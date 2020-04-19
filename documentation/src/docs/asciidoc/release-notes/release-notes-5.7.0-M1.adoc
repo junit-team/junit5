@@ -19,7 +19,9 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* In the `EngineTestKit` API, the `all()`, `containers()`, and `tests()` methods in
+  `EngineExecutionResults` that were deprecated in JUnit Platform 1.6.0 have been removed
+  in favor of `allEvents()`, `containerEvents()`, and `testEvents()`, respectively.
 
 ==== New Features and Improvements
 
@@ -28,13 +30,24 @@ on GitHub.
 * The annotation `@Testable` may now be applied _directly_ to fields.
 * The TestKit now allows to match conditions with events loosely, i.e. an incomplete match
   with or without a fixed order.
+* New `junit.platform.execution.listeners.deactivate` configuration parameter that allows
+  one to specify a comma-separated list of patterns for deactivating
+  `TestExecutionListener` implementations registered via the `ServiceLoader` mechanism.
+* The `@Testable` annotation may now be applied _directly_ to fields.
+* Add `Node.DynamicTestExecutor#execute(TestDescriptor, EngineExecutionListener)` for
+  engines that wish to pass a custom `EngineExecutionListener` and cancel or wait for the
+  execution of a submitted test via the returned `Future`.
+* Add `EngineExecutionListener.NOOP` and change all declared methods to have empty default
+  implementations.
+
 
 [[release-notes-5.7.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
 
-* ❓
+* The Jupiter engine now ignores `MethodSelectors` for methods in non-Jupiter test
+  classes instead of failing for missing methods in such cases.
 
 ==== Deprecations and Breaking Changes
 
@@ -42,10 +55,25 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* `assertThrows` for Kotlin can now be used with suspending functions and other lambda
+  contexts that require inlining.
+* Synthetic constructors are now ignored when instantiating a test class.
 * The Javadoc for the `provideTestTemplateInvocationContexts()` method in
   `TestTemplateInvocationContextProvider` has been aligned with the actual implementation.
   Providers are now officially allowed to return an empty stream, and the error message
   when all provided streams are empty is now more helpful.
+* The `JRE` enum now provides a static `currentVersion()` method that returns the enum
+  constant for the currently executing JRE, e.g. for use in custom execution conditions
+  and other extensions.
+* The `name` attribute of `@ParameterizedTest` is now clearly documented to be a
+  `MessageFormat` pattern.
+* New `DisplayNameGenerator` named `Simple` (based on `Standard`) that removes trailing
+  parentheses for methods with no parameters.
+* New `MethodOrderer` named `DisplayName` that sorts test methods alphanumerically based
+  on their display names.
+* New `getDisplayName()` method in `MethodDescriptor`.
+* New annotations `@EnabledIf` and `@DisabledIf` can be used to enable/disable a test
+  or container based on static condition methods.
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]
@@ -53,7 +81,9 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The Vintage engine no longer fails when resolving a `MethodSelector` for methods of test
+  classes that cannot be found via reflection. This allows selecting Spock feature methods
+  by their source code name even though they have a generated method name in the bytecode.
 
 ==== Deprecations and Breaking Changes
 
@@ -61,4 +91,6 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The internal `JUnit4VersionCheck` class -- which verifies that a supported version of
+  JUnit 4 is on the classpath -- now implements a lenient version ID parsing algorithm in
+  order to support custom version ID formats such as `4.12.0`, `4.12-patch_1`, etc.

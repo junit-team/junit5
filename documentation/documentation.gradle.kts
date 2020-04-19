@@ -12,7 +12,7 @@ plugins {
 	`kotlin-library-conventions`
 }
 
-val modularProjects: List<Project> by rootProject.extra
+val modularProjects: List<Project> by rootProject
 
 // Because we need to set up Javadoc aggregation
 modularProjects.forEach { evaluationDependsOn(it.path) }
@@ -49,11 +49,12 @@ asciidoctorj {
 
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
+val releaseBranch = if (snapshot) "master" else "r${rootProject.version}"
 val docsDir = file("$buildDir/ghpages-docs")
 val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
 val uploadPdfs = !snapshot
-val ota4jDocVersion = if (Versions.ota4j.contains("SNAPSHOT")) "snapshot" else Versions.ota4j
-val apiGuardianDocVersion = if (Versions.apiGuardian.contains("SNAPSHOT")) "snapshot" else Versions.apiGuardian
+val ota4jDocVersion = if (versions.opentest4j.contains("SNAPSHOT")) "snapshot" else versions.opentest4j
+val apiGuardianDocVersion = if (versions.apiguardian.contains("SNAPSHOT")) "snapshot" else versions.apiguardian
 
 gitPublish {
 	repoUri.set("https://github.com/junit-team/junit5.git")
@@ -80,12 +81,13 @@ val deprecatedApisTableFile = File(generatedAsciiDocPath, "deprecated-apis-table
 
 val elementListsDir = file("$buildDir/elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
-		"org.apiguardian.api" to JavadocCoordinates("https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/", JavadocListType.ELEMENT_LIST),
-		"org.assertj.core" to JavadocCoordinates("https://joel-costigliola.github.io/assertj/core-8/api/", JavadocListType.PACKAGE_LIST),
-		"org.opentest4j" to JavadocCoordinates("https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/", JavadocListType.ELEMENT_LIST)
+		"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
+		"org.assertj.core" to "https://javadoc.io/doc/org.assertj/assertj-core/${versions.assertj}/",
+		"org.opentest4j" to "https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/"
 )
-enum class JavadocListType { ELEMENT_LIST, PACKAGE_LIST }
-data class JavadocCoordinates(val baseUrl: String, val listType: JavadocListType) : java.io.Serializable
+require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
+	"all base URLs must end with a trailing slash: $externalModulesWithoutModularJavadoc"
+}
 
 tasks {
 
@@ -149,15 +151,15 @@ tasks {
 		attributes(mapOf(
 				"linkToPdf" to uploadPdfs,
 				"jupiter-version" to version,
-				"platform-version" to project.properties["platformVersion"],
-				"vintage-version" to project.properties["vintageVersion"],
+				"platform-version" to project.property("platformVersion"),
+				"vintage-version" to project.property("vintageVersion"),
 				"bom-version" to version,
-				"junit4-version" to Versions.junit4,
-				"apiguardian-version" to Versions.apiGuardian,
-				"ota4j-version" to Versions.ota4j,
-				"surefire-version" to Versions.surefire,
-				"release-branch" to project.properties["releaseBranch"],
-				"docs-version" to project.properties["docsVersion"],
+				"junit4-version" to versions.junit4,
+				"apiguardian-version" to versions.apiguardian,
+				"ota4j-version" to versions.opentest4j,
+				"surefire-version" to versions["surefire"],
+				"release-branch" to releaseBranch,
+				"docs-version" to docsVersion,
 				"revnumber" to version,
 				"consoleLauncherOptionsFile" to consoleLauncherOptionsFile,
 				"experimentalApisTableFile" to experimentalApisTableFile,
@@ -199,15 +201,12 @@ tasks {
 	}
 
 	val downloadJavadocElementLists by registering {
-		outputs.dir(elementListsDir)
+		outputs.cacheIf { true }
+		outputs.dir(elementListsDir).withPropertyName("elementListsDir")
 		inputs.property("externalModulesWithoutModularJavadoc", externalModulesWithoutModularJavadoc)
 		doFirst {
-			externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
-				val fileName = when(coordinates.listType) {
-					JavadocListType.ELEMENT_LIST -> "element-list"
-					JavadocListType.PACKAGE_LIST -> "package-list"
-				}
-				val resource = resources.text.fromUri("${coordinates.baseUrl}$fileName")
+			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
+				val resource = resources.text.fromUri("${baseUrl}element-list")
 				elementListsDir.resolve(moduleName).apply {
 					mkdir()
 					resolve("element-list").writeText("module:$moduleName\n${resource.asString()}")
@@ -246,9 +245,9 @@ tasks {
 				jFlags("-Xmx1g")
 
 				links("https://docs.oracle.com/en/java/javase/11/docs/api/")
-				links("https://junit.org/junit4/javadoc/${Versions.junit4}/")
-				externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
-					linksOffline(coordinates.baseUrl, "$elementListsDir/$moduleName")
+				links("https://junit.org/junit4/javadoc/${versions.junit4}/")
+				externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
+					linksOffline(baseUrl, "$elementListsDir/$moduleName")
 				}
 
 				groups = mapOf(
@@ -265,7 +264,7 @@ tasks {
 				moduleSourcePathOption.value = modularProjects.map { it.file("src/module") }
 				moduleSourcePathOption.value.forEach { inputs.dir(it) }
 				addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate {
-					it.javaModuleName to files(it.sourceSets.main.get().allJava.srcDirs, it.sourceSets.mainRelease9.get().allJava.srcDirs).asPath
+					it.javaModuleName to files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava.srcDirs }).asPath
 				}))
 				addStringOption("-add-modules", "info.picocli")
 				addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
@@ -283,7 +282,7 @@ tasks {
 				inputs.files(modulePathOption.value).withNormalizer(ClasspathNormalizer::class)
 			}
 		}
-		source(modularProjects.map { files(it.sourceSets.main.get().allJava, it.sourceSets.mainRelease9.get().allJava) })
+		source(modularProjects.map { files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava }) })
 
 		setMaxMemory("1024m")
 		setDestinationDir(file("$buildDir/docs/javadoc"))
@@ -307,8 +306,8 @@ tasks {
 				val favicon = "<link rel=\"icon\" type=\"image/png\" href=\"https://junit.org/junit5/assets/img/junit5-logo.png\">"
 				filter { line ->
 					var result = if (line.startsWith("<head>")) line.replace("<head>", "<head>$favicon") else line
-					externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
-						result = result.replace("${coordinates.baseUrl}$moduleName/", coordinates.baseUrl)
+					externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
+						result = result.replace("${baseUrl}$moduleName/", baseUrl)
 					}
 					return@filter result
 				}

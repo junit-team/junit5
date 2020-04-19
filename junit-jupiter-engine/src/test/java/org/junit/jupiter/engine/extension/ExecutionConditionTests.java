@@ -15,13 +15,21 @@ import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_P
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.engine.extension.sub.AlwaysDisabledCondition;
+import org.junit.jupiter.engine.extension.sub.AnotherAlwaysDisabledCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition.SystemProperty;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -39,6 +47,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	private static final String FOO = "DisabledTests.foo";
 	private static final String BAR = "DisabledTests.bar";
 	private static final String BOGUS = "DisabledTests.bogus";
+	private static final String DEACTIVATE = "*AnotherAlwaysDisable*, org.junit.jupiter.engine.extension.sub.AlwaysDisable*";
 
 	@BeforeEach
 	public void setUp() {
@@ -67,7 +76,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void overrideConditionsUsingFullyQualifiedClassName() {
-		String deactivatePattern = SystemPropertyCondition.class.getName();
+		String deactivatePattern = SystemPropertyCondition.class.getName() + "," + DEACTIVATE;
 		assertExecutionConditionOverride(deactivatePattern, 1, 1);
 		assertExecutionConditionOverride(deactivatePattern, 4, 2, 2);
 	}
@@ -83,7 +92,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void overrideConditionsUsingStarPlusSimpleClassName() {
 		// DisabledCondition should remain activated
-		String deactivatePattern = "*" + SystemPropertyCondition.class.getSimpleName();
+		String deactivatePattern = "*" + SystemPropertyCondition.class.getSimpleName() + ", " + DEACTIVATE;
 		assertExecutionConditionOverride(deactivatePattern, 1, 1);
 		assertExecutionConditionOverride(deactivatePattern, 4, 2, 2);
 	}
@@ -91,7 +100,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void overrideConditionsUsingPackageNamePlusDotStar() {
 		// DisabledCondition should remain activated
-		String deactivatePattern = SystemPropertyCondition.class.getPackage().getName() + ".*";
+		String deactivatePattern = DEACTIVATE + ", " + SystemPropertyCondition.class.getPackage().getName() + ".*";
 		assertExecutionConditionOverride(deactivatePattern, 1, 1);
 		assertExecutionConditionOverride(deactivatePattern, 4, 2, 2);
 	}
@@ -99,7 +108,15 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void overrideConditionsUsingMultipleWildcards() {
 		// DisabledCondition should remain activated
-		String deactivatePattern = "org.junit.jupiter.*.System*Condition";
+		String deactivatePattern = "org.junit.jupiter.*.System*Condition" + "," + DEACTIVATE;
+		assertExecutionConditionOverride(deactivatePattern, 1, 1);
+		assertExecutionConditionOverride(deactivatePattern, 4, 2, 2);
+	}
+
+	@Test
+	void deactivateAllConditions() {
+		// DisabledCondition should remain activated
+		String deactivatePattern = "org.junit.jupiter.*.System*Condition" + ", " + DEACTIVATE;
 		assertExecutionConditionOverride(deactivatePattern, 1, 1);
 		assertExecutionConditionOverride(deactivatePattern, 4, 2, 2);
 	}
@@ -135,6 +152,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@SystemProperty(key = FOO, value = BOGUS)
+	@DeactivatedConditions
 	static class TestCaseWithExecutionConditionOnClass {
 
 		@Test
@@ -157,6 +175,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@Disabled
+		@DeactivatedConditions
 		void atDisabledTest() {
 			fail("this should be @Disabled");
 		}
@@ -167,17 +186,25 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
+		@DeactivatedConditions
 		@SystemProperty(key = FOO, value = BOGUS)
 		void systemPropertyWithIncorrectValueTest() {
 			fail("this should be disabled");
 		}
 
 		@Test
+		@DeactivatedConditions
 		@SystemProperty(key = BOGUS, value = "doesn't matter")
 		void systemPropertyNotSetTest() {
 			fail("this should be disabled");
 		}
 
+	}
+
+	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@Retention(RetentionPolicy.RUNTIME)
+	@ExtendWith({ AlwaysDisabledCondition.class, AnotherAlwaysDisabledCondition.class })
+	@interface DeactivatedConditions {
 	}
 
 }

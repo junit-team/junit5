@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -141,12 +141,19 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				invokeAfterEachMethods(context);
 			}
 		invokeAfterEachCallbacks(context);
-		invokeTestInstancePreDestroyCallback(context);
+		if (isPerMethodLifecycle(context)) {
+			invokeTestInstancePreDestroyCallbacks(context);
+		}
 		// @formatter:on
 
 		throwableCollector.assertEmpty();
 
 		return context;
+	}
+
+	private boolean isPerMethodLifecycle(JupiterEngineExecutionContext context) {
+		return context.getExtensionContext().getTestInstanceLifecycle().orElse(
+			Lifecycle.PER_CLASS) == Lifecycle.PER_METHOD;
 	}
 
 	private void invokeBeforeEachCallbacks(JupiterEngineExecutionContext context) {
@@ -248,13 +255,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			(callback, extensionContext) -> callback.afterEach(extensionContext));
 	}
 
-	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
-		context.getExtensionContext().getTestInstanceLifecycle().ifPresent(lifecycle -> {
-			if (TestInstance.Lifecycle.PER_METHOD == lifecycle) {
-				invokeAllAfterMethodsOrCallbacks(TestInstancePreDestroyCallback.class, context,
-					TestInstancePreDestroyCallback::preDestroyTestInstance);
-			}
-		});
+	private void invokeTestInstancePreDestroyCallbacks(JupiterEngineExecutionContext context) {
+		invokeAllAfterMethodsOrCallbacks(TestInstancePreDestroyCallback.class, context,
+			TestInstancePreDestroyCallback::preDestroyTestInstance);
 	}
 
 	private <T extends Extension> void invokeAllAfterMethodsOrCallbacks(Class<T> type,

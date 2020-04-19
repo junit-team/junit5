@@ -55,10 +55,11 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 				return getMethodByFullyQualifiedName(factoryMethodName);
 			}
 			else {
-				return getMethod(context.getRequiredTestClass(), factoryMethodName);
+				return ReflectionUtils.getRequiredMethod(context.getRequiredTestClass(), factoryMethodName);
 			}
 		}
-		return getMethod(context.getRequiredTestClass(), context.getRequiredTestMethod().getName());
+		return ReflectionUtils.getRequiredMethod(context.getRequiredTestClass(),
+			context.getRequiredTestMethod().getName());
 	}
 
 	private Method getMethodByFullyQualifiedName(String fullyQualifiedMethodName) {
@@ -70,17 +71,12 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		Preconditions.condition(StringUtils.isBlank(methodParameters),
 			() -> format("factory method [%s] must not declare formal parameters", fullyQualifiedMethodName));
 
-		return getMethod(loadRequiredClass(className), methodName);
+		return ReflectionUtils.getRequiredMethod(loadRequiredClass(className), methodName);
 	}
 
 	private Class<?> loadRequiredClass(String className) {
 		return ReflectionUtils.tryToLoadClass(className).getOrThrow(
 			cause -> new JUnitException(format("Could not load class [%s]", className), cause));
-	}
-
-	private Method getMethod(Class<?> clazz, String methodName) {
-		return ReflectionUtils.findMethod(clazz, methodName).orElseThrow(() -> new JUnitException(
-			format("Could not find factory method [%s] in class [%s]", methodName, clazz.getName())));
 	}
 
 	private static Arguments toArguments(Object item) {

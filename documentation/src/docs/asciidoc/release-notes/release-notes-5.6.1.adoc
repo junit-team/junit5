@@ -1,0 +1,36 @@
+[[release-notes-5.6.1]]
+== 5.6.1
+
+*Date of Release:* March 22, 2020
+
+*Scope:* Bug fixes since 5.6.0
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/47?closed=1+[5.6.1] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.6.1-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* In order to avoid file locking issues on Microsoft Windows, URLs are no longer cached
+  when loading `junit-platform.properties` files.
+* The presence of multiple `junit-platform.properties` files on the classpath now only
+  results in a warning if the files have different URLs.
+
+
+[[release-notes-5.6.1-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* `TestInstancePreDestroyCallback` extensions are now invoked in reverse registration
+  order when `PER_CLASS` test instance lifecycle semantics have been configured.
+
+
+[[release-notes-5.6.1-junit-vintage]]
+=== JUnit Vintage
+
+No changes.

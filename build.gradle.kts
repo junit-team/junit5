@@ -1,4 +1,6 @@
 import java.time.OffsetDateTime
+import java.time.Instant
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
@@ -16,7 +18,24 @@ buildScan {
 	}
 }
 
-val buildTimeAndDate = OffsetDateTime.now()
+val buildTimeAndDate by extra {
+
+	// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against
+	// in order to achieve reproducible builds
+	//
+	// More details - https://reproducible-builds.org/docs/source-date-epoch/
+
+	if (System.getenv().containsKey("SOURCE_DATE_EPOCH")) {
+
+		val sourceDateEpoch = System.getenv("SOURCE_DATE_EPOCH").toLong()
+
+		Instant.ofEpochSecond(sourceDateEpoch).atOffset(ZoneOffset.UTC)
+
+	} else {
+		OffsetDateTime.now()
+	}
+}
+
 val buildDate by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
 val buildTime by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
 val buildRevision by extra { versioning.info.commit }
@@ -55,6 +74,9 @@ val license by extra(License(
 		headerFile = file("src/spotless/eclipse-public-license-2.0.java")
 ))
 
+val tempRepoName by extra("temp")
+val tempRepoDir by extra(file("$buildDir/repo"))
+
 val enableJaCoCo = project.hasProperty("enableJaCoCo")
 val jacocoTestProjects = listOf(
 		project(":junit-jupiter-engine"),
@@ -76,7 +98,7 @@ allprojects {
 	if (enableJaCoCo) {
 		apply(plugin = "jacoco")
 		configure<JacocoPluginExtension> {
-			toolVersion = Versions.jacoco
+			toolVersion = versions["jacoco"]
 		}
 	}
 
@@ -105,6 +127,13 @@ subprojects {
 		version = property("vintageVersion")!!
 	}
 
+	tasks.withType<AbstractArchiveTask>().configureEach {
+		isPreserveFileTimestamps = false
+		isReproducibleFileOrder = true
+		dirMode = Integer.parseInt("0755", 8)
+		fileMode = Integer.parseInt("0644", 8)
+	}
+
 	pluginManager.withPlugin("java") {
 
 		spotless {
@@ -122,7 +151,7 @@ subprojects {
 			}
 
 			kotlin {
-				ktlint(Versions.ktlint)
+				ktlint(versions["ktlint"])
 				licenseHeaderFile(headerFile)
 				trimTrailingWhitespace()
 				endWithNewline()
@@ -144,6 +173,19 @@ subprojects {
 					onlyIf { jarTask.enabled }
 				}
 				jarTask.finalizedBy(extractJar)
+			}
+		}
+	}
+
+	pluginManager.withPlugin("maven-publish") {
+		configure<PublishingExtension> {
+			repositories {
+				repositories {
+					maven {
+						name = tempRepoName
+						url = uri(tempRepoDir)
+					}
+				}
 			}
 		}
 	}
@@ -174,6 +216,7 @@ rootProject.apply {
 
 	tasks {
 		dependencyUpdates {
+			checkConstraints = true
 			resolutionStrategy {
 				componentSelection {
 					all {

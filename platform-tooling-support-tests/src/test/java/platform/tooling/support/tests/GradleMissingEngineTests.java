@@ -42,6 +42,7 @@ class GradleMissingEngineTests {
 				.setProject(project) //
 				.setWorkspace(project + '-' + version) //
 				.setTool(gradle) //
+				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //

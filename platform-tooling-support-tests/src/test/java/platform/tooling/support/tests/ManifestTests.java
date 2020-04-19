@@ -14,11 +14,10 @@ import static aQute.bnd.osgi.Constants.VERSION_ATTRIBUTE;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static platform.tooling.support.Helper.createJarPath;
 
 import java.io.File;
 import java.lang.module.ModuleFinder;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.jar.Attributes;
 
 import aQute.bnd.osgi.Domain;
@@ -40,7 +39,7 @@ class ManifestTests {
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void manifestEntriesAdhereToConventions(String module) throws Exception {
 		var version = Helper.version(module);
-		var modulePath = modulePath(module);
+		var modulePath = createJarPath(module);
 		var uri = ModuleFinder.of(modulePath).findAll().iterator().next().location().orElseThrow();
 		var jarFile = new File(uri);
 		try (var jar = new Jar(jarFile)) {
@@ -80,12 +79,6 @@ class ManifestTests {
 				assertDoesNotThrow(() -> new VersionRange(stringVersionRange));
 			});
 		}
-	}
-
-	private static Path modulePath(String module) {
-		var version = Helper.version(module);
-		var archive = module + '-' + version + ".jar";
-		return Paths.get("..", module, "build", "libs", archive);
 	}
 
 	private static String specificationVersion(String version) {

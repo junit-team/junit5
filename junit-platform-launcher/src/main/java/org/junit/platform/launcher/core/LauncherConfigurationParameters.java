@@ -10,13 +10,17 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.Collections.emptyMap;
+
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -35,6 +39,10 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 	private final Map<String, String> explicitConfigParams;
 	private final Properties configParamsFromFile;
 
+	LauncherConfigurationParameters() {
+		this(emptyMap(), ConfigurationParameters.CONFIG_FILE_NAME);
+	}
+
 	LauncherConfigurationParameters(Map<String, String> configParams) {
 		this(configParams, ConfigurationParameters.CONFIG_FILE_NAME);
 	}
@@ -51,7 +59,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 		try {
 			ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
-			List<URL> resources = Collections.list(classLoader.getResources(configFileName));
+			Set<URL> resources = new LinkedHashSet<>(Collections.list(classLoader.getResources(configFileName)));
 
 			if (!resources.isEmpty()) {
 				if (resources.size() > 1) {
@@ -60,10 +68,12 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 						resources.size(), configFileName));
 				}
 
-				URL configFileUrl = resources.get(0);
+				URL configFileUrl = resources.iterator().next(); // same as List#get(0)
 				logger.info(() -> String.format(
 					"Loading JUnit Platform configuration parameters from classpath resource [%s].", configFileUrl));
-				try (InputStream inputStream = configFileUrl.openStream()) {
+				URLConnection urlConnection = configFileUrl.openConnection();
+				urlConnection.setUseCaches(false);
+				try (InputStream inputStream = urlConnection.getInputStream()) {
 					props.load(inputStream);
 				}
 			}

@@ -728,6 +728,38 @@ precedence over those supplied via system properties and the configuration file.
 Similarly, configuration parameters supplied via system properties take precedence over
 those supplied via the configuration file.
 
+[[running-tests-config-params-deactivation-pattern]]
+==== Pattern Matching Syntax
+
+This section describes the pattern matching syntax that is applied to the _configuration
+parameters_ used for the following features.
+
+- <<extensions-conditions-deactivation>>
+- <<launcher-api-listeners-custom-deactivation>>
+
+If the value for the given _configuration parameter_ consists solely of an asterisk
+(`+*+`), the pattern will match against all candidate classes. Otherwise, the value will
+be treated as a comma-separated list of patterns where each pattern will be matched
+against the fully qualified class name (_FQCN_) of each candidate class. Any dot (`.`) in
+a pattern will match against a dot (`.`) or a dollar sign (`$`) in a FQCN. Any asterisk
+(`+*+`) will match against one or more characters in a FQCN. All other characters in a
+pattern will be matched one-to-one against a FQCN.
+
+Examples:
+
+- `+*+`: matches all candidate classes.
+- `+org.junit.*+`: matches all candidate classes under the `org.junit` base package and
+  any of its subpackages.
+- `+*.MyCustomImpl+`: matches every candidate class whose simple class name is exactly
+  `MyCustomImpl`.
+- `+*System*+`: matches every candidate class whose FQCN contains `System`.
+- `+*System*+, +*Unit*+`: matches every candidate class whose FQCN contains `System` or
+  `Unit`.
+- `org.example.MyCustomImpl`: matches the candidate class whose FQCN is exactly
+  `org.example.MyCustomImpl`.
+- `org.example.MyCustomImpl, org.example.TheirCustomImpl`: matches candidate classes whose
+  FQCN is exactly `org.example.MyCustomImpl` or `org.example.TheirCustomImpl`.
+
 [[running-tests-tag-expressions]]
 === Tag Expressions
 Tag expressions are boolean expressions with the operators `!`, `&` and `|`. In addition,

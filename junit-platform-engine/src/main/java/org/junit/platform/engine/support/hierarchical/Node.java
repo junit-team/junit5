@@ -16,9 +16,11 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 
@@ -282,9 +284,25 @@ public interface Node<C extends EngineExecutionContext> {
 		/**
 		 * Submit a dynamic test descriptor for immediate execution.
 		 *
-		 * @param testDescriptor the test descriptor to be executed
+		 * @param testDescriptor the test descriptor to be executed; never
+		 * {@code null}
 		 */
 		void execute(TestDescriptor testDescriptor);
+
+		/**
+		 * Submit a dynamic test descriptor for immediate execution with a
+		 * custom, potentially no-op, execution listener.
+		 *
+		 * @param testDescriptor the test descriptor to be executed; never
+		 * {@code null}
+		 * @param executionListener the executionListener to be notified; never
+		 * {@code null}
+		 * @return a future to cancel or wait for the execution
+		 * @see EngineExecutionListener#NOOP
+		 * @since 5.7
+		 */
+		@API(status = EXPERIMENTAL, since = "5.7")
+		Future<?> execute(TestDescriptor testDescriptor, EngineExecutionListener executionListener);
 
 		/**
 		 * Block until all dynamic test descriptors submitted to this executor

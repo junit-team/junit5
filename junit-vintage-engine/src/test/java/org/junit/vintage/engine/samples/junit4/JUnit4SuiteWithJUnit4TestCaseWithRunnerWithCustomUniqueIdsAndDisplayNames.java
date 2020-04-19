@@ -10,19 +10,14 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
- * @since 4.12
+ * @since 5.6.2
  */
-@RunWith(RunnerWithCustomUniqueIds.class)
-public class JUnit4TestCaseWithRunnerWithCustomUniqueIds {
-
-	@Test
-	public void test() {
-		Assert.fail();
-	}
-
+@RunWith(Suite.class)
+@SuiteClasses(JUnit4TestCaseWithRunnerWithCustomUniqueIdsAndDisplayNames.class)
+public class JUnit4SuiteWithJUnit4TestCaseWithRunnerWithCustomUniqueIdsAndDisplayNames {
 }

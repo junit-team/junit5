@@ -94,6 +94,19 @@ class OrderedMethodTests {
 	}
 
 	@Test
+	void displayName() {
+		var tests = executeTestsInParallel(DisplayNameTestCase.class);
+
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence)//
+				.containsExactly("$", "AAA", "No_display_name_attribute_1_caps()", "No_display_name_attribute_2_caps()",
+					"ZZ_Top", "___", "a1", "a2", "b()", "no_display_name_attribute_1()",
+					"no_display_name_attribute_2()", "repetition 1 of 1", "⑦ϼ\uD83D\uDC69\u200D⚕\uD83E\uDDD8\u200D♂");
+		assertThat(threadNames).hasSize(1);
+	}
+
+	@Test
 	void orderAnnotation() {
 		assertOrderAnnotationSupport(OrderAnnotationTestCase.class);
 	}
@@ -353,6 +366,78 @@ class OrderedMethodTests {
 
 		@RepeatedTest(1)
 		void zzz() {
+		}
+	}
+
+	@TestMethodOrder(MethodOrderer.DisplayName.class)
+	static class DisplayNameTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			callSequence.add(testInfo.getDisplayName());
+			threadNames.add(Thread.currentThread().getName());
+		}
+
+		@TestFactory
+		DynamicTest b() {
+			return dynamicTest("dynamic", () -> {
+			});
+		}
+
+		@DisplayName("$")
+		@Test
+		void $() {
+		}
+
+		@DisplayName("___")
+		@Test
+		void ___() {
+		}
+
+		@DisplayName("AAA")
+		@Test
+		void AAA() {
+		}
+
+		@DisplayName("ZZ_Top")
+		@Test
+		void ZZ_Top() {
+		}
+
+		@DisplayName("a1")
+		@Test
+		void a1() {
+		}
+
+		@DisplayName("a2")
+		@Test
+		void a2() {
+		}
+
+		@DisplayName("zzz")
+		@RepeatedTest(1)
+		void zzz() {
+		}
+
+		@Test
+		@DisplayName("⑦ϼ\uD83D\uDC69\u200D⚕\uD83E\uDDD8\u200D♂")
+		void special_characters() {
+		}
+
+		@Test
+		void no_display_name_attribute_1() {
+		}
+
+		@Test
+		void no_display_name_attribute_2() {
+		}
+
+		@Test
+		void No_display_name_attribute_1_caps() {
+		}
+
+		@Test
+		void No_display_name_attribute_2_caps() {
 		}
 	}
 

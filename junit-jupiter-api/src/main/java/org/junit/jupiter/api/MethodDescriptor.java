@@ -36,6 +36,16 @@ public interface MethodDescriptor {
 	Method getMethod();
 
 	/**
+	 * Get the display name for this descriptor's {@link #getMethod() method}.
+	 *
+	 * @return the display name for this descriptor's method; never {@code null}
+	 * or blank
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	String getDisplayName();
+
+	/**
 	 * Determine if an annotation of {@code annotationType} is either
 	 * <em>present</em> or <em>meta-present</em> on the {@link Method} for
 	 * this descriptor.

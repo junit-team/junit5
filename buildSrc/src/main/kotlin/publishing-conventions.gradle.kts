@@ -11,9 +11,12 @@ val isContinuousIntegrationEnvironment = System.getenv("CI")?.toBoolean() ?: fal
 val isJitPackEnvironment = System.getenv("JITPACK")?.toBoolean() ?: false
 
 // ensure project is built successfully before publishing it
-val build = tasks[LifecycleBasePlugin.BUILD_TASK_NAME]
-tasks[PublishingPlugin.PUBLISH_LIFECYCLE_TASK_NAME].dependsOn(build)
-tasks[MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME].dependsOn(build)
+tasks.withType<PublishToMavenRepository>().configureEach {
+	dependsOn(tasks.build)
+}
+tasks.withType<PublishToMavenLocal>().configureEach {
+	dependsOn(tasks.build)
+}
 
 signing {
 	sign(publishing.publications)
@@ -74,7 +77,7 @@ publishing {
 					developer {
 						id.set("mmerdes")
 						name.set("Matthias Merdes")
-						email.set("Matthias.Merdes@heidelberg-mobil.com")
+						email.set("matthias.merdes@heidelpay.com")
 					}
 					developer {
 						id.set("sbrannen")

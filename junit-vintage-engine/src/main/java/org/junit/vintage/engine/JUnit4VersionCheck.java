@@ -10,6 +10,8 @@
 
 package org.junit.vintage.engine;
 
+import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
+
 import java.math.BigDecimal;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -25,11 +27,19 @@ import org.junit.platform.commons.util.BlacklistedExceptions;
  */
 class JUnit4VersionCheck {
 
-	private static final Pattern versionPattern = Pattern.compile("^(\\d+\\.\\d+)(?:-.+)?");
+	private static final Pattern versionPattern = Pattern.compile("^(\\d+\\.\\d+).*");
 	private static final BigDecimal minVersion = new BigDecimal("4.12");
 
 	static void checkSupported() {
-		checkSupported(Version::id);
+		try {
+			checkSupported(Version::id);
+		}
+		catch (NoClassDefFoundError e) {
+			throw new JUnitException(
+				"Invalid class/module path: junit-vintage-engine is present but junit:junit is not. "
+						+ "Please either remove junit-vintage-engine or add junit:junit, or "
+						+ "alternatively use an excludeEngines(\"" + ENGINE_ID + "\") filter.");
+		}
 	}
 
 	static void checkSupported(Supplier<String> versionSupplier) {
