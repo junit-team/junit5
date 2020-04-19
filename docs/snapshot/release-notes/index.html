@@ -514,10 +514,35 @@ authors as well as build tool and IDE vendors.</p>
 <h2 id="release-notes-5.7.0-M1"><a class="anchor" href="#release-notes-5.7.0-M1"></a>5.7.0-M1</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> April 19, 2020</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>New <code>@EnabledIf</code>/<code>@DisabledIf</code> for conditional execution based on method calls</p>
+</li>
+<li>
+<p>New <code>MethodOrderer</code> named <code>DisplayName</code></p>
+</li>
+<li>
+<p>New <code>DisplayNameGenerator</code> named <code>Simple</code> that removes empty parentheses</p>
+</li>
+<li>
+<p><code>assertThrows</code> for Kotlin can now be used with suspending functions</p>
+</li>
+<li>
+<p><code>TestExecutionListener</code> deactivation via configuration parameter</p>
+</li>
+<li>
+<p><code>EngineTestKit</code> now allows for testing post-discovery filtering and pruning</p>
+</li>
+<li>
+<p>Interoperability improvements for the Vintage test engine with Spock</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -527,16 +552,6 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.7.0-M1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
 <h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
@@ -544,6 +559,22 @@ on GitHub.</p>
 <p>In the <code>EngineTestKit</code> API, the <code>all()</code>, <code>containers()</code>, and <code>tests()</code> methods in
 <code>EngineExecutionResults</code> that were deprecated in JUnit Platform 1.6.0 have been removed
 in favor of <code>allEvents()</code>, <code>containerEvents()</code>, and <code>testEvents()</code>, respectively.</p>
+</li>
+<li>
+<p>The following methods in <code>EngineTestKit</code> are now deprecated with replacements:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>execute(String, EngineDiscoveryRequest)</code> → <code>execute(String, LauncherDiscoveryRequest)</code></p>
+</li>
+<li>
+<p><code>execute(TestEngine, EngineDiscoveryRequest)</code> → <code>execute(TestEngine, LauncherDiscoveryRequest)</code></p>
+</li>
+<li>
+<p><code>Builder.filters(DiscoveryFilter&#8230;&#8203;)</code> → <code>Builder.filters(Filter&#8230;&#8203;)</code></p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -574,6 +605,11 @@ execution of a submitted test via the returned <code>Future</code>.</p>
 implementations.</p>
 </li>
 <li>
+<p>The <code>EngineTestKit</code> now reuses the same test discovery and execution logic as the
+<code>Launcher</code>. Thus, it&#8217;s now possible to test that an engine&#8217;s behavior in the presence of
+post-discovery filters (e.g. tag filters) and with regard to pruning.</p>
+</li>
+<li>
 <p>The TestKit now allows to match conditions with events loosely, i.e. an incomplete match
 with or without a fixed order.</p>
 </li>
@@ -584,7 +620,7 @@ with or without a fixed order.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.7.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
+<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -598,22 +634,29 @@ classes instead of failing for missing methods in such cases.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
 <h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
+<p>New annotations <code>@EnabledIf</code> and <code>@DisabledIf</code> can be used to enable/disable a test
+or container based on static condition methods.</p>
+</li>
+<li>
+<p>New <code>MethodOrderer</code> named <code>DisplayName</code> that sorts test methods alphanumerically based
+on their display names.</p>
+</li>
+<li>
+<p>New <code>DisplayNameGenerator</code> named <code>Simple</code> (based on <code>Standard</code>) that removes trailing
+parentheses for methods with no parameters.</p>
+</li>
+<li>
 <p><code>assertThrows</code> for Kotlin can now be used with suspending functions and other lambda
 contexts that require inlining.</p>
+</li>
+<li>
+<p>The <code>JRE</code> enum now provides a static <code>currentVersion()</code> method that returns the enum
+constant for the currently executing JRE, e.g. for use in custom execution conditions
+and other extensions.</p>
 </li>
 <li>
 <p>Synthetic constructors are now ignored when instantiating a test class.</p>
@@ -625,28 +668,11 @@ Providers are now officially allowed to return an empty stream, and the error me
 when all provided streams are empty is now more helpful.</p>
 </li>
 <li>
-<p>The <code>JRE</code> enum now provides a static <code>currentVersion()</code> method that returns the enum
-constant for the currently executing JRE, e.g. for use in custom execution conditions
-and other extensions.</p>
-</li>
-<li>
 <p>The <code>name</code> attribute of <code>@ParameterizedTest</code> is now clearly documented to be a
 <code>MessageFormat</code> pattern.</p>
 </li>
 <li>
-<p>New <code>DisplayNameGenerator</code> named <code>Simple</code> (based on <code>Standard</code>) that removes trailing
-parentheses for methods with no parameters.</p>
-</li>
-<li>
-<p>New <code>MethodOrderer</code> named <code>DisplayName</code> that sorts test methods alphanumerically based
-on their display names.</p>
-</li>
-<li>
 <p>New <code>getDisplayName()</code> method in <code>MethodDescriptor</code>.</p>
-</li>
-<li>
-<p>New annotations <code>@EnabledIf</code> and <code>@DisabledIf</code> can be used to enable/disable a test
-or container based on static condition methods.</p>
 </li>
 </ul>
 </div>
@@ -655,23 +681,13 @@ or container based on static condition methods.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.7.0-M1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
 <p>The Vintage engine no longer fails when resolving a <code>MethodSelector</code> for methods of test
 classes that cannot be found via reflection. This allows selecting Spock feature methods
 by their source code name even though they have a generated method name in the bytecode.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
 </li>
 </ul>
 </div>
@@ -708,7 +724,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.2-junit-platform"><a class="anchor" href="#release-notes-5.6.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -724,7 +740,7 @@ classes are not annotated with <code>@Nested</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.2-junit-jupiter"><a class="anchor" href="#release-notes-5.6.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -738,7 +754,7 @@ cycle if such inner classes are not annotated with <code>@Nested</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.2-junit-vintage"><a class="anchor" href="#release-notes-5.6.2-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -768,7 +784,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.1-junit-platform"><a class="anchor" href="#release-notes-5.6.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -786,7 +802,7 @@ results in a warning if the files have different URLs.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.1-junit-jupiter"><a class="anchor" href="#release-notes-5.6.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -864,7 +880,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-04-19 15:05:24 UTC
+Last updated 2020-04-19 15:21:43 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

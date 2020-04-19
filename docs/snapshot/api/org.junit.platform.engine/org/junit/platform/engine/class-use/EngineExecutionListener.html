@@ -131,6 +131,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#org.junit.platform.launcher.core">org.junit.platform.launcher.core</a></th>
+<td class="colLast">
+<div class="block">Core support classes for the <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>
+ including the <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core"><code>LauncherFactory</code></a>
+ and the <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.vintage.engine.execution">org.junit.vintage.engine.execution</a></th>
 <td class="colLast">
 <div class="block">Internal classes for test execution within the JUnit Vintage test engine.</div>
@@ -254,6 +262,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">
 <div class="block">Submit a dynamic test descriptor for immediate execution with a
  custom, potentially no-op, execution listener.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.platform.launcher.core">
+<!--   -->
+</a>
+<h3>Uses of <a href="../EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a> in <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/package-summary.html">org.junit.platform.launcher.core</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/package-summary.html">org.junit.platform.launcher.core</a> with parameters of type <a href="../EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">EngineExecutionOrchestrator.</span><code><span class="memberNameLink"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineExecutionOrchestrator.html#execute(org.junit.platform.launcher.core.LauncherDiscoveryResult,org.junit.platform.engine.EngineExecutionListener)">execute</a></span>&#8203;(<a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryResult</a>&nbsp;discoveryResult,
+       <a href="../EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;listener)</code></th>
+<td class="colLast">
+<div class="block">Executes tests for the supplied <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">discovery results</a> and notifies the supplied <a href="../EngineExecutionListener.html" title="interface in org.junit.platform.engine">listener</a> of execution events.</div>
 </td>
 </tr>
 </tbody>

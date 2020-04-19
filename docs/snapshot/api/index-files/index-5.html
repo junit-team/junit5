@@ -227,6 +227,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block"><code>EngineDiscoveryListener</code> contains <a href="../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> access to the
  information necessary to discover tests and containers.</div>
 </dd>
+<dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineDiscoveryOrchestrator.html" title="class in org.junit.platform.launcher.core"><span class="typeNameLink">EngineDiscoveryOrchestrator</span></a> - Class in <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/package-summary.html">org.junit.platform.launcher.core</a></dt>
+<dd>
+<div class="block">Orchestrates test discovery using the configured test engines.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineDiscoveryOrchestrator.html#%3Cinit%3E(java.lang.Iterable)">EngineDiscoveryOrchestrator(Iterable&lt;TestEngine&gt;)</a></span> - Constructor for class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineDiscoveryOrchestrator.html" title="class in org.junit.platform.launcher.core">EngineDiscoveryOrchestrator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">EngineDiscoveryRequest</span></a> - Interface in <a href="../org.junit.platform.engine/org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
 <dd>
 <div class="block"><code>EngineDiscoveryRequest</code> provides a <a href="../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> access to the
@@ -272,6 +278,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Listener to be notified of test execution events by
  <a href="../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">test engines</a>.</div>
 </dd>
+<dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineExecutionOrchestrator.html" title="class in org.junit.platform.launcher.core"><span class="typeNameLink">EngineExecutionOrchestrator</span></a> - Class in <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/package-summary.html">org.junit.platform.launcher.core</a></dt>
+<dd>
+<div class="block">Orchestrates test execution using the configured test engines.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineExecutionOrchestrator.html#%3Cinit%3E()">EngineExecutionOrchestrator()</a></span> - Constructor for class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineExecutionOrchestrator.html" title="class in org.junit.platform.launcher.core">EngineExecutionOrchestrator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine"><span class="typeNameLink">EngineExecutionResults</span></a> - Class in <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></dt>
 <dd>
 <div class="block"><code>EngineExecutionResults</code> provides a fluent API for processing the
@@ -571,7 +583,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html#execute(java.lang.String,org.junit.platform.engine.EngineDiscoveryRequest)">execute(String, EngineDiscoveryRequest)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html" title="class in org.junit.platform.testkit.engine">EngineTestKit</a></dt>
 <dd>
-<div class="block">Execute tests for the given <a href="../org.junit.platform.engine/org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> using the
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html#execute(java.lang.String,org.junit.platform.launcher.LauncherDiscoveryRequest)"><code>EngineTestKit.execute(String, LauncherDiscoveryRequest)</code></a>
+ instead.</div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html#execute(java.lang.String,org.junit.platform.launcher.LauncherDiscoveryRequest)">execute(String, LauncherDiscoveryRequest)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html" title="class in org.junit.platform.testkit.engine">EngineTestKit</a></dt>
+<dd>
+<div class="block">Execute tests for the given <a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryRequest</code></a> using the
  <a href="../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> with the supplied ID.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html#execute(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execute(JupiterEngineExecutionContext, Node.DynamicTestExecutor)</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestMethodTestDescriptor</a></dt>
@@ -610,8 +629,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html#execute(org.junit.platform.engine.TestEngine,org.junit.platform.engine.EngineDiscoveryRequest)">execute(TestEngine, EngineDiscoveryRequest)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html" title="class in org.junit.platform.testkit.engine">EngineTestKit</a></dt>
 <dd>
-<div class="block">Execute tests for the given <a href="../org.junit.platform.engine/org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> using the
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html#execute(org.junit.platform.engine.TestEngine,org.junit.platform.launcher.LauncherDiscoveryRequest)"><code>EngineTestKit.execute(TestEngine, LauncherDiscoveryRequest)</code></a>
+ instead.</div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html#execute(org.junit.platform.engine.TestEngine,org.junit.platform.launcher.LauncherDiscoveryRequest)">execute(TestEngine, LauncherDiscoveryRequest)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html" title="class in org.junit.platform.testkit.engine">EngineTestKit</a></dt>
+<dd>
+<div class="block">Execute tests for the given <a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryRequest</code></a> using the
  supplied <a href="../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineExecutionOrchestrator.html#execute(org.junit.platform.launcher.core.LauncherDiscoveryResult,org.junit.platform.engine.EngineExecutionListener)">execute(LauncherDiscoveryResult, EngineExecutionListener)</a></span> - Method in class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineExecutionOrchestrator.html" title="class in org.junit.platform.launcher.core">EngineExecutionOrchestrator</a></dt>
+<dd>
+<div class="block">Executes tests for the supplied <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">discovery results</a> and notifies the supplied <a href="../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">listener</a> of execution events.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html#execute(org.junit.platform.launcher.LauncherDiscoveryRequest,org.junit.platform.launcher.TestExecutionListener...)">execute(LauncherDiscoveryRequest, TestExecutionListener...)</a></span> - Method in interface org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher">Launcher</a></dt>
 <dd>
