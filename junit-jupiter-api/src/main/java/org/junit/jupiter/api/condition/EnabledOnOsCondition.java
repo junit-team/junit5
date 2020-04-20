@@ -10,11 +10,8 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-
 import java.util.Arrays;
 
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -31,26 +28,7 @@ class EnabledOnOsCondition extends BooleanExecutionCondition<EnabledOnOs> {
 	static final String DISABLED_ON_CURRENT_OS = "Disabled on operating system: " + System.getProperty("os.name");
 
 	EnabledOnOsCondition() {
-		super(EnabledOnOs.class);
-	}
-
-	@Override
-	ConditionEvaluationResult defaultResult() {
-		return enabled("@EnabledOnOs is not present");
-	}
-
-	@Override
-	String disabledReason(EnabledOnOs annotation) {
-		String customReason = annotation.disabledReason();
-		if (customReason.isEmpty()) {
-			return DISABLED_ON_CURRENT_OS;
-		}
-		return String.format("%s ==> %s", DISABLED_ON_CURRENT_OS, customReason);
-	}
-
-	@Override
-	String enabledReason(EnabledOnOs annotation) {
-		return ENABLED_ON_CURRENT_OS;
+		super(EnabledOnOs.class, ENABLED_ON_CURRENT_OS, DISABLED_ON_CURRENT_OS, EnabledOnOs::disabledReason);
 	}
 
 	@Override

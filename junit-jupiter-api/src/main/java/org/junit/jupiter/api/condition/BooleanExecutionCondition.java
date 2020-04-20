@@ -16,6 +16,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -25,15 +26,17 @@ public abstract class BooleanExecutionCondition<A extends Annotation> implements
 
 	private final Class<A> annotationType;
 
-	protected BooleanExecutionCondition(Class<A> annotationType) {
+	private final String enabledReason;
+	private final String disabledReason;
+	private final Function<A, String> customDisabledReason;
+
+	BooleanExecutionCondition(Class<A> annotationType, String enabledReason, String disabledReason,
+			Function<A, String> customDisabledReason) {
 		this.annotationType = annotationType;
+		this.enabledReason = enabledReason;
+		this.disabledReason = disabledReason;
+		this.customDisabledReason = customDisabledReason;
 	}
-
-	abstract ConditionEvaluationResult defaultResult();
-
-	abstract String disabledReason(A annotation);
-
-	abstract String enabledReason(A annotation);
 
 	abstract boolean isEnabled(A annotation);
 
@@ -42,9 +45,22 @@ public abstract class BooleanExecutionCondition<A extends Annotation> implements
 		Optional<A> optional = findAnnotation(context.getElement(), annotationType);
 		if (optional.isPresent()) {
 			A annotation = optional.get();
-			return isEnabled(annotation) ? enabled(enabledReason(annotation)) : disabled(disabledReason(annotation));
+			return isEnabled(annotation) ? enabled(enabledReason) : disabled(disabledReason(annotation));
 		}
-		return defaultResult();
+		return enabledByDefault();
+	}
+
+	private String disabledReason(A annotation) {
+		String customReason = customDisabledReason.apply(annotation);
+		if (customReason.isEmpty()) {
+			return disabledReason;
+		}
+		return String.format("%s ==> %s", disabledReason, customReason);
+	}
+
+	private ConditionEvaluationResult enabledByDefault() {
+		String reason = String.format("@%s is not present", annotationType.getSimpleName());
+		return enabled(reason);
 	}
 
 }
