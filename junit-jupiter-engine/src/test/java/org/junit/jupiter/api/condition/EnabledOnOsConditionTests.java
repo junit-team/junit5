@@ -31,6 +31,8 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 
+	private static final String OS_NAME = System.getProperty("os.name");
+
 	@Override
 	protected ExecutionCondition getExecutionCondition() {
 		return new EnabledOnOsCondition();
@@ -120,17 +122,23 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void other() {
 		evaluateCondition();
-		assertEnabledOnCurrentOsIf(!(onLinux() || onMac() || onSolaris() || onWindows()));
+		assertEnabledOnCurrentOsIf(!(onLinux() || onMac() || onSolaris() || onWindows()),
+			"Disabled on almost every OS");
 	}
 
 	private void assertEnabledOnCurrentOsIf(boolean condition) {
+		assertEnabledOnCurrentOsIf(condition, null);
+	}
+
+	private void assertEnabledOnCurrentOsIf(boolean condition, String customDisabledReason) {
 		if (condition) {
 			assertEnabled();
-			assertReasonContains("Enabled on operating system: " + System.getProperty("os.name"));
+			assertReasonContains("Enabled on operating system: " + OS_NAME);
 		}
 		else {
 			assertDisabled();
-			assertReasonContains("Disabled on operating system: " + System.getProperty("os.name"));
+			assertReasonContains("Disabled on operating system: " + OS_NAME //
+					+ (customDisabledReason == null ? "" : " ==> " + customDisabledReason));
 		}
 	}
 
