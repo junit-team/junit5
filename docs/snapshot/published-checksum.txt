@@ -32,7 +32,6 @@
 0cecd0c8dfd0e435fdf1125c5736407f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Execution.java
 0cf0f420d5992d4ee327641258591b16  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseResults.java
 0cfd5dbc9cbbc24d5a5ca836c6c26718  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicTestTestDescriptor.java
-0d4333fd286a04dfbee3e3339b3da3b5  documentation/src/docs/asciidoc/release-notes/index.adoc
 0ddd356184dace9456fde694e2f6ee45  junit-platform-launcher/src/main/java/org/junit/platform/launcher/Launcher.java
 0e3243fcecf6ea279b311312861e099e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodFinder.java
 0f24ccde7756c65a10c4d136644134e5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotEquals.java
@@ -630,6 +629,7 @@ eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit
 eab4a4b60983b3e8ac6d4be11edc4248  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotNull.java
 eb06ab8e739753de5ce92e278865c951  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageSelector.java
 ebf861b91d3c0781002d84c5f4f78062  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ClassSupport.java
+ec2e587332cf65f95b9162c820a10ac2  documentation/src/docs/asciidoc/release-notes/index.adoc
 ec5b587d60bcff9a477ad3e57e69f163  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
 eca8f212417ac57d948d5dc0e40f00ec  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
 ed727cde31649f571d7469060eab244e  junit-platform-engine/src/main/java/org/junit/platform/engine/ExecutionRequest.java
@@ -673,6 +673,7 @@ fca61e8b537bbc713951aa48a9756027  junit-platform-launcher/src/main/java/org/juni
 fd1dce59ed7608c81139a55116cd9013  documentation/src/test/java/example/registration/DocumentationDemo.java
 fda07e50bb1910df853f7e8e1ae7a013  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeExecutionAdvisor.java
 fdac89a74e03fcea057df79898e0893c  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java
+fde93d19cf94a9b6ac2e628baa33a095  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M2.adoc
 fe150fed05a64f57df74cd89a87d474e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/ClasspathScanningSupport.java
 fe68bd8a2799ff750d17f9e4d4156a2b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertFalse.java
 fe99b3c49b9cefe65e5a54e82859be9e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
