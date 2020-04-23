@@ -134,7 +134,7 @@ class DiscoveryRequestCreator {
 		classNamePatterns.addAll(patterns.getIncludedClassNamePatterns());
 		classNamePatterns.addAll(patterns.getSelectedClasses());
 		classNamePatterns.addAll(patterns.getSelectedMethods().stream() //
-				.map(fullyQualifiedName -> fullyQualifiedName.split("#")[0]) //
+				.map(name -> ReflectionUtils.parseFullyQualifiedMethodName(name)[0]) //
 				.collect(Collectors.toList()));
 		return includeClassNamePatterns(classNamePatterns.toArray(new String[0]));
 	}
