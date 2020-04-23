@@ -27,12 +27,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -95,7 +97,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
-		requestBuilder.filters(includeClassNamePatterns(options.getIncludedClassNamePatterns().toArray(new String[0])));
+		requestBuilder.filters(includedClassNamePatterns(options));
 
 		if (!options.getExcludedClassNamePatterns().isEmpty()) {
 			requestBuilder.filters(
@@ -125,6 +127,16 @@ class DiscoveryRequestCreator {
 		if (!options.getExcludedEngines().isEmpty()) {
 			requestBuilder.filters(excludeEngines(options.getExcludedEngines()));
 		}
+	}
+
+	private ClassNameFilter includedClassNamePatterns(CommandLineOptions patterns) {
+		List<String> classNamePatterns = new ArrayList<>();
+		classNamePatterns.addAll(patterns.getIncludedClassNamePatterns());
+		classNamePatterns.addAll(patterns.getSelectedClasses());
+		classNamePatterns.addAll(patterns.getSelectedMethods().stream() //
+				.map(fullyQualifiedName -> fullyQualifiedName.split("#")[0]) //
+				.collect(Collectors.toList()));
+		return includeClassNamePatterns(classNamePatterns.toArray(new String[0]));
 	}
 
 }

@@ -277,6 +277,21 @@ class DiscoveryRequestCreatorTests {
 		assertThat(configurationParameters.getBoolean("baz")).contains(true);
 	}
 
+	@Test
+	void includeSelectedClassesAndMethodsRegardlessOfClassNamePatterns() {
+		options.setSelectedClasses(singletonList("SomeTest"));
+		options.setSelectedMethods(asList("com.acme.Foo#m()"));
+		options.setIncludedClassNamePatterns(asList("Foo.*Bar"));
+
+		LauncherDiscoveryRequest request = convert();
+
+		List<ClassNameFilter> filter = request.getFiltersByType(ClassNameFilter.class);
+		assertThat(filter).hasSize(1);
+		assertThat(filter.get(0).toString()).contains("SomeTest");
+		assertThat(filter.get(0).toString()).contains("com.acme.Foo");
+		assertThat(filter.get(0).toString()).contains("Foo.*Bar");
+	}
+
 	private LauncherDiscoveryRequest convert() {
 		DiscoveryRequestCreator creator = new DiscoveryRequestCreator();
 		return creator.toDiscoveryRequest(options);
