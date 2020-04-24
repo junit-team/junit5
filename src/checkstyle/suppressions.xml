@@ -4,4 +4,6 @@
 		files="junit-platform-commons[\\/]src[\\/]main[\\/]java9[\\/]org[\\/]junit[\\/]platform[\\/]commons[\\/]util[\\/]*"/>
 	<suppress checks="JavadocPackage"
 		files="junit-platform-console[\\/]src[\\/]main[\\/]java9[\\/]org[\\/]junit[\\/]platform[\\/]console[\\/]*"/>
+	<suppress checks="JavadocPackage"
+		files="junit-platform-launcher[\\/]src[\\/]main[\\/]java9[\\/]org[\\/]junit[\\/]platform[\\/]launcher[\\/]listeners[\\/]*"/>
 </suppressions>
