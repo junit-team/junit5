@@ -18,9 +18,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import jdk.jfr.Category;
-import jdk.jfr.Description;
 import jdk.jfr.Event;
 import jdk.jfr.Label;
+import jdk.jfr.Name;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
@@ -50,7 +50,8 @@ public class FlightRecordingListener implements TestExecutionListener {
 	public void testPlanExecutionStarted(TestPlan plan) {
 		TestPlanExecutionEvent event = new TestPlanExecutionEvent();
 		event.containsTests = plan.containsTests();
-		event.roots = plan.getRoots().stream().map(TestIdentifier::getUniqueId).collect(Collectors.joining("\t"));
+		event.rootContainerIds = plan.getRoots().stream().map(TestIdentifier::getUniqueId).collect(
+			Collectors.joining("#"));
 		testPlanExecutionEvent.set(event);
 		event.begin();
 	}
@@ -58,7 +59,6 @@ public class FlightRecordingListener implements TestExecutionListener {
 	@Override
 	public void testPlanExecutionFinished(TestPlan plan) {
 		TestPlanExecutionEvent event = testPlanExecutionEvent.get();
-		event.end();
 		event.commit();
 	}
 
@@ -82,9 +82,9 @@ public class FlightRecordingListener implements TestExecutionListener {
 	@Override
 	public void executionStarted(TestIdentifier test) {
 		TestExecutionEvent event = new TestExecutionEvent();
-		event.begin();
 		event.uniqueId = test.getUniqueId();
 		event.displayName = test.getDisplayName();
+		event.begin();
 		testExecutionEventMap.put(test.getUniqueId(), event);
 	}
 
@@ -97,33 +97,40 @@ public class FlightRecordingListener implements TestExecutionListener {
 	}
 
 	@Category("JUnit")
-	@Description("Test Plan Execution")
+	@Name("org.junit.TestPlan")
+	@Label("Test Plan")
 	static class TestPlanExecutionEvent extends Event {
-		@Label("Does test plan contain tests?")
+
+		@Label("Contains Tests")
 		boolean containsTests;
-		@Label("UniqueIds of the root containers")
-		String roots;
+
+		@Label("Root Containers Ids")
+		String rootContainerIds;
 	}
 
 	@Category("JUnit")
+	@Name("org.junit.Test")
+	@Label("Test")
 	static abstract class TestEvent extends Event {
-		@Label("UniqueId")
+
+		@Label("Unique Id")
 		String uniqueId;
+
 		@Label("Display Name")
 		String displayName;
 	}
 
-	@Description("Dynamic Test Registration")
+	@Name("org.junit.DynamicTestRegistration")
 	static class DynamicTestEvent extends TestEvent {
 	}
 
-	@Description("Skipped Test")
+	@Name("org.junit.SkippedTest")
 	static class SkippedTestEvent extends TestEvent {
 		@Label("Reason")
 		String reason;
 	}
 
-	@Description("Test Execution")
+	@Name("org.junit.TestExecution")
 	static class TestExecutionEvent extends TestEvent {
 		@Label("Result")
 		String result;
