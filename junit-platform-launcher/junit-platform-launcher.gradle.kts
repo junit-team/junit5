@@ -28,6 +28,14 @@ tasks.jar {
 	}
 }
 
+tasks.compileMainRelease9Java {
+	doFirst {
+		val index = options.compilerArgs.indexOf("--release")
+		options.compilerArgs.removeAt(index)
+		options.compilerArgs.removeAt(index)
+	}
+}
+
 eclipse {
 	classpath {
 		sourceSets -= project.sourceSets.mainRelease9.get()
