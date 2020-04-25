@@ -120,7 +120,10 @@ class ModularUserGuideTests {
 		));
 
 		command.add("--add-modules");
-		command.add("documentation");
+		command.add("documentation,jdk.jfr");
+
+		command.add("--add-reads");
+		command.add("org.junit.platform.launcher=jdk.jfr");
 
 		// TODO This `patch-module` should work! Why doesn't it?
 		// command.add("--patch-module");
