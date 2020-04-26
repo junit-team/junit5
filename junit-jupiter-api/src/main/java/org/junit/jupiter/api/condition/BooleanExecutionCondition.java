@@ -25,7 +25,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 public abstract class BooleanExecutionCondition<A extends Annotation> implements ExecutionCondition {
 
 	private final Class<A> annotationType;
-
 	private final String enabledReason;
 	private final String disabledReason;
 	private final Function<A, String> customDisabledReason;

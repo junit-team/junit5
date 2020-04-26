@@ -10,15 +10,7 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
-import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-
-import java.util.Optional;
-
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
  * {@link ExecutionCondition} for {@link DisabledIf @DisabledIf}.
@@ -26,36 +18,14 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * @since 5.7
  * @see DisabledIf
  */
-class DisabledIfCondition extends MethodBasedCondition {
+class DisabledIfCondition extends MethodBasedCondition<DisabledIf> {
 
-	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled("@DisabledIf is not present");
-	private static final ConditionEvaluationResult ENABLED = enabled(
-		"Condition provided in @DisabledIf evaluates to false");
-	private static final ConditionEvaluationResult DISABLED = disabled(
-		"Condition provided in @DisabledIf evaluates to true");
-
-	@Override
-	Optional<String> getMethodName(ExtensionContext context) {
-		return findAnnotation(context.getElement(), DisabledIf.class) //
-				.map(DisabledIf::value);
+	DisabledIfCondition() {
+		super(DisabledIf.class, DisabledIf::value, DisabledIf::disabledReason);
 	}
 
 	@Override
-	ConditionEvaluationResult getDefaultResult() {
-		return ENABLED_BY_DEFAULT;
+	protected boolean isEnabled(boolean methodResult) {
+		return !methodResult;
 	}
-
-	@Override
-	ConditionEvaluationResult getResultBasedOnBoolean(boolean methodResult, ExtensionContext context) {
-		if (!methodResult) {
-			return ENABLED;
-		}
-		String customReason = findAnnotation(context.getElement(), DisabledIf.class) //
-				.map(DisabledIf::disabledReason).get();
-		if (customReason.isEmpty()) {
-			return DISABLED;
-		}
-		return disabled(customReason);
-	}
-
 }
