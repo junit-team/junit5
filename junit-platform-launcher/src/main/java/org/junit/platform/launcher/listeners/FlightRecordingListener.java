@@ -38,10 +38,6 @@ public class FlightRecordingListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-	}
-
-	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 	}
 
