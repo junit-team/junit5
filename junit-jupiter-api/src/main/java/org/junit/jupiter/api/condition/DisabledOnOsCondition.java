@@ -21,8 +21,8 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * {@link ExecutionCondition} for {@link DisabledOnOs @DisabledOnOs}.
  *
- * @see DisabledOnOs
  * @since 5.1
+ * @see DisabledOnOs
  */
 class DisabledOnOsCondition extends BooleanExecutionCondition<DisabledOnOs> {
 

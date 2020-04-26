@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public abstract class BooleanExecutionCondition<A extends Annotation> implements ExecutionCondition {
+abstract class BooleanExecutionCondition<A extends Annotation> implements ExecutionCondition {
 
 	private final Class<A> annotationType;
 	private final String enabledReason;

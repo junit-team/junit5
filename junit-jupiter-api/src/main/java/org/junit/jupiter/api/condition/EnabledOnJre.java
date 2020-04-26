@@ -49,6 +49,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * this annotation may be used in conjunction with other {@code @Enabled*} or
  * {@code @Disabled*} annotations in this package.
  *
+ * @since 5.1
  * @see JRE
  * @see org.junit.jupiter.api.condition.DisabledOnJre
  * @see org.junit.jupiter.api.condition.EnabledForJreRange
@@ -62,7 +63,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @see org.junit.jupiter.api.condition.EnabledIf
  * @see org.junit.jupiter.api.condition.DisabledIf
  * @see org.junit.jupiter.api.Disabled
- * @since 5.1
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

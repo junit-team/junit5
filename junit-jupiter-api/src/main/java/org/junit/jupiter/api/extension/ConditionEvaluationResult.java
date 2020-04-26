@@ -29,7 +29,6 @@ public class ConditionEvaluationResult {
 	 * Factory for creating <em>enabled</em> results.
 	 *
 	 * @param reason the reason why the container or test should be enabled
-	 *
 	 * @return an enabled {@code ConditionEvaluationResult} with the given reason
 	 */
 	public static ConditionEvaluationResult enabled(String reason) {
@@ -40,7 +39,6 @@ public class ConditionEvaluationResult {
 	 * Factory for creating <em>disabled</em> results.
 	 *
 	 * @param reason the reason why the container or test should be disabled
-	 *
 	 * @return a disabled {@code ConditionEvaluationResult} with the given reason
 	 */
 	public static ConditionEvaluationResult disabled(String reason) {
@@ -53,7 +51,6 @@ public class ConditionEvaluationResult {
 	 *
 	 * @param reason the default reason why the container or test should be disabled
 	 * @param customReason the custom reason why the container or test should be disabled
-	 *
 	 * @return a disabled {@code ConditionEvaluationResult} with the given reasons
 	 */
 	public static ConditionEvaluationResult disabled(String reason, String customReason) {
