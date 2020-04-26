@@ -134,7 +134,7 @@ class XmlReportWriter {
 		for (String propertyName : new TreeSet<>(systemProperties.stringPropertyNames())) {
 			writer.writeEmptyElement("property");
 			writer.writeAttribute("name", propertyName);
-			writer.writeAttribute("value", systemProperties.getProperty(propertyName));
+			writer.writeAttribute("value", escapeIllegalChars(systemProperties.getProperty(propertyName)));
 			newLine(writer);
 		}
 		writer.writeEndElement();
@@ -217,7 +217,7 @@ class XmlReportWriter {
 			throws XMLStreamException {
 
 		if (throwable.getMessage() != null) {
-			writer.writeAttribute("message", throwable.getMessage());
+			writer.writeAttribute("message", escapeIllegalChars(throwable.getMessage()));
 		}
 		writer.writeAttribute("type", throwable.getClass().getName());
 		writeCDataSafely(writer, readStackTrace(throwable));
@@ -298,9 +298,35 @@ class XmlReportWriter {
 	}
 
 	private void writeCDataSafely(XMLStreamWriter writer, String data) throws XMLStreamException {
-		for (String safeDataPart : CDATA_SPLIT_PATTERN.split(data)) {
+		for (String safeDataPart : CDATA_SPLIT_PATTERN.split(escapeIllegalChars(data))) {
 			writer.writeCData(safeDataPart);
 		}
+	}
+
+	static String escapeIllegalChars(String text) {
+		if (text.codePoints().allMatch(XmlReportWriter::isAllowedXmlCharacter)) {
+			return text;
+		}
+		StringBuilder result = new StringBuilder(text.length() * 2);
+		text.codePoints().forEach(codePoint -> {
+			if (isAllowedXmlCharacter(codePoint)) {
+				result.appendCodePoint(codePoint);
+			}
+			else { // use a Character Reference (cf. https://www.w3.org/TR/xml/#NT-CharRef)
+				result.append("&#").append(codePoint).append(';');
+			}
+		});
+		return result.toString();
+	}
+
+	private static boolean isAllowedXmlCharacter(int codePoint) {
+		// source: https://www.w3.org/TR/xml/#charsets
+		return codePoint == 0x9 //
+				|| codePoint == 0xA //
+				|| codePoint == 0xD //
+				|| (codePoint >= 0x20 && codePoint <= 0xD7FF) //
+				|| (codePoint >= 0xE000 && codePoint <= 0xFFFD) //
+				|| (codePoint >= 0x10000 && codePoint <= 0x10FFFF);
 	}
 
 	private void newLine(XMLStreamWriter xmlWriter) throws XMLStreamException {
