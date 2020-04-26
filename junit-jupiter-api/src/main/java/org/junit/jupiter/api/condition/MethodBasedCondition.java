@@ -28,14 +28,14 @@ abstract class MethodBasedCondition implements ExecutionCondition {
 
 	abstract ConditionEvaluationResult getDefaultResult();
 
-	abstract ConditionEvaluationResult getResultBasedOnBoolean(boolean result);
+	abstract ConditionEvaluationResult getResultBasedOnBoolean(boolean methodResult, ExtensionContext context);
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
 		return getMethodName(context) //
 				.map(methodName -> getConditionMethod(methodName, context)) //
 				.map(method -> (boolean) evaluateCondition(method, context)) //
-				.map(this::getResultBasedOnBoolean) //
+				.map(result -> getResultBasedOnBoolean(result, context)) //
 				.orElse(getDefaultResult());
 	}
 

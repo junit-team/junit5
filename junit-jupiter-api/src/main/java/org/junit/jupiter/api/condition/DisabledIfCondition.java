@@ -46,8 +46,16 @@ class DisabledIfCondition extends MethodBasedCondition {
 	}
 
 	@Override
-	ConditionEvaluationResult getResultBasedOnBoolean(boolean result) {
-		return result ? DISABLED : ENABLED;
+	ConditionEvaluationResult getResultBasedOnBoolean(boolean methodResult, ExtensionContext context) {
+		if (!methodResult) {
+			return ENABLED;
+		}
+		String customReason = findAnnotation(context.getElement(), DisabledIf.class) //
+				.map(DisabledIf::disabledReason).get();
+		if (customReason.isEmpty()) {
+			return DISABLED;
+		}
+		return disabled(customReason);
 	}
 
 }
