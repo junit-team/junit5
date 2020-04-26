@@ -12,6 +12,8 @@ package org.junit.platform.launcher.listeners;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -21,6 +23,7 @@ import jdk.jfr.Category;
 import jdk.jfr.Event;
 import jdk.jfr.Label;
 import jdk.jfr.Name;
+import jdk.jfr.StackTrace;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
@@ -51,8 +54,8 @@ public class FlightRecordingListener implements TestExecutionListener {
 	public void testPlanExecutionStarted(TestPlan plan) {
 		TestPlanExecutionEvent event = new TestPlanExecutionEvent();
 		event.containsTests = plan.containsTests();
-		event.rootContainerIds = plan.getRoots().stream().map(TestIdentifier::getUniqueId).collect(
-			Collectors.joining("#"));
+		event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
+			Collectors.joining(", "));
 		testPlanExecutionEvent.set(event);
 		event.begin();
 	}
@@ -66,8 +69,7 @@ public class FlightRecordingListener implements TestExecutionListener {
 	@Override
 	public void executionSkipped(TestIdentifier test, String reason) {
 		SkippedTestEvent event = new SkippedTestEvent();
-		event.uniqueId = test.getUniqueId();
-		event.displayName = test.getDisplayName();
+		event.initialize(test);
 		event.reason = reason;
 		event.commit();
 	}
@@ -76,74 +78,80 @@ public class FlightRecordingListener implements TestExecutionListener {
 	public void executionStarted(TestIdentifier test) {
 		TestExecutionEvent event = new TestExecutionEvent();
 		testExecutionEventMap.put(test.getUniqueId(), event);
-		event.uniqueId = test.getUniqueId();
-		event.displayName = test.getDisplayName();
+		event.initialize(test);
 		event.begin();
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
-		TestExecutionEvent event = testExecutionEventMap.get(test.getUniqueId());
+		if (test.isContainer() && result.getStatus().equals(TestExecutionResult.Status.SUCCESSFUL)) {
+			return;
+		}
+		TestExecutionEvent event = testExecutionEventMap.get(test.getUniqueId()); // TODO Remove?
 		event.end();
+		event.reports = event.reportEntries == null ? null : event.reportEntries.toString();
 		event.result = result.getStatus().toString();
+		event.throwable = result.getThrowable().map(Throwable::getMessage).orElse(null); // TODO Include stacktrace?
 		event.commit();
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier test, ReportEntry entry) {
-		ReportEntryEvent event = new ReportEntryEvent();
-		event.uniqueId = test.getUniqueId();
-		event.map = entry.getKeyValuePairs().entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).collect(
-			Collectors.joining(", ", "[", "]"));
-		event.commit();
+		TestExecutionEvent event = testExecutionEventMap.get(test.getUniqueId());
+		if (event.reportEntries == null) {
+			event.reportEntries = new ArrayList<>();
+		}
+		event.reportEntries.add(entry);
 	}
 
 	@Category("JUnit")
-	@Name("org.junit.TestPlan")
 	@Label("Test Plan")
+	@Name("org.junit.TestPlan")
+	@StackTrace(false)
 	static class TestPlanExecutionEvent extends Event {
 		@Label("Contains Tests")
 		boolean containsTests;
-		@Label("Root Containers Ids")
-		String rootContainerIds;
+		@Label("Engine Names")
+		String engineNames;
 	}
 
 	@Category("JUnit")
-	@Name("org.junit.Test")
-	@Label("Test")
-	static abstract class TestEvent extends Event {
+	@StackTrace(false)
+	abstract static class TestEvent extends Event {
 		@Label("Unique Id")
 		String uniqueId;
 		@Label("Display Name")
 		String displayName;
+		@Label("Tags")
+		String tags;
+		@Label("Type")
+		String type;
+		@Label("Reports")
+		String reports;
+		// initialized on-the-fly, used to fill the `reports` field
+		transient List<ReportEntry> reportEntries;
+
+		void initialize(TestIdentifier test) {
+			this.uniqueId = test.getUniqueId();
+			this.displayName = test.getDisplayName();
+			this.tags = test.getTags().isEmpty() ? null : test.getTags().toString();
+			this.type = test.getType().name();
+		}
 	}
 
-	@Name("org.junit.DynamicTestRegistration")
-	@Label("Dynamic Test Registration")
-	static class DynamicTestEvent extends TestEvent {
-	}
-
-	@Name("org.junit.SkippedTest")
 	@Label("Skipped Test")
+	@Name("org.junit.SkippedTest")
 	static class SkippedTestEvent extends TestEvent {
 		@Label("Reason")
 		String reason;
 	}
 
-	@Name("org.junit.TestExecution")
 	@Label("Test")
+	@Name("org.junit.TestExecution")
 	static class TestExecutionEvent extends TestEvent {
 		@Label("Result")
 		String result;
-	}
-
-	@Category("JUnit")
-	@Name("org.junit.ReportEntry")
-	@Label("Report Entry")
-	static class ReportEntryEvent extends Event {
-		@Label("Unique Id")
-		String uniqueId;
-		@Label("Key-Value Map")
-		String map;
+		@Label("Throwable")
+		String throwable;
 	}
 }
