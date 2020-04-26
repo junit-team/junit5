@@ -64,14 +64,6 @@ public class FlightRecordingListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void dynamicTestRegistered(TestIdentifier test) {
-		DynamicTestEvent event = new DynamicTestEvent();
-		event.uniqueId = test.getUniqueId();
-		event.displayName = test.getDisplayName();
-		event.commit();
-	}
-
-	@Override
 	public void executionSkipped(TestIdentifier test, String reason) {
 		SkippedTestEvent event = new SkippedTestEvent();
 		event.uniqueId = test.getUniqueId();
