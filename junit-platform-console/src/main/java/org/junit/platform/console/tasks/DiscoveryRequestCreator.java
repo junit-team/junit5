@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.function.Function;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -129,14 +131,17 @@ class DiscoveryRequestCreator {
 		}
 	}
 
-	private ClassNameFilter includedClassNamePatterns(CommandLineOptions patterns) {
-		List<String> classNamePatterns = new ArrayList<>();
-		classNamePatterns.addAll(patterns.getIncludedClassNamePatterns());
-		classNamePatterns.addAll(patterns.getSelectedClasses());
-		classNamePatterns.addAll(patterns.getSelectedMethods().stream() //
-				.map(name -> ReflectionUtils.parseFullyQualifiedMethodName(name)[0]) //
-				.collect(Collectors.toList()));
-		return includeClassNamePatterns(classNamePatterns.toArray(new String[0]));
+	private ClassNameFilter includedClassNamePatterns(CommandLineOptions options) {
+		Stream<Stream<String>> patternStreams = Stream.of( //
+			options.getIncludedClassNamePatterns().stream(), //
+			options.getSelectedClasses().stream() //
+					.map(Pattern::quote), //
+			options.getSelectedMethods().stream() //
+					.map(name -> ReflectionUtils.parseFullyQualifiedMethodName(name)[0]) //
+					.map(Pattern::quote));
+		return includeClassNamePatterns(patternStreams //
+				.flatMap(Function.identity()) //
+				.toArray(String[]::new));
 	}
 
 }

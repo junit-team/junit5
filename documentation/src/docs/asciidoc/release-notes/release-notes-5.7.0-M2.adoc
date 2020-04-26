@@ -25,7 +25,7 @@ on GitHub.
 
 * When using `ConsoleLauncher`, explicitly selected classes from `--select-class`
   and `--select-method` are now always executed regardless of class name patterns
-  provided with `--include-classname`.
+  provided with `--include-classname` or the default class name pattern.
 
 
 [[release-notes-5.7.0-M2-junit-jupiter]]

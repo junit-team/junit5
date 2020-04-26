@@ -112,7 +112,7 @@ class DiscoveryRequestCreatorTests {
 
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filters).hasSize(1);
-		assertFilters(filters.get(0), STANDARD_INCLUDE_PATTERN);
+		assertExcludes(filters.get(0), STANDARD_INCLUDE_PATTERN);
 	}
 
 	@Test
@@ -124,8 +124,8 @@ class DiscoveryRequestCreatorTests {
 
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filters).hasSize(1);
-		assertFilters(filters.get(0), "Foo.*Bar");
-		assertFilters(filters.get(0), "Bar.*Foo");
+		assertIncludes(filters.get(0), "Foo.*Bar");
+		assertIncludes(filters.get(0), "Bar.*Foo");
 	}
 
 	@Test
@@ -138,9 +138,9 @@ class DiscoveryRequestCreatorTests {
 
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filters).hasSize(1);
-		assertFilters(filters.get(0), "SomeTest");
-		assertFilters(filters.get(0), "com.acme.Foo");
-		assertFilters(filters.get(0), "Foo.*Bar");
+		assertIncludes(filters.get(0), "SomeTest");
+		assertIncludes(filters.get(0), "com.acme.Foo");
+		assertIncludes(filters.get(0), "Foo.*Bar");
 	}
 
 	@Test
@@ -152,8 +152,8 @@ class DiscoveryRequestCreatorTests {
 
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filters).hasSize(2);
-		assertFilters(filters.get(1), "Foo.*Bar");
-		assertFilters(filters.get(1), "Bar.*Foo");
+		assertExcludes(filters.get(1), "Foo.*Bar");
+		assertExcludes(filters.get(1), "Bar.*Foo");
 	}
 
 	@Test
@@ -166,10 +166,10 @@ class DiscoveryRequestCreatorTests {
 		List<PackageNameFilter> packageNameFilters = request.getFiltersByType(PackageNameFilter.class);
 
 		assertThat(packageNameFilters).hasSize(2);
-		assertFilters(packageNameFilters.get(0), "org.junit.included1");
-		assertFilters(packageNameFilters.get(0), "org.junit.included2");
-		assertFilters(packageNameFilters.get(0), "org.junit.included3");
-		assertFilters(packageNameFilters.get(1), "org.junit.excluded1");
+		assertIncludes(packageNameFilters.get(0), "org.junit.included1");
+		assertIncludes(packageNameFilters.get(0), "org.junit.included2");
+		assertIncludes(packageNameFilters.get(0), "org.junit.included3");
+		assertExcludes(packageNameFilters.get(1), "org.junit.excluded1");
 	}
 
 	@Test
@@ -182,8 +182,8 @@ class DiscoveryRequestCreatorTests {
 		List<PostDiscoveryFilter> postDiscoveryFilters = request.getPostDiscoveryFilters();
 
 		assertThat(postDiscoveryFilters).hasSize(2);
-		assertFilters(postDiscoveryFilters.get(0), "TagFilter");
-		assertFilters(postDiscoveryFilters.get(1), "TagFilter");
+		assertThat(postDiscoveryFilters.get(0).toString()).contains("TagFilter");
+		assertThat(postDiscoveryFilters.get(1).toString()).contains("TagFilter");
 	}
 
 	@Test
@@ -298,8 +298,12 @@ class DiscoveryRequestCreatorTests {
 		return creator.toDiscoveryRequest(options);
 	}
 
-	private void assertFilters(Filter<?> filter, String filteredElement) {
-		assertThat(filter.toString()).contains(filteredElement);
+	private void assertIncludes(Filter<String> filter, String included) {
+		assertThat(filter.apply(included).included()).isTrue();
+	}
+
+	private void assertExcludes(Filter<String> filter, String excluded) {
+		assertThat(filter.apply(excluded).excluded()).isTrue();
 	}
 
 	@SafeVarargs
