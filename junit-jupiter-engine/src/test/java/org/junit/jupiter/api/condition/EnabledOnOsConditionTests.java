@@ -122,23 +122,18 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void other() {
 		evaluateCondition();
-		assertEnabledOnCurrentOsIf(!(onLinux() || onMac() || onSolaris() || onWindows()),
-			"Disabled on almost every OS");
+		assertEnabledOnCurrentOsIf(!(onLinux() || onMac() || onSolaris() || onWindows()));
+		assertCustomDisabledReasonIs("Disabled on almost every OS");
 	}
 
 	private void assertEnabledOnCurrentOsIf(boolean condition) {
-		assertEnabledOnCurrentOsIf(condition, null);
-	}
-
-	private void assertEnabledOnCurrentOsIf(boolean condition, String customDisabledReason) {
 		if (condition) {
 			assertEnabled();
 			assertReasonContains("Enabled on operating system: " + OS_NAME);
 		}
 		else {
 			assertDisabled();
-			assertReasonContains("Disabled on operating system: " + OS_NAME //
-					+ (customDisabledReason == null ? "" : " ==> " + customDisabledReason));
+			assertReasonContains("Disabled on operating system: " + OS_NAME);
 		}
 	}
 

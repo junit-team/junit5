@@ -57,7 +57,7 @@ class EnabledForJreRangeIntegrationTests {
 	}
 
 	@Test
-	@EnabledForJreRange(min = JAVA_8, max = JAVA_11)
+	@EnabledForJreRange(min = JAVA_8, max = JAVA_11, disabledReason = "Disabled on some JRE")
 	void java8to11() {
 		assertTrue(onJava8() || onJava9() || onJava10() || onJava11());
 		assertFalse(onJava12());
