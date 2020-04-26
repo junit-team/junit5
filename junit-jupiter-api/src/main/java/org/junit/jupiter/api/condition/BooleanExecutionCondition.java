@@ -45,17 +45,10 @@ public abstract class BooleanExecutionCondition<A extends Annotation> implements
 		Optional<A> optional = findAnnotation(context.getElement(), annotationType);
 		if (optional.isPresent()) {
 			A annotation = optional.get();
-			return isEnabled(annotation) ? enabled(enabledReason) : disabled(disabledReason(annotation));
+			String customReason = customDisabledReason.apply(annotation);
+			return isEnabled(annotation) ? enabled(enabledReason) : disabled(disabledReason, customReason);
 		}
 		return enabledByDefault();
-	}
-
-	private String disabledReason(A annotation) {
-		String customReason = customDisabledReason.apply(annotation);
-		if (customReason.isEmpty()) {
-			return disabledReason;
-		}
-		return String.format("%s ==> %s", disabledReason, customReason);
 	}
 
 	private ConditionEvaluationResult enabledByDefault() {

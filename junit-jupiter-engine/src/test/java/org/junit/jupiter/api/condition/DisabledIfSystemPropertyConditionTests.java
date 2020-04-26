@@ -85,6 +85,7 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 		evaluateCondition();
 		assertDisabled();
 		assertReasonContains("matches regular expression");
+		assertCustomDisabledReasonIs("That's an enigma");
 	}
 
 	/**

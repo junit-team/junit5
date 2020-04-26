@@ -88,6 +88,7 @@ class DisabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondi
 		evaluateCondition();
 		assertDisabled();
 		assertReasonContains("matches regular expression");
+		assertCustomDisabledReasonIs("That's an enigma");
 	}
 
 	/**

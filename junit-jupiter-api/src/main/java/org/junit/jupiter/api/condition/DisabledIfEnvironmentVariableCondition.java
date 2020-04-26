@@ -54,7 +54,7 @@ class DisabledIfEnvironmentVariableCondition
 
 		if (actual.matches(regex)) {
 			return disabled(format("Environment variable [%s] with value [%s] matches regular expression [%s]", name,
-				actual, regex));
+				actual, regex), annotation.disabledReason());
 		}
 		// else
 		return enabled(format("Environment variable [%s] with value [%s] does not match regular expression [%s]", name,
