@@ -39,7 +39,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* All `@EnabledIf*`/`@DisabledIf*` annotations now have an optional `disabledReason`
+  field that can be used to provide additional explanation as to why a test or container
+  might be disabled.
 
 
 [[release-notes-5.7.0-M2-junit-vintage]]
