@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.annotation.Annotation;
-import java.util.Optional;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
@@ -41,13 +40,10 @@ abstract class BooleanExecutionCondition<A extends Annotation> implements Execut
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<A> optional = findAnnotation(context.getElement(), annotationType);
-		if (optional.isPresent()) {
-			A annotation = optional.get();
-			String customReason = customDisabledReason.apply(annotation);
-			return isEnabled(annotation) ? enabled(enabledReason) : disabled(disabledReason, customReason);
-		}
-		return enabledByDefault();
+		return findAnnotation(context.getElement(), annotationType) //
+				.map(annotation -> isEnabled(annotation) ? enabled(enabledReason)
+						: disabled(disabledReason, customDisabledReason.apply(annotation))) //
+				.orElseGet(this::enabledByDefault);
 	}
 
 	private ConditionEvaluationResult enabledByDefault() {
