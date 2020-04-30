@@ -23,7 +23,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* File system path resolution for cvs file sources in addition to class path resolution.
 
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
