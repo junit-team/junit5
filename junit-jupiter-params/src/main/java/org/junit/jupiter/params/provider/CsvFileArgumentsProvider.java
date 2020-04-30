@@ -19,6 +19,8 @@ import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
@@ -84,6 +86,11 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 	private InputStream openInputStream(ExtensionContext context, String resource) {
 		Preconditions.notBlank(resource, "Classpath resource [" + resource + "] must not be null or blank");
+		try {
+			return Files.newInputStream(Paths.get(resource));
+		}
+		catch (Exception swallowed) {
+		}
 		Class<?> testClass = context.getRequiredTestClass();
 		return Preconditions.notNull(inputStreamProvider.apply(testClass, resource),
 			() -> "Classpath resource [" + resource + "] does not exist");

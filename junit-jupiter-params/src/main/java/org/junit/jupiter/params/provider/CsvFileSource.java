@@ -22,13 +22,24 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @CsvFileSource} is an {@link ArgumentsSource} which is used to load
- * comma-separated value (CSV) files from one or more classpath {@link #resources
+ * comma-separated value (CSV) files from one or more file system or classpath {@link #resources
  * resources}.
  *
+ * 
  * <p>The lines of these CSV files will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method. Any line beginning with a
  * {@code #} symbol will be interpreted as a comment and will be ignored.
  *
+ * <p>The find resource algorithm first attempts to resolve the given resource name as file system resource
+ * using the standard java file resolution. The file system path resolution mechanism resolves relative paths against the current working directory which typically is the
+ * project root directory. If the file system resolving mechanism fails, the class path is tried. If that fails too, a error 
+ * is raised stating that the resource with a given name cannot be resolved.
+ * 
+ * 
+ *  {@code @CsvFileSource(resources={"src/test/resources/testdata.csv"})} is a typical path for a gradle or maven test data path,
+ *  as is  {@code @CsvFileSource(resources={"testdata.csv"})} which simply resides in the project root directory.  
+ * 
+ * 
  * @since 5.0
  * @see CsvSource
  * @see org.junit.jupiter.params.provider.ArgumentsSource

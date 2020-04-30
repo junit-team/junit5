@@ -148,6 +148,22 @@ class CsvFileArgumentsProviderTests {
 		assertThat(arguments).hasSize(10);
 	}
 
+	/**
+	 * Resolve file using the file system. One way to specify the default location in a gradel (and maven) build,
+	 * the second, "single-column-fs.csv" in the file system, root of the project (junit-jupiter-params).
+	 */
+	@Test
+	void readsFromMultipleFileSystemPathResources() {
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("src/test/resources/single-column.csv", "single-column-fs.csv")//
+				.build();
+
+		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).hasSize(10);
+	}
+
 	@Test
 	void readsFromSingleClasspathResourceWithHeaders() {
 		CsvFileSource annotation = csvFileSource()//
