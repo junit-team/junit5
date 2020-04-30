@@ -1218,7 +1218,7 @@ of any custom values configured via the `nullValues` attribute.
 [[writing-tests-parameterized-tests-sources-CsvFileSource]]
 ===== @CsvFileSource
 
-`@CsvFileSource` lets you use CSV files from the classpath. Each line from a CSV file
+`@CsvFileSource` lets you use CSV files from the file system and from classpath. Each line from a CSV file
 results in one invocation of the parameterized test.
 
 The default delimiter is a comma (`,`), but you can use another character by setting the
@@ -1235,6 +1235,20 @@ ignored.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example]
 ----
 
+<1> The resource `/two-column.csv` will be resolved in the class path, because the it is unlikely that
+a file named `two-column.csv` will reside in the root of any real file system.
+The same resource can also be specified with its source name as in the example below.
+
+[source,java]
+----
+@ParameterizedTest
+@CsvFileSource(resources = "src/test/resources/two-column.csv", numLinesToSkip = 1) //<1>
+// rest skipped for brevity
+----
+
+<1> File system specification of the same file in the source folder.
+
+
 [source,csv,indent=0]
 .two-column.csv
 ----
@@ -1247,7 +1261,9 @@ An empty, quoted value `""` results in an empty `String` unless the `emptyValue`
 is set; whereas, an entirely _empty_ value is interpreted as a `null` reference. By
 specifying one or more `nullValues`, a custom value can be interpreted as a `null`
 reference. An `ArgumentConversionException` is thrown if the target type of a `null`
-reference is a primitive type.
+reference is a primitive type. +
+The last line illustrates the use of '#' as comment char. Far Far Away exists only in fairy tales
+and the Shrek sequel.
 
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
