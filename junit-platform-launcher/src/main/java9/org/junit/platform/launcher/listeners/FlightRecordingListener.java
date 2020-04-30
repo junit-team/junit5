@@ -165,7 +165,7 @@ public class FlightRecordingListener implements TestExecutionListener {
 	}
 
 	@Category("JUnit")
-	@Label("ReportEntry")
+	@Label("Report Entry")
 	@Name("org.junit.ReportEntry")
 	@StackTrace(false)
 	static class ReportEntryEvent extends Event {
