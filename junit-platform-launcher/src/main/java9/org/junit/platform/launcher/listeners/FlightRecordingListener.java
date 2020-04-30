@@ -12,9 +12,12 @@ package org.junit.platform.launcher.listeners;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -22,7 +25,9 @@ import java.util.stream.Collectors;
 import jdk.jfr.Category;
 import jdk.jfr.Event;
 import jdk.jfr.Label;
+import jdk.jfr.MetadataDefinition;
 import jdk.jfr.Name;
+import jdk.jfr.Relational;
 import jdk.jfr.StackTrace;
 
 import org.apiguardian.api.API;
@@ -42,13 +47,8 @@ import org.junit.platform.launcher.TestPlan;
 @API(status = EXPERIMENTAL, since = "1.7")
 public class FlightRecordingListener implements TestExecutionListener {
 
-	private final AtomicReference<TestPlanExecutionEvent> testPlanExecutionEvent;
-	private final Map<String, TestExecutionEvent> testExecutionEventMap;
-
-	public FlightRecordingListener() {
-		this.testPlanExecutionEvent = new AtomicReference<>();
-		this.testExecutionEventMap = new ConcurrentHashMap<>();
-	}
+	private final AtomicReference<TestPlanExecutionEvent> testPlanExecutionEvent = new AtomicReference<>();
+	private final Map<String, TestExecutionEvent> testExecutionEventMap = new ConcurrentHashMap<>();
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan plan) {
@@ -87,21 +87,24 @@ public class FlightRecordingListener implements TestExecutionListener {
 		if (test.isContainer() && result.getStatus().equals(TestExecutionResult.Status.SUCCESSFUL)) {
 			return;
 		}
+		Optional<Throwable> throwable = result.getThrowable();
 		TestExecutionEvent event = testExecutionEventMap.get(test.getUniqueId()); // TODO Remove?
 		event.end();
-		event.reports = event.reportEntries == null ? null : event.reportEntries.toString();
 		event.result = result.getStatus().toString();
-		event.throwable = result.getThrowable().map(Throwable::getMessage).orElse(null); // TODO Include stacktrace?
+		event.exceptionClass = throwable.map(Throwable::getClass).orElse(null);
+		event.exceptionMessage = throwable.map(Throwable::getMessage).orElse(null);
 		event.commit();
 	}
 
 	@Override
-	public void reportingEntryPublished(TestIdentifier test, ReportEntry entry) {
-		TestExecutionEvent event = testExecutionEventMap.get(test.getUniqueId());
-		if (event.reportEntries == null) {
-			event.reportEntries = new ArrayList<>();
+	public void reportingEntryPublished(TestIdentifier test, ReportEntry reportEntry) {
+		for (Map.Entry<String, String> entry : reportEntry.getKeyValuePairs().entrySet()) {
+			ReportEntryEvent event = new ReportEntryEvent();
+			event.uniqueId = test.getUniqueId();
+			event.key = entry.getKey();
+			event.value = entry.getValue();
+			event.commit();
 		}
-		event.reportEntries.add(entry);
 	}
 
 	@Category("JUnit")
@@ -115,9 +118,17 @@ public class FlightRecordingListener implements TestExecutionListener {
 		String engineNames;
 	}
 
+	@MetadataDefinition
+	@Relational
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	public @interface UniqueId {
+	}
+
 	@Category("JUnit")
 	@StackTrace(false)
 	abstract static class TestEvent extends Event {
+		@UniqueId
 		@Label("Unique Id")
 		String uniqueId;
 		@Label("Display Name")
@@ -126,10 +137,6 @@ public class FlightRecordingListener implements TestExecutionListener {
 		String tags;
 		@Label("Type")
 		String type;
-		@Label("Reports")
-		String reports;
-		// initialized on-the-fly, used to fill the `reports` field
-		transient List<ReportEntry> reportEntries;
 
 		void initialize(TestIdentifier test) {
 			this.uniqueId = test.getUniqueId();
@@ -151,7 +158,23 @@ public class FlightRecordingListener implements TestExecutionListener {
 	static class TestExecutionEvent extends TestEvent {
 		@Label("Result")
 		String result;
-		@Label("Throwable")
-		String throwable;
+		@Label("Exception Class")
+		Class<?> exceptionClass;
+		@Label("Exception Message")
+		String exceptionMessage;
+	}
+
+	@Category("JUnit")
+	@Label("ReportEntry")
+	@Name("org.junit.ReportEntry")
+	@StackTrace(false)
+	static class ReportEntryEvent extends Event {
+		@UniqueId
+		@Label("Unique Id")
+		String uniqueId;
+		@Label("Key")
+		String key;
+		@Label("Value")
+		String value;
 	}
 }
