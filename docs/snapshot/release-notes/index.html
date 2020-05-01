@@ -474,6 +474,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#release-notes-5.7.0-M2">5.7.0-M2</a>
 <ul class="sectlevel2">
+<li><a href="#release-notes-5.7.0-M2-overall-improvements">Overall Improvements</a></li>
 <li><a href="#release-notes-5.7.0-M2-junit-platform">JUnit Platform</a></li>
 <li><a href="#release-notes-5.7.0-M2-junit-jupiter">JUnit Jupiter</a></li>
 <li><a href="#release-notes-5.7.0-M2-junit-vintage">JUnit Vintage</a></li>
@@ -532,13 +533,25 @@ the <a href="https://github.com/junit-team/junit5/milestone/5.7.0-M2?closed=1">5
 on GitHub.</p>
 </div>
 <div class="sect2">
+<h3 id="release-notes-5.7.0-M2-overall-improvements"><a class="anchor" href="#release-notes-5.7.0-M2-overall-improvements"></a>Overall Improvements</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Javadoc JARs now contain <code>package-list</code> in addition to <code>element-list</code> for compatibility
+with tools like NetBeans 11.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
 <h3 id="release-notes-5.7.0-M2-junit-platform"><a class="anchor" href="#release-notes-5.7.0-M2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
 <h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Characters in exception messages and other user-supplied values that are not allowed in
+XML are now replaced with their character reference (e.g. <code>\0</code> becomes <code>&amp;#0;</code>).</p>
 </li>
 </ul>
 </div>
@@ -1008,7 +1021,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-04-23 18:31:27 UTC
+Last updated 2020-05-01 10:50:44 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

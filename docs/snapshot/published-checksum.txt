@@ -155,6 +155,7 @@
 36380f946fbb20c3f9dec2771cbf861b  documentation/src/test/java/example/defaultmethods/ComparableContract.java
 3734ba916899d7d83c86f6e8c13b3214  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
 3735caf18d6c23d294b8834896307339  junit-platform-commons/src/main/java/org/junit/platform/commons/function/Try.java
+37568ee635d54c6878b035063db051fd  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M2.adoc
 377fb211dd9eb2d9e53fd3fc75aa0de2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.java
 37872b55e4e7f1e7ca8eac6f752912f0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemPropertyCondition.java
 37d87d01e388fa620c41266ea6e72f49  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemProperties.java
@@ -673,7 +674,6 @@ fca61e8b537bbc713951aa48a9756027  junit-platform-launcher/src/main/java/org/juni
 fd1dce59ed7608c81139a55116cd9013  documentation/src/test/java/example/registration/DocumentationDemo.java
 fda07e50bb1910df853f7e8e1ae7a013  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeExecutionAdvisor.java
 fdac89a74e03fcea057df79898e0893c  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java
-fde93d19cf94a9b6ac2e628baa33a095  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M2.adoc
 fe150fed05a64f57df74cd89a87d474e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/ClasspathScanningSupport.java
 fe68bd8a2799ff750d17f9e4d4156a2b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertFalse.java
 fe99b3c49b9cefe65e5a54e82859be9e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
