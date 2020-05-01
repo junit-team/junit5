@@ -86,7 +86,7 @@ public class EngineDiscoveryOrchestrator {
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
 
-		final List<PostDiscoveryFilter> filters = new LinkedList<>(postDiscoveryFilters);
+		List<PostDiscoveryFilter> filters = new LinkedList<>(postDiscoveryFilters);
 		filters.addAll(request.getPostDiscoveryFilters());
 
 		applyPostDiscoveryFilters(testEngineDescriptors, filters);
