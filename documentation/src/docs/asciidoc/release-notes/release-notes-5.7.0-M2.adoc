@@ -10,6 +10,13 @@ the link:{junit5-repo}+/milestone/5.7.0-M2?closed=1+[5.7 M2] milestone page in t
 on GitHub.
 
 
+[[release-notes-5.7.0-M2-overall-improvements]]
+=== Overall Improvements
+
+* Javadoc JARs now contain `package-list` in addition to `element-list` for compatibility
+  with tools like NetBeans 11.
+
+
 [[release-notes-5.7.0-M2-junit-platform]]
 === JUnit Platform
 
