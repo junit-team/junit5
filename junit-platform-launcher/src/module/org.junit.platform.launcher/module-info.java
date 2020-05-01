@@ -15,6 +15,7 @@
  *
  * @since 1.0
  * @uses org.junit.platform.engine.TestEngine
+ * @uses org.junit.platform.launcher.PostDiscoveryFilter
  * @uses org.junit.platform.launcher.TestExecutionListener
  */
 module org.junit.platform.launcher {
@@ -29,6 +30,6 @@ module org.junit.platform.launcher {
 	exports org.junit.platform.launcher.listeners.discovery;
 
 	uses org.junit.platform.engine.TestEngine;
-	uses org.junit.platform.launcher.TestExecutionListener;
 	uses org.junit.platform.launcher.PostDiscoveryFilter;
+	uses org.junit.platform.launcher.TestExecutionListener;
 }
