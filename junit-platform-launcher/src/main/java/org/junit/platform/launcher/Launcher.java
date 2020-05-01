@@ -60,6 +60,14 @@ public interface Launcher {
 	void registerTestExecutionListeners(TestExecutionListener... listeners);
 
 	/**
+	 * Register one or more post discovery filters for test discovery.
+	 *
+	 * @param filters additional post discovery filters to register;
+	 * never {@code null} or empty
+	 */
+	void registerPostDiscoveryFilters(PostDiscoveryFilter... filters);
+
+	/**
 	 * Discover tests and build a {@link TestPlan} according to the supplied
 	 * {@link LauncherDiscoveryRequest} by querying all registered engines and
 	 * collecting their results.

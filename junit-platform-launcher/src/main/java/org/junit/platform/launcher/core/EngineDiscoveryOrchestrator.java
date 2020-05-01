@@ -14,7 +14,10 @@ import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +28,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
@@ -47,9 +51,17 @@ public class EngineDiscoveryOrchestrator {
 
 	private final EngineDiscoveryResultValidator discoveryResultValidator = new EngineDiscoveryResultValidator();
 	private final Iterable<TestEngine> testEngines;
+	private final Collection<PostDiscoveryFilter> postDiscoveryFilters = new LinkedHashSet<>();
 
 	public EngineDiscoveryOrchestrator(Iterable<TestEngine> testEngines) {
 		this.testEngines = testEngines;
+	}
+
+	public EngineDiscoveryOrchestrator addPostDiscoveryFilters(PostDiscoveryFilter... filters) {
+		Preconditions.notNull(filters, "PostDiscoveryFilter array must not be null");
+		Preconditions.containsNoNullElements(filters, "PostDiscoveryFilter array must not contain null elements");
+		Collections.addAll(this.postDiscoveryFilters, filters);
+		return this;
 	}
 
 	/**
@@ -82,7 +94,10 @@ public class EngineDiscoveryOrchestrator {
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
 
-		applyPostDiscoveryFilters(testEngineDescriptors, request.getPostDiscoveryFilters());
+		final List<PostDiscoveryFilter> filters = new LinkedList<>(postDiscoveryFilters);
+		filters.addAll(request.getPostDiscoveryFilters());
+
+		applyPostDiscoveryFilters(testEngineDescriptors, filters);
 		prune(testEngineDescriptors);
 
 		return new LauncherDiscoveryResult(testEngineDescriptors, request.getConfigurationParameters());

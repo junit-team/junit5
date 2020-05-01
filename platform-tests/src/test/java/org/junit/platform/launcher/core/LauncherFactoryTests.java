@@ -20,10 +20,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -99,6 +101,26 @@ class LauncherFactoryTests {
 		assertThat(ids).containsOnly("[engine:junit-jupiter]");
 	}
 
+	@Test
+	void createWithPostDiscoveryFilters() {
+		LauncherDiscoveryRequest discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+
+		LauncherConfig config = LauncherConfig.builder()//
+				.addPostDiscoveryFilters(TagFilter.includeTags("example")).build();
+
+		TestPlan testPlan = LauncherFactory.create(config).discover(discoveryRequest);
+		Set<TestIdentifier> roots = testPlan.getRoots();
+		assertThat(roots).hasSize(1);
+
+		// @formatter:off
+		List<String> ids = roots.stream()
+				.map(TestIdentifier::getUniqueId)
+				.collect(toList());
+		// @formatter:on
+
+		assertThat(ids).containsOnly("[engine:junit-jupiter]");
+	}
+
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
 		// @formatter:off
 		return request()
@@ -118,10 +140,10 @@ class LauncherFactoryTests {
 
 	static class JUnit5Example {
 
+		@Tag("example")
 		@Test
 		void testJ5() {
 		}
 
 	}
-
 }

@@ -14,6 +14,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 
@@ -50,6 +51,13 @@ class DefaultLauncher implements Launcher {
 		Preconditions.notEmpty(listeners, "listeners array must not be null or empty");
 		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
 		this.listenerRegistry.registerListeners(listeners);
+	}
+
+	@Override
+	public void registerPostDiscoveryFilters(final PostDiscoveryFilter... filters) {
+		Preconditions.notEmpty(filters, "filters array must not be null or empty");
+		Preconditions.containsNoNullElements(filters, "individual filters must not be null");
+		this.discoveryOrchestrator.addPostDiscoveryFilters(filters);
 	}
 
 	@Override

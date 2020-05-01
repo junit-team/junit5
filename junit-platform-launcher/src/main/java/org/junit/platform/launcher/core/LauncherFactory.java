@@ -100,6 +100,12 @@ public class LauncherFactory {
 		}
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 
+		if (config.isPostDiscoveryFilterAutoRegistrationEnabled()) {
+			new ServiceLoaderPostDiscoveryFilterRegistry().loadPostDiscoveryFilters().forEach(
+				launcher::registerPostDiscoveryFilters);
+		}
+		config.getAdditionalPostDiscoveryFilters().forEach(launcher::registerPostDiscoveryFilters);
+
 		return launcher;
 	}
 
