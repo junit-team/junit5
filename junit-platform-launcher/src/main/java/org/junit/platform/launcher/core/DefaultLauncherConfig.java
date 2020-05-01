@@ -15,6 +15,7 @@ import static java.util.Collections.unmodifiableCollection;
 import java.util.Collection;
 
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 
 /**
@@ -28,18 +29,26 @@ class DefaultLauncherConfig implements LauncherConfig {
 
 	private final boolean testExecutionListenerAutoRegistrationEnabled;
 
+	private final boolean postDiscoveryFilterAutoRegistrationEnabled;
+
 	private final Collection<TestEngine> additionalTestEngines;
 
 	private final Collection<TestExecutionListener> additionalTestExecutionListeners;
 
+	private final Collection<PostDiscoveryFilter> additionalPostDiscoveryFilters;
+
 	DefaultLauncherConfig(boolean testEngineAutoRegistrationEnabled,
-			boolean testExecutionListenerAutoRegistrationEnabled, Collection<TestEngine> additionalTestEngines,
-			Collection<TestExecutionListener> additionalTestExecutionListeners) {
+			boolean testExecutionListenerAutoRegistrationEnabled, boolean postDiscoveryFilterAutoRegistrationEnabled,
+			Collection<TestEngine> additionalTestEngines,
+			Collection<TestExecutionListener> additionalTestExecutionListeners,
+			Collection<PostDiscoveryFilter> additionalPostDiscoveryFilters) {
 
 		this.testExecutionListenerAutoRegistrationEnabled = testExecutionListenerAutoRegistrationEnabled;
 		this.testEngineAutoRegistrationEnabled = testEngineAutoRegistrationEnabled;
+		this.postDiscoveryFilterAutoRegistrationEnabled = postDiscoveryFilterAutoRegistrationEnabled;
 		this.additionalTestEngines = unmodifiableCollection(additionalTestEngines);
 		this.additionalTestExecutionListeners = unmodifiableCollection(additionalTestExecutionListeners);
+		this.additionalPostDiscoveryFilters = unmodifiableCollection(additionalPostDiscoveryFilters);
 	}
 
 	@Override
@@ -53,6 +62,11 @@ class DefaultLauncherConfig implements LauncherConfig {
 	}
 
 	@Override
+	public boolean isPostDiscoveryFilterAutoRegistrationEnabled() {
+		return this.postDiscoveryFilterAutoRegistrationEnabled;
+	}
+
+	@Override
 	public Collection<TestEngine> getAdditionalTestEngines() {
 		return this.additionalTestEngines;
 	}
@@ -60,6 +74,11 @@ class DefaultLauncherConfig implements LauncherConfig {
 	@Override
 	public Collection<TestExecutionListener> getAdditionalTestExecutionListeners() {
 		return this.additionalTestExecutionListeners;
+	}
+
+	@Override
+	public Collection<PostDiscoveryFilter> getAdditionalPostDiscoveryFilters() {
+		return this.additionalPostDiscoveryFilters;
 	}
 
 }
