@@ -109,16 +109,11 @@ class LauncherFactoryTests {
 				.addPostDiscoveryFilters(TagFilter.includeTags("example")).build();
 
 		TestPlan testPlan = LauncherFactory.create(config).discover(discoveryRequest);
-		Set<TestIdentifier> roots = testPlan.getRoots();
-		assertThat(roots).hasSize(1);
+		final Set<TestIdentifier> vintage = testPlan.getChildren("[engine:junit-vintage]");
+		assertThat(vintage).isEmpty();
 
-		// @formatter:off
-		List<String> ids = roots.stream()
-				.map(TestIdentifier::getUniqueId)
-				.collect(toList());
-		// @formatter:on
-
-		assertThat(ids).containsOnly("[engine:junit-jupiter]");
+		final Set<TestIdentifier> jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+		assertThat(jupiter).hasSize(1);
 	}
 
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
