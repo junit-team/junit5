@@ -79,10 +79,10 @@ if (project in mavenizedProjects) {
 	}
 
 	tasks.named<Jar>("javadocJar").configure {
-        from(tasks.javadoc.map { File(it.destinationDir, "element-list") }) {
-            // For compatibility with older tools, e.g. NetBeans 11
-            rename { "package-list" }
-        }
+		from(tasks.javadoc.map { File(it.destinationDir, "element-list") }) {
+			// For compatibility with older tools, e.g. NetBeans 11
+			rename { "package-list" }
+		}
 	}
 
 	tasks.named<Jar>("sourcesJar").configure {
