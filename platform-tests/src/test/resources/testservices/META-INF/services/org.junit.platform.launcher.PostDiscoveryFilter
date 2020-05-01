@@ -1,1 +1,1 @@
-org.junit.platform.launcher.TestPostDiscoveryFilter
+org.junit.platform.launcher.TestPostDiscoveryTagFilter

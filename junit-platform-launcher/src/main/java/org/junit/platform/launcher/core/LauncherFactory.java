@@ -14,7 +14,9 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -94,7 +96,7 @@ public class LauncherFactory {
 		}
 		engines.addAll(config.getAdditionalTestEngines());
 
-		Set<PostDiscoveryFilter> filters = new LinkedHashSet<>();
+		List<PostDiscoveryFilter> filters = new ArrayList<>();
 		if (config.isPostDiscoveryFilterAutoRegistrationEnabled()) {
 			new ServiceLoaderPostDiscoveryFilterRegistry().loadPostDiscoveryFilters().forEach(filters::add);
 		}

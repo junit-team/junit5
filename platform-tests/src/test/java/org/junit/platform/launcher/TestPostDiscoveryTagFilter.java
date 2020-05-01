@@ -14,7 +14,7 @@ import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 
-public class TestPostDiscoveryFilter implements PostDiscoveryFilter {
+public class TestPostDiscoveryTagFilter implements PostDiscoveryFilter {
 	@Override
 	public FilterResult apply(final TestDescriptor object) {
 		boolean include = object.getTags().stream().map(TestTag::getName).anyMatch("test-post-discovery"::equals);
