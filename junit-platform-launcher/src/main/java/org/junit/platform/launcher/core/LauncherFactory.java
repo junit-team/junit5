@@ -26,6 +26,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 
 /**
@@ -93,18 +94,18 @@ public class LauncherFactory {
 		}
 		engines.addAll(config.getAdditionalTestEngines());
 
-		Launcher launcher = new DefaultLauncher(engines);
+		Set<PostDiscoveryFilter> filters = new LinkedHashSet<>();
+		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
+			new ServiceLoaderPostDiscoveryFilterRegistry().loadPostDiscoveryFilters().forEach(filters::add);
+		}
+		filters.addAll(config.getAdditionalPostDiscoveryFilters());
+
+		Launcher launcher = new DefaultLauncher(engines, filters);
 
 		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
 			loadAndFilterTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 		}
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
-
-		if (config.isPostDiscoveryFilterAutoRegistrationEnabled()) {
-			new ServiceLoaderPostDiscoveryFilterRegistry().loadPostDiscoveryFilters().forEach(
-				launcher::registerPostDiscoveryFilters);
-		}
-		config.getAdditionalPostDiscoveryFilters().forEach(launcher::registerPostDiscoveryFilters);
 
 		return launcher;
 	}
