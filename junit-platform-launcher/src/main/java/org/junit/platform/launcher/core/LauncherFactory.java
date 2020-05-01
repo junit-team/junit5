@@ -95,7 +95,7 @@ public class LauncherFactory {
 		engines.addAll(config.getAdditionalTestEngines());
 
 		Set<PostDiscoveryFilter> filters = new LinkedHashSet<>();
-		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
+		if (config.isPostDiscoveryFilterAutoRegistrationEnabled()) {
 			new ServiceLoaderPostDiscoveryFilterRegistry().loadPostDiscoveryFilters().forEach(filters::add);
 		}
 		filters.addAll(config.getAdditionalPostDiscoveryFilters());
