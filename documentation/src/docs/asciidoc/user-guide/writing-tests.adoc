@@ -1235,7 +1235,7 @@ ignored.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example]
 ----
 
-<1> The resource `/two-column.csv` will be resolved in the class path, because the it is unlikely that
+<1> The resource `/two-column.csv` will be resolved in the class path, because it is unlikely that
 a file named `two-column.csv` will reside in the root of any real file system.
 The same resource can also be specified with its source name as in the example below.
 
