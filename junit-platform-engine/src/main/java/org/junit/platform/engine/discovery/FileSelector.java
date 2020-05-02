@@ -42,7 +42,7 @@ import org.junit.platform.engine.DiscoverySelector;
 public class FileSelector implements DiscoverySelector {
 
 	private final String path;
-	private FilePosition position;
+	private final FilePosition position;
 
 	FileSelector(String path) {
 		this(path, null);

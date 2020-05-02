@@ -40,7 +40,7 @@ import org.junit.platform.engine.DiscoverySelector;
 public class ClasspathResourceSelector implements DiscoverySelector {
 
 	private final String classpathResourceName;
-	private FilePosition position;
+	private final FilePosition position;
 
 	ClasspathResourceSelector(String classpathResourceName) {
 		this(classpathResourceName, null);
