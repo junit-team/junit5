@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -54,7 +55,7 @@ public class ConditionEvaluationResult {
 	 * @return a disabled {@code ConditionEvaluationResult} with the given reasons
 	 */
 	public static ConditionEvaluationResult disabled(String reason, String customReason) {
-		if (customReason.isEmpty()) {
+		if (StringUtils.isBlank(customReason)) {
 			return disabled(reason);
 		}
 		return disabled(String.format("%s ==> %s", reason, customReason));
