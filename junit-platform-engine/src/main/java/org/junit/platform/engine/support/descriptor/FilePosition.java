@@ -10,36 +10,31 @@
 
 package org.junit.platform.engine.support.descriptor;
 
+import static org.apiguardian.api.API.Status.STABLE;
+
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * Position inside a file represented by {@linkplain #getLine line} and
  * {@linkplain #getColumn column} numbers.
  *
  * @since 1.0
- * @deprecated use {@link org.junit.platform.engine.discovery.FilePosition}
  */
-@API(status = Status.DEPRECATED, since = "1.7")
-@Deprecated
-public class FilePosition extends org.junit.platform.engine.discovery.FilePosition {
+@API(status = STABLE, since = "1.0")
+public class FilePosition implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(FilePosition.class);
-
-	private FilePosition(int line) {
-		super(line);
-	}
-
-	private FilePosition(int line, int column) {
-		super(line, column);
-	}
 
 	/**
 	 * Create a new {@code FilePosition} using the supplied {@code line} number
@@ -116,6 +111,68 @@ public class FilePosition extends org.junit.platform.engine.discovery.FilePositi
 			}
 		}
 		return Optional.ofNullable(result);
+	}
+
+	private final int line;
+	private final Integer column;
+
+	private FilePosition(int line) {
+		Preconditions.condition(line > 0, "line number must be greater than zero");
+		this.line = line;
+		this.column = null;
+	}
+
+	private FilePosition(int line, int column) {
+		Preconditions.condition(line > 0, "line number must be greater than zero");
+		Preconditions.condition(column > 0, "column number must be greater than zero");
+		this.line = line;
+		this.column = column;
+	}
+
+	/**
+	 * Get the line number of this {@code FilePosition}.
+	 *
+	 * @return the line number
+	 */
+	public int getLine() {
+		return this.line;
+	}
+
+	/**
+	 * Get the column number of this {@code FilePosition}, if available.
+	 *
+	 * @return an {@code Optional} containing the column number; never
+	 * {@code null} but potentially empty
+	 */
+	public Optional<Integer> getColumn() {
+		return Optional.ofNullable(this.column);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		FilePosition that = (FilePosition) o;
+		return (this.line == that.line) && Objects.equals(this.column, that.column);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.line, this.column);
+	}
+
+	@Override
+	public String toString() {
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("line", this.line)
+				.append("column", getColumn().orElse(-1))
+				.toString();
+		// @formatter:on
 	}
 
 }

@@ -27,7 +27,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * Abstract base class for unit tests involving {@link TestSource TestSources}

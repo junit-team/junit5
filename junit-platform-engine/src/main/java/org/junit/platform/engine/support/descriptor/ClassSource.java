@@ -12,18 +12,15 @@ package org.junit.platform.engine.support.descriptor;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
-import java.io.File;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * Class based {@link org.junit.platform.engine.TestSource TestSource} with
@@ -54,21 +51,6 @@ public class ClassSource implements TestSource {
 	 */
 	public static ClassSource from(String className) {
 		return new ClassSource(className);
-	}
-
-	/**
-	 * Create a new {@code ClassSource} using the supplied class name and
-	 * {@linkplain FilePosition file position}.
-	 *
-	 * @param className the class name; must not be {@code null} or blank
-	 * @param filePosition the position in the source file; may be {@code null}
-	 * @deprecated use {@link #from(File, FilePosition)}
-	 */
-	@API(status = Status.DEPRECATED, since = "1.7")
-	@Deprecated
-	public static ClassSource from(String className,
-			org.junit.platform.engine.support.descriptor.FilePosition filePosition) {
-		return new ClassSource(className, filePosition);
 	}
 
 	/**

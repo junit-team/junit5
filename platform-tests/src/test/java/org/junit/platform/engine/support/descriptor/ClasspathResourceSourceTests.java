@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * Unit tests for {@link ClasspathResourceSource}.
@@ -55,7 +54,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getFilePosition()).isEmpty();
+		assertThat(source.getPosition()).isEmpty();
 	}
 
 	@Test
@@ -64,7 +63,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getFilePosition()).isEmpty();
+		assertThat(source.getPosition()).isEmpty();
 	}
 
 	@Test
@@ -74,7 +73,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getFilePosition()).hasValue(position);
+		assertThat(source.getPosition()).hasValue(position);
 	}
 
 	@Test
@@ -83,7 +82,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getFilePosition()).isEmpty();
+		assertThat(source.getPosition()).isEmpty();
 	}
 
 	@Test
@@ -94,7 +93,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getFilePosition()).hasValue(position);
+		assertThat(source.getPosition()).hasValue(position);
 	}
 
 	@Test
@@ -105,7 +104,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getFilePosition()).hasValue(position);
+		assertThat(source.getPosition()).hasValue(position);
 	}
 
 	@Test

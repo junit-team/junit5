@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * Unit tests for {@link FileSource} and {@link DirectorySource}.
@@ -61,7 +60,7 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source.getUri()).isEqualTo(canonicalFile.toURI());
 		assertThat(source.getFile()).isEqualTo(canonicalFile);
-		assertThat(source.getFilePosition()).isEmpty();
+		assertThat(source.getPosition()).isEmpty();
 	}
 
 	@Test
@@ -72,7 +71,7 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source.getUri()).isEqualTo(file.getAbsoluteFile().toURI());
 		assertThat(source.getFile()).isEqualTo(file.getAbsoluteFile());
-		assertThat(source.getFilePosition()).hasValue(position);
+		assertThat(source.getPosition()).hasValue(position);
 	}
 
 	@Test

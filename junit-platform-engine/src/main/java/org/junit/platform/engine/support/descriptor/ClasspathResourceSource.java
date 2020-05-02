@@ -17,12 +17,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * <em>Classpath resource</em> based {@link org.junit.platform.engine.TestSource}
@@ -62,28 +60,6 @@ public class ClasspathResourceSource implements TestSource {
 	 */
 	public static ClasspathResourceSource from(String classpathResourceName) {
 		return new ClasspathResourceSource(classpathResourceName);
-	}
-
-	/**
-	 * Create a new {@code ClasspathResourceSource} using the supplied classpath
-	 * resource name and {@link FilePosition}.
-	 *
-	 * <p>The name of a <em>classpath resource</em> must follow the semantics
-	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.
-	 *
-	 * <p>If the supplied classpath resource name is prefixed with a slash
-	 * ({@code /}), the slash will be removed.
-	 *
-	 * @param classpathResourceName the name of the classpath resource; never
-	 * {@code null} or blank
-	 * @param filePosition the position in the classpath resource; may be {@code null}
-	 * @deprecated use {@link #from(String, FilePosition)}
-	 */
-	@API(status = Status.DEPRECATED, since = "1.7")
-	@Deprecated
-	public static ClasspathResourceSource from(String classpathResourceName,
-			org.junit.platform.engine.support.descriptor.FilePosition filePosition) {
-		return new ClasspathResourceSource(classpathResourceName, filePosition);
 	}
 
 	/**
@@ -161,21 +137,8 @@ public class ClasspathResourceSource implements TestSource {
 
 	/**
 	 * Get the {@link FilePosition}, if available.
-	 *
-	 * @deprecated use {@link #getFilePosition()}
 	 */
-	@API(status = Status.DEPRECATED, since = "1.7")
-	@Deprecated
-	public final Optional<org.junit.platform.engine.support.descriptor.FilePosition> getPosition() {
-		return Optional.ofNullable(this.filePosition).map(fp -> fp.getColumn().isPresent()
-				? org.junit.platform.engine.support.descriptor.FilePosition.from(fp.getLine(), fp.getColumn().get())
-				: org.junit.platform.engine.support.descriptor.FilePosition.from(fp.getLine()));
-	}
-
-	/**
-	 * Get the {@link FilePosition}, if available.
-	 */
-	public final Optional<FilePosition> getFilePosition() {
+	public final Optional<FilePosition> getPosition() {
 		return Optional.ofNullable(this.filePosition);
 	}
 

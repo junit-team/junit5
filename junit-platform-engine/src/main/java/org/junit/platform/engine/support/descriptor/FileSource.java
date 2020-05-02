@@ -19,11 +19,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * File based {@link org.junit.platform.engine.TestSource} with an optional
@@ -44,20 +42,6 @@ public class FileSource implements FileSystemSource {
 	 */
 	public static FileSource from(File file) {
 		return new FileSource(file);
-	}
-
-	/**
-	 * Create a new {@code FileSource} using the supplied {@link File file} and
-	 * {@link FilePosition filePosition}.
-	 *
-	 * @param file the source file; must not be {@code null}
-	 * @param filePosition the position in the source file; may be {@code null}
-	 * @deprecated use {@link #from(File, FilePosition)}
-	 */
-	@API(status = Status.DEPRECATED, since = "1.7")
-	@Deprecated
-	public static FileSource from(File file, org.junit.platform.engine.support.descriptor.FilePosition filePosition) {
-		return new FileSource(file, filePosition);
 	}
 
 	/**
@@ -111,21 +95,8 @@ public class FileSource implements FileSystemSource {
 
 	/**
 	 * Get the {@link FilePosition}, if available.
-	 *
-	 * @deprecated use {@link #getFilePosition()}
 	 */
-	@API(status = Status.DEPRECATED, since = "1.7")
-	@Deprecated
-	public final Optional<org.junit.platform.engine.support.descriptor.FilePosition> getPosition() {
-		return Optional.ofNullable(this.filePosition).map(fp -> fp.getColumn().isPresent()
-				? org.junit.platform.engine.support.descriptor.FilePosition.from(fp.getLine(), fp.getColumn().get())
-				: org.junit.platform.engine.support.descriptor.FilePosition.from(fp.getLine()));
-	}
-
-	/**
-	 * Get the {@link FilePosition}, if available.
-	 */
-	public final Optional<FilePosition> getFilePosition() {
+	public final Optional<FilePosition> getPosition() {
 		return Optional.ofNullable(this.filePosition);
 	}
 

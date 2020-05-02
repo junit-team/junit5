@@ -33,9 +33,9 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.FilePosition;
 import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
 import org.junit.platform.engine.support.descriptor.DirectorySource;
+import org.junit.platform.engine.support.descriptor.FilePosition;
 import org.junit.platform.engine.support.descriptor.FileSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.descriptor.UriSource;
@@ -64,7 +64,7 @@ class TestFactoryTestDescriptorTests {
 			assertThat(testSource).isInstanceOf(ClasspathResourceSource.class);
 			ClasspathResourceSource source = (ClasspathResourceSource) testSource;
 			assertThat(source.getClasspathResourceName()).isEqualTo("test.js");
-			assertThat(source.getFilePosition()).hasValue(position);
+			assertThat(source.getPosition()).hasValue(position);
 		}
 
 		@Test
@@ -79,7 +79,7 @@ class TestFactoryTestDescriptorTests {
 			assertThat(testSource).isInstanceOf(FileSource.class);
 			FileSource source = (FileSource) testSource;
 			assertThat(source.getFile().getAbsolutePath()).isEqualTo(file.getAbsolutePath());
-			assertThat(source.getFilePosition()).hasValue(position);
+			assertThat(source.getPosition()).hasValue(position);
 		}
 
 		@Test

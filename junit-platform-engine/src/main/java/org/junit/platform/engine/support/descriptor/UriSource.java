@@ -21,7 +21,6 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * A {@link TestSource} that can be represented as a {@link URI}.
