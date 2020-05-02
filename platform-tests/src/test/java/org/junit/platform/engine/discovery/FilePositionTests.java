@@ -65,7 +65,7 @@ class FilePositionTests extends AbstractEqualsAndHashCodeTests {
 	@ParameterizedTest
 	@MethodSource
 	void filePositionFromQuery(String query, int expectedLine, int expectedColumn) {
-		Optional<? extends FilePosition> optionalFilePosition = FilePosition.fromQuery(query);
+		Optional<FilePosition> optionalFilePosition = FilePosition.fromQuery(query);
 
 		if (optionalFilePosition.isPresent()) {
 			FilePosition filePosition = optionalFilePosition.get();

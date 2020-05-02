@@ -17,7 +17,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
@@ -27,8 +26,6 @@ import org.junit.platform.commons.util.ToStringBuilder;
 /**
  * Position inside a file represented by {@linkplain #getLine line} and
  * {@linkplain #getColumn column} numbers.
- *
- * This class is not intended to be subclassed by clients.
  *
  * @since 1.7
  */
@@ -80,7 +77,7 @@ public class FilePosition implements Serializable {
 	 * @see #from(int)
 	 * @see #from(int, int)
 	 */
-	public static Optional<? extends FilePosition> fromQuery(String query) {
+	public static Optional<FilePosition> fromQuery(String query) {
 		FilePosition result = null;
 		Integer line = null;
 		Integer column = null;
@@ -119,15 +116,13 @@ public class FilePosition implements Serializable {
 	private final int line;
 	private final Integer column;
 
-	@API(status = Status.INTERNAL)
-	protected FilePosition(int line) {
+	private FilePosition(int line) {
 		Preconditions.condition(line > 0, "line number must be greater than zero");
 		this.line = line;
 		this.column = null;
 	}
 
-	@API(status = Status.INTERNAL)
-	protected FilePosition(int line, int column) {
+	private FilePosition(int line, int column) {
 		Preconditions.condition(line > 0, "line number must be greater than zero");
 		Preconditions.condition(column > 0, "column number must be greater than zero");
 		this.line = line;
