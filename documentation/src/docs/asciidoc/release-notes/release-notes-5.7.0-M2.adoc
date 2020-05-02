@@ -1,0 +1,66 @@
+[[release-notes-5.7.0-M2]]
+== 5.7.0-M2
+
+*Date of Release:* ❓
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult
+the link:{junit5-repo}+/milestone/5.7.0-M2?closed=1+[5.7 M2] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.7.0-M2-overall-improvements]]
+=== Overall Improvements
+
+* Javadoc JARs now contain `package-list` in addition to `element-list` for compatibility
+  with tools like NetBeans 11.
+
+
+[[release-notes-5.7.0-M2-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* Characters in exception messages and other user-supplied values that are not allowed in
+  XML are now replaced with their character reference (e.g. `\0` becomes `&#0;`).
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.7.0-M2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.7.0-M2-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓

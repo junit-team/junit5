@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 import org.apiguardian.api.API;
 
 /**
- * Class-related predicate holder used by reflection utilities.
+ * Class-related predicate used by reflection utilities.
  *
  * <h3>DISCLAIMER</h3>
  *

@@ -109,6 +109,15 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
+	void doesNotAttemptToResolveMethodsForNonTestClasses() {
+		var methodSelector = selectMethod(NonTestClass.class, "doesNotExist");
+		resolve(request().selectors(methodSelector));
+
+		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		assertUnresolved(methodSelector);
+	}
+
+	@Test
 	void abstractClassResolution() {
 		resolve(request().selectors(selectClass(AbstractTestClass.class)));
 

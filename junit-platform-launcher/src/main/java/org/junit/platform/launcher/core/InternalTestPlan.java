@@ -29,22 +29,22 @@ class InternalTestPlan extends TestPlan {
 	private static final Logger logger = LoggerFactory.getLogger(InternalTestPlan.class);
 
 	private final AtomicBoolean warningEmitted = new AtomicBoolean(false);
-	private final Root root;
+	private final LauncherDiscoveryResult discoveryResult;
 	private final TestPlan delegate;
 
-	static InternalTestPlan from(Root root) {
-		TestPlan delegate = TestPlan.from(root.getEngineDescriptors());
-		return new InternalTestPlan(root, delegate);
+	static InternalTestPlan from(LauncherDiscoveryResult discoveryResult) {
+		TestPlan delegate = TestPlan.from(discoveryResult.getEngineTestDescriptors());
+		return new InternalTestPlan(discoveryResult, delegate);
 	}
 
-	private InternalTestPlan(Root root, TestPlan delegate) {
+	private InternalTestPlan(LauncherDiscoveryResult discoveryResult, TestPlan delegate) {
 		super(delegate.containsTests());
-		this.root = root;
+		this.discoveryResult = discoveryResult;
 		this.delegate = delegate;
 	}
 
-	Root getRoot() {
-		return root;
+	LauncherDiscoveryResult getDiscoveryResult() {
+		return discoveryResult;
 	}
 
 	@Override

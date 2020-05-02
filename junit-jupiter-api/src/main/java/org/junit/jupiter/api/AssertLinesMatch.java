@@ -36,8 +36,8 @@ class AssertLinesMatch {
 		/* no-op */
 	}
 
-	private final static int MAX_SNIPPET_LENGTH = 21;
-	private final static int MAX_LINES_IN_FAILURE_MESSAGE = 42;
+	private static final int MAX_SNIPPET_LENGTH = 21;
+	private static final int MAX_LINES_IN_FAILURE_MESSAGE = 42;
 
 	static void assertLinesMatch(List<String> expectedLines, List<String> actualLines) {
 		assertLinesMatch(expectedLines, actualLines, (Object) null);

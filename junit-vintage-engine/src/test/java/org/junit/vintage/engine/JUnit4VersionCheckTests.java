@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
 
@@ -72,4 +73,14 @@ class JUnit4VersionCheckTests {
 		assertEquals("Failed to parse version of junit:junit: not a version", exception.getMessage());
 	}
 
+	@Test
+	@Tag("missing-junit4")
+	void handlesMissingJUnit() {
+		JUnitException exception = assertThrows(JUnitException.class, JUnit4VersionCheck::checkSupported);
+
+		assertEquals("Invalid class/module path: junit-vintage-engine is present but junit:junit is not. "
+				+ "Please either remove junit-vintage-engine or add junit:junit, or alternatively use "
+				+ "an excludeEngines(\"junit-vintage\") filter.",
+			exception.getMessage());
+	}
 }

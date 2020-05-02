@@ -14,21 +14,31 @@ import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
+import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.ThrowingConsumer;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -37,6 +47,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor;
+import org.junit.platform.launcher.core.ConfigurationParametersFactoryForTests;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -64,8 +75,14 @@ class HierarchicalTestExecutorTests {
 
 	@BeforeEach
 	void init() {
+		executor = createExecutor(new SameThreadHierarchicalTestExecutorService());
+	}
+
+	private HierarchicalTestExecutor<MyEngineExecutionContext> createExecutor(
+			HierarchicalTestExecutorService executorService) {
 		ExecutionRequest request = new ExecutionRequest(root, listener, null);
-		executor = new MyExecutor(request, rootContext);
+		return new HierarchicalTestExecutor<>(request, rootContext, executorService,
+			OpenTest4JAwareThrowableCollector::new);
 	}
 
 	@Test
@@ -437,11 +454,7 @@ class HierarchicalTestExecutorTests {
 		MyLeaf child = spy(new MyLeaf(leafUniqueId));
 		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
 
-		when(child.execute(any(), any())).thenAnswer(invocation -> {
-			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
-			dynamicTestExecutor.execute(dynamicTestDescriptor);
-			return invocation.getArgument(0);
-		});
+		when(child.execute(any(), any())).thenAnswer(execute(dynamicTestDescriptor));
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child, dynamicTestDescriptor);
@@ -477,8 +490,8 @@ class HierarchicalTestExecutorTests {
 		MyLeaf dynamicLeaf = spy(new MyLeaf(dynamicContainerAndTest.getUniqueId().append("test", "dynamicLeaf")));
 
 		root.addChild(child);
-		when(child.execute(any(), any())).thenAnswer(registerAndExecute(dynamicContainerAndTest));
-		when(dynamicContainerAndTest.execute(any(), any())).thenAnswer(registerAndExecute(dynamicLeaf));
+		when(child.execute(any(), any())).thenAnswer(execute(dynamicContainerAndTest));
+		when(dynamicContainerAndTest.execute(any(), any())).thenAnswer(execute(dynamicLeaf));
 		when(dynamicLeaf.execute(any(), any())).thenAnswer(invocation -> {
 			throw new AssertionError("test fails");
 		});
@@ -516,10 +529,78 @@ class HierarchicalTestExecutorTests {
 			FAILED, SUCCESSFUL, SUCCESSFUL);
 	}
 
-	private Answer<Object> registerAndExecute(TestDescriptor dynamicChild) {
+	@Test
+	void executesDynamicTestDescriptorsWithCustomListener() {
+
+		UniqueId leafUniqueId = UniqueId.root("leaf", "child leaf");
+		MyLeaf child = spy(new MyLeaf(leafUniqueId));
+		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
+		root.addChild(child);
+
+		EngineExecutionListener anotherListener = mock(EngineExecutionListener.class);
+		when(child.execute(any(), any())).thenAnswer(
+			useDynamicTestExecutor(executor -> executor.execute(dynamicTestDescriptor, anotherListener)));
+
+		executor.execute();
+
+		InOrder inOrder = inOrder(listener, anotherListener, root, child, dynamicTestDescriptor);
+		inOrder.verify(anotherListener).dynamicTestRegistered(dynamicTestDescriptor);
+		inOrder.verify(anotherListener).executionStarted(dynamicTestDescriptor);
+		inOrder.verify(dynamicTestDescriptor).execute(eq(rootContext), any());
+		inOrder.verify(dynamicTestDescriptor).nodeFinished(rootContext, dynamicTestDescriptor, successful());
+		inOrder.verify(anotherListener).executionFinished(dynamicTestDescriptor, successful());
+	}
+
+	@Test
+	void canAbortExecutionOfDynamicChild() throws Exception {
+
+		UniqueId leafUniqueId = UniqueId.root("leaf", "child leaf");
+		MyLeaf child = spy(new MyLeaf(leafUniqueId));
+		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
+		root.addChild(child);
+
+		var startedLatch = new CountDownLatch(1);
+		var interrupted = new CompletableFuture<Boolean>();
+
+		when(child.execute(any(), any())).thenAnswer(useDynamicTestExecutor(executor -> {
+			Future<?> future = executor.execute(dynamicTestDescriptor, EngineExecutionListener.NOOP);
+			startedLatch.await();
+			future.cancel(true);
+			executor.awaitFinished();
+		}));
+		when(dynamicTestDescriptor.execute(any(), any())).thenAnswer(invocation -> {
+			startedLatch.countDown();
+			try {
+				new CountDownLatch(1).await(); // block until interrupted
+				interrupted.complete(false);
+				return null;
+			}
+			catch (InterruptedException e) {
+				interrupted.complete(true);
+				throw e;
+			}
+		});
+
+		ConfigurationParameters parameters = ConfigurationParametersFactoryForTests.create(Map.of(//
+			DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME, "fixed", //
+			DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, "2"));
+
+		try (var executorService = new ForkJoinPoolHierarchicalTestExecutorService(parameters)) {
+			createExecutor(executorService).execute().get();
+		}
+
+		verify(listener).executionFinished(child, successful());
+		assertTrue(interrupted.get(), "dynamic node was interrupted");
+	}
+
+	private Answer<Object> execute(TestDescriptor dynamicChild) {
+		return useDynamicTestExecutor(executor -> executor.execute(dynamicChild));
+	}
+
+	private Answer<Object> useDynamicTestExecutor(ThrowingConsumer<DynamicTestExecutor> action) {
 		return invocation -> {
 			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
-			dynamicTestExecutor.execute(dynamicChild);
+			action.accept(dynamicTestExecutor);
 			return invocation.getArgument(0);
 		};
 	}
@@ -585,11 +666,7 @@ class HierarchicalTestExecutorTests {
 		when(dynamicTestDescriptor.getExclusiveResources()).thenReturn(
 			singleton(new ExclusiveResource("foo", LockMode.READ)));
 
-		when(child.execute(any(), any())).thenAnswer(invocation -> {
-			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
-			dynamicTestExecutor.execute(dynamicTestDescriptor);
-			return invocation.getArgument(0);
-		});
+		when(child.execute(any(), any())).thenAnswer(execute(dynamicTestDescriptor));
 		root.addChild(child);
 
 		executor.execute();
@@ -674,14 +751,6 @@ class HierarchicalTestExecutorTests {
 		@Override
 		public Type getType() {
 			return Type.CONTAINER_AND_TEST;
-		}
-	}
-
-	private static class MyExecutor extends HierarchicalTestExecutor<MyEngineExecutionContext> {
-
-		MyExecutor(ExecutionRequest request, MyEngineExecutionContext rootContext) {
-			super(request, rootContext, new SameThreadHierarchicalTestExecutorService(),
-				OpenTest4JAwareThrowableCollector::new);
 		}
 	}
 

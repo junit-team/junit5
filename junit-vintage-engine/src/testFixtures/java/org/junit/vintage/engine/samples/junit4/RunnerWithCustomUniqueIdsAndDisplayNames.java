@@ -15,6 +15,7 @@ import static org.junit.runner.Description.createTestDescription;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.Description;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -23,16 +24,27 @@ import org.junit.runners.model.InitializationError;
 /**
  * @since 4.12
  */
-public class RunnerWithCustomUniqueIds extends BlockJUnit4ClassRunner {
+public class RunnerWithCustomUniqueIdsAndDisplayNames extends BlockJUnit4ClassRunner {
 
-	public RunnerWithCustomUniqueIds(Class<?> klass) throws InitializationError {
+	public RunnerWithCustomUniqueIdsAndDisplayNames(Class<?> klass) throws InitializationError {
 		super(klass);
 	}
 
 	@Override
+	protected String getName() {
+		DisplayName displayName = getTestClass().getAnnotation(DisplayName.class);
+		return displayName == null ? super.getName() : displayName.value();
+	}
+
+	@Override
 	protected Description describeChild(FrameworkMethod method) {
-		String testName = testName(method);
+		String testName = getTestName(method);
 		return createTestDescription(getTestClass().getJavaClass().getName(), testName, new CustomUniqueId(testName));
+	}
+
+	private String getTestName(FrameworkMethod method) {
+		DisplayName displayName = method.getAnnotation(DisplayName.class);
+		return displayName == null ? testName(method) : displayName.value();
 	}
 
 	private static class CustomUniqueId implements Serializable {

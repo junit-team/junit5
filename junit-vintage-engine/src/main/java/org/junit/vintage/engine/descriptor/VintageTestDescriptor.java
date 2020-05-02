@@ -55,7 +55,8 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 	}
 
 	private static String generateDisplayName(Description description) {
-		return description.getMethodName() != null ? description.getMethodName() : description.getDisplayName();
+		String methodName = description.getMethodName();
+		return isNotBlank(methodName) ? methodName : description.getDisplayName();
 	}
 
 	public Description getDescription() {

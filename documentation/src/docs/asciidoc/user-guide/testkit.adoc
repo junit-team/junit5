@@ -17,10 +17,10 @@ given `{TestEngine}` running on the JUnit Platform and then accessing the result
 fluent API to verify the expected results. The key entry point into this API is the
 `{EngineTestKit}` which provides static factory methods named `engine()` and `execute()`.
 It is recommended that you select one of the `engine()` variants to benefit from the
-fluent API for building an `EngineDiscoveryRequest`.
+fluent API for building a `LauncherDiscoveryRequest`.
 
 NOTE: If you prefer to use the `LauncherDiscoveryRequestBuilder` from the `Launcher` API
-to build your `EngineDiscoveryRequest`, you must use one of the `execute()` variants in
+to build your `LauncherDiscoveryRequest`, you must use one of the `execute()` variants in
 `EngineTestKit`.
 
 The following test class written using JUnit Jupiter will be used in subsequent examples.
@@ -131,6 +131,10 @@ annotated with `@Order(...)`. This allows us to enforce the order in which the t
 methods are executed, which in turn allows our `verifyAllJupiterEvents()` test to be
 reliable.
 ====
+
+If you want to do a _partial_ match _with_ or _without_ ordering requirements, you can use
+the methods `assertEventsMatchLooselyInOrder()` and `assertEventsMatchLoosely()`,
+respectively.
 
 [source,java,indent=0]
 ----

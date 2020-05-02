@@ -19,9 +19,12 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Prepare Gradle Enterprise credentials
+      shell: bash
+      run: |
+        mkdir -p $HOME/.gradle/enterprise/
+        echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > $HOME/.gradle/enterprise/keys.properties
     - name: Build and compare checksums
       shell: bash
-      env:
-        GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
       run: |
         ./src/checkBuildReproducibility.sh

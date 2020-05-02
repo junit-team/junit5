@@ -12,6 +12,8 @@ package org.junit.platform.reporting.legacy.xml;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
@@ -23,8 +25,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.time.Clock;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -221,6 +228,32 @@ class XmlReportWriterTests {
 	}
 
 	@Test
+	void escapesInvalidCharactersInSystemPropertiesAndExceptionMessages(TestInfo testInfo) throws Exception {
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
+		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		AssertionError assertionError = new AssertionError("expected: <A> but was: <B\0>");
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
+
+		System.setProperty("foo.bar", "\1");
+		String content;
+		try {
+			content = writeXmlReport(testPlan, reportData);
+		}
+		finally {
+			System.getProperties().remove("foo.bar");
+		}
+
+		assertValidAccordingToJenkinsSchema(content);
+		assertThat(content) //
+				.contains("<property name=\"foo.bar\" value=\"&amp;#1;\"/>") //
+				.contains("failure message=\"expected: &lt;A&gt; but was: &lt;B&amp;#0;&gt;\"") //
+				.contains("AssertionError: expected: <A> but was: <B&#0;>");
+	}
+
+	@Test
 	void doesNotReopenCDataWithinCDataContent() throws Exception {
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
@@ -238,6 +271,26 @@ class XmlReportWriterTests {
 		};
 
 		writeXmlReport(testPlan, reportData, assertingWriter);
+	}
+
+	@ParameterizedTest
+	@MethodSource("stringPairs")
+	void escapesIllegalChars(String input, String output) {
+		assertEquals(output, XmlReportWriter.escapeIllegalChars(input));
+	}
+
+	static Stream<Arguments> stringPairs() {
+		return Stream.of( //
+			arguments("\0", "&#0;"), //
+			arguments("\1", "&#1;"), //
+			arguments("\t", "\t"), //
+			arguments("\r", "\r"), //
+			arguments("\n", "\n"), //
+			arguments("\u001f", "&#31;"), //
+			arguments("\u0020", "\u0020"), //
+			arguments("foo!", "foo!"), //
+			arguments("\uD801\uDC00", "\uD801\uDC00") //
+		);
 	}
 
 	private String writeXmlReport(TestPlan testPlan, XmlReportData reportData) throws Exception {

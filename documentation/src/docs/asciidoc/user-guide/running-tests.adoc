@@ -750,8 +750,8 @@ Examples:
 - `+*+`: matches all candidate classes.
 - `+org.junit.*+`: matches all candidate classes under the `org.junit` base package and
   any of its subpackages.
-- `+*.MyCustom+`: matches every candidate class whose simple class name is exactly
-  `MyCustom`.
+- `+*.MyCustomImpl+`: matches every candidate class whose simple class name is exactly
+  `MyCustomImpl`.
 - `+*System*+`: matches every candidate class whose FQCN contains `System`.
 - `+*System*+, +*Unit*+`: matches every candidate class whose FQCN contains `System` or
   `Unit`.

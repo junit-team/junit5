@@ -33,7 +33,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class Request {
 
-	private static final Path PROJECTS = Paths.get("projects");
+	public static final Path PROJECTS = Paths.get("projects");
 	private static final Path TOOLS = Paths.get("build", "test-tools");
 	public static final Path WORKSPACE = Paths.get("build", "test-workspace");
 

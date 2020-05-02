@@ -2,14 +2,14 @@ import com.gradle.scan.plugin.internal.api.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
 	plugins {
-		id("com.gradle.enterprise") version "3.1.1"
-		id("net.nemerosa.versioning") version "2.10.0"
-		id("com.github.ben-manes.versions") version "0.27.0"
-		id("com.diffplug.gradle.spotless") version "3.27.0"
+		id("com.gradle.enterprise") version "3.2.1"
+		id("net.nemerosa.versioning") version "2.12.1"
+		id("com.github.ben-manes.versions") version "0.28.0"
+		id("com.diffplug.gradle.spotless") version "3.28.1"
 		id("org.ajoberstar.git-publish") version "2.1.3"
-		kotlin("jvm") version "1.3.61"
-		id("org.asciidoctor.jvm.convert") version "3.1.0"
-		id("org.asciidoctor.jvm.pdf") version "3.1.0"
+		kotlin("jvm") version "1.3.71"
+		id("org.asciidoctor.jvm.convert") version "3.2.0"
+		id("org.asciidoctor.jvm.pdf") version "3.2.0"
 		id("me.champeau.gradle.jmh") version "0.5.0"
 		id("io.spring.nohttp") version "0.0.4.RELEASE"
 	}

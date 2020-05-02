@@ -12,7 +12,7 @@ plugins {
 	`kotlin-library-conventions`
 }
 
-val modularProjects: List<Project> by rootProject.extra
+val modularProjects: List<Project> by rootProject
 
 // Because we need to set up Javadoc aggregation
 modularProjects.forEach { evaluationDependsOn(it.path) }
@@ -49,6 +49,7 @@ asciidoctorj {
 
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
+val releaseBranch = if (snapshot) "master" else "r${rootProject.version}"
 val docsDir = file("$buildDir/ghpages-docs")
 val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
 val uploadPdfs = !snapshot
@@ -150,15 +151,15 @@ tasks {
 		attributes(mapOf(
 				"linkToPdf" to uploadPdfs,
 				"jupiter-version" to version,
-				"platform-version" to project.properties["platformVersion"],
-				"vintage-version" to project.properties["vintageVersion"],
+				"platform-version" to project.property("platformVersion"),
+				"vintage-version" to project.property("vintageVersion"),
 				"bom-version" to version,
 				"junit4-version" to versions.junit4,
 				"apiguardian-version" to versions.apiguardian,
 				"ota4j-version" to versions.opentest4j,
 				"surefire-version" to versions["surefire"],
-				"release-branch" to project.properties["releaseBranch"],
-				"docs-version" to project.properties["docsVersion"],
+				"release-branch" to releaseBranch,
+				"docs-version" to docsVersion,
 				"revnumber" to version,
 				"consoleLauncherOptionsFile" to consoleLauncherOptionsFile,
 				"experimentalApisTableFile" to experimentalApisTableFile,
@@ -200,7 +201,8 @@ tasks {
 	}
 
 	val downloadJavadocElementLists by registering {
-		outputs.dir(elementListsDir)
+		outputs.cacheIf { true }
+		outputs.dir(elementListsDir).withPropertyName("elementListsDir")
 		inputs.property("externalModulesWithoutModularJavadoc", externalModulesWithoutModularJavadoc)
 		doFirst {
 			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->

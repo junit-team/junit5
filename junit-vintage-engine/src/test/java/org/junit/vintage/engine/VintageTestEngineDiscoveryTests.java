@@ -58,12 +58,12 @@ import org.junit.vintage.engine.samples.junit4.Categories.Skipped;
 import org.junit.vintage.engine.samples.junit4.Categories.SkippedWithReason;
 import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithRunnerWithCustomUniqueIdsAndDisplayNames;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithTwoTestCases;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithDistinguishableOverloadedMethod;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithIndistinguishableOverloadedMethod;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithNotFilterableRunner;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIds;
 import org.junit.vintage.engine.samples.junit4.ParameterizedTestCase;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleInheritedTestWhichFails;
@@ -662,19 +662,23 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	@Test
-	void usesCustomUniqueIdsWhenPresent() {
-		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIds.class;
-		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
+	void usesCustomUniqueIdsAndDisplayNamesWhenPresent() {
+		Class<?> suiteClass = JUnit4SuiteWithJUnit4TestCaseWithRunnerWithCustomUniqueIdsAndDisplayNames.class;
+		LauncherDiscoveryRequest request = request().selectors(selectClass(suiteClass)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(request);
 
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertRunnerTestDescriptor(runnerDescriptor, testClass);
+		assertRunnerTestDescriptor(runnerDescriptor, suiteClass);
 
-		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
+		TestDescriptor testClassDescriptor = getOnlyElement(runnerDescriptor.getChildren());
+		assertEquals("(TestClass)", testClassDescriptor.getDisplayName());
 
-		UniqueId prefix = VintageUniqueIdBuilder.uniqueIdForClass(testClass);
+		TestDescriptor childDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+
+		UniqueId prefix = VintageUniqueIdBuilder.uniqueIdForClass(suiteClass);
 		assertThat(childDescriptor.getUniqueId().toString()).startsWith(prefix.toString());
+		assertEquals("(TestMethod)", childDescriptor.getDisplayName());
 
 		String customUniqueIdValue = childDescriptor.getUniqueId().getSegments().get(2).getType();
 		assertNotNull(Base64.getDecoder().decode(customUniqueIdValue.getBytes(StandardCharsets.UTF_8)),

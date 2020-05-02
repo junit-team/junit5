@@ -190,7 +190,7 @@ class MethodArgumentsProviderTests {
 	void throwsExceptionWhenFactoryMethodDoesNotExist() {
 		var exception = assertThrows(JUnitException.class, () -> provideArguments("unknownMethod").toArray());
 
-		assertThat(exception.getMessage()).contains("Could not find factory method [unknownMethod] in class [",
+		assertThat(exception.getMessage()).contains("Could not find method [unknownMethod] in class [",
 			TestCase.class.getName());
 	}
 
@@ -255,8 +255,8 @@ class MethodArgumentsProviderTests {
 		var exception = assertThrows(JUnitException.class,
 			() -> provideArguments(ExternalFactoryMethods.class.getName() + "#nonExistentMethod").toArray());
 
-		assertThat(exception.getMessage()).isEqualTo("Could not find factory method [nonExistentMethod] in class ["
-				+ ExternalFactoryMethods.class.getName() + "]");
+		assertThat(exception.getMessage()).isEqualTo(
+			"Could not find method [nonExistentMethod] in class [" + ExternalFactoryMethods.class.getName() + "]");
 	}
 
 	@Nested

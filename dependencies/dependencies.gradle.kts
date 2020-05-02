@@ -32,5 +32,6 @@ dependencies {
 		api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions["kotlinx-coroutines-core"]}")
 		api("org.mockito:mockito-junit-jupiter:${versions["mockito"]}")
 		api("biz.aQute.bnd:biz.aQute.bndlib:${versions["bnd"]}")
+		api("org.spockframework:spock-core:${versions["spock"]}")
 	}
 }

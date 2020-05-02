@@ -15,7 +15,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqu
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 
-import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -74,8 +73,8 @@ class MethodSelectorResolver implements SelectorResolver {
 
 	private Filter toMethodFilter(MethodSelector methodSelector) {
 		Class<?> testClass = methodSelector.getJavaClass();
-		Method testMethod = methodSelector.getJavaMethod();
-		return matchMethodDescription(Description.createTestDescription(testClass, testMethod.getName()));
+		String methodName = methodSelector.getMethodName();
+		return matchMethodDescription(Description.createTestDescription(testClass, methodName));
 	}
 
 	private Filter toUniqueIdFilter(RunnerTestDescriptor runnerTestDescriptor, UniqueId uniqueId) {

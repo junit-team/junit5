@@ -130,6 +130,8 @@ subprojects {
 	tasks.withType<AbstractArchiveTask>().configureEach {
 		isPreserveFileTimestamps = false
 		isReproducibleFileOrder = true
+		dirMode = Integer.parseInt("0755", 8)
+		fileMode = Integer.parseInt("0644", 8)
 	}
 
 	pluginManager.withPlugin("java") {
@@ -214,6 +216,7 @@ rootProject.apply {
 
 	tasks {
 		dependencyUpdates {
+			checkConstraints = true
 			resolutionStrategy {
 				componentSelection {
 					all {

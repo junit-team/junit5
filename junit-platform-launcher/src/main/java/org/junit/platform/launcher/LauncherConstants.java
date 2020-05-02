@@ -91,17 +91,19 @@ public class LauncherConstants {
 	public static final String STDERR_REPORT_ENTRY_KEY = "stderr";
 
 	/**
-	 * Property name used to provide a pattern for deactivating listeners: {@value}
+	 * Property name used to provide patterns for deactivating listeners registered
+	 * via the {@link java.util.ServiceLoader ServiceLoader} mechanism: {@value}
 	 *
 	 * <h3>Pattern Matching Syntax</h3>
 	 *
-	 * <p>If the pattern consists solely of an asterisk ({@code *}), all listeners registered via
-	 * ServiceLoader will be deactivated. Otherwise, the pattern will be used to match against
-	 * comma separated fully qualified class name (<em>FQCN</em>) of each registered listener.
-	 * Any dot ({@code .}) in the pattern will match against a dot ({@code .})
-	 * or a dollar sign ({@code $}) in the FQCN. Any asterisk ({@code *}) will match
-	 * against one or more characters in the FQCN. All other characters in the
-	 * pattern will be matched one-to-one against the FQCN.
+	 * <p>If the property value consists solely of an asterisk ({@code *}), all
+	 * listeners will be deactivated. Otherwise, the property value will be treated
+	 * as a comma-separated list of patterns where each individual pattern will be
+	 * matched against the fully qualified class name (<em>FQCN</em>) of each registered
+	 * listener. Any dot ({@code .}) in a pattern will match against a dot ({@code .})
+	 * or a dollar sign ({@code $}) in a FQCN. Any asterisk ({@code *}) will match
+	 * against one or more characters in a FQCN. All other characters in a pattern
+	 * will be matched one-to-one against a FQCN.
 	 *
 	 * <h3>Examples</h3>
 	 *
@@ -111,10 +113,11 @@ public class LauncherConstants {
 	 * base package and any of its subpackages.
 	 * <li>{@code *.MyListener}: deactivates every listener whose simple class name is
 	 * exactly {@code MyListener}.
-	 * <li>{@code *System*, *Unit*}: deactivates every listener whose simple class name contains
-	 * {@code System} or {@code Unit}.
-	 * <li>{@code org.example.MyCondition}: deactivates the condition whose FQCN is
-	 * exactly {@code org.example.MyCondition}.
+	 * <li>{@code *System*, *Dev*}: deactivates every listener whose FQCN contains
+	 * {@code System} or {@code Dev}.
+	 * <li>{@code org.example.MyListener, org.example.TheirListener}: deactivates
+	 * listeners whose FQCN is exactly {@code org.example.MyListener} or
+	 * {@code org.example.TheirListener}.
 	 * </ul>
 	 *
 	 * @see #DEACTIVATE_ALL_LISTENERS_PATTERN
@@ -123,7 +126,9 @@ public class LauncherConstants {
 	public static final String DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME = "junit.platform.execution.listeners.deactivate";
 
 	/**
-	 * Wildcard pattern which signals that all listeners registered via ServiceLoader should be deactivated: {@value}
+	 * Wildcard pattern which signals that all listeners registered via the
+	 * {@link java.util.ServiceLoader ServiceLoader} mechanism should be deactivated:
+	 * {@value}
 	 *
 	 * @see #DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME
 	 * @see org.junit.platform.launcher.TestExecutionListener
