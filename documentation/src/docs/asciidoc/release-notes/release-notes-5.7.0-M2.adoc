@@ -31,8 +31,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
-
+* Support FilePosition in File and ClasspathResource discovery selectors.
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter
