@@ -192,6 +192,13 @@ public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#disabledReason()">disabledReason</a></span></code></th>
+<td class="colLast">
+<div class="block">Reason to provide if the test of container ends up being disabled.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="JRE.html" title="enum in org.junit.jupiter.api.condition">JRE</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max()">max</a></span></code></th>
 <td class="colLast">
@@ -200,7 +207,7 @@ public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
  should be enabled.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="JRE.html" title="enum in org.junit.jupiter.api.condition">JRE</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min()">min</a></span></code></th>
 <td class="colLast">
@@ -257,7 +264,7 @@ public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
 <li class="blockList"><a id="max()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>max</h4>
 <pre><a href="JRE.html" title="enum in org.junit.jupiter.api.condition">JRE</a>&nbsp;max</pre>
@@ -274,6 +281,25 @@ public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
 <dl>
 <dt>Default:</dt>
 <dd>org.junit.jupiter.api.condition.JRE.OTHER</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="disabledReason()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>disabledReason</h4>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;disabledReason</pre>
+<div class="block">Reason to provide if the test of container ends up being disabled.</div>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
 </dl>
 </li>
 </ul>

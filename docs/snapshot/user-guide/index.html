@@ -1871,7 +1871,9 @@ conditions <em>programmatically</em>. The simplest example of such a condition i
 several other annotation-based conditions in the <code>org.junit.jupiter.api.condition</code>
 package that allow developers to enable or disable containers and tests <em>declaratively</em>.
 When multiple <code>ExecutionCondition</code> extensions are registered, a container or test is
-disabled as soon as one of the conditions returns <em>disabled</em>.</p>
+disabled as soon as one of the conditions returns <em>disabled</em>. If you wish to provide
+details about why they might be disabled, every annotation associated with these built-in
+conditions has a <code>disabledReason</code> attribute available for that purpose.</p>
 </div>
 <div class="paragraph">
 <p>See <a href="#extensions-conditions"><code>ExecutionCondition</code></a> and the following sections for
@@ -9952,7 +9954,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-05-02 16:00:08 UTC
+Last updated 2020-05-05 14:59:47 UTC
 </div>
 </div>
 <style>
