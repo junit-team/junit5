@@ -342,7 +342,9 @@ conditions _programmatically_. The simplest example of such a condition is the b
 several other annotation-based conditions in the `org.junit.jupiter.api.condition`
 package that allow developers to enable or disable containers and tests _declaratively_.
 When multiple `ExecutionCondition` extensions are registered, a container or test is
-disabled as soon as one of the conditions returns _disabled_.
+disabled as soon as one of the conditions returns _disabled_. If you wish to provide
+details about why they might be disabled, every annotation associated with these built-in
+conditions has a `disabledReason` attribute available for that purpose.
 
 See <<extensions-conditions, `ExecutionCondition`>> and the following sections for
 details.

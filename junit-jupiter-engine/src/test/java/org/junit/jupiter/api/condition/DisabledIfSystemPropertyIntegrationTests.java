@@ -68,7 +68,7 @@ class DisabledIfSystemPropertyIntegrationTests {
 	}
 
 	@Test
-	@DisabledIfSystemProperty(named = KEY1, matches = ENIGMA)
+	@DisabledIfSystemProperty(named = KEY1, matches = ENIGMA, disabledReason = "That's an enigma")
 	void disabledBecauseSystemPropertyMatchesExactly() {
 		fail("should be disabled");
 	}

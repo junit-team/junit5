@@ -83,7 +83,7 @@ class EnabledOnOsIntegrationTests {
 	}
 
 	@Test
-	@EnabledOnOs(OTHER)
+	@EnabledOnOs(value = OTHER, disabledReason = "Disabled on almost every OS")
 	void other() {
 		assertFalse(onLinux() || onMac() || onSolaris() || onWindows());
 	}

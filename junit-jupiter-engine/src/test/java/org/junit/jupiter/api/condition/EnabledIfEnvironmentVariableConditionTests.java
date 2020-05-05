@@ -130,6 +130,7 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 		evaluateCondition();
 		assertDisabled();
 		assertReasonContains("does not match regular expression");
+		assertCustomDisabledReasonIs("Not bogus");
 	}
 
 	/**

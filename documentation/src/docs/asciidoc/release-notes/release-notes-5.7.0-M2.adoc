@@ -49,7 +49,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason`
+  attribute that can be used to provide additional explanation as to why a test or
+  container might be disabled.
 
 
 [[release-notes-5.7.0-M2-junit-vintage]]
