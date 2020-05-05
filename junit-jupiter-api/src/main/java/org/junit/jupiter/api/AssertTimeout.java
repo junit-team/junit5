@@ -21,10 +21,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.opentest4j.AssertionFailedError;
 
@@ -124,7 +126,12 @@ class AssertTimeout {
 	private static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
 			Object messageOrSupplier) {
 
-		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		AtomicReference<Thread> threadReference = new AtomicReference<>();
+		ExecutorService executorService = Executors.newSingleThreadExecutor(runnable -> {
+			Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+			threadReference.set(thread);
+			return thread;
+		});
 
 		try {
 			Future<T> future = executorService.submit(() -> {
@@ -141,8 +148,11 @@ class AssertTimeout {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
+				ExecutionTimeoutException exception = new ExecutionTimeoutException("Execution timed out");
+				exception.setStackTrace(threadReference.get().getStackTrace());
 				throw new AssertionFailedError(buildPrefix(nullSafeGet(messageOrSupplier))
-						+ "execution timed out after " + timeoutInMillis + " ms");
+						+ "execution timed out after " + timeoutInMillis + " ms",
+					exception);
 			}
 			catch (ExecutionException ex) {
 				throw ExceptionUtils.throwAsUncheckedException(ex.getCause());
@@ -153,6 +163,15 @@ class AssertTimeout {
 		}
 		finally {
 			executorService.shutdownNow();
+		}
+	}
+
+	private static class ExecutionTimeoutException extends JUnitException {
+
+		private static final long serialVersionUID = 1L;
+
+		ExecutionTimeoutException(String message) {
+			super(message);
 		}
 	}
 

@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static java.time.Duration.ofMillis;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -189,6 +190,8 @@ class AssertTimeoutAssertionsTests {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
 			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt));
 		assertMessageEquals(error, "execution timed out after 10 ms");
+		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
 	@Test
@@ -196,6 +199,8 @@ class AssertTimeoutAssertionsTests {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
 			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt, "Tempus Fugit"));
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
+		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
 	@Test
@@ -203,6 +208,8 @@ class AssertTimeoutAssertionsTests {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
 			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt, () -> "Tempus" + " " + "Fugit"));
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
+		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
 	@Test
@@ -256,6 +263,8 @@ class AssertTimeoutAssertionsTests {
 			});
 		});
 		assertMessageEquals(error, "execution timed out after 10 ms");
+		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertStackTraceContains(error.getCause().getStackTrace(), "AssertTimeoutAssertionsTests", "nap");
 	}
 
 	@Test
@@ -267,6 +276,8 @@ class AssertTimeoutAssertionsTests {
 			}, "Tempus Fugit");
 		});
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
+		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertStackTraceContains(error.getCause().getStackTrace(), "AssertTimeoutAssertionsTests", "nap");
 	}
 
 	@Test
@@ -278,6 +289,8 @@ class AssertTimeoutAssertionsTests {
 			}, () -> "Tempus" + " " + "Fugit");
 		});
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
+		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertStackTraceContains(error.getCause().getStackTrace(), "AssertTimeoutAssertionsTests", "nap");
 	}
 
 	/**
@@ -298,6 +311,16 @@ class AssertTimeoutAssertionsTests {
 		catch (InterruptedException ignore) {
 			// ignore
 		}
+	}
+
+	/**
+	 * Assert the given stack trace elements contain an element with the given class name and method name.
+	 */
+	private static void assertStackTraceContains(StackTraceElement[] stackTrace, String className, String methodName) {
+		assertThat(stackTrace).anySatisfy(element -> {
+			assertThat(element.getClassName()).endsWith(className);
+			assertThat(element.getMethodName()).isEqualTo(methodName);
+		});
 	}
 
 }
