@@ -10,16 +10,9 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
-import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-
 import java.util.Arrays;
-import java.util.Optional;
 
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -28,26 +21,21 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see EnabledOnOs
  */
-class EnabledOnOsCondition implements ExecutionCondition {
+class EnabledOnOsCondition extends BooleanExecutionCondition<EnabledOnOs> {
 
-	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled("@EnabledOnOs is not present");
+	static final String ENABLED_ON_CURRENT_OS = "Enabled on operating system: " + System.getProperty("os.name");
 
-	static final ConditionEvaluationResult ENABLED_ON_CURRENT_OS = //
-		enabled("Enabled on operating system: " + System.getProperty("os.name"));
+	static final String DISABLED_ON_CURRENT_OS = "Disabled on operating system: " + System.getProperty("os.name");
 
-	static final ConditionEvaluationResult DISABLED_ON_CURRENT_OS = //
-		disabled("Disabled on operating system: " + System.getProperty("os.name"));
+	EnabledOnOsCondition() {
+		super(EnabledOnOs.class, ENABLED_ON_CURRENT_OS, DISABLED_ON_CURRENT_OS, EnabledOnOs::disabledReason);
+	}
 
 	@Override
-	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<EnabledOnOs> optional = findAnnotation(context.getElement(), EnabledOnOs.class);
-		if (optional.isPresent()) {
-			OS[] operatingSystems = optional.get().value();
-			Preconditions.condition(operatingSystems.length > 0, "You must declare at least one OS in @EnabledOnOs");
-			return (Arrays.stream(operatingSystems).anyMatch(OS::isCurrentOs)) ? ENABLED_ON_CURRENT_OS
-					: DISABLED_ON_CURRENT_OS;
-		}
-		return ENABLED_BY_DEFAULT;
+	boolean isEnabled(EnabledOnOs annotation) {
+		OS[] operatingSystems = annotation.value();
+		Preconditions.condition(operatingSystems.length > 0, "You must declare at least one OS in @EnabledOnOs");
+		return Arrays.stream(operatingSystems).anyMatch(OS::isCurrentOs);
 	}
 
 }

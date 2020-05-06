@@ -80,6 +80,7 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	void java8to11() {
 		evaluateCondition();
 		assertDisabledOnCurrentJreIf(onJava8() || onJava9() || onJava10() || onJava11());
+		assertCustomDisabledReasonIs("Disabled on some JRE");
 	}
 
 	/**

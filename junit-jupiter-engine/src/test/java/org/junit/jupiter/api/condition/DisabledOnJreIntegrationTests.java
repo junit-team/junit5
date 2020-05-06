@@ -53,7 +53,8 @@ class DisabledOnJreIntegrationTests {
 	}
 
 	@Test
-	@DisabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15, OTHER })
+	@DisabledOnJre(value = { JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15,
+			OTHER }, disabledReason = "Disabled on every JRE")
 	void disabledOnAllJavaVersions() {
 		fail("should be disabled");
 	}

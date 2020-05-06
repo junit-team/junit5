@@ -31,6 +31,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* When using `ConsoleLauncher`, explicitly selected classes from `--select-class`
+  and `--select-method` are now always executed regardless of class name patterns
+  provided with `--include-classname` or the default class name pattern.
 * Support FilePosition in File and ClasspathResource discovery selectors.
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
@@ -46,7 +49,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason`
+  attribute that can be used to provide additional explanation as to why a test or
+  container might be disabled.
 
 
 [[release-notes-5.7.0-M2-junit-vintage]]

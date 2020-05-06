@@ -10,16 +10,9 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
-import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-
 import java.util.Arrays;
-import java.util.Optional;
 
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -28,26 +21,23 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see EnabledOnJre
  */
-class EnabledOnJreCondition implements ExecutionCondition {
+class EnabledOnJreCondition extends BooleanExecutionCondition<EnabledOnJre> {
 
-	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled("@EnabledOnJre is not present");
+	static final String ENABLED_ON_CURRENT_JRE = //
+		"Enabled on JRE version: " + System.getProperty("java.version");
 
-	static final ConditionEvaluationResult ENABLED_ON_CURRENT_JRE = //
-		enabled("Enabled on JRE version: " + System.getProperty("java.version"));
+	static final String DISABLED_ON_CURRENT_JRE = //
+		"Disabled on JRE version: " + System.getProperty("java.version");
 
-	static final ConditionEvaluationResult DISABLED_ON_CURRENT_JRE = //
-		disabled("Disabled on JRE version: " + System.getProperty("java.version"));
+	EnabledOnJreCondition() {
+		super(EnabledOnJre.class, ENABLED_ON_CURRENT_JRE, DISABLED_ON_CURRENT_JRE, EnabledOnJre::disabledReason);
+	}
 
 	@Override
-	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<EnabledOnJre> optional = findAnnotation(context.getElement(), EnabledOnJre.class);
-		if (optional.isPresent()) {
-			JRE[] versions = optional.get().value();
-			Preconditions.condition(versions.length > 0, "You must declare at least one JRE in @EnabledOnJre");
-			return (Arrays.stream(versions).anyMatch(JRE::isCurrentVersion)) ? ENABLED_ON_CURRENT_JRE
-					: DISABLED_ON_CURRENT_JRE;
-		}
-		return ENABLED_BY_DEFAULT;
+	boolean isEnabled(EnabledOnJre annotation) {
+		JRE[] versions = annotation.value();
+		Preconditions.condition(versions.length > 0, "You must declare at least one JRE in @EnabledOnJre");
+		return Arrays.stream(versions).anyMatch(JRE::isCurrentVersion);
 	}
 
 }

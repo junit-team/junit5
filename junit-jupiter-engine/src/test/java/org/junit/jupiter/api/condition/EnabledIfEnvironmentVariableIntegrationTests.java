@@ -74,7 +74,7 @@ class EnabledIfEnvironmentVariableIntegrationTests {
 	}
 
 	@Test
-	@EnabledIfEnvironmentVariable(named = KEY1, matches = BOGUS)
+	@EnabledIfEnvironmentVariable(named = KEY1, matches = BOGUS, disabledReason = "Not bogus")
 	void disabledBecauseEnvironmentVariableDoesNotMatch() {
 		fail("should be disabled");
 	}

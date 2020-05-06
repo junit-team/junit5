@@ -29,7 +29,7 @@ public class DisabledIfIntegrationTests {
 	}
 
 	@Test
-	@DisabledIf("staticMethodThatReturnsTrue")
+	@DisabledIf(value = "staticMethodThatReturnsTrue", disabledReason = "Disabled for some reason")
 	void disabledBecauseStaticConditionMethodReturnsTrue() {
 		fail("Should be disabled");
 	}
