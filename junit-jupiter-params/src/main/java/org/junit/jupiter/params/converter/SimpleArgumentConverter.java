@@ -31,7 +31,7 @@ public abstract class SimpleArgumentConverter implements ArgumentConverter {
 	}
 
 	/**
-	 * Convert the supplied {@code source} object into to the supplied
+	 * Convert the supplied {@code source} object into the supplied
 	 * {@code targetType}.
 	 *
 	 * @param source the source object to convert; may be {@code null}
