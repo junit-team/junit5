@@ -18,7 +18,7 @@ import org.apiguardian.api.API;
  * {@code BeforeTestExecutionCallback} defines the API for {@link Extension
  * Extensions} that wish to provide additional behavior to tests
  * <strong>immediately</strong> before an individual test is executed but after
- * any user-defined teardown methods (e.g.,
+ * any user-defined setup methods (e.g.,
  * {@link org.junit.jupiter.api.BeforeEach @BeforeEach} methods) have been
  * executed for that test.
  *
