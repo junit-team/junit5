@@ -65,7 +65,7 @@ public interface BeforeTestExecutionCallback extends Extension {
 
 	/**
 	 * Callback that is invoked <em>immediately before</em> an individual test is
-	 * executed but after any user-defined teardown methods have been executed
+	 * executed but after any user-defined setup methods have been executed
 	 * for that test.
 	 *
 	 * @param context the current extension context; never {@code null}
