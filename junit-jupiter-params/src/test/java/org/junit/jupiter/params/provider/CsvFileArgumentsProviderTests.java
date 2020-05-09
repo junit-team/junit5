@@ -19,13 +19,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.provider.CsvFileArgumentsProvider.InputStreamProvider;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -36,6 +42,7 @@ class CsvFileArgumentsProviderTests {
 	@Test
 	void providesArgumentsForNewlineAndComma() {
 		CsvFileSource annotation = csvFileSource()//
+				.resources("test.csv")//
 				.lineSeparator("\n")//
 				.delimiter(',')//
 				.build();
@@ -48,6 +55,7 @@ class CsvFileArgumentsProviderTests {
 	@Test
 	void providesArgumentsForCarriageReturnAndSemicolon() {
 		CsvFileSource annotation = csvFileSource()//
+				.resources("test.csv")//
 				.lineSeparator("\r")//
 				.delimiter(';')//
 				.build();
@@ -60,6 +68,7 @@ class CsvFileArgumentsProviderTests {
 	@Test
 	void providesArgumentsWithStringDelimiter() {
 		CsvFileSource annotation = csvFileSource()//
+				.resources("test.csv")//
 				.delimiterString(",")//
 				.build();
 
@@ -71,6 +80,7 @@ class CsvFileArgumentsProviderTests {
 	@Test
 	void throwsExceptionIfBothDelimitersAreSimultaneouslySet() {
 		CsvFileSource annotation = csvFileSource()//
+				.resources("test.csv")//
 				.delimiter(',')//
 				.delimiterString(";")//
 				.build();
@@ -86,6 +96,7 @@ class CsvFileArgumentsProviderTests {
 	@Test
 	void ignoresCommentedOutEntries() {
 		CsvFileSource annotation = csvFileSource()//
+				.resources("test.csv")//
 				.delimiter(',')//
 				.build();
 
@@ -95,7 +106,7 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void closesInputStream() {
+	void closesInputStreamForClasspathResource() {
 		AtomicBoolean closed = new AtomicBoolean(false);
 		InputStream inputStream = new ByteArrayInputStream("foo".getBytes()) {
 
@@ -104,8 +115,28 @@ class CsvFileArgumentsProviderTests {
 				closed.set(true);
 			}
 		};
+		CsvFileSource annotation = csvFileSource().resources("test.csv").build();
 
-		Stream<Object[]> arguments = provideArguments(inputStream, csvFileSource().build());
+		Stream<Object[]> arguments = provideArguments(inputStream, annotation);
+
+		assertThat(arguments.count()).isEqualTo(1);
+		assertThat(closed.get()).describedAs("closed").isTrue();
+	}
+
+	@Test
+	void closesInputStreamForFile(@TempDir Path tempDir) {
+		AtomicBoolean closed = new AtomicBoolean(false);
+		InputStream inputStream = new ByteArrayInputStream("foo".getBytes()) {
+
+			@Override
+			public void close() {
+				closed.set(true);
+			}
+		};
+		CsvFileSource annotation = csvFileSource().files(
+			tempDir.resolve("test.csv").toAbsolutePath().toString()).build();
+
+		Stream<Object[]> arguments = provideArguments(inputStream, annotation);
 
 		assertThat(arguments.count()).isEqualTo(1);
 		assertThat(closed.get()).describedAs("closed").isTrue();
@@ -121,6 +152,51 @@ class CsvFileArgumentsProviderTests {
 		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("baz"), array("qux"), array(""));
+	}
+
+	@Test
+	void readsFromSingleFileWithAbsolutePath(@TempDir Path tempDir) throws Exception {
+		Path csvFile = writeClasspathResourceToFile("/single-column.csv", tempDir.resolve("single-column.csv"));
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.files(csvFile.toAbsolutePath().toString())//
+				.build();
+
+		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("baz"), array("qux"), array(""));
+	}
+
+	@Test
+	void readsFromClasspathResourcesAndFiles(@TempDir Path tempDir) throws Exception {
+		Path csvFile = writeClasspathResourceToFile("/single-column.csv", tempDir.resolve("single-column.csv"));
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/single-column.csv")//
+				.files(csvFile.toAbsolutePath().toString())//
+				.build();
+
+		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).hasSize(2 * 5);
+	}
+
+	@Test
+	void readsFromSingleFileWithRelativePath() throws Exception {
+		Path csvFile = writeClasspathResourceToFile("/single-column.csv", Path.of("single-column.csv"));
+		try {
+			CsvFileSource annotation = csvFileSource()//
+					.encoding("ISO-8859-1")//
+					.files(csvFile.getFileName().toString())//
+					.build();
+
+			Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+
+			assertThat(arguments).containsExactly(array("foo"), array("bar"), array("baz"), array("qux"), array(""));
+		}
+		finally {
+			Files.delete(csvFile);
+		}
 	}
 
 	@Test
@@ -213,6 +289,43 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
+	void throwsExceptionForMissingFile() {
+		CsvFileSource annotation = csvFileSource()//
+				.files("does-not-exist.csv")//
+				.build();
+
+		UncheckedIOException exception = assertThrows(UncheckedIOException.class,
+			() -> provideArguments(new CsvFileArgumentsProvider(), annotation).toArray());
+
+		assertThat(exception).hasMessageContaining("File [does-not-exist.csv] could not be read");
+	}
+
+	@Test
+	void throwsExceptionForBlankFile() {
+		CsvFileSource annotation = csvFileSource()//
+				.files("    ")//
+				.build();
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(new CsvFileArgumentsProvider(), annotation).toArray());
+
+		assertThat(exception).hasMessageContaining("File [    ] must not be null or blank");
+	}
+
+	@Test
+	void throwsExceptionIfResourcesAndFilesAreEmpty() {
+		CsvFileSource annotation = csvFileSource()//
+				.resources()//
+				.files()//
+				.build();
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(new CsvFileArgumentsProvider(), annotation).toArray());
+
+		assertThat(exception).hasMessageContaining("Resources or files must not be empty");
+	}
+
+	@Test
 	void throwsExceptionForInvalidCharset() {
 		CsvFileSource annotation = csvFileSource()//
 				.encoding("Bogus-Charset")//
@@ -244,6 +357,7 @@ class CsvFileArgumentsProviderTests {
 	@Test
 	void emptyValueIsAnEmptyWithCustomNullValueString() {
 		CsvFileSource annotation = csvFileSource()//
+				.resources("test.csv")//
 				.lineSeparator("\n")//
 				.delimiter(',')//
 				.nullValues("NIL")//
@@ -259,11 +373,18 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	private Stream<Object[]> provideArguments(InputStream inputStream, CsvFileSource annotation) {
-		String expectedResource = annotation.resources()[0];
+		CsvFileArgumentsProvider provider = new CsvFileArgumentsProvider(new InputStreamProvider() {
+			@Override
+			public InputStream openClasspathResource(Class<?> baseClass, String path) {
+				assertThat(path).isEqualTo(annotation.resources()[0]);
+				return inputStream;
+			}
 
-		CsvFileArgumentsProvider provider = new CsvFileArgumentsProvider((testClass, resource) -> {
-			assertThat(resource).isEqualTo(expectedResource);
-			return inputStream;
+			@Override
+			public InputStream openFile(String path) {
+				assertThat(path).isEqualTo(annotation.files()[0]);
+				return inputStream;
+			}
 		});
 		return provideArguments(provider, annotation);
 	}
@@ -279,6 +400,13 @@ class CsvFileArgumentsProviderTests {
 	@SuppressWarnings("unchecked")
 	private static <T> T[] array(T... elements) {
 		return elements;
+	}
+
+	private static Path writeClasspathResourceToFile(String name, Path target) throws IOException {
+		try (var in = CsvFileArgumentsProviderTests.class.getResourceAsStream(name)) {
+			Files.copy(in, target);
+		}
+		return target;
 	}
 
 }

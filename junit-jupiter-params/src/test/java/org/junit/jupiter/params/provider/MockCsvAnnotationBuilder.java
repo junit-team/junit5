@@ -102,7 +102,8 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 	static class MockCsvFileSourceBuilder extends MockCsvAnnotationBuilder<CsvFileSource, MockCsvFileSourceBuilder> {
 
-		private String[] resources = { "test.csv" };
+		private String[] resources = {};
+		private String[] files = {};
 		private String encoding = "UTF-8";
 		private String lineSeparator = "\n";
 		private int numLinesToSkip = 0;
@@ -112,11 +113,13 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			return this;
 		}
 
-		/**
-		 * Defaults to "test.csv".
-		 */
 		MockCsvFileSourceBuilder resources(String... resources) {
 			this.resources = resources;
+			return this;
+		}
+
+		MockCsvFileSourceBuilder files(String... files) {
+			this.files = files;
 			return this;
 		}
 
@@ -147,6 +150,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 			// @CsvFileSource
 			when(annotation.resources()).thenReturn(this.resources);
+			when(annotation.files()).thenReturn(this.files);
 			when(annotation.encoding()).thenReturn(this.encoding);
 			when(annotation.lineSeparator()).thenReturn(this.lineSeparator);
 			when(annotation.numLinesToSkip()).thenReturn(this.numLinesToSkip);
