@@ -20,7 +20,6 @@ import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -35,6 +34,7 @@ import com.univocity.parsers.csv.CsvParser;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -201,7 +201,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 				return Files.newInputStream(Paths.get(path));
 			}
 			catch (IOException e) {
-				throw new UncheckedIOException("File [" + path + "] could not be read", e);
+				throw new JUnitException("File [" + path + "] could not be read", e);
 			}
 		}
 

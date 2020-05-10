@@ -21,7 +21,6 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -32,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.provider.CsvFileArgumentsProvider.InputStreamProvider;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -294,7 +294,7 @@ class CsvFileArgumentsProviderTests {
 				.files("does-not-exist.csv")//
 				.build();
 
-		UncheckedIOException exception = assertThrows(UncheckedIOException.class,
+		JUnitException exception = assertThrows(JUnitException.class,
 			() -> provideArguments(new CsvFileArgumentsProvider(), annotation).toArray());
 
 		assertThat(exception).hasMessageContaining("File [does-not-exist.csv] could not be read");
