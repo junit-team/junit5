@@ -189,14 +189,14 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 		@Override
 		public InputStream openClasspathResource(Class<?> baseClass, String path) {
-			Preconditions.notBlank(path, "Classpath resource [" + path + "] must not be null or blank");
+			Preconditions.notBlank(path, () -> "Classpath resource [" + path + "] must not be null or blank");
 			InputStream inputStream = baseClass.getResourceAsStream(path);
 			return Preconditions.notNull(inputStream, () -> "Classpath resource [" + path + "] does not exist");
 		}
 
 		@Override
 		public InputStream openFile(String path) {
-			Preconditions.notBlank(path, "File [" + path + "] must not be null or blank");
+			Preconditions.notBlank(path, () -> "File [" + path + "] must not be null or blank");
 			try {
 				return Files.newInputStream(Paths.get(path));
 			}
