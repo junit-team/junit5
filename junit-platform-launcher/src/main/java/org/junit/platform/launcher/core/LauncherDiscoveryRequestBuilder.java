@@ -93,12 +93,13 @@ public final class LauncherDiscoveryRequestBuilder {
 	 */
 	public static final String DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME = "junit.platform.discovery.listener.default";
 
-	private List<DiscoverySelector> selectors = new ArrayList<>();
-	private List<EngineFilter> engineFilters = new ArrayList<>();
-	private List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
-	private List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
-	private Map<String, String> configurationParameters = new HashMap<>();
-	private List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
+	private final List<DiscoverySelector> selectors = new ArrayList<>();
+	private final List<EngineFilter> engineFilters = new ArrayList<>();
+	private final List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
+	private final List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
+	private final Map<String, String> configurationParameters = new HashMap<>();
+	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
+	private boolean useImplicitConfigurationParameters = true;
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
@@ -225,16 +226,29 @@ public final class LauncherDiscoveryRequestBuilder {
 		}
 	}
 
+	@API(status = API.Status.EXPERIMENTAL, since = "1.7")
+	public LauncherDiscoveryRequestBuilder withImplicitConfigurationParameters(
+			boolean useImplicitConfigurationParameters) {
+		this.useImplicitConfigurationParameters = useImplicitConfigurationParameters;
+		return this;
+	}
+
 	/**
 	 * Build the {@link LauncherDiscoveryRequest} that has been configured via
 	 * this builder.
 	 */
 	public LauncherDiscoveryRequest build() {
-		LauncherConfigurationParameters launcherConfigurationParameters = new LauncherConfigurationParameters(
-			this.configurationParameters);
+		LauncherConfigurationParameters launcherConfigurationParameters = buildLauncherConfigurationParameters();
 		LauncherDiscoveryListener discoveryListener = getLauncherDiscoveryListener(launcherConfigurationParameters);
 		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
 			this.postDiscoveryFilters, launcherConfigurationParameters, discoveryListener);
+	}
+
+	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {
+		return LauncherConfigurationParameters.builder() //
+				.withExplicitParameters(this.configurationParameters) //
+				.withImplicitLookups(this.useImplicitConfigurationParameters) //
+				.build();
 	}
 
 	private LauncherDiscoveryListener getLauncherDiscoveryListener(ConfigurationParameters configurationParameters) {

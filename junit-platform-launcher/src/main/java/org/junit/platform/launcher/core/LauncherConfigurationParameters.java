@@ -10,14 +10,16 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Collections.emptyMap;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -36,25 +38,157 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	private static final Logger logger = LoggerFactory.getLogger(LauncherConfigurationParameters.class);
 
-	private final Map<String, String> explicitConfigParams;
-	private final Properties configParamsFromFile;
-
-	LauncherConfigurationParameters() {
-		this(emptyMap(), ConfigurationParameters.CONFIG_FILE_NAME);
+	static Builder builder() {
+		return new Builder();
 	}
 
-	LauncherConfigurationParameters(Map<String, String> configParams) {
-		this(configParams, ConfigurationParameters.CONFIG_FILE_NAME);
+	private final List<Lookup> lookups;
+
+	private LauncherConfigurationParameters(List<Lookup> lookups) {
+		this.lookups = lookups;
 	}
 
-	LauncherConfigurationParameters(Map<String, String> configParams, String configFileName) {
-		Preconditions.notNull(configParams, "configuration parameters must not be null");
-		Preconditions.notBlank(configFileName, "configFileName must not be null or blank");
-		this.explicitConfigParams = configParams;
-		this.configParamsFromFile = fromClasspathResource(configFileName.trim());
+	@Override
+	public Optional<String> get(String key) {
+		return Optional.ofNullable(getProperty(key));
 	}
 
-	private static Properties fromClasspathResource(String configFileName) {
+	@Override
+	public Optional<Boolean> getBoolean(String key) {
+		return get(key).map(Boolean::parseBoolean);
+	}
+
+	@Override
+	public int size() {
+		return lookups.stream() //
+				.mapToInt(Lookup::size) //
+				.sum();
+	}
+
+	private String getProperty(String key) {
+		Preconditions.notBlank(key, "key must not be null or blank");
+		return lookups.stream() //
+				.map(lookup -> lookup.getValue(key)) //
+				.filter(Objects::nonNull) //
+				.findFirst() //
+				.orElse(null);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this) //
+				.append("lookups", lookups) //
+				.toString();
+	}
+
+	static final class Builder {
+
+		private final Map<String, String> explicitParameters = new HashMap<>();
+		private boolean useImplicitLookups = true;
+		private String configFileName = ConfigurationParameters.CONFIG_FILE_NAME;
+
+		private Builder() {
+		}
+
+		Builder withExplicitParameters(Map<String, String> parameters) {
+			Preconditions.notNull(parameters, "configuration parameters must not be null");
+			explicitParameters.putAll(parameters);
+			return this;
+		}
+
+		Builder withImplicitLookups(boolean useImplicitLookups) {
+			this.useImplicitLookups = useImplicitLookups;
+			return this;
+		}
+
+		Builder withConfigFileName(String configFileName) {
+			Preconditions.notBlank(configFileName, "configFileName must not be null or blank");
+			this.configFileName = configFileName;
+			return this;
+		}
+
+		LauncherConfigurationParameters build() {
+			List<Lookup> lookups = new ArrayList<>();
+			if (!explicitParameters.isEmpty()) {
+				lookups.add(Lookup.explicit(explicitParameters));
+			}
+			if (useImplicitLookups) {
+				lookups.add(Lookup.systemProperties());
+				lookups.add(Lookup.propertiesFile(configFileName));
+			}
+			return new LauncherConfigurationParameters(lookups);
+		}
+	}
+
+	private interface Lookup {
+
+		String getValue(String key);
+
+		default int size() {
+			return 0;
+		}
+
+		static Lookup explicit(Map<String, String> configParams) {
+			return new Lookup() {
+				@Override
+				public String getValue(String key) {
+					return configParams.get(key);
+				}
+
+				@Override
+				public int size() {
+					return configParams.size();
+				}
+
+				@Override
+				public String toString() {
+					ToStringBuilder builder = new ToStringBuilder("explicit");
+					configParams.forEach(builder::append);
+					return builder.toString();
+				}
+			};
+		}
+
+		static Lookup systemProperties() {
+			return new Lookup() {
+				@Override
+				public String getValue(String key) {
+					try {
+						return System.getProperty(key);
+					}
+					catch (Exception ignore) {
+						return null;
+					}
+				}
+
+				@Override
+				public String toString() {
+					return "systemProperties [...]";
+				}
+			};
+		}
+
+		static Lookup propertiesFile(String configFileName) {
+			Preconditions.notBlank(configFileName, "configFileName must not be null or blank");
+			Properties properties = loadClasspathResource(configFileName.trim());
+			return new Lookup() {
+				@Override
+				public String getValue(String key) {
+					return properties.getProperty(key);
+				}
+
+				@Override
+				public String toString() {
+					ToStringBuilder builder = new ToStringBuilder("propertiesFile");
+					properties.stringPropertyNames().forEach(key -> builder.append(key, getValue(key)));
+					return builder.toString();
+				}
+			};
+		}
+
+	}
+
+	private static Properties loadClasspathResource(String configFileName) {
 		Properties props = new Properties();
 
 		try {
@@ -86,64 +220,6 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		}
 
 		return props;
-	}
-
-	@Override
-	public Optional<String> get(String key) {
-		return Optional.ofNullable(getProperty(key));
-	}
-
-	@Override
-	public Optional<Boolean> getBoolean(String key) {
-		String property = getProperty(key);
-		if (property != null) {
-			return Optional.of(Boolean.parseBoolean(property));
-		}
-		return Optional.empty();
-	}
-
-	@Override
-	public int size() {
-		return this.explicitConfigParams.size();
-	}
-
-	private String getProperty(String key) {
-		Preconditions.notBlank(key, "key must not be null or blank");
-
-		// 1) Check explicit config param.
-		String value = this.explicitConfigParams.get(key);
-
-		// 2) Check system property.
-		if (value == null) {
-			try {
-				value = System.getProperty(key);
-			}
-			catch (Exception ex) {
-				/* ignore */
-			}
-
-			// 3) Check config file.
-			if (value == null) {
-				value = this.configParamsFromFile.getProperty(key);
-			}
-		}
-
-		return value;
-	}
-
-	@Override
-	public String toString() {
-		ToStringBuilder builder = new ToStringBuilder(this);
-
-		this.explicitConfigParams.forEach(builder::append);
-
-		// @formatter:off
-		this.configParamsFromFile.stringPropertyNames().stream()
-				.filter(key -> !this.explicitConfigParams.containsKey(key))
-				.forEach(key -> builder.append(key, this.configParamsFromFile.getProperty(key)));
-		// @formatter:on
-
-		return builder.toString();
 	}
 
 }

@@ -20,6 +20,9 @@ public class ConfigurationParametersFactoryForTests {
 	}
 
 	public static ConfigurationParameters create(Map<String, String> configParams) {
-		return new LauncherConfigurationParameters(configParams, "/dev/null");
+		return LauncherConfigurationParameters.builder() //
+				.withExplicitParameters(configParams) //
+				.withImplicitLookups(false) //
+				.build();
 	}
 }

@@ -33,16 +33,20 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public class ToStringBuilder {
 
-	private final Class<?> type;
+	private final String typeName;
 
 	private final List<String> values = new ArrayList<>();
 
 	public ToStringBuilder(Object obj) {
-		this.type = Preconditions.notNull(obj, "Object must not be null").getClass();
+		this(Preconditions.notNull(obj, "Object must not be null").getClass().getSimpleName());
 	}
 
 	public ToStringBuilder(Class<?> type) {
-		this.type = Preconditions.notNull(type, "Class must not be null");
+		this(Preconditions.notNull(type, "Class must not be null").getSimpleName());
+	}
+
+	public ToStringBuilder(String typeName) {
+		this.typeName = Preconditions.notNull(typeName, "Type name must not be null");
 	}
 
 	public ToStringBuilder append(String name, Object value) {
@@ -57,7 +61,7 @@ public class ToStringBuilder {
 
 	@Override
 	public String toString() {
-		return this.type.getSimpleName() + " [" + join(", ", this.values) + "]";
+		return this.typeName + " [" + join(", ", this.values) + "]";
 	}
 
 }

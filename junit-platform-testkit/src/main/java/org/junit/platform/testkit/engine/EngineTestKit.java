@@ -330,7 +330,8 @@ public final class EngineTestKit {
 	 */
 	public static final class Builder {
 
-		private final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
+		private final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request() //
+				.withImplicitConfigurationParameters(false);
 		private final TestEngine testEngine;
 
 		private Builder(TestEngine testEngine) {
@@ -438,6 +439,12 @@ public final class EngineTestKit {
 			return this;
 		}
 
+		@API(status = API.Status.EXPERIMENTAL, since = "1.7")
+		public Builder withImplicitConfigurationParameters(boolean useImplicitConfigurationParameters) {
+			this.requestBuilder.withImplicitConfigurationParameters(useImplicitConfigurationParameters);
+			return this;
+		}
+
 		/**
 		 * Execute tests for the configured {@link TestEngine},
 		 * {@linkplain DiscoverySelector discovery selectors},
@@ -451,9 +458,9 @@ public final class EngineTestKit {
 		 * @see #configurationParameters(Map)
 		 */
 		public EngineExecutionResults execute() {
+			LauncherDiscoveryRequest request = this.requestBuilder.build();
 			ExecutionRecorder executionRecorder = new ExecutionRecorder();
-			EngineTestKit.executeUsingLauncherOrchestration(this.testEngine, this.requestBuilder.build(),
-				executionRecorder);
+			EngineTestKit.executeUsingLauncherOrchestration(this.testEngine, request, executionRecorder);
 			return executionRecorder.getExecutionResults();
 		}
 
