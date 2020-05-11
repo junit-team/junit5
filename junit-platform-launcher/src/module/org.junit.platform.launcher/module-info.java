@@ -20,6 +20,7 @@
  */
 module org.junit.platform.launcher {
 	requires transitive java.logging;
+	requires jdk.jfr;
 	requires transitive org.apiguardian.api;
 	requires transitive org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
