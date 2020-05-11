@@ -145,7 +145,7 @@ val compileModule by tasks.registering(JavaCompile::class) {
 	source = fileTree(moduleSourceDir)
 	destinationDir = moduleOutputDir
 	sourceCompatibility = "9"
-	targetCompatibility = "9"
+	targetCompatibility = "11"
 	classpath = files()
 	options.compilerArgs.addAll(listOf(
 			// "-verbose",
