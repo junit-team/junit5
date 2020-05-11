@@ -32,7 +32,4 @@ module org.junit.platform.launcher {
 	uses org.junit.platform.engine.TestEngine;
 	uses org.junit.platform.launcher.PostDiscoveryFilter;
 	uses org.junit.platform.launcher.TestExecutionListener;
-
-	provides org.junit.platform.launcher.TestExecutionListener
-			with org.junit.platform.launcher.listeners.FlightRecordingListener;
 }
