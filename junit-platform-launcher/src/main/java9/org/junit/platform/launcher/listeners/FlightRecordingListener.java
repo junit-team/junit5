@@ -120,6 +120,7 @@ public class FlightRecordingListener implements TestExecutionListener {
 
 	@MetadataDefinition
 	@Relational
+	@Name("org.junit.UniqueId")
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	public @interface UniqueId {
