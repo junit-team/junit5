@@ -10,10 +10,12 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.Logger;
@@ -29,22 +31,23 @@ class InternalTestPlan extends TestPlan {
 	private static final Logger logger = LoggerFactory.getLogger(InternalTestPlan.class);
 
 	private final AtomicBoolean warningEmitted = new AtomicBoolean(false);
-	private final Root root;
+	private final List<Root> roots;
 	private final TestPlan delegate;
 
-	static InternalTestPlan from(Root root) {
-		TestPlan delegate = TestPlan.from(root.getEngineDescriptors());
-		return new InternalTestPlan(root, delegate);
+	static InternalTestPlan from(List<Root> roots) {
+		TestPlan delegate = TestPlan.from(roots.parallelStream().flatMap(
+				root -> root.getEngineDescriptors().stream()).collect(Collectors.toList()));
+		return new InternalTestPlan(roots, delegate);
 	}
 
-	private InternalTestPlan(Root root, TestPlan delegate) {
+	private InternalTestPlan(List<Root> roots, TestPlan delegate) {
 		super(delegate.containsTests());
-		this.root = root;
+		this.roots = roots;
 		this.delegate = delegate;
 	}
 
-	Root getRoot() {
-		return root;
+	List<Root> getInternalRoots() {
+		return roots;
 	}
 
 	@Override

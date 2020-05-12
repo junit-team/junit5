@@ -10,10 +10,13 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
@@ -33,6 +36,7 @@ import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
@@ -145,9 +149,20 @@ class DefaultLauncher implements Launcher {
 		return listenerRegistry;
 	}
 
-	private Root discoverRoot(LauncherDiscoveryRequest discoveryRequest, String phase) {
-		Root root = new Root(discoveryRequest.getConfigurationParameters());
+	private List<Root> discoverRoot(LauncherDiscoveryRequest discoveryRequest, String phase) {
+		return collectRequests(discoveryRequest).stream().map(request -> resolveRequest(request, phase))
+				.collect(Collectors.toList());
+	}
 
+	private List<Root> collectRequests(LauncherDiscoveryRequest discoveryRequest) {
+		List<Root> requests = new ArrayList<>();
+		requests.add(new Root(discoveryRequest));
+		requests.addAll(new SuiteDiscoverer().resolve(discoveryRequest));
+		return requests;
+	}
+	
+	private Root resolveRequest(Root root, String phase) {
+		LauncherDiscoveryRequest discoveryRequest = root.getDiscoveryRequest();
 		for (TestEngine testEngine : this.testEngines) {
 			// @formatter:off
 			boolean engineIsExcluded = discoveryRequest.getEngineFilters().stream()
@@ -165,7 +180,7 @@ class DefaultLauncher implements Launcher {
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, discoveryRequest);
+			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, root);
 			root.add(testEngine, rootDescriptor);
 		}
 		root.applyPostDiscoveryFilters(discoveryRequest);
@@ -173,9 +188,12 @@ class DefaultLauncher implements Launcher {
 		return root;
 	}
 
-	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
+	private TestDescriptor discoverEngineRoot(TestEngine testEngine, Root root) {
+		LauncherDiscoveryRequest discoveryRequest = root.getDiscoveryRequest();
 		LauncherDiscoveryListener discoveryListener = discoveryRequest.getDiscoveryListener();
-		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
+		UniqueId uniqueEngineId = root.getSuiteDescriptor().map(TestDescriptor::getUniqueId).map(
+				id -> id.append(UniqueId.ENGINE_SEGMENT_TYPE, testEngine.getId())).orElseGet(
+						() -> UniqueId.forEngine(testEngine.getId()));
 		try {
 			discoveryListener.engineDiscoveryStarted(uniqueEngineId);
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
@@ -193,11 +211,19 @@ class DefaultLauncher implements Launcher {
 	}
 
 	private void execute(InternalTestPlan internalTestPlan, TestExecutionListener[] listeners) {
-		Root root = internalTestPlan.getRoot();
-		ConfigurationParameters configurationParameters = root.getConfigurationParameters();
 		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
+		testExecutionListener.testPlanExecutionStarted(internalTestPlan);
+		for (Root root : internalTestPlan.getInternalRoots()) {
+			execute(internalTestPlan, root, listenerRegistry);
+		}
+		testExecutionListener.testPlanExecutionFinished(internalTestPlan);
+	}
+		
+	private void execute(InternalTestPlan internalTestPlan, Root root, TestExecutionListenerRegistry listenerRegistry) {
+		ConfigurationParameters configurationParameters = root.getConfigurationParameters();
 		withInterceptedStreams(configurationParameters, listenerRegistry, testExecutionListener -> {
-			testExecutionListener.testPlanExecutionStarted(internalTestPlan);
+			root.getSuiteDescriptor().map(TestIdentifier::from).ifPresent(testExecutionListener::executionStarted);
 			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(internalTestPlan,
 				testExecutionListener);
 			for (TestEngine testEngine : root.getTestEngines()) {
@@ -211,7 +237,9 @@ class DefaultLauncher implements Launcher {
 					execute(engineDescriptor, engineExecutionListener, configurationParameters, testEngine);
 				}
 			}
-			testExecutionListener.testPlanExecutionFinished(internalTestPlan);
+			root.getSuiteDescriptor().map(TestIdentifier::from).ifPresent(
+					suiteIdentifier -> testExecutionListener.executionFinished(
+							suiteIdentifier, TestExecutionResult.successful()));
 		});
 	}
 

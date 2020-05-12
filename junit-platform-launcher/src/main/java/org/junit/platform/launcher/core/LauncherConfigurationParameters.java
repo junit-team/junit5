@@ -46,6 +46,10 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		this.configParamsFromFile = fromClasspathResource(configFileName.trim());
 	}
 
+	Map<String, String> getExplicitConfigParams() {
+		return explicitConfigParams;
+	}
+
 	private static Properties fromClasspathResource(String configFileName) {
 		Properties props = new Properties();
 

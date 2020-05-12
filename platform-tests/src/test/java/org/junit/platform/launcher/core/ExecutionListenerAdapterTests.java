@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -38,7 +39,7 @@ class ExecutionListenerAdapterTests {
 		//cannot mock final classes with mockito
 		Root root = new Root(null);
 		root.add(mock(TestEngine.class), testDescriptor);
-		InternalTestPlan testPlan = InternalTestPlan.from(root);
+		InternalTestPlan testPlan = InternalTestPlan.from(Collections.singletonList(root));
 		TestIdentifier testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
 
 		//not yet spyable with mockito? -> https://github.com/mockito/mockito/issues/146

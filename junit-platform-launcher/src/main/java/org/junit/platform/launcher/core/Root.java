@@ -13,8 +13,11 @@ package org.junit.platform.launcher.core;
 import static org.junit.platform.engine.Filter.composeFilters;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.Filter;
@@ -31,20 +34,35 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 class Root {
 
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>(4);
-	private final ConfigurationParameters configurationParameters;
+	private final LauncherDiscoveryRequest discoveryRequest;
+	private final SuiteDescriptor suiteDescriptor;
 
-	Root(ConfigurationParameters configurationParameters) {
-		this.configurationParameters = configurationParameters;
+	Root(LauncherDiscoveryRequest discoveryRequest) {
+		this(discoveryRequest, null);
+	}
+
+	Root(LauncherDiscoveryRequest discoveryRequest, SuiteDescriptor suiteDescriptor) {
+		this.discoveryRequest = discoveryRequest;
+		this.suiteDescriptor = suiteDescriptor;
+	}
+
+	public LauncherDiscoveryRequest getDiscoveryRequest() {
+		return discoveryRequest;
 	}
 
 	public ConfigurationParameters getConfigurationParameters() {
-		return configurationParameters;
+		return discoveryRequest.getConfigurationParameters();
+	}
+
+	Optional<TestDescriptor> getSuiteDescriptor() {
+		return Optional.ofNullable(suiteDescriptor);
 	}
 
 	/**
 	 * Add an {@code engine}'s root {@link TestDescriptor}.
 	 */
 	void add(TestEngine engine, TestDescriptor testDescriptor) {
+		getSuiteDescriptor().ifPresent(suiteDescriptor -> suiteDescriptor.addChild(testDescriptor));
 		this.testEngineDescriptors.put(engine, testDescriptor);
 	}
 
@@ -53,7 +71,9 @@ class Root {
 	}
 
 	Collection<TestDescriptor> getEngineDescriptors() {
-		return this.testEngineDescriptors.values();
+		return getSuiteDescriptor()
+				.map(o -> (Collection<TestDescriptor>) Collections.singleton(o))
+				.orElseGet(this.testEngineDescriptors::values);
 	}
 
 	TestDescriptor getTestDescriptorFor(TestEngine testEngine) {
