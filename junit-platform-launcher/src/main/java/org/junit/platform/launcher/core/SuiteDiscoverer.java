@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInModule;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
@@ -39,6 +40,7 @@ import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
+import org.junit.platform.suite.api.Configuration;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.ExcludePackages;
@@ -166,6 +168,8 @@ class SuiteDiscoverer {
             findAnnotation(javaClass, IncludeTags.class).map(IncludeTags::value)
                     .ifPresent(tagExpressions -> request.filters(TagFilter.includeTags(tagExpressions)));
             // @formatter:on
+            findRepeatableAnnotations(javaClass, Configuration.class).forEach(configuration ->
+            		request.configurationParameter(configuration.key(), configuration.value()));
 			return request.build();
 		}
 
