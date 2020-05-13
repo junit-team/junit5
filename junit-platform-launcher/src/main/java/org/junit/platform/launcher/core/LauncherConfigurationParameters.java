@@ -43,9 +43,11 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 	}
 
 	private final List<ParameterProvider> providers;
+	private final Map<String, String> explicitParameters;
 
-	private LauncherConfigurationParameters(List<ParameterProvider> providers) {
+	private LauncherConfigurationParameters(List<ParameterProvider> providers, Map<String, String> explicitParameters) {
 		this.providers = providers;
+		this.explicitParameters = explicitParameters;
 	}
 
 	@Override
@@ -116,8 +118,12 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				parameterProviders.add(ParameterProvider.systemProperties());
 				parameterProviders.add(ParameterProvider.propertiesFile(configFileName));
 			}
-			return new LauncherConfigurationParameters(parameterProviders);
+			return new LauncherConfigurationParameters(parameterProviders, explicitParameters);
 		}
+	}
+
+	Map<String, String> getExplicitParameters() {
+		return explicitParameters;
 	}
 
 	private interface ParameterProvider {

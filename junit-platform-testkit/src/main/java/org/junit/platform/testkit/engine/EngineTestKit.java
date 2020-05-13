@@ -267,7 +267,7 @@ public final class EngineTestKit {
 			LauncherDiscoveryRequest discoveryRequest, EngineExecutionListener listener) {
 		TestDescriptor engineTestDescriptor;
 		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine),
-			emptySet()).discover(discoveryRequest, "testing");
+			emptySet()).discover(discoveryRequest, "testing").iterator().next();
 		engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
 		new EngineExecutionOrchestrator().execute(discoveryResult, listener);

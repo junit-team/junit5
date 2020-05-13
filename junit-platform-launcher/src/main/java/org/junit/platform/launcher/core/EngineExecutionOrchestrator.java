@@ -25,6 +25,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestIdentifier;
 
 /**
  * Orchestrates test execution using the configured test engines.
@@ -45,13 +46,25 @@ public class EngineExecutionOrchestrator {
 	}
 
 	void execute(InternalTestPlan internalTestPlan, TestExecutionListener... listeners) {
-		LauncherDiscoveryResult discoveryResult = internalTestPlan.getDiscoveryResult();
-		ConfigurationParameters configurationParameters = discoveryResult.getConfigurationParameters();
 		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
+		TestExecutionListener listener = listenerRegistry.getCompositeTestExecutionListener();
+		listener.testPlanExecutionStarted(internalTestPlan);
+		for (LauncherDiscoveryResult discoveryResult : internalTestPlan.getDiscoveryResults()) {
+			execute(internalTestPlan, discoveryResult, listenerRegistry);
+		}
+		listener.testPlanExecutionFinished(internalTestPlan);
+	}
+
+	private void execute(InternalTestPlan internalTestPlan, LauncherDiscoveryResult discoveryResult,
+			TestExecutionListenerRegistry listenerRegistry) {
+		ConfigurationParameters configurationParameters = discoveryResult.getConfigurationParameters();
 		withInterceptedStreams(configurationParameters, listenerRegistry, testExecutionListener -> {
-			testExecutionListener.testPlanExecutionStarted(internalTestPlan);
+			discoveryResult.getParentDescriptor().map(TestIdentifier::from).ifPresent(
+				testExecutionListener::executionStarted);
 			execute(discoveryResult, new ExecutionListenerAdapter(internalTestPlan, testExecutionListener));
-			testExecutionListener.testPlanExecutionFinished(internalTestPlan);
+			discoveryResult.getParentDescriptor().map(TestIdentifier::from).ifPresent(
+				suiteIdentifier -> testExecutionListener.executionFinished(suiteIdentifier,
+					TestExecutionResult.successful()));
 		});
 	}
 

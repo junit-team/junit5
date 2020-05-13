@@ -14,12 +14,14 @@ import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -64,7 +66,18 @@ public class EngineDiscoveryOrchestrator {
 	 * filters} and {@linkplain PostDiscoveryFilter post-discovery filters} and
 	 * {@linkplain TestDescriptor#prune() prunes} the resulting test tree.
 	 */
-	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, String phase) {
+	public List<LauncherDiscoveryResult> discover(LauncherDiscoveryRequest request, String phase) {
+		return collectRequests(request).stream().map(req -> resolveRequest(req, phase)).collect(Collectors.toList());
+	}
+
+	private List<LauncherDiscoveryRequest> collectRequests(LauncherDiscoveryRequest discoveryRequest) {
+		List<LauncherDiscoveryRequest> requests = new ArrayList<>();
+		requests.add(discoveryRequest);
+		requests.addAll(new SuiteDiscoverer().resolve(discoveryRequest));
+		return requests;
+	}
+
+	private LauncherDiscoveryResult resolveRequest(LauncherDiscoveryRequest request, String phase) {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 
 		for (TestEngine testEngine : this.testEngines) {
@@ -83,6 +96,7 @@ public class EngineDiscoveryOrchestrator {
 				testEngine.getId()));
 
 			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request);
+			request.getParentDescriptor().ifPresent(parentDescriptor -> parentDescriptor.addChild(rootDescriptor));
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
 
@@ -92,12 +106,15 @@ public class EngineDiscoveryOrchestrator {
 		applyPostDiscoveryFilters(testEngineDescriptors, filters);
 		prune(testEngineDescriptors);
 
-		return new LauncherDiscoveryResult(testEngineDescriptors, request.getConfigurationParameters());
+		return new LauncherDiscoveryResult(testEngineDescriptors, request.getConfigurationParameters(),
+			request.getParentDescriptor());
 	}
 
 	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
 		LauncherDiscoveryListener discoveryListener = discoveryRequest.getDiscoveryListener();
-		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
+		UniqueId uniqueEngineId = discoveryRequest.getParentDescriptor().map(TestDescriptor::getUniqueId).map(
+			id -> id.append(UniqueId.ENGINE_SEGMENT_TYPE, testEngine.getId())).orElseGet(
+				() -> UniqueId.forEngine(testEngine.getId()));
 		try {
 			discoveryListener.engineDiscoveryStarted(uniqueEngineId);
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);

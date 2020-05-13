@@ -13,6 +13,7 @@ package org.junit.platform.launcher.core;
 import static java.util.Collections.unmodifiableCollection;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestEngine;
@@ -88,7 +89,7 @@ class DefaultLauncher implements Launcher {
 		return listenerRegistry;
 	}
 
-	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest, String phase) {
+	private List<LauncherDiscoveryResult> discover(LauncherDiscoveryRequest discoveryRequest, String phase) {
 		return discoveryOrchestrator.discover(discoveryRequest, phase);
 	}
 

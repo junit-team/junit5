@@ -11,4 +11,6 @@ dependencies {
 	api(platform(project(":junit-bom")))
 	api("org.apiguardian:apiguardian-api")
 	api(project(":junit-platform-engine"))
+
+	implementation(project(":junit-platform-suite-api"))
 }

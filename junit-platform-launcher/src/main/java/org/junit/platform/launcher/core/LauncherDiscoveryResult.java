@@ -14,8 +14,10 @@ import static java.util.Collections.unmodifiableMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -33,11 +35,13 @@ public class LauncherDiscoveryResult {
 
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors;
 	private final ConfigurationParameters configurationParameters;
+	private final Optional<TestDescriptor> parentDescriptor;
 
 	LauncherDiscoveryResult(Map<TestEngine, TestDescriptor> testEngineDescriptors,
-			ConfigurationParameters configurationParameters) {
+			ConfigurationParameters configurationParameters, Optional<TestDescriptor> parentDescriptor) {
 		this.testEngineDescriptors = unmodifiableMap(new LinkedHashMap<>(testEngineDescriptors));
 		this.configurationParameters = configurationParameters;
+		this.parentDescriptor = parentDescriptor;
 	}
 
 	public TestDescriptor getEngineTestDescriptor(TestEngine testEngine) {
@@ -48,12 +52,17 @@ public class LauncherDiscoveryResult {
 		return configurationParameters;
 	}
 
+	Optional<TestDescriptor> getParentDescriptor() {
+		return parentDescriptor;
+	}
+
 	Collection<TestEngine> getTestEngines() {
 		return this.testEngineDescriptors.keySet();
 	}
 
 	Collection<TestDescriptor> getEngineTestDescriptors() {
-		return this.testEngineDescriptors.values();
+		return getParentDescriptor().map(o -> (Collection<TestDescriptor>) Collections.singleton(o)).orElseGet(
+			this.testEngineDescriptors::values);
 	}
 
 }

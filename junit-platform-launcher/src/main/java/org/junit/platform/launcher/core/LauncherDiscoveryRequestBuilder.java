@@ -25,6 +25,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -100,6 +101,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	private final Map<String, String> configurationParameters = new HashMap<>();
 	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
 	private boolean implicitConfigurationParametersEnabled = true;
+	private TestDescriptor parentDescriptor = null;
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
@@ -108,6 +110,11 @@ public final class LauncherDiscoveryRequestBuilder {
 	 */
 	public static LauncherDiscoveryRequestBuilder request() {
 		return new LauncherDiscoveryRequestBuilder();
+	}
+
+	public LauncherDiscoveryRequestBuilder parent(TestDescriptor parent) {
+		this.parentDescriptor = parent;
+		return this;
 	}
 
 	/**
@@ -252,7 +259,7 @@ public final class LauncherDiscoveryRequestBuilder {
 		LauncherConfigurationParameters launcherConfigurationParameters = buildLauncherConfigurationParameters();
 		LauncherDiscoveryListener discoveryListener = getLauncherDiscoveryListener(launcherConfigurationParameters);
 		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
-			this.postDiscoveryFilters, launcherConfigurationParameters, discoveryListener);
+			this.postDiscoveryFilters, launcherConfigurationParameters, discoveryListener, parentDescriptor);
 	}
 
 	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {

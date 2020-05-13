@@ -14,7 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -37,8 +39,8 @@ class ExecutionListenerAdapterTests {
 		TestDescriptor testDescriptor = getSampleMethodTestDescriptor();
 
 		LauncherDiscoveryResult discoveryResult = new LauncherDiscoveryResult(
-			Map.of(mock(TestEngine.class), testDescriptor), null);
-		InternalTestPlan testPlan = InternalTestPlan.from(discoveryResult);
+			Map.of(mock(TestEngine.class), testDescriptor), null, Optional.empty());
+		InternalTestPlan testPlan = InternalTestPlan.from(Collections.singletonList(discoveryResult));
 		TestIdentifier testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
 
 		//not yet spyable with mockito? -> https://github.com/mockito/mockito/issues/146

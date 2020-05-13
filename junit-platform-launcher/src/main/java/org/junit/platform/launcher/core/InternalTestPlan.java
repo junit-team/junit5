@@ -10,10 +10,12 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.Logger;
@@ -29,22 +31,23 @@ class InternalTestPlan extends TestPlan {
 	private static final Logger logger = LoggerFactory.getLogger(InternalTestPlan.class);
 
 	private final AtomicBoolean warningEmitted = new AtomicBoolean(false);
-	private final LauncherDiscoveryResult discoveryResult;
+	private final List<LauncherDiscoveryResult> discoveryResults;
 	private final TestPlan delegate;
 
-	static InternalTestPlan from(LauncherDiscoveryResult discoveryResult) {
-		TestPlan delegate = TestPlan.from(discoveryResult.getEngineTestDescriptors());
-		return new InternalTestPlan(discoveryResult, delegate);
+	static InternalTestPlan from(List<LauncherDiscoveryResult> discoveryResults) {
+		TestPlan delegate = TestPlan.from(discoveryResults.stream().flatMap(
+			discoveryResult -> discoveryResult.getEngineTestDescriptors().stream()).collect(Collectors.toList()));
+		return new InternalTestPlan(discoveryResults, delegate);
 	}
 
-	private InternalTestPlan(LauncherDiscoveryResult discoveryResult, TestPlan delegate) {
+	private InternalTestPlan(List<LauncherDiscoveryResult> discoveryResults, TestPlan delegate) {
 		super(delegate.containsTests());
-		this.discoveryResult = discoveryResult;
+		this.discoveryResults = discoveryResults;
 		this.delegate = delegate;
 	}
 
-	LauncherDiscoveryResult getDiscoveryResult() {
-		return discoveryResult;
+	List<LauncherDiscoveryResult> getDiscoveryResults() {
+		return discoveryResults;
 	}
 
 	@Override

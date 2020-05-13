@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.successful;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
@@ -40,6 +41,7 @@ import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.JUnitException;
@@ -69,7 +71,11 @@ import org.junit.platform.launcher.PostDiscoveryFilterStub;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.listeners.LoggingListener;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.SuiteDisplayName;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
@@ -764,6 +770,31 @@ class DefaultLauncherTests {
 		assertThat(exception).hasMessage(
 			"Third-party TestEngine '%s' is forbidden to use the reserved '%s' TestEngine ID.",
 			impostor.getClass().getName(), id);
+	}
+
+	@Test
+	void executesSuite() {
+		SummaryGeneratingListener listener = new SummaryGeneratingListener();
+
+		Launcher launcher = createLauncher(new JupiterTestEngine());
+		launcher.execute(request().selectors(selectClass(MyFirstSuite.class)).build(), listener,
+			LoggingListener.forBiConsumer((t, s) -> System.out.println(s.get())));
+
+		assertThat(listener.getSummary()).isNotNull();
+		assertThat(listener.getSummary().getContainersFoundCount()).isEqualTo(4);
+		assertThat(listener.getSummary().getTestsFoundCount()).isEqualTo(1);
+	}
+
+	@Suite
+	@SuiteDisplayName("My 1st JUnit Platform Suite")
+	@SelectClasses(TestCase.class)
+	static class MyFirstSuite {
+	}
+
+	static class TestCase {
+		@Test
+		void test() {
+		}
 	}
 
 }

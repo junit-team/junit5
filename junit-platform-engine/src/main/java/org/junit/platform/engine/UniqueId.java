@@ -38,7 +38,7 @@ public class UniqueId implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String ENGINE_SEGMENT_TYPE = "engine";
+	public static final String ENGINE_SEGMENT_TYPE = "engine";
 
 	/**
 	 * Parse a {@code UniqueId} from the supplied string representation using the

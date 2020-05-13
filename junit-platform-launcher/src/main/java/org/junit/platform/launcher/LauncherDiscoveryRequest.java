@@ -14,12 +14,14 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.TestDescriptor;
 
 /**
  * {@code LauncherDiscoveryRequest} extends the {@link EngineDiscoveryRequest} API
@@ -95,6 +97,10 @@ public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 	@Override
 	default LauncherDiscoveryListener getDiscoveryListener() {
 		return LauncherDiscoveryListener.NOOP;
+	}
+
+	default Optional<TestDescriptor> getParentDescriptor() {
+		return Optional.empty();
 	}
 
 }

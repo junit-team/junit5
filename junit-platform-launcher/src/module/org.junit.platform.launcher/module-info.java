@@ -23,6 +23,7 @@ module org.junit.platform.launcher {
 	requires transitive org.apiguardian.api;
 	requires transitive org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
+	requires transitive org.junit.platform.suite.api;
 
 	exports org.junit.platform.launcher;
 	exports org.junit.platform.launcher.core;

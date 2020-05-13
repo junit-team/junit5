@@ -14,12 +14,14 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -51,15 +53,24 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	// Listener for test discovery that may abort on errors.
 	private final LauncherDiscoveryListener discoveryListener;
 
+	private final TestDescriptor parentDescriptor;
+
 	DefaultDiscoveryRequest(List<DiscoverySelector> selectors, List<EngineFilter> engineFilters,
 			List<DiscoveryFilter<?>> discoveryFilters, List<PostDiscoveryFilter> postDiscoveryFilters,
-			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener) {
+			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener,
+			TestDescriptor parentDescriptor) {
 		this.selectors = selectors;
 		this.engineFilters = engineFilters;
 		this.discoveryFilters = discoveryFilters;
 		this.postDiscoveryFilters = postDiscoveryFilters;
 		this.configurationParameters = configurationParameters;
 		this.discoveryListener = discoveryListener;
+		this.parentDescriptor = parentDescriptor;
+	}
+
+	@Override
+	public Optional<TestDescriptor> getParentDescriptor() {
+		return Optional.ofNullable(parentDescriptor);
 	}
 
 	@Override

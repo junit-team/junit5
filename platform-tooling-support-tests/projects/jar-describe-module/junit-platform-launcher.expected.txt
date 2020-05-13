@@ -8,6 +8,7 @@ requires java.logging transitive
 requires org.apiguardian.api transitive
 requires org.junit.platform.commons transitive
 requires org.junit.platform.engine transitive
+requires org.junit.platform.suite.api transitive
 uses org.junit.platform.engine.TestEngine
 uses org.junit.platform.launcher.PostDiscoveryFilter
 uses org.junit.platform.launcher.TestExecutionListener
