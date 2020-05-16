@@ -29,7 +29,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 /**
  * Unit tests for {@link FilePosition}.
  *
- * @since 1.0
+ * @since 1.7
  */
 @DisplayName("FilePosition unit tests")
 class FilePositionTests extends AbstractEqualsAndHashCodeTests {

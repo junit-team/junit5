@@ -67,8 +67,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected position within the classpath resource as a
-	 * {@link FilePosition}.
+	 * Get the selected {@code FilePosition} within the classpath resource.
 	 */
 	public Optional<FilePosition> getPosition() {
 		return Optional.ofNullable(this.position);
