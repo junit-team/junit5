@@ -186,11 +186,6 @@ class DiscoverySelectorsTests {
 		// standard use case
 		selector = selectClasspathResource("A/B/C/spec.json");
 		assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
-
-		// with file position
-		selector = selectClasspathResource("A/B/C/spec.json", FilePosition.from(12, 34));
-		assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
-		assertEquals(FilePosition.from(12, 34), selector.getPosition().get());
 	}
 
 	@Test
