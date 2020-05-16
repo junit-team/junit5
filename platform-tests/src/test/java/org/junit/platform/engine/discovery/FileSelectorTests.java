@@ -23,9 +23,9 @@ class FileSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void equalsAndHashCode() {
-		var selector1 = new FileSelector("/example/foo.txt");
-		var selector2 = new FileSelector("/example/foo.txt");
-		var selector3 = new FileSelector("/example/bar.txt");
+		var selector1 = new FileSelector("/example/foo.txt", null);
+		var selector2 = new FileSelector("/example/foo.txt", null);
+		var selector3 = new FileSelector("/example/bar.txt", null);
 
 		assertEqualsAndHashCode(selector1, selector2, selector3);
 	}
