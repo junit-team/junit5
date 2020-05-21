@@ -54,7 +54,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void underscoreGenerator() {
 		var expectedDisplayNames = List.of( //
-			"CONTAINER: UnderscoreStyle.*", //
+			"CONTAINER: DisplayNameGenerationTests\\$UnderscoreStyle.*", //
 			"TEST: @DisplayName prevails", //
 			"TEST: test", //
 			"TEST: test (TestInfo)", //

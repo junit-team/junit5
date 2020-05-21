@@ -90,7 +90,7 @@ public interface DisplayNameGenerator {
 	 */
 	static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass) {
 		Preconditions.notNull(testClass, "Class must not be null");
-		Preconditions.condition(testClass.getEnclosingClass() == DisplayNameGenerator.class,
+		Preconditions.condition(DisplayNameGenerator.class.isAssignableFrom(testClass),
 			"Class must be a DisplayNameGenerator implementation");
 		if (testClass == Standard.class) {
 			return Standard.INSTANCE;
@@ -145,7 +145,7 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
-			return replaceUnderscores(testClass.getSimpleName());
+			return replaceUnderscores(super.generateDisplayNameForClass(testClass));
 		}
 
 		@Override
