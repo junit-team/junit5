@@ -28,7 +28,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -201,18 +201,25 @@ implements <a href="../DiscoverySelector.html" title="interface in org.junit.pla
 </td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="FilePosition.html" title="class in org.junit.platform.engine.discovery">FilePosition</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPosition()">getPosition</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the selected position within the file as a <a href="FilePosition.html" title="class in org.junit.platform.engine.discovery"><code>FilePosition</code></a>.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRawPath()">getRawPath</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the selected file as a <em>raw path</em>.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hashCode()">hashCode</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -285,6 +292,16 @@ implements <a href="../DiscoverySelector.html" title="interface in org.junit.pla
 <dd><a href="#getFile()"><code>getFile()</code></a>, 
 <a href="#getPath()"><code>getPath()</code></a></dd>
 </dl>
+</li>
+</ul>
+<a id="getPosition()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getPosition</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="FilePosition.html" title="class in org.junit.platform.engine.discovery">FilePosition</a>&gt;&nbsp;getPosition()</pre>
+<div class="block">Get the selected position within the file as a <a href="FilePosition.html" title="class in org.junit.platform.engine.discovery"><code>FilePosition</code></a>.</div>
 </li>
 </ul>
 <a id="equals(java.lang.Object)">

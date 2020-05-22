@@ -169,6 +169,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Convert the supplied exception into a failed <code>Try</code>.</div>
 </dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/FilePosition.html" title="class in org.junit.platform.engine.discovery"><span class="typeNameLink">FilePosition</span></a> - Class in <a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/package-summary.html">org.junit.platform.engine.discovery</a></dt>
+<dd>
+<div class="block">Position inside a file represented by <a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/FilePosition.html#getLine()">line</a> and
+ <a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/FilePosition.html#getColumn()">column</a> numbers.</div>
+</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor"><span class="typeNameLink">FilePosition</span></a> - Class in <a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/package-summary.html">org.junit.platform.engine.support.descriptor</a></dt>
 <dd>
 <div class="block">Position inside a file represented by <a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/FilePosition.html#getLine()">line</a> and
@@ -569,10 +574,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Create a new <code>ForkJoinPoolHierarchicalTestExecutorService</code> based on
  the supplied <a href="../org.junit.platform.engine/org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/FilePosition.html#from(int)">from(int)</a></span> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/FilePosition.html" title="class in org.junit.platform.engine.discovery">FilePosition</a></dt>
+<dd>
+<div class="block">Create a new <code>FilePosition</code> using the supplied <code>line</code> number
+ and an undefined column number.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/FilePosition.html#from(int)">from(int)</a></span> - Static method in class org.junit.platform.engine.support.descriptor.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a></dt>
 <dd>
 <div class="block">Create a new <code>FilePosition</code> using the supplied <code>line</code> number
  and an undefined column number.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/FilePosition.html#from(int,int)">from(int, int)</a></span> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/FilePosition.html" title="class in org.junit.platform.engine.discovery">FilePosition</a></dt>
+<dd>
+<div class="block">Create a new <code>FilePosition</code> using the supplied <code>line</code> and
+ <code>column</code> numbers.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/FilePosition.html#from(int,int)">from(int, int)</a></span> - Static method in class org.junit.platform.engine.support.descriptor.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a></dt>
 <dd>
@@ -685,6 +700,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/discovery/LauncherDiscoveryListeners.html#fromConfigurationParameter(java.lang.String,java.lang.String)">fromConfigurationParameter(String, String)</a></span> - Static method in class org.junit.platform.launcher.listeners.discovery.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/discovery/LauncherDiscoveryListeners.html" title="class in org.junit.platform.launcher.listeners.discovery">LauncherDiscoveryListeners</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/FilePosition.html#fromQuery(java.lang.String)">fromQuery(String)</a></span> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/FilePosition.html" title="class in org.junit.platform.engine.discovery">FilePosition</a></dt>
+<dd>
+<div class="block">Create an optional <code>FilePosition</code> by parsing the supplied
+ <code>query</code> string.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/FilePosition.html#fromQuery(java.lang.String)">fromQuery(String)</a></span> - Static method in class org.junit.platform.engine.support.descriptor.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a></dt>
 <dd>
 <div class="block">Create an optional <code>FilePosition</code> by parsing the supplied
