@@ -23,9 +23,18 @@ class ClasspathResourceSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void equalsAndHashCode() {
-		var selector1 = new ClasspathResourceSelector("/foo/bar.txt");
-		var selector2 = new ClasspathResourceSelector("/foo/bar.txt");
-		var selector3 = new ClasspathResourceSelector("/foo/X.txt");
+		var selector1 = new ClasspathResourceSelector("/foo/bar.txt", null);
+		var selector2 = new ClasspathResourceSelector("/foo/bar.txt", null);
+		var selector3 = new ClasspathResourceSelector("/foo/X.txt", null);
+
+		assertEqualsAndHashCode(selector1, selector2, selector3);
+	}
+
+	@Test
+	void equalsAndHashCodeWithFilePosition() {
+		var selector1 = new ClasspathResourceSelector("/foo/bar.txt", FilePosition.from(1));
+		var selector2 = new ClasspathResourceSelector("/foo/bar.txt", FilePosition.from(1));
+		var selector3 = new ClasspathResourceSelector("/foo/bar.txt", FilePosition.from(2));
 
 		assertEqualsAndHashCode(selector1, selector2, selector3);
 	}

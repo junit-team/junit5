@@ -102,12 +102,12 @@ public final class DiscoverySelectors {
 	 * @param path the path to the file to select; never {@code null} or blank
 	 * @see FileSelector
 	 * @see #selectFile(File)
+	 * @see #selectFile(String, FilePosition)
 	 * @see #selectDirectory(String)
 	 * @see #selectDirectory(File)
 	 */
 	public static FileSelector selectFile(String path) {
-		Preconditions.notBlank(path, "File path must not be null or blank");
-		return new FileSelector(path);
+		return selectFile(path, null);
 	}
 
 	/**
@@ -120,15 +120,54 @@ public final class DiscoverySelectors {
 	 * @param file the file to select; never {@code null}
 	 * @see FileSelector
 	 * @see #selectFile(String)
+	 * @see #selectFile(File, FilePosition)
 	 * @see #selectDirectory(String)
 	 * @see #selectDirectory(File)
 	 */
 	public static FileSelector selectFile(File file) {
+		return selectFile(file, null);
+	}
+
+	/**
+	 * Create a {@code FileSelector} for the supplied file path.
+	 *
+	 * <p>This method selects the file using the supplied path <em>as is</em>,
+	 * without verifying if the file exists.
+	 *
+	 * @param path the path to the file to select; never {@code null} or blank
+	 * @param position the position inside the file; may be {@code null}
+	 * @see FileSelector
+	 * @see #selectFile(String)
+	 * @see #selectFile(File, FilePosition)
+	 * @see #selectDirectory(String)
+	 * @see #selectDirectory(File)
+	 */
+	public static FileSelector selectFile(String path, FilePosition position) {
+		Preconditions.notBlank(path, "File path must not be null or blank");
+		return new FileSelector(path, position);
+	}
+
+	/**
+	 * Create a {@code FileSelector} for the supplied {@linkplain File file}.
+	 *
+	 * <p>This method selects the file in its {@linkplain File#getCanonicalPath()
+	 * canonical} form and throws a {@link PreconditionViolationException} if the
+	 * file does not exist.
+	 *
+	 * @param file the file to select; never {@code null}
+	 * @param position the position inside the file; may be {@code null}
+	 * @see FileSelector
+	 * @see #selectFile(File)
+	 * @see #selectFile(String, FilePosition)
+	 * @see #selectDirectory(String)
+	 * @see #selectDirectory(File)
+	 */
+	public static FileSelector selectFile(File file, FilePosition position) {
 		Preconditions.notNull(file, "File must not be null");
 		Preconditions.condition(file.isFile(),
 			() -> String.format("The supplied java.io.File [%s] must represent an existing file", file));
 		try {
-			return new FileSelector(file.getCanonicalPath());
+			return new FileSelector(file.getCanonicalPath(), position);
 		}
 		catch (IOException ex) {
 			throw new PreconditionViolationException("Failed to retrieve canonical path for file: " + file, ex);
@@ -232,14 +271,44 @@ public final class DiscoverySelectors {
 	 *
 	 * @param classpathResourceName the name of the classpath resource; never
 	 * {@code null} or blank
+	 * @see #selectClasspathResource(String, FilePosition)
 	 * @see ClasspathResourceSelector
 	 * @see ClassLoader#getResource(String)
 	 * @see ClassLoader#getResourceAsStream(String)
 	 * @see ClassLoader#getResources(String)
 	 */
 	public static ClasspathResourceSelector selectClasspathResource(String classpathResourceName) {
+		return selectClasspathResource(classpathResourceName, null);
+	}
+
+	/**
+	 * Create a {@code ClasspathResourceSelector} for the supplied classpath
+	 * resource name.
+	 *
+	 * <p>The name of a <em>classpath resource</em> must follow the semantics
+	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.
+	 *
+	 * <p>If the supplied classpath resource name is prefixed with a slash
+	 * ({@code /}), the slash will be removed.
+	 *
+	 * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+	 * expected to modify the classpath, the supplied classpath resource must be
+	 * on the classpath of the
+	 * {@linkplain Thread#getContextClassLoader() context class loader} of the
+	 * {@linkplain Thread thread} that uses the resulting selector.
+	 *
+	 * @param classpathResourceName the name of the classpath resource; never
+	 * {@code null} or blank
+	 * @param position the position inside the classpath resource; may be {@code null}
+	 * @see ClasspathResourceSelector
+	 * @see ClassLoader#getResource(String)
+	 * @see ClassLoader#getResourceAsStream(String)
+	 * @see ClassLoader#getResources(String)
+	 */
+	public static ClasspathResourceSelector selectClasspathResource(String classpathResourceName,
+			FilePosition position) {
 		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
-		return new ClasspathResourceSelector(classpathResourceName);
+		return new ClasspathResourceSelector(classpathResourceName, position);
 	}
 
 	/**
