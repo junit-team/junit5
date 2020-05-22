@@ -103,6 +103,7 @@ public final class DiscoverySelectors {
 	 * @see FileSelector
 	 * @see #selectFile(File)
 	 * @see #selectFile(String, FilePosition)
+	 * @see #selectFile(File, FilePosition)
 	 * @see #selectDirectory(String)
 	 * @see #selectDirectory(File)
 	 */
@@ -121,6 +122,7 @@ public final class DiscoverySelectors {
 	 * @see FileSelector
 	 * @see #selectFile(String)
 	 * @see #selectFile(File, FilePosition)
+	 * @see #selectFile(String, FilePosition)
 	 * @see #selectDirectory(String)
 	 * @see #selectDirectory(File)
 	 */
@@ -138,6 +140,7 @@ public final class DiscoverySelectors {
 	 * @param position the position inside the file; may be {@code null}
 	 * @see FileSelector
 	 * @see #selectFile(String)
+	 * @see #selectFile(File)
 	 * @see #selectFile(File, FilePosition)
 	 * @see #selectDirectory(String)
 	 * @see #selectDirectory(File)
@@ -158,6 +161,7 @@ public final class DiscoverySelectors {
 	 * @param position the position inside the file; may be {@code null}
 	 * @see FileSelector
 	 * @see #selectFile(File)
+	 * @see #selectFile(String)
 	 * @see #selectFile(String, FilePosition)
 	 * @see #selectDirectory(String)
 	 * @see #selectDirectory(File)
@@ -300,6 +304,7 @@ public final class DiscoverySelectors {
 	 * @param classpathResourceName the name of the classpath resource; never
 	 * {@code null} or blank
 	 * @param position the position inside the classpath resource; may be {@code null}
+	 * @see #selectClasspathResource(String)
 	 * @see ClasspathResourceSelector
 	 * @see ClassLoader#getResource(String)
 	 * @see ClassLoader#getResourceAsStream(String)

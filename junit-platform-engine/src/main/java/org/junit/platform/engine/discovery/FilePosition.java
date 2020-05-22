@@ -27,6 +27,11 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * Position inside a file represented by {@linkplain #getLine line} and
  * {@linkplain #getColumn column} numbers.
  *
+ * @implNote This class is a copy of
+ * {@link org.junit.platform.engine.support.descriptor.FilePosition FilePosition},
+ * which is not accessible from this package. The decision to duplicate it is
+ * motivated by an eventual divergence between the two classes in the future.
+ *
  * @since 1.7
  */
 @API(status = STABLE, since = "1.7")
