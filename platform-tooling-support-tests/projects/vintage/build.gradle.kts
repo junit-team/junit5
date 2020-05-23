@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
@@ -26,6 +27,8 @@ tasks.test {
 
 	testLogging {
 		events = setOf(TestLogEvent.STARTED, TestLogEvent.PASSED, TestLogEvent.FAILED)
-		addTestOutputListener { _, event -> println(event.message) }
+		afterSuite(KotlinClosure2<TestDescriptor, TestResult, Any>({ _, result ->
+			result.exception?.printStackTrace(System.out)
+		}))
 	}
 }
