@@ -2,7 +2,7 @@ import com.gradle.scan.plugin.internal.api.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
 	plugins {
-		id("com.gradle.enterprise") version "3.2.1"
+		id("com.gradle.enterprise") version "3.3.1"
 		id("net.nemerosa.versioning") version "2.12.1"
 		id("com.github.ben-manes.versions") version "0.28.0"
 		id("com.diffplug.gradle.spotless") version "3.28.1"
@@ -28,6 +28,7 @@ gradleEnterprise {
 	buildScan {
 		server = gradleEnterpriseServer
 		isCaptureTaskInputFiles = true
+		isUploadInBackground = !isCiServer
 		publishAlways()
 		this as BuildScanExtensionWithHiddenFeatures
 		publishIfAuthenticated()
