@@ -282,15 +282,16 @@ tasks {
 			)))
 		}
 
-		source(modularProjects.map { files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava }) })
+		source(modularProjects.map { files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava }).from(it.file("src/module/${it.javaModuleName}")) })
 		classpath = files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
+		modularity.inferModulePath.set(true)
 
 		maxMemory = "1024m"
 		destinationDir = file("$buildDir/docs/javadoc")
 
-		doFirst {
-			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
-		}
+//		doFirst {
+//			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
+//		}
 	}
 
 	val fixJavadoc by registering(Copy::class) {
