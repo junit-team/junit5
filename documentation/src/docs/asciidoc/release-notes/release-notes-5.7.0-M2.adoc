@@ -52,8 +52,8 @@ on GitHub.
 * All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason`
   attribute that can be used to provide additional explanation as to why a test or
   container might be disabled.
-* New `assertLinesMatch` method overloads added to class `Assertions` that take in
-  two `Stream<String>` instances for comparision.
+* New `assertLinesMatch` method overloads added to class `Assertions` that accept
+  two `Stream<String>` instances for comparison.
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage
