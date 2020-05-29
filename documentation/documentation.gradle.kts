@@ -1,6 +1,5 @@
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-import org.junit.gradle.javadoc.FileCollectionAsPathJavadocFileOption
 import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
@@ -271,23 +270,18 @@ tasks {
 						"org.junit.platform.console" to "info.picocli",
 						"org.junit.jupiter.params" to "univocity.parsers"
 				)))
-
-				val modulePathOption = FileCollectionAsPathJavadocFileOption("-module-path", files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
-						// Remove Kotlin classes from classpath due to "bad" class file
-						// see https://bugs.openjdk.java.net/browse/JDK-8187422
-						.filter { !it.path.contains("kotlin") }
-						// Remove subproject JARs so Kotlin classes don"t get picked up
-						.filter { it.isDirectory || !it.absolutePath.startsWith(projectDir.absolutePath) })
-				addOption(modulePathOption)
-				inputs.files(modulePathOption.value).withNormalizer(ClasspathNormalizer::class)
 			}
 		}
+
 		source(modularProjects.map { files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava }) })
+		classpath = files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
 
 		setMaxMemory("1024m")
 		setDestinationDir(file("$buildDir/docs/javadoc"))
 
-		classpath = files()
+		doFirst {
+			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
+		}
 	}
 
 	val fixJavadoc by registering(Copy::class) {
