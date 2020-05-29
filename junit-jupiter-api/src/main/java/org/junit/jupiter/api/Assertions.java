@@ -1613,6 +1613,61 @@ public class Assertions {
 		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, messageSupplier);
 	}
 
+	/**
+	 * <em>Assert</em> that {@code expected} stream of {@linkplain String}s matches {@code actual}
+	 * stream.
+	 *
+	 * <p>Find a detailed description of the matching algorithm in {@link #assertLinesMatch(List, List)}.
+	 *
+	 * <p>Note: An implementation of this method may consume all lines of both streams eagerly and
+	 * delegate the evaluation to {@link #assertLinesMatch(List, List)}.
+	 *
+	 * @since 5.7
+	 * @see #assertLinesMatch(List, List)
+	 */
+	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines) {
+		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} stream of {@linkplain String}s matches {@code actual}
+	 * stream.
+	 *
+	 * <p>Find a detailed description of the matching algorithm in {@link #assertLinesMatch(List, List)}.
+	 *
+	 * <p>Fails with the supplied failure {@code message} and the generated message.
+	 *
+	 * <p>Note: An implementation of this method may consume all lines of both streams eagerly and
+	 * delegate the evaluation to {@link #assertLinesMatch(List, List)}.
+	 *
+	 * @since 5.7
+	 * @see #assertLinesMatch(List, List)
+	 */
+	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines, String message) {
+		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, message);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} stream of {@linkplain String}s matches {@code actual}
+	 * stream.
+	 *
+	 * <p>Find a detailed description of the matching algorithm in {@link #assertLinesMatch(List, List)}.
+	 *
+	 * <p>If necessary, a custom failure message will be retrieved lazily from the supplied
+	 * {@code messageSupplier}. Fails with the custom failure message prepended to
+	 * a generated failure message describing the difference.
+	 *
+	 * <p>Note: An implementation of this method may consume all lines of both streams eagerly and
+	 * delegate the evaluation to {@link #assertLinesMatch(List, List)}.
+	 *
+	 * @since 5.7
+	 * @see #assertLinesMatch(List, List)
+	 */
+	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines,
+			Supplier<String> messageSupplier) {
+		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, messageSupplier);
+	}
+
 	// --- assertNotEquals -----------------------------------------------------
 
 	/**
