@@ -228,56 +228,57 @@ tasks {
 		inputs.file(overviewFile)
 
 		options {
+
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = rootProject.description
 			encoding = "UTF-8"
 			locale = "en"
-			(this as StandardJavadocDocletOptions).apply {
-				overview(overviewFile)
-				splitIndex(true)
-				addBooleanOption("Xdoclint:none", true)
-				addBooleanOption("html5", true)
-				addMultilineStringsOption("tag").value = listOf(
-						"apiNote:a:API Note:",
-						"implNote:a:Implementation Note:"
-				)
-				jFlags("-Xmx1g")
+			overview = overviewFile
+			jFlags("-Xmx1g")
 
-				links("https://docs.oracle.com/en/java/javase/11/docs/api/")
-				links("https://junit.org/junit4/javadoc/${versions.junit4}/")
-				externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
-					linksOffline(baseUrl, "$elementListsDir/$moduleName")
-				}
+			this as StandardJavadocDocletOptions
+			splitIndex(true)
+			addBooleanOption("Xdoclint:none", true)
+			addBooleanOption("html5", true)
+			addMultilineStringsOption("tag").value = listOf(
+					"apiNote:a:API Note:",
+					"implNote:a:Implementation Note:"
+			)
 
-				groups = mapOf(
-						"Jupiter" to listOf("org.junit.jupiter*"),
-						"Vintage" to listOf("org.junit.vintage*"),
-						"Platform" to listOf("org.junit.platform*")
-				)
-				addStringOption("-add-stylesheet", additionalStylesheetFile)
-				use(true)
-				noTimestamp(true)
-
-				addStringsOption("-module", ",").value = modularProjects.map { it.javaModuleName }
-				val moduleSourcePathOption = addPathOption("-module-source-path")
-				moduleSourcePathOption.value = modularProjects.map { it.file("src/module") }
-				moduleSourcePathOption.value.forEach { inputs.dir(it) }
-				addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate {
-					it.javaModuleName to files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava.srcDirs }).asPath
-				}))
-				addStringOption("-add-modules", "info.picocli")
-				addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
-						"org.junit.platform.console" to "info.picocli",
-						"org.junit.jupiter.params" to "univocity.parsers"
-				)))
+			links("https://docs.oracle.com/en/java/javase/11/docs/api/")
+			links("https://junit.org/junit4/javadoc/${versions.junit4}/")
+			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
+				linksOffline(baseUrl, "$elementListsDir/$moduleName")
 			}
+
+			groups = mapOf(
+					"Jupiter" to listOf("org.junit.jupiter*"),
+					"Vintage" to listOf("org.junit.vintage*"),
+					"Platform" to listOf("org.junit.platform*")
+			)
+			addStringOption("-add-stylesheet", additionalStylesheetFile)
+			use(true)
+			noTimestamp(true)
+
+			addStringsOption("-module", ",").value = modularProjects.map { it.javaModuleName }
+			val moduleSourcePathOption = addPathOption("-module-source-path")
+			moduleSourcePathOption.value = modularProjects.map { it.file("src/module") }
+			moduleSourcePathOption.value.forEach { inputs.dir(it) }
+			addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate {
+				it.javaModuleName to files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava.srcDirs }).asPath
+			}))
+			addStringOption("-add-modules", "info.picocli")
+			addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
+					"org.junit.platform.console" to "info.picocli",
+					"org.junit.jupiter.params" to "univocity.parsers"
+			)))
 		}
 
 		source(modularProjects.map { files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava }) })
 		classpath = files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
 
-		setMaxMemory("1024m")
-		setDestinationDir(file("$buildDir/docs/javadoc"))
+		maxMemory = "1024m"
+		destinationDir = file("$buildDir/docs/javadoc")
 
 		doFirst {
 			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
