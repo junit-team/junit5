@@ -13,10 +13,13 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code DisplayNameGenerator} defines the SPI for generating display names
@@ -86,6 +89,8 @@ public interface DisplayNameGenerator {
 	 */
 	class Standard implements DisplayNameGenerator {
 
+		static final DisplayNameGenerator INSTANCE = new Standard();
+
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
 			String name = testClass.getName();
@@ -114,6 +119,8 @@ public interface DisplayNameGenerator {
 	 */
 	class Simple extends Standard {
 
+		static final DisplayNameGenerator INSTANCE = new Simple();
+
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
 			String displayName = testMethod.getName();
@@ -138,9 +145,11 @@ public interface DisplayNameGenerator {
 	 */
 	class ReplaceUnderscores extends Simple {
 
+		static final DisplayNameGenerator INSTANCE = new ReplaceUnderscores();
+
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
-			return replaceUnderscores(super.generateDisplayNameForClass(testClass));
+			return replaceUnderscores(testClass.getSimpleName());
 		}
 
 		@Override
@@ -157,6 +166,153 @@ public interface DisplayNameGenerator {
 			return name.replace('_', ' ');
 		}
 
+	}
+
+	/**
+	 * {@code DisplayNameGenerator} that generates complete sentences.
+	 *
+	 * <p>This implements the functionality of {@link DisplayNameGenerator}
+	 * by generating complete sentences display names, these
+	 * sentences are divided with a separator, and the generator and separator
+	 * can be customisable by using the {@link IndicativeSentencesGeneration}
+	 * interface as annotation.
+	 *
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	class IndicativeSentences implements DisplayNameGenerator {
+
+		static final DisplayNameGenerator INSTANCE = new IndicativeSentences();
+
+		@Override
+		public String generateDisplayNameForClass(Class<?> testClass) {
+			return getGeneratorForIndicativeSentence(testClass).generateDisplayNameForClass(testClass);
+		}
+
+		@Override
+		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+			return classReplaceToIndicativeSentence(nestedClass);
+		}
+
+		@Override
+		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+			return classReplaceToIndicativeSentence(testClass) + getSentenceSeparator(testClass)
+					+ getGeneratorForIndicativeSentence(testClass).generateDisplayNameForMethod(testClass, testMethod);
+		}
+
+		private String classReplaceToIndicativeSentence(Class<?> testClass) {
+			Class<?> enclosingParent = testClass.getEnclosingClass();
+			Optional<DisplayName> displayName = AnnotationSupport.findAnnotation(testClass, DisplayName.class);
+			Optional<DisplayNameGeneration> displayNameGeneration = AnnotationSupport.findAnnotation(testClass,
+				DisplayNameGeneration.class);
+
+			if (enclosingParent == null) {
+				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
+			}
+			if (displayNameGeneration.isPresent()) {
+				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
+			}
+			return displayName.map(name -> classReplaceToIndicativeSentence(enclosingParent)
+					+ getSentenceSeparator(testClass) + name.value()).orElseGet(
+						() -> classReplaceToIndicativeSentence(enclosingParent) + getSentenceSeparator(testClass)
+								+ getGeneratorForIndicativeSentence(testClass).generateDisplayNameForNestedClass(
+									testClass));
+
+		}
+
+		/**
+		 * Gets the separator for {@link IndicativeSentencesGeneration} when extracting the
+		 * annotation from {@code IndicativeSentencesGeneration}, if it doesn't find it,
+		 * then search for the parent classes, if no separator is found use @code{", "} by default.
+		 *
+		 * @param testClass Class to get Indicative sentence annotation separator either custom or default
+		 * @return the indicative sentence separator
+		 */
+		private String getSentenceSeparator(Class<?> testClass) {
+			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = getIndicativeSentencesGeneration(
+				testClass);
+			if (indicativeSentencesGeneration.isPresent()) {
+				if (indicativeSentencesGeneration.get().separator().equals("")) {
+					return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
+				}
+				return indicativeSentencesGeneration.get().separator();
+			}
+
+			return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
+		}
+
+		/**
+		 * Gets the generator for {@link IndicativeSentencesGeneration} when extracting the
+		 * annotation from {@code IndicativeSentencesGeneration}, if it doesn't find it,
+		 * then search for the parent classes, if no generator value is found use
+		 * {@link Standard} by default.
+		 *
+		 * @param testClass Class to get Indicative sentence generator either custom or default
+		 * @return the {@code DisplayNameGenerator} instance to use in indicative sentences generator
+		 */
+		private DisplayNameGenerator getGeneratorForIndicativeSentence(Class<?> testClass) {
+			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = getIndicativeSentencesGeneration(
+				testClass);
+			if (indicativeSentencesGeneration.isPresent()) {
+				DisplayNameGenerator displayNameGenerator = getDisplayNameGenerator(
+					indicativeSentencesGeneration.get().generator());
+				if (displayNameGenerator.getClass() == IndicativeSentences.class) {
+					return getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR);
+				}
+				return displayNameGenerator;
+			}
+
+			return getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR);
+		}
+
+		/**
+		 * Finds the {@code IndicativeSentencesGeneration} annotation that is present,
+		 * meta-present or if it doesn't find it, then search for the enclosing
+		 * parent classes, if no annotation is found returns empty.
+		 *
+		 * @param testClass the Test Class to find the {@code IndicativeSentencesGeneration}
+		 * annotation
+		 * @return the optional annotation retrieved from the test class.
+		 */
+		private Optional<IndicativeSentencesGeneration> getIndicativeSentencesGeneration(Class<?> testClass) {
+			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = AnnotationSupport.findAnnotation(
+				testClass, IndicativeSentencesGeneration.class);
+
+			if (indicativeSentencesGeneration.isPresent()) {
+				return indicativeSentencesGeneration;
+			}
+			if (testClass.getEnclosingClass() != null) {
+				return getIndicativeSentencesGeneration(testClass.getEnclosingClass());
+			}
+
+			return Optional.empty();
+		}
+	}
+
+	/**
+	 * Generates the DisplayNameGenerator instance corresponding to the class it's given.
+	 *
+	 * @param testClass the class to generate the instance; never {@code null} and being a
+	 * DisplayNameGenerator implementation
+	 * @return a DisplayNameGenerator implementation instance
+	 */
+	static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass) {
+		Preconditions.notNull(testClass, "Class must not be null");
+		Preconditions.condition(testClass.getEnclosingClass() == DisplayNameGenerator.class,
+			"Class must be a DisplayNameGenerator implementation");
+		if (testClass == Standard.class) {
+			return Standard.INSTANCE;
+		}
+		if (testClass == Simple.class) {
+			return Simple.INSTANCE;
+		}
+		if (testClass == ReplaceUnderscores.class) {
+			return ReplaceUnderscores.INSTANCE;
+		}
+		if (testClass == IndicativeSentences.class) {
+			return IndicativeSentences.INSTANCE;
+		}
+		return (DisplayNameGenerator) ReflectionUtils.newInstance(testClass);
 	}
 
 }

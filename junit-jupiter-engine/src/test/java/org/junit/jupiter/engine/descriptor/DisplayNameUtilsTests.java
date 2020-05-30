@@ -90,7 +90,7 @@ class DisplayNameUtilsTests {
 				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(
 					Underscore_DisplayName_TestCase.class, configuration);
 
-				assertThat(displayName.get()).isEqualTo("DisplayNameUtilsTests$Underscore DisplayName TestCase");
+				assertThat(displayName.get()).isEqualTo("Underscore DisplayName TestCase");
 			}
 
 			@Test
