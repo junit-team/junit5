@@ -11,12 +11,12 @@
 package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -149,7 +149,7 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
-			return replaceUnderscores(testClass.getSimpleName());
+			return replaceUnderscores(super.generateDisplayNameForClass(testClass));
 		}
 
 		@Override
@@ -191,33 +191,30 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
-			return classReplaceToIndicativeSentence(nestedClass);
+			return getSentenceBeginning(nestedClass);
 		}
 
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			return classReplaceToIndicativeSentence(testClass) + getSentenceSeparator(testClass)
+			return getSentenceBeginning(testClass) + getSentenceSeparator(testClass)
 					+ getGeneratorForIndicativeSentence(testClass).generateDisplayNameForMethod(testClass, testMethod);
 		}
 
-		private String classReplaceToIndicativeSentence(Class<?> testClass) {
+		private String getSentenceBeginning(Class<?> testClass) {
 			Class<?> enclosingParent = testClass.getEnclosingClass();
-			Optional<DisplayName> displayName = AnnotationSupport.findAnnotation(testClass, DisplayName.class);
-			Optional<DisplayNameGeneration> displayNameGeneration = AnnotationSupport.findAnnotation(testClass,
+			Optional<DisplayName> displayName = findAnnotation(testClass, DisplayName.class);
+			Optional<DisplayNameGeneration> displayNameGeneration = findAnnotation(testClass,
 				DisplayNameGeneration.class);
 
-			if (enclosingParent == null) {
+			if (enclosingParent == null || displayNameGeneration.isPresent()) {
 				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
 			}
-			if (displayNameGeneration.isPresent()) {
-				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
-			}
-			return displayName.map(name -> classReplaceToIndicativeSentence(enclosingParent)
-					+ getSentenceSeparator(testClass) + name.value()).orElseGet(
-						() -> classReplaceToIndicativeSentence(enclosingParent) + getSentenceSeparator(testClass)
-								+ getGeneratorForIndicativeSentence(testClass).generateDisplayNameForNestedClass(
-									testClass));
-
+			String separator = getSentenceSeparator(testClass);
+			String sentenceBeginning = getSentenceBeginning(enclosingParent);
+			return displayName.map(name -> sentenceBeginning + separator + name.value()) //
+					.orElseGet(() -> sentenceBeginning + separator
+							+ getGeneratorForIndicativeSentence(testClass).generateDisplayNameForNestedClass(
+								testClass));
 		}
 
 		/**
@@ -270,13 +267,13 @@ public interface DisplayNameGenerator {
 		 * meta-present or if it doesn't find it, then search for the enclosing
 		 * parent classes, if no annotation is found returns empty.
 		 *
-		 * @param testClass the Test Class to find the {@code IndicativeSentencesGeneration}
+		 * @param testClass the test class to find the {@code IndicativeSentencesGeneration}
 		 * annotation
 		 * @return the optional annotation retrieved from the test class.
 		 */
 		private Optional<IndicativeSentencesGeneration> getIndicativeSentencesGeneration(Class<?> testClass) {
-			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = AnnotationSupport.findAnnotation(
-				testClass, IndicativeSentencesGeneration.class);
+			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = findAnnotation(testClass,
+				IndicativeSentencesGeneration.class);
 
 			if (indicativeSentencesGeneration.isPresent()) {
 				return indicativeSentencesGeneration;
@@ -290,29 +287,30 @@ public interface DisplayNameGenerator {
 	}
 
 	/**
-	 * Generates the DisplayNameGenerator instance corresponding to the class it's given.
+	 * Return the {@code DisplayNameGenerator} instance corresponding to the
+	 * given {@code Class}.
 	 *
-	 * @param testClass the class to generate the instance; never {@code null} and being a
-	 * DisplayNameGenerator implementation
-	 * @return a DisplayNameGenerator implementation instance
+	 * @param generatorClass the generator's {@code Class}; never {@code null},
+	 * has to be a {@code DisplayNameGenerator} implementation
+	 * @return a {@code DisplayNameGenerator} implementation instance
 	 */
-	static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass) {
-		Preconditions.notNull(testClass, "Class must not be null");
-		Preconditions.condition(testClass.getEnclosingClass() == DisplayNameGenerator.class,
+	static DisplayNameGenerator getDisplayNameGenerator(Class<?> generatorClass) {
+		Preconditions.notNull(generatorClass, "Class must not be null");
+		Preconditions.condition(DisplayNameGenerator.class.isAssignableFrom(generatorClass),
 			"Class must be a DisplayNameGenerator implementation");
-		if (testClass == Standard.class) {
+		if (generatorClass == Standard.class) {
 			return Standard.INSTANCE;
 		}
-		if (testClass == Simple.class) {
+		if (generatorClass == Simple.class) {
 			return Simple.INSTANCE;
 		}
-		if (testClass == ReplaceUnderscores.class) {
+		if (generatorClass == ReplaceUnderscores.class) {
 			return ReplaceUnderscores.INSTANCE;
 		}
-		if (testClass == IndicativeSentences.class) {
+		if (generatorClass == IndicativeSentences.class) {
 			return IndicativeSentences.INSTANCE;
 		}
-		return (DisplayNameGenerator) ReflectionUtils.newInstance(testClass);
+		return (DisplayNameGenerator) ReflectionUtils.newInstance(generatorClass);
 	}
 
 }

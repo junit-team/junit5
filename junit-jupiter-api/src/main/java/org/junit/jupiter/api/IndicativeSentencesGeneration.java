@@ -29,6 +29,7 @@ import org.apiguardian.api.API;
  * @since 5.7
  * @see DisplayName
  * @see DisplayNameGenerator
+ * @see DisplayNameGenerator.IndicativeSentences
  */
 @DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
@@ -43,15 +44,11 @@ public @interface IndicativeSentencesGeneration {
 
 	/**
 	 * Custom separator for indicative sentences generator.
-	 *
-	 * @return custom separator for indicative sentences
 	 */
 	String separator() default "";
 
 	/**
 	 * Custom display name generator.
-	 *
-	 * @return custom display name generator class
 	 */
 	Class<? extends DisplayNameGenerator> generator() default DisplayNameGenerator.Standard.class;
 }
