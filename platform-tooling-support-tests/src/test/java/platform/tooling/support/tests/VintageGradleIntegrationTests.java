@@ -34,7 +34,7 @@ class VintageGradleIntegrationTests {
 	void unsupportedVersion() {
 		Result result = run("4.11");
 
-		assertThat(result.getExitCode()).isEqualTo(0);
+		assertThat(result.getExitCode()).isGreaterThan(0);
 		assertThat(result.getOutput("out")) //
 				.doesNotContain("STARTED") //
 				.contains("Unsupported version of junit:junit: 4.11");

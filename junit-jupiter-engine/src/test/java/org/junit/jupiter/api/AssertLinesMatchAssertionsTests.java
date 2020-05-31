@@ -29,6 +29,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.PreconditionViolationException;
 import org.opentest4j.AssertionFailedError;
@@ -94,8 +95,9 @@ class AssertLinesMatchAssertionsTests {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	void assertLinesMatchWithNullFails() {
-		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(null, null));
+		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch((List) null, (List) null));
 		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(null, Collections.emptyList()));
 		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(Collections.emptyList(), null));
 	}
@@ -342,6 +344,34 @@ class AssertLinesMatchAssertionsTests {
 				"c", //
 				">");
 			assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R")));
+		}
+	}
+
+	@Nested
+	class WithStreamsOfStrings {
+		@Test
+		void assertLinesMatchEmptyStreams() {
+			assertLinesMatch(Stream.empty(), Stream.empty());
+		}
+
+		@Test
+		void assertLinesMatchSameListInstance() {
+			Stream<String> stream = Stream.of("first line", "second line", "third line", "last line");
+			assertLinesMatch(stream, stream);
+		}
+
+		@Test
+		void assertLinesMatchPlainEqualLists() {
+			List<String> expected = Arrays.asList("first line", "second line", "third line", "last line");
+			List<String> actual = Arrays.asList("first line", "second line", "third line", "last line");
+			assertLinesMatch(expected, actual);
+		}
+
+		@Test
+		void assertLinesMatchUsingRegexPatterns() {
+			List<String> expected = Arrays.asList("^first.+line", "second\\s*line", "th.rd l.ne", "last line$");
+			List<String> actual = Arrays.asList("first line", "second line", "third line", "last line");
+			assertLinesMatch(expected, actual);
 		}
 	}
 }

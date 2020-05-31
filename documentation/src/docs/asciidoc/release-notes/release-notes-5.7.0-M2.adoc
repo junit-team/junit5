@@ -34,7 +34,7 @@ on GitHub.
 * When using `ConsoleLauncher`, explicitly selected classes from `--select-class`
   and `--select-method` are now always executed regardless of class name patterns
   provided with `--include-classname` or the default class name pattern.
-
+* Support `FilePosition` in `FileSelector` and `ClasspathResourceSelector`.
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter
@@ -52,9 +52,10 @@ on GitHub.
 * All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason`
   attribute that can be used to provide additional explanation as to why a test or
   container might be disabled.
+* New `assertLinesMatch` method overloads added to class `Assertions` that accept
+  two `Stream<String>` instances for comparison.
 * `@CsvFileSource` now allows to specify file paths as an alternative to classpath
   resources.
-
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage
