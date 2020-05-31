@@ -99,7 +99,7 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
-	@EnabledOnJre(OTHER)
+	@EnabledOnJre(value = OTHER, disabledReason = "Disabled on almost every JRE")
 	void other() {
 		assertFalse(
 			onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15());

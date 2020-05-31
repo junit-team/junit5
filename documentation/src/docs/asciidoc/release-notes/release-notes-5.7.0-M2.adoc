@@ -10,12 +10,20 @@ the link:{junit5-repo}+/milestone/5.7.0-M2?closed=1+[5.7 M2] milestone page in t
 on GitHub.
 
 
+[[release-notes-5.7.0-M2-overall-improvements]]
+=== Overall Improvements
+
+* Javadoc JARs now contain `package-list` in addition to `element-list` for compatibility
+  with tools like NetBeans 11.
+
+
 [[release-notes-5.7.0-M2-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
 
-* ❓
+* Characters in exception messages and other user-supplied values that are not allowed in
+  XML are now replaced with their character reference (e.g. `\0` becomes `&#0;`).
 
 ==== Deprecations and Breaking Changes
 
@@ -23,9 +31,12 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* When using `ConsoleLauncher`, explicitly selected classes from `--select-class`
+  and `--select-method` are now always executed regardless of class name patterns
+  provided with `--include-classname` or the default class name pattern.
+* Support `FilePosition` in `FileSelector` and `ClasspathResourceSelector`.
 * Custom `PostDiscoveryFilter` implementations can now be registered via Java’s
   `ServiceLoader` mechanism.
-
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter
@@ -40,8 +51,13 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
-
+* All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason`
+  attribute that can be used to provide additional explanation as to why a test or
+  container might be disabled.
+* New `assertLinesMatch` method overloads added to class `Assertions` that accept
+  two `Stream<String>` instances for comparison.
+* `@CsvFileSource` now allows to specify file paths as an alternative to classpath
+  resources.
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage

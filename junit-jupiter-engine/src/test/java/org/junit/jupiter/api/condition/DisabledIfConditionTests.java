@@ -51,7 +51,7 @@ public class DisabledIfConditionTests extends AbstractExecutionConditionTests {
 	void disabledBecauseStaticConditionMethodReturnsTrue() {
 		evaluateCondition();
 		assertDisabled();
-		assertReasonContains("Condition provided in @DisabledIf evaluates to true");
+		assertReasonContains("Disabled for some reason");
 	}
 
 	/**

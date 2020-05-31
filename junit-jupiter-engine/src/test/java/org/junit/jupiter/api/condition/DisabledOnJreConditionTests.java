@@ -71,6 +71,7 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	void disabledOnAllJavaVersions() {
 		evaluateCondition();
 		assertDisabledOnCurrentJreIf(true);
+		assertCustomDisabledReasonIs("Disabled on every JRE");
 	}
 
 	/**

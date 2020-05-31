@@ -13,6 +13,7 @@ package org.junit.platform.engine.discovery;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -39,10 +40,12 @@ import org.junit.platform.engine.DiscoverySelector;
 public class ClasspathResourceSelector implements DiscoverySelector {
 
 	private final String classpathResourceName;
+	private final FilePosition position;
 
-	ClasspathResourceSelector(String classpathResourceName) {
+	ClasspathResourceSelector(String classpathResourceName, FilePosition position) {
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		this.classpathResourceName = (startsWithSlash ? classpathResourceName.substring(1) : classpathResourceName);
+		this.position = position;
 	}
 
 	/**
@@ -60,6 +63,13 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	}
 
 	/**
+	 * Get the selected {@code FilePosition} within the classpath resource.
+	 */
+	public Optional<FilePosition> getPosition() {
+		return Optional.ofNullable(this.position);
+	}
+
+	/**
 	 * @since 1.3
 	 */
 	@API(status = STABLE, since = "1.3")
@@ -72,7 +82,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 			return false;
 		}
 		ClasspathResourceSelector that = (ClasspathResourceSelector) o;
-		return Objects.equals(this.classpathResourceName, that.classpathResourceName);
+		return Objects.equals(this.classpathResourceName, that.classpathResourceName)
+				&& Objects.equals(this.position, that.position);
 	}
 
 	/**
@@ -81,12 +92,13 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
-		return this.classpathResourceName.hashCode();
+		return Objects.hash(this.classpathResourceName, this.position);
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("classpathResourceName", this.classpathResourceName).toString();
+		return new ToStringBuilder(this).append("classpathResourceName", this.classpathResourceName).append("position",
+			this.position).toString();
 	}
 
 }

@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
@@ -109,9 +110,9 @@ class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassNameFilter> filter = request.getFiltersByType(ClassNameFilter.class);
-		assertThat(filter).hasSize(1);
-		assertThat(filter.get(0).toString()).contains(STANDARD_INCLUDE_PATTERN);
+		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
+		assertThat(filters).hasSize(1);
+		assertExcludes(filters.get(0), STANDARD_INCLUDE_PATTERN);
 	}
 
 	@Test
@@ -121,10 +122,25 @@ class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassNameFilter> filter = request.getFiltersByType(ClassNameFilter.class);
-		assertThat(filter).hasSize(1);
-		assertThat(filter.get(0).toString()).contains("Foo.*Bar");
-		assertThat(filter.get(0).toString()).contains("Bar.*Foo");
+		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
+		assertThat(filters).hasSize(1);
+		assertIncludes(filters.get(0), "Foo.*Bar");
+		assertIncludes(filters.get(0), "Bar.*Foo");
+	}
+
+	@Test
+	void includeSelectedClassesAndMethodsRegardlessOfClassNamePatterns() {
+		options.setSelectedClasses(singletonList("SomeTest"));
+		options.setSelectedMethods(asList("com.acme.Foo#m()"));
+		options.setIncludedClassNamePatterns(asList("Foo.*Bar"));
+
+		LauncherDiscoveryRequest request = convert();
+
+		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
+		assertThat(filters).hasSize(1);
+		assertIncludes(filters.get(0), "SomeTest");
+		assertIncludes(filters.get(0), "com.acme.Foo");
+		assertIncludes(filters.get(0), "Foo.*Bar");
 	}
 
 	@Test
@@ -134,10 +150,10 @@ class DiscoveryRequestCreatorTests {
 
 		LauncherDiscoveryRequest request = convert();
 
-		List<ClassNameFilter> filter = request.getFiltersByType(ClassNameFilter.class);
-		assertThat(filter).hasSize(2);
-		assertThat(filter.get(1).toString()).contains("Foo.*Bar");
-		assertThat(filter.get(1).toString()).contains("Bar.*Foo");
+		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
+		assertThat(filters).hasSize(2);
+		assertExcludes(filters.get(1), "Foo.*Bar");
+		assertExcludes(filters.get(1), "Bar.*Foo");
 	}
 
 	@Test
@@ -150,10 +166,10 @@ class DiscoveryRequestCreatorTests {
 		List<PackageNameFilter> packageNameFilters = request.getFiltersByType(PackageNameFilter.class);
 
 		assertThat(packageNameFilters).hasSize(2);
-		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included1");
-		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included2");
-		assertThat(packageNameFilters.get(0).toString()).contains("org.junit.included3");
-		assertThat(packageNameFilters.get(1).toString()).contains("org.junit.excluded1");
+		assertIncludes(packageNameFilters.get(0), "org.junit.included1");
+		assertIncludes(packageNameFilters.get(0), "org.junit.included2");
+		assertIncludes(packageNameFilters.get(0), "org.junit.included3");
+		assertExcludes(packageNameFilters.get(1), "org.junit.excluded1");
 	}
 
 	@Test
@@ -280,6 +296,14 @@ class DiscoveryRequestCreatorTests {
 	private LauncherDiscoveryRequest convert() {
 		DiscoveryRequestCreator creator = new DiscoveryRequestCreator();
 		return creator.toDiscoveryRequest(options);
+	}
+
+	private void assertIncludes(Filter<String> filter, String included) {
+		assertThat(filter.apply(included).included()).isTrue();
+	}
+
+	private void assertExcludes(Filter<String> filter, String excluded) {
+		assertThat(filter.apply(excluded).excluded()).isTrue();
 	}
 
 	@SafeVarargs

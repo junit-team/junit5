@@ -89,6 +89,13 @@ abstract class AbstractExecutionConditionTests {
 		assertThat(this.result.getReason()).hasValueSatisfying(reason -> assertThat(reason).contains(text));
 	}
 
+	protected void assertCustomDisabledReasonIs(String text) {
+		if (this.result.isDisabled()) {
+			assertThat(this.result.getReason()).hasValueSatisfying(
+				reason -> assertThat(reason).contains(" ==> " + text));
+		}
+	}
+
 	private Optional<AnnotatedElement> method(TestInfo testInfo) {
 		return method(getTestClass(), testInfo.getTestMethod().get().getName());
 	}
