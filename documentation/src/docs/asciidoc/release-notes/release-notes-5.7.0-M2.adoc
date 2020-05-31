@@ -23,7 +23,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Custom `PostDiscoveryFilter` implementations can now be registered via Java’s
+  `ServiceLoader` mechanism.
 
 
 [[release-notes-5.7.0-M2-junit-jupiter]]

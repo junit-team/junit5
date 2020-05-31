@@ -105,6 +105,17 @@ by the JUnit Team may use the `junit-` prefix for their `TestEngine` IDs.
   violations.
 ====
 
+[[launcher-api-post-discovery-filters-custom]]
+==== Plugging in your own Post-Discovery Filters
+
+In addition to specifying post-discovery filters as part of a `{LauncherDiscoveryRequest}`
+passed to the `{Launcher}` API, by default custom `{PostDiscoveryFilter}` implementations
+will be discovered at runtime via Java's `java.util.ServiceLoader` mechanism and
+automatically applied by the `Launcher` in addition to those that are part of the request.
+For example, an `example.CustomTagFilter` class implementing `{PostDiscoveryFilter}` and
+declared within the `/META-INF/services/org.junit.platform.launcher.PostDiscoveryFilter`
+file is loaded and applied automatically.
+
 [[launcher-api-listeners-custom]]
 ==== Plugging in your own Test Execution Listener
 
