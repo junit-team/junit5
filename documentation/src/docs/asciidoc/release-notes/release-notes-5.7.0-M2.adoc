@@ -35,6 +35,8 @@ on GitHub.
   and `--select-method` are now always executed regardless of class name patterns
   provided with `--include-classname` or the default class name pattern.
 * Support `FilePosition` in `FileSelector` and `ClasspathResourceSelector`.
+* Custom `PostDiscoveryFilter` implementations can now be registered via Java’s
+  `ServiceLoader` mechanism.
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter

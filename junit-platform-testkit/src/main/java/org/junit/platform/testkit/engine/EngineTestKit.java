@@ -11,6 +11,7 @@
 package org.junit.platform.testkit.engine;
 
 import static java.lang.String.join;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
@@ -265,8 +266,8 @@ public final class EngineTestKit {
 	private static void executeUsingLauncherOrchestration(TestEngine testEngine,
 			LauncherDiscoveryRequest discoveryRequest, EngineExecutionListener listener) {
 		TestDescriptor engineTestDescriptor;
-		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine)).discover(
-			discoveryRequest, "testing");
+		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine),
+			emptySet()).discover(discoveryRequest, "testing");
 		engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
 		new EngineExecutionOrchestrator().execute(discoveryResult, listener);

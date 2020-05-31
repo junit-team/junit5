@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,9 +48,12 @@ public class EngineDiscoveryOrchestrator {
 
 	private final EngineDiscoveryResultValidator discoveryResultValidator = new EngineDiscoveryResultValidator();
 	private final Iterable<TestEngine> testEngines;
+	private final Collection<PostDiscoveryFilter> postDiscoveryFilters;
 
-	public EngineDiscoveryOrchestrator(Iterable<TestEngine> testEngines) {
+	public EngineDiscoveryOrchestrator(Iterable<TestEngine> testEngines,
+			Collection<PostDiscoveryFilter> postDiscoveryFilters) {
 		this.testEngines = testEngines;
+		this.postDiscoveryFilters = postDiscoveryFilters;
 	}
 
 	/**
@@ -82,7 +86,10 @@ public class EngineDiscoveryOrchestrator {
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
 
-		applyPostDiscoveryFilters(testEngineDescriptors, request.getPostDiscoveryFilters());
+		List<PostDiscoveryFilter> filters = new LinkedList<>(postDiscoveryFilters);
+		filters.addAll(request.getPostDiscoveryFilters());
+
+		applyPostDiscoveryFilters(testEngineDescriptors, filters);
 		prune(testEngineDescriptors);
 
 		return new LauncherDiscoveryResult(testEngineDescriptors, request.getConfigurationParameters());

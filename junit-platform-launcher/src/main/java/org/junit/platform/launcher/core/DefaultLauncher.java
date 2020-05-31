@@ -10,10 +10,15 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.Collections.unmodifiableCollection;
+
+import java.util.Collection;
+
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 
@@ -37,12 +42,16 @@ class DefaultLauncher implements Launcher {
 	 * Construct a new {@code DefaultLauncher} with the supplied test engines.
 	 *
 	 * @param testEngines the test engines to delegate to; never {@code null} or empty
+	 * @param filters the additional post discovery filters for discovery requests; never {@code null}
 	 */
-	DefaultLauncher(Iterable<TestEngine> testEngines) {
+	DefaultLauncher(Iterable<TestEngine> testEngines, Collection<PostDiscoveryFilter> filters) {
 		Preconditions.condition(testEngines != null && testEngines.iterator().hasNext(),
 			() -> "Cannot create Launcher without at least one TestEngine; "
 					+ "consider adding an engine implementation JAR to the classpath");
-		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(EngineIdValidator.validate(testEngines));
+		Preconditions.notNull(filters, "PostDiscoveryFilter array must not be null");
+		Preconditions.containsNoNullElements(filters, "PostDiscoveryFilter array must not contain null elements");
+		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(EngineIdValidator.validate(testEngines),
+			unmodifiableCollection(filters));
 	}
 
 	@Override

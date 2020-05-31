@@ -16,14 +16,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -99,6 +103,71 @@ class LauncherFactoryTests {
 		assertThat(ids).containsOnly("[engine:junit-jupiter]");
 	}
 
+	@Test
+	void createWithPostDiscoveryFilters() {
+		LauncherDiscoveryRequest discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+
+		LauncherConfig config = LauncherConfig.builder()//
+				.addPostDiscoveryFilters(TagFilter.includeTags("test-post-discovery")).build();
+
+		TestPlan testPlan = LauncherFactory.create(config).discover(discoveryRequest);
+		final Set<TestIdentifier> vintage = testPlan.getChildren("[engine:junit-vintage]");
+		assertThat(vintage).isEmpty();
+
+		final Set<TestIdentifier> jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+		assertThat(jupiter).hasSize(1);
+	}
+
+	@Test
+	void applyPostDiscoveryFiltersViaServiceApi() {
+		final ClassLoader current = Thread.currentThread().getContextClassLoader();
+		try {
+			URL url = getClass().getClassLoader().getResource("testservices/");
+			URLClassLoader classLoader = new URLClassLoader(new URL[] { url }, current);
+			Thread.currentThread().setContextClassLoader(classLoader);
+
+			LauncherDiscoveryRequest discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+
+			LauncherConfig config = LauncherConfig.builder()//
+					.build();
+
+			TestPlan testPlan = LauncherFactory.create(config).discover(discoveryRequest);
+			final Set<TestIdentifier> vintage = testPlan.getChildren("[engine:junit-vintage]");
+			assertThat(vintage).isEmpty();
+
+			final Set<TestIdentifier> jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+			assertThat(jupiter).hasSize(1);
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(current);
+		}
+	}
+
+	@Test
+	void notApplyIfDisabledPostDiscoveryFiltersViaServiceApi() {
+		final ClassLoader current = Thread.currentThread().getContextClassLoader();
+		try {
+			URL url = getClass().getClassLoader().getResource("testservices/");
+			URLClassLoader classLoader = new URLClassLoader(new URL[] { url }, current);
+			Thread.currentThread().setContextClassLoader(classLoader);
+
+			LauncherDiscoveryRequest discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+
+			LauncherConfig config = LauncherConfig.builder()//
+					.enablePostDiscoveryFilterAutoRegistration(false).build();
+
+			TestPlan testPlan = LauncherFactory.create(config).discover(discoveryRequest);
+			final Set<TestIdentifier> vintage = testPlan.getChildren("[engine:junit-vintage]");
+			assertThat(vintage).hasSize(1);
+
+			final Set<TestIdentifier> jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+			assertThat(jupiter).hasSize(1);
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(current);
+		}
+	}
+
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
 		// @formatter:off
 		return request()
@@ -118,10 +187,10 @@ class LauncherFactoryTests {
 
 	static class JUnit5Example {
 
+		@Tag("test-post-discovery")
 		@Test
 		void testJ5() {
 		}
 
 	}
-
 }
