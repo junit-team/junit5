@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
 /**
  * {@code @CsvFileSource} is an {@link ArgumentsSource} which is used to load
  * comma-separated value (CSV) files from one or more classpath {@link #resources
- * resources}.
+ * resources} or {@link #files}.
  *
  * <p>The lines of these CSV files will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method. Any line beginning with a
@@ -42,10 +42,16 @@ import org.apiguardian.api.API;
 public @interface CsvFileSource {
 
 	/**
-	 * The CSV classpath resources to use as the sources of arguments; must not be
-	 * empty.
+	 * The CSV classpath resources to use as the sources of arguments; must not
+	 * be empty unless {@link #files} is non-empty.
 	 */
-	String[] resources();
+	String[] resources() default {};
+
+	/**
+	 * The CSV files to use as the sources of arguments; must not be empty
+	 * unless {@link #resources} is non-empty.
+	 */
+	String[] files() default {};
 
 	/**
 	 * The encoding to use when reading the CSV files; must be a valid charset.

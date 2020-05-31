@@ -54,6 +54,8 @@ on GitHub.
   container might be disabled.
 * New `assertLinesMatch` method overloads added to class `Assertions` that accept
   two `Stream<String>` instances for comparison.
+* `@CsvFileSource` now allows to specify file paths as an alternative to classpath
+  resources.
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage
