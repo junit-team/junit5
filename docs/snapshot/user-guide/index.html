@@ -3693,8 +3693,8 @@ of any custom values configured via the <code>nullValues</code> attribute.
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-CsvFileSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-CsvFileSource"></a>@CsvFileSource</h5>
 <div class="paragraph">
-<p><code>@CsvFileSource</code> lets you use CSV files from the classpath. Each line from a CSV file
-results in one invocation of the parameterized test.</p>
+<p><code>@CsvFileSource</code> lets you use CSV files from the classpath or the local file system. Each
+line from a CSV file results in one invocation of the parameterized test.</p>
 </div>
 <div class="paragraph">
 <p>The default delimiter is a comma (<code>,</code>), but you can use another character by setting the
@@ -3720,7 +3720,14 @@ ignored.
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@CsvFileSource</span>(resources = <span class="string"><span class="delimiter">&quot;</span><span class="content">/two-column.csv</span><span class="delimiter">&quot;</span></span>, numLinesToSkip = <span class="integer">1</span>)
-<span class="type">void</span> testWithCsvFileSource(<span class="predefined-type">String</span> country, <span class="type">int</span> reference) {
+<span class="type">void</span> testWithCsvFileSourceFromClasspath(<span class="predefined-type">String</span> country, <span class="type">int</span> reference) {
+    assertNotNull(country);
+    assertNotEquals(<span class="integer">0</span>, reference);
+}
+
+<span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@CsvFileSource</span>(files = <span class="string"><span class="delimiter">&quot;</span><span class="content">src/test/resources/two-column.csv</span><span class="delimiter">&quot;</span></span>, numLinesToSkip = <span class="integer">1</span>)
+<span class="type">void</span> testWithCsvFileSourceFromFile(<span class="predefined-type">String</span> country, <span class="type">int</span> reference) {
     assertNotNull(country);
     assertNotEquals(<span class="integer">0</span>, reference);
 }</code></pre>
@@ -9954,7 +9961,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-05-29 18:32:56 UTC
+Last updated 2020-05-31 19:18:42 UTC
 </div>
 </div>
 <style>

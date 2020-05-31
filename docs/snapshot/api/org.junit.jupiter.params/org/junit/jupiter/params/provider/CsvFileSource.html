@@ -87,7 +87,7 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.optional.element.summary">Optional</a></li>
 </ul>
 <ul class="subNavList">
@@ -128,7 +128,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a href="ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider">@ArgumentsSource</a>(org.junit.jupiter.params.provider.CsvFileArgumentsProvider.class)
 public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
 <div class="block"><code>@CsvFileSource</code> is an <a href="ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a> which is used to load
- comma-separated value (CSV) files from one or more classpath <a href="#resources()"><code>resources</code></a>.
+ comma-separated value (CSV) files from one or more classpath <a href="#resources()"><code>resources</code></a> or <a href="#files()"><code>files()</code></a>.
 
  <p>The lines of these CSV files will be provided as arguments to the
  annotated <code>@ParameterizedTest</code> method. Any line beginning with a
@@ -147,32 +147,6 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== ANNOTATION TYPE REQUIRED MEMBER SUMMARY =========== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="annotation.type.required.element.summary">
-<!--   -->
-</a>
-<h3>Required Element Summary</h3>
-<table class="memberSummary">
-<caption><span>Required Elements</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Required Element</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resources()">resources</a></span></code></th>
-<td class="colLast">
-<div class="block">The CSV classpath resources to use as the sources of arguments; must not be
- empty.</div>
-</td>
-</tr>
-</table>
-</li>
-</ul>
-</section>
 <!-- =========== ANNOTATION TYPE OPTIONAL MEMBER SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -216,6 +190,14 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#files()">files</a></span></code></th>
+<td class="colLast">
+<div class="block">The CSV files to use as the sources of arguments; must not be empty
+ unless <a href="#resources()"><code>resources()</code></a> is non-empty.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lineSeparator()">lineSeparator</a></span></code></th>
 <td class="colLast">
@@ -223,18 +205,26 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
  or 2 characters.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nullValues()">nullValues</a></span></code></th>
 <td class="colLast">
 <div class="block">A list of strings that should be interpreted as <code>null</code> references.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#numLinesToSkip()">numLinesToSkip</a></span></code></th>
 <td class="colLast">
 <div class="block">The number of lines to skip when reading the CSV files.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resources()">resources</a></span></code></th>
+<td class="colLast">
+<div class="block">The CSV classpath resources to use as the sources of arguments; must not
+ be empty unless <a href="#files()"><code>files()</code></a> is non-empty.</div>
 </td>
 </tr>
 </table>
@@ -257,18 +247,41 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
 <a id="resources()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>resources</h4>
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;resources</pre>
-<div class="block">The CSV classpath resources to use as the sources of arguments; must not be
- empty.</div>
+<div class="block">The CSV classpath resources to use as the sources of arguments; must not
+ be empty unless <a href="#files()"><code>files()</code></a> is non-empty.</div>
+<dl>
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
 </li>
 </ul>
 </li>
 </ul>
 </section>
-<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="files()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>files</h4>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;files</pre>
+<div class="block">The CSV files to use as the sources of arguments; must not be empty
+ unless <a href="#resources()"><code>resources()</code></a> is non-empty.</div>
+<dl>
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <section role="region">
 <ul class="blockList">
 <li class="blockList"><a id="encoding()">
@@ -517,7 +530,7 @@ int&nbsp;numLinesToSkip</pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.optional.element.summary">Optional</a></li>
 </ul>
 <ul class="subNavList">
