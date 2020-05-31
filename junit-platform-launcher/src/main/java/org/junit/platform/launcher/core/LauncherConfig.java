@@ -77,6 +77,7 @@ public interface LauncherConfig {
 	 * @return {@code true} if post discovery filters should be automatically
 	 * registered
 	 */
+	@API(status = EXPERIMENTAL, since = "1.7")
 	boolean isPostDiscoveryFilterAutoRegistrationEnabled();
 
 	/**
@@ -104,6 +105,7 @@ public interface LauncherConfig {
 	 * @return the collection of additional post discovery filters; never
 	 * {@code null} but potentially empty
 	 */
+	@API(status = EXPERIMENTAL, since = "1.7")
 	Collection<PostDiscoveryFilter> getAdditionalPostDiscoveryFilters();
 
 	/**
@@ -173,6 +175,7 @@ public interface LauncherConfig {
 		 * registered
 		 * @return this builder for method chaining
 		 */
+		@API(status = EXPERIMENTAL, since = "1.7")
 		public Builder enablePostDiscoveryFilterAutoRegistration(boolean enabled) {
 			this.postDiscoveryFilterAutoRegistrationEnabled = enabled;
 			return this;
@@ -214,6 +217,7 @@ public interface LauncherConfig {
 		 * never {@code null} or containing {@code null}
 		 * @return this builder for method chaining
 		 */
+		@API(status = EXPERIMENTAL, since = "1.7")
 		public Builder addPostDiscoveryFilters(PostDiscoveryFilter... filters) {
 			Preconditions.notNull(filters, "PostDiscoveryFilter array must not be null");
 			Preconditions.containsNoNullElements(filters, "PostDiscoveryFilter array must not contain null elements");
