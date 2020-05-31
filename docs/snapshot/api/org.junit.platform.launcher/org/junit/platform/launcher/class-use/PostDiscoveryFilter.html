@@ -115,6 +115,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Public API for configuring and launching test plans.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#org.junit.platform.launcher.core">org.junit.platform.launcher.core</a></th>
+<td class="colLast">
+<div class="block">Core support classes for the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>
+ including the <a href="../core/LauncherFactory.html" title="class in org.junit.platform.launcher.core"><code>LauncherFactory</code></a>
+ and the <a href="../core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a>.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -177,6 +185,62 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">
 <div class="block">Get the <code>PostDiscoveryFilters</code> for this request.</div>
 </td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.platform.launcher.core">
+<!--   -->
+</a>
+<h3>Uses of <a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a> in <a href="../core/package-summary.html">org.junit.platform.launcher.core</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../core/package-summary.html">org.junit.platform.launcher.core</a> that return types with arguments of type <a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LauncherConfig.</span><code><span class="memberNameLink"><a href="../core/LauncherConfig.html#getAdditionalPostDiscoveryFilters()">getAdditionalPostDiscoveryFilters</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the collection of additional post discovery filters that should be
+ added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../core/package-summary.html">org.junit.platform.launcher.core</a> with parameters of type <a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LauncherConfig.Builder.</span><code><span class="memberNameLink"><a href="../core/LauncherConfig.Builder.html#addPostDiscoveryFilters(org.junit.platform.launcher.PostDiscoveryFilter...)">addPostDiscoveryFilters</a></span>&#8203;(<a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>...&nbsp;filters)</code></th>
+<td class="colLast">
+<div class="block">Add all of the supplied <code>filters</code> to the configuration.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Constructor parameters in <a href="../core/package-summary.html">org.junit.platform.launcher.core</a> with type arguments of type <a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Constructor</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../core/EngineDiscoveryOrchestrator.html#%3Cinit%3E(java.lang.Iterable,java.util.Collection)">EngineDiscoveryOrchestrator</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&gt;&nbsp;testEngines,
+                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&gt;&nbsp;postDiscoveryFilters)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>

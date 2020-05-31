@@ -28,7 +28,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -165,19 +165,26 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addPostDiscoveryFilters(org.junit.platform.launcher.PostDiscoveryFilter...)">addPostDiscoveryFilters</a></span>&#8203;(<a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>...&nbsp;filters)</code></th>
+<td class="colLast">
+<div class="block">Add all of the supplied <code>filters</code> to the configuration.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addTestEngines(org.junit.platform.engine.TestEngine...)">addTestEngines</a></span>&#8203;(<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>...&nbsp;engines)</code></th>
 <td class="colLast">
 <div class="block">Add all of the supplied <code>engines</code> to the configuration.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">addTestExecutionListeners</a></span>&#8203;(<a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</code></th>
 <td class="colLast">
 <div class="block">Add all of the supplied <code>listeners</code> to the configuration.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#build()">build</a></span>()</code></th>
 <td class="colLast">
@@ -185,14 +192,21 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  builder.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#enablePostDiscoveryFilterAutoRegistration(boolean)">enablePostDiscoveryFilterAutoRegistration</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
+<td class="colLast">
+<div class="block">Configure the auto-registration flag for post discovery filters.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#enableTestEngineAutoRegistration(boolean)">enableTestEngineAutoRegistration</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
 <td class="colLast">
 <div class="block">Configure the auto-registration flag for test engines.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#enableTestExecutionListenerAutoRegistration(boolean)">enableTestExecutionListenerAutoRegistration</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
 <td class="colLast">
@@ -261,6 +275,27 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
+<a id="enablePostDiscoveryFilterAutoRegistration(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>enablePostDiscoveryFilterAutoRegistration</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.7")
+public&nbsp;<a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;enablePostDiscoveryFilterAutoRegistration&#8203;(boolean&nbsp;enabled)</pre>
+<div class="block">Configure the auto-registration flag for post discovery filters.
+
+ <p>Defaults to <code>true</code>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>enabled</code> - <code>true</code> if post discovery filters should be automatically
+ registered</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this builder for method chaining</dd>
+</dl>
+</li>
+</ul>
 <a id="addTestEngines(org.junit.platform.engine.TestEngine...)">
 <!--   -->
 </a>
@@ -289,6 +324,25 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>listeners</code> - additional test execution listeners to register;
+ never <code>null</code> or containing <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this builder for method chaining</dd>
+</dl>
+</li>
+</ul>
+<a id="addPostDiscoveryFilters(org.junit.platform.launcher.PostDiscoveryFilter...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addPostDiscoveryFilters</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.7")
+public&nbsp;<a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;addPostDiscoveryFilters&#8203;(<a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>...&nbsp;filters)</pre>
+<div class="block">Add all of the supplied <code>filters</code> to the configuration.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>filters</code> - additional post discovery filters to register;
  never <code>null</code> or containing <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this builder for method chaining</dd>

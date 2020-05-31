@@ -28,7 +28,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":1,"i1":6,"i2":6,"i3":6,"i4":6};
+var data = {"i0":1,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -209,6 +209,14 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAdditionalPostDiscoveryFilters()">getAdditionalPostDiscoveryFilters</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the collection of additional post discovery filters that should be
+ added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAdditionalTestEngines()">getAdditionalTestEngines</a></span>()</code></th>
 <td class="colLast">
@@ -216,7 +224,7 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
  the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAdditionalTestExecutionListeners()">getAdditionalTestExecutionListeners</a></span>()</code></th>
 <td class="colLast">
@@ -224,7 +232,16 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
  added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isPostDiscoveryFilterAutoRegistrationEnabled()">isPostDiscoveryFilterAutoRegistrationEnabled</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Determine if post discovery filters should be discovered at runtime
+ using the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isTestEngineAutoRegistrationEnabled()">isTestEngineAutoRegistrationEnabled</a></span>()</code></th>
 <td class="colLast">
@@ -233,7 +250,7 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
  automatically registered.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isTestExecutionListenerAutoRegistrationEnabled()">isTestExecutionListenerAutoRegistrationEnabled</a></span>()</code></th>
 <td class="colLast">
@@ -292,6 +309,25 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
 </dl>
 </li>
 </ul>
+<a id="isPostDiscoveryFilterAutoRegistrationEnabled()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isPostDiscoveryFilterAutoRegistrationEnabled</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.7")
+boolean&nbsp;isPostDiscoveryFilterAutoRegistrationEnabled()</pre>
+<div class="block">Determine if post discovery filters should be discovered at runtime
+ using the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>true</code> if post discovery filters should be automatically
+ registered</dd>
+</dl>
+</li>
+</ul>
 <a id="getAdditionalTestEngines()">
 <!--   -->
 </a>
@@ -320,6 +356,24 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the collection of additional test execution listeners; never
+ <code>null</code> but potentially empty</dd>
+</dl>
+</li>
+</ul>
+<a id="getAdditionalPostDiscoveryFilters()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAdditionalPostDiscoveryFilters</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.7")
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&gt;&nbsp;getAdditionalPostDiscoveryFilters()</pre>
+<div class="block">Get the collection of additional post discovery filters that should be
+ added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the collection of additional post discovery filters; never
  <code>null</code> but potentially empty</dd>
 </dl>
 </li>
