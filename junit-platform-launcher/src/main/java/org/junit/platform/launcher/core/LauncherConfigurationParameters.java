@@ -42,10 +42,10 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		return new Builder();
 	}
 
-	private final List<Lookup> lookups;
+	private final List<ParameterProvider> providers;
 
-	private LauncherConfigurationParameters(List<Lookup> lookups) {
-		this.lookups = lookups;
+	private LauncherConfigurationParameters(List<ParameterProvider> providers) {
+		this.providers = providers;
 	}
 
 	@Override
@@ -60,15 +60,15 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	@Override
 	public int size() {
-		return lookups.stream() //
-				.mapToInt(Lookup::size) //
+		return providers.stream() //
+				.mapToInt(ParameterProvider::size) //
 				.sum();
 	}
 
 	private String getProperty(String key) {
 		Preconditions.notBlank(key, "key must not be null or blank");
-		return lookups.stream() //
-				.map(lookup -> lookup.getValue(key)) //
+		return providers.stream() //
+				.map(parameterProvider -> parameterProvider.getValue(key)) //
 				.filter(Objects::nonNull) //
 				.findFirst() //
 				.orElse(null);
@@ -77,50 +77,50 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this) //
-				.append("lookups", lookups) //
+				.append("lookups", providers) //
 				.toString();
 	}
 
 	static final class Builder {
 
 		private final Map<String, String> explicitParameters = new HashMap<>();
-		private boolean useImplicitLookups = true;
+		private boolean implicitProvidersEnabled = true;
 		private String configFileName = ConfigurationParameters.CONFIG_FILE_NAME;
 
 		private Builder() {
 		}
 
-		Builder withExplicitParameters(Map<String, String> parameters) {
+		Builder explicitParameters(Map<String, String> parameters) {
 			Preconditions.notNull(parameters, "configuration parameters must not be null");
 			explicitParameters.putAll(parameters);
 			return this;
 		}
 
-		Builder withImplicitLookups(boolean useImplicitLookups) {
-			this.useImplicitLookups = useImplicitLookups;
+		Builder enableImplicitProviders(boolean enabled) {
+			this.implicitProvidersEnabled = enabled;
 			return this;
 		}
 
-		Builder withConfigFileName(String configFileName) {
+		Builder configFileName(String configFileName) {
 			Preconditions.notBlank(configFileName, "configFileName must not be null or blank");
 			this.configFileName = configFileName;
 			return this;
 		}
 
 		LauncherConfigurationParameters build() {
-			List<Lookup> lookups = new ArrayList<>();
+			List<ParameterProvider> parameterProviders = new ArrayList<>();
 			if (!explicitParameters.isEmpty()) {
-				lookups.add(Lookup.explicit(explicitParameters));
+				parameterProviders.add(ParameterProvider.explicit(explicitParameters));
 			}
-			if (useImplicitLookups) {
-				lookups.add(Lookup.systemProperties());
-				lookups.add(Lookup.propertiesFile(configFileName));
+			if (implicitProvidersEnabled) {
+				parameterProviders.add(ParameterProvider.systemProperties());
+				parameterProviders.add(ParameterProvider.propertiesFile(configFileName));
 			}
-			return new LauncherConfigurationParameters(lookups);
+			return new LauncherConfigurationParameters(parameterProviders);
 		}
 	}
 
-	private interface Lookup {
+	private interface ParameterProvider {
 
 		String getValue(String key);
 
@@ -128,8 +128,8 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			return 0;
 		}
 
-		static Lookup explicit(Map<String, String> configParams) {
-			return new Lookup() {
+		static ParameterProvider explicit(Map<String, String> configParams) {
+			return new ParameterProvider() {
 				@Override
 				public String getValue(String key) {
 					return configParams.get(key);
@@ -149,8 +149,8 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			};
 		}
 
-		static Lookup systemProperties() {
-			return new Lookup() {
+		static ParameterProvider systemProperties() {
+			return new ParameterProvider() {
 				@Override
 				public String getValue(String key) {
 					try {
@@ -168,10 +168,10 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			};
 		}
 
-		static Lookup propertiesFile(String configFileName) {
+		static ParameterProvider propertiesFile(String configFileName) {
 			Preconditions.notBlank(configFileName, "configFileName must not be null or blank");
 			Properties properties = loadClasspathResource(configFileName.trim());
-			return new Lookup() {
+			return new ParameterProvider() {
 				@Override
 				public String getValue(String key) {
 					return properties.getProperty(key);

@@ -149,19 +149,19 @@ class LauncherConfigurationParametersTests {
 	void ignoresSystemPropertyAndConfigFileWhenImplicitLookupsAreDisabled() {
 		System.setProperty(KEY, SYSTEM_PROPERTY);
 		ConfigurationParameters configParams = LauncherConfigurationParameters.builder() //
-				.withImplicitLookups(false) //
+				.enableImplicitProviders(false) //
 				.build();
 		assertThat(configParams.get(KEY)).isEmpty();
 	}
 
 	private static LauncherConfigurationParameters fromMap(Map<String, String> map) {
-		return LauncherConfigurationParameters.builder().withExplicitParameters(map).build();
+		return LauncherConfigurationParameters.builder().explicitParameters(map).build();
 	}
 
 	private static LauncherConfigurationParameters fromMapAndFile(Map<String, String> map, String configFileName) {
 		return LauncherConfigurationParameters.builder() //
-				.withExplicitParameters(map) //
-				.withConfigFileName(configFileName) //
+				.explicitParameters(map) //
+				.configFileName(configFileName) //
 				.build();
 	}
 

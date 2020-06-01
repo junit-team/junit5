@@ -50,7 +50,7 @@ public class EngineTestKitTests {
 	@CsvSource({ "true, from system property", "false," })
 	void usesImplicitConfigurationParametersWhenEnabled(boolean enabled, String expectedValue) {
 		var value = executeExampleTestCaseAndCollectValue(
-			builder -> builder.withImplicitConfigurationParameters(enabled));
+			builder -> builder.enableImplicitConfigurationParameters(enabled));
 
 		assertThat(value).isEqualTo(Optional.ofNullable(expectedValue));
 	}

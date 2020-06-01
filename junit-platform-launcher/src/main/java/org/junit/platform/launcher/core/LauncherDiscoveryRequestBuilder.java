@@ -99,7 +99,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
 	private final Map<String, String> configurationParameters = new HashMap<>();
 	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
-	private boolean useImplicitConfigurationParameters = true;
+	private boolean implicitConfigurationParametersEnabled = true;
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
@@ -227,9 +227,8 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	@API(status = API.Status.EXPERIMENTAL, since = "1.7")
-	public LauncherDiscoveryRequestBuilder withImplicitConfigurationParameters(
-			boolean useImplicitConfigurationParameters) {
-		this.useImplicitConfigurationParameters = useImplicitConfigurationParameters;
+	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
+		this.implicitConfigurationParametersEnabled = enabled;
 		return this;
 	}
 
@@ -246,8 +245,8 @@ public final class LauncherDiscoveryRequestBuilder {
 
 	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {
 		return LauncherConfigurationParameters.builder() //
-				.withExplicitParameters(this.configurationParameters) //
-				.withImplicitLookups(this.useImplicitConfigurationParameters) //
+				.explicitParameters(this.configurationParameters) //
+				.enableImplicitProviders(this.implicitConfigurationParametersEnabled) //
 				.build();
 	}
 

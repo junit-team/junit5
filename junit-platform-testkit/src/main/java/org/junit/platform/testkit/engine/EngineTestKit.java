@@ -331,7 +331,7 @@ public final class EngineTestKit {
 	public static final class Builder {
 
 		private final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request() //
-				.withImplicitConfigurationParameters(false);
+				.enableImplicitConfigurationParameters(false);
 		private final TestEngine testEngine;
 
 		private Builder(TestEngine testEngine) {
@@ -440,8 +440,8 @@ public final class EngineTestKit {
 		}
 
 		@API(status = API.Status.EXPERIMENTAL, since = "1.7")
-		public Builder withImplicitConfigurationParameters(boolean useImplicitConfigurationParameters) {
-			this.requestBuilder.withImplicitConfigurationParameters(useImplicitConfigurationParameters);
+		public Builder enableImplicitConfigurationParameters(boolean enabled) {
+			this.requestBuilder.enableImplicitConfigurationParameters(enabled);
 			return this;
 		}
 

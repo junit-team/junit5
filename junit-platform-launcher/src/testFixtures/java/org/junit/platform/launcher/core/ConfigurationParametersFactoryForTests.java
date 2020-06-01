@@ -21,8 +21,8 @@ public class ConfigurationParametersFactoryForTests {
 
 	public static ConfigurationParameters create(Map<String, String> configParams) {
 		return LauncherConfigurationParameters.builder() //
-				.withExplicitParameters(configParams) //
-				.withImplicitLookups(false) //
+				.explicitParameters(configParams) //
+				.enableImplicitProviders(false) //
 				.build();
 	}
 }
