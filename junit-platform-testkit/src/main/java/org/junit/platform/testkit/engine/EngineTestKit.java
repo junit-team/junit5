@@ -331,7 +331,8 @@ public final class EngineTestKit {
 	 */
 	public static final class Builder {
 
-		private final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
+		private final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request() //
+				.enableImplicitConfigurationParameters(false);
 		private final TestEngine testEngine;
 
 		private Builder(TestEngine testEngine) {
@@ -440,6 +441,26 @@ public final class EngineTestKit {
 		}
 
 		/**
+		 * Configure whether implicit configuration parameters should be
+		 * considered.
+		 *
+		 * <p>By default, only configuration parameters that are passed
+		 * explicitly to this builder are taken into account. Passing
+		 * {@code true} to this method, enables additionally reading
+		 * configuration parameters from implicit sources, i.e. system
+		 * properties and the {@code junit-platform.properties} classpath
+		 * resource.
+		 *
+		 * @see #configurationParameter(String, String)
+		 * @see #configurationParameters(Map)
+		 */
+		@API(status = API.Status.EXPERIMENTAL, since = "1.7")
+		public Builder enableImplicitConfigurationParameters(boolean enabled) {
+			this.requestBuilder.enableImplicitConfigurationParameters(enabled);
+			return this;
+		}
+
+		/**
 		 * Execute tests for the configured {@link TestEngine},
 		 * {@linkplain DiscoverySelector discovery selectors},
 		 * {@linkplain DiscoveryFilter discovery filters}, and
@@ -452,9 +473,9 @@ public final class EngineTestKit {
 		 * @see #configurationParameters(Map)
 		 */
 		public EngineExecutionResults execute() {
+			LauncherDiscoveryRequest request = this.requestBuilder.build();
 			ExecutionRecorder executionRecorder = new ExecutionRecorder();
-			EngineTestKit.executeUsingLauncherOrchestration(this.testEngine, this.requestBuilder.build(),
-				executionRecorder);
+			EngineTestKit.executeUsingLauncherOrchestration(this.testEngine, request, executionRecorder);
 			return executionRecorder.getExecutionResults();
 		}
 

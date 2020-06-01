@@ -114,7 +114,7 @@ public class LauncherFactory {
 
 	private static Stream<TestExecutionListener> loadAndFilterTestExecutionListeners() {
 		Iterable<TestExecutionListener> listeners = new ServiceLoaderTestExecutionListenerRegistry().loadListeners();
-		ConfigurationParameters configurationParameters = new LauncherConfigurationParameters();
+		ConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
 		String deactivatedListenersPattern = configurationParameters.get(
 			DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME).orElse(null);
 		// @formatter:off

@@ -27,7 +27,10 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `EngineTestKit` no longer takes into account implicit configuration parameters (i.e.
+  system properties and the `junit-platform.properties` classpath resource) by default.
+  This change makes tests executed via `EngineTestKit` independent of the environment they
+  are executed in.
 
 ==== New Features and Improvements
 
