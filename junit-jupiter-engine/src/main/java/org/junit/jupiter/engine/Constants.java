@@ -454,10 +454,11 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Supported values include fully qualified class names for types that implement
-	 * {@link org.junit.jupiter.api.MethodOrderer}.
+	 * <p>Supported values include fully qualified class names for types that
+	 * implement {@link org.junit.jupiter.api.MethodOrderer}.
 	 *
-	 * <p>If not specified, the default is the default test method order.
+	 * <p>If not specified, test methods will be ordered using an algorithm that
+	 * is deterministic but intentionally nonobvious.
 	 */
 	@API(status = EXPERIMENTAL, since = "5.7")
 	public static final String DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;

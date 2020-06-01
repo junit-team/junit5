@@ -39,7 +39,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New `junit.jupiter.testmethod.order.default` configuration parameter to set the default
+  `MethodOrderer` that will be used unless `@TestMethodOrder` is present.
 
 
 [[release-notes-5.7.0-M2-junit-vintage]]
