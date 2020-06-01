@@ -95,6 +95,21 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
+	void selectFileByNameAndPosition() {
+		FilePosition filePosition = FilePosition.from(12, 34);
+		assertViolatesPrecondition(() -> selectFile((String) null, filePosition));
+		assertViolatesPrecondition(() -> selectFile("   ", filePosition));
+
+		String path = "src/test/resources/do_not_delete_me.txt";
+
+		FileSelector selector = selectFile(path, filePosition);
+		assertEquals(path, selector.getRawPath());
+		assertEquals(new File(path), selector.getFile());
+		assertEquals(Paths.get(path), selector.getPath());
+		assertEquals(filePosition, selector.getPosition().get());
+	}
+
+	@Test
 	void selectFileByFileReference() throws Exception {
 		assertViolatesPrecondition(() -> selectFile((File) null));
 		assertViolatesPrecondition(() -> selectFile(new File("bogus/nonexistent.txt")));
@@ -108,6 +123,24 @@ class DiscoverySelectorsTests {
 		assertEquals(path, selector.getRawPath());
 		assertEquals(file.getCanonicalFile(), selector.getFile());
 		assertEquals(Paths.get(path), selector.getPath());
+	}
+
+	@Test
+	void selectFileByFileReferenceAndPosition() throws Exception {
+		FilePosition filePosition = FilePosition.from(12, 34);
+		assertViolatesPrecondition(() -> selectFile((File) null, filePosition));
+		assertViolatesPrecondition(() -> selectFile(new File("bogus/nonexistent.txt"), filePosition));
+
+		File currentDir = new File(".").getCanonicalFile();
+		File relativeDir = new File("..", currentDir.getName());
+		File file = new File(relativeDir, "src/test/resources/do_not_delete_me.txt");
+		String path = file.getCanonicalFile().getPath();
+
+		FileSelector selector = selectFile(file, filePosition);
+		assertEquals(path, selector.getRawPath());
+		assertEquals(file.getCanonicalFile(), selector.getFile());
+		assertEquals(Paths.get(path), selector.getPath());
+		assertEquals(FilePosition.from(12, 34), selector.getPosition().get());
 	}
 
 	@Test
@@ -153,6 +186,25 @@ class DiscoverySelectorsTests {
 		// standard use case
 		selector = selectClasspathResource("A/B/C/spec.json");
 		assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
+	}
+
+	@Test
+	void selectClasspathResourcesWithFilePosition() {
+		FilePosition filePosition = FilePosition.from(12, 34);
+		assertViolatesPrecondition(() -> selectClasspathResource(null, filePosition));
+		assertViolatesPrecondition(() -> selectClasspathResource("", filePosition));
+		assertViolatesPrecondition(() -> selectClasspathResource("    ", filePosition));
+		assertViolatesPrecondition(() -> selectClasspathResource("\t", filePosition));
+
+		// with unnecessary "/" prefix
+		ClasspathResourceSelector selector = selectClasspathResource("/foo/bar/spec.xml", filePosition);
+		assertEquals("foo/bar/spec.xml", selector.getClasspathResourceName());
+		assertEquals(FilePosition.from(12, 34), selector.getPosition().get());
+
+		// standard use case
+		selector = selectClasspathResource("A/B/C/spec.json", filePosition);
+		assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
+		assertEquals(filePosition, selector.getPosition().get());
 	}
 
 	@Test

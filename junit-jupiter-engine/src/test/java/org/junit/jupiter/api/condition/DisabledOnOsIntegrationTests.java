@@ -50,7 +50,7 @@ class DisabledOnOsIntegrationTests {
 	}
 
 	@Test
-	@DisabledOnOs({ LINUX, MAC, WINDOWS, SOLARIS, OTHER })
+	@DisabledOnOs(value = { LINUX, MAC, WINDOWS, SOLARIS, OTHER }, disabledReason = "Disabled on every OS")
 	void disabledOnEveryOs() {
 		fail("should be disabled");
 	}

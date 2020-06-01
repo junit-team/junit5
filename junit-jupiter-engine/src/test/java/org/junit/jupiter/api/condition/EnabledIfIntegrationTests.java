@@ -34,7 +34,7 @@ public class EnabledIfIntegrationTests {
 	}
 
 	@Test
-	@EnabledIf("staticMethodThatReturnsFalse")
+	@EnabledIf(value = "staticMethodThatReturnsFalse", disabledReason = "Disabled for some reason")
 	void disabledBecauseStaticConditionMethodReturnsFalse() {
 		fail("Should be disabled");
 	}

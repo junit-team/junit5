@@ -53,9 +53,9 @@ class LauncherConfigurationParametersTests {
 	@Test
 	void constructorPreconditions() {
 		assertThrows(PreconditionViolationException.class, () -> fromMap(null));
-		assertThrows(PreconditionViolationException.class, () -> fromMap(emptyMap(), null));
-		assertThrows(PreconditionViolationException.class, () -> fromMap(emptyMap(), ""));
-		assertThrows(PreconditionViolationException.class, () -> fromMap(emptyMap(), "  "));
+		assertThrows(PreconditionViolationException.class, () -> fromMapAndFile(emptyMap(), null));
+		assertThrows(PreconditionViolationException.class, () -> fromMapAndFile(emptyMap(), ""));
+		assertThrows(PreconditionViolationException.class, () -> fromMapAndFile(emptyMap(), "  "));
 	}
 
 	@Test
@@ -91,7 +91,7 @@ class LauncherConfigurationParametersTests {
 
 	@Test
 	void configFile() {
-		ConfigurationParameters configParams = fromMap(emptyMap(), CONFIG_FILE_NAME);
+		ConfigurationParameters configParams = fromMapAndFile(emptyMap(), CONFIG_FILE_NAME);
 		assertThat(configParams.get(KEY)).contains(CONFIG_FILE);
 		assertThat(configParams.toString()).contains(CONFIG_FILE);
 	}
@@ -106,16 +106,15 @@ class LauncherConfigurationParametersTests {
 
 	@Test
 	void explicitConfigParamOverridesConfigFile() {
-		ConfigurationParameters configParams = fromMap(singletonMap(KEY, CONFIG_PARAM), CONFIG_FILE_NAME);
+		ConfigurationParameters configParams = fromMapAndFile(singletonMap(KEY, CONFIG_PARAM), CONFIG_FILE_NAME);
 		assertThat(configParams.get(KEY)).contains(CONFIG_PARAM);
 		assertThat(configParams.toString()).contains(CONFIG_PARAM);
-		assertThat(configParams.toString()).doesNotContain(CONFIG_FILE);
 	}
 
 	@Test
 	void systemPropertyOverridesConfigFile() {
 		System.setProperty(KEY, SYSTEM_PROPERTY);
-		ConfigurationParameters configParams = fromMap(emptyMap(), CONFIG_FILE_NAME);
+		ConfigurationParameters configParams = fromMapAndFile(emptyMap(), CONFIG_FILE_NAME);
 		assertThat(configParams.get(KEY)).contains(SYSTEM_PROPERTY);
 		assertThat(configParams.toString()).contains(CONFIG_FILE);
 	}
@@ -146,12 +145,24 @@ class LauncherConfigurationParametersTests {
 			"Failed to transform configuration parameter with key '" + KEY + "' and initial value '42'");
 	}
 
-	private static LauncherConfigurationParameters fromMap(Map<String, String> map) {
-		return new LauncherConfigurationParameters(map);
+	@Test
+	void ignoresSystemPropertyAndConfigFileWhenImplicitLookupsAreDisabled() {
+		System.setProperty(KEY, SYSTEM_PROPERTY);
+		ConfigurationParameters configParams = LauncherConfigurationParameters.builder() //
+				.enableImplicitProviders(false) //
+				.build();
+		assertThat(configParams.get(KEY)).isEmpty();
 	}
 
-	private static LauncherConfigurationParameters fromMap(Map<String, String> map, String configFileName) {
-		return new LauncherConfigurationParameters(map, configFileName);
+	private static LauncherConfigurationParameters fromMap(Map<String, String> map) {
+		return LauncherConfigurationParameters.builder().explicitParameters(map).build();
+	}
+
+	private static LauncherConfigurationParameters fromMapAndFile(Map<String, String> map, String configFileName) {
+		return LauncherConfigurationParameters.builder() //
+				.explicitParameters(map) //
+				.configFileName(configFileName) //
+				.build();
 	}
 
 	private static class Mutator implements TestInstancePostProcessor {

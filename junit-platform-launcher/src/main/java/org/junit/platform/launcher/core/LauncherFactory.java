@@ -14,7 +14,9 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -26,6 +28,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 
 /**
@@ -93,7 +96,13 @@ public class LauncherFactory {
 		}
 		engines.addAll(config.getAdditionalTestEngines());
 
-		Launcher launcher = new DefaultLauncher(engines);
+		List<PostDiscoveryFilter> filters = new ArrayList<>();
+		if (config.isPostDiscoveryFilterAutoRegistrationEnabled()) {
+			new ServiceLoaderPostDiscoveryFilterRegistry().loadPostDiscoveryFilters().forEach(filters::add);
+		}
+		filters.addAll(config.getAdditionalPostDiscoveryFilters());
+
+		Launcher launcher = new DefaultLauncher(engines, filters);
 
 		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
 			loadAndFilterTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
@@ -105,7 +114,7 @@ public class LauncherFactory {
 
 	private static Stream<TestExecutionListener> loadAndFilterTestExecutionListeners() {
 		Iterable<TestExecutionListener> listeners = new ServiceLoaderTestExecutionListenerRegistry().loadListeners();
-		ConfigurationParameters configurationParameters = new LauncherConfigurationParameters();
+		ConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
 		String deactivatedListenersPattern = configurationParameters.get(
 			DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME).orElse(null);
 		// @formatter:off

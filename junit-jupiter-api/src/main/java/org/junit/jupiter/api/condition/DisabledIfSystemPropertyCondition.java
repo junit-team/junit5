@@ -53,7 +53,8 @@ class DisabledIfSystemPropertyCondition extends AbstractRepeatableAnnotationCond
 
 		if (actual.matches(regex)) {
 			return disabled(
-				format("System property [%s] with value [%s] matches regular expression [%s]", name, actual, regex));
+				format("System property [%s] with value [%s] matches regular expression [%s]", name, actual, regex),
+				annotation.disabledReason());
 		}
 		// else
 		return enabled(

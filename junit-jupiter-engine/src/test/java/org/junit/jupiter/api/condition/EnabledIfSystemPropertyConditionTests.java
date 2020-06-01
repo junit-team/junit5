@@ -115,6 +115,7 @@ class EnabledIfSystemPropertyConditionTests extends AbstractExecutionConditionTe
 		evaluateCondition();
 		assertDisabled();
 		assertReasonContains("does not match regular expression");
+		assertCustomDisabledReasonIs("Not bogus");
 	}
 
 	@Test

@@ -153,6 +153,7 @@ class EnabledOnJreConditionTests extends AbstractExecutionConditionTests {
 		evaluateCondition();
 		assertEnabledOnCurrentJreIf(!(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13()
 				|| onJava14() || onJava15()));
+		assertCustomDisabledReasonIs("Disabled on almost every JRE");
 	}
 
 	private void assertEnabledOnCurrentJreIf(boolean condition) {

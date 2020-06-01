@@ -18,6 +18,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -41,9 +42,11 @@ import org.junit.platform.engine.DiscoverySelector;
 public class FileSelector implements DiscoverySelector {
 
 	private final String path;
+	private final FilePosition position;
 
-	FileSelector(String path) {
+	FileSelector(String path, FilePosition position) {
 		this.path = path;
+		this.position = position;
 	}
 
 	/**
@@ -78,6 +81,13 @@ public class FileSelector implements DiscoverySelector {
 	}
 
 	/**
+	 * Get the selected position within the file as a {@link FilePosition}.
+	 */
+	public Optional<FilePosition> getPosition() {
+		return Optional.ofNullable(this.position);
+	}
+
+	/**
 	 * @since 1.3
 	 */
 	@API(status = STABLE, since = "1.3")
@@ -90,7 +100,7 @@ public class FileSelector implements DiscoverySelector {
 			return false;
 		}
 		FileSelector that = (FileSelector) o;
-		return Objects.equals(this.path, that.path);
+		return Objects.equals(this.path, that.path) && Objects.equals(this.position, that.position);
 	}
 
 	/**
@@ -99,12 +109,12 @@ public class FileSelector implements DiscoverySelector {
 	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
-		return this.path.hashCode();
+		return Objects.hash(path, position);
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("path", this.path).toString();
+		return new ToStringBuilder(this).append("path", this.path).append("position", this.position).toString();
 	}
 
 }

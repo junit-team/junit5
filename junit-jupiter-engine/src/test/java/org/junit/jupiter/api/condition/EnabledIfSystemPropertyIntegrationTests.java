@@ -86,7 +86,7 @@ class EnabledIfSystemPropertyIntegrationTests {
 	}
 
 	@Test
-	@EnabledIfSystemProperty(named = KEY1, matches = BOGUS)
+	@EnabledIfSystemProperty(named = KEY1, matches = BOGUS, disabledReason = "Not bogus")
 	void disabledBecauseSystemPropertyDoesNotMatch() {
 		fail("should be disabled");
 	}
