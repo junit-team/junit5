@@ -94,7 +94,7 @@ class DefaultJupiterConfigurationTests {
 		when(parameters.get(key)).thenReturn(Optional.empty());
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
 
-		final Optional<MethodOrderer> defaultTestMethodOrder = configuration.getDefaultTestMethodOrder();
+		final Optional<MethodOrderer> defaultTestMethodOrder = configuration.getDefaultTestMethodOrderer();
 
 		assertThat(defaultTestMethodOrder).isEmpty();
 	}

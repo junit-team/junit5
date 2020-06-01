@@ -88,8 +88,8 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Optional<MethodOrderer> getDefaultTestMethodOrder() {
+	public Optional<MethodOrderer> getDefaultTestMethodOrderer() {
 		return (Optional<MethodOrderer>) cache.computeIfAbsent(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME,
-			key -> delegate.getDefaultTestMethodOrder());
+			key -> delegate.getDefaultTestMethodOrderer());
 	}
 }

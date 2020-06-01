@@ -68,7 +68,7 @@ class MethodOrderingVisitor implements TestDescriptor.Visitor {
 				.map(TestMethodOrder::value)//
 				.<MethodOrderer> map(ReflectionUtils::newInstance)//
 				.map(Optional::of)//
-				.orElse(configuration.getDefaultTestMethodOrder())//
+				.orElseGet(configuration::getDefaultTestMethodOrderer)//
 				.ifPresent(methodOrderer -> {
 
 					Set<? extends TestDescriptor> children = classBasedTestDescriptor.getChildren();

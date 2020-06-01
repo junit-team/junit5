@@ -100,15 +100,15 @@ class CachingJupiterConfigurationTests {
 	}
 
 	@Test
-	void cachesDefaultTestMethodOrder() {
+	void cachesDefaultTestMethodOrderer() {
 		final Optional<MethodOrderer> methodOrderer = Optional.of(new MethodOrderer.Alphanumeric());
-		when(delegate.getDefaultTestMethodOrder()).thenReturn(methodOrderer);
+		when(delegate.getDefaultTestMethodOrderer()).thenReturn(methodOrderer);
 
-		// call `cache.getDefaultDisplayNameGenerator()` twice to verify the delegate method is called only once.
-		assertThat(cache.getDefaultTestMethodOrder()).isSameAs(methodOrderer);
-		assertThat(cache.getDefaultTestMethodOrder()).isSameAs(methodOrderer);
+		// call `cache.getDefaultTestMethodOrderer()` twice to verify the delegate method is called only once.
+		assertThat(cache.getDefaultTestMethodOrderer()).isSameAs(methodOrderer);
+		assertThat(cache.getDefaultTestMethodOrderer()).isSameAs(methodOrderer);
 
-		verify(delegate, only()).getDefaultTestMethodOrder();
+		verify(delegate, only()).getDefaultTestMethodOrderer();
 	}
 
 	@Test

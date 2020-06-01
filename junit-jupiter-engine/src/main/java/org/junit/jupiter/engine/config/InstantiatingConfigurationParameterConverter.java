@@ -12,34 +12,41 @@ package org.junit.jupiter.engine.config;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 
 /**
- * @since 5.7
+ * @since 5.5
  */
-class MethodOrdererParameterConverter {
+class InstantiatingConfigurationParameterConverter<T> {
 
-	private static final Logger logger = LoggerFactory.getLogger(MethodOrdererParameterConverter.class);
+	private static final Logger logger = LoggerFactory.getLogger(InstantiatingConfigurationParameterConverter.class);
 
-	Optional<MethodOrderer> get(ConfigurationParameters configurationParameters, String key) {
+	private final Class<T> clazz;
+	private final String name;
+
+	public InstantiatingConfigurationParameterConverter(Class<T> clazz, String name) {
+		this.clazz = clazz;
+		this.name = name;
+	}
+
+	Optional<T> get(ConfigurationParameters configurationParameters, String key) {
 		// @formatter:off
 		return configurationParameters.get(key)
 				.map(String::trim)
 				.filter(className -> !className.isEmpty())
-				.flatMap(className -> instantiateMethodOrderer(className, key));
+				.flatMap(className -> instantiateGenerator(className, key));
 		// @formatter:on
 	}
 
-	private Optional<MethodOrderer> instantiateMethodOrderer(String className, String key) {
+	private Optional<T> instantiateGenerator(String className, String key) {
 		// @formatter:off
 		return ReflectionUtils.tryToLoadClass(className)
 				.andThenTry(ReflectionUtils::newInstance)
-				.andThenTry(MethodOrderer.class::cast)
-				.ifSuccess(generator -> logGeneratorClassMessage(className, key))
+				.andThenTry(clazz::cast)
+				.ifSuccess(generator -> logSuccessMessage(className, key))
 				.ifFailure(cause -> logFailureMessage(className, key, cause))
 				.toOptional();
 		// @formatter:on
@@ -47,13 +54,13 @@ class MethodOrdererParameterConverter {
 
 	private void logFailureMessage(String className, String key, Exception cause) {
 		logger.warn(cause,
-			() -> String.format("Failed to load default method orderer '%s' set via the '%s' configuration parameter."
+			() -> String.format("Failed to load default %s class '%s' set via the '%s' configuration parameter."
 					+ " Falling back to default behavior.",
-				className, key));
+				name, className, key));
 	}
 
-	private void logGeneratorClassMessage(String className, String key) {
-		logger.info(() -> String.format("Using default method orderer '%s' set via the '%s' configuration parameter.",
+	private void logSuccessMessage(String className, String key) {
+		logger.info(() -> String.format("Using default %s '%s' set via the '%s' configuration parameter.", name,
 			className, key));
 	}
 

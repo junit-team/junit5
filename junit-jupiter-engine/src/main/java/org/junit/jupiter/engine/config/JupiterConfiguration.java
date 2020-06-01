@@ -67,5 +67,5 @@ public interface JupiterConfiguration {
 
 	DisplayNameGenerator getDefaultDisplayNameGenerator();
 
-	Optional<MethodOrderer> getDefaultTestMethodOrder();
+	Optional<MethodOrderer> getDefaultTestMethodOrderer();
 }

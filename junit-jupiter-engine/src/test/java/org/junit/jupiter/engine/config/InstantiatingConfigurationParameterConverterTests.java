@@ -31,19 +31,19 @@ import org.junit.platform.engine.ConfigurationParameters;
  * @since 5.5
  */
 @TrackLogRecords
-class DisplayNameGeneratorParameterConverterTests {
+class InstantiatingConfigurationParameterConverterTests {
 
 	private static final String KEY = DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME;
 
 	@Test
-	void shouldReturnDefaultDisplayGenerator(LogRecordListener listener) {
+	void shouldInstantiateConfiguredClass(LogRecordListener listener) {
 
 		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of(CustomDisplayNameGenerator.class.getName()));
 
-		DisplayNameGeneratorParameterConverter converter = new DisplayNameGeneratorParameterConverter();
-		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY,
-			DisplayNameGenerator.Standard::new);
+		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
+			DisplayNameGenerator.class, "display name generator");
+		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY).orElseThrow();
 
 		assertThat(displayNameGenerator).isInstanceOf(CustomDisplayNameGenerator.class);
 		assertExpectedLogMessage(listener, Level.INFO,
@@ -53,38 +53,38 @@ class DisplayNameGeneratorParameterConverterTests {
 	}
 
 	@Test
-	void shouldReturnStandardGeneratorIfNoConfigurationFound() {
+	void shouldReturnEmptyOptionalIfNoConfigurationFound() {
 		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
 		when(configurationParameters.get(KEY)).thenReturn(Optional.empty());
 
-		DisplayNameGeneratorParameterConverter converter = new DisplayNameGeneratorParameterConverter();
-		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY,
-			DisplayNameGenerator.Standard::new);
+		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
+			DisplayNameGenerator.class, "display name generator");
+		Optional<DisplayNameGenerator> displayNameGenerator = converter.get(configurationParameters, KEY);
 
-		assertThat(displayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
+		assertThat(displayNameGenerator).isEmpty();
 	}
 
 	@Test
-	void shouldReturnStandardGeneratorIfConfigurationIsBlank() {
+	void shouldReturnEmptyOptionalIfConfigurationIsBlank() {
 		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of(""));
 
-		DisplayNameGeneratorParameterConverter converter = new DisplayNameGeneratorParameterConverter();
-		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY,
-			DisplayNameGenerator.Standard::new);
+		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
+			DisplayNameGenerator.class, "display name generator");
+		Optional<DisplayNameGenerator> displayNameGenerator = converter.get(configurationParameters, KEY);
 
-		assertThat(displayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
+		assertThat(displayNameGenerator).isEmpty();
 	}
 
 	@Test
-	void shouldTrimAndReturnDisplayNameGenerator(LogRecordListener listener) {
+	void shouldTrimAndInstantiateConfiguredClass(LogRecordListener listener) {
 		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
 		String classNameWithSpaces = " " + CustomDisplayNameGenerator.class.getName() + "  ";
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of(classNameWithSpaces));
 
-		DisplayNameGeneratorParameterConverter converter = new DisplayNameGeneratorParameterConverter();
-		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY,
-			DisplayNameGenerator.Standard::new);
+		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
+			DisplayNameGenerator.class, "display name generator");
+		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY).orElseThrow();
 
 		assertThat(displayNameGenerator).isInstanceOf(CustomDisplayNameGenerator.class);
 		assertExpectedLogMessage(listener, Level.INFO,
@@ -94,15 +94,15 @@ class DisplayNameGeneratorParameterConverterTests {
 	}
 
 	@Test
-	void shouldReturnStandardGeneratorIfNoClassFound(LogRecordListener listener) {
+	void shouldReturnEmptyOptionalIfNoClassFound(LogRecordListener listener) {
 		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of("random-string"));
 
-		DisplayNameGeneratorParameterConverter converter = new DisplayNameGeneratorParameterConverter();
-		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY,
-			DisplayNameGenerator.Standard::new);
+		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
+			DisplayNameGenerator.class, "display name generator");
+		Optional<DisplayNameGenerator> displayNameGenerator = converter.get(configurationParameters, KEY);
 
-		assertThat(displayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
+		assertThat(displayNameGenerator).isEmpty();
 		assertExpectedLogMessage(listener, Level.WARNING,
 			"Failed to load default display name generator "
 					+ "class 'random-string' set via the 'junit.jupiter.displayname.generator.default' "
@@ -110,15 +110,15 @@ class DisplayNameGeneratorParameterConverterTests {
 	}
 
 	@Test
-	void shouldReturnStandardGeneratorIfClassFoundIsNotATypeOfDisplayNameGenerator(LogRecordListener listener) {
+	void shouldReturnEmptyOptionalIfClassFoundIsNotATypeOfExpectedType(LogRecordListener listener) {
 		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of(Object.class.getName()));
 
-		DisplayNameGeneratorParameterConverter converter = new DisplayNameGeneratorParameterConverter();
-		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY,
-			DisplayNameGenerator.Standard::new);
+		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
+			DisplayNameGenerator.class, "display name generator");
+		Optional<DisplayNameGenerator> displayNameGenerator = converter.get(configurationParameters, KEY);
 
-		assertThat(displayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
+		assertThat(displayNameGenerator).isEmpty();
 		assertExpectedLogMessage(listener, Level.WARNING,
 			"Failed to load default display name generator class 'java.lang.Object' "
 					+ "set via the 'junit.jupiter.displayname.generator.default' configuration parameter. "
@@ -126,16 +126,16 @@ class DisplayNameGeneratorParameterConverterTests {
 	}
 
 	@Test
-	void shouldReturnStandardGeneratorIfClassNameIsNotFullyQualified(LogRecordListener listener) {
+	void shouldReturnEmptyOptionalIfClassNameIsNotFullyQualified(LogRecordListener listener) {
 		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
 		when(configurationParameters.get(KEY)).thenReturn(
 			Optional.of(CustomDisplayNameGenerator.class.getSimpleName()));
 
-		DisplayNameGeneratorParameterConverter converter = new DisplayNameGeneratorParameterConverter();
-		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY,
-			DisplayNameGenerator.Standard::new);
+		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
+			DisplayNameGenerator.class, "display name generator");
+		Optional<DisplayNameGenerator> displayNameGenerator = converter.get(configurationParameters, KEY);
 
-		assertThat(displayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
+		assertThat(displayNameGenerator).isEmpty();
 		assertExpectedLogMessage(listener, Level.WARNING,
 			"Failed to load default display name generator class 'CustomDisplayNameGenerator' "
 					+ "set via the 'junit.jupiter.displayname.generator.default' configuration parameter. "
