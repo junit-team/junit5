@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
 import static org.junit.jupiter.api.Order.DEFAULT;
 import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
+import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
@@ -148,6 +149,16 @@ class OrderedMethodTests {
 	}
 
 	@Test
+	void defaultOrderer() {
+		var tests = executeTestsInParallel(WithoutTestMethodOrderTestCase.class, OrderAnnotation.class);
+
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()");
+		assertThat(threadNames).hasSize(1);
+	}
+
+	@Test
 	@TrackLogRecords
 	void randomWithBogusSeedRepeatedly(LogRecordListener listener) {
 		String seed = "explode";
@@ -276,11 +287,16 @@ class OrderedMethodTests {
 	}
 
 	private Events executeTestsInParallel(Class<?> testClass) {
+		return executeTestsInParallel(testClass, Random.class);
+	}
+
+	private Events executeTestsInParallel(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
 		// @formatter:off
 		return EngineTestKit
 				.engine("junit-jupiter")
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
 				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
+				.configurationParameter(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME, defaultOrderer.getName())
 				.selectors(selectClass(testClass))
 				.execute()
 				.testEvents();
@@ -623,6 +639,31 @@ class OrderedMethodTests {
 			context.getMethodDescriptors().remove(0);
 			context.getMethodDescriptors().remove(0);
 		}
+	}
+
+	static class WithoutTestMethodOrderTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			callSequence.add(testInfo.getDisplayName());
+			threadNames.add(Thread.currentThread().getName());
+		}
+
+		@Test
+		@Order(2)
+		void test2() {
+		}
+
+		@Test
+		@Order(3)
+		void test3() {
+		}
+
+		@Test
+		@Order(1)
+		void test1() {
+		}
+
 	}
 
 }
