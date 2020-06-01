@@ -45,6 +45,7 @@ public class ToStringBuilder {
 		this(Preconditions.notNull(type, "Class must not be null").getSimpleName());
 	}
 
+	@API(status = INTERNAL, since = "1.7")
 	public ToStringBuilder(String typeName) {
 		this.typeName = Preconditions.notNull(typeName, "Type name must not be null");
 	}

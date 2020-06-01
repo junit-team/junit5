@@ -209,6 +209,24 @@ public final class LauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	/**
+	 * Configure whether implicit configuration parameters should be considered.
+	 *
+	 * <p>By default, in addition to those parameters that are passed explicitly
+	 * to this builder, configuration parameters are read from system properties
+	 * and from the {@code junit-platform.properties} classpath resource.
+	 * Passing {@code false} to this method, disables the latter two sources so
+	 * that only explicit configuration parameters are taken into account.
+	 *
+	 * @see #configurationParameter(String, String)
+	 * @see #configurationParameters(Map)
+	 */
+	@API(status = API.Status.EXPERIMENTAL, since = "1.7")
+	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
+		this.implicitConfigurationParametersEnabled = enabled;
+		return this;
+	}
+
 	private void storeFilter(Filter<?> filter) {
 		if (filter instanceof EngineFilter) {
 			this.engineFilters.add((EngineFilter) filter);
@@ -224,12 +242,6 @@ public final class LauncherDiscoveryRequestBuilder {
 				String.format("Filter [%s] must implement %s, %s, or %s.", filter, EngineFilter.class.getSimpleName(),
 					PostDiscoveryFilter.class.getSimpleName(), DiscoveryFilter.class.getSimpleName()));
 		}
-	}
-
-	@API(status = API.Status.EXPERIMENTAL, since = "1.7")
-	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
-		this.implicitConfigurationParametersEnabled = enabled;
-		return this;
 	}
 
 	/**

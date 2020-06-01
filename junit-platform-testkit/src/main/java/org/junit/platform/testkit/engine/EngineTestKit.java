@@ -439,6 +439,20 @@ public final class EngineTestKit {
 			return this;
 		}
 
+		/**
+		 * Configure whether implicit configuration parameters should be
+		 * considered.
+		 *
+		 * <p>By default, only configuration parameters that are passed
+		 * explicitly to this builder are taken into account. Passing
+		 * {@code true} to this method, enables additionally reading
+		 * configuration parameters from implicit sources, i.e. system
+		 * properties and the {@code junit-platform.properties} classpath
+		 * resource.
+		 *
+		 * @see #configurationParameter(String, String)
+		 * @see #configurationParameters(Map)
+		 */
 		@API(status = API.Status.EXPERIMENTAL, since = "1.7")
 		public Builder enableImplicitConfigurationParameters(boolean enabled) {
 			this.requestBuilder.enableImplicitConfigurationParameters(enabled);
