@@ -561,7 +561,10 @@ XML are now replaced with their character reference (e.g. <code>\0</code> become
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>EngineTestKit</code> no longer takes into account implicit configuration parameters (i.e.
+system properties and the <code>junit-platform.properties</code> classpath resource) by default.
+This change makes tests executed via <code>EngineTestKit</code> independent of the environment they
+are executed in.</p>
 </li>
 </ul>
 </div>
@@ -1040,7 +1043,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-05-31 19:40:49 UTC
+Last updated 2020-06-01 12:26:22 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

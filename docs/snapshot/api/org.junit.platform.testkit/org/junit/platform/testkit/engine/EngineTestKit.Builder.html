@@ -28,7 +28,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":42,"i4":10,"i5":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":42,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -192,6 +192,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="EngineTestKit.Builder.html" title="class in org.junit.platform.testkit.engine">EngineTestKit.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#enableImplicitConfigurationParameters(boolean)">enableImplicitConfigurationParameters</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
+<td class="colLast">
+<div class="block">Configure whether implicit configuration parameters should be
+ considered.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine">EngineExecutionResults</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute()">execute</a></span>()</code></th>
 <td class="colLast">
@@ -201,7 +209,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  <em>configuration parameters</em>.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="EngineTestKit.Builder.html" title="class in org.junit.platform.testkit.engine">EngineTestKit.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filters(org.junit.platform.engine.DiscoveryFilter...)">filters</a></span>&#8203;(<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine">DiscoveryFilter</a>&lt;?&gt;...&nbsp;filters)</code></th>
 <td class="colLast">
@@ -210,14 +218,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="EngineTestKit.Builder.html" title="class in org.junit.platform.testkit.engine">EngineTestKit.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filters(org.junit.platform.engine.Filter...)">filters</a></span>&#8203;(<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/Filter.html" title="interface in org.junit.platform.engine">Filter</a>&lt;?&gt;...&nbsp;filters)</code></th>
 <td class="colLast">
 <div class="block">Add all of the supplied <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/Filter.html" title="interface in org.junit.platform.engine">filters</a>.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="EngineTestKit.Builder.html" title="class in org.junit.platform.testkit.engine">EngineTestKit.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectors(org.junit.platform.engine.DiscoverySelector...)">selectors</a></span>&#8203;(<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>...&nbsp;selectors)</code></th>
 <td class="colLast">
@@ -382,6 +390,31 @@ public&nbsp;<a href="EngineTestKit.Builder.html" title="class in org.junit.platf
 <a href="#configurationParameter(java.lang.String,java.lang.String)"><code>configurationParameter(String, String)</code></a>, 
 <a href="#execute()"><code>execute()</code></a>, 
 <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="enableImplicitConfigurationParameters(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>enableImplicitConfigurationParameters</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.7")
+public&nbsp;<a href="EngineTestKit.Builder.html" title="class in org.junit.platform.testkit.engine">EngineTestKit.Builder</a>&nbsp;enableImplicitConfigurationParameters&#8203;(boolean&nbsp;enabled)</pre>
+<div class="block">Configure whether implicit configuration parameters should be
+ considered.
+
+ <p>By default, only configuration parameters that are passed
+ explicitly to this builder are taken into account. Passing
+ <code>true</code> to this method, enables additionally reading
+ configuration parameters from implicit sources, i.e. system
+ properties and the <code>junit-platform.properties</code> classpath
+ resource.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#configurationParameter(java.lang.String,java.lang.String)"><code>configurationParameter(String, String)</code></a>, 
+<a href="#configurationParameters(java.util.Map)"><code>configurationParameters(Map)</code></a></dd>
 </dl>
 </li>
 </ul>
