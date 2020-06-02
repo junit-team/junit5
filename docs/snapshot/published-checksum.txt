@@ -28,6 +28,7 @@
 0aa291c6242b4968564b5a9bc8e9aec3  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java
 0abb8110e64d8700654c7b94b931986c  junit-platform-console/src/main/java/org/junit/platform/console/package-info.java
 0b35daa3394520bc160479c3a129caba  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/MutableExtensionRegistry.java
+0bcc151b25365f450a37ca945c32dcc6  junit-platform-console/src/main/java/org/junit/platform/console/tasks/VerboseTreePrintingListener.java
 0c4a1485797c81ba61d3bb54a0a36925  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestTemplate.java
 0caf8cb9b18552a4605d23c9dd44e7f3  documentation/src/test/java/example/TestInfoDemo.java
 0cd44cecf312409d46c88dc736aaafab  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
@@ -569,7 +570,6 @@ d3c7b9d6ab7c8ab7ab1b087f9db4766a  junit-jupiter-engine/src/main/java/org/junit/j
 d3d38fbda3527ef7c75a5006494b93f6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfCondition.java
 d3d7dbc7dc745777ed266740e81406d3  documentation/src/test/java/example/DisplayNameDemo.java
 d4267c445de4a9f0d62bd1a040fdcd06  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java
-d43d276969f8644f5c310819ce288799  junit-platform-console/src/main/java/org/junit/platform/console/tasks/VerboseTreePrintingListener.java
 d48ca497e27808531a970f7782107993  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/package-info.java
 d4ce47495afb2233161e3f4241bc9f98  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/package-info.java
 d4fe811c167b6bbaf3f427b4a26faa0b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/package-info.java
