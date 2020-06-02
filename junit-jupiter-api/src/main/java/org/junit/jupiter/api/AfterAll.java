@@ -88,6 +88,6 @@ import org.apiguardian.api.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = STABLE, since = "5.0")
+@API(status = STABLE, since = "0.5.0")
 public @interface AfterAll {
 }
