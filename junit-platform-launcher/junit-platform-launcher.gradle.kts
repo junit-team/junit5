@@ -1,7 +1,5 @@
 plugins {
 	`java-library-conventions`
-	`java-multi-release-sources`
-	`java-repackage-jars`
 	`java-test-fixtures`
 }
 
