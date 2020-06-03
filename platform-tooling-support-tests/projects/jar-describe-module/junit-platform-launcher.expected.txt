@@ -5,11 +5,9 @@ exports org.junit.platform.launcher.listeners
 exports org.junit.platform.launcher.listeners.discovery
 requires java.base mandated
 requires java.logging transitive
-requires jdk.jfr
 requires org.apiguardian.api transitive
 requires org.junit.platform.commons transitive
 requires org.junit.platform.engine transitive
 uses org.junit.platform.engine.TestEngine
 uses org.junit.platform.launcher.PostDiscoveryFilter
 uses org.junit.platform.launcher.TestExecutionListener
-contains org.junit.platform.launcher.tagexpression

@@ -46,6 +46,7 @@ val platformProjects by extra(listOf(
 		project(":junit-platform-console"),
 		project(":junit-platform-console-standalone"),
 		project(":junit-platform-engine"),
+		project(":junit-platform-jfr"),
 		project(":junit-platform-launcher"),
 		project(":junit-platform-reporting"),
 		project(":junit-platform-runner"),

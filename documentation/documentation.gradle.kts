@@ -18,7 +18,7 @@ modularProjects.forEach { evaluationDependsOn(it.path) }
 
 javaLibrary {
 	mainJavaVersion = JavaVersion.VERSION_1_8
-	testJavaVersion = JavaVersion.VERSION_1_8
+	testJavaVersion = JavaVersion.VERSION_11
 }
 
 dependencies {

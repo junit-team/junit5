@@ -30,7 +30,6 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
-import org.junit.platform.launcher.listeners.FlightRecordingListener;
 
 /**
  * Factory for creating {@link Launcher} instances by invoking {@link #create()}
@@ -109,8 +108,6 @@ public class LauncherFactory {
 			loadAndFilterTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 		}
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
-		// unconditionally register Java Flight Recorder listener since 1.7
-		launcher.registerTestExecutionListeners(new FlightRecordingListener());
 
 		return launcher;
 	}
