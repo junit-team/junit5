@@ -17,6 +17,9 @@ javaLibrary {
 }
 
 tasks {
+	compileModule {
+		targetCompatibility = "11"
+	}
 	verifyOSGi {
 		enabled=false
 	}
