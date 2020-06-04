@@ -5,11 +5,11 @@ The goal of this document is to provide comprehensive reference documentation fo
 programmers writing tests, extension authors, and engine authors as well as build tool
 and IDE vendors.
 
-ifdef::linkToPdf[]
 ifdef::backend-html5[]
-This document is also available as a link:index.pdf[PDF download].
-endif::backend-html5[]
+ifdef::linkToPdf[]
+This document is also available as a link:{userGuidePdfFileName}[PDF download].
 endif::linkToPdf[]
+endif::backend-html5[]
 
 [[overview-what-is-junit-5]]
 === What is JUnit 5?

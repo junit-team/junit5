@@ -52,6 +52,7 @@ val releaseBranch = if (snapshot) "master" else "r${rootProject.version}"
 val docsDir = file("$buildDir/ghpages-docs")
 val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
 val uploadPdfs = !snapshot
+val userGuidePdfFileName = "junit-user-guide-${rootProject.version}.pdf"
 val ota4jDocVersion = if (versions.opentest4j.contains("SNAPSHOT")) "snapshot" else versions.opentest4j
 val apiGuardianDocVersion = if (versions.apiguardian.contains("SNAPSHOT")) "snapshot" else versions.apiguardian
 
@@ -136,10 +137,6 @@ tasks {
 		dependsOn(generateConsoleLauncherOptions, generateExperimentalApisTable, generateDeprecatedApisTable)
 		inputs.files(consoleLauncherOptionsFile, experimentalApisTableFile, deprecatedApisTableFile)
 
-		sources {
-			include("**/index.adoc")
-		}
-
 		resources {
 			from(sourceDir) {
 				include("**/images/**/*.png")
@@ -148,7 +145,6 @@ tasks {
 		}
 
 		attributes(mapOf(
-				"linkToPdf" to uploadPdfs,
 				"jupiter-version" to version,
 				"platform-version" to project.property("platformVersion"),
 				"vintage-version" to project.property("vintageVersion"),
@@ -188,15 +184,27 @@ tasks {
 	}
 
 	asciidoctor {
+		sources {
+			include("**/index.adoc")
+		}
 		resources {
 			from(sourceDir) {
 				include("tocbot-*/**")
 			}
 		}
+		attributes(mapOf(
+				"linkToPdf" to uploadPdfs,
+				"userGuidePdfFileName" to userGuidePdfFileName,
+				"releaseNotesUrl" to "../release-notes/index.html#release-notes"
+		))
 	}
 
 	asciidoctorPdf {
+		sources {
+			include("user-guide/index.adoc")
+		}
 		copyAllResources()
+		attributes(mapOf("releaseNotesUrl" to "https://junit.org/junit5/docs/$docsVersion/release-notes/"))
 	}
 
 	val downloadJavadocElementLists by registering {
@@ -326,6 +334,7 @@ tasks {
 		if (uploadPdfs) {
 			from(asciidoctorPdf.map { it.outputDir }) {
 				include("**/*.pdf")
+				rename { userGuidePdfFileName }
 			}
 		}
 		from(fixJavadoc.map { it.destinationDir }) {
