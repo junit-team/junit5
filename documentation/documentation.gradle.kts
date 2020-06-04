@@ -164,7 +164,7 @@ tasks {
 				"experimentalApisTableFile" to experimentalApisTableFile,
 				"deprecatedApisTableFile" to deprecatedApisTableFile,
 				"outdir" to outputDir.absolutePath,
-				"source-highlighter" to "coderay@", // TODO switch to "rouge" once supported by the html5 backend and on MS Windows
+				"source-highlighter" to "rouge",
 				"tabsize" to "4",
 				"toc" to "left",
 				"icons" to "font",
