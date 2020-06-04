@@ -37,6 +37,6 @@ include::{basedir}/contributors.adoc[]
 [[release-notes]]
 == Release Notes
 
-The release notes are available <<../release-notes/index.adoc#release-notes,here>>.
+The release notes are available link:{releaseNotesUrl}[here].
 
 include::{basedir}/appendix.adoc[]
