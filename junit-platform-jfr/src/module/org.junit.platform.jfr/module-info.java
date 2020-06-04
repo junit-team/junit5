@@ -9,16 +9,20 @@
  */
 
 /**
- * Defines the JUnit Platform JAR API.
+ * Provides the JUnit Platform Flight Recording Listener.
  *
+ * <p>The Flight Recording Listener is a {@link TestExecutionListener} that
+ * generates Java Flight Recorder events.
+ *
+ * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
  * @since 1.7
  */
 module org.junit.platform.jfr {
 	requires jdk.jfr;
-	requires transitive org.apiguardian.api;
-	requires org.junit.platform.commons;
-	requires transitive org.junit.platform.launcher;
+	requires org.apiguardian.api;
+	requires org.junit.platform.engine;
+	requires org.junit.platform.launcher;
 
-	provides org.junit.platform.launcher.TestExecutionListener with
-			org.junit.platform.jfr.FlightRecordingListener;
+	provides org.junit.platform.launcher.TestExecutionListener
+			with org.junit.platform.jfr.FlightRecordingListener;
 }
