@@ -21,6 +21,6 @@ tasks {
 		targetCompatibility = "11"
 	}
 	verifyOSGi {
-		enabled=false
+		enabled = false
 	}
 }
