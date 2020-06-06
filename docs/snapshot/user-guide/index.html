@@ -1594,87 +1594,87 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="groovy"><span class="kn">import</span> <span class="nn">example.domain.Person</span>
-<span class="kn">import</span> <span class="nn">example.util.Calculator</span>
-<span class="kn">import</span> <span class="nn">java.time.Duration</span>
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Assertions.assertEquals</span>
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Assertions.assertTrue</span>
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span>
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.assertAll</span>
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.assertDoesNotThrow</span>
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.assertThrows</span>
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.assertTimeout</span>
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.assertTimeoutPreemptively</span>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">import</span> <span class="nn">example.domain.Person</span>
+<span class="k">import</span> <span class="nn">example.util.Calculator</span>
+<span class="k">import</span> <span class="nn">java.time.Duration</span>
+<span class="k">import</span> <span class="nn">org.junit.jupiter.api.Assertions.assertEquals</span>
+<span class="k">import</span> <span class="nn">org.junit.jupiter.api.Assertions.assertTrue</span>
+<span class="k">import</span> <span class="nn">org.junit.jupiter.api.Test</span>
+<span class="k">import</span> <span class="nn">org.junit.jupiter.api.assertAll</span>
+<span class="k">import</span> <span class="nn">org.junit.jupiter.api.assertDoesNotThrow</span>
+<span class="k">import</span> <span class="nn">org.junit.jupiter.api.assertThrows</span>
+<span class="k">import</span> <span class="nn">org.junit.jupiter.api.assertTimeout</span>
+<span class="k">import</span> <span class="nn">org.junit.jupiter.api.assertTimeoutPreemptively</span>
 
-<span class="kd">class</span> <span class="nc">KotlinAssertionsDemo</span> <span class="o">{</span>
+<span class="kd">class</span> <span class="nc">KotlinAssertionsDemo</span> <span class="p">{</span>
 
-    <span class="kd">private</span> <span class="n">val</span> <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="o">(</span><span class="s2">"Jane"</span><span class="o">,</span> <span class="s2">"Doe"</span><span class="o">)</span>
-    <span class="kd">private</span> <span class="n">val</span> <span class="n">people</span> <span class="o">=</span> <span class="n">setOf</span><span class="o">(</span><span class="n">person</span><span class="o">,</span> <span class="n">Person</span><span class="o">(</span><span class="s2">"John"</span><span class="o">,</span> <span class="s2">"Doe"</span><span class="o">))</span>
-
-    <span class="nd">@Test</span>
-    <span class="n">fun</span> <span class="err">`</span><span class="n">exception</span> <span class="n">absence</span> <span class="n">testing</span><span class="err">`</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">val</span> <span class="n">calculator</span> <span class="o">=</span> <span class="n">Calculator</span><span class="o">()</span>
-        <span class="n">val</span> <span class="n">result</span> <span class="o">=</span> <span class="n">assertDoesNotThrow</span><span class="o">(</span><span class="s2">"Should not throw an exception"</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">calculator</span><span class="o">.</span><span class="na">divide</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
-        <span class="o">}</span>
-        <span class="n">assertEquals</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">result</span><span class="o">)</span>
-    <span class="o">}</span>
+    <span class="k">private</span> <span class="kd">val</span> <span class="py">person</span> <span class="p">=</span> <span class="nc">Person</span><span class="p">(</span><span class="s">"Jane"</span><span class="p">,</span> <span class="s">"Doe"</span><span class="p">)</span>
+    <span class="k">private</span> <span class="kd">val</span> <span class="py">people</span> <span class="p">=</span> <span class="nf">setOf</span><span class="p">(</span><span class="n">person</span><span class="p">,</span> <span class="nc">Person</span><span class="p">(</span><span class="s">"John"</span><span class="p">,</span> <span class="s">"Doe"</span><span class="p">))</span>
 
     <span class="nd">@Test</span>
-    <span class="n">fun</span> <span class="err">`</span><span class="n">expected</span> <span class="n">exception</span> <span class="n">testing</span><span class="err">`</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">val</span> <span class="n">calculator</span> <span class="o">=</span> <span class="n">Calculator</span><span class="o">()</span>
-        <span class="n">val</span> <span class="n">exception</span> <span class="o">=</span> <span class="n">assertThrows</span><span class="o">&lt;</span><span class="n">ArithmeticException</span><span class="o">&gt;</span> <span class="o">(</span><span class="s2">"Should throw an exception"</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">calculator</span><span class="o">.</span><span class="na">divide</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span>
-        <span class="o">}</span>
-        <span class="n">assertEquals</span><span class="o">(</span><span class="s2">"/ by zero"</span><span class="o">,</span> <span class="n">exception</span><span class="o">.</span><span class="na">message</span><span class="o">)</span>
-    <span class="o">}</span>
+    <span class="k">fun</span> <span class="nf">`exception</span> <span class="n">absence</span> <span class="nf">testing`</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="nc">Calculator</span><span class="p">()</span>
+        <span class="kd">val</span> <span class="py">result</span> <span class="p">=</span> <span class="nf">assertDoesNotThrow</span><span class="p">(</span><span class="s">"Should not throw an exception"</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">calculator</span><span class="p">.</span><span class="nf">divide</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nf">assertEquals</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+    <span class="p">}</span>
 
     <span class="nd">@Test</span>
-    <span class="n">fun</span> <span class="err">`</span><span class="n">grouped</span> <span class="n">assertions</span><span class="err">`</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">assertAll</span><span class="o">(</span><span class="s2">"Person properties"</span><span class="o">,</span>
-            <span class="o">{</span> <span class="n">assertEquals</span><span class="o">(</span><span class="s2">"Jane"</span><span class="o">,</span> <span class="n">person</span><span class="o">.</span><span class="na">firstName</span><span class="o">)</span> <span class="o">},</span>
-            <span class="o">{</span> <span class="n">assertEquals</span><span class="o">(</span><span class="s2">"Doe"</span><span class="o">,</span> <span class="n">person</span><span class="o">.</span><span class="na">lastName</span><span class="o">)</span> <span class="o">}</span>
-        <span class="o">)</span>
-    <span class="o">}</span>
+    <span class="k">fun</span> <span class="nf">`expected</span> <span class="n">exception</span> <span class="nf">testing`</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="nc">Calculator</span><span class="p">()</span>
+        <span class="kd">val</span> <span class="py">exception</span> <span class="p">=</span> <span class="n">assertThrows</span><span class="p">&lt;</span><span class="nc">ArithmeticException</span><span class="p">&gt;</span> <span class="p">(</span><span class="s">"Should throw an exception"</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">calculator</span><span class="p">.</span><span class="nf">divide</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nf">assertEquals</span><span class="p">(</span><span class="s">"/ by zero"</span><span class="p">,</span> <span class="n">exception</span><span class="p">.</span><span class="n">message</span><span class="p">)</span>
+    <span class="p">}</span>
 
     <span class="nd">@Test</span>
-    <span class="n">fun</span> <span class="err">`</span><span class="n">grouped</span> <span class="n">assertions</span> <span class="n">from</span> <span class="n">a</span> <span class="n">stream</span><span class="err">`</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">assertAll</span><span class="o">(</span><span class="s2">"People with first name starting with J"</span><span class="o">,</span>
+    <span class="k">fun</span> <span class="nf">`grouped</span> <span class="nf">assertions`</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">assertAll</span><span class="p">(</span><span class="s">"Person properties"</span><span class="p">,</span>
+            <span class="p">{</span> <span class="nf">assertEquals</span><span class="p">(</span><span class="s">"Jane"</span><span class="p">,</span> <span class="n">person</span><span class="p">.</span><span class="n">firstName</span><span class="p">)</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="nf">assertEquals</span><span class="p">(</span><span class="s">"Doe"</span><span class="p">,</span> <span class="n">person</span><span class="p">.</span><span class="n">lastName</span><span class="p">)</span> <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="k">fun</span> <span class="nf">`grouped</span> <span class="n">assertions</span> <span class="n">from</span> <span class="n">a</span> <span class="nf">stream`</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">assertAll</span><span class="p">(</span><span class="s">"People with first name starting with J"</span><span class="p">,</span>
             <span class="n">people</span>
-                <span class="o">.</span><span class="na">stream</span><span class="o">()</span>
-                <span class="o">.</span><span class="na">map</span> <span class="o">{</span>
+                <span class="p">.</span><span class="nf">stream</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">map</span> <span class="p">{</span>
                     <span class="c1">// This mapping returns Stream&lt;() -&gt; Unit&gt;</span>
-                    <span class="o">{</span> <span class="n">assertTrue</span><span class="o">(</span><span class="n">it</span><span class="o">.</span><span class="na">firstName</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s2">"J"</span><span class="o">))</span> <span class="o">}</span>
-                <span class="o">}</span>
-        <span class="o">)</span>
-    <span class="o">}</span>
+                    <span class="p">{</span> <span class="nf">assertTrue</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">firstName</span><span class="p">.</span><span class="nf">startsWith</span><span class="p">(</span><span class="s">"J"</span><span class="p">))</span> <span class="p">}</span>
+                <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
 
     <span class="nd">@Test</span>
-    <span class="n">fun</span> <span class="err">`</span><span class="n">grouped</span> <span class="n">assertions</span> <span class="n">from</span> <span class="n">a</span> <span class="n">collection</span><span class="err">`</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">assertAll</span><span class="o">(</span><span class="s2">"People with last name of Doe"</span><span class="o">,</span>
-            <span class="n">people</span><span class="o">.</span><span class="na">map</span> <span class="o">{</span> <span class="o">{</span> <span class="n">assertEquals</span><span class="o">(</span><span class="s2">"Doe"</span><span class="o">,</span> <span class="n">it</span><span class="o">.</span><span class="na">lastName</span><span class="o">)</span> <span class="o">}</span> <span class="o">}</span>
-        <span class="o">)</span>
-    <span class="o">}</span>
+    <span class="k">fun</span> <span class="nf">`grouped</span> <span class="n">assertions</span> <span class="n">from</span> <span class="n">a</span> <span class="nf">collection`</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">assertAll</span><span class="p">(</span><span class="s">"People with last name of Doe"</span><span class="p">,</span>
+            <span class="n">people</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="p">{</span> <span class="nf">assertEquals</span><span class="p">(</span><span class="s">"Doe"</span><span class="p">,</span> <span class="n">it</span><span class="p">.</span><span class="n">lastName</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
 
     <span class="nd">@Test</span>
-    <span class="n">fun</span> <span class="err">`</span><span class="n">timeout</span> <span class="n">not</span> <span class="n">exceeded</span> <span class="n">testing</span><span class="err">`</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">val</span> <span class="n">fibonacciCalculator</span> <span class="o">=</span> <span class="n">FibonacciCalculator</span><span class="o">()</span>
-        <span class="n">val</span> <span class="n">result</span> <span class="o">=</span> <span class="n">assertTimeout</span><span class="o">(</span><span class="n">Duration</span><span class="o">.</span><span class="na">ofMillis</span><span class="o">(</span><span class="mi">1000</span><span class="o">))</span> <span class="o">{</span>
-            <span class="n">fibonacciCalculator</span><span class="o">.</span><span class="na">fib</span><span class="o">(</span><span class="mi">14</span><span class="o">)</span>
-        <span class="o">}</span>
-        <span class="n">assertEquals</span><span class="o">(</span><span class="mi">377</span><span class="o">,</span> <span class="n">result</span><span class="o">)</span>
-    <span class="o">}</span>
+    <span class="k">fun</span> <span class="nf">`timeout</span> <span class="n">not</span> <span class="n">exceeded</span> <span class="nf">testing`</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">val</span> <span class="py">fibonacciCalculator</span> <span class="p">=</span> <span class="nc">FibonacciCalculator</span><span class="p">()</span>
+        <span class="kd">val</span> <span class="py">result</span> <span class="p">=</span> <span class="nf">assertTimeout</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="nf">ofMillis</span><span class="p">(</span><span class="m">1000</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">fibonacciCalculator</span><span class="p">.</span><span class="nf">fib</span><span class="p">(</span><span class="m">14</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nf">assertEquals</span><span class="p">(</span><span class="m">377</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+    <span class="p">}</span>
 
     <span class="nd">@Test</span>
-    <span class="n">fun</span> <span class="err">`</span><span class="n">timeout</span> <span class="n">exceeded</span> <span class="n">with</span> <span class="n">preemptive</span> <span class="n">termination</span><span class="err">`</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">fun</span> <span class="nf">`timeout</span> <span class="n">exceeded</span> <span class="n">with</span> <span class="n">preemptive</span> <span class="nf">termination`</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// The following assertion fails with an error message similar to:</span>
         <span class="c1">// execution timed out after 10 ms</span>
-        <span class="n">assertTimeoutPreemptively</span><span class="o">(</span><span class="n">Duration</span><span class="o">.</span><span class="na">ofMillis</span><span class="o">(</span><span class="mi">10</span><span class="o">))</span> <span class="o">{</span>
+        <span class="nf">assertTimeoutPreemptively</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="nf">ofMillis</span><span class="p">(</span><span class="m">10</span><span class="p">))</span> <span class="p">{</span>
             <span class="c1">// Simulate task that takes more than 10 ms.</span>
-            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">)</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre>
+            <span class="nc">Thread</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="m">100</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
 </div>
 </div>
 </div>
@@ -6892,24 +6892,24 @@ has been ported to Kotlin.</p>
 <div class="listingblock">
 <div class="title">Registering an extension via a static field in Kotlin</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="groovy"><span class="kd">class</span> <span class="nc">KotlinWebServerDemo</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="kd">class</span> <span class="nc">KotlinWebServerDemo</span> <span class="p">{</span>
 
-    <span class="n">companion</span> <span class="n">object</span> <span class="o">{</span>
+    <span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
         <span class="nd">@JvmField</span>
         <span class="nd">@RegisterExtension</span>
-        <span class="n">val</span> <span class="n">server</span> <span class="o">=</span> <span class="n">WebServerExtension</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
-                <span class="o">.</span><span class="na">enableSecurity</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
-                <span class="o">.</span><span class="na">build</span><span class="o">()</span>
-    <span class="o">}</span>
+        <span class="kd">val</span> <span class="py">server</span> <span class="p">=</span> <span class="nc">WebServerExtension</span><span class="p">.</span><span class="nf">builder</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">enableSecurity</span><span class="p">(</span><span class="k">false</span><span class="p">)</span>
+                <span class="p">.</span><span class="nf">build</span><span class="p">()</span>
+    <span class="p">}</span>
 
     <span class="nd">@Test</span>
-    <span class="n">fun</span> <span class="nf">getProductList</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">fun</span> <span class="nf">getProductList</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// Use WebClient to connect to web server using serverUrl and verify response</span>
-        <span class="n">val</span> <span class="n">webClient</span> <span class="o">=</span> <span class="n">WebClient</span><span class="o">()</span>
-        <span class="n">val</span> <span class="n">serverUrl</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="na">serverUrl</span>
-        <span class="n">assertEquals</span><span class="o">(</span><span class="mi">200</span><span class="o">,</span> <span class="n">webClient</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s2">"$serverUrl/products"</span><span class="o">).</span><span class="na">responseStatus</span><span class="o">)</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre>
+        <span class="kd">val</span> <span class="py">webClient</span> <span class="p">=</span> <span class="nc">WebClient</span><span class="p">()</span>
+        <span class="kd">val</span> <span class="py">serverUrl</span> <span class="p">=</span> <span class="n">server</span><span class="p">.</span><span class="n">serverUrl</span>
+        <span class="nf">assertEquals</span><span class="p">(</span><span class="m">200</span><span class="p">,</span> <span class="n">webClient</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s">"$serverUrl/products"</span><span class="p">).</span><span class="n">responseStatus</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
 </div>
 </div>
 </div>
@@ -9974,7 +9974,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-06-05 17:54:38 UTC
+Last updated 2020-06-06 08:53:46 UTC
 </div>
 </div>
 <style>
