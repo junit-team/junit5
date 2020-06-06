@@ -247,8 +247,7 @@ JUnit Jupiter also comes with a few assertion methods that lend themselves well 
 used in https://kotlinlang.org/[Kotlin]. All JUnit Jupiter Kotlin assertions are top-level
 functions in the `org.junit.jupiter.api` package.
 
-// TODO: Change to using kotlin language highlighting after switch to rouge syntax highlighter
-[source,groovy,indent=0]
+[source,kotlin,indent=0]
 ----
 include::{kotlinTestDir}/example/KotlinAssertionsDemo.kt[tags=user_guide]
 ----
