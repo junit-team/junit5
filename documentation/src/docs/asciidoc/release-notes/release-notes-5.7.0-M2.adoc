@@ -46,7 +46,9 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Registered `TestInstancePreDestroyCallback` extensions are now always called if an
+  instance of a test class was created, regardless whether any registered
+  `TestInstancePostProcessor` extension threw an exception.
 
 ==== Deprecations and Breaking Changes
 
