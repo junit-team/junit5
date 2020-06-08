@@ -89,6 +89,20 @@ Your donations will help to make that a reality!
         </div>
       </div>
     </li>
+    <li>
+      <div class="cardbronze" onclick="location.href='https://kreuzwerker.de/en/solution/remastering';">
+        <div class="cardbronze-image">
+          <img style="width:80%" src="assets/img/sponsor-logo-kreuzwerker.svg" alt="kreuzwerker">
+        </div>
+        <div class="cardbronze-center">
+          <h4>kreuzwerker</h4>
+        </div>
+        <div class="cardbronze-bottom">
+          <h4>Bronze Sponsor</h4>
+          <p>Since June 2020</p>
+        </div>
+      </div>
+    </li>    
   </ul>
 </div>
 
