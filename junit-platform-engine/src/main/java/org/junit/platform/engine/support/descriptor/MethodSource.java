@@ -14,13 +14,13 @@ import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Objects;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
 
@@ -108,7 +108,6 @@ public class MethodSource implements TestSource {
 	private final String methodName;
 	private final String methodParameterTypes;
 	private Class<?> javaClass;
-	private transient List<Method> javaMethods;
 	private transient Method javaMethod;
 
 	private MethodSource(String className, String methodName) {
@@ -185,6 +184,7 @@ public class MethodSource implements TestSource {
 	 * @since 5.7
 	 * @see #getClassName()
 	 */
+	@API(status = STABLE, since = "5.7")
 	public final Class<?> getJavaClass() {
 		if (this.javaClass == null) {
 			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
@@ -195,43 +195,31 @@ public class MethodSource implements TestSource {
 	}
 
 	/**
-	 * Get the {@linkplain Method Java method} of this source and any overloads.
-	 *
-	 * <p>This method attempts to lazily load the {@link Method} list based on
-	 * the method's name and throws a {@link PreconditionViolationException} if
-	 * the methods cannot be loaded.
-	 *
-	 * <p>An empty list will be returned if there are no matching methods.
-	 *
-	 * @since 5.7
-	 * @see #getMethodName()
-	 * @see #getJavaMethod()
-	 */
-	public List<Method> getJavaMethods() {
-		if (this.javaMethods == null) {
-			this.javaMethods = ReflectionUtils.findMethods(getJavaClass(),
-				method -> method.getName().equals(methodName));
-		}
-		return this.javaMethods;
-	}
-
-	/**
 	 * Get the {@linkplain Method Java method} of this source.
 	 *
 	 * <p>If the {@link Method} was not provided, but only the name, this method
-	 * attempts to lazily load the {@link Method} based on its name and throws a
-	 * {@link PreconditionViolationException} if the method cannot be loaded or
-	 * if the method has overloads.
+	 * attempts to lazily load the {@code Method} based on its name and throws a
+	 * {@link PreconditionViolationException} if the method cannot be loaded.
 	 *
 	 * @since 5.7
 	 * @see #getMethodName()
-	 * @see #getJavaMethods()
 	 */
+	@API(status = STABLE, since = "5.7")
 	public Method getJavaMethod() {
 		if (this.javaMethod == null) {
-			Preconditions.notEmpty(getJavaMethods(), "No method with name: " + this.methodName);
-			Preconditions.condition(getJavaMethods().size() == 1, "Multiple methods with name: " + this.methodName);
-			this.javaMethod = getJavaMethods().get(0);
+			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
+				this.javaMethod = ReflectionUtils.findMethod(getJavaClass(), this.methodName,
+					this.methodParameterTypes).orElseThrow(
+						() -> new PreconditionViolationException(String.format(
+							"Could not find method with name [%s] and parameter types [%s] in class [%s].",
+							this.methodName, this.methodParameterTypes, getJavaClass().getName())));
+			}
+			else {
+				this.javaMethod = ReflectionUtils.findMethod(getJavaClass(), this.methodName).orElseThrow(
+					() -> new PreconditionViolationException(
+						String.format("Could not find method with name [%s] in class [%s].", this.methodName,
+							getJavaClass().getName())));
+			}
 		}
 		return this.javaMethod;
 	}
