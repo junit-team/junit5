@@ -32,7 +32,9 @@ import org.apiguardian.api.API;
  * Use at your own risk!
  *
  * @since 1.0
+ * @deprecated Use {@link UnrecoverableExceptions} instead.
  */
+@Deprecated
 @API(status = DEPRECATED, since = "1.7")
 public final class BlacklistedExceptions {
 
