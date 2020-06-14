@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
@@ -106,7 +106,7 @@ public class EngineDiscoveryOrchestrator {
 			return engineRoot;
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
 			JUnitException cause = new JUnitException(message, throwable);
 			discoveryListener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));

@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -108,7 +108,7 @@ public class EngineExecutionOrchestrator {
 			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 			delayingListener.reportEngineFailure(new JUnitException(
 				String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId()), throwable));
 		}

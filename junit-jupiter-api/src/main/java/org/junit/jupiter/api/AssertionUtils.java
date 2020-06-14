@@ -15,8 +15,8 @@ import static java.util.stream.Collectors.joining;
 import java.util.Deque;
 import java.util.function.Supplier;
 
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -103,7 +103,7 @@ class AssertionUtils {
 			return (canonicalName != null ? canonicalName : clazz.getName());
 		}
 		catch (Throwable t) {
-			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			return clazz.getName();
 		}
 	}

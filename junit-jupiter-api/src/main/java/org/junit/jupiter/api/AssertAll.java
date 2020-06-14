@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.function.Executable;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.opentest4j.MultipleFailuresError;
 
 /**
@@ -69,7 +69,7 @@ class AssertAll {
 						return null;
 					}
 					catch (Throwable t) {
-						BlacklistedExceptions.rethrowIfBlacklisted(t);
+						UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 						return t;
 					}
 				}) //

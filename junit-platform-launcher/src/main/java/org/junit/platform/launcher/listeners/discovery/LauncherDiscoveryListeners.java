@@ -53,7 +53,7 @@ public class LauncherDiscoveryListeners {
 	 *         {@link UniqueIdSelector} that starts with the engine's unique ID.
 	 *     </li>
 	 *     <li>
-	 *         any non-blacklisted {@link Throwable} thrown by
+	 *         any recoverable {@link Throwable} thrown by
 	 *         {@link TestEngine#discover}.
 	 *     </li>
 	 * </ul>

@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -67,7 +67,7 @@ class TestExecutionListenerRegistry {
 				consumer.accept(listener);
 			}
 			catch (Throwable throwable) {
-				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 				logger.warn(throwable, () -> String.format("TestExecutionListener [%s] threw exception for method: %s",
 					listener.getClass().getName(), description.get()));
 			}

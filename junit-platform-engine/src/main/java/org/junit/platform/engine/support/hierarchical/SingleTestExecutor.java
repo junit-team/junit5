@@ -11,12 +11,12 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.engine.TestExecutionResult.aborted;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 
@@ -54,7 +54,7 @@ public class SingleTestExecutor {
 	 * Execute the supplied {@link Executable} and return a
 	 * {@link TestExecutionResult} based on the outcome.
 	 *
-	 * <p>If the {@code Executable} throws a <em>blacklisted</em> exception
+	 * <p>If the {@code Executable} throws an <em>unrecoverable</em> exception
 	 * &mdash; for example, an {@link OutOfMemoryError} &mdash; this method will
 	 * rethrow it.
 	 *
@@ -74,7 +74,7 @@ public class SingleTestExecutor {
 			return aborted(e);
 		}
 		catch (Throwable t) {
-			rethrowIfBlacklisted(t);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			return failed(t);
 		}
 	}

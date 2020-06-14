@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.util;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
@@ -31,12 +31,12 @@ import org.apiguardian.api.API;
  * itself. <strong>Any usage by external parties is not supported.</strong>
  * Use at your own risk!
  *
- * @since 1.0
+ * @since 1.7
  */
-@API(status = DEPRECATED, since = "1.7")
-public final class BlacklistedExceptions {
+@API(status = INTERNAL, since = "1.7")
+public final class UnrecoverableExceptions {
 
-	private BlacklistedExceptions() {
+	private UnrecoverableExceptions() {
 		/* no-op */
 	}
 
@@ -46,13 +46,11 @@ public final class BlacklistedExceptions {
 	 *
 	 * <p>If the supplied {@code exception} is not <em>unrecoverable</em>, this
 	 * method does nothing.
-	 *
-	 * @deprecated Use {@link UnrecoverableExceptions#rethrowIfUnrecoverable}
-	 * instead.
 	 */
-	@Deprecated
-	public static void rethrowIfBlacklisted(Throwable exception) {
-		UnrecoverableExceptions.rethrowIfUnrecoverable(exception);
+	public static void rethrowIfUnrecoverable(Throwable exception) {
+		if (exception instanceof OutOfMemoryError) {
+			ExceptionUtils.throwAsUncheckedException(exception);
+		}
 	}
 
 }

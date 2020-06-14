@@ -14,7 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.JUnitCore;
@@ -43,7 +43,7 @@ public class RunnerExecutor {
 			core.run(runnerTestDescriptor.toRequest());
 		}
 		catch (Throwable t) {
-			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			reportUnexpectedFailure(testRun, runnerTestDescriptor, failed(t));
 		}
 	}

@@ -11,7 +11,6 @@
 package org.junit.platform.engine.support.discovery;
 
 import static java.util.stream.Collectors.joining;
-import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.SelectorResolutionResult.failed;
 import static org.junit.platform.engine.SelectorResolutionResult.resolved;
@@ -30,6 +29,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -98,7 +98,7 @@ class EngineDiscoveryRequestResolution {
 			}
 		}
 		catch (Throwable t) {
-			rethrowIfBlacklisted(t);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			discoveryListener.selectorProcessed(engineId, selector, failed(t));
 		}
 	}
