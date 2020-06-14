@@ -91,8 +91,8 @@ public class Assertions {
 	 * <p>Although failing <em>with</em> an explicit failure message is recommended,
 	 * this method may be useful when maintaining legacy code.
 	 *
-	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
-	 * this method's generic return type {@code V}.
+	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
+	 * generic return type {@code V}.
 	 */
 	public static <V> V fail() {
 		AssertionUtils.fail();
@@ -101,18 +101,6 @@ public class Assertions {
 
 	/**
 	 * <em>Fail</em> the test with the given failure {@code message}.
-	 *
-	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
-	 * this method's generic return type {@code V}.
-	 */
-	public static <V> V fail(String message) {
-		AssertionUtils.fail(message);
-		return null; // appeasing the compiler: this line will never be executed.
-	}
-
-	/**
-	 * <em>Fail</em> the test with the given failure {@code message} as well
-	 * as the underlying {@code cause}.
 	 *
 	 * <p>The generic return type {@code V} allows this method to be used
 	 * directly as a single-statement lambda expression, thereby avoiding the
@@ -125,6 +113,18 @@ public class Assertions {
 	 * Stream.of().map(entry -> fail("should not be called"));
 	 * }</pre>
 	 */
+	public static <V> V fail(String message) {
+		AssertionUtils.fail(message);
+		return null; // appeasing the compiler: this line will never be executed.
+	}
+
+	/**
+	 * <em>Fail</em> the test with the given failure {@code message} as well
+	 * as the underlying {@code cause}.
+	 *
+	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
+	 * generic return type {@code V}.
+	 */
 	public static <V> V fail(String message, Throwable cause) {
 		AssertionUtils.fail(message, cause);
 		return null; // appeasing the compiler: this line will never be executed.
@@ -133,8 +133,8 @@ public class Assertions {
 	/**
 	 * <em>Fail</em> the test with the given underlying {@code cause}.
 	 *
-	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
-	 * this method's generic return type {@code V}.
+	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
+	 * generic return type {@code V}.
 	 */
 	public static <V> V fail(Throwable cause) {
 		AssertionUtils.fail(cause);
@@ -145,8 +145,8 @@ public class Assertions {
 	 * <em>Fail</em> the test with the failure message retrieved from the
 	 * given {@code messageSupplier}.
 	 *
-	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
-	 * this method's generic return type {@code V}.
+	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
+	 * generic return type {@code V}.
 	 */
 	public static <V> V fail(Supplier<String> messageSupplier) {
 		AssertionUtils.fail(messageSupplier);
