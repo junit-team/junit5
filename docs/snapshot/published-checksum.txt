@@ -190,6 +190,7 @@
 448abc5d1d09a50b28ba19a21badccb2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tag.java
 44c035122fdc08f7d0311cc53aeeab32  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Order.java
 44d0dabdd919bc0d4d40483546ca49d2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRange.java
+4506aff60846d06ee3be9d5a574a9f3e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 4516a2609587e86e5e7a4999a4bfe63f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/DirectorySource.java
 45e984850a13c7bd002bf40e0cbd447a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java
 45e99197bad88c00277f415e1d23d232  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
@@ -455,7 +456,6 @@ ab83ef64ae475dffa6ef688db027c5e0  junit-vintage-engine/src/main/java/org/junit/v
 abb4067959cc900f129ae384e966f0fb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultMethodOrdererContext.java
 abca435c1035e37c6fb9a8e25c556e57  documentation/src/test/java/example/TestTemplateDemo.java
 abf27187d35a5913206a0f4ec6d851de  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePreDestroyCallback.java
-ac5ddadfce6edab2085927892843257e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 ac804445c6eef4eed3fd8d96d142a5d4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
 ad15a703f04d1d4f97b6ccd6cee50db4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/Extensions.java
 ad5249abfb2497a3862e87effb034809  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/RegisterExtension.java

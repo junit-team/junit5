@@ -2774,8 +2774,8 @@ protected&nbsp;Assertions()</pre>
  <p>Although failing <em>with</em> an explicit failure message is recommended,
  this method may be useful when maintaining legacy code.
 
- <p>See Javadoc for <a href="#fail(java.lang.String,java.lang.Throwable)"><code>fail(String, Throwable)</code></a> for an explanation of
- this method's generic return type <code>V</code>.</div>
+ <p>See Javadoc for <a href="#fail(java.lang.String)"><code>fail(String)</code></a> for an explanation of this method's
+ generic return type <code>V</code>.</div>
 </li>
 </ul>
 <a id="fail(java.lang.String)">
@@ -2786,21 +2786,6 @@ protected&nbsp;Assertions()</pre>
 <h4>fail</h4>
 <pre class="methodSignature">public static&nbsp;&lt;V&gt;&nbsp;V&nbsp;fail&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message)</pre>
 <div class="block"><em>Fail</em> the test with the given failure <code>message</code>.
-
- <p>See Javadoc for <a href="#fail(java.lang.String,java.lang.Throwable)"><code>fail(String, Throwable)</code></a> for an explanation of
- this method's generic return type <code>V</code>.</div>
-</li>
-</ul>
-<a id="fail(java.lang.String,java.lang.Throwable)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>fail</h4>
-<pre class="methodSignature">public static&nbsp;&lt;V&gt;&nbsp;V&nbsp;fail&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message,
-                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;cause)</pre>
-<div class="block"><em>Fail</em> the test with the given failure <code>message</code> as well
- as the underlying <code>cause</code>.
 
  <p>The generic return type <code>V</code> allows this method to be used
  directly as a single-statement lambda expression, thereby avoiding the
@@ -2814,6 +2799,21 @@ protected&nbsp;Assertions()</pre>
  </code></pre></div>
 </li>
 </ul>
+<a id="fail(java.lang.String,java.lang.Throwable)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fail</h4>
+<pre class="methodSignature">public static&nbsp;&lt;V&gt;&nbsp;V&nbsp;fail&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message,
+                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;cause)</pre>
+<div class="block"><em>Fail</em> the test with the given failure <code>message</code> as well
+ as the underlying <code>cause</code>.
+
+ <p>See Javadoc for <a href="#fail(java.lang.String)"><code>fail(String)</code></a> for an explanation of this method's
+ generic return type <code>V</code>.</div>
+</li>
+</ul>
 <a id="fail(java.lang.Throwable)">
 <!--   -->
 </a>
@@ -2823,8 +2823,8 @@ protected&nbsp;Assertions()</pre>
 <pre class="methodSignature">public static&nbsp;&lt;V&gt;&nbsp;V&nbsp;fail&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;cause)</pre>
 <div class="block"><em>Fail</em> the test with the given underlying <code>cause</code>.
 
- <p>See Javadoc for <a href="#fail(java.lang.String,java.lang.Throwable)"><code>fail(String, Throwable)</code></a> for an explanation of
- this method's generic return type <code>V</code>.</div>
+ <p>See Javadoc for <a href="#fail(java.lang.String)"><code>fail(String)</code></a> for an explanation of this method's
+ generic return type <code>V</code>.</div>
 </li>
 </ul>
 <a id="fail(java.util.function.Supplier)">
@@ -2837,8 +2837,8 @@ protected&nbsp;Assertions()</pre>
 <div class="block"><em>Fail</em> the test with the failure message retrieved from the
  given <code>messageSupplier</code>.
 
- <p>See Javadoc for <a href="#fail(java.lang.String,java.lang.Throwable)"><code>fail(String, Throwable)</code></a> for an explanation of
- this method's generic return type <code>V</code>.</div>
+ <p>See Javadoc for <a href="#fail(java.lang.String)"><code>fail(String)</code></a> for an explanation of this method's
+ generic return type <code>V</code>.</div>
 </li>
 </ul>
 <a id="assertTrue(boolean)">
