@@ -7224,9 +7224,9 @@ public static&nbsp;void&nbsp;assertNotEquals&#8203;(<a href="https://docs.oracle
  or any subclass thereof), all remaining <code>executables</code> will still be executed,
  and all exceptions will be aggregated and reported in a <a href="https://ota4j-team.github.io/opentest4j/docs/1.2.0/api/org/opentest4j/MultipleFailuresError.html?is-external=true" title="class or interface in org.opentest4j" class="externalLink"><code>MultipleFailuresError</code></a>.
  In addition, all aggregated exceptions will be added as <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#addSuppressed(java.lang.Throwable)" title="class or interface in java.lang" class="externalLink">suppressed exceptions</a> to the
- <code>MultipleFailuresError</code>. However, if an <code>executable</code> throws a
- <em>blacklisted</em> exception &mdash; for example, an <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>OutOfMemoryError</code></a>
- &mdash; execution will halt immediately, and the blacklisted exception will be
+ <code>MultipleFailuresError</code>. However, if an <code>executable</code> throws an
+ <em>unrecoverable</em> exception &mdash; for example, an <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>OutOfMemoryError</code></a>
+ &mdash; execution will halt immediately, and the unrecoverable exception will be
  rethrown <em>as is</em> but <em>masked</em> as an unchecked exception.
 
  <p>The supplied <code>heading</code> will be included in the message string for the

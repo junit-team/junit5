@@ -345,7 +345,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Execute the supplied <a href="ThrowableCollector.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector.Executable</code></a> and collect any <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>
  thrown during the execution.
 
- <p>If the <code>Executable</code> throws a <em>blacklisted</em> exception
+ <p>If the <code>Executable</code> throws an <em>unrecoverable</em> exception
  &mdash; for example, an <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>OutOfMemoryError</code></a> &mdash; this method will
  rethrow it.</div>
 <dl>

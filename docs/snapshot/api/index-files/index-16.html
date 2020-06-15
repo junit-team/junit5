@@ -453,8 +453,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.commons/org/junit/platform/commons/util/BlacklistedExceptions.html#rethrowIfBlacklisted(java.lang.Throwable)">rethrowIfBlacklisted(Throwable)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/BlacklistedExceptions.html" title="class in org.junit.platform.commons.util">BlacklistedExceptions</a></dt>
 <dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Use <a href="../org.junit.platform.commons/org/junit/platform/commons/util/UnrecoverableExceptions.html#rethrowIfUnrecoverable(java.lang.Throwable)"><code>UnrecoverableExceptions.rethrowIfUnrecoverable(java.lang.Throwable)</code></a>
+ instead.</div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org.junit.platform.commons/org/junit/platform/commons/util/UnrecoverableExceptions.html#rethrowIfUnrecoverable(java.lang.Throwable)">rethrowIfUnrecoverable(Throwable)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/UnrecoverableExceptions.html" title="class in org.junit.platform.commons.util">UnrecoverableExceptions</a></dt>
+<dd>
 <div class="block">Rethrow the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>exception</code></a> if it is
- <em>blacklisted</em>.</div>
+ <em>unrecoverable</em>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#returnsVoid(java.lang.reflect.Method)">returnsVoid(Method)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
 <dd>&nbsp;</dd>

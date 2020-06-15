@@ -118,19 +118,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
+<th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.commons/org/junit/platform/commons/util/BlacklistedExceptions.html" title="class in org.junit.platform.commons.util">org.junit.platform.commons.util.BlacklistedExceptions</a></th>
+<td class="colLast">
+<div class="deprecationComment">Use <a href="org.junit.platform.commons/org/junit/platform/commons/util/UnrecoverableExceptions.html" title="class in org.junit.platform.commons.util"><code>UnrecoverableExceptions</code></a> instead.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.engine/org/junit/platform/engine/support/filter/ClasspathScanningSupport.html" title="class in org.junit.platform.engine.support.filter">org.junit.platform.engine.support.filter.ClasspathScanningSupport</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="org.junit.platform.engine/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a> instead.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical">org.junit.platform.engine.support.hierarchical.SingleTestExecutor</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)"><code>ThrowableCollector.execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)</code></a> and
  <a href="org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#toTestExecutionResult()"><code>ThrowableCollector.toTestExecutionResult()</code></a> instead.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.launcher/org/junit/platform/launcher/listeners/LegacyReportingUtils.html" title="class in org.junit.platform.launcher.listeners">org.junit.platform.launcher.listeners.LegacyReportingUtils</a></th>
 <td class="colLast">
 <div class="deprecationComment">Use <a href="org.junit.platform.reporting/org/junit/platform/reporting/legacy/LegacyReportingUtils.html" title="class in org.junit.platform.reporting.legacy"><code>LegacyReportingUtils</code></a>
@@ -182,52 +188,59 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.commons/org/junit/platform/commons/util/BlacklistedExceptions.html#rethrowIfBlacklisted(java.lang.Throwable)">org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted&#8203;(Throwable)</a></th>
+<td class="colLast">
+<div class="deprecationComment">Use <a href="org.junit.platform.commons/org/junit/platform/commons/util/UnrecoverableExceptions.html#rethrowIfUnrecoverable(java.lang.Throwable)"><code>UnrecoverableExceptions.rethrowIfUnrecoverable(java.lang.Throwable)</code></a>
+ instead.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#getOutermostInstance(java.lang.Object,java.lang.Class)">org.junit.platform.commons.util.ReflectionUtils.getOutermostInstance&#8203;(Object, Class&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please discontinue use of this method since it relies on internal
  implementation details of the JDK that may not work in the future.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#loadClass(java.lang.String)">org.junit.platform.commons.util.ReflectionUtils.loadClass&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#tryToLoadClass(java.lang.String)"><code>ReflectionUtils.tryToLoadClass(String)</code></a> instead.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.Class,java.lang.String,T)">org.junit.platform.commons.util.ReflectionUtils.readFieldValue&#8203;(Class&lt;T&gt;, String, T)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#tryToReadFieldValue(java.lang.Class,java.lang.String,T)"><code>ReflectionUtils.tryToReadFieldValue(Class, String, Object)</code></a>
  instead.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.engine/org/junit/platform/engine/support/filter/ClasspathScanningSupport.html#buildClassFilter(org.junit.platform.engine.EngineDiscoveryRequest,java.util.function.Predicate)">org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassFilter&#8203;(EngineDiscoveryRequest, Predicate&lt;Class&lt;?&gt;&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="org.junit.platform.engine/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a> instead.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.engine/org/junit/platform/engine/support/filter/ClasspathScanningSupport.html#buildClassNamePredicate(org.junit.platform.engine.EngineDiscoveryRequest)">org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate&#8203;(EngineDiscoveryRequest)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="org.junit.platform.engine/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a> instead.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html#add(org.junit.platform.launcher.TestIdentifier)">org.junit.platform.launcher.TestPlan.add&#8203;(TestIdentifier)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please discontinue use of this method. A future version of the
  JUnit Platform will ignore this call and eventually even throw an exception.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.Builder.html#filters(org.junit.platform.engine.DiscoveryFilter...)">org.junit.platform.testkit.engine.EngineTestKit.Builder.filters&#8203;(DiscoveryFilter&lt;?&gt;...)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.Builder.html#filters(org.junit.platform.engine.Filter...)"><code>EngineTestKit.Builder.filters(Filter...)</code></a> instead.
  instead.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html#execute(java.lang.String,org.junit.platform.engine.EngineDiscoveryRequest)">org.junit.platform.testkit.engine.EngineTestKit.execute&#8203;(String, EngineDiscoveryRequest)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html#execute(java.lang.String,org.junit.platform.launcher.LauncherDiscoveryRequest)"><code>EngineTestKit.execute(String, LauncherDiscoveryRequest)</code></a>
