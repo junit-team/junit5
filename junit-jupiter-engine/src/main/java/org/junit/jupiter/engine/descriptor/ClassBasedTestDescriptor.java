@@ -59,10 +59,10 @@ import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -290,7 +290,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 				new DefaultTestInstanceFactoryContext(this.testClass, outerInstance), extensionContext);
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 
 			if (throwable instanceof TestInstantiationException) {
 				throw (TestInstantiationException) throwable;

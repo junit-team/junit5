@@ -193,7 +193,7 @@ public final class StringUtils {
 			return obj.toString();
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 
 			return defaultToString(obj);
 		}

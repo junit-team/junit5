@@ -43,8 +43,8 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -213,7 +213,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 					interceptorCall);
 			}
 			catch (Throwable throwable) {
-				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), extensionContext, throwable);
 			}
 		});
@@ -336,7 +336,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				callback.accept(watcher);
 			}
 			catch (Throwable throwable) {
-				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 				ExtensionContext extensionContext = context.getExtensionContext();
 				logger.warn(throwable,
 					() -> String.format("Failed to invoke TestWatcher [%s] for method [%s] with display name [%s]",

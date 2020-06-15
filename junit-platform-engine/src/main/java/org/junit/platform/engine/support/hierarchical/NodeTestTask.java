@@ -24,9 +24,9 @@ import java.util.concurrent.Future;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
@@ -161,7 +161,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				node.nodeSkipped(context, testDescriptor, skipResult);
 			}
 			catch (Throwable throwable) {
-				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 				logger.debug(throwable,
 					() -> String.format("Failed to invoke nodeSkipped() on Node %s", testDescriptor.getUniqueId()));
 			}
@@ -176,7 +176,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			node.nodeFinished(context, testDescriptor, throwableCollector.toTestExecutionResult());
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 			logger.debug(throwable,
 				() -> String.format("Failed to invoke nodeFinished() on Node %s", testDescriptor.getUniqueId()));
 		}
