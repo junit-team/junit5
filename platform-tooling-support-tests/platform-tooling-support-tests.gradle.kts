@@ -88,6 +88,6 @@ tasks.test {
 	maxParallelForks = 1 // Bartholdy.install is not parallel safe, see https://github.com/sormuras/bartholdy/issues/4
 }
 
-class MavenRepo(@get:InputDirectory val repoDir: File) : CommandLineArgumentProvider {
+class MavenRepo(@get:InputDirectory @get:PathSensitive(PathSensitivity.RELATIVE) val repoDir: File) : CommandLineArgumentProvider {
 	override fun asArguments() = listOf("-Dmaven.repo=$repoDir")
 }
