@@ -17,7 +17,7 @@ jobs:
   openjdk:
     strategy:
       matrix:
-        jdk: [14, 15]
+        jdk: [14, 15, 16]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     container: "junitteam/build:${{ matrix.jdk }}"
