@@ -64,6 +64,8 @@ on GitHub.
   two `Stream<String>` instances for comparison.
 * `@CsvFileSource` now allows to specify file paths as an alternative to classpath
   resources.
+* `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution
+  conditions.
 
 
 [[release-notes-5.7.0-M2-junit-vintage]]
