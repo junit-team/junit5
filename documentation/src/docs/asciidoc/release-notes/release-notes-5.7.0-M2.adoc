@@ -41,7 +41,8 @@ on GitHub.
 * Custom `PostDiscoveryFilter` implementations can now be registered via Java’s
   `ServiceLoader` mechanism.
 * New `getJavaClass()` and `getJavaMethod()` methods in
-   `org.junit.platform.engine.support.descriptor.MethodSource`.
+  `org.junit.platform.engine.support.descriptor.MethodSource`.
+
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter
@@ -63,6 +64,7 @@ on GitHub.
   two `Stream<String>` instances for comparison.
 * `@CsvFileSource` now allows to specify file paths as an alternative to classpath
   resources.
+
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage

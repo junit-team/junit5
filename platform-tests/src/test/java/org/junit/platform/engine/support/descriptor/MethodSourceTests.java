@@ -247,7 +247,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void getJavaMethodFromStringShouldThrowExceptionParameterTypesNotGiven() {
+	void getJavaMethodFromStringShouldThrowExceptionIfParameterTypesAreNotSupplied() {
 		MethodSource source = MethodSource.from(getClass().getName(), "method3");
 
 		assertThrows(PreconditionViolationException.class, source::getJavaMethod);

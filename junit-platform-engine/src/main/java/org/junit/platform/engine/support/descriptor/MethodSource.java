@@ -160,20 +160,6 @@ public class MethodSource implements TestSource {
 		return this.methodParameterTypes;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		MethodSource that = (MethodSource) o;
-		return Objects.equals(this.className, that.className)//
-				&& Objects.equals(this.methodName, that.methodName)//
-				&& Objects.equals(this.methodParameterTypes, that.methodParameterTypes);
-	}
-
 	/**
 	 * Get the {@linkplain Class Java class} of this source.
 	 *
@@ -186,11 +172,7 @@ public class MethodSource implements TestSource {
 	 */
 	@API(status = STABLE, since = "1.7")
 	public final Class<?> getJavaClass() {
-		if (this.javaClass == null) {
-			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
-				cause -> new PreconditionViolationException("Could not load class with name: " + this.className,
-					cause));
-		}
+		lazyLoadJavaClass();
 		return this.javaClass;
 	}
 
@@ -205,23 +187,52 @@ public class MethodSource implements TestSource {
 	 * @see #getMethodName()
 	 */
 	@API(status = STABLE, since = "1.7")
-	public Method getJavaMethod() {
+	public final Method getJavaMethod() {
+		lazyLoadJavaMethod();
+		return this.javaMethod;
+	}
+
+	private void lazyLoadJavaClass() {
+		if (this.javaClass == null) {
+			// @formatter:off
+			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
+				cause -> new PreconditionViolationException("Could not load class with name: " + this.className, cause));
+			// @formatter:on
+		}
+	}
+
+	private void lazyLoadJavaMethod() {
+		lazyLoadJavaClass();
+
 		if (this.javaMethod == null) {
 			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
-				this.javaMethod = ReflectionUtils.findMethod(getJavaClass(), this.methodName,
+				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName,
 					this.methodParameterTypes).orElseThrow(
 						() -> new PreconditionViolationException(String.format(
 							"Could not find method with name [%s] and parameter types [%s] in class [%s].",
-							this.methodName, this.methodParameterTypes, getJavaClass().getName())));
+							this.methodName, this.methodParameterTypes, this.javaClass.getName())));
 			}
 			else {
-				this.javaMethod = ReflectionUtils.findMethod(getJavaClass(), this.methodName).orElseThrow(
+				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName).orElseThrow(
 					() -> new PreconditionViolationException(
 						String.format("Could not find method with name [%s] in class [%s].", this.methodName,
-							getJavaClass().getName())));
+							this.javaClass.getName())));
 			}
 		}
-		return this.javaMethod;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		MethodSource that = (MethodSource) o;
+		return Objects.equals(this.className, that.className)//
+				&& Objects.equals(this.methodName, that.methodName)//
+				&& Objects.equals(this.methodParameterTypes, that.methodParameterTypes);
 	}
 
 	@Override
