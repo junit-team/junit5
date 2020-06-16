@@ -40,7 +40,8 @@ on GitHub.
 * Support `FilePosition` in `FileSelector` and `ClasspathResourceSelector`.
 * Custom `PostDiscoveryFilter` implementations can now be registered via Java’s
   `ServiceLoader` mechanism.
-* New `getJavaClass` and `getJavaMethod` methods in class `MethodSource`
+* New `getJavaClass()` and `getJavaMethod()` methods in
+   `org.junit.platform.engine.support.descriptor.MethodSource`.
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter

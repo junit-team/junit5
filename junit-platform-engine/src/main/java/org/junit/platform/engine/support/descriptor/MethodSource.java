@@ -181,10 +181,10 @@ public class MethodSource implements TestSource {
 	 * attempts to lazily load the {@link Class} based on its name and throws a
 	 * {@link PreconditionViolationException} if the class cannot be loaded.
 	 *
-	 * @since 5.7
+	 * @since 1.7
 	 * @see #getClassName()
 	 */
-	@API(status = STABLE, since = "5.7")
+	@API(status = STABLE, since = "1.7")
 	public final Class<?> getJavaClass() {
 		if (this.javaClass == null) {
 			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
@@ -201,10 +201,10 @@ public class MethodSource implements TestSource {
 	 * attempts to lazily load the {@code Method} based on its name and throws a
 	 * {@link PreconditionViolationException} if the method cannot be loaded.
 	 *
-	 * @since 5.7
+	 * @since 1.7
 	 * @see #getMethodName()
 	 */
-	@API(status = STABLE, since = "5.7")
+	@API(status = STABLE, since = "1.7")
 	public Method getJavaMethod() {
 		if (this.javaMethod == null) {
 			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
