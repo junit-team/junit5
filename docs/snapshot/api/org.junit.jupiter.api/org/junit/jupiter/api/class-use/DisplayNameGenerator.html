@@ -141,12 +141,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DisplayNameGenerator.IndicativeSentences.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.IndicativeSentences</a></span></code></th>
+<td class="colLast">
+<div class="block"><code>DisplayNameGenerator</code> that generates complete sentences.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DisplayNameGenerator.ReplaceUnderscores.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.ReplaceUnderscores</a></span></code></th>
 <td class="colLast">
 <div class="block"><code>DisplayNameGenerator</code> that replaces underscores with spaces.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DisplayNameGenerator.Simple.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Simple</a></span></code></th>
 <td class="colLast">
@@ -154,11 +161,44 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  for methods with no parameters.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></span></code></th>
 <td class="colLast">
 <div class="block">Standard <code>DisplayNameGenerator</code>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Fields in <a href="../package-summary.html">org.junit.jupiter.api</a> with type parameters of type <a href="../DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Field</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="../DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">IndicativeSentencesGeneration.</span><code><span class="memberNameLink"><a href="../IndicativeSentencesGeneration.html#DEFAULT_GENERATOR">DEFAULT_GENERATOR</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../package-summary.html">org.junit.jupiter.api</a> that return <a href="../DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DisplayNameGenerator.</span><code><span class="memberNameLink"><a href="../DisplayNameGenerator.html#getDisplayNameGenerator(java.lang.Class)">getDisplayNameGenerator</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;generatorClass)</code></th>
+<td class="colLast">
+<div class="block">Return the <code>DisplayNameGenerator</code> instance corresponding to the
+ given <code>Class</code>.</div>
 </td>
 </tr>
 </tbody>
@@ -172,6 +212,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="../DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../IndicativeSentencesGeneration.html#generator()">generator</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Custom display name generator.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="../DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DisplayNameGeneration.html#value()">value</a></span>()</code></th>
 <td class="colLast">
