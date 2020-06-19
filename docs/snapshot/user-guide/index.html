@@ -897,19 +897,19 @@ of the combinations you can choose from.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>For Gradle and Java, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-gradle">junit5-jupiter-starter-gradle</a></code> project.</p>
+<p>For Gradle and Java, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-gradle">junit5-jupiter-starter-gradle</a></code> project.</p>
 </li>
 <li>
-<p>For Gradle and Kotlin, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-gradle-kotlin">junit5-jupiter-starter-gradle-kotlin</a></code> project.</p>
+<p>For Gradle and Kotlin, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-gradle-kotlin">junit5-jupiter-starter-gradle-kotlin</a></code> project.</p>
 </li>
 <li>
-<p>For Gradle and Groovy, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-gradle-groovy">junit5-jupiter-starter-gradle-groovy</a></code> project.</p>
+<p>For Gradle and Groovy, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-gradle-groovy">junit5-jupiter-starter-gradle-groovy</a></code> project.</p>
 </li>
 <li>
-<p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project.</p>
+<p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project.</p>
 </li>
 <li>
-<p>For Ant, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-ant">junit5-jupiter-starter-ant</a></code> project.</p>
+<p>For Ant, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-ant">junit5-jupiter-starter-ant</a></code> project.</p>
 </li>
 </ul>
 </div>
@@ -1933,7 +1933,7 @@ traceability, etc.
 <p>The <a href="#extensions-conditions"><code>ExecutionCondition</code></a> extension API in JUnit Jupiter allows
 developers to either <em>enable</em> or <em>disable</em> a container or test based on certain
 conditions <em>programmatically</em>. The simplest example of such a condition is the built-in
-<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> which supports the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation (see
+<code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> which supports the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation (see
 <a href="#writing-tests-disabling">Disabling Tests</a>). In addition to <code>@Disabled</code>, JUnit Jupiter also supports
 several other annotation-based conditions in the <code>org.junit.jupiter.api.condition</code>
 package that allow developers to enable or disable containers and tests <em>declaratively</em>.
@@ -2654,7 +2654,7 @@ parameter must be resolved at runtime by a registered <code>ParameterResolver</c
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a constructor or method parameter is of type
+<p><code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a constructor or method parameter is of type
 <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code>, the <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code>
 corresponding to the current container or test as the value for the parameter. The
 <code>TestInfo</code> can then be used to retrieve information about the current container or test
@@ -2711,7 +2711,7 @@ following demonstrates how to have <code>TestInfo</code> injected into a test co
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java">RepetitionInfoParameterResolver</a></code>: if a method parameter in a <code>@RepeatedTest</code>,
+<p><code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java">RepetitionInfoParameterResolver</a></code>: if a method parameter in a <code>@RepeatedTest</code>,
 <code>@BeforeEach</code>, or <code>@AfterEach</code> method is of type <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/RepetitionInfo.html">RepetitionInfo</a></code>, the
 <code>RepetitionInfoParameterResolver</code> will supply an instance of <code>RepetitionInfo</code>.
 <code>RepetitionInfo</code> can then be used to retrieve information about the current repetition
@@ -2720,7 +2720,7 @@ however, that <code>RepetitionInfoParameterResolver</code> is not registered out
 of a <code>@RepeatedTest</code>. See <a href="#writing-tests-repeated-tests-examples">Repeated Test Examples</a>.</p>
 </li>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a constructor or method parameter is of type
+<p><code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a constructor or method parameter is of type
 <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>, the <code>TestReporterParameterResolver</code> will supply an instance of
 <code>TestReporter</code>. The <code>TestReporter</code> can be used to publish additional data about the
 current test run. The data can be consumed via the <code>reportingEntryPublished()</code> method in
@@ -2774,7 +2774,7 @@ Other parameter resolvers must be explicitly enabled by registering appropriate
 </table>
 </div>
 <div class="paragraph">
-<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java">RandomParametersExtension</a></code> for an example of a custom
+<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java">RandomParametersExtension</a></code> for an example of a custom
 <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>. While not intended to be production-ready, it demonstrates the
 simplicity and expressiveness of both the extension model and the parameter resolution
 process. <code>MyRandomParametersTest</code> demonstrates how to inject random values into <code>@Test</code>
@@ -2800,11 +2800,11 @@ methods.</p>
 </div>
 <div class="paragraph">
 <p>For real-world use cases, check out the source code for the <code><a href="https://github.com/mockito/mockito/blob/release/2.x/subprojects/junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java">MockitoExtension</a></code> and the
-<code><a href="https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
+<code><a href="https://github.com/spring-projects/spring-framework/tree/HEAD/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
 </div>
 <div class="paragraph">
 <p>When the type of the parameter to inject is the only condition for your
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>, you can use the generic <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java">TypeBasedParameterResolver</a></code> base class.
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>, you can use the generic <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java">TypeBasedParameterResolver</a></code> base class.
 The <code>supportsParameters</code> method is implemented behind the scenes and supports
 parameterized types.</p>
 </div>
@@ -5228,7 +5228,7 @@ can improve and eventually <a href="#api-evolution">promote</a> this feature.
 </table>
 </div>
 <div class="paragraph">
-<p>The built-in <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a></code> extension is used to create and clean up a temporary
+<p>The built-in <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a></code> extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
 default. To use it, annotate a non-private field of type <code>java.nio.file.Path</code> or
 <code>java.io.File</code> with <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or add a parameter of type <code>java.nio.file.Path</code> or
@@ -5811,7 +5811,7 @@ native support instead.</p>
 Surefire and Maven Failsafe provide
 <a href="https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html">native support</a>
 for executing tests on the JUnit Platform. The <code>pom.xml</code> file in the
-<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use the Maven Surefire plugin
+<code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use the Maven Surefire plugin
 and can serve as a starting point for configuring your Maven build.</p>
 </div>
 <div class="sect4">
@@ -6046,7 +6046,7 @@ gives the task a consistent and natural feel when compared to many other core An
 <a href="https://ant.apache.org/manual/Tasks/junitlauncher.html#fork">forking the tests in a separate JVM</a>.</p>
 </div>
 <div class="paragraph">
-<p>The <code>build.xml</code> file in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-ant">junit5-jupiter-starter-ant</a></code> project demonstrates how to use
+<p>The <code>build.xml</code> file in the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-ant">junit5-jupiter-starter-ant</a></code> project demonstrates how to use
 the task and can serve as a starting point.</p>
 </div>
 <div class="sect4">
@@ -7092,7 +7092,7 @@ container or test to be disabled. In other words, the evaluation works like the
 short-circuiting boolean OR operator.</p>
 </div>
 <div class="paragraph">
-<p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
+<p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
 </div>
 <div class="sect3">
 <h4 id="extensions-conditions-deactivation"><a class="anchor" href="#extensions-conditions-deactivation"></a>5.3.1. Deactivating Conditions</h4>
@@ -7172,7 +7172,7 @@ initialization methods on the test instance, etc.</p>
 </div>
 <div class="paragraph">
 <p>For a concrete example, consult the source code for the <code><a href="https://github.com/mockito/mockito/blob/release/2.x/subprojects/junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java">MockitoExtension</a></code> and the
-<code><a href="https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
+<code><a href="https://github.com/spring-projects/spring-framework/tree/HEAD/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -7196,18 +7196,18 @@ runtime.</p>
 <p>If a <em>test class</em> constructor, <em>test method</em>, or <em>lifecycle method</em> (see
 <a href="#writing-tests-classes-and-methods">Test Classes and Methods</a>) declares a parameter, the parameter must be
 <em>resolved</em> at runtime by a <code>ParameterResolver</code>. A <code>ParameterResolver</code> can either be
-built-in (see <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extensions-registration">registered by
+built-in (see <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extensions-registration">registered by
 the user</a>. Generally speaking, parameters may be resolved by <em>name</em>, <em>type</em>,
 <em>annotation</em>, or any combination thereof.</p>
 </div>
 <div class="paragraph">
 <p>If you wish to implement a custom <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> that resolves parameters based
 solely on the type of the parameter, you may find it convenient to extend the
-<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java">TypeBasedParameterResolver</a></code> which serves as a generic adapter for such use cases.</p>
+<code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java">TypeBasedParameterResolver</a></code> which serves as a generic adapter for such use cases.</p>
 </div>
 <div class="paragraph">
-<p>For concrete examples, consult the source code for <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code>,
-<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>, and <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/MapOfListsTypeBasedParameterResolver.java">MapOfListsTypeBasedParameterResolver</a></code>.</p>
+<p>For concrete examples, consult the source code for <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code>,
+<code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>, and <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/MapOfListsTypeBasedParameterResolver.java">MapOfListsTypeBasedParameterResolver</a></code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -7353,7 +7353,7 @@ each of these interfaces in the <code><a href="../api/org.junit.jupiter.api/org/
 <td class="content">
 <div class="title">Implementing Multiple Extension APIs</div>
 Extension developers may choose to implement any number of these interfaces
-within a single extension. Consult the source code of the <code><a href="https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code> for a
+within a single extension. Consult the source code of the <code><a href="https://github.com/spring-projects/spring-framework/tree/HEAD/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code> for a
 concrete example.
 </td>
 </tr>
@@ -10055,7 +10055,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-06-18 17:22:28 UTC
+Last updated 2020-06-19 18:22:55 UTC
 </div>
 </div>
 <style>
