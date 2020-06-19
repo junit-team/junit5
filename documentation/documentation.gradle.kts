@@ -48,7 +48,7 @@ asciidoctorj {
 
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
-val releaseBranch = if (snapshot) "master" else "r${rootProject.version}"
+val releaseBranch = if (snapshot) "HEAD" else "r${rootProject.version}"
 val docsDir = file("$buildDir/ghpages-docs")
 val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
 val uploadPdfs = !snapshot

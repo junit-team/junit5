@@ -124,7 +124,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5
-[CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
+[CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
