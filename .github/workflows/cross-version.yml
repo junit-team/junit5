@@ -3,7 +3,7 @@ name: Cross-Version
 on:
   push:
     branches:
-      - master
+      - main
       - 'releases/*'
   pull_request:
     branches:

@@ -3,7 +3,7 @@ name: Reproducible build
 on:
   push:
     branches:
-    - master
+    - main
     - 'releases/*'
   pull_request:
     branches:
