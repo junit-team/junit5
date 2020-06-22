@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static java.util.Comparator.comparingInt;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
@@ -38,7 +39,7 @@ import org.junit.platform.commons.util.ClassUtils;
  * implementations.
  *
  * <ul>
- * <li>{@link Alphanumeric}</li>
+ * <li>{@link MethodName}</li>
  * <li>{@link OrderAnnotation}</li>
  * <li>{@link Random}</li>
  * </ul>
@@ -108,11 +109,32 @@ public interface MethodOrderer {
 	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
 	 * names using {@link String#compareTo(String)}.
 	 *
+	 * <b>This class has been deprecated in favor of {@code MethodName} and will be
+	 * removed.</b>
+	 *
 	 * <p>If two methods have the same name, {@code String} representations of
 	 * their formal parameter lists will be used as a fallback for comparing the
 	 * methods.
+	 *
+	 * @since 5.4
+	 * @deprecated Deprecated in favor of MethodOrderer.MethodName
 	 */
-	class Alphanumeric implements MethodOrderer {
+	@API(status = DEPRECATED, since = "5.4")
+	@Deprecated
+	class Alphanumeric extends MethodName {
+
+	}
+	/**
+	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
+	 * names using {@link String#compareTo(String)}.
+	 *
+	 * <p>If two methods have the same name, {@code String} representations of
+	 * their formal parameter lists will be used as a fallback for comparing the
+	 * methods.
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	class MethodName implements MethodOrderer {
 
 		/**
 		 * Sort the methods encapsulated in the supplied

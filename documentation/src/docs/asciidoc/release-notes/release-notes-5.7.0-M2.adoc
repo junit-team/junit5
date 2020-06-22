@@ -53,7 +53,8 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `MethodOrderer.Alphanumeric` has been deprecated in favor of `MethodOrderer.MethodName`
+  which provides the exact same functionality but has a more descriptive name.
 
 ==== New Features and Improvements
 
@@ -66,6 +67,8 @@ on GitHub.
   resources.
 * `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution
   conditions.
+* Add `MethodOrderer.MethodName` to replace `MethodOrderer.Alphanumeric` with the exact
+  same functionality but a more descriptive name.
 
 
 [[release-notes-5.7.0-M2-junit-vintage]]

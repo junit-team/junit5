@@ -557,6 +557,8 @@ implementation. You can implement your own custom `MethodOrderer` or use one of 
 following built-in `MethodOrderer` implementations.
 
 * `{Alphanumeric}`: sorts test methods _alphanumerically_ based on their names and formal
+  parameter lists. **Deprecated in favor of `{MethodName}`
+* `{MethodName}`: sorts test methods _alphanumerically_ based on their method name and formal
   parameter lists.
 * `{DisplayName}`: sorts test methods _alphanumerically_ based on their display names (see
   <<writing-tests-display-name-generator-precedence-rules, display name generation
