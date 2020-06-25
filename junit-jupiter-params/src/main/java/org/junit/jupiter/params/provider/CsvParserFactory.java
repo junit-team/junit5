@@ -27,15 +27,18 @@ class CsvParserFactory {
 	private static final char SINGLE_QUOTE = '\'';
 	private static final char DOUBLE_QUOTE = '"';
 	private static final char EMPTY_CHAR = '\0';
+	private static final int DEFAULT_MAX_CHARS_PER_COLUMN = 4096;
 
 	static CsvParser createParserFor(CsvSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
-		return createParser(delimiter, LINE_SEPARATOR, SINGLE_QUOTE, annotation.emptyValue());
+		return createParser(delimiter, LINE_SEPARATOR, SINGLE_QUOTE, annotation.emptyValue(),
+			annotation.maxCharsPerColumn());
 	}
 
 	static CsvParser createParserFor(CsvFileSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
-		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue());
+		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue(),
+			annotation.maxCharsPerColumn());
 	}
 
 	private static String selectDelimiter(Annotation annotation, char delimiter, String delimiterString) {
@@ -51,12 +54,13 @@ class CsvParserFactory {
 		return DEFAULT_DELIMITER;
 	}
 
-	private static CsvParser createParser(String delimiter, String lineSeparator, char quote, String emptyValue) {
-		return new CsvParser(createParserSettings(delimiter, lineSeparator, quote, emptyValue));
+	private static CsvParser createParser(String delimiter, String lineSeparator, char quote, String emptyValue,
+			int maxCharsPerColumn) {
+		return new CsvParser(createParserSettings(delimiter, lineSeparator, quote, emptyValue, maxCharsPerColumn));
 	}
 
 	private static CsvParserSettings createParserSettings(String delimiter, String lineSeparator, char quote,
-			String emptyValue) {
+			String emptyValue, int maxCharsPerColumn) {
 
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
@@ -65,6 +69,7 @@ class CsvParserFactory {
 		settings.getFormat().setQuoteEscape(quote);
 		settings.setEmptyValue(emptyValue);
 		settings.setAutoConfigurationEnabled(false);
+		settings.setMaxCharsPerColumn(maxCharsPerColumn == 0 ? DEFAULT_MAX_CHARS_PER_COLUMN : maxCharsPerColumn);
 		// Do not use the built-in support for skipping rows/lines since it will
 		// throw an IllegalArgumentException if the file does not contain at least
 		// the number of specified lines to skip.

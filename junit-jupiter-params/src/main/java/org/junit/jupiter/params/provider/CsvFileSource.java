@@ -137,4 +137,16 @@ public @interface CsvFileSource {
 	@API(status = EXPERIMENTAL, since = "5.6")
 	String[] nullValues() default {};
 
+	/**
+	 * The maximum characters of per CSV column allowed.
+	 *
+	 * <p>To enable auto-expansion of the internal array, set this property to -1
+	 *
+	 * <p>Defaults to {@code 4096}.
+	 *
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	int maxCharsPerColumn() default 4096;
+
 }
