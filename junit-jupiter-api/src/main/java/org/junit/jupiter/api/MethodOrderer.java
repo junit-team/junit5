@@ -109,15 +109,14 @@ public interface MethodOrderer {
 	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
 	 * names using {@link String#compareTo(String)}.
 	 *
-	 * <b>This class has been deprecated in favor of {@code MethodName} and will be
-	 * removed.</b>
-	 *
 	 * <p>If two methods have the same name, {@code String} representations of
 	 * their formal parameter lists will be used as a fallback for comparing the
-	 * methods.
+	 * methods.</p>
+	 * <p> <b>This class has been deprecated in favor of {@code MethodOrderer.MethodName} and will be
+	 * removed in 6.0</b></p>
 	 *
 	 * @since 5.4
-	 * @deprecated Deprecated in favor of MethodOrderer.MethodName
+	 * @deprecated Deprecated in favor of MethodOrderer.MethodName. Will be removed in 6.0
 	 */
 	@API(status = DEPRECATED, since = "5.4")
 	@Deprecated
