@@ -127,15 +127,12 @@ class AssertTimeout {
 			Object messageOrSupplier) {
 
 		AtomicReference<Thread> threadReference = new AtomicReference<>();
-		ExecutorService executorService = Executors.newSingleThreadExecutor(runnable -> {
-			Thread thread = Executors.defaultThreadFactory().newThread(runnable);
-			threadReference.set(thread);
-			return thread;
-		});
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 		try {
 			Future<T> future = executorService.submit(() -> {
 				try {
+					threadReference.set(Thread.currentThread());
 					return supplier.get();
 				}
 				catch (Throwable throwable) {
@@ -148,11 +145,19 @@ class AssertTimeout {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
-				ExecutionTimeoutException exception = new ExecutionTimeoutException("Execution timed out");
-				exception.setStackTrace(threadReference.get().getStackTrace());
-				throw new AssertionFailedError(buildPrefix(nullSafeGet(messageOrSupplier))
-						+ "execution timed out after " + timeoutInMillis + " ms",
-					exception);
+				String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "execution timed out after "
+						+ timeoutInMillis + " ms";
+
+				Thread thread = threadReference.get();
+				if (thread != null) {
+					ExecutionTimeoutException exception = new ExecutionTimeoutException(
+						"Execution timed out in thread " + thread.getName());
+					exception.setStackTrace(thread.getStackTrace());
+					throw new AssertionFailedError(message, exception);
+				}
+				else {
+					throw new AssertionFailedError(message);
+				}
 			}
 			catch (ExecutionException ex) {
 				throw ExceptionUtils.throwAsUncheckedException(ex.getCause());

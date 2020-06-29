@@ -190,7 +190,7 @@ class AssertTimeoutAssertionsTests {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
 			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt));
 		assertMessageEquals(error, "execution timed out after 10 ms");
-		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
 		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
@@ -199,7 +199,7 @@ class AssertTimeoutAssertionsTests {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
 			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt, "Tempus Fugit"));
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
-		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
 		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
@@ -208,7 +208,7 @@ class AssertTimeoutAssertionsTests {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
 			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt, () -> "Tempus" + " " + "Fugit"));
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
-		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
 		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
@@ -263,7 +263,7 @@ class AssertTimeoutAssertionsTests {
 			});
 		});
 		assertMessageEquals(error, "execution timed out after 10 ms");
-		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
 		assertStackTraceContains(error.getCause().getStackTrace(), "AssertTimeoutAssertionsTests", "nap");
 	}
 
@@ -276,7 +276,7 @@ class AssertTimeoutAssertionsTests {
 			}, "Tempus Fugit");
 		});
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
-		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
 		assertStackTraceContains(error.getCause().getStackTrace(), "AssertTimeoutAssertionsTests", "nap");
 	}
 
@@ -289,7 +289,7 @@ class AssertTimeoutAssertionsTests {
 			}, () -> "Tempus" + " " + "Fugit");
 		});
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
-		assertMessageEquals(error.getCause(), "Execution timed out");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
 		assertStackTraceContains(error.getCause().getStackTrace(), "AssertTimeoutAssertionsTests", "nap");
 	}
 
