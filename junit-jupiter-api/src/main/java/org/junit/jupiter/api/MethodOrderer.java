@@ -112,13 +112,14 @@ public interface MethodOrderer {
 	 * <p>If two methods have the same name, {@code String} representations of
 	 * their formal parameter lists will be used as a fallback for comparing the
 	 * methods.</p>
-	 * <p> <b>This class has been deprecated in favor of {@code MethodOrderer.MethodName} and will be
-	 * removed in 6.0</b></p>
+	 * <p> <b>This class has been deprecated in favor of
+	 * {@link MethodOrderer.MethodName} and will be removed in 6.0</b></p>
 	 *
 	 * @since 5.4
-	 * @deprecated Deprecated in favor of MethodOrderer.MethodName. Will be removed in 6.0
+	 * @deprecated Deprecated in favor of {@link MethodOrderer.MethodName}.
+	 * Will be removed in 6.0
 	 */
-	@API(status = DEPRECATED, since = "5.4")
+	@API(status = DEPRECATED, since = "5.7")
 	@Deprecated
 	class Alphanumeric extends MethodName {
 
