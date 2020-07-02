@@ -168,8 +168,8 @@ class SuiteDiscoverer {
             findAnnotation(javaClass, IncludeTags.class).map(IncludeTags::value)
                     .ifPresent(tagExpressions -> request.filters(TagFilter.includeTags(tagExpressions)));
             // @formatter:on
-            findRepeatableAnnotations(javaClass, Configuration.class).forEach(configuration ->
-            		request.configurationParameter(configuration.key(), configuration.value()));
+			findRepeatableAnnotations(javaClass, Configuration.class).forEach(
+				configuration -> request.configurationParameter(configuration.key(), configuration.value()));
 			return request.build();
 		}
 
