@@ -600,7 +600,9 @@ provided with <code>--include-classname</code> or the default class name pattern
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Registered <code>TestInstancePreDestroyCallback</code> extensions are now always called if an
+instance of a test class was created, regardless whether any registered
+<code>TestInstancePostProcessor</code> extension threw an exception.</p>
 </li>
 </ul>
 </div>
@@ -1051,7 +1053,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-06-19 18:22:55 UTC
+Last updated 2020-07-03 10:28:24 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

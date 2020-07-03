@@ -162,13 +162,15 @@ public interface <span class="typeNameLabel">TestInstancesProvider</span></pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar)">getTestInstances</a></span>&#8203;(<a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry,
-                <a href="../extension/ExtensionRegistrar.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistrar</a>&nbsp;extensionRegistrar)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar,org.junit.platform.engine.support.hierarchical.ThrowableCollector)">getTestInstances</a></span>&#8203;(<a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry,
+                <a href="../extension/ExtensionRegistrar.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistrar</a>&nbsp;extensionRegistrar,
+                <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a>&nbsp;throwableCollector)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>default <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstances(org.junit.jupiter.engine.extension.MutableExtensionRegistry)">getTestInstances</a></span>&#8203;(<a href="../extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstances(org.junit.jupiter.engine.extension.MutableExtensionRegistry,org.junit.platform.engine.support.hierarchical.ThrowableCollector)">getTestInstances</a></span>&#8203;(<a href="../extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a>&nbsp;extensionRegistry,
+                <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a>&nbsp;throwableCollector)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -188,23 +190,25 @@ public interface <span class="typeNameLabel">TestInstancesProvider</span></pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="getTestInstances(org.junit.jupiter.engine.extension.MutableExtensionRegistry)">
+<a id="getTestInstances(org.junit.jupiter.engine.extension.MutableExtensionRegistry,org.junit.platform.engine.support.hierarchical.ThrowableCollector)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getTestInstances</h4>
-<pre class="methodSignature">default&nbsp;<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;getTestInstances&#8203;(<a href="../extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a>&nbsp;extensionRegistry)</pre>
+<pre class="methodSignature">default&nbsp;<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;getTestInstances&#8203;(<a href="../extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a>&nbsp;extensionRegistry,
+                                       <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a>&nbsp;throwableCollector)</pre>
 </li>
 </ul>
-<a id="getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar)">
+<a id="getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar,org.junit.platform.engine.support.hierarchical.ThrowableCollector)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getTestInstances</h4>
 <pre class="methodSignature"><a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;getTestInstances&#8203;(<a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry,
-                               <a href="../extension/ExtensionRegistrar.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistrar</a>&nbsp;extensionRegistrar)</pre>
+                               <a href="../extension/ExtensionRegistrar.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistrar</a>&nbsp;extensionRegistrar,
+                               <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a>&nbsp;throwableCollector)</pre>
 </li>
 </ul>
 </li>
