@@ -251,7 +251,7 @@ class AssertTimeoutAssertionsTests {
 	void assertTimeoutPreemptivelyForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
 			assertTimeoutPreemptively(ofMillis(10), () -> {
-				nap();
+				waitForInterrupt();
 				return "Tempus Fugit";
 			});
 		});
@@ -262,7 +262,7 @@ class AssertTimeoutAssertionsTests {
 	void assertTimeoutPreemptivelyWithMessageForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
 			assertTimeoutPreemptively(ofMillis(10), () -> {
-				nap();
+				waitForInterrupt();
 				return "Tempus Fugit";
 			}, "Tempus Fugit");
 		});
@@ -273,7 +273,7 @@ class AssertTimeoutAssertionsTests {
 	void assertTimeoutPreemptivelyWithMessageSupplierForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
 			assertTimeoutPreemptively(ofMillis(10), () -> {
-				nap();
+				waitForInterrupt();
 				return "Tempus Fugit";
 			}, () -> "Tempus" + " " + "Fugit");
 		});
