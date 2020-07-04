@@ -1906,7 +1906,7 @@ The opposite combination will run all methods within one class in parallel, but 
 classes will run sequentially:
 
 [source,properties]
-.Configuration parameters to execute top-level classes in sequentially but their methods in parallel
+.Configuration parameters to execute top-level classes sequentially but their methods in parallel
 ----
 junit.jupiter.execution.parallel.enabled = true
 junit.jupiter.execution.parallel.mode.default = concurrent
