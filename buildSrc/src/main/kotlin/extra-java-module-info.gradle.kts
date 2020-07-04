@@ -3,9 +3,11 @@ plugins {
 }
 
 extraJavaModuleInfo {
-    automaticModule("univocity-parsers-${versions["univocity-parsers"]}.jar", "univocity-parsers")
-    automaticModule("kotlin-stdlib-1.3.72.jar", "kotlin-stdlib")
-    automaticModule("kotlin-stdlib-common-1.3.72.jar", "kotlin-stdlib-common")
-    automaticModule("annotations-13.0.jar", "jetbrains-annotations")
-    automaticModule("hamcrest-core-1.3.jar", "hamcrest-core")
+    module("univocity-parsers-${versions["univocity-parsers"]}.jar", "univocity-parsers", versions["univocity-parsers"]) {
+        exports("com.univocity.parsers.csv")
+    }
+    module("kotlin-stdlib-${versions["kotlin.plugin"]}.jar", "kotlin-stdlib", versions["kotlin.plugin"])
+    module("kotlin-stdlib-common-${versions["kotlin.plugin"]}.jar", "kotlin-stdlib-common", versions["kotlin.plugin"])
+    module("annotations-13.0.jar", "jetbrains-annotations", "13.0")
+    module("hamcrest-core-1.3.jar", "hamcrest-core", "1.3")
 }
