@@ -4,6 +4,7 @@ plugins {
 	idea
 	checkstyle
 	id("custom-java-home")
+	id("extra-java-module-info")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
