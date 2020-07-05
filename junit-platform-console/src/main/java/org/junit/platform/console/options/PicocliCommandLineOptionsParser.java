@@ -41,9 +41,16 @@ public class PicocliCommandLineOptionsParser implements CommandLineOptionsParser
 	}
 
 	@Override
-	public void printHelp(Writer writer) {
+	public void printHelp(Writer writer, boolean disableColor) {
 		try {
-			writer.write(getAvailableOptions().getParser().getUsageMessage());
+			if (disableColor) {
+				CommandLine parser = getAvailableOptions().getParser();
+				parser.setColorScheme(CommandLine.Help.defaultColorScheme(CommandLine.Help.Ansi.OFF));
+				writer.append(parser.getUsageMessage());
+			}
+			else {
+				writer.write(getAvailableOptions().getParser().getUsageMessage());
+			}
 		}
 		catch (IOException e) {
 			throw new JUnitException("Error printing help", e);
