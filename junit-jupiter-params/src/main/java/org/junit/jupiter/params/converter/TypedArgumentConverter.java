@@ -36,7 +36,6 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
 		if (!sourceType.isAssignableFrom(source.getClass())) {
 			throw new ArgumentConversionException("Can only convert objects of type " + sourceType);
@@ -44,7 +43,7 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 		if (!targetType.isAssignableFrom(context.getParameter().getType())) {
 			throw new ArgumentConversionException("Can only convert to type " + targetType);
 		}
-		return convert((S) source);
+		return convert(sourceType.cast(source));
 	}
 
 	/**
