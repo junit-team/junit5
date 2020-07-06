@@ -528,8 +528,8 @@ authors as well as build tool and IDE vendors.</p>
 <p><strong>Scope:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult
-the <a href="https://github.com/junit-team/junit5/milestone/5.7.0-M2?closed=1">5.7 M2</a> milestone page in the JUnit repository
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/49?closed=1">5.7 M2</a> milestone page in the JUnit repository
 on GitHub.</p>
 </div>
 <div class="sect2">
@@ -551,7 +551,7 @@ with tools like NetBeans 11.</p>
 <ul>
 <li>
 <p>Characters in exception messages and other user-supplied values that are not allowed in
-XML are now replaced with their character reference (e.g. <code>\0</code> becomes <code>&amp;#0;</code>).</p>
+XML are now replaced with their character reference – for example, <code>\0</code> becomes <code>&amp;#0;</code>.</p>
 </li>
 </ul>
 </div>
@@ -574,12 +574,16 @@ are executed in.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>When using <code>ConsoleLauncher</code>, explicitly selected classes from <code>--select-class</code>
-and <code>--select-method</code> are now always executed regardless of class name patterns
-provided with <code>--include-classname</code> or the default class name pattern.</p>
+<p>When using <code>ConsoleLauncher</code>, explicitly selected classes from <code>--select-class</code> and
+<code>--select-method</code> are now always executed regardless of class name patterns provided
+with <code>--include-classname</code> or the default class name pattern.</p>
 </li>
 <li>
-<p>Support <code>FilePosition</code> in <code>FileSelector</code> and <code>ClasspathResourceSelector</code>.</p>
+<p>The <code>ConsoleLauncher</code> now honors the <code>--disable-ansi-colors</code> option when printing usage
+help.</p>
+</li>
+<li>
+<p>New <code>FilePosition</code> support in <code>FileSelector</code> and <code>ClasspathResourceSelector</code>.</p>
 </li>
 <li>
 <p>Custom <code>PostDiscoveryFilter</code> implementations can now be registered via Java’s
@@ -622,21 +626,20 @@ instance of a test class was created, regardless whether any registered
 <div class="ulist">
 <ul>
 <li>
-<p>All <code>@Enabled*</code>/<code>@Disabled*</code> annotations now have an optional <code>disabledReason</code>
-attribute that can be used to provide additional explanation as to why a test or
-container might be disabled.</p>
+<p>All <code>@Enabled*</code>/<code>@Disabled*</code> annotations now have an optional <code>disabledReason</code> attribute
+that can be used to provide and additional explanation as to why a test or container
+might be disabled.</p>
 </li>
 <li>
-<p>New <code>assertLinesMatch</code> method overloads added to class <code>Assertions</code> that accept
-two <code>Stream&lt;String&gt;</code> instances for comparison.</p>
+<p>New <code>assertLinesMatch()</code> method overloads in <code>Assertions</code> that accept two
+<code>Stream&lt;String&gt;</code> instances for comparison.</p>
 </li>
 <li>
-<p><code>@CsvFileSource</code> now allows to specify file paths as an alternative to classpath
+<p><code>@CsvFileSource</code> now allows one to specify file paths as an alternative to classpath
 resources.</p>
 </li>
 <li>
-<p><code>JAVA_16</code> has been added to the <code>JRE</code> enum for use with JRE-based execution
-conditions.</p>
+<p><code>JAVA_16</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
 </li>
 </ul>
 </div>
@@ -1053,7 +1056,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-07-04 12:20:06 UTC
+Last updated 2020-07-06 09:44:30 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
