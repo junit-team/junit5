@@ -6,8 +6,8 @@
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/5.7.0-M2?closed=1+[5.7 M2] milestone page in the JUnit
-repository on GitHub.
+link:{junit5-repo}+/milestone/49?closed=1+[5.7 M2] milestone page in the JUnit repository
+on GitHub.
 
 
 [[release-notes-5.7.0-M2-overall-improvements]]
