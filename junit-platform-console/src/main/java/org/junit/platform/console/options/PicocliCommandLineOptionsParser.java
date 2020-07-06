@@ -35,29 +35,27 @@ public class PicocliCommandLineOptionsParser implements CommandLineOptionsParser
 			ParseResult detectedOptions = parser.parseArgs(arguments);
 			return availableOptions.toCommandLineOptions(detectedOptions);
 		}
-		catch (Exception e) {
-			throw new JUnitException("Error parsing command-line arguments: " + e.getMessage(), e);
+		catch (Exception ex) {
+			throw new JUnitException("Error parsing command-line arguments: " + ex.getMessage(), ex);
 		}
 	}
 
 	@Override
-	public void printHelp(Writer writer, boolean disableColor) {
+	public void printHelp(Writer writer, boolean ansiColorOutputDisabled) {
 		try {
-			if (disableColor) {
-				CommandLine parser = getAvailableOptions().getParser();
+			CommandLine parser = getAvailableOptions().getParser();
+			if (ansiColorOutputDisabled) {
 				parser.setColorScheme(CommandLine.Help.defaultColorScheme(CommandLine.Help.Ansi.OFF));
-				writer.append(parser.getUsageMessage());
 			}
-			else {
-				writer.write(getAvailableOptions().getParser().getUsageMessage());
-			}
+			writer.append(parser.getUsageMessage());
 		}
-		catch (IOException e) {
-			throw new JUnitException("Error printing help", e);
+		catch (IOException ex) {
+			throw new JUnitException("Error printing help", ex);
 		}
 	}
 
 	private AvailableOptions getAvailableOptions() {
 		return new AvailableOptions();
 	}
+
 }

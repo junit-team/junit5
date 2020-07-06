@@ -99,8 +99,8 @@ public class ConsoleLauncher {
 			exception.printStackTrace(err);
 			err.println();
 			commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
+			return ConsoleLauncherExecutionResult.failed();
 		}
-		return ConsoleLauncherExecutionResult.failed();
 	}
 
 }

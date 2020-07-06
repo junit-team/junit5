@@ -5,9 +5,9 @@
 
 *Scope:* ❓
 
-For a complete list of all _closed_ issues and pull requests for this release, consult
-the link:{junit5-repo}+/milestone/5.7.0-M2?closed=1+[5.7 M2] milestone page in the JUnit repository
-on GitHub.
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/5.7.0-M2?closed=1+[5.7 M2] milestone page in the JUnit
+repository on GitHub.
 
 
 [[release-notes-5.7.0-M2-overall-improvements]]
@@ -23,7 +23,7 @@ on GitHub.
 ==== Bug Fixes
 
 * Characters in exception messages and other user-supplied values that are not allowed in
-  XML are now replaced with their character reference (e.g. `\0` becomes `&#0;`).
+  XML are now replaced with their character reference – for example, `\0` becomes `&#0;`.
 
 ==== Deprecations and Breaking Changes
 
@@ -34,10 +34,12 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* When using `ConsoleLauncher`, explicitly selected classes from `--select-class`
-  and `--select-method` are now always executed regardless of class name patterns
-  provided with `--include-classname` or the default class name pattern.
-* Support `FilePosition` in `FileSelector` and `ClasspathResourceSelector`.
+* When using `ConsoleLauncher`, explicitly selected classes from `--select-class` and
+  `--select-method` are now always executed regardless of class name patterns provided
+  with `--include-classname` or the default class name pattern.
+* The `ConsoleLauncher` now honors the `--disable-ansi-colors` option when printing usage
+  help.
+* New `FilePosition` support in `FileSelector` and `ClasspathResourceSelector`.
 * Custom `PostDiscoveryFilter` implementations can now be registered via Java’s
   `ServiceLoader` mechanism.
 * New `getJavaClass()` and `getJavaMethod()` methods in
@@ -59,15 +61,14 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason`
-  attribute that can be used to provide additional explanation as to why a test or
-  container might be disabled.
-* New `assertLinesMatch` method overloads added to class `Assertions` that accept
-  two `Stream<String>` instances for comparison.
-* `@CsvFileSource` now allows to specify file paths as an alternative to classpath
+* All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason` attribute
+  that can be used to provide and additional explanation as to why a test or container
+  might be disabled.
+* New `assertLinesMatch()` method overloads in `Assertions` that accept two
+  `Stream<String>` instances for comparison.
+* `@CsvFileSource` now allows one to specify file paths as an alternative to classpath
   resources.
-* `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution
-  conditions.
+* `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.7.0-M2-junit-vintage]]

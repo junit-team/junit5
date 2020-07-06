@@ -24,6 +24,6 @@ public interface CommandLineOptionsParser {
 
 	CommandLineOptions parse(String... arguments);
 
-	void printHelp(Writer writer, boolean disableColor);
+	void printHelp(Writer writer, boolean ansiColorOutputDisabled);
 
 }
