@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromFields;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -481,14 +483,62 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			InvocationInterceptor::interceptAfterEachMethod);
 	}
 
-	private void invokeMethodInExtensionContext(Method method, ExtensionContext context, ExtensionRegistry registry,
-			VoidMethodInterceptorCall interceptorCall) {
-		TestInstances testInstances = context.getRequiredTestInstances();
-		Object target = testInstances.findInstance(method.getDeclaringClass()).orElseThrow(
-			() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
+    private void invokeMethodInExtensionContext(Method method, ExtensionContext context, ExtensionRegistry registry,
+                                                VoidMethodInterceptorCall interceptorCall) {
+        TestInstances testInstances = context.getRequiredTestInstances();
+        Optional<?> instance = testInstances.findInstance(this.testClass);
 
-		executableInvoker.invoke(method, target, context, registry,
-			ReflectiveInterceptorCall.ofVoidMethod(interceptorCall));
-	}
+//        testInstances
+//                .getAllInstances()
+//                .forEach(i -> this.toTextForm(i, method));
+
+        Object target = instance.orElseThrow(
+                () -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
+
+        executableInvoker.invoke(method, target, context, registry,
+                ReflectiveInterceptorCall.ofVoidMethod(interceptorCall));
+    }
+
+    @Deprecated
+    private void toTextForm(Object instance, Method method) {
+        System.err.println("     ########## " + instance.getClass().getSimpleName());
+        System.err.println("     ########## " + method);
+
+        for (Method method1 : instance.getClass().getMethods())
+            System.out.println("method1 = " + method1);
+        System.err.println("-------------------------");
+        for (Method method1 : instance.getClass().getDeclaredMethods())
+            System.out.println("method1 = " + method1);
+
+        Optional<Method> foundMethod = Arrays.stream(instance.getClass().getMethods()).filter(m -> m.equals(method)).findFirst();
+        Optional<Method> foundDeclaredMethod = Arrays.stream(instance.getClass().getDeclaredMethods()).filter(m -> m.equals(method)).findFirst();
+
+        System.err.println("            foundMethod = " + foundMethod);
+        System.err.println("            foundDeclaredMethod = " + foundDeclaredMethod);
+
+
+    }
+
+    @Deprecated
+    private boolean matches(Method method, Object object) {
+        return Arrays.stream(object.getClass().getMethods()).collect(toList()).contains(method);
+    }
+
+    @Deprecated
+    private Class<?> determineTargetClass(Method method, ExtensionContext context) {
+        Class<?> declaringClass = method.getDeclaringClass();
+        Optional<Class<?>> testClass = context.getTestClass();
+
+        System.err.println("=====================================");
+        System.err.println("declaring class: " + declaringClass);
+        System.err.println("test      class: " + testClass);
+        System.err.println("req. test class: " + context.getRequiredTestClass());
+        System.err.println("req. test class: " + context.getRequiredTestInstance().getClass());
+        System.err.println("req. test class: " + context.getTestInstance());
+        System.err.println("=====================================");
+
+        return declaringClass;
+    }
+
 
 }
