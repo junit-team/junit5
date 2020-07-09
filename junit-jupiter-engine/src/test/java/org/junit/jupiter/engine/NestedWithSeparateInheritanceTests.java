@@ -20,16 +20,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class NestedWithInheritanceTests extends SuperClass {
+class NestedWithSeparateInheritanceTests extends SuperClass1 {
 
 	static List<String> lifecycleInvokingClassNames;
 
-	static String OUTER = NestedWithInheritanceTests.class.getSimpleName();
+	static String OUTER = NestedWithSeparateInheritanceTests.class.getSimpleName();
 	static String NESTED = NestedClass.class.getSimpleName();
 	static String NESTEDNESTED = NestedClass.NestedNestedClass.class.getSimpleName();
 
 	@Nested
-	class NestedClass extends SuperClass {
+	class NestedClass extends SuperClass2 {
 
 		@Test
 		public void test() {
@@ -37,7 +37,7 @@ class NestedWithInheritanceTests extends SuperClass {
 		}
 
 		@Nested
-		class NestedNestedClass extends SuperClass {
+		class NestedNestedClass extends SuperClass3 {
 
 			@Test
 			public void test() {
@@ -49,17 +49,47 @@ class NestedWithInheritanceTests extends SuperClass {
 
 }
 
-class SuperClass {
+class SuperClass1 {
 
 	@BeforeAll
 	static void setup() {
-		NestedWithInheritanceTests.lifecycleInvokingClassNames = new ArrayList<>();
+		NestedWithSeparateInheritanceTests.lifecycleInvokingClassNames = new ArrayList<>();
 	}
 
 	@BeforeEach
 	public void beforeEach() {
 		String invokingClass = this.getClass().getSimpleName();
-		NestedWithInheritanceTests.lifecycleInvokingClassNames.add(invokingClass);
+		NestedWithSeparateInheritanceTests.lifecycleInvokingClassNames.add(invokingClass);
+	}
+
+}
+
+class SuperClass2 {
+
+	@BeforeAll
+	static void setup() {
+		NestedWithSeparateInheritanceTests.lifecycleInvokingClassNames = new ArrayList<>();
+	}
+
+	@BeforeEach
+	public void beforeEach() {
+		String invokingClass = this.getClass().getSimpleName();
+		NestedWithSeparateInheritanceTests.lifecycleInvokingClassNames.add(invokingClass);
+	}
+
+}
+
+class SuperClass3 {
+
+	@BeforeAll
+	static void setup() {
+		NestedWithSeparateInheritanceTests.lifecycleInvokingClassNames = new ArrayList<>();
+	}
+
+	@BeforeEach
+	public void beforeEach() {
+		String invokingClass = this.getClass().getSimpleName();
+		NestedWithSeparateInheritanceTests.lifecycleInvokingClassNames.add(invokingClass);
 	}
 
 }
