@@ -667,6 +667,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#running-tests-tag-expressions">4.6. Tag Expressions</a></li>
 <li><a href="#running-tests-capturing-output">4.7. Capturing Standard Output/Error</a></li>
+<li><a href="#running-tests-flight-recorder">4.8. Flight Recorder Support</a></li>
 </ul>
 </li>
 <li><a href="#extensions">5. Extension Model</a>
@@ -6745,6 +6746,72 @@ it a try and provide feedback to the JUnit team so they can improve and eventual
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="running-tests-flight-recorder"><a class="anchor" href="#running-tests-flight-recorder"></a>4.8. Flight Recorder Support</h3>
+<div class="paragraph">
+<p>Since version 1.7, the JUnit Platform provides opt-in support for generating Flight
+Recorder events. <a href="https://openjdk.java.net/jeps/328">JEP 328</a> describes the Java Flight
+Recorder (JFR) as:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Flight Recorder records events originating from applications, the JVM and the OS.
+Events are stored in a single file that can be attached to bug reports and examined by
+support engineers, allowing after-the-fact analysis of issues in the period leading up
+to a problem.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In order to record Flight Recorder events generated while running tests, you need to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Provide module <code>org.junit.platform.jfr</code> (<code>junit-platform-jfr-1.7.0-SNAPSHOT.jar</code>)
+on the class-path or module-path at test runtime.</p>
+</li>
+<li>
+<p>Start flight recording when launching a test run. Flight Recorder can be started via
+java command line option:</p>
+<div class="literalblock">
+<div class="content">
+<pre>-XX:StartFlightRecording:filename=...</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Please consult the manual of your build tool for the appropriate commands.</p>
+</div>
+<div class="paragraph">
+<p>To analyze the recorded events, use the
+<a href="https://docs.oracle.com/en/java/javase/14/docs/specs/man/jfr.html">jfr</a>
+command line tool shipped with recent JDKs or open the recording file with
+<a href="https://jdk.java.net/jmc/">JDK Mission Control</a>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Flight Recorder support is currently an <em>experimental</em> feature. You&#8217;re
+invited to give it a try and provide feedback to the JUnit team so they can improve
+and eventually <a href="#api-evolution">promote</a> this feature.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -9657,6 +9724,11 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.jfr</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FlightRecordingListener</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.7</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EngineDiscoveryResult</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
@@ -10055,7 +10127,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-07-06 09:44:30 UTC
+Last updated 2020-07-12 11:07:53 UTC
 </div>
 </div>
 <style>

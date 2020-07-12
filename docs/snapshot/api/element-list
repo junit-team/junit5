@@ -48,6 +48,8 @@ org.junit.platform.engine.support.descriptor
 org.junit.platform.engine.support.discovery
 org.junit.platform.engine.support.filter
 org.junit.platform.engine.support.hierarchical
+module:org.junit.platform.jfr
+org.junit.platform.jfr
 module:org.junit.platform.launcher
 org.junit.platform.launcher
 org.junit.platform.launcher.core

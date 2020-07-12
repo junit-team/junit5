@@ -110,12 +110,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="#org.junit.platform.jfr">org.junit.platform.jfr</a></th>
+<td class="colLast">
+<div class="block">Java Flight Recorder support package.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.launcher">org.junit.platform.launcher</a></th>
 <td class="colLast">
 <div class="block">Public API for configuring and launching test plans.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.launcher.core">org.junit.platform.launcher.core</a></th>
 <td class="colLast">
 <div class="block">Core support classes for the <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>
@@ -123,27 +129,27 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  and the <a href="core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.launcher.listeners">org.junit.platform.launcher.listeners</a></th>
 <td class="colLast">
 <div class="block">Common <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> implementations and related support classes for
  the <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.launcher.listeners.discovery">org.junit.platform.launcher.listeners.discovery</a></th>
 <td class="colLast">
 <div class="block">Common <a href="LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a>
  implementations and factory methods.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.reporting.legacy">org.junit.platform.reporting.legacy</a></th>
 <td class="colLast">
 <div class="block">Support for legacy reporting formats.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.reporting.legacy.xml">org.junit.platform.reporting.legacy.xml</a></th>
 <td class="colLast">
 <div class="block">Support for generating XML reports using a format which is compatible with
@@ -151,11 +157,45 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  by the Ant build system.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.testkit.engine">org.junit.platform.testkit.engine</a></th>
 <td class="colLast">
 <div class="block">Test Kit for testing the execution of a <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>
  running on the JUnit Platform.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a id="org.junit.platform.jfr">
+<!--   -->
+</a>
+<table class="useSummary">
+<caption><span>Classes in <a href="package-summary.html">org.junit.platform.launcher</a> used by <a href="../../../../../org.junit.platform.jfr/org/junit/platform/jfr/package-summary.html">org.junit.platform.jfr</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Class</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/TestExecutionListener.html#org.junit.platform.jfr">TestExecutionListener</a></th>
+<td class="colLast">
+<div class="block">Register a concrete implementation of this interface with a <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>
+ to be notified of events that occur during test execution.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/TestIdentifier.html#org.junit.platform.jfr">TestIdentifier</a></th>
+<td class="colLast">
+<div class="block">Immutable data transfer object that represents a test or container which is
+ usually part of a <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/TestPlan.html#org.junit.platform.jfr">TestPlan</a></th>
+<td class="colLast">
+<div class="block"><code>TestPlan</code> describes the tree of tests and containers as discovered
+ by a <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
 </tbody>
