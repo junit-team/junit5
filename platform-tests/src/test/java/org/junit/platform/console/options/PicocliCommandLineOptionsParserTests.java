@@ -539,7 +539,7 @@ class PicocliCommandLineOptionsParserTests {
 	void printHelpOutputsHelpOption() {
 		StringWriter writer = new StringWriter();
 
-		createParser().printHelp(writer);
+		createParser().printHelp(writer, true);
 
 		assertThat(writer.toString()).contains("--help");
 	}
@@ -563,7 +563,7 @@ class PicocliCommandLineOptionsParserTests {
 		};
 
 		CommandLineOptionsParser parser = createParser();
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> parser.printHelp(writer));
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> parser.printHelp(writer, true));
 
 		assertThat(exception).hasCauseInstanceOf(IOException.class);
 		assertThat(exception.getCause()).hasMessage("Something went wrong");

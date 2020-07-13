@@ -108,6 +108,8 @@ class ModularUserGuideTests {
 		var projectDir = Path.of("../documentation");
 		command.add(Path.of(System.getProperty("java.home"), "bin", "java").toString());
 
+		command.add("-XX:StartFlightRecording:filename=" + temp.resolve("user-guide.jfr"));
+
 		command.add("--show-version");
 		command.add("--show-module-resolution");
 

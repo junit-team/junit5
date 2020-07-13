@@ -105,7 +105,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		MethodExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector);
 		throwableCollector.execute(() -> {
-			TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(registry);
+			TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(registry,
+				throwableCollector);
 			extensionContext.setTestInstances(testInstances);
 		});
 
@@ -124,7 +125,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
-			DynamicTestExecutor dynamicTestExecutor) throws Exception {
+			DynamicTestExecutor dynamicTestExecutor) {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		// @formatter:off
@@ -141,14 +142,18 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				invokeAfterEachMethods(context);
 			}
 		invokeAfterEachCallbacks(context);
-		if (isPerMethodLifecycle(context)) {
-			invokeTestInstancePreDestroyCallbacks(context);
-		}
 		// @formatter:on
 
-		throwableCollector.assertEmpty();
-
 		return context;
+	}
+
+	@Override
+	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
+		if (isPerMethodLifecycle(context) && context.getExtensionContext().getTestInstance().isPresent()) {
+			invokeTestInstancePreDestroyCallbacks(context);
+		}
+		super.cleanUp(context);
+		context.getThrowableCollector().assertEmpty();
 	}
 
 	private boolean isPerMethodLifecycle(JupiterEngineExecutionContext context) {

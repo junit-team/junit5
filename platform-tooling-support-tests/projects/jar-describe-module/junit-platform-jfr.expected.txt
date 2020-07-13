@@ -1,0 +1,8 @@
+org.junit.platform.jfr@${platformVersion} jar:file:.+junit-platform-jfr/build/libs/junit-platform-jfr-${platformVersion}.jar/!module-info.class
+requires java.base mandated
+requires jdk.jfr
+requires org.apiguardian.api
+requires org.junit.platform.engine
+requires org.junit.platform.launcher
+provides org.junit.platform.launcher.TestExecutionListener with org.junit.platform.jfr.FlightRecordingListener
+contains org.junit.platform.jfr

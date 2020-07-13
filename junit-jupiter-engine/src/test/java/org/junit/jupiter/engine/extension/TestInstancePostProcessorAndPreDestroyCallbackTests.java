@@ -92,11 +92,14 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 
 	@Test
 	void postProcessTestInstanceMethodThrowsAnException() {
-		// @formatter:off
 		assertPostProcessorAndPreDestroyCallbacks(ExceptionInTestInstancePostProcessorTestCase.class, 0,
-			"exceptionThrowingTestInstancePostProcessor"
-		);
-		// @formatter:on
+			"exceptionThrowingTestInstancePostProcessor", "exceptionPreDestroyTestInstance");
+	}
+
+	@Test
+	void testClassConstructorThrowsAnException() {
+		assertPostProcessorAndPreDestroyCallbacks(ExceptionInTestClassConstructorTestCase.class, 0,
+			"exceptionThrowingConstructor");
 	}
 
 	private void assertPostProcessorAndPreDestroyCallbacks(Class<?> testClass, String... expectedCalls) {
@@ -149,6 +152,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 
 	@ExtendWith(ExceptionThrowingTestInstancePreDestroyCallback.class)
 	static class ExceptionInTestInstancePreDestroyCallbackTestCase {
+
 		@Test
 		void test() {
 			callSequence.add("test");
@@ -157,6 +161,21 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 
 	@ExtendWith(ExceptionThrowingTestInstancePostProcessor.class)
 	static class ExceptionInTestInstancePostProcessorTestCase {
+
+		@Test
+		void test() {
+			callSequence.add("test");
+		}
+	}
+
+	@ExtendWith(FooTestInstanceCallbacks.class)
+	static class ExceptionInTestClassConstructorTestCase {
+
+		ExceptionInTestClassConstructorTestCase() {
+			callSequence.add("exceptionThrowingConstructor");
+			throw new RuntimeException("in constructor");
+		}
+
 		@Test
 		void test() {
 			callSequence.add("test");

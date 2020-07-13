@@ -10,6 +10,7 @@
 package org.junit.jupiter.api
 
 import java.time.Duration.ofMillis
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
@@ -178,7 +179,7 @@ internal class KotlinAssertTimeoutAssertionsTests {
     @Test
     fun assertTimeoutPreemptivelyForExecutableThatCompletesAfterTheTimeout() {
         val error = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(10)) { this.nap() }
+            assertTimeoutPreemptively(ofMillis(10)) { waitForInterrupt() }
         }
         assertMessageEquals(error, "execution timed out after 10 ms")
     }
@@ -186,7 +187,7 @@ internal class KotlinAssertTimeoutAssertionsTests {
     @Test
     fun assertTimeoutPreemptivelyWithMessageForExecutableThatCompletesAfterTheTimeout() {
         val error = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(10), "Tempus Fugit") { this.nap() }
+            assertTimeoutPreemptively(ofMillis(10), "Tempus Fugit") { waitForInterrupt() }
         }
         assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms")
     }
@@ -194,7 +195,7 @@ internal class KotlinAssertTimeoutAssertionsTests {
     @Test
     fun assertTimeoutPreemptivelyWithMessageSupplierForExecutableThatCompletesAfterTheTimeout() {
         val error = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(10), { "Tempus" + " " + "Fugit" }) { this.nap() }
+            assertTimeoutPreemptively(ofMillis(10), { "Tempus" + " " + "Fugit" }) { waitForInterrupt() }
         }
         assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms")
     }
@@ -244,7 +245,7 @@ internal class KotlinAssertTimeoutAssertionsTests {
     fun assertTimeoutPreemptivelyForSupplierThatCompletesAfterTheTimeout() {
         val error = assertThrows<AssertionFailedError> {
             assertTimeoutPreemptively(ofMillis(10)) {
-                nap()
+                waitForInterrupt()
                 "Tempus Fugit"
             }
         }
@@ -255,7 +256,7 @@ internal class KotlinAssertTimeoutAssertionsTests {
     fun assertTimeoutPreemptivelyWithMessageForSupplierThatCompletesAfterTheTimeout() {
         val error = assertThrows<AssertionFailedError> {
             assertTimeoutPreemptively(ofMillis(10), "Tempus Fugit") {
-                nap()
+                waitForInterrupt()
                 "Tempus Fugit"
             }
         }
@@ -266,7 +267,7 @@ internal class KotlinAssertTimeoutAssertionsTests {
     fun assertTimeoutPreemptivelyWithMessageSupplierForSupplierThatCompletesAfterTheTimeout() {
         val error = assertThrows<AssertionFailedError> {
             assertTimeoutPreemptively(ofMillis(10), { "Tempus" + " " + "Fugit" }) {
-                nap()
+                waitForInterrupt()
                 "Tempus Fugit"
             }
         }
@@ -277,7 +278,19 @@ internal class KotlinAssertTimeoutAssertionsTests {
      * Take a nap for 100 milliseconds.
      */
     private fun nap() {
-        Thread.sleep(100)
+        val start = System.currentTimeMillis()
+        // workaround for imprecise clocks (yes, Windows, I'm talking about you)
+        do {
+            Thread.sleep(100)
+        } while (System.currentTimeMillis() - start < 100)
+    }
+
+    private fun waitForInterrupt() {
+        try {
+            CountDownLatch(1).await()
+        } catch (ignore: InterruptedException) {
+            // ignore
+        }
     }
 
     companion object {
