@@ -72,7 +72,7 @@ public @interface TestMethodOrder {
 	 * The {@link MethodOrderer} to use.
 	 *
 	 * @see MethodOrderer
-	 * @see MethodOrderer.Alphanumeric
+	 * @see MethodOrderer.MethodName
 	 * @see MethodOrderer.DisplayName
 	 * @see MethodOrderer.OrderAnnotation
 	 * @see MethodOrderer.Random

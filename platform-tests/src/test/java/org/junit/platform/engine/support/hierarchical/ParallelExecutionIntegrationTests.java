@@ -51,7 +51,7 @@ import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
+import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -537,7 +537,7 @@ class ParallelExecutionIntegrationTests {
 		}
 	}
 
-	@TestMethodOrder(Alphanumeric.class)
+	@TestMethodOrder(MethodName.class)
 	static class InterruptedThreadTestCase {
 
 		@Test

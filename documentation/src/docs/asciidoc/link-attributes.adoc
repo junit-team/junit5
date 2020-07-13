@@ -57,6 +57,7 @@ endif::[]
 // Jupiter Core API
 :api-package:                                {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/package-summary.html[org.junit.jupiter.api]
 :Alphanumeric:                               {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Alphanumeric.html[Alphanumeric]
+:MethodName:                                 {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html[MethodName]
 :Assertions:                                 {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html[org.junit.jupiter.api.Assertions]
 :Assumptions:                                {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/Assumptions.html[org.junit.jupiter.api.Assumptions]
 :Disabled:                                   {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html[@Disabled]
