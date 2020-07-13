@@ -116,8 +116,7 @@ public interface MethodOrderer {
 	 * {@link MethodOrderer.MethodName} and will be removed in 6.0</b></p>
 	 *
 	 * @since 5.4
-	 * @deprecated Deprecated in favor of {@link MethodOrderer.MethodName}.
-	 * Will be removed in 6.0
+	 * @deprecated Please use {@link MethodOrderer.MethodName} instead.
 	 */
 	@API(status = DEPRECATED, since = "5.7")
 	@Deprecated
