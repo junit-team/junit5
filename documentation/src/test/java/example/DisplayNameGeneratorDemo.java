@@ -40,7 +40,7 @@ class DisplayNameGeneratorDemo {
 	}
 
 	@Nested
-	@IndicativeSentencesGeneration(generator = DisplayNameGenerator.ReplaceUnderscores.class)
+	@IndicativeSentencesGeneration(separator = " -> ", generator = DisplayNameGenerator.ReplaceUnderscores.class)
 	class A_year_is_a_leap_year {
 
 		@Test
