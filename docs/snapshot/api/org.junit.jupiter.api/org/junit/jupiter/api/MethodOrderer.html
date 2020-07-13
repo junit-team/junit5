@@ -129,7 +129,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="MethodOrderer.Alphanumeric.html" title="class in org.junit.jupiter.api">MethodOrderer.Alphanumeric</a></code>, <code><a href="MethodOrderer.DisplayName.html" title="class in org.junit.jupiter.api">MethodOrderer.DisplayName</a></code>, <code><a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api">MethodOrderer.OrderAnnotation</a></code>, <code><a href="MethodOrderer.Random.html" title="class in org.junit.jupiter.api">MethodOrderer.Random</a></code></dd>
+<dd><code><a href="MethodOrderer.Alphanumeric.html" title="class in org.junit.jupiter.api">MethodOrderer.Alphanumeric</a></code>, <code><a href="MethodOrderer.DisplayName.html" title="class in org.junit.jupiter.api">MethodOrderer.DisplayName</a></code>, <code><a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api">MethodOrderer.MethodName</a></code>, <code><a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api">MethodOrderer.OrderAnnotation</a></code>, <code><a href="MethodOrderer.Random.html" title="class in org.junit.jupiter.api">MethodOrderer.Random</a></code></dd>
 </dl>
 <hr>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
@@ -148,7 +148,7 @@ public interface <span class="typeNameLabel">MethodOrderer</span></pre>
  implementations.
 
  <ul>
- <li><a href="MethodOrderer.Alphanumeric.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.Alphanumeric</code></a></li>
+ <li><a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.MethodName</code></a></li>
  <li><a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.OrderAnnotation</code></a></li>
  <li><a href="MethodOrderer.Random.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.Random</code></a></li>
  </ul></div>
@@ -184,8 +184,9 @@ public interface <span class="typeNameLabel">MethodOrderer</span></pre>
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="MethodOrderer.Alphanumeric.html" title="class in org.junit.jupiter.api">MethodOrderer.Alphanumeric</a></span></code></th>
 <td class="colLast">
-<div class="block"><code>MethodOrderer</code> that sorts methods alphanumerically based on their
- names using <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true#compareTo(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>String.compareTo(String)</code></a>.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Deprecated in favor of <a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.MethodName</code></a>.</div>
+</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -198,13 +199,21 @@ public interface <span class="typeNameLabel">MethodOrderer</span></pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api">MethodOrderer.MethodName</a></span></code></th>
+<td class="colLast">
+<div class="block"><code>MethodOrderer</code> that sorts methods alphanumerically based on their
+ names using <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true#compareTo(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>String.compareTo(String)</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api">MethodOrderer.OrderAnnotation</a></span></code></th>
 <td class="colLast">
 <div class="block"><code>MethodOrderer</code> that sorts methods based on the <a href="Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a>
  annotation.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="MethodOrderer.Random.html" title="class in org.junit.jupiter.api">MethodOrderer.Random</a></span></code></th>
 <td class="colLast">

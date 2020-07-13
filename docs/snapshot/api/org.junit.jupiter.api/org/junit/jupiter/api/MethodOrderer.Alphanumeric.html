@@ -28,12 +28,6 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
-var altColor = "altColor";
-var rowColor = "rowColor";
-var tableTab = "tableTab";
-var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../../";
 var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
@@ -101,7 +95,7 @@ loadScripts(document, 'script');</script>
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
+<li>Method</li>
 </ul>
 </div>
 <a id="skip.navbar.top">
@@ -128,7 +122,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api">org.junit.jupiter.api.MethodOrderer.MethodName</a></li>
+<li>
+<ul class="inheritance">
 <li>org.junit.jupiter.api.MethodOrderer.Alphanumeric</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -144,15 +143,27 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><a href="MethodOrderer.html" title="interface in org.junit.jupiter.api">MethodOrderer</a></dd>
 </dl>
 <hr>
-<pre>public static class <span class="typeNameLabel">MethodOrderer.Alphanumeric</span>
-extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
-implements <a href="MethodOrderer.html" title="interface in org.junit.jupiter.api">MethodOrderer</a></pre>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.7")
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
+public static class <span class="typeNameLabel">MethodOrderer.Alphanumeric</span>
+extends <a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api">MethodOrderer.MethodName</a></pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Deprecated in favor of <a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.MethodName</code></a>.
+ Will be removed in 6.0</div>
+</div>
 <div class="block"><code>MethodOrderer</code> that sorts methods alphanumerically based on their
  names using <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true#compareTo(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>String.compareTo(String)</code></a>.
 
  <p>If two methods have the same name, <code>String</code> representations of
  their formal parameter lists will be used as a fallback for comparing the
- methods.</div>
+ methods.</p>
+ <p> <b>This class has been deprecated in favor of
+ <a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.MethodName</code></a> and will be removed in 6.0</b></p></div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.4</dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -171,7 +182,7 @@ implements <a href="MethodOrderer.html" title="interface in org.junit.jupiter.ap
 <!--   -->
 </a>
 <h3>Nested classes/interfaces inherited from interface&nbsp;org.junit.jupiter.api.<a href="MethodOrderer.html" title="interface in org.junit.jupiter.api">MethodOrderer</a></h3>
-<code><a href="MethodOrderer.Alphanumeric.html" title="class in org.junit.jupiter.api">MethodOrderer.Alphanumeric</a>, <a href="MethodOrderer.DisplayName.html" title="class in org.junit.jupiter.api">MethodOrderer.DisplayName</a>, <a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api">MethodOrderer.OrderAnnotation</a>, <a href="MethodOrderer.Random.html" title="class in org.junit.jupiter.api">MethodOrderer.Random</a></code></li>
+<code><a href="MethodOrderer.Alphanumeric.html" title="class in org.junit.jupiter.api">MethodOrderer.Alphanumeric</a>, <a href="MethodOrderer.DisplayName.html" title="class in org.junit.jupiter.api">MethodOrderer.DisplayName</a>, <a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api">MethodOrderer.MethodName</a>, <a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api">MethodOrderer.OrderAnnotation</a>, <a href="MethodOrderer.Random.html" title="class in org.junit.jupiter.api">MethodOrderer.Random</a></code></li>
 </ul>
 </li>
 </ul>
@@ -191,7 +202,9 @@ implements <a href="MethodOrderer.html" title="interface in org.junit.jupiter.ap
 </tr>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">Alphanumeric</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -204,23 +217,13 @@ implements <a href="MethodOrderer.html" title="interface in org.junit.jupiter.ap
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tr id="i0" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#orderMethods(org.junit.jupiter.api.MethodOrdererContext)">orderMethods</a></span>&#8203;(<a href="MethodOrdererContext.html" title="interface in org.junit.jupiter.api">MethodOrdererContext</a>&nbsp;context)</code></th>
-<td class="colLast">
-<div class="block">Sort the methods encapsulated in the supplied
- <a href="MethodOrdererContext.html" title="interface in org.junit.jupiter.api"><code>MethodOrdererContext</code></a> alphanumerically based on their names
- and formal parameter lists.</div>
-</td>
-</tr>
-</table>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.org.junit.jupiter.api.MethodOrderer.MethodName">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;org.junit.jupiter.api.<a href="MethodOrderer.MethodName.html" title="class in org.junit.jupiter.api">MethodOrderer.MethodName</a></h3>
+<code><a href="MethodOrderer.MethodName.html#orderMethods(org.junit.jupiter.api.MethodOrdererContext)">orderMethods</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -258,37 +261,7 @@ implements <a href="MethodOrderer.html" title="interface in org.junit.jupiter.ap
 <li class="blockList">
 <h4>Alphanumeric</h4>
 <pre>public&nbsp;Alphanumeric()</pre>
-</li>
-</ul>
-</li>
-</ul>
-</section>
-<!-- ============ METHOD DETAIL ========== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="method.detail">
-<!--   -->
-</a>
-<h3>Method Detail</h3>
-<a id="orderMethods(org.junit.jupiter.api.MethodOrdererContext)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>orderMethods</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;orderMethods&#8203;(<a href="MethodOrdererContext.html" title="interface in org.junit.jupiter.api">MethodOrdererContext</a>&nbsp;context)</pre>
-<div class="block">Sort the methods encapsulated in the supplied
- <a href="MethodOrdererContext.html" title="interface in org.junit.jupiter.api"><code>MethodOrdererContext</code></a> alphanumerically based on their names
- and formal parameter lists.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="MethodOrderer.html#orderMethods(org.junit.jupiter.api.MethodOrdererContext)">orderMethods</a></code>&nbsp;in interface&nbsp;<code><a href="MethodOrderer.html" title="interface in org.junit.jupiter.api">MethodOrderer</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>context</code> - the <code>MethodOrdererContext</code> containing the
- <a href="MethodDescriptor.html" title="interface in org.junit.jupiter.api"><code>method descriptors</code></a> to order; never <code>null</code></dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="MethodOrderer.html#getDefaultExecutionMode()"><code>MethodOrderer.getDefaultExecutionMode()</code></a></dd>
-</dl>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 </li>
 </ul>
 </li>
@@ -354,7 +327,7 @@ implements <a href="MethodOrderer.html" title="interface in org.junit.jupiter.ap
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
+<li>Method</li>
 </ul>
 </div>
 <a id="skip.navbar.bottom">

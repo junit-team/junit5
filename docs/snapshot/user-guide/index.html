@@ -2311,13 +2311,13 @@ following built-in <code>MethodOrderer</code> implementations.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Alphanumeric.html">Alphanumeric</a></code>: sorts test methods <em>alphanumerically</em> based on their names and formal
-parameter lists.</p>
-</li>
-<li>
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a></code>: sorts test methods <em>alphanumerically</em> based on their display names (see
 <a href="#writing-tests-display-name-generator-precedence-rules">display name generation
 precedence rules</a>)</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html">MethodName</a></code>: sorts test methods <em>alphanumerically</em> based on their method name and formal
+parameter lists.</p>
 </li>
 <li>
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">OrderAnnotation</a></code>: sorts test methods <em>numerically</em> based on values specified via the
@@ -2326,6 +2326,10 @@ precedence rules</a>)</p>
 <li>
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Random.html">Random</a></code>: orders test methods <em>pseudo-randomly</em> and supports configuration of a custom
 <em>seed</em>.</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Alphanumeric.html">Alphanumeric</a></code>: sorts test methods <em>alphanumerically</em> based on their names and formal
+parameter lists. <strong>Deprecated in favor of <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html">MethodName</a></code>. Will be removed in 6.0</strong></p>
 </li>
 </ul>
 </div>
@@ -9297,6 +9301,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodName</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodOrdererContext</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
 </tr>
@@ -9790,6 +9799,11 @@ since such APIs will likely be removed in an upcoming release.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Alphanumeric</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.commons.util</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BlacklistedExceptions</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.7</code></p></td>
@@ -10079,7 +10093,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-07-13 15:09:29 UTC
+Last updated 2020-07-13 15:36:01 UTC
 </div>
 </div>
 <style>
