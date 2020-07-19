@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -643,7 +643,7 @@ class ParallelExecutionIntegrationTests {
 			throws InterruptedException {
 		int value = sharedResource.incrementAndGet();
 		countDownLatch.countDown();
-		countDownLatch.await(1, SECONDS);
+		countDownLatch.await(100, MILLISECONDS);
 		return value;
 	}
 
