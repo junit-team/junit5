@@ -74,6 +74,8 @@ on GitHub.
 * `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution conditions.
 * Add `MethodOrderer.MethodName` to replace `MethodOrderer.Alphanumeric` with the exact
   same functionality but a more descriptive name.
+* `assertTimeoutPreemptively` in `Assertions` now reports the stacktrace of the timed out
+  thread in the cause of the `AssertionFailedError`.
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage
