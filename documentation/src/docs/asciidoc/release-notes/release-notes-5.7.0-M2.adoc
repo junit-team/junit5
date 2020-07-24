@@ -56,6 +56,8 @@ on GitHub.
 * Registered `TestInstancePreDestroyCallback` extensions are now always called if an
   instance of a test class was created, regardless whether any registered
   `TestInstancePostProcessor` extension threw an exception.
+* Disabled `@TestTemplate` methods (e.g. `@ParameterizedTest` and `@RepeatedTest` methods)
+  are now reported to registered `TestWatcher` extensions.
 
 ==== Deprecations and Breaking Changes
 
