@@ -95,56 +95,16 @@ In multi-line bullet point entries, subsequent lines should be indented.
 - Insert a blank line before at-clauses/tags.
 - Favor `{@code foo}` over `<code>foo</code>`.
 - Favor literals (e.g., `{@literal @}`) over HTML entities.
-- New classes should have the JavaDoc that describes the class
-- New classes should have `@since ...` annotation  
+- New classes and methods should have `@since ...` annotation  
 - Use `@since 5.0` instead of `@since 5.0.0`.
 - Do not use `@author` tags. Instead, contributors are listed on [GitHub](https://github.com/junit-team/junit5/graphs/contributors). 
-- Do not use verbs in third person form (use "Get" instead of "Gets" for example). 
+- Do not use verbs in third person form (e.g. use "Discover tests..." instead of "Discover tests..." 
+  in the first sentence describing a method). 
 
 #### JavaDoc Examples
 
-Below is an example of a standard Java-Doc for method `Optional<AnnotatedElement> getElement()`: 
-
-```
-/**
- * Get the {@link AnnotatedElement} corresponding to the current extension
- * context, if available.
- *
- * <p>For example, if the current extension context encapsulates a test
- * class, test method, test factory method, or test template method, the
- * annotated element will be the corresponding {@link Class} or {@link Method}
- * reference.
- *
- * <p>Favor this method over more specific methods whenever the
- * {@code AnnotatedElement} API suits the task at hand &mdash; for example,
- * when looking up annotations regardless of concrete element type.
- *
- * @return an {@code Optional} containing the {@code AnnotatedElement};
- * never {@code null} but potentially empty
- * @see #getTestClass()
- * @see #getTestMethod()
- */
-``` 
-
-Another example that shows the JavaDoc for ParameterContext interface: 
-
-```
-/**
- * {@code ParameterContext} encapsulates the <em>context</em> in which an
- * {@link #getDeclaringExecutable Executable} will be invoked for a given
- * {@link #getParameter Parameter}.
- *
- * <p>A {@code ParameterContext} is used to support parameter resolution via
- * a {@link ParameterResolver}.
- *
- * @since 5.0
- * @see ParameterResolver
- * @see java.lang.reflect.Parameter
- * @see java.lang.reflect.Executable
- * @see java.lang.reflect.Method
- * @see java.lang.reflect.Constructor
- */
-```
+See [here](java\org\junit\jupiter\api\extension\ExtensionContext.java) and 
+[here](java\org\junit\jupiter\api\extension\ParameterContext.java) for example javadoc
 
 
 ### Tests
