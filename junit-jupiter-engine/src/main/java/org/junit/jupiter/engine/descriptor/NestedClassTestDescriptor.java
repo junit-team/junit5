@@ -30,6 +30,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * {@link TestDescriptor} for tests based on nested (but not static) Java classes.
@@ -76,12 +77,13 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 
 	@Override
 	protected TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ExtensionRegistrar registrar, ExtensionContext extensionContext) {
+			ExtensionRegistry registry, ExtensionRegistrar registrar, ExtensionContext extensionContext,
+			ThrowableCollector throwableCollector) {
 
 		// Extensions registered for nested classes and below are not to be used for instantiating and initializing outer classes
 		ExtensionRegistry extensionRegistryForOuterInstanceCreation = parentExecutionContext.getExtensionRegistry();
 		TestInstances outerInstances = parentExecutionContext.getTestInstancesProvider().getTestInstances(
-			extensionRegistryForOuterInstanceCreation, registrar);
+			extensionRegistryForOuterInstanceCreation, registrar, throwableCollector);
 		return instantiateTestClass(Optional.of(outerInstances), registry, extensionContext);
 	}
 

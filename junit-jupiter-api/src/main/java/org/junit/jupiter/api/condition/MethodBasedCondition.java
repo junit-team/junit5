@@ -27,6 +27,9 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
+/**
+ * @since 5.7
+ */
 abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCondition {
 
 	private final Class<A> annotationType;
@@ -40,29 +43,27 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 		this.customDisabledReason = customDisabledReason;
 	}
 
-	protected abstract boolean isEnabled(boolean methodResult);
-
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<A> annotation = findAnnotation(context.getElement(), annotationType);
+		Optional<A> annotation = findAnnotation(context.getElement(), this.annotationType);
 		return annotation //
-				.map(methodName) //
+				.map(this.methodName) //
 				.map(methodName -> getConditionMethod(methodName, context)) //
-				.map(method -> (boolean) invokeMethod(method, context)) //
+				.map(method -> invokeConditionMethod(method, context)) //
 				.map(methodResult -> buildConditionEvaluationResult(methodResult, annotation.get())) //
-				.orElse(enabledByDefault());
+				.orElseGet(this::enabledByDefault);
 	}
 
-	private Method getConditionMethod(String methodName, ExtensionContext context) {
-		if (!methodName.contains("#")) {
-			return findMethod(context.getRequiredTestClass(), methodName);
+	private Method getConditionMethod(String fullyQualifiedMethodName, ExtensionContext context) {
+		if (!fullyQualifiedMethodName.contains("#")) {
+			return findMethod(context.getRequiredTestClass(), fullyQualifiedMethodName);
 		}
-		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(methodName);
+		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
 		String className = methodParts[0];
-		String methodName1 = methodParts[1];
+		String methodName = methodParts[1];
 		Class<?> clazz = ReflectionUtils.tryToLoadClass(className).getOrThrow(
 			cause -> new JUnitException(format("Could not load class [%s]", className), cause));
-		return findMethod(clazz, methodName1);
+		return findMethod(clazz, methodName);
 	}
 
 	private Method findMethod(Class<?> clazz, String methodName) {
@@ -70,20 +71,20 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 				.orElseGet(() -> ReflectionUtils.getRequiredMethod(clazz, methodName, ExtensionContext.class));
 	}
 
-	private Object invokeMethod(Method method, ExtensionContext context) {
+	private boolean invokeConditionMethod(Method method, ExtensionContext context) {
 		Preconditions.condition(method.getReturnType() == boolean.class,
-			() -> format("method [%s] should return a boolean", method.getName()));
-		Preconditions.condition(areParametersSupported(method),
-			() -> format("method [%s] should take either an ExtensionContext or no parameters", method.getName()));
+			() -> format("Method [%s] should return a boolean", method.getName()));
+		Preconditions.condition(acceptsExtensionContextArgument(method),
+			() -> format("Method [%s] should accept either an ExtensionContext or no arguments", method.getName()));
 
 		Object testInstance = context.getTestInstance().orElse(null);
 		if (method.getParameterCount() == 0) {
-			return ReflectionUtils.invokeMethod(method, testInstance);
+			return (boolean) ReflectionUtils.invokeMethod(method, testInstance);
 		}
-		return ReflectionUtils.invokeMethod(method, testInstance, context);
+		return (boolean) ReflectionUtils.invokeMethod(method, testInstance, context);
 	}
 
-	private boolean areParametersSupported(Method method) {
+	private boolean acceptsExtensionContextArgument(Method method) {
 		switch (method.getParameterCount()) {
 			case 0:
 				return true;
@@ -95,21 +96,22 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 	}
 
 	private ConditionEvaluationResult buildConditionEvaluationResult(boolean methodResult, A annotation) {
-		String defaultReason = format("Condition provided in @%s evaluates to %s", annotationType.getSimpleName(),
+		String defaultReason = format("Condition provided in @%s evaluates to %s", this.annotationType.getSimpleName(),
 			methodResult);
 		if (isEnabled(methodResult)) {
 			return enabled(defaultReason);
 		}
-		String customReason = customDisabledReason.apply(annotation);
+		String customReason = this.customDisabledReason.apply(annotation);
 		if (customReason.isEmpty()) {
 			return disabled(defaultReason);
 		}
 		return disabled(customReason);
 	}
 
+	protected abstract boolean isEnabled(boolean methodResult);
+
 	private ConditionEvaluationResult enabledByDefault() {
-		String reason = String.format("@%s is not present", annotationType.getSimpleName());
-		return enabled(reason);
+		return enabled(format("@%s is not present", this.annotationType.getSimpleName()));
 	}
 
 }

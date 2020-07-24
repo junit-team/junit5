@@ -40,8 +40,8 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -123,7 +123,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			handlerInvoker.invoke(exceptionHandlers.remove(0), throwable);
 		}
 		catch (Throwable handledThrowable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(handledThrowable);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(handledThrowable);
 			invokeExecutionExceptionHandlers(exceptionHandlers, handledThrowable, handlerInvoker);
 		}
 	}

@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import junit.runner.Version;
 
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 
 /**
  * @since 5.4
@@ -69,7 +69,7 @@ class JUnit4VersionCheck {
 			return versionSupplier.get();
 		}
 		catch (Throwable t) {
-			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			throw new JUnitException("Failed to read version of junit:junit", t);
 		}
 	}

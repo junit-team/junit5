@@ -36,6 +36,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
+import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
 import org.junit.jupiter.api.MethodOrdererContext;
@@ -85,7 +86,29 @@ class OrderedMethodTests {
 		// on the class names.
 		assertThat(testClass.getSuperclass().getName()).isGreaterThan(testClass.getName());
 
-		var tests = executeTestsInParallel(AlphanumericTestCase.class);
+		var tests = executeTestsInParallel(MethodNameTestCase.class);
+
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence).containsExactly("$()", "AAA()", "AAA(org.junit.jupiter.api.TestInfo)",
+			"AAA(org.junit.jupiter.api.TestReporter)", "ZZ_Top()", "___()", "a1()", "a2()", "b()", "c()", "zzz()");
+		assertThat(threadNames).hasSize(1);
+	}
+
+	@Test
+	void methodName() {
+		Class<?> testClass = MethodNameTestCase.class;
+
+		// The name of the base class MUST start with a letter alphanumerically
+		// greater than "A" so that BaseTestCase comes after AlphanumericTestCase
+		// if methods are sorted by class name for the fallback ordering if two
+		// methods have the same name but different parameter lists. Note, however,
+		// that Alphanumeric actually does not order methods like that, but we want
+		// this check to remain in place to ensure that the ordering does not rely
+		// on the class names.
+		assertThat(testClass.getSuperclass().getName()).isLessThan(testClass.getName());
+
+		var tests = executeTestsInParallel(MethodNameTestCase.class);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -333,6 +356,59 @@ class OrderedMethodTests {
 
 	}
 
+	@TestMethodOrder(MethodName.class)
+	static class MethodNameTestCase extends BaseTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			var method = testInfo.getTestMethod().get();
+			var signature = String.format("%s(%s)", method.getName(),
+				ClassUtils.nullSafeToString(method.getParameterTypes()));
+
+			callSequence.add(signature);
+			threadNames.add(Thread.currentThread().getName());
+		}
+
+		@TestFactory
+		DynamicTest b() {
+			return dynamicTest("dynamic", () -> {
+			});
+		}
+
+		@Test
+		void $() {
+		}
+
+		@Test
+		void ___() {
+		}
+
+		@Test
+		void AAA(TestReporter testReporter) {
+		}
+
+		@Test
+		void AAA(TestInfo testInfo) {
+		}
+
+		@Test
+		void ZZ_Top() {
+		}
+
+		@Test
+		void a1() {
+		}
+
+		@Test
+		void a2() {
+		}
+
+		@RepeatedTest(1)
+		void zzz() {
+		}
+	}
+
+	@SuppressWarnings("deprecation")
 	@TestMethodOrder(Alphanumeric.class)
 	static class AlphanumericTestCase extends BaseTestCase {
 

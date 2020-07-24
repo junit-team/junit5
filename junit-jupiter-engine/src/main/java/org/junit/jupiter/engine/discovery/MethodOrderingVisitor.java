@@ -29,8 +29,8 @@ import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
@@ -54,7 +54,7 @@ class MethodOrderingVisitor implements TestDescriptor.Visitor {
 				orderContainedMethods(classBasedTestDescriptor, classBasedTestDescriptor.getTestClass());
 			}
 			catch (Throwable t) {
-				BlacklistedExceptions.rethrowIfBlacklisted(t);
+				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 				logger.error(t, () -> "Failed to order methods for " + classBasedTestDescriptor.getTestClass());
 			}
 		}

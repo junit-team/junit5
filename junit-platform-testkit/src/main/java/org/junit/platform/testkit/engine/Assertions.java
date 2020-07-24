@@ -15,9 +15,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
 
@@ -45,7 +45,7 @@ class Assertions {
 						return null;
 					}
 					catch (Throwable t) {
-						BlacklistedExceptions.rethrowIfBlacklisted(t);
+						UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 						return t;
 					}
 				}) //

@@ -286,9 +286,9 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	@DisplayName("does not swallow blacklisted exceptions")
-	void doesNotSwallowBlacklistedExceptions() {
-		assertThrows(OutOfMemoryError.class, () -> executeTestsForClass(BlacklistedExceptionTestCase.class));
+	@DisplayName("does not swallow unrecoverable exceptions")
+	void doesNotSwallowUnrecoverableExceptions() {
+		assertThrows(OutOfMemoryError.class, () -> executeTestsForClass(UnrecoverableExceptionTestCase.class));
 	}
 
 	@Test
@@ -474,7 +474,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class BlacklistedExceptionTestCase {
+	static class UnrecoverableExceptionTestCase {
 		@Test
 		@Timeout(value = 1, unit = NANOSECONDS)
 		void test() {

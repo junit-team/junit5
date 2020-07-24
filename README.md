@@ -92,6 +92,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
   - `junit-platform-console` (`org.junit.platform.console`)
   - `junit-platform-console-standalone` (*N/A*)
   - `junit-platform-engine` (`org.junit.platform.engine`)
+  - `junit-platform-jfr` (`org.junit.platform.jfr`)
   - `junit-platform-launcher` (`org.junit.platform.launcher`)
   - `junit-platform-reporting` (`org.junit.platform.reporting`)
   - `junit-platform-runner` (`org.junit.platform.runner`)
@@ -124,7 +125,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5
-[CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
+[CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/

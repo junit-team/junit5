@@ -16,7 +16,7 @@ package org.junit.jupiter.migrationsupport.rules;
 class FailAfterAllHelper {
 
 	static void fail() {
-		// hack: use this blacklisted exception to fail the build, since all others would be swallowed...
+		// hack: use this unrecoverable exception to fail the build, since all others would be swallowed...
 		throw new OutOfMemoryError("a postcondition was violated");
 	}
 

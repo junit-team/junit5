@@ -45,6 +45,8 @@ class MethodSourceTests extends AbstractTestSourceTests {
 		assertThat(source.getClassName()).isEqualTo(getClass().getName());
 		assertThat(source.getMethodName()).isEqualTo(testMethod.getName());
 		assertThat(source.getMethodParameterTypes()).isEqualTo(String.class.getName());
+		assertThat(source.getJavaClass()).isEqualTo(getClass());
+		assertThat(source.getJavaMethod()).isEqualTo(testMethod);
 	}
 
 	@Test
@@ -205,6 +207,66 @@ class MethodSourceTests extends AbstractTestSourceTests {
 		assertNotEquals(MethodSource.from(m1).hashCode(), MethodSource.from(m2).hashCode());
 	}
 
+	@Test
+	void getJavaClassFromString() {
+		MethodSource source = MethodSource.from(getClass().getName(), "method1");
+
+		assertThat(source.getJavaClass()).isEqualTo(getClass());
+	}
+
+	@Test
+	void getJavaClassShouldThrowExceptionIfClassNotFound() {
+		MethodSource source = MethodSource.from(getClass().getName() + "X", "method1");
+
+		assertThrows(PreconditionViolationException.class, source::getJavaClass);
+	}
+
+	@Test
+	void getJavaMethodShouldReturnGivenMethodIfOverloadExists() throws Exception {
+		Method testMethod = getMethod("method3");
+		MethodSource source = MethodSource.from(testMethod);
+
+		assertThat(source.getJavaMethod()).isEqualTo(testMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldFindVoidMethod() throws Exception {
+		Method testMethod = getClass().getDeclaredMethod("methodVoid");
+		MethodSource source = MethodSource.from(getClass().getName(), testMethod.getName());
+
+		assertThat(source.getJavaMethod()).isEqualTo(testMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldFindMethodWithParameter() throws Exception {
+		Method testMethod = getClass().getDeclaredMethod("method3", Integer.TYPE);
+		MethodSource source = MethodSource.from(getClass().getName(), testMethod.getName(),
+			testMethod.getParameterTypes());
+
+		assertThat(source.getJavaMethod()).isEqualTo(testMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldThrowExceptionIfParameterTypesAreNotSupplied() {
+		MethodSource source = MethodSource.from(getClass().getName(), "method3");
+
+		assertThrows(PreconditionViolationException.class, source::getJavaMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldThrowExceptionIfParameterTypesDoNotMatch() {
+		MethodSource source = MethodSource.from(getClass().getName(), "method3", Double.TYPE);
+
+		assertThrows(PreconditionViolationException.class, source::getJavaMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldThrowExceptionIfMethodDoesNotExist() {
+		MethodSource source = MethodSource.from(getClass().getName(), "methodX");
+
+		assertThrows(PreconditionViolationException.class, source::getJavaMethod);
+	}
+
 	private Method getMethod(String name) throws Exception {
 		return getClass().getDeclaredMethod(name, String.class);
 	}
@@ -215,6 +277,18 @@ class MethodSourceTests extends AbstractTestSourceTests {
 
 	@SuppressWarnings("unused")
 	void method2(String text) {
+	}
+
+	@SuppressWarnings("unused")
+	void method3(String text) {
+	}
+
+	@SuppressWarnings("unused")
+	void method3(int number) {
+	}
+
+	@SuppressWarnings("unused")
+	void methodVoid() {
 	}
 
 }

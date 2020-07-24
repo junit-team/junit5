@@ -2,16 +2,16 @@ import com.gradle.scan.plugin.internal.api.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
 	plugins {
-		id("com.gradle.enterprise") version "3.3.1"
-		id("net.nemerosa.versioning") version "2.12.1"
-		id("com.github.ben-manes.versions") version "0.28.0"
-		id("com.diffplug.gradle.spotless") version "3.28.1"
-		id("org.ajoberstar.git-publish") version "2.1.3"
-		kotlin("jvm") version "1.3.71"
-		id("org.asciidoctor.jvm.convert") version "3.2.0"
-		id("org.asciidoctor.jvm.pdf") version "3.2.0"
-		id("me.champeau.gradle.jmh") version "0.5.0"
-		id("io.spring.nohttp") version "0.0.4.RELEASE"
+		id("com.gradle.enterprise") version settings.extra["gradle.enterprise.plugin.version"] as String
+		id("net.nemerosa.versioning") version settings.extra["versioning.plugin.version"] as String
+		id("com.github.ben-manes.versions") version settings.extra["versions.plugin.version"] as String
+		id("com.diffplug.gradle.spotless") version settings.extra["spotless.plugin.version"] as String
+		id("org.ajoberstar.git-publish") version settings.extra["git-publish.plugin.version"] as String
+		kotlin("jvm") version settings.extra["kotlin.plugin.version"] as String
+		id("org.asciidoctor.jvm.convert") version settings.extra["asciidoctor.plugin.version"] as String
+		id("org.asciidoctor.jvm.pdf") version settings.extra["asciidoctor.plugin.version"] as String
+		id("me.champeau.gradle.jmh") version settings.extra["jmh.plugin.version"] as String
+		id("io.spring.nohttp") version settings.extra["nohttp.plugin.version"] as String
 	}
 }
 
@@ -75,6 +75,7 @@ include("junit-platform-commons")
 include("junit-platform-console")
 include("junit-platform-console-standalone")
 include("junit-platform-engine")
+include("junit-platform-jfr")
 include("junit-platform-launcher")
 include("junit-platform-reporting")
 include("junit-platform-runner")

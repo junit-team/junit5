@@ -14,7 +14,6 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.commons.util.ClassFileVisitor.CLASS_FILE_SUFFIX;
 
 import java.io.IOException;
@@ -186,7 +185,7 @@ class ClasspathScanner {
 	}
 
 	private void handleThrowable(Path classFile, Throwable throwable) {
-		rethrowIfBlacklisted(throwable);
+		UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 		logGenericFileProcessingException(classFile, throwable);
 	}
 
@@ -196,7 +195,7 @@ class ClasspathScanner {
 				classFile.toAbsolutePath(), fullyQualifiedClassName));
 		}
 		catch (Throwable t) {
-			rethrowIfBlacklisted(t);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			ex.addSuppressed(t);
 			logGenericFileProcessingException(classFile, ex);
 		}

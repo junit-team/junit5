@@ -606,7 +606,7 @@ class HierarchicalTestExecutorTests {
 	}
 
 	/**
-	 * Verifies support for blacklisted exceptions.
+	 * Verifies support for unrecoverable exceptions.
 	 */
 	@Test
 	void outOfMemoryErrorInShouldBeSkipped() throws Exception {
@@ -620,7 +620,7 @@ class HierarchicalTestExecutorTests {
 	}
 
 	/**
-	 * Verifies support for blacklisted exceptions.
+	 * Verifies support for unrecoverable exceptions.
 	 */
 	@Test
 	void outOfMemoryErrorInLeafExecution() {

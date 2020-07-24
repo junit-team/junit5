@@ -99,9 +99,18 @@ public enum JRE {
 	JAVA_15,
 
 	/**
+	 * Java 16.
+	 *
+	 * @since 5.7
+	 */
+	@API(status = STABLE, since = "5.7")
+	JAVA_16,
+
+	/**
 	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
 	 * {@link #JAVA_10}, {@link #JAVA_11}, {@link #JAVA_12},
-	 * {@link #JAVA_13}, {@link #JAVA_14}, or {@link #JAVA_15}.
+	 * {@link #JAVA_13}, {@link #JAVA_14}, {@link #JAVA_15}, or
+	 * {@link #JAVA_16}.
 	 */
 	OTHER;
 
@@ -145,6 +154,8 @@ public enum JRE {
 					return JAVA_14;
 				case 15:
 					return JAVA_15;
+				case 16:
+					return JAVA_16;
 				default:
 					return OTHER;
 			}

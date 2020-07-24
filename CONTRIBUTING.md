@@ -126,3 +126,20 @@ In multi-line bullet point entries, subsequent lines should be indented.
   - _config_ (JUL: `CONFIG`, Log4J: `CONFIG`): information related to configuration of the system (Example: `ServiceLoaderTestEngineRegistry` logs IDs of discovered engines)
   - _debug_ (JUL: `FINE`, Log4J: `DEBUG`)
   - _trace_ (JUL: `FINER`, Log4J: `TRACE`)
+
+### Deprecation
+
+Publicly available interfaces, classes and methods have a defined lifecycle
+which is described in detail in the [User Guide](https://junit.org/junit5/docs/current/user-guide/#api-evolution).
+This process is using the `@API` annotation from [API Guardian](https://github.com/apiguardian-team/apiguardian).
+It also describes the deprecation process followed for API items.
+
+To deprecate an item:
+- Update the `@API.status` to `DEPRECATED`.
+- Update `@API.since`. Please note `since` describes the version when the
+  status was changed and not the introduction of the element.
+- Add the `@Deprecated` Java annotation on the item.
+- Add the `@deprecated` JavaDoc tag to describe the deprecation, and refer to
+  an eventual replacement.
+- If the item is used in existing code, add `@SuppressWarnings("deprecation")`
+  to make the build pass.

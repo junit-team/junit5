@@ -65,10 +65,14 @@ class ApiReportGenerator {
 	ApiReport generateReport(String... packages) {
 		final Logger logger = LoggerFactory.getLogger(ApiReportGenerator.class);
 		final String EOL = System.lineSeparator();
+		ClassGraph classGraph = new ClassGraph() //
+				.overrideClasspath(System.getProperty("api.classpath")) //
+				.whitelistPackages(packages) //
+				.disableNestedJarScanning() //
+				.enableAnnotationInfo(); //
 
 		// Scan packages
-		try (ScanResult scanResult = new ClassGraph().whitelistPackages(
-			packages).disableNestedJarScanning().enableAnnotationInfo().scan()) {
+		try (ScanResult scanResult = classGraph.scan()) {
 
 			// Collect names
 			ClassInfoList classesWithApiAnnotation = scanResult.getClassesWithAnnotation(API.class.getCanonicalName());

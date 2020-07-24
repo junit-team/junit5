@@ -44,7 +44,7 @@ public final class ClassLoaderUtils {
 			}
 		}
 		catch (Throwable t) {
-			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			/* otherwise ignore */
 		}
 		return ClassLoader.getSystemClassLoader();
@@ -75,7 +75,7 @@ public final class ClassLoaderUtils {
 				return Optional.ofNullable(loader.getResource(name));
 			}
 			catch (Throwable t) {
-				BlacklistedExceptions.rethrowIfBlacklisted(t);
+				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 				/* otherwise ignore */
 			}
 		}

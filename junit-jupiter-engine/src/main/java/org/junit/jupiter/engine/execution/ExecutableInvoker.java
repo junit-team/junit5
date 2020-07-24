@@ -33,9 +33,9 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 
 /**
  * {@code ExecutableInvoker} encapsulates the invocation of a
@@ -227,7 +227,7 @@ public class ExecutableInvoker {
 			throw ex;
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 
 			String message = String.format("Failed to resolve parameter [%s] in %s [%s]",
 				parameterContext.getParameter(), asLabel(executable), executable.toGenericString());

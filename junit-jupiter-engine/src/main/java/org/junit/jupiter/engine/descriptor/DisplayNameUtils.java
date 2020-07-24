@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
@@ -56,6 +57,11 @@ final class DisplayNameUtils {
 	 * Pre-defined display name generator instance replacing underscores.
 	 */
 	private static final DisplayNameGenerator replaceUnderscoresGenerator = new ReplaceUnderscores();
+
+	/**
+	 * Pre-defined display name generator instance producing indicative sentences.
+	 */
+	private static final DisplayNameGenerator indicativeSentencesGenerator = new IndicativeSentences();
 
 	static String determineDisplayName(AnnotatedElement element, Supplier<String> displayNameSupplier) {
 		Preconditions.notNull(element, "Annotated element must not be null");
@@ -107,6 +113,9 @@ final class DisplayNameUtils {
 					}
 					if (displayNameGeneratorClass == ReplaceUnderscores.class) {
 						return replaceUnderscoresGenerator;
+					}
+					if (displayNameGeneratorClass == IndicativeSentences.class) {
+						return indicativeSentencesGenerator;
 					}
 					return ReflectionUtils.newInstance(displayNameGeneratorClass);
 				}) //

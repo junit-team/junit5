@@ -79,18 +79,22 @@ public class EnabledIfIntegrationTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("unused")
 	private static boolean staticMethodThatReturnsTrue() {
 		return true;
 	}
 
+	@SuppressWarnings("unused")
 	private static boolean staticMethodThatReturnsFalse() {
 		return false;
 	}
 
+	@SuppressWarnings("unused")
 	private boolean methodThatReturnsTrue() {
 		return true;
 	}
 
+	@SuppressWarnings("unused")
 	private boolean methodThatReturnsFalse() {
 		return false;
 	}

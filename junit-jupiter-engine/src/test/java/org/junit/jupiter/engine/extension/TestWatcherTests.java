@@ -42,7 +42,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -82,10 +82,10 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 		ArrayList<String> expectedMethods = new ArrayList<>(testWatcherMethodNames);
 		// Since the @RepeatedTest container is disabled, the individual invocations never occur.
-		expectedMethods.remove("testDisabled");
 		assertThat(TrackingTestWatcher.results.keySet()).containsAll(expectedMethods);
 		// 2 => number of iterations declared in @RepeatedTest(2).
-		TrackingTestWatcher.results.values().forEach(uidList -> assertEquals(2, uidList.size()));
+		TrackingTestWatcher.results.forEach(
+			(methodName, uidList) -> assertEquals("testDisabled".endsWith(methodName) ? 1 : 2, uidList.size()));
 	}
 
 	@Test
@@ -107,7 +107,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		assertCommonStatistics(executeTestsForClass(ExceptionThrowingTestWatcherTestCase.class));
 
 		// @formatter:off
-		long exceptionCount = logRecordListener.stream(TestMethodTestDescriptor.class, Level.WARNING)
+		long exceptionCount = logRecordListener.stream(MethodBasedTestDescriptor.class, Level.WARNING)
 				.map(LogRecord::getThrown)
 				.filter(throwable -> throwable instanceof JUnitException)
 				.filter(throwable -> testWatcherMethodNames.contains(throwable.getStackTrace()[0].getMethodName()))

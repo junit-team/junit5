@@ -30,16 +30,6 @@ import org.junit.runner.RunWith;
  * -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
  * </pre>
  *
- * <h3>Disable Nashorn Warnings</h3>
- *
- * <p>In able to disable warnings about the Nashorn JavaScript engine being
- * removed in a future JDK release, you must set the following system property before running any tests &mdash; for
- * example, in <em>Run Configurations</em> in Eclipse.
- *
- * <pre class="code">
- * -Dnashorn.args=--no-deprecation-warning
- * </pre>
- *
  * @since 5.0
  */
 @RunWith(JUnitPlatform.class)

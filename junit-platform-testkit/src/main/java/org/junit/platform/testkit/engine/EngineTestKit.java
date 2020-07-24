@@ -372,7 +372,6 @@ public final class EngineTestKit {
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
 		 * @deprecated Please use {@link #filters(Filter...)} instead.
-		 * instead.
 		 */
 		@Deprecated
 		@API(status = DEPRECATED, since = "1.7")

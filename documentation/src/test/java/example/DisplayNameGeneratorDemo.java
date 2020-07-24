@@ -11,11 +11,11 @@
 package example;
 
 // tag::user_guide[]
-import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -40,7 +40,7 @@ class DisplayNameGeneratorDemo {
 	}
 
 	@Nested
-	@DisplayNameGeneration(IndicativeSentences.class)
+	@IndicativeSentencesGeneration(separator = " -> ", generator = DisplayNameGenerator.ReplaceUnderscores.class)
 	class A_year_is_a_leap_year {
 
 		@Test
@@ -50,26 +50,6 @@ class DisplayNameGeneratorDemo {
 		@ParameterizedTest(name = "Year {0} is a leap year.")
 		@ValueSource(ints = { 2016, 2020, 2048 })
 		void if_it_is_one_of_the_following_years(int year) {
-		}
-
-	}
-
-	static class IndicativeSentences extends DisplayNameGenerator.ReplaceUnderscores {
-
-		@Override
-		public String generateDisplayNameForClass(Class<?> testClass) {
-			return super.generateDisplayNameForClass(testClass);
-		}
-
-		@Override
-		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
-			return super.generateDisplayNameForNestedClass(nestedClass) + "...";
-		}
-
-		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			String name = testClass.getSimpleName() + ' ' + testMethod.getName();
-			return name.replace('_', ' ') + '.';
 		}
 
 	}

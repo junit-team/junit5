@@ -81,10 +81,10 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		ConvertExceptionHandler.afterEachCalls = 0;
 		ConvertExceptionHandler.afterAllCalls = 0;
 
-		BlacklistedExceptionHandler.beforeAllCalls = 0;
-		BlacklistedExceptionHandler.beforeEachCalls = 0;
-		BlacklistedExceptionHandler.afterEachCalls = 0;
-		BlacklistedExceptionHandler.afterAllCalls = 0;
+		UnrecoverableExceptionHandler.beforeAllCalls = 0;
+		UnrecoverableExceptionHandler.beforeEachCalls = 0;
+		UnrecoverableExceptionHandler.afterEachCalls = 0;
+		UnrecoverableExceptionHandler.afterAllCalls = 0;
 
 		ShouldNotBeCalledHandler.beforeAllCalls = 0;
 		ShouldNotBeCalledHandler.beforeEachCalls = 0;
@@ -229,59 +229,60 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 	}
 
 	@Test
-	void blacklistedExceptionsAreNotPropagatedInBeforeAll() {
+	void unrecoverableExceptionsAreNotPropagatedInBeforeAll() {
 		throwExceptionBeforeAll = true;
 		throwExceptionBeforeEach = false;
 		throwExceptionAfterEach = false;
 		throwExceptionAfterAll = false;
 
-		boolean blackListedExceptionThrown = executeThrowingOutOfMemoryException();
-		assertTrue(blackListedExceptionThrown, "Blacklisted Exception should be thrown");
-		assertEquals(1, BlacklistedExceptionHandler.beforeAllCalls, "Exception should be handled in @BeforeAll");
+		boolean unrecoverableExceptionThrown = executeThrowingOutOfMemoryException();
+		assertTrue(unrecoverableExceptionThrown, "Unrecoverable Exception should be thrown");
+		assertEquals(1, UnrecoverableExceptionHandler.beforeAllCalls, "Exception should be handled in @BeforeAll");
 		assertEquals(0, ShouldNotBeCalledHandler.beforeAllCalls, "Exception should not propagate in @BeforeAll");
 	}
 
 	@Test
-	void blacklistedExceptionsAreNotPropagatedInBeforeEach() {
+	void unrecoverableExceptionsAreNotPropagatedInBeforeEach() {
 		throwExceptionBeforeAll = false;
 		throwExceptionBeforeEach = true;
 		throwExceptionAfterEach = false;
 		throwExceptionAfterAll = false;
 
-		boolean blackListedExceptionThrown = executeThrowingOutOfMemoryException();
-		assertTrue(blackListedExceptionThrown, "Blacklisted Exception should be thrown");
-		assertEquals(1, BlacklistedExceptionHandler.beforeEachCalls, "Exception should be handled in @BeforeEach");
+		boolean unrecoverableExceptionThrown = executeThrowingOutOfMemoryException();
+		assertTrue(unrecoverableExceptionThrown, "Unrecoverable Exception should be thrown");
+		assertEquals(1, UnrecoverableExceptionHandler.beforeEachCalls, "Exception should be handled in @BeforeEach");
 		assertEquals(0, ShouldNotBeCalledHandler.beforeEachCalls, "Exception should not propagate in @BeforeEach");
 	}
 
 	@Test
-	void blacklistedExceptionsAreNotPropagatedInAfterEach() {
+	void unrecoverableExceptionsAreNotPropagatedInAfterEach() {
 		throwExceptionBeforeAll = false;
 		throwExceptionBeforeEach = false;
 		throwExceptionAfterEach = true;
 		throwExceptionAfterAll = false;
 
-		boolean blackListedExceptionThrown = executeThrowingOutOfMemoryException();
-		assertTrue(blackListedExceptionThrown, "Blacklisted Exception should be thrown");
-		assertEquals(1, BlacklistedExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
+		boolean unrecoverableExceptionThrown = executeThrowingOutOfMemoryException();
+		assertTrue(unrecoverableExceptionThrown, "Unrecoverable Exception should be thrown");
+		assertEquals(1, UnrecoverableExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
 		assertEquals(0, ShouldNotBeCalledHandler.afterEachCalls, "Exception should not propagate in @AfterEach");
 	}
 
 	@Test
-	void blacklistedExceptionsAreNotPropagatedInAfterAll() {
+	void unrecoverableExceptionsAreNotPropagatedInAfterAll() {
 		throwExceptionBeforeAll = false;
 		throwExceptionBeforeEach = false;
 		throwExceptionAfterEach = false;
 		throwExceptionAfterAll = true;
 
-		boolean blackListedExceptionThrown = executeThrowingOutOfMemoryException();
-		assertTrue(blackListedExceptionThrown, "Blacklisted Exception should be thrown");
-		assertEquals(1, BlacklistedExceptionHandler.afterAllCalls, "Exception should be handled in @AfterAll");
+		boolean unrecoverableExceptionThrown = executeThrowingOutOfMemoryException();
+		assertTrue(unrecoverableExceptionThrown, "Unrecoverable Exception should be thrown");
+		assertEquals(1, UnrecoverableExceptionHandler.afterAllCalls, "Exception should be handled in @AfterAll");
 		assertEquals(0, ShouldNotBeCalledHandler.afterAllCalls, "Exception should not propagate in @AfterAll");
 	}
 
 	private boolean executeThrowingOutOfMemoryException() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(BlacklistedExceptionTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(
+			selectClass(UnrecoverableExceptionTestCase.class)).build();
 		try {
 			executeTests(request);
 		}
@@ -340,8 +341,8 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 	}
 
 	@ExtendWith(ShouldNotBeCalledHandler.class)
-	@ExtendWith(BlacklistedExceptionHandler.class)
-	static class BlacklistedExceptionTestCase extends BaseTestCase {
+	@ExtendWith(UnrecoverableExceptionHandler.class)
+	static class UnrecoverableExceptionTestCase extends BaseTestCase {
 	}
 
 	@ExtendWith(ShouldNotBeCalledHandler.class)
@@ -493,7 +494,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		}
 	}
 
-	static class BlacklistedExceptionHandler implements LifecycleMethodExecutionExceptionHandler {
+	static class UnrecoverableExceptionHandler implements LifecycleMethodExecutionExceptionHandler {
 		static int beforeAllCalls = 0;
 		static int beforeEachCalls = 0;
 		static int afterEachCalls = 0;
@@ -502,28 +503,28 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
 			beforeAllCalls++;
-			handlerCalls.add("BlacklistedExceptionBeforeAll");
+			handlerCalls.add("UnrecoverableExceptionBeforeAll");
 			throw new OutOfMemoryError();
 		}
 
 		@Override
 		public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
 			beforeEachCalls++;
-			handlerCalls.add("BlacklistedExceptionBeforeEach");
+			handlerCalls.add("UnrecoverableExceptionBeforeEach");
 			throw new OutOfMemoryError();
 		}
 
 		@Override
 		public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
 			afterEachCalls++;
-			handlerCalls.add("BlacklistedExceptionAfterEach");
+			handlerCalls.add("UnrecoverableExceptionAfterEach");
 			throw new OutOfMemoryError();
 		}
 
 		@Override
 		public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
 			afterAllCalls++;
-			handlerCalls.add("BlacklistedExceptionAfterAll");
+			handlerCalls.add("UnrecoverableExceptionAfterAll");
 			throw new OutOfMemoryError();
 		}
 	}
