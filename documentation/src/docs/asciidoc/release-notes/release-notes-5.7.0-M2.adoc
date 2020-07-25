@@ -45,8 +45,8 @@ on GitHub.
 * New `getJavaClass()` and `getJavaMethod()` methods in
   `org.junit.platform.engine.support.descriptor.MethodSource`.
 * New module `org.junit.platform.jfr` added. When running on Java 11 or later, it
- provides and registers a `TestExecutionListener` that generates Java Flight Recorder
- events.
+  provides and registers a `TestExecutionListener` that generates Java Flight Recorder
+  events.
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter
