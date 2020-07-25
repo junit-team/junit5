@@ -18,6 +18,6 @@ javaLibrary {
 
 tasks {
 	compileModule {
-		targetCompatibility = "11"
+		options.release.set(11)
 	}
 }

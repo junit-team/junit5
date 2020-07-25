@@ -23,8 +23,7 @@ tasks {
 	}
 
 	named<JavaCompile>(mainRelease9.get().compileJavaTaskName).configure {
-		sourceCompatibility = "9"
-		targetCompatibility = "9"
+		options.release.set(9)
 	}
 
 	named<Checkstyle>("checkstyle${mainRelease9.name.capitalize()}").configure {
