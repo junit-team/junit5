@@ -522,7 +522,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#syntax-rules-for-tags">2.8.1. Syntax Rules for Tags</a></li>
 </ul>
 </li>
-<li><a href="#writing-tests-test-execution-order">2.9. Test Execution Order</a></li>
+<li><a href="#writing-tests-test-execution-order">2.9. Test Execution Order</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-test-execution-order-default">2.9.1. Setting the Default Method Orderer</a></li>
+</ul>
+</li>
 <li><a href="#writing-tests-test-instance-lifecycle">2.10. Test Instance Lifecycle</a>
 <ul class="sectlevel3">
 <li><a href="#writing-tests-test-instance-lifecycle-changing-default">2.10.1. Changing the Default Test Instance Lifecycle</a></li>
@@ -2378,6 +2382,31 @@ order specified via the <code>@Order</code> annotation.</p>
     <span class="o">}</span>
 
 <span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-test-execution-order-default"><a class="anchor" href="#writing-tests-test-execution-order-default"></a>2.9.1. Setting the Default Method Orderer</h4>
+<div class="paragraph">
+<p>You can use the <code>junit.jupiter.testmethod.order.default</code> <a href="#running-tests-config-params">configuration parameter</a> to specify the fully qualified class name of the
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> you would like to use by default. Just like for the orderer configured
+via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestMethodOrder.html">@TestMethodOrder</a></code> annotation, the supplied class has to implement the
+<code>MethodOrderer</code> interface. The default orderer will be used for all tests unless the
+<code>@TestMethodOrder</code> annotation is present on an enclosing test class or test interface.</p>
+</div>
+<div class="paragraph">
+<p>For example, to use the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">OrderAnnotation</a></code> method orderer by default, you should set the
+configuration parameter to the corresponding fully qualified class name (e.g., in
+<code>src/test/resources/junit-platform.properties</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="properties"><span class="py">junit.jupiter.testmethod.order.default</span> <span class="p">=</span> <span class="se">\
+</span>    <span class="s">org.junit.jupiter.api.MethodOrderer$OrderAnnotation</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Similarly, you can specify the fully qualified name of any custom class that implements
+<code>MethodOrderer</code>.</p>
 </div>
 </div>
 </div>
@@ -10093,7 +10122,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-07-24 10:22:53 UTC
+Last updated 2020-07-25 13:17:37 UTC
 </div>
 </div>
 <style>
