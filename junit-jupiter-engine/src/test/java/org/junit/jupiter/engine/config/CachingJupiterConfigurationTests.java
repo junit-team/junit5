@@ -101,7 +101,7 @@ class CachingJupiterConfigurationTests {
 
 	@Test
 	void cachesDefaultTestMethodOrderer() {
-		final Optional<MethodOrderer> methodOrderer = Optional.of(new MethodOrderer.Alphanumeric());
+		final Optional<MethodOrderer> methodOrderer = Optional.of(new MethodOrderer.MethodName());
 		when(delegate.getDefaultTestMethodOrderer()).thenReturn(methodOrderer);
 
 		// call `cache.getDefaultTestMethodOrderer()` twice to verify the delegate method is called only once.
