@@ -98,7 +98,7 @@ In multi-line bullet point entries, subsequent lines should be indented.
 - New classes and methods should have `@since ...` annotation.
 - Use `@since 5.0` instead of `@since 5.0.0`.
 - Do not use `@author` tags. Instead, contributors are listed on [GitHub](https://github.com/junit-team/junit5/graphs/contributors).
-- Do not use verbs in third person form (e.g. use "Discover tests..." instead of "Discover tests...")
+- Do not use verbs in third person form (e.g. use "Discover tests..." instead of "Discovers tests...")
   in the first sentence describing a method.
 
 #### Examples
