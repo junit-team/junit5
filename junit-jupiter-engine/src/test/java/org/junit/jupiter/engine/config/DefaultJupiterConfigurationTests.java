@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.engine.Constants;
@@ -84,6 +85,18 @@ class DefaultJupiterConfigurationTests {
 		DisplayNameGenerator defaultDisplayNameGenerator = configuration.getDefaultDisplayNameGenerator();
 
 		assertThat(defaultDisplayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
+	}
+
+	@Test
+	void shouldGetNothingAsDefaultTestMethodOrderWithoutConfigParamSet() {
+		ConfigurationParameters parameters = mock(ConfigurationParameters.class);
+		String key = Constants.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
+		when(parameters.get(key)).thenReturn(Optional.empty());
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+
+		final Optional<MethodOrderer> defaultTestMethodOrder = configuration.getDefaultTestMethodOrderer();
+
+		assertThat(defaultTestMethodOrder).isEmpty();
 	}
 
 	private void assertDefaultConfigParam(String configValue, Lifecycle expected) {

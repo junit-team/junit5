@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -38,8 +39,11 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	private static final EnumConfigurationParameterConverter<Lifecycle> lifecycleConverter = //
 		new EnumConfigurationParameterConverter<>(Lifecycle.class, "test instance lifecycle mode");
 
-	private static final DisplayNameGeneratorParameterConverter displayNameGeneratorConverter = //
-		new DisplayNameGeneratorParameterConverter();
+	private static final InstantiatingConfigurationParameterConverter<DisplayNameGenerator> displayNameGeneratorConverter = //
+		new InstantiatingConfigurationParameterConverter<>(DisplayNameGenerator.class, "display name generator");
+
+	private static final InstantiatingConfigurationParameterConverter<MethodOrderer> methodOrdererConverter = //
+		new InstantiatingConfigurationParameterConverter<>(MethodOrderer.class, "method orderer");
 
 	private final ConfigurationParameters configurationParameters;
 
@@ -89,7 +93,13 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	@Override
 	public DisplayNameGenerator getDefaultDisplayNameGenerator() {
-		return displayNameGeneratorConverter.get(configurationParameters, DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME,
-			DisplayNameGenerator.Standard::new);
+		return displayNameGeneratorConverter.get(configurationParameters, DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME) //
+				.orElseGet(DisplayNameGenerator.Standard::new);
 	}
+
+	@Override
+	public Optional<MethodOrderer> getDefaultTestMethodOrderer() {
+		return methodOrdererConverter.get(configurationParameters, DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME);
+	}
+
 }

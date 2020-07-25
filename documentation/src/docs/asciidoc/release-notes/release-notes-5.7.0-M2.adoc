@@ -73,6 +73,8 @@ on GitHub.
   `Stream<String>` instances for comparison.
 * `@CsvFileSource` now allows one to specify file paths as an alternative to classpath
   resources.
+* New `junit.jupiter.testmethod.order.default` configuration parameter to set the default
+  `MethodOrderer` that will be used unless `@TestMethodOrder` is present.
 * `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution conditions.
 * Add `MethodOrderer.MethodName` to replace `MethodOrderer.Alphanumeric` with the exact
   same functionality but a more descriptive name.

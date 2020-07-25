@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -96,6 +97,18 @@ class CachingJupiterConfigurationTests {
 		assertThat(cache.getDefaultDisplayNameGenerator()).isSameAs(customDisplayNameGenerator);
 
 		verify(delegate, only()).getDefaultDisplayNameGenerator();
+	}
+
+	@Test
+	void cachesDefaultTestMethodOrderer() {
+		final Optional<MethodOrderer> methodOrderer = Optional.of(new MethodOrderer.MethodName());
+		when(delegate.getDefaultTestMethodOrderer()).thenReturn(methodOrderer);
+
+		// call `cache.getDefaultTestMethodOrderer()` twice to verify the delegate method is called only once.
+		assertThat(cache.getDefaultTestMethodOrderer()).isSameAs(methodOrderer);
+		assertThat(cache.getDefaultTestMethodOrderer()).isSameAs(methodOrderer);
+
+		verify(delegate, only()).getDefaultTestMethodOrderer();
 	}
 
 	@Test
