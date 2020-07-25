@@ -103,8 +103,8 @@ In multi-line bullet point entries, subsequent lines should be indented.
 
 #### JavaDoc Examples
 
-See [here](java\org\junit\jupiter\api\extension\ExtensionContext.java) and 
-[here](java\org\junit\jupiter\api\extension\ParameterContext.java) for example javadoc
+See [here](https://github.com/junit-team/junit5/blob/main/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContext.java) and 
+[here](https://github.com/junit-team/junit5/blob/main/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java) for example javadoc
 
 
 ### Tests
