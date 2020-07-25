@@ -98,13 +98,13 @@ In multi-line bullet point entries, subsequent lines should be indented.
 - New classes and methods should have `@since ...` annotation  
 - Use `@since 5.0` instead of `@since 5.0.0`.
 - Do not use `@author` tags. Instead, contributors are listed on [GitHub](https://github.com/junit-team/junit5/graphs/contributors). 
-- Do not use verbs in third person form (e.g. use "Discover tests..." instead of "Discover tests..." 
-  in the first sentence describing a method). 
+- Do not use verbs in third person form (e.g. use "Discover tests..." instead of "Discover tests...")
+  in the first sentence describing a method.
 
-#### JavaDoc Examples
+#### Examples
 
-See [here](https://github.com/junit-team/junit5/blob/main/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContext.java) and 
-[here](https://github.com/junit-team/junit5/blob/main/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java) for example javadoc
+See [`ExtensionContext`](junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContext.java) and 
+[`ParameterContext`](junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java) for example Javadoc.
 
 
 ### Tests
