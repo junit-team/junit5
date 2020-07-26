@@ -27,7 +27,7 @@ installed in order to generate the User Guide.
 ### Generate AsciiDocPdf
 
 This following Gradle command generates the PDF version of the User Guide to 
-`build/docs/asciidocPdf/user-guide/index.pdf`
+`build/docs/asciidocPdf/user-guide/index.pdf`.
 
 ```
 gradlew asciidoctorPdf
