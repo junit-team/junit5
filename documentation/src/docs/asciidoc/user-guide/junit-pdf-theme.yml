@@ -1,0 +1,7 @@
+extends: default
+font:
+  catalog:
+    merge: true
+    Symbola: SymbolaNew.ttf
+    OpenSans: OpenSansEmoji.ttf
+  fallbacks: [Symbola, OpenSans]

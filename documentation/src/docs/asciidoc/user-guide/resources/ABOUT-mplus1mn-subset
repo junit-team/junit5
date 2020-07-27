@@ -1,0 +1,26 @@
+M+ fonts are generated from the M+ outline fonts TESTFLIGHT 63a retrieved from http://mplus-fonts.osdn.jp/mplus-outline-fonts/download/index-en.html.
+
+The following changes were made using fontforge to produce mplus1mn-*-ascii.ttf fonts:
+
+* Subsetted to include (ascii variant):
+ ** Non-visible Characters (U+00a0)
+ ** Basic Latin (U+0020–U+007e)
+ ** Enclosed Numbers (U+2460–U+2473, U+2776–U+277f, U+24eb–U+24f4) (M+ 1mn Regular only)
+ ** Box Drawing Symbols (U+2500–U+257f)
+ ** .notdef glyph
+* Subsetted to include (subset variant):
+ ** Non-visible Characters (U+00a0)
+ ** Basic Latin (U+0020–U+007e)
+ ** Latin-1 Supplement (U+00a0–U+00fd)
+ ** Latin Extended-A (U+0100–U+017f)
+ ** Greek Alphabet (U+0391–U+03c9)
+ ** Cyrillic (U+0400–U+04ff)
+ ** Assorted Symbols (U+20ac, U+2713–U+2714)
+ ** Enclosed Numbers (U+2460–U+2473, U+2776–U+277f, U+24eb–U+24f4) (mplus1mn-regular only)
+ ** Box Drawing Symbols (U+2500–U+257f)
+ ** .notdef glyph
+* Added BOM (U+feff) and line feed (U+000a) characters (from blank)
+* Generated old-style kern table (neither Apple or OpenType) (required to make kerning work in Prawn) (flags: 0x90)
+* Removed Truetype instructions (information not used by Prawn) (flags: 0x08)
+* Generated with PS Glyph Names option enabled (didn't use 0x04 flag)
+* Generate flags used, in total: 0x90 + 0x08

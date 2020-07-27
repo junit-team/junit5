@@ -1,0 +1,26 @@
+M+ fonts are generated from the M+ outline fonts TESTFLIGHT 63a retrieved from http://mplus-fonts.osdn.jp/mplus-outline-fonts/download/index-en.html.
+
+The following changes were made using fontforge to produce mplus1p-regular-fallback.ttf font:
+
+* Subsetted to include:
+ ** Non-visible Characters (U+00a0)
+ ** Basic Latin (U+0020–U+007e)
+ ** Latin-1 Supplement (U+00a0–U+00fd)
+ ** Latin Extended-A (U+0100–U+017f)
+ ** Latin Extended-B (U+0180–U+024f)
+ ** IPA (U+0259, U+02b0–U+02ff)
+ ** Greek (U+0370–U+03ff)
+ ** Cyrillic (U+0400–U+04ff)
+ ** Vietnamese (U+01a0–U01b0, U+1ea0–U1ef9)
+ ** CJK (U+4e00–U+9fff, U+3000–U+303f) (mostly Japanese, limited selection based on what M+ supports)
+ ** Mathematical Operators (U+2200–U+22ff, U+2116)
+ ** General Punctuation (U+2000–U203a)
+ ** Geometric Shapes (U+25a0–U25ff)
+ ** Assorted Symbols (U+20ac, U+2122, U+21d0–U+21d5, U+2190–U+2195, U+2610–U+2611, U+2713–U+2714)
+ ** .notdef glyph
+* Added BOM (U+feff), hair space (U+200a), zero-width space (U+200b) and line feed (U+000a) characters (from blank)
+* Manually added non-breaking hyphen (U+2011) from hyphen (U+002d)
+* Generated old-style kern table (neither Apple or OpenType) (required to make kerning work in Prawn) (flags: 0x90)
+* Removed Truetype instructions (information not used by Prawn) (flags: 0x08)
+* Generated with PS Glyph Names option enabled (didn't use 0x04 flag)
+* Generate flags used, in total: 0x90 + 0x08

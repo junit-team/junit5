@@ -1,4 +1,5 @@
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
+import org.jetbrains.kotlin.fir.resolve.dfa.contracts.createArgumentsMapping
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.junit.gradle.exec.ClasspathSystemPropertyProvider
 import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
@@ -56,6 +57,7 @@ dependencies {
 asciidoctorj {
 	modules {
 		diagram.use()
+		pdf.version("1.5.3")
 	}
 }
 
@@ -219,6 +221,7 @@ tasks {
 			include("user-guide/index.adoc")
 		}
 		copyAllResources()
+		setFontsDir("$sourceDir/user-guide/resources")
 		attributes(mapOf("releaseNotesUrl" to "https://junit.org/junit5/docs/$docsVersion/release-notes/"))
 	}
 

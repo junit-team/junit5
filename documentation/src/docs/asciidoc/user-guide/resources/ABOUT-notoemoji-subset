@@ -1,0 +1,3 @@
+Noto Emoji font is generated from the google-noto-emoji-fonts (commit 16151a2312a1f8a7d79e91789d3cfe24559d61f7).
+
+Some glyphs have been removed that conflict with the other built-in fonts to produce the notoemoji-subset.ttf font.
