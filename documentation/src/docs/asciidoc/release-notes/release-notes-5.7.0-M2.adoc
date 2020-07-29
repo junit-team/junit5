@@ -60,6 +60,7 @@ on GitHub.
   `TestInstancePostProcessor` extension threw an exception.
 * Disabled `@TestTemplate` methods (e.g. `@ParameterizedTest` and `@RepeatedTest` methods)
   are now reported to registered `TestWatcher` extensions.
+* Inherited @BeforeEach methods are now executed on correct instances for @Nested classes.
 
 ==== Deprecations and Breaking Changes
 
