@@ -336,6 +336,7 @@
 78e3da888f3b7f7543f2b8297f60ebb8  documentation/src/main/java/example/registration/package-info.java
 78f5202023854f5ff8088b2968845932  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Test.java
 79450c974d0e02853aa73d3266a8401d  documentation/src/test/resources/two-column.csv
+79ec51b9125184ca7b6e9779cc716246  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassBasedTestDescriptor.java
 7a1b4ae292e24d53c5878c23d2e0b32d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SuiteDisplayName.java
 7a93fb94ec4db6482815a938d889b599  documentation/src/test/resources/log4j2-test.xml
 7af84e2c2701a74d749b4515550fd8ec  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodSelectorResolver.java
@@ -403,7 +404,6 @@
 93ba881c0a41bd44a11c3c49b32e1acb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAggregationException.java
 9430e8061a15b65fa94e67c3b8b99111  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/package-info.java
 94be4e1cbeab4c637f4f97ba377b8ae7  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectClasses.java
-950cc4b0afca11385d20286a576bfc4d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassBasedTestDescriptor.java
 9515297e1fb93d5cbe53e5f190419893  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/DefaultArgumentConverter.java
 95355bbe4a0b1488e1517585bc592b45  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Executions.java
 9561b6022a39c9bbcaf1aef6622ddf1e  documentation/src/test/java/example/ConditionalTestExecutionDemo.java
