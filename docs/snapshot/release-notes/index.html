@@ -621,6 +621,9 @@ instance of a test class was created, regardless whether any registered
 <p>Disabled <code>@TestTemplate</code> methods (e.g. <code>@ParameterizedTest</code> and <code>@RepeatedTest</code> methods)
 are now reported to registered <code>TestWatcher</code> extensions.</p>
 </li>
+<li>
+<p>Inherited @BeforeEach methods are now executed on correct instances for @Nested classes.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1082,7 +1085,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-07-29 09:04:14 UTC
+Last updated 2020-07-29 10:07:40 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
