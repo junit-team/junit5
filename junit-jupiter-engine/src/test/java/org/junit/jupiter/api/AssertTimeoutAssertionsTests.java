@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -291,6 +292,14 @@ class AssertTimeoutAssertionsTests {
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
 		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
 		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
+	}
+
+	@Test
+	void assertTimeoutPreemptivelyUsesThreadsWithSpecificNamePrefix() {
+		AtomicReference<String> threadName = new AtomicReference<>("");
+		assertTimeoutPreemptively(ofMillis(10), () -> threadName.set(Thread.currentThread().getName()));
+		assertTrue(threadName.get().startsWith("junit-timeout-thread-"),
+			"Thread name does not match the expected prefix");
 	}
 
 	/**

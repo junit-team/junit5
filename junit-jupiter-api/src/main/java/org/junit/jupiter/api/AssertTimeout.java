@@ -19,8 +19,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
@@ -127,7 +129,7 @@ class AssertTimeout {
 			Object messageOrSupplier) {
 
 		AtomicReference<Thread> threadReference = new AtomicReference<>();
-		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		ExecutorService executorService = Executors.newSingleThreadExecutor(new TimeoutThreadFactory());
 
 		try {
 			Future<T> future = executorService.submit(() -> {
@@ -177,6 +179,32 @@ class AssertTimeout {
 
 		ExecutionTimeoutException(String message) {
 			super(message);
+		}
+	}
+
+	/**
+	 * The thread factory used for preemptive timeout.
+	 *
+	 * This factory is the same with {@link Executors#defaultThreadFactory()} but provides more meaningful thread names,
+	 * helpful for debugging purposes.
+	 *
+	 */
+	private static class TimeoutThreadFactory implements ThreadFactory {
+		private static final AtomicInteger threadNumber = new AtomicInteger(1);
+		private final ThreadGroup group;
+
+		TimeoutThreadFactory() {
+			SecurityManager s = System.getSecurityManager();
+			group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+		}
+
+		public Thread newThread(Runnable r) {
+			Thread t = new Thread(group, r, "junit-timeout-thread-" + threadNumber.getAndIncrement(), 0);
+			if (t.isDaemon())
+				t.setDaemon(false);
+			if (t.getPriority() != Thread.NORM_PRIORITY)
+				t.setPriority(Thread.NORM_PRIORITY);
+			return t;
 		}
 	}
 
