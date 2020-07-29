@@ -4,4 +4,5 @@ font:
     merge: true
     Symbola: SymbolaNew.ttf
     OpenSans: OpenSansEmoji.ttf
-  fallbacks: [Symbola, OpenSans]
+    NotoEmoji: notoemoji-subset.ttf
+  fallbacks: [NotoEmoji, Symbola, OpenSans]
