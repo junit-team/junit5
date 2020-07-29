@@ -191,15 +191,9 @@ class AssertTimeout {
 	 */
 	private static class TimeoutThreadFactory implements ThreadFactory {
 		private static final AtomicInteger threadNumber = new AtomicInteger(1);
-		private final ThreadGroup group;
-
-		TimeoutThreadFactory() {
-			SecurityManager s = System.getSecurityManager();
-			group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-		}
 
 		public Thread newThread(Runnable r) {
-			Thread t = new Thread(group, r, "junit-timeout-thread-" + threadNumber.getAndIncrement(), 0);
+			Thread t = new Thread(null, r, "junit-timeout-thread-" + threadNumber.getAndIncrement(), 0);
 			if (t.isDaemon())
 				t.setDaemon(false);
 			if (t.getPriority() != Thread.NORM_PRIORITY)
