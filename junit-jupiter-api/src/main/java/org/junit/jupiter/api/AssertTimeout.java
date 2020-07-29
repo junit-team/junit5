@@ -185,9 +185,7 @@ class AssertTimeout {
 	/**
 	 * The thread factory used for preemptive timeout.
 	 *
-	 * This factory is the same with {@link Executors#defaultThreadFactory()} but provides more meaningful thread names,
-	 * helpful for debugging purposes.
-	 *
+	 * The factory creates threads with meaningful names, helpful for debugging purposes.
 	 */
 	private static class TimeoutThreadFactory implements ThreadFactory {
 		private static final AtomicInteger threadNumber = new AtomicInteger(1);
