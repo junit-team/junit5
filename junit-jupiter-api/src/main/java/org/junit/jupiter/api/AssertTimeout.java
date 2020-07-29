@@ -193,12 +193,7 @@ class AssertTimeout {
 		private static final AtomicInteger threadNumber = new AtomicInteger(1);
 
 		public Thread newThread(Runnable r) {
-			Thread t = new Thread(null, r, "junit-timeout-thread-" + threadNumber.getAndIncrement(), 0);
-			if (t.isDaemon())
-				t.setDaemon(false);
-			if (t.getPriority() != Thread.NORM_PRIORITY)
-				t.setPriority(Thread.NORM_PRIORITY);
-			return t;
+			return new Thread(null, r, "junit-timeout-thread-" + threadNumber.getAndIncrement(), 0);
 		}
 	}
 
