@@ -66,6 +66,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	 *
 	 * @since 1.7
 	 */
+	@API(status = EXPERIMENTAL, since = "1.7")
 	public ForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
 		forkJoinPool = createForkJoinPool(configuration);
 		parallelism = forkJoinPool.getParallelism();
