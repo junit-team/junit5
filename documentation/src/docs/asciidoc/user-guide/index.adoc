@@ -2,7 +2,7 @@
 = JUnit 5 User Guide
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Juliette de Rancourt; Christian Stein
 :basedir: {includedir}/user-guide
-:pdf-theme: {basedir}/junit-pdf-theme.yml
+:pdf-theme: {basedir}/resources/themes/junit-pdf-theme.yml
 :imagesdir: images
 :imagesoutdir: {outdir}/user-guide/images
 //

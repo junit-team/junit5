@@ -1,0 +1,6 @@
+extends: default
+font:
+  catalog:
+    merge: true
+    Symbola: symbola.ttf
+  fallbacks: [Symbola]

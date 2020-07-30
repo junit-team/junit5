@@ -221,7 +221,7 @@ tasks {
 			include("user-guide/index.adoc")
 		}
 		copyAllResources()
-		setFontsDir("$sourceDir/user-guide/resources")
+		setFontsDir("$sourceDir/user-guide/resources/fonts")
 		attributes(mapOf("releaseNotesUrl" to "https://junit.org/junit5/docs/$docsVersion/release-notes/"))
 	}
 

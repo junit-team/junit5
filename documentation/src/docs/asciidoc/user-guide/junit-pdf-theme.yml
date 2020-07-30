@@ -1,8 +1,0 @@
-extends: default
-font:
-  catalog:
-    merge: true
-    Symbola: SymbolaNew.ttf
-    OpenSans: OpenSansEmoji.ttf
-    NotoEmoji: notoemoji-subset.ttf
-  fallbacks: [NotoEmoji, Symbola, OpenSans]
