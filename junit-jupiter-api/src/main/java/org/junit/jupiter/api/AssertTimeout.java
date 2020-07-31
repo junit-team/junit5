@@ -190,9 +190,9 @@ class AssertTimeout {
 	private static class TimeoutThreadFactory implements ThreadFactory {
 		private static final AtomicInteger threadNumber = new AtomicInteger(1);
 
-    public Thread newThread(Runnable r) {
-      return new Thread(r, "junit-timeout-thread-" + threadNumber.getAndIncrement());
-    }
+		public Thread newThread(Runnable r) {
+			return new Thread(r, "junit-timeout-thread-" + threadNumber.getAndIncrement());
+		}
 	}
 
 }
