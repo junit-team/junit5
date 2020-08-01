@@ -59,6 +59,7 @@ on GitHub.
   - `junit-jupiter-params` (i.e. `@ParameterizedTest` etc.)
   - `@TestMethodOrder`, `MethodOrderer`, and its pre-5.7 implementations
   - `@DisplayNameGeneration`, `DisplayNameGenerator`, and its pre-5.7 implementations
+  - Kotlin-specific assertions that were introduced in 5.1
 
 ==== Bug Fixes
 
