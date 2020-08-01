@@ -25,6 +25,7 @@ on GitHub.
 * The following APIs have been promoted from "experimental":
   - `LauncherConstants` is now "stable"
   - `LauncherConfig` (except for methods introduced in 5.7) is now "stable"
+  - `LegacyXmlReportGeneratingListener` is now "stable"
 
 ==== Bug Fixes
 
