@@ -2,5 +2,5 @@ extends: default
 font:
   catalog:
     merge: true
-    Symbola: symbola.ttf
+    Symbola: Symbola.ttf
   fallbacks: [Symbola]
