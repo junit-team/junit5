@@ -61,6 +61,7 @@ on GitHub.
   - `@DisplayNameGeneration`, `DisplayNameGenerator`, and its pre-5.7 implementations
   - `@Timeout`
   - `TestInstanceFactory`
+  - `TestInstancePreDestroyCallback`
   - Kotlin-specific assertions that were introduced in 5.1
 
 ==== Bug Fixes
