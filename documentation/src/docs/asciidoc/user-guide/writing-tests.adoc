@@ -1442,6 +1442,14 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_e
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_example_ToStringArgumentConverter]
 ----
 
+If the converter is only meant to convert one type to another, you can extend
+`TypedArgumentConverter` that reduce boilerplate type checks.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_example_TypedArgumentConverter]
+----
+
 Explicit argument converters are meant to be implemented by test and extension authors.
 Thus, `junit-jupiter-params` only provides a single explicit argument converter that may
 also serve as a reference implementation: `JavaTimeArgumentConverter`. It is used via the

@@ -51,6 +51,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
+import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -332,6 +333,22 @@ class ParameterizedTestDemo {
 		}
 	}
 	// end::explicit_conversion_example_ToStringArgumentConverter[]
+
+	static
+	// tag::explicit_conversion_example_TypedArgumentConverter[]
+	public class ToLengthArgumentConverter extends TypedArgumentConverter<String, Integer> {
+
+		protected ToLengthArgumentConverter() {
+			super(String.class, Integer.class);
+		}
+
+		@Override
+		protected Integer convert(String source) {
+			return source.length();
+		}
+
+	}
+	// end::explicit_conversion_example_TypedArgumentConverter[]
 
 	// tag::explicit_java_time_converter[]
 	@ParameterizedTest

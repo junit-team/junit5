@@ -105,6 +105,8 @@ on GitHub.
   same functionality but a more descriptive name.
 * `assertTimeoutPreemptively` in `Assertions` now reports the stacktrace of the timed out
   thread in the cause of the `AssertionFailedError`.
+* New `TypedArgumentConverter` that always convert one specific type to another, therefore
+  reducing boilerplate type checks compared to `ArgumentConverter`.
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage
