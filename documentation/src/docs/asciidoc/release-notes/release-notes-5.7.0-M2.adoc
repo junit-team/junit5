@@ -63,6 +63,7 @@ on GitHub.
   - `TestInstanceFactory`
   - `TestInstancePreDestroyCallback`
   - `TestInstances` and corresponding `ExtensionContext` methods
+  - `TestWatcher`
   - Kotlin-specific assertions that were introduced in 5.1
 
 ==== Bug Fixes

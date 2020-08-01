@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Optional;
 
@@ -45,7 +45,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.4
  */
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = STABLE, since = "5.7")
 public interface TestWatcher extends Extension {
 
 	/**
