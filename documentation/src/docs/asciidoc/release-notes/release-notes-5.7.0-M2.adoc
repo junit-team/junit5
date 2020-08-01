@@ -26,6 +26,7 @@ on GitHub.
   - `LauncherConstants` is now "stable"
   - `LauncherConfig` (except for methods introduced in 5.7) is now "stable"
   - `LegacyXmlReportGeneratingListener` is now "stable"
+  - `org.junit.platform.testkit.engine` is now "maintained"
 
 ==== Bug Fixes
 

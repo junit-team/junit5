@@ -10,7 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -27,7 +27,7 @@ import org.junit.platform.engine.TestExecutionResult;
  *
  * @since 1.4
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public class Execution {
 
 	// --- Factories -----------------------------------------------------------

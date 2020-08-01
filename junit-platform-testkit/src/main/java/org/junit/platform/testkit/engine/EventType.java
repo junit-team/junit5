@@ -10,7 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestDescriptor;
@@ -23,7 +23,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * @since 1.4
  * @see Event
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public enum EventType {
 
 	/**

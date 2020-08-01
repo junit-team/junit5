@@ -12,7 +12,7 @@ package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
@@ -48,7 +48,7 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
  * @since 1.4
  * @see TestExecutionResultConditions
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public final class EventConditions {
 
 	private EventConditions() {
@@ -225,7 +225,6 @@ public final class EventConditions {
 	 *
 	 * @since 1.6
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public static Condition<Event> uniqueIdSubstrings(String... uniqueIdSubstrings) {
 		return uniqueIdSubstrings(Arrays.asList(uniqueIdSubstrings));
 	}
@@ -238,7 +237,6 @@ public final class EventConditions {
 	 *
 	 * @since 1.6
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public static Condition<Event> uniqueIdSubstrings(List<String> uniqueIdSubstrings) {
 		// The following worked with AssertJ 3.13.2
 		// return allOf(uniqueIdSubstrings.stream().map(EventConditions::uniqueIdSubstring).collect(toList()));

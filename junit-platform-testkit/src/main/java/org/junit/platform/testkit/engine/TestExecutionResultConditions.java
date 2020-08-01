@@ -12,7 +12,7 @@ package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
 import java.util.Arrays;
@@ -32,7 +32,7 @@ import org.junit.platform.engine.TestExecutionResult.Status;
  * @since 1.4
  * @see EventConditions
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public final class TestExecutionResultConditions {
 
 	private TestExecutionResultConditions() {

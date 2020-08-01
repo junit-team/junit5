@@ -10,7 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 
 import java.util.List;
@@ -34,7 +34,7 @@ import org.junit.platform.engine.TestDescriptor;
  * @see Events
  * @see Executions
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public class EngineExecutionResults {
 
 	private final Events allEvents;
@@ -64,7 +64,6 @@ public class EngineExecutionResults {
 	 * @see #containerEvents()
 	 * @see #testEvents()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public Events allEvents() {
 		return this.allEvents;
 	}
@@ -79,7 +78,6 @@ public class EngineExecutionResults {
 	 * @see #allEvents()
 	 * @see #testEvents()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public Events containerEvents() {
 		return this.containerEvents;
 	}
@@ -94,7 +92,6 @@ public class EngineExecutionResults {
 	 * @see #allEvents()
 	 * @see #containerEvents()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public Events testEvents() {
 		return this.testEvents;
 	}

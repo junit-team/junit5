@@ -13,7 +13,7 @@ package org.junit.platform.testkit.engine;
 import static java.util.Collections.sort;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.testkit.engine.Event.byPayload;
 import static org.junit.platform.testkit.engine.Event.byType;
@@ -49,7 +49,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 1.4
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public final class Events {
 
 	private final List<Event> events;
