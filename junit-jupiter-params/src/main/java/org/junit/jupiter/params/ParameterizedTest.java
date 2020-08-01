@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -119,7 +119,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.0")
+@API(status = STABLE, since = "5.7")
 @TestTemplate
 @ExtendWith(ParameterizedTestExtension.class)
 public @interface ParameterizedTest {
@@ -131,7 +131,6 @@ public @interface ParameterizedTest {
 	 * @see #name
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
 	String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
 
 	/**
@@ -141,7 +140,6 @@ public @interface ParameterizedTest {
 	 * @see #name
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
 	String INDEX_PLACEHOLDER = "{index}";
 
 	/**
@@ -152,7 +150,6 @@ public @interface ParameterizedTest {
 	 * @see #name
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
 	String ARGUMENTS_PLACEHOLDER = "{arguments}";
 
 	/**
@@ -163,7 +160,6 @@ public @interface ParameterizedTest {
 	 * @see #name
 	 * @since 5.6
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
 	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
 
 	/**
@@ -180,7 +176,6 @@ public @interface ParameterizedTest {
 	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
 	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 
 	/**

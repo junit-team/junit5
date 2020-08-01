@@ -53,6 +53,11 @@ on GitHub.
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter
 
+==== Promoted Features
+
+* The following APIs have been promoted from "experimental" to "stable":
+  - `junit-jupiter-params` (i.e. `@ParameterizedTest` etc.)
+
 ==== Bug Fixes
 
 * Registered `TestInstancePreDestroyCallback` extensions are now always called if an
