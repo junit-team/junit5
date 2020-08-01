@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -50,7 +50,7 @@ import org.junit.jupiter.migrationsupport.rules.VerifierSupport;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = STABLE, since = "5.7")
 @EnableRuleMigrationSupport
 @ExtendWith(IgnoreCondition.class)
 public @interface EnableJUnit4MigrationSupport {
