@@ -13,6 +13,7 @@ package org.junit.jupiter.api;
 import static java.util.Comparator.comparingInt;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -49,7 +50,7 @@ import org.junit.platform.commons.util.ClassUtils;
  * @see MethodOrdererContext
  * @see #orderMethods(MethodOrdererContext)
  */
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = STABLE, since = "5.7")
 public interface MethodOrderer {
 
 	/**

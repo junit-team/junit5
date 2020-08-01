@@ -57,6 +57,7 @@ on GitHub.
 
 * The following APIs have been promoted from "experimental" to "stable":
   - `junit-jupiter-params` (i.e. `@ParameterizedTest` etc.)
+  - `@TestMethodOrder`, `MethodOrderer`, and its pre-5.7 implementations
 
 ==== Bug Fixes
 
