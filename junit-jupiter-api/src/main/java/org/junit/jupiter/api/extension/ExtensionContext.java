@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
@@ -196,7 +195,7 @@ public interface ExtensionContext {
 	 *
 	 * @since 5.4
 	 */
-	@API(status = EXPERIMENTAL, since = "5.4")
+	@API(status = STABLE, since = "5.7")
 	Optional<TestInstances> getTestInstances();
 
 	/**
@@ -212,7 +211,7 @@ public interface ExtensionContext {
 	 *
 	 * @since 5.4
 	 */
-	@API(status = EXPERIMENTAL, since = "5.4")
+	@API(status = STABLE, since = "5.7")
 	default TestInstances getRequiredTestInstances() {
 		return Preconditions.notNull(getTestInstances().orElse(null),
 			"Illegal state: required test instances are not present in the current ExtensionContext");

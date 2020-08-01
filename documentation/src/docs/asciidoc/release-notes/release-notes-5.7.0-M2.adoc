@@ -62,6 +62,7 @@ on GitHub.
   - `@Timeout`
   - `TestInstanceFactory`
   - `TestInstancePreDestroyCallback`
+  - `TestInstances` and corresponding `ExtensionContext` methods
   - Kotlin-specific assertions that were introduced in 5.1
 
 ==== Bug Fixes
