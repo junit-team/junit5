@@ -18,7 +18,6 @@ import static org.junit.platform.commons.util.Preconditions.condition;
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
@@ -39,7 +38,6 @@ class AssertLinesMatch {
 	}
 
 	private static final int MAX_SNIPPET_LENGTH = 21;
-	private static final int MAX_LINES_IN_FAILURE_MESSAGE = 42;
 
 	static void assertLinesMatch(List<String> expectedLines, List<String> actualLines) {
 		assertLinesMatch(expectedLines, actualLines, (Object) null);
@@ -173,7 +171,9 @@ class AssertLinesMatch {
 					}
 				}
 
-				fail("expected line #%d:`%s` doesn't match", expectedLineNumber, snippet(expectedLine));
+				int actualLineNumber = actualLines.size() - actualDeque.size() + 1; // 1-based line number
+				fail("expected line #%d doesn't match actual line #%d%n" + "\texpected: `%s`%n" + "\t  actual: `%s`",
+					expectedLineNumber, actualLineNumber, expectedLine, actualLine);
 			}
 
 			// after math
@@ -190,24 +190,9 @@ class AssertLinesMatch {
 		}
 
 		void fail(String format, Object... args) {
-			List<String> expectedLinesForMessage = truncateForFailureMessage(expectedLines);
-			List<String> actualLinesForMessage = truncateForFailureMessage(actualLines);
 			String newLine = System.lineSeparator();
-			String message = AssertionUtils.format( //
-				newLine + join(newLine, expectedLinesForMessage) + newLine, // expected
-				newLine + join(newLine, actualLinesForMessage) + newLine, // actual
-				buildPrefix(nullSafeGet(messageOrSupplier)) + format(format, args));
+			String message = buildPrefix(nullSafeGet(messageOrSupplier)) + format(format, args);
 			AssertionUtils.fail(message, join(newLine, expectedLines), join(newLine, actualLines));
-		}
-
-		static List<String> truncateForFailureMessage(List<String> lines) {
-			int diff = lines.size() - MAX_LINES_IN_FAILURE_MESSAGE;
-			if (diff <= 0) {
-				return lines;
-			}
-			List<String> truncatedLines = new ArrayList<>(lines.subList(0, MAX_LINES_IN_FAILURE_MESSAGE));
-			truncatedLines.add(format("[omitted %d line(s)]", diff));
-			return truncatedLines;
 		}
 	}
 
