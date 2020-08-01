@@ -180,10 +180,10 @@ public final class EngineTestKit {
 	 * @return the results of the execution
 	 * @throws PreconditionViolationException for invalid arguments or if the
 	 * {@code TestEngine} with the supplied ID cannot be loaded
+	 * @since 1.7
 	 * @see #execute(TestEngine, LauncherDiscoveryRequest)
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
-	 * @since 1.7
 	 */
 	public static EngineExecutionResults execute(String engineId, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
@@ -239,10 +239,10 @@ public final class EngineTestKit {
 	 * not be {@code null}
 	 * @return the recorded {@code EngineExecutionResults}
 	 * @throws PreconditionViolationException for invalid arguments
+	 * @since 1.7
 	 * @see #execute(String, LauncherDiscoveryRequest)
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
-	 * @since 1.7
 	 */
 	public static EngineExecutionResults execute(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
@@ -391,11 +391,11 @@ public final class EngineTestKit {
 		 *
 		 * @param filters the filters to add; never {@code null}
 		 * @return this builder for method chaining
+		 * @since 1.7
 		 * @see #selectors(DiscoverySelector...)
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
-		 * @since 1.7
 		 */
 		@API(status = EXPERIMENTAL, since = "1.7")
 		public Builder filters(Filter<?>... filters) {

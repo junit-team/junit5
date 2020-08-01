@@ -128,8 +128,8 @@ public @interface ParameterizedTest {
 	 * Placeholder for the {@linkplain org.junit.jupiter.api.TestInfo#getDisplayName
 	 * display name} of a {@code @ParameterizedTest} method: <code>{displayName}</code>
 	 *
-	 * @see #name
 	 * @since 5.3
+	 * @see #name
 	 */
 	String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
 
@@ -137,8 +137,8 @@ public @interface ParameterizedTest {
 	 * Placeholder for the current invocation index of a {@code @ParameterizedTest}
 	 * method (1-based): <code>{index}</code>
 	 *
-	 * @see #name
 	 * @since 5.3
+	 * @see #name
 	 */
 	String INDEX_PLACEHOLDER = "{index}";
 
@@ -147,8 +147,8 @@ public @interface ParameterizedTest {
 	 * current invocation of a {@code @ParameterizedTest} method:
 	 * <code>{arguments}</code>
 	 *
-	 * @see #name
 	 * @since 5.3
+	 * @see #name
 	 */
 	String ARGUMENTS_PLACEHOLDER = "{arguments}";
 
@@ -157,8 +157,8 @@ public @interface ParameterizedTest {
 	 * of the current invocation of a {@code @ParameterizedTest} method:
 	 * <code>{argumentsWithNames}</code>
 	 *
-	 * @see #name
 	 * @since 5.6
+	 * @see #name
 	 */
 	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
 
@@ -170,11 +170,11 @@ public @interface ParameterizedTest {
 	 * {@linkplain #DISPLAY_NAME_PLACEHOLDER display name} of the
 	 * {@code @ParameterizedTest} method.
 	 *
+	 * @since 5.3
 	 * @see #name
 	 * @see #DISPLAY_NAME_PLACEHOLDER
 	 * @see #INDEX_PLACEHOLDER
 	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
-	 * @since 5.3
 	 */
 	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 
