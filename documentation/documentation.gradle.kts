@@ -1,5 +1,4 @@
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
-import org.jetbrains.kotlin.fir.resolve.dfa.contracts.createArgumentsMapping
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.junit.gradle.exec.ClasspathSystemPropertyProvider
 import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
