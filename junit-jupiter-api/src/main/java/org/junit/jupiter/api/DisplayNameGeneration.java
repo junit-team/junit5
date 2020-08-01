@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -33,7 +33,7 @@ import org.apiguardian.api.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = STABLE, since = "5.7")
 public @interface DisplayNameGeneration {
 
 	/**
