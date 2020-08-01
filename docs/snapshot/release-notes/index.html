@@ -546,6 +546,32 @@ with tools like NetBeans 11.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.0-M2-junit-platform"><a class="anchor" href="#release-notes-5.7.0-M2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
+<h4 id="promoted-features"><a class="anchor" href="#promoted-features"></a>Promoted Features</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The following APIs have been promoted from "experimental":</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LauncherConstants</code> is now "stable"</p>
+</li>
+<li>
+<p><code>LauncherConfig</code> (except for methods introduced in 5.7) is now "stable"</p>
+</li>
+<li>
+<p><code>LegacyXmlReportGeneratingListener</code> is now "stable"</p>
+</li>
+<li>
+<p><code>org.junit.platform.testkit.engine</code> is now "maintained"</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
 <h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
@@ -608,6 +634,50 @@ classes that use <code>EngineExecutionListener</code>.</p>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.7.0-M2-junit-jupiter"><a class="anchor" href="#release-notes-5.7.0-M2-junit-jupiter"></a>JUnit Jupiter</h3>
+<div class="sect3">
+<h4 id="promoted-features-2"><a class="anchor" href="#promoted-features-2"></a>Promoted Features</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The following APIs have been promoted from "experimental" to "stable":</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>junit-jupiter-migrationsupport</code></p>
+</li>
+<li>
+<p><code>junit-jupiter-params</code> (i.e. <code>@ParameterizedTest</code> etc.)</p>
+</li>
+<li>
+<p><code>@TestMethodOrder</code>, <code>MethodOrderer</code>, and its pre-5.7 implementations</p>
+</li>
+<li>
+<p><code>@DisplayNameGeneration</code>, <code>DisplayNameGenerator</code>, and its pre-5.7 implementations</p>
+</li>
+<li>
+<p><code>@Timeout</code></p>
+</li>
+<li>
+<p><code>TestInstanceFactory</code></p>
+</li>
+<li>
+<p><code>TestInstancePreDestroyCallback</code></p>
+</li>
+<li>
+<p><code>TestInstances</code> and corresponding <code>ExtensionContext</code> methods</p>
+</li>
+<li>
+<p><code>TestWatcher</code></p>
+</li>
+<li>
+<p>Kotlin-specific assertions that were introduced in 5.1</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
 <div class="sect3">
 <h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
@@ -1085,7 +1155,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-07-29 10:07:40 UTC
+Last updated 2020-08-01 13:11:01 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
