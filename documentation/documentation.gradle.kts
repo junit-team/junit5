@@ -57,7 +57,7 @@ dependencies {
 asciidoctorj {
 	modules {
 		diagram.use()
-		pdf.version("1.5.3")
+		pdf.version(versions["asciidoctor-pdf"])
 	}
 }
 
