@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -47,7 +48,7 @@ import org.junit.platform.launcher.TestExecutionListener;
  * @see LauncherFactory
  * @since 1.3
  */
-@API(status = EXPERIMENTAL, since = "1.3")
+@API(status = STABLE, since = "1.7")
 public interface LauncherConfig {
 
 	/**

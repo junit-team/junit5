@@ -20,6 +20,12 @@ on GitHub.
 [[release-notes-5.7.0-M2-junit-platform]]
 === JUnit Platform
 
+==== Promoted Features
+
+* The following APIs have been promoted from "experimental":
+  - `LauncherConstants` is now "stable"
+  - `LauncherConfig` (except for methods introduced in 5.7) is now "stable"
+
 ==== Bug Fixes
 
 * Characters in exception messages and other user-supplied values that are not allowed in
