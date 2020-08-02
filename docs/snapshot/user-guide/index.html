@@ -4162,6 +4162,26 @@ declared as either a top-level class or as a <code>static</code> nested class.</
 </div>
 </div>
 <div class="paragraph">
+<p>If the converter is only meant to convert one type to another, you can extend
+<code>TypedArgumentConverter</code> to avoid boilerplate type checks.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ToLengthArgumentConverter</span> <span class="kd">extends</span> <span class="nc">TypedArgumentConverter</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="kd">protected</span> <span class="nf">ToLengthArgumentConverter</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="nc">Integer</span> <span class="nf">convert</span><span class="o">(</span><span class="nc">String</span> <span class="n">source</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">source</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Explicit argument converters are meant to be implemented by test and extension authors.
 Thus, <code>junit-jupiter-params</code> only provides a single explicit argument converter that may
 also serve as a reference implementation: <code>JavaTimeArgumentConverter</code>. It is used via the
@@ -9379,6 +9399,11 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.converter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TypedArgumentConverter</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.console</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConsoleLauncherToolProvider</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
@@ -9822,7 +9847,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-08-02 08:44:22 UTC
+Last updated 2020-08-02 10:22:48 UTC
 </div>
 </div>
 <style>
