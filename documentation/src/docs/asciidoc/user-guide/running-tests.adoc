@@ -537,7 +537,7 @@ Here's an example of its output:
    │  └─ skippedTest() ↷ for demonstration purposes
    └─ A special test case
       ├─ Custom test name containing spaces ✔
-      ├─ ╯°□°)╯ ✔
+      ├─ ╯°□°）╯ ✔
       └─ 😱 ✔
 
 Test run finished after 64 ms
