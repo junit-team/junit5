@@ -1,9 +1,8 @@
 plugins {
 	`kotlin-library-conventions`
+	`testing-conventions`
 	groovy
 }
-
-apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Engine"
 

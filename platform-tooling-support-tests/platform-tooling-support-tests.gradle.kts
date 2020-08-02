@@ -1,8 +1,7 @@
 plugins {
 	`java-library-conventions`
+	`testing-conventions`
 }
-
-apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 javaLibrary {
 	mainJavaVersion = JavaVersion.VERSION_11

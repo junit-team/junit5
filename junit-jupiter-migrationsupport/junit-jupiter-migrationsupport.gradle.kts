@@ -3,9 +3,8 @@ import aQute.bnd.gradle.BundleTaskConvention;
 plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
+	`testing-conventions`
 }
-
-apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Migration Support"
 

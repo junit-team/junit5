@@ -1,10 +1,9 @@
 plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
+	`testing-conventions`
 	id("me.champeau.gradle.jmh")
 }
-
-apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 dependencies {
 	internal(platform(project(":dependencies")))
