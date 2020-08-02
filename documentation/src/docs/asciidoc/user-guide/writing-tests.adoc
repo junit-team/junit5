@@ -1443,7 +1443,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_e
 ----
 
 If the converter is only meant to convert one type to another, you can extend
-`TypedArgumentConverter` that reduce boilerplate type checks.
+`TypedArgumentConverter` to avoid boilerplate type checks.
 
 [source,java,indent=0]
 ----
