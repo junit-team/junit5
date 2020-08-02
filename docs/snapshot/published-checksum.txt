@@ -511,6 +511,7 @@ bf8d76cf67ea68f9d620a5fb5e2f9ab3  documentation/src/docs/asciidoc/tocbot-3.0.2/s
 bfcc512008463472b835cbe8fa88647e  documentation/src/docs/asciidoc/link-attributes.adoc
 bfe09c2ef52a6115ace4fd00afae497e  junit-platform-console/src/main/java/org/junit/platform/console/tasks/ConsoleTestExecutor.java
 bffb434162227cc7b3bdd8b14562ee55  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ToStringBuilder.java
+c05711790a07be8c8188b477efe484ed  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
 c07430ff87088d9e90a287fafdebbe76  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/DequeStack.java
 c0b5f61dc113db14e2fbe5d2da73bbe8  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/package-info.java
 c164844cfe6c7da168c964642397d64e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LoggingListener.java
@@ -611,7 +612,6 @@ df1edccafd2ffb7864a9f6a0ade97162  junit-platform-console/src/main/java/org/junit
 df3dde4584945a4b45d6f4cae12a8a5b  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
 df539b315bf219814fc278b540195fc4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/DefaultParameterContext.java
 df770299d57b47d79d7f971892850596  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionConfigurationException.java
-df8b3a5a75c36d98095492440631f1ce  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
 e07a878876e4f7dcd3474f35f60e3aa8  junit-platform-engine/src/main/java/org/junit/platform/engine/reporting/package-info.java
 e0d2f1e1fe5be25c5a6082bf4b075676  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineDiscoveryRequest.java
 e0f93504379865726071df9bb7fda79f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
