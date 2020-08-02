@@ -107,6 +107,8 @@ on GitHub.
   thread in the cause of the `AssertionFailedError`.
 * New `TypedArgumentConverter` for converting one specific type to another, therefore
   reducing boilerplate type checks compared to implementing `ArgumentConverter` directly.
+* Added `ExtensionContext.getConfigurationParameter(String, Function<String, T>)`
+  convenience method for reading transformed configuration parameters from extensions.
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage

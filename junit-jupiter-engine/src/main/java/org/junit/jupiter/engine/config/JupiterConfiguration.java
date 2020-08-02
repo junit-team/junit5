@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.config;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
@@ -52,6 +53,8 @@ public interface JupiterConfiguration {
 	String TIMEOUT_MODE_PROPERTY_NAME = "junit.jupiter.execution.timeout.mode";
 
 	Optional<String> getRawConfigurationParameter(String key);
+
+	<T> Optional<T> getRawConfigurationParameter(String key, Function<String, T> transformer);
 
 	boolean isParallelExecutionEnabled();
 

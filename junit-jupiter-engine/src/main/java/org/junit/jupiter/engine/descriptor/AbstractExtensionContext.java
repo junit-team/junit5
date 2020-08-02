@@ -18,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -122,4 +123,8 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		return this.configuration.getRawConfigurationParameter(key);
 	}
 
+	@Override
+	public <V> Optional<V> getConfigurationParameter(String key, Function<String, V> transformer) {
+		return this.configuration.getRawConfigurationParameter(key, transformer);
+	}
 }
