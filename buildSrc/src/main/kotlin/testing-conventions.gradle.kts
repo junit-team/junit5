@@ -1,6 +1,10 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 
+plugins {
+	id("org.gradle.test-retry")
+}
+
 tasks.withType<Test>().configureEach {
 	useJUnitPlatform {
 		includeEngines("junit-jupiter")
@@ -9,6 +13,9 @@ tasks.withType<Test>().configureEach {
 	testLogging {
 		events = setOf(FAILED)
 		exceptionFormat = FULL
+	}
+	retry {
+		maxRetries.set(2)
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14
