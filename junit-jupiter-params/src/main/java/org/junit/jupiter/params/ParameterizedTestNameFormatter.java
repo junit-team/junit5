@@ -32,11 +32,14 @@ class ParameterizedTestNameFormatter {
 	private final String pattern;
 	private final String displayName;
 	private final ParameterizedTestMethodContext methodContext;
+	private final int argumentMaxLength;
 
-	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext) {
+	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
+			int argumentMaxLength) {
 		this.pattern = pattern;
 		this.displayName = displayName;
 		this.methodContext = methodContext;
+		this.argumentMaxLength = argumentMaxLength;
 	}
 
 	String format(int invocationIndex, Object... arguments) {
@@ -91,10 +94,17 @@ class ParameterizedTestNameFormatter {
 		Object[] result = Arrays.copyOf(arguments, Math.min(arguments.length, formats.length), Object[].class);
 		for (int i = 0; i < result.length; i++) {
 			if (formats[i] == null) {
-				result[i] = StringUtils.nullSafeToString(arguments[i]);
+				result[i] = truncateIfExceedsMaxLength(StringUtils.nullSafeToString(arguments[i]));
 			}
 		}
 		return result;
+	}
+
+	private String truncateIfExceedsMaxLength(String argument) {
+		if (argument.length() > argumentMaxLength) {
+			return argument.substring(0, argumentMaxLength - 1) + "\u2026";
+		}
+		return argument;
 	}
 
 }

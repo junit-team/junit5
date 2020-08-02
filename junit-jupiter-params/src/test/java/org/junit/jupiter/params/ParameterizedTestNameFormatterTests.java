@@ -213,12 +213,28 @@ class ParameterizedTestNameFormatterTests {
 		assertThat(formattedName).isEqualTo("foo, baz");
 	}
 
+	@Test
+	void truncatesArgumentsThatExceedMaxLength() {
+		ParameterizedTestNameFormatter formatter = formatter("{arguments}", 3);
+
+		String formattedName = formatter.format(1, "fo", "foo", "fooo");
+
+		assertThat(formattedName).isEqualTo("fo, foo, fo…");
+	}
+
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName) {
-		return new ParameterizedTestNameFormatter(pattern, displayName, mock(ParameterizedTestMethodContext.class));
+		return new ParameterizedTestNameFormatter(pattern, displayName, mock(ParameterizedTestMethodContext.class),
+			512);
+	}
+
+	private static ParameterizedTestNameFormatter formatter(String pattern, int argumentMaxLength) {
+		return new ParameterizedTestNameFormatter(pattern, "display name", mock(ParameterizedTestMethodContext.class),
+			argumentMaxLength);
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
-		return new ParameterizedTestNameFormatter(pattern, displayName, new ParameterizedTestMethodContext(method));
+		return new ParameterizedTestNameFormatter(pattern, displayName, new ParameterizedTestMethodContext(method),
+			512);
 	}
 
 	// -------------------------------------------------------------------
