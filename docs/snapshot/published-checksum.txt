@@ -61,7 +61,6 @@
 14f8ee8e33af4f26a86a23f293d6f21b  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineExecutionResults.java
 150359db57cb6a1c680bb4d8da28ed14  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestableMethod.java
 15349defd97f0f340e3f8e70eb119588  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFileVisitor.java
-15790e8a3825339656544e40289b0602  documentation/src/test/java/org/junit/api/tools/ApiReportGenerator.java
 15c2f49277b59f037a74e358af8963eb  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DirectorySelector.java
 163ebc7990ae94f88526c05e1d38159f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ConvertWith.java
 17079878eeb5768f34b3934fcabf21bd  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
@@ -180,7 +179,6 @@
 3c82f45bbf0cb895b2efccd09d5febb1  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutExtension.java
 3ca1dbe934d8a3e75af2fbff74d08773  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/package-info.java
 3cb2c150bdb6e65a9c24870f4a428be7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/MethodBasedCondition.java
-3cb32970f91c5bc03b020eddea8cedad  documentation/src/test/java/org/junit/api/tools/AsciidocApiReportWriter.java
 3d0678ab539642a12d9cf193e3c0328d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstantiationException.java
 3dc0996756b1643627f7fb4f266f5948  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/FallbackStringToObjectConverter.java
 3e76ed8ec9951800599c19be799b9d45  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/FilterableIgnoringRunnerDecorator.java
@@ -296,6 +294,7 @@
 6a0863b7d60569cabc4094ece5c63cbd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOsCondition.java
 6a1e95c175810a1af635795d282d6ee2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java
 6a74c01c24c0b32e8083f6b462e26516  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/discovery/AbortOnFailureLauncherDiscoveryListener.java
+6c6e2949aaf855f34514a3c8da9979e0  documentation/src/test/java/org/junit/api/tools/ApiReportGenerator.java
 6c805f0fea8c4a1a4dcb53300f712c58  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepetitionInfo.java
 6cee8115a0bcbc4db7f2d5249b209447  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertArrayEquals.java
 6cfaa44232aa9903cf85ba55de667520  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ExecutionMode.java
@@ -507,6 +506,7 @@ bdddfb3dbb13a9a26c1c9b04eb68b34d  junit-platform-engine/src/main/java/org/junit/
 be38cfd5a623af129540c1a1237b0b35  documentation/src/javadoc/junit-stylesheet.css
 be88abf533eb27f2b25077302881b0c8  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueIdFormat.java
 becc58e25b292ea7adfea345c10c40f9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/TempDir.java
+bf193de0eb3b3ac49e4cc149e3c9b1ec  documentation/src/test/java/org/junit/api/tools/AsciidocApiReportWriter.java
 bf2f33348f8232aede2fabe469cd87a4  documentation/src/docs/asciidoc/user-guide/launcher-api.adoc
 bf8d76cf67ea68f9d620a5fb5e2f9ab3  documentation/src/docs/asciidoc/tocbot-3.0.2/styles.css
 bfcc512008463472b835cbe8fa88647e  documentation/src/docs/asciidoc/link-attributes.adoc
