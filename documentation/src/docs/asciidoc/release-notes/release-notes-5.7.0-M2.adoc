@@ -109,7 +109,7 @@ on GitHub.
   reducing boilerplate type checks compared to implementing `ArgumentConverter` directly.
 * Added `ExtensionContext.getConfigurationParameter(String, Function<String, T>)`
   convenience method for reading transformed configuration parameters from extensions.
-* Arguments of in display names of parameterized test invocations are now truncated if
+* Arguments in display names of parameterized test invocations are now truncated if
   they exceed a configurable maximum length (defaults to 512 characters).
 
 [[release-notes-5.7.0-M2-junit-vintage]]

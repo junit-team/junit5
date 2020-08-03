@@ -1563,8 +1563,8 @@ The following placeholders are supported within custom display names.
 | `{0}`, `{1}`, ...        | an individual argument
 |===
 
-NOTE: When including arguments in display names, their string representation is truncated
-if it exceeds the configured maximum length. The limit is configurable via the
+NOTE: When including arguments in display names, their string representations are truncated
+if they exceed the configured maximum length. The limit is configurable via the
 `junit.jupiter.params.displayname.argument.maxlength` configuration parameter and defaults
 to 512 characters.
 
