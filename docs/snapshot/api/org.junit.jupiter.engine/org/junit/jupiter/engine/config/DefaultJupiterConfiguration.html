@@ -28,7 +28,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -244,11 +244,17 @@ implements <a href="JupiterConfiguration.html" title="interface in org.junit.jup
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRawConfigurationParameter(java.lang.String,java.util.function.Function)">getRawConfigurationParameter</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
+                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;T&gt;&nbsp;transformer)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isExtensionAutoDetectionEnabled()">isExtensionAutoDetectionEnabled</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isParallelExecutionEnabled()">isParallelExecutionEnabled</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -306,6 +312,20 @@ implements <a href="JupiterConfiguration.html" title="interface in org.junit.jup
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="JupiterConfiguration.html#getRawConfigurationParameter(java.lang.String)">getRawConfigurationParameter</a></code>&nbsp;in interface&nbsp;<code><a href="JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a></code></dd>
+</dl>
+</li>
+</ul>
+<a id="getRawConfigurationParameter(java.lang.String,java.util.function.Function)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getRawConfigurationParameter</h4>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;&nbsp;getRawConfigurationParameter&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
+                                                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;T&gt;&nbsp;transformer)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="JupiterConfiguration.html#getRawConfigurationParameter(java.lang.String,java.util.function.Function)">getRawConfigurationParameter</a></code>&nbsp;in interface&nbsp;<code><a href="JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a></code></dd>
 </dl>
 </li>
 </ul>

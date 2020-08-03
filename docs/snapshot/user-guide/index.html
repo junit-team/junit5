@@ -4385,6 +4385,21 @@ the following.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When including arguments in display names, their string representations are truncated
+if they exceed the configured maximum length. The limit is configurable via the
+<code>junit.jupiter.params.displayname.argument.maxlength</code> configuration parameter and defaults
+to 512 characters.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>2.15.7. Lifecycle and Interoperability</h4>
@@ -9847,7 +9862,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-08-02 12:52:05 UTC
+Last updated 2020-08-03 16:12:55 UTC
 </div>
 </div>
 <style>

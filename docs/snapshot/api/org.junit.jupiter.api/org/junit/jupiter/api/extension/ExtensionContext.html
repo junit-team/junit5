@@ -28,7 +28,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":18,"i6":18,"i7":18,"i8":18,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":18,"i19":18,"i20":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":18,"i7":18,"i8":18,"i9":18,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":18,"i20":18,"i21":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -204,13 +204,22 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getConfigurationParameter(java.lang.String,java.util.function.Function)">getConfigurationParameter</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
+                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;T&gt;&nbsp;transformer)</code></th>
+<td class="colLast">
+<div class="block">Get and transform the configuration parameter stored under the specified
+ <code>key</code> using the specified <code>transformer</code>.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDisplayName()">getDisplayName</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the display name for the current test or container.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AnnotatedElement</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getElement()">getElement</a></span>()</code></th>
 <td class="colLast">
@@ -218,7 +227,7 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  context, if available.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getExecutionException()">getExecutionException</a></span>()</code></th>
 <td class="colLast">
@@ -226,14 +235,14 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  associated with this <code>ExtensionContext</code>, if available.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getParent()">getParent</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the parent extension context, if available.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>default <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRequiredTestClass()">getRequiredTestClass</a></span>()</code></th>
 <td class="colLast">
@@ -241,7 +250,7 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  or container.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>default <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRequiredTestInstance()">getRequiredTestInstance</a></span>()</code></th>
 <td class="colLast">
@@ -249,7 +258,7 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  or container.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>default <a href="TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRequiredTestInstances()">getRequiredTestInstances</a></span>()</code></th>
 <td class="colLast">
@@ -257,7 +266,7 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  or container.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>default <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRequiredTestMethod()">getRequiredTestMethod</a></span>()</code></th>
 <td class="colLast">
@@ -265,28 +274,28 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  or container.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRoot()">getRoot</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the <em>root</em> <code>ExtensionContext</code>.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext.Store</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getStore(org.junit.jupiter.api.extension.ExtensionContext.Namespace)">getStore</a></span>&#8203;(<a href="ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension">ExtensionContext.Namespace</a>&nbsp;namespace)</code></th>
 <td class="colLast">
 <div class="block">Get the <a href="ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store</code></a> for the supplied <a href="ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension"><code>ExtensionContext.Namespace</code></a>.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTags()">getTags</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the set of all tags for the current test or container.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestClass()">getTestClass</a></span>()</code></th>
 <td class="colLast">
@@ -294,7 +303,7 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  if available.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstance()">getTestInstance</a></span>()</code></th>
 <td class="colLast">
@@ -302,7 +311,7 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  if available.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api">TestInstance.Lifecycle</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstanceLifecycle()">getTestInstanceLifecycle</a></span>()</code></th>
 <td class="colLast">
@@ -310,7 +319,7 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  instance</a> associated with the current test or container, if available.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstances()">getTestInstances</a></span>()</code></th>
 <td class="colLast">
@@ -318,21 +327,21 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  if available.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestMethod()">getTestMethod</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> associated with the current test, if available.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getUniqueId()">getUniqueId</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the unique ID of the current test or container.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#publishReportEntry(java.lang.String)">publishReportEntry</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
 <td class="colLast">
@@ -341,7 +350,7 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  supply additional information to the reporting infrastructure.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#publishReportEntry(java.lang.String,java.lang.String)">publishReportEntry</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
@@ -351,7 +360,7 @@ public interface <span class="typeNameLabel">ExtensionContext</span></pre>
  supply additional information to the reporting infrastructure.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#publishReportEntry(java.util.Map)">publishReportEntry</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;map)</code></th>
 <td class="colLast">
@@ -744,6 +753,42 @@ default&nbsp;<a href="TestInstances.html" title="interface in org.junit.jupiter.
  but potentially empty</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.1</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html?is-external=true#getProperty(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>System.getProperty(String)</code></a>, 
+<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="getConfigurationParameter(java.lang.String,java.util.function.Function)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getConfigurationParameter</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.7")
+&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;&nbsp;getConfigurationParameter&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
+                                          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;T&gt;&nbsp;transformer)</pre>
+<div class="block">Get and transform the configuration parameter stored under the specified
+ <code>key</code> using the specified <code>transformer</code>.
+
+ <p>If no such key is present in the <code>ConfigurationParameters</code> for
+ the JUnit Platform, an attempt will be made to look up the value as a
+ JVM system property. If no such system property exists, an attempt will
+ be made to look up the value in the JUnit Platform properties file.
+
+ <p>In case the transformer throws an exception, it will be wrapped in a
+ <a href="../../../../../../org.junit.platform.commons/org/junit/platform/commons/JUnitException.html" title="class in org.junit.platform.commons"><code>JUnitException</code></a> with a helpful message.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - the key to look up; never <code>null</code> or blank</dd>
+<dd><code>transformer</code> - the transformer to apply in case a value is found;
+ never <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an <code>Optional</code> containing the value; never <code>null</code>
+ but potentially empty</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.7</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html?is-external=true#getProperty(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>System.getProperty(String)</code></a>, 
 <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a></dd>
