@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
@@ -41,6 +42,11 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public Optional<String> getRawConfigurationParameter(String key) {
 		return delegate.getRawConfigurationParameter(key);
+	}
+
+	@Override
+	public <T> Optional<T> getRawConfigurationParameter(String key, Function<String, T> transformer) {
+		return delegate.getRawConfigurationParameter(key, transformer);
 	}
 
 	@Override

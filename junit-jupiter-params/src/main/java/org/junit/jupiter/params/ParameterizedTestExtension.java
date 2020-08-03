@@ -38,6 +38,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class ParameterizedTestExtension implements TestTemplateInvocationContextProvider {
 
 	private static final String METHOD_CONTEXT_KEY = "context";
+	static final String ARGUMENT_MAX_LENGTH_KEY = "junit.jupiter.params.displayname.argument.maxlength";
 
 	@Override
 	public boolean supportsTestTemplate(ExtensionContext context) {
@@ -72,7 +73,10 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		String displayName = extensionContext.getDisplayName();
 		ParameterizedTestMethodContext methodContext = getStore(extensionContext)//
 				.get(METHOD_CONTEXT_KEY, ParameterizedTestMethodContext.class);
-		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod, methodContext, displayName);
+		int argumentMaxLength = extensionContext.getConfigurationParameter(ARGUMENT_MAX_LENGTH_KEY,
+			Integer::parseInt).orElse(512);
+		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod, methodContext, displayName,
+			argumentMaxLength);
 		AtomicLong invocationCount = new AtomicLong(0);
 
 		// @formatter:off
@@ -119,13 +123,13 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod,
-			ParameterizedTestMethodContext methodContext, String displayName) {
+			ParameterizedTestMethodContext methodContext, String displayName, int argumentMaxLength) {
 		ParameterizedTest parameterizedTest = findAnnotation(templateMethod, ParameterizedTest.class).get();
 		String pattern = Preconditions.notBlank(parameterizedTest.name().trim(),
 			() -> String.format(
 				"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.",
 				templateMethod));
-		return new ParameterizedTestNameFormatter(pattern, displayName, methodContext);
+		return new ParameterizedTestNameFormatter(pattern, displayName, methodContext, argumentMaxLength);
 	}
 
 	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider, ExtensionContext context) {

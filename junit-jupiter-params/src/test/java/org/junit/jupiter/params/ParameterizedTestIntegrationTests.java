@@ -21,6 +21,7 @@ import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
@@ -217,6 +218,17 @@ class ParameterizedTestIntegrationTests {
 					"afterEach:[2] argument=bar",
 			"afterAll:ParameterizedTestIntegrationTests$LifecycleTestCase");
 		// @formatter:on
+	}
+
+	@Test
+	void truncatesArgumentsThatExceedMaxLength() {
+		var results = EngineTestKit.engine(new JupiterTestEngine()) //
+				.configurationParameter(ParameterizedTestExtension.ARGUMENT_MAX_LENGTH_KEY, "2") //
+				.selectors(selectMethod(TestCase.class, "testWithCsvSource", String.class.getName())) //
+				.execute();
+		results.testEvents().assertThatEvents() //
+				.haveExactly(1, event(displayName("[1] argument=f…"), started())) //
+				.haveExactly(1, event(displayName("[2] argument=b…"), started()));
 	}
 
 	private EngineExecutionResults execute(DiscoverySelector... selectors) {
