@@ -29,6 +29,8 @@ import org.junit.platform.commons.util.StringUtils;
  */
 class ParameterizedTestNameFormatter {
 
+	private static final char ELLIPSIS = '\u2026';
+
 	private final String pattern;
 	private final String displayName;
 	private final ParameterizedTestMethodContext methodContext;
@@ -102,7 +104,7 @@ class ParameterizedTestNameFormatter {
 
 	private String truncateIfExceedsMaxLength(String argument) {
 		if (argument.length() > argumentMaxLength) {
-			return argument.substring(0, argumentMaxLength - 1) + "\u2026";
+			return argument.substring(0, argumentMaxLength - 1) + ELLIPSIS;
 		}
 		return argument;
 	}
