@@ -105,6 +105,8 @@ on GitHub.
   same functionality but a more descriptive name.
 * `assertTimeoutPreemptively` in `Assertions` now reports the stacktrace of the timed out
   thread in the cause of the `AssertionFailedError`.
+* `assertTimeoutPreemptively` now uses threads with a specific name, conveying their use
+  by the framework, to facilitate debugging and stack trace analysis.
 * New `TypedArgumentConverter` for converting one specific type to another, therefore
   reducing boilerplate type checks compared to implementing `ArgumentConverter` directly.
 * Added `ExtensionContext.getConfigurationParameter(String, Function<String, T>)`
