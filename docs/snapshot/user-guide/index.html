@@ -6927,6 +6927,20 @@ which they are declared in the source code. For example, the execution of tests 
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>If you wish to combine multiple extensions in a reusable way, you can define a custom
+<em><a href="#writing-tests-meta-annotations">composed annotation</a></em> and use <code>@ExtendWith</code> as a
+<em>meta-annotation</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@Target</span><span class="o">({</span> <span class="nc">ElementType</span><span class="o">.</span><span class="na">TYPE</span><span class="o">,</span> <span class="nc">ElementType</span><span class="o">.</span><span class="na">METHOD</span> <span class="o">})</span>
+<span class="nd">@Retention</span><span class="o">(</span><span class="nc">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+<span class="nd">@ExtendWith</span><span class="o">({</span> <span class="nc">DatabaseExtension</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="nc">WebServerExtension</span><span class="o">.</span><span class="na">class</span> <span class="o">})</span>
+<span class="kd">public</span> <span class="nd">@interface</span> <span class="nc">DatabaseAndWebServerExtension</span> <span class="o">{</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="extensions-registration-programmatic"><a class="anchor" href="#extensions-registration-programmatic"></a>5.2.2. Programmatic Extension Registration</h4>
@@ -9862,7 +9876,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-08-04 15:40:02 UTC
+Last updated 2020-08-04 21:03:26 UTC
 </div>
 </div>
 <style>
