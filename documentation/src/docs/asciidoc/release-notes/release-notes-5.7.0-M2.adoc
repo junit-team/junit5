@@ -57,6 +57,7 @@ on GitHub.
   events.
 * `ExecutionRecorder` in junit-platform-testkit is now public for fine-grained testing of
   classes that use `EngineExecutionListener`.
+* `ForkJoinPoolHierarchicalTestExecutorService` can now be constructed using `ParallelExecutionConfiguration`
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter
