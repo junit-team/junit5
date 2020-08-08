@@ -696,7 +696,8 @@ instance of a test class was created, regardless whether any registered
 are now reported to registered <code>TestWatcher</code> extensions.</p>
 </li>
 <li>
-<p>Inherited @BeforeEach methods are now executed on correct instances for @Nested classes.</p>
+<p>Inherited <code>@BeforeEach</code> methods are now executed on correct instances for <code>@Nested</code>
+classes.</p>
 </li>
 </ul>
 </div>
@@ -717,48 +718,52 @@ which provides the exact same functionality but has a more descriptive name.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>New <code>assertLinesMatch()</code> method overloads in <code>Assertions</code> that accept two
+<code>Stream&lt;String&gt;</code> instances for comparison.</p>
+</li>
+<li>
+<p><code>assertTimeoutPreemptively()</code> in <code>Assertions</code> now reports the stack trace of the timed
+out thread in the cause of the <code>AssertionFailedError</code>.</p>
+</li>
+<li>
+<p><code>assertTimeoutPreemptively()</code> now uses threads with a specific name, conveying their use
+by the framework, to facilitate debugging and stack trace analysis.</p>
+</li>
+<li>
 <p>All <code>@Enabled*</code>/<code>@Disabled*</code> annotations now have an optional <code>disabledReason</code> attribute
 that can be used to provide and additional explanation as to why a test or container
 might be disabled.</p>
 </li>
 <li>
-<p>New <code>assertLinesMatch()</code> method overloads in <code>Assertions</code> that accept two
-<code>Stream&lt;String&gt;</code> instances for comparison.</p>
+<p><code>JAVA_16</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
 </li>
 <li>
-<p><code>@CsvFileSource</code> now allows one to specify file paths as an alternative to classpath
-resources.</p>
+<p>New <code>MethodOrderer.MethodName</code> to replace <code>MethodOrderer.Alphanumeric</code> with the exact
+same functionality but a more descriptive name.</p>
 </li>
 <li>
 <p>New <code>junit.jupiter.testmethod.order.default</code> configuration parameter to set the default
 <code>MethodOrderer</code> that will be used unless <code>@TestMethodOrder</code> is present.</p>
 </li>
 <li>
-<p><code>JAVA_16</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
+<p>New <code>DynamicTest.stream()</code> factory method that accepts a <code>Stream</code> instead of an
+<code>Iterator</code> for the input source.</p>
 </li>
 <li>
-<p>Add <code>MethodOrderer.MethodName</code> to replace <code>MethodOrderer.Alphanumeric</code> with the exact
-same functionality but a more descriptive name.</p>
+<p><code>@CsvFileSource</code> now allows one to specify file paths as an alternative to classpath
+resources.</p>
 </li>
 <li>
-<p><code>assertTimeoutPreemptively</code> in <code>Assertions</code> now reports the stacktrace of the timed out
-thread in the cause of the <code>AssertionFailedError</code>.</p>
-</li>
-<li>
-<p><code>assertTimeoutPreemptively</code> now uses threads with a specific name, conveying their use
-by the framework, to facilitate debugging and stack trace analysis.</p>
+<p>Arguments in display names of parameterized test invocations are now truncated if
+they exceed a configurable maximum length (defaults to 512 characters).</p>
 </li>
 <li>
 <p>New <code>TypedArgumentConverter</code> for converting one specific type to another, therefore
 reducing boilerplate type checks compared to implementing <code>ArgumentConverter</code> directly.</p>
 </li>
 <li>
-<p>Added <code>ExtensionContext.getConfigurationParameter(String, Function&lt;String, T&gt;)</code>
+<p>New <code>ExtensionContext.getConfigurationParameter(String, Function&lt;String, T&gt;)</code>
 convenience method for reading transformed configuration parameters from extensions.</p>
-</li>
-<li>
-<p>Arguments in display names of parameterized test invocations are now truncated if
-they exceed a configurable maximum length (defaults to 512 characters).</p>
 </li>
 </ul>
 </div>
@@ -1175,7 +1180,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-08-04 21:03:26 UTC
+Last updated 2020-08-08 09:32:20 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

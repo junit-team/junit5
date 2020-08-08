@@ -4555,8 +4555,14 @@ repeatability and should thus be used with care, it serves to demonstrate the
 expressiveness and power of dynamic tests.</p>
 </div>
 <div class="paragraph">
-<p>The last method generates a nested hierarchy of dynamic tests utilizing
-<code>DynamicContainer</code>.</p>
+<p>The next method is similar to <code>generateRandomNumberOfTests()</code> in terms of flexibility;
+however, <code>dynamicTestsFromStreamFactoryMethod()</code> generates a stream of dynamic tests from
+an existing <code>Stream</code> via the <code>DynamicTest.stream()</code> factory method.</p>
+</div>
+<div class="paragraph">
+<p>For demonstration purposes, the <code>dynamicNodeSingleTest()</code> method generates a single
+<code>DynamicTest</code> instead of a stream, and the <code>dynamicNodeSingleContainer()</code> method generates
+a nested hierarchy of dynamic tests utilizing <code>DynamicContainer</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4641,7 +4647,7 @@ expressiveness and power of dynamic tests.</p>
     <span class="o">}</span>
 
     <span class="nd">@TestFactory</span>
-    <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">DynamicTest</span><span class="o">&gt;</span> <span class="nf">generateRandomNumberOfTests</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">DynamicTest</span><span class="o">&gt;</span> <span class="nf">generateRandomNumberOfTestsFromIterator</span><span class="o">()</span> <span class="o">{</span>
 
         <span class="c1">// Generates random positive integers between 0 and 100 until</span>
         <span class="c1">// a number evenly divisible by 7 is encountered.</span>
@@ -4670,6 +4676,21 @@ expressiveness and power of dynamic tests.</p>
 
         <span class="c1">// Returns a stream of dynamic tests.</span>
         <span class="k">return</span> <span class="nc">DynamicTest</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">inputGenerator</span><span class="o">,</span> <span class="n">displayNameGenerator</span><span class="o">,</span> <span class="n">testExecutor</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@TestFactory</span>
+    <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">DynamicTest</span><span class="o">&gt;</span> <span class="nf">dynamicTestsFromStreamFactoryMethod</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// Stream of palindromes to check</span>
+        <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">inputStream</span> <span class="o">=</span> <span class="nc">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"racecar"</span><span class="o">,</span> <span class="s">"radar"</span><span class="o">,</span> <span class="s">"mom"</span><span class="o">,</span> <span class="s">"dad"</span><span class="o">);</span>
+
+        <span class="c1">// Generates display names like: racecar is a palindrome</span>
+        <span class="nc">Function</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">displayNameGenerator</span> <span class="o">=</span> <span class="n">text</span> <span class="o">-&gt;</span> <span class="n">text</span> <span class="o">+</span> <span class="s">" is a palindrome"</span><span class="o">;</span>
+
+        <span class="c1">// Executes tests based on the current input value.</span>
+        <span class="nc">ThrowingConsumer</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">testExecutor</span> <span class="o">=</span> <span class="n">text</span> <span class="o">-&gt;</span> <span class="n">assertTrue</span><span class="o">(</span><span class="n">isPalindrome</span><span class="o">(</span><span class="n">text</span><span class="o">));</span>
+
+        <span class="c1">// Returns a stream of dynamic tests.</span>
+        <span class="k">return</span> <span class="nc">DynamicTest</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">,</span> <span class="n">displayNameGenerator</span><span class="o">,</span> <span class="n">testExecutor</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="nd">@TestFactory</span>
@@ -9876,7 +9897,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-08-04 21:03:26 UTC
+Last updated 2020-08-08 09:32:20 UTC
 </div>
 </div>
 <style>

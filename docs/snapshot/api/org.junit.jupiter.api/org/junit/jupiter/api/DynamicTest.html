@@ -28,7 +28,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":10,"i3":9};
+var data = {"i0":9,"i1":9,"i2":10,"i3":9,"i4":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -219,8 +219,18 @@ extends <a href="DynamicNode.html" title="class in org.junit.jupiter.api">Dynami
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super T,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;displayNameGenerator,
       <a href="function/ThrowingConsumer.html" title="interface in org.junit.jupiter.api.function">ThrowingConsumer</a>&lt;? super T&gt;&nbsp;testExecutor)</code></th>
 <td class="colLast">
-<div class="block">Generate a stream of dynamic tests based on the supplied generators
- and test executor.</div>
+<div class="block">Generate a stream of dynamic tests based on the given generator and test
+ executor.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="DynamicTest.html" title="class in org.junit.jupiter.api">DynamicTest</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stream(java.util.stream.Stream,java.util.function.Function,org.junit.jupiter.api.function.ThrowingConsumer)">stream</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;T&gt;&nbsp;inputStream,
+      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super T,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;displayNameGenerator,
+      <a href="function/ThrowingConsumer.html" title="interface in org.junit.jupiter.api.function">ThrowingConsumer</a>&lt;? super T&gt;&nbsp;testExecutor)</code></th>
+<td class="colLast">
+<div class="block">Generate a stream of dynamic tests based on the given input stream and
+ test executor.</div>
 </td>
 </tr>
 </table>
@@ -311,15 +321,16 @@ extends <a href="DynamicNode.html" title="class in org.junit.jupiter.api">Dynami
 <pre class="methodSignature">public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="DynamicTest.html" title="class in org.junit.jupiter.api">DynamicTest</a>&gt;&nbsp;stream&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;T&gt;&nbsp;inputGenerator,
                                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super T,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;displayNameGenerator,
                                              <a href="function/ThrowingConsumer.html" title="interface in org.junit.jupiter.api.function">ThrowingConsumer</a>&lt;? super T&gt;&nbsp;testExecutor)</pre>
-<div class="block">Generate a stream of dynamic tests based on the supplied generators
- and test executor.
+<div class="block">Generate a stream of dynamic tests based on the given generator and test
+ executor.
 
- <p>Use this method when the set of dynamic tests is nondeterministic
- in nature.
+ <p>Use this method when the set of dynamic tests is nondeterministic in
+ nature or when the input comes from an existing <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Iterator</code></a>. See
+ <a href="#stream(java.util.stream.Stream,java.util.function.Function,org.junit.jupiter.api.function.ThrowingConsumer)"><code>stream(Stream, Function, ThrowingConsumer)</code></a> as an alternative.
 
- <p>The supplied <code>inputGenerator</code> is responsible for generating
+ <p>The given <code>inputGenerator</code> is responsible for generating
  input values. A <a href="DynamicTest.html" title="class in org.junit.jupiter.api"><code>DynamicTest</code></a> will be added to the resulting
- stream for each dynamically generated input value, using the supplied
+ stream for each dynamically generated input value, using the given
  <code>displayNameGenerator</code> and <code>testExecutor</code>.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -330,13 +341,58 @@ extends <a href="DynamicNode.html" title="class in org.junit.jupiter.api">Dynami
  <em>input generator</em>; never <code>null</code></dd>
 <dd><code>displayNameGenerator</code> - a function that generates a display name
  based on an input value; never <code>null</code></dd>
-<dd><code>testExecutor</code> - a consumer that executes a test based on an
- input value; never <code>null</code></dd>
+<dd><code>testExecutor</code> - a consumer that executes a test based on an input
+ value; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a stream of dynamic tests based on the supplied generators and
+<dd>a stream of dynamic tests based on the given generator and
  executor; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#dynamicTest(java.lang.String,org.junit.jupiter.api.function.Executable)"><code>dynamicTest(String, Executable)</code></a></dd>
+<dd><a href="#dynamicTest(java.lang.String,org.junit.jupiter.api.function.Executable)"><code>dynamicTest(String, Executable)</code></a>, 
+<a href="#stream(java.util.stream.Stream,java.util.function.Function,org.junit.jupiter.api.function.ThrowingConsumer)"><code>stream(Stream, Function, ThrowingConsumer)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="stream(java.util.stream.Stream,java.util.function.Function,org.junit.jupiter.api.function.ThrowingConsumer)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>stream</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#MAINTAINED" title="class or interface in org.apiguardian.api" class="externalLink">MAINTAINED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.7")
+public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="DynamicTest.html" title="class in org.junit.jupiter.api">DynamicTest</a>&gt;&nbsp;stream&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;T&gt;&nbsp;inputStream,
+                                             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super T,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;displayNameGenerator,
+                                             <a href="function/ThrowingConsumer.html" title="interface in org.junit.jupiter.api.function">ThrowingConsumer</a>&lt;? super T&gt;&nbsp;testExecutor)</pre>
+<div class="block">Generate a stream of dynamic tests based on the given input stream and
+ test executor.
+
+ <p>Use this method when the set of dynamic tests is nondeterministic in
+ nature or when the input comes from an existing <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink"><code>Stream</code></a>. See
+ <a href="#stream(java.util.Iterator,java.util.function.Function,org.junit.jupiter.api.function.ThrowingConsumer)"><code>stream(Iterator, Function, ThrowingConsumer)</code></a> as an alternative.
+
+ <p>The given <code>inputStream</code> is responsible for supplying input values.
+ A <a href="DynamicTest.html" title="class in org.junit.jupiter.api"><code>DynamicTest</code></a> will be added to the resulting stream for each
+ dynamically supplied input value, using the given <code>displayNameGenerator</code>
+ and <code>testExecutor</code>.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of <em>input</em> supplied by the <code>inputStream</code>
+ and used by the <code>displayNameGenerator</code> and <code>testExecutor</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>inputStream</code> - a <code>Stream</code> that supplies dynamic input values;
+ never <code>null</code></dd>
+<dd><code>displayNameGenerator</code> - a function that generates a display name
+ based on an input value; never <code>null</code></dd>
+<dd><code>testExecutor</code> - a consumer that executes a test based on an input
+ value; never <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a stream of dynamic tests based on the given generator and
+ executor; never <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.7</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#dynamicTest(java.lang.String,org.junit.jupiter.api.function.Executable)"><code>dynamicTest(String, Executable)</code></a>, 
+<a href="#stream(java.util.Iterator,java.util.function.Function,org.junit.jupiter.api.function.ThrowingConsumer)"><code>stream(Iterator, Function, ThrowingConsumer)</code></a></dd>
 </dl>
 </li>
 </ul>

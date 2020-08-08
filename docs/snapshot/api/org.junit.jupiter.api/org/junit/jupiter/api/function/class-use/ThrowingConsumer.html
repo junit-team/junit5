@@ -139,8 +139,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super T,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;displayNameGenerator,
       <a href="../ThrowingConsumer.html" title="interface in org.junit.jupiter.api.function">ThrowingConsumer</a>&lt;? super T&gt;&nbsp;testExecutor)</code></th>
 <td class="colLast">
-<div class="block">Generate a stream of dynamic tests based on the supplied generators
- and test executor.</div>
+<div class="block">Generate a stream of dynamic tests based on the given generator and test
+ executor.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="../../DynamicTest.html" title="class in org.junit.jupiter.api">DynamicTest</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DynamicTest.</span><code><span class="memberNameLink"><a href="../../DynamicTest.html#stream(java.util.stream.Stream,java.util.function.Function,org.junit.jupiter.api.function.ThrowingConsumer)">stream</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;T&gt;&nbsp;inputStream,
+      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super T,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;displayNameGenerator,
+      <a href="../ThrowingConsumer.html" title="interface in org.junit.jupiter.api.function">ThrowingConsumer</a>&lt;? super T&gt;&nbsp;testExecutor)</code></th>
+<td class="colLast">
+<div class="block">Generate a stream of dynamic tests based on the given input stream and
+ test executor.</div>
 </td>
 </tr>
 </tbody>
