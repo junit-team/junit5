@@ -60,6 +60,7 @@ on GitHub.
 * `ForkJoinPoolHierarchicalTestExecutorService` can now be constructed by supplying a
   `ParallelExecutionConfiguration`.
 
+
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter
 
@@ -84,7 +85,8 @@ on GitHub.
   `TestInstancePostProcessor` extension threw an exception.
 * Disabled `@TestTemplate` methods (e.g. `@ParameterizedTest` and `@RepeatedTest` methods)
   are now reported to registered `TestWatcher` extensions.
-* Inherited @BeforeEach methods are now executed on correct instances for @Nested classes.
+* Inherited `@BeforeEach` methods are now executed on correct instances for `@Nested`
+  classes.
 
 ==== Deprecations and Breaking Changes
 
@@ -93,28 +95,29 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New `assertLinesMatch()` method overloads in `Assertions` that accept two
+  `Stream<String>` instances for comparison.
+* `assertTimeoutPreemptively()` in `Assertions` now reports the stack trace of the timed
+  out thread in the cause of the `AssertionFailedError`.
+* `assertTimeoutPreemptively()` now uses threads with a specific name, conveying their use
+  by the framework, to facilitate debugging and stack trace analysis.
 * All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason` attribute
   that can be used to provide and additional explanation as to why a test or container
   might be disabled.
-* New `assertLinesMatch()` method overloads in `Assertions` that accept two
-  `Stream<String>` instances for comparison.
-* `@CsvFileSource` now allows one to specify file paths as an alternative to classpath
-  resources.
+* `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* New `MethodOrderer.MethodName` to replace `MethodOrderer.Alphanumeric` with the exact
+  same functionality but a more descriptive name.
 * New `junit.jupiter.testmethod.order.default` configuration parameter to set the default
   `MethodOrderer` that will be used unless `@TestMethodOrder` is present.
-* `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution conditions.
-* Add `MethodOrderer.MethodName` to replace `MethodOrderer.Alphanumeric` with the exact
-  same functionality but a more descriptive name.
-* `assertTimeoutPreemptively` in `Assertions` now reports the stacktrace of the timed out
-  thread in the cause of the `AssertionFailedError`.
-* `assertTimeoutPreemptively` now uses threads with a specific name, conveying their use
-  by the framework, to facilitate debugging and stack trace analysis.
-* New `TypedArgumentConverter` for converting one specific type to another, therefore
-  reducing boilerplate type checks compared to implementing `ArgumentConverter` directly.
-* Added `ExtensionContext.getConfigurationParameter(String, Function<String, T>)`
-  convenience method for reading transformed configuration parameters from extensions.
+* `@CsvFileSource` now allows one to specify file paths as an alternative to classpath
+  resources.
 * Arguments in display names of parameterized test invocations are now truncated if
   they exceed a configurable maximum length (defaults to 512 characters).
+* New `TypedArgumentConverter` for converting one specific type to another, therefore
+  reducing boilerplate type checks compared to implementing `ArgumentConverter` directly.
+* New `ExtensionContext.getConfigurationParameter(String, Function<String, T>)`
+  convenience method for reading transformed configuration parameters from extensions.
+
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage
