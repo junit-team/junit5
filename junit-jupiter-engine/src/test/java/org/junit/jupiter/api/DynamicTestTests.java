@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static java.util.Collections.emptyIterator;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
@@ -19,12 +20,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.function.ThrowingConsumer;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.opentest4j.AssertionFailedError;
 
@@ -39,9 +43,48 @@ class DynamicTestTests {
 	private final List<String> assertedValues = new ArrayList<>();
 
 	@Test
+	void streamFromStreamPreconditions() {
+		ThrowingConsumer<Object> testExecutor = input -> {
+		};
+		Function<Object, String> displayNameGenerator = Object::toString;
+
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream((Stream<?>) null, displayNameGenerator, testExecutor));
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream(Stream.empty(), null, testExecutor));
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream(Stream.empty(), displayNameGenerator, null));
+	}
+
+	@Test
+	void streamFromIteratorPreconditions() {
+		ThrowingConsumer<Object> testExecutor = input -> {
+		};
+		Function<Object, String> displayNameGenerator = Object::toString;
+
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream((Iterator<?>) null, displayNameGenerator, testExecutor));
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream(emptyIterator(), null, testExecutor));
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream(emptyIterator(), displayNameGenerator, null));
+	}
+
+	@Test
+	void streamFromStream() throws Throwable {
+		Stream<DynamicTest> stream = DynamicTest.stream(Stream.of("foo", "bar", "baz"), String::toUpperCase,
+			this::throwingConsumer);
+		assertStream(stream);
+	}
+
+	@Test
 	void streamFromIterator() throws Throwable {
-		Stream<DynamicTest> stream = DynamicTest.stream(Arrays.asList("foo", "bar", "baz").iterator(),
-			String::toUpperCase, this::throwingConsumer);
+		Stream<DynamicTest> stream = DynamicTest.stream(List.of("foo", "bar", "baz").iterator(), String::toUpperCase,
+			this::throwingConsumer);
+		assertStream(stream);
+	}
+
+	private void assertStream(Stream<DynamicTest> stream) throws Throwable {
 		List<DynamicTest> dynamicTests = stream.collect(Collectors.toList());
 
 		assertThat(dynamicTests).extracting(DynamicTest::getDisplayName).containsExactly("FOO", "BAR", "BAZ");

@@ -99,7 +99,7 @@ class DynamicTestsDemo {
 	}
 
 	@TestFactory
-	Stream<DynamicTest> generateRandomNumberOfTests() {
+	Stream<DynamicTest> generateRandomNumberOfTestsFromIterator() {
 
 		// Generates random positive integers between 0 and 100 until
 		// a number evenly divisible by 7 is encountered.
@@ -134,6 +134,21 @@ class DynamicTestsDemo {
 
 		// Returns a stream of dynamic tests.
 		return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
+	}
+
+	@TestFactory
+	Stream<DynamicTest> dynamicTestsFromStreamFactoryMethod() {
+		// Stream of palindromes to check
+		Stream<String> inputStream = Stream.of("racecar", "radar", "mom", "dad");
+
+		// Generates display names like: racecar is a palindrome
+		Function<String, String> displayNameGenerator = text -> text + " is a palindrome";
+
+		// Executes tests based on the current input value.
+		ThrowingConsumer<String> testExecutor = text -> assertTrue(isPalindrome(text));
+
+		// Returns a stream of dynamic tests.
+		return DynamicTest.stream(inputStream, displayNameGenerator, testExecutor);
 	}
 
 	@TestFactory

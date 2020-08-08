@@ -109,6 +109,8 @@ on GitHub.
   same functionality but a more descriptive name.
 * New `junit.jupiter.testmethod.order.default` configuration parameter to set the default
   `MethodOrderer` that will be used unless `@TestMethodOrder` is present.
+* New `DynamicTest.stream()` factory method that accepts a `Stream` instead of an
+  `Iterator` for the input source.
 * `@CsvFileSource` now allows one to specify file paths as an alternative to classpath
   resources.
 * Arguments in display names of parameterized test invocations are now truncated if

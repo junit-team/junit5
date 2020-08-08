@@ -1676,8 +1676,13 @@ behavior of `generateRandomNumberOfTests()` is of course in conflict with test
 repeatability and should thus be used with care, it serves to demonstrate the
 expressiveness and power of dynamic tests.
 
-The last method generates a nested hierarchy of dynamic tests utilizing
-`DynamicContainer`.
+The next method is similar to `generateRandomNumberOfTests()` in terms of flexibility;
+however, `dynamicTestsFromStreamFactoryMethod()` generates a stream of dynamic tests from
+an existing `Stream` via the `DynamicTest.stream()` factory method.
+
+For demonstration purposes, the `dynamicNodeSingleTest()` method generates a single
+`DynamicTest` instead of a stream, and the `dynamicNodeSingleContainer()` method generates
+a nested hierarchy of dynamic tests utilizing `DynamicContainer`.
 
 [source,java]
 ----
