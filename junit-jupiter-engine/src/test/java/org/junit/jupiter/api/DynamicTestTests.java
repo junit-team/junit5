@@ -44,8 +44,7 @@ class DynamicTestTests {
 			String::toUpperCase, this::throwingConsumer);
 		List<DynamicTest> dynamicTests = stream.collect(Collectors.toList());
 
-		assertThat(dynamicTests).hasSize(3).extracting(DynamicTest::getDisplayName).containsExactly("FOO", "BAR",
-			"BAZ");
+		assertThat(dynamicTests).extracting(DynamicTest::getDisplayName).containsExactly("FOO", "BAR", "BAZ");
 
 		assertThat(assertedValues).isEmpty();
 
@@ -86,7 +85,7 @@ class DynamicTestTests {
 	}
 
 	@Test
-	void testSourceUriIsNotPresentByDefault() {
+	void sourceUriIsNotPresentByDefault() {
 		DynamicTest test = dynamicTest("foo", nix);
 		assertThat(test.getTestSourceUri()).isNotPresent();
 		assertThat(test.toString()).isEqualTo("DynamicTest [displayName = 'foo', testSourceUri = null]");
@@ -96,7 +95,7 @@ class DynamicTestTests {
 	}
 
 	@Test
-	void testSourceUriIsReturnedWhenSupplied() {
+	void sourceUriIsReturnedWhenSupplied() {
 		URI testSourceUri = URI.create("any://test");
 		DynamicTest test = dynamicTest("foo", testSourceUri, nix);
 		URI containerSourceUri = URI.create("other://container");
