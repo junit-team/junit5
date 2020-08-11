@@ -66,7 +66,8 @@ public interface Launcher {
 	 *
 	 * @apiNote This method may be called to generate a preview of the test
 	 * tree. The resulting {@link TestPlan} is unmodifiable and may be passed to
-	 * {@link #execute(TestPlan, TestExecutionListener...)} for execution.
+	 * {@link #execute(TestPlan, TestExecutionListener...)} for execution at
+	 * most once.
 	 *
 	 * @param launcherDiscoveryRequest the launcher discovery request; never
 	 * {@code null}
@@ -106,6 +107,9 @@ public interface Launcher {
 	 * <p>Supplied test execution listeners are registered in addition to
 	 * already registered listeners but only for the execution of the supplied
 	 * test plan.
+	 *
+	 * @apiNote The supplied {@link TestPlan} must not have been executed
+	 * previously.
 	 *
 	 * @param testPlan the test plan to execute; never {@code null}
 	 * @param listeners additional test execution listeners; never {@code null}

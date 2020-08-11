@@ -28,6 +28,7 @@ class InternalTestPlan extends TestPlan {
 
 	private static final Logger logger = LoggerFactory.getLogger(InternalTestPlan.class);
 
+	private final AtomicBoolean executionStarted = new AtomicBoolean(false);
 	private final AtomicBoolean warningEmitted = new AtomicBoolean(false);
 	private final LauncherDiscoveryResult discoveryResult;
 	private final TestPlan delegate;
@@ -41,6 +42,12 @@ class InternalTestPlan extends TestPlan {
 		super(delegate.containsTests());
 		this.discoveryResult = discoveryResult;
 		this.delegate = delegate;
+	}
+
+	void markStarted() {
+		if (!executionStarted.compareAndSet(false, true)) {
+			throw new PreconditionViolationException("TestPlan must only be executed once");
+		}
 	}
 
 	LauncherDiscoveryResult getDiscoveryResult() {
