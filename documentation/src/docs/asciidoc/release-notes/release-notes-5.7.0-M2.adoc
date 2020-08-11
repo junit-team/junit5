@@ -32,6 +32,8 @@ on GitHub.
 
 * Characters in exception messages and other user-supplied values that are not allowed in
   XML are now replaced with their character reference – for example, `\0` becomes `&#0;`.
+* The `Launcher` now throws an exception when a previously executed `TestPlan` is
+  attempted to be executed again.
 
 ==== Deprecations and Breaking Changes
 

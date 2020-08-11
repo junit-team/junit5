@@ -698,7 +698,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherCanExecuteTestPlan() {
+	void launcherCanExecuteTestPlanExactlyOnce() {
 		TestEngine engine = mock(TestEngine.class);
 		when(engine.getId()).thenReturn("some-engine");
 		when(engine.discover(any(), any())).thenAnswer(invocation -> {
@@ -712,6 +712,9 @@ class DefaultLauncherTests {
 
 		launcher.execute(testPlan);
 		verify(engine, times(1)).execute(any());
+
+		var e = assertThrows(PreconditionViolationException.class, () -> launcher.execute(testPlan));
+		assertEquals(e.getMessage(), "TestPlan must only be executed once");
 	}
 
 	@Test
