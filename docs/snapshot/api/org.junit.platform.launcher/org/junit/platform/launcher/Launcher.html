@@ -275,7 +275,8 @@ public interface <span class="typeNameLabel">Launcher</span></pre>
 <dt><span class="simpleTagLabel">API Note:</span></dt>
 <dd>This method may be called to generate a preview of the test
  tree. The resulting <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> is unmodifiable and may be passed to
- <a href="#execute(org.junit.platform.launcher.TestPlan,org.junit.platform.launcher.TestExecutionListener...)"><code>execute(TestPlan, TestExecutionListener...)</code></a> for execution.</dd>
+ <a href="#execute(org.junit.platform.launcher.TestPlan,org.junit.platform.launcher.TestExecutionListener...)"><code>execute(TestPlan, TestExecutionListener...)</code></a> for execution at
+ most once.</dd>
 </dl>
 </li>
 </ul>
@@ -333,6 +334,9 @@ void&nbsp;execute&#8203;(<a href="TestPlan.html" title="class in org.junit.platf
 <dd><code>listeners</code> - additional test execution listeners; never <code>null</code></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
+<dt><span class="simpleTagLabel">API Note:</span></dt>
+<dd>The supplied <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> must not have been executed
+ previously.</dd>
 </dl>
 </li>
 </ul>
