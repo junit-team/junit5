@@ -140,7 +140,7 @@ public @interface CsvFileSource {
 	/**
 	 * The maximum characters of per CSV column allowed.
 	 *
-	 * <p>To enable auto-expansion of the internal array, set this property to -1
+	 * <p>Must be a positive number.
 	 *
 	 * <p>Defaults to {@code 4096}.
 	 *

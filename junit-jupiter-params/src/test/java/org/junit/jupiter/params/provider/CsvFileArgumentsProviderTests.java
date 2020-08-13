@@ -398,7 +398,7 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void readsLineFromExceedsMaxCharsFileWithAutoExpansionConfig(@TempDir Path tempDir) throws java.io.IOException {
+	void throwsExceptionWhenMaxCharsPerColumnIsNotPositiveNumber(@TempDir Path tempDir) throws java.io.IOException {
 		Path csvFile = writeClasspathResourceToFile("/exceeds-default-max-chars.csv",
 			tempDir.resolve("exceeds-default-max-chars.csv"));
 		CsvFileSource annotation = csvFileSource()//
@@ -407,9 +407,12 @@ class CsvFileArgumentsProviderTests {
 				.maxCharsPerColumn(-1).files(csvFile.toAbsolutePath().toString())//
 				.build();
 
-		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, //
+			() -> provideArguments(new CsvFileArgumentsProvider(), annotation));
 
-		assertThat(arguments).hasSize(2 * 1);
+		assertThat(exception)//
+				.hasMessageStartingWith("maxCharsPerColumn must be a positive number: -1");
+
 	}
 
 	@Test

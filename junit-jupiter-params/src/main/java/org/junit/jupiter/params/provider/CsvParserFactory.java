@@ -27,7 +27,6 @@ class CsvParserFactory {
 	private static final char SINGLE_QUOTE = '\'';
 	private static final char DOUBLE_QUOTE = '"';
 	private static final char EMPTY_CHAR = '\0';
-	private static final int DEFAULT_MAX_CHARS_PER_COLUMN = 4096;
 
 	static CsvParser createParserFor(CsvSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
@@ -69,7 +68,9 @@ class CsvParserFactory {
 		settings.getFormat().setQuoteEscape(quote);
 		settings.setEmptyValue(emptyValue);
 		settings.setAutoConfigurationEnabled(false);
-		settings.setMaxCharsPerColumn(maxCharsPerColumn == 0 ? DEFAULT_MAX_CHARS_PER_COLUMN : maxCharsPerColumn);
+		Preconditions.condition(maxCharsPerColumn > 0,
+			() -> "maxCharsPerColumn must be a positive number: " + maxCharsPerColumn);
+		settings.setMaxCharsPerColumn(maxCharsPerColumn);
 		// Do not use the built-in support for skipping rows/lines since it will
 		// throw an IllegalArgumentException if the file does not contain at least
 		// the number of specified lines to skip.
