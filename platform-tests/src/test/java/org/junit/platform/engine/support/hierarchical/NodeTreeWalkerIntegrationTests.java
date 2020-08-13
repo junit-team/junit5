@@ -51,7 +51,7 @@ class NodeTreeWalkerIntegrationTests {
 		NodeExecutionAdvisor advisor = new NodeTreeWalker().walk(engineDescriptor);
 
 		TestDescriptor testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertThat(advisor.getResourceLock(testClassDescriptor)).isInstanceOf(NopLock.class);
+		assertThat(advisor.getResourceLock(testClassDescriptor)).isInstanceOf(SingleLock.class);
 		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
 
 		assertThat(testClassDescriptor.getChildren()).hasSize(2);

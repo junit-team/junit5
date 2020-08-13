@@ -62,6 +62,7 @@ import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
@@ -220,6 +221,33 @@ class ParallelExecutionIntegrationTests {
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassB))).hasSize(3);
 		TestDescriptor testClassC = findFirstTestDescriptor(results, container(ParallelMethodsTestCaseC.class));
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassC))).hasSize(3);
+	}
+
+	@Test
+	void canRunTestsIsolatedFromEachOther() {
+		var events = executeConcurrently(2, IsolatedTestCase.class);
+
+		assertThat(events.stream().filter(event(test(), finishedWithFailure())::matches)).isEmpty();
+	}
+
+	@ExtendWith(ThreadReporter.class)
+	static class IsolatedTestCase {
+
+		@Test
+		@Isolated
+		void a() {
+			assertTrue(A.tryLock());
+		}
+
+		@Test
+		void b() {
+			assertTrue(A.tryLock());
+		}
+
+		@AfterEach
+		void unlock() {
+			A.unlock();
+		}
 	}
 
 	private List<Event> getEventsOfChildren(EngineExecutionResults results, TestDescriptor container) {

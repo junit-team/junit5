@@ -29,6 +29,8 @@ import org.junit.platform.commons.util.ToStringBuilder;
 @API(status = EXPERIMENTAL, since = "1.3")
 public class ExclusiveResource {
 
+	static final String GLOBAL_RESOURCE_LOCK_KEY = "__global__";
+
 	private final String key;
 	private final LockMode lockMode;
 	private int hash;
