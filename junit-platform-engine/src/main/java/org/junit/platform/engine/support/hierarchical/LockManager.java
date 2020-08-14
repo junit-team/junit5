@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_RESOURCE_LOCK_KEY;
@@ -31,15 +32,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 class LockManager {
 
-	private static final Comparator<ExclusiveResource> COMPARATOR = comparing(ExclusiveResource::getKey, (a, b) -> {
-		if (a.equals(GLOBAL_RESOURCE_LOCK_KEY)) {
-			return b.equals(GLOBAL_RESOURCE_LOCK_KEY) ? 0 : -1;
-		}
-		if (b.equals(GLOBAL_RESOURCE_LOCK_KEY)) {
-			return 1;
-		}
-		return a.compareTo(b);
-	}).thenComparing(ExclusiveResource::getLockMode);
+	private static final Comparator<ExclusiveResource> COMPARATOR //
+		= comparing(ExclusiveResource::getKey, globalLockFirst().thenComparing(naturalOrder())) //
+				.thenComparing(ExclusiveResource::getLockMode);
+
+	private static Comparator<String> globalLockFirst() {
+		return comparing(key -> !GLOBAL_RESOURCE_LOCK_KEY.equals(key));
+	}
 
 	private final Map<String, ReadWriteLock> locksByKey = new ConcurrentHashMap<>();
 
