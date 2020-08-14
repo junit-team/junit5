@@ -103,7 +103,8 @@ class LockManagerTests {
 		Collection<ExclusiveResource> resources = asList( //
 			new ExclusiveResource("___foo", READ), //
 			new ExclusiveResource("foo", READ_WRITE), //
-			new ExclusiveResource(GLOBAL_RESOURCE_LOCK_KEY, globalLockMode), new ExclusiveResource("bar", READ_WRITE));
+			new ExclusiveResource(GLOBAL_RESOURCE_LOCK_KEY, globalLockMode), //
+			new ExclusiveResource("bar", READ_WRITE));
 
 		List<Lock> locks = getLocks(resources, CompositeLock.class);
 
