@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
 
 @API(status = EXPERIMENTAL, since = "5.7")
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target(ElementType.TYPE)
 @Inherited
 @ResourceLock("__global__")
 public @interface Isolated {
