@@ -379,7 +379,7 @@ class CsvFileArgumentsProviderTests {
 
 		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
 
-		assertThat(arguments).hasSize(2 * 1);
+		assertThat(arguments).hasSize(2);
 	}
 
 	@Test
@@ -389,12 +389,13 @@ class CsvFileArgumentsProviderTests {
 		CsvFileSource annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
 				.resources("/exceeds-default-max-chars.csv")//
-				.maxCharsPerColumn(4097).files(csvFile.toAbsolutePath().toString())//
+				.maxCharsPerColumn(4097)//
+				.files(csvFile.toAbsolutePath().toString())//
 				.build();
 
 		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
 
-		assertThat(arguments).hasSize(2 * 1);
+		assertThat(arguments).hasSize(2);
 	}
 
 	@Test
@@ -412,7 +413,6 @@ class CsvFileArgumentsProviderTests {
 
 		assertThat(exception)//
 				.hasMessageStartingWith("maxCharsPerColumn must be a positive number: -1");
-
 	}
 
 	@Test
@@ -433,7 +433,6 @@ class CsvFileArgumentsProviderTests {
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
 				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
-
 	}
 
 	private Stream<Object[]> provideArguments(CsvFileSource annotation, String content) {
