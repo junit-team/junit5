@@ -46,12 +46,12 @@ class NodeTreeWalker {
 	private void walk(TestDescriptor globalLockDescriptor, TestDescriptor testDescriptor,
 			NodeExecutionAdvisor advisor) {
 		Set<ExclusiveResource> exclusiveResources = getExclusiveResources(testDescriptor);
-		Set<ExclusiveResource> allResources = new HashSet<>(exclusiveResources);
 		if (exclusiveResources.isEmpty()) {
 			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(singleton(GLOBAL_READ_LOCK)));
 			testDescriptor.getChildren().forEach(child -> walk(globalLockDescriptor, child, advisor));
 		}
 		else {
+			Set<ExclusiveResource> allResources = new HashSet<>(exclusiveResources);
 			advisor.forceDescendantExecutionMode(testDescriptor, SAME_THREAD);
 			doForChildrenRecursively(testDescriptor, child -> {
 				allResources.addAll(getExclusiveResources(child));
