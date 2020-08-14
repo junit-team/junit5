@@ -244,6 +244,7 @@ class ParallelExecutionIntegrationTests {
 		assertThat(events.stream().filter(event(test(), finishedWithFailure())::matches)).isEmpty();
 	}
 
+	@Isolated
 	static class IsolatedTestCase {
 		static AtomicInteger sharedResource;
 		static CountDownLatch countDownLatch;
@@ -255,7 +256,6 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Test
-		@Isolated
 		void a() throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
@@ -300,10 +300,10 @@ class ParallelExecutionIntegrationTests {
 			}
 
 			@Nested
+			@Isolated
 			class InnerInner {
 
 				@Test
-				@Isolated
 				void a() throws Exception {
 					incrementBlockAndCheck(sharedResource, countDownLatch);
 				}
@@ -331,9 +331,10 @@ class ParallelExecutionIntegrationTests {
 				storeAndBlockAndCheck(sharedResource, countDownLatch);
 			}
 		}
+
+		@Isolated
 		static class B {
 			@Test
-			@Isolated
 			void a() throws Exception {
 				incrementBlockAndCheck(sharedResource, countDownLatch);
 			}
