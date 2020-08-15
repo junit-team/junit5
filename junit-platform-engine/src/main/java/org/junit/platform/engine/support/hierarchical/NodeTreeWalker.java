@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Collections.singleton;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
@@ -41,7 +40,7 @@ class NodeTreeWalker {
 			NodeExecutionAdvisor advisor) {
 		Set<ExclusiveResource> exclusiveResources = getExclusiveResources(testDescriptor);
 		if (exclusiveResources.isEmpty()) {
-			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(singleton(GLOBAL_READ)));
+			advisor.useResourceLock(testDescriptor, lockManager.getLockForResource(GLOBAL_READ));
 			testDescriptor.getChildren().forEach(child -> walk(globalLockDescriptor, child, advisor));
 		}
 		else {
@@ -55,8 +54,7 @@ class NodeTreeWalker {
 				advisor.forceDescendantExecutionMode(globalLockDescriptor, SAME_THREAD);
 				doForChildrenRecursively(globalLockDescriptor,
 					child -> advisor.forceDescendantExecutionMode(child, SAME_THREAD));
-				advisor.useResourceLock(globalLockDescriptor,
-					lockManager.getLockForResources(singleton(GLOBAL_READ_WRITE)));
+				advisor.useResourceLock(globalLockDescriptor, lockManager.getLockForResource(GLOBAL_READ_WRITE));
 			}
 			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(allResources));
 		}
