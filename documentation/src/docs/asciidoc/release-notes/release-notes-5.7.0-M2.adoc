@@ -66,8 +66,8 @@ on GitHub.
   resources.
 * `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution
   conditions.
-* `maxCharsPerColumn` attribute which enables the configuration of maximum characters
-  of per CSV column has been added to `@CsvSource` and `@CsvFileSource`.
+* `@CsvFileSource` and `@CsvSource` now provide a `maxCharsPerColumn` attribute
+  that enables configuring the maximum number of characters per column.
 
 
 [[release-notes-5.7.0-M2-junit-vintage]]
