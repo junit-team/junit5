@@ -26,7 +26,15 @@ import org.junit.platform.engine.TestDescriptor;
  */
 class NodeTreeWalker {
 
-	private final LockManager lockManager = new LockManager();
+	private final LockManager lockManager;
+
+	NodeTreeWalker() {
+		this(new LockManager());
+	}
+
+	NodeTreeWalker(LockManager lockManager) {
+		this.lockManager = lockManager;
+	}
 
 	NodeExecutionAdvisor walk(TestDescriptor rootDescriptor) {
 		Preconditions.condition(getExclusiveResources(rootDescriptor).isEmpty(),

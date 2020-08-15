@@ -11,10 +11,8 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
@@ -122,16 +120,7 @@ class LockManagerTests {
 	private List<Lock> getLocks(Collection<ExclusiveResource> resources, Class<? extends ResourceLock> type) {
 		ResourceLock lock = lockManager.getLockForResources(resources);
 		assertThat(lock).isInstanceOf(type);
-		return getLocks(lock);
+		return ResourceLockSupport.getLocks(lock);
 	}
 
-	private List<Lock> getLocks(ResourceLock resourceLock) {
-		if (resourceLock instanceof NopLock) {
-			return emptyList();
-		}
-		if (resourceLock instanceof SingleLock) {
-			return singletonList(((SingleLock) resourceLock).getLock());
-		}
-		return ((CompositeLock) resourceLock).getLocks();
-	}
 }
