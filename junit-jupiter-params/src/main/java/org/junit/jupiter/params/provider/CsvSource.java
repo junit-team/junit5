@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -36,7 +36,7 @@ import org.apiguardian.api.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.0")
+@API(status = STABLE, since = "5.7")
 @ArgumentsSource(CsvArgumentsProvider.class)
 public @interface CsvSource {
 
@@ -72,7 +72,6 @@ public @interface CsvSource {
 	 *
 	 * @since 5.6
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
 	String delimiterString() default "";
 
 	/**
@@ -84,7 +83,6 @@ public @interface CsvSource {
 	 *
 	 * @since 5.5
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
 	String emptyValue() default "";
 
 	/**
@@ -102,7 +100,6 @@ public @interface CsvSource {
 	 *
 	 * @since 5.6
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
 	String[] nullValues() default {};
 
 	/**

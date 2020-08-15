@@ -67,7 +67,9 @@ val osgiPropertiesFile = file("$buildDir/verifyOSGiProperties.bndrun")
 val osgiProperties by tasks.registering(WriteProperties::class) {
 	outputFile = osgiPropertiesFile
 	property("-standalone", true)
-	property("-runee", "JavaSE-${Versions.jvmTarget}")
+	project.extensions.getByType(JavaLibraryExtension::class.java).let { javaLibrary ->
+		property("-runee", "JavaSE-${javaLibrary.mainJavaVersion}")
+	}
 	property("-runrequires", "osgi.identity;filter:='(osgi.identity=${project.name})'")
 	property("-runsystempackages", "jdk.internal.misc,sun.misc")
 }

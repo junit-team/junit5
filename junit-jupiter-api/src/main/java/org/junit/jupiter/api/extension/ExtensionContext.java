@@ -196,7 +196,7 @@ public interface ExtensionContext {
 	 *
 	 * @since 5.4
 	 */
-	@API(status = EXPERIMENTAL, since = "5.4")
+	@API(status = STABLE, since = "5.7")
 	Optional<TestInstances> getTestInstances();
 
 	/**
@@ -212,7 +212,7 @@ public interface ExtensionContext {
 	 *
 	 * @since 5.4
 	 */
-	@API(status = EXPERIMENTAL, since = "5.4")
+	@API(status = STABLE, since = "5.7")
 	default TestInstances getRequiredTestInstances() {
 		return Preconditions.notNull(getTestInstances().orElse(null),
 			"Illegal state: required test instances are not present in the current ExtensionContext");
@@ -291,6 +291,31 @@ public interface ExtensionContext {
 	 */
 	@API(status = STABLE, since = "5.1")
 	Optional<String> getConfigurationParameter(String key);
+
+	/**
+	 * Get and transform the configuration parameter stored under the specified
+	 * {@code key} using the specified {@code transformer}.
+	 *
+	 * <p>If no such key is present in the {@code ConfigurationParameters} for
+	 * the JUnit Platform, an attempt will be made to look up the value as a
+	 * JVM system property. If no such system property exists, an attempt will
+	 * be made to look up the value in the JUnit Platform properties file.
+	 *
+	 * <p>In case the transformer throws an exception, it will be wrapped in a
+	 * {@link org.junit.platform.commons.JUnitException} with a helpful message.
+	 *
+	 * @param key the key to look up; never {@code null} or blank
+	 * @param transformer the transformer to apply in case a value is found;
+	 * never {@code null}
+	 * @return an {@code Optional} containing the value; never {@code null}
+	 * but potentially empty
+	 *
+	 * @see System#getProperty(String)
+	 * @see org.junit.platform.engine.ConfigurationParameters
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	<T> Optional<T> getConfigurationParameter(String key, Function<String, T> transformer);
 
 	/**
 	 * Publish a map of key-value pairs to be consumed by an

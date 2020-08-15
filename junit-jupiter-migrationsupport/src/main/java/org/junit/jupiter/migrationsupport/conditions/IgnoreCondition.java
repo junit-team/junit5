@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.conditions;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
@@ -33,7 +33,7 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #evaluateExecutionCondition(ExtensionContext)
  * @see org.junit.jupiter.migrationsupport.EnableJUnit4MigrationSupport
  */
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = STABLE, since = "5.7")
 public class IgnoreCondition implements ExecutionCondition {
 
 	private static final ConditionEvaluationResult ENABLED = //

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.converter;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
  * @since 5.0
  * @see ArgumentConverter
  */
-@API(status = EXPERIMENTAL, since = "5.0")
+@API(status = STABLE, since = "5.7")
 public abstract class SimpleArgumentConverter implements ArgumentConverter {
 
 	@Override
@@ -31,7 +31,7 @@ public abstract class SimpleArgumentConverter implements ArgumentConverter {
 	}
 
 	/**
-	 * Convert the supplied {@code source} object into to the supplied
+	 * Convert the supplied {@code source} object into the supplied
 	 * {@code targetType}.
 	 *
 	 * @param source the source object to convert; may be {@code null}

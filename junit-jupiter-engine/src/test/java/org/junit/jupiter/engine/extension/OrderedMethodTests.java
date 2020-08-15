@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
 import static org.junit.jupiter.api.Order.DEFAULT;
 import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
+import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
+import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
 import org.junit.jupiter.api.MethodOrdererContext;
@@ -84,7 +86,29 @@ class OrderedMethodTests {
 		// on the class names.
 		assertThat(testClass.getSuperclass().getName()).isGreaterThan(testClass.getName());
 
-		var tests = executeTestsInParallel(AlphanumericTestCase.class);
+		var tests = executeTestsInParallel(MethodNameTestCase.class);
+
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence).containsExactly("$()", "AAA()", "AAA(org.junit.jupiter.api.TestInfo)",
+			"AAA(org.junit.jupiter.api.TestReporter)", "ZZ_Top()", "___()", "a1()", "a2()", "b()", "c()", "zzz()");
+		assertThat(threadNames).hasSize(1);
+	}
+
+	@Test
+	void methodName() {
+		Class<?> testClass = MethodNameTestCase.class;
+
+		// The name of the base class MUST start with a letter alphanumerically
+		// greater than "A" so that BaseTestCase comes after AlphanumericTestCase
+		// if methods are sorted by class name for the fallback ordering if two
+		// methods have the same name but different parameter lists. Note, however,
+		// that Alphanumeric actually does not order methods like that, but we want
+		// this check to remain in place to ensure that the ordering does not rely
+		// on the class names.
+		assertThat(testClass.getSuperclass().getName()).isLessThan(testClass.getName());
+
+		var tests = executeTestsInParallel(MethodNameTestCase.class);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -144,6 +168,16 @@ class OrderedMethodTests {
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
+		assertThat(threadNames).hasSize(1);
+	}
+
+	@Test
+	void defaultOrderer() {
+		var tests = executeTestsInParallel(WithoutTestMethodOrderTestCase.class, OrderAnnotation.class);
+
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()");
 		assertThat(threadNames).hasSize(1);
 	}
 
@@ -276,11 +310,16 @@ class OrderedMethodTests {
 	}
 
 	private Events executeTestsInParallel(Class<?> testClass) {
+		return executeTestsInParallel(testClass, Random.class);
+	}
+
+	private Events executeTestsInParallel(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
 		// @formatter:off
 		return EngineTestKit
 				.engine("junit-jupiter")
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
 				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
+				.configurationParameter(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME, defaultOrderer.getName())
 				.selectors(selectClass(testClass))
 				.execute()
 				.testEvents();
@@ -317,6 +356,59 @@ class OrderedMethodTests {
 
 	}
 
+	@TestMethodOrder(MethodName.class)
+	static class MethodNameTestCase extends BaseTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			var method = testInfo.getTestMethod().get();
+			var signature = String.format("%s(%s)", method.getName(),
+				ClassUtils.nullSafeToString(method.getParameterTypes()));
+
+			callSequence.add(signature);
+			threadNames.add(Thread.currentThread().getName());
+		}
+
+		@TestFactory
+		DynamicTest b() {
+			return dynamicTest("dynamic", () -> {
+			});
+		}
+
+		@Test
+		void $() {
+		}
+
+		@Test
+		void ___() {
+		}
+
+		@Test
+		void AAA(TestReporter testReporter) {
+		}
+
+		@Test
+		void AAA(TestInfo testInfo) {
+		}
+
+		@Test
+		void ZZ_Top() {
+		}
+
+		@Test
+		void a1() {
+		}
+
+		@Test
+		void a2() {
+		}
+
+		@RepeatedTest(1)
+		void zzz() {
+		}
+	}
+
+	@SuppressWarnings("deprecation")
 	@TestMethodOrder(Alphanumeric.class)
 	static class AlphanumericTestCase extends BaseTestCase {
 
@@ -580,6 +672,7 @@ class OrderedMethodTests {
 
 	static class OrderAnnotationWithNestedClassTestCase extends OrderAnnotationTestCase {
 		@Nested
+		@TestMethodOrder(OrderAnnotation.class)
 		class NestedTests {
 
 			@BeforeEach
@@ -623,6 +716,31 @@ class OrderedMethodTests {
 			context.getMethodDescriptors().remove(0);
 			context.getMethodDescriptors().remove(0);
 		}
+	}
+
+	static class WithoutTestMethodOrderTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			callSequence.add(testInfo.getDisplayName());
+			threadNames.add(Thread.currentThread().getName());
+		}
+
+		@Test
+		@Order(2)
+		void test2() {
+		}
+
+		@Test
+		@Order(3)
+		void test3() {
+		}
+
+		@Test
+		@Order(1)
+		void test1() {
+		}
+
 	}
 
 }

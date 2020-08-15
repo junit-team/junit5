@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.aggregator;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -23,7 +23,7 @@ import org.junit.platform.commons.JUnitException;
  * @since 5.2
  * @see ArgumentsAggregator
  */
-@API(status = EXPERIMENTAL, since = "5.2")
+@API(status = STABLE, since = "5.7")
 public class ArgumentsAggregationException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

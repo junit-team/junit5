@@ -15,7 +15,7 @@ This subproject contains the AsciiDoc sources for the JUnit 5 User Guide.
 ### Generate AsciiDoc
 
 This following Gradle command generates the HTML version of the User Guide as
-`build/asciidoc/index.html`.
+`build/docs/asciidoc/user-guide/index.html`.
 
 ```
 gradlew asciidoctor
@@ -23,3 +23,12 @@ gradlew asciidoctor
 
 On Linux operating systems, the `graphviz` package providing `/usr/bin/dot` must be
 installed in order to generate the User Guide.
+
+### Generate AsciiDocPdf
+
+This following Gradle command generates the PDF version of the User Guide to
+`build/docs/asciidocPdf/user-guide/index.pdf`.
+
+```
+gradlew asciidoctorPdf
+```

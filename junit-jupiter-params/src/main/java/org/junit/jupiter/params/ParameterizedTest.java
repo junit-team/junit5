@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -119,7 +119,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.0")
+@API(status = STABLE, since = "5.7")
 @TestTemplate
 @ExtendWith(ParameterizedTestExtension.class)
 public @interface ParameterizedTest {
@@ -128,20 +128,18 @@ public @interface ParameterizedTest {
 	 * Placeholder for the {@linkplain org.junit.jupiter.api.TestInfo#getDisplayName
 	 * display name} of a {@code @ParameterizedTest} method: <code>{displayName}</code>
 	 *
-	 * @see #name
 	 * @since 5.3
+	 * @see #name
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
 	String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
 
 	/**
 	 * Placeholder for the current invocation index of a {@code @ParameterizedTest}
 	 * method (1-based): <code>{index}</code>
 	 *
-	 * @see #name
 	 * @since 5.3
+	 * @see #name
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
 	String INDEX_PLACEHOLDER = "{index}";
 
 	/**
@@ -149,10 +147,9 @@ public @interface ParameterizedTest {
 	 * current invocation of a {@code @ParameterizedTest} method:
 	 * <code>{arguments}</code>
 	 *
-	 * @see #name
 	 * @since 5.3
+	 * @see #name
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
 	String ARGUMENTS_PLACEHOLDER = "{arguments}";
 
 	/**
@@ -160,10 +157,9 @@ public @interface ParameterizedTest {
 	 * of the current invocation of a {@code @ParameterizedTest} method:
 	 * <code>{argumentsWithNames}</code>
 	 *
-	 * @see #name
 	 * @since 5.6
+	 * @see #name
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
 	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
 
 	/**
@@ -174,13 +170,12 @@ public @interface ParameterizedTest {
 	 * {@linkplain #DISPLAY_NAME_PLACEHOLDER display name} of the
 	 * {@code @ParameterizedTest} method.
 	 *
+	 * @since 5.3
 	 * @see #name
 	 * @see #DISPLAY_NAME_PLACEHOLDER
 	 * @see #INDEX_PLACEHOLDER
 	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
-	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
 	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 
 	/**

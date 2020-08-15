@@ -7,7 +7,7 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
-@file:API(status = EXPERIMENTAL, since = "5.1")
+@file:API(status = STABLE, since = "5.7")
 
 package org.junit.jupiter.api
 
@@ -16,6 +16,7 @@ import java.util.function.Supplier
 import java.util.stream.Stream
 import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
+import org.apiguardian.api.API.Status.STABLE
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.api.function.ThrowingSupplier
 

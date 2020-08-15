@@ -77,6 +77,19 @@ which they are declared in the source code. For example, the execution of tests 
 `WebServerExtension`, **in exactly that order**.
 ====
 
+If you wish to combine multiple extensions in a reusable way, you can define a custom
+_<<writing-tests-meta-annotations,composed annotation>>_ and use `@ExtendWith` as a
+_meta-annotation_:
+
+[source,java,indent=0]
+----
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith({ DatabaseExtension.class, WebServerExtension.class })
+public @interface DatabaseAndWebServerExtension {
+}
+----
+
 [[extensions-registration-programmatic]]
 ==== Programmatic Extension Registration
 

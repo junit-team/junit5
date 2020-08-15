@@ -19,12 +19,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.opentest4j.AssertionFailedError;
 
@@ -124,11 +128,13 @@ class AssertTimeout {
 	private static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
 			Object messageOrSupplier) {
 
-		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		AtomicReference<Thread> threadReference = new AtomicReference<>();
+		ExecutorService executorService = Executors.newSingleThreadExecutor(new TimeoutThreadFactory());
 
 		try {
 			Future<T> future = executorService.submit(() -> {
 				try {
+					threadReference.set(Thread.currentThread());
 					return supplier.get();
 				}
 				catch (Throwable throwable) {
@@ -141,8 +147,19 @@ class AssertTimeout {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
-				throw new AssertionFailedError(buildPrefix(nullSafeGet(messageOrSupplier))
-						+ "execution timed out after " + timeoutInMillis + " ms");
+				String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "execution timed out after "
+						+ timeoutInMillis + " ms";
+
+				Thread thread = threadReference.get();
+				if (thread != null) {
+					ExecutionTimeoutException exception = new ExecutionTimeoutException(
+						"Execution timed out in thread " + thread.getName());
+					exception.setStackTrace(thread.getStackTrace());
+					throw new AssertionFailedError(message, exception);
+				}
+				else {
+					throw new AssertionFailedError(message);
+				}
 			}
 			catch (ExecutionException ex) {
 				throw ExceptionUtils.throwAsUncheckedException(ex.getCause());
@@ -153,6 +170,28 @@ class AssertTimeout {
 		}
 		finally {
 			executorService.shutdownNow();
+		}
+	}
+
+	private static class ExecutionTimeoutException extends JUnitException {
+
+		private static final long serialVersionUID = 1L;
+
+		ExecutionTimeoutException(String message) {
+			super(message);
+		}
+	}
+
+	/**
+	 * The thread factory used for preemptive timeout.
+	 *
+	 * The factory creates threads with meaningful names, helpful for debugging purposes.
+	 */
+	private static class TimeoutThreadFactory implements ThreadFactory {
+		private static final AtomicInteger threadNumber = new AtomicInteger(1);
+
+		public Thread newThread(Runnable r) {
+			return new Thread(r, "junit-timeout-thread-" + threadNumber.getAndIncrement());
 		}
 	}
 

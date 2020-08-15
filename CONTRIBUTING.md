@@ -95,8 +95,17 @@ In multi-line bullet point entries, subsequent lines should be indented.
 - Insert a blank line before at-clauses/tags.
 - Favor `{@code foo}` over `<code>foo</code>`.
 - Favor literals (e.g., `{@literal @}`) over HTML entities.
+- New classes and methods should have `@since ...` annotation.
 - Use `@since 5.0` instead of `@since 5.0.0`.
 - Do not use `@author` tags. Instead, contributors are listed on [GitHub](https://github.com/junit-team/junit5/graphs/contributors).
+- Do not use verbs in third person form (e.g. use "Discover tests..." instead of "Discovers tests...")
+  in the first sentence describing a method.
+
+#### Examples
+
+See [`ExtensionContext`](junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContext.java) and
+[`ParameterContext`](junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java) for example Javadoc.
+
 
 ### Tests
 
@@ -126,3 +135,20 @@ In multi-line bullet point entries, subsequent lines should be indented.
   - _config_ (JUL: `CONFIG`, Log4J: `CONFIG`): information related to configuration of the system (Example: `ServiceLoaderTestEngineRegistry` logs IDs of discovered engines)
   - _debug_ (JUL: `FINE`, Log4J: `DEBUG`)
   - _trace_ (JUL: `FINER`, Log4J: `TRACE`)
+
+### Deprecation
+
+Publicly available interfaces, classes and methods have a defined lifecycle
+which is described in detail in the [User Guide](https://junit.org/junit5/docs/current/user-guide/#api-evolution).
+This process is using the `@API` annotation from [API Guardian](https://github.com/apiguardian-team/apiguardian).
+It also describes the deprecation process followed for API items.
+
+To deprecate an item:
+- Update the `@API.status` to `DEPRECATED`.
+- Update `@API.since`. Please note `since` describes the version when the
+  status was changed and not the introduction of the element.
+- Add the `@Deprecated` Java annotation on the item.
+- Add the `@deprecated` JavaDoc tag to describe the deprecation, and refer to
+  an eventual replacement.
+- If the item is used in existing code, add `@SuppressWarnings("deprecation")`
+  to make the build pass.

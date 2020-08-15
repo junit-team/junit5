@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
@@ -44,7 +44,7 @@ import org.apiguardian.api.API;
  * @see ParameterResolver
  */
 @FunctionalInterface
-@API(status = EXPERIMENTAL, since = "5.6")
+@API(status = STABLE, since = "5.7")
 public interface TestInstancePreDestroyCallback extends Extension {
 
 	/**

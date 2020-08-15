@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static java.time.Duration.ofMillis;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -189,6 +191,8 @@ class AssertTimeoutAssertionsTests {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
 			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt));
 		assertMessageEquals(error, "execution timed out after 10 ms");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
+		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
 	@Test
@@ -196,6 +200,8 @@ class AssertTimeoutAssertionsTests {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
 			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt, "Tempus Fugit"));
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
+		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
 	@Test
@@ -203,6 +209,8 @@ class AssertTimeoutAssertionsTests {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
 			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt, () -> "Tempus" + " " + "Fugit"));
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
+		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
 	@Test
@@ -251,33 +259,47 @@ class AssertTimeoutAssertionsTests {
 	void assertTimeoutPreemptivelyForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
 			assertTimeoutPreemptively(ofMillis(10), () -> {
-				nap();
+				waitForInterrupt();
 				return "Tempus Fugit";
 			});
 		});
 		assertMessageEquals(error, "execution timed out after 10 ms");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
+		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
 			assertTimeoutPreemptively(ofMillis(10), () -> {
-				nap();
+				waitForInterrupt();
 				return "Tempus Fugit";
 			}, "Tempus Fugit");
 		});
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
+		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageSupplierForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
 			assertTimeoutPreemptively(ofMillis(10), () -> {
-				nap();
+				waitForInterrupt();
 				return "Tempus Fugit";
 			}, () -> "Tempus" + " " + "Fugit");
 		});
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
+		assertMessageStartsWith(error.getCause(), "Execution timed out in ");
+		assertStackTraceContains(error.getCause().getStackTrace(), "CountDownLatch", "await");
+	}
+
+	@Test
+	void assertTimeoutPreemptivelyUsesThreadsWithSpecificNamePrefix() {
+		AtomicReference<String> threadName = new AtomicReference<>("");
+		assertTimeoutPreemptively(ofMillis(1000), () -> threadName.set(Thread.currentThread().getName()));
+		assertTrue(threadName.get().startsWith("junit-timeout-thread-"),
+			"Thread name does not match the expected prefix");
 	}
 
 	/**
@@ -298,6 +320,16 @@ class AssertTimeoutAssertionsTests {
 		catch (InterruptedException ignore) {
 			// ignore
 		}
+	}
+
+	/**
+	 * Assert the given stack trace elements contain an element with the given class name and method name.
+	 */
+	private static void assertStackTraceContains(StackTraceElement[] stackTrace, String className, String methodName) {
+		assertThat(stackTrace).anySatisfy(element -> {
+			assertThat(element.getClassName()).endsWith(className);
+			assertThat(element.getMethodName()).isEqualTo(methodName);
+		});
 	}
 
 }

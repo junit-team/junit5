@@ -5,8 +5,8 @@
 
 *Scope:* ❓
 
-For a complete list of all _closed_ issues and pull requests for this release, consult
-the link:{junit5-repo}+/milestone/5.7.0-M2?closed=1+[5.7 M2] milestone page in the JUnit repository
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/49?closed=1+[5.7 M2] milestone page in the JUnit repository
 on GitHub.
 
 
@@ -20,10 +20,20 @@ on GitHub.
 [[release-notes-5.7.0-M2-junit-platform]]
 === JUnit Platform
 
+==== Promoted Features
+
+* The following APIs have been promoted from "experimental":
+  - `LauncherConstants` is now "stable"
+  - `LauncherConfig` (except for methods introduced in 5.7) is now "stable"
+  - `LegacyXmlReportGeneratingListener` is now "stable"
+  - `org.junit.platform.testkit.engine` is now "maintained"
+
 ==== Bug Fixes
 
 * Characters in exception messages and other user-supplied values that are not allowed in
-  XML are now replaced with their character reference (e.g. `\0` becomes `&#0;`).
+  XML are now replaced with their character reference – for example, `\0` becomes `&#0;`.
+* The `Launcher` now throws an exception when a previously executed `TestPlan` is
+  attempted to be executed again.
 
 ==== Deprecations and Breaking Changes
 
@@ -34,41 +44,87 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* When using `ConsoleLauncher`, explicitly selected classes from `--select-class`
-  and `--select-method` are now always executed regardless of class name patterns
-  provided with `--include-classname` or the default class name pattern.
-* Support `FilePosition` in `FileSelector` and `ClasspathResourceSelector`.
+* When using `ConsoleLauncher`, explicitly selected classes from `--select-class` and
+  `--select-method` are now always executed regardless of class name patterns provided
+  with `--include-classname` or the default class name pattern.
+* The `ConsoleLauncher` now honors the `--disable-ansi-colors` option when printing usage
+  help.
+* New `FilePosition` support in `FileSelector` and `ClasspathResourceSelector`.
 * Custom `PostDiscoveryFilter` implementations can now be registered via Java’s
   `ServiceLoader` mechanism.
 * New `getJavaClass()` and `getJavaMethod()` methods in
   `org.junit.platform.engine.support.descriptor.MethodSource`.
+* New module `org.junit.platform.jfr` added. When running on Java 11 or later, it
+  provides and registers a `TestExecutionListener` that generates Java Flight Recorder
+  events.
+* `ExecutionRecorder` in junit-platform-testkit is now public for fine-grained testing of
+  classes that use `EngineExecutionListener`.
+* `ForkJoinPoolHierarchicalTestExecutorService` can now be constructed by supplying a
+  `ParallelExecutionConfiguration`.
 
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
 === JUnit Jupiter
 
+==== Promoted Features
+
+* The following APIs have been promoted from "experimental" to "stable":
+  - `junit-jupiter-migrationsupport`
+  - `junit-jupiter-params` (i.e. `@ParameterizedTest` etc.)
+  - `@TestMethodOrder`, `MethodOrderer`, and its pre-5.7 implementations
+  - `@DisplayNameGeneration`, `DisplayNameGenerator`, and its pre-5.7 implementations
+  - `@Timeout`
+  - `TestInstanceFactory`
+  - `TestInstancePreDestroyCallback`
+  - `TestInstances` and corresponding `ExtensionContext` methods
+  - `TestWatcher`
+  - Kotlin-specific assertions that were introduced in 5.1
+
 ==== Bug Fixes
 
-* ❓
+* Registered `TestInstancePreDestroyCallback` extensions are now always called if an
+  instance of a test class was created, regardless whether any registered
+  `TestInstancePostProcessor` extension threw an exception.
+* Disabled `@TestTemplate` methods (e.g. `@ParameterizedTest` and `@RepeatedTest` methods)
+  are now reported to registered `TestWatcher` extensions.
+* Inherited `@BeforeEach` methods are now executed on correct instances for `@Nested`
+  classes.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `MethodOrderer.Alphanumeric` has been deprecated in favor of `MethodOrderer.MethodName`
+  which provides the exact same functionality but has a more descriptive name.
 
 ==== New Features and Improvements
 
-* All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason`
-  attribute that can be used to provide additional explanation as to why a test or
-  container might be disabled.
-* New `assertLinesMatch` method overloads added to class `Assertions` that accept
-  two `Stream<String>` instances for comparison.
-* `@CsvFileSource` now allows to specify file paths as an alternative to classpath
+* New `assertLinesMatch()` method overloads in `Assertions` that accept two
+  `Stream<String>` instances for comparison.
+* `assertTimeoutPreemptively()` in `Assertions` now reports the stack trace of the timed
+  out thread in the cause of the `AssertionFailedError`.
+* `assertTimeoutPreemptively()` now uses threads with a specific name, conveying their use
+  by the framework, to facilitate debugging and stack trace analysis.
+* All `@Enabled*`/`@Disabled*` annotations now have an optional `disabledReason` attribute
+  that can be used to provide and additional explanation as to why a test or container
+  might be disabled.
+* `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* New `MethodOrderer.MethodName` to replace `MethodOrderer.Alphanumeric` with the exact
+  same functionality but a more descriptive name.
+* New `junit.jupiter.testmethod.order.default` configuration parameter to set the default
+  `MethodOrderer` that will be used unless `@TestMethodOrder` is present.
+* New `DynamicTest.stream()` factory method that accepts a `Stream` instead of an
+  `Iterator` for the input source.
+* `@CsvFileSource` now allows one to specify file paths as an alternative to classpath
   resources.
 * `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution
   conditions.
+* Arguments in display names of parameterized test invocations are now truncated if
+  they exceed a configurable maximum length (defaults to 512 characters).
+* New `TypedArgumentConverter` for converting one specific type to another, therefore
+  reducing boilerplate type checks compared to implementing `ArgumentConverter` directly.
+* New `ExtensionContext.getConfigurationParameter(String, Function<String, T>)`
+  convenience method for reading transformed configuration parameters from extensions.
 * `@CsvFileSource` and `@CsvSource` now provide a `maxCharsPerColumn` attribute
   that enables configuring the maximum number of characters per column.
-
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage

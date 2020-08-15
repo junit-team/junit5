@@ -17,6 +17,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ import org.junit.platform.launcher.core.LauncherDiscoveryResult;
  * @see #execute(TestEngine, LauncherDiscoveryRequest)
  * @see EngineExecutionResults
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public final class EngineTestKit {
 
 	private static final Logger logger = LoggerFactory.getLogger(EngineTestKit.class);
@@ -179,12 +180,11 @@ public final class EngineTestKit {
 	 * @return the results of the execution
 	 * @throws PreconditionViolationException for invalid arguments or if the
 	 * {@code TestEngine} with the supplied ID cannot be loaded
+	 * @since 1.7
 	 * @see #execute(TestEngine, LauncherDiscoveryRequest)
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
-	 * @since 1.7
 	 */
-	@API(status = EXPERIMENTAL, since = "1.7")
 	public static EngineExecutionResults execute(String engineId, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
 		return execute(loadTestEngine(engineId.trim()), discoveryRequest);
@@ -239,12 +239,11 @@ public final class EngineTestKit {
 	 * not be {@code null}
 	 * @return the recorded {@code EngineExecutionResults}
 	 * @throws PreconditionViolationException for invalid arguments
+	 * @since 1.7
 	 * @see #execute(String, LauncherDiscoveryRequest)
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
-	 * @since 1.7
 	 */
-	@API(status = EXPERIMENTAL, since = "1.7")
 	public static EngineExecutionResults execute(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
 		Preconditions.notNull(discoveryRequest, "EngineDiscoveryRequest must not be null");
@@ -372,7 +371,6 @@ public final class EngineTestKit {
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
 		 * @deprecated Please use {@link #filters(Filter...)} instead.
-		 * instead.
 		 */
 		@Deprecated
 		@API(status = DEPRECATED, since = "1.7")
@@ -393,11 +391,11 @@ public final class EngineTestKit {
 		 *
 		 * @param filters the filters to add; never {@code null}
 		 * @return this builder for method chaining
+		 * @since 1.7
 		 * @see #selectors(DiscoverySelector...)
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
-		 * @since 1.7
 		 */
 		@API(status = EXPERIMENTAL, since = "1.7")
 		public Builder filters(Filter<?>... filters) {
@@ -454,7 +452,7 @@ public final class EngineTestKit {
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 */
-		@API(status = API.Status.EXPERIMENTAL, since = "1.7")
+		@API(status = EXPERIMENTAL, since = "1.7")
 		public Builder enableImplicitConfigurationParameters(boolean enabled) {
 			this.requestBuilder.enableImplicitConfigurationParameters(enabled);
 			return this;

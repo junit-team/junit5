@@ -20,6 +20,22 @@ jobs:
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@v2
+    - name: Cache Gradle wrapper and dependencies
+      uses: actions/cache@v2
+      with:
+        path: | 
+          /root/.gradle/caches/
+          /root/.gradle/wrapper/dists
+        key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+        restore-keys: |
+          test-${{ runner.os }}-gradle-
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: /root/.m2/repository
+        key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          test-${{ runner.os }}-maven-
     - name: Prepare Gradle Enterprise credentials
       run: |
         mkdir -p /root/.gradle/enterprise/
@@ -34,6 +50,22 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Cache Gradle wrapper and dependencies
+      uses: actions/cache@v2
+      with:
+        path: | 
+          ~/.gradle/caches/
+          ~/.gradle/wrapper/dists
+        key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+        restore-keys: |
+          test-${{ runner.os }}-gradle-
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          test-${{ runner.os }}-maven-
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:
@@ -48,12 +80,28 @@ jobs:
       run: |
         ./gradlew --version
         ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
-
+        ./gradlew --stop
   mac:
     name: 'Mac OS'
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Cache Gradle wrapper and dependencies
+      uses: actions/cache@v2
+      with:
+        path: | 
+          ~/.gradle/caches/
+          ~/.gradle/wrapper/dists
+        key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+        restore-keys: |
+          test-${{ runner.os }}-gradle-
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          test-${{ runner.os }}-maven-
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:
@@ -74,6 +122,22 @@ jobs:
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@v2
+    - name: Cache Gradle wrapper and dependencies
+      uses: actions/cache@v2
+      with:
+        path: | 
+          /root/.gradle/caches/
+          /root/.gradle/wrapper/dists
+        key: coverage-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+        restore-keys: |
+          coverage-${{ runner.os }}-gradle-
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: /root/.m2/repository
+        key: coverage-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          coverage-${{ runner.os }}-maven-
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:
@@ -101,6 +165,15 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
     - uses: actions/checkout@v2
+    - name: Cache Gradle wrapper and dependencies
+      uses: actions/cache@v2
+      with:
+        path: | 
+          ~/.gradle/caches/
+          ~/.gradle/wrapper/dists
+        key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+        restore-keys: |
+          assemble-${{ runner.os }}-gradle-
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:
@@ -119,6 +192,15 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v2
+    - name: Cache Gradle wrapper and dependencies
+      uses: actions/cache@v2
+      with:
+        path: | 
+          ~/.gradle/caches/
+          ~/.gradle/wrapper/dists
+        key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+        restore-keys: |
+          assemble-${{ runner.os }}-gradle-
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:

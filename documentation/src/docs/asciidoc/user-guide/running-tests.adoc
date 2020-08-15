@@ -537,7 +537,7 @@ Here's an example of its output:
    │  └─ skippedTest() ↷ for demonstration purposes
    └─ A special test case
       ├─ Custom test name containing spaces ✔
-      ├─ ╯°□°）╯ ✔
+      ├─ ╯°□°)╯ ✔
       └─ 😱 ✔
 
 Test run finished after 64 ms
@@ -828,3 +828,35 @@ to attribute it to a specific test or container.
 WARNING: Capturing output is currently an _experimental_ feature. You're invited to give
 it a try and provide feedback to the JUnit team so they can improve and eventually
 <<api-evolution, promote>> this feature.
+
+[[running-tests-flight-recorder]]
+=== Flight Recorder Support
+
+Since version 1.7, the JUnit Platform provides opt-in support for generating Flight
+Recorder events. https://openjdk.java.net/jeps/328[JEP 328] describes the Java Flight
+Recorder (JFR) as:
+
+NOTE: Flight Recorder records events originating from applications, the JVM and the OS.
+Events are stored in a single file that can be attached to bug reports and examined by
+support engineers, allowing after-the-fact analysis of issues in the period leading up
+to a problem.
+
+In order to record Flight Recorder events generated while running tests, you need to:
+
+1. Provide module `org.junit.platform.jfr` (`junit-platform-jfr-{platform-version}.jar`)
+   on the class-path or module-path at test runtime.
+2. Start flight recording when launching a test run. Flight Recorder can be started via
+   java command line option:
+
+   -XX:StartFlightRecording:filename=...
+
+Please consult the manual of your build tool for the appropriate commands.
+
+To analyze the recorded events, use the
+https://docs.oracle.com/en/java/javase/14/docs/specs/man/jfr.html[jfr]
+command line tool shipped with recent JDKs or open the recording file with
+https://jdk.java.net/jmc/[JDK Mission Control].
+
+WARNING: Flight Recorder support is currently an _experimental_ feature. You're
+invited to give it a try and provide feedback to the JUnit team so they can improve
+and eventually <<api-evolution, promote>> this feature.

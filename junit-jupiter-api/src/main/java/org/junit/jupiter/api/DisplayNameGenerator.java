@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
 import java.lang.reflect.Method;
@@ -34,7 +35,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @see DisplayName @DisplayName
  * @see DisplayNameGeneration @DisplayNameGeneration
  */
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = STABLE, since = "5.7")
 public interface DisplayNameGenerator {
 
 	/**

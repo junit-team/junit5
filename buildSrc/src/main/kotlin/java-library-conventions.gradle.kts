@@ -147,11 +147,11 @@ val compileModule by tasks.registering(JavaCompile::class) {
 	sourceCompatibility = "9"
 	targetCompatibility = "9"
 	classpath = files()
+	options.release.set(9)
 	options.compilerArgs.addAll(listOf(
 			// "-verbose",
 			// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
 			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
-			"--release", "9",
 			"--module-version", "${project.version}",
 			"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
 	))
@@ -253,19 +253,10 @@ afterEvaluate {
 	}
 	tasks {
 		compileJava {
-			sourceCompatibility = extension.mainJavaVersion.majorVersion
-			targetCompatibility = extension.mainJavaVersion.majorVersion
+			options.release.set(extension.mainJavaVersion.majorVersion.toInt())
 		}
 		compileTestJava {
-			sourceCompatibility = extension.testJavaVersion.majorVersion
-			targetCompatibility = extension.testJavaVersion.majorVersion
-		}
-		withType<JavaCompile>().configureEach {
-			// --release release
-			// Compiles against the public, supported and documented API for a specific VM version.
-			// Supported release targets are 7, 8, 9, 10, 11, 12
-			// Note that if --release is added then -target and -source are ignored.
-			options.compilerArgs.addAll(listOf("--release", targetCompatibility))
+			options.release.set(extension.testJavaVersion.majorVersion.toInt())
 		}
 	}
 	pluginManager.withPlugin("groovy") {

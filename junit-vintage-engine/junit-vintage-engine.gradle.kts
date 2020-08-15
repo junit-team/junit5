@@ -3,11 +3,10 @@ import aQute.bnd.gradle.BundleTaskConvention;
 plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
+	`testing-conventions`
 	`java-test-fixtures`
 	groovy
 }
-
-apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Vintage Engine"
 

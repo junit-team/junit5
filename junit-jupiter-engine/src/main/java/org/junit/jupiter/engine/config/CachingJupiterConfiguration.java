@@ -14,10 +14,12 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -40,6 +42,11 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public Optional<String> getRawConfigurationParameter(String key) {
 		return delegate.getRawConfigurationParameter(key);
+	}
+
+	@Override
+	public <T> Optional<T> getRawConfigurationParameter(String key, Function<String, T> transformer) {
+		return delegate.getRawConfigurationParameter(key, transformer);
 	}
 
 	@Override
@@ -83,5 +90,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	public DisplayNameGenerator getDefaultDisplayNameGenerator() {
 		return (DisplayNameGenerator) cache.computeIfAbsent(DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME,
 			key -> delegate.getDefaultDisplayNameGenerator());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Optional<MethodOrderer> getDefaultTestMethodOrderer() {
+		return (Optional<MethodOrderer>) cache.computeIfAbsent(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME,
+			key -> delegate.getDefaultTestMethodOrderer());
 	}
 }

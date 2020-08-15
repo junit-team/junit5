@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import org.apiguardian.api.API;
 
 /**
@@ -19,6 +21,6 @@ import org.apiguardian.api.API;
  * @since 5.6
  * @see EnumSource#value()
  */
-@API(status = API.Status.EXPERIMENTAL, since = "5.6")
+@API(status = INTERNAL, since = "5.7")
 public enum NullEnum {
 }

@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -221,6 +222,11 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<String> getConfigurationParameter(String key) {
+				return Optional.empty();
+			}
+
+			@Override
+			public <T> Optional<T> getConfigurationParameter(String key, Function<String, T> transformer) {
 				return Optional.empty();
 			}
 
