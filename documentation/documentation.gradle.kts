@@ -113,7 +113,6 @@ tasks {
 		classpath = sourceSets["test"].runtimeClasspath
 		main = "org.junit.platform.console.ConsoleLauncher"
 		args("--scan-classpath")
-		args("--details", "tree")
 		args("--include-classname", ".*Tests")
 		args("--include-classname", ".*Demo")
 		args("--exclude-tag", "exclude")
@@ -129,7 +128,7 @@ tasks {
 	val generateConsoleLauncherOptions by registering(JavaExec::class) {
 		classpath = sourceSets["test"].runtimeClasspath
 		main = "org.junit.platform.console.ConsoleLauncher"
-		args("--help")
+		args("--help", "--disable-banner")
 		redirectOutput(consoleLauncherOptionsFile)
 	}
 

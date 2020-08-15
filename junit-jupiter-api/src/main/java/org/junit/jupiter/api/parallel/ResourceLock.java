@@ -40,6 +40,7 @@ import org.apiguardian.api.API;
  * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
  * within class hierarchies.
  *
+ * @see Isolated
  * @see Resources
  * @see ResourceAccessMode
  * @see ResourceLocks
