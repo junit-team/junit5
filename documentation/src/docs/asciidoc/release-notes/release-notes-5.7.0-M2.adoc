@@ -115,8 +115,6 @@ on GitHub.
   `Iterator` for the input source.
 * `@CsvFileSource` now allows one to specify file paths as an alternative to classpath
   resources.
-* `JAVA_16` has been added to the `JRE` enum for use with JRE-based execution
-  conditions.
 * Arguments in display names of parameterized test invocations are now truncated if
   they exceed a configurable maximum length (defaults to 512 characters).
 * New `TypedArgumentConverter` for converting one specific type to another, therefore
