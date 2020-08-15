@@ -29,9 +29,9 @@ class NodeTreeWalker {
 	private final LockManager lockManager = new LockManager();
 
 	NodeExecutionAdvisor walk(TestDescriptor rootDescriptor) {
-		NodeExecutionAdvisor advisor = new NodeExecutionAdvisor();
 		Preconditions.condition(getExclusiveResources(rootDescriptor).isEmpty(),
 			"Engine descriptor must not declare exclusive resources");
+		NodeExecutionAdvisor advisor = new NodeExecutionAdvisor();
 		rootDescriptor.getChildren().forEach(child -> walk(child, child, advisor));
 		return advisor;
 	}
