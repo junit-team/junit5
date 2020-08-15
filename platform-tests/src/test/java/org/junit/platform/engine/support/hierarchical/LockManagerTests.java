@@ -16,7 +16,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_RESOURCE_LOCK_KEY;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ_WRITE;
 
@@ -103,13 +103,13 @@ class LockManagerTests {
 		Collection<ExclusiveResource> resources = asList( //
 			new ExclusiveResource("___foo", READ), //
 			new ExclusiveResource("foo", READ_WRITE), //
-			new ExclusiveResource(GLOBAL_RESOURCE_LOCK_KEY, globalLockMode), //
+			new ExclusiveResource(GLOBAL_KEY, globalLockMode), //
 			new ExclusiveResource("bar", READ_WRITE));
 
 		List<Lock> locks = getLocks(resources, CompositeLock.class);
 
 		assertThat(locks).hasSize(4);
-		assertThat(locks.get(0)).isEqualTo(getSingleLock(GLOBAL_RESOURCE_LOCK_KEY, globalLockMode));
+		assertThat(locks.get(0)).isEqualTo(getSingleLock(GLOBAL_KEY, globalLockMode));
 		assertThat(locks.get(1)).isEqualTo(getSingleLock("___foo", READ));
 		assertThat(locks.get(2)).isEqualTo(getSingleLock("bar", READ_WRITE));
 		assertThat(locks.get(3)).isEqualTo(getSingleLock("foo", READ_WRITE));

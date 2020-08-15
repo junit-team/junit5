@@ -14,7 +14,7 @@ import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_RESOURCE_LOCK_KEY;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
 
 import java.util.Collection;
@@ -37,7 +37,7 @@ class LockManager {
 				.thenComparing(ExclusiveResource::getLockMode);
 
 	private static Comparator<String> globalLockFirst() {
-		return comparing(key -> !GLOBAL_RESOURCE_LOCK_KEY.equals(key));
+		return comparing(key -> !GLOBAL_KEY.equals(key));
 	}
 
 	private final Map<String, ReadWriteLock> locksByKey = new ConcurrentHashMap<>();

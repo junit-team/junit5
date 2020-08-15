@@ -11,7 +11,8 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.Collections.singleton;
-import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_RESOURCE_LOCK_KEY;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 
 import java.util.HashSet;
@@ -26,20 +27,13 @@ import org.junit.platform.engine.TestDescriptor;
  */
 class NodeTreeWalker {
 
-	private static final ExclusiveResource GLOBAL_WRITE_LOCK = new ExclusiveResource(GLOBAL_RESOURCE_LOCK_KEY,
-		ExclusiveResource.LockMode.READ_WRITE);
-	private static final ExclusiveResource GLOBAL_READ_LOCK = new ExclusiveResource(GLOBAL_RESOURCE_LOCK_KEY,
-		ExclusiveResource.LockMode.READ);
-
 	private final LockManager lockManager = new LockManager();
 
 	NodeExecutionAdvisor walk(TestDescriptor rootDescriptor) {
 		NodeExecutionAdvisor advisor = new NodeExecutionAdvisor();
 		Preconditions.condition(getExclusiveResources(rootDescriptor).isEmpty(),
 			"Engine descriptor must not declare exclusive resources");
-		rootDescriptor.getChildren().forEach(child -> {
-			walk(child, child, advisor);
-		});
+		rootDescriptor.getChildren().forEach(child -> walk(child, child, advisor));
 		return advisor;
 	}
 
@@ -47,7 +41,7 @@ class NodeTreeWalker {
 			NodeExecutionAdvisor advisor) {
 		Set<ExclusiveResource> exclusiveResources = getExclusiveResources(testDescriptor);
 		if (exclusiveResources.isEmpty()) {
-			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(singleton(GLOBAL_READ_LOCK)));
+			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(singleton(GLOBAL_READ)));
 			testDescriptor.getChildren().forEach(child -> walk(globalLockDescriptor, child, advisor));
 		}
 		else {
@@ -57,14 +51,12 @@ class NodeTreeWalker {
 				allResources.addAll(getExclusiveResources(child));
 				advisor.forceDescendantExecutionMode(child, SAME_THREAD);
 			});
-			if (allResources.contains(GLOBAL_WRITE_LOCK)) {
-				if (!globalLockDescriptor.equals(testDescriptor)) {
-					advisor.forceDescendantExecutionMode(globalLockDescriptor, SAME_THREAD);
-					doForChildrenRecursively(globalLockDescriptor,
-						child -> advisor.forceDescendantExecutionMode(child, SAME_THREAD));
-					advisor.useResourceLock(globalLockDescriptor,
-						lockManager.getLockForResources(singleton(GLOBAL_WRITE_LOCK)));
-				}
+			if (!globalLockDescriptor.equals(testDescriptor) && allResources.contains(GLOBAL_READ_WRITE)) {
+				advisor.forceDescendantExecutionMode(globalLockDescriptor, SAME_THREAD);
+				doForChildrenRecursively(globalLockDescriptor,
+					child -> advisor.forceDescendantExecutionMode(child, SAME_THREAD));
+				advisor.useResourceLock(globalLockDescriptor,
+					lockManager.getLockForResources(singleton(GLOBAL_READ_WRITE)));
 			}
 			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(allResources));
 		}

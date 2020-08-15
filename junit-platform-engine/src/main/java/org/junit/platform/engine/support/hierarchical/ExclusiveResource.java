@@ -29,7 +29,18 @@ import org.junit.platform.commons.util.ToStringBuilder;
 @API(status = EXPERIMENTAL, since = "1.3")
 public class ExclusiveResource {
 
-	static final String GLOBAL_RESOURCE_LOCK_KEY = "__global__";
+	/**
+	 * The key for the global resource lock that all direct children of the
+	 * engine descriptor acquire in {@linkplain LockMode#READ read} mode by
+	 * default.
+	 *
+	 * @since 1.7
+	 */
+	@API(status = EXPERIMENTAL, since = "1.7")
+	public static final String GLOBAL_KEY = "org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY";
+
+	static final ExclusiveResource GLOBAL_READ = new ExclusiveResource(GLOBAL_KEY, LockMode.READ);
+	static final ExclusiveResource GLOBAL_READ_WRITE = new ExclusiveResource(GLOBAL_KEY, LockMode.READ_WRITE);
 
 	private final String key;
 	private final LockMode lockMode;

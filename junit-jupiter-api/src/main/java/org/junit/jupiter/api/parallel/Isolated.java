@@ -37,6 +37,6 @@ import org.apiguardian.api.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
-@ResourceLock("__global__")
+@ResourceLock("org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY")
 public @interface Isolated {
 }
