@@ -27,6 +27,8 @@ import org.junit.platform.engine.TestDescriptor;
 class NodeTreeWalker {
 
 	private final LockManager lockManager;
+	private final ResourceLock globalReadLock;
+	private final ResourceLock globalReadWriteLock;
 
 	NodeTreeWalker() {
 		this(new LockManager());
@@ -34,6 +36,8 @@ class NodeTreeWalker {
 
 	NodeTreeWalker(LockManager lockManager) {
 		this.lockManager = lockManager;
+		this.globalReadLock = lockManager.getLockForResource(GLOBAL_READ);
+		this.globalReadWriteLock = lockManager.getLockForResource(GLOBAL_READ_WRITE);
 	}
 
 	NodeExecutionAdvisor walk(TestDescriptor rootDescriptor) {
@@ -48,7 +52,7 @@ class NodeTreeWalker {
 			NodeExecutionAdvisor advisor) {
 		Set<ExclusiveResource> exclusiveResources = getExclusiveResources(testDescriptor);
 		if (exclusiveResources.isEmpty()) {
-			advisor.useResourceLock(testDescriptor, lockManager.getLockForResource(GLOBAL_READ));
+			advisor.useResourceLock(testDescriptor, globalReadLock);
 			testDescriptor.getChildren().forEach(child -> walk(globalLockDescriptor, child, advisor));
 		}
 		else {
@@ -62,7 +66,7 @@ class NodeTreeWalker {
 				advisor.forceDescendantExecutionMode(globalLockDescriptor, SAME_THREAD);
 				doForChildrenRecursively(globalLockDescriptor,
 					child -> advisor.forceDescendantExecutionMode(child, SAME_THREAD));
-				advisor.useResourceLock(globalLockDescriptor, lockManager.getLockForResource(GLOBAL_READ_WRITE));
+				advisor.useResourceLock(globalLockDescriptor, globalReadWriteLock);
 			}
 			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(allResources));
 		}
