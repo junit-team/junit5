@@ -5192,9 +5192,27 @@ would fail due to the inherent race condition of writing and then reading the sa
 System Property.</p>
 </div>
 <div class="paragraph">
-<p>When access to shared resources is declared using the <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a> annotation, the
+<p>When access to shared resources is declared using the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a></code> annotation, the
 JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
 parallel.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Running tests in isolation</div>
+<div class="paragraph">
+<p>If most of your test classes can be run in parallel without any synchronization but you
+have a some test classes that need to run in isolation, you can mark the latter with the
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Isolated.html">@Isolated</a></code> annotation. Tests in such classes are executed sequentially without any other
+tests running at the same time.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>In addition to the <code>String</code> that uniquely identifies the shared resource, you may specify
@@ -9428,6 +9446,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Isolated</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ResourceAccessMode</code> <em>(enum)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
 </tr>
@@ -9895,7 +9918,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-08-15 10:29:38 UTC
+Last updated 2020-08-15 14:51:09 UTC
 </div>
 </div>
 <style>

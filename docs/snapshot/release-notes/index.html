@@ -636,6 +636,9 @@ classes that use <code>EngineExecutionListener</code>.</p>
 <p><code>ForkJoinPoolHierarchicalTestExecutorService</code> can now be constructed by supplying a
 <code>ParallelExecutionConfiguration</code>.</p>
 </li>
+<li>
+<p><code>HierarchicalTestEngine</code> now supports a global resource lock.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -768,6 +771,10 @@ reducing boilerplate type checks compared to implementing <code>ArgumentConverte
 <li>
 <p>New <code>ExtensionContext.getConfigurationParameter(String, Function&lt;String, T&gt;)</code>
 convenience method for reading transformed configuration parameters from extensions.</p>
+</li>
+<li>
+<p>New <code>@Isolated</code> annotation allows to run test classes in isolation of other test classes
+when using parallel test execution.</p>
 </li>
 </ul>
 </div>
@@ -1184,7 +1191,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-08-15 10:29:38 UTC
+Last updated 2020-08-15 14:51:09 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
