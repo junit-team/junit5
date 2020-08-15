@@ -75,14 +75,14 @@ class LockManager {
 	}
 
 	private ResourceLock toResourceLock(List<Lock> locks) {
-		int size = locks.size();
-		if (size == 0) {
-			return NopLock.INSTANCE;
+		switch (locks.size()) {
+			case 0:
+				return NopLock.INSTANCE;
+			case 1:
+				return new SingleLock(locks.get(0));
+			default:
+				return new CompositeLock(locks);
 		}
-		if (size == 1) {
-			return new SingleLock(locks.get(0));
-		}
-		return new CompositeLock(locks);
 	}
 
 }
