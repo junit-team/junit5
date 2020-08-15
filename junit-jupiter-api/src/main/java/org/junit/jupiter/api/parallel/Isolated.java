@@ -21,27 +21,22 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @Execution} is used to configure the parallel execution
- * {@linkplain #value mode} of a test class or test method.
+ * {@code @Isolated} is used to declare that the annotated test class should be
+ * executed in isolation from other test classes.
  *
- * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
- * within class hierarchies.
+ * <p>When a test class is run in isolation, no other test class is executed
+ * concurrently. This can be used to enable parallel test execution for the
+ * entire test suite while running some tests in isolation (e.g. if they modify
+ * some global resource).
  *
- * @see Isolated
+ * @since 5.7
+ * @see ExecutionMode
  * @see ResourceLock
- * @since 5.3
  */
-@API(status = EXPERIMENTAL, since = "5.3")
+@API(status = EXPERIMENTAL, since = "5.7")
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target(ElementType.TYPE)
 @Inherited
-public @interface Execution {
-
-	/**
-	 * The required/preferred execution mode.
-	 *
-	 * @see ExecutionMode
-	 */
-	ExecutionMode value();
-
+@ResourceLock("org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY")
+public @interface Isolated {
 }

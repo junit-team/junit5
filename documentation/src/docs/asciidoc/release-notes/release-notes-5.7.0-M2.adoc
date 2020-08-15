@@ -61,6 +61,7 @@ on GitHub.
   classes that use `EngineExecutionListener`.
 * `ForkJoinPoolHierarchicalTestExecutorService` can now be constructed by supplying a
   `ParallelExecutionConfiguration`.
+* `HierarchicalTestEngine` now supports a global resource lock.
 
 
 [[release-notes-5.7.0-M2-junit-jupiter]]
@@ -121,6 +122,8 @@ on GitHub.
   reducing boilerplate type checks compared to implementing `ArgumentConverter` directly.
 * New `ExtensionContext.getConfigurationParameter(String, Function<String, T>)`
   convenience method for reading transformed configuration parameters from extensions.
+* New `@Isolated` annotation allows to run test classes in isolation of other test classes
+  when using parallel test execution.
 
 
 [[release-notes-5.7.0-M2-junit-vintage]]
