@@ -20,6 +20,19 @@ import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
 
+/**
+ * {@code @Isolated} is used to declare that the annotated test class should be
+ * executed in isolation from other test classes.
+ *
+ * <p>When a test class is run in isolation, no other test class is executed
+ * concurrently. This can be used to enable parallel test execution for the
+ * entire test suite while running some tests in isolation (e.g. if they modify
+ * some global resource).
+ *
+ * @since 5.7
+ * @see ExecutionMode
+ * @see ResourceLock
+ */
 @API(status = EXPERIMENTAL, since = "5.7")
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

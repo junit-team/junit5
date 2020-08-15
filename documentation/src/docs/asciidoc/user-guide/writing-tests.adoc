@@ -2023,9 +2023,18 @@ If the tests in the following example were run in parallel _without_ the use of
 would fail due to the inherent race condition of writing and then reading the same JVM
 System Property.
 
-When access to shared resources is declared using the {ResourceLock} annotation, the
+When access to shared resources is declared using the `{ResourceLock}` annotation, the
 JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
 parallel.
+
+[NOTE]
+.Running tests in isolation
+====
+If most of your test classes can be run in parallel without any synchronization but you
+have a some test classes that need to run in isolation, you can mark the latter with the
+`{Isolated}` annotation. Tests in such classes are executed sequentially without any other
+tests running at the same time.
+====
 
 In addition to the `String` that uniquely identifies the shared resource, you may specify
 an access mode. Two tests that require `READ` access to a shared resource may run in
