@@ -34,10 +34,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 class LockManager {
 
 	private static final Comparator<ExclusiveResource> COMPARATOR //
-		= comparing(ExclusiveResource::getKey, globalLockFirst().thenComparing(naturalOrder())) //
+		= comparing(ExclusiveResource::getKey, globalKeyFirst().thenComparing(naturalOrder())) //
 				.thenComparing(ExclusiveResource::getLockMode);
 
-	private static Comparator<String> globalLockFirst() {
+	private static Comparator<String> globalKeyFirst() {
 		return comparing(key -> !GLOBAL_KEY.equals(key));
 	}
 
