@@ -18,6 +18,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
 /**
  * An exclusive resource identified by a key with a lock mode that is used to
@@ -30,9 +31,15 @@ import org.junit.platform.commons.util.ToStringBuilder;
 public class ExclusiveResource {
 
 	/**
-	 * The key for the global resource lock that all direct children of the
-	 * engine descriptor acquire in {@linkplain LockMode#READ read} mode by
-	 * default.
+	 * Key of the global resource lock that all direct children of the engine
+	 * descriptor acquire in {@linkplain LockMode#READ read mode} by default.
+	 *
+	 * <p>If any node {@linkplain Node#getExclusiveResources() requires} an
+	 * exclusive resource with the same key in
+	 * {@linkplain LockMode#READ_WRITE read-write mode}, the lock will be
+	 * coarsened to be acquired by the node's ancestor that is a direct child of
+	 * the engine descriptor and all of the ancestor's descendants will be
+	 * forced to run in the {@linkplain ExecutionMode#SAME_THREAD same thread}.
 	 *
 	 * @since 1.7
 	 */
