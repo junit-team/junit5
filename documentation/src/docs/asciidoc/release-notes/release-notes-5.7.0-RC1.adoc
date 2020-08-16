@@ -9,7 +9,6 @@
 * Java Flight Recorder support
 * TestKit improvements
 * `@Isolated` tests
-* Java 16 support
 * Configurable default method orderer
 * Custom disabled reasons for all `@Enabled*`/`@Disabled*` annotations
 * Improvements to `assertTimeoutPreemptively()`
