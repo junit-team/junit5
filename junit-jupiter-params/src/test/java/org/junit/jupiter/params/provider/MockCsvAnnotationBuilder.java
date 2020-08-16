@@ -38,6 +38,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 	protected String delimiterString = "";
 	protected String emptyValue = "";
 	protected String[] nullValues = new String[0];
+	protected int maxCharsPerColumn = 4096;
 
 	private MockCsvAnnotationBuilder() {
 	}
@@ -61,6 +62,11 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 	B nullValues(String... nullValues) {
 		this.nullValues = nullValues;
+		return getSelf();
+	}
+
+	B maxCharsPerColumn(int maxCharsPerColumn) {
+		this.maxCharsPerColumn = maxCharsPerColumn;
 		return getSelf();
 	}
 
@@ -91,6 +97,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
 			when(annotation.nullValues()).thenReturn(super.nullValues);
+			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
 
 			// @CsvSource
 			when(annotation.value()).thenReturn(this.lines);
@@ -147,6 +154,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
 			when(annotation.nullValues()).thenReturn(super.nullValues);
+			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
 
 			// @CsvFileSource
 			when(annotation.resources()).thenReturn(this.resources);

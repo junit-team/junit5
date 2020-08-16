@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -101,5 +102,17 @@ public @interface CsvSource {
 	 * @since 5.6
 	 */
 	String[] nullValues() default {};
+
+	/**
+	 * The maximum characters of per CSV column allowed.
+	 *
+	 * <p>Must be a positive number.
+	 *
+	 * <p>Defaults to {@code 4096}.
+	 *
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	int maxCharsPerColumn() default 4096;
 
 }

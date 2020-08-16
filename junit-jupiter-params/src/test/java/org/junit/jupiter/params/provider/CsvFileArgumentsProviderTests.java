@@ -368,6 +368,73 @@ class CsvFileArgumentsProviderTests {
 		assertThat(arguments).containsExactly(array("apple", null, null, "''"), array(null, null, "foo", "bar"));
 	}
 
+	@Test
+	void readsLineFromDefaultMaxCharsFileWithDefaultConfig(@TempDir Path tempDir) throws Exception {
+		Path csvFile = writeClasspathResourceToFile("/default-max-chars.csv", tempDir.resolve("default-max-chars.csv"));
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/default-max-chars.csv")//
+				.files(csvFile.toAbsolutePath().toString())//
+				.build();
+
+		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).hasSize(2);
+	}
+
+	@Test
+	void readsLineFromExceedsMaxCharsFileWithCustomConfig(@TempDir Path tempDir) throws java.io.IOException {
+		Path csvFile = writeClasspathResourceToFile("/exceeds-default-max-chars.csv",
+			tempDir.resolve("exceeds-default-max-chars.csv"));
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/exceeds-default-max-chars.csv")//
+				.maxCharsPerColumn(4097)//
+				.files(csvFile.toAbsolutePath().toString())//
+				.build();
+
+		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).hasSize(2);
+	}
+
+	@Test
+	void throwsExceptionWhenMaxCharsPerColumnIsNotPositiveNumber(@TempDir Path tempDir) throws java.io.IOException {
+		Path csvFile = writeClasspathResourceToFile("/exceeds-default-max-chars.csv",
+			tempDir.resolve("exceeds-default-max-chars.csv"));
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/exceeds-default-max-chars.csv")//
+				.maxCharsPerColumn(-1).files(csvFile.toAbsolutePath().toString())//
+				.build();
+
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, //
+			() -> provideArguments(new CsvFileArgumentsProvider(), annotation));
+
+		assertThat(exception)//
+				.hasMessageStartingWith("maxCharsPerColumn must be a positive number: -1");
+	}
+
+	@Test
+	void throwsExceptionForExceedsMaxCharsFileWithDefaultConfig(@TempDir Path tempDir) throws java.io.IOException {
+		Path csvFile = writeClasspathResourceToFile("/exceeds-default-max-chars.csv",
+			tempDir.resolve("exceeds-default-max-chars.csv"));
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/exceeds-default-max-chars.csv")//
+				.files(csvFile.toAbsolutePath().toString())//
+				.build();
+
+		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+
+		CsvParsingException exception = assertThrows(CsvParsingException.class,
+			() -> provideArguments(new CsvFileArgumentsProvider(), annotation).toArray());
+
+		assertThat(exception)//
+				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
+				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+	}
+
 	private Stream<Object[]> provideArguments(CsvFileSource annotation, String content) {
 		return provideArguments(new ByteArrayInputStream(content.getBytes(UTF_8)), annotation);
 	}

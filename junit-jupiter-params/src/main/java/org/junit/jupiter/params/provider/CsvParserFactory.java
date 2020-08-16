@@ -30,12 +30,14 @@ class CsvParserFactory {
 
 	static CsvParser createParserFor(CsvSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
-		return createParser(delimiter, LINE_SEPARATOR, SINGLE_QUOTE, annotation.emptyValue());
+		return createParser(delimiter, LINE_SEPARATOR, SINGLE_QUOTE, annotation.emptyValue(),
+			annotation.maxCharsPerColumn());
 	}
 
 	static CsvParser createParserFor(CsvFileSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
-		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue());
+		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue(),
+			annotation.maxCharsPerColumn());
 	}
 
 	private static String selectDelimiter(Annotation annotation, char delimiter, String delimiterString) {
@@ -51,12 +53,13 @@ class CsvParserFactory {
 		return DEFAULT_DELIMITER;
 	}
 
-	private static CsvParser createParser(String delimiter, String lineSeparator, char quote, String emptyValue) {
-		return new CsvParser(createParserSettings(delimiter, lineSeparator, quote, emptyValue));
+	private static CsvParser createParser(String delimiter, String lineSeparator, char quote, String emptyValue,
+			int maxCharsPerColumn) {
+		return new CsvParser(createParserSettings(delimiter, lineSeparator, quote, emptyValue, maxCharsPerColumn));
 	}
 
 	private static CsvParserSettings createParserSettings(String delimiter, String lineSeparator, char quote,
-			String emptyValue) {
+			String emptyValue, int maxCharsPerColumn) {
 
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
@@ -65,6 +68,9 @@ class CsvParserFactory {
 		settings.getFormat().setQuoteEscape(quote);
 		settings.setEmptyValue(emptyValue);
 		settings.setAutoConfigurationEnabled(false);
+		Preconditions.condition(maxCharsPerColumn > 0,
+			() -> "maxCharsPerColumn must be a positive number: " + maxCharsPerColumn);
+		settings.setMaxCharsPerColumn(maxCharsPerColumn);
 		// Do not use the built-in support for skipping rows/lines since it will
 		// throw an IllegalArgumentException if the file does not contain at least
 		// the number of specified lines to skip.
