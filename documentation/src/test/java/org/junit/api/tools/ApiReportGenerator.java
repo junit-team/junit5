@@ -66,7 +66,7 @@ class ApiReportGenerator {
 		Logger logger = LoggerFactory.getLogger(ApiReportGenerator.class);
 		String EOL = System.lineSeparator();
 		ClassGraph classGraph = new ClassGraph() //
-				.whitelistPackages(packages) //
+				.acceptPackages(packages) //
 				.disableNestedJarScanning() //
 				.enableAnnotationInfo(); //
 		String apiClasspath = System.getProperty("api.classpath");
