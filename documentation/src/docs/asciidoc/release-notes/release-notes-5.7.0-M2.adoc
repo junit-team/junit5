@@ -117,7 +117,7 @@ on GitHub.
 * `@CsvFileSource` now allows one to specify file paths as an alternative to classpath
   resources.
 * `@CsvFileSource` and `@CsvSource` now provide a `maxCharsPerColumn` attribute
-  that enables configuring the maximum number of characters per column.
+  for configuring the maximum number of characters per column.
 * Arguments in display names of parameterized test invocations are now truncated if
   they exceed a configurable maximum length (defaults to 512 characters).
 * New `TypedArgumentConverter` for converting one specific type to another, therefore
