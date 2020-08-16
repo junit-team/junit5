@@ -42,6 +42,9 @@ public @interface Isolated {
 
 	/**
 	 * The reason this test class needs to run in isolation.
+	 *
+	 * <p>The supplied string is currently not reported in any way but can be
+	 * used for documentation purposes.
 	 */
 	String value() default "";
 
