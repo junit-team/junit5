@@ -472,12 +472,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#release-notes-5.7.0-M2">5.7.0-M2</a>
+<li><a href="#release-notes-5.7.0-RC1">5.7.0-RC1</a>
 <ul class="sectlevel2">
-<li><a href="#release-notes-5.7.0-M2-overall-improvements">Overall Improvements</a></li>
-<li><a href="#release-notes-5.7.0-M2-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.7.0-M2-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.7.0-M2-junit-vintage">JUnit Vintage</a></li>
+<li><a href="#release-notes-5.7.0-RC1-overall-improvements">Overall Improvements</a></li>
+<li><a href="#release-notes-5.7.0-RC1-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.7.0-RC1-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.7.0-RC1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
 <li><a href="#release-notes-5.7.0-M1">5.7.0-M1</a>
@@ -519,13 +519,44 @@ authors as well as build tool and IDE vendors.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes-5.7.0-M2"><a class="anchor" href="#release-notes-5.7.0-M2"></a>5.7.0-M2</h2>
+<h2 id="release-notes-5.7.0-RC1"><a class="anchor" href="#release-notes-5.7.0-RC1"></a>5.7.0-RC1</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> August 16, 2020</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope (in addition to <a href="#release-notes-5.7.0-M1">M1</a>):</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Promotion of experimental features in JUnit Platform and Jupiter</p>
+</li>
+<li>
+<p>Java Flight Recorder support</p>
+</li>
+<li>
+<p>TestKit improvements</p>
+</li>
+<li>
+<p><code>@Isolated</code> tests</p>
+</li>
+<li>
+<p>Java 16 support</p>
+</li>
+<li>
+<p>Configurable default method orderer</p>
+</li>
+<li>
+<p>Custom disabled reasons for all <code>@Enabled*</code>/<code>@Disabled*</code> annotations</p>
+</li>
+<li>
+<p>Improvements to <code>assertTimeoutPreemptively</code></p>
+</li>
+<li>
+<p>Improvements to <code>@CsvFileSource</code> and <code>@CsvSource</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -533,7 +564,7 @@ authors as well as build tool and IDE vendors.</p>
 on GitHub.</p>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.7.0-M2-overall-improvements"><a class="anchor" href="#release-notes-5.7.0-M2-overall-improvements"></a>Overall Improvements</h3>
+<h3 id="release-notes-5.7.0-RC1-overall-improvements"><a class="anchor" href="#release-notes-5.7.0-RC1-overall-improvements"></a>Overall Improvements</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -544,7 +575,7 @@ with tools like NetBeans 11.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.7.0-M2-junit-platform"><a class="anchor" href="#release-notes-5.7.0-M2-junit-platform"></a>JUnit Platform</h3>
+<h3 id="release-notes-5.7.0-RC1-junit-platform"><a class="anchor" href="#release-notes-5.7.0-RC1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
 <h4 id="promoted-features"><a class="anchor" href="#promoted-features"></a>Promoted Features</h4>
 <div class="ulist">
@@ -644,7 +675,7 @@ classes that use <code>EngineExecutionListener</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.7.0-M2-junit-jupiter"><a class="anchor" href="#release-notes-5.7.0-M2-junit-jupiter"></a>JUnit Jupiter</h3>
+<h3 id="release-notes-5.7.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.7.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
 <h4 id="promoted-features-2"><a class="anchor" href="#promoted-features-2"></a>Promoted Features</h4>
 <div class="ulist">
@@ -785,36 +816,9 @@ when using parallel test execution.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.7.0-M2-junit-vintage"><a class="anchor" href="#release-notes-5.7.0-M2-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
+<h3 id="release-notes-5.7.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.7.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
+<div class="paragraph">
+<p>No changes.</p>
 </div>
 </div>
 </div>
@@ -863,7 +867,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.7.0-M1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -891,7 +895,7 @@ in favor of <code>allEvents()</code>, <code>containerEvents()</code>, and <code>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -934,7 +938,7 @@ incomplete match with or without a fixed order.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.7.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -948,7 +952,7 @@ classes instead of failing for missing methods in such cases.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -996,7 +1000,7 @@ implementations.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.7.0-M1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1008,7 +1012,7 @@ by their source code name even though they have a generated method name in the b
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1039,7 +1043,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.2-junit-platform"><a class="anchor" href="#release-notes-5.6.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1055,7 +1059,7 @@ classes are not annotated with <code>@Nested</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.2-junit-jupiter"><a class="anchor" href="#release-notes-5.6.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1069,7 +1073,7 @@ cycle if such inner classes are not annotated with <code>@Nested</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.2-junit-vintage"><a class="anchor" href="#release-notes-5.6.2-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1099,7 +1103,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.1-junit-platform"><a class="anchor" href="#release-notes-5.6.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1117,7 +1121,7 @@ results in a warning if the files have different URLs.</p>
 <div class="sect2">
 <h3 id="release-notes-5.6.1-junit-jupiter"><a class="anchor" href="#release-notes-5.6.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1195,7 +1199,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-08-16 12:21:59 UTC
+Last updated 2020-08-16 12:43:39 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
