@@ -98,6 +98,15 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
+	void doesNotTrimSpacesInsideQuotes() {
+		CsvSource annotation = csvSource("''", "'   '", "'blank '", "' not blank   '");
+
+		Stream<Object[]> arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array(""), array("   "), array("blank "), array(" not blank   "));
+	}
+
+	@Test
 	void providesArgumentsWithCharacterDelimiter() {
 		CsvSource annotation = csvSource().delimiter('|').lines("foo|bar", "bar|foo").build();
 
