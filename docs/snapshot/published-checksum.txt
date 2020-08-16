@@ -349,6 +349,7 @@
 7d045c1dcd9e82b949c5368e1ead732e  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
 7d8441eb40f2ce5ec970844439595caf  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.java
 7d91d07df20d4bad698aa839238ba293  documentation/src/test/java/example/AssertionsDemo.java
+7dd200ac36cf2184e23019b783ad74fe  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Isolated.java
 7e0f992140511eb98c92608345b85a88  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/Constants.java
 7e92cfdd0f38e0eeb846ba6636d568c7  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClassNameFilter.java
 7ec074a058c2eaf68363f822e17209e1  documentation/src/test/java/example/JUnitPlatformSuiteDemo.java
@@ -680,7 +681,6 @@ fa8ab6611d026f8b27a70a6904d6d6e6  junit-jupiter-api/src/main/java/org/junit/jupi
 fad6c8144f87135732391c6b3495a58c  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageNameFilter.java
 fadece59a381fa8335c0be8668911a43  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.java
 fb322000e2557c04a137e62cdb1581f5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariableCondition.java
-fb656b8a343062d151a22170c247cb42  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Isolated.java
 fb6cb48e67b12100aa652cfe9e1f8b78  junit-platform-commons/src/main/java/org/junit/platform/commons/util/FunctionUtils.java
 fbc0a0a1024e8999ef70bbd8a36f01fd  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/OutcomeDelayingEngineExecutionListener.java
 fbc99937f40cc5ae7e0e47113ff01fe4  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
