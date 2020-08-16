@@ -2031,7 +2031,7 @@ parallel.
 .Running tests in isolation
 ====
 If most of your test classes can be run in parallel without any synchronization but you
-have a some test classes that need to run in isolation, you can mark the latter with the
+have some test classes that need to run in isolation, you can mark the latter with the
 `{Isolated}` annotation. Tests in such classes are executed sequentially without any other
 tests running at the same time.
 ====
