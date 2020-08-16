@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 plugins {
 	id("net.nemerosa.versioning")
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
-	id("com.diffplug.gradle.spotless")
+	id("com.diffplug.spotless")
 	id("io.spring.nohttp")
 }
 
@@ -94,7 +94,7 @@ allprojects {
 
 	apply(plugin = "eclipse")
 	apply(plugin = "idea")
-	apply(plugin = "com.diffplug.gradle.spotless")
+	apply(plugin = "com.diffplug.spotless")
 
 	if (enableJaCoCo) {
 		apply(plugin = "jacoco")

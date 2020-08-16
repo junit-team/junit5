@@ -5,7 +5,7 @@ pluginManagement {
 		id("com.gradle.enterprise") version settings.extra["gradle.enterprise.plugin.version"] as String
 		id("net.nemerosa.versioning") version settings.extra["versioning.plugin.version"] as String
 		id("com.github.ben-manes.versions") version settings.extra["versions.plugin.version"] as String
-		id("com.diffplug.gradle.spotless") version settings.extra["spotless.plugin.version"] as String
+		id("com.diffplug.spotless") version settings.extra["spotless.plugin.version"] as String
 		id("org.ajoberstar.git-publish") version settings.extra["git-publish.plugin.version"] as String
 		kotlin("jvm") version settings.extra["kotlin.plugin.version"] as String
 		id("org.asciidoctor.jvm.convert") version settings.extra["asciidoctor.plugin.version"] as String
