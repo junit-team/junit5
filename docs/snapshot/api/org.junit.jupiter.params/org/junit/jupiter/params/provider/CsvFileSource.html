@@ -206,20 +206,27 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxCharsPerColumn()">maxCharsPerColumn</a></span></code></th>
+<td class="colLast">
+<div class="block">The maximum characters of per CSV column allowed.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nullValues()">nullValues</a></span></code></th>
 <td class="colLast">
 <div class="block">A list of strings that should be interpreted as <code>null</code> references.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#numLinesToSkip()">numLinesToSkip</a></span></code></th>
 <td class="colLast">
 <div class="block">The number of lines to skip when reading the CSV files.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resources()">resources</a></span></code></th>
 <td class="colLast">
@@ -442,7 +449,7 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
 <li class="blockList"><a id="nullValues()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>nullValues</h4>
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;nullValues</pre>
@@ -464,6 +471,35 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
 <dl>
 <dt>Default:</dt>
 <dd>{}</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="maxCharsPerColumn()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>maxCharsPerColumn</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.7")
+int&nbsp;maxCharsPerColumn</pre>
+<div class="block">The maximum characters of per CSV column allowed.
+
+ <p>Must be a positive number.
+
+ <p>Defaults to <code>4096</code>.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.7</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>4096</dd>
 </dl>
 </li>
 </ul>
