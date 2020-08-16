@@ -25,6 +25,9 @@ import org.apiguardian.api.API;
  * comma-separated values (CSV) from one or more supplied
  * {@linkplain #value CSV lines}.
  *
+ * <p>The column delimiter (defaults to comma) can be customized with either
+ * {@link #delimiter()} or {@link #delimiterString()}.
+ *
  * <p>The supplied values will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method.
  *
