@@ -116,6 +116,8 @@ on GitHub.
   `Iterator` for the input source.
 * `@CsvFileSource` now allows one to specify file paths as an alternative to classpath
   resources.
+* `@CsvFileSource` and `@CsvSource` now provide a `maxCharsPerColumn` attribute
+  that enables configuring the maximum number of characters per column.
 * Arguments in display names of parameterized test invocations are now truncated if
   they exceed a configurable maximum length (defaults to 512 characters).
 * New `TypedArgumentConverter` for converting one specific type to another, therefore
@@ -124,8 +126,7 @@ on GitHub.
   convenience method for reading transformed configuration parameters from extensions.
 * New `@Isolated` annotation allows to run test classes in isolation of other test classes
   when using parallel test execution.
-* `@CsvFileSource` and `@CsvSource` now provide a `maxCharsPerColumn` attribute
-  that enables configuring the maximum number of characters per column.
+
 
 [[release-notes-5.7.0-M2-junit-vintage]]
 === JUnit Vintage
