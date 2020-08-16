@@ -244,7 +244,7 @@ class ParallelExecutionIntegrationTests {
 		assertThat(events.stream().filter(event(test(), finishedWithFailure())::matches)).isEmpty();
 	}
 
-	@Isolated
+	@Isolated("testing")
 	static class IsolatedTestCase {
 		static AtomicInteger sharedResource;
 		static CountDownLatch countDownLatch;

@@ -39,4 +39,10 @@ import org.apiguardian.api.API;
 @Inherited
 @ResourceLock("org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY")
 public @interface Isolated {
+
+	/**
+	 * The reason this test class needs to run in isolation.
+	 */
+	String value() default "";
+
 }
