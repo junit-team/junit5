@@ -430,6 +430,7 @@ a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/mig
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a13777605819a6ab3a2060956fa0b743  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
 a19dfa211e3f0f74ea007e63e78f479f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRangeCondition.java
+a1deee7d5b8af0a6028f652df2c9cb7d  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-RC1.adoc
 a1ea21eb6905311553d061647b2c98d0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/package-info.java
 a3112552fe1385621120dbc4f07796d6  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
 a3537020581abc2d9a3ffa3e5e23435d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeEngines.java
@@ -488,7 +489,6 @@ b56ec6e758918497b010124f4b6dcae3  documentation/src/main/java/example/util/Calcu
 b5966ad0031841b4a6087d1cdccd6a28  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ExclusiveResource.java
 b605687b16ddc6bc8dd36662d1cb3fee  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/package-info.java
 b659d6afa2ba4637865ed4a0d4311b5b  documentation/src/docs/asciidoc/user-guide/contributors.adoc
-b677ca7a5aee54cdd95cd852a14fa8db  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-RC1.adoc
 b72f606b732300becc6d82ca61193944  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicTest.java
 b77e6b7323de1c237df2dfa279d67641  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumArgumentsProvider.java
 b7a345d7fb2cf3d32425443f990855bb  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FileSystemSource.java
