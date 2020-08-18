@@ -15,10 +15,12 @@ import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
@@ -27,6 +29,7 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
@@ -39,34 +42,36 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 @API(status = INTERNAL, since = "5.0")
 public class ExtensionValuesStore {
 
+	private static final Comparator<StoredValue> REVERSE_INSERT_ORDER = Comparator.<StoredValue, Integer> comparing(
+		it -> it.order).reversed();
+
+	private final AtomicInteger insertOrderSequence = new AtomicInteger();
+	private final ConcurrentMap<CompositeKey, StoredValue> storedValues = new ConcurrentHashMap<>(4);
 	private final ExtensionValuesStore parentStore;
-	private final ConcurrentMap<CompositeKey, Supplier<Object>> storedValues = new ConcurrentHashMap<>(4);
 
 	public ExtensionValuesStore(ExtensionValuesStore parentStore) {
 		this.parentStore = parentStore;
 	}
 
 	/**
-	 * Close all values that implement {@link ExtensionContext.Store.CloseableResource}.
+	 * Close all values that implement {@link CloseableResource}.
 	 *
 	 * @implNote Only close values stored in this instance. This implementation
 	 * does not close values in parent stores.
 	 */
 	public void closeAllStoredCloseableValues() {
 		ThrowableCollector throwableCollector = createThrowableCollector();
-		for (Supplier<Object> supplier : storedValues.values()) {
-			Object value = supplier.get();
-			if (value instanceof ExtensionContext.Store.CloseableResource) {
-				ExtensionContext.Store.CloseableResource resource = (ExtensionContext.Store.CloseableResource) value;
-				throwableCollector.execute(resource::close);
-			}
-		}
+		storedValues.values().stream() //
+				.filter(storedValue -> storedValue.evaluate() instanceof CloseableResource) //
+				.sorted(REVERSE_INSERT_ORDER) //
+				.map(storedValue -> (CloseableResource) storedValue.evaluate()) //
+				.forEach(resource -> throwableCollector.execute(resource::close));
 		throwableCollector.assertEmpty();
 	}
 
 	Object get(Namespace namespace, Object key) {
-		Supplier<Object> storedValue = getStoredValue(new CompositeKey(namespace, key));
-		return (storedValue != null ? storedValue.get() : null);
+		StoredValue storedValue = getStoredValue(new CompositeKey(namespace, key));
+		return (storedValue != null ? storedValue.evaluate() : null);
 	}
 
 	<T> T get(Namespace namespace, Object key, Class<T> requiredType) {
@@ -76,12 +81,12 @@ public class ExtensionValuesStore {
 
 	<K, V> Object getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator) {
 		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		Supplier<Object> storedValue = getStoredValue(compositeKey);
+		StoredValue storedValue = getStoredValue(compositeKey);
 		if (storedValue == null) {
-			Supplier<Object> newValue = new MemoizingSupplier(() -> defaultCreator.apply(key));
+			StoredValue newValue = storedValue(new MemoizingSupplier(() -> defaultCreator.apply(key)));
 			storedValue = Optional.ofNullable(storedValues.putIfAbsent(compositeKey, newValue)).orElse(newValue);
 		}
-		return storedValue.get();
+		return storedValue.evaluate();
 	}
 
 	<K, V> V getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
@@ -90,12 +95,16 @@ public class ExtensionValuesStore {
 	}
 
 	void put(Namespace namespace, Object key, Object value) {
-		storedValues.put(new CompositeKey(namespace, key), () -> value);
+		storedValues.put(new CompositeKey(namespace, key), storedValue(() -> value));
+	}
+
+	private StoredValue storedValue(Supplier<Object> value) {
+		return new StoredValue(insertOrderSequence.getAndIncrement(), value);
 	}
 
 	Object remove(Namespace namespace, Object key) {
-		Supplier<Object> previous = storedValues.remove(new CompositeKey(namespace, key));
-		return (previous != null ? previous.get() : null);
+		StoredValue previous = storedValues.remove(new CompositeKey(namespace, key));
+		return (previous != null ? previous.evaluate() : null);
 	}
 
 	<T> T remove(Namespace namespace, Object key, Class<T> requiredType) {
@@ -103,17 +112,15 @@ public class ExtensionValuesStore {
 		return castToRequiredType(key, value, requiredType);
 	}
 
-	private Supplier<Object> getStoredValue(CompositeKey compositeKey) {
-		Supplier<Object> storedValue = storedValues.get(compositeKey);
+	private StoredValue getStoredValue(CompositeKey compositeKey) {
+		StoredValue storedValue = storedValues.get(compositeKey);
 		if (storedValue != null) {
 			return storedValue;
 		}
-		else if (parentStore != null) {
+		if (parentStore != null) {
 			return parentStore.getStoredValue(compositeKey);
 		}
-		else {
-			return null;
-		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -157,6 +164,22 @@ public class ExtensionValuesStore {
 		@Override
 		public int hashCode() {
 			return Objects.hash(namespace, key);
+		}
+
+	}
+
+	private static class StoredValue {
+
+		private final int order;
+		private final Supplier<Object> supplier;
+
+		public StoredValue(int order, Supplier<Object> supplier) {
+			this.order = order;
+			this.supplier = supplier;
+		}
+
+		private Object evaluate() {
+			return supplier.get();
 		}
 
 	}

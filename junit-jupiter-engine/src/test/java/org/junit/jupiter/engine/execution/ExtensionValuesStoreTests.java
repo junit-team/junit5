@@ -378,7 +378,7 @@ public class ExtensionValuesStoreTests {
 		}
 
 		@Test
-		void additionNamespacePartMakesADifferenc() {
+		void additionNamespacePartMakesADifference() {
 
 			Namespace ns1 = Namespace.create("part1", "part2");
 			Namespace ns2 = Namespace.create("part1");
