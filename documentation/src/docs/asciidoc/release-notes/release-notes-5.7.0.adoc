@@ -6,7 +6,7 @@
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult
-the link:{junit5-repo}+/milestone/?closed=1+[5.7.0] milestone page in the JUnit repository
+the link:{junit5-repo}+/milestone/50?closed=1+[5.7.0] milestone page in the JUnit repository
 on GitHub.
 
 
