@@ -21,9 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.ExtensionContextParameterResolver;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 
 class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
@@ -43,20 +41,6 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 		assertThat(engineExtensionContext.orElse(null).getElement()).isEmpty();
 
 		assertThat(engineExtensionContext.orElse(null).getParent()).isEmpty();
-	}
-
-	static class ExtensionContextParameterResolver implements ParameterResolver {
-		@Override
-		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-				throws ParameterResolutionException {
-			return ExtensionContext.class.equals(parameterContext.getParameter().getType());
-		}
-
-		@Override
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-				throws ParameterResolutionException {
-			return extensionContext;
-		}
 	}
 
 	@Test

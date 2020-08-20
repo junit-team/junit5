@@ -31,7 +31,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* `CloseableResource` instances stored in `ExtensionContext.Store` are now closed in the
+  reverse order they were added in. Previously, the order was undefined and unstable.
 
 ==== Deprecations and Breaking Changes
 

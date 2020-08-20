@@ -396,6 +396,9 @@ public interface ExtensionContext {
 		 * <p>Note that the {@code CloseableResource} API is only honored for
 		 * objects stored within an extension context {@link Store Store}.
 		 *
+		 * <p>The resources stored in a {@link Store Store} are closed in the
+		 * inverse order they were added in.
+		 *
 		 * @since 5.1
 		 */
 		@API(status = STABLE, since = "5.1")

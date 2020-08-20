@@ -569,8 +569,8 @@ methods available for storing and retrieving values via the `{ExtensionContext_S
 .`ExtensionContext.Store.CloseableResource`
 NOTE: An extension context store is bound to its extension context lifecycle. When an
 extension context lifecycle ends it closes its associated store. All stored values
-that are instances of `CloseableResource` are notified by
-an invocation of their `close()` method.
+that are instances of `CloseableResource` are notified by an invocation of their `close()`
+method in the inverse order they were added in.
 
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
