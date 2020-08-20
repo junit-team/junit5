@@ -103,6 +103,7 @@
 23b040c1c3235c271fa2d307519fee69  documentation/src/test/java/example/exception/IgnoreIOExceptionTests.java
 23bc0a09ce9614ac2e3191410590999f  junit-platform-commons/src/main/java/org/junit/platform/commons/JUnitException.java
 23dd3aa019a94f0e48b0afd0819a1493  junit-platform-launcher/src/main/java/org/junit/platform/launcher/Launcher.java
+24995b4ef84b4aa42ebc5a5e2f089bea  documentation/src/docs/asciidoc/release-notes/index.adoc
 249fcdc7bcb09fb930181edb902a6f83  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/EnumConfigurationParameterConverter.java
 24e8b779ea3f6f20c2d200bcf1f1e331  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludePackages.java
 253def58192b9d112b3965d8b6de4fda  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.txt
@@ -271,6 +272,7 @@
 611caf3c0c766a147652099586e511fe  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/SelectorResolver.java
 615eda5aeaca8bfe6e79b1a4ee6957df  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ExtensionUtils.java
 6184c7eb1d70519d57c67244e4460663  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/ExternalResourceAdapter.java
+6209ed5a490a2adcbd72715972a9f772  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0.adoc
 620a977477e8fa45dc0895b811a82c6d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExtensionValuesStore.java
 625b962a8c1a39a6773a0b0337d0fa00  junit-platform-engine/src/main/java/org/junit/platform/engine/reporting/ReportEntry.java
 62aac98a5a49e4187035cd0bcff24622  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncherExecutionResult.java
@@ -696,6 +698,5 @@ fe150fed05a64f57df74cd89a87d474e  junit-platform-engine/src/main/java/org/junit/
 fe1a6c0b59eca3e6ba26a6107c88489b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java
 fe68bd8a2799ff750d17f9e4d4156a2b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertFalse.java
 fe99b3c49b9cefe65e5a54e82859be9e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
-ff152e08fef8fc251cc4fe894093fc05  documentation/src/docs/asciidoc/release-notes/index.adoc
 ff76dc23c01f73b8be328522d8843be7  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/FileSelector.java
 ffe69cdbb784904d5a1367b7fa7a3564  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.java
