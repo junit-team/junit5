@@ -140,7 +140,10 @@ public static interface <span class="typeNameLabel">ExtensionContext.Store.Close
  is closed.
 
  <p>Note that the <code>CloseableResource</code> API is only honored for
- objects stored within an extension context <a href="ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension"><code>Store</code></a>.</div>
+ objects stored within an extension context <a href="ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension"><code>Store</code></a>.
+
+ <p>The resources stored in a <a href="ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension"><code>Store</code></a> are closed in the
+ inverse order they were added in.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.1</dd>

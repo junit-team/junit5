@@ -7843,8 +7843,8 @@ methods available for storing and retrieving values via the <code><a href="../ap
 <div class="title"><code>ExtensionContext.Store.CloseableResource</code></div>
 An extension context store is bound to its extension context lifecycle. When an
 extension context lifecycle ends it closes its associated store. All stored values
-that are instances of <code>CloseableResource</code> are notified by
-an invocation of their <code>close()</code> method.
+that are instances of <code>CloseableResource</code> are notified by an invocation of their <code>close()</code>
+method in the inverse order they were added in.
 </td>
 </tr>
 </table>
@@ -9918,7 +9918,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-08-20 19:45:15 UTC
+Last updated 2020-08-20 20:04:21 UTC
 </div>
 </div>
 <style>
