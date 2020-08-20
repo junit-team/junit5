@@ -11,7 +11,7 @@
 package org.junit.platform.reporting.legacy.xml;
 
 import static java.text.MessageFormat.format;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
@@ -23,7 +23,7 @@ import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -116,7 +116,7 @@ class XmlReportWriter {
 		writeTestCounts(tests, writer);
 		writeAttributeSafely(writer, "time", getTime(testIdentifier, numberFormat));
 		writeAttributeSafely(writer, "hostname", getHostname().orElse("<unknown host>"));
-		writeAttributeSafely(writer, "timestamp", ISO_LOCAL_DATE_TIME.format(getCurrentDateTime()));
+		writeAttributeSafely(writer, "timestamp", ISO_ZONED_DATE_TIME.format(getCurrentDateTime()));
 	}
 
 	private void writeTestCounts(List<TestIdentifier> tests, XMLStreamWriter writer) throws XMLStreamException {
@@ -236,7 +236,7 @@ class XmlReportWriter {
 					systemOutElementsForCapturedOutput);
 				removeIfPresentAndAddAsSeparateElement(keyValuePairs, STDERR_REPORT_ENTRY_KEY, systemErrElements);
 				if (!keyValuePairs.isEmpty()) {
-					buildReportEntryDescription(reportEntry.getTimestamp(), keyValuePairs, i + 1,
+					buildReportEntryDescription(reportEntry.getZonedTimestamp(), keyValuePairs, i + 1,
 						formattedReportEntries);
 				}
 			}
@@ -253,10 +253,10 @@ class XmlReportWriter {
 		}
 	}
 
-	private void buildReportEntryDescription(LocalDateTime timestamp, Map<String, String> keyValuePairs,
+	private void buildReportEntryDescription(ZonedDateTime timestamp, Map<String, String> keyValuePairs,
 			int entryNumber, StringBuilder result) {
 		result.append(
-			format("Report Entry #{0} (timestamp: {1})\n", entryNumber, ISO_LOCAL_DATE_TIME.format(timestamp)));
+			format("Report Entry #{0} (timestamp: {1})\n", entryNumber, ISO_ZONED_DATE_TIME.format(timestamp)));
 		keyValuePairs.forEach((key, value) -> result.append(format("\t- {0}: {1}\n", key, value)));
 	}
 
@@ -273,8 +273,8 @@ class XmlReportWriter {
 		}
 	}
 
-	private LocalDateTime getCurrentDateTime() {
-		return LocalDateTime.now(this.reportData.getClock()).withNano(0);
+	private ZonedDateTime getCurrentDateTime() {
+		return ZonedDateTime.now(this.reportData.getClock()).withNano(0);
 	}
 
 	private String formatNonStandardAttributesAsString(TestIdentifier testIdentifier) {

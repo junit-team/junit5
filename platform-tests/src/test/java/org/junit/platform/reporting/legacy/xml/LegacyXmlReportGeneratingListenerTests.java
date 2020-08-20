@@ -32,7 +32,6 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -317,10 +316,11 @@ class LegacyXmlReportGeneratingListenerTests {
 		engine.addTest("test", () -> {
 		});
 
-		LocalDateTime now = LocalDateTime.parse("2016-01-28T14:02:59.123");
-		ZoneId zone = ZoneId.systemDefault();
+		String timestamp = "2016-01-28T14:02:59Z[Europe/London]";
+		ZonedDateTime now = ZonedDateTime.parse(timestamp);
+		ZoneId zone = now.getZone();
 
-		executeTests(engine, tempDirectory, Clock.fixed(ZonedDateTime.of(now, zone).toInstant(), zone));
+		executeTests(engine, tempDirectory, Clock.fixed(now.toInstant(), zone));
 
 		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
@@ -329,7 +329,7 @@ class LegacyXmlReportGeneratingListenerTests {
 			.containsSubsequence(
 				"<testsuite",
 				"hostname=\"" + InetAddress.getLocalHost().getHostName() + "\"",
-				"timestamp=\"2016-01-28T14:02:59\"",
+				"timestamp=\"" + timestamp + "\"",
 				"<testcase",
 				"</testsuite>");
 		// @formatter:on
