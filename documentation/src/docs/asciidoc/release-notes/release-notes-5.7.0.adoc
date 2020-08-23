@@ -23,7 +23,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The `@Testable` annotation may now target any element type, including fields, methods,
+  classes, packages, and modules.
 
 
 [[release-notes-5.7.0-junit-jupiter]]

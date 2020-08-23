@@ -13,11 +13,9 @@ package org.junit.platform.commons.annotation;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
 
@@ -68,9 +66,13 @@ import org.apiguardian.api.API;
  * is therefore required to discover tests based on information specific to
  * that test engine (e.g., annotations specific to that test engine).
  *
+ * <h3>{@code @Testable} may target any declaration element type</h3>
+ * <p>Since JUnit Platform version 1.7, {@code @Testable} may target any
+ * declaration {@linkplain java.lang.annotation.ElementType element type}.
+ * That includes the aforementioned "method, field, or class" elements.
+ *
  * @since 1.0
  */
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
