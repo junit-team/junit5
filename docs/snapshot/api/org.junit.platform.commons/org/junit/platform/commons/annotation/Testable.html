@@ -120,8 +120,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation" class="externalLink">TYPE</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation" class="externalLink">METHOD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation" class="externalLink">FIELD</a>})
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Inherited</a>
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Documented</a>
 <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
@@ -171,7 +170,12 @@ public @interface <span class="memberNameLabel">Testable</span></pre>
  discovery, the presence of <code>@Testable</code> should only be meaningful to
  clients such as IDEs and tooling vendors. A <code>TestEngine</code> implementation
  is therefore required to discover tests based on information specific to
- that test engine (e.g., annotations specific to that test engine).</div>
+ that test engine (e.g., annotations specific to that test engine).
+
+ <h3><code>@Testable</code> may target any declaration element type</h3>
+ <p>Since JUnit Platform version 1.7, <code>@Testable</code> may target any
+ declaration <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">element type</a>.
+ That includes the aforementioned "method, field, or class" elements.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
