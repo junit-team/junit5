@@ -8,23 +8,22 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine;
+package org.junit.platform.commons.annotation;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.annotation.Testable;
 
 /**
- * Integration test that verifies that the testable annotation may be
- * attached to any element type.
+ * Integration tests that indirectly verify that the {@link Testable @Testable}
+ * annotation may be declared on any element type.
  *
- * @since 5.7
+ * @since 1.7
  */
 class TestableAnnotationTests {
 
 	@Test
-	void testAndRepeatedTest() {
+	void testMethod() {
 		assertNotNull(new TestableEverywhere().toString());
 	}
 
@@ -41,6 +40,7 @@ class TestableAnnotationTests {
 		@Testable
 		void test(@Testable int parameter) {
 			@Testable
+			@SuppressWarnings("unused")
 			var var = "var";
 		}
 	}
