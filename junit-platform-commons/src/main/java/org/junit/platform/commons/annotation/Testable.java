@@ -23,16 +23,16 @@ import org.apiguardian.api.API;
  * {@code @Testable} is used to signal to IDEs and tooling vendors that the
  * annotated or meta-annotated element is <em>testable</em>.
  *
- * <p>In this context, the term "testable" means that the annotated method, field,
- * or class can be executed by a {@code TestEngine} as a test or test container
- * on the JUnit Platform.
+ * <p>In this context, the term "testable" means that the annotated element
+ * (typically a method, field, or class) can be executed by a {@code TestEngine}
+ * as a test or test container on the JUnit Platform.
  *
  * <h3>Motivation for {@code @Testable}</h3>
  * <p>Some clients of the JUnit Platform, notably IDEs such as IntelliJ IDEA,
  * operate only on sources for test discovery. Thus, they cannot use the full
  * runtime discovery mechanism of the JUnit Platform since it relies on compiled
  * classes. {@code @Testable} therefore serves as an alternative mechanism for
- * IDEs to discover tests by analyzing the source code only.
+ * IDEs to discover potential tests by analyzing the source code only.
  *
  * <h3>Common Use Cases</h3>
  * <p>{@code @Testable} will typically be used as a meta-annotation in order to
@@ -66,10 +66,10 @@ import org.apiguardian.api.API;
  * is therefore required to discover tests based on information specific to
  * that test engine (e.g., annotations specific to that test engine).
  *
- * <h3>{@code @Testable} may target any declaration element type</h3>
+ * <h3>Supported Target Elements</h3>
  * <p>Since JUnit Platform version 1.7, {@code @Testable} may target any
- * declaration {@linkplain java.lang.annotation.ElementType element type}.
- * That includes the aforementioned "method, field, or class" elements.
+ * declaration {@linkplain java.lang.annotation.ElementType element type}. This
+ * includes the aforementioned method, field, and class elements.
  *
  * @since 1.0
  */
