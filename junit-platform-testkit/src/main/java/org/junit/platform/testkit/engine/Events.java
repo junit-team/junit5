@@ -256,6 +256,8 @@ public final class Events {
 	 * </pre>
 	 *
 	 * @param conditions the conditions to match against; never {@code null}
+	 * @see #assertEventsMatchLoosely(Condition...)
+	 * @see #assertEventsMatchLooselyInOrder(Condition...)
 	 * @see EventConditions
 	 * @see TestExecutionResultConditions
 	 */
@@ -267,9 +269,10 @@ public final class Events {
 
 	/**
 	 * Assert that all provided conditions are matched by an {@linkplain Event event}
-	 * contained in this {@code Events} object regardless of order.
-	 * Note that this method does a partial match, i.e. some events may not match any
-	 * of the provided conditions.
+	 * contained in this {@code Events} object, regardless of order.
+	 *
+	 * <p>Note that this method performs a partial match. Thus, some events may
+	 * not match any of the provided conditions.
 	 *
 	 * <p>Conditions can be imported statically from {@link EventConditions}
 	 * and {@link TestExecutionResultConditions}.
@@ -284,8 +287,11 @@ public final class Events {
 	 * </pre>
 	 *
 	 * @param conditions the conditions to match against; never {@code null}
+	 * @see #assertEventsMatchExactly(Condition...)
+	 * @see #assertEventsMatchLooselyInOrder(Condition...)
 	 * @see EventConditions
 	 * @see TestExecutionResultConditions
+	 * @since 1.7
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
@@ -298,9 +304,10 @@ public final class Events {
 	/**
 	 * Assert that all provided conditions are matched by an {@linkplain Event event}
 	 * contained in this {@code Events} object.
-	 * Note that this method does a partial match, i.e. some events may not match any
-	 * of the provided conditions.
-	 * However, the conditions provided must be in the correct order.
+	 *
+	 * <p>Note that this method performs a partial match. Thus, some events may
+	 * not match any of the provided conditions; however, the conditions provided
+	 * must be in the correct order.
 	 *
 	 * <p>Conditions can be imported statically from {@link EventConditions}
 	 * and {@link TestExecutionResultConditions}.
@@ -315,8 +322,11 @@ public final class Events {
 	 * </pre>
 	 *
 	 * @param conditions the conditions to match against; never {@code null}
+	 * @see #assertEventsMatchExactly(Condition...)
+	 * @see #assertEventsMatchLoosely(Condition...)
 	 * @see EventConditions
 	 * @see TestExecutionResultConditions
+	 * @since 1.7
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
@@ -441,9 +451,7 @@ public final class Events {
 	}
 
 	private static void checkCondition(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
-		boolean matches = events.stream().anyMatch(condition::matches);
-
-		if (!matches) {
+		if (events.stream().noneMatch(condition::matches)) {
 			softly.fail("Condition did not match any event: " + condition);
 		}
 	}
