@@ -496,6 +496,7 @@ b7daaa098365846f33d542d56958e31d  junit-platform-testkit/src/main/java/org/junit
 b7f7dc758c34ec0953a579dd6ca90dc8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestFactoryMethod.java
 b81992b624d16e4fb9ab6a645ab79d38  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerDecorator.java
 b8cc0eaf585aa63e16d2631a5ad46c2f  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeClassNamePatterns.java
+b8d097c9a1a13df150de6dcec30d3d99  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
 b8d897b5aa03974a91ea40507aa9be58  documentation/src/test/java/example/PollingTimeoutDemo.java
 b8db87594da53407d05cb5c7786fe67d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NopLock.java
 b98971d7b678326048537cd1f4725be4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicContainerTestDescriptor.java
@@ -672,7 +673,6 @@ f35db7ea25fcf2a1dbf8f0dfb34a388f  documentation/src/test/java/example/StandardTe
 f5919de0da68f042c7d92f96abe28f6c  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 f5da166ba832f0a1c1b15144ff71f816  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 f5f966bb0e1530748a9531a68e56fadd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExecutionCondition.java
-f63cb5c027ba61d6c4ab2ad8ffe06daa  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
 f6caafaf1bad0ed4df136a11092cf186  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
 f6f4905f2b458d40db54a866fee78af3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNull.java
 f8ff9545052f8b24e7ecf57c786fb820  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/package-info.java
