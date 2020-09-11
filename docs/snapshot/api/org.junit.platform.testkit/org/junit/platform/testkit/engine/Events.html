@@ -186,7 +186,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assertEventsMatchLoosely(org.assertj.core.api.Condition...)">assertEventsMatchLoosely</a></span>&#8203;(<a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink">Condition</a>&lt;? super <a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;...&nbsp;conditions)</code></th>
 <td class="colLast">
 <div class="block">Assert that all provided conditions are matched by an <a href="Event.html" title="class in org.junit.platform.testkit.engine">event</a>
- contained in this <code>Events</code> object regardless of order.</div>
+ contained in this <code>Events</code> object, regardless of order.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -610,7 +610,9 @@ public final&nbsp;void&nbsp;assertEventsMatchExactly&#8203;(<a href="https://jav
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>conditions</code> - the conditions to match against; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="EventConditions.html" title="class in org.junit.platform.testkit.engine"><code>EventConditions</code></a>, 
+<dd><a href="#assertEventsMatchLoosely(org.assertj.core.api.Condition...)"><code>assertEventsMatchLoosely(Condition...)</code></a>, 
+<a href="#assertEventsMatchLooselyInOrder(org.assertj.core.api.Condition...)"><code>assertEventsMatchLooselyInOrder(Condition...)</code></a>, 
+<a href="EventConditions.html" title="class in org.junit.platform.testkit.engine"><code>EventConditions</code></a>, 
 <a href="TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine"><code>TestExecutionResultConditions</code></a></dd>
 </dl>
 </li>
@@ -624,9 +626,10 @@ public final&nbsp;void&nbsp;assertEventsMatchExactly&#8203;(<a href="https://jav
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/SafeVarargs.html?is-external=true" title="class or interface in java.lang" class="externalLink">@SafeVarargs</a>
 public final&nbsp;void&nbsp;assertEventsMatchLoosely&#8203;(<a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink">Condition</a>&lt;? super <a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;...&nbsp;conditions)</pre>
 <div class="block">Assert that all provided conditions are matched by an <a href="Event.html" title="class in org.junit.platform.testkit.engine">event</a>
- contained in this <code>Events</code> object regardless of order.
- Note that this method does a partial match, i.e. some events may not match any
- of the provided conditions.
+ contained in this <code>Events</code> object, regardless of order.
+
+ <p>Note that this method performs a partial match. Thus, some events may
+ not match any of the provided conditions.
 
  <p>Conditions can be imported statically from <a href="EventConditions.html" title="class in org.junit.platform.testkit.engine"><code>EventConditions</code></a>
  and <a href="TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine"><code>TestExecutionResultConditions</code></a>.
@@ -642,8 +645,12 @@ public final&nbsp;void&nbsp;assertEventsMatchLoosely&#8203;(<a href="https://jav
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>conditions</code> - the conditions to match against; never <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.7</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="EventConditions.html" title="class in org.junit.platform.testkit.engine"><code>EventConditions</code></a>, 
+<dd><a href="#assertEventsMatchExactly(org.assertj.core.api.Condition...)"><code>assertEventsMatchExactly(Condition...)</code></a>, 
+<a href="#assertEventsMatchLooselyInOrder(org.assertj.core.api.Condition...)"><code>assertEventsMatchLooselyInOrder(Condition...)</code></a>, 
+<a href="EventConditions.html" title="class in org.junit.platform.testkit.engine"><code>EventConditions</code></a>, 
 <a href="TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine"><code>TestExecutionResultConditions</code></a></dd>
 </dl>
 </li>
@@ -658,9 +665,10 @@ public final&nbsp;void&nbsp;assertEventsMatchLoosely&#8203;(<a href="https://jav
 public final&nbsp;void&nbsp;assertEventsMatchLooselyInOrder&#8203;(<a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink">Condition</a>&lt;? super <a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;...&nbsp;conditions)</pre>
 <div class="block">Assert that all provided conditions are matched by an <a href="Event.html" title="class in org.junit.platform.testkit.engine">event</a>
  contained in this <code>Events</code> object.
- Note that this method does a partial match, i.e. some events may not match any
- of the provided conditions.
- However, the conditions provided must be in the correct order.
+
+ <p>Note that this method performs a partial match. Thus, some events may
+ not match any of the provided conditions; however, the conditions provided
+ must be in the correct order.
 
  <p>Conditions can be imported statically from <a href="EventConditions.html" title="class in org.junit.platform.testkit.engine"><code>EventConditions</code></a>
  and <a href="TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine"><code>TestExecutionResultConditions</code></a>.
@@ -676,8 +684,12 @@ public final&nbsp;void&nbsp;assertEventsMatchLooselyInOrder&#8203;(<a href="http
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>conditions</code> - the conditions to match against; never <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.7</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="EventConditions.html" title="class in org.junit.platform.testkit.engine"><code>EventConditions</code></a>, 
+<dd><a href="#assertEventsMatchExactly(org.assertj.core.api.Condition...)"><code>assertEventsMatchExactly(Condition...)</code></a>, 
+<a href="#assertEventsMatchLoosely(org.assertj.core.api.Condition...)"><code>assertEventsMatchLoosely(Condition...)</code></a>, 
+<a href="EventConditions.html" title="class in org.junit.platform.testkit.engine"><code>EventConditions</code></a>, 
 <a href="TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine"><code>TestExecutionResultConditions</code></a></dd>
 </dl>
 </li>
