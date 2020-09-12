@@ -14,7 +14,6 @@ import static org.junit.platform.testkit.engine.EventConditions.reportEntry;
 
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 
@@ -39,7 +38,6 @@ public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngine
 			store.put("baz", reportEntryOnClose(extensionContext, "3"));
 		}
 
-		@NotNull
 		private ExtensionContext.Store.CloseableResource reportEntryOnClose(ExtensionContext extensionContext,
 				String key) {
 			return () -> extensionContext.publishReportEntry(Map.of(key, "closed"));

@@ -17,6 +17,9 @@
 			<property name="processJavadoc" value="true" />
 		</module>
 		<module name="AvoidStarImport"/>
+		<module name="IllegalImport">
+			<property name="illegalPkgs" value="org.jetbrains.annotations" />
+		</module>
 	</module>
 
 	<module name="JavadocPackage" />
