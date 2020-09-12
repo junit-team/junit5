@@ -193,7 +193,9 @@ public @interface ParameterizedTest {
 	 * </ul>
 	 *
 	 * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
-	 * to customize formatting.
+	 * to customize formatting. Please note that the original arguments are
+	 * passed when formatting, regardless of any implicit or explicit argument
+	 * conversions.
 	 *
 	 * @see java.text.MessageFormat
 	 */
