@@ -157,6 +157,7 @@
 356c26d6d938125b52a9d89e9bea0dd9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java
 35fe6a3d0752b1fea9b84f5d9246d6bd  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExtensionValuesStore.java
 36380f946fbb20c3f9dec2771cbf861b  documentation/src/test/java/example/defaultmethods/ComparableContract.java
+36f8768435182fb7a319dd873cfe6a6a  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 3734ba916899d7d83c86f6e8c13b3214  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
 3735caf18d6c23d294b8834896307339  junit-platform-commons/src/main/java/org/junit/platform/commons/function/Try.java
 37725239b2f5f7dcf21565077d139433  documentation/src/docs/asciidoc/resources/fonts/Symbola.ttf
@@ -222,7 +223,6 @@
 4e208fa8d799d32c1c29922b1f50bd54  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportData.java
 4ea6d149cce4c36dac46504a82993c09  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicExtensionContext.java
 4ec473d5f1cc4d2c3c6bd751daf6e90d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
-4ed444e83c8e954500b4cf8da7956292  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 4ee3db4fb0e698e7ebd89a656c959d26  documentation/src/test/java/example/TimeoutDemo.java
 4f4adf7be7601deae1ac9735cece3584  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherConstants.java
 5058bcf84fa9db37b6bc53235478ae86  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.java
