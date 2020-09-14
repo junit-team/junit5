@@ -39,6 +39,8 @@ artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
     directory. See <<running-tests-console-launcher>> for details.
   `junit-platform-engine`::
     Public API for test engines. See <<launcher-api-engines-custom>> for details.
+  `junit-platform-jfr`::
+    Provides a `TestExecutionListener` for Java Flight Recorder events on the JUnit Platform. See <<running-tests-flight-recorder>> for details.
   `junit-platform-launcher`::
     Public API for configuring and launching test plans -- typically used by IDEs and
     build tools. See <<launcher-api>> for details.
@@ -142,6 +144,7 @@ package org.junit.platform {
     [junit-platform-commons] as commons
     [junit-platform-console] as console
     [junit-platform-engine] as engine
+    [junit-platform-jfr] as jfr
     [junit-platform-launcher] as launcher
     [junit-platform-reporting] as reporting
     [junit-platform-runner] as runner
@@ -184,6 +187,8 @@ console ..> launcher
 console ..> reporting
 
 launcher ..> engine
+
+jfr ..> launcher
 
 engine ..> opentest4j
 engine ..> commons

@@ -78,60 +78,22 @@ consumption in other projects via the following command.
 
 ## Dependency Metadata
 
-The following sections list the dependency metadata for the JUnit Platform, JUnit
-Jupiter, and JUnit Vintage.
+Consult the [Dependency Metadata] section of the [User Guide] for a list of all artifacts
+of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.
 
-See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://oss.sonatype.org/content/repositories/snapshots/org/junit/> for snapshots.
-
-### JUnit Platform
-
-- **Group ID**: `org.junit.platform`
-- **Version**: `1.7.0` or `1.7.1-SNAPSHOT`
-- **Artifact IDs** and Java **module** name:
-  - `junit-platform-commons` (`org.junit.platform.commons`)
-  - `junit-platform-console` (`org.junit.platform.console`)
-  - `junit-platform-console-standalone` (*N/A*)
-  - `junit-platform-engine` (`org.junit.platform.engine`)
-  - `junit-platform-jfr` (`org.junit.platform.jfr`)
-  - `junit-platform-launcher` (`org.junit.platform.launcher`)
-  - `junit-platform-reporting` (`org.junit.platform.reporting`)
-  - `junit-platform-runner` (`org.junit.platform.runner`)
-  - `junit-platform-suite-api` (`org.junit.platform.suite.api`)
-  - `junit-platform-testkit` (`org.junit.platform.testkit`)
-
-### JUnit Jupiter
-
-- **Group ID**: `org.junit.jupiter`
-- **Version**: `5.7.0` or `5.7.1-SNAPSHOT`
-- **Artifact IDs** and Java **module** name:
-  - `junit-jupiter` (`org.junit.jupiter`)
-  - `junit-jupiter-api` (`org.junit.jupiter.api`)
-  - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
-  - `junit-jupiter-migrationsupport` (`org.junit.jupiter.migrationsupport`)
-  - `junit-jupiter-params` (`org.junit.jupiter.params`)
-
-### JUnit Vintage
-
-- **Group ID**: `org.junit.vintage`
-- **Version**: `5.7.0` or `5.7.1-SNAPSHOT`
-- **Artifact ID** and Java **module** name:
-  - `junit-vintage-engine` (`org.junit.vintage.engine`)
-
-### Bill of Materials (BOM)
-
-- **Group ID**: `org.junit`
-- **Artifact ID** `junit-bom`
-- **Version**: `5.7.0` or `5.7.1-SNAPSHOT`
+See also <https://repo1.maven.org/maven2/org/junit/> for releases and
+<https://oss.sonatype.org/content/repositories/snapshots/org/junit/> for snapshots.
 
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md
+[Dependency Metadata]: https://junit.org/junit5/docs/current/user-guide/#dependency-metadata
 [Gitter]: https://gitter.im/junit-team/junit5
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
 [JDK 11]: https://jdk.java.net/11/
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
+[Samples]: https://github.com/junit-team/junit5-samples
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [User Guide]: https://junit.org/junit5/docs/current/user-guide/
-[Samples]: https://github.com/junit-team/junit5-samples
