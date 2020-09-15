@@ -45,7 +45,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 class ParameterizedTestNameFormatterTests {
 
-	private Locale originalLocale = Locale.getDefault();
+	private final Locale originalLocale = Locale.getDefault();
 
 	@AfterEach
 	void restoreLocale() {
@@ -160,10 +160,19 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	@Test
+	void formattingDoesNotFailIfArgumentToStringImplementationReturnsNull() {
+		ParameterizedTestNameFormatter formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
+
+		String formattedName = formatter.format(1, new ToStringReturnsNull(), "foo");
+
+		assertThat(formattedName).isEqualTo("null, foo");
+	}
+
+	@Test
 	void formattingDoesNotFailIfArgumentToStringImplementationThrowsAnException() {
 		ParameterizedTestNameFormatter formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 
-		String formattedName = formatter.format(1, new Object[] { new ToStringThrowsException(), "foo" });
+		String formattedName = formatter.format(1, new ToStringThrowsException(), "foo");
 
 		assertThat(formattedName).startsWith(ToStringThrowsException.class.getName() + "@");
 		assertThat(formattedName).endsWith("foo");
@@ -238,6 +247,14 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	// -------------------------------------------------------------------
+
+	private static class ToStringReturnsNull {
+
+		@Override
+		public String toString() {
+			return null;
+		}
+	}
 
 	private static class ToStringThrowsException {
 
