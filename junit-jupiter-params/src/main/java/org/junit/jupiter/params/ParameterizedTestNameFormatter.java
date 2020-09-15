@@ -103,7 +103,7 @@ class ParameterizedTestNameFormatter {
 	}
 
 	private String truncateIfExceedsMaxLength(String argument) {
-		if (argument.length() > argumentMaxLength) {
+		if (argument != null && argument.length() > argumentMaxLength) {
 			return argument.substring(0, argumentMaxLength - 1) + ELLIPSIS;
 		}
 		return argument;
