@@ -1848,6 +1848,49 @@ method with full support for the same lifecycle callbacks and extensions. Please
 NOTE: <<writing-tests-repeated-tests>> and <<writing-tests-parameterized-tests>> are
 built-in specializations of test templates.
 
+Usually if there is more than one `{TestTemplateInvocationContextProvider}` that applies
+to a method, each set is concatonated togther. This means that the extensions registered
+by each will not be available to the other. The best example is this test method
+
+[source:java]
+---
+@RepeatedTest(2)
+@ParameterizedTest
+@ValueSource(string={"a", "b"})
+public void testMethod(String value) {
+}
+---
+
+In this example the test method will be run four times; twice from the `RepeatedTest`
+annotation and twice from the `ParameterizedTest` annotation. This may not be desirable
+though since it means two of the runs will not have anything that populates the `value`
+parameter.
+
+If this is a case you need to deal with; there is an annotation `{CombineTestTemplates}`
+which changes this behaviour.
+
+[source:java]
+---
+@RepeatedTest(2)
+@ParameterizedTest
+@CombineTestTemplates
+@ValueSource(string={"a", "b"})
+public void testMethod(String value) {
+}
+---
+
+Adding this annotation causes the test runner to combine the contexts from all of the
+providers. In this example the context from the first repeated test run will be combined
+with each of the one from the parameterized test. This result in executions that can be
+described like this:
+
+{[Run 1, Parameter A], [Run 1, Parameter B], [Run 2, Parameter A], [Run 2, Parameter B]}
+
+For more details see the Javadoc on the `{CombineTestTemplates}` annotation.
+
+NOTE: Not all `{TestTemplateInvocationContextProvider}` instances will be compatible with
+this annotation.
+
 [[writing-tests-dynamic-tests]]
 === Dynamic Tests
 
