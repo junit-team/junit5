@@ -16,9 +16,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
@@ -66,7 +64,8 @@ public class ConsoleTestExecutor {
 		launcher.execute(discoveryRequest);
 
 		TestExecutionSummary summary = summaryListener.getSummary();
-		if (summary.getTotalFailureCount() > 0 || options.getDetails() != Details.NONE) {
+		if (summary.getTotalFailureCount() > 0 ||
+				(options.getDetails().size() == 0 && options.getDetails().get(0) != Details.NONE)) {
 			printSummary(summary, out);
 		}
 
@@ -98,28 +97,26 @@ public class ConsoleTestExecutor {
 		SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(summaryListener);
 		// optionally, register test plan execution details printing listener
-		createDetailsPrintingListener(out).ifPresent(launcher::registerTestExecutionListeners);
+		createDetailsPrintingListener(out).forEach(launcher::registerTestExecutionListeners);
 		// optionally, register XML reports writing listener
 		createXmlWritingListener(out).ifPresent(launcher::registerTestExecutionListeners);
 		return summaryListener;
 	}
 
-	private Optional<TestExecutionListener> createDetailsPrintingListener(PrintWriter out) {
+	private List<TestExecutionListener> createDetailsPrintingListener(PrintWriter out) {
 		boolean disableAnsiColors = options.isAnsiColorOutputDisabled();
 		Theme theme = options.getTheme();
-		switch (options.getDetails()) {
-			case SUMMARY:
-				// summary listener is always created and registered
-				return Optional.empty();
-			case FLAT:
-				return Optional.of(new FlatPrintingListener(out, disableAnsiColors));
-			case TREE:
-				return Optional.of(new TreePrintingListener(out, disableAnsiColors, theme));
-			case VERBOSE:
-				return Optional.of(new VerboseTreePrintingListener(out, disableAnsiColors, 16, theme));
-			default:
-				return Optional.empty();
+		List<TestExecutionListener> testExecutionListeners = new ArrayList<>();
+		for (Details listenerDetail : options.getDetails()) {
+			if (listenerDetail.equals(Details.FLAT)) {
+				testExecutionListeners.add(new FlatPrintingListener(out, disableAnsiColors));
+			} else if (listenerDetail.equals(Details.TREE)) {
+				testExecutionListeners.add(new TreePrintingListener(out, disableAnsiColors, theme));
+			} else if (listenerDetail.equals(Details.VERBOSE)) {
+				testExecutionListeners.add(new VerboseTreePrintingListener(out, disableAnsiColors, 16, theme));
+			}
 		}
+		return testExecutionListeners;
 	}
 
 	private Optional<TestExecutionListener> createXmlWritingListener(PrintWriter out) {

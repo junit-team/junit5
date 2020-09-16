@@ -40,7 +40,8 @@ public class CommandLineOptions {
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
 	private boolean bannerDisabled;
-	private Details details = DEFAULT_DETAILS;
+	private List<Details> details = emptyList();
+	private List<Details> detailNames = emptyList();
 	private Theme theme = DEFAULT_THEME;
 	private List<Path> additionalClasspathEntries = emptyList();
 	private boolean failIfNoTests;
@@ -112,11 +113,11 @@ public class CommandLineOptions {
 		this.scanClasspath = scanClasspath;
 	}
 
-	public Details getDetails() {
+	public List<Details> getDetails() {
 		return this.details;
 	}
 
-	public void setDetails(Details details) {
+	public void setDetails(List<Details> details) {
 		this.details = details;
 	}
 
@@ -303,4 +304,11 @@ public class CommandLineOptions {
 		this.configurationParameters = configurationParameters;
 	}
 
+	public List<Details> getDetailNames() {
+		return detailNames;
+	}
+
+	public void setDetailNames(List<Details> detailNames) {
+		this.detailNames = detailNames;
+	}
 }

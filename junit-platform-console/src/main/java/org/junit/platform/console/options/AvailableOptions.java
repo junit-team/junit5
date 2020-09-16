@@ -12,11 +12,7 @@ package org.junit.platform.console.options;
 
 import java.net.URI;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.junit.platform.engine.discovery.ClassNameFilter;
 
@@ -56,13 +52,13 @@ class AvailableOptions {
 	@Option(names = "-disable-banner", hidden = true)
 	private boolean disableBanner2;
 
-	@Option(names = "--details", paramLabel = "MODE", description = "Select an output details mode for when tests are executed. " //
+	@Option(names = "--details", split = ",", paramLabel = "MODE", description = "Select an output details mode for when tests are executed. " //
 			+ "Use one of: ${COMPLETION-CANDIDATES}. If 'none' is selected, " //
 			+ "then only the summary and test failures are shown. Default: ${DEFAULT-VALUE}.")
-	private Details details = CommandLineOptions.DEFAULT_DETAILS;
+	private List<Details> details = new ArrayList<>();
 
-	@Option(names = "-details", hidden = true)
-	private Details details2 = CommandLineOptions.DEFAULT_DETAILS;
+	@Option(names = "-details", split = ",", hidden = true)
+	private List<Details> details2 = new ArrayList<>();
 
 	@Option(names = "--details-theme", paramLabel = "THEME", description = "Select an output details tree theme for when tests are executed. "
 			+ "Use one of: ${COMPLETION-CANDIDATES}. Default: ${DEFAULT-VALUE}.")
@@ -293,7 +289,7 @@ class AvailableOptions {
 		result.setDisplayHelp(this.helpRequested || this.helpRequested2);
 		result.setAnsiColorOutputDisabled(this.disableAnsiColors || this.disableAnsiColors2);
 		result.setBannerDisabled(this.disableBanner || this.disableBanner2);
-		result.setDetails(choose(this.details, this.details2, CommandLineOptions.DEFAULT_DETAILS));
+		result.setDetails(merge(this.details, this.details2));
 		result.setTheme(choose(this.theme, this.theme2, CommandLineOptions.DEFAULT_THEME));
 		result.setAdditionalClasspathEntries(merge(this.additionalClasspathEntries, this.additionalClasspathEntries2));
 		result.setFailIfNoTests(this.failIfNoTests);
