@@ -43,7 +43,12 @@ public enum Details {
 	/**
 	 * Combines {@link #TREE} and {@link #FLAT} modes.
 	 */
-	VERBOSE;
+	VERBOSE,
+
+	/**
+	 * Test plan executes in a combination of tree and flat
+	 */
+	TESTFEED;
 
 	/**
 	 * Return lower case {@link #name} for easier usage in help text for
