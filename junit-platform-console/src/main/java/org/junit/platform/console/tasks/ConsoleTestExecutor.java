@@ -114,6 +114,8 @@ public class ConsoleTestExecutor {
 				testExecutionListeners.add(new TreePrintingListener(out, disableAnsiColors, theme));
 			} else if (listenerDetail.equals(Details.VERBOSE)) {
 				testExecutionListeners.add(new VerboseTreePrintingListener(out, disableAnsiColors, 16, theme));
+			} else if (listenerDetail.equals(Details.TESTFEED)) {
+				testExecutionListeners.add(new TestFeedPrintingListener(out, disableAnsiColors));
 			}
 		}
 		return testExecutionListeners;
