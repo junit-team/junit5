@@ -7,9 +7,9 @@
 
 *Scope:* ❓
 
-For a complete list of all _closed_ issues and pull requests for this release, consult
-the link:{junit5-repo}+/milestone/⚠️?closed=1+[⚠️] milestone page in the JUnit repository
-on GitHub.
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/⚠️?closed=1+[⚠️] milestone page in the JUnit repository on
+GitHub.
 
 
 [[release-notes-⚠️-junit-platform]]
