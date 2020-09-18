@@ -33,6 +33,10 @@ GitHub.
 
 ==== Bug Fixes
 
+* If the `toString()` implementation of an argument passed to a `@ParameterizedTest`
+  method returns `null`, the display name formatter for the parameterized test now treats
+  the name of the corresponding argument as `"null"` instead of throwing an exception.
+  This fixes a regression introduced in JUnit Jupiter 5.7.0.
 * Creator functions passed to `ExtensionContext.Store.getOrComputeIfAbsent()` are now only
   called once even if they throw an exception.
 
