@@ -139,6 +139,11 @@ class StringUtilsTests {
 	}
 
 	@Test
+	void nullSafeToStringForObjectWhoseToStringImplementationReturnsNull() {
+		assertEquals("null", nullSafeToString(new ToStringReturnsNull()));
+	}
+
+	@Test
 	void nullSafeToStringForObjectWhoseToStringImplementationThrowsAnException() {
 		assertThat(nullSafeToString(new ToStringThrowsException()))//
 				.startsWith(ToStringThrowsException.class.getName() + "@");
@@ -166,6 +171,14 @@ class StringUtilsTests {
 			() -> String.format("'%s' should not contain ISO control character", str));
 		assertFalse(containsIsoControlCharacter(str),
 			() -> String.format("'%s' should not contain ISO control character", str));
+	}
+
+	private static class ToStringReturnsNull {
+
+		@Override
+		public String toString() {
+			return null;
+		}
 	}
 
 	private static class ToStringThrowsException {

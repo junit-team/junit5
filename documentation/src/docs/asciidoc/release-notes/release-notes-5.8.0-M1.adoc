@@ -15,7 +15,9 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* `StringUtils.nullSafeToString()` now returns `"null"` if the invocation of `toString()`
+  on the supplied object returns `null`. Although this is an internal utility, the effect
+  of this change may be witnessed by end users and test engine or extension authors.
 
 ==== Deprecations and Breaking Changes
 
