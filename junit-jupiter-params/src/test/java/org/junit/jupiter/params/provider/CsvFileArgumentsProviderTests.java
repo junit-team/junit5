@@ -425,8 +425,6 @@ class CsvFileArgumentsProviderTests {
 				.files(csvFile.toAbsolutePath().toString())//
 				.build();
 
-		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
-
 		CsvParsingException exception = assertThrows(CsvParsingException.class,
 			() -> provideArguments(new CsvFileArgumentsProvider(), annotation).toArray());
 
