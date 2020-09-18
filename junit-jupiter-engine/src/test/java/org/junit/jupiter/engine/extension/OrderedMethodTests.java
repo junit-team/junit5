@@ -85,7 +85,7 @@ class OrderedMethodTests {
 		// on the class names.
 		assertThat(testClass.getSuperclass().getName()).isGreaterThan(testClass.getName());
 
-		var tests = executeTestsInParallel(MethodNameTestCase.class);
+		var tests = executeTestsInParallel(testClass);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -107,7 +107,7 @@ class OrderedMethodTests {
 		// on the class names.
 		assertThat(testClass.getSuperclass().getName()).isLessThan(testClass.getName());
 
-		var tests = executeTestsInParallel(MethodNameTestCase.class);
+		var tests = executeTestsInParallel(testClass);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
