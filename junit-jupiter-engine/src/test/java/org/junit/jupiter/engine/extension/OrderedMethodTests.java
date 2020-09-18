@@ -35,7 +35,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
@@ -409,7 +408,7 @@ class OrderedMethodTests {
 	}
 
 	@SuppressWarnings("deprecation")
-	@TestMethodOrder(Alphanumeric.class)
+	@TestMethodOrder(org.junit.jupiter.api.MethodOrderer.Alphanumeric.class)
 	static class AlphanumericTestCase extends BaseTestCase {
 
 		@BeforeEach
