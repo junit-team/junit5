@@ -552,7 +552,10 @@ of this change may be witnessed by end users and test engine or extension author
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>If the <code>toString()</code> implementation of an argument passed to a <code>@ParameterizedTest</code>
+method returns <code>null</code>, the display name formatter for the parameterized test now treats
+the name of the corresponding argument as <code>"null"</code> instead of throwing an exception.
+This fixes a regression introduced in JUnit Jupiter 5.7.0.</p>
 </li>
 </ul>
 </div>
@@ -660,7 +663,7 @@ of this change may be witnessed by end users and test engine or extension author
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2020-09-18 11:02:12 UTC
+Last updated 2020-09-18 11:36:16 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
