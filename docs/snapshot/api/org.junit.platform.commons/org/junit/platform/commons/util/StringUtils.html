@@ -406,8 +406,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  <code>Arrays#toString(...)</code> variant will be used to convert it to a String.</li>
  <li>If the supplied object is an object array, <code>Arrays#deepToString(Object[])</code>
  will be used to convert it to a String.</li>
- <li>Otherwise, the result of invoking <code>toString()</code> on the object
- will be returned.</li>
+ <li>Otherwise, <code>toString()</code> will be invoked on the object. If the
+ result is non-null, that result will be returned. If the result is
+ <code>null</code>, <code>"null"</code> will be returned.</li>
  <li>If any of the above results in an exception, this method delegates to
  <a href="#defaultToString(java.lang.Object)"><code>defaultToString(Object)</code></a></li>
  </ul></div>

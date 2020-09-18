@@ -517,7 +517,9 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>StringUtils.nullSafeToString()</code> now returns <code>"null"</code> if the invocation of <code>toString()</code>
+on the supplied object returns <code>null</code>. Although this is an internal utility, the effect
+of this change may be witnessed by end users and test engine or extension authors.</p>
 </li>
 </ul>
 </div>
@@ -658,7 +660,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2020-09-18 10:51:55 UTC
+Last updated 2020-09-18 11:02:12 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
