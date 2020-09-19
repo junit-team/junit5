@@ -44,7 +44,7 @@ public class TestFeedPrintingListener implements TestExecutionListener {
             println(Color.DYNAMIC, "%s > %s \n %s", msg, status.toString(),
                     testExecutionResult.getThrowable().get().getMessage());
         } else {
-            println(Color.DYNAMIC, "%s > %s ", msg, status.toString());
+            println(Color.DYNAMIC, "%s > %s", msg, status.toString());
         }
     }
 
