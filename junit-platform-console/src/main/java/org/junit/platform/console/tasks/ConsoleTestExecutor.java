@@ -130,7 +130,8 @@ public class ConsoleTestExecutor {
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
 		// Otherwise the failures have already been printed in detail
-		if (options.getDetails().contains(EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE))) {
+		if (options.getDetails().stream().anyMatch(o -> o == Details.NONE ||
+				o == Details.SUMMARY || o == Details.TREE)) {
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);
