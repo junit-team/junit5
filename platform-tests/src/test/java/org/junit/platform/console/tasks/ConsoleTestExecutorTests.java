@@ -22,6 +22,7 @@ import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposes
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.ConsoleLauncherExecutionResult;
@@ -60,7 +61,7 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void printsDetailsIfTheyAreNotHidden() throws Exception {
-		options.setDetails(Details.FLAT);
+		options.setDetails(Collections.singletonList(Details.FLAT));
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
@@ -72,7 +73,7 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void printsNoDetailsIfTheyAreHidden() throws Exception {
-		options.setDetails(Details.NONE);
+		options.setDetails(Collections.singletonList(Details.FLAT));
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
@@ -84,7 +85,7 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void printsFailuresEvenIfDetailsAreHidden() throws Exception {
-		options.setDetails(Details.NONE);
+		options.setDetails(Collections.singletonList(Details.FLAT));
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);

@@ -12,7 +12,11 @@ package org.junit.platform.console.options;
 
 import java.net.URI;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.platform.engine.discovery.ClassNameFilter;
 
@@ -52,9 +56,8 @@ class AvailableOptions {
 	@Option(names = "-disable-banner", hidden = true)
 	private boolean disableBanner2;
 
-	@Option(names = "--details", split = ",", paramLabel = "MODE", description = "Select an output details mode for when tests are executed. " //
-			+ "Use one of: ${COMPLETION-CANDIDATES}. If 'none' is selected, " //
-			+ "then only the summary and test failures are shown. Default: ${DEFAULT-VALUE}.")
+	@Option(names = "--details", split = ",", paramLabel = "MODE", description = "Comma separated values for  " +
+			"details. Can be none, summary, flat, tree, verbose or testfeed")
 	private List<Details> details = new ArrayList<>();
 
 	@Option(names = "-details", split = ",", hidden = true)
