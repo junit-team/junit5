@@ -1,4 +1,4 @@
-import com.gradle.scan.plugin.internal.api.BuildScanExtensionWithHiddenFeatures
+import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
 	plugins {
