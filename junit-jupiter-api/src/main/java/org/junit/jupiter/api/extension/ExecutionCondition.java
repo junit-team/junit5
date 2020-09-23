@@ -57,7 +57,7 @@ public interface ExecutionCondition extends Extension {
 	 * <p>An {@linkplain ConditionEvaluationResult#enabled enabled} result
 	 * indicates that the container or test should be executed; whereas, a
 	 * {@linkplain ConditionEvaluationResult#disabled disabled} result
-	 * indicates that the container or test should not be executed.
+	 * indicates that the container or test shall not be executed.
 	 *
 	 * @param context the current extension context; never {@code null}
 	 * @return the result of evaluating this condition; never {@code null}

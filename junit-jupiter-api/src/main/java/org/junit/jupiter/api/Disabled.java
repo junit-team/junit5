@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @Disabled} is used to signal that the annotated test class or
- * test method is currently <em>disabled</em> and should not be executed.
+ * test method is currently <em>disabled</em> and shall not be executed.
  *
  * <p>{@code @Disabled} may optionally be declared with a {@linkplain #value
  * reason} to document why the annotated test class or test method is disabled.
