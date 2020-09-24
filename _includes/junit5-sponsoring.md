@@ -52,7 +52,7 @@ Your donations will help to make that a reality!
     <li>
       <div class="cardgold" onclick="location.href='https://octopus.com';">
         <div class="cardgold-image">
-          <img style="width:50%" src="assets/img/sponsor-logo-Octopus.svg" alt="Octopus Deploy">
+          <img style="height:80%" src="assets/img/sponsor-logo-Octopus.svg" alt="Octopus Deploy">
         </div>
         <div class="cardgold-center">
           <h3>Octopus Deploy</h3>
