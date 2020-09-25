@@ -83,6 +83,9 @@ footer {
     background-color: gold; /* For browsers that do not support gradients */
     background-image: linear-gradient(to bottom right, gold, white); /* Standard syntax (must be last) */
     cursor: pointer;
+    display: block;
+    color: #000 !important;
+    text-decoration: none !important;
 }
 
 .cardgold:hover {
@@ -129,6 +132,9 @@ footer {
     background-color: silver;
     background-image: linear-gradient(to bottom right, silver, white);
     cursor: pointer;
+    display: block;
+    color: #000 !important;
+    text-decoration: none !important;
 }
 
 .cardsilver:hover {
@@ -175,6 +181,9 @@ footer {
     background-color: chocolate; /* For browsers that do not support gradients */
     background-image: linear-gradient(to bottom right, white, chocolate); /* Standard syntax (must be last) */
     cursor: pointer;
+    display: block;
+    color: #000 !important;
+    text-decoration: none !important;
 }
 
 .cardbronze:hover {
