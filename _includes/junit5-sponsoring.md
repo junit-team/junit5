@@ -12,7 +12,7 @@ Your donations will help to make that a reality!
 <div align="center">
   <ul class="list-inline">
     <li>
-      <div class="cardgold" onclick="location.href='https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it';">
+      <a class="cardgold" href="https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it">
         <div class="cardgold-image">
           <img style="width:80%" src="assets/img/sponsor-logo-SocieteGenerale.svg" alt="Société Générale">
         </div>
@@ -28,10 +28,10 @@ Your donations will help to make that a reality!
           <h4>Gold Sponsor</h4>
           <p>Since October 2018</p>
         </div>
-      </div>
+      </a>
     </li>
     <li>
-      <div class="cardgold" onclick="location.href='https://www.jetbrains.com/idea';">
+      <a class="cardgold" href="https://www.jetbrains.com/idea">
         <div class="cardgold-image">
           <img style="height:100px; padding-left:30px" src="assets/img/sponsor-logo-JetBrains.svg" alt="JetBrains">
         </div>
@@ -47,10 +47,10 @@ Your donations will help to make that a reality!
           <h4>Gold Sponsor</h4>
           <p>Since February 2019</p>
         </div>
-      </div>
+      </a>
     </li>
     <li>
-      <div class="cardgold" onclick="location.href='https://octopus.com';">
+      <a class="cardgold" href="https://octopus.com">
         <div class="cardgold-image">
           <img style="height:80%" src="assets/img/sponsor-logo-Octopus.svg" alt="Octopus Deploy">
         </div>
@@ -66,7 +66,7 @@ Your donations will help to make that a reality!
           <h4>Gold Sponsor</h4>
           <p>Since September 2020</p>
         </div>
-      </div>
+      </a>
     </li>
   </ul>
 </div>
@@ -75,7 +75,7 @@ Your donations will help to make that a reality!
 <div align="center">
   <ul class="list-inline">
     <li>
-      <div class="cardsilver" onclick="location.href='https://www.micromata.de';">
+      <a class="cardsilver" href="https://www.micromata.de">
         <div class="cardsilver-image">
           <img style="width:80%" src="assets/img/sponsor-logo-Micromata.svg" alt="MICROMATA">
         </div>
@@ -86,7 +86,7 @@ Your donations will help to make that a reality!
           <h4>Silver Sponsor</h4>
           <p>Since May 2019</p>
         </div>
-      </div>
+      </a>
     </li>
   </ul>
 </div>
@@ -95,7 +95,7 @@ Your donations will help to make that a reality!
 <div align="center">
   <ul class="list-inline">
     <li>
-      <div class="cardbronze" onclick="location.href='https://www.premium-minds.com';">
+      <a class="cardbronze" href="https://www.premium-minds.com">
         <div class="cardbronze-image">
           <img style="width:80%" src="assets/img/sponsor-logo-PremiumMinds.svg" alt="Premium Minds">
         </div>
@@ -106,10 +106,10 @@ Your donations will help to make that a reality!
           <h4>Bronze Sponsor</h4>
           <p>Since July 2019</p>
         </div>
-      </div>
+      </a>
     </li>
     <li>
-      <div class="cardbronze" onclick="location.href='https://kreuzwerker.de/en/solution/remastering';">
+      <a class="cardbronze" href="https://kreuzwerker.de/en/solution/remastering">
         <div class="cardbronze-image">
           <img style="width:80%" src="assets/img/sponsor-logo-kreuzwerker.svg" alt="kreuzwerker">
         </div>
@@ -120,7 +120,7 @@ Your donations will help to make that a reality!
           <h4>Bronze Sponsor</h4>
           <p>Since June 2020</p>
         </div>
-      </div>
+      </a>
     </li>    
   </ul>
 </div>
