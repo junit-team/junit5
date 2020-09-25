@@ -44,7 +44,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
+  underscores as in some JVM languages, to improve readability of long numbers like
+  `700_000_000`.
 
 
 [[release-notes-5.8.0-M1-junit-vintage]]

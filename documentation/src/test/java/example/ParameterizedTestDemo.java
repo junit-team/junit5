@@ -210,7 +210,8 @@ class ParameterizedTestDemo {
 	@CsvSource({
 		"apple,         1",
 		"banana,        2",
-		"'lemon, lime', 0xF1"
+		"'lemon, lime', 0xF1",
+		"strawberry,    700_000"
 	})
 	void testWithCsvSource(String fruit, int rank) {
 		assertNotNull(fruit);
