@@ -21,10 +21,29 @@ import example.util.Calculator;
 
 import org.junit.jupiter.api.Test;
 
+
+/**
+ * Assumptions demo
+ * @author      John Doe
+ * @version     1.6 (current version number of program)
+ * @since       1.2 (the version of the package this class was first added to)
+ */
 class AssumptionsDemo {
 
 	private final Calculator calculator = new Calculator();
 
+	/**
+	 * Short one line description.                           (1)
+	 * <p>
+	 * Longer description. If there were any, it would be    (2)
+	 * here.
+	 * <p>
+	 * And even more explanations to follow in consecutive
+	 * paragraphs separated by HTML paragraph breaks.
+	 *
+	 * @param  variable Description text text text.          (3)
+	 * @return Description text text text.
+	 */
 	@Test
 	void testOnlyOnCiServer() {
 		assumeTrue("CI".equals(System.getenv("ENV")));

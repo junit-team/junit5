@@ -14,6 +14,15 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
 // tag::user_guide[]
+/**
+ * Demo for a Web server implemented with Kotlin
+ *
+ * This class is used for documentation purposes and serves as an example
+ *
+ * @param parameter Some parameter
+ * @property name the name of KotlinWebServerDemo.
+ * @constructor Creates a KotlinWebServerDemo.
+ */
 class KotlinWebServerDemo {
 
     companion object {

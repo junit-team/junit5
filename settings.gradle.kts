@@ -12,6 +12,7 @@ pluginManagement {
 		id("org.asciidoctor.jvm.pdf") version settings.extra["asciidoctor.plugin.version"] as String
 		id("me.champeau.gradle.jmh") version settings.extra["jmh.plugin.version"] as String
 		id("io.spring.nohttp") version settings.extra["nohttp.plugin.version"] as String
+		id("org.jetbrains.dokka") version "1.4.10"
 	}
 }
 

@@ -106,6 +106,7 @@ allprojects {
 	repositories {
 		// mavenLocal()
 		mavenCentral()
+		jcenter() // doka dependency
 		maven(url = "https://oss.sonatype.org/content/repositories/snapshots") {
 			mavenContent {
 				snapshotsOnly()

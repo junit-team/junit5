@@ -9,6 +9,9 @@
  */
 package example
 
+/**
+ * A calculator for Fibonacci numbers
+ */
 class FibonacciCalculator {
 
     private val fibonacci = sequence {
@@ -24,6 +27,11 @@ class FibonacciCalculator {
         }
     }
 
+    /**
+     * Runs the fibonacci calculator
+     * @param fibonacciNumber the number to start from
+     * @return fibonacci numbers
+     */
     fun fib(fibonacciNumber: Int) =
         fibonacci.elementAt(fibonacciNumber)
 }

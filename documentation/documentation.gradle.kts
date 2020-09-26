@@ -4,8 +4,10 @@ import org.junit.gradle.exec.ClasspathSystemPropertyProvider
 import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
+import java.net.URL
 
 plugins {
+	id("org.jetbrains.dokka")
 	id("org.asciidoctor.jvm.convert")
 	id("org.asciidoctor.jvm.pdf")
 	id("org.ajoberstar.git-publish")
@@ -306,6 +308,25 @@ tasks {
 		doFirst {
 			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
 		}
+	}
+
+	val customDokkaTask by creating(org.jetbrains.dokka.gradle.DokkaTask::class) {
+		dependencies {
+			plugins("org.jetbrains.dokka:kotlin-as-java-plugin:1.4.10")
+		}
+		dokkaSourceSets {
+			configureEach {
+				sourceRoot("src/test")
+				sourceLink{
+					localDirectory.set(File("src/test"))
+
+					remoteUrl.set(URL("https://github.com/junit-team/junit5/tree/main/documentation/src/test/kotlin/example"))
+					// Suffix which is used to append the line number to the URL. Use #L for GitHub
+					remoteLineSuffix.set("#L")
+				}
+			}
+		}
+		dependsOn(javadoc)
 	}
 
 	val fixJavadoc by registering(Copy::class) {

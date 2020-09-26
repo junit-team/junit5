@@ -54,6 +54,16 @@ class KotlinAssertionsDemo {
         )
     }
 
+    /**
+     * Test for grouping assertions from a stream:
+     * ```kotlin
+     * val exception = assertThrows<IllegalArgumentException>({ "Should throw an Exception" }) {
+     *     throw IllegalArgumentException("Talk to a duck")
+     * }
+     * assertEquals("Talk to a duck", exception.message)
+     * ```
+     * @since 5.0
+     */
     @Test
     fun `grouped assertions from a stream`() {
         assertAll("People with first name starting with J",
