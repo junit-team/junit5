@@ -16,9 +16,12 @@ import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -31,6 +34,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 
 /**
  * @since 5.0
@@ -88,6 +92,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.flatMap(provider -> arguments(provider, extensionContext))
 				.map(Arguments::get)
 				.map(arguments -> consumedArguments(arguments, methodContext))
+				.map(this::namedArguments)
 				.map(arguments -> createInvocationContext(formatter, methodContext, arguments))
 				.peek(invocationContext -> invocationCount.incrementAndGet())
 				.onClose(() ->
@@ -118,7 +123,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments) {
+			ParameterizedTestMethodContext methodContext, List<Named<Object>> arguments) {
 		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments);
 	}
 
@@ -143,8 +148,21 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	private Object[] consumedArguments(Object[] arguments, ParameterizedTestMethodContext methodContext) {
 		int parameterCount = methodContext.getParameterCount();
-		return methodContext.hasAggregator() ? arguments
-				: (arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments);
+		if (methodContext.hasAggregator()) {
+			return arguments;
+		}
+		return arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments;
+	}
+
+	private List<Named<Object>> namedArguments(Object[] arguments) {
+		return Arrays.stream(arguments) //
+				.map(argument -> {
+					if (argument instanceof Named) {
+						return (Named<Object>) argument;
+					}
+					return Named.of(StringUtils.nullSafeToString(argument), argument);
+				}) //
+				.collect(Collectors.toList());
 	}
 
 }

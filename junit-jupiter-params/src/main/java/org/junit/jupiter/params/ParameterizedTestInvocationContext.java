@@ -14,6 +14,7 @@ import static java.util.Collections.singletonList;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 
@@ -24,10 +25,10 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	private final ParameterizedTestNameFormatter formatter;
 	private final ParameterizedTestMethodContext methodContext;
-	private final Object[] arguments;
+	private final List<Named<Object>> arguments;
 
 	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments) {
+			ParameterizedTestMethodContext methodContext, List<Named<Object>> arguments) {
 		this.formatter = formatter;
 		this.methodContext = methodContext;
 		this.arguments = arguments;

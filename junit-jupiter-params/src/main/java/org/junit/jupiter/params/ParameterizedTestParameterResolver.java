@@ -12,7 +12,9 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
+import java.util.List;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -24,9 +26,9 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 class ParameterizedTestParameterResolver implements ParameterResolver {
 
 	private final ParameterizedTestMethodContext methodContext;
-	private final Object[] arguments;
+	private final List<Named<Object>> arguments;
 
-	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, Object[] arguments) {
+	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, List<Named<Object>> arguments) {
 		this.methodContext = methodContext;
 		this.arguments = arguments;
 	}
@@ -54,14 +56,13 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		}
 
 		// Else fallback to behavior for parameterized test methods without aggregators.
-		return parameterIndex < this.arguments.length;
+		return parameterIndex < this.arguments.size();
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-
-		return this.methodContext.resolve(parameterContext, this.arguments);
+		return this.methodContext.resolve(parameterContext, this.arguments.stream().map(Named::getPayload).toArray());
 	}
 
 }
