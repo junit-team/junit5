@@ -24,6 +24,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.TestSourceLocator;
 
 /**
  * A {@code DynamicTest} is a test case generated at runtime.
@@ -48,6 +49,10 @@ import org.junit.platform.commons.util.Preconditions;
  */
 @API(status = MAINTAINED, since = "5.3")
 public class DynamicTest extends DynamicNode {
+
+	static {
+		TestSourceLocator.ignoreClass(DynamicTest.class);
+	}
 
 	/**
 	 * Factory for creating a new {@code DynamicTest} for the supplied display

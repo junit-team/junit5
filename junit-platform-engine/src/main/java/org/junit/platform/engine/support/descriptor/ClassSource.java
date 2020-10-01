@@ -10,8 +10,11 @@
 
 package org.junit.platform.engine.support.descriptor;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.net.URI;
+import java.net.URLDecoder;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,6 +46,14 @@ import org.junit.platform.engine.TestSource;
 public class ClassSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * {@link URI} {@linkplain URI#getScheme() scheme} for class
+	 * sources: {@value}
+	 *
+	 * @since 1.3
+	 */
+	public static final String CLASS_SCHEME = "class";
 
 	/**
 	 * Create a new {@code ClassSource} using the supplied class name.
@@ -82,6 +93,33 @@ public class ClassSource implements TestSource {
 	 */
 	public static ClassSource from(Class<?> javaClass, FilePosition filePosition) {
 		return new ClassSource(javaClass, filePosition);
+	}
+
+	/**
+	 * Create a new {@code ClassSource} from the supplied {@link URI}.
+	 *
+	 * <p>The {@link URI#getPath() path} component of the {@code URI} (excluding
+	 * the query) will be used as the class name. The
+	 * {@linkplain URI#getQuery() query} component of the {@code URI}, if present,
+	 * will be used to retrieve the {@link FilePosition} via
+	 * {@link FilePosition#fromQuery(String)}.
+	 *
+	 * @param uri the {@code URI} for the class source; never {@code null}
+	 * @return a new {@code ClassSource}; never {@code null}
+	 * @throws PreconditionViolationException if the supplied {@code URI} is
+	 * {@code null} or if the scheme of the supplied {@code URI} is not equal
+	 * to the {@link #CLASS_SCHEME}
+	 * @since 1.3
+	 * @see #CLASS_SCHEME
+	 */
+	public static ClassSource from(URI uri) {
+		Preconditions.notNull(uri, "URI must not be null");
+		Preconditions.condition(CLASS_SCHEME.equals(uri.getScheme()),
+			() -> "URI [" + uri + "] must have [" + CLASS_SCHEME + "] scheme");
+
+		String classSource = URLDecoder.decode(ResourceUtils.stripQueryComponent(uri).getPath().substring(1), UTF_8);
+		FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
+		return ClassSource.from(classSource, filePosition);
 	}
 
 	private final String className;
