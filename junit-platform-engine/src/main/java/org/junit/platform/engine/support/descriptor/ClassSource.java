@@ -10,11 +10,9 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.net.URI;
-import java.net.URLDecoder;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -117,7 +115,7 @@ public class ClassSource implements TestSource {
 		Preconditions.condition(CLASS_SCHEME.equals(uri.getScheme()),
 			() -> "URI [" + uri + "] must have [" + CLASS_SCHEME + "] scheme");
 
-		String classSource = URLDecoder.decode(ResourceUtils.stripQueryComponent(uri).getPath().substring(1), UTF_8);
+		String classSource = ResourceUtils.stripQueryComponent(uri).getPath().substring(1);
 		FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
 		return ClassSource.from(classSource, filePosition);
 	}

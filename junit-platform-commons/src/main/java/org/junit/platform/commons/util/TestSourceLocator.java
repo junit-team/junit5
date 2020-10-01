@@ -1,9 +1,6 @@
 package org.junit.platform.commons.util;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -117,7 +114,7 @@ public final class TestSourceLocator {
 	 */
 	private static URI toUri(final StackTraceElement ste) {
 		final String className = ste.getClassName();
-		final String rootClassName = URLEncoder.encode(className.replaceFirst("\\$.*", ""), UTF_8);
+		final String rootClassName = className.replaceFirst("\\$.*", "");
 		final int lineNumber = ste.getLineNumber();
 		return URI.create("class:/" + rootClassName + (lineNumber > 0 ? "?line=" + lineNumber : ""));
 	}
