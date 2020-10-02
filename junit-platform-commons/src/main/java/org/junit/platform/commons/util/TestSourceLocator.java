@@ -47,6 +47,7 @@ public final class TestSourceLocator {
 	 * @param filter The filter condition to add.
 	 */
 	public static void ignore(final Predicate<StackTraceElement> filter) {
+		Preconditions.notNull(filter, "filter must not be null");
 		sourceFilters.add(filter);
 	}
 
@@ -56,6 +57,7 @@ public final class TestSourceLocator {
 	 * @param filter The filter condition to add.
 	 */
 	public static void ignoreClass(final Predicate<String> filter) {
+		Preconditions.notNull(filter, "filter must not be null");
 		ignore(ste -> filter.test(ste.getClassName()));
 	}
 
@@ -65,6 +67,7 @@ public final class TestSourceLocator {
 	 * @param ignored The class name to ignore.
 	 */
 	public static void ignoreClass(final String ignored) {
+		Preconditions.notBlank(ignored, "ignored must not be blank");
 		ignoreClass(className -> className.equals(ignored));
 	}
 
@@ -74,6 +77,7 @@ public final class TestSourceLocator {
 	 * @param ignored The class to ignore.
 	 */
 	public static void ignoreClass(final Class<?> ignored) {
+		Preconditions.notNull(ignored, "ignored must not be null");
 		ignoreClass(ignored.getName());
 	}
 
@@ -83,6 +87,7 @@ public final class TestSourceLocator {
 	 * @param prefix The class name prefix to ignore.
 	 */
 	public static void ignoreClassStartingWith(final String prefix) {
+		Preconditions.notBlank(prefix, "prefix must not be blank");
 		ignoreClass(className -> className.startsWith(prefix));
 	}
 
