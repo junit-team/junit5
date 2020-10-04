@@ -286,7 +286,10 @@ tasks {
 }
 
 pluginManager.withPlugin("java-test-fixtures") {
-	tasks.named<Checkstyle>("checkstyleTestFixtures").configure {
+	tasks.named<Checkstyle>("checkstyleTestFixtures") {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+	}
+	tasks.named<JavaCompile>("compileTestFixturesJava") {
+		options.release.set(extension.testJavaVersion.majorVersion.toInt())
 	}
 }
