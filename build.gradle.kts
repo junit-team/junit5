@@ -12,12 +12,6 @@ plugins {
 
 apply(from = "gradle/build-scan-user-data.gradle")
 
-buildScan {
-	if (project.hasProperty("javaHome")) {
-		value("Custom Java home", project.property("javaHome") as String)
-	}
-}
-
 val buildTimeAndDate by extra {
 
 	// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against

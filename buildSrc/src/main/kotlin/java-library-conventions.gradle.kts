@@ -3,7 +3,7 @@ plugins {
 	eclipse
 	idea
 	checkstyle
-	id("custom-java-home")
+	id("java-toolchain-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
