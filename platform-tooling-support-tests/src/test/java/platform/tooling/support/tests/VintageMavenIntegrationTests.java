@@ -18,7 +18,6 @@ import java.time.Duration;
 
 import de.sormuras.bartholdy.Result;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,7 +26,6 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.Request;
 
-@Disabled("needs to consume maven.repo system property instead of downloading from Sonatype snapshot repo or Maven local repo")
 class VintageMavenIntegrationTests {
 
 	@Test
