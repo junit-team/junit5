@@ -4,15 +4,13 @@ val javaToolchainVersion: String? by project
 
 project.pluginManager.withPlugin("java") {
 	val extension = the<JavaPluginExtension>()
-	val javaLanguageVersion = JavaLanguageVersion.of(javaToolchainVersion?.toInt() ?: 11)
+	val javaToolchainService = the<JavaToolchainService>()
 	extension.toolchain {
-		languageVersion.set(javaLanguageVersion)
+		languageVersion.set(JavaLanguageVersion.of(javaToolchainVersion?.toInt() ?: 11))
 	}
-	val service = the<JavaToolchainService>()
-	val javaHome = service.compilerFor(extension.toolchain).get().metadata.installationPath.asFile.absolutePath
 	tasks.withType<KotlinJvmCompile>().configureEach {
-		kotlinOptions {
-			jdkHome = javaHome
+		doFirst {
+			kotlinOptions.jdkHome = javaToolchainService.compilerFor(extension.toolchain).get().metadata.installationPath.asFile.absolutePath
 		}
 	}
 }
