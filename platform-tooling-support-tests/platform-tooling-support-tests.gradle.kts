@@ -56,23 +56,15 @@ tasks.test {
 		(mavenizedProjects + project(":junit-bom"))
 				.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
 				.forEach { dependsOn(it) }
-		// Pass "java.home.N" system properties from sources like "~/.gradle/gradle.properties".
-		// Values will be picked up by: platform.tooling.support.Helper::getJavaHome
-		for (N in 8..99) {
-			val home = project.properties["java.home.$N"] ?: System.getenv("JDK$N")
-			if (home != null) systemProperty("java.home.$N", home)
-		}
-		// TODO Enabling parallel execution fails due to Gradle's listener not being thread-safe:
-		//   Received a completed event for test with unknown id "10.5".
-		//   Registered test ids: "[:platform-tooling-support-tests:test, 10.1]"
-		// systemProperty("junit.jupiter.execution.parallel.enabled", "true")
 
 		// Pass version constants (declared in Versions.kt) to tests as system properties
 		systemProperty("Versions.apiGuardian", versions.apiguardian)
 		systemProperty("Versions.assertJ", versions.assertj)
 		systemProperty("Versions.junit4", versions.junit4)
 		systemProperty("Versions.ota4j", versions.opentest4j)
+
 		jvmArgumentProviders += MavenRepo(tempRepoDir)
+		jvmArgumentProviders += JavaHomeDir(project, 8)
 	}
 
 	filter {
@@ -89,4 +81,18 @@ tasks.test {
 
 class MavenRepo(@get:InputDirectory @get:PathSensitive(PathSensitivity.RELATIVE) val repoDir: File) : CommandLineArgumentProvider {
 	override fun asArguments() = listOf("-Dmaven.repo=$repoDir")
+}
+
+class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgumentProvider {
+	@Internal
+	val javaLauncher: Property<JavaLauncher> = project.objects.property<JavaLauncher>()
+			.value(project.the<JavaToolchainService>().launcherFor {
+				languageVersion.set(JavaLanguageVersion.of(version))
+			})
+
+	override fun asArguments(): List<String> {
+		val metadata = javaLauncher.map { it.metadata }
+		val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
+		return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
+	}
 }
