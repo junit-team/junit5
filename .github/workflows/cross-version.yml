@@ -46,4 +46,4 @@ jobs:
       - name: Test
         run: |
           ./gradlew --version
-          ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,ADDITIONAL_JDK -PjavaToolchainVersion=${{ matrix.jdk }} build "-Dscan.tag.JDK_${{ matrix.jdk }}"
+          ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} build "-Dscan.tag.JDK_${{ matrix.jdk }}"
