@@ -79,7 +79,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --info --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
         ./gradlew --stop
   mac:
     name: 'Mac OS'
