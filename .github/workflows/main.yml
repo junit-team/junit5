@@ -90,7 +90,7 @@ jobs:
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
-        path: | 
+        path: |
           ~/.gradle/caches/
           ~/.gradle/wrapper/dists
         key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
@@ -126,7 +126,7 @@ jobs:
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
-        path: | 
+        path: |
           /root/.gradle/caches/
           /root/.gradle/wrapper/dists
         key: coverage-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
@@ -169,7 +169,7 @@ jobs:
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
-        path: | 
+        path: |
           ~/.gradle/caches/
           ~/.gradle/wrapper/dists
         key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
@@ -196,7 +196,7 @@ jobs:
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
-        path: | 
+        path: |
           ~/.gradle/caches/
           ~/.gradle/wrapper/dists
         key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
