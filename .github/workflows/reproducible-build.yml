@@ -9,6 +9,9 @@ on:
     branches:
     - '*'
 
+env:
+  ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
+
 jobs:
   check_build_reproducibility:
     name: 'Check build reproducibility'
