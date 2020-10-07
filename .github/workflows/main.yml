@@ -12,6 +12,7 @@ on:
 env:
   ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
   ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
+  ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
 
 jobs:
   linux:
@@ -23,7 +24,7 @@ jobs:
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
-        path: | 
+        path: |
           /root/.gradle/caches/
           /root/.gradle/wrapper/dists
         key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
@@ -53,7 +54,7 @@ jobs:
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
-        path: | 
+        path: |
           ~/.gradle/caches/
           ~/.gradle/wrapper/dists
         key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}

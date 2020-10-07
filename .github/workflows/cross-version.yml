@@ -12,6 +12,7 @@ on:
 env:
   ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
   ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
+  ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
 
 jobs:
   openjdk:
