@@ -1,3 +1,5 @@
+import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
+
 plugins {
 	`java-library-conventions`
 	`testing-conventions`
@@ -86,8 +88,14 @@ class MavenRepo(@get:InputDirectory @get:PathSensitive(PathSensitivity.RELATIVE)
 class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgumentProvider {
 	@Internal
 	val javaLauncher: Property<JavaLauncher> = project.objects.property<JavaLauncher>()
-			.value(project.the<JavaToolchainService>().launcherFor {
-				languageVersion.set(JavaLanguageVersion.of(version))
+			.value(project.provider {
+				try {
+					project.the<JavaToolchainService>().launcherFor {
+						languageVersion.set(JavaLanguageVersion.of(version))
+					}.get()
+				} catch (e: NoToolchainAvailableException) {
+					null
+				}
 			})
 
 	override fun asArguments(): List<String> {
