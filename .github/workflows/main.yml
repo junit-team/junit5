@@ -87,7 +87,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --info --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
+        ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
         ./gradlew --stop
   mac:
     name: 'Mac OS'
