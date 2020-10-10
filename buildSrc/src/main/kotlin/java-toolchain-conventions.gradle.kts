@@ -11,9 +11,16 @@ project.pluginManager.withPlugin("java") {
 	val extension = the<JavaPluginExtension>()
 	val javaToolchainService = the<JavaToolchainService>()
 	extension.toolchain.languageVersion.set(javaLanguageVersion)
+	val compiler = javaToolchainService.compilerFor(extension.toolchain)
 	tasks.withType<KotlinJvmCompile>().configureEach {
 		doFirst {
-			kotlinOptions.jdkHome = javaToolchainService.compilerFor(extension.toolchain).get().metadata.installationPath.asFile.absolutePath
+			kotlinOptions.jdkHome = compiler.get().metadata.installationPath.asFile.absolutePath
 		}
+	}
+	tasks.withType<JavaCompile>().configureEach {
+		javaCompiler.set(compiler)
+	}
+	tasks.withType<JavaExec>().configureEach {
+		javaLauncher.set(javaToolchainService.launcherFor(extension.toolchain))
 	}
 }
