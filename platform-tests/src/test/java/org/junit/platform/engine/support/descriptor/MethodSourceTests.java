@@ -151,7 +151,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	@Test
 	void twoEqualMethodsWithUnequalParametersShouldHaveUnequalMethodSourceHashCodes() {
 		assertNotEquals(MethodSource.from("TestClass1", "testMethod1", "int, String").hashCode(),
-			MethodSource.from("TestClass1", "testMethod1", "float, int, String"));
+			MethodSource.from("TestClass1", "testMethod1", "float, int, String").hashCode());
 	}
 
 	@Test
