@@ -224,7 +224,7 @@ class ReflectionSupportTests {
 	}
 
 	@Test
-	void findMethodDelegates() throws Exception {
+	void findMethodDelegates() {
 		assertEquals(ReflectionUtils.findMethod(Boolean.class, "valueOf", String.class.getName()),
 			ReflectionSupport.findMethod(Boolean.class, "valueOf", String.class.getName()));
 
@@ -233,7 +233,7 @@ class ReflectionSupportTests {
 	}
 
 	@Test
-	void findMethodPreconditions() throws Exception {
+	void findMethodPreconditions() {
 		assertPreconditionViolationException("Class",
 			() -> ReflectionSupport.findMethod(null, "valueOf", String.class.getName()));
 		assertPreconditionViolationExceptionForString("Method name",
@@ -280,13 +280,13 @@ class ReflectionSupportTests {
 	}
 
 	@Test
-	void findNestedClassesDelegates() throws Exception {
+	void findNestedClassesDelegates() {
 		assertEquals(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic),
 			ReflectionSupport.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic));
 	}
 
 	@Test
-	void findNestedClassesPreconditions() throws Exception {
+	void findNestedClassesPreconditions() {
 		assertPreconditionViolationException("Class",
 			() -> ReflectionSupport.findNestedClasses(null, ReflectionUtils::isStatic));
 		assertPreconditionViolationException("Predicate",
