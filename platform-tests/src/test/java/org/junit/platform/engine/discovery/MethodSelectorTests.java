@@ -40,9 +40,9 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadClass() {
-		MethodSelector selector = new MethodSelector("TestClass", "method", "int, boolean");
+		var selector = new MethodSelector("TestClass", "method", "int, boolean");
 
-		PreconditionViolationException e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
+		var e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
 
 		assertThat(e).hasMessage("Could not load class with name: TestClass").hasCauseInstanceOf(
 			ClassNotFoundException.class);

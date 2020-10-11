@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -39,11 +38,11 @@ class AbstractTestDescriptorTests {
 	@BeforeEach
 	void initTree() {
 		engineDescriptor = new EngineDescriptor(UniqueId.forEngine("testEngine"), "testEngine");
-		GroupDescriptor group1 = new GroupDescriptor(UniqueId.root("group", "group1"));
+		var group1 = new GroupDescriptor(UniqueId.root("group", "group1"));
 		engineDescriptor.addChild(group1);
-		GroupDescriptor group2 = new GroupDescriptor(UniqueId.root("group", "group2"));
+		var group2 = new GroupDescriptor(UniqueId.root("group", "group2"));
 		engineDescriptor.addChild(group2);
-		GroupDescriptor group11 = new GroupDescriptor(UniqueId.root("group", "group1-1"));
+		var group11 = new GroupDescriptor(UniqueId.root("group", "group1-1"));
 		group1.addChild(group11);
 
 		group1.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf1-1")));
@@ -56,17 +55,17 @@ class AbstractTestDescriptorTests {
 
 	@Test
 	void removeRootFromHierarchyFails() {
-		JUnitException e = assertThrows(JUnitException.class, () -> engineDescriptor.removeFromHierarchy());
+		var e = assertThrows(JUnitException.class, () -> engineDescriptor.removeFromHierarchy());
 		assertTrue(e.toString().contains("cannot remove the root of a hierarchy"));
 	}
 
 	@Test
 	void removeFromHierarchyClearsParentFromAllChildren() {
-		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		var group = engineDescriptor.getChildren().iterator().next();
 		assertSame(engineDescriptor, group.getParent().orElseThrow(Error::new));
 		assertTrue(group.getChildren().stream().allMatch(d -> d.getParent().orElseThrow(Error::new) == group));
 
-		Set<? extends TestDescriptor> formerChildren = group.getChildren();
+		var formerChildren = group.getChildren();
 		group.removeFromHierarchy();
 
 		assertFalse(group.getParent().isPresent());
@@ -77,7 +76,7 @@ class AbstractTestDescriptorTests {
 	@Test
 	void setParentToOtherInstance() {
 		TestDescriptor newEngine = new EngineDescriptor(UniqueId.forEngine("newEngine"), "newEngine");
-		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		var group = engineDescriptor.getChildren().iterator().next();
 		assertSame(engineDescriptor, group.getParent().orElseThrow(Error::new));
 		group.setParent(newEngine);
 		assertSame(newEngine, group.getParent().orElseThrow(Error::new));
@@ -85,7 +84,7 @@ class AbstractTestDescriptorTests {
 
 	@Test
 	void setParentToNull() {
-		TestDescriptor group = engineDescriptor.getChildren().iterator().next();
+		var group = engineDescriptor.getChildren().iterator().next();
 		assertTrue(group.getParent().isPresent());
 		group.setParent(null);
 		assertFalse(group.getParent().isPresent());
@@ -117,7 +116,7 @@ class AbstractTestDescriptorTests {
 
 	@Test
 	void pruneGroup() {
-		final AtomicInteger countVisited = new AtomicInteger();
+		final var countVisited = new AtomicInteger();
 		TestDescriptor.Visitor visitor = descriptor -> {
 			if (descriptor.getUniqueId().equals(UniqueId.root("group", "group1")))
 				descriptor.removeFromHierarchy();

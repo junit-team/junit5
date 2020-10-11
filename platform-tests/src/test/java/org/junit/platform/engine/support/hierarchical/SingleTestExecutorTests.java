@@ -19,7 +19,6 @@ import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -30,7 +29,7 @@ class SingleTestExecutorTests {
 
 	@Test
 	void executeSafelySuccessful() {
-		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
+		var result = new SingleTestExecutor().executeSafely(() -> {
 		});
 
 		assertEquals(SUCCESSFUL, result.getStatus());
@@ -39,9 +38,9 @@ class SingleTestExecutorTests {
 
 	@Test
 	void executeSafelyAborted() {
-		TestAbortedException testAbortedException = new TestAbortedException("assumption violated");
+		var testAbortedException = new TestAbortedException("assumption violated");
 
-		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
+		var result = new SingleTestExecutor().executeSafely(() -> {
 			throw testAbortedException;
 		});
 
@@ -51,9 +50,9 @@ class SingleTestExecutorTests {
 
 	@Test
 	void executeSafelyFailed() {
-		AssertionError assertionError = new AssertionError("assumption violated");
+		var assertionError = new AssertionError("assumption violated");
 
-		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
+		var result = new SingleTestExecutor().executeSafely(() -> {
 			throw assertionError;
 		});
 

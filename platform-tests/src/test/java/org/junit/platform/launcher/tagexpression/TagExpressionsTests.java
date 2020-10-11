@@ -47,7 +47,7 @@ class TagExpressionsTests {
 
 	@Test
 	void tagEvaluation() {
-		TagExpression tagExpression = tag("foo");
+		var tagExpression = tag("foo");
 
 		assertThat(tagExpression.evaluate(singleton(create("foo")))).isTrue();
 		assertThat(tagExpression.evaluate(singleton(create("not_foo")))).isFalse();

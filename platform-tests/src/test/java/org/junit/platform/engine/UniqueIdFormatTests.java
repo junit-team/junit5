@@ -39,14 +39,14 @@ class UniqueIdFormatTests {
 
 		@Test
 		void withTwoSegments() {
-			UniqueId classId = engineId.append("class", "org.junit.MyClass");
+			var classId = engineId.append("class", "org.junit.MyClass");
 			assertEquals("[engine:junit-jupiter]/[class:org.junit.MyClass]", classId.toString());
 			assertEquals(format.format(classId), classId.toString());
 		}
 
 		@Test
 		void withManySegments() {
-			UniqueId uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
+			var uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
 			assertEquals("[engine:junit-jupiter]/[t1:v1]/[t2:v2]/[t3:v3]", uniqueId.toString());
 			assertEquals(format.format(uniqueId), uniqueId.toString());
 		}
@@ -120,7 +120,7 @@ class UniqueIdFormatTests {
 
 		@Test
 		default void parseEngineUid() {
-			UniqueId parsedId = getFormat().parse(getEngineUid());
+			var parsedId = getFormat().parse(getEngineUid());
 			assertSegment(parsedId.getSegments().get(0), "engine", "junit-jupiter");
 			assertEquals(getEngineUid(), getFormat().format(parsedId));
 			assertEquals(getEngineUid(), parsedId.toString());
@@ -128,7 +128,7 @@ class UniqueIdFormatTests {
 
 		@Test
 		default void parseMethodUid() {
-			UniqueId parsedId = getFormat().parse(getMethodUid());
+			var parsedId = getFormat().parse(getMethodUid());
 			assertSegment(parsedId.getSegments().get(0), "engine", "junit-jupiter");
 			assertSegment(parsedId.getSegments().get(1), "class", "MyClass");
 			assertSegment(parsedId.getSegments().get(2), "method", "myMethod");

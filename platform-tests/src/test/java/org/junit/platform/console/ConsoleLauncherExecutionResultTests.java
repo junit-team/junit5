@@ -30,7 +30,7 @@ class ConsoleLauncherExecutionResultTests {
 	void hasStatusCode0ForNoTotalFailures() {
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -39,7 +39,7 @@ class ConsoleLauncherExecutionResultTests {
 	void hasStatusCode1ForForAnyFailure() {
 		when(summary.getTotalFailureCount()).thenReturn(1L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(1);
 	}
@@ -52,7 +52,7 @@ class ConsoleLauncherExecutionResultTests {
 		options.setFailIfNoTests(true);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(2);
 	}
@@ -66,7 +66,7 @@ class ConsoleLauncherExecutionResultTests {
 		when(summary.getTestsFoundCount()).thenReturn(1L);
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -79,7 +79,7 @@ class ConsoleLauncherExecutionResultTests {
 		options.setFailIfNoTests(false);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}

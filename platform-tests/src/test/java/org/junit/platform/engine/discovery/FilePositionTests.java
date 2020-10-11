@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -44,7 +43,7 @@ class FilePositionTests extends AbstractEqualsAndHashCodeTests {
 	@Test
 	@DisplayName("create FilePosition from factory method with line number")
 	void filePositionFromLine() {
-		FilePosition filePosition = FilePosition.from(42);
+		var filePosition = FilePosition.from(42);
 
 		assertThat(filePosition.getLine()).isEqualTo(42);
 		assertThat(filePosition.getColumn()).isEmpty();
@@ -53,7 +52,7 @@ class FilePositionTests extends AbstractEqualsAndHashCodeTests {
 	@Test
 	@DisplayName("create FilePosition from factory method with line number and column number")
 	void filePositionFromLineAndColumn() {
-		FilePosition filePosition = FilePosition.from(42, 99);
+		var filePosition = FilePosition.from(42, 99);
 
 		assertThat(filePosition.getLine()).isEqualTo(42);
 		assertThat(filePosition.getColumn()).contains(99);
@@ -65,10 +64,10 @@ class FilePositionTests extends AbstractEqualsAndHashCodeTests {
 	@ParameterizedTest
 	@MethodSource
 	void filePositionFromQuery(String query, int expectedLine, int expectedColumn) {
-		Optional<FilePosition> optionalFilePosition = FilePosition.fromQuery(query);
+		var optionalFilePosition = FilePosition.fromQuery(query);
 
 		if (optionalFilePosition.isPresent()) {
-			FilePosition filePosition = optionalFilePosition.get();
+			var filePosition = optionalFilePosition.get();
 
 			assertThat(filePosition.getLine()).isEqualTo(expectedLine);
 			assertThat(filePosition.getColumn().orElse(-1)).isEqualTo(expectedColumn);
@@ -99,9 +98,9 @@ class FilePositionTests extends AbstractEqualsAndHashCodeTests {
 	@Test
 	@DisplayName("equals() and hashCode() with column number cached by Integer.valueOf()")
 	void equalsAndHashCode() {
-		FilePosition same = FilePosition.from(42, 99);
-		FilePosition sameSame = FilePosition.from(42, 99);
-		FilePosition different = FilePosition.from(1, 2);
+		var same = FilePosition.from(42, 99);
+		var sameSame = FilePosition.from(42, 99);
+		var different = FilePosition.from(1, 2);
 
 		assertEqualsAndHashCode(same, sameSame, different);
 	}
@@ -109,9 +108,9 @@ class FilePositionTests extends AbstractEqualsAndHashCodeTests {
 	@Test
 	@DisplayName("equals() and hashCode() with column number not cached by Integer.valueOf()")
 	void equalsAndHashCodeWithColumnNumberNotCachedByJavaLangIntegerDotValueOf() {
-		FilePosition same = FilePosition.from(42, 99999);
-		FilePosition sameSame = FilePosition.from(42, 99999);
-		FilePosition different = FilePosition.from(1, 2);
+		var same = FilePosition.from(42, 99999);
+		var sameSame = FilePosition.from(42, 99999);
+		var different = FilePosition.from(1, 2);
 
 		assertEqualsAndHashCode(same, sameSame, different);
 	}

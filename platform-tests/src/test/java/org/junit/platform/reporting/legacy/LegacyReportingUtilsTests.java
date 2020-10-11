@@ -31,8 +31,8 @@ class LegacyReportingUtilsTests {
 
 	@Test
 	void legacyReportingClassNameForTestIdentifierWithoutClassSourceIsParentLegacyReportingName() {
-		UniqueId uniqueId = engineDescriptor.getUniqueId().append("child", "bar");
-		TestDescriptor testDescriptor = createTestDescriptor(uniqueId, "Bar", null);
+		var uniqueId = engineDescriptor.getUniqueId().append("child", "bar");
+		var testDescriptor = createTestDescriptor(uniqueId, "Bar", null);
 		engineDescriptor.addChild(testDescriptor);
 
 		assertThat(getClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
@@ -44,17 +44,17 @@ class LegacyReportingUtilsTests {
 
 	@Test
 	void legacyReportingClassNameForDescendantOfTestIdentifierWithClassSourceIsClassName() {
-		UniqueId classUniqueId = engineDescriptor.getUniqueId().append("class", "class");
-		TestDescriptor classDescriptor = createTestDescriptor(classUniqueId, "Class",
+		var classUniqueId = engineDescriptor.getUniqueId().append("class", "class");
+		var classDescriptor = createTestDescriptor(classUniqueId, "Class",
 			ClassSource.from(LegacyReportingUtilsTests.class));
 		engineDescriptor.addChild(classDescriptor);
 
-		UniqueId subUniqueId = classUniqueId.append("sub", "baz");
-		TestDescriptor subDescriptor = createTestDescriptor(subUniqueId, "Baz", null);
+		var subUniqueId = classUniqueId.append("sub", "baz");
+		var subDescriptor = createTestDescriptor(subUniqueId, "Baz", null);
 		classDescriptor.addChild(subDescriptor);
 
-		UniqueId subSubUniqueId = subUniqueId.append("subsub", "qux");
-		TestDescriptor subSubDescriptor = createTestDescriptor(subSubUniqueId, "Qux", null);
+		var subSubUniqueId = subUniqueId.append("subsub", "qux");
+		var subSubDescriptor = createTestDescriptor(subSubUniqueId, "Qux", null);
 		subDescriptor.addChild(subSubDescriptor);
 
 		assertThat(getClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
@@ -69,13 +69,13 @@ class LegacyReportingUtilsTests {
 	}
 
 	private String getClassName(UniqueId uniqueId) {
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(singleton(engineDescriptor));
 		return LegacyReportingUtils.getClassName(testPlan, testPlan.getTestIdentifier(uniqueId.toString()));
 	}
 
 	@SuppressWarnings("deprecation")
 	private String getClassNameFromOldLocation(UniqueId uniqueId) {
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(singleton(engineDescriptor));
 		return org.junit.platform.launcher.listeners.LegacyReportingUtils.getClassName(testPlan,
 			testPlan.getTestIdentifier(uniqueId.toString()));
 	}

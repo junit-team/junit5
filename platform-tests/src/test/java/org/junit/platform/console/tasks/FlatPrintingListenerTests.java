@@ -34,9 +34,9 @@ class FlatPrintingListenerTests {
 
 	@Test
 	void executionSkipped() {
-		StringWriter stringWriter = new StringWriter();
+		var stringWriter = new StringWriter();
 		listener(stringWriter).executionSkipped(newTestIdentifier(), "Test" + EOL + "disabled");
-		String[] lines = lines(stringWriter);
+		var lines = lines(stringWriter);
 
 		assertEquals(3, lines.length);
 		assertAll("lines in the output", //
@@ -47,9 +47,9 @@ class FlatPrintingListenerTests {
 
 	@Test
 	void reportingEntryPublished() {
-		StringWriter stringWriter = new StringWriter();
+		var stringWriter = new StringWriter();
 		listener(stringWriter).reportingEntryPublished(newTestIdentifier(), ReportEntry.from("foo", "bar"));
-		String[] lines = lines(stringWriter);
+		var lines = lines(stringWriter);
 
 		assertEquals(2, lines.length);
 		assertAll("lines in the output", //
@@ -60,9 +60,9 @@ class FlatPrintingListenerTests {
 
 	@Test
 	void executionFinishedWithFailure() {
-		StringWriter stringWriter = new StringWriter();
+		var stringWriter = new StringWriter();
 		listener(stringWriter).executionFinished(newTestIdentifier(), failed(new AssertionError("Boom!")));
-		String[] lines = lines(stringWriter);
+		var lines = lines(stringWriter);
 
 		assertAll("lines in the output", //
 			() -> assertEquals("Finished:    demo-test ([engine:demo-engine])", lines[0]), //
@@ -74,7 +74,7 @@ class FlatPrintingListenerTests {
 	}
 
 	private static TestIdentifier newTestIdentifier() {
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.forEngine("demo-engine"), "demo-test");
+		var testDescriptor = new TestDescriptorStub(UniqueId.forEngine("demo-engine"), "demo-test");
 		return TestIdentifier.from(testDescriptor);
 	}
 

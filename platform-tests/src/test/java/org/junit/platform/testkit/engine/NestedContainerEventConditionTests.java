@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -53,13 +52,13 @@ class NestedContainerEventConditionTests {
 
 	@Test
 	void nestedContainerChecksSuppliedClassAndAllEnclosingClasses() {
-		UniqueId uniqueId = UniqueId.root("top-level", getClass().getName())//
+		var uniqueId = UniqueId.root("top-level", getClass().getName())//
 				.append("nested", ATestCase.class.getSimpleName())//
 				.append("nested", BTestCase.class.getSimpleName())//
 				.append("nested", CTestCase.class.getSimpleName());
-		Event event = createEvent(uniqueId);
+		var event = createEvent(uniqueId);
 
-		Condition<Event> condition = nestedContainer(HashMap.Entry.class);
+		var condition = nestedContainer(HashMap.Entry.class);
 		assertThat(condition.matches(event)).isFalse();
 		assertThat(condition.toString()).contains(//
 			"is a container", "with uniqueId substring 'Map'", "with uniqueId substring 'Entry'");
@@ -73,11 +72,11 @@ class NestedContainerEventConditionTests {
 	}
 
 	private Event createEvent(UniqueId uniqueId) {
-		TestDescriptor testDescriptor = mock(TestDescriptor.class);
+		var testDescriptor = mock(TestDescriptor.class);
 		when(testDescriptor.isContainer()).thenReturn(true);
 		when(testDescriptor.getUniqueId()).thenReturn(uniqueId);
 
-		Event event = mock(Event.class);
+		var event = mock(Event.class);
 		when(event.getTestDescriptor()).thenReturn(testDescriptor);
 		return event;
 	}

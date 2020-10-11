@@ -25,8 +25,6 @@ import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -60,8 +58,8 @@ class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithSingleElementCollection() {
-		Object expected = new Object();
-		Object actual = CollectionUtils.getOnlyElement(singleton(expected));
+		var expected = new Object();
+		var actual = CollectionUtils.getOnlyElement(singleton(expected));
 		assertSame(expected, actual);
 	}
 
@@ -74,7 +72,7 @@ class CollectionUtilsTests {
 
 	@Test
 	void toUnmodifiableListThrowsOnMutation() {
-		List<Integer> numbers = Stream.of(1).collect(toUnmodifiableList());
+		var numbers = Stream.of(1).collect(toUnmodifiableList());
 		assertThrows(UnsupportedOperationException.class, numbers::clear);
 	}
 
@@ -95,9 +93,9 @@ class CollectionUtilsTests {
 
 	@Test
 	void toStreamWithExistingStream() {
-		Stream<String> input = Stream.of("foo");
+		var input = Stream.of("foo");
 
-		Stream<?> result = CollectionUtils.toStream(input);
+		var result = CollectionUtils.toStream(input);
 
 		assertThat(result).isSameAs(input);
 	}
@@ -105,9 +103,9 @@ class CollectionUtilsTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void toStreamWithDoubleStream() {
-		DoubleStream input = DoubleStream.of(42.23);
+		var input = DoubleStream.of(42.23);
 
-		Stream<Double> result = (Stream<Double>) CollectionUtils.toStream(input);
+		var result = (Stream<Double>) CollectionUtils.toStream(input);
 
 		assertThat(result).containsExactly(42.23);
 	}
@@ -115,9 +113,9 @@ class CollectionUtilsTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void toStreamWithIntStream() {
-		IntStream input = IntStream.of(23, 42);
+		var input = IntStream.of(23, 42);
 
-		Stream<Integer> result = (Stream<Integer>) CollectionUtils.toStream(input);
+		var result = (Stream<Integer>) CollectionUtils.toStream(input);
 
 		assertThat(result).containsExactly(23, 42);
 	}
@@ -125,9 +123,9 @@ class CollectionUtilsTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void toStreamWithLongStream() {
-		LongStream input = LongStream.of(23L, 42L);
+		var input = LongStream.of(23L, 42L);
 
-		Stream<Long> result = (Stream<Long>) CollectionUtils.toStream(input);
+		var result = (Stream<Long>) CollectionUtils.toStream(input);
 
 		assertThat(result).containsExactly(23L, 42L);
 	}
@@ -135,7 +133,7 @@ class CollectionUtilsTests {
 	@Test
 	@SuppressWarnings({ "unchecked", "serial" })
 	void toStreamWithCollection() {
-		AtomicBoolean collectionStreamClosed = new AtomicBoolean(false);
+		var collectionStreamClosed = new AtomicBoolean(false);
 		Collection<String> input = new ArrayList<>() {
 
 			{
@@ -149,8 +147,8 @@ class CollectionUtilsTests {
 			}
 		};
 
-		try (Stream<String> stream = (Stream<String>) CollectionUtils.toStream(input)) {
-			List<String> result = stream.collect(toList());
+		try (var stream = (Stream<String>) CollectionUtils.toStream(input)) {
+			var result = stream.collect(toList());
 			assertThat(result).containsExactly("foo", "bar");
 		}
 
@@ -163,7 +161,7 @@ class CollectionUtilsTests {
 
 		Iterable<String> input = () -> asList("foo", "bar").iterator();
 
-		Stream<String> result = (Stream<String>) CollectionUtils.toStream(input);
+		var result = (Stream<String>) CollectionUtils.toStream(input);
 
 		assertThat(result).containsExactly("foo", "bar");
 	}
@@ -171,9 +169,9 @@ class CollectionUtilsTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void toStreamWithIterator() {
-		Iterator<String> input = asList("foo", "bar").iterator();
+		var input = asList("foo", "bar").iterator();
 
-		Stream<String> result = (Stream<String>) CollectionUtils.toStream(input);
+		var result = (Stream<String>) CollectionUtils.toStream(input);
 
 		assertThat(result).containsExactly("foo", "bar");
 	}
@@ -181,7 +179,7 @@ class CollectionUtilsTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void toStreamWithArray() {
-		Stream<String> result = (Stream<String>) CollectionUtils.toStream(new String[] { "foo", "bar" });
+		var result = (Stream<String>) CollectionUtils.toStream(new String[] { "foo", "bar" });
 
 		assertThat(result).containsExactly("foo", "bar");
 	}
@@ -213,8 +211,8 @@ class CollectionUtilsTests {
 	private void toStreamWithPrimitiveArray(Object primitiveArray) {
 		assertTrue(primitiveArray.getClass().isArray());
 		assertTrue(primitiveArray.getClass().getComponentType().isPrimitive());
-		Object[] result = CollectionUtils.toStream(primitiveArray).toArray();
-		for (int i = 0; i < result.length; i++) {
+		var result = CollectionUtils.toStream(primitiveArray).toArray();
+		for (var i = 0; i < result.length; i++) {
 			assertEquals(Array.get(primitiveArray, i), result[i]);
 		}
 	}

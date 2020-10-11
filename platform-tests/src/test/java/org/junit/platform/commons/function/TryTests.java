@@ -24,73 +24,73 @@ public class TryTests {
 
 	@Test
 	void successfulTriesCanBeTransformed() throws Exception {
-		Try<String> t = Try.success("foo");
+		var success = Try.success("foo");
 
-		assertThat(t.get()).isEqualTo("foo");
-		assertThat(t.getOrThrow(RuntimeException::new)).isEqualTo("foo");
-		assertThat(t.toOptional()).contains("foo");
+		assertThat(success.get()).isEqualTo("foo");
+		assertThat(success.getOrThrow(RuntimeException::new)).isEqualTo("foo");
+		assertThat(success.toOptional()).contains("foo");
 
-		assertThat(t.andThen(v -> {
+		assertThat(success.andThen(v -> {
 			assertThat(v).isEqualTo("foo");
 			return Try.success("bar");
 		}).get()).isEqualTo("bar");
-		assertThat(t.andThenTry(v -> {
+		assertThat(success.andThenTry(v -> {
 			assertThat(v).isEqualTo("foo");
 			return "bar";
 		}).get()).isEqualTo("bar");
 
-		assertThat(t.orElse(() -> fail("should not be called"))).isSameAs(t);
-		assertThat(t.orElseTry(() -> fail("should not be called"))).isSameAs(t);
+		assertThat(success.orElse(() -> fail("should not be called"))).isSameAs(success);
+		assertThat(success.orElseTry(() -> fail("should not be called"))).isSameAs(success);
 
-		AtomicReference<String> value = new AtomicReference<>();
-		assertThat(t.ifSuccess(value::set)).isSameAs(t);
+		var value = new AtomicReference<String>();
+		assertThat(success.ifSuccess(value::set)).isSameAs(success);
 		assertThat(value.get()).isEqualTo("foo");
-		assertThat(t.ifFailure(cause -> fail("should not be called"))).isSameAs(t);
+		assertThat(success.ifFailure(cause -> fail("should not be called"))).isSameAs(success);
 	}
 
 	@Test
 	void failedTriesCanBeTransformed() throws Exception {
-		JUnitException cause = new JUnitException("foo");
-		Try<String> t = Try.failure(cause);
+		var cause = new JUnitException("foo");
+		var failure = Try.failure(cause);
 
-		assertThat(assertThrows(JUnitException.class, t::get)).isSameAs(cause);
-		assertThat(assertThrows(RuntimeException.class, () -> t.getOrThrow(RuntimeException::new))).isInstanceOf(
+		assertThat(assertThrows(JUnitException.class, failure::get)).isSameAs(cause);
+		assertThat(assertThrows(RuntimeException.class, () -> failure.getOrThrow(RuntimeException::new))).isInstanceOf(
 			RuntimeException.class).hasCause(cause);
-		assertThat(t.toOptional()).isEmpty();
+		assertThat(failure.toOptional()).isEmpty();
 
-		assertThat(t.andThen(v -> fail("should not be called"))).isSameAs(t);
-		assertThat(t.andThenTry(v -> fail("should not be called"))).isSameAs(t);
+		assertThat(failure.andThen(v -> fail("should not be called"))).isSameAs(failure);
+		assertThat(failure.andThenTry(v -> fail("should not be called"))).isSameAs(failure);
 
-		assertThat(t.orElse(() -> Try.success("bar")).get()).isEqualTo("bar");
-		assertThat(t.orElseTry(() -> "bar").get()).isEqualTo("bar");
+		assertThat(failure.orElse(() -> Try.success("bar")).get()).isEqualTo("bar");
+		assertThat(failure.orElseTry(() -> "bar").get()).isEqualTo("bar");
 
-		assertThat(t.ifSuccess(v -> fail("should not be called"))).isSameAs(t);
-		AtomicReference<Exception> exception = new AtomicReference<>();
-		assertThat(t.ifFailure(exception::set)).isSameAs(t);
+		assertThat(failure.ifSuccess(v -> fail("should not be called"))).isSameAs(failure);
+		var exception = new AtomicReference<Exception>();
+		assertThat(failure.ifFailure(exception::set)).isSameAs(failure);
 		assertThat(exception.get()).isSameAs(cause);
 	}
 
 	@Test
 	void successfulTriesCanStoreNull() throws Exception {
-		Try<String> t = Try.success(null);
-		assertThat(t.get()).isNull();
-		assertThat(t.getOrThrow(RuntimeException::new)).isNull();
-		assertThat(t.toOptional()).isEmpty();
+		var success = Try.success(null);
+		assertThat(success.get()).isNull();
+		assertThat(success.getOrThrow(RuntimeException::new)).isNull();
+		assertThat(success.toOptional()).isEmpty();
 	}
 
 	@Test
 	void triesWithSameContentAreEqual() {
-		Exception cause = new Exception();
+		var cause = new Exception();
 		Callable<Object> failingCallable = () -> {
 			throw cause;
 		};
 
-		Try<String> success = Try.call(() -> "foo");
+		var success = Try.call(() -> "foo");
 		assertThat(success).isEqualTo(success).hasSameHashCodeAs(success);
 		assertThat(success).isEqualTo(Try.success("foo"));
 		assertThat(success).isNotEqualTo(Try.failure(cause));
 
-		Try<Object> failure = Try.call(failingCallable);
+		var failure = Try.call(failingCallable);
 		assertThat(failure).isEqualTo(failure).hasSameHashCodeAs(failure);
 		assertThat(failure).isNotEqualTo(Try.success("foo"));
 		assertThat(failure).isEqualTo(Try.failure(cause));
@@ -100,12 +100,12 @@ public class TryTests {
 	void methodPreconditionsAreChecked() {
 		assertThrows(JUnitException.class, () -> Try.call(null));
 
-		Try<String> success = Try.success("foo");
+		var success = Try.success("foo");
 		assertThrows(JUnitException.class, () -> success.andThen(null));
 		assertThrows(JUnitException.class, () -> success.andThenTry(null));
 		assertThrows(JUnitException.class, () -> success.ifSuccess(null));
 
-		Try<String> failure = Try.failure(new Exception());
+		var failure = Try.failure(new Exception());
 		assertThrows(JUnitException.class, () -> failure.orElse(null));
 		assertThrows(JUnitException.class, () -> failure.orElseTry(null));
 		assertThrows(JUnitException.class, () -> failure.ifFailure(null));

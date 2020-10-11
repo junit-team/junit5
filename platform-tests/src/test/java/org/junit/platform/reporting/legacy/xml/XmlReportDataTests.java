@@ -16,10 +16,8 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
 import java.time.Clock;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.fakes.TestDescriptorStub;
@@ -32,41 +30,41 @@ class XmlReportDataTests {
 
 	@Test
 	void resultOfTestIdentifierWithoutAnyReportedEventsIsEmpty() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(singleton(engineDescriptor));
 
-		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
+		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		var result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
 
 		assertThat(result).isEmpty();
 	}
 
 	@Test
 	void resultOfTestIdentifierWithoutReportedEventsIsFailureOfAncestor() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(singleton(engineDescriptor));
 
-		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		TestExecutionResult failureOfAncestor = failed(new RuntimeException("failed!"));
+		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		var failureOfAncestor = failed(new RuntimeException("failed!"));
 		reportData.markFinished(testPlan.getTestIdentifier("[engine:engine]"), failureOfAncestor);
 
-		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
+		var result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
 
 		assertThat(result).contains(failureOfAncestor);
 	}
 
 	@Test
 	void resultOfTestIdentifierWithoutReportedEventsIsEmptyWhenAncestorWasSuccessful() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(singleton(engineDescriptor));
 
-		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markFinished(testPlan.getTestIdentifier("[engine:engine]"), successful());
 
-		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
+		var result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
 
 		assertThat(result).isEmpty();
 	}

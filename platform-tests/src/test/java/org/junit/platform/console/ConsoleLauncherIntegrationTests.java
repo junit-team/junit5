@@ -25,7 +25,7 @@ class ConsoleLauncherIntegrationTests {
 
 	@Test
 	void executeWithoutArgumentsFailsAndPrintsHelpInformation() {
-		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute(-1);
+		var result = new ConsoleLauncherWrapper().execute(-1);
 		assertAll("empty args array results in display of help information and an exception stacktrace", //
 			() -> assertTrue(result.out.contains("help information")), //
 			() -> assertTrue(result.err.contains("No arguments were supplied to the ConsoleLauncher")) //
@@ -42,7 +42,7 @@ class ConsoleLauncherIntegrationTests {
 	void executeWithExcludeClassnameOptionExcludesClasses() {
 		String[] args = { "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage", "--exclude-classname",
 				"^org\\.junit\\.platform\\.console\\.subpackage\\..*" };
-		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute(args);
+		var result = new ConsoleLauncherWrapper().execute(args);
 		assertAll("all subpackage test classes are excluded by the class name filter", //
 			() -> assertArrayEquals(args, result.args), //
 			() -> assertEquals(0, result.code), //

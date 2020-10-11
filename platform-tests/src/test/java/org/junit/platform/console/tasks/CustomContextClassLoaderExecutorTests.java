@@ -29,8 +29,8 @@ class CustomContextClassLoaderExecutorTests {
 
 	@Test
 	void invokeWithoutCustomClassLoaderDoesNotSetClassLoader() throws Exception {
-		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-		CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(Optional.empty());
+		var originalClassLoader = Thread.currentThread().getContextClassLoader();
+		var executor = new CustomContextClassLoaderExecutor(Optional.empty());
 
 		int result = executor.invoke(() -> {
 			assertSame(originalClassLoader, Thread.currentThread().getContextClassLoader());
@@ -43,10 +43,9 @@ class CustomContextClassLoaderExecutorTests {
 
 	@Test
 	void invokeWithCustomClassLoaderSetsCustomAndResetsToOriginal() throws Exception {
-		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+		var originalClassLoader = Thread.currentThread().getContextClassLoader();
 		ClassLoader customClassLoader = URLClassLoader.newInstance(new URL[0]);
-		CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(
-			Optional.of(customClassLoader));
+		var executor = new CustomContextClassLoaderExecutor(Optional.of(customClassLoader));
 
 		int result = executor.invoke(() -> {
 			assertSame(customClassLoader, Thread.currentThread().getContextClassLoader());
@@ -59,7 +58,7 @@ class CustomContextClassLoaderExecutorTests {
 
 	@Test
 	void invokeWithCustomClassLoaderAndEnsureItIsClosedAfterUsage() throws Exception {
-		AtomicBoolean closed = new AtomicBoolean(false);
+		var closed = new AtomicBoolean(false);
 		ClassLoader localClassLoader = new URLClassLoader(new URL[0]) {
 			@Override
 			public void close() throws IOException {
@@ -67,7 +66,7 @@ class CustomContextClassLoaderExecutorTests {
 				super.close();
 			}
 		};
-		CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(Optional.of(localClassLoader));
+		var executor = new CustomContextClassLoaderExecutor(Optional.of(localClassLoader));
 
 		int result = executor.invoke(() -> 4711);
 

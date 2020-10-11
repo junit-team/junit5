@@ -42,8 +42,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -181,7 +179,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void getAllAssignmentCompatibleClasses() {
-		Set<Class<?>> superclasses = ReflectionUtils.getAllAssignmentCompatibleClasses(B.class);
+		var superclasses = ReflectionUtils.getAllAssignmentCompatibleClasses(B.class);
 		assertThat(superclasses).containsExactly(B.class, InterfaceC.class, InterfaceA.class, InterfaceB.class, A.class,
 			InterfaceD.class, Object.class);
 		assertTrue(superclasses.stream().allMatch(clazz -> clazz.isAssignableFrom(B.class)));
@@ -198,7 +196,7 @@ class ReflectionUtilsTests {
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, null, null));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, ((Object[]) null)));
 
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> ReflectionUtils.newInstance(Exploder.class));
+		var exception = assertThrows(RuntimeException.class, () -> ReflectionUtils.newInstance(Exploder.class));
 		assertThat(exception).hasMessage("boom");
 		// @formatter:on
 	}
@@ -237,7 +235,7 @@ class ReflectionUtilsTests {
 	void readFieldValueOfExistingStaticField() throws Exception {
 		assertThat(readFieldValue(MyClass.class, "staticField", null)).contains(42);
 
-		Field field = MyClass.class.getDeclaredField("staticField");
+		var field = MyClass.class.getDeclaredField("staticField");
 		assertThat(readFieldValue(field)).contains(42);
 		assertThat(readFieldValue(field, null)).contains(42);
 	}
@@ -246,7 +244,7 @@ class ReflectionUtilsTests {
 	void tryToReadFieldValueOfExistingStaticField() throws Exception {
 		assertThat(tryToReadFieldValue(MyClass.class, "staticField", null).get()).isEqualTo(42);
 
-		Field field = MyClass.class.getDeclaredField("staticField");
+		var field = MyClass.class.getDeclaredField("staticField");
 		assertThat(tryToReadFieldValue(field).get()).isEqualTo(42);
 		assertThat(tryToReadFieldValue(field, null).get()).isEqualTo(42);
 	}
@@ -254,17 +252,17 @@ class ReflectionUtilsTests {
 	@Test
 	@SuppressWarnings("deprecation")
 	void readFieldValueOfExistingInstanceField() throws Exception {
-		MyClass instance = new MyClass(42);
+		var instance = new MyClass(42);
 		assertThat(readFieldValue(MyClass.class, "instanceField", instance)).contains(42);
 
-		Field field = MyClass.class.getDeclaredField("instanceField");
+		var field = MyClass.class.getDeclaredField("instanceField");
 		assertThat(readFieldValue(field, instance)).contains(42);
 	}
 
 	@Test
 	@SuppressWarnings("deprecation")
 	void attemptToReadFieldValueOfExistingInstanceFieldAsStaticField() throws Exception {
-		Field field = MyClass.class.getDeclaredField("instanceField");
+		var field = MyClass.class.getDeclaredField("instanceField");
 		Exception exception = assertThrows(PreconditionViolationException.class, () -> readFieldValue(field, null));
 		assertThat(exception)//
 				.hasMessageStartingWith("Cannot read non-static field")//
@@ -273,10 +271,10 @@ class ReflectionUtilsTests {
 
 	@Test
 	void tryToReadFieldValueOfExistingInstanceField() throws Exception {
-		MyClass instance = new MyClass(42);
+		var instance = new MyClass(42);
 		assertThat(tryToReadFieldValue(MyClass.class, "instanceField", instance).get()).isEqualTo(42);
 
-		Field field = MyClass.class.getDeclaredField("instanceField");
+		var field = MyClass.class.getDeclaredField("instanceField");
 		assertThat(tryToReadFieldValue(field, instance).get()).isEqualTo(42);
 		assertThrows(PreconditionViolationException.class, () -> tryToReadFieldValue(field, null).get());
 	}
@@ -417,14 +415,14 @@ class ReflectionUtilsTests {
 
 	@Test
 	void invokePublicMethod() throws Exception {
-		InvocationTracker tracker = new InvocationTracker();
+		var tracker = new InvocationTracker();
 		invokeMethod(InvocationTracker.class.getDeclaredMethod("publicMethod"), tracker);
 		assertTrue(tracker.publicMethodInvoked);
 	}
 
 	@Test
 	void invokePrivateMethod() throws Exception {
-		InvocationTracker tracker = new InvocationTracker();
+		var tracker = new InvocationTracker();
 		invokeMethod(InvocationTracker.class.getDeclaredMethod("privateMethod"), tracker);
 		assertTrue(tracker.privateMethodInvoked);
 	}
@@ -467,7 +465,7 @@ class ReflectionUtilsTests {
 	@Test
 	@SuppressWarnings("deprecation")
 	void loadClass() {
-		Optional<Class<?>> optional = ReflectionUtils.loadClass(Integer.class.getName());
+		var optional = ReflectionUtils.loadClass(Integer.class.getName());
 		assertThat(optional).contains(Integer.class);
 	}
 
@@ -622,9 +620,9 @@ class ReflectionUtilsTests {
 	@Test
 	@SuppressWarnings("deprecation")
 	void getOutermostInstance() {
-		FirstClass firstClass = new FirstClass();
-		FirstClass.SecondClass secondClass = firstClass.new SecondClass();
-		FirstClass.SecondClass.ThirdClass thirdClass = secondClass.new ThirdClass();
+		var firstClass = new FirstClass();
+		var secondClass = firstClass.new SecondClass();
+		var thirdClass = secondClass.new ThirdClass();
 
 		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.ThirdClass.class))//
 				.contains(thirdClass);
@@ -636,11 +634,11 @@ class ReflectionUtilsTests {
 
 	@Test
 	void getAllClasspathRootDirectories(@TempDir Path tempDirectory) throws Exception {
-		Path root1 = tempDirectory.resolve("root1").toAbsolutePath();
-		Path root2 = tempDirectory.resolve("root2").toAbsolutePath();
-		String testClassPath = root1 + File.pathSeparator + root2;
+		var root1 = tempDirectory.resolve("root1").toAbsolutePath();
+		var root2 = tempDirectory.resolve("root2").toAbsolutePath();
+		var testClassPath = root1 + File.pathSeparator + root2;
 
-		String originalClassPath = System.setProperty("java.class.path", testClassPath);
+		var originalClassPath = System.setProperty("java.class.path", testClassPath);
 		try {
 			createDirectories(root1, root2);
 
@@ -744,20 +742,20 @@ class ReflectionUtilsTests {
 	@Test
 	@TrackLogRecords
 	void findNestedClassesWithInvalidNestedClassFile(LogRecordListener listener) throws Exception {
-		URL jarUrl = getClass().getResource("/gh-1436-invalid-nested-class-file.jar");
+		var jarUrl = getClass().getResource("/gh-1436-invalid-nested-class-file.jar");
 
-		try (URLClassLoader classLoader = new URLClassLoader(new URL[] { jarUrl })) {
-			String fqcn = "tests.NestedInterfaceGroovyTests";
-			Class<?> classWithInvalidNestedClassFile = classLoader.loadClass(fqcn);
+		try (var classLoader = new URLClassLoader(new URL[] { jarUrl })) {
+			var fqcn = "tests.NestedInterfaceGroovyTests";
+			var classWithInvalidNestedClassFile = classLoader.loadClass(fqcn);
 
 			assertEquals(fqcn, classWithInvalidNestedClassFile.getName());
-			NoClassDefFoundError noClassDefFoundError = assertThrows(NoClassDefFoundError.class,
+			var noClassDefFoundError = assertThrows(NoClassDefFoundError.class,
 				classWithInvalidNestedClassFile::getDeclaredClasses);
 			assertEquals("tests/NestedInterfaceGroovyTests$NestedInterface$1", noClassDefFoundError.getMessage());
 
 			assertThat(findNestedClasses(classWithInvalidNestedClassFile)).isEmpty();
 			// @formatter:off
-			String logMessage = listener.stream(ReflectionUtils.class, Level.FINE)
+			var logMessage = listener.stream(ReflectionUtils.class, Level.FINE)
 					.findFirst()
 					.map(LogRecord::getMessage)
 					.orElse("didn't find log record");
@@ -864,7 +862,7 @@ class ReflectionUtilsTests {
 	@Test
 	void findMethodByParameterTypesInGenericInterface() {
 		Class<?> ifc = InterfaceWithGenericDefaultMethod.class;
-		Optional<Method> method = findMethod(ifc, "foo", Number.class);
+		var method = findMethod(ifc, "foo", Number.class);
 		assertThat(method).isNotEmpty();
 		assertThat(method.get().getName()).isEqualTo("foo");
 	}
@@ -875,7 +873,7 @@ class ReflectionUtilsTests {
 	@Test
 	void findMethodByParameterTypesInGenericInterfaceViaParameterizedSubclass() {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
-		Optional<Method> method = findMethod(clazz, "foo", Long.class);
+		var method = findMethod(clazz, "foo", Long.class);
 		assertThat(method).isNotEmpty();
 		assertThat(method.get().getName()).isEqualTo("foo");
 
@@ -898,7 +896,7 @@ class ReflectionUtilsTests {
 	void findMethodByParameterTypesWithOverloadedMethodNextToGenericDefaultMethod() {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
 		Class<?> parameterType = Double.class;
-		Optional<Method> method = findMethod(clazz, "foo", parameterType);
+		var method = findMethod(clazz, "foo", parameterType);
 		assertThat(method).isNotEmpty();
 		assertThat(method.get().getName()).isEqualTo("foo");
 		assertThat(method.get().getParameterTypes()[0]).isEqualTo(parameterType);
@@ -931,15 +929,15 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findMethodByParameterNamesWithParameterizedMapParameter() throws Exception {
-		String methodName = "methodWithParameterizedMap";
+		var methodName = "methodWithParameterizedMap";
 
 		// standard, supported use case
 		assertFindMethodByParameterNames(methodName, Map.class);
 
 		// generic type info in parameter list
-		Method method = getClass().getDeclaredMethod(methodName, Map.class);
-		String genericParameterTypeName = method.getGenericParameterTypes()[0].getTypeName();
-		JUnitException exception = assertThrows(JUnitException.class,
+		var method = getClass().getDeclaredMethod(methodName, Map.class);
+		var genericParameterTypeName = method.getGenericParameterTypes()[0].getTypeName();
+		var exception = assertThrows(JUnitException.class,
 			() -> findMethod(getClass(), methodName, genericParameterTypeName));
 
 		assertThat(exception).hasMessageStartingWith("Failed to load parameter type [java.util.Map<java.lang.String");
@@ -948,8 +946,8 @@ class ReflectionUtilsTests {
 	private void assertFindMethodByParameterNames(String methodName, Class<?> parameterType)
 			throws NoSuchMethodException {
 
-		Method method = getClass().getDeclaredMethod(methodName, parameterType);
-		Optional<Method> optional = findMethod(getClass(), methodName, parameterType.getName());
+		var method = getClass().getDeclaredMethod(methodName, parameterType);
+		var optional = findMethod(getClass(), methodName, parameterType.getName());
 		assertThat(optional).contains(method);
 	}
 
@@ -982,7 +980,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findMethodsInObject() {
-		List<Method> methods = findMethods(Object.class, method -> true);
+		var methods = findMethods(Object.class, method -> true);
 		assertNotNull(methods);
 		assertTrue(methods.size() > 10);
 	}
@@ -1009,7 +1007,7 @@ class ReflectionUtilsTests {
 		assertTrue(stream(ClassWithSyntheticMethod.class.getDeclaredMethods()).anyMatch(Method::isSynthetic),
 			"ClassWithSyntheticMethod must actually contain at least one synthetic method.");
 
-		List<Method> methods = findMethods(ClassWithSyntheticMethod.class, method -> true);
+		var methods = findMethods(ClassWithSyntheticMethod.class, method -> true);
 		assertThat(methods).isEmpty();
 	}
 
@@ -1070,7 +1068,7 @@ class ReflectionUtilsTests {
 				.containsExactly(MethodShadowingChild.class.getMethod("method5", Long.class),
 					MethodShadowingParent.class.getMethod("method5", String.class));
 
-		List<Method> methods = findMethods(MethodShadowingChild.class, method -> true, BOTTOM_UP);
+		var methods = findMethods(MethodShadowingChild.class, method -> true, BOTTOM_UP);
 		assertEquals(6, methods.size());
 		assertThat(methods.subList(0, 3)).containsOnly(MethodShadowingChild.class.getMethod("method4", boolean.class),
 			MethodShadowingChild.class.getMethod("method1", String.class),
@@ -1097,7 +1095,7 @@ class ReflectionUtilsTests {
 				.containsExactly(MethodShadowingParent.class.getMethod("method5", String.class),
 					MethodShadowingChild.class.getMethod("method5", Long.class));
 
-		List<Method> methods = findMethods(MethodShadowingChild.class, method -> true, TOP_DOWN);
+		var methods = findMethods(MethodShadowingChild.class, method -> true, TOP_DOWN);
 		assertEquals(6, methods.size());
 		assertEquals(MethodShadowingInterface.class.getMethod("method2", int.class, int.class), methods.get(0));
 		assertThat(methods.subList(1, 3)).containsOnly(
@@ -1114,19 +1112,19 @@ class ReflectionUtilsTests {
 		Class<?> parent = StaticMethodHidingParent.class;
 		Class<?> child = StaticMethodHidingChild.class;
 
-		Method ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
-		Method childMethod1 = child.getDeclaredMethod("method1", String.class);
-		Method childMethod4 = child.getDeclaredMethod("method4", boolean.class);
-		Method childMethod5 = child.getDeclaredMethod("method5", Long.class);
-		Method parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
-		Method parentMethod5 = parent.getDeclaredMethod("method5", String.class);
+		var ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
+		var childMethod1 = child.getDeclaredMethod("method1", String.class);
+		var childMethod4 = child.getDeclaredMethod("method4", boolean.class);
+		var childMethod5 = child.getDeclaredMethod("method5", Long.class);
+		var parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
+		var parentMethod5 = parent.getDeclaredMethod("method5", String.class);
 
 		assertThat(findMethods(child, methodContains1, BOTTOM_UP)).containsExactly(childMethod1);
 		assertThat(findMethods(child, methodContains2, BOTTOM_UP)).containsExactly(parentMethod2, ifcMethod2);
 		assertThat(findMethods(child, methodContains4, BOTTOM_UP)).containsExactly(childMethod4);
 		assertThat(findMethods(child, methodContains5, BOTTOM_UP)).containsExactly(childMethod5, parentMethod5);
 
-		List<Method> methods = findMethods(child, method -> true, BOTTOM_UP);
+		var methods = findMethods(child, method -> true, BOTTOM_UP);
 		assertEquals(6, methods.size());
 		assertThat(methods.subList(0, 3)).containsOnly(childMethod1, childMethod4, childMethod5);
 		assertThat(methods.subList(3, 5)).containsOnly(parentMethod2, parentMethod5);
@@ -1139,19 +1137,19 @@ class ReflectionUtilsTests {
 		Class<?> parent = StaticMethodHidingParent.class;
 		Class<?> child = StaticMethodHidingChild.class;
 
-		Method ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
-		Method childMethod1 = child.getDeclaredMethod("method1", String.class);
-		Method childMethod4 = child.getDeclaredMethod("method4", boolean.class);
-		Method childMethod5 = child.getDeclaredMethod("method5", Long.class);
-		Method parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
-		Method parentMethod5 = parent.getDeclaredMethod("method5", String.class);
+		var ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
+		var childMethod1 = child.getDeclaredMethod("method1", String.class);
+		var childMethod4 = child.getDeclaredMethod("method4", boolean.class);
+		var childMethod5 = child.getDeclaredMethod("method5", Long.class);
+		var parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
+		var parentMethod5 = parent.getDeclaredMethod("method5", String.class);
 
 		assertThat(findMethods(child, methodContains1, TOP_DOWN)).containsExactly(childMethod1);
 		assertThat(findMethods(child, methodContains2, TOP_DOWN)).containsExactly(ifcMethod2, parentMethod2);
 		assertThat(findMethods(child, methodContains4, TOP_DOWN)).containsExactly(childMethod4);
 		assertThat(findMethods(child, methodContains5, TOP_DOWN)).containsExactly(parentMethod5, childMethod5);
 
-		List<Method> methods = findMethods(child, method -> true, TOP_DOWN);
+		var methods = findMethods(child, method -> true, TOP_DOWN);
 		assertEquals(6, methods.size());
 		assertEquals(ifcMethod2, methods.get(0));
 		assertThat(methods.subList(1, 3)).containsOnly(parentMethod2, parentMethod5);
@@ -1163,7 +1161,7 @@ class ReflectionUtilsTests {
 		Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.
-		List<Method> methods = findMethods(clazz, isFooMethod);
+		var methods = findMethods(clazz, isFooMethod);
 
 		// One might expect or desire that the signature for the generic foo(N)
 		// default method would be "foo(java.lang.Long)" when looked up via the
@@ -1177,8 +1175,8 @@ class ReflectionUtilsTests {
 		Class<?> clazz = InterfaceWithOverriddenGenericDefaultMethodImpl.class;
 
 		// Search for all foo(*) methods.
-		List<Method> methods = findMethods(clazz, isFooMethod);
-		List<String> signatures = signaturesOf(methods);
+		var methods = findMethods(clazz, isFooMethod);
+		var signatures = signaturesOf(methods);
 
 		// Although the subsequent assertion covers this case as well, this
 		// assertion is in place to provide a more informative failure message.
@@ -1202,18 +1200,18 @@ class ReflectionUtilsTests {
 		assertTrue(PublicChildClass.class.getDeclaredMethod("method1").isBridge());
 		assertTrue(PublicChildClass.class.getDeclaredMethod("method3").isBridge());
 
-		List<Method> methods = findMethods(PublicChildClass.class, method -> true);
-		List<String> signatures = signaturesOf(methods);
+		var methods = findMethods(PublicChildClass.class, method -> true);
+		var signatures = signaturesOf(methods);
 		assertThat(signatures).containsOnly("method1()", "method2()", "method3()", "otherMethod1()", "otherMethod2()");
 		assertEquals(0, methods.stream().filter(Method::isBridge).count());
 	}
 
 	@Test
 	void isGeneric() {
-		for (Method method : Generic.class.getMethods()) {
+		for (var method : Generic.class.getMethods()) {
 			assertTrue(ReflectionUtils.isGeneric(method));
 		}
-		for (Method method : PublicClass.class.getMethods()) {
+		for (var method : PublicClass.class.getMethods()) {
 			assertFalse(ReflectionUtils.isGeneric(method));
 		}
 	}
@@ -1305,7 +1303,7 @@ class ReflectionUtilsTests {
 	}
 
 	private static void createDirectories(Path... paths) throws IOException {
-		for (Path path : paths) {
+		for (var path : paths) {
 			Files.createDirectory(path);
 		}
 	}

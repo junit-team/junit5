@@ -115,7 +115,7 @@ class ClassNamePatternFilterUtilsTests {
 	//@formatter:on
 	@ParameterizedTest
 	void alwaysEnabledClass(String pattern) {
-		List<Object> executionConditions = asList(new AVanillaEmpty(), new BVanillaEmpty());
+		var executionConditions = asList(new AVanillaEmpty(), new BVanillaEmpty());
 		assertThat(executionConditions).filteredOn(
 			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isNotEmpty();
 	}
@@ -131,7 +131,7 @@ class ClassNamePatternFilterUtilsTests {
 	//@formatter:on
 	@ParameterizedTest
 	void alwaysDisabledClass(String pattern) {
-		List<Object> executionConditions = asList(new AVanillaEmpty(), new BVanillaEmpty());
+		var executionConditions = asList(new AVanillaEmpty(), new BVanillaEmpty());
 		assertThat(executionConditions).filteredOn(
 			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isEmpty();
 	}
