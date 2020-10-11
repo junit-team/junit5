@@ -128,10 +128,9 @@ class UniqueIdTests {
 	@Nested
 	class ParsingAndFormatting {
 
-		private final String uniqueIdString = "[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]";
-
 		@Test
 		void ensureDefaultUniqueIdFormatIsUsedForParsing() {
+			var uniqueIdString = "[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]";
 			var parsedDirectly = UniqueId.parse(uniqueIdString);
 			var parsedViaFormat = UniqueIdFormat.getDefault().parse(uniqueIdString);
 			assertEquals(parsedViaFormat, parsedDirectly);
