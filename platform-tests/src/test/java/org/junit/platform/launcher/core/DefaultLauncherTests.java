@@ -86,7 +86,8 @@ class DefaultLauncherTests {
 
 	@Test
 	void constructLauncherWithoutAnyEngines() {
-		Throwable exception = assertThrows(PreconditionViolationException.class, () -> createLauncher());
+		Throwable exception = assertThrows(PreconditionViolationException.class,
+			LauncherFactoryForTestingPurposesOnly::createLauncher);
 
 		assertThat(exception).hasMessageContaining("Cannot create Launcher without at least one TestEngine");
 	}
@@ -115,7 +116,7 @@ class DefaultLauncherTests {
 		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners());
+			launcher::registerTestExecutionListeners);
 
 		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
 	}
