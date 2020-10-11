@@ -153,7 +153,7 @@ class UniqueIdTests {
 		@Test
 		void ensureDefaultUniqueIdFormatCanHandleAllCharacters() {
 			for (char c = 0; c < Character.MAX_VALUE; c++) {
-				String value = "foo " + String.valueOf(c) + " bar";
+				String value = "foo " + c + " bar";
 				UniqueId uniqueId = UniqueId.parse(UniqueId.root("type", value).toString());
 				Segment segment = uniqueId.getSegments().get(0);
 				assertEquals(value, segment.getValue());
