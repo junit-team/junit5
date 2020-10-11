@@ -165,13 +165,7 @@ class CollectionUtilsTests {
 	@SuppressWarnings("unchecked")
 	void toStreamWithIterable() {
 
-		Iterable<String> input = new Iterable<>() {
-
-			@Override
-			public Iterator<String> iterator() {
-				return asList("foo", "bar").iterator();
-			}
-		};
+		Iterable<String> input = () -> asList("foo", "bar").iterator();
 
 		Stream<String> result = (Stream<String>) CollectionUtils.toStream(input);
 
