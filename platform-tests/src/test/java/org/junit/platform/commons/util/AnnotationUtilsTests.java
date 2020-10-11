@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -239,7 +238,7 @@ class AnnotationUtilsTests {
 	}
 
 	private void assertTagsFound(Class<?> clazz, String... tags) {
-		assertEquals(asList(tags),
+		assertEquals(List.of(tags),
 			findRepeatableAnnotations(clazz, Tag.class).stream().map(Tag::value).collect(toList()),
 			() -> "Tags found for class " + clazz.getName());
 	}
@@ -297,7 +296,7 @@ class AnnotationUtilsTests {
 	}
 
 	private void assertExtensionsFound(Class<?> clazz, String... tags) {
-		assertEquals(asList(tags),
+		assertEquals(List.of(tags),
 			findRepeatableAnnotations(clazz, ExtendWith.class).stream().map(ExtendWith::value).collect(toList()),
 			() -> "Extensions found for class " + clazz.getName());
 	}
@@ -490,7 +489,7 @@ class AnnotationUtilsTests {
 	void findPublicAnnotatedFieldsForDirectlyAnnotatedField() {
 		var fields = findPublicAnnotatedFields(getClass(), String.class, Annotation1.class);
 		assertNotNull(fields);
-		assertIterableEquals(asList("directlyAnnotatedField"), asNames(fields));
+		assertIterableEquals(List.of("directlyAnnotatedField"), asNames(fields));
 	}
 
 	@Test
@@ -498,14 +497,14 @@ class AnnotationUtilsTests {
 		var fields = findPublicAnnotatedFields(getClass(), Number.class, Annotation1.class);
 		assertNotNull(fields);
 		assertEquals(1, fields.size());
-		assertIterableEquals(asList("metaAnnotatedField"), asNames(fields));
+		assertIterableEquals(List.of("metaAnnotatedField"), asNames(fields));
 	}
 
 	@Test
 	void findPublicAnnotatedFieldsForDirectlyAnnotatedFieldInInterface() {
 		var fields = findPublicAnnotatedFields(InterfaceWithAnnotatedFields.class, String.class, Annotation1.class);
 		assertNotNull(fields);
-		assertIterableEquals(asList("foo"), asNames(fields));
+		assertIterableEquals(List.of("foo"), asNames(fields));
 	}
 
 	@Test

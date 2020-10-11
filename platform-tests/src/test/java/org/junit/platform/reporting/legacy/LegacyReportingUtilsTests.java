@@ -10,8 +10,9 @@
 
 package org.junit.platform.reporting.legacy;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
@@ -69,13 +70,13 @@ class LegacyReportingUtilsTests {
 	}
 
 	private String getClassName(UniqueId uniqueId) {
-		var testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 		return LegacyReportingUtils.getClassName(testPlan, testPlan.getTestIdentifier(uniqueId.toString()));
 	}
 
 	@SuppressWarnings("deprecation")
 	private String getClassNameFromOldLocation(UniqueId uniqueId) {
-		var testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 		return org.junit.platform.launcher.listeners.LegacyReportingUtils.getClassName(testPlan,
 			testPlan.getTestIdentifier(uniqueId.toString()));
 	}

@@ -10,13 +10,13 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Arrays.asList;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
 
@@ -34,7 +34,7 @@ class CompositeLockTests {
 		var lock1 = mock(Lock.class);
 		var lock2 = mock(Lock.class);
 
-		new CompositeLock(asList(lock1, lock2)).acquire();
+		new CompositeLock(List.of(lock1, lock2)).acquire();
 
 		var inOrder = inOrder(lock1, lock2);
 		inOrder.verify(lock1).lockInterruptibly();
@@ -47,7 +47,7 @@ class CompositeLockTests {
 		var lock1 = mock(Lock.class);
 		var lock2 = mock(Lock.class);
 
-		new CompositeLock(asList(lock1, lock2)).acquire().close();
+		new CompositeLock(List.of(lock1, lock2)).acquire().close();
 
 		var inOrder = inOrder(lock1, lock2);
 		inOrder.verify(lock2).unlock();
@@ -64,7 +64,7 @@ class CompositeLockTests {
 
 		var thread = new Thread(() -> {
 			try {
-				new CompositeLock(asList(firstLock, secondLock, unavailableLock)).acquire();
+				new CompositeLock(List.of(firstLock, secondLock, unavailableLock)).acquire();
 			}
 			catch (InterruptedException e) {
 				Thread.currentThread().interrupt();

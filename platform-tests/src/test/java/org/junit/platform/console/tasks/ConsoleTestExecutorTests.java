@@ -10,8 +10,6 @@
 
 package org.junit.platform.console.tasks;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -22,6 +20,7 @@ import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposes
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.ConsoleLauncherExecutionResult;
@@ -151,7 +150,7 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() throws Exception {
-		options.setAdditionalClasspathEntries(singletonList(Paths.get(".")));
+		options.setAdditionalClasspathEntries(List.of(Paths.get(".")));
 
 		var oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",
@@ -165,7 +164,7 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void usesSameClassLoaderIfNoAdditionalClassPathEntriesArePresent() throws Exception {
-		options.setAdditionalClasspathEntries(emptyList());
+		options.setAdditionalClasspathEntries(List.of());
 
 		var oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",

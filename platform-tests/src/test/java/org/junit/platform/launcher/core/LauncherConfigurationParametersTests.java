@@ -10,8 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -52,14 +50,14 @@ class LauncherConfigurationParametersTests {
 	@Test
 	void constructorPreconditions() {
 		assertThrows(PreconditionViolationException.class, () -> fromMap(null));
-		assertThrows(PreconditionViolationException.class, () -> fromMapAndFile(emptyMap(), null));
-		assertThrows(PreconditionViolationException.class, () -> fromMapAndFile(emptyMap(), ""));
-		assertThrows(PreconditionViolationException.class, () -> fromMapAndFile(emptyMap(), "  "));
+		assertThrows(PreconditionViolationException.class, () -> fromMapAndFile(Map.of(), null));
+		assertThrows(PreconditionViolationException.class, () -> fromMapAndFile(Map.of(), ""));
+		assertThrows(PreconditionViolationException.class, () -> fromMapAndFile(Map.of(), "  "));
 	}
 
 	@Test
 	void getPreconditions() {
-		ConfigurationParameters configParams = fromMap(emptyMap());
+		ConfigurationParameters configParams = fromMap(Map.of());
 		assertThrows(PreconditionViolationException.class, () -> configParams.get(null));
 		assertThrows(PreconditionViolationException.class, () -> configParams.get(""));
 		assertThrows(PreconditionViolationException.class, () -> configParams.get("  "));
@@ -67,7 +65,7 @@ class LauncherConfigurationParametersTests {
 
 	@Test
 	void noConfigParams() {
-		ConfigurationParameters configParams = fromMap(emptyMap());
+		ConfigurationParameters configParams = fromMap(Map.of());
 		assertThat(configParams.size()).isEqualTo(0);
 		assertThat(configParams.get(KEY)).isEmpty();
 		assertThat(configParams.toString()).doesNotContain(KEY);
@@ -75,7 +73,7 @@ class LauncherConfigurationParametersTests {
 
 	@Test
 	void explicitConfigParam() {
-		ConfigurationParameters configParams = fromMap(singletonMap(KEY, CONFIG_PARAM));
+		ConfigurationParameters configParams = fromMap(Map.of(KEY, CONFIG_PARAM));
 		assertThat(configParams.get(KEY)).contains(CONFIG_PARAM);
 		assertThat(configParams.toString()).contains(CONFIG_PARAM);
 	}
@@ -83,14 +81,14 @@ class LauncherConfigurationParametersTests {
 	@Test
 	void systemProperty() {
 		System.setProperty(KEY, SYSTEM_PROPERTY);
-		ConfigurationParameters configParams = fromMap(emptyMap());
+		ConfigurationParameters configParams = fromMap(Map.of());
 		assertThat(configParams.get(KEY)).contains(SYSTEM_PROPERTY);
 		assertThat(configParams.toString()).doesNotContain(KEY);
 	}
 
 	@Test
 	void configFile() {
-		ConfigurationParameters configParams = fromMapAndFile(emptyMap(), CONFIG_FILE_NAME);
+		ConfigurationParameters configParams = fromMapAndFile(Map.of(), CONFIG_FILE_NAME);
 		assertThat(configParams.get(KEY)).contains(CONFIG_FILE);
 		assertThat(configParams.toString()).contains(CONFIG_FILE);
 	}
@@ -98,14 +96,14 @@ class LauncherConfigurationParametersTests {
 	@Test
 	void explicitConfigParamOverridesSystemProperty() {
 		System.setProperty(KEY, SYSTEM_PROPERTY);
-		ConfigurationParameters configParams = fromMap(singletonMap(KEY, CONFIG_PARAM));
+		ConfigurationParameters configParams = fromMap(Map.of(KEY, CONFIG_PARAM));
 		assertThat(configParams.get(KEY)).contains(CONFIG_PARAM);
 		assertThat(configParams.toString()).contains(CONFIG_PARAM);
 	}
 
 	@Test
 	void explicitConfigParamOverridesConfigFile() {
-		ConfigurationParameters configParams = fromMapAndFile(singletonMap(KEY, CONFIG_PARAM), CONFIG_FILE_NAME);
+		ConfigurationParameters configParams = fromMapAndFile(Map.of(KEY, CONFIG_PARAM), CONFIG_FILE_NAME);
 		assertThat(configParams.get(KEY)).contains(CONFIG_PARAM);
 		assertThat(configParams.toString()).contains(CONFIG_PARAM);
 	}
@@ -113,7 +111,7 @@ class LauncherConfigurationParametersTests {
 	@Test
 	void systemPropertyOverridesConfigFile() {
 		System.setProperty(KEY, SYSTEM_PROPERTY);
-		ConfigurationParameters configParams = fromMapAndFile(emptyMap(), CONFIG_FILE_NAME);
+		ConfigurationParameters configParams = fromMapAndFile(Map.of(), CONFIG_FILE_NAME);
 		assertThat(configParams.get(KEY)).contains(SYSTEM_PROPERTY);
 		assertThat(configParams.toString()).contains(CONFIG_FILE);
 	}
@@ -130,13 +128,13 @@ class LauncherConfigurationParametersTests {
 
 	@Test
 	void getWithSuccessfulTransformer() {
-		ConfigurationParameters configParams = fromMap(singletonMap(KEY, "42"));
+		ConfigurationParameters configParams = fromMap(Map.of(KEY, "42"));
 		assertThat(configParams.get(KEY, Integer::valueOf)).contains(42);
 	}
 
 	@Test
 	void getWithErroneousTransformer() {
-		ConfigurationParameters configParams = fromMap(singletonMap(KEY, "42"));
+		ConfigurationParameters configParams = fromMap(Map.of(KEY, "42"));
 		var exception = assertThrows(JUnitException.class, () -> configParams.get(KEY, input -> {
 			throw new RuntimeException("foo");
 		}));

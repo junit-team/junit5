@@ -10,8 +10,6 @@
 
 package org.junit.platform.reporting.legacy.xml;
 
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -37,6 +35,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
@@ -335,12 +334,12 @@ class LegacyXmlReportGeneratingListenerTests {
 	@Test
 	void printsExceptionWhenReportsDirCannotBeCreated(@TempDir Path tempDirectory) throws Exception {
 		var reportsDir = tempDirectory.resolve("dummy.txt");
-		Files.write(reportsDir, singleton("content"));
+		Files.write(reportsDir, Set.of("content"));
 
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(reportsDir, new PrintWriter(out));
 
-		listener.testPlanExecutionStarted(TestPlan.from(emptySet()));
+		listener.testPlanExecutionStarted(TestPlan.from(Set.of()));
 
 		assertThat(out.toString()).containsSubsequence("Could not create reports directory",
 			"FileAlreadyExistsException", "at ");
@@ -356,7 +355,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));
 
-		listener.testPlanExecutionStarted(TestPlan.from(singleton(engineDescriptor)));
+		listener.testPlanExecutionStarted(TestPlan.from(Set.of(engineDescriptor)));
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
 
 		assertThat(out.toString()).containsSubsequence("Could not write XML report", "Exception", "at ");
@@ -367,7 +366,7 @@ class LegacyXmlReportGeneratingListenerTests {
 			throws Exception {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		var testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));

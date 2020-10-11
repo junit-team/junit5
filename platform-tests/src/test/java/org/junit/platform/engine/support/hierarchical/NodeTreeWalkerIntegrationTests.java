@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -51,7 +50,7 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
 
 		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
-		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(emptyList());
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(List.of());
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
 	}
 
@@ -79,7 +78,7 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(nestedTestClassDescriptor)).isEmpty();
 
 		var nestedTestMethodDescriptor = getOnlyElement(nestedTestClassDescriptor.getChildren());
-		assertThat(advisor.getResourceLock(nestedTestMethodDescriptor)).extracting(allLocks()).isEqualTo(emptyList());
+		assertThat(advisor.getResourceLock(nestedTestMethodDescriptor)).extracting(allLocks()).isEqualTo(List.of());
 		assertThat(advisor.getForcedExecutionMode(nestedTestMethodDescriptor)).contains(SAME_THREAD);
 	}
 
