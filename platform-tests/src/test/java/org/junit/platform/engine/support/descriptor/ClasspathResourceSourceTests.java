@@ -77,7 +77,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void resourcefromUriWithoutPosition() {
+	void resourceFromUriWithoutPosition() {
 		var source = ClasspathResourceSource.from(FOO_RESOURCE_URI);
 
 		assertThat(source).isNotNull();

@@ -273,7 +273,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void reportsEngineExecutionFailuresForSucessfullyFinishedEngine() {
+	void reportsEngineExecutionFailuresForSuccessfullyFinishedEngine() {
 		var rootCause = new RuntimeException("something went horribly wrong");
 		var engine = new TestEngineStub() {
 			@Override
