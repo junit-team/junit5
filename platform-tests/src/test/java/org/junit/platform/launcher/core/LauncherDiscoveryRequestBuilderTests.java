@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -290,7 +289,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		void configurationParameterAddedByMap_isStoredInDiscoveryRequest() {
 			// @formatter:off
 			var discoveryRequest = request()
-					.configurationParameters(singletonMap("key", "value"))
+					.configurationParameters(Map.of("key", "value"))
 					.build();
 			// @formatter:on
 

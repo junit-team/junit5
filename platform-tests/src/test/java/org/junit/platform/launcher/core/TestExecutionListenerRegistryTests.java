@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
-import java.util.Collections;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -96,7 +96,7 @@ class TestExecutionListenerRegistryTests {
 			LogRecordListener logRecordListener) {
 		var testDescriptor = getDemoMethodTestDescriptor();
 
-		compositeTestExecutionListener.testPlanExecutionStarted(TestPlan.from(Collections.singleton(testDescriptor)));
+		compositeTestExecutionListener.testPlanExecutionStarted(TestPlan.from(Set.of(testDescriptor)));
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"testPlanExecutionStarted");
@@ -107,7 +107,7 @@ class TestExecutionListenerRegistryTests {
 			LogRecordListener logRecordListener) {
 		var testDescriptor = getDemoMethodTestDescriptor();
 
-		compositeTestExecutionListener.testPlanExecutionFinished(TestPlan.from(Collections.singleton(testDescriptor)));
+		compositeTestExecutionListener.testPlanExecutionFinished(TestPlan.from(Set.of(testDescriptor)));
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"testPlanExecutionFinished");

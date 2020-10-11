@@ -10,9 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +22,8 @@ import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -52,21 +51,21 @@ class CollectionUtilsTests {
 	@Test
 	void getOnlyElementWithEmptyCollection() {
 		var exception = assertThrows(PreconditionViolationException.class,
-			() -> CollectionUtils.getOnlyElement(emptySet()));
+			() -> CollectionUtils.getOnlyElement(Set.of()));
 		assertEquals("collection must contain exactly one element: []", exception.getMessage());
 	}
 
 	@Test
 	void getOnlyElementWithSingleElementCollection() {
 		var expected = new Object();
-		var actual = CollectionUtils.getOnlyElement(singleton(expected));
+		var actual = CollectionUtils.getOnlyElement(Set.of(expected));
 		assertSame(expected, actual);
 	}
 
 	@Test
 	void getOnlyElementWithMultiElementCollection() {
 		var exception = assertThrows(PreconditionViolationException.class,
-			() -> CollectionUtils.getOnlyElement(asList("foo", "bar")));
+			() -> CollectionUtils.getOnlyElement(List.of("foo", "bar")));
 		assertEquals("collection must contain exactly one element: [foo, bar]", exception.getMessage());
 	}
 
@@ -159,7 +158,7 @@ class CollectionUtilsTests {
 	@SuppressWarnings("unchecked")
 	void toStreamWithIterable() {
 
-		Iterable<String> input = () -> asList("foo", "bar").iterator();
+		Iterable<String> input = () -> List.of("foo", "bar").iterator();
 
 		var result = (Stream<String>) CollectionUtils.toStream(input);
 
@@ -169,7 +168,7 @@ class CollectionUtilsTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void toStreamWithIterator() {
-		var input = asList("foo", "bar").iterator();
+		var input = List.of("foo", "bar").iterator();
 
 		var result = (Stream<String>) CollectionUtils.toStream(input);
 

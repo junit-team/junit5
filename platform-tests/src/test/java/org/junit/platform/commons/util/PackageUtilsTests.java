@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -91,13 +90,15 @@ class PackageUtilsTests {
 
 	@TestFactory
 	List<DynamicTest> attributesFromValueWrapperClassArePresent() {
-		return Arrays.asList(dynamicTest("getName", isPresent(Package::getName)),
+		return List.of( //
+			dynamicTest("getName", isPresent(Package::getName)),
 			dynamicTest("getImplementationTitle", isPresent(Package::getImplementationTitle)),
 			dynamicTest("getImplementationVendor", isPresent(Package::getImplementationVendor)),
 			dynamicTest("getImplementationVersion", isPresent(Package::getImplementationVersion)),
 			dynamicTest("getSpecificationTitle", isPresent(Package::getSpecificationTitle)),
 			dynamicTest("getSpecificationVendor", isPresent(Package::getSpecificationVendor)),
-			dynamicTest("getSpecificationVersion", isPresent(Package::getSpecificationVersion)));
+			dynamicTest("getSpecificationVersion", isPresent(Package::getSpecificationVersion)) //
+		);
 	}
 
 	private Executable isPresent(Function<Package, String> function) {

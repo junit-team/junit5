@@ -10,8 +10,6 @@
 
 package org.junit.platform.console.tasks;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -21,6 +19,7 @@ import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLU
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
@@ -65,7 +64,7 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsScanClasspathOptionWithExplicitRootDirectories() {
 		options.setScanClasspath(true);
-		options.setSelectedClasspathEntries(asList(Paths.get("."), Paths.get("..")));
+		options.setSelectedClasspathEntries(List.of(Paths.get("."), Paths.get("..")));
 
 		var request = convert();
 
@@ -79,7 +78,7 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsScanClasspathOptionWithAdditionalClasspathEntries() {
 		options.setScanClasspath(true);
-		options.setAdditionalClasspathEntries(asList(Paths.get("."), Paths.get("..")));
+		options.setAdditionalClasspathEntries(List.of(Paths.get("."), Paths.get("..")));
 
 		var request = convert();
 
@@ -93,7 +92,7 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void doesNotSupportScanClasspathAndExplicitSelectors() {
 		options.setScanClasspath(true);
-		options.setSelectedClasses(singletonList("SomeTest"));
+		options.setSelectedClasses(List.of("SomeTest"));
 
 		Throwable cause = assertThrows(PreconditionViolationException.class, this::convert);
 
@@ -114,7 +113,7 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsExplicitIncludeClassNamePatternOption() {
 		options.setScanClasspath(true);
-		options.setIncludedClassNamePatterns(asList("Foo.*Bar", "Bar.*Foo"));
+		options.setIncludedClassNamePatterns(List.of("Foo.*Bar", "Bar.*Foo"));
 
 		var request = convert();
 
@@ -126,9 +125,9 @@ class DiscoveryRequestCreatorTests {
 
 	@Test
 	void includeSelectedClassesAndMethodsRegardlessOfClassNamePatterns() {
-		options.setSelectedClasses(singletonList("SomeTest"));
-		options.setSelectedMethods(asList("com.acme.Foo#m()"));
-		options.setIncludedClassNamePatterns(asList("Foo.*Bar"));
+		options.setSelectedClasses(List.of("SomeTest"));
+		options.setSelectedMethods(List.of("com.acme.Foo#m()"));
+		options.setIncludedClassNamePatterns(List.of("Foo.*Bar"));
 
 		var request = convert();
 
@@ -142,7 +141,7 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsExcludeClassNamePatternOption() {
 		options.setScanClasspath(true);
-		options.setExcludedClassNamePatterns(asList("Foo.*Bar", "Bar.*Foo"));
+		options.setExcludedClassNamePatterns(List.of("Foo.*Bar", "Bar.*Foo"));
 
 		var request = convert();
 
@@ -155,8 +154,8 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsPackageOptions() {
 		options.setScanClasspath(true);
-		options.setIncludedPackages(asList("org.junit.included1", "org.junit.included2", "org.junit.included3"));
-		options.setExcludedPackages(asList("org.junit.excluded1"));
+		options.setIncludedPackages(List.of("org.junit.included1", "org.junit.included2", "org.junit.included3"));
+		options.setExcludedPackages(List.of("org.junit.excluded1"));
 
 		var request = convert();
 		var packageNameFilters = request.getFiltersByType(PackageNameFilter.class);
@@ -171,8 +170,8 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsTagOptions() {
 		options.setScanClasspath(true);
-		options.setIncludedTagExpressions(asList("fast", "medium", "slow"));
-		options.setExcludedTagExpressions(asList("slow"));
+		options.setIncludedTagExpressions(List.of("fast", "medium", "slow"));
+		options.setExcludedTagExpressions(List.of("slow"));
 
 		var request = convert();
 		var postDiscoveryFilters = request.getPostDiscoveryFilters();
@@ -185,8 +184,8 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsEngineOptions() {
 		options.setScanClasspath(true);
-		options.setIncludedEngines(asList("engine1", "engine2", "engine3"));
-		options.setExcludedEngines(singletonList("engine2"));
+		options.setIncludedEngines(List.of("engine1", "engine2", "engine3"));
+		options.setExcludedEngines(List.of("engine2"));
 
 		var request = convert();
 		var engineFilters = request.getEngineFilters();
@@ -198,7 +197,7 @@ class DiscoveryRequestCreatorTests {
 
 	@Test
 	void convertsUriSelectors() {
-		options.setSelectedUris(asList(URI.create("a"), URI.create("b")));
+		options.setSelectedUris(List.of(URI.create("a"), URI.create("b")));
 
 		var request = convert();
 		var uriSelectors = request.getSelectorsByType(UriSelector.class);
@@ -208,7 +207,7 @@ class DiscoveryRequestCreatorTests {
 
 	@Test
 	void convertsFileSelectors() {
-		options.setSelectedFiles(asList("foo.txt", "bar.csv"));
+		options.setSelectedFiles(List.of("foo.txt", "bar.csv"));
 
 		var request = convert();
 		var fileSelectors = request.getSelectorsByType(FileSelector.class);
@@ -218,7 +217,7 @@ class DiscoveryRequestCreatorTests {
 
 	@Test
 	void convertsDirectorySelectors() {
-		options.setSelectedDirectories(asList("foo/bar", "bar/qux"));
+		options.setSelectedDirectories(List.of("foo/bar", "bar/qux"));
 
 		var request = convert();
 		var directorySelectors = request.getSelectorsByType(DirectorySelector.class);
@@ -228,7 +227,7 @@ class DiscoveryRequestCreatorTests {
 
 	@Test
 	void convertsPackageSelectors() {
-		options.setSelectedPackages(asList("com.acme.foo", "com.example.bar"));
+		options.setSelectedPackages(List.of("com.acme.foo", "com.example.bar"));
 
 		var request = convert();
 		var packageSelectors = request.getSelectorsByType(PackageSelector.class);
@@ -239,7 +238,7 @@ class DiscoveryRequestCreatorTests {
 
 	@Test
 	void convertsClassSelectors() {
-		options.setSelectedClasses(asList("com.acme.Foo", "com.example.Bar"));
+		options.setSelectedClasses(List.of("com.acme.Foo", "com.example.Bar"));
 
 		var request = convert();
 		var classSelectors = request.getSelectorsByType(ClassSelector.class);
@@ -250,7 +249,7 @@ class DiscoveryRequestCreatorTests {
 
 	@Test
 	void convertsMethodSelectors() {
-		options.setSelectedMethods(asList("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"));
+		options.setSelectedMethods(List.of("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"));
 
 		var request = convert();
 		var methodSelectors = request.getSelectorsByType(MethodSelector.class);
@@ -266,7 +265,7 @@ class DiscoveryRequestCreatorTests {
 
 	@Test
 	void convertsClasspathResourceSelectors() {
-		options.setSelectedClasspathResources(asList("foo.csv", "com/example/bar.json"));
+		options.setSelectedClasspathResources(List.of("foo.csv", "com/example/bar.json"));
 
 		var request = convert();
 		var classpathResourceSelectors = request.getSelectorsByType(ClasspathResourceSelector.class);

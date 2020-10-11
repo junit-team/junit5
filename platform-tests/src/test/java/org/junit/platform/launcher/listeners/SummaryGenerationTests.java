@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ import org.junit.platform.launcher.TestPlan;
 class SummaryGenerationTests {
 
 	private final SummaryGeneratingListener listener = new SummaryGeneratingListener();
-	private final TestPlan testPlan = TestPlan.from(Collections.emptyList());
+	private final TestPlan testPlan = TestPlan.from(List.of());
 
 	@Test
 	void emptyReport() {

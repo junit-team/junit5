@@ -10,12 +10,13 @@
 
 package org.junit.platform.launcher;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.SerializationUtils.serializeAndDeserialize;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
@@ -57,13 +58,13 @@ class TestIdentifierTests {
 	void serialization() throws Exception {
 		var identifier = serializeAndDeserialize(//
 			new TestIdentifier("uniqueId", "displayName", ClassSource.from(TestIdentifierTests.class),
-				singleton(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName"));
+				Set.of(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName"));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());
 		assertEquals("reportingName", identifier.getLegacyReportingName());
 		assertThat(identifier.getSource()).contains(ClassSource.from(TestIdentifierTests.class));
-		assertEquals(singleton(TestTag.create("aTag")), identifier.getTags());
+		assertEquals(Set.of(TestTag.create("aTag")), identifier.getTags());
 		assertEquals(TestDescriptor.Type.TEST, identifier.getType());
 		assertTrue(identifier.isTest());
 		assertFalse(identifier.isContainer());

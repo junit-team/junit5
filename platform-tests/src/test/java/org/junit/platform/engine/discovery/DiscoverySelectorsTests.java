@@ -11,8 +11,6 @@
 package org.junit.platform.engine.discovery;
 
 import static java.lang.String.join;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,9 +33,8 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -222,7 +219,7 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectModulesByNames() {
-		var selectors = selectModules(new HashSet<>(Arrays.asList("a", "b")));
+		var selectors = selectModules(Set.of("a", "b"));
 		var names = selectors.stream().map(ModuleSelector::getModuleName).collect(Collectors.toList());
 		assertThat(names).containsExactlyInAnyOrder("b", "a");
 	}
@@ -230,7 +227,7 @@ class DiscoverySelectorsTests {
 	@Test
 	void selectModulesByNamesPreconditions() {
 		assertViolatesPrecondition(() -> selectModules(null));
-		assertViolatesPrecondition(() -> selectModules(new HashSet<>(Arrays.asList("a", " "))));
+		assertViolatesPrecondition(() -> selectModules(Set.of("a", " ")));
 	}
 
 	@Test
@@ -616,21 +613,21 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectClasspathRootsWithNonExistingDirectory() {
-		var selectors = selectClasspathRoots(singleton(Paths.get("some", "local", "path")));
+		var selectors = selectClasspathRoots(Set.of(Paths.get("some", "local", "path")));
 
 		assertThat(selectors).isEmpty();
 	}
 
 	@Test
 	void selectClasspathRootsWithNonExistingJarFile() {
-		var selectors = selectClasspathRoots(singleton(Paths.get("some.jar")));
+		var selectors = selectClasspathRoots(Set.of(Paths.get("some.jar")));
 
 		assertThat(selectors).isEmpty();
 	}
 
 	@Test
 	void selectClasspathRootsWithExistingDirectory(@TempDir Path tempDir) {
-		var selectors = selectClasspathRoots(singleton(tempDir));
+		var selectors = selectClasspathRoots(Set.of(tempDir));
 
 		assertThat(selectors).extracting(ClasspathRootSelector::getClasspathRoot).containsExactly(tempDir.toUri());
 	}
@@ -640,7 +637,7 @@ class DiscoverySelectorsTests {
 		var jarUri = getClass().getResource("/jartest.jar").toURI();
 		var jarFile = Paths.get(jarUri);
 
-		var selectors = selectClasspathRoots(singleton(jarFile));
+		var selectors = selectClasspathRoots(Set.of(jarFile));
 
 		assertThat(selectors).extracting(ClasspathRootSelector::getClasspathRoot).containsExactly(jarUri);
 	}
@@ -680,7 +677,7 @@ class DiscoverySelectorsTests {
 		@Test
 		void selectNestedClassPreconditions() {
 			assertViolatesPrecondition(() -> selectNestedClass(null, "ClassName"));
-			assertViolatesPrecondition(() -> selectNestedClass(emptyList(), "ClassName"));
+			assertViolatesPrecondition(() -> selectNestedClass(List.of(), "ClassName"));
 			assertViolatesPrecondition(() -> selectNestedClass(List.of("ClassName"), null));
 			assertViolatesPrecondition(() -> selectNestedClass(List.of("ClassName"), ""));
 			assertViolatesPrecondition(() -> selectNestedClass(List.of("ClassName"), " "));
@@ -750,8 +747,8 @@ class DiscoverySelectorsTests {
 		void selectNestedMethodPreconditions() {
 			assertViolatesPrecondition(() -> selectNestedMethod(null, "ClassName", "methodName"));
 			assertViolatesPrecondition(() -> selectNestedMethod(null, "ClassName", "methodName", "int"));
-			assertViolatesPrecondition(() -> selectNestedMethod(emptyList(), "ClassName", "methodName"));
-			assertViolatesPrecondition(() -> selectNestedMethod(emptyList(), "ClassName", "methodName", "int"));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of(), "ClassName", "methodName"));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of(), "ClassName", "methodName", "int"));
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), null, "methodName"));
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), null, "methodName", "int"));
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), " ", "methodName"));

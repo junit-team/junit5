@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -21,7 +20,6 @@ import static org.junit.platform.commons.util.Preconditions.notBlank;
 import static org.junit.platform.commons.util.Preconditions.notEmpty;
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -70,7 +68,7 @@ class PreconditionsTests {
 
 	@Test
 	void notEmptyPassesForNonEmptyCollection() {
-		Collection<String> collection = Arrays.asList("a", "b", "c");
+		Collection<String> collection = List.of("a", "b", "c");
 		var nonEmptyCollection = notEmpty(collection, () -> "should not fail");
 		assertSame(collection, nonEmptyCollection);
 	}
@@ -117,7 +115,7 @@ class PreconditionsTests {
 	void notEmptyThrowsForEmptyCollection() {
 		var message = "collection is empty";
 
-		var exception = assertThrows(PreconditionViolationException.class, () -> notEmpty(emptyList(), message));
+		var exception = assertThrows(PreconditionViolationException.class, () -> notEmpty(List.of(), message));
 
 		assertEquals(message, exception.getMessage());
 	}
@@ -134,10 +132,10 @@ class PreconditionsTests {
 	@Test
 	void containsNoNullElementsPassesForCollectionThatIsNullOrEmpty() {
 		containsNoNullElements((List<?>) null, "collection is null");
-		containsNoNullElements(emptyList(), "collection is empty");
+		containsNoNullElements(List.of(), "collection is empty");
 
 		containsNoNullElements((List<?>) null, () -> "collection is null");
-		containsNoNullElements(emptyList(), () -> "collection is empty");
+		containsNoNullElements(List.of(), () -> "collection is empty");
 	}
 
 	@Test
@@ -149,7 +147,7 @@ class PreconditionsTests {
 
 	@Test
 	void containsNoNullElementsPassesForCollectionContainingNonNullElements() {
-		Collection<String> input = Arrays.asList("a", "b", "c");
+		var input = List.of("a", "b", "c");
 		var output = containsNoNullElements(input, "message");
 		assertSame(input, output);
 

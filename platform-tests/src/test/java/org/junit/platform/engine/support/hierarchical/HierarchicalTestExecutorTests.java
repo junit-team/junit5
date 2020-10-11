@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,6 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
@@ -660,7 +660,7 @@ class HierarchicalTestExecutorTests {
 		var child = spy(new MyLeaf(leafUniqueId));
 		var dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
 		when(dynamicTestDescriptor.getExclusiveResources()).thenReturn(
-			singleton(new ExclusiveResource("foo", LockMode.READ)));
+			Set.of(new ExclusiveResource("foo", LockMode.READ)));
 
 		when(child.execute(any(), any())).thenAnswer(execute(dynamicTestDescriptor));
 		root.addChild(child);

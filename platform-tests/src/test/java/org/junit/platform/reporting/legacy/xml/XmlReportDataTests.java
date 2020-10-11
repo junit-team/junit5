@@ -10,12 +10,12 @@
 
 package org.junit.platform.reporting.legacy.xml;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
 import java.time.Clock;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.UniqueId;
@@ -32,7 +32,7 @@ class XmlReportDataTests {
 	void resultOfTestIdentifierWithoutAnyReportedEventsIsEmpty() {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		var testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
@@ -44,7 +44,7 @@ class XmlReportDataTests {
 	void resultOfTestIdentifierWithoutReportedEventsIsFailureOfAncestor() {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		var testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var failureOfAncestor = failed(new RuntimeException("failed!"));
@@ -59,7 +59,7 @@ class XmlReportDataTests {
 	void resultOfTestIdentifierWithoutReportedEventsIsEmptyWhenAncestorWasSuccessful() {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		var testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markFinished(testPlan.getTestIdentifier("[engine:engine]"), successful());

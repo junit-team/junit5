@@ -12,7 +12,6 @@ package org.junit.platform.console;
 
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -229,7 +228,7 @@ class ConsoleDetailsTests {
 			assumeTrue(Files.isReadable(path), "can not read: " + path);
 
 			var expectedLines = Files.readAllLines(path, UTF_8);
-			var actualLines = asList(result.out.split("\\R"));
+			var actualLines = List.of(result.out.split("\\R"));
 
 			assertLinesMatch(expectedLines, actualLines);
 		}
