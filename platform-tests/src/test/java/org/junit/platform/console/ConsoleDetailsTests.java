@@ -43,6 +43,7 @@ import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.console.options.Details;
 import org.junit.platform.console.options.Theme;
+import org.opentest4j.TestAbortedException;
 
 /**
  * @since 1.0
@@ -211,13 +212,13 @@ class ConsoleDetailsTests {
 			var result = wrapper.execute(Optional.empty(), args);
 
 			var optionalUri = toUri(dirName, outName);
-			if (!optionalUri.isPresent()) {
+			if (optionalUri.isEmpty()) {
 				if (Boolean.getBoolean("org.junit.platform.console.ConsoleDetailsTests.writeResultOut")) {
 					// do not use Files.createTempDirectory(prefix) as we want one folder for one container
 					var temp = Paths.get(System.getProperty("java.io.tmpdir"), dirName.replace('/', '-'));
 					Files.createDirectories(temp);
-					var path = Files.write(temp.resolve(outName), result.out.getBytes(UTF_8));
-					assumeTrue(false,
+					var path = Files.writeString(temp.resolve(outName), result.out);
+					throw new TestAbortedException(
 						format("resource `%s` not found\nwrote console stdout to: %s/%s", dirName, outName, path));
 				}
 				fail("could not load resource named `" + dirName + "/" + outName + "`");

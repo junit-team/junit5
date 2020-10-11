@@ -10,7 +10,6 @@
 
 package org.junit.platform.reporting.legacy.xml;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -418,7 +417,7 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	private String readValidXmlFile(Path xmlFile) throws Exception {
 		assertTrue(Files.exists(xmlFile), () -> "File does not exist: " + xmlFile);
-		var content = new String(Files.readAllBytes(xmlFile), UTF_8);
+		var content = Files.readString(xmlFile);
 		assertValidAccordingToJenkinsSchema(content);
 		return content;
 	}
