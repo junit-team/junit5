@@ -140,7 +140,10 @@ subprojects {
 				licenseHeaderFile(headerFile, "(package|import|open|module) ")
 				importOrderFile(importOrderConfigFile)
 				eclipse().configFile(javaFormatterConfigFile)
-				removeUnusedImports()
+				if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {
+					// Doesn't work with Java 15 text blocks, see https://github.com/diffplug/spotless/issues/713
+					removeUnusedImports()
+				}
 				trimTrailingWhitespace()
 				endWithNewline()
 			}

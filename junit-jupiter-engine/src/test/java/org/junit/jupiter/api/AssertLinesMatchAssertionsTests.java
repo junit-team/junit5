@@ -285,16 +285,36 @@ class AssertLinesMatchAssertionsTests {
 
 		@Test
 		void assertLinesMatchPlainEqualLists() {
-			List<String> expected = List.of("first line", "second line", "third line", "last line");
-			List<String> actual = List.of("first line", "second line", "third line", "last line");
-			assertLinesMatch(expected, actual);
+			var expected = """
+					first line
+					second line
+					third line
+					last line
+					""";
+			var actual = """
+					first line
+					second line
+					third line
+					last line
+					""";
+			assertLinesMatch(expected.lines(), actual.lines());
 		}
 
 		@Test
 		void assertLinesMatchUsingRegexPatterns() {
-			List<String> expected = List.of("^first.+line", "second\\s*line", "th.rd l.ne", "last line$");
-			List<String> actual = List.of("first line", "second line", "third line", "last line");
-			assertLinesMatch(expected, actual);
+			var expected = """
+					^first.+line
+					second\\s*line
+					th.rd l.ne
+					last line$
+					""";
+			var actual = """
+					first line
+					second line
+					third line
+					last line
+					""";
+			assertLinesMatch(expected.lines(), actual.lines());
 		}
 	}
 
