@@ -227,7 +227,7 @@ class AnnotationSupportTests {
 			() -> AnnotationSupport.findAnnotatedFieldValues(this, null));
 
 		assertPreconditionViolationException("Class",
-			() -> AnnotationSupport.findAnnotatedFieldValues((Class<?>) null, FieldMarker.class));
+			() -> AnnotationSupport.findAnnotatedFieldValues(null, FieldMarker.class));
 		assertPreconditionViolationException("annotationType",
 			() -> AnnotationSupport.findAnnotatedFieldValues(Probe.class, null));
 
@@ -239,7 +239,7 @@ class AnnotationSupportTests {
 			() -> AnnotationSupport.findAnnotatedFieldValues(this, FieldMarker.class, null));
 
 		assertPreconditionViolationException("Class",
-			() -> AnnotationSupport.findAnnotatedFieldValues((Class<?>) null, FieldMarker.class, Number.class));
+			() -> AnnotationSupport.findAnnotatedFieldValues(null, FieldMarker.class, Number.class));
 		assertPreconditionViolationException("annotationType",
 			() -> AnnotationSupport.findAnnotatedFieldValues(Probe.class, null, Number.class));
 		assertPreconditionViolationException("fieldType",
