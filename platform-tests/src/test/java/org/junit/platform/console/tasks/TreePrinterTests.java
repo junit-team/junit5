@@ -58,7 +58,7 @@ class TreePrinterTests {
 
 	@Test
 	void emptyEngines() {
-		TreeNode root = new TreeNode("<root>");
+		var root = new TreeNode("<root>");
 		root.addChild(new TreeNode(identifier("e-0", "engine zero"), "none"));
 		root.addChild(new TreeNode(identifier("e-1", "engine one")).setResult(successful()));
 		root.addChild(new TreeNode(identifier("e-2", "engine two")).setResult(failed(null)));
@@ -77,8 +77,8 @@ class TreePrinterTests {
 	@Test
 	// https://github.com/junit-team/junit5/issues/786
 	void printNodeHandlesNullMessageThrowableGracefully() {
-		TestExecutionResult result = TestExecutionResult.failed(new NullPointerException());
-		TreeNode node = new TreeNode(identifier("NPE", "test()")).setResult(result);
+		var result = TestExecutionResult.failed(new NullPointerException());
+		var node = new TreeNode(identifier("NPE", "test()")).setResult(result);
 		new TreePrinter(out, Theme.ASCII, true).print(node);
 		assertLinesMatch(Arrays.asList(".", "+-- test() [X] java.lang.NullPointerException"), actual());
 	}

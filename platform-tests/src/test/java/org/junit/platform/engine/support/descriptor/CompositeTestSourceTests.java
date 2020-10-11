@@ -33,8 +33,8 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 
 	@Override
 	Stream<CompositeTestSource> createSerializableInstances() {
-		FileSource fileSource = FileSource.from(new File("sample.instance"));
-		ClassSource classSource = ClassSource.from(getClass());
+		var fileSource = FileSource.from(new File("sample.instance"));
+		var classSource = ClassSource.from(getClass());
 		List<TestSource> sources = new ArrayList<>(Arrays.asList(fileSource, classSource));
 		return Stream.of(CompositeTestSource.from(sources));
 	}
@@ -51,10 +51,10 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void createCompositeTestSourceFromClassAndFileSources() {
-		FileSource fileSource = FileSource.from(new File("example.test"));
-		ClassSource classSource = ClassSource.from(getClass());
+		var fileSource = FileSource.from(new File("example.test"));
+		var classSource = ClassSource.from(getClass());
 		List<TestSource> sources = new ArrayList<>(Arrays.asList(fileSource, classSource));
-		CompositeTestSource compositeTestSource = CompositeTestSource.from(sources);
+		var compositeTestSource = CompositeTestSource.from(sources);
 
 		assertThat(compositeTestSource.getSources().size()).isEqualTo(2);
 		assertThat(compositeTestSource.getSources()).contains(fileSource, classSource);

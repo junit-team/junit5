@@ -32,7 +32,7 @@ class TestPlanTests {
 				}
 			});
 
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		assertThat(testPlan.containsTests()).as("contains tests").isFalse();
 	}
@@ -47,7 +47,7 @@ class TestPlanTests {
 				}
 			});
 
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}
@@ -67,7 +67,7 @@ class TestPlanTests {
 				}
 			});
 
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}

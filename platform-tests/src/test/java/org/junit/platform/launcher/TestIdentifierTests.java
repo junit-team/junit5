@@ -32,7 +32,7 @@ class TestIdentifierTests {
 	@Test
 	void inheritsIdAndNamesFromDescriptor() {
 		TestDescriptor testDescriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "displayName");
-		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
+		var testIdentifier = TestIdentifier.from(testDescriptor);
 
 		assertEquals("[aType:uniqueId]", testIdentifier.getUniqueId());
 		assertEquals("displayName", testIdentifier.getDisplayName());
@@ -41,7 +41,7 @@ class TestIdentifierTests {
 	@Test
 	void inheritsTypeFromDescriptor() {
 		TestDescriptor descriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "displayName");
-		TestIdentifier identifier = TestIdentifier.from(descriptor);
+		var identifier = TestIdentifier.from(descriptor);
 		assertEquals(TestDescriptor.Type.TEST, identifier.getType());
 		assertTrue(identifier.isTest());
 		assertFalse(identifier.isContainer());
@@ -55,7 +55,7 @@ class TestIdentifierTests {
 
 	@Test
 	void serialization() throws Exception {
-		TestIdentifier identifier = serializeAndDeserialize(//
+		var identifier = serializeAndDeserialize(//
 			new TestIdentifier("uniqueId", "displayName", ClassSource.from(TestIdentifierTests.class),
 				singleton(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName"));
 

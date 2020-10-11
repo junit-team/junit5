@@ -39,21 +39,21 @@ class DefaultUriSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void getterReturnsSameUriInstanceAsSuppliedToTheConstructor() throws Exception {
-		URI expected = new URI("foo.txt");
-		URI actual = new DefaultUriSource(expected).getUri();
+		var expected = new URI("foo.txt");
+		var actual = new DefaultUriSource(expected).getUri();
 		assertSame(expected, actual);
 	}
 
 	@Test
 	void equalsAndHashCode() throws Exception {
-		URI uri1 = new URI("foo.txt");
-		URI uri2 = new URI("bar.txt");
+		var uri1 = new URI("foo.txt");
+		var uri2 = new URI("bar.txt");
 		assertEqualsAndHashCode(new DefaultUriSource(uri1), new DefaultUriSource(uri1), new DefaultUriSource(uri2));
 	}
 
 	@Test
 	void testToString() {
-		String actual = new DefaultUriSource(URI.create("foo.txt")).toString();
+		var actual = new DefaultUriSource(URI.create("foo.txt")).toString();
 		assertEquals("DefaultUriSource [uri = foo.txt]", actual);
 	}
 }

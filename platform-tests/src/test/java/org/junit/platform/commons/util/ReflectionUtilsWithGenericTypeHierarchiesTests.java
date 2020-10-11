@@ -44,7 +44,7 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 			}
 		}
 
-		Method foo = findMethod(A.class, "foo", Long.class).orElseThrow();
+		var foo = findMethod(A.class, "foo", Long.class).orElseThrow();
 
 		assertEquals(A.class, foo.getDeclaringClass());
 	}
@@ -58,7 +58,7 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 			}
 		}
 
-		Method foo = findMethod(A.class, "foo", Long.class).orElseThrow();
+		var foo = findMethod(A.class, "foo", Long.class).orElseThrow();
 
 		assertEquals(A.class, foo.getDeclaringClass());
 	}
@@ -79,7 +79,7 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 			}
 		}
 
-		Method foo = findMethod(A.class, "foo", Long.class).orElseThrow();
+		var foo = findMethod(A.class, "foo", Long.class).orElseThrow();
 
 		assertEquals(A.class, foo.getDeclaringClass());
 	}
@@ -96,7 +96,7 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 		class A extends AParent implements InterfaceGenericNumber<Number> {
 		}
 
-		Method foo = findMethod(A.class, "foo", Long.class).orElseThrow();
+		var foo = findMethod(A.class, "foo", Long.class).orElseThrow();
 
 		// ????????
 		assertEquals(A.class, foo.getDeclaringClass());
@@ -124,7 +124,7 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 
 	private void assertSpecificFooMethodFound(Class<?> classToSearchIn, Class<?> classWithMostSpecificMethod,
 			Class<?> parameterType) {
-		Method foo = findMethod(classToSearchIn, "foo", parameterType).orElseThrow();
+		var foo = findMethod(classToSearchIn, "foo", parameterType).orElseThrow();
 		assertDeclaringClass(foo, classWithMostSpecificMethod);
 	}
 

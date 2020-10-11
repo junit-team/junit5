@@ -25,7 +25,7 @@ class SingleLockTests {
 	@Test
 	@SuppressWarnings("resource")
 	void acquire() throws Exception {
-		ReentrantLock lock = new ReentrantLock();
+		var lock = new ReentrantLock();
 
 		new SingleLock(lock).acquire();
 
@@ -35,7 +35,7 @@ class SingleLockTests {
 	@Test
 	@SuppressWarnings("resource")
 	void release() throws Exception {
-		ReentrantLock lock = new ReentrantLock();
+		var lock = new ReentrantLock();
 
 		new SingleLock(lock).acquire().close();
 

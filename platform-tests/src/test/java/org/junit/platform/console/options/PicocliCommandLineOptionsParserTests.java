@@ -31,10 +31,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -51,7 +49,7 @@ class PicocliCommandLineOptionsParserTests {
 	@Test
 	void parseNoArguments() {
 		String[] noArguments = {};
-		CommandLineOptions options = createParser().parse(noArguments);
+		var options = createParser().parse(noArguments);
 
 		// @formatter:off
 		assertAll(
@@ -272,7 +270,7 @@ class PicocliCommandLineOptionsParserTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseValidAdditionalClasspathEntries(ArgsType type) {
-		Path dir = Paths.get(".");
+		var dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(singletonList(dir), type.parseArgLine("-cp .").getAdditionalClasspathEntries()),
@@ -297,7 +295,7 @@ class PicocliCommandLineOptionsParserTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseValidXmlReportsDirs(ArgsType type) {
-		Path dir = Paths.get("build", "test-results");
+		var dir = Paths.get("build", "test-results");
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(Optional.of(dir), type.parseArgLine("--reports-dir build/test-results").getReportsDir()),
@@ -483,7 +481,7 @@ class PicocliCommandLineOptionsParserTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseClasspathScanningEntries(ArgsType type) {
-		Path dir = Paths.get(".");
+		var dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 			() -> assertTrue(type.parseArgLine("--scan-class-path").isScanClasspath()),
@@ -537,7 +535,7 @@ class PicocliCommandLineOptionsParserTests {
 
 	@Test
 	void printHelpOutputsHelpOption() {
-		StringWriter writer = new StringWriter();
+		var writer = new StringWriter();
 
 		createParser().printHelp(writer, true);
 
@@ -546,7 +544,7 @@ class PicocliCommandLineOptionsParserTests {
 
 	@Test
 	void printHelpPreservesOriginalIOException() {
-		Writer writer = new Writer() {
+		var writer = new Writer() {
 
 			@Override
 			public void write(char[] cbuf, int off, int len) throws IOException {
@@ -562,8 +560,8 @@ class PicocliCommandLineOptionsParserTests {
 			}
 		};
 
-		CommandLineOptionsParser parser = createParser();
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> parser.printHelp(writer, true));
+		var parser = createParser();
+		var exception = assertThrows(RuntimeException.class, () -> parser.printHelp(writer, true));
 
 		assertThat(exception).hasCauseInstanceOf(IOException.class);
 		assertThat(exception.getCause()).hasMessage("Something went wrong");
@@ -595,9 +593,9 @@ class PicocliCommandLineOptionsParserTests {
 		},
 		atFile {
 			CommandLineOptions parseArgLine(String argLine) throws IOException {
-				Path atFile = Files.createTempFile("junit-launcher-args", ".txt");
+				var atFile = Files.createTempFile("junit-launcher-args", ".txt");
 				try {
-					List<String> lines = Arrays.asList(split(argLine));
+					var lines = Arrays.asList(split(argLine));
 					Files.write(atFile, lines);
 					return createParser().parse("@" + atFile);
 				}

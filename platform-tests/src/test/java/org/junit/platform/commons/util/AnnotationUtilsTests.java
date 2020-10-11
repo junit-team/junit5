@@ -37,7 +37,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -129,19 +128,19 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findAnnotationDirectlyPresentOnMethod() throws Exception {
-		Method method = Annotation2Class.class.getDeclaredMethod("method");
+		var method = Annotation2Class.class.getDeclaredMethod("method");
 		assertThat(findAnnotation(method, Annotation1.class)).isPresent();
 	}
 
 	@Test
 	void findAnnotationMetaPresentOnMethod() throws Exception {
-		Method method = ComposedAnnotationClass.class.getDeclaredMethod("method");
+		var method = ComposedAnnotationClass.class.getDeclaredMethod("method");
 		assertThat(findAnnotation(method, Annotation1.class)).isPresent();
 	}
 
 	@Test
 	void findAnnotationMetaPresentOnOptionalMethod() throws Exception {
-		Method method = ComposedAnnotationClass.class.getDeclaredMethod("method");
+		var method = ComposedAnnotationClass.class.getDeclaredMethod("method");
 		assertThat(findAnnotation(Optional.of(method), Annotation1.class)).isPresent();
 	}
 
@@ -177,7 +176,7 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findRepeatableAnnotationsForNotRepeatableAnnotation() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> findRepeatableAnnotations(getClass(), Inherited.class));
 
 		assertThat(exception.getMessage()).isEqualTo(Inherited.class.getName() + " must be @Repeatable");
@@ -322,21 +321,21 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findAnnotatedMethodsForAnnotationOnMethodsInClassUsingHierarchyDownMode() throws Exception {
-		Method method2 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method2");
-		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
+		var method2 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method2");
+		var method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
 
-		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation2.class, TOP_DOWN);
+		var methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation2.class, TOP_DOWN);
 
 		assertThat(methods).containsOnly(method2, method3);
 	}
 
 	@Test
 	void findAnnotatedMethodsForAnnotationOnMethodsInClassHierarchyUsingHierarchyUpMode() throws Exception {
-		Method method1 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method1");
-		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
-		Method superMethod = SuperclassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
+		var method1 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method1");
+		var method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
+		var superMethod = SuperclassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
 
-		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, BOTTOM_UP);
+		var methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, BOTTOM_UP);
 
 		assertEquals(3, methods.size());
 		assertThat(methods.subList(0, 2)).containsOnly(method1, method3);
@@ -345,11 +344,11 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findAnnotatedMethodsForAnnotationUsedInClassAndSuperclassHierarchyDown() throws Exception {
-		Method method1 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method1");
-		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
-		Method superMethod = SuperclassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
+		var method1 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method1");
+		var method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
+		var superMethod = SuperclassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
 
-		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, TOP_DOWN);
+		var methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, TOP_DOWN);
 
 		assertEquals(3, methods.size());
 		assertEquals(superMethod, methods.get(0));
@@ -358,9 +357,9 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findAnnotatedMethodsForAnnotationUsedInInterface() throws Exception {
-		Method interfaceMethod = InterfaceWithAnnotatedDefaultMethod.class.getDeclaredMethod("interfaceMethod");
+		var interfaceMethod = InterfaceWithAnnotatedDefaultMethod.class.getDeclaredMethod("interfaceMethod");
 
-		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation3.class, BOTTOM_UP);
+		var methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation3.class, BOTTOM_UP);
 
 		assertThat(methods).containsExactly(interfaceMethod);
 	}
@@ -392,23 +391,21 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findAnnotatedFieldsForAnnotationOnFieldsInClassUsingHierarchyDownMode() throws Exception {
-		Field field2 = ClassWithAnnotatedFields.class.getDeclaredField("field2");
-		Field field3 = ClassWithAnnotatedFields.class.getDeclaredField("field3");
+		var field2 = ClassWithAnnotatedFields.class.getDeclaredField("field2");
+		var field3 = ClassWithAnnotatedFields.class.getDeclaredField("field3");
 
-		List<Field> fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation2.class, isStringField,
-			TOP_DOWN);
+		var fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation2.class, isStringField, TOP_DOWN);
 
 		assertThat(fields).containsOnly(field2, field3);
 	}
 
 	@Test
 	void findAnnotatedFieldsForAnnotationOnFieldsInClassHierarchyUsingHierarchyUpMode() throws Exception {
-		Field field1 = ClassWithAnnotatedFields.class.getDeclaredField("field1");
-		Field field3 = ClassWithAnnotatedFields.class.getDeclaredField("field3");
-		Field superField = SuperclassWithAnnotatedField.class.getDeclaredField("superField");
+		var field1 = ClassWithAnnotatedFields.class.getDeclaredField("field1");
+		var field3 = ClassWithAnnotatedFields.class.getDeclaredField("field3");
+		var superField = SuperclassWithAnnotatedField.class.getDeclaredField("superField");
 
-		List<Field> fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation1.class, isStringField,
-			BOTTOM_UP);
+		var fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation1.class, isStringField, BOTTOM_UP);
 
 		assertEquals(3, fields.size());
 		assertThat(fields.subList(0, 2)).containsOnly(field1, field3);
@@ -417,12 +414,11 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findAnnotatedFieldsForAnnotationUsedInClassAndSuperclassHierarchyDown() throws Exception {
-		Field field1 = ClassWithAnnotatedFields.class.getDeclaredField("field1");
-		Field field3 = ClassWithAnnotatedFields.class.getDeclaredField("field3");
-		Field superField = SuperclassWithAnnotatedField.class.getDeclaredField("superField");
+		var field1 = ClassWithAnnotatedFields.class.getDeclaredField("field1");
+		var field3 = ClassWithAnnotatedFields.class.getDeclaredField("field3");
+		var superField = SuperclassWithAnnotatedField.class.getDeclaredField("superField");
 
-		List<Field> fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation1.class, isStringField,
-			TOP_DOWN);
+		var fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation1.class, isStringField, TOP_DOWN);
 
 		assertEquals(3, fields.size());
 		assertEquals(superField, fields.get(0));
@@ -431,10 +427,9 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findAnnotatedFieldsForAnnotationUsedInInterface() throws Exception {
-		Field interfaceField = InterfaceWithAnnotatedField.class.getDeclaredField("interfaceField");
+		var interfaceField = InterfaceWithAnnotatedField.class.getDeclaredField("interfaceField");
 
-		List<Field> fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation3.class, isStringField,
-			BOTTOM_UP);
+		var fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation3.class, isStringField, BOTTOM_UP);
 
 		assertThat(fields).containsExactly(interfaceField);
 	}
@@ -442,11 +437,11 @@ class AnnotationUtilsTests {
 	@Test
 	void findAnnotatedFieldsForShadowedFields() throws Exception {
 		Class<?> clazz = ClassWithShadowedAnnotatedFields.class;
-		Field interfaceField = clazz.getDeclaredField("interfaceField");
-		Field superField = clazz.getDeclaredField("superField");
-		Field field1 = clazz.getDeclaredField("field1");
-		Field field2 = clazz.getDeclaredField("field2");
-		Field field3 = clazz.getDeclaredField("field3");
+		var interfaceField = clazz.getDeclaredField("interfaceField");
+		var superField = clazz.getDeclaredField("superField");
+		var field1 = clazz.getDeclaredField("field1");
+		var field2 = clazz.getDeclaredField("field2");
+		var field3 = clazz.getDeclaredField("field3");
 
 		assertThat(findShadowingAnnotatedFields(Annotation1.class)).containsExactly(superField, field1, field3);
 		assertThat(findShadowingAnnotatedFields(Annotation2.class)).containsExactly(field2, field3);
@@ -479,28 +474,28 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findPublicAnnotatedFieldsForPrivateField() {
-		List<Field> fields = findPublicAnnotatedFields(getClass(), Boolean.class, Annotation1.class);
+		var fields = findPublicAnnotatedFields(getClass(), Boolean.class, Annotation1.class);
 		assertNotNull(fields);
 		assertEquals(0, fields.size());
 	}
 
 	@Test
 	void findPublicAnnotatedFieldsForDirectlyAnnotatedFieldOfWrongFieldType() {
-		List<Field> fields = findPublicAnnotatedFields(getClass(), BigDecimal.class, Annotation1.class);
+		var fields = findPublicAnnotatedFields(getClass(), BigDecimal.class, Annotation1.class);
 		assertNotNull(fields);
 		assertEquals(0, fields.size());
 	}
 
 	@Test
 	void findPublicAnnotatedFieldsForDirectlyAnnotatedField() {
-		List<Field> fields = findPublicAnnotatedFields(getClass(), String.class, Annotation1.class);
+		var fields = findPublicAnnotatedFields(getClass(), String.class, Annotation1.class);
 		assertNotNull(fields);
 		assertIterableEquals(asList("directlyAnnotatedField"), asNames(fields));
 	}
 
 	@Test
 	void findPublicAnnotatedFieldsForMetaAnnotatedField() {
-		List<Field> fields = findPublicAnnotatedFields(getClass(), Number.class, Annotation1.class);
+		var fields = findPublicAnnotatedFields(getClass(), Number.class, Annotation1.class);
 		assertNotNull(fields);
 		assertEquals(1, fields.size());
 		assertIterableEquals(asList("metaAnnotatedField"), asNames(fields));
@@ -508,15 +503,14 @@ class AnnotationUtilsTests {
 
 	@Test
 	void findPublicAnnotatedFieldsForDirectlyAnnotatedFieldInInterface() {
-		List<Field> fields = findPublicAnnotatedFields(InterfaceWithAnnotatedFields.class, String.class,
-			Annotation1.class);
+		var fields = findPublicAnnotatedFields(InterfaceWithAnnotatedFields.class, String.class, Annotation1.class);
 		assertNotNull(fields);
 		assertIterableEquals(asList("foo"), asNames(fields));
 	}
 
 	@Test
 	void findPublicAnnotatedFieldsForDirectlyAnnotatedFieldsInClassAndInterface() {
-		List<Field> fields = findPublicAnnotatedFields(ClassWithPublicAnnotatedFieldsFromInterface.class, String.class,
+		var fields = findPublicAnnotatedFields(ClassWithPublicAnnotatedFieldsFromInterface.class, String.class,
 			Annotation1.class);
 		assertNotNull(fields);
 		assertThat(asNames(fields)).containsExactlyInAnyOrder("foo", "bar");

@@ -46,10 +46,8 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
-import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.fakes.TestDescriptorStub;
-import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
@@ -63,13 +61,13 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesFileForSingleSucceedingTest(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("succeedingTest", "display<-->Name 😎", () -> {
 		});
 
 		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -96,12 +94,12 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesFileForSingleFailingTest(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("failingTest", () -> fail("expected to <b>fail</b>"));
 
 		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -121,14 +119,14 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesFileForSingleErroneousTest(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("failingTest", () -> {
 			throw new RuntimeException("error occurred");
 		});
 
 		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -148,13 +146,13 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesFileForSingleSkippedTest(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
-		DemoHierarchicalTestDescriptor testDescriptor = engine.addTest("skippedTest", () -> fail("never called"));
+		var engine = new DemoHierarchicalTestEngine("dummy");
+		var testDescriptor = engine.addTest("skippedTest", () -> fail("never called"));
 		testDescriptor.markSkipped("should be skipped");
 
 		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -173,12 +171,12 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesFileForSingleAbortedTest(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("abortedTest", () -> assumeFalse(true, "deliberately aborted"));
 
 		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -199,7 +197,7 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void measuresTimesInSeconds(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("firstTest", () -> {
 		});
 		engine.addTest("secondTest", () -> {
@@ -207,7 +205,7 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory, new IncrementingClock(0, Duration.ofMillis(333)));
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		//               start        end
@@ -225,13 +223,13 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void testWithImmeasurableTimeIsOutputCorrectly(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
 
 		executeTests(engine, tempDirectory, Clock.fixed(Instant.EPOCH, ZoneId.systemDefault()));
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -243,13 +241,13 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesFileForSkippedContainer(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().markSkipped("should be skipped");
 
 		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -266,13 +264,13 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesFileForFailingContainer(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().setBeforeAllBehavior(() -> fail("failure before all tests"));
 
 		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -290,13 +288,13 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesSystemProperties(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
 
 		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -313,16 +311,16 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesHostNameAndTimestamp(@TempDir Path tempDirectory) throws Exception {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
 
-		LocalDateTime now = LocalDateTime.parse("2016-01-28T14:02:59.123");
-		ZoneId zone = ZoneId.systemDefault();
+		var now = LocalDateTime.parse("2016-01-28T14:02:59.123");
+		var zone = ZoneId.systemDefault();
 
 		executeTests(engine, tempDirectory, Clock.fixed(ZonedDateTime.of(now, zone).toInstant(), zone));
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		// @formatter:off
 		assertThat(content)
@@ -337,12 +335,11 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void printsExceptionWhenReportsDirCannotBeCreated(@TempDir Path tempDirectory) throws Exception {
-		Path reportsDir = tempDirectory.resolve("dummy.txt");
+		var reportsDir = tempDirectory.resolve("dummy.txt");
 		Files.write(reportsDir, singleton("content"));
 
-		StringWriter out = new StringWriter();
-		LegacyXmlReportGeneratingListener listener = new LegacyXmlReportGeneratingListener(reportsDir,
-			new PrintWriter(out));
+		var out = new StringWriter();
+		var listener = new LegacyXmlReportGeneratingListener(reportsDir, new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(TestPlan.from(emptySet()));
 
@@ -352,14 +349,13 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void printsExceptionWhenReportCouldNotBeWritten(@TempDir Path tempDirectory) throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 
-		Path xmlFile = tempDirectory.resolve("TEST-engine.xml");
+		var xmlFile = tempDirectory.resolve("TEST-engine.xml");
 		Files.createDirectories(xmlFile);
 
-		StringWriter out = new StringWriter();
-		LegacyXmlReportGeneratingListener listener = new LegacyXmlReportGeneratingListener(tempDirectory,
-			new PrintWriter(out));
+		var out = new StringWriter();
+		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(TestPlan.from(singleton(engineDescriptor)));
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
@@ -370,16 +366,15 @@ class LegacyXmlReportGeneratingListenerTests {
 	@Test
 	void writesReportEntriesToSystemOutElement(@TempDir Path tempDirectory, TestReporter testReporter)
 			throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(singleton(engineDescriptor));
 
-		StringWriter out = new StringWriter();
-		LegacyXmlReportGeneratingListener listener = new LegacyXmlReportGeneratingListener(tempDirectory,
-			new PrintWriter(out));
+		var out = new StringWriter();
+		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(testPlan);
-		TestIdentifier testIdentifier = testPlan.getTestIdentifier("[child:test]");
+		var testIdentifier = testPlan.getTestIdentifier("[child:test]");
 		listener.executionStarted(testIdentifier);
 		listener.reportingEntryPublished(testIdentifier, ReportEntry.from("foo", "bar"));
 		Map<String, String> map = new LinkedHashMap<>();
@@ -389,7 +384,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		listener.executionFinished(testIdentifier, successful());
 		listener.executionFinished(testPlan.getTestIdentifier("[engine:engine]"), successful());
 
-		String content = readValidXmlFile(tempDirectory.resolve("TEST-engine.xml"));
+		var content = readValidXmlFile(tempDirectory.resolve("TEST-engine.xml"));
 		//testReporter.publishEntry("xml", content);
 
 		// @formatter:off
@@ -414,17 +409,16 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	private void executeTests(TestEngine engine, Path tempDirectory, Clock clock) {
-		PrintWriter out = new PrintWriter(new StringWriter());
-		LegacyXmlReportGeneratingListener reportListener = new LegacyXmlReportGeneratingListener(
-			tempDirectory.toString(), out, clock);
-		Launcher launcher = createLauncher(engine);
+		var out = new PrintWriter(new StringWriter());
+		var reportListener = new LegacyXmlReportGeneratingListener(tempDirectory.toString(), out, clock);
+		var launcher = createLauncher(engine);
 		launcher.registerTestExecutionListeners(reportListener);
 		launcher.execute(request().selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))).build());
 	}
 
 	private String readValidXmlFile(Path xmlFile) throws Exception {
 		assertTrue(Files.exists(xmlFile), () -> "File does not exist: " + xmlFile);
-		String content = new String(Files.readAllBytes(xmlFile), UTF_8);
+		var content = new String(Files.readAllBytes(xmlFile), UTF_8);
 		assertValidAccordingToJenkinsSchema(content);
 		return content;
 	}

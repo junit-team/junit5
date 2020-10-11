@@ -16,8 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.function.Predicate;
-
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -42,7 +40,7 @@ class FunctionUtilsTests {
 
 	@Test
 	void whereWithChecksPredicateAgainstResultOfFunction() {
-		Predicate<String> combinedPredicate = FunctionUtils.where(String::length, isEqual(3));
+		var combinedPredicate = FunctionUtils.where(String::length, isEqual(3));
 		assertFalse(combinedPredicate.test("fo"));
 		assertTrue(combinedPredicate.test("foo"));
 		assertFalse(combinedPredicate.test("fooo"));

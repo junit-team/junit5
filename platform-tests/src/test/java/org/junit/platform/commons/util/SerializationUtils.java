@@ -20,19 +20,19 @@ public class SerializationUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends Serializable> T serializeAndDeserialize(T object) throws Exception {
-		byte[] bytes = serialize(object);
+		var bytes = serialize(object);
 		return (T) deserialize(bytes);
 	}
 
 	private static Object deserialize(byte[] bytes) throws Exception {
-		try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+		try (var in = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
 			return in.readObject();
 		}
 	}
 
 	private static byte[] serialize(Object object) throws Exception {
-		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-				ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+		try (var byteArrayOutputStream = new ByteArrayOutputStream();
+				var objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
 			objectOutputStream.writeObject(object);
 			objectOutputStream.flush();
 			return byteArrayOutputStream.toByteArray();

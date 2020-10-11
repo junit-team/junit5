@@ -27,7 +27,7 @@ class EngineDiscoveryResultValidatorTests {
 
 	@Test
 	void detectCycleWithDoubleRoot() {
-		TestDescriptorStub root = new TestDescriptorStub(UniqueId.forEngine("root"), "root");
+		var root = new TestDescriptorStub(UniqueId.forEngine("root"), "root");
 		assertTrue(validator.isAcyclic(root));
 
 		root.addChild(root);
@@ -36,8 +36,8 @@ class EngineDiscoveryResultValidatorTests {
 
 	@Test
 	void detectCycleWithDoubleGroup() {
-		UniqueId rootId = UniqueId.forEngine("root");
-		TestDescriptorStub root = new TestDescriptorStub(rootId, "root");
+		var rootId = UniqueId.forEngine("root");
+		var root = new TestDescriptorStub(rootId, "root");
 		TestDescriptor group1 = new TestDescriptorStub(rootId.append("group", "1"), "1");
 		TestDescriptor group2 = new TestDescriptorStub(rootId.append("group", "2"), "2");
 		root.addChild(group1);
@@ -50,8 +50,8 @@ class EngineDiscoveryResultValidatorTests {
 
 	@Test
 	void detectCycleWithDoubleTest() {
-		UniqueId rootId = UniqueId.forEngine("root");
-		TestDescriptorStub root = new TestDescriptorStub(rootId, "root");
+		var rootId = UniqueId.forEngine("root");
+		var root = new TestDescriptorStub(rootId, "root");
 		TestDescriptor group1 = new TestDescriptorStub(rootId.append("group", "1"), "1");
 		TestDescriptor group2 = new TestDescriptorStub(rootId.append("group", "2"), "2");
 		root.addChild(group1);

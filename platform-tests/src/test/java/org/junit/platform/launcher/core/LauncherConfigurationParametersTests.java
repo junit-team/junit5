@@ -28,7 +28,6 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 
 /**
@@ -121,10 +120,10 @@ class LauncherConfigurationParametersTests {
 
 	@Test
 	void getValueInExtensionContext() {
-		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request() //
+		var request = LauncherDiscoveryRequestBuilder.request() //
 				.configurationParameter("thing", "one else!") //
 				.selectors(DiscoverySelectors.selectClass(Something.class)).build();
-		SummaryGeneratingListener summary = new SummaryGeneratingListener();
+		var summary = new SummaryGeneratingListener();
 		LauncherFactory.create().execute(request, summary);
 		assertEquals(0, summary.getSummary().getTestsFailedCount());
 	}
@@ -138,7 +137,7 @@ class LauncherConfigurationParametersTests {
 	@Test
 	void getWithErroneousTransformer() {
 		ConfigurationParameters configParams = fromMap(singletonMap(KEY, "42"));
-		JUnitException exception = assertThrows(JUnitException.class, () -> configParams.get(KEY, input -> {
+		var exception = assertThrows(JUnitException.class, () -> configParams.get(KEY, input -> {
 			throw new RuntimeException("foo");
 		}));
 		assertThat(exception).hasMessageContaining(
@@ -168,7 +167,7 @@ class LauncherConfigurationParametersTests {
 	private static class Mutator implements TestInstancePostProcessor {
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
-			String value = context.getConfigurationParameter("thing").orElse("thing");
+			var value = context.getConfigurationParameter("thing").orElse("thing");
 			Something.class.getField("thing").set(testInstance, value);
 		}
 	}

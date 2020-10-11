@@ -126,9 +126,9 @@ class EventsTests {
 			event(engine(), skippedWithReason("other")) //
 		);
 
-		AssertJMultipleFailuresError error = assertThrows(AssertJMultipleFailuresError.class, willFail);
+		var error = assertThrows(AssertJMultipleFailuresError.class, willFail);
 
-		List<Throwable> failures = error.getFailures();
+		var failures = error.getFailures();
 		assertEquals(2, failures.size());
 		assertEquals(AssertionError.class, failures.get(0).getClass());
 		assertEquals(AssertionError.class, failures.get(1).getClass());
@@ -142,9 +142,9 @@ class EventsTests {
 			event(engine(), finishedWithFailure()) //
 		);
 
-		AssertJMultipleFailuresError error = assertThrows(AssertJMultipleFailuresError.class, willFail);
+		var error = assertThrows(AssertJMultipleFailuresError.class, willFail);
 
-		List<Throwable> failures = error.getFailures();
+		var failures = error.getFailures();
 		assertEquals(1, failures.size());
 		assertEquals(AssertionError.class, failures.get(0).getClass());
 	}
@@ -170,7 +170,7 @@ class EventsTests {
 			event(engine(), started()) //
 		);
 
-		AssertionFailedError error = assertThrows(AssertionFailedError.class, willFail);
+		var error = assertThrows(AssertionFailedError.class, willFail);
 		assertTrue(error.getMessage().contains("Conditions are not in the correct order."));
 	}
 
@@ -200,7 +200,7 @@ class EventsTests {
 			event(engine(), started()) //
 		);
 
-		AssertionFailedError error = assertThrows(AssertionFailedError.class, willFail);
+		var error = assertThrows(AssertionFailedError.class, willFail);
 		assertTrue(error.getMessage().contains("Conditions are not in the correct order."));
 	}
 
@@ -228,9 +228,9 @@ class EventsTests {
 			event(engine(), skippedWithReason("other")) //
 		);
 
-		AssertJMultipleFailuresError error = assertThrows(AssertJMultipleFailuresError.class, willFail);
+		var error = assertThrows(AssertJMultipleFailuresError.class, willFail);
 
-		List<Throwable> failures = error.getFailures();
+		var failures = error.getFailures();
 		assertEquals(2, failures.size());
 		assertEquals(AssertionError.class, failures.get(0).getClass());
 		assertEquals(AssertionError.class, failures.get(1).getClass());
@@ -244,7 +244,7 @@ class EventsTests {
 			event(engine(), finishedWithFailure()) //
 		);
 
-		AssertJMultipleFailuresError error = assertThrows(AssertJMultipleFailuresError.class, willFail);
+		var error = assertThrows(AssertJMultipleFailuresError.class, willFail);
 		assertEquals(1, error.getFailures().size());
 	}
 
@@ -265,7 +265,7 @@ class EventsTests {
 			event(engine(), skippedWithReason("reason1")) //
 		);
 
-		AssertionFailedError error = assertThrows(AssertionFailedError.class, willFail);
+		var error = assertThrows(AssertionFailedError.class, willFail);
 		assertTrue(error.getMessage().contains("Conditions are not in the correct order."));
 	}
 
@@ -280,7 +280,7 @@ class EventsTests {
 			event(engine(), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 
-		AssertionError error = assertThrows(AssertionError.class, willFail);
+		var error = assertThrows(AssertionError.class, willFail);
 		assertTrue(error.getMessage().endsWith("to be less than or equal to 4 but was 6"));
 	}
 

@@ -52,7 +52,7 @@ public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 		Set<TestTag> methodTags = findRepeatableAnnotations(this.testMethod, Tag.class).stream()
 				.map(Tag::value)
 				.filter(tag -> {
-					boolean isValid = TestTag.isValid(tag);
+					var isValid = TestTag.isValid(tag);
 					if (!isValid) {
 						// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
 						// handling validation exceptions during the TestEngine discovery phase.
