@@ -752,7 +752,7 @@ class ReflectionUtilsTests {
 
 			assertEquals(fqcn, classWithInvalidNestedClassFile.getName());
 			NoClassDefFoundError noClassDefFoundError = assertThrows(NoClassDefFoundError.class,
-				() -> classWithInvalidNestedClassFile.getDeclaredClasses());
+				classWithInvalidNestedClassFile::getDeclaredClasses);
 			assertEquals("tests/NestedInterfaceGroovyTests$NestedInterface$1", noClassDefFoundError.getMessage());
 
 			assertThat(findNestedClasses(classWithInvalidNestedClassFile)).isEmpty();

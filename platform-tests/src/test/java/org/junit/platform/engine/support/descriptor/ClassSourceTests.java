@@ -54,7 +54,7 @@ class ClassSourceTests extends AbstractTestSourceTests {
 		assertThat(source.getClassName()).isEqualTo(testClassName);
 		assertThat(source.getPosition()).isEmpty();
 
-		var exception = assertThrows(PreconditionViolationException.class, () -> source.getJavaClass());
+		var exception = assertThrows(PreconditionViolationException.class, source::getJavaClass);
 		assertThat(exception).hasMessage("Could not load class with name: " + testClassName);
 	}
 
