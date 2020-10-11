@@ -13,6 +13,7 @@ package org.junit.platform.engine;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -174,8 +175,8 @@ class UniqueIdTests {
 			var id1 = UniqueId.root("engine", "junit-jupiter");
 			var id2 = UniqueId.root("engine", "junit-jupiter");
 
-			assertTrue(id1.equals(id2));
-			assertTrue(id2.equals(id1));
+			assertEquals(id2, id1);
+			assertEquals(id1, id2);
 			assertEquals(id1.hashCode(), id2.hashCode());
 		}
 
@@ -184,8 +185,8 @@ class UniqueIdTests {
 			var id1 = UniqueId.root("engine", "junit-vintage");
 			var id2 = UniqueId.root("engine", "junit-jupiter");
 
-			assertFalse(id1.equals(id2));
-			assertFalse(id2.equals(id1));
+			assertNotEquals(id2, id1);
+			assertNotEquals(id1, id2);
 		}
 
 		@Test
@@ -193,8 +194,8 @@ class UniqueIdTests {
 			var id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 			var id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 
-			assertTrue(id1.equals(id2));
-			assertTrue(id2.equals(id1));
+			assertEquals(id2, id1);
+			assertEquals(id1, id2);
 			assertEquals(id1.hashCode(), id2.hashCode());
 		}
 
@@ -203,8 +204,8 @@ class UniqueIdTests {
 			var id1 = UniqueId.root("engine", "junit-jupiter").append("t2", "v2").append("t1", "v1");
 			var id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 
-			assertFalse(id1.equals(id2));
-			assertFalse(id2.equals(id1));
+			assertNotEquals(id2, id1);
+			assertNotEquals(id1, id2);
 		}
 
 		@Test
@@ -212,8 +213,8 @@ class UniqueIdTests {
 			var id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1");
 			var id2 = id1.append("t2", "v2");
 
-			assertFalse(id1.equals(id2));
-			assertFalse(id2.equals(id1));
+			assertNotEquals(id2, id1);
+			assertNotEquals(id1, id2);
 		}
 	}
 
