@@ -1,11 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 val javaToolchainVersion: String? by project
-val minLanguageVersion = JavaLanguageVersion.of(15)!!
-val javaLanguageVersion = javaToolchainVersion?.let { JavaLanguageVersion.of(it) } ?: minLanguageVersion
-require(javaLanguageVersion >= minLanguageVersion) {
-	"Toolchain needs to use at least $minLanguageVersion"
-}
+val defaultLanguageVersion = JavaLanguageVersion.of(15)!!
+val javaLanguageVersion = javaToolchainVersion?.let { JavaLanguageVersion.of(it) } ?: defaultLanguageVersion
 
 project.pluginManager.withPlugin("java") {
 	val extension = the<JavaPluginExtension>()
