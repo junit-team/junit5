@@ -47,17 +47,14 @@ class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithNullCollection() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, () -> {
-			CollectionUtils.getOnlyElement(null);
-		});
+		var exception = assertThrows(PreconditionViolationException.class, () -> CollectionUtils.getOnlyElement(null));
 		assertEquals("collection must not be null", exception.getMessage());
 	}
 
 	@Test
 	void getOnlyElementWithEmptyCollection() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, () -> {
-			CollectionUtils.getOnlyElement(emptySet());
-		});
+		var exception = assertThrows(PreconditionViolationException.class,
+			() -> CollectionUtils.getOnlyElement(emptySet()));
 		assertEquals("collection must contain exactly one element: []", exception.getMessage());
 	}
 
@@ -70,9 +67,8 @@ class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithMultiElementCollection() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, () -> {
-			CollectionUtils.getOnlyElement(asList("foo", "bar"));
-		});
+		var exception = assertThrows(PreconditionViolationException.class,
+			() -> CollectionUtils.getOnlyElement(asList("foo", "bar")));
 		assertEquals("collection must contain exactly one element: [foo, bar]", exception.getMessage());
 	}
 
