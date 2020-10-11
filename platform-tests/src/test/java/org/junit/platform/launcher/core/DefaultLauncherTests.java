@@ -115,7 +115,7 @@ class DefaultLauncherTests {
 		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[0]));
+			() -> launcher.registerTestExecutionListeners());
 
 		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
 	}
