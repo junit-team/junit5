@@ -31,6 +31,7 @@ class JUnit4VersionCheckTests {
 	void handlesParsingSupportedVersionIdWithStandardVersionFormat() {
 		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.12"));
 		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.13"));
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.13.1"));
 	}
 
 	/**

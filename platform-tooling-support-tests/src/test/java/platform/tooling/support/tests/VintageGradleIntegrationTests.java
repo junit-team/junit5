@@ -41,7 +41,7 @@ class VintageGradleIntegrationTests {
 	}
 
 	@ParameterizedTest(name = "{0}")
-	@ValueSource(strings = { "4.12", "4.13" })
+	@ValueSource(strings = { "4.12", "4.13.1" })
 	void supportedVersions(String version) {
 		Result result = run(version);
 
