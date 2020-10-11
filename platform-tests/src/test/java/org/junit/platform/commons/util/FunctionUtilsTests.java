@@ -30,17 +30,13 @@ class FunctionUtilsTests {
 
 	@Test
 	void whereWithNullFunction() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, () -> {
-			FunctionUtils.where(null, o -> true);
-		});
+		var exception = assertThrows(PreconditionViolationException.class, () -> FunctionUtils.where(null, o -> true));
 		assertEquals("function must not be null", exception.getMessage());
 	}
 
 	@Test
 	void whereWithNullPredicate() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, () -> {
-			FunctionUtils.where(o -> o, null);
-		});
+		var exception = assertThrows(PreconditionViolationException.class, () -> FunctionUtils.where(o -> o, null));
 		assertEquals("predicate must not be null", exception.getMessage());
 	}
 
