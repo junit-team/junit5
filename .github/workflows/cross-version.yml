@@ -21,7 +21,7 @@ jobs:
         jdk: [16]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
-    container: "junitteam/build:${{ matrix.jdk }}"
+    container: "ghcr.io/junit-team/build:${{ matrix.jdk }}"
     steps:
       - uses: actions/checkout@v2
       - name: Cache Gradle wrapper and dependencies
