@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 
 import de.sormuras.bartholdy.jdk.Jar;
 
+import org.junit.jupiter.api.condition.DisabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -38,6 +40,7 @@ class JarDescribeModuleTests {
 
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
+	@DisabledOnJre(JRE.JAVA_16)
 	void describeModule(String module) throws Exception {
 		var modulePath = createJarPath(module);
 		var result = Request.builder() //
