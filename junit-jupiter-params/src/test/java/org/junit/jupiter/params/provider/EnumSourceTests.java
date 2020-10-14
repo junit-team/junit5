@@ -22,10 +22,7 @@ import static org.junit.jupiter.params.provider.EnumSourceTests.EnumWithThreeCon
 import static org.junit.jupiter.params.provider.EnumSourceTests.EnumWithThreeConstants.BAZ;
 import static org.junit.jupiter.params.provider.EnumSourceTests.EnumWithThreeConstants.FOO;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -41,66 +38,66 @@ class EnumSourceTests {
 		assertAll("include names with all", //
 			() -> assertTrue(INCLUDE.select(FOO, allOf(EnumWithThreeConstants::name))),
 			() -> assertTrue(INCLUDE.select(BAR, allOf(EnumWithThreeConstants::name))),
-			() -> assertTrue(INCLUDE.select(BAZ, allOf(EnumWithThreeConstants::name))));
+			() -> assertTrue(INCLUDE.select(BAZ, allOf(EnumWithThreeConstants::name))) //
+		);
 	}
 
 	@Test
 	void includeNamesWithSingleton() {
 		assertAll("include names with singleton", //
-			() -> assertTrue(INCLUDE.select(FOO, FOO.singleton())),
-			() -> assertTrue(INCLUDE.select(BAR, BAR.singleton())),
-			() -> assertTrue(INCLUDE.select(BAZ, BAZ.singleton())));
+			() -> assertTrue(INCLUDE.select(FOO, Set.of(FOO.name()))),
+			() -> assertTrue(INCLUDE.select(BAR, Set.of(BAR.name()))),
+			() -> assertTrue(INCLUDE.select(BAZ, Set.of(BAZ.name()))) //
+		);
 		assertAll("include names with singleton complement", //
-			() -> assertFalse(INCLUDE.select(BAR, FOO.singleton())),
-			() -> assertFalse(INCLUDE.select(BAZ, FOO.singleton())));
+			() -> assertFalse(INCLUDE.select(BAR, Set.of(FOO.name()))),
+			() -> assertFalse(INCLUDE.select(BAZ, Set.of(FOO.name()))) //
+		);
 	}
 
 	@Test
 	void excludeNames() {
 		assertAll("exclude name with none excluded", //
-			() -> assertTrue(EXCLUDE.select(FOO, Collections.emptySet())),
-			() -> assertTrue(EXCLUDE.select(BAR, Collections.emptySet())),
-			() -> assertTrue(EXCLUDE.select(BAZ, Collections.emptySet())));
+			() -> assertTrue(EXCLUDE.select(FOO, Set.of())), //
+			() -> assertTrue(EXCLUDE.select(BAR, Set.of())), //
+			() -> assertTrue(EXCLUDE.select(BAZ, Set.of())) //
+		);
 		assertAll("exclude name with FOO excluded", //
-			() -> assertFalse(EXCLUDE.select(FOO, FOO.singleton())),
-			() -> assertTrue(EXCLUDE.select(BAR, FOO.singleton())),
-			() -> assertTrue(EXCLUDE.select(BAZ, FOO.singleton())));
+			() -> assertFalse(EXCLUDE.select(FOO, Set.of(FOO.name()))),
+			() -> assertTrue(EXCLUDE.select(BAR, Set.of(FOO.name()))),
+			() -> assertTrue(EXCLUDE.select(BAZ, Set.of(FOO.name()))) //
+		);
 	}
 
 	@Test
 	void matchesAll() {
 		assertAll("matches all", //
-			() -> assertTrue(MATCH_ALL.select(FOO, Collections.singleton("F.."))),
-			() -> assertTrue(MATCH_ALL.select(BAR, Collections.singleton("B.."))),
-			() -> assertTrue(MATCH_ALL.select(BAZ, Collections.singleton("B.."))));
+			() -> assertTrue(MATCH_ALL.select(FOO, Set.of("F.."))),
+			() -> assertTrue(MATCH_ALL.select(BAR, Set.of("B.."))),
+			() -> assertTrue(MATCH_ALL.select(BAZ, Set.of("B.."))) //
+		);
 		assertAll("matches all fails if not all match", //
-			() -> assertFalse(MATCH_ALL.select(FOO, set("F..", "."))),
-			() -> assertFalse(MATCH_ALL.select(BAR, set("B..", "."))),
-			() -> assertFalse(MATCH_ALL.select(BAZ, set("B..", "."))));
+			() -> assertFalse(MATCH_ALL.select(FOO, Set.of("F..", "."))),
+			() -> assertFalse(MATCH_ALL.select(BAR, Set.of("B..", "."))),
+			() -> assertFalse(MATCH_ALL.select(BAZ, Set.of("B..", "."))) //
+		);
 	}
 
 	@Test
 	void matchesAny() {
 		assertAll("matches any", //
-			() -> assertTrue(MATCH_ANY.select(FOO, set("B..", "^F.*"))),
-			() -> assertTrue(MATCH_ANY.select(BAR, set("B", "B.", "B.."))),
-			() -> assertTrue(MATCH_ANY.select(BAZ, set("^.+[zZ]$"))));
+			() -> assertTrue(MATCH_ANY.select(FOO, Set.of("B..", "^F.*"))),
+			() -> assertTrue(MATCH_ANY.select(BAR, Set.of("B", "B.", "B.."))),
+			() -> assertTrue(MATCH_ANY.select(BAZ, Set.of("^.+[zZ]$"))));
 	}
 
 	enum EnumWithThreeConstants {
 		FOO, BAR, BAZ;
 
-		Set<String> singleton() {
-			return Collections.singleton(name());
-		}
 	}
 
 	static Set<String> allOf(Function<EnumWithThreeConstants, String> mapper) {
 		return EnumSet.allOf(EnumWithThreeConstants.class).stream().map(mapper).collect(toSet());
-	}
-
-	static Set<String> set(String... strings) {
-		return new HashSet<>(Arrays.asList(strings));
 	}
 
 }

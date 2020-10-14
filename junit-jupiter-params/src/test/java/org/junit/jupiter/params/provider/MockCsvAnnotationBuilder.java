@@ -90,7 +90,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 		@Override
 		CsvSource build() {
-			CsvSource annotation = mock(CsvSource.class);
+			var annotation = mock(CsvSource.class);
 
 			// Common
 			when(annotation.delimiter()).thenReturn(super.delimiter);
@@ -147,7 +147,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 		@Override
 		CsvFileSource build() {
-			CsvFileSource annotation = mock(CsvFileSource.class);
+			var annotation = mock(CsvFileSource.class);
 
 			// Common
 			when(annotation.delimiter()).thenReturn(super.delimiter);

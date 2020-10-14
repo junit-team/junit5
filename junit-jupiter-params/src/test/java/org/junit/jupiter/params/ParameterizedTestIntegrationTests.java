@@ -137,7 +137,7 @@ class ParameterizedTestIntegrationTests {
 		var results = execute("testWithCustomName", String.class, int.class);
 
 		// @formatter:off
-		Stream<String> legacyReportingNames = results.testEvents().dynamicallyRegistered()
+		var legacyReportingNames = results.testEvents().dynamicallyRegistered()
 				.map(Event::getTestDescriptor)
 				.map(TestDescriptor::getLegacyReportingName);
 		// @formatter:on
@@ -272,7 +272,7 @@ class ParameterizedTestIntegrationTests {
 
 		@Test
 		void failsWithNullSourceWithZeroFormalParameters() {
-			String methodName = "testWithNullSourceWithZeroFormalParameters";
+			var methodName = "testWithNullSourceWithZeroFormalParameters";
 			execute(methodName).containerEvents().failed().assertEventsMatchExactly(//
 				event(container(methodName), //
 					finishedWithFailure(//
@@ -358,7 +358,7 @@ class ParameterizedTestIntegrationTests {
 
 		@Test
 		void failsWithEmptySourceWithZeroFormalParameters() {
-			String methodName = "testWithEmptySourceWithZeroFormalParameters";
+			var methodName = "testWithEmptySourceWithZeroFormalParameters";
 			execute(methodName).containerEvents().failed().assertEventsMatchExactly(//
 				event(container(methodName), //
 					finishedWithFailure(//
@@ -381,7 +381,7 @@ class ParameterizedTestIntegrationTests {
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
 						message(msg -> msg.matches("@EmptySource cannot provide an empty argument to method .+: \\["
-								+ parameterType.getName() + "\\] is not a supported type."))//
+								+ parameterType.getName() + "] is not a supported type."))//
 					)));
 		}
 
@@ -1093,7 +1093,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		private void performTest(String argument, TestInfo testInfo) {
-			String testMethod = testInfo.getTestMethod().get().getName();
+			var testMethod = testInfo.getTestMethod().orElseThrow().getName();
 			testMethods.add(testMethod);
 			lifecycleEvents.add(testMethod + ":" + testInfo.getDisplayName());
 			fail(argument);

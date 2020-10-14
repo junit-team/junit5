@@ -27,7 +27,7 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionOnInvalidCsv() {
-		CsvSource annotation = csvSource("foo", "bar", "");
+		var annotation = csvSource("foo", "bar", "");
 
 		assertThatExceptionOfType(JUnitException.class)//
 				.isThrownBy(() -> provideArguments(annotation).toArray())//
@@ -36,97 +36,97 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void providesSingleArgument() {
-		CsvSource annotation = csvSource("foo");
+		var annotation = csvSource("foo");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("foo"));
 	}
 
 	@Test
 	void providesMultipleArguments() {
-		CsvSource annotation = csvSource("foo", "bar");
+		var annotation = csvSource("foo", "bar");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
 
 	@Test
 	void splitsAndTrimsArguments() {
-		CsvSource annotation = csvSource(" foo , bar ");
+		var annotation = csvSource(" foo , bar ");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("foo", "bar"));
 	}
 
 	@Test
 	void trimsLeadingSpaces() {
-		CsvSource annotation = csvSource("'', 1", " '', 2", "'' , 3", " '' , 4");
+		var annotation = csvSource("'', 1", " '', 2", "'' , 3", " '' , 4");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(new Object[][] { { "", "1" }, { "", "2" }, { "", "3" }, { "", "4" } });
 	}
 
 	@Test
 	void trimsTrailingSpaces() {
-		CsvSource annotation = csvSource("1,''", "2, ''", "3,'' ", "4, '' ");
+		var annotation = csvSource("1,''", "2, ''", "3,'' ", "4, '' ");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(new Object[][] { { "1", "" }, { "2", "" }, { "3", "" }, { "4", "" } });
 	}
 
 	@Test
 	void understandsQuotes() {
-		CsvSource annotation = csvSource("'foo, bar'");
+		var annotation = csvSource("'foo, bar'");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("foo, bar"));
 	}
 
 	@Test
 	void understandsEscapeCharacters() {
-		CsvSource annotation = csvSource("'foo or ''bar''', baz");
+		var annotation = csvSource("'foo or ''bar''', baz");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("foo or 'bar'", "baz"));
 	}
 
 	@Test
 	void doesNotTrimSpacesInsideQuotes() {
-		CsvSource annotation = csvSource("''", "'   '", "'blank '", "' not blank   '");
+		var annotation = csvSource("''", "'   '", "'blank '", "' not blank   '");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array(""), array("   "), array("blank "), array(" not blank   "));
 	}
 
 	@Test
 	void providesArgumentsWithCharacterDelimiter() {
-		CsvSource annotation = csvSource().delimiter('|').lines("foo|bar", "bar|foo").build();
+		var annotation = csvSource().delimiter('|').lines("foo|bar", "bar|foo").build();
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("foo", "bar"), array("bar", "foo"));
 	}
 
 	@Test
 	void providesArgumentsWithStringDelimiter() {
-		CsvSource annotation = csvSource().delimiterString("~~~").lines("foo~~~ bar", "bar~~~ foo").build();
+		var annotation = csvSource().delimiterString("~~~").lines("foo~~~ bar", "bar~~~ foo").build();
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("foo", "bar"), array("bar", "foo"));
 	}
 
 	@Test
 	void throwsExceptionIfBothDelimitersAreSimultaneouslySet() {
-		CsvSource annotation = csvSource().delimiter('|').delimiterString("~~~").build();
+		var annotation = csvSource().delimiter('|').delimiterString("~~~").build();
 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(() -> provideArguments(annotation))//
@@ -136,85 +136,85 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void defaultEmptyValueAndDefaultNullValue() {
-		CsvSource annotation = csvSource("'', null, , apple");
+		var annotation = csvSource("'', null, , apple");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("", "null", null, "apple"));
 	}
 
 	@Test
 	void customEmptyValueAndDefaultNullValue() {
-		CsvSource annotation = csvSource().emptyValue("EMPTY").lines("'', null, , apple").build();
+		var annotation = csvSource().emptyValue("EMPTY").lines("'', null, , apple").build();
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("EMPTY", "null", null, "apple"));
 	}
 
 	@Test
 	void customNullValues() {
-		CsvSource annotation = csvSource().nullValues("N/A", "NIL").lines("apple, , NIL, '', N/A, banana").build();
+		var annotation = csvSource().nullValues("N/A", "NIL").lines("apple, , NIL, '', N/A, banana").build();
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("apple", null, null, "", null, "banana"));
 	}
 
 	@Test
 	void convertsEmptyValuesToNullInLinesAfterFirstLine() {
-		CsvSource annotation = csvSource("'', ''", " , ");
+		var annotation = csvSource("'', ''", " , ");
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(new Object[][] { { "", "" }, { null, null } });
 	}
 
 	@Test
 	void throwsExceptionIfSourceExceedsMaxCharsPerColumnConfig() {
-		CsvSource annotation = csvSource().lines("413").maxCharsPerColumn(2).build();
+		var annotation = csvSource().lines("413").maxCharsPerColumn(2).build();
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThatExceptionOfType(CsvParsingException.class)//
-				.isThrownBy(() -> arguments.toArray())//
+				.isThrownBy(arguments::toArray)//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
 				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
 
 	@Test
 	void providesArgumentWithDefaultMaxCharsPerColumnConfig() {
-		CsvSource annotation = csvSource().lines("0".repeat(4096)).delimiter(';').build();
+		var annotation = csvSource().lines("0".repeat(4096)).delimiter(';').build();
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments.toArray()).hasSize(1);
 	}
 
 	@Test
 	void throwsExceptionWhenSourceExceedsDefaultMaxCharsPerColumnConfig() {
-		CsvSource annotation = csvSource().lines("0".repeat(4097)).delimiter(';').build();
+		var annotation = csvSource().lines("0".repeat(4097)).delimiter(';').build();
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThatExceptionOfType(CsvParsingException.class)//
-				.isThrownBy(() -> arguments.toArray())//
+				.isThrownBy(arguments::toArray)//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
 				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
 
 	@Test
 	void providesArgumentsForExceedsSourceWithCustomMaxCharsPerColumnConfig() {
-		CsvSource annotation = csvSource().lines("0".repeat(4097)).delimiter(';').maxCharsPerColumn(4097).build();
+		var annotation = csvSource().lines("0".repeat(4097)).delimiter(';').maxCharsPerColumn(4097).build();
 
-		Stream<Object[]> arguments = provideArguments(annotation);
+		var arguments = provideArguments(annotation);
 
 		assertThat(arguments.toArray()).hasSize(1);
 	}
 
 	@Test
 	void throwsExceptionWhenMaxCharsPerColumnIsNotPositiveNumber() {
-		CsvSource annotation = csvSource().lines("41").delimiter(';').maxCharsPerColumn(-1).build();
+		var annotation = csvSource().lines("41").delimiter(';').maxCharsPerColumn(-1).build();
 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(() -> provideArguments(annotation))//
@@ -222,7 +222,7 @@ class CsvArgumentsProviderTests {
 	}
 
 	private Stream<Object[]> provideArguments(CsvSource annotation) {
-		CsvArgumentsProvider provider = new CsvArgumentsProvider();
+		var provider = new CsvArgumentsProvider();
 		provider.accept(annotation);
 		return provider.provideArguments(null).map(Arguments::get);
 	}

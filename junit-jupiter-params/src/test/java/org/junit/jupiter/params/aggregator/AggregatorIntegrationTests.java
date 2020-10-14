@@ -83,7 +83,7 @@ public class AggregatorIntegrationTests {
 			"99 Peachtree Road, Atlanta, 30318"//
 	})
 	void addressAggregator(@CsvToAddress Address address) {
-		testAddressAggegator(address);
+		testAddressAggregator(address);
 	}
 
 	@ParameterizedTest
@@ -95,7 +95,7 @@ public class AggregatorIntegrationTests {
 			@CsvToAddress @StartIndex(4) Address address) {
 
 		testPersonAggregator(person);
-		testAddressAggegator(address);
+		testAddressAggregator(address);
 	}
 
 	@ParameterizedTest(name = "Mixed Mode #1: {arguments}")
@@ -108,7 +108,7 @@ public class AggregatorIntegrationTests {
 
 		assertThat(issueNumber).startsWith("gh-");
 		testPersonAggregator(person);
-		testAddressAggegator(address);
+		testAddressAggregator(address);
 		assertThat(testInfo.getDisplayName()).startsWith("Mixed Mode #1");
 	}
 
@@ -121,7 +121,7 @@ public class AggregatorIntegrationTests {
 	@ParameterizedTest
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
 	void argumentsAccessor(ArgumentsAccessor arguments) {
-		assertEquals(55, IntStream.range(0, arguments.size()).map(i -> arguments.getInteger(i)).sum());
+		assertEquals(55, IntStream.range(0, arguments.size()).map(arguments::getInteger).sum());
 	}
 
 	@ParameterizedTest(name = "2 ArgumentsAccessors: {arguments}")
@@ -133,7 +133,7 @@ public class AggregatorIntegrationTests {
 	@ParameterizedTest(name = "ArgumentsAccessor and TestInfo: {arguments}")
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
 	void argumentsAccessorAndTestInfo(ArgumentsAccessor arguments, TestInfo testInfo) {
-		assertEquals(55, IntStream.range(0, arguments.size()).map(i -> arguments.getInteger(i)).sum());
+		assertEquals(55, IntStream.range(0, arguments.size()).map(arguments::getInteger).sum());
 		assertThat(testInfo.getDisplayName()).startsWith("ArgumentsAccessor and TestInfo");
 	}
 
@@ -142,7 +142,7 @@ public class AggregatorIntegrationTests {
 	void indexedArgumentsAndArgumentsAccessor(int num1, int num2, ArgumentsAccessor arguments) {
 		assertEquals(1, num1);
 		assertEquals(2, num2);
-		assertEquals(55, IntStream.range(0, arguments.size()).map(i -> arguments.getInteger(i)).sum());
+		assertEquals(55, IntStream.range(0, arguments.size()).map(arguments::getInteger).sum());
 	}
 
 	@ParameterizedTest(name = "Indexed Arguments, ArgumentsAccessor, and TestInfo: {arguments}")
@@ -152,7 +152,7 @@ public class AggregatorIntegrationTests {
 
 		assertEquals(1, num1);
 		assertEquals(2, num2);
-		assertEquals(55, IntStream.range(0, arguments.size()).map(i -> arguments.getInteger(i)).sum());
+		assertEquals(55, IntStream.range(0, arguments.size()).map(arguments::getInteger).sum());
 		assertThat(testInfo.getDisplayName()).startsWith("Indexed Arguments, ArgumentsAccessor, and TestInfo");
 	}
 
@@ -164,7 +164,7 @@ public class AggregatorIntegrationTests {
 		assertEquals(1, num1);
 		assertEquals(2, num2);
 		assertArrayEquals(arguments1.toArray(), arguments2.toArray());
-		assertEquals(55, IntStream.range(0, arguments1.size()).map(i -> arguments1.getInteger(i)).sum());
+		assertEquals(55, IntStream.range(0, arguments1.size()).map(arguments1::getInteger).sum());
 		assertThat(testInfo.getDisplayName()).startsWith("Indexed Arguments, 2 ArgumentsAccessors, and TestInfo");
 	}
 
@@ -198,7 +198,7 @@ public class AggregatorIntegrationTests {
 		}
 	}
 
-	private void testAddressAggegator(Address address) {
+	private void testAddressAggregator(Address address) {
 		assertThat(address.street).contains("Peachtree");
 		assertEquals("Atlanta", address.city);
 		assertEquals(30318, address.zipCode);
@@ -306,7 +306,7 @@ public class AggregatorIntegrationTests {
 		public Map<String, Integer> aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
 			// @formatter:off
 			return IntStream.range(0, arguments.size())
-					.mapToObj(i -> arguments.getString(i))
+					.mapToObj(arguments::getString)
 					.collect(toMap(s -> s, String::length));
 			// @formatter:on
 		}

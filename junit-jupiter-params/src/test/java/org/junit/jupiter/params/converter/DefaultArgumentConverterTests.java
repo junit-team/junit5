@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -124,8 +125,8 @@ class DefaultArgumentConverterTests {
 
 	@Test
 	void convertsStringToCharset() {
-		assertConverts("ISO-8859-1", Charset.class, Charset.forName("ISO-8859-1"));
-		assertConverts("UTF-8", Charset.class, Charset.forName("UTF-8"));
+		assertConverts("ISO-8859-1", Charset.class, StandardCharsets.ISO_8859_1);
+		assertConverts("UTF-8", Charset.class, StandardCharsets.UTF_8);
 	}
 
 	@Test
@@ -218,14 +219,14 @@ class DefaultArgumentConverterTests {
 
 	@Test
 	void convertsStringToUUID() {
-		String uuid = "d043e930-7b3b-48e3-bdbe-5a3ccfb833db";
+		var uuid = "d043e930-7b3b-48e3-bdbe-5a3ccfb833db";
 		assertConverts(uuid, UUID.class, UUID.fromString(uuid));
 	}
 
 	// -------------------------------------------------------------------------
 
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
-		Object result = DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
+		var result = DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
 
 		assertThat(result) //
 				.describedAs(input + " --(" + targetClass.getName() + ")--> " + expectedOutput) //

@@ -26,14 +26,14 @@ class ArgumentsTests {
 
 	@Test
 	void ofSupportsVarargs() {
-		Arguments arguments = of(1, "2", 3.0);
+		var arguments = of(1, "2", 3.0);
 
 		assertArrayEquals(new Object[] { 1, "2", 3.0 }, arguments.get());
 	}
 
 	@Test
 	void argumentsSupportsVarargs() {
-		Arguments arguments = arguments(1, "2", 3.0);
+		var arguments = arguments(1, "2", 3.0);
 
 		assertArrayEquals(new Object[] { 1, "2", 3.0 }, arguments.get());
 	}
@@ -42,7 +42,7 @@ class ArgumentsTests {
 	void ofReturnsSameArrayUsedForCreating() {
 		Object[] input = { 1, "2", 3.0 };
 
-		Arguments arguments = of(input);
+		var arguments = of(input);
 
 		assertThat(arguments.get()).isSameAs(input);
 	}
@@ -51,7 +51,7 @@ class ArgumentsTests {
 	void argumentsReturnsSameArrayUsedForCreating() {
 		Object[] input = { 1, "2", 3.0 };
 
-		Arguments arguments = arguments(input);
+		var arguments = arguments(input);
 
 		assertThat(arguments.get()).isSameAs(input);
 	}

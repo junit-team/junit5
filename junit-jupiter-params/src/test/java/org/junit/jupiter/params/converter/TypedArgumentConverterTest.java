@@ -28,7 +28,7 @@ public class TypedArgumentConverterTest {
 	}
 
 	private void assertConverts(String input, Integer expectedOutput) {
-		Integer result = new StringLengthArgumentConverter().convert(input);
+		var result = new StringLengthArgumentConverter().convert(input);
 		assertThat(result).isEqualTo(expectedOutput);
 	}
 

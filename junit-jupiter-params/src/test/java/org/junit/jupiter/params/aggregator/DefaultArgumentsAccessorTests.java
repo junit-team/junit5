@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -138,8 +137,8 @@ class DefaultArgumentsAccessorTests {
 
 	@Test
 	void toArray() {
-		DefaultArgumentsAccessor arguments = new DefaultArgumentsAccessor("foo", "bar");
-		Object[] copy = arguments.toArray();
+		var arguments = new DefaultArgumentsAccessor("foo", "bar");
+		var copy = arguments.toArray();
 		assertArrayEquals(new String[] { "foo", "bar" }, copy);
 
 		// Modify local copy:
@@ -149,8 +148,8 @@ class DefaultArgumentsAccessorTests {
 
 	@Test
 	void toList() {
-		DefaultArgumentsAccessor arguments = new DefaultArgumentsAccessor("foo", "bar");
-		List<Object> copy = arguments.toList();
+		var arguments = new DefaultArgumentsAccessor("foo", "bar");
+		var copy = arguments.toList();
 		assertIterableEquals(Arrays.asList("foo", "bar"), copy);
 
 		// Modify local copy:

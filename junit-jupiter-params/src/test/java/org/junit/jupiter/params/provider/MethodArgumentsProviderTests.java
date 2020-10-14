@@ -84,8 +84,8 @@ class MethodArgumentsProviderTests {
 		var arguments = provideArguments("intArrayStreamProvider");
 
 		assertThat(arguments).containsExactly( //
-			array(new int[] { 1, 2 }), //
-			array(new int[] { 3, 4 }) //
+			new Object[] { new int[] { 1, 2 } }, //
+			new Object[] { new int[] { 3, 4 } } //
 		);
 	}
 
