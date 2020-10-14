@@ -33,14 +33,14 @@ class GradleMissingEngineTests {
 
 	@Test
 	void gradle_wrapper() {
-		test(new GradleWrapper(Paths.get("..")), "wrapper");
+		test(new GradleWrapper(Paths.get("..")));
 	}
 
-	private void test(Tool gradle, String version) {
+	private void test(Tool gradle) {
 		var project = "gradle-missing-engine";
 		var result = Request.builder() //
 				.setProject(project) //
-				.setWorkspace(project + '-' + version) //
+				.setWorkspace(project + "-wrapper") //
 				.setTool(gradle) //
 				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //

@@ -149,8 +149,7 @@ public class Request {
 		}
 
 		public Builder setJavaHome(Path javaHome) {
-			putEnvironment("JAVA_HOME", javaHome.normalize().toAbsolutePath().toString());
-			return this;
+			return putEnvironment("JAVA_HOME", javaHome.normalize().toAbsolutePath().toString());
 		}
 
 		public Builder setProject(String project) {

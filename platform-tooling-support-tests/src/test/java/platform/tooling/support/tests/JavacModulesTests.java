@@ -67,7 +67,7 @@ class JavacModulesTests {
 		private Stream<Path> getMainOutputDirs() {
 			try {
 				return Files.list(javaClassesDir) //
-						.filter(file -> Files.isDirectory(file)) //
+						.filter(Files::isDirectory) //
 						.filter(dir -> dir.getFileName().toString().startsWith("main"));
 			}
 			catch (IOException e) {

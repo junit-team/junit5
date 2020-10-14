@@ -75,8 +75,8 @@ public class Helper {
 	}
 
 	public static List<String> loadModuleDirectoryNames() {
-		Pattern moduleLinePattern = Pattern.compile("include\\(\"(.+)\"\\)");
-		try (Stream<String> stream = Files.lines(SETTINGS_GRADLE) //
+		var moduleLinePattern = Pattern.compile("include\\(\"(.+)\"\\)");
+		try (var stream = Files.lines(SETTINGS_GRADLE) //
 				.map(moduleLinePattern::matcher) //
 				.filter(Matcher::matches) //
 				.map(matcher -> matcher.group(1)) //
@@ -92,8 +92,8 @@ public class Helper {
 
 	public static Path createJarPath(String module) {
 		var parent = Paths.get("..", module, "build", "libs");
-		Path jar = parent.resolve(module + '-' + version(module) + ".jar");
-		Path shadowJar = parent.resolve(module + '-' + version(module) + "-all.jar");
+		var jar = parent.resolve(module + '-' + version(module) + ".jar");
+		var shadowJar = parent.resolve(module + '-' + version(module) + "-all.jar");
 		return Files.exists(jar) ? jar : shadowJar;
 	}
 
@@ -113,7 +113,7 @@ public class Helper {
 
 	public static Optional<Path> getJavaHome(String version) {
 		// First, try various system sources...
-		Stream<String> sources = Stream.of( //
+		var sources = Stream.of( //
 			System.getProperty("java.home." + version), //
 			System.getProperty("java." + version), //
 			System.getProperty("jdk.home." + version), //

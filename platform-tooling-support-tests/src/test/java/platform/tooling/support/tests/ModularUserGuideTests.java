@@ -103,7 +103,7 @@ class ModularUserGuideTests {
 		return args;
 	}
 
-	private static List<String> junit(Path temp, Writer out, Writer err) throws Exception {
+	private static void junit(Path temp, Writer out, Writer err) throws Exception {
 		var command = new ArrayList<String>();
 		var projectDir = Path.of("../documentation");
 		command.add(Path.of(System.getProperty("java.home"), "bin", "java").toString());
@@ -154,7 +154,6 @@ class ModularUserGuideTests {
 			System.err.println(err);
 			fail("Unexpected exit code: " + code);
 		}
-		return command;
 	}
 
 	@Test

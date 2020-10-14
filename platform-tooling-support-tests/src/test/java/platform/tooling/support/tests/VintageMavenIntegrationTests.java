@@ -13,7 +13,6 @@ package platform.tooling.support.tests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-import java.nio.file.Path;
 import java.time.Duration;
 
 import de.sormuras.bartholdy.Result;
@@ -30,7 +29,7 @@ class VintageMavenIntegrationTests {
 
 	@Test
 	void unsupportedVersion() {
-		Result result = run("4.11");
+		var result = run("4.11");
 
 		assertThat(result.getExitCode()).isEqualTo(0);
 		assertThat(result.getOutput("out")) //
@@ -40,7 +39,7 @@ class VintageMavenIntegrationTests {
 	@ParameterizedTest(name = "{0}")
 	@ValueSource(strings = { "4.12", "4.13.1" })
 	void supportedVersions(String version) {
-		Result result = run(version);
+		var result = run(version);
 
 		assertThat(result.getExitCode()).isGreaterThan(0);
 		assertThat(result.getOutput("out")) //
@@ -48,14 +47,14 @@ class VintageMavenIntegrationTests {
 				.contains("VintageTest.failure:") //
 				.contains("Tests run: 2, Failures: 1, Errors: 0, Skipped: 0");
 
-		Path surefireReportsDir = Request.WORKSPACE.resolve("vintage-maven-" + version).resolve(
+		var surefireReportsDir = Request.WORKSPACE.resolve("vintage-maven-" + version).resolve(
 			"target/surefire-reports");
 		assertThat(surefireReportsDir.resolve("com.example.vintage.VintageTest.txt")).isRegularFile();
 		assertThat(surefireReportsDir.resolve("TEST-com.example.vintage.VintageTest.xml")).isRegularFile();
 	}
 
 	private Result run(String version) {
-		Result result = Request.builder() //
+		var result = Request.builder() //
 				.setTool(Request.maven()) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.setProject("vintage") //
