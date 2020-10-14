@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -58,14 +57,14 @@ class VintageLauncherIntegrationTests {
 	@Test
 	void executesOnlyTaggedMethodOfRegularTestClass() {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters(includeTags(Categories.Failing.class.getName()));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).hasSize(2);
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactlyInAnyOrder("JUnit Vintage", testClass.getSimpleName(), "failingTest");
 	}
@@ -74,14 +73,14 @@ class VintageLauncherIntegrationTests {
 	void executesIncludedTaggedMethodOfNestedTestClass() {
 		Class<?> testClass = EnclosedJUnit4TestCase.class;
 		Class<?> nestedTestClass = EnclosedJUnit4TestCase.NestedClass.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters(includeTags(Categories.Failing.class.getName()));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).hasSize(3);
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactlyInAnyOrder("JUnit Vintage", testClass.getSimpleName(), nestedTestClass.getName(),
 					"failingTest");
@@ -91,14 +90,14 @@ class VintageLauncherIntegrationTests {
 	void executesOnlyNotExcludedTaggedMethodOfNestedTestClass() {
 		Class<?> testClass = EnclosedJUnit4TestCase.class;
 		Class<?> nestedTestClass = EnclosedJUnit4TestCase.NestedClass.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters(excludeTags(Categories.Failing.class.getName()));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).hasSize(3);
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactlyInAnyOrder("JUnit Vintage", testClass.getSimpleName(), nestedTestClass.getName(),
 					"successfulTest");
@@ -107,14 +106,14 @@ class VintageLauncherIntegrationTests {
 	@Test
 	void removesWholeSubtree() {
 		Class<?> testClass = EnclosedJUnit4TestCase.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters(excludeTags(Categories.Plain.class.getName()));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).isEmpty();
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactlyInAnyOrder("JUnit Vintage");
 	}
@@ -122,14 +121,14 @@ class VintageLauncherIntegrationTests {
 	@Test
 	void removesCompleteClassIfNoMethodHasMatchingTags() {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters(includeTags("wrong-tag"));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).isEmpty();
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactly("JUnit Vintage");
 	}
@@ -137,14 +136,14 @@ class VintageLauncherIntegrationTests {
 	@Test
 	void removesCompleteClassIfItHasExcludedTag() {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters(excludeTags(Categories.Plain.class.getName()));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).isEmpty();
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactly("JUnit Vintage");
 	}
@@ -153,15 +152,15 @@ class VintageLauncherIntegrationTests {
 	@Test
 	void executesAllTestsForNotFilterableRunner(LogRecordListener logRecordListener) {
 		Class<?> testClass = JUnit4TestCaseWithNotFilterableRunner.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters((PostDiscoveryFilter) descriptor -> includedIf(descriptor.getDisplayName().contains("#1")));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		logRecordListener.clear();
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).hasSize(3);
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactlyInAnyOrder("JUnit Vintage", testClass.getSimpleName(), "Test #0", "Test #1");
 		assertThat(logRecordListener.stream(RunnerTestDescriptor.class, Level.WARNING).map(LogRecord::getMessage)) //
@@ -175,15 +174,15 @@ class VintageLauncherIntegrationTests {
 	void executesAllTestsForNotFilterableChildRunnerOfSuite(LogRecordListener logRecordListener) {
 		Class<?> suiteClass = JUnit4SuiteOfSuiteWithFilterableChildRunner.class;
 		Class<?> testClass = JUnit4TestCaseWithNotFilterableRunner.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(suiteClass)) //
 				.filters((PostDiscoveryFilter) descriptor -> includedIf(descriptor.getDisplayName().contains("#1")));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		logRecordListener.clear();
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).hasSize(4);
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactlyInAnyOrder("JUnit Vintage", suiteClass.getSimpleName(), testClass.getName(), "Test #0",
 					"Test #1");
@@ -196,14 +195,14 @@ class VintageLauncherIntegrationTests {
 	void executesOnlyTaggedMethodsForSuite() {
 		Class<?> suiteClass = JUnit4SuiteWithTwoTestCases.class;
 		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(suiteClass)) //
 				.filters(includeTags(Categories.Successful.class.getName()));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).hasSize(3);
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactlyInAnyOrder("JUnit Vintage", suiteClass.getSimpleName(), testClass.getName(),
 					"successfulTest");
@@ -212,14 +211,14 @@ class VintageLauncherIntegrationTests {
 	@Test
 	void removesCompleteClassWithNotFilterableRunnerIfItHasExcludedTag() {
 		Class<?> testClass = JUnit4TestCaseWithNotFilterableRunner.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters(excludeTags(Categories.Successful.class.getName()));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).isEmpty();
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactly("JUnit Vintage");
 	}
@@ -227,27 +226,27 @@ class VintageLauncherIntegrationTests {
 	@Test
 	void filtersOutAllDescendantsOfParameterizedTestCase() {
 		Class<?> testClass = ParameterizedTestCase.class;
-		LauncherDiscoveryRequestBuilder request = request() //
+		var request = request() //
 				.selectors(selectClass(testClass)) //
 				.filters((PostDiscoveryFilter) descriptor -> excluded("excluded"));
 
-		TestPlan testPlan = discover(request);
+		var testPlan = discover(request);
 		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).isEmpty();
 
-		Map<TestIdentifier, TestExecutionResult> results = execute(request);
+		var results = execute(request);
 		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
 				.containsExactly("JUnit Vintage");
 	}
 
 	private TestPlan discover(LauncherDiscoveryRequestBuilder requestBuilder) {
-		Launcher launcher = LauncherFactory.create();
+		var launcher = LauncherFactory.create();
 		return launcher.discover(toRequest(requestBuilder));
 	}
 
 	private Map<TestIdentifier, TestExecutionResult> execute(LauncherDiscoveryRequestBuilder requestBuilder) {
 		Map<TestIdentifier, TestExecutionResult> results = new LinkedHashMap<>();
-		LauncherDiscoveryRequest request = toRequest(requestBuilder);
-		Launcher launcher = LauncherFactory.create();
+		var request = toRequest(requestBuilder);
+		var launcher = LauncherFactory.create();
 		launcher.execute(request, new TestExecutionListener() {
 			@Override
 			public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {

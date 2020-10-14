@@ -32,18 +32,18 @@ public class RunnerWithCustomUniqueIdsAndDisplayNames extends BlockJUnit4ClassRu
 
 	@Override
 	protected String getName() {
-		DisplayName displayName = getTestClass().getAnnotation(DisplayName.class);
+		var displayName = getTestClass().getAnnotation(DisplayName.class);
 		return displayName == null ? super.getName() : displayName.value();
 	}
 
 	@Override
 	protected Description describeChild(FrameworkMethod method) {
-		String testName = getTestName(method);
+		var testName = getTestName(method);
 		return createTestDescription(getTestClass().getJavaClass().getName(), testName, new CustomUniqueId(testName));
 	}
 
 	private String getTestName(FrameworkMethod method) {
-		DisplayName displayName = method.getAnnotation(DisplayName.class);
+		var displayName = method.getAnnotation(DisplayName.class);
 		return displayName == null ? testName(method) : displayName.value();
 	}
 
@@ -60,7 +60,7 @@ public class RunnerWithCustomUniqueIdsAndDisplayNames extends BlockJUnit4ClassRu
 		@Override
 		public boolean equals(Object obj) {
 			if (obj instanceof CustomUniqueId) {
-				CustomUniqueId that = (CustomUniqueId) obj;
+				var that = (CustomUniqueId) obj;
 				return Objects.equals(this.testName, that.testName);
 			}
 			return false;

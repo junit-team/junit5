@@ -15,7 +15,6 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
 
 public class RunnerThatOnlyReportsFailures extends BlockJUnit4ClassRunner {
 	public RunnerThatOnlyReportsFailures(Class<?> klass) throws InitializationError {
@@ -24,7 +23,7 @@ public class RunnerThatOnlyReportsFailures extends BlockJUnit4ClassRunner {
 
 	@Override
 	protected void runChild(FrameworkMethod method, RunNotifier notifier) {
-		Statement statement = methodBlock(method);
+		var statement = methodBlock(method);
 		try {
 			statement.evaluate();
 		}

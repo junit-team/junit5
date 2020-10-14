@@ -26,11 +26,11 @@ public class JUnit3SuiteWithSubsuites extends TestCase {
 	}
 
 	public static TestSuite suite() {
-		TestSuite root = new TestSuite("allTests");
-		TestSuite case1 = new TestSuite("Case1");
+		var root = new TestSuite("allTests");
+		var case1 = new TestSuite("Case1");
 		case1.addTest(new JUnit3SuiteWithSubsuites("hello", "world"));
 		root.addTest(case1);
-		TestSuite case2 = new TestSuite("Case2");
+		var case2 = new TestSuite("Case2");
 		case2.addTest(new JUnit3SuiteWithSubsuites("hello", "WORLD"));
 		root.addTest(case2);
 		return root;

@@ -28,10 +28,10 @@ public class JUnit3ParallelSuiteWithSubsuites extends TestCase {
 
 	public static TestSuite suite() {
 		TestSuite root = new ActiveTestSuite("allTests");
-		TestSuite case1 = new TestSuite("Case1");
+		var case1 = new TestSuite("Case1");
 		case1.addTest(new JUnit3ParallelSuiteWithSubsuites("hello", "world"));
 		root.addTest(case1);
-		TestSuite case2 = new TestSuite("Case2");
+		var case2 = new TestSuite("Case2");
 		case2.addTest(new JUnit3ParallelSuiteWithSubsuites("hello", "WORLD"));
 		root.addTest(case2);
 		return root;

@@ -19,7 +19,7 @@ import junit.framework.TestSuite;
 public class JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails extends TestCase {
 
 	public static junit.framework.Test suite() {
-		TestSuite suite = new TestSuite();
+		var suite = new TestSuite();
 		suite.addTestSuite(PlainJUnit3TestCaseWithSingleTestWhichFails.class);
 		return suite;
 	}

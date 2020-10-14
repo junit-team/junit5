@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
-import static java.util.Arrays.asList;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class IgnoredParameterizedTestCase {
 
 	@Parameters(name = "{0}")
 	public static Iterable<String> parameters() {
-		return asList("foo", "bar");
+		return List.of("foo", "bar");
 	}
 
 	@Parameter

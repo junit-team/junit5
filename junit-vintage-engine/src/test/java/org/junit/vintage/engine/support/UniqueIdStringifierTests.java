@@ -29,7 +29,7 @@ class UniqueIdStringifierTests {
 
 	@Test
 	void returnsReadableStringForKnownTypes() {
-		UniqueIdStringifier stringifier = new UniqueIdStringifier();
+		var stringifier = new UniqueIdStringifier();
 
 		assertEquals("foo", stringifier.apply("foo"));
 		assertEquals("42", stringifier.apply(42));
@@ -39,21 +39,21 @@ class UniqueIdStringifierTests {
 
 	@Test
 	void serializesUnknownTypes() throws Exception {
-		UniqueIdStringifier stringifier = new UniqueIdStringifier();
+		var stringifier = new UniqueIdStringifier();
 
-		String serialized = stringifier.apply(new MyCustomId(42));
+		var serialized = stringifier.apply(new MyCustomId(42));
 
-		Object deserializedObject = deserialize(decodeBase64(serialized));
+		var deserializedObject = deserialize(decodeBase64(serialized));
 		assertThat(deserializedObject).isInstanceOf(MyCustomId.class);
 		assertEquals(42, ((MyCustomId) deserializedObject).getValue());
 	}
 
 	@Test
 	void usesToStringWhenSerializationFails() {
-		UniqueIdStringifier stringifier = new UniqueIdStringifier();
-		String serialized = stringifier.apply(new ClassWithErroneousSerialization());
+		var stringifier = new UniqueIdStringifier();
+		var serialized = stringifier.apply(new ClassWithErroneousSerialization());
 
-		String deserializedString = new String(decodeBase64(serialized), UniqueIdStringifier.CHARSET);
+		var deserializedString = new String(decodeBase64(serialized), UniqueIdStringifier.CHARSET);
 
 		assertEquals("value from toString()", deserializedString);
 	}
@@ -63,7 +63,7 @@ class UniqueIdStringifierTests {
 	}
 
 	private Object deserialize(byte[] bytes) throws Exception {
-		try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+		try (var inputStream = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
 			return inputStream.readObject();
 		}
 	}

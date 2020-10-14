@@ -34,7 +34,6 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.samples.junit3.AbstractJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstructorParameter;
@@ -56,7 +55,7 @@ class VintageDiscovererTests {
 				.build();
 		// @formatter:on
 
-		TestDescriptor testDescriptor = discover(request);
+		var testDescriptor = discover(request);
 
 		assertThat(testDescriptor.getChildren()).hasSize(1);
 		assertThat(getOnlyElement(testDescriptor.getChildren()).getUniqueId().toString()).contains(Foo.class.getName());
@@ -71,7 +70,7 @@ class VintageDiscovererTests {
 				.build();
 		// @formatter:on
 
-		TestDescriptor testDescriptor = discover(request);
+		var testDescriptor = discover(request);
 
 		assertThat(testDescriptor.getChildren()).isEmpty();
 	}
@@ -88,7 +87,7 @@ class VintageDiscovererTests {
 
 	@Test
 	void failsToResolveUnloadableTestClass() {
-		UniqueId uniqueId = VintageUniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
+		var uniqueId = VintageUniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
 
 		doesNotResolve(selectUniqueId(uniqueId), result -> {
 			assertThat(result.getStatus()).isEqualTo(FAILED);
@@ -107,16 +106,16 @@ class VintageDiscovererTests {
 
 	private void doesNotResolve(DiscoverySelector selector, Consumer<SelectorResolutionResult> resultCheck) {
 		var discoveryListener = mock(LauncherDiscoveryListener.class);
-		LauncherDiscoveryRequest request = request() //
+		var request = request() //
 				.selectors(selector) //
 				.listeners(discoveryListener) //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.build();
 
-		TestDescriptor testDescriptor = discover(request);
+		var testDescriptor = discover(request);
 
 		assertThat(testDescriptor.getChildren()).isEmpty();
-		ArgumentCaptor<SelectorResolutionResult> resultCaptor = ArgumentCaptor.forClass(SelectorResolutionResult.class);
+		var resultCaptor = ArgumentCaptor.forClass(SelectorResolutionResult.class);
 		verify(discoveryListener).selectorProcessed(eq(UniqueId.forEngine("junit-vintage")), eq(selector),
 			resultCaptor.capture());
 		resultCheck.accept(resultCaptor.getValue());

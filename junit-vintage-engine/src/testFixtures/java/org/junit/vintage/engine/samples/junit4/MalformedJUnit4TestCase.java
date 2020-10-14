@@ -20,7 +20,7 @@ import org.junit.Test;
 public class MalformedJUnit4TestCase {
 
 	@Test
-	/* intentionally not public */
+	@SuppressWarnings("TestMethodWithIncorrectSignature") // intentionally not public
 	void nonPublicTest() {
 		fail("this should never be called");
 	}

@@ -10,8 +10,9 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,7 @@ public class ParameterizedTestCase {
 
 	@Parameters(name = "{0}")
 	public static Iterable<String> primes() {
-		return asList("foo", "bar");
+		return List.of("foo", "bar");
 	}
 
 	@Parameter

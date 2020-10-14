@@ -17,11 +17,7 @@ import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_DYNAMIC;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.UniqueId;
-import org.junit.runner.Description;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
@@ -35,13 +31,12 @@ class TestRunTests {
 	@Test
 	void returnsEmptyOptionalForUnknownDescriptions() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
-		UniqueId runnerId = engineId().append(SEGMENT_TYPE_RUNNER, testClass.getName());
-		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(runnerId, testClass,
-			new BlockJUnit4ClassRunner(testClass));
-		Description unknownDescription = createTestDescription(testClass, "dynamicTest");
+		var runnerId = engineId().append(SEGMENT_TYPE_RUNNER, testClass.getName());
+		var runnerTestDescriptor = new RunnerTestDescriptor(runnerId, testClass, new BlockJUnit4ClassRunner(testClass));
+		var unknownDescription = createTestDescription(testClass, "dynamicTest");
 
-		TestRun testRun = new TestRun(runnerTestDescriptor);
-		Optional<VintageTestDescriptor> testDescriptor = testRun.lookupNextTestDescriptor(unknownDescription);
+		var testRun = new TestRun(runnerTestDescriptor);
+		var testDescriptor = testRun.lookupNextTestDescriptor(unknownDescription);
 
 		assertThat(testDescriptor).isEmpty();
 	}
@@ -49,15 +44,13 @@ class TestRunTests {
 	@Test
 	void registersDynamicTestDescriptors() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
-		UniqueId runnerId = engineId().append(SEGMENT_TYPE_RUNNER, testClass.getName());
-		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(runnerId, testClass,
-			new BlockJUnit4ClassRunner(testClass));
-		UniqueId dynamicTestId = runnerId.append(SEGMENT_TYPE_DYNAMIC, "dynamicTest");
-		Description dynamicDescription = createTestDescription(testClass, "dynamicTest");
-		VintageTestDescriptor dynamicTestDescriptor = new VintageTestDescriptor(dynamicTestId, dynamicDescription,
-			null);
+		var runnerId = engineId().append(SEGMENT_TYPE_RUNNER, testClass.getName());
+		var runnerTestDescriptor = new RunnerTestDescriptor(runnerId, testClass, new BlockJUnit4ClassRunner(testClass));
+		var dynamicTestId = runnerId.append(SEGMENT_TYPE_DYNAMIC, "dynamicTest");
+		var dynamicDescription = createTestDescription(testClass, "dynamicTest");
+		var dynamicTestDescriptor = new VintageTestDescriptor(dynamicTestId, dynamicDescription, null);
 
-		TestRun testRun = new TestRun(runnerTestDescriptor);
+		var testRun = new TestRun(runnerTestDescriptor);
 		testRun.registerDynamicTest(dynamicTestDescriptor);
 
 		assertThat(testRun.lookupNextTestDescriptor(dynamicDescription)).contains(dynamicTestDescriptor);

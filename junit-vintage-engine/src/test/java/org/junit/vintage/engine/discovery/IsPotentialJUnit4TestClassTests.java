@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 class IsPotentialJUnit4TestClassTests {
 
-	private IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
+	private final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
 
 	@Test
 	void staticMemberClass() {
@@ -25,7 +25,6 @@ class IsPotentialJUnit4TestClassTests {
 	}
 
 	public static class Foo {
-
 	}
 
 	@Test
@@ -34,7 +33,6 @@ class IsPotentialJUnit4TestClassTests {
 	}
 
 	static class Bar {
-
 	}
 
 	@Test
@@ -43,20 +41,17 @@ class IsPotentialJUnit4TestClassTests {
 	}
 
 	public static abstract class Baz {
-
 	}
 
 	@Test
 	void anonymousClass() {
-		Foo foo = new Foo() {
-
+		var foo = new Foo() {
 		};
 
 		assertFalse(isPotentialJUnit4TestClass.test(foo.getClass()));
 	}
 
 	public class FooBaz {
-
 	}
 
 	@Test

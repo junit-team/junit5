@@ -27,6 +27,7 @@ public class JUnit4TestCaseWithDistinguishableOverloadedMethod {
 		test("foo");
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void test(String message) {
 		fail(message);
 	}

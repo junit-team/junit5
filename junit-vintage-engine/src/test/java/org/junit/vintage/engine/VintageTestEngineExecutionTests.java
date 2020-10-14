@@ -333,7 +333,7 @@ class VintageTestEngineExecutionTests {
 		Class<?> testClass = PlainJUnit4TestCaseWithLifecycleMethods.class;
 		PlainJUnit4TestCaseWithLifecycleMethods.EVENTS.clear();
 
-		EngineExecutionListener listener = new EngineExecutionListener() {
+		var listener = new EngineExecutionListener() {
 
 			@Override
 			public void executionStarted(TestDescriptor testDescriptor) {
@@ -492,7 +492,7 @@ class VintageTestEngineExecutionTests {
 
 		@Override
 		public void run(RunNotifier notifier) {
-			Description dynamicDescription = createTestDescription(testClass, "dynamicTest");
+			var dynamicDescription = createTestDescription(testClass, "dynamicTest");
 			notifier.fireTestStarted(dynamicDescription);
 			notifier.fireTestFinished(dynamicDescription);
 		}
@@ -527,17 +527,17 @@ class VintageTestEngineExecutionTests {
 
 		@Override
 		public Description getDescription() {
-			Description suiteDescription = createSuiteDescription(testClass);
+			var suiteDescription = createSuiteDescription(testClass);
 			suiteDescription.addChild(createTestDescription(testClass, "staticTest"));
 			return suiteDescription;
 		}
 
 		@Override
 		public void run(RunNotifier notifier) {
-			Description staticDescription = getDescription().getChildren().get(0);
+			var staticDescription = getDescription().getChildren().get(0);
 			notifier.fireTestStarted(staticDescription);
 			notifier.fireTestFinished(staticDescription);
-			Description dynamicDescription = createTestDescription(testClass, "dynamicTest");
+			var dynamicDescription = createTestDescription(testClass, "dynamicTest");
 			notifier.fireTestStarted(dynamicDescription);
 			notifier.fireTestFinished(dynamicDescription);
 		}
@@ -792,9 +792,8 @@ class VintageTestEngineExecutionTests {
 
 	private static void execute(Class<?> testClass, EngineExecutionListener listener) {
 		TestEngine testEngine = new VintageTestEngine();
-		LauncherDiscoveryRequest discoveryRequest = request(testClass);
-		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest,
-			UniqueId.forEngine(testEngine.getId()));
+		var discoveryRequest = request(testClass);
+		var engineTestDescriptor = testEngine.discover(discoveryRequest, UniqueId.forEngine(testEngine.getId()));
 		testEngine.execute(
 			new ExecutionRequest(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
 	}

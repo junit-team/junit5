@@ -42,7 +42,7 @@ abstract class ConfigurableRunner extends Runner {
 
 	ConfigurableRunner(Class<?> testClass) {
 		this.testClass = testClass;
-		ChildCount childCountAnnotation = testClass.getAnnotation(ChildCount.class);
+		var childCountAnnotation = testClass.getAnnotation(ChildCount.class);
 		int childCount = Optional.ofNullable(childCountAnnotation).map(ChildCount::value).orElse(0);
 		// @formatter:off
 		range(0, childCount)
@@ -53,7 +53,7 @@ abstract class ConfigurableRunner extends Runner {
 
 	@Override
 	public Description getDescription() {
-		Description suiteDescription = Description.createSuiteDescription(testClass);
+		var suiteDescription = Description.createSuiteDescription(testClass);
 		filteredChildren.forEach(suiteDescription::addChild);
 		return suiteDescription;
 	}

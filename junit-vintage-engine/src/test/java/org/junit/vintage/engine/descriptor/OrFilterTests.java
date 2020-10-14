@@ -10,9 +10,6 @@
 
 package org.junit.vintage.engine.descriptor;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,6 +18,9 @@ import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -34,21 +34,19 @@ class OrFilterTests {
 
 	@Test
 	void exceptionWithoutAnyFilters() {
-		PreconditionViolationException actual = assertThrows(PreconditionViolationException.class, () -> {
-			new OrFilter(emptyList());
-		});
+		var actual = assertThrows(PreconditionViolationException.class, () -> new OrFilter(Set.of()));
 		assertEquals("filters must not be empty", actual.getMessage());
 	}
 
 	@Test
 	void evaluatesSingleFilter() {
-		Filter filter = mockFilter("foo", true);
+		var filter = mockFilter("foo", true);
 
-		OrFilter orFilter = new OrFilter(singleton(filter));
+		var orFilter = new OrFilter(Set.of(filter));
 
 		assertEquals("foo", orFilter.describe());
 
-		Description description = Description.createTestDescription(getClass(), "evaluatesSingleFilter");
+		var description = Description.createTestDescription(getClass(), "evaluatesSingleFilter");
 		assertTrue(orFilter.shouldRun(description));
 
 		verify(filter).shouldRun(same(description));
@@ -56,14 +54,14 @@ class OrFilterTests {
 
 	@Test
 	void evaluatesMultipleFilters() {
-		Filter filter1 = mockFilter("foo", false);
-		Filter filter2 = mockFilter("bar", true);
+		var filter1 = mockFilter("foo", false);
+		var filter2 = mockFilter("bar", true);
 
-		OrFilter orFilter = new OrFilter(asList(filter1, filter2));
+		var orFilter = new OrFilter(List.of(filter1, filter2));
 
 		assertEquals("foo OR bar", orFilter.describe());
 
-		Description description = Description.createTestDescription(getClass(), "evaluatesMultipleFilters");
+		var description = Description.createTestDescription(getClass(), "evaluatesMultipleFilters");
 		assertTrue(orFilter.shouldRun(description));
 
 		verify(filter1).shouldRun(same(description));
@@ -71,7 +69,7 @@ class OrFilterTests {
 	}
 
 	private Filter mockFilter(String description, boolean result) {
-		Filter filter = mock(Filter.class);
+		var filter = mock(Filter.class);
 		when(filter.describe()).thenReturn(description);
 		when(filter.shouldRun(any())).thenReturn(result);
 		return filter;

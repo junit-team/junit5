@@ -18,7 +18,7 @@ import org.junit.runner.notification.RunNotifier;
 public class JUnit4TestCaseWithRunnerWithDuplicateChangingChildDescriptions {
 	public static class Runner extends org.junit.runner.Runner {
 
-		private Class<?> testClass;
+		private final Class<?> testClass;
 
 		public Runner(Class<?> testClass) {
 			this.testClass = testClass;
@@ -45,7 +45,7 @@ public class JUnit4TestCaseWithRunnerWithDuplicateChangingChildDescriptions {
 
 		@Override
 		public void run(RunNotifier notifier) {
-			for (int i = 0; i < 2; i++) {
+			for (var i = 0; i < 2; i++) {
 				notifier.fireTestIgnored(getLeafDescription());
 				notifier.fireTestStarted(getLeafDescription());
 				notifier.fireTestFinished(getLeafDescription());
