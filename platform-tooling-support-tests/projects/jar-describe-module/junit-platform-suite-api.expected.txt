@@ -1,4 +1,4 @@
-org.junit.platform.suite.api@${platformVersion} jar:file:.+junit-platform-suite-api/build/libs/junit-platform-suite-api-${platformVersion}.jar/!module-info.class
+org.junit.platform.suite.api@${platformVersion} jar:file:.+junit-platform-suite-api/build/libs/junit-platform-suite-api-${platformVersion}.jar..module-info.class
 exports org.junit.platform.suite.api
 requires java.base mandated
 requires org.apiguardian.api transitive

@@ -1,4 +1,4 @@
-org.junit.jupiter.migrationsupport@${jupiterVersion} jar:file:.+junit-jupiter-migrationsupport/build/libs/junit-jupiter-migrationsupport-${jupiterVersion}.jar/!module-info.class
+org.junit.jupiter.migrationsupport@${jupiterVersion} jar:file:.+junit-jupiter-migrationsupport/build/libs/junit-jupiter-migrationsupport-${jupiterVersion}.jar..module-info.class
 exports org.junit.jupiter.migrationsupport
 exports org.junit.jupiter.migrationsupport.conditions
 exports org.junit.jupiter.migrationsupport.rules
