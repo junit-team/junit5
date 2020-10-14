@@ -1,4 +1,4 @@
-org.junit.jupiter.api@${jupiterVersion} jar:file:.+junit-jupiter-api/build/libs/junit-jupiter-api-${jupiterVersion}.jar/!module-info.class
+org.junit.jupiter.api@${jupiterVersion} jar:file:.+junit-jupiter-api/build/libs/junit-jupiter-api-${jupiterVersion}.jar..module-info.class
 exports org.junit.jupiter.api
 exports org.junit.jupiter.api.condition
 exports org.junit.jupiter.api.extension
