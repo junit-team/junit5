@@ -50,7 +50,6 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 	}
 
 	@Test
-	@Disabled("Describes a new case that does not yet yield the expected result.")
 	void findMoreSpecificMethodFromOverriddenImplementationOfGenericInterfaceMethod() {
 		class A implements InterfaceGenericNumber<Number> {
 			@Override
@@ -64,7 +63,6 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 	}
 
 	@Test
-	@Disabled("Describes a new case that does not yet yield the expected result.")
 	void findMoreSpecificMethodFromImplementationOverDefaultInterfaceMethodAndGenericClassExtension() {
 
 		class AParent {

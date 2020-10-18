@@ -1607,7 +1607,8 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean isMethodShadowedBy(Method upper, Method lower) {
-		return hasCompatibleSignature(upper, lower.getName(), lower.getParameterTypes());
+		return getSignatureCompatibility(upper, lower.getName(), lower.getParameterTypes())
+			.isWithin(SignatureCompatibility.OVERRIDABLE);
 	}
 
 	/**
@@ -1617,15 +1618,21 @@ public final class ReflectionUtils {
 	 * and generics into account.
 	 */
 	private static boolean hasCompatibleSignature(Method candidate, String methodName, Class<?>[] parameterTypes) {
+		return getSignatureCompatibility(candidate, methodName, parameterTypes)
+			.isWithin(SignatureCompatibility.SUBTYPE);
+	}
+
+	private static SignatureCompatibility getSignatureCompatibility(
+		Method candidate, String methodName, Class<?>[] parameterTypes) {
 		if (!methodName.equals(candidate.getName())) {
-			return false;
+			return SignatureCompatibility.INCOMPATIBLE;
 		}
 		if (parameterTypes.length != candidate.getParameterCount()) {
-			return false;
+			return SignatureCompatibility.INCOMPATIBLE;
 		}
 		// trivial case: parameter types exactly match
 		if (Arrays.equals(parameterTypes, candidate.getParameterTypes())) {
-			return true;
+			return SignatureCompatibility.EXACT;
 		}
 		// param count is equal, but types do not match exactly: check for method sub-signatures
 		// https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2
@@ -1633,14 +1640,14 @@ public final class ReflectionUtils {
 			Class<?> lowerType = parameterTypes[i];
 			Class<?> upperType = candidate.getParameterTypes()[i];
 			if (!upperType.isAssignableFrom(lowerType)) {
-				return false;
+				return SignatureCompatibility.INCOMPATIBLE;
 			}
 		}
 		// lower is sub-signature of upper: check for generics in upper method
 		if (isGeneric(candidate)) {
-			return true;
+			return SignatureCompatibility.OVERRIDABLE;
 		}
-		return false;
+		return SignatureCompatibility.SUBTYPE;
 	}
 
 	static boolean isGeneric(Method method) {
@@ -1715,4 +1722,16 @@ public final class ReflectionUtils {
 		return t;
 	}
 
+	private enum SignatureCompatibility {
+		INCOMPATIBLE,
+		EXACT,
+		OVERRIDABLE,
+		SUBTYPE;
+
+		public boolean isWithin(SignatureCompatibility other) {
+			return this.equals(INCOMPATIBLE)
+				? other.equals(INCOMPATIBLE)
+				: this.compareTo(other) <= 0;
+		}
+	}
 }

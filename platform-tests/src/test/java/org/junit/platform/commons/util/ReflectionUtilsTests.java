@@ -952,6 +952,17 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void findMethodByParameterNamesWithSuperTypeParameter() {
+		class A {
+			public void method(Object o) {}
+		}
+
+		var method = findMethod(A.class, "method", String.class);
+
+		assertTrue(method.isPresent());
+	}
+
+	@Test
 	void findMethodsPreconditions() {
 		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> findMethods(null, null));
