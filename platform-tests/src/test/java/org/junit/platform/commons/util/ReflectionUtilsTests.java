@@ -954,12 +954,47 @@ class ReflectionUtilsTests {
 	@Test
 	void findMethodByParameterNamesWithSuperTypeParameter() {
 		class A {
-			public void method(Object o) {}
+			public void method(Object o) {
+			}
 		}
 
 		var method = findMethod(A.class, "method", String.class);
 
 		assertTrue(method.isPresent());
+	}
+
+	@Test
+	void findMethodByParameterNamesWithSuperTypeParameterNameComingBeforeSubTypeParameterNameAlphabetically() {
+		class A {
+			public void method(Short o) {
+			}
+
+			public void method(Number o) {
+			}
+		}
+
+		Class<Short> parameterType = Short.class;
+
+		var method = findMethod(A.class, "method", parameterType).orElseThrow();
+
+		assertEquals(parameterType, method.getParameterTypes()[0]);
+	}
+
+	@Test
+	void findMethodByParameterNamesWithSuperTypeParameterNameComingAfterSubTypeParameterNameAlphabetically() {
+		class A {
+			public void method(Short o) {
+			}
+
+			public void method(Object o) {
+			}
+		}
+
+		Class<Short> parameterType = Short.class;
+
+		var method = findMethod(A.class, "method", parameterType).orElseThrow();
+
+		assertEquals(parameterType, method.getParameterTypes()[0]);
 	}
 
 	@Test

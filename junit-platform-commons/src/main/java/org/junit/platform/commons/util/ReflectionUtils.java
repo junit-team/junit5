@@ -40,17 +40,24 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.Stack;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -1292,32 +1299,29 @@ public final class ReflectionUtils {
 		Preconditions.notNull(parameterTypes, "Parameter types array must not be null");
 		Preconditions.containsNoNullElements(parameterTypes, "Individual parameter types must not be null");
 
-		return findMethod(clazz, method -> hasCompatibleSignature(method, methodName, parameterTypes));
+		return streamClassHierarchyMethods(clazz).map(
+			method -> MethodCompatibility.of(methodName, method, parameterTypes)).filter(
+				MethodCompatibility::isCompatible).max(
+					Comparator.comparing(MethodCompatibility::getSignatureCompatibility)).map(
+						MethodCompatibility::getMethod);
 	}
 
 	private static Optional<Method> findMethod(Class<?> clazz, Predicate<Method> predicate) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
-		for (Class<?> current = clazz; isSearchable(current); current = current.getSuperclass()) {
-			// Search for match in current type
-			List<Method> methods = current.isInterface() ? getMethods(current) : getDeclaredMethods(current, BOTTOM_UP);
-			for (Method method : methods) {
-				if (predicate.test(method)) {
-					return Optional.of(method);
-				}
-			}
+		return streamClassHierarchyMethods(clazz).filter(predicate).findFirst();
+	}
 
-			// Search for match in interfaces implemented by current type
-			for (Class<?> ifc : current.getInterfaces()) {
-				Optional<Method> optional = findMethod(ifc, predicate);
-				if (optional.isPresent()) {
-					return optional;
-				}
-			}
-		}
+	private static Stream<Method> streamClassHierarchyMethods(Class<?> clazz) {
+		return streamClassHierarchy(clazz).flatMap(aClass -> aClass.isInterface() ? getMethods(aClass).stream()
+				: getDeclaredMethods(aClass, BOTTOM_UP).stream());
+	}
 
-		return Optional.empty();
+	private static Stream<Class<?>> streamClassHierarchy(Class<?> clazz) {
+		HierarchyIterator hierarchyIterator = new HierarchyIterator(clazz);
+		Spliterator<Class<?>> hierarchySpliterator = Spliterators.spliteratorUnknownSize(hierarchyIterator, 0);
+		return StreamSupport.stream(hierarchySpliterator, false);
 	}
 
 	/**
@@ -1607,23 +1611,17 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean isMethodShadowedBy(Method upper, Method lower) {
-		return getSignatureCompatibility(upper, lower.getName(), lower.getParameterTypes())
-			.isWithin(SignatureCompatibility.OVERRIDABLE);
+		return getSignatureCompatibility(upper, lower.getName(), lower.getParameterTypes()).isOverridable();
 	}
 
 	/**
-	 * Determine if the supplied candidate method (typically a method higher in
-	 * the type hierarchy) has a signature that is compatible with a method that
-	 * has the supplied name and parameter types, taking method sub-signatures
-	 * and generics into account.
+	 * Determine the signature compatibility between the supplied candidate
+	 * method (typically a method higher in the type hierarchy) and a method
+	 * that has the supplied name and parameter types, taking method
+	 * sub-signatures and generics into account.
 	 */
-	private static boolean hasCompatibleSignature(Method candidate, String methodName, Class<?>[] parameterTypes) {
-		return getSignatureCompatibility(candidate, methodName, parameterTypes)
-			.isWithin(SignatureCompatibility.SUBTYPE);
-	}
-
-	private static SignatureCompatibility getSignatureCompatibility(
-		Method candidate, String methodName, Class<?>[] parameterTypes) {
+	private static SignatureCompatibility getSignatureCompatibility(Method candidate, String methodName,
+			Class<?>[] parameterTypes) {
 		if (!methodName.equals(candidate.getName())) {
 			return SignatureCompatibility.INCOMPATIBLE;
 		}
@@ -1645,9 +1643,9 @@ public final class ReflectionUtils {
 		}
 		// lower is sub-signature of upper: check for generics in upper method
 		if (isGeneric(candidate)) {
-			return SignatureCompatibility.OVERRIDABLE;
+			return SignatureCompatibility.GENERIC_SUPERTYPE;
 		}
-		return SignatureCompatibility.SUBTYPE;
+		return SignatureCompatibility.NON_GENERIC_SUPERTYPE;
 	}
 
 	static boolean isGeneric(Method method) {
@@ -1723,15 +1721,71 @@ public final class ReflectionUtils {
 	}
 
 	private enum SignatureCompatibility {
-		INCOMPATIBLE,
-		EXACT,
-		OVERRIDABLE,
-		SUBTYPE;
+		INCOMPATIBLE, GENERIC_SUPERTYPE, NON_GENERIC_SUPERTYPE, EXACT;
 
-		public boolean isWithin(SignatureCompatibility other) {
-			return this.equals(INCOMPATIBLE)
-				? other.equals(INCOMPATIBLE)
-				: this.compareTo(other) <= 0;
+		private static final List<SignatureCompatibility> OVERRIDABLES = Arrays.asList(EXACT, GENERIC_SUPERTYPE);
+
+		public boolean isCompatible() {
+			return !this.equals(INCOMPATIBLE);
+		}
+
+		public boolean isOverridable() {
+			return OVERRIDABLES.contains(this);
+		}
+	}
+
+	private static class HierarchyIterator implements Iterator<Class<?>> {
+
+		private final Stack<Class<?>> classes = new Stack<>();
+
+		public HierarchyIterator(Class<?> clazz) {
+			// push super classes in reverse order so that clazz is popped first
+			List<Class<?>> superClasses = new ArrayList<>();
+			for (Class<?> current = clazz; isSearchable(current); current = current.getSuperclass()) {
+				superClasses.add(current);
+			}
+			Collections.reverse(superClasses);
+			classes.addAll(superClasses);
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !classes.isEmpty();
+		}
+
+		@Override
+		public Class<?> next() {
+			Class<?> next = classes.pop();
+			classes.addAll(Arrays.asList(next.getInterfaces()));
+			return next;
+		}
+	}
+
+	private static class MethodCompatibility {
+
+		private final Method method;
+		private final SignatureCompatibility signatureCompatibility;
+
+		public MethodCompatibility(Method method, SignatureCompatibility signatureCompatibility) {
+			this.method = method;
+			this.signatureCompatibility = signatureCompatibility;
+		}
+
+		private static MethodCompatibility of(String methodName, Method method, Class<?>[] parameterTypes) {
+			return new MethodCompatibility(method,
+				ReflectionUtils.getSignatureCompatibility(method, methodName, parameterTypes));
+		}
+
+		public Method getMethod() {
+			return method;
+		}
+
+		public SignatureCompatibility getSignatureCompatibility() {
+			return signatureCompatibility;
+		}
+
+		public boolean isCompatible() {
+			return signatureCompatibility.isCompatible();
 		}
 	}
 }
