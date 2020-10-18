@@ -21,7 +21,9 @@ developers have plenty of time to migrate to JUnit Jupiter on their own schedule
 
 Just make sure that the `junit-vintage-engine` artifact is in your test runtime path. In
 that case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
-launcher.
+launcher. Limited parallel execution is supported by setting the
+`junit.jupiter.execution.parallel.enabled` configuration parameter to `true`. In addition, the
+JUnit concurrency settings in `junit.jupiter.execution.parallel.config.*` are also supported.
 
 See the example projects in the {junit5-samples-repo}[`junit5-samples`] repository to
 find out how this is done with Gradle and Maven.

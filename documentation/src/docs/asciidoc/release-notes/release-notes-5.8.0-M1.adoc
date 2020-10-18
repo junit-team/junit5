@@ -62,4 +62,6 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Tests can now be run in parallel by setting the appropriate `junit.jupiter.execution.parallel`
+  parameters. This is compatible with the Maven Surefire and Failsafe plugins.
 * ❓
