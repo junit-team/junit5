@@ -11,6 +11,8 @@
 package org.junit.platform.commons.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 
 import java.lang.reflect.Method;
@@ -120,6 +122,19 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 		// Exact Type Match
 		assertSpecificFooMethodFound(ClassImplementingGenericInterfaceWithMoreSpecificMethod.class,
 			ClassImplementingGenericInterfaceWithMoreSpecificMethod.class, Number.class);
+	}
+
+	@Test
+	void findMethodWithParameterTypeWithMultipleBounds() {
+		class A {
+			public <T extends A & InterfaceDouble> void method(T o) {
+			}
+		}
+
+		var method = findMethod(A.class, "method", A.class);
+
+		assertFalse(InterfaceDouble.class.isAssignableFrom(A.class));
+		assertTrue(method.isEmpty());
 	}
 
 	private void assertSpecificFooMethodFound(Class<?> classToSearchIn, Class<?> classWithMostSpecificMethod,
