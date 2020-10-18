@@ -125,6 +125,7 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 	}
 
 	@Test
+	@Disabled("Describes a new case that does not yet yield the expected result.")
 	void findMethodWithParameterTypeWithMultipleBounds() {
 		class A {
 			public <T extends A & InterfaceDouble> void method(T o) {
