@@ -274,7 +274,8 @@ public final class LauncherDiscoveryRequestBuilder {
 		if (discoveryListeners.contains(defaultDiscoveryListener)) {
 			return LauncherDiscoveryListeners.composite(discoveryListeners);
 		}
-		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(discoveryListeners);
+		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(discoveryListeners.size() + 1);
+		allDiscoveryListeners.addAll(discoveryListeners);
 		allDiscoveryListeners.add(defaultDiscoveryListener);
 		return LauncherDiscoveryListeners.composite(allDiscoveryListeners);
 	}

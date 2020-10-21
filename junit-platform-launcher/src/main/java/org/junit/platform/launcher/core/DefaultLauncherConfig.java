@@ -26,23 +26,20 @@ import org.junit.platform.launcher.TestExecutionListener;
 class DefaultLauncherConfig implements LauncherConfig {
 
 	private final boolean testEngineAutoRegistrationEnabled;
-
+	private final boolean launcherDiscoveryListenerAutoRegistrationEnabled;
 	private final boolean testExecutionListenerAutoRegistrationEnabled;
-
 	private final boolean postDiscoveryFilterAutoRegistrationEnabled;
-
 	private final Collection<TestEngine> additionalTestEngines;
-
 	private final Collection<TestExecutionListener> additionalTestExecutionListeners;
-
 	private final Collection<PostDiscoveryFilter> additionalPostDiscoveryFilters;
 
 	DefaultLauncherConfig(boolean testEngineAutoRegistrationEnabled,
+			boolean launcherDiscoveryListenerAutoRegistrationEnabled,
 			boolean testExecutionListenerAutoRegistrationEnabled, boolean postDiscoveryFilterAutoRegistrationEnabled,
 			Collection<TestEngine> additionalTestEngines,
 			Collection<TestExecutionListener> additionalTestExecutionListeners,
 			Collection<PostDiscoveryFilter> additionalPostDiscoveryFilters) {
-
+		this.launcherDiscoveryListenerAutoRegistrationEnabled = launcherDiscoveryListenerAutoRegistrationEnabled;
 		this.testExecutionListenerAutoRegistrationEnabled = testExecutionListenerAutoRegistrationEnabled;
 		this.testEngineAutoRegistrationEnabled = testEngineAutoRegistrationEnabled;
 		this.postDiscoveryFilterAutoRegistrationEnabled = postDiscoveryFilterAutoRegistrationEnabled;
@@ -54,6 +51,11 @@ class DefaultLauncherConfig implements LauncherConfig {
 	@Override
 	public boolean isTestEngineAutoRegistrationEnabled() {
 		return this.testEngineAutoRegistrationEnabled;
+	}
+
+	@Override
+	public boolean isLauncherDiscoveryListenerAutoRegistrationEnabled() {
+		return launcherDiscoveryListenerAutoRegistrationEnabled;
 	}
 
 	@Override

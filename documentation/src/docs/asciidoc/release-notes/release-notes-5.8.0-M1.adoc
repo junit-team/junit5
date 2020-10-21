@@ -34,6 +34,8 @@ on GitHub.
   `my test`.
 * The `junit-platform-jfr` module now also reports events for containers, e.g. test
   classes.
+* Custom `LauncherDiscoveryListener` implementations can now be registered via Java’s
+  `ServiceLoader` mechanism.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]

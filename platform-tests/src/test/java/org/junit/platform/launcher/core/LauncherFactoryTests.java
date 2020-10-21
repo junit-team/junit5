@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.abortOnFailure;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -26,6 +27,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestLauncherDiscoveryListener;
 import org.junit.platform.launcher.listeners.AnotherUnusedTestExecutionListener;
 import org.junit.platform.launcher.listeners.NoopTestExecutionListener;
 import org.junit.platform.launcher.listeners.UnusedTestExecutionListener;
@@ -42,20 +44,24 @@ class LauncherFactoryTests {
 
 	@Test
 	void noopTestExecutionListenerIsLoadedViaServiceApi() {
-		var launcher = (DefaultLauncher) LauncherFactory.create();
-		var listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
-		var listener = listeners.stream().filter(NoopTestExecutionListener.class::isInstance).findFirst();
-		assertThat(listener).isPresent();
+		withTestServices(() -> {
+			var launcher = (DefaultLauncher) LauncherFactory.create();
+			var listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
+			var listener = listeners.stream().filter(NoopTestExecutionListener.class::isInstance).findFirst();
+			assertThat(listener).isPresent();
+		});
 	}
 
 	@Test
 	void unusedTestExecutionListenerIsNotLoadedViaServiceApi() {
-		var launcher = (DefaultLauncher) LauncherFactory.create();
-		var listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
+		withTestServices(() -> {
+			var launcher = (DefaultLauncher) LauncherFactory.create();
+			var listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
 
-		assertThat(listeners).filteredOn(AnotherUnusedTestExecutionListener.class::isInstance).isEmpty();
-		assertThat(listeners).filteredOn(UnusedTestExecutionListener.class::isInstance).isEmpty();
-		assertThat(listeners).filteredOn(NoopTestExecutionListener.class::isInstance).isNotEmpty();
+			assertThat(listeners).filteredOn(AnotherUnusedTestExecutionListener.class::isInstance).isEmpty();
+			assertThat(listeners).filteredOn(UnusedTestExecutionListener.class::isInstance).isEmpty();
+			assertThat(listeners).filteredOn(NoopTestExecutionListener.class::isInstance).isNotEmpty();
+		});
 	}
 
 	@Test
@@ -156,6 +162,42 @@ class LauncherFactoryTests {
 
 			final var jupiter = testPlan.getChildren("[engine:junit-jupiter]");
 			assertThat(jupiter).hasSize(1);
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(current);
+		}
+	}
+
+	@Test
+	void doesNotDiscoverLauncherDiscoverRequestListenerViaServiceApiWhenDisabled() {
+		withTestServices(() -> {
+			var launcher = (DefaultLauncher) LauncherFactory.create(
+				LauncherConfig.builder().enableLauncherDiscoveryListenerAutoRegistration(false).build());
+			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListener(request().build());
+
+			assertThat(launcherDiscoveryListener).isEqualTo(abortOnFailure());
+		});
+	}
+
+	@Test
+	void discoversLauncherDiscoverRequestListenerViaServiceApiByDefault() {
+		withTestServices(() -> {
+			var launcher = (DefaultLauncher) LauncherFactory.create();
+			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListener(request().build());
+
+			assertThat(launcherDiscoveryListener.getClass().getSimpleName()).startsWith("Composite");
+			assertThat(launcherDiscoveryListener).extracting("listeners").asList() //
+					.containsExactlyInAnyOrder(new TestLauncherDiscoveryListener(), abortOnFailure());
+		});
+	}
+
+	private static void withTestServices(Runnable runnable) {
+		var current = Thread.currentThread().getContextClassLoader();
+		try {
+			var url = LauncherFactoryTests.class.getClassLoader().getResource("testservices/");
+			var classLoader = new URLClassLoader(new URL[] { url }, current);
+			Thread.currentThread().setContextClassLoader(classLoader);
+			runnable.run();
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(current);
