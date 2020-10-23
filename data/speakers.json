@@ -110,5 +110,23 @@
     "twitter_username": "SvenRuppert",
     "link": "https://www.sven-ruppert.de",
     "picture": "https://avatars3.githubusercontent.com/u/2665330?s=96&v=4"
+  },
+  "bjhargrave": {
+    "name": "BJ Hargrave",
+    "github_username": "bjhargrave",
+    "link": "https://blog.hargrave.io",
+    "picture": "https://avatars3.githubusercontent.com/u/277682?s=400&v=4"
+  },
+  "rotty3000": {
+    "name": "Raymond Augé",
+    "github_username": "rotty3000",
+    "twitter_username": "rotty3000",
+    "link": "https://rotty3000.github.io",
+    "picture": "https://avatars2.githubusercontent.com/u/146764?s=400&v=4"
+  },
+  "kriegfrj": {
+    "name": "Fr Jeremy Krieg",
+    "github_username": "kriegfrj",
+    "link": "https://github.com/kriegfrj/"
   }
 }
