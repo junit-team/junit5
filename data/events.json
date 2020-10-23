@@ -734,5 +734,17 @@
       "marcphilipp",
       "sormuras"
     ]
+  },
+  {
+    "title": "Easier integration testing in OSGi: The open source osgi-test project",
+    "event": "EclipseCon 2020",
+    "date": "2020-10-22",
+    "location": "Cologne, Germany",
+    "link": "https://www.eclipsecon.org/2020/sessions/easier-integration-testing-osgi-open-source-osgi-test-project",
+    "speakers": [
+      "bjhargrave",
+      "rotty3000",
+      "kriegfrj"
+    ]
   }
 ]
