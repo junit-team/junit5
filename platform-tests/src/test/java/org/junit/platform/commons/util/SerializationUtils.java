@@ -14,23 +14,16 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 public class SerializationUtils {
 
-	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T serializeAndDeserialize(T object) throws Exception {
-		var bytes = serialize(object);
-		return (T) deserialize(bytes);
-	}
-
-	private static Object deserialize(byte[] bytes) throws Exception {
+	public static Object deserialize(byte[] bytes) throws Exception {
 		try (var in = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
 			return in.readObject();
 		}
 	}
 
-	private static byte[] serialize(Object object) throws Exception {
+	public static byte[] serialize(Object object) throws Exception {
 		try (var byteArrayOutputStream = new ByteArrayOutputStream();
 				var objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
 			objectOutputStream.writeObject(object);
