@@ -89,8 +89,7 @@ public class UniqueId implements Cloneable, Serializable {
 	private transient SoftReference<String> toString;
 
 	private UniqueId(UniqueIdFormat uniqueIdFormat, Segment segment) {
-		this.uniqueIdFormat = uniqueIdFormat;
-		this.segments = singletonList(segment);
+		this(uniqueIdFormat, singletonList(segment));
 	}
 
 	/**
@@ -102,7 +101,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 */
 	UniqueId(UniqueIdFormat uniqueIdFormat, List<Segment> segments) {
 		this.uniqueIdFormat = uniqueIdFormat;
-		this.segments = unmodifiableList(segments);
+		this.segments = segments;
 	}
 
 	final Optional<Segment> getRoot() {
@@ -123,7 +122,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 * {@code UniqueId}.
 	 */
 	public final List<Segment> getSegments() {
-		return this.segments;
+		return unmodifiableList(this.segments);
 	}
 
 	/**
@@ -157,7 +156,8 @@ public class UniqueId implements Cloneable, Serializable {
 	@API(status = STABLE, since = "1.1")
 	public final UniqueId append(Segment segment) {
 		Preconditions.notNull(segment, "segment must not be null");
-		List<Segment> baseSegments = new ArrayList<>(this.segments);
+		List<Segment> baseSegments = new ArrayList<>(this.segments.size() + 1);
+		baseSegments.addAll(this.segments);
 		baseSegments.add(segment);
 		return new UniqueId(this.uniqueIdFormat, baseSegments);
 	}
@@ -192,7 +192,7 @@ public class UniqueId implements Cloneable, Serializable {
 	@API(status = STABLE, since = "1.5")
 	public UniqueId removeLastSegment() {
 		Preconditions.condition(this.segments.size() > 1, "Cannot remove last remaining segment");
-		return new UniqueId(uniqueIdFormat, new ArrayList<>(segments.subList(0, segments.size() - 1)));
+		return new UniqueId(uniqueIdFormat, new ArrayList<>(this.segments.subList(0, this.segments.size() - 1)));
 	}
 
 	/**
