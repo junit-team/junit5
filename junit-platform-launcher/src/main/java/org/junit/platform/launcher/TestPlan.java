@@ -11,13 +11,13 @@
 package org.junit.platform.launcher;
 
 import static java.util.Collections.emptySet;
+import static java.util.Collections.synchronizedSet;
 import static java.util.Collections.unmodifiableSet;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +30,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestDescriptor.Visitor;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * {@code TestPlan} describes the tree of tests and containers as discovered
@@ -57,11 +58,11 @@ import org.junit.platform.engine.TestDescriptor.Visitor;
 @API(status = STABLE, since = "1.0")
 public class TestPlan {
 
-	private final Set<TestIdentifier> roots = Collections.synchronizedSet(new LinkedHashSet<>(4));
+	private final Set<TestIdentifier> roots = synchronizedSet(new LinkedHashSet<>(4));
 
-	private final Map<String, Set<TestIdentifier>> children = new ConcurrentHashMap<>(32);
+	private final Map<UniqueId, Set<TestIdentifier>> children = new ConcurrentHashMap<>(32);
 
-	private final Map<String, TestIdentifier> allIdentifiers = new ConcurrentHashMap<>(32);
+	private final Map<UniqueId, TestIdentifier> allIdentifiers = new ConcurrentHashMap<>(32);
 
 	private final boolean containsTests;
 
@@ -101,11 +102,11 @@ public class TestPlan {
 	@API(status = DEPRECATED, since = "1.4")
 	public void add(TestIdentifier testIdentifier) {
 		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
-		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);
-		if (testIdentifier.getParentId().isPresent()) {
-			String parentId = testIdentifier.getParentId().get();
+		allIdentifiers.put(testIdentifier.getUniqueIdObject(), testIdentifier);
+		if (testIdentifier.getParentIdObject().isPresent()) {
+			UniqueId parentId = testIdentifier.getParentIdObject().get();
 			Set<TestIdentifier> directChildren = children.computeIfAbsent(parentId,
-				key -> Collections.synchronizedSet(new LinkedHashSet<>(16)));
+				key -> synchronizedSet(new LinkedHashSet<>(16)));
 			directChildren.add(testIdentifier);
 		}
 		else {
@@ -155,7 +156,8 @@ public class TestPlan {
 	 */
 	public Set<TestIdentifier> getChildren(String parentId) {
 		Preconditions.notBlank(parentId, "parent ID must not be null or blank");
-		return children.containsKey(parentId) ? unmodifiableSet(children.get(parentId)) : emptySet();
+		UniqueId uniqueId = UniqueId.parse(parentId);
+		return children.containsKey(uniqueId) ? unmodifiableSet(children.get(uniqueId)) : emptySet();
 	}
 
 	/**
@@ -169,9 +171,10 @@ public class TestPlan {
 	 */
 	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
 		Preconditions.notBlank(uniqueId, "unique ID must not be null or blank");
-		Preconditions.condition(allIdentifiers.containsKey(uniqueId),
+		UniqueId uniqueIdObject = UniqueId.parse(uniqueId);
+		Preconditions.condition(allIdentifiers.containsKey(uniqueIdObject),
 			() -> "No TestIdentifier with unique ID [" + uniqueId + "] has been added to this TestPlan.");
-		return allIdentifiers.get(uniqueId);
+		return allIdentifiers.get(uniqueIdObject);
 	}
 
 	/**

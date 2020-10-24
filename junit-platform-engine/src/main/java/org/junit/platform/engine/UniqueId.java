@@ -15,6 +15,7 @@ import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -85,7 +86,7 @@ public class UniqueId implements Cloneable, Serializable {
 	// lazily computed
 	private transient int hashCode;
 	// lazily computed
-	private transient String toString;
+	private transient SoftReference<String> toString;
 
 	private UniqueId(UniqueIdFormat uniqueIdFormat, Segment segment) {
 		this.uniqueIdFormat = uniqueIdFormat;
@@ -250,9 +251,10 @@ public class UniqueId implements Cloneable, Serializable {
 	 */
 	@Override
 	public String toString() {
-		String s = this.toString;
-		if (s == null) {
-			s = this.uniqueIdFormat.format(this);
+		SoftReference<String> s = this.toString;
+		String value = s == null ? null : s.get();
+		if (value == null) {
+			value = this.uniqueIdFormat.format(this);
 			// this is a benign race like String#hash
 			// we potentially read and write values from multiple threads
 			// without a happens-before relationship
@@ -260,9 +262,9 @@ public class UniqueId implements Cloneable, Serializable {
 			// that were valid at one point, either null or the toString value
 			// so we might end up not seeing a value that a different thread
 			// has computed or multiple threads writing the same value
-			this.toString = s;
+			this.toString = new SoftReference<>(value);
 		}
-		return s;
+		return value;
 	}
 
 	/**
