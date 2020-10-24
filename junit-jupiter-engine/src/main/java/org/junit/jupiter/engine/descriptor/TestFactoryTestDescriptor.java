@@ -155,7 +155,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		}
 		if (dynamicDescendantFilter.test(uniqueId)) {
 			JupiterTestDescriptor descriptor = descriptorCreator.get();
-			parent.addChild(descriptor);
+			descriptor.setParent(parent);
 			return Optional.of(descriptor);
 		}
 		return Optional.empty();

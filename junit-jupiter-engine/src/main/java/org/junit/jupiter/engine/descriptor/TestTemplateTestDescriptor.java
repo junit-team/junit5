@@ -135,7 +135,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	}
 
 	private void execute(DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {
-		addChild(testDescriptor);
+		testDescriptor.setParent(this);
 		dynamicTestExecutor.execute(testDescriptor);
 	}
 
