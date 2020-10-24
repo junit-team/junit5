@@ -16,8 +16,10 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -29,6 +31,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
@@ -40,10 +43,13 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
 class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private static final Logger logger = LoggerFactory.getLogger(NodeTestTask.class);
+	private static final Runnable NOOP = () -> {
+	};
 
 	private final NodeTestTaskContext taskContext;
 	private final TestDescriptor testDescriptor;
 	private final Node<C> node;
+	private final Runnable finalizer;
 
 	private C parentContext;
 	private C context;
@@ -53,9 +59,14 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private ThrowableCollector throwableCollector;
 
 	NodeTestTask(NodeTestTaskContext taskContext, TestDescriptor testDescriptor) {
+		this(taskContext, testDescriptor, NOOP);
+	}
+
+	NodeTestTask(NodeTestTaskContext taskContext, TestDescriptor testDescriptor, Runnable finalizer) {
 		this.taskContext = taskContext;
 		this.testDescriptor = testDescriptor;
 		this.node = NodeUtils.asNode(testDescriptor);
+		this.finalizer = finalizer;
 	}
 
 	@Override
@@ -100,6 +111,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 							+ "why the flag was not cleared by user code.",
 					this.testDescriptor.getDisplayName(), this.testDescriptor.getUniqueId()));
 			}
+			finalizer.run();
 		}
 
 		// Clear reference to context to allow it to be garbage collected.
@@ -185,7 +197,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	}
 
 	private class DefaultDynamicTestExecutor implements DynamicTestExecutor {
-		private final List<Future<?>> futures = new ArrayList<>();
+		private final Map<UniqueId, DynamicTaskState> unfinishedTasks = new ConcurrentHashMap<>();
 
 		@Override
 		public void execute(TestDescriptor testDescriptor) {
@@ -206,20 +218,22 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				return completedFuture(null);
 			}
 			else {
+				UniqueId uniqueId = testDescriptor.getUniqueId();
 				NodeTestTask<C> nodeTestTask = new NodeTestTask<>(taskContext.withListener(executionListener),
-					testDescriptor);
+					testDescriptor, () -> unfinishedTasks.remove(uniqueId));
 				nodeTestTask.setParentContext(context);
-				Future<?> future = taskContext.getExecutorService().submit(nodeTestTask);
-				futures.add(future);
+				unfinishedTasks.put(uniqueId, DynamicTaskState.unscheduled());
+				Future<Void> future = taskContext.getExecutorService().submit(nodeTestTask);
+				unfinishedTasks.computeIfPresent(uniqueId, (__, state) -> DynamicTaskState.scheduled(future));
 				return future;
 			}
 		}
 
 		@Override
 		public void awaitFinished() throws InterruptedException {
-			for (Future<?> future : futures) {
+			for (DynamicTaskState state : unfinishedTasks.values()) {
 				try {
-					future.get();
+					state.awaitFinished();
 				}
 				catch (CancellationException ignore) {
 					// Futures returned by execute() may have been cancelled
@@ -229,6 +243,23 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				}
 			}
 		}
+	}
+
+	@FunctionalInterface
+	private interface DynamicTaskState {
+
+		DynamicTaskState UNSCHEDULED = () -> {
+		};
+
+		static DynamicTaskState unscheduled() {
+			return UNSCHEDULED;
+		}
+
+		static DynamicTaskState scheduled(Future<Void> future) {
+			return future::get;
+		}
+
+		void awaitFinished() throws CancellationException, ExecutionException, InterruptedException;
 	}
 
 }
