@@ -10,9 +10,12 @@
 
 package org.junit.platform.launcher;
 
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 import static java.util.Collections.unmodifiableSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -88,9 +91,20 @@ public final class TestIdentifier implements Serializable {
 		this.parentId = parentId;
 		this.displayName = displayName;
 		this.source = source;
-		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
+		this.tags = copyOf(tags);
 		this.type = type;
 		this.legacyReportingName = legacyReportingName;
+	}
+
+	private Set<TestTag> copyOf(Set<TestTag> tags) {
+		switch (tags.size()) {
+			case 0:
+				return emptySet();
+			case 1:
+				return singleton(getOnlyElement(tags));
+			default:
+				return new LinkedHashSet<>(tags);
+		}
 	}
 
 	/**
