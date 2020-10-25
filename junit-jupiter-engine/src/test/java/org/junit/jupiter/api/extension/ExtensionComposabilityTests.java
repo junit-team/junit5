@@ -60,6 +60,7 @@ class ExtensionComposabilityTests {
 
 		List<String> expectedMethodNames = expectedMethods.stream()
 				.map(Method::getName)
+				.distinct()
 				.sorted()
 				.collect(toList());
 		// @formatter:on
