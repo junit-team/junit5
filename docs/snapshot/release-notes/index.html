@@ -536,7 +536,9 @@ of this change may be witnessed by end users and test engine or extension author
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt; , ExtensionContext)</code> has been deprecated in favor of
+<code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt; , DynamicTestInvocationContext, ExtensionContext)</code> that
+allows to access the dynamic test executable via <code>DynamicTestInvocationContext.getExecutable()</code>.</p>
 </li>
 </ul>
 </div>
@@ -786,7 +788,7 @@ called once even if they throw an exception.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2020-10-25 13:00:01 UTC
+Last updated 2020-10-25 16:28:13 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

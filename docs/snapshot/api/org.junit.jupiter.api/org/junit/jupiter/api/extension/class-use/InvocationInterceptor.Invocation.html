@@ -135,13 +135,24 @@ loadScripts(document, 'script');</script>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>default void</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">InvocationInterceptor.</span><code><span class="member-name-link"><a href="../InvocationInterceptor.html#interceptDynamicTest(org.junit.jupiter.api.extension.InvocationInterceptor.Invocation,org.junit.jupiter.api.extension.ExtensionContext)">interceptDynamicTest</a></span>&#8203;(<a href="../InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">InvocationInterceptor.Invocation</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;invocation,
+<th class="col-second" scope="row"><span class="type-name-label">InvocationInterceptor.</span><code><span class="member-name-link"><a href="../InvocationInterceptor.html#interceptDynamicTest(org.junit.jupiter.api.extension.InvocationInterceptor.Invocation,org.junit.jupiter.api.extension.DynamicTestInvocationContext,org.junit.jupiter.api.extension.ExtensionContext)">interceptDynamicTest</a></span>&#8203;(<a href="../InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">InvocationInterceptor.Invocation</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;invocation,
+<a href="../DynamicTestInvocationContext.html" title="class in org.junit.jupiter.api.extension">DynamicTestInvocationContext</a>&nbsp;invocationContext,
 <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="col-last">
 <div class="block">Intercept the invocation of a <a href="../../DynamicTest.html" title="class in org.junit.jupiter.api"><code>DynamicTest</code></a>.</div>
 </td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>default void</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">InvocationInterceptor.</span><code><span class="member-name-link"><a href="../InvocationInterceptor.html#interceptDynamicTest(org.junit.jupiter.api.extension.InvocationInterceptor.Invocation,org.junit.jupiter.api.extension.ExtensionContext)">interceptDynamicTest</a></span>&#8203;(<a href="../InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">InvocationInterceptor.Invocation</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;invocation,
+<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="../InvocationInterceptor.html#interceptDynamicTest(org.junit.jupiter.api.extension.InvocationInterceptor.Invocation,org.junit.jupiter.api.extension.DynamicTestInvocationContext,org.junit.jupiter.api.extension.ExtensionContext)"><code>InvocationInterceptor.interceptDynamicTest(Invocation, DynamicTestInvocationContext, ExtensionContext)</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code>default &lt;T&gt;&nbsp;T</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">InvocationInterceptor.</span><code><span class="member-name-link"><a href="../InvocationInterceptor.html#interceptTestClassConstructor(org.junit.jupiter.api.extension.InvocationInterceptor.Invocation,org.junit.jupiter.api.extension.ReflectiveInvocationContext,org.junit.jupiter.api.extension.ExtensionContext)">interceptTestClassConstructor</a></span>&#8203;(<a href="../InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">InvocationInterceptor.Invocation</a>&lt;T&gt;&nbsp;invocation,
 <a href="../ReflectiveInvocationContext.html" title="interface in org.junit.jupiter.api.extension">ReflectiveInvocationContext</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Constructor.html" title="class or interface in java.lang.reflect" class="external-link">Constructor</a>&lt;T&gt;&gt;&nbsp;invocationContext,
@@ -150,7 +161,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Intercept the invocation of a test class constructor.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>default &lt;T&gt;&nbsp;T</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">InvocationInterceptor.</span><code><span class="member-name-link"><a href="../InvocationInterceptor.html#interceptTestFactoryMethod(org.junit.jupiter.api.extension.InvocationInterceptor.Invocation,org.junit.jupiter.api.extension.ReflectiveInvocationContext,org.junit.jupiter.api.extension.ExtensionContext)">interceptTestFactoryMethod</a></span>&#8203;(<a href="../InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">InvocationInterceptor.Invocation</a>&lt;T&gt;&nbsp;invocation,
 <a href="../ReflectiveInvocationContext.html" title="interface in org.junit.jupiter.api.extension">ReflectiveInvocationContext</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&gt;&nbsp;invocationContext,
@@ -159,7 +170,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Intercept the invocation of a <a href="../../TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a> method.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">InvocationInterceptor.</span><code><span class="member-name-link"><a href="../InvocationInterceptor.html#interceptTestMethod(org.junit.jupiter.api.extension.InvocationInterceptor.Invocation,org.junit.jupiter.api.extension.ReflectiveInvocationContext,org.junit.jupiter.api.extension.ExtensionContext)">interceptTestMethod</a></span>&#8203;(<a href="../InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">InvocationInterceptor.Invocation</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;invocation,
 <a href="../ReflectiveInvocationContext.html" title="interface in org.junit.jupiter.api.extension">ReflectiveInvocationContext</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&gt;&nbsp;invocationContext,
@@ -168,7 +179,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Intercept the invocation of a <a href="../../Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a> method.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">InvocationInterceptor.</span><code><span class="member-name-link"><a href="../InvocationInterceptor.html#interceptTestTemplateMethod(org.junit.jupiter.api.extension.InvocationInterceptor.Invocation,org.junit.jupiter.api.extension.ReflectiveInvocationContext,org.junit.jupiter.api.extension.ExtensionContext)">interceptTestTemplateMethod</a></span>&#8203;(<a href="../InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">InvocationInterceptor.Invocation</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;invocation,
 <a href="../ReflectiveInvocationContext.html" title="interface in org.junit.jupiter.api.extension">ReflectiveInvocationContext</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&gt;&nbsp;invocationContext,
