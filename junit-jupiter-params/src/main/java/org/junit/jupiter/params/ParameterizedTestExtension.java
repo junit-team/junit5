@@ -154,6 +154,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		return arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Named<Object>> namedArguments(Object[] arguments) {
 		return Arrays.stream(arguments) //
 				.map(argument -> {
