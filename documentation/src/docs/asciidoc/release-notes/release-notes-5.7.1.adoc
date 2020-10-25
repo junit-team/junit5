@@ -31,7 +31,8 @@ GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Creator functions passed to `ExtensionContext.Store.getOrComputeIfAbsent()` are now only
+  called once even if they throw an exception.
 
 ==== Deprecations and Breaking Changes
 
