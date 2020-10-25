@@ -45,7 +45,7 @@ link runner to junit4--><path d="M485.7737,215.2137 C467.0962,230.9678 437.7033,
 link testkit to opentest4j--><path d="M231.7898,210.2734 C152.6847,225.3616 39.0445,252.5646 12.8147,288 C-9.1671,317.6964 30.337,450.2449 33.8147,455 C51.8937,479.7194 81.4831,496.802 107.4458,507.9 " fill="none" id="testkit-&gt;opentest4j" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="112.2478,509.9031,105.4815,502.7465,107.6332,507.9781,102.4016,510.1299,112.2478,509.9031" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[a03d5193873264966af50dc3cedb1169]
 link testkit to launcher--><path d="M331.1497,215.0501 C349.7431,230.4696 378.7054,251.8707 407.8147,263 C486.1361,292.9445 513.9774,265.7236 594.8147,288 C616.8476,294.0716 640.3201,303.7951 659.4719,312.6525 " fill="none" id="testkit-&gt;launcher" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="664.2444,314.883,657.7845,307.4486,659.7147,312.766,654.3973,314.6962,664.2444,314.883" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[689563d167406738417b7162b24b4b21]
 link vintage_engine to engine--><path d="M207.5047,349.4433 C210.3075,349.9772 213.0842,350.4978 215.8147,351 C354.3829,376.4874 516.1226,401.6273 613.1267,416.2119 " fill="none" id="vintage_engine-&gt;engine" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="618.271,416.9846,609.965,411.6921,613.3265,416.2419,608.7767,419.6033,618.271,416.9846" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[39cae807274abf57b2b086cda786b46e]
-link vintage_engine to junit4--><path d="M128.8147,351.0569 C128.8147,366.5126 128.8147,388.8647 128.8147,405.6731 " fill="none" id="vintage_engine-&gt;junit4" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="128.8147,410.6977,132.8147,401.6977,128.8147,405.6977,124.8147,401.6977,128.8147,410.6977" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[51b82269eb3842a1a0882c65c40837e5]
+link vintage_engine to junit4--><path d="M128.8147,351.0569 C128.8147,366.5126 128.8147,388.8647 128.8147,405.6731 " fill="none" id="vintage_engine-&gt;junit4" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="128.8147,410.6977,132.8147,401.6977,128.8147,405.6977,124.8147,401.6977,128.8147,410.6977" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[9783ecedf2b42576c8b459fd5f23c88d]
 @startuml
 skinparam {
     defaultFontName Open Sans
@@ -134,7 +134,7 @@ PlantUML version 1.2019.12(Sun Nov 03 10:24:54 UTC 2019)
 (APACHE source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 11.0.8+10-LTS
+Java Version: 15.0.1+8
 Operating System: Linux
 Default Encoding: UTF-8
 Language: en

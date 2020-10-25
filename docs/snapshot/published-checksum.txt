@@ -154,7 +154,6 @@
 341484f8a640fe26fc66c9e1adfba0cd  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAggregationException.java
 345f27888832c7d08f2705656ac5fff2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java
 356c26d6d938125b52a9d89e9bea0dd9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java
-35fe6a3d0752b1fea9b84f5d9246d6bd  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExtensionValuesStore.java
 36380f946fbb20c3f9dec2771cbf861b  documentation/src/test/java/example/defaultmethods/ComparableContract.java
 36f8768435182fb7a319dd873cfe6a6a  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 3734ba916899d7d83c86f6e8c13b3214  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
@@ -208,7 +207,6 @@
 473c66075e6caf5280a0776723f60243  documentation/src/test/java/example/callbacks/Extension2.java
 47498bdd41e084e8176fc8f9456481e4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrdererContext.java
 4810af74b85062da079e42106d432dfc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileSource.java
-48135548cb900e6d0a6e03310813f2d3  documentation/src/docs/asciidoc/release-notes/index.adoc
 49376c2e2e72b3c425b2ac43dce20542  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.java
 4a1da47ce2b5b7b4d5fd1145737a933a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/package-info.java
 4a4216873a839d7f0531cbba8491cfc9  documentation/src/test/java/example/exception/IgnoreIOExceptionExtension.java
@@ -290,6 +288,7 @@
 69851f66647aa76ef872b4894895c2dd  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle.png
 69b9dda3124ed22cf6c5109c734a6292  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfigurationParameters.java
 69dbc93187f8695f67f17cc5bb5d7954  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/MutableTestExecutionSummary.java
+6a06ad16a130eff6ef044284d8fd1447  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExtensionValuesStore.java
 6a0863b7d60569cabc4094ece5c63cbd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOsCondition.java
 6a1e95c175810a1af635795d282d6ee2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java
 6a74c01c24c0b32e8083f6b462e26516  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/discovery/AbortOnFailureLauncherDiscoveryListener.java
@@ -424,6 +423,7 @@
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a13777605819a6ab3a2060956fa0b743  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
+a14f24747bc6fd573f765d607eac4639  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 a19dfa211e3f0f74ea007e63e78f479f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRangeCondition.java
 a1ea21eb6905311553d061647b2c98d0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/package-info.java
 a3112552fe1385621120dbc4f07796d6  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
@@ -643,6 +643,7 @@ e9dcd13f55b4cf63ac30d8577eca9c85  junit-platform-launcher/src/main/java/org/juni
 ea07a1e249006b4b6dadd79dae2b5cad  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
 ea253702a64ee9614c2a5342ac23fb2a  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.css
 ea740affec7db6778579dfec63792fbf  documentation/src/test/java/example/testinterface/TimeExecutionLogger.java
+ea92fff073fb0530d434b1cd97f8b442  documentation/src/docs/asciidoc/release-notes/index.adoc
 eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit/platform/console/tasks/package-info.java
 eab4a4b60983b3e8ac6d4be11edc4248  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotNull.java
 eb06ab8e739753de5ce92e278865c951  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageSelector.java
