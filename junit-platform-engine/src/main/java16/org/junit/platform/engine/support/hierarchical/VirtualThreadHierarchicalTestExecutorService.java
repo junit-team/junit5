@@ -45,7 +45,7 @@ class VirtualThreadHierarchicalTestExecutorService implements HierarchicalTestEx
 			configuration.getCorePoolSize(), configuration.getMaxPoolSize(), configuration.getMinimumRunnable(), null,
 			configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
 		var virtualThreadFactory = Thread.builder().virtual(forkJoinPool).name("junit-executor", 1).factory();
-		executorService = Executors.newUnboundedExecutor(virtualThreadFactory);
+		executorService = Executors.newThreadExecutor(virtualThreadFactory);
 	}
 
 	@Override

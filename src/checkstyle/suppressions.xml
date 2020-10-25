@@ -5,5 +5,5 @@
 	<suppress checks="JavadocPackage"
 		files="junit-platform-console[\\/]src[\\/]main[\\/]java.+?[\\/]org[\\/]junit[\\/]platform[\\/]console[\\/]*"/>
 	<suppress checks="JavadocPackage"
-		files="junit-platform-engine[\\/]src[\\/]main[\\/]java15[\\/]org[\\/]junit[\\/]platform[\\/]engine[\\/]support[\\/]hierarchical[\\/]*"/>
+		files="junit-platform-engine[\\/]src[\\/]main[\\/]java16[\\/]org[\\/]junit[\\/]platform[\\/]engine[\\/]support[\\/]hierarchical[\\/]*"/>
 </suppressions>
