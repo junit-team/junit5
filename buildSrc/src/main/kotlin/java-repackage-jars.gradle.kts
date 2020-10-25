@@ -1,5 +1,3 @@
-import java.util.Calendar
-import java.util.GregorianCalendar
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
@@ -19,10 +17,21 @@ afterEvaluate {
 			val newJarStream = JarOutputStream(os)
 			val oldJar = JarFile(originalOutput)
 
+			fun sortAlwaysFirst(name: String): Comparator<JarEntry> =
+				Comparator { a, b ->
+					when {
+						a.name == name -> -1
+						b.name == name -> 1
+						else -> 0
+					}
+				}
+
 			oldJar.entries()
 					.toList()
 					.distinctBy { it.name }
-					.sortedBy { it.name }
+					.sortedWith(sortAlwaysFirst("META-INF/")
+							.then(sortAlwaysFirst("META-INF/MANIFEST.MF"))
+							.thenBy { it.name })
 					.forEach { entry ->
 						val jarEntry = JarEntry(entry.name)
 
