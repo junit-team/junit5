@@ -12,8 +12,12 @@ package platform.tooling.support.tests;
 
 import static com.tngtech.archunit.base.DescribedPredicate.describe;
 import static com.tngtech.archunit.base.DescribedPredicate.not;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.ANONYMOUS_CLASSES;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.TOP_LEVEL_CLASSES;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.simpleName;
+import static com.tngtech.archunit.core.domain.JavaModifier.PUBLIC;
 import static com.tngtech.archunit.core.domain.properties.HasModifiers.Predicates.modifier;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
@@ -26,9 +30,7 @@ import static platform.tooling.support.Helper.loadJarFiles;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
-import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.Location;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -43,9 +45,10 @@ class ArchUnitTests {
 
 	@ArchTest
 	private final ArchRule allPublicTopLevelTypesHaveApiAnnotations = classes() //
-			.that(have(modifier(JavaModifier.PUBLIC))) //
-			.and(describe("are top-level", javaClass -> !javaClass.getEnclosingClass().isPresent())) //
-			.and(not(describe("are anonymous", JavaClass::isAnonymous))) //
+			.that(have(modifier(PUBLIC))) //
+			.and(TOP_LEVEL_CLASSES) //
+			.and(not(ANONYMOUS_CLASSES)) //
+			.and(not(describe("are Kotlin SAM type implementations", simpleName("")))) //
 			.and(not(describe("are shadowed", resideInAnyPackage("..shadow..")))) //
 			.should().beAnnotatedWith(API.class);
 

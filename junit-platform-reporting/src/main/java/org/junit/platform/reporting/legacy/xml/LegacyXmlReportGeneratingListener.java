@@ -10,7 +10,7 @@
 
 package org.junit.platform.reporting.legacy.xml;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,7 +43,7 @@ import org.junit.platform.launcher.TestPlan;
  * @see org.junit.platform.launcher.listeners.LoggingListener
  * @see org.junit.platform.launcher.listeners.SummaryGeneratingListener
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = STABLE, since = "1.7")
 public class LegacyXmlReportGeneratingListener implements TestExecutionListener {
 
 	private final Path reportsDir;

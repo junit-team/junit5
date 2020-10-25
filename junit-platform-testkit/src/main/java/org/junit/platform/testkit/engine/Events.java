@@ -10,9 +10,10 @@
 
 package org.junit.platform.testkit.engine;
 
+import static java.util.Collections.sort;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.testkit.engine.Event.byPayload;
 import static org.junit.platform.testkit.engine.Event.byType;
@@ -20,8 +21,12 @@ import static org.junit.platform.testkit.engine.Event.byType;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -36,6 +41,7 @@ import org.assertj.core.data.Index;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
+import org.opentest4j.AssertionFailedError;
 
 /**
  * {@code Events} is a facade that provides a fluent API for working with
@@ -43,7 +49,7 @@ import org.junit.platform.engine.TestExecutionResult.Status;
  *
  * @since 1.4
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public final class Events {
 
 	private final List<Event> events;
@@ -243,13 +249,15 @@ public final class Events {
 	 * <h4>Example</h4>
 	 *
 	 * <pre class="code">
-	 * executionResults.tests().assertEventsMatchExactly(
+	 * executionResults.testEvents().assertEventsMatchExactly(
 	 *     event(test("exampleTestMethod"), started()),
 	 *     event(test("exampleTestMethod"), finishedSuccessfully())
 	 * );
 	 * </pre>
 	 *
 	 * @param conditions the conditions to match against; never {@code null}
+	 * @see #assertEventsMatchLoosely(Condition...)
+	 * @see #assertEventsMatchLooselyInOrder(Condition...)
 	 * @see EventConditions
 	 * @see TestExecutionResultConditions
 	 */
@@ -257,6 +265,75 @@ public final class Events {
 	public final void assertEventsMatchExactly(Condition<? super Event>... conditions) {
 		Preconditions.notNull(conditions, "conditions must not be null");
 		assertEventsMatchExactly(this.events, conditions);
+	}
+
+	/**
+	 * Assert that all provided conditions are matched by an {@linkplain Event event}
+	 * contained in this {@code Events} object, regardless of order.
+	 *
+	 * <p>Note that this method performs a partial match. Thus, some events may
+	 * not match any of the provided conditions.
+	 *
+	 * <p>Conditions can be imported statically from {@link EventConditions}
+	 * and {@link TestExecutionResultConditions}.
+	 *
+	 * <h4>Example</h4>
+	 *
+	 * <pre class="code">
+	 * executionResults.testEvents().assertEventsMatchLoosely(
+	 *     event(test("exampleTestMethod"), started()),
+	 *     event(test("exampleTestMethod"), finishedSuccessfully())
+	 * );
+	 * </pre>
+	 *
+	 * @param conditions the conditions to match against; never {@code null}
+	 * @see #assertEventsMatchExactly(Condition...)
+	 * @see #assertEventsMatchLooselyInOrder(Condition...)
+	 * @see EventConditions
+	 * @see TestExecutionResultConditions
+	 * @since 1.7
+	 */
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public final void assertEventsMatchLoosely(Condition<? super Event>... conditions) {
+		Preconditions.notNull(conditions, "conditions must not be null");
+		Preconditions.containsNoNullElements(conditions, "conditions must not contain null elements");
+		assertEventsMatchLoosely(this.events, conditions);
+	}
+
+	/**
+	 * Assert that all provided conditions are matched by an {@linkplain Event event}
+	 * contained in this {@code Events} object.
+	 *
+	 * <p>Note that this method performs a partial match. Thus, some events may
+	 * not match any of the provided conditions; however, the conditions provided
+	 * must be in the correct order.
+	 *
+	 * <p>Conditions can be imported statically from {@link EventConditions}
+	 * and {@link TestExecutionResultConditions}.
+	 *
+	 * <h4>Example</h4>
+	 *
+	 * <pre class="code">
+	 * executionResults.testEvents().assertEventsMatchLooselyInOrder(
+	 *     event(test("exampleTestMethod"), started()),
+	 *     event(test("exampleTestMethod"), finishedSuccessfully())
+	 * );
+	 * </pre>
+	 *
+	 * @param conditions the conditions to match against; never {@code null}
+	 * @see #assertEventsMatchExactly(Condition...)
+	 * @see #assertEventsMatchLoosely(Condition...)
+	 * @see EventConditions
+	 * @see TestExecutionResultConditions
+	 * @since 1.7
+	 */
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public final void assertEventsMatchLooselyInOrder(Condition<? super Event>... conditions) {
+		Preconditions.notNull(conditions, "conditions must not be null");
+		Preconditions.containsNoNullElements(conditions, "conditions must not contain null elements");
+		assertEventsMatchLooselyInOrder(this.events, conditions);
 	}
 
 	/**
@@ -334,6 +411,63 @@ public final class Events {
 			softly.assertThat(events).has(conditions[i], Index.atIndex(i));
 		}
 		softly.assertAll();
+	}
+
+	@SafeVarargs
+	private static void assertEventsMatchLoosely(List<Event> events, Condition<? super Event>... conditions) {
+		SoftAssertions softly = new SoftAssertions();
+		for (Condition<? super Event> condition : conditions) {
+			checkCondition(events, softly, condition);
+		}
+		softly.assertAll();
+	}
+
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	private static void assertEventsMatchLooselyInOrder(List<Event> events, Condition<? super Event>... conditions) {
+		Assertions.assertThat(conditions).hasSizeLessThanOrEqualTo(events.size());
+		SoftAssertions softly = new SoftAssertions();
+
+		// @formatter:off
+		List<Integer> indices = Arrays.stream(conditions)
+				.map(condition -> findEvent(events, softly, condition))
+				.filter(Objects::nonNull)
+				.map(events::indexOf)
+				.collect(toList());
+		// @formatter:on
+
+		if (isNotInIncreasingOrder(indices)) {
+			throw new AssertionFailedError("Conditions are not in the correct order.");
+		}
+
+		softly.assertAll();
+	}
+
+	private static boolean isNotInIncreasingOrder(List<Integer> indices) {
+		List<Integer> copy = new ArrayList<>(indices);
+		sort(copy);
+
+		return !indices.equals(copy);
+	}
+
+	private static void checkCondition(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
+		if (events.stream().noneMatch(condition::matches)) {
+			softly.fail("Condition did not match any event: " + condition);
+		}
+	}
+
+	private static Event findEvent(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
+		// @formatter:off
+		Optional<Event> matchedEvent = events.stream()
+				.filter(condition::matches)
+				.findFirst();
+		// @formatter:on
+
+		if (!matchedEvent.isPresent()) {
+			softly.fail("Condition did not match any event: " + condition);
+		}
+
+		return matchedEvent.orElse(null);
 	}
 
 }

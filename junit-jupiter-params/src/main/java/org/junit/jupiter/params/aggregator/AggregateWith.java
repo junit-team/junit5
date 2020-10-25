@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.aggregator;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -40,7 +40,7 @@ import org.apiguardian.api.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
 @Documented
-@API(status = EXPERIMENTAL, since = "5.2")
+@API(status = STABLE, since = "5.7")
 public @interface AggregateWith {
 
 	Class<? extends ArgumentsAggregator> value();

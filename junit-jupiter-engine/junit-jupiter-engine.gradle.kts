@@ -1,9 +1,8 @@
 plugins {
 	`kotlin-library-conventions`
+	`testing-conventions`
 	groovy
 }
-
-apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Engine"
 
@@ -19,5 +18,6 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 	testImplementation("org.codehaus.groovy:groovy-all")
 }

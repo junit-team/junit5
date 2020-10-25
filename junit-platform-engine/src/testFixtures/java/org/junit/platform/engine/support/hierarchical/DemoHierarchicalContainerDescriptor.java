@@ -11,7 +11,6 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip;
-import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip;
 
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -24,12 +23,6 @@ public class DemoHierarchicalContainerDescriptor extends AbstractTestDescriptor
 		implements Node<DemoEngineExecutionContext> {
 
 	private final Runnable beforeBlock;
-	private String skippedReason;
-	private boolean skipped;
-
-	DemoHierarchicalContainerDescriptor(UniqueId uniqueId, String displayName, Runnable executeBlock) {
-		this(uniqueId, displayName, null, executeBlock);
-	}
 
 	public DemoHierarchicalContainerDescriptor(UniqueId uniqueId, String displayName, TestSource source,
 			Runnable beforeBlock) {
@@ -47,14 +40,9 @@ public class DemoHierarchicalContainerDescriptor extends AbstractTestDescriptor
 		return true;
 	}
 
-	public void markSkipped(String reason) {
-		this.skipped = true;
-		this.skippedReason = reason;
-	}
-
 	@Override
 	public SkipResult shouldBeSkipped(DemoEngineExecutionContext context) {
-		return this.skipped ? skip(this.skippedReason) : doNotSkip();
+		return doNotSkip();
 	}
 
 	@Override

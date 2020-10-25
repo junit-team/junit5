@@ -13,6 +13,7 @@ package org.junit.platform.testkit.engine;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
@@ -29,6 +30,7 @@ import static org.junit.platform.testkit.engine.EventType.STARTED;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
@@ -40,6 +42,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 /**
@@ -48,7 +51,7 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
  * @since 1.4
  * @see TestExecutionResultConditions
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public final class EventConditions {
 
 	private EventConditions() {
@@ -225,7 +228,6 @@ public final class EventConditions {
 	 *
 	 * @since 1.6
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public static Condition<Event> uniqueIdSubstrings(String... uniqueIdSubstrings) {
 		return uniqueIdSubstrings(Arrays.asList(uniqueIdSubstrings));
 	}
@@ -238,7 +240,6 @@ public final class EventConditions {
 	 *
 	 * @since 1.6
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public static Condition<Event> uniqueIdSubstrings(List<String> uniqueIdSubstrings) {
 		// The following worked with AssertJ 3.13.2
 		// return allOf(uniqueIdSubstrings.stream().map(EventConditions::uniqueIdSubstring).collect(toList()));
@@ -411,6 +412,17 @@ public final class EventConditions {
 	 */
 	public static Condition<Event> reason(Predicate<String> predicate) {
 		return new Condition<>(byPayload(String.class, predicate), "event with custom reason predicate");
+	}
+
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getPayload() payload} is an instance of
+	 * {@link ReportEntry} that contains the supplied key-value pairs.
+	 */
+	@API(status = EXPERIMENTAL, since = "1.7")
+	public static Condition<Event> reportEntry(Map<String, String> keyValuePairs) {
+		return new Condition<>(byPayload(ReportEntry.class, it -> it.getKeyValuePairs().equals(keyValuePairs)),
+			"event for report entry with key-value pairs %s", keyValuePairs);
 	}
 
 }

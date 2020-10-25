@@ -7,7 +7,7 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
-@file:API(status = API.Status.EXPERIMENTAL, since = "5.3")
+@file:API(status = API.Status.STABLE, since = "5.7")
 
 package org.junit.jupiter.params.aggregator
 

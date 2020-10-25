@@ -16,18 +16,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.net.URL;
+import java.net.URLClassLoader;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.listeners.AnotherUnusedTestExecutionListener;
 import org.junit.platform.launcher.listeners.NoopTestExecutionListener;
+import org.junit.platform.launcher.listeners.UnusedTestExecutionListener;
 
 /**
  * @since 1.0
@@ -41,23 +42,32 @@ class LauncherFactoryTests {
 
 	@Test
 	void noopTestExecutionListenerIsLoadedViaServiceApi() {
-		DefaultLauncher launcher = (DefaultLauncher) LauncherFactory.create();
-		List<TestExecutionListener> listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
-		Optional<TestExecutionListener> listener = listeners.stream().filter(
-			NoopTestExecutionListener.class::isInstance).findFirst();
+		var launcher = (DefaultLauncher) LauncherFactory.create();
+		var listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
+		var listener = listeners.stream().filter(NoopTestExecutionListener.class::isInstance).findFirst();
 		assertThat(listener).isPresent();
 	}
 
 	@Test
-	void create() {
-		LauncherDiscoveryRequest discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+	void unusedTestExecutionListenerIsNotLoadedViaServiceApi() {
+		var launcher = (DefaultLauncher) LauncherFactory.create();
+		var listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
 
-		TestPlan testPlan = LauncherFactory.create().discover(discoveryRequest);
-		Set<TestIdentifier> roots = testPlan.getRoots();
+		assertThat(listeners).filteredOn(AnotherUnusedTestExecutionListener.class::isInstance).isEmpty();
+		assertThat(listeners).filteredOn(UnusedTestExecutionListener.class::isInstance).isEmpty();
+		assertThat(listeners).filteredOn(NoopTestExecutionListener.class::isInstance).isNotEmpty();
+	}
+
+	@Test
+	void create() {
+		var discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+
+		var testPlan = LauncherFactory.create().discover(discoveryRequest);
+		var roots = testPlan.getRoots();
 		assertThat(roots).hasSize(2);
 
 		// @formatter:off
-		List<String> ids = roots.stream()
+		var ids = roots.stream()
 				.map(TestIdentifier::getUniqueId)
 				.collect(toList());
 		// @formatter:on
@@ -67,24 +77,89 @@ class LauncherFactoryTests {
 
 	@Test
 	void createWithConfig() {
-		LauncherDiscoveryRequest discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+		var discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
 
-		LauncherConfig config = LauncherConfig.builder()//
+		var config = LauncherConfig.builder()//
 				.enableTestEngineAutoRegistration(false)//
 				.addTestEngines(new JupiterTestEngine())//
 				.build();
 
-		TestPlan testPlan = LauncherFactory.create(config).discover(discoveryRequest);
-		Set<TestIdentifier> roots = testPlan.getRoots();
+		var testPlan = LauncherFactory.create(config).discover(discoveryRequest);
+		var roots = testPlan.getRoots();
 		assertThat(roots).hasSize(1);
 
 		// @formatter:off
-		List<String> ids = roots.stream()
+		var ids = roots.stream()
 				.map(TestIdentifier::getUniqueId)
 				.collect(toList());
 		// @formatter:on
 
 		assertThat(ids).containsOnly("[engine:junit-jupiter]");
+	}
+
+	@Test
+	void createWithPostDiscoveryFilters() {
+		var discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+
+		var config = LauncherConfig.builder()//
+				.addPostDiscoveryFilters(TagFilter.includeTags("test-post-discovery")).build();
+
+		var testPlan = LauncherFactory.create(config).discover(discoveryRequest);
+		final var vintage = testPlan.getChildren("[engine:junit-vintage]");
+		assertThat(vintage).isEmpty();
+
+		final var jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+		assertThat(jupiter).hasSize(1);
+	}
+
+	@Test
+	void applyPostDiscoveryFiltersViaServiceApi() {
+		final var current = Thread.currentThread().getContextClassLoader();
+		try {
+			var url = getClass().getClassLoader().getResource("testservices/");
+			var classLoader = new URLClassLoader(new URL[] { url }, current);
+			Thread.currentThread().setContextClassLoader(classLoader);
+
+			var discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+
+			var config = LauncherConfig.builder()//
+					.build();
+
+			var testPlan = LauncherFactory.create(config).discover(discoveryRequest);
+			final var vintage = testPlan.getChildren("[engine:junit-vintage]");
+			assertThat(vintage).isEmpty();
+
+			final var jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+			assertThat(jupiter).hasSize(1);
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(current);
+		}
+	}
+
+	@Test
+	void notApplyIfDisabledPostDiscoveryFiltersViaServiceApi() {
+		final var current = Thread.currentThread().getContextClassLoader();
+		try {
+			var url = getClass().getClassLoader().getResource("testservices/");
+			var classLoader = new URLClassLoader(new URL[] { url }, current);
+			Thread.currentThread().setContextClassLoader(classLoader);
+
+			var discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+
+			var config = LauncherConfig.builder()//
+					.enablePostDiscoveryFilterAutoRegistration(false).build();
+
+			var testPlan = LauncherFactory.create(config).discover(discoveryRequest);
+			final var vintage = testPlan.getChildren("[engine:junit-vintage]");
+			assertThat(vintage).hasSize(1);
+
+			final var jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+			assertThat(jupiter).hasSize(1);
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(current);
+		}
 	}
 
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
@@ -106,10 +181,10 @@ class LauncherFactoryTests {
 
 	static class JUnit5Example {
 
+		@Tag("test-post-discovery")
 		@Test
 		void testJ5() {
 		}
 
 	}
-
 }

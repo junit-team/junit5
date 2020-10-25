@@ -11,6 +11,7 @@
 package org.junit.jupiter.params.provider;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -25,6 +26,9 @@ import org.apiguardian.api.API;
  * comma-separated values (CSV) from one or more supplied
  * {@linkplain #value CSV lines}.
  *
+ * <p>The column delimiter (defaults to comma) can be customized with either
+ * {@link #delimiter()} or {@link #delimiterString()}.
+ *
  * <p>The supplied values will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method.
  *
@@ -36,7 +40,7 @@ import org.apiguardian.api.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.0")
+@API(status = STABLE, since = "5.7")
 @ArgumentsSource(CsvArgumentsProvider.class)
 public @interface CsvSource {
 
@@ -72,7 +76,6 @@ public @interface CsvSource {
 	 *
 	 * @since 5.6
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
 	String delimiterString() default "";
 
 	/**
@@ -84,7 +87,6 @@ public @interface CsvSource {
 	 *
 	 * @since 5.5
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
 	String emptyValue() default "";
 
 	/**
@@ -102,7 +104,18 @@ public @interface CsvSource {
 	 *
 	 * @since 5.6
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
 	String[] nullValues() default {};
+
+	/**
+	 * The maximum characters of per CSV column allowed.
+	 *
+	 * <p>Must be a positive number.
+	 *
+	 * <p>Defaults to {@code 4096}.
+	 *
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	int maxCharsPerColumn() default 4096;
 
 }

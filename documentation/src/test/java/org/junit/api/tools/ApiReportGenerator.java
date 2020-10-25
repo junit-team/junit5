@@ -63,12 +63,19 @@ class ApiReportGenerator {
 	// -------------------------------------------------------------------------
 
 	ApiReport generateReport(String... packages) {
-		final Logger logger = LoggerFactory.getLogger(ApiReportGenerator.class);
-		final String EOL = System.lineSeparator();
+		Logger logger = LoggerFactory.getLogger(ApiReportGenerator.class);
+		String EOL = System.lineSeparator();
+		ClassGraph classGraph = new ClassGraph() //
+				.acceptPackages(packages) //
+				.disableNestedJarScanning() //
+				.enableAnnotationInfo(); //
+		String apiClasspath = System.getProperty("api.classpath");
+		if (apiClasspath != null) {
+			classGraph = classGraph.overrideClasspath(apiClasspath);
+		}
 
 		// Scan packages
-		try (ScanResult scanResult = new ClassGraph().whitelistPackages(
-			packages).disableNestedJarScanning().enableAnnotationInfo().scan()) {
+		try (ScanResult scanResult = classGraph.scan()) {
 
 			// Collect names
 			ClassInfoList classesWithApiAnnotation = scanResult.getClassesWithAnnotation(API.class.getCanonicalName());
@@ -80,7 +87,6 @@ class ApiReportGenerator {
 				builder.append(EOL);
 				scanResult.getClasspathURLs().forEach(e -> builder.append(e).append(EOL));
 				return builder.toString();
-
 			});
 
 			// Collect types

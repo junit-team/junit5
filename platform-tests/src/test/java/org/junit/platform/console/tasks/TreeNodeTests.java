@@ -43,7 +43,7 @@ class TreeNodeTests {
 
 	@Test
 	void childrenCanBeAddedConcurrently() throws Exception {
-		TreeNode treeNode = new TreeNode("root");
+		var treeNode = new TreeNode("root");
 
 		runConcurrently(() -> {
 			for (long i = 0; i < ITEMS_PER_THREAD; i++) {
@@ -56,7 +56,7 @@ class TreeNodeTests {
 
 	@Test
 	void reportEntriesCanBeAddedConcurrently() throws Exception {
-		TreeNode treeNode = new TreeNode("root");
+		var treeNode = new TreeNode("root");
 
 		runConcurrently(() -> {
 			for (long i = 0; i < ITEMS_PER_THREAD; i++) {
@@ -71,7 +71,7 @@ class TreeNodeTests {
 		ExecutorService executor = new ThreadPoolExecutor(NUM_THREADS, NUM_THREADS, 10, SECONDS,
 			new ArrayBlockingQueue<>(NUM_THREADS));
 		try {
-			CyclicBarrier barrier = new CyclicBarrier(NUM_THREADS);
+			var barrier = new CyclicBarrier(NUM_THREADS);
 			for (long i = 0; i < NUM_THREADS; i++) {
 				executor.submit(() -> {
 					await(barrier);
@@ -81,7 +81,7 @@ class TreeNodeTests {
 		}
 		finally {
 			executor.shutdown();
-			boolean terminated = executor.awaitTermination(10, SECONDS);
+			var terminated = executor.awaitTermination(10, SECONDS);
 			assertTrue(terminated, "Executor was not terminated");
 		}
 	}

@@ -46,12 +46,10 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.launcher.LauncherConstants;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
 
 /**
  * @since 1.3
@@ -62,9 +60,9 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 	@MethodSource("systemStreams")
 	@ExtendWith(HiddenSystemOutAndErr.class)
 	void interceptsStream(String configParam, Supplier<PrintStream> printStreamSupplier, String reportKey) {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("engine");
+		var engine = new DemoHierarchicalTestEngine("engine");
 		TestDescriptor test = engine.addTest("test", () -> printStreamSupplier.get().print("4567890"));
-		TestExecutionListener listener = mock(TestExecutionListener.class);
+		var listener = mock(TestExecutionListener.class);
 		doAnswer(invocation -> {
 			TestIdentifier testIdentifier = invocation.getArgument(0);
 			if (testIdentifier.getUniqueId().equals(test.getUniqueId().toString())) {
@@ -74,23 +72,23 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 		}).when(listener).executionStarted(any());
 
 		var launcher = createLauncher(engine);
-		LauncherDiscoveryRequest discoveryRequest = request()//
+		var discoveryRequest = request()//
 				.selectors(selectUniqueId(test.getUniqueId()))//
 				.configurationParameter(configParam, String.valueOf(true))//
 				.configurationParameter(LauncherConstants.CAPTURE_MAX_BUFFER_PROPERTY_NAME, String.valueOf(5))//
 				.build();
 		launcher.execute(discoveryRequest, listener);
 
-		ArgumentCaptor<TestPlan> testPlanArgumentCaptor = ArgumentCaptor.forClass(TestPlan.class);
-		InOrder inOrder = inOrder(listener);
+		var testPlanArgumentCaptor = ArgumentCaptor.forClass(TestPlan.class);
+		var inOrder = inOrder(listener);
 		inOrder.verify(listener).testPlanExecutionStarted(testPlanArgumentCaptor.capture());
-		TestPlan testPlan = testPlanArgumentCaptor.getValue();
-		TestIdentifier testIdentifier = testPlan.getTestIdentifier(test.getUniqueId().toString());
+		var testPlan = testPlanArgumentCaptor.getValue();
+		var testIdentifier = testPlan.getTestIdentifier(test.getUniqueId().toString());
 
-		ArgumentCaptor<ReportEntry> reportEntryArgumentCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+		var reportEntryArgumentCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 		inOrder.verify(listener).reportingEntryPublished(same(testIdentifier), reportEntryArgumentCaptor.capture());
 		inOrder.verify(listener).executionFinished(testIdentifier, successful());
-		ReportEntry reportEntry = reportEntryArgumentCaptor.getValue();
+		var reportEntry = reportEntryArgumentCaptor.getValue();
 
 		assertThat(reportEntry.getKeyValuePairs()).containsExactly(entry(reportKey, "12345"));
 	}
@@ -100,18 +98,18 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 	@ExtendWith(HiddenSystemOutAndErr.class)
 	void doesNotInterceptStreamWhenAlreadyBeingIntercepted(String configParam,
 			Supplier<PrintStream> printStreamSupplier) {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("engine");
+		var engine = new DemoHierarchicalTestEngine("engine");
 		TestDescriptor test = engine.addTest("test", () -> printStreamSupplier.get().print("1234567890"));
 
 		assertThat(StreamInterceptor.registerStdout(1)).isPresent();
 		assertThat(StreamInterceptor.registerStderr(1)).isPresent();
 
 		var launcher = createLauncher(engine);
-		LauncherDiscoveryRequest discoveryRequest = request()//
+		var discoveryRequest = request()//
 				.selectors(selectUniqueId(test.getUniqueId()))//
 				.configurationParameter(configParam, String.valueOf(true))//
 				.build();
-		TestExecutionListener listener = mock(TestExecutionListener.class);
+		var listener = mock(TestExecutionListener.class);
 		launcher.execute(discoveryRequest, listener);
 
 		verify(listener, never()).reportingEntryPublished(any(), any());
@@ -135,7 +133,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 
 		@Override
 		public void beforeTestExecution(ExtensionContext context) {
-			ExtensionContext.Store store = context.getStore(NAMESPACE);
+			var store = context.getStore(NAMESPACE);
 			store.put("out", System.out);
 			store.put("err", System.err);
 			System.setOut(new PrintStream(new ByteArrayOutputStream()));
@@ -144,7 +142,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 
 		@Override
 		public void afterTestExecution(ExtensionContext context) {
-			ExtensionContext.Store store = context.getStore(NAMESPACE);
+			var store = context.getStore(NAMESPACE);
 			System.setOut(store.get("out", PrintStream.class));
 			System.setErr(store.get("err", PrintStream.class));
 		}

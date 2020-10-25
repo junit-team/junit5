@@ -16,8 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.function.Predicate;
-
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -30,23 +28,19 @@ class FunctionUtilsTests {
 
 	@Test
 	void whereWithNullFunction() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, () -> {
-			FunctionUtils.where(null, o -> true);
-		});
+		var exception = assertThrows(PreconditionViolationException.class, () -> FunctionUtils.where(null, o -> true));
 		assertEquals("function must not be null", exception.getMessage());
 	}
 
 	@Test
 	void whereWithNullPredicate() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, () -> {
-			FunctionUtils.where(o -> o, null);
-		});
+		var exception = assertThrows(PreconditionViolationException.class, () -> FunctionUtils.where(o -> o, null));
 		assertEquals("predicate must not be null", exception.getMessage());
 	}
 
 	@Test
 	void whereWithChecksPredicateAgainstResultOfFunction() {
-		Predicate<String> combinedPredicate = FunctionUtils.where(String::length, isEqual(3));
+		var combinedPredicate = FunctionUtils.where(String::length, isEqual(3));
 		assertFalse(combinedPredicate.test("fo"));
 		assertTrue(combinedPredicate.test("foo"));
 		assertFalse(combinedPredicate.test("fooo"));

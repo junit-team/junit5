@@ -14,8 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
-import java.lang.reflect.Method;
-import java.util.Collections;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -46,7 +45,7 @@ class TestExecutionListenerRegistryTests {
 
 	@Test
 	void shouldNotThrowExceptionButLogIfDynamicTestRegisteredListenerMethodFails(LogRecordListener logRecordListener) {
-		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		var testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.dynamicTestRegistered(testIdentifier);
 
@@ -56,7 +55,7 @@ class TestExecutionListenerRegistryTests {
 
 	@Test
 	void shouldNotThrowExceptionButLogIfExecutionStartedListenerMethodFails(LogRecordListener logRecordListener) {
-		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		var testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.executionStarted(testIdentifier);
 
@@ -65,7 +64,7 @@ class TestExecutionListenerRegistryTests {
 
 	@Test
 	void shouldNotThrowExceptionButLogIfExecutionSkippedListenerMethodFails(LogRecordListener logRecordListener) {
-		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		var testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.executionSkipped(testIdentifier, "deliberately skipped container");
 
@@ -74,7 +73,7 @@ class TestExecutionListenerRegistryTests {
 
 	@Test
 	void shouldNotThrowExceptionButLogIfExecutionFinishedListenerMethodFails(LogRecordListener logRecordListener) {
-		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		var testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.executionFinished(testIdentifier, mock(TestExecutionResult.class));
 
@@ -84,7 +83,7 @@ class TestExecutionListenerRegistryTests {
 	@Test
 	void shouldNotThrowExceptionButLogIfReportingEntryPublishedListenerMethodFails(
 			LogRecordListener logRecordListener) {
-		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		var testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.reportingEntryPublished(testIdentifier, ReportEntry.from("one", "two"));
 
@@ -95,9 +94,9 @@ class TestExecutionListenerRegistryTests {
 	@Test
 	void shouldNotThrowExceptionButLogIfTesPlanExecutionStartedListenerMethodFails(
 			LogRecordListener logRecordListener) {
-		DemoMethodTestDescriptor testDescriptor = getDemoMethodTestDescriptor();
+		var testDescriptor = getDemoMethodTestDescriptor();
 
-		compositeTestExecutionListener.testPlanExecutionStarted(TestPlan.from(Collections.singleton(testDescriptor)));
+		compositeTestExecutionListener.testPlanExecutionStarted(TestPlan.from(Set.of(testDescriptor)));
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"testPlanExecutionStarted");
@@ -106,9 +105,9 @@ class TestExecutionListenerRegistryTests {
 	@Test
 	void shouldNotThrowExceptionButLogIfTesPlanExecutionFinishedListenerMethodFails(
 			LogRecordListener logRecordListener) {
-		DemoMethodTestDescriptor testDescriptor = getDemoMethodTestDescriptor();
+		var testDescriptor = getDemoMethodTestDescriptor();
 
-		compositeTestExecutionListener.testPlanExecutionFinished(TestPlan.from(Collections.singleton(testDescriptor)));
+		compositeTestExecutionListener.testPlanExecutionFinished(TestPlan.from(Set.of(testDescriptor)));
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"testPlanExecutionFinished");
@@ -119,7 +118,7 @@ class TestExecutionListenerRegistryTests {
 			LogRecordListener logRecordListener) {
 		registry.registerListeners(new ThrowingEagerTestExecutionListener());
 
-		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		var testIdentifier = getSampleMethodTestIdentifier();
 		compositeTestExecutionListener.executionStarted(testIdentifier);
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEagerTestExecutionListener.class,
@@ -131,7 +130,7 @@ class TestExecutionListenerRegistryTests {
 			LogRecordListener logRecordListener) {
 		registry.registerListeners(new ThrowingEagerTestExecutionListener());
 
-		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		var testIdentifier = getSampleMethodTestIdentifier();
 		compositeTestExecutionListener.executionFinished(testIdentifier, mock(TestExecutionResult.class));
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEagerTestExecutionListener.class,
@@ -140,14 +139,14 @@ class TestExecutionListenerRegistryTests {
 
 	@Test
 	void shouldThrowOutOfMemoryExceptionAndStopListenerWithoutLog(LogRecordListener logRecordListener) {
-		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry();
+		var registry = new TestExecutionListenerRegistry();
 		registry.registerListeners(new TestExecutionListener() {
 			@Override
 			public void executionStarted(TestIdentifier testIdentifier) {
 				throw new OutOfMemoryError();
 			}
 		});
-		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		var testIdentifier = getSampleMethodTestIdentifier();
 		assertThatThrownBy(
 			() -> registry.getCompositeTestExecutionListener().executionStarted(testIdentifier)).isInstanceOf(
 				OutOfMemoryError.class);
@@ -157,14 +156,14 @@ class TestExecutionListenerRegistryTests {
 
 	@Test
 	void shouldThrowOutOfMemoryExceptionAndStopEagerListenerWithoutLog(LogRecordListener logRecordListener) {
-		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry();
+		var registry = new TestExecutionListenerRegistry();
 		registry.registerListeners(new TestExecutionListenerRegistry.EagerTestExecutionListener() {
 			@Override
 			public void executionJustStarted(TestIdentifier testIdentifier) {
 				throw new OutOfMemoryError();
 			}
 		});
-		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		var testIdentifier = getSampleMethodTestIdentifier();
 		assertThatThrownBy(
 			() -> registry.getCompositeTestExecutionListener().executionStarted(testIdentifier)).isInstanceOf(
 				OutOfMemoryError.class);
@@ -182,7 +181,7 @@ class TestExecutionListenerRegistryTests {
 	}
 
 	private TestIdentifier getSampleMethodTestIdentifier() {
-		DemoMethodTestDescriptor demoMethodTestDescriptor = getDemoMethodTestDescriptor();
+		var demoMethodTestDescriptor = getDemoMethodTestDescriptor();
 		return TestIdentifier.from(demoMethodTestDescriptor);
 	}
 
@@ -193,7 +192,7 @@ class TestExecutionListenerRegistryTests {
 	}
 
 	private DemoMethodTestDescriptor getDemoMethodTestDescriptor() {
-		Method method = ReflectionUtils.findMethod(this.getClass(), "getDemoMethodTestDescriptor",
+		var method = ReflectionUtils.findMethod(this.getClass(), "getDemoMethodTestDescriptor",
 			new Class<?>[0]).orElseThrow();
 		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(), method);
 	}

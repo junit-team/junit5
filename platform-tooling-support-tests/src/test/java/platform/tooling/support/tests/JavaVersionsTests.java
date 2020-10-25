@@ -52,6 +52,7 @@ class JavaVersionsTests {
 				.setTool(Request.maven()) //
 				.setProject("java-versions") //
 				.setWorkspace("java-versions-" + version) //
+				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
 				.addArguments("--debug", "verify") //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.setJavaHome(javaHome) //

@@ -35,6 +35,8 @@ import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
+import org.junit.jupiter.engine.discovery.predicates.IsNestedTestClass;
+import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestTemplateMethod;
@@ -57,6 +59,8 @@ class MethodSelectorResolver implements SelectorResolver {
 
 	private static final Logger logger = LoggerFactory.getLogger(MethodSelectorResolver.class);
 	private static final MethodFinder methodFinder = new MethodFinder();
+	private static final Predicate<Class<?>> testClassPredicate = new IsTestClassWithTests().or(
+		new IsNestedTestClass());
 
 	protected final JupiterConfiguration configuration;
 
@@ -66,15 +70,20 @@ class MethodSelectorResolver implements SelectorResolver {
 
 	@Override
 	public Resolution resolve(MethodSelector selector, Context context) {
-		return resolve(context, emptyList(), selector.getJavaClass(), selector.getJavaMethod());
+		return resolve(context, emptyList(), selector.getJavaClass(), selector::getJavaMethod);
 	}
 
 	@Override
 	public Resolution resolve(NestedMethodSelector selector, Context context) {
-		return resolve(context, selector.getEnclosingClasses(), selector.getNestedClass(), selector.getMethod());
+		return resolve(context, selector.getEnclosingClasses(), selector.getNestedClass(), selector::getMethod);
 	}
 
-	private Resolution resolve(Context context, List<Class<?>> enclosingClasses, Class<?> testClass, Method method) {
+	private Resolution resolve(Context context, List<Class<?>> enclosingClasses, Class<?> testClass,
+			Supplier<Method> methodSupplier) {
+		if (!testClassPredicate.test(testClass)) {
+			return unresolved();
+		}
+		Method method = methodSupplier.get();
 		// @formatter:off
 		Set<Match> matches = Arrays.stream(MethodType.values())
 				.map(methodType -> methodType.resolve(enclosingClasses, testClass, method, context, configuration))

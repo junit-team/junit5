@@ -12,6 +12,7 @@ package org.junit.vintage.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
@@ -75,7 +76,7 @@ import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInBeforeCl
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithExceptionThrowingRunner;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithIndistinguishableOverloadedMethod;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIds;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIdsAndDisplayNames;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithDuplicateChangingChildDescriptions;
 import org.junit.vintage.engine.samples.junit4.MalformedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.ParameterizedTestCase;
@@ -84,6 +85,7 @@ import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithLifecycleM
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
+import org.junit.vintage.engine.samples.spock.SpockTestCaseWithUnrolledAndRegularFeatureMethods;
 import org.opentest4j.MultipleFailuresError;
 
 /**
@@ -331,7 +333,7 @@ class VintageTestEngineExecutionTests {
 		Class<?> testClass = PlainJUnit4TestCaseWithLifecycleMethods.class;
 		PlainJUnit4TestCaseWithLifecycleMethods.EVENTS.clear();
 
-		EngineExecutionListener listener = new EngineExecutionListener() {
+		var listener = new EngineExecutionListener() {
 
 			@Override
 			public void executionStarted(TestDescriptor testDescriptor) {
@@ -490,7 +492,7 @@ class VintageTestEngineExecutionTests {
 
 		@Override
 		public void run(RunNotifier notifier) {
-			Description dynamicDescription = createTestDescription(testClass, "dynamicTest");
+			var dynamicDescription = createTestDescription(testClass, "dynamicTest");
 			notifier.fireTestStarted(dynamicDescription);
 			notifier.fireTestFinished(dynamicDescription);
 		}
@@ -525,17 +527,17 @@ class VintageTestEngineExecutionTests {
 
 		@Override
 		public Description getDescription() {
-			Description suiteDescription = createSuiteDescription(testClass);
+			var suiteDescription = createSuiteDescription(testClass);
 			suiteDescription.addChild(createTestDescription(testClass, "staticTest"));
 			return suiteDescription;
 		}
 
 		@Override
 		public void run(RunNotifier notifier) {
-			Description staticDescription = getDescription().getChildren().get(0);
+			var staticDescription = getDescription().getChildren().get(0);
 			notifier.fireTestStarted(staticDescription);
 			notifier.fireTestFinished(staticDescription);
-			Description dynamicDescription = createTestDescription(testClass, "dynamicTest");
+			var dynamicDescription = createTestDescription(testClass, "dynamicTest");
 			notifier.fireTestStarted(dynamicDescription);
 			notifier.fireTestFinished(dynamicDescription);
 		}
@@ -610,7 +612,7 @@ class VintageTestEngineExecutionTests {
 
 	@Test
 	void executesJUnit4TestCaseWithRunnerWithCustomUniqueIds() {
-		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIds.class;
+		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIdsAndDisplayNames.class;
 
 		execute(testClass).allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -749,6 +751,37 @@ class VintageTestEngineExecutionTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void executesUnrolledSpockFeatureMethod() {
+		Class<?> testClass = SpockTestCaseWithUnrolledAndRegularFeatureMethods.class;
+		var request = LauncherDiscoveryRequestBuilder.request().selectors(
+			selectMethod(testClass, "unrolled feature for #input")).build();
+		execute(request).allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(uniqueIdSubstring(testClass.getName()), started()), //
+			event(dynamicTestRegistered("unrolled feature for 23")), //
+			event(test("unrolled feature for 23"), started()), //
+			event(test("unrolled feature for 23"), finishedWithFailure()), //
+			event(dynamicTestRegistered("unrolled feature for 42")), //
+			event(test("unrolled feature for 42"), started()), //
+			event(test("unrolled feature for 42"), finishedSuccessfully()), //
+			event(uniqueIdSubstring(testClass.getName()), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesRegularSpockFeatureMethod() {
+		Class<?> testClass = SpockTestCaseWithUnrolledAndRegularFeatureMethods.class;
+		var request = LauncherDiscoveryRequestBuilder.request().selectors(selectMethod(testClass, "regular")).build();
+		execute(request).allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(test("regular"), started()), //
+			event(test("regular"), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	private static EngineExecutionResults execute(Class<?> testClass) {
 		return execute(request(testClass));
 	}
@@ -759,9 +792,8 @@ class VintageTestEngineExecutionTests {
 
 	private static void execute(Class<?> testClass, EngineExecutionListener listener) {
 		TestEngine testEngine = new VintageTestEngine();
-		LauncherDiscoveryRequest discoveryRequest = request(testClass);
-		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest,
-			UniqueId.forEngine(testEngine.getId()));
+		var discoveryRequest = request(testClass);
+		var engineTestDescriptor = testEngine.discover(discoveryRequest, UniqueId.forEngine(testEngine.getId()));
 		testEngine.execute(
 			new ExecutionRequest(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
 	}

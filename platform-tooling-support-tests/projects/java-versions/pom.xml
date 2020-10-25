@@ -49,6 +49,16 @@
 
     <repositories>
         <repository>
+            <id>local-temp</id>
+            <url>file://${maven.repo}</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
             <id>sonatype-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             <snapshots>

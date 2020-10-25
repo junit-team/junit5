@@ -21,6 +21,7 @@ import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
@@ -136,7 +137,7 @@ class ParameterizedTestIntegrationTests {
 		var results = execute("testWithCustomName", String.class, int.class);
 
 		// @formatter:off
-		Stream<String> legacyReportingNames = results.testEvents().dynamicallyRegistered()
+		var legacyReportingNames = results.testEvents().dynamicallyRegistered()
 				.map(Event::getTestDescriptor)
 				.map(TestDescriptor::getLegacyReportingName);
 		// @formatter:on
@@ -219,6 +220,17 @@ class ParameterizedTestIntegrationTests {
 		// @formatter:on
 	}
 
+	@Test
+	void truncatesArgumentsThatExceedMaxLength() {
+		var results = EngineTestKit.engine(new JupiterTestEngine()) //
+				.configurationParameter(ParameterizedTestExtension.ARGUMENT_MAX_LENGTH_KEY, "2") //
+				.selectors(selectMethod(TestCase.class, "testWithCsvSource", String.class.getName())) //
+				.execute();
+		results.testEvents().assertThatEvents() //
+				.haveExactly(1, event(displayName("[1] argument=f…"), started())) //
+				.haveExactly(1, event(displayName("[2] argument=b…"), started()));
+	}
+
 	private EngineExecutionResults execute(DiscoverySelector... selectors) {
 		return EngineTestKit.engine(new JupiterTestEngine()).selectors(selectors).execute();
 	}
@@ -260,7 +272,7 @@ class ParameterizedTestIntegrationTests {
 
 		@Test
 		void failsWithNullSourceWithZeroFormalParameters() {
-			String methodName = "testWithNullSourceWithZeroFormalParameters";
+			var methodName = "testWithNullSourceWithZeroFormalParameters";
 			execute(methodName).containerEvents().failed().assertEventsMatchExactly(//
 				event(container(methodName), //
 					finishedWithFailure(//
@@ -346,7 +358,7 @@ class ParameterizedTestIntegrationTests {
 
 		@Test
 		void failsWithEmptySourceWithZeroFormalParameters() {
-			String methodName = "testWithEmptySourceWithZeroFormalParameters";
+			var methodName = "testWithEmptySourceWithZeroFormalParameters";
 			execute(methodName).containerEvents().failed().assertEventsMatchExactly(//
 				event(container(methodName), //
 					finishedWithFailure(//
@@ -369,7 +381,7 @@ class ParameterizedTestIntegrationTests {
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
 						message(msg -> msg.matches("@EmptySource cannot provide an empty argument to method .+: \\["
-								+ parameterType.getName() + "\\] is not a supported type."))//
+								+ parameterType.getName() + "] is not a supported type."))//
 					)));
 		}
 
@@ -1081,7 +1093,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		private void performTest(String argument, TestInfo testInfo) {
-			String testMethod = testInfo.getTestMethod().get().getName();
+			var testMethod = testInfo.getTestMethod().orElseThrow().getName();
 			testMethods.add(testMethod);
 			lifecycleEvents.add(testMethod + ":" + testInfo.getDisplayName());
 			fail(argument);

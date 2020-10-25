@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -66,14 +65,14 @@ class PackageUtilsTests {
 
 	@Test
 	void getAttributeWithNullType() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> PackageUtils.getAttribute(null, p -> "any"));
 		assertEquals("type must not be null", exception.getMessage());
 	}
 
 	@Test
 	void getAttributeWithNullFunction() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> PackageUtils.getAttribute(getClass(), (Function<Package, String>) null));
 		assertEquals("function must not be null", exception.getMessage());
 	}
@@ -85,19 +84,21 @@ class PackageUtilsTests {
 
 	@Test
 	void getAttributeFromDefaultPackageMemberIsEmpty() throws Exception {
-		Class<?> classInDefaultPackage = ReflectionUtils.tryToLoadClass("DefaultPackageTestCase").get();
+		var classInDefaultPackage = ReflectionUtils.tryToLoadClass("DefaultPackageTestCase").get();
 		assertFalse(PackageUtils.getAttribute(classInDefaultPackage, Package::getSpecificationTitle).isPresent());
 	}
 
 	@TestFactory
 	List<DynamicTest> attributesFromValueWrapperClassArePresent() {
-		return Arrays.asList(dynamicTest("getName", isPresent(Package::getName)),
+		return List.of( //
+			dynamicTest("getName", isPresent(Package::getName)),
 			dynamicTest("getImplementationTitle", isPresent(Package::getImplementationTitle)),
 			dynamicTest("getImplementationVendor", isPresent(Package::getImplementationVendor)),
 			dynamicTest("getImplementationVersion", isPresent(Package::getImplementationVersion)),
 			dynamicTest("getSpecificationTitle", isPresent(Package::getSpecificationTitle)),
 			dynamicTest("getSpecificationVendor", isPresent(Package::getSpecificationVendor)),
-			dynamicTest("getSpecificationVersion", isPresent(Package::getSpecificationVersion)));
+			dynamicTest("getSpecificationVersion", isPresent(Package::getSpecificationVersion)) //
+		);
 	}
 
 	private Executable isPresent(Function<Package, String> function) {
@@ -106,21 +107,21 @@ class PackageUtilsTests {
 
 	@Test
 	void getAttributeWithNullTypeAndName() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> PackageUtils.getAttribute(null, "foo"));
 		assertEquals("type must not be null", exception.getMessage());
 	}
 
 	@Test
 	void getAttributeWithNullName() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> PackageUtils.getAttribute(getClass(), (String) null));
 		assertEquals("name must not be blank", exception.getMessage());
 	}
 
 	@Test
 	void getAttributeWithEmptyName() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> PackageUtils.getAttribute(getClass(), ""));
 		assertEquals("name must not be blank", exception.getMessage());
 	}

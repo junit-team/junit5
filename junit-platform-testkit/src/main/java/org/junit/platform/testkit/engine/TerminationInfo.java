@@ -10,7 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
@@ -25,7 +25,7 @@ import org.junit.platform.engine.TestExecutionResult;
  * @since 1.4
  * @see Execution#getTerminationInfo()
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public class TerminationInfo {
 
 	// --- Factories -----------------------------------------------------------

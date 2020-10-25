@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.tagexpression;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.TestTag.create;
@@ -21,7 +20,6 @@ import static org.junit.platform.launcher.tagexpression.TagExpressions.not;
 import static org.junit.platform.launcher.tagexpression.TagExpressions.or;
 import static org.junit.platform.launcher.tagexpression.TagExpressions.tag;
 
-import java.util.Collections;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -47,10 +45,10 @@ class TagExpressionsTests {
 
 	@Test
 	void tagEvaluation() {
-		TagExpression tagExpression = tag("foo");
+		var tagExpression = tag("foo");
 
-		assertThat(tagExpression.evaluate(singleton(create("foo")))).isTrue();
-		assertThat(tagExpression.evaluate(singleton(create("not_foo")))).isFalse();
+		assertThat(tagExpression.evaluate(Set.of(create("foo")))).isTrue();
+		assertThat(tagExpression.evaluate(Set.of(create("not_foo")))).isFalse();
 	}
 
 	@Test
@@ -62,8 +60,8 @@ class TagExpressionsTests {
 
 	@Test
 	void notEvaluation() {
-		assertThat(not(True).evaluate(emptyTestTags())).isFalse();
-		assertThat(not(False).evaluate(emptyTestTags())).isTrue();
+		assertThat(not(True).evaluate(Set.of())).isFalse();
+		assertThat(not(False).evaluate(Set.of())).isTrue();
 	}
 
 	@Test
@@ -73,9 +71,9 @@ class TagExpressionsTests {
 
 	@Test
 	void andEvaluation() {
-		assertThat(and(True, True).evaluate(emptyTestTags())).isTrue();
-		assertThat(and(True, False).evaluate(emptyTestTags())).isFalse();
-		assertThat(and(False, onEvaluateThrow()).evaluate(emptyTestTags())).isFalse();
+		assertThat(and(True, True).evaluate(Set.of())).isTrue();
+		assertThat(and(True, False).evaluate(Set.of())).isFalse();
+		assertThat(and(False, onEvaluateThrow()).evaluate(Set.of())).isFalse();
 	}
 
 	@Test
@@ -85,20 +83,20 @@ class TagExpressionsTests {
 
 	@Test
 	void orEvaluation() {
-		assertThat(or(False, False).evaluate(emptyTestTags())).isFalse();
-		assertThat(or(True, onEvaluateThrow()).evaluate(emptyTestTags())).isTrue();
-		assertThat(or(False, True).evaluate(emptyTestTags())).isTrue();
+		assertThat(or(False, False).evaluate(Set.of())).isFalse();
+		assertThat(or(True, onEvaluateThrow()).evaluate(Set.of())).isTrue();
+		assertThat(or(False, True).evaluate(Set.of())).isTrue();
 	}
 
 	@Test
 	void anyEvaluation() {
-		assertThat(any().evaluate(emptyTestTags())).isFalse();
+		assertThat(any().evaluate(Set.of())).isFalse();
 		assertThat(any().evaluate(Set.of(TestTag.create("foo")))).isTrue();
 	}
 
 	@Test
 	void noneEvaluation() {
-		assertThat(none().evaluate(emptyTestTags())).isTrue();
+		assertThat(none().evaluate(Set.of())).isTrue();
 		assertThat(none().evaluate(Set.of(TestTag.create("foo")))).isFalse();
 	}
 
@@ -108,7 +106,4 @@ class TagExpressionsTests {
 		};
 	}
 
-	private static Set<TestTag> emptyTestTags() {
-		return Collections.emptySet();
-	}
 }

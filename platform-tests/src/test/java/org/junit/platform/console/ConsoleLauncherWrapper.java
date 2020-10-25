@@ -37,8 +37,8 @@ class ConsoleLauncherWrapper {
 	}
 
 	private ConsoleLauncherWrapper(CommandLineOptionsParser parser) {
-		PrintWriter outWriter = new PrintWriter(out, false);
-		PrintWriter errWriter = new PrintWriter(err, false);
+		var outWriter = new PrintWriter(out, false);
+		var errWriter = new PrintWriter(err, false);
 		this.consoleLauncher = new ConsoleLauncher(parser, outWriter, errWriter);
 
 	}
@@ -52,10 +52,10 @@ class ConsoleLauncherWrapper {
 	}
 
 	public ConsoleLauncherWrapperResult execute(Optional<Integer> expectedCode, String... args) {
-		ConsoleLauncherExecutionResult result = consoleLauncher.execute(args);
-		int code = result.getExitCode();
-		String outText = out.toString();
-		String errText = err.toString();
+		var result = consoleLauncher.execute(args);
+		var code = result.getExitCode();
+		var outText = out.toString();
+		var errText = err.toString();
 		if (expectedCode.isPresent()) {
 			int expectedValue = expectedCode.get();
 			assertAll("wrapped execution failed:\n" + outText + "\n", //

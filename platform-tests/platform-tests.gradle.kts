@@ -1,10 +1,9 @@
 plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
+	`testing-conventions`
 	id("me.champeau.gradle.jmh")
 }
-
-apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 dependencies {
 	internal(platform(project(":dependencies")))
@@ -41,7 +40,7 @@ dependencies {
 }
 
 jmh {
-	jmhVersion = Versions.jmh
+	jmhVersion = versions["jmh"]
 
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 0 // Too long command line on Windows...

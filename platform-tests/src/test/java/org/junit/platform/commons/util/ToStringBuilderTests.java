@@ -28,16 +28,12 @@ class ToStringBuilderTests {
 
 	@Test
 	void withNullObject() {
-		assertThrows(PreconditionViolationException.class, () -> {
-			new ToStringBuilder((Object) null);
-		});
+		assertThrows(PreconditionViolationException.class, () -> new ToStringBuilder((Object) null));
 	}
 
 	@Test
 	void withNullClass() {
-		assertThrows(PreconditionViolationException.class, () -> {
-			new ToStringBuilder((Class<?>) null);
-		});
+		assertThrows(PreconditionViolationException.class, () -> new ToStringBuilder((Class<?>) null));
 	}
 
 	@Test

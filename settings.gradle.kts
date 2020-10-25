@@ -1,17 +1,17 @@
-import com.gradle.scan.plugin.internal.api.BuildScanExtensionWithHiddenFeatures
+import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
 	plugins {
-		id("com.gradle.enterprise") version "3.1.1"
-		id("net.nemerosa.versioning") version "2.10.0"
-		id("com.github.ben-manes.versions") version "0.27.0"
-		id("com.diffplug.gradle.spotless") version "3.27.0"
-		id("org.ajoberstar.git-publish") version "2.1.3"
-		kotlin("jvm") version "1.3.61"
-		id("org.asciidoctor.jvm.convert") version "3.1.0"
-		id("org.asciidoctor.jvm.pdf") version "3.1.0"
-		id("me.champeau.gradle.jmh") version "0.5.0"
-		id("io.spring.nohttp") version "0.0.4.RELEASE"
+		id("com.gradle.enterprise") version settings.extra["gradle.enterprise.plugin.version"] as String
+		id("net.nemerosa.versioning") version settings.extra["versioning.plugin.version"] as String
+		id("com.github.ben-manes.versions") version settings.extra["versions.plugin.version"] as String
+		id("com.diffplug.spotless") version settings.extra["spotless.plugin.version"] as String
+		id("org.ajoberstar.git-publish") version settings.extra["git-publish.plugin.version"] as String
+		kotlin("jvm") version settings.extra["kotlin.plugin.version"] as String
+		id("org.asciidoctor.jvm.convert") version settings.extra["asciidoctor.plugin.version"] as String
+		id("org.asciidoctor.jvm.pdf") version settings.extra["asciidoctor.plugin.version"] as String
+		id("me.champeau.gradle.jmh") version settings.extra["jmh.plugin.version"] as String
+		id("io.spring.nohttp") version settings.extra["nohttp.plugin.version"] as String
 	}
 }
 
@@ -28,6 +28,7 @@ gradleEnterprise {
 	buildScan {
 		server = gradleEnterpriseServer
 		isCaptureTaskInputFiles = true
+		isUploadInBackground = !isCiServer
 		publishAlways()
 		this as BuildScanExtensionWithHiddenFeatures
 		publishIfAuthenticated()
@@ -57,8 +58,8 @@ buildCache {
 }
 
 val javaVersion = JavaVersion.current()
-require(javaVersion.isJava11Compatible) {
-	"The JUnit 5 build requires Java 11 or higher. Currently executing with Java ${javaVersion.majorVersion}."
+require(javaVersion.isJava9Compatible) {
+	"The JUnit 5 build requires Java 9 or higher. Currently executing with Java ${javaVersion.majorVersion}."
 }
 
 rootProject.name = "junit5"
@@ -74,6 +75,7 @@ include("junit-platform-commons")
 include("junit-platform-console")
 include("junit-platform-console-standalone")
 include("junit-platform-engine")
+include("junit-platform-jfr")
 include("junit-platform-launcher")
 include("junit-platform-reporting")
 include("junit-platform-runner")

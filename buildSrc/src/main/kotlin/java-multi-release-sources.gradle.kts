@@ -7,7 +7,7 @@ val mavenizedProjects: List<Project> by rootProject.extra
 val extension = extensions.create<MultiReleaseSourcesExtension>("multiReleaseSources")
 
 extension.releases.all {
-	val release = this.toString()
+	val release = this
 
 	val releaseSourceSet = sourceSets.create("mainRelease$release") {
 		compileClasspath += sourceSets.main.get().output
@@ -28,8 +28,7 @@ extension.releases.all {
 		}
 
 		named<JavaCompile>(releaseSourceSet.compileJavaTaskName).configure {
-			sourceCompatibility = release
-			targetCompatibility = release
+			options.release.set(release)
 		}
 
 		named<Checkstyle>("checkstyle${releaseSourceSet.name.capitalize()}").configure {

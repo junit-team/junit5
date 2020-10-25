@@ -1,0 +1,18 @@
+[[release-notes-5.7.0]]
+== 5.7.0
+
+*Date of Release:* September 13, 2020
+
+*Scope:*
+
+* Promotion of experimental features in JUnit Platform and Jupiter
+* Java Flight Recorder support
+* TestKit improvements
+* `@Isolated` tests
+* Configurable default method orderer
+* Custom disabled reasons for all `@Enabled*`/`@Disabled*` annotations
+* Improvements to `assertTimeoutPreemptively()`
+* Improvements to `@CsvFileSource` and `@CsvSource`
+
+For complete details consult the
+https://junit.org/junit5/docs/5.7.0/release-notes/index.html[5.7.0 Release Notes] online.

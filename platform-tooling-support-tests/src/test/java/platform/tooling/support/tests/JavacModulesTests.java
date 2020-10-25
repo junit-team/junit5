@@ -67,7 +67,7 @@ class JavacModulesTests {
 		private Stream<Path> getMainOutputDirs() {
 			try {
 				return Files.list(javaClassesDir) //
-						.filter(file -> Files.isDirectory(file)) //
+						.filter(Files::isDirectory) //
 						.filter(dir -> dir.getFileName().toString().startsWith("main"));
 			}
 			catch (IOException e) {
@@ -104,7 +104,7 @@ class JavacModulesTests {
 					.map(base::resolve) //
 					.map(Project::new) //
 					.collect(Collectors.toList());
-			assertEquals(14, projects.size());
+			assertEquals(15, projects.size());
 
 			args.add("--module-source-path");
 			args.add(projects.stream() //

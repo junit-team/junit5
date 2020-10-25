@@ -69,10 +69,10 @@ class ModularUserGuideTests {
 		args.add(temp.resolve("destination").toString());
 
 		var lib = Files.createDirectories(temp.resolve("lib"));
-		Helper.load(lib, "junit", "junit", Helper.version("junit4", "4.12"));
-		Helper.load(lib, "org.assertj", "assertj-core", Helper.version("assertJ", "3.12.2"));
+		Helper.load(lib, "junit", "junit", Helper.version("junit4", "4.13.1"));
+		Helper.load(lib, "org.assertj", "assertj-core", Helper.version("assertJ", "3.14.0"));
 		Helper.load(lib, "org.apiguardian", "apiguardian-api", Helper.version("apiGuardian", "1.1.0"));
-		Helper.load(lib, "org.hamcrest", "hamcrest", Helper.version("hamcrest", "2.1"));
+		Helper.load(lib, "org.hamcrest", "hamcrest", Helper.version("hamcrest", "2.2"));
 		Helper.load(lib, "org.opentest4j", "opentest4j", Helper.version("ota4j", "1.2.0"));
 		Helper.loadAllJUnitModules(lib);
 		args.add("--module-path");
@@ -103,9 +103,12 @@ class ModularUserGuideTests {
 		return args;
 	}
 
-	private static List<String> junit(Path temp, Writer out, Writer err) throws Exception {
+	private static void junit(Path temp, Writer out, Writer err) throws Exception {
 		var command = new ArrayList<String>();
+		var projectDir = Path.of("../documentation");
 		command.add(Path.of(System.getProperty("java.home"), "bin", "java").toString());
+
+		command.add("-XX:StartFlightRecording:filename=" + temp.resolve("user-guide.jfr"));
 
 		command.add("--show-version");
 		command.add("--show-module-resolution");
@@ -122,7 +125,7 @@ class ModularUserGuideTests {
 		// TODO This `patch-module` should work! Why doesn't it?
 		// command.add("--patch-module");
 		// command.add("documentation=../documentation/src/test/resources/");
-		Files.copy(Path.of("../documentation/src/test/resources/two-column.csv"),
+		Files.copy(projectDir.resolve("src/test/resources/two-column.csv"),
 			temp.resolve("destination/documentation/two-column.csv"));
 
 		command.add("--module");
@@ -141,7 +144,7 @@ class ModularUserGuideTests {
 		// System.out.println("______________");
 		// command.forEach(System.out::println);
 
-		var builder = new ProcessBuilder(command).directory(temp.toFile());
+		var builder = new ProcessBuilder(command).directory(projectDir.toFile());
 		var java = builder.start();
 		ProcessGroovyMethods.waitForProcessOutput(java, out, err);
 		var code = java.exitValue();
@@ -151,7 +154,6 @@ class ModularUserGuideTests {
 			System.err.println(err);
 			fail("Unexpected exit code: " + code);
 		}
-		return command;
 	}
 
 	@Test

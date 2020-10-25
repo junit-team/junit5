@@ -57,15 +57,29 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	 * @see DefaultParallelExecutionConfigurationStrategy
 	 */
 	public ForkJoinPoolHierarchicalTestExecutorService(ConfigurationParameters configurationParameters) {
-		forkJoinPool = createForkJoinPool(configurationParameters);
+		this(createConfiguration(configurationParameters));
+	}
+
+	/**
+	 * Create a new {@code ForkJoinPoolHierarchicalTestExecutorService} based on
+	 * the supplied {@link ParallelExecutionConfiguration}.
+	 *
+	 * @since 1.7
+	 */
+	@API(status = EXPERIMENTAL, since = "1.7")
+	public ForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
+		forkJoinPool = createForkJoinPool(configuration);
 		parallelism = forkJoinPool.getParallelism();
 		LoggerFactory.getLogger(getClass()).config(() -> "Using ForkJoinPool with parallelism of " + parallelism);
 	}
 
-	private ForkJoinPool createForkJoinPool(ConfigurationParameters configurationParameters) {
+	private static ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.getStrategy(
 			configurationParameters);
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configurationParameters);
+		return strategy.createConfiguration(configurationParameters);
+	}
+
+	private ForkJoinPool createForkJoinPool(ParallelExecutionConfiguration configuration) {
 		ForkJoinWorkerThreadFactory threadFactory = new WorkerThreadFactory();
 		return Try.call(() -> {
 			// Try to use constructor available in Java >= 9

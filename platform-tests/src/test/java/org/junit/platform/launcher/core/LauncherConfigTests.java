@@ -36,7 +36,7 @@ class LauncherConfigTests {
 			() -> LauncherConfig.builder().addTestExecutionListeners((TestExecutionListener[]) null));
 
 		TestEngine engine = new TestEngineStub();
-		TestExecutionListener listener = new TestExecutionListener() {
+		var listener = new TestExecutionListener() {
 		};
 		assertThrows(PreconditionViolationException.class,
 			() -> LauncherConfig.builder().addTestEngines(engine, engine, null));
@@ -46,7 +46,7 @@ class LauncherConfigTests {
 
 	@Test
 	void defaultConfig() {
-		LauncherConfig config = LauncherConfig.builder().build();
+		var config = LauncherConfig.builder().build();
 
 		assertTrue(config.isTestEngineAutoRegistrationEnabled(),
 			"Test engine auto-registration should be enabled by default");
@@ -60,14 +60,14 @@ class LauncherConfigTests {
 
 	@Test
 	void disableTestEngineAutoRegistration() {
-		LauncherConfig config = LauncherConfig.builder().enableTestEngineAutoRegistration(false).build();
+		var config = LauncherConfig.builder().enableTestEngineAutoRegistration(false).build();
 
 		assertFalse(config.isTestEngineAutoRegistrationEnabled());
 	}
 
 	@Test
 	void disableTestExecutionListenerAutoRegistration() {
-		LauncherConfig config = LauncherConfig.builder().enableTestExecutionListenerAutoRegistration(false).build();
+		var config = LauncherConfig.builder().enableTestExecutionListenerAutoRegistration(false).build();
 
 		assertFalse(config.isTestExecutionListenerAutoRegistrationEnabled());
 	}
@@ -77,19 +77,19 @@ class LauncherConfigTests {
 		TestEngine first = new TestEngineStub();
 		TestEngine second = new TestEngineStub();
 
-		LauncherConfig config = LauncherConfig.builder().addTestEngines(first, second).build();
+		var config = LauncherConfig.builder().addTestEngines(first, second).build();
 
 		assertThat(config.getAdditionalTestEngines()).containsOnly(first, second);
 	}
 
 	@Test
 	void addTestExecutionListeners() {
-		TestExecutionListener first = new TestExecutionListener() {
+		var first = new TestExecutionListener() {
 		};
-		TestExecutionListener second = new TestExecutionListener() {
+		var second = new TestExecutionListener() {
 		};
 
-		LauncherConfig config = LauncherConfig.builder().addTestExecutionListeners(first, second).build();
+		var config = LauncherConfig.builder().addTestExecutionListeners(first, second).build();
 
 		assertThat(config.getAdditionalTestExecutionListeners()).containsOnly(first, second);
 	}

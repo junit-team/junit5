@@ -1,34 +1,24 @@
 import org.gradle.api.JavaVersion
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.extra
+import kotlin.reflect.KProperty
 
-object Versions {
+class Versions(private val project: Project) {
 
-    val jvmTarget = JavaVersion.VERSION_1_8
+    companion object {
+        val jvmTarget = JavaVersion.VERSION_1_8
+    }
 
-    // Dependencies
-    val apiGuardian = "1.1.0"
-    val junit4 = "4.13"
-    val junit4Min = "4.12"
-    val ota4j = "1.2.0"
-    val picocli = "4.1.4"
-    val univocity = "2.8.4"
+    private val properties = object {
+        operator fun getValue(receiver: Any?, property: KProperty<*>) = get(property.name)
+    }
 
-    // Test Dependencies
-    val archunit = "0.12.0"
-    val assertJ = "3.14.0"
-    val bartholdy = "0.2.3"
-    val classgraph = "4.8.59"
-    val commonsIo = "2.6"
-    val groovy = "3.0.0-rc-2"
-    val log4j = "2.12.1"
-    val mockito = "3.2.4"
-    val slf4j = "1.7.30"
+    val junit4 by properties
+    val junit4Min by properties
+    val opentest4j by properties
+    val apiguardian by properties
+    val assertj by properties
 
-    // Tools
-    val checkstyle = "8.25"
-    val jacoco = "0.8.5"
-    val jmh = "1.22"
-    val ktlint = "0.35.0"
-    val surefire = "2.22.2"
-    var bnd = "4.3.1"
+    operator fun get(name: String) = project.extra.get("$name.version") as String
 
 }

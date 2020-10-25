@@ -10,8 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 
 import java.util.List;
@@ -35,7 +34,7 @@ import org.junit.platform.engine.TestDescriptor;
  * @see Events
  * @see Executions
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public class EngineExecutionResults {
 
 	private final Events allEvents;
@@ -65,20 +64,8 @@ public class EngineExecutionResults {
 	 * @see #containerEvents()
 	 * @see #testEvents()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public Events allEvents() {
 		return this.allEvents;
-	}
-
-	/**
-	 * Get all recorded events.
-	 *
-	 * @deprecated This method will be removed in 1.7; use {@link #allEvents()} instead.
-	 */
-	@Deprecated
-	@API(status = DEPRECATED, since = "1.6")
-	public Events all() {
-		return allEvents();
 	}
 
 	/**
@@ -91,23 +78,8 @@ public class EngineExecutionResults {
 	 * @see #allEvents()
 	 * @see #testEvents()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public Events containerEvents() {
 		return this.containerEvents;
-	}
-
-	/**
-	 * Get recorded events for containers.
-	 *
-	 * <p>In this context, the word "container" applies to {@link TestDescriptor
-	 * TestDescriptors} that return {@code true} from {@link TestDescriptor#isContainer()}.
-	 *
-	 * @deprecated This method will be removed in 1.7; use {@link #containerEvents()} instead.
-	 */
-	@Deprecated
-	@API(status = DEPRECATED, since = "1.6")
-	public Events containers() {
-		return containerEvents();
 	}
 
 	/**
@@ -120,23 +92,8 @@ public class EngineExecutionResults {
 	 * @see #allEvents()
 	 * @see #containerEvents()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
 	public Events testEvents() {
 		return this.testEvents;
-	}
-
-	/**
-	 * Get recorded events for tests.
-	 *
-	 * <p>In this context, the word "test" applies to {@link TestDescriptor
-	 * TestDescriptors} that return {@code true} from {@link TestDescriptor#isTest()}.
-	 *
-	 * @deprecated This method will be removed in 1.7; use {@link #testEvents()} instead.
-	 */
-	@Deprecated
-	@API(status = DEPRECATED, since = "1.6")
-	public Events tests() {
-		return testEvents();
 	}
 
 	/**

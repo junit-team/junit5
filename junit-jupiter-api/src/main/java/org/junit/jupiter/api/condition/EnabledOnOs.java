@@ -60,6 +60,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @see org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable
  * @see org.junit.jupiter.api.condition.EnabledIfSystemProperty
  * @see org.junit.jupiter.api.condition.DisabledIfSystemProperty
+ * @see org.junit.jupiter.api.condition.EnabledIf
+ * @see org.junit.jupiter.api.condition.DisabledIf
  * @see org.junit.jupiter.api.Disabled
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
@@ -76,5 +78,10 @@ public @interface EnabledOnOs {
 	 * @see OS
 	 */
 	OS[] value();
+
+	/**
+	 * Reason to provide if the test of container ends up being disabled.
+	 */
+	String disabledReason() default "";
 
 }

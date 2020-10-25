@@ -12,7 +12,6 @@ package org.junit.platform.console;
 
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -22,12 +21,9 @@ import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.getFullyQualifiedMethodName;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -46,6 +42,7 @@ import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.console.options.Details;
 import org.junit.platform.console.options.Theme;
+import org.opentest4j.TestAbortedException;
 
 /**
  * @since 1.0
@@ -77,17 +74,17 @@ class ConsoleDetailsTests {
 	}
 
 	private List<DynamicNode> scanContainerClassAndCreateDynamicTests(Class<?> containerClass) {
-		String containerName = containerClass.getSimpleName().replace("TestCase", "");
+		var containerName = containerClass.getSimpleName().replace("TestCase", "");
 		// String containerName = containerClass.getSimpleName();
 		List<DynamicNode> nodes = new ArrayList<>();
 		Map<Details, List<DynamicTest>> map = new EnumMap<>(Details.class);
-		for (Method method : findMethods(containerClass, m -> m.isAnnotationPresent(Test.class))) {
-			String methodName = method.getName();
-			Class<?>[] types = method.getParameterTypes();
-			for (Details details : Details.values()) {
-				List<DynamicTest> tests = map.computeIfAbsent(details, key -> new ArrayList<>());
-				for (Theme theme : Theme.values()) {
-					String caption = containerName + "-" + methodName + "-" + details + "-" + theme;
+		for (var method : findMethods(containerClass, m -> m.isAnnotationPresent(Test.class))) {
+			var methodName = method.getName();
+			var types = method.getParameterTypes();
+			for (var details : Details.values()) {
+				var tests = map.computeIfAbsent(details, key -> new ArrayList<>());
+				for (var theme : Theme.values()) {
+					var caption = containerName + "-" + methodName + "-" + details + "-" + theme;
 					String[] args = { //
 							"--include-engine", "junit-jupiter", //
 							"--details", details.name(), //
@@ -97,16 +94,16 @@ class ConsoleDetailsTests {
 							"--include-classname", containerClass.getCanonicalName(), //
 							"--select-method", getFullyQualifiedMethodName(containerClass, methodName, types) //
 					};
-					String displayName = methodName + "() " + theme.name();
-					String dirName = "console/details/" + containerName.toLowerCase();
-					String outName = caption + ".out.txt";
-					Runner runner = new Runner(dirName, outName, args);
-					URI source = toUri(dirName, outName).orElse(null);
+					var displayName = methodName + "() " + theme.name();
+					var dirName = "console/details/" + containerName.toLowerCase();
+					var outName = caption + ".out.txt";
+					var runner = new Runner(dirName, outName, args);
+					var source = toUri(dirName, outName).orElse(null);
 					tests.add(dynamicTest(displayName, source, runner));
 				}
 			}
 		}
-		URI source = new File("src/test/resources/console/details").toURI();
+		var source = new File("src/test/resources/console/details").toURI();
 		map.forEach((details, tests) -> nodes.add(dynamicContainer(details.name(), source, tests.stream())));
 		return nodes;
 	}
@@ -210,36 +207,36 @@ class ConsoleDetailsTests {
 
 		@Override
 		public void execute() throws Throwable {
-			ConsoleLauncherWrapper wrapper = new ConsoleLauncherWrapper();
-			ConsoleLauncherWrapperResult result = wrapper.execute(Optional.empty(), args);
+			var wrapper = new ConsoleLauncherWrapper();
+			var result = wrapper.execute(Optional.empty(), args);
 
-			Optional<URI> optionalUri = toUri(dirName, outName);
-			if (!optionalUri.isPresent()) {
+			var optionalUri = toUri(dirName, outName);
+			if (optionalUri.isEmpty()) {
 				if (Boolean.getBoolean("org.junit.platform.console.ConsoleDetailsTests.writeResultOut")) {
 					// do not use Files.createTempDirectory(prefix) as we want one folder for one container
-					Path temp = Paths.get(System.getProperty("java.io.tmpdir"), dirName.replace('/', '-'));
+					var temp = Paths.get(System.getProperty("java.io.tmpdir"), dirName.replace('/', '-'));
 					Files.createDirectories(temp);
-					Path path = Files.write(temp.resolve(outName), result.out.getBytes(UTF_8));
-					assumeTrue(false,
+					var path = Files.writeString(temp.resolve(outName), result.out);
+					throw new TestAbortedException(
 						format("resource `%s` not found\nwrote console stdout to: %s/%s", dirName, outName, path));
 				}
 				fail("could not load resource named `" + dirName + "/" + outName + "`");
 			}
 
-			Path path = Paths.get(optionalUri.get());
+			var path = Paths.get(optionalUri.get());
 			assumeTrue(Files.exists(path), "path does not exist: " + path);
 			assumeTrue(Files.isReadable(path), "can not read: " + path);
 
-			List<String> expectedLines = Files.readAllLines(path, UTF_8);
-			List<String> actualLines = asList(result.out.split("\\R"));
+			var expectedLines = Files.readAllLines(path, UTF_8);
+			var actualLines = List.of(result.out.split("\\R"));
 
 			assertLinesMatch(expectedLines, actualLines);
 		}
 	}
 
 	static Optional<URI> toUri(String dirName, String outName) {
-		String resourceName = dirName + "/" + outName;
-		URL url = ConsoleDetailsTests.class.getClassLoader().getResource(resourceName);
+		var resourceName = dirName + "/" + outName;
+		var url = ConsoleDetailsTests.class.getClassLoader().getResource(resourceName);
 		if (url == null) {
 			return Optional.empty();
 		}

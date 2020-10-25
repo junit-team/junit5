@@ -24,13 +24,13 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
@@ -51,35 +51,33 @@ class ParameterizedTestExtensionTests {
 
 	@Test
 	void supportsReturnsFalseForMissingTestMethod() {
-		ExtensionContext extensionContextWithoutTestMethod = getExtensionContextReturningSingleMethod(
-			new TestCaseWithoutMethod());
+		var extensionContextWithoutTestMethod = getExtensionContextReturningSingleMethod(new TestCaseWithoutMethod());
 		assertFalse(this.parameterizedTestExtension.supportsTestTemplate(extensionContextWithoutTestMethod));
 	}
 
 	@Test
 	void supportsReturnsFalseForTestMethodWithoutParameterizedTestAnnotation() {
-		ExtensionContext extensionContextWithUnAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+		var extensionContextWithUnAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new TestCaseWithMethod());
 		assertFalse(this.parameterizedTestExtension.supportsTestTemplate(extensionContextWithUnAnnotatedTestMethod));
 	}
 
 	@Test
 	void supportsReturnsTrueForTestMethodWithParameterizedTestAnnotation() {
-		ExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new TestCaseWithAnnotatedMethod());
 		assertTrue(this.parameterizedTestExtension.supportsTestTemplate(extensionContextWithAnnotatedTestMethod));
 	}
 
 	@Test
 	void streamsReturnedByProvidersAreClosedWhenCallingProvide() {
-		ExtensionContext extensionContext = getExtensionContextReturningSingleMethod(
+		var extensionContext = getExtensionContextReturningSingleMethod(
 			new ArgumentsProviderWithCloseHandlerTestCase());
 		// we need to call supportsTestTemplate() first, because it creates and
 		// puts the ParameterizedTestMethodContext into the Store
 		this.parameterizedTestExtension.supportsTestTemplate(extensionContext);
 
-		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
-			extensionContext);
+		var stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext);
 
 		assertFalse(streamWasClosed);
 		// cause the stream to be evaluated
@@ -93,21 +91,20 @@ class ParameterizedTestExtensionTests {
 			throw new FileNotFoundException("a message");
 		};
 
-		FileNotFoundException exception = assertThrows(FileNotFoundException.class,
-			() -> arguments(failingProvider, null));
+		var exception = assertThrows(FileNotFoundException.class, () -> arguments(failingProvider, null));
 		assertEquals("a message", exception.getMessage());
 	}
 
 	@Test
 	void throwsExceptionWhenParameterizedTestIsNotInvokedAtLeastOnce() {
-		ExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new TestCaseWithAnnotatedMethod());
 
-		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
+		var stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContextWithAnnotatedTestMethod);
 		// cause the stream to be evaluated
 		stream.toArray();
-		JUnitException exception = assertThrows(JUnitException.class, stream::close);
+		var exception = assertThrows(JUnitException.class, stream::close);
 
 		assertThat(exception).hasMessage(
 			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest");
@@ -115,26 +112,26 @@ class ParameterizedTestExtensionTests {
 
 	@Test
 	void throwsExceptionWhenArgumentsProviderIsNotStatic() {
-		ExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new NonStaticArgumentsProviderTestCase());
 
-		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
+		var stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContextWithAnnotatedTestMethod);
 
-		JUnitException exception = assertThrows(JUnitException.class, stream::toArray);
+		var exception = assertThrows(JUnitException.class, stream::toArray);
 
 		assertArgumentsProviderInstantiationException(exception, NonStaticArgumentsProvider.class);
 	}
 
 	@Test
 	void throwsExceptionWhenArgumentsProviderDoesNotContainNoArgumentConstructor() {
-		ExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new MissingNoArgumentsConstructorArgumentsProviderTestCase());
 
-		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
+		var stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContextWithAnnotatedTestMethod);
 
-		JUnitException exception = assertThrows(JUnitException.class, stream::toArray);
+		var exception = assertThrows(JUnitException.class, stream::toArray);
 
 		assertArgumentsProviderInstantiationException(exception, MissingNoArgumentsConstructorArgumentsProvider.class);
 	}
@@ -150,7 +147,7 @@ class ParameterizedTestExtensionTests {
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase) {
 
 		// @formatter:off
-		Optional<Method> optional = Arrays.stream(testCase.getClass().getDeclaredMethods())
+		var optional = Arrays.stream(testCase.getClass().getDeclaredMethods())
 				.filter(method -> method.getName().equals("method"))
 				.findFirst();
 		// @formatter:on
@@ -166,7 +163,7 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<ExtensionContext> getParent() {
-				return null;
+				return Optional.empty();
 			}
 
 			@Override
@@ -191,12 +188,12 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<AnnotatedElement> getElement() {
-				return null;
+				return Optional.empty();
 			}
 
 			@Override
 			public Optional<Class<?>> getTestClass() {
-				return null;
+				return Optional.empty();
 			}
 
 			@Override
@@ -221,6 +218,11 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<String> getConfigurationParameter(String key) {
+				return Optional.empty();
+			}
+
+			@Override
+			public <T> Optional<T> getConfigurationParameter(String key, Function<String, T> transformer) {
 				return Optional.empty();
 			}
 
@@ -263,7 +265,7 @@ class ParameterizedTestExtensionTests {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-			Stream<Arguments> argumentsStream = Stream.of("foo", "bar").map(Arguments::of);
+			var argumentsStream = Stream.of("foo", "bar").map(Arguments::of);
 			return argumentsStream.onClose(() -> streamWasClosed = true);
 		}
 	}

@@ -38,9 +38,9 @@ class PackageNameFilterTests {
 
 	@Test
 	void includePackageWithMultiplePackages() {
-		String includedPackage1 = "java.lang";
-		String includedPackage2 = "java.util";
-		PackageNameFilter filter = PackageNameFilter.includePackageNames(includedPackage1, includedPackage2);
+		var includedPackage1 = "java.lang";
+		var includedPackage2 = "java.util";
+		var filter = PackageNameFilter.includePackageNames(includedPackage1, includedPackage2);
 
 		assertThat(filter).hasToString(
 			"IncludePackageNameFilter that includes packages whose names are either equal to or start with one of the following: '"
@@ -89,9 +89,9 @@ class PackageNameFilterTests {
 
 	@Test
 	void excludePackageWithMultiplePackages() {
-		String excludedPackage1 = "java.lang";
-		String excludedPackage2 = "java.util";
-		PackageNameFilter filter = PackageNameFilter.excludePackageNames(excludedPackage1, excludedPackage2);
+		var excludedPackage1 = "java.lang";
+		var excludedPackage2 = "java.util";
+		var filter = PackageNameFilter.excludePackageNames(excludedPackage1, excludedPackage2);
 
 		assertThat(filter).hasToString(
 			"ExcludePackageNameFilter that excludes packages whose names are either equal to or start with one of the following: '"

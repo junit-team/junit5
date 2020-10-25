@@ -10,22 +10,22 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ_WRITE;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 
 /**
  * @since 1.3
@@ -36,18 +36,18 @@ class LockManagerTests {
 
 	@Test
 	void returnsNopLockWithoutExclusiveResources() {
-		Collection<ExclusiveResource> resources = emptySet();
+		Collection<ExclusiveResource> resources = Set.of();
 
-		List<Lock> locks = getLocks(resources, NopLock.class);
+		var locks = getLocks(resources, NopLock.class);
 
 		assertThat(locks).isEmpty();
 	}
 
 	@Test
 	void returnsSingleLockForSingleExclusiveResource() {
-		Collection<ExclusiveResource> resources = singleton(new ExclusiveResource("foo", READ));
+		Collection<ExclusiveResource> resources = Set.of(new ExclusiveResource("foo", READ));
 
-		List<Lock> locks = getLocks(resources, SingleLock.class);
+		var locks = getLocks(resources, SingleLock.class);
 
 		assertThat(locks).hasSize(1);
 		assertThat(locks.get(0)).isInstanceOf(ReadLock.class);
@@ -55,11 +55,11 @@ class LockManagerTests {
 
 	@Test
 	void returnsCompositeLockForMultipleDifferentExclusiveResources() {
-		Collection<ExclusiveResource> resources = asList( //
+		Collection<ExclusiveResource> resources = List.of( //
 			new ExclusiveResource("a", READ), //
 			new ExclusiveResource("b", READ_WRITE));
 
-		List<Lock> locks = getLocks(resources, CompositeLock.class);
+		var locks = getLocks(resources, CompositeLock.class);
 
 		assertThat(locks).hasSize(2);
 		assertThat(locks.get(0)).isInstanceOf(ReadLock.class);
@@ -68,10 +68,10 @@ class LockManagerTests {
 
 	@Test
 	void reusesSameLockForExclusiveResourceWithSameKey() {
-		Collection<ExclusiveResource> resources = singleton(new ExclusiveResource("foo", READ));
+		Collection<ExclusiveResource> resources = Set.of(new ExclusiveResource("foo", READ));
 
-		List<Lock> locks1 = getLocks(resources, SingleLock.class);
-		List<Lock> locks2 = getLocks(resources, SingleLock.class);
+		var locks1 = getLocks(resources, SingleLock.class);
+		var locks2 = getLocks(resources, SingleLock.class);
 
 		assertThat(locks1).hasSize(1);
 		assertThat(locks2).hasSize(1);
@@ -80,32 +80,45 @@ class LockManagerTests {
 
 	@Test
 	void returnsWriteLockForExclusiveResourceWithBothLockModes() {
-		Collection<ExclusiveResource> resources = asList( //
+		Collection<ExclusiveResource> resources = List.of( //
 			new ExclusiveResource("bar", READ), //
 			new ExclusiveResource("foo", READ), //
 			new ExclusiveResource("foo", READ_WRITE), //
 			new ExclusiveResource("bar", READ_WRITE));
 
-		List<Lock> locks = getLocks(resources, CompositeLock.class);
+		var locks = getLocks(resources, CompositeLock.class);
 
 		assertThat(locks).hasSize(2);
 		assertThat(locks.get(0)).isInstanceOf(WriteLock.class);
 		assertThat(locks.get(1)).isInstanceOf(WriteLock.class);
 	}
 
-	private List<Lock> getLocks(Collection<ExclusiveResource> resources, Class<? extends ResourceLock> type) {
-		ResourceLock lock = lockManager.getLockForResources(resources);
-		assertThat(lock).isInstanceOf(type);
-		return getLocks(lock);
+	@ParameterizedTest
+	@EnumSource
+	void globalLockComesFirst(LockMode globalLockMode) {
+		Collection<ExclusiveResource> resources = List.of( //
+			new ExclusiveResource("___foo", READ), //
+			new ExclusiveResource("foo", READ_WRITE), //
+			new ExclusiveResource(GLOBAL_KEY, globalLockMode), //
+			new ExclusiveResource("bar", READ_WRITE));
+
+		var locks = getLocks(resources, CompositeLock.class);
+
+		assertThat(locks).hasSize(4);
+		assertThat(locks.get(0)).isEqualTo(getSingleLock(GLOBAL_KEY, globalLockMode));
+		assertThat(locks.get(1)).isEqualTo(getSingleLock("___foo", READ));
+		assertThat(locks.get(2)).isEqualTo(getSingleLock("bar", READ_WRITE));
+		assertThat(locks.get(3)).isEqualTo(getSingleLock("foo", READ_WRITE));
 	}
 
-	private List<Lock> getLocks(ResourceLock resourceLock) {
-		if (resourceLock instanceof NopLock) {
-			return emptyList();
-		}
-		if (resourceLock instanceof SingleLock) {
-			return singletonList(((SingleLock) resourceLock).getLock());
-		}
-		return ((CompositeLock) resourceLock).getLocks();
+	private Lock getSingleLock(String globalResourceLockKey, LockMode read) {
+		return getLocks(Set.of(new ExclusiveResource(globalResourceLockKey, read)), SingleLock.class).get(0);
 	}
+
+	private List<Lock> getLocks(Collection<ExclusiveResource> resources, Class<? extends ResourceLock> type) {
+		var lock = lockManager.getLockForResources(resources);
+		assertThat(lock).isInstanceOf(type);
+		return ResourceLockSupport.getLocks(lock);
+	}
+
 }

@@ -60,6 +60,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @see org.junit.jupiter.api.condition.DisabledForJreRange
  * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.DisabledOnOs
+ * @see org.junit.jupiter.api.condition.EnabledIf
+ * @see org.junit.jupiter.api.condition.DisabledIf
  * @see org.junit.jupiter.api.Disabled
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
@@ -87,5 +89,10 @@ public @interface EnabledIfSystemProperty {
 	 * @see java.util.regex.Pattern
 	 */
 	String matches();
+
+	/**
+	 * Reason to provide if the test of container ends up being disabled.
+	 */
+	String disabledReason() default "";
 
 }

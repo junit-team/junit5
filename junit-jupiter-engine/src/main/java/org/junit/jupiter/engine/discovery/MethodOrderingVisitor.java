@@ -16,10 +16,12 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
@@ -27,8 +29,8 @@ import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
@@ -52,7 +54,7 @@ class MethodOrderingVisitor implements TestDescriptor.Visitor {
 				orderContainedMethods(classBasedTestDescriptor, classBasedTestDescriptor.getTestClass());
 			}
 			catch (Throwable t) {
-				BlacklistedExceptions.rethrowIfBlacklisted(t);
+				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 				logger.error(t, () -> "Failed to order methods for " + classBasedTestDescriptor.getTestClass());
 			}
 		}
@@ -64,7 +66,9 @@ class MethodOrderingVisitor implements TestDescriptor.Visitor {
 	private void orderContainedMethods(ClassBasedTestDescriptor classBasedTestDescriptor, Class<?> testClass) {
 		findAnnotation(testClass, TestMethodOrder.class)//
 				.map(TestMethodOrder::value)//
-				.map(ReflectionUtils::newInstance)//
+				.<MethodOrderer> map(ReflectionUtils::newInstance)//
+				.map(Optional::of)//
+				.orElseGet(configuration::getDefaultTestMethodOrderer)//
 				.ifPresent(methodOrderer -> {
 
 					Set<? extends TestDescriptor> children = classBasedTestDescriptor.getChildren();

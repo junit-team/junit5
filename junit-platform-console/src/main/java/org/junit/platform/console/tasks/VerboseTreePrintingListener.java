@@ -143,7 +143,7 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 	}
 
 	private String verticals(int index) {
-		return verticals[Math.min(index, verticals.length)];
+		return verticals[Math.min(index, verticals.length - 1)];
 	}
 
 	private void printVerticals(String tile) {

@@ -33,8 +33,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Constructor;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -46,9 +44,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
-import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
@@ -56,13 +52,11 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
-import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.fakes.TestEngineSpy;
 import org.junit.platform.fakes.TestEngineStub;
 import org.junit.platform.launcher.EngineDiscoveryResult;
-import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
@@ -71,7 +65,6 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
 
 /**
  * @since 1.0
@@ -86,14 +79,15 @@ class DefaultLauncherTests {
 
 	@Test
 	void constructLauncherWithoutAnyEngines() {
-		Throwable exception = assertThrows(PreconditionViolationException.class, () -> createLauncher());
+		Throwable exception = assertThrows(PreconditionViolationException.class,
+			LauncherFactoryForTestingPurposesOnly::createLauncher);
 
 		assertThat(exception).hasMessageContaining("Cannot create Launcher without at least one TestEngine");
 	}
 
 	@Test
 	void constructLauncherWithMultipleTestEnginesWithDuplicateIds() {
-		JUnitException exception = assertThrows(JUnitException.class,
+		var exception = assertThrows(JUnitException.class,
 			() -> createLauncher(new DemoHierarchicalTestEngine("dummy id"),
 				new DemoHierarchicalTestEngine("dummy id")));
 
@@ -104,7 +98,7 @@ class DefaultLauncherTests {
 	void registerTestExecutionListenersWithNullArray() {
 		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> launcher.registerTestExecutionListeners((TestExecutionListener[]) null));
 
 		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
@@ -114,8 +108,7 @@ class DefaultLauncherTests {
 	void registerTestExecutionListenersWithEmptyArray() {
 		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[0]));
+		var exception = assertThrows(PreconditionViolationException.class, launcher::registerTestExecutionListeners);
 
 		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
 	}
@@ -124,7 +117,7 @@ class DefaultLauncherTests {
 	void registerTestExecutionListenersWithArrayContainingNullElements() {
 		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[] { null }));
 
 		assertThat(exception).hasMessageContaining("individual listeners must not be null");
@@ -132,9 +125,9 @@ class DefaultLauncherTests {
 
 	@Test
 	void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
-		Launcher launcher = createLauncher(new DemoHierarchicalTestEngine());
+		var launcher = createLauncher(new DemoHierarchicalTestEngine());
 
-		TestPlan testPlan = launcher.discover(request().build());
+		var testPlan = launcher.discover(request().build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 	}
@@ -166,7 +159,7 @@ class DefaultLauncherTests {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				try {
-					Constructor<? extends Throwable> constructor = throwableClass.getDeclaredConstructor(String.class);
+					var constructor = throwableClass.getDeclaredConstructor(String.class);
 					throw ExceptionUtils.throwAsUncheckedException(constructor.newInstance("ignored"));
 				}
 				catch (Exception ignored) {
@@ -200,7 +193,7 @@ class DefaultLauncherTests {
 
 	private void assertDiscoveryFailed(TestEngine testEngine, LauncherDiscoveryListener discoveryListener) {
 		var engineId = testEngine.getId();
-		ArgumentCaptor<EngineDiscoveryResult> failureCaptor = ArgumentCaptor.forClass(EngineDiscoveryResult.class);
+		var failureCaptor = ArgumentCaptor.forClass(EngineDiscoveryResult.class);
 		verify(discoveryListener).engineDiscoveryFinished(eq(UniqueId.forEngine(engineId)), failureCaptor.capture());
 		var result = failureCaptor.getValue();
 		assertThat(result.getStatus()).isEqualTo(EngineDiscoveryResult.Status.FAILED);
@@ -280,7 +273,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void reportsEngineExecutionFailuresForSucessfullyFinishedEngine() {
+	void reportsEngineExecutionFailuresForSuccessfullyFinishedEngine() {
 		var rootCause = new RuntimeException("something went horribly wrong");
 		var engine = new TestEngineStub() {
 			@Override
@@ -372,30 +365,30 @@ class DefaultLauncherTests {
 
 	@Test
 	void discoverTestPlanForSingleEngine() {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("myEngine");
+		var engine = new DemoHierarchicalTestEngine("myEngine");
 		engine.addTest("test1", noOp);
 		engine.addTest("test2", noOp);
 
 		var launcher = createLauncher(engine);
 
-		TestPlan testPlan = launcher.discover(request().selectors(selectPackage("any")).build());
+		var testPlan = launcher.discover(request().selectors(selectPackage("any")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
-		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
+		var rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(2);
 		assertThat(testPlan.getChildren("[engine:myEngine]")).hasSize(2);
 	}
 
 	@Test
 	void discoverTestPlanForMultipleEngines() {
-		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("engine1");
+		var firstEngine = new DemoHierarchicalTestEngine("engine1");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("engine2");
+		var secondEngine = new DemoHierarchicalTestEngine("engine2");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		var launcher = createLauncher(firstEngine, secondEngine);
 
-		TestPlan testPlan = launcher.discover(
+		var testPlan = launcher.discover(
 			request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(2);
@@ -405,15 +398,15 @@ class DefaultLauncherTests {
 
 	@Test
 	void launcherWillNotExecuteEnginesIfNotIncludedByAnEngineFilter() {
-		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
+		var firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
+		var secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		var launcher = createLauncher(firstEngine, secondEngine);
 
 		// @formatter:off
-		TestPlan testPlan = launcher.discover(
+		var testPlan = launcher.discover(
 			request()
 				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
 				.filters(includeEngines("first"))
@@ -421,22 +414,22 @@ class DefaultLauncherTests {
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
-		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
+		var rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
 		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
 	}
 
 	@Test
 	void launcherWillExecuteAllEnginesExplicitlyIncludedViaSingleEngineFilter() {
-		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
+		var firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
+		var secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		var launcher = createLauncher(firstEngine, secondEngine);
 
 		// @formatter:off
-		TestPlan testPlan = launcher.discover(
+		var testPlan = launcher.discover(
 			request()
 				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
 				.filters(includeEngines("first", "second"))
@@ -448,15 +441,15 @@ class DefaultLauncherTests {
 
 	@Test
 	void launcherWillNotExecuteEnginesExplicitlyIncludedViaMultipleCompetingEngineFilters() {
-		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
+		var firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
+		var secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		var launcher = createLauncher(firstEngine, secondEngine);
 
 		// @formatter:off
-		TestPlan testPlan = launcher.discover(
+		var testPlan = launcher.discover(
 			request()
 				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
 				.filters(includeEngines("first"), includeEngines("second"))
@@ -468,15 +461,15 @@ class DefaultLauncherTests {
 
 	@Test
 	void launcherWillNotExecuteEnginesExplicitlyExcludedByAnEngineFilter() {
-		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
+		var firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
+		var secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		var launcher = createLauncher(firstEngine, secondEngine);
 
 		// @formatter:off
-		TestPlan testPlan = launcher.discover(
+		var testPlan = launcher.discover(
 			request()
 				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
 				.filters(excludeEngines("second"))
@@ -484,24 +477,24 @@ class DefaultLauncherTests {
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
-		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
+		var rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
 		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
 	}
 
 	@Test
 	void launcherWillExecuteEnginesHonoringBothIncludeAndExcludeEngineFilters() {
-		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
+		var firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
+		var secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
-		DemoHierarchicalTestEngine thirdEngine = new DemoHierarchicalTestEngine("third");
+		var thirdEngine = new DemoHierarchicalTestEngine("third");
 		TestDescriptor test3 = thirdEngine.addTest("test3", noOp);
 
 		var launcher = createLauncher(firstEngine, secondEngine, thirdEngine);
 
 		// @formatter:off
-		TestPlan testPlan = launcher.discover(
+		var testPlan = launcher.discover(
 			request()
 				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()), selectUniqueId(test3.getUniqueId()))
 				.filters(includeEngines("first", "second"), excludeEngines("second"))
@@ -509,15 +502,15 @@ class DefaultLauncherTests {
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
-		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
+		var rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
 		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
 	}
 
 	@Test
 	void launcherAppliesPostDiscoveryFilters() {
-		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("myEngine");
-		DemoHierarchicalTestDescriptor test1 = engine.addTest("test1", noOp);
+		var engine = new DemoHierarchicalTestEngine("myEngine");
+		var test1 = engine.addTest("test1", noOp);
 		engine.addTest("test2", noOp);
 
 		var launcher = createLauncher(engine);
@@ -528,7 +521,7 @@ class DefaultLauncherTests {
 		PostDiscoveryFilter includeWithUniqueIdContains1 = new PostDiscoveryFilterStub(
 			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().toString().contains("1")), () -> "filter2");
 
-		TestPlan testPlan = launcher.discover( //
+		var testPlan = launcher.discover( //
 			request() //
 					.selectors(selectPackage("any")) //
 					.filters(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
@@ -540,24 +533,24 @@ class DefaultLauncherTests {
 
 	@Test
 	void withoutConfigurationParameters_LauncherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
-		TestEngineSpy engine = new TestEngineSpy();
+		var engine = new TestEngineSpy();
 
 		var launcher = createLauncher(engine);
 		launcher.execute(request().build());
 
-		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
+		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.get("key").isPresent()).isFalse();
 		assertThat(configurationParameters.size()).isEqualTo(0);
 	}
 
 	@Test
 	void withConfigurationParameters_LauncherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
-		TestEngineSpy engine = new TestEngineSpy();
+		var engine = new TestEngineSpy();
 
 		var launcher = createLauncher(engine);
 		launcher.execute(request().configurationParameter("key", "value").build());
 
-		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
+		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.size()).isEqualTo(1);
 		assertThat(configurationParameters.get("key").isPresent()).isTrue();
 		assertThat(configurationParameters.get("key").get()).isEqualTo("value");
@@ -568,14 +561,14 @@ class DefaultLauncherTests {
 		System.setProperty(FOO, BAR);
 
 		try {
-			TestEngineSpy engine = new TestEngineSpy();
+			var engine = new TestEngineSpy();
 
 			var launcher = createLauncher(engine);
 			launcher.execute(request().build());
 
-			ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
+			var configurationParameters = engine.requestForExecution.getConfigurationParameters();
 			assertThat(configurationParameters.size()).isEqualTo(0);
-			Optional<String> optionalFoo = configurationParameters.get(FOO);
+			var optionalFoo = configurationParameters.get(FOO);
 			assertTrue(optionalFoo.isPresent(), "foo should have been picked up via system property");
 			assertEquals(BAR, optionalFoo.get(), "foo property");
 		}
@@ -586,8 +579,8 @@ class DefaultLauncherTests {
 
 	@Test
 	void withAdditionalListener() {
-		TestEngineSpy engine = new TestEngineSpy();
-		SummaryGeneratingListener listener = new SummaryGeneratingListener();
+		var engine = new TestEngineSpy();
+		var listener = new SummaryGeneratingListener();
 
 		var launcher = createLauncher(engine);
 		launcher.execute(request().build(), listener);
@@ -599,14 +592,13 @@ class DefaultLauncherTests {
 
 	@Test
 	void prunesTestDescriptorsAfterApplyingPostDiscoveryFilters() {
-		TestEngineSpy engine = new TestEngineSpy() {
+		var engine = new TestEngineSpy() {
 
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				super.discover(discoveryRequest, uniqueId);
-				TestDescriptorStub engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
-				TestDescriptorStub containerDescriptor = new TestDescriptorStub(uniqueId.append("container", "a"),
-					"container") {
+				var engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
+				var containerDescriptor = new TestDescriptorStub(uniqueId.append("container", "a"), "container") {
 
 					@Override
 					public Type getType() {
@@ -621,26 +613,26 @@ class DefaultLauncherTests {
 		};
 
 		var launcher = createLauncher(engine);
-		TestPlan testPlan = launcher.discover(request().filters(
+		var testPlan = launcher.discover(request().filters(
 			(PostDiscoveryFilter) testDescriptor -> FilterResult.includedIf(testDescriptor.isContainer())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
-		TestIdentifier engineIdentifier = getOnlyElement(testPlan.getRoots());
+		var engineIdentifier = getOnlyElement(testPlan.getRoots());
 		assertThat(testPlan.getChildren(engineIdentifier)).isEmpty();
 	}
 
 	@Test
 	void reportsDynamicTestDescriptorsCorrectly() {
-		UniqueId engineId = UniqueId.forEngine(TestEngineSpy.ID);
-		UniqueId containerAndTestId = engineId.append("c&t", "c&t");
-		UniqueId dynamicTestId = containerAndTestId.append("test", "test");
+		var engineId = UniqueId.forEngine(TestEngineSpy.ID);
+		var containerAndTestId = engineId.append("c&t", "c&t");
+		var dynamicTestId = containerAndTestId.append("test", "test");
 
-		TestEngineSpy engine = new TestEngineSpy() {
+		var engine = new TestEngineSpy() {
 
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				super.discover(discoveryRequest, uniqueId);
-				TestDescriptorStub engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
+				var engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
 				engineDescriptor.addChild(new TestDescriptorStub(containerAndTestId, "c&t") {
 
 					@Override
@@ -654,13 +646,13 @@ class DefaultLauncherTests {
 			@Override
 			public void execute(ExecutionRequest request) {
 				super.execute(request);
-				EngineExecutionListener listener = request.getEngineExecutionListener();
+				var listener = request.getEngineExecutionListener();
 
 				listener.executionStarted(request.getRootTestDescriptor());
-				TestDescriptor containerAndTest = getOnlyElement(request.getRootTestDescriptor().getChildren());
+				var containerAndTest = getOnlyElement(request.getRootTestDescriptor().getChildren());
 				listener.executionStarted(containerAndTest);
 
-				TestDescriptorStub dynamicTest = new TestDescriptorStub(dynamicTestId, "test");
+				var dynamicTest = new TestDescriptorStub(dynamicTestId, "test");
 				dynamicTest.setParent(containerAndTest);
 				listener.dynamicTestRegistered(dynamicTest);
 				listener.executionStarted(dynamicTest);
@@ -672,17 +664,17 @@ class DefaultLauncherTests {
 		};
 
 		var launcher = createLauncher(engine);
-		TestExecutionListener listener = mock(TestExecutionListener.class);
+		var listener = mock(TestExecutionListener.class);
 		launcher.execute(request().build(), listener);
 
-		InOrder inOrder = inOrder(listener);
-		ArgumentCaptor<TestPlan> testPlanArgumentCaptor = ArgumentCaptor.forClass(TestPlan.class);
+		var inOrder = inOrder(listener);
+		var testPlanArgumentCaptor = ArgumentCaptor.forClass(TestPlan.class);
 		inOrder.verify(listener).testPlanExecutionStarted(testPlanArgumentCaptor.capture());
 
-		TestPlan testPlan = testPlanArgumentCaptor.getValue();
-		TestIdentifier engineTestIdentifier = testPlan.getTestIdentifier(engineId.toString());
-		TestIdentifier containerAndTestIdentifier = testPlan.getTestIdentifier(containerAndTestId.toString());
-		TestIdentifier dynamicTestIdentifier = testPlan.getTestIdentifier(dynamicTestId.toString());
+		var testPlan = testPlanArgumentCaptor.getValue();
+		var engineTestIdentifier = testPlan.getTestIdentifier(engineId.toString());
+		var containerAndTestIdentifier = testPlan.getTestIdentifier(containerAndTestId.toString());
+		var dynamicTestIdentifier = testPlan.getTestIdentifier(dynamicTestId.toString());
 		assertThat(engineTestIdentifier.getParentId()).isEmpty();
 		assertThat(containerAndTestIdentifier.getParentId()).contains(engineId.toString());
 		assertThat(dynamicTestIdentifier.getParentId()).contains(containerAndTestId.toString());
@@ -698,8 +690,8 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherCanExecuteTestPlan() {
-		TestEngine engine = mock(TestEngine.class);
+	void launcherCanExecuteTestPlanExactlyOnce() {
+		var engine = mock(TestEngine.class);
 		when(engine.getId()).thenReturn("some-engine");
 		when(engine.discover(any(), any())).thenAnswer(invocation -> {
 			UniqueId uniqueId = invocation.getArgument(1);
@@ -707,11 +699,14 @@ class DefaultLauncherTests {
 		});
 
 		var launcher = createLauncher(engine);
-		TestPlan testPlan = launcher.discover(request().build());
+		var testPlan = launcher.discover(request().build());
 		verify(engine, times(1)).discover(any(), any());
 
 		launcher.execute(testPlan);
 		verify(engine, times(1)).execute(any());
+
+		var e = assertThrows(PreconditionViolationException.class, () -> launcher.execute(testPlan));
+		assertEquals(e.getMessage(), "TestPlan must only be executed once");
 	}
 
 	@Test
@@ -720,12 +715,12 @@ class DefaultLauncherTests {
 	void testPlanWarnsWhenModified(LogRecordListener listener) {
 		TestEngine engine = new TestEngineSpy();
 		var launcher = createLauncher(engine);
-		TestPlan testPlan = launcher.discover(request().build());
-		TestIdentifier engineIdentifier = getOnlyElement(testPlan.getRoots());
-		UniqueId engineUniqueId = UniqueId.parse(engineIdentifier.getUniqueId());
+		var testPlan = launcher.discover(request().build());
+		var engineIdentifier = getOnlyElement(testPlan.getRoots());
+		var engineUniqueId = UniqueId.parse(engineIdentifier.getUniqueId());
 		assertThat(testPlan.getChildren(engineIdentifier)).hasSize(1);
 
-		TestIdentifier addedIdentifier = TestIdentifier.from(
+		var addedIdentifier = TestIdentifier.from(
 			new TestDescriptorStub(engineUniqueId.append("test", "test2"), "test2"));
 		testPlan.add(addedIdentifier);
 		testPlan.add(addedIdentifier);
@@ -740,9 +735,9 @@ class DefaultLauncherTests {
 	@Test
 	@TrackLogRecords
 	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(LogRecordListener listener) {
-		String id = "junit-using-reserved-prefix";
+		var id = "junit-using-reserved-prefix";
 		createLauncher(new TestEngineStub(id));
-		assertThat(listener.stream(DefaultLauncher.class, Level.WARNING).map(LogRecord::getMessage)) //
+		assertThat(listener.stream(EngineIdValidator.class, Level.WARNING).map(LogRecord::getMessage)) //
 				.containsExactly(
 					"Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '"
 							+ id + "'");

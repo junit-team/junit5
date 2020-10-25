@@ -22,8 +22,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -43,7 +41,7 @@ class TreePrinterTests {
 	private List<String> actual() {
 		try {
 			out.flush();
-			return Arrays.asList(stream.toString(charset.name()).split("\\R"));
+			return List.of(stream.toString(charset.name()).split("\\R"));
 		}
 		catch (UnsupportedEncodingException e) {
 			throw new AssertionError(charset.name() + " is an unsupported encoding?!", e);
@@ -53,19 +51,19 @@ class TreePrinterTests {
 	@Test
 	void emptyTree() {
 		new TreePrinter(out, Theme.UNICODE, true).print(new TreeNode("<root>"));
-		assertIterableEquals(Collections.singletonList("╷"), actual());
+		assertIterableEquals(List.of("╷"), actual());
 	}
 
 	@Test
 	void emptyEngines() {
-		TreeNode root = new TreeNode("<root>");
+		var root = new TreeNode("<root>");
 		root.addChild(new TreeNode(identifier("e-0", "engine zero"), "none"));
 		root.addChild(new TreeNode(identifier("e-1", "engine one")).setResult(successful()));
 		root.addChild(new TreeNode(identifier("e-2", "engine two")).setResult(failed(null)));
 		root.addChild(new TreeNode(identifier("e-3", "engine three")).setResult(aborted(null)));
 		new TreePrinter(out, Theme.UNICODE, true).print(root);
 		assertIterableEquals( //
-			Arrays.asList( //
+			List.of( //
 				"╷", //
 				"├─ engine zero ↷ none", //
 				"├─ engine one ✔", //
@@ -77,10 +75,10 @@ class TreePrinterTests {
 	@Test
 	// https://github.com/junit-team/junit5/issues/786
 	void printNodeHandlesNullMessageThrowableGracefully() {
-		TestExecutionResult result = TestExecutionResult.failed(new NullPointerException());
-		TreeNode node = new TreeNode(identifier("NPE", "test()")).setResult(result);
+		var result = TestExecutionResult.failed(new NullPointerException());
+		var node = new TreeNode(identifier("NPE", "test()")).setResult(result);
 		new TreePrinter(out, Theme.ASCII, true).print(node);
-		assertLinesMatch(Arrays.asList(".", "+-- test() [X] java.lang.NullPointerException"), actual());
+		assertLinesMatch(List.of(".", "+-- test() [X] java.lang.NullPointerException"), actual());
 	}
 
 	@Test

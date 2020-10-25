@@ -11,7 +11,7 @@
 package org.junit.platform.testkit.engine;
 
 import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -39,7 +39,7 @@ import org.junit.platform.engine.TestExecutionResult.Status;
  *
  * @since 1.4
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public final class Executions {
 
 	private final List<Execution> executions;

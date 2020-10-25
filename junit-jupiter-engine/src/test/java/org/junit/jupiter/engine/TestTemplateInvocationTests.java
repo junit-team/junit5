@@ -154,8 +154,8 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		events.assertStatistics(stats -> stats.dynamicallyRegistered(2));
 		//  events.dynamicallyRegistered().debug();
-		//  results.tests().dynamicallyRegistered().debug();
-		//  results.containers().dynamicallyRegistered().debug();
+		//  results.testEvents().dynamicallyRegistered().debug();
+		//  results.containerEvents().dynamicallyRegistered().debug();
 
 		// @formatter:off
 		Stream<String> legacyReportingNames = events.dynamicallyRegistered()

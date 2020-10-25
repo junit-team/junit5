@@ -10,14 +10,11 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import java.lang.reflect.Method;
-
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * @since 1.0
@@ -49,18 +46,9 @@ public final class DemoHierarchicalTestEngine extends HierarchicalTestEngine<Dem
 		return addTest(uniqueName, uniqueName, executeBlock);
 	}
 
-	public DemoHierarchicalTestDescriptor addTest(Method testMethod, Runnable executeBlock) {
-		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", testMethod.getName());
-		MethodSource source = MethodSource.from(testMethod);
-		DemoHierarchicalTestDescriptor child = new DemoHierarchicalTestDescriptor(uniqueId, testMethod.getName(),
-			source, executeBlock);
-		engineDescriptor.addChild(child);
-		return child;
-	}
-
 	public DemoHierarchicalTestDescriptor addTest(String uniqueName, String displayName, Runnable executeBlock) {
-		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", uniqueName);
-		DemoHierarchicalTestDescriptor child = new DemoHierarchicalTestDescriptor(uniqueId, displayName, executeBlock);
+		var uniqueId = engineDescriptor.getUniqueId().append("test", uniqueName);
+		var child = new DemoHierarchicalTestDescriptor(uniqueId, displayName, executeBlock);
 		engineDescriptor.addChild(child);
 		return child;
 	}
@@ -76,9 +64,8 @@ public final class DemoHierarchicalTestEngine extends HierarchicalTestEngine<Dem
 	public DemoHierarchicalContainerDescriptor addContainer(String uniqueName, String displayName, TestSource source,
 			Runnable beforeBlock) {
 
-		UniqueId uniqueId = engineDescriptor.getUniqueId().append("container", uniqueName);
-		DemoHierarchicalContainerDescriptor container = new DemoHierarchicalContainerDescriptor(uniqueId, displayName,
-			source, beforeBlock);
+		var uniqueId = engineDescriptor.getUniqueId().append("container", uniqueName);
+		var container = new DemoHierarchicalContainerDescriptor(uniqueId, displayName, source, beforeBlock);
 		engineDescriptor.addChild(container);
 		return container;
 	}

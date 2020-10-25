@@ -1,0 +1,59 @@
+[[release-notes-5.7.1]]
+== 5.7.1
+
+*Date of Release:* ❓
+
+*Scope:* Bug fixes since 5.7.0
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/52?closed=1+[5.7.1] milestone page in the JUnit repository on
+GitHub.
+
+
+[[release-notes-5.7.1-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.7.1-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* Creator functions passed to `ExtensionContext.Store.getOrComputeIfAbsent()` are now only
+  called once even if they throw an exception.
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.7.1-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓

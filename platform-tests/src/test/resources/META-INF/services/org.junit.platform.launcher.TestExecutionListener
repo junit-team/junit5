@@ -1,1 +1,3 @@
 org.junit.platform.launcher.listeners.NoopTestExecutionListener
+org.junit.platform.launcher.listeners.UnusedTestExecutionListener
+org.junit.platform.launcher.listeners.AnotherUnusedTestExecutionListener

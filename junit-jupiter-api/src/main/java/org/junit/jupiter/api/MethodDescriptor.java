@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -25,7 +26,7 @@ import org.apiguardian.api.API;
  * @since 5.4
  * @see MethodOrdererContext
  */
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = STABLE, since = "5.7")
 public interface MethodDescriptor {
 
 	/**
@@ -34,6 +35,16 @@ public interface MethodDescriptor {
 	 * @return the method; never {@code null}
 	 */
 	Method getMethod();
+
+	/**
+	 * Get the display name for this descriptor's {@link #getMethod() method}.
+	 *
+	 * @return the display name for this descriptor's method; never {@code null}
+	 * or blank
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	String getDisplayName();
 
 	/**
 	 * Determine if an annotation of {@code annotationType} is either

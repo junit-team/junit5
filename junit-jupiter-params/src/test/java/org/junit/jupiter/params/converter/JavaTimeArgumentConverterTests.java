@@ -105,15 +105,14 @@ class JavaTimeArgumentConverterTests {
 
 	@Test
 	void throwsExceptionOnInvalidTargetType() {
-		ArgumentConversionException exception = assertThrows(ArgumentConversionException.class,
-			() -> convert("2017", "yyyy", Integer.class));
+		var exception = assertThrows(ArgumentConversionException.class, () -> convert("2017", "yyyy", Integer.class));
 
 		assertThat(exception).hasMessage("Cannot convert to java.lang.Integer: 2017");
 	}
 
 	private Object convert(Object input, String pattern, Class<?> targetClass) {
-		JavaTimeArgumentConverter converter = new JavaTimeArgumentConverter();
-		JavaTimeConversionPattern annotation = mock(JavaTimeConversionPattern.class);
+		var converter = new JavaTimeArgumentConverter();
+		var annotation = mock(JavaTimeConversionPattern.class);
 		when(annotation.value()).thenReturn(pattern);
 		converter.accept(annotation);
 

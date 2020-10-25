@@ -39,18 +39,20 @@ class MethodSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void methodSource() throws Exception {
-		Method testMethod = getMethod("method1");
-		MethodSource source = MethodSource.from(testMethod);
+		var testMethod = getMethod("method1");
+		var source = MethodSource.from(testMethod);
 
 		assertThat(source.getClassName()).isEqualTo(getClass().getName());
 		assertThat(source.getMethodName()).isEqualTo(testMethod.getName());
 		assertThat(source.getMethodParameterTypes()).isEqualTo(String.class.getName());
+		assertThat(source.getJavaClass()).isEqualTo(getClass());
+		assertThat(source.getJavaMethod()).isEqualTo(testMethod);
 	}
 
 	@Test
 	void equalsAndHashCodeForMethodSource() throws Exception {
-		Method method1 = getMethod("method1");
-		Method method2 = getMethod("method2");
+		var method1 = getMethod("method1");
+		var method2 = getMethod("method2");
 		assertEqualsAndHashCode(MethodSource.from(method1), MethodSource.from(method1), MethodSource.from(method2));
 	}
 
@@ -86,7 +88,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void instantiationWithClassAndMethodShouldResultInACorrectObject() throws Exception {
-		MethodSource source = MethodSource.from(String.class,
+		var source = MethodSource.from(String.class,
 			String.class.getDeclaredMethod("lastIndexOf", String.class, int.class));
 		assertEquals(String.class.getName(), source.getClassName());
 		assertEquals("lastIndexOf", source.getMethodName());
@@ -95,7 +97,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void instantiationWithClassAndMethodAsStringAndParamsAsClassVarargsShouldResultInACorrectObject() {
-		MethodSource source = MethodSource.from(String.class.getName(), "lastIndexOf", String.class, int.class);
+		var source = MethodSource.from(String.class.getName(), "lastIndexOf", String.class, int.class);
 		assertEquals(String.class.getName(), source.getClassName());
 		assertEquals("lastIndexOf", source.getMethodName());
 		assertEquals("java.lang.String, int", source.getMethodParameterTypes());
@@ -149,60 +151,119 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	@Test
 	void twoEqualMethodsWithUnequalParametersShouldHaveUnequalMethodSourceHashCodes() {
 		assertNotEquals(MethodSource.from("TestClass1", "testMethod1", "int, String").hashCode(),
-			MethodSource.from("TestClass1", "testMethod1", "float, int, String"));
+			MethodSource.from("TestClass1", "testMethod1", "float, int, String").hashCode());
 	}
 
 	@Test
 	void aReflectedMethodsClassNameShouldBeConsistent() throws Exception {
-		Method m = String.class.getDeclaredMethod("valueOf", int.class);
+		var m = String.class.getDeclaredMethod("valueOf", int.class);
 
 		assertEquals("java.lang.String", MethodSource.from(m).getClassName());
 	}
 
 	@Test
 	void aReflectedMethodsMethodNameShouldBeConsistent() throws Exception {
-		Method m = String.class.getDeclaredMethod("valueOf", int.class);
+		var m = String.class.getDeclaredMethod("valueOf", int.class);
 
 		assertEquals("valueOf", MethodSource.from(m).getMethodName());
 	}
 
 	@Test
 	void aReflectedMethodsParameterTypesShouldBeConsistent() throws Exception {
-		Method m = String.class.getDeclaredMethod("valueOf", float.class);
+		var m = String.class.getDeclaredMethod("valueOf", float.class);
 
 		assertEquals("float", MethodSource.from(m).getMethodParameterTypes());
 	}
 
 	@Test
 	void twoEqualReflectedMethodsShouldHaveEqualMethodSourceObjects() throws Exception {
-		Method m1 = String.class.getDeclaredMethod("valueOf", int.class);
-		Method m2 = String.class.getDeclaredMethod("valueOf", int.class);
+		var m1 = String.class.getDeclaredMethod("valueOf", int.class);
+		var m2 = String.class.getDeclaredMethod("valueOf", int.class);
 
 		assertEquals(MethodSource.from(m1), MethodSource.from(m2));
 	}
 
 	@Test
 	void twoEqualReflectedMethodsShouldHaveEqualMethodSourceHashCodes() throws Exception {
-		Method m1 = String.class.getDeclaredMethod("valueOf", int.class);
-		Method m2 = String.class.getDeclaredMethod("valueOf", int.class);
+		var m1 = String.class.getDeclaredMethod("valueOf", int.class);
+		var m2 = String.class.getDeclaredMethod("valueOf", int.class);
 
 		assertEquals(MethodSource.from(m1).hashCode(), MethodSource.from(m2).hashCode());
 	}
 
 	@Test
 	void twoUnequalReflectedMethodsShouldNotHaveEqualMethodSourceObjects() throws Exception {
-		Method m1 = String.class.getDeclaredMethod("valueOf", int.class);
-		Method m2 = Byte.class.getDeclaredMethod("byteValue");
+		var m1 = String.class.getDeclaredMethod("valueOf", int.class);
+		var m2 = Byte.class.getDeclaredMethod("byteValue");
 
 		assertNotEquals(MethodSource.from(m1), MethodSource.from(m2));
 	}
 
 	@Test
 	void twoUnequalReflectedMethodsShouldNotHaveEqualMethodSourceHashCodes() throws Exception {
-		Method m1 = String.class.getDeclaredMethod("valueOf", int.class);
-		Method m2 = Byte.class.getDeclaredMethod("byteValue");
+		var m1 = String.class.getDeclaredMethod("valueOf", int.class);
+		var m2 = Byte.class.getDeclaredMethod("byteValue");
 
 		assertNotEquals(MethodSource.from(m1).hashCode(), MethodSource.from(m2).hashCode());
+	}
+
+	@Test
+	void getJavaClassFromString() {
+		var source = MethodSource.from(getClass().getName(), "method1");
+
+		assertThat(source.getJavaClass()).isEqualTo(getClass());
+	}
+
+	@Test
+	void getJavaClassShouldThrowExceptionIfClassNotFound() {
+		var source = MethodSource.from(getClass().getName() + "X", "method1");
+
+		assertThrows(PreconditionViolationException.class, source::getJavaClass);
+	}
+
+	@Test
+	void getJavaMethodShouldReturnGivenMethodIfOverloadExists() throws Exception {
+		var testMethod = getMethod("method3");
+		var source = MethodSource.from(testMethod);
+
+		assertThat(source.getJavaMethod()).isEqualTo(testMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldFindVoidMethod() throws Exception {
+		var testMethod = getClass().getDeclaredMethod("methodVoid");
+		var source = MethodSource.from(getClass().getName(), testMethod.getName());
+
+		assertThat(source.getJavaMethod()).isEqualTo(testMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldFindMethodWithParameter() throws Exception {
+		var testMethod = getClass().getDeclaredMethod("method3", Integer.TYPE);
+		var source = MethodSource.from(getClass().getName(), testMethod.getName(), testMethod.getParameterTypes());
+
+		assertThat(source.getJavaMethod()).isEqualTo(testMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldThrowExceptionIfParameterTypesAreNotSupplied() {
+		var source = MethodSource.from(getClass().getName(), "method3");
+
+		assertThrows(PreconditionViolationException.class, source::getJavaMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldThrowExceptionIfParameterTypesDoNotMatch() {
+		var source = MethodSource.from(getClass().getName(), "method3", Double.TYPE);
+
+		assertThrows(PreconditionViolationException.class, source::getJavaMethod);
+	}
+
+	@Test
+	void getJavaMethodFromStringShouldThrowExceptionIfMethodDoesNotExist() {
+		var source = MethodSource.from(getClass().getName(), "methodX");
+
+		assertThrows(PreconditionViolationException.class, source::getJavaMethod);
 	}
 
 	private Method getMethod(String name) throws Exception {
@@ -215,6 +276,18 @@ class MethodSourceTests extends AbstractTestSourceTests {
 
 	@SuppressWarnings("unused")
 	void method2(String text) {
+	}
+
+	@SuppressWarnings("unused")
+	void method3(String text) {
+	}
+
+	@SuppressWarnings("unused")
+	void method3(int number) {
+	}
+
+	@SuppressWarnings("unused")
+	void methodVoid() {
 	}
 
 }

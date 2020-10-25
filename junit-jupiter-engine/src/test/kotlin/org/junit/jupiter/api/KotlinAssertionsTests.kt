@@ -11,6 +11,7 @@ package org.junit.jupiter.api
 
 import java.util.stream.Stream
 import kotlin.reflect.KClass
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
@@ -58,6 +59,13 @@ class KotlinAssertionsTests {
         assertThrows<AssertionError>("should fail") { fail({ "message" }) }
         assertThrows<AssertionError>({ "should fail" }) { fail(AssertionError()) }
         assertThrows<AssertionError>({ "should fail" }) { fail(null as Throwable?) }
+    }
+
+    @Test
+    fun `expected context exception testing`() = runBlocking<Unit> {
+        assertThrows<AssertionError>("Should fail async") {
+            suspend { fail("Should fail async") }()
+        }
     }
 
     @TestFactory

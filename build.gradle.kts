@@ -1,22 +1,35 @@
 import java.time.OffsetDateTime
+import java.time.Instant
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
 	id("net.nemerosa.versioning")
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
-	id("com.diffplug.gradle.spotless")
+	id("com.diffplug.spotless")
 	id("io.spring.nohttp")
 }
 
 apply(from = "gradle/build-scan-user-data.gradle")
 
-buildScan {
-	if (project.hasProperty("javaHome")) {
-		value("Custom Java home", project.property("javaHome") as String)
+val buildTimeAndDate by extra {
+
+	// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against
+	// in order to achieve reproducible builds
+	//
+	// More details - https://reproducible-builds.org/docs/source-date-epoch/
+
+	if (System.getenv().containsKey("SOURCE_DATE_EPOCH")) {
+
+		val sourceDateEpoch = System.getenv("SOURCE_DATE_EPOCH").toLong()
+
+		Instant.ofEpochSecond(sourceDateEpoch).atOffset(ZoneOffset.UTC)
+
+	} else {
+		OffsetDateTime.now()
 	}
 }
 
-val buildTimeAndDate = OffsetDateTime.now()
 val buildDate by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
 val buildTime by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
 val buildRevision by extra { versioning.info.commit }
@@ -27,6 +40,7 @@ val platformProjects by extra(listOf(
 		project(":junit-platform-console"),
 		project(":junit-platform-console-standalone"),
 		project(":junit-platform-engine"),
+		project(":junit-platform-jfr"),
 		project(":junit-platform-launcher"),
 		project(":junit-platform-reporting"),
 		project(":junit-platform-runner"),
@@ -55,6 +69,9 @@ val license by extra(License(
 		headerFile = file("src/spotless/eclipse-public-license-2.0.java")
 ))
 
+val tempRepoName by extra("temp")
+val tempRepoDir by extra(file("$buildDir/repo"))
+
 val enableJaCoCo = project.hasProperty("enableJaCoCo")
 val jacocoTestProjects = listOf(
 		project(":junit-jupiter-engine"),
@@ -71,12 +88,12 @@ allprojects {
 
 	apply(plugin = "eclipse")
 	apply(plugin = "idea")
-	apply(plugin = "com.diffplug.gradle.spotless")
+	apply(plugin = "com.diffplug.spotless")
 
 	if (enableJaCoCo) {
 		apply(plugin = "jacoco")
 		configure<JacocoPluginExtension> {
-			toolVersion = Versions.jacoco
+			toolVersion = versions["jacoco"]
 		}
 	}
 
@@ -105,6 +122,13 @@ subprojects {
 		version = property("vintageVersion")!!
 	}
 
+	tasks.withType<AbstractArchiveTask>().configureEach {
+		isPreserveFileTimestamps = false
+		isReproducibleFileOrder = true
+		dirMode = Integer.parseInt("0755", 8)
+		fileMode = Integer.parseInt("0644", 8)
+	}
+
 	pluginManager.withPlugin("java") {
 
 		spotless {
@@ -116,13 +140,16 @@ subprojects {
 				licenseHeaderFile(headerFile, "(package|import|open|module) ")
 				importOrderFile(importOrderConfigFile)
 				eclipse().configFile(javaFormatterConfigFile)
-				removeUnusedImports()
+				if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {
+					// Doesn't work with Java 15 text blocks, see https://github.com/diffplug/spotless/issues/713
+					removeUnusedImports()
+				}
 				trimTrailingWhitespace()
 				endWithNewline()
 			}
 
 			kotlin {
-				ktlint(Versions.ktlint)
+				ktlint(versions["ktlint"])
 				licenseHeaderFile(headerFile)
 				trimTrailingWhitespace()
 				endWithNewline()
@@ -144,6 +171,19 @@ subprojects {
 					onlyIf { jarTask.enabled }
 				}
 				jarTask.finalizedBy(extractJar)
+			}
+		}
+	}
+
+	pluginManager.withPlugin("maven-publish") {
+		configure<PublishingExtension> {
+			repositories {
+				repositories {
+					maven {
+						name = tempRepoName
+						url = uri(tempRepoDir)
+					}
+				}
 			}
 		}
 	}
@@ -174,6 +214,7 @@ rootProject.apply {
 
 	tasks {
 		dependencyUpdates {
+			checkConstraints = true
 			resolutionStrategy {
 				componentSelection {
 					all {

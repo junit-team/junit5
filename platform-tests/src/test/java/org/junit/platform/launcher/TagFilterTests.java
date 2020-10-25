@@ -61,8 +61,7 @@ class TagFilterTests {
 	}
 
 	private void assertSyntaxViolationForIncludes(String tag) {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> includeTags(tag));
+		var exception = assertThrows(PreconditionViolationException.class, () -> includeTags(tag));
 		assertThat(exception).hasMessageStartingWith("Unable to parse tag expression");
 	}
 
@@ -79,8 +78,7 @@ class TagFilterTests {
 	}
 
 	private void assertSyntaxViolationForExcludes(String tag) {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> excludeTags(tag));
+		var exception = assertThrows(PreconditionViolationException.class, () -> excludeTags(tag));
 		assertThat(exception).hasMessageStartingWith("Unable to parse tag expression");
 	}
 
@@ -96,7 +94,7 @@ class TagFilterTests {
 
 	@Test
 	void includeMultipleTags() {
-		PostDiscoveryFilter filter = includeTags("tag1", "  tag2  ");
+		var filter = includeTags("tag1", "  tag2  ");
 
 		assertTrue(filter.apply(classWithBothTags).included());
 		assertTrue(filter.apply(classWithTag1).included());
@@ -119,22 +117,22 @@ class TagFilterTests {
 
 	@Test
 	void excludeMultipleTags() {
-		PostDiscoveryFilter filter = excludeTags("tag1", "  tag2  ");
+		var filter = excludeTags("tag1", "  tag2  ");
 
-		String exclusionReason = "excluded because tags match tag expression(s): [tag1,tag2]";
+		var exclusionReason = "excluded because tags match tag expression(s): [tag1,tag2]";
 		assertExcluded(filter.apply(classWithTag1), exclusionReason);
 		assertExcluded(filter.apply(classWithTag1AndSurroundingWhitespace), exclusionReason);
 		assertExcluded(filter.apply(classWithBothTags), exclusionReason);
 		assertExcluded(filter.apply(classWithTag2), exclusionReason);
 
-		String inclusionReason = "included because tags do not match expression(s): [tag1,tag2]";
+		var inclusionReason = "included because tags do not match expression(s): [tag1,tag2]";
 		assertIncluded(filter.apply(classWithDifferentTags), inclusionReason);
 		assertIncluded(filter.apply(classWithNoTags), inclusionReason);
 	}
 
 	@Test
 	void rejectSingleUnparsableTagExpressions() {
-		String brokenTagExpression = "tag & ";
+		var brokenTagExpression = "tag & ";
 		RuntimeException expected = assertThrows(PreconditionViolationException.class,
 			() -> TagFilter.includeTags(brokenTagExpression));
 		assertThat(expected).hasMessageStartingWith("Unable to parse tag expression \"" + brokenTagExpression + "\"");
@@ -142,31 +140,31 @@ class TagFilterTests {
 
 	@Test
 	void rejectUnparsableTagExpressionFromArray() {
-		String brokenTagExpression = "tag & ";
+		var brokenTagExpression = "tag & ";
 		RuntimeException expected = assertThrows(PreconditionViolationException.class,
 			() -> TagFilter.excludeTags(brokenTagExpression, "foo", "bar"));
 		assertThat(expected).hasMessageStartingWith("Unable to parse tag expression \"" + brokenTagExpression + "\"");
 	}
 
 	private void includeSingleTag(PostDiscoveryFilter filter) {
-		String inclusionReason = "included because tags match expression(s): [tag1]";
+		var inclusionReason = "included because tags match expression(s): [tag1]";
 		assertIncluded(filter.apply(classWithTag1), inclusionReason);
 		assertIncluded(filter.apply(classWithTag1AndSurroundingWhitespace), inclusionReason);
 		assertIncluded(filter.apply(classWithBothTags), inclusionReason);
 
-		String exclusionReason = "excluded because tags do not match tag expression(s): [tag1]";
+		var exclusionReason = "excluded because tags do not match tag expression(s): [tag1]";
 		assertExcluded(filter.apply(classWithTag2), exclusionReason);
 		assertExcluded(filter.apply(classWithDifferentTags), exclusionReason);
 		assertExcluded(filter.apply(classWithNoTags), exclusionReason);
 	}
 
 	private void excludeSingleTag(PostDiscoveryFilter filter) {
-		String exclusionReason = "excluded because tags match tag expression(s): [tag1]";
+		var exclusionReason = "excluded because tags match tag expression(s): [tag1]";
 		assertExcluded(filter.apply(classWithTag1), exclusionReason);
 		assertExcluded(filter.apply(classWithTag1AndSurroundingWhitespace), exclusionReason);
 		assertExcluded(filter.apply(classWithBothTags), exclusionReason);
 
-		String inclusionReason = "included because tags do not match expression(s): [tag1]";
+		var inclusionReason = "included because tags do not match expression(s): [tag1]";
 		assertIncluded(filter.apply(classWithTag2), inclusionReason);
 		assertIncluded(filter.apply(classWithDifferentTags), inclusionReason);
 		assertIncluded(filter.apply(classWithNoTags), inclusionReason);
@@ -221,7 +219,7 @@ class TagFilterTests {
 	}
 
 	private static TestDescriptor classTestDescriptor(String uniqueId, Class<?> testClass) {
-		UniqueId rootUniqueId = UniqueId.root("class", uniqueId);
+		var rootUniqueId = UniqueId.root("class", uniqueId);
 		return new DemoClassTestDescriptor(rootUniqueId, testClass);
 	}
 

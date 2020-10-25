@@ -27,7 +27,7 @@ class ExecutionsIntegrationTests {
 
 	@Test
 	void executionsFromSkippedTestEvents() {
-		Events testEvents = getTestEvents();
+		var testEvents = getTestEvents();
 
 		// We expect 1 for both of the following cases, since an Execution can
 		// be created for a "skipped event even if "started" and "finished" events
@@ -38,7 +38,7 @@ class ExecutionsIntegrationTests {
 
 	@Test
 	void executionsFromStartedTestEvents() {
-		Events testEvents = getTestEvents();
+		var testEvents = getTestEvents();
 
 		// We expect 3 if the executions are created BEFORE filtering out "finished" events.
 		assertThat(testEvents.executions().started().count()).isEqualTo(3);
@@ -48,7 +48,7 @@ class ExecutionsIntegrationTests {
 
 	@Test
 	void executionsFromFinishedTestEvents() {
-		Events testEvents = getTestEvents();
+		var testEvents = getTestEvents();
 
 		// We expect 3 if the executions are created BEFORE filtering out "started" events.
 		assertThat(testEvents.executions().finished().count()).isEqualTo(3);
@@ -58,7 +58,7 @@ class ExecutionsIntegrationTests {
 
 	@Test
 	void executionsFromSucceededTestEvents() {
-		Events testEvents = getTestEvents();
+		var testEvents = getTestEvents();
 
 		// We expect 1 if the executions are created BEFORE filtering out "finished" events.
 		assertThat(testEvents.executions().succeeded().count()).isEqualTo(1);
@@ -68,7 +68,7 @@ class ExecutionsIntegrationTests {
 
 	@Test
 	void executionsFromAbortedTestEvents() {
-		Events testEvents = getTestEvents();
+		var testEvents = getTestEvents();
 
 		// We expect 1 if the executions are created BEFORE filtering out "started" events.
 		assertThat(testEvents.executions().aborted().count()).isEqualTo(1);
@@ -78,7 +78,7 @@ class ExecutionsIntegrationTests {
 
 	@Test
 	void executionsFromFailedTestEvents() {
-		Events testEvents = getTestEvents();
+		var testEvents = getTestEvents();
 
 		// We expect 1 if the executions are created BEFORE filtering out "started" events.
 		assertThat(testEvents.executions().failed().count()).isEqualTo(1);

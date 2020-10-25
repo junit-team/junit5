@@ -11,6 +11,7 @@
 package org.junit.jupiter.params.provider;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -23,7 +24,7 @@ import org.apiguardian.api.API;
 /**
  * {@code @CsvFileSource} is an {@link ArgumentsSource} which is used to load
  * comma-separated value (CSV) files from one or more classpath {@link #resources
- * resources}.
+ * resources} or {@link #files}.
  *
  * <p>The lines of these CSV files will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method. Any line beginning with a
@@ -37,15 +38,21 @@ import org.apiguardian.api.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.0")
+@API(status = STABLE, since = "5.7")
 @ArgumentsSource(CsvFileArgumentsProvider.class)
 public @interface CsvFileSource {
 
 	/**
-	 * The CSV classpath resources to use as the sources of arguments; must not be
-	 * empty.
+	 * The CSV classpath resources to use as the sources of arguments; must not
+	 * be empty unless {@link #files} is non-empty.
 	 */
-	String[] resources();
+	String[] resources() default {};
+
+	/**
+	 * The CSV files to use as the sources of arguments; must not be empty
+	 * unless {@link #resources} is non-empty.
+	 */
+	String[] files() default {};
 
 	/**
 	 * The encoding to use when reading the CSV files; must be a valid charset.
@@ -86,7 +93,6 @@ public @interface CsvFileSource {
 	 *
 	 * @since 5.6
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
 	String delimiterString() default "";
 
 	/**
@@ -98,7 +104,6 @@ public @interface CsvFileSource {
 	 *
 	 * @since 5.1
 	 */
-	@API(status = EXPERIMENTAL, since = "5.1")
 	int numLinesToSkip() default 0;
 
 	/**
@@ -110,7 +115,6 @@ public @interface CsvFileSource {
 	 *
 	 * @since 5.5
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
 	String emptyValue() default "";
 
 	/**
@@ -128,7 +132,18 @@ public @interface CsvFileSource {
 	 *
 	 * @since 5.6
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
 	String[] nullValues() default {};
+
+	/**
+	 * The maximum characters of per CSV column allowed.
+	 *
+	 * <p>Must be a positive number.
+	 *
+	 * <p>Defaults to {@code 4096}.
+	 *
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	int maxCharsPerColumn() default 4096;
 
 }

@@ -37,6 +37,7 @@ class HelperTests {
 			"junit-platform-commons", //
 			"junit-platform-console", //
 			"junit-platform-engine", //
+			"junit-platform-jfr", //
 			"junit-platform-launcher", //
 			"junit-platform-reporting", //
 			"junit-platform-runner", //
@@ -55,13 +56,13 @@ class HelperTests {
 
 	@Test
 	void nonExistingJdkVersionYieldsAnEmptyOptional() {
-		assertEquals(Optional.empty(), Helper.getJdkHomeFromMavenToolchains("does not exist"));
+		assertEquals(Optional.empty(), Helper.getJavaHome("does not exist"));
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = { 8, 9, 10, 11, 12, 13 })
-	void checkMavenToolchainsPointingValidJdkInstallations(int version) {
-		var home = Helper.getJdkHomeFromMavenToolchains("" + version);
+	@ValueSource(ints = 8)
+	void checkJavaHome(int version) {
+		var home = Helper.getJavaHome(String.valueOf(version));
 		assumeTrue(home.isPresent(), "No 'jdk' element found in Maven toolchain for: " + version);
 		assertTrue(Files.isDirectory(home.get()));
 	}

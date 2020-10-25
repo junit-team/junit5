@@ -14,15 +14,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.runner.Description.createTestDescription;
 
-import java.io.Serializable;
-import java.util.Optional;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
-import org.junit.runner.Description;
 
 /**
  * Tests for {@link UniqueIdReader}.
@@ -34,9 +30,9 @@ class UniqueIdReaderTests {
 
 	@Test
 	void readsUniqueId(LogRecordListener listener) {
-		Description description = createTestDescription("ClassName", "methodName", "uniqueId");
+		var description = createTestDescription("ClassName", "methodName", "uniqueId");
 
-		Serializable uniqueId = new UniqueIdReader().apply(description);
+		var uniqueId = new UniqueIdReader().apply(description);
 
 		assertEquals("uniqueId", uniqueId);
 		assertThat(listener.stream(UniqueIdReader.class)).isEmpty();
@@ -44,14 +40,14 @@ class UniqueIdReaderTests {
 
 	@Test
 	void returnsDisplayNameWhenUniqueIdCannotBeRead(LogRecordListener listener) {
-		Description description = createTestDescription("ClassName", "methodName", "uniqueId");
+		var description = createTestDescription("ClassName", "methodName", "uniqueId");
 		assertEquals("methodName(ClassName)", description.getDisplayName());
 
-		Serializable uniqueId = new UniqueIdReader("wrongFieldName").apply(description);
+		var uniqueId = new UniqueIdReader("wrongFieldName").apply(description);
 
 		assertEquals(description.getDisplayName(), uniqueId);
 
-		Optional<LogRecord> logRecord = listener.stream(UniqueIdReader.class, Level.WARNING).findFirst();
+		var logRecord = listener.stream(UniqueIdReader.class, Level.WARNING).findFirst();
 		assertThat(logRecord).isPresent();
 		assertThat(logRecord.get().getMessage()).isEqualTo(
 			"Could not read unique ID for Description; using display name instead: " + description.getDisplayName());

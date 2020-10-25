@@ -1,0 +1,42 @@
+name: Reproducible build
+
+on:
+  push:
+    branches:
+    - main
+    - 'releases/*'
+  pull_request:
+    branches:
+    - '*'
+
+env:
+  ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
+
+jobs:
+  check_build_reproducibility:
+    name: 'Check build reproducibility'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache Gradle wrapper and dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches/
+          ~/.gradle/wrapper/dists
+        key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+        restore-keys: |
+          assemble-${{ runner.os }}-gradle-
+    - name: 'Set up JDK 15'
+      uses: actions/setup-java@v1
+      with:
+        java-version: 15
+    - name: Prepare Gradle Enterprise credentials
+      shell: bash
+      run: |
+        mkdir -p $HOME/.gradle/enterprise/
+        echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > $HOME/.gradle/enterprise/keys.properties
+    - name: Build and compare checksums
+      shell: bash
+      run: |
+        ./src/checkBuildReproducibility.sh

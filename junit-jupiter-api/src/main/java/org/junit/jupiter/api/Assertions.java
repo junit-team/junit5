@@ -91,8 +91,8 @@ public class Assertions {
 	 * <p>Although failing <em>with</em> an explicit failure message is recommended,
 	 * this method may be useful when maintaining legacy code.
 	 *
-	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
-	 * this method's generic return type {@code V}.
+	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
+	 * generic return type {@code V}.
 	 */
 	public static <V> V fail() {
 		AssertionUtils.fail();
@@ -101,18 +101,6 @@ public class Assertions {
 
 	/**
 	 * <em>Fail</em> the test with the given failure {@code message}.
-	 *
-	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
-	 * this method's generic return type {@code V}.
-	 */
-	public static <V> V fail(String message) {
-		AssertionUtils.fail(message);
-		return null; // appeasing the compiler: this line will never be executed.
-	}
-
-	/**
-	 * <em>Fail</em> the test with the given failure {@code message} as well
-	 * as the underlying {@code cause}.
 	 *
 	 * <p>The generic return type {@code V} allows this method to be used
 	 * directly as a single-statement lambda expression, thereby avoiding the
@@ -125,6 +113,18 @@ public class Assertions {
 	 * Stream.of().map(entry -> fail("should not be called"));
 	 * }</pre>
 	 */
+	public static <V> V fail(String message) {
+		AssertionUtils.fail(message);
+		return null; // appeasing the compiler: this line will never be executed.
+	}
+
+	/**
+	 * <em>Fail</em> the test with the given failure {@code message} as well
+	 * as the underlying {@code cause}.
+	 *
+	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
+	 * generic return type {@code V}.
+	 */
 	public static <V> V fail(String message, Throwable cause) {
 		AssertionUtils.fail(message, cause);
 		return null; // appeasing the compiler: this line will never be executed.
@@ -133,8 +133,8 @@ public class Assertions {
 	/**
 	 * <em>Fail</em> the test with the given underlying {@code cause}.
 	 *
-	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
-	 * this method's generic return type {@code V}.
+	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
+	 * generic return type {@code V}.
 	 */
 	public static <V> V fail(Throwable cause) {
 		AssertionUtils.fail(cause);
@@ -145,8 +145,8 @@ public class Assertions {
 	 * <em>Fail</em> the test with the failure message retrieved from the
 	 * given {@code messageSupplier}.
 	 *
-	 * <p>See Javadoc for {@link #fail(String, Throwable)} for an explanation of
-	 * this method's generic return type {@code V}.
+	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
+	 * generic return type {@code V}.
 	 */
 	public static <V> V fail(Supplier<String> messageSupplier) {
 		AssertionUtils.fail(messageSupplier);
@@ -1613,6 +1613,61 @@ public class Assertions {
 		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, messageSupplier);
 	}
 
+	/**
+	 * <em>Assert</em> that {@code expected} stream of {@linkplain String}s matches {@code actual}
+	 * stream.
+	 *
+	 * <p>Find a detailed description of the matching algorithm in {@link #assertLinesMatch(List, List)}.
+	 *
+	 * <p>Note: An implementation of this method may consume all lines of both streams eagerly and
+	 * delegate the evaluation to {@link #assertLinesMatch(List, List)}.
+	 *
+	 * @since 5.7
+	 * @see #assertLinesMatch(List, List)
+	 */
+	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines) {
+		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} stream of {@linkplain String}s matches {@code actual}
+	 * stream.
+	 *
+	 * <p>Find a detailed description of the matching algorithm in {@link #assertLinesMatch(List, List)}.
+	 *
+	 * <p>Fails with the supplied failure {@code message} and the generated message.
+	 *
+	 * <p>Note: An implementation of this method may consume all lines of both streams eagerly and
+	 * delegate the evaluation to {@link #assertLinesMatch(List, List)}.
+	 *
+	 * @since 5.7
+	 * @see #assertLinesMatch(List, List)
+	 */
+	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines, String message) {
+		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, message);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} stream of {@linkplain String}s matches {@code actual}
+	 * stream.
+	 *
+	 * <p>Find a detailed description of the matching algorithm in {@link #assertLinesMatch(List, List)}.
+	 *
+	 * <p>If necessary, a custom failure message will be retrieved lazily from the supplied
+	 * {@code messageSupplier}. Fails with the custom failure message prepended to
+	 * a generated failure message describing the difference.
+	 *
+	 * <p>Note: An implementation of this method may consume all lines of both streams eagerly and
+	 * delegate the evaluation to {@link #assertLinesMatch(List, List)}.
+	 *
+	 * @since 5.7
+	 * @see #assertLinesMatch(List, List)
+	 */
+	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines,
+			Supplier<String> messageSupplier) {
+		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, messageSupplier);
+	}
+
 	// --- assertNotEquals -----------------------------------------------------
 
 	/**
@@ -2916,9 +2971,9 @@ public class Assertions {
 	 * and all exceptions will be aggregated and reported in a {@link MultipleFailuresError}.
 	 * In addition, all aggregated exceptions will be added as {@linkplain
 	 * Throwable#addSuppressed(Throwable) suppressed exceptions} to the
-	 * {@code MultipleFailuresError}. However, if an {@code executable} throws a
-	 * <em>blacklisted</em> exception &mdash; for example, an {@link OutOfMemoryError}
-	 * &mdash; execution will halt immediately, and the blacklisted exception will be
+	 * {@code MultipleFailuresError}. However, if an {@code executable} throws an
+	 * <em>unrecoverable</em> exception &mdash; for example, an {@link OutOfMemoryError}
+	 * &mdash; execution will halt immediately, and the unrecoverable exception will be
 	 * rethrown <em>as is</em> but <em>masked</em> as an unchecked exception.
 	 *
 	 * <p>The supplied {@code heading} will be included in the message string for the

@@ -13,6 +13,7 @@ package org.junit.platform.engine;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,7 +42,7 @@ class UniqueIdTests {
 
 		@Test
 		void uniqueIdCanBeCreatedFromEngineId() {
-			UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID);
+			var uniqueId = UniqueId.forEngine(ENGINE_ID);
 
 			assertEquals("[engine:junit-jupiter]", uniqueId.toString());
 			assertSegment(uniqueId.getSegments().get(0), "engine", "junit-jupiter");
@@ -49,16 +50,16 @@ class UniqueIdTests {
 
 		@Test
 		void retrievingOptionalEngineId() {
-			UniqueId uniqueIdWithEngine = UniqueId.forEngine(ENGINE_ID);
+			var uniqueIdWithEngine = UniqueId.forEngine(ENGINE_ID);
 			assertThat(uniqueIdWithEngine.getEngineId()).contains("junit-jupiter");
 
-			UniqueId uniqueIdWithoutEngine = UniqueId.root("root", "avalue");
+			var uniqueIdWithoutEngine = UniqueId.root("root", "avalue");
 			assertEquals(Optional.empty(), uniqueIdWithoutEngine.getEngineId());
 		}
 
 		@Test
 		void uniqueIdCanBeCreatedFromTypeAndValue() {
-			UniqueId uniqueId = UniqueId.root("aType", "aValue");
+			var uniqueId = UniqueId.root("aType", "aValue");
 
 			assertEquals("[aType:aValue]", uniqueId.toString());
 			assertSegment(uniqueId.getSegments().get(0), "aType", "aValue");
@@ -66,15 +67,15 @@ class UniqueIdTests {
 
 		@Test
 		void rootSegmentCanBeRetrieved() {
-			UniqueId uniqueId = UniqueId.root("aType", "aValue");
+			var uniqueId = UniqueId.root("aType", "aValue");
 
 			assertThat(uniqueId.getRoot()).contains(new Segment("aType", "aValue"));
 		}
 
 		@Test
 		void appendingOneSegment() {
-			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
-			UniqueId classId = engineId.append("class", "org.junit.MyClass");
+			var engineId = UniqueId.root("engine", ENGINE_ID);
+			var classId = engineId.append("class", "org.junit.MyClass");
 
 			assertThat(classId.getSegments()).hasSize(2);
 			assertSegment(classId.getSegments().get(0), "engine", ENGINE_ID);
@@ -83,7 +84,7 @@ class UniqueIdTests {
 
 		@Test
 		void appendingSegmentLeavesOriginalUnchanged() {
-			UniqueId uniqueId = UniqueId.root("engine", ENGINE_ID);
+			var uniqueId = UniqueId.root("engine", ENGINE_ID);
 			uniqueId.append("class", "org.junit.MyClass");
 
 			assertThat(uniqueId.getSegments()).hasSize(1);
@@ -92,8 +93,8 @@ class UniqueIdTests {
 
 		@Test
 		void appendingSeveralSegments() {
-			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
-			UniqueId uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
+			var engineId = UniqueId.root("engine", ENGINE_ID);
+			var uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
 
 			assertThat(uniqueId.getSegments()).hasSize(4);
 			assertSegment(uniqueId.getSegments().get(0), "engine", ENGINE_ID);
@@ -104,7 +105,7 @@ class UniqueIdTests {
 
 		@Test
 		void appendingSegmentInstance() {
-			UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID).append("t1", "v1");
+			var uniqueId = UniqueId.forEngine(ENGINE_ID).append("t1", "v1");
 
 			uniqueId = uniqueId.append(new Segment("t2", "v2"));
 
@@ -116,7 +117,7 @@ class UniqueIdTests {
 
 		@Test
 		void appendingNullIsNotAllowed() {
-			UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID);
+			var uniqueId = UniqueId.forEngine(ENGINE_ID);
 
 			assertThrows(PreconditionViolationException.class, () -> uniqueId.append(null));
 			assertThrows(PreconditionViolationException.class, () -> uniqueId.append(null, "foo"));
@@ -128,24 +129,23 @@ class UniqueIdTests {
 	@Nested
 	class ParsingAndFormatting {
 
-		private final String uniqueIdString = "[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]";
-
 		@Test
 		void ensureDefaultUniqueIdFormatIsUsedForParsing() {
-			UniqueId parsedDirectly = UniqueId.parse(uniqueIdString);
-			UniqueId parsedViaFormat = UniqueIdFormat.getDefault().parse(uniqueIdString);
+			var uniqueIdString = "[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]";
+			var parsedDirectly = UniqueId.parse(uniqueIdString);
+			var parsedViaFormat = UniqueIdFormat.getDefault().parse(uniqueIdString);
 			assertEquals(parsedViaFormat, parsedDirectly);
 		}
 
 		@Test
 		void ensureDefaultUniqueIdFormatIsUsedForFormatting() {
-			UniqueId parsedDirectly = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
+			var parsedDirectly = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
 			assertEquals("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]", parsedDirectly.toString());
 		}
 
 		@Test
 		void ensureDefaultUniqueIdFormatDecodingEncodesSegmentParts() {
-			UniqueId.Segment segment = UniqueId.parse("[%5B+%25+%5D):(%3A+%2B+%2F]").getSegments().get(0);
+			var segment = UniqueId.parse("[%5B+%25+%5D):(%3A+%2B+%2F]").getSegments().get(0);
 			assertEquals("[ % ])", segment.getType());
 			assertEquals("(: + /", segment.getValue());
 		}
@@ -153,9 +153,9 @@ class UniqueIdTests {
 		@Test
 		void ensureDefaultUniqueIdFormatCanHandleAllCharacters() {
 			for (char c = 0; c < Character.MAX_VALUE; c++) {
-				String value = "foo " + String.valueOf(c) + " bar";
-				UniqueId uniqueId = UniqueId.parse(UniqueId.root("type", value).toString());
-				Segment segment = uniqueId.getSegments().get(0);
+				var value = "foo " + c + " bar";
+				var uniqueId = UniqueId.parse(UniqueId.root("type", value).toString());
+				var segment = uniqueId.getSegments().get(0);
 				assertEquals(value, segment.getValue());
 			}
 		}
@@ -172,49 +172,49 @@ class UniqueIdTests {
 
 		@Test
 		void sameEnginesAreEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit-jupiter");
-			UniqueId id2 = UniqueId.root("engine", "junit-jupiter");
+			var id1 = UniqueId.root("engine", "junit-jupiter");
+			var id2 = UniqueId.root("engine", "junit-jupiter");
 
-			assertTrue(id1.equals(id2));
-			assertTrue(id2.equals(id1));
+			assertEquals(id2, id1);
+			assertEquals(id1, id2);
 			assertEquals(id1.hashCode(), id2.hashCode());
 		}
 
 		@Test
 		void differentEnginesAreNotEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit-vintage");
-			UniqueId id2 = UniqueId.root("engine", "junit-jupiter");
+			var id1 = UniqueId.root("engine", "junit-vintage");
+			var id2 = UniqueId.root("engine", "junit-jupiter");
 
-			assertFalse(id1.equals(id2));
-			assertFalse(id2.equals(id1));
+			assertNotEquals(id2, id1);
+			assertNotEquals(id1, id2);
 		}
 
 		@Test
 		void uniqueIdWithSameSegmentsAreEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
-			UniqueId id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
+			var id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
+			var id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 
-			assertTrue(id1.equals(id2));
-			assertTrue(id2.equals(id1));
+			assertEquals(id2, id1);
+			assertEquals(id1, id2);
 			assertEquals(id1.hashCode(), id2.hashCode());
 		}
 
 		@Test
 		void differentOrderOfSegmentsAreNotEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit-jupiter").append("t2", "v2").append("t1", "v1");
-			UniqueId id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
+			var id1 = UniqueId.root("engine", "junit-jupiter").append("t2", "v2").append("t1", "v1");
+			var id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 
-			assertFalse(id1.equals(id2));
-			assertFalse(id2.equals(id1));
+			assertNotEquals(id2, id1);
+			assertNotEquals(id1, id2);
 		}
 
 		@Test
 		void additionalSegmentMakesItNotEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1");
-			UniqueId id2 = id1.append("t2", "v2");
+			var id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1");
+			var id2 = id1.append("t2", "v2");
 
-			assertFalse(id1.equals(id2));
-			assertFalse(id2.equals(id1));
+			assertNotEquals(id2, id1);
+			assertNotEquals(id1, id2);
 		}
 	}
 
@@ -223,23 +223,23 @@ class UniqueIdTests {
 
 		@Test
 		void nullIsNotAPrefix() {
-			UniqueId id = UniqueId.forEngine(ENGINE_ID);
+			var id = UniqueId.forEngine(ENGINE_ID);
 
 			assertThrows(PreconditionViolationException.class, () -> id.hasPrefix(null));
 		}
 
 		@Test
 		void uniqueIdIsPrefixForItself() {
-			UniqueId id = UniqueId.forEngine(ENGINE_ID).append("t1", "v1").append("t2", "v2");
+			var id = UniqueId.forEngine(ENGINE_ID).append("t1", "v1").append("t2", "v2");
 
 			assertTrue(id.hasPrefix(id));
 		}
 
 		@Test
 		void uniqueIdIsPrefixForUniqueIdWithAdditionalSegments() {
-			UniqueId id1 = UniqueId.forEngine(ENGINE_ID);
-			UniqueId id2 = id1.append("t1", "v1");
-			UniqueId id3 = id2.append("t2", "v2");
+			var id1 = UniqueId.forEngine(ENGINE_ID);
+			var id2 = id1.append("t1", "v1");
+			var id3 = id2.append("t2", "v2");
 
 			assertFalse(id1.hasPrefix(id2));
 			assertFalse(id1.hasPrefix(id3));
@@ -251,8 +251,8 @@ class UniqueIdTests {
 
 		@Test
 		void completelyUnrelatedUniqueIdsAreNotPrefixesForEachOther() {
-			UniqueId id1 = UniqueId.forEngine("foo");
-			UniqueId id2 = UniqueId.forEngine("bar");
+			var id1 = UniqueId.forEngine("foo");
+			var id2 = UniqueId.forEngine("bar");
 
 			assertFalse(id1.hasPrefix(id2));
 			assertFalse(id2.hasPrefix(id1));
@@ -265,7 +265,7 @@ class UniqueIdTests {
 
 		@Test
 		void returnsLastSegment() {
-			UniqueId uniqueId = UniqueId.forEngine("foo");
+			var uniqueId = UniqueId.forEngine("foo");
 			assertSame(uniqueId.getSegments().get(0), uniqueId.getLastSegment());
 
 			uniqueId = UniqueId.forEngine("foo").append("type", "bar");
@@ -274,10 +274,10 @@ class UniqueIdTests {
 
 		@Test
 		void removesLastSegment() {
-			UniqueId uniqueId = UniqueId.forEngine("foo");
+			var uniqueId = UniqueId.forEngine("foo");
 			assertThrows(PreconditionViolationException.class, uniqueId::removeLastSegment);
 
-			UniqueId newUniqueId = uniqueId.append("type", "bar").removeLastSegment();
+			var newUniqueId = uniqueId.append("type", "bar").removeLastSegment();
 			assertEquals(uniqueId, newUniqueId);
 		}
 

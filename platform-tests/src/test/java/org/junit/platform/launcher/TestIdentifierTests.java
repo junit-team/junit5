@@ -10,12 +10,13 @@
 
 package org.junit.platform.launcher;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.SerializationUtils.serializeAndDeserialize;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
@@ -32,7 +33,7 @@ class TestIdentifierTests {
 	@Test
 	void inheritsIdAndNamesFromDescriptor() {
 		TestDescriptor testDescriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "displayName");
-		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
+		var testIdentifier = TestIdentifier.from(testDescriptor);
 
 		assertEquals("[aType:uniqueId]", testIdentifier.getUniqueId());
 		assertEquals("displayName", testIdentifier.getDisplayName());
@@ -41,7 +42,7 @@ class TestIdentifierTests {
 	@Test
 	void inheritsTypeFromDescriptor() {
 		TestDescriptor descriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "displayName");
-		TestIdentifier identifier = TestIdentifier.from(descriptor);
+		var identifier = TestIdentifier.from(descriptor);
 		assertEquals(TestDescriptor.Type.TEST, identifier.getType());
 		assertTrue(identifier.isTest());
 		assertFalse(identifier.isContainer());
@@ -55,15 +56,15 @@ class TestIdentifierTests {
 
 	@Test
 	void serialization() throws Exception {
-		TestIdentifier identifier = serializeAndDeserialize(//
+		var identifier = serializeAndDeserialize(//
 			new TestIdentifier("uniqueId", "displayName", ClassSource.from(TestIdentifierTests.class),
-				singleton(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName"));
+				Set.of(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName"));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());
 		assertEquals("reportingName", identifier.getLegacyReportingName());
 		assertThat(identifier.getSource()).contains(ClassSource.from(TestIdentifierTests.class));
-		assertEquals(singleton(TestTag.create("aTag")), identifier.getTags());
+		assertEquals(Set.of(TestTag.create("aTag")), identifier.getTags());
 		assertEquals(TestDescriptor.Type.TEST, identifier.getType());
 		assertTrue(identifier.isTest());
 		assertFalse(identifier.isContainer());

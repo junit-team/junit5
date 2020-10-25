@@ -10,7 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
 import java.time.Instant;
@@ -31,7 +31,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * @since 1.4
  * @see EventType
  */
-@API(status = EXPERIMENTAL, since = "1.4")
+@API(status = MAINTAINED, since = "1.7")
 public class Event {
 
 	// --- Factories -----------------------------------------------------------

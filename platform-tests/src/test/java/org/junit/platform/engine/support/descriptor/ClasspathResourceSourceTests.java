@@ -50,7 +50,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void resourceWithoutPosition() {
-		ClasspathResourceSource source = ClasspathResourceSource.from(FOO_RESOURCE);
+		var source = ClasspathResourceSource.from(FOO_RESOURCE);
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
@@ -59,7 +59,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void resourceWithLeadingSlashWithoutPosition() {
-		ClasspathResourceSource source = ClasspathResourceSource.from("/" + FOO_RESOURCE);
+		var source = ClasspathResourceSource.from("/" + FOO_RESOURCE);
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
@@ -68,8 +68,8 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void resourceWithPosition() {
-		FilePosition position = FilePosition.from(42, 23);
-		ClasspathResourceSource source = ClasspathResourceSource.from(FOO_RESOURCE, position);
+		var position = FilePosition.from(42, 23);
+		var source = ClasspathResourceSource.from(FOO_RESOURCE, position);
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
@@ -77,8 +77,8 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void resourcefromUriWithoutPosition() {
-		ClasspathResourceSource source = ClasspathResourceSource.from(FOO_RESOURCE_URI);
+	void resourceFromUriWithoutPosition() {
+		var source = ClasspathResourceSource.from(FOO_RESOURCE_URI);
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
@@ -87,9 +87,9 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void resourceFromUriWithLineNumber() {
-		FilePosition position = FilePosition.from(42);
-		URI uri = URI.create(FOO_RESOURCE_URI + "?line=42");
-		ClasspathResourceSource source = ClasspathResourceSource.from(uri);
+		var position = FilePosition.from(42);
+		var uri = URI.create(FOO_RESOURCE_URI + "?line=42");
+		var source = ClasspathResourceSource.from(uri);
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
@@ -98,9 +98,9 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void resourceFromUriWithLineAndColumnNumbers() {
-		FilePosition position = FilePosition.from(42, 23);
-		URI uri = URI.create(FOO_RESOURCE_URI + "?line=42&foo=bar&column=23");
-		ClasspathResourceSource source = ClasspathResourceSource.from(uri);
+		var position = FilePosition.from(42, 23);
+		var uri = URI.create(FOO_RESOURCE_URI + "?line=42&foo=bar&column=23");
+		var source = ClasspathResourceSource.from(uri);
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
@@ -112,7 +112,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 		assertEqualsAndHashCode(ClasspathResourceSource.from(FOO_RESOURCE), ClasspathResourceSource.from(FOO_RESOURCE),
 			ClasspathResourceSource.from(BAR_RESOURCE));
 
-		FilePosition position = FilePosition.from(42, 23);
+		var position = FilePosition.from(42, 23);
 		assertEqualsAndHashCode(ClasspathResourceSource.from(FOO_RESOURCE, position),
 			ClasspathResourceSource.from(FOO_RESOURCE, position), ClasspathResourceSource.from(BAR_RESOURCE, position));
 	}

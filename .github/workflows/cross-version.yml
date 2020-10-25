@@ -3,7 +3,7 @@ name: Cross-Version
 on:
   push:
     branches:
-      - master
+      - main
       - 'releases/*'
   pull_request:
     branches:
@@ -12,17 +12,34 @@ on:
 env:
   ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
   ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
+  ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
 
 jobs:
   openjdk:
     strategy:
       matrix:
-        jdk: [12, 13, 14, 15]
+        jdk: [16]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
-    container: "junitteam/build:${{ matrix.jdk }}"
+    container: "ghcr.io/junit-team/build:${{ matrix.jdk }}"
     steps:
       - uses: actions/checkout@v2
+      - name: Cache Gradle wrapper and dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            /root/.gradle/caches/
+            /root/.gradle/wrapper/dists
+          key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+          restore-keys: |
+            test-${{ runner.os }}-gradle-
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: /root/.m2/repository
+          key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            test-${{ runner.os }}-maven-
       - name: Prepare Gradle Enterprise credentials
         run: |
           mkdir -p /root/.gradle/enterprise/
@@ -30,4 +47,4 @@ jobs:
       - name: Test
         run: |
           ./gradlew --version
-          ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaHome=$ADDITIONAL_JDK build "-Dscan.tag.JDK_${{ matrix.jdk }}"
+          ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} build "-Dscan.tag.JDK_${{ matrix.jdk }}"

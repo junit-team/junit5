@@ -93,12 +93,13 @@ public final class LauncherDiscoveryRequestBuilder {
 	 */
 	public static final String DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME = "junit.platform.discovery.listener.default";
 
-	private List<DiscoverySelector> selectors = new ArrayList<>();
-	private List<EngineFilter> engineFilters = new ArrayList<>();
-	private List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
-	private List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
-	private Map<String, String> configurationParameters = new HashMap<>();
-	private List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
+	private final List<DiscoverySelector> selectors = new ArrayList<>();
+	private final List<EngineFilter> engineFilters = new ArrayList<>();
+	private final List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
+	private final List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
+	private final Map<String, String> configurationParameters = new HashMap<>();
+	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
+	private boolean implicitConfigurationParametersEnabled = true;
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
@@ -208,6 +209,24 @@ public final class LauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	/**
+	 * Configure whether implicit configuration parameters should be considered.
+	 *
+	 * <p>By default, in addition to those parameters that are passed explicitly
+	 * to this builder, configuration parameters are read from system properties
+	 * and from the {@code junit-platform.properties} classpath resource.
+	 * Passing {@code false} to this method, disables the latter two sources so
+	 * that only explicit configuration parameters are taken into account.
+	 *
+	 * @see #configurationParameter(String, String)
+	 * @see #configurationParameters(Map)
+	 */
+	@API(status = API.Status.EXPERIMENTAL, since = "1.7")
+	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
+		this.implicitConfigurationParametersEnabled = enabled;
+		return this;
+	}
+
 	private void storeFilter(Filter<?> filter) {
 		if (filter instanceof EngineFilter) {
 			this.engineFilters.add((EngineFilter) filter);
@@ -230,11 +249,17 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * this builder.
 	 */
 	public LauncherDiscoveryRequest build() {
-		LauncherConfigurationParameters launcherConfigurationParameters = new LauncherConfigurationParameters(
-			this.configurationParameters);
+		LauncherConfigurationParameters launcherConfigurationParameters = buildLauncherConfigurationParameters();
 		LauncherDiscoveryListener discoveryListener = getLauncherDiscoveryListener(launcherConfigurationParameters);
 		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
 			this.postDiscoveryFilters, launcherConfigurationParameters, discoveryListener);
+	}
+
+	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {
+		return LauncherConfigurationParameters.builder() //
+				.explicitParameters(this.configurationParameters) //
+				.enableImplicitProviders(this.implicitConfigurationParametersEnabled) //
+				.build();
 	}
 
 	private LauncherDiscoveryListener getLauncherDiscoveryListener(ConfigurationParameters configurationParameters) {

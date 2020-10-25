@@ -18,7 +18,9 @@ gradle-app.setting
 *.ipr
 *.iws
 *.uml
-.idea/
+**/.idea/*
+!/.idea/icon.png
+!/.idea/vcs.xml
 /out/
 /*/out/
 
@@ -27,3 +29,5 @@ gradle-app.setting
 *.graphml
 coverage.db*
 .metadata
+
+checksums*

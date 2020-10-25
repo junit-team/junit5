@@ -8,9 +8,6 @@
 		<module name="JavadocMethod">
 			<property name="allowMissingParamTags" value="true" />
 			<property name="allowMissingReturnTag" value="true" />
-			<property name="allowMissingThrowsTags" value="true" />
-			<property name="allowUndeclaredRTE" value="true" />
-			<property name="validateThrows" value="true" />
 		</module>
 		<module name="AtclauseOrder">
 			<property name="tagOrder" value="@param, @return, @throws, @exception, @since, @see" />
@@ -20,6 +17,9 @@
 			<property name="processJavadoc" value="true" />
 		</module>
 		<module name="AvoidStarImport"/>
+		<module name="IllegalImport">
+			<property name="illegalPkgs" value="org.jetbrains.annotations" />
+		</module>
 	</module>
 
 	<module name="JavadocPackage" />

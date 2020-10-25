@@ -79,4 +79,5 @@ public class ConsoleLauncherExecutionResult {
 	public Optional<TestExecutionSummary> getTestExecutionSummary() {
 		return Optional.ofNullable(testExecutionSummary);
 	}
+
 }

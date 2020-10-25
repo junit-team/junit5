@@ -10,11 +10,6 @@
 
 package org.junit.platform.console.options;
 
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -31,12 +26,12 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -51,7 +46,7 @@ class PicocliCommandLineOptionsParserTests {
 	@Test
 	void parseNoArguments() {
 		String[] noArguments = {};
-		CommandLineOptions options = createParser().parse(noArguments);
+		var options = createParser().parse(noArguments);
 
 		// @formatter:off
 		assertAll(
@@ -59,22 +54,22 @@ class PicocliCommandLineOptionsParserTests {
 			() -> assertFalse(options.isDisplayHelp()),
 			() -> assertEquals(CommandLineOptions.DEFAULT_DETAILS, options.getDetails()),
 			() -> assertFalse(options.isScanClasspath()),
-			() -> assertEquals(singletonList(STANDARD_INCLUDE_PATTERN), options.getIncludedClassNamePatterns()),
-			() -> assertEquals(emptyList(), options.getExcludedClassNamePatterns()),
-			() -> assertEquals(emptyList(), options.getIncludedPackages()),
-			() -> assertEquals(emptyList(), options.getExcludedPackages()),
-			() -> assertEquals(emptyList(), options.getIncludedTagExpressions()),
-			() -> assertEquals(emptyList(), options.getExcludedTagExpressions()),
-			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(STANDARD_INCLUDE_PATTERN), options.getIncludedClassNamePatterns()),
+			() -> assertEquals(List.of(), options.getExcludedClassNamePatterns()),
+			() -> assertEquals(List.of(), options.getIncludedPackages()),
+			() -> assertEquals(List.of(), options.getExcludedPackages()),
+			() -> assertEquals(List.of(), options.getIncludedTagExpressions()),
+			() -> assertEquals(List.of(), options.getExcludedTagExpressions()),
+			() -> assertEquals(List.of(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getReportsDir()),
-			() -> assertEquals(emptyList(), options.getSelectedUris()),
-			() -> assertEquals(emptyList(), options.getSelectedFiles()),
-			() -> assertEquals(emptyList(), options.getSelectedDirectories()),
-			() -> assertEquals(emptyList(), options.getSelectedModules()),
-			() -> assertEquals(emptyList(), options.getSelectedPackages()),
-			() -> assertEquals(emptyList(), options.getSelectedMethods()),
-			() -> assertEquals(emptyList(), options.getSelectedClasspathEntries()),
-			() -> assertEquals(emptyMap(), options.getConfigurationParameters())
+			() -> assertEquals(List.of(), options.getSelectedUris()),
+			() -> assertEquals(List.of(), options.getSelectedFiles()),
+			() -> assertEquals(List.of(), options.getSelectedDirectories()),
+			() -> assertEquals(List.of(), options.getSelectedModules()),
+			() -> assertEquals(List.of(), options.getSelectedPackages()),
+			() -> assertEquals(List.of(), options.getSelectedMethods()),
+			() -> assertEquals(List.of(), options.getSelectedClasspathEntries()),
+			() -> assertEquals(Map.of(), options.getConfigurationParameters())
 		);
 		// @formatter:on
 	}
@@ -134,9 +129,9 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidIncludeClassNamePatterns(ArgsType type) {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(singletonList(".*Test"), type.parseArgLine("-n .*Test").getIncludedClassNamePatterns()),
-			() -> assertEquals(asList(".*Test", ".*Tests"), type.parseArgLine("--include-classname .*Test --include-classname .*Tests").getIncludedClassNamePatterns()),
-			() -> assertEquals(singletonList(".*Test"), type.parseArgLine("--include-classname=.*Test").getIncludedClassNamePatterns())
+			() -> assertEquals(List.of(".*Test"), type.parseArgLine("-n .*Test").getIncludedClassNamePatterns()),
+			() -> assertEquals(List.of(".*Test", ".*Tests"), type.parseArgLine("--include-classname .*Test --include-classname .*Tests").getIncludedClassNamePatterns()),
+			() -> assertEquals(List.of(".*Test"), type.parseArgLine("--include-classname=.*Test").getIncludedClassNamePatterns())
 		);
 		// @formatter:on
 	}
@@ -146,17 +141,16 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidExcludeClassNamePatterns(ArgsType type) {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(singletonList(".*Test"), type.parseArgLine("-N .*Test").getExcludedClassNamePatterns()),
-			() -> assertEquals(asList(".*Test", ".*Tests"), type.parseArgLine("--exclude-classname .*Test --exclude-classname .*Tests").getExcludedClassNamePatterns()),
-			() -> assertEquals(singletonList(".*Test"), type.parseArgLine("--exclude-classname=.*Test").getExcludedClassNamePatterns())
+			() -> assertEquals(List.of(".*Test"), type.parseArgLine("-N .*Test").getExcludedClassNamePatterns()),
+			() -> assertEquals(List.of(".*Test", ".*Tests"), type.parseArgLine("--exclude-classname .*Test --exclude-classname .*Tests").getExcludedClassNamePatterns()),
+			() -> assertEquals(List.of(".*Test"), type.parseArgLine("--exclude-classname=.*Test").getExcludedClassNamePatterns())
 		);
 		// @formatter:on
 	}
 
 	@Test
 	void usesDefaultClassNamePatternWithoutExplicitArgument() throws Exception {
-		assertEquals(singletonList(STANDARD_INCLUDE_PATTERN),
-			ArgsType.args.parseArgLine("").getIncludedClassNamePatterns());
+		assertEquals(List.of(STANDARD_INCLUDE_PATTERN), ArgsType.args.parseArgLine("").getIncludedClassNamePatterns());
 	}
 
 	@Test
@@ -174,11 +168,11 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidIncludedPackages(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(asList("org.junit.included"),
+				() -> assertEquals(List.of("org.junit.included"),
 						type.parseArgLine("--include-package org.junit.included").getIncludedPackages()),
-				() -> assertEquals(asList("org.junit.included"),
+				() -> assertEquals(List.of("org.junit.included"),
 						type.parseArgLine("--include-package=org.junit.included").getIncludedPackages()),
-				() -> assertEquals(asList("org.junit.included1", "org.junit.included2"),
+				() -> assertEquals(List.of("org.junit.included1", "org.junit.included2"),
 						type.parseArgLine("--include-package org.junit.included1 --include-package org.junit.included2").getIncludedPackages())
 		);
 		// @formatter:on
@@ -189,11 +183,11 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidExcludedPackages(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(asList("org.junit.excluded"),
+				() -> assertEquals(List.of("org.junit.excluded"),
 						type.parseArgLine("--exclude-package org.junit.excluded").getExcludedPackages()),
-				() -> assertEquals(asList("org.junit.excluded"),
+				() -> assertEquals(List.of("org.junit.excluded"),
 						type.parseArgLine("--exclude-package=org.junit.excluded").getExcludedPackages()),
-				() -> assertEquals(asList("org.junit.excluded1", "org.junit.excluded2"),
+				() -> assertEquals(List.of("org.junit.excluded1", "org.junit.excluded2"),
 						type.parseArgLine("--exclude-package org.junit.excluded1 --exclude-package org.junit.excluded2").getExcludedPackages())
 		);
 		// @formatter:on
@@ -204,10 +198,10 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidIncludedTags(ArgsType type) {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("fast"), type.parseArgLine("-t fast").getIncludedTagExpressions()),
-			() -> assertEquals(asList("fast"), type.parseArgLine("--include-tag fast").getIncludedTagExpressions()),
-			() -> assertEquals(asList("fast"), type.parseArgLine("--include-tag=fast").getIncludedTagExpressions()),
-			() -> assertEquals(asList("fast", "slow"), type.parseArgLine("-t fast -t slow").getIncludedTagExpressions())
+			() -> assertEquals(List.of("fast"), type.parseArgLine("-t fast").getIncludedTagExpressions()),
+			() -> assertEquals(List.of("fast"), type.parseArgLine("--include-tag fast").getIncludedTagExpressions()),
+			() -> assertEquals(List.of("fast"), type.parseArgLine("--include-tag=fast").getIncludedTagExpressions()),
+			() -> assertEquals(List.of("fast", "slow"), type.parseArgLine("-t fast -t slow").getIncludedTagExpressions())
 		);
 		// @formatter:on
 	}
@@ -222,10 +216,10 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidExcludedTags(ArgsType type) {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("fast"), type.parseArgLine("-T fast").getExcludedTagExpressions()),
-			() -> assertEquals(asList("fast"), type.parseArgLine("--exclude-tag fast").getExcludedTagExpressions()),
-			() -> assertEquals(asList("fast"), type.parseArgLine("--exclude-tag=fast").getExcludedTagExpressions()),
-			() -> assertEquals(asList("fast", "slow"), type.parseArgLine("-T fast -T slow").getExcludedTagExpressions())
+			() -> assertEquals(List.of("fast"), type.parseArgLine("-T fast").getExcludedTagExpressions()),
+			() -> assertEquals(List.of("fast"), type.parseArgLine("--exclude-tag fast").getExcludedTagExpressions()),
+			() -> assertEquals(List.of("fast"), type.parseArgLine("--exclude-tag=fast").getExcludedTagExpressions()),
+			() -> assertEquals(List.of("fast", "slow"), type.parseArgLine("-T fast -T slow").getExcludedTagExpressions())
 		);
 		// @formatter:on
 	}
@@ -240,9 +234,9 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidIncludedEngines(ArgsType type) {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("junit-jupiter"), type.parseArgLine("-e junit-jupiter").getIncludedEngines()),
-			() -> assertEquals(asList("junit-vintage"), type.parseArgLine("--include-engine junit-vintage").getIncludedEngines()),
-			() -> assertEquals(emptyList(), type.parseArgLine("").getIncludedEngines())
+			() -> assertEquals(List.of("junit-jupiter"), type.parseArgLine("-e junit-jupiter").getIncludedEngines()),
+			() -> assertEquals(List.of("junit-vintage"), type.parseArgLine("--include-engine junit-vintage").getIncludedEngines()),
+			() -> assertEquals(List.of(), type.parseArgLine("").getIncludedEngines())
 		);
 		// @formatter:on
 	}
@@ -257,9 +251,9 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidExcludedEngines(ArgsType type) {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("junit-jupiter"), type.parseArgLine("-E junit-jupiter").getExcludedEngines()),
-			() -> assertEquals(asList("junit-vintage"), type.parseArgLine("--exclude-engine junit-vintage").getExcludedEngines()),
-			() -> assertEquals(emptyList(), type.parseArgLine("").getExcludedEngines())
+			() -> assertEquals(List.of("junit-jupiter"), type.parseArgLine("-E junit-jupiter").getExcludedEngines()),
+			() -> assertEquals(List.of("junit-vintage"), type.parseArgLine("--exclude-engine junit-vintage").getExcludedEngines()),
+			() -> assertEquals(List.of(), type.parseArgLine("").getExcludedEngines())
 		);
 		// @formatter:on
 	}
@@ -272,19 +266,19 @@ class PicocliCommandLineOptionsParserTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseValidAdditionalClasspathEntries(ArgsType type) {
-		Path dir = Paths.get(".");
+		var dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(singletonList(dir), type.parseArgLine("-cp .").getAdditionalClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("--cp .").getAdditionalClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("-classpath .").getAdditionalClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("-classpath=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("--classpath .").getAdditionalClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("--class-path .").getAdditionalClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("--class-path=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir, Paths.get("src", "test", "java")), type.parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
-			() -> assertEquals(asList(dir, Paths.get("src", "test", "java")), type.parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
+			() -> assertEquals(List.of(dir), type.parseArgLine("-cp .").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("--cp .").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("-classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("-classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("--classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("--class-path .").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("--class-path=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir, Paths.get("src", "test", "java")), type.parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir, Paths.get("src", "test", "java")), type.parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
 		);
 		// @formatter:on
 	}
@@ -297,7 +291,7 @@ class PicocliCommandLineOptionsParserTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseValidXmlReportsDirs(ArgsType type) {
-		Path dir = Paths.get("build", "test-results");
+		var dir = Paths.get("build", "test-results");
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(Optional.of(dir), type.parseArgLine("--reports-dir build/test-results").getReportsDir()),
@@ -316,13 +310,13 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidUriSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(singletonList(new URI("file:///foo.txt")), type.parseArgLine("-u file:///foo.txt").getSelectedUris()),
-				() -> assertEquals(singletonList(new URI("file:///foo.txt")), type.parseArgLine("--u file:///foo.txt").getSelectedUris()),
-				() -> assertEquals(singletonList(new URI("file:///foo.txt")), type.parseArgLine("-select-uri file:///foo.txt").getSelectedUris()),
-				() -> assertEquals(singletonList(new URI("file:///foo.txt")), type.parseArgLine("-select-uri=file:///foo.txt").getSelectedUris()),
-				() -> assertEquals(singletonList(new URI("file:///foo.txt")), type.parseArgLine("--select-uri file:///foo.txt").getSelectedUris()),
-				() -> assertEquals(singletonList(new URI("file:///foo.txt")), type.parseArgLine("--select-uri=file:///foo.txt").getSelectedUris()),
-				() -> assertEquals(asList(new URI("file:///foo.txt"), new URI("https://example")), type.parseArgLine("-u file:///foo.txt -u https://example").getSelectedUris())
+				() -> assertEquals(List.of(new URI("file:///foo.txt")), type.parseArgLine("-u file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(List.of(new URI("file:///foo.txt")), type.parseArgLine("--u file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(List.of(new URI("file:///foo.txt")), type.parseArgLine("-select-uri file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(List.of(new URI("file:///foo.txt")), type.parseArgLine("-select-uri=file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(List.of(new URI("file:///foo.txt")), type.parseArgLine("--select-uri file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(List.of(new URI("file:///foo.txt")), type.parseArgLine("--select-uri=file:///foo.txt").getSelectedUris()),
+				() -> assertEquals(List.of(new URI("file:///foo.txt"), new URI("https://example")), type.parseArgLine("-u file:///foo.txt -u https://example").getSelectedUris())
 		);
 		// @formatter:on
 	}
@@ -337,13 +331,13 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidFileSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(singletonList("foo.txt"), type.parseArgLine("-f foo.txt").getSelectedFiles()),
-				() -> assertEquals(singletonList("foo.txt"), type.parseArgLine("--f foo.txt").getSelectedFiles()),
-				() -> assertEquals(singletonList("foo.txt"), type.parseArgLine("-select-file foo.txt").getSelectedFiles()),
-				() -> assertEquals(singletonList("foo.txt"), type.parseArgLine("-select-file=foo.txt").getSelectedFiles()),
-				() -> assertEquals(singletonList("foo.txt"), type.parseArgLine("--select-file foo.txt").getSelectedFiles()),
-				() -> assertEquals(singletonList("foo.txt"), type.parseArgLine("--select-file=foo.txt").getSelectedFiles()),
-				() -> assertEquals(asList("foo.txt", "bar.csv"), type.parseArgLine("-f foo.txt -f bar.csv").getSelectedFiles())
+				() -> assertEquals(List.of("foo.txt"), type.parseArgLine("-f foo.txt").getSelectedFiles()),
+				() -> assertEquals(List.of("foo.txt"), type.parseArgLine("--f foo.txt").getSelectedFiles()),
+				() -> assertEquals(List.of("foo.txt"), type.parseArgLine("-select-file foo.txt").getSelectedFiles()),
+				() -> assertEquals(List.of("foo.txt"), type.parseArgLine("-select-file=foo.txt").getSelectedFiles()),
+				() -> assertEquals(List.of("foo.txt"), type.parseArgLine("--select-file foo.txt").getSelectedFiles()),
+				() -> assertEquals(List.of("foo.txt"), type.parseArgLine("--select-file=foo.txt").getSelectedFiles()),
+				() -> assertEquals(List.of("foo.txt", "bar.csv"), type.parseArgLine("-f foo.txt -f bar.csv").getSelectedFiles())
 		);
 		// @formatter:on
 	}
@@ -358,13 +352,13 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidDirectorySelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(singletonList("foo/bar"), type.parseArgLine("-d foo/bar").getSelectedDirectories()),
-				() -> assertEquals(singletonList("foo/bar"), type.parseArgLine("--d foo/bar").getSelectedDirectories()),
-				() -> assertEquals(singletonList("foo/bar"), type.parseArgLine("-select-directory foo/bar").getSelectedDirectories()),
-				() -> assertEquals(singletonList("foo/bar"), type.parseArgLine("-select-directory=foo/bar").getSelectedDirectories()),
-				() -> assertEquals(singletonList("foo/bar"), type.parseArgLine("--select-directory foo/bar").getSelectedDirectories()),
-				() -> assertEquals(singletonList("foo/bar"), type.parseArgLine("--select-directory=foo/bar").getSelectedDirectories()),
-				() -> assertEquals(asList("foo/bar", "bar/qux"), type.parseArgLine("-d foo/bar -d bar/qux").getSelectedDirectories())
+				() -> assertEquals(List.of("foo/bar"), type.parseArgLine("-d foo/bar").getSelectedDirectories()),
+				() -> assertEquals(List.of("foo/bar"), type.parseArgLine("--d foo/bar").getSelectedDirectories()),
+				() -> assertEquals(List.of("foo/bar"), type.parseArgLine("-select-directory foo/bar").getSelectedDirectories()),
+				() -> assertEquals(List.of("foo/bar"), type.parseArgLine("-select-directory=foo/bar").getSelectedDirectories()),
+				() -> assertEquals(List.of("foo/bar"), type.parseArgLine("--select-directory foo/bar").getSelectedDirectories()),
+				() -> assertEquals(List.of("foo/bar"), type.parseArgLine("--select-directory=foo/bar").getSelectedDirectories()),
+				() -> assertEquals(List.of("foo/bar", "bar/qux"), type.parseArgLine("-d foo/bar -d bar/qux").getSelectedDirectories())
 		);
 		// @formatter:on
 	}
@@ -379,13 +373,13 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidModuleSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("-o com.acme.foo").getSelectedModules()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("--o com.acme.foo").getSelectedModules()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("-select-module com.acme.foo").getSelectedModules()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("-select-module=com.acme.foo").getSelectedModules()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("--select-module com.acme.foo").getSelectedModules()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("--select-module=com.acme.foo").getSelectedModules()),
-				() -> assertEquals(asList("com.acme.foo", "com.example.bar"), type.parseArgLine("-o com.acme.foo -o com.example.bar").getSelectedModules())
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("-o com.acme.foo").getSelectedModules()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("--o com.acme.foo").getSelectedModules()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("-select-module com.acme.foo").getSelectedModules()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("-select-module=com.acme.foo").getSelectedModules()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("--select-module com.acme.foo").getSelectedModules()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("--select-module=com.acme.foo").getSelectedModules()),
+				() -> assertEquals(List.of("com.acme.foo", "com.example.bar"), type.parseArgLine("-o com.acme.foo -o com.example.bar").getSelectedModules())
 		);
 		// @formatter:on
 	}
@@ -400,13 +394,13 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidPackageSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("-p com.acme.foo").getSelectedPackages()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("--p com.acme.foo").getSelectedPackages()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("-select-package com.acme.foo").getSelectedPackages()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("-select-package=com.acme.foo").getSelectedPackages()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("--select-package com.acme.foo").getSelectedPackages()),
-				() -> assertEquals(singletonList("com.acme.foo"), type.parseArgLine("--select-package=com.acme.foo").getSelectedPackages()),
-				() -> assertEquals(asList("com.acme.foo", "com.example.bar"), type.parseArgLine("-p com.acme.foo -p com.example.bar").getSelectedPackages())
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("-p com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("--p com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("-select-package com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("-select-package=com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("--select-package com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(List.of("com.acme.foo"), type.parseArgLine("--select-package=com.acme.foo").getSelectedPackages()),
+				() -> assertEquals(List.of("com.acme.foo", "com.example.bar"), type.parseArgLine("-p com.acme.foo -p com.example.bar").getSelectedPackages())
 		);
 		// @formatter:on
 	}
@@ -421,13 +415,13 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidClassSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(singletonList("com.acme.Foo"), type.parseArgLine("-c com.acme.Foo").getSelectedClasses()),
-				() -> assertEquals(singletonList("com.acme.Foo"), type.parseArgLine("--c com.acme.Foo").getSelectedClasses()),
-				() -> assertEquals(singletonList("com.acme.Foo"), type.parseArgLine("-select-class com.acme.Foo").getSelectedClasses()),
-				() -> assertEquals(singletonList("com.acme.Foo"), type.parseArgLine("-select-class=com.acme.Foo").getSelectedClasses()),
-				() -> assertEquals(singletonList("com.acme.Foo"), type.parseArgLine("--select-class com.acme.Foo").getSelectedClasses()),
-				() -> assertEquals(singletonList("com.acme.Foo"), type.parseArgLine("--select-class=com.acme.Foo").getSelectedClasses()),
-				() -> assertEquals(asList("com.acme.Foo", "com.example.Bar"), type.parseArgLine("-c com.acme.Foo -c com.example.Bar").getSelectedClasses())
+				() -> assertEquals(List.of("com.acme.Foo"), type.parseArgLine("-c com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(List.of("com.acme.Foo"), type.parseArgLine("--c com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(List.of("com.acme.Foo"), type.parseArgLine("-select-class com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(List.of("com.acme.Foo"), type.parseArgLine("-select-class=com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(List.of("com.acme.Foo"), type.parseArgLine("--select-class com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(List.of("com.acme.Foo"), type.parseArgLine("--select-class=com.acme.Foo").getSelectedClasses()),
+				() -> assertEquals(List.of("com.acme.Foo", "com.example.Bar"), type.parseArgLine("-c com.acme.Foo -c com.example.Bar").getSelectedClasses())
 		);
 		// @formatter:on
 	}
@@ -442,13 +436,13 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidMethodSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(singletonList("com.acme.Foo#m()"), type.parseArgLine("-m com.acme.Foo#m()").getSelectedMethods()),
-				() -> assertEquals(singletonList("com.acme.Foo#m()"), type.parseArgLine("--m com.acme.Foo#m()").getSelectedMethods()),
-				() -> assertEquals(singletonList("com.acme.Foo#m()"), type.parseArgLine("-select-method com.acme.Foo#m()").getSelectedMethods()),
-				() -> assertEquals(singletonList("com.acme.Foo#m()"), type.parseArgLine("-select-method=com.acme.Foo#m()").getSelectedMethods()),
-				() -> assertEquals(singletonList("com.acme.Foo#m()"), type.parseArgLine("--select-method com.acme.Foo#m()").getSelectedMethods()),
-				() -> assertEquals(singletonList("com.acme.Foo#m()"), type.parseArgLine("--select-method=com.acme.Foo#m()").getSelectedMethods()),
-				() -> assertEquals(asList("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"),
+				() -> assertEquals(List.of("com.acme.Foo#m()"), type.parseArgLine("-m com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(List.of("com.acme.Foo#m()"), type.parseArgLine("--m com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(List.of("com.acme.Foo#m()"), type.parseArgLine("-select-method com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(List.of("com.acme.Foo#m()"), type.parseArgLine("-select-method=com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(List.of("com.acme.Foo#m()"), type.parseArgLine("--select-method com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(List.of("com.acme.Foo#m()"), type.parseArgLine("--select-method=com.acme.Foo#m()").getSelectedMethods()),
+				() -> assertEquals(List.of("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"),
 						type.parseArgLine("-m com.acme.Foo#m() -m com.example.Bar#method(java.lang.Object)").getSelectedMethods())
 		);
 		// @formatter:on
@@ -464,13 +458,13 @@ class PicocliCommandLineOptionsParserTests {
 	void parseValidClasspathResourceSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(singletonList("/foo.csv"), type.parseArgLine("-r /foo.csv").getSelectedClasspathResources()),
-				() -> assertEquals(singletonList("/foo.csv"), type.parseArgLine("--r /foo.csv").getSelectedClasspathResources()),
-				() -> assertEquals(singletonList("/foo.csv"), type.parseArgLine("-select-resource /foo.csv").getSelectedClasspathResources()),
-				() -> assertEquals(singletonList("/foo.csv"), type.parseArgLine("-select-resource=/foo.csv").getSelectedClasspathResources()),
-				() -> assertEquals(singletonList("/foo.csv"), type.parseArgLine("--select-resource /foo.csv").getSelectedClasspathResources()),
-				() -> assertEquals(singletonList("/foo.csv"), type.parseArgLine("--select-resource=/foo.csv").getSelectedClasspathResources()),
-				() -> assertEquals(asList("/foo.csv", "bar.json"), type.parseArgLine("-r /foo.csv -r bar.json").getSelectedClasspathResources())
+				() -> assertEquals(List.of("/foo.csv"), type.parseArgLine("-r /foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(List.of("/foo.csv"), type.parseArgLine("--r /foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(List.of("/foo.csv"), type.parseArgLine("-select-resource /foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(List.of("/foo.csv"), type.parseArgLine("-select-resource=/foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(List.of("/foo.csv"), type.parseArgLine("--select-resource /foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(List.of("/foo.csv"), type.parseArgLine("--select-resource=/foo.csv").getSelectedClasspathResources()),
+				() -> assertEquals(List.of("/foo.csv", "bar.json"), type.parseArgLine("-r /foo.csv -r bar.json").getSelectedClasspathResources())
 		);
 		// @formatter:on
 	}
@@ -483,20 +477,20 @@ class PicocliCommandLineOptionsParserTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseClasspathScanningEntries(ArgsType type) {
-		Path dir = Paths.get(".");
+		var dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
 			() -> assertTrue(type.parseArgLine("--scan-class-path").isScanClasspath()),
-			() -> assertEquals(emptyList(), type.parseArgLine("--scan-class-path").getSelectedClasspathEntries()),
+			() -> assertEquals(List.of(), type.parseArgLine("--scan-class-path").getSelectedClasspathEntries()),
 			() -> assertTrue(type.parseArgLine("--scan-classpath").isScanClasspath()),
-			() -> assertEquals(emptyList(), type.parseArgLine("--scan-classpath").getSelectedClasspathEntries()),
+			() -> assertEquals(List.of(), type.parseArgLine("--scan-classpath").getSelectedClasspathEntries()),
 			() -> assertTrue(type.parseArgLine("--scan-class-path .").isScanClasspath()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("--scan-class-path .").getSelectedClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("--scan-class-path=.").getSelectedClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("-scan-class-path .").getSelectedClasspathEntries()),
-			() -> assertEquals(singletonList(dir), type.parseArgLine("-scan-class-path=.").getSelectedClasspathEntries()),
-			() -> assertEquals(asList(dir, Paths.get("src/test/java")), type.parseArgLine("--scan-class-path . --scan-class-path src/test/java").getSelectedClasspathEntries()),
-			() -> assertEquals(asList(dir, Paths.get("src/test/java")), type.parseArgLine("--scan-class-path ." + File.pathSeparator + "src/test/java").getSelectedClasspathEntries())
+			() -> assertEquals(List.of(dir), type.parseArgLine("--scan-class-path .").getSelectedClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("--scan-class-path=.").getSelectedClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("-scan-class-path .").getSelectedClasspathEntries()),
+			() -> assertEquals(List.of(dir), type.parseArgLine("-scan-class-path=.").getSelectedClasspathEntries()),
+			() -> assertEquals(List.of(dir, Paths.get("src/test/java")), type.parseArgLine("--scan-class-path . --scan-class-path src/test/java").getSelectedClasspathEntries()),
+			() -> assertEquals(List.of(dir, Paths.get("src/test/java")), type.parseArgLine("--scan-class-path ." + File.pathSeparator + "src/test/java").getSelectedClasspathEntries())
 		);
 		// @formatter:on
 	}
@@ -537,16 +531,16 @@ class PicocliCommandLineOptionsParserTests {
 
 	@Test
 	void printHelpOutputsHelpOption() {
-		StringWriter writer = new StringWriter();
+		var writer = new StringWriter();
 
-		createParser().printHelp(writer);
+		createParser().printHelp(writer, true);
 
 		assertThat(writer.toString()).contains("--help");
 	}
 
 	@Test
 	void printHelpPreservesOriginalIOException() {
-		Writer writer = new Writer() {
+		var writer = new Writer() {
 
 			@Override
 			public void write(char[] cbuf, int off, int len) throws IOException {
@@ -562,20 +556,20 @@ class PicocliCommandLineOptionsParserTests {
 			}
 		};
 
-		CommandLineOptionsParser parser = createParser();
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> parser.printHelp(writer));
+		var parser = createParser();
+		var exception = assertThrows(RuntimeException.class, () -> parser.printHelp(writer, true));
 
 		assertThat(exception).hasCauseInstanceOf(IOException.class);
 		assertThat(exception.getCause()).hasMessage("Something went wrong");
 	}
 
 	private void assertOptionWithMissingRequiredArgumentThrowsException(String... options) {
-		assertAll(stream(options).map(
+		assertAll(Stream.of(options).map(
 			opt -> () -> assertThrows(JUnitException.class, () -> ArgsType.args.parseArgLine(opt))));
 	}
 
 	private void assertParses(String name, Predicate<CommandLineOptions> property, String... argLines) {
-		stream(argLines).forEach(argLine -> {
+		Stream.of(argLines).forEach(argLine -> {
 			CommandLineOptions options = null;
 			try {
 				options = ArgsType.args.parseArgLine(argLine);
@@ -595,10 +589,9 @@ class PicocliCommandLineOptionsParserTests {
 		},
 		atFile {
 			CommandLineOptions parseArgLine(String argLine) throws IOException {
-				Path atFile = Files.createTempFile("junit-launcher-args", ".txt");
+				var atFile = Files.createTempFile("junit-launcher-args", ".txt");
 				try {
-					List<String> lines = Arrays.asList(split(argLine));
-					Files.write(atFile, lines);
+					Files.write(atFile, List.of(split(argLine)));
 					return createParser().parse("@" + atFile);
 				}
 				finally {

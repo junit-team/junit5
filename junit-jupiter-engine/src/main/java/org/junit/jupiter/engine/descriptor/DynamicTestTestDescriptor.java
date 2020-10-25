@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.extension.DynamicTestInvocationContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.function.Executable;
@@ -52,10 +53,13 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 			dynamicTest.getExecutable().execute();
 			return null;
 		};
+		DynamicTestInvocationContext dynamicTestInvocationContext = new DynamicTestInvocationContext(
+			dynamicTest.getExecutable());
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
 		interceptorChain.invoke(invocation, extensionRegistry, InterceptorCall.ofVoid(
-			(interceptor, wrappedInvocation) -> interceptor.interceptDynamicTest(wrappedInvocation, extensionContext)));
+			(interceptor, wrappedInvocation) -> interceptor.interceptDynamicTest(wrappedInvocation,
+				dynamicTestInvocationContext, extensionContext)));
 		return context;
 	}
 

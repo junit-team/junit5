@@ -58,21 +58,18 @@ class ManifestTests {
 			assertValue(attributes, "Bundle-Version",
 				MavenVersion.parseMavenString(version).getOSGiVersion().toString());
 			switch (module) {
-				case "junit-platform-commons":
-					assertValue(attributes, "Multi-Release", "true");
-					break;
-				case "junit-platform-console":
-					assertValue(attributes, "Main-Class", "org.junit.platform.console.ConsoleLauncher");
-					break;
+				case "junit-platform-commons" -> assertValue(attributes, "Multi-Release", "true");
+				case "junit-platform-console" -> assertValue(attributes, "Main-Class",
+					"org.junit.platform.console.ConsoleLauncher");
 			}
 			var domain = Domain.domain(manifest);
 			domain.getExportPackage().forEach((pkg, attrs) -> {
-				final String stringVersion = attrs.get(VERSION_ATTRIBUTE);
+				final var stringVersion = attrs.get(VERSION_ATTRIBUTE);
 				assertNotNull(stringVersion);
 				assertDoesNotThrow(() -> new Version(stringVersion));
 			});
 			domain.getImportPackage().forEach((pkg, attrs) -> {
-				final String stringVersionRange = attrs.get(VERSION_ATTRIBUTE);
+				final var stringVersionRange = attrs.get(VERSION_ATTRIBUTE);
 				if (stringVersionRange == null) {
 					return;
 				}

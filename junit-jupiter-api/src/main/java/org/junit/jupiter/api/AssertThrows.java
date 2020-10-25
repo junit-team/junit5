@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
-import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -59,7 +59,7 @@ class AssertThrows {
 				return (T) actualException;
 			}
 			else {
-				BlacklistedExceptions.rethrowIfBlacklisted(actualException);
+				UnrecoverableExceptions.rethrowIfUnrecoverable(actualException);
 				String message = buildPrefix(nullSafeGet(messageOrSupplier))
 						+ format(expectedType, actualException.getClass(), "Unexpected exception type thrown");
 				throw new AssertionFailedError(message, actualException);

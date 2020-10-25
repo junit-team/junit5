@@ -28,8 +28,8 @@ class ClassLoaderUtilsTests {
 
 	@Test
 	void getDefaultClassLoaderWithExplicitContextClassLoader() {
-		ClassLoader original = Thread.currentThread().getContextClassLoader();
-		ClassLoader mock = mock(ClassLoader.class);
+		var original = Thread.currentThread().getContextClassLoader();
+		var mock = mock(ClassLoader.class);
 		Thread.currentThread().setContextClassLoader(mock);
 		try {
 			assertSame(mock, ClassLoaderUtils.getDefaultClassLoader());
@@ -41,7 +41,7 @@ class ClassLoaderUtilsTests {
 
 	@Test
 	void getDefaultClassLoaderWithNullContextClassLoader() {
-		ClassLoader original = Thread.currentThread().getContextClassLoader();
+		var original = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(null);
 		try {
 			assertSame(ClassLoader.getSystemClassLoader(), ClassLoaderUtils.getDefaultClassLoader());
@@ -53,8 +53,7 @@ class ClassLoaderUtilsTests {
 
 	@Test
 	void getLocationFromNullFails() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> ClassLoaderUtils.getLocation(null));
+		var exception = assertThrows(PreconditionViolationException.class, () -> ClassLoaderUtils.getLocation(null));
 		assertEquals("object must not be null", exception.getMessage());
 	}
 

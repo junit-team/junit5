@@ -10,8 +10,9 @@
 
 package org.junit.platform.launcher;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.UniqueId;
@@ -32,7 +33,7 @@ class TestPlanTests {
 				}
 			});
 
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 
 		assertThat(testPlan.containsTests()).as("contains tests").isFalse();
 	}
@@ -47,7 +48,7 @@ class TestPlanTests {
 				}
 			});
 
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}
@@ -67,7 +68,7 @@ class TestPlanTests {
 				}
 			});
 
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}

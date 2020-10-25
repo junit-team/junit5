@@ -1,4 +1,4 @@
-org.junit.vintage.engine@${vintageVersion} jar:file:.+junit-vintage-engine/build/libs/junit-vintage-engine-${jupiterVersion}.jar/!module-info.class
+org.junit.vintage.engine@${vintageVersion} jar:file:.+junit-vintage-engine/build/libs/junit-vintage-engine-${jupiterVersion}.jar..module-info.class
 requires java.base mandated
 requires junit
 requires org.apiguardian.api

@@ -48,7 +48,7 @@ class PrefixedConfigurationParametersTests {
 	@Test
 	void delegatesGetCalls() {
 		when(delegate.get(any())).thenReturn(Optional.of("result"));
-		PrefixedConfigurationParameters parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
+		var parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
 
 		assertThat(parameters.get("qux")).contains("result");
 
@@ -58,7 +58,7 @@ class PrefixedConfigurationParametersTests {
 	@Test
 	void delegatesGetBooleanCalls() {
 		when(delegate.getBoolean(any())).thenReturn(Optional.of(true));
-		PrefixedConfigurationParameters parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
+		var parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
 
 		assertThat(parameters.getBoolean("qux")).contains(true);
 
@@ -68,7 +68,7 @@ class PrefixedConfigurationParametersTests {
 	@Test
 	void delegatesGetWithTransformerCalls() {
 		when(delegate.get(any(), any())).thenReturn(Optional.of("QUX"));
-		PrefixedConfigurationParameters parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
+		var parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
 
 		Function<String, String> transformer = String::toUpperCase;
 		assertThat(parameters.get("qux", transformer)).contains("QUX");
@@ -79,7 +79,7 @@ class PrefixedConfigurationParametersTests {
 	@Test
 	void delegatesSizeCalls() {
 		when(delegate.size()).thenReturn(42);
-		PrefixedConfigurationParameters parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
+		var parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
 
 		assertThat(parameters.size()).isEqualTo(42);
 

@@ -32,15 +32,15 @@ public class VintageUniqueIdBuilder {
 	}
 
 	public static UniqueId uniqueIdForClasses(Class<?> clazz, Class<?>... clazzes) {
-		UniqueId uniqueId = uniqueIdForClass(clazz.getName());
-		for (Class<?> each : clazzes) {
+		var uniqueId = uniqueIdForClass(clazz.getName());
+		for (var each : clazzes) {
 			uniqueId = uniqueId.append(VintageTestDescriptor.SEGMENT_TYPE_TEST, each.getName());
 		}
 		return uniqueId;
 	}
 
 	public static UniqueId uniqueIdForClass(String fullyQualifiedClassName) {
-		UniqueId containerId = engineId();
+		var containerId = engineId();
 		return containerId.append(VintageTestDescriptor.SEGMENT_TYPE_RUNNER, fullyQualifiedClassName);
 	}
 

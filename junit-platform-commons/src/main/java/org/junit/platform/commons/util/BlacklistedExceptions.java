@@ -10,20 +10,17 @@
 
 package org.junit.platform.commons.util;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import java.util.Collections;
-import java.util.List;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
 import org.apiguardian.api.API;
 
 /**
- * Internal utilities for working with <em>blacklisted</em> exceptions.
+ * Internal utilities for working with <em>unrecoverable</em> exceptions.
  *
- * <p><em>Blacklisted</em> exceptions are those that should always terminate
+ * <p><em>Unrecoverable</em> exceptions are those that should always terminate
  * test plan execution immediately.
  *
- * <h4>Currently Blacklisted Exceptions</h4>
+ * <h4>Currently Unrecoverable Exceptions</h4>
  * <ul>
  * <li>{@link OutOfMemoryError}</li>
  * </ul>
@@ -35,11 +32,11 @@ import org.apiguardian.api.API;
  * Use at your own risk!
  *
  * @since 1.0
+ * @deprecated Use {@link UnrecoverableExceptions} instead.
  */
-@API(status = INTERNAL, since = "1.0")
+@Deprecated
+@API(status = DEPRECATED, since = "1.7")
 public final class BlacklistedExceptions {
-
-	private static final List<Class<? extends Throwable>> blacklist = Collections.singletonList(OutOfMemoryError.class);
 
 	private BlacklistedExceptions() {
 		/* no-op */
@@ -47,15 +44,17 @@ public final class BlacklistedExceptions {
 
 	/**
 	 * Rethrow the supplied {@link Throwable exception} if it is
-	 * <em>blacklisted</em>.
+	 * <em>unrecoverable</em>.
 	 *
-	 * <p>If the supplied {@code exception} is not <em>blacklisted</em>,
-	 * this method does nothing.
+	 * <p>If the supplied {@code exception} is not <em>unrecoverable</em>, this
+	 * method does nothing.
+	 *
+	 * @deprecated Use {@link UnrecoverableExceptions#rethrowIfUnrecoverable}
+	 * instead.
 	 */
+	@Deprecated
 	public static void rethrowIfBlacklisted(Throwable exception) {
-		if (blacklist.stream().anyMatch(exceptionType -> exceptionType.isInstance(exception))) {
-			ExceptionUtils.throwAsUncheckedException(exception);
-		}
+		UnrecoverableExceptions.rethrowIfUnrecoverable(exception);
 	}
 
 }

@@ -38,6 +38,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 	protected String delimiterString = "";
 	protected String emptyValue = "";
 	protected String[] nullValues = new String[0];
+	protected int maxCharsPerColumn = 4096;
 
 	private MockCsvAnnotationBuilder() {
 	}
@@ -64,6 +65,11 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 		return getSelf();
 	}
 
+	B maxCharsPerColumn(int maxCharsPerColumn) {
+		this.maxCharsPerColumn = maxCharsPerColumn;
+		return getSelf();
+	}
+
 	abstract A build();
 
 	// -------------------------------------------------------------------------
@@ -84,13 +90,14 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 		@Override
 		CsvSource build() {
-			CsvSource annotation = mock(CsvSource.class);
+			var annotation = mock(CsvSource.class);
 
 			// Common
 			when(annotation.delimiter()).thenReturn(super.delimiter);
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
 			when(annotation.nullValues()).thenReturn(super.nullValues);
+			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
 
 			// @CsvSource
 			when(annotation.value()).thenReturn(this.lines);
@@ -102,7 +109,8 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 	static class MockCsvFileSourceBuilder extends MockCsvAnnotationBuilder<CsvFileSource, MockCsvFileSourceBuilder> {
 
-		private String[] resources = { "test.csv" };
+		private String[] resources = {};
+		private String[] files = {};
 		private String encoding = "UTF-8";
 		private String lineSeparator = "\n";
 		private int numLinesToSkip = 0;
@@ -112,11 +120,13 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			return this;
 		}
 
-		/**
-		 * Defaults to "test.csv".
-		 */
 		MockCsvFileSourceBuilder resources(String... resources) {
 			this.resources = resources;
+			return this;
+		}
+
+		MockCsvFileSourceBuilder files(String... files) {
+			this.files = files;
 			return this;
 		}
 
@@ -137,16 +147,18 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 		@Override
 		CsvFileSource build() {
-			CsvFileSource annotation = mock(CsvFileSource.class);
+			var annotation = mock(CsvFileSource.class);
 
 			// Common
 			when(annotation.delimiter()).thenReturn(super.delimiter);
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
 			when(annotation.nullValues()).thenReturn(super.nullValues);
+			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
 
 			// @CsvFileSource
 			when(annotation.resources()).thenReturn(this.resources);
+			when(annotation.files()).thenReturn(this.files);
 			when(annotation.encoding()).thenReturn(this.encoding);
 			when(annotation.lineSeparator()).thenReturn(this.lineSeparator);
 			when(annotation.numLinesToSkip()).thenReturn(this.numLinesToSkip);

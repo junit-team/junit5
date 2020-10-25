@@ -67,7 +67,7 @@ public class ConsoleLauncher {
 				displayBanner(out);
 			}
 			if (options.isDisplayHelp()) {
-				commandLineOptionsParser.printHelp(out);
+				commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
 				return ConsoleLauncherExecutionResult.success();
 			}
 			return executeTests(options, out);
@@ -75,7 +75,7 @@ public class ConsoleLauncher {
 		catch (JUnitException ex) {
 			err.println(ex.getMessage());
 			err.println();
-			commandLineOptionsParser.printHelp(err);
+			commandLineOptionsParser.printHelp(err, false);
 			return ConsoleLauncherExecutionResult.failed();
 		}
 		finally {
@@ -98,9 +98,9 @@ public class ConsoleLauncher {
 		catch (Exception exception) {
 			exception.printStackTrace(err);
 			err.println();
-			commandLineOptionsParser.printHelp(out);
+			commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
+			return ConsoleLauncherExecutionResult.failed();
 		}
-		return ConsoleLauncherExecutionResult.failed();
 	}
 
 }

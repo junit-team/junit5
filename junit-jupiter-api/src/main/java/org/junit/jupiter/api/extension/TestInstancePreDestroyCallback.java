@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
@@ -23,7 +23,14 @@ import org.apiguardian.api.API;
  * the test instance, invoking custom clean-up methods on the test instance, etc.
  *
  * <p>Extensions that implement {@code TestInstancePreDestroyCallback} must be
- * registered at the class level.
+ * registered at the class level if the test class is configured with
+ * {@link org.junit.jupiter.api.TestInstance.Lifecycle @TestInstance(Lifecycle.PER_CLASS)}
+ * semantics. If the test class is configured with
+ * {@link org.junit.jupiter.api.TestInstance.Lifecycle @TestInstance(Lifecycle.PER_METHOD)}
+ * semantics, {@code TestInstancePreDestroyCallback} extensions may be registered
+ * at the class level or at the method level. In the latter case, the
+ * {@code TestInstancePreDestroyCallback} extension will only be applied to the
+ * test method for which it is registered.
  *
  * <h3>Constructor Requirements</h3>
  *
@@ -37,7 +44,7 @@ import org.apiguardian.api.API;
  * @see ParameterResolver
  */
 @FunctionalInterface
-@API(status = EXPERIMENTAL, since = "5.6")
+@API(status = STABLE, since = "5.7")
 public interface TestInstancePreDestroyCallback extends Extension {
 
 	/**

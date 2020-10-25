@@ -32,8 +32,8 @@ class StreamInterceptorTests {
 
 	@Test
 	void interceptsWriteOperationsToStreamPerThread() {
-		StreamInterceptor streamInterceptor = StreamInterceptor.register(targetStream,
-			newStream -> this.targetStream = newStream, 3).orElseThrow(RuntimeException::new);
+		var streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
+			3).orElseThrow(RuntimeException::new);
 		// @formatter:off
 		IntStream.range(0, 1000)
 				.parallel()
@@ -47,10 +47,10 @@ class StreamInterceptorTests {
 
 	@Test
 	void unregisterRestoresOriginalStream() {
-		PrintStream originalStream = targetStream;
+		var originalStream = targetStream;
 
-		StreamInterceptor streamInterceptor = StreamInterceptor.register(targetStream,
-			newStream -> this.targetStream = newStream, 3).orElseThrow(RuntimeException::new);
+		var streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
+			3).orElseThrow(RuntimeException::new);
 		assertSame(streamInterceptor, targetStream);
 
 		streamInterceptor.unregister();
@@ -59,7 +59,7 @@ class StreamInterceptorTests {
 
 	@Test
 	void writeForwardsOperationsToOriginalStream() throws IOException {
-		PrintStream originalStream = targetStream;
+		var originalStream = targetStream;
 
 		StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream, 2).orElseThrow(
 			RuntimeException::new);
@@ -73,8 +73,8 @@ class StreamInterceptorTests {
 
 	@Test
 	void handlesNestedCaptures() {
-		StreamInterceptor streamInterceptor = StreamInterceptor.register(targetStream,
-			newStream -> this.targetStream = newStream, 100).orElseThrow(RuntimeException::new);
+		var streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
+			100).orElseThrow(RuntimeException::new);
 
 		String outermost, inner, innermost;
 

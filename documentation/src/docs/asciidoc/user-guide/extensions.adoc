@@ -77,6 +77,19 @@ which they are declared in the source code. For example, the execution of tests 
 `WebServerExtension`, **in exactly that order**.
 ====
 
+If you wish to combine multiple extensions in a reusable way, you can define a custom
+_<<writing-tests-meta-annotations,composed annotation>>_ and use `@ExtendWith` as a
+_meta-annotation_:
+
+[source,java,indent=0]
+----
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith({ DatabaseExtension.class, WebServerExtension.class })
+public @interface DatabaseAndWebServerExtension {
+}
+----
+
 [[extensions-registration-programmatic]]
 ==== Programmatic Extension Registration
 
@@ -153,8 +166,7 @@ Rather, the `@JvmField` annotation must be used.
 The following example is a version of the `WebServerDemo` from the previous section that
 has been ported to Kotlin.
 
-// TODO: Change to using kotlin language highlighting after switch to rouge syntax highlighter
-[source,groovy,indent=0]
+[source,kotlin,indent=0]
 .Registering an extension via a static field in Kotlin
 ----
 include::{kotlinTestDir}/example/registration/KotlinWebServerDemo.kt[tags=user_guide]
@@ -205,10 +217,10 @@ name in a file named `org.junit.jupiter.api.extension.Extension` within the
 ===== Enabling Automatic Extension Detection
 
 Auto-detection is an advanced feature and is therefore not enabled by default. To enable
-it, simply set the `junit.jupiter.extensions.autodetection.enabled` _configuration
-parameter_ to `true`. This can be supplied as a JVM system property, as a _configuration
-parameter_ in the `LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the
-JUnit Platform configuration file (see <<running-tests-config-params>> for details).
+it, set the `junit.jupiter.extensions.autodetection.enabled` _configuration parameter_ to
+`true`. This can be supplied as a JVM system property, as a _configuration parameter_ in
+the `LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the JUnit Platform
+configuration file (see <<running-tests-config-params>> for details).
 
 For example, to enable auto-detection of extensions, you can start your JVM with the
 following system property.
@@ -253,7 +265,7 @@ See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examp
 
 Sometimes it can be useful to run a test suite _without_ certain conditions being active.
 For example, you may wish to run tests even if they are annotated with `@Disabled` in
-order to see if they are still _broken_. To do this, simply provide a pattern for the
+order to see if they are still _broken_. To do this, provide a pattern for the
 `junit.jupiter.conditions.deactivate` _configuration parameter_ to specify which
 conditions should be deactivated (i.e., not evaluated) for the current test run. The
 pattern can be supplied as a JVM system property, as a _configuration parameter_ in the
@@ -268,23 +280,7 @@ following system property.
 [[extensions-conditions-deactivation-patterns]]
 ===== Pattern Matching Syntax
 
-If the `junit.jupiter.conditions.deactivate` pattern consists solely of an asterisk
-(`+*+`), all conditions will be deactivated. Otherwise, the pattern will be used to match
-against the fully qualified class name (_FQCN_) of each registered condition. Any dot
-(`.`) in the pattern will match against a dot (`.`) or a dollar sign (`$`) in the FQCN.
-Any asterisk (`+*+`) will match against one or more characters in the FQCN. All other
-characters in the pattern will be matched one-to-one against the FQCN.
-
-Examples:
-
-- `+*+`: deactivates all conditions.
-- `+org.junit.*+`: deactivates every condition under the `org.junit` base package and any
-  of its subpackages.
-- `+*.MyCondition+`: deactivates every condition whose simple class name is exactly
-  `MyCondition`.
-- `+*System*+`: deactivates every condition whose simple class name contains `System`.
-- `org.example.MyCondition`: deactivates the condition whose FQCN is exactly
-  `org.example.MyCondition`.
+Refer to <<running-tests-config-params-deactivation-pattern>> for details.
 
 [[extensions-test-instance-factories]]
 === Test Instance Factories
@@ -295,7 +291,7 @@ instances.
 Common use cases include acquiring the test instance from a dependency injection
 framework or invoking a static factory method to create the test class instance.
 
-If no `TestInstanceFactory` is registered, the framework will simply invoke the _sole_
+If no `TestInstanceFactory` is registered, the framework will invoke the _sole_
 constructor for the test class to instantiate it, potentially resolving constructor
 arguments via registered `ParameterResolver` extensions.
 
@@ -573,8 +569,8 @@ methods available for storing and retrieving values via the `{ExtensionContext_S
 .`ExtensionContext.Store.CloseableResource`
 NOTE: An extension context store is bound to its extension context lifecycle. When an
 extension context lifecycle ends it closes its associated store. All stored values
-that are instances of `CloseableResource` are notified by
-an invocation of their `close()` method.
+that are instances of `CloseableResource` are notified by an invocation of their `close()`
+method in the inverse order they were added in.
 
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
@@ -774,8 +770,8 @@ for user-supplied _lifecycle methods_ (see <<writing-tests-classes-and-methods>>
 The following examples demonstrate this behavior. Please note that the examples do not
 actually do anything realistic. Instead, they mimic common scenarios for testing
 interactions with the database. All methods imported statically from the `Logger` class
-simply log contextual information in order to help us better understand the execution
-order of user-supplied callback methods and callback methods in extensions.
+log contextual information in order to help us better understand the execution order of
+user-supplied callback methods and callback methods in extensions.
 
 [source,java,indent=0]
 .Extension1

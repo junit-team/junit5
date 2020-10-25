@@ -4,6 +4,7 @@ plugins {
 	`java-library-conventions`
 	`shadow-conventions`
 	`java-multi-release-sources`
+	`java-repackage-jars`
 }
 
 description = "JUnit Platform Console"

@@ -175,7 +175,7 @@ class AssertAllAssertionsTests {
 	}
 
 	@Test
-	void assertAllWithExecutableThatThrowsBlacklistedException() {
+	void assertAllWithExecutableThatThrowsUnrecoverableException() {
 		OutOfMemoryError outOfMemoryError = assertThrows(OutOfMemoryError.class,
 			() -> assertAll(AssertionTestUtils::runOutOfMemory));
 

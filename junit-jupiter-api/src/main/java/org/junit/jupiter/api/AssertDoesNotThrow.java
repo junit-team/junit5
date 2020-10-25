@@ -17,8 +17,8 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -50,7 +50,7 @@ class AssertDoesNotThrow {
 			executable.execute();
 		}
 		catch (Throwable t) {
-			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			throw createAssertionFailedError(messageOrSupplier, t);
 		}
 	}
@@ -72,7 +72,7 @@ class AssertDoesNotThrow {
 			return supplier.get();
 		}
 		catch (Throwable t) {
-			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			throw createAssertionFailedError(messageOrSupplier, t);
 		}
 	}

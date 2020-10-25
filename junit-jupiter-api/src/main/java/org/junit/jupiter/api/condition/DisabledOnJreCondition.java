@@ -12,15 +12,10 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.condition.EnabledOnJreCondition.DISABLED_ON_CURRENT_JRE;
 import static org.junit.jupiter.api.condition.EnabledOnJreCondition.ENABLED_ON_CURRENT_JRE;
-import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.util.Arrays;
-import java.util.Optional;
 
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -29,20 +24,17 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see DisabledOnJre
  */
-class DisabledOnJreCondition implements ExecutionCondition {
+class DisabledOnJreCondition extends BooleanExecutionCondition<DisabledOnJre> {
 
-	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled("@DisabledOnJre is not present");
+	DisabledOnJreCondition() {
+		super(DisabledOnJre.class, ENABLED_ON_CURRENT_JRE, DISABLED_ON_CURRENT_JRE, DisabledOnJre::disabledReason);
+	}
 
 	@Override
-	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<DisabledOnJre> optional = findAnnotation(context.getElement(), DisabledOnJre.class);
-		if (optional.isPresent()) {
-			JRE[] versions = optional.get().value();
-			Preconditions.condition(versions.length > 0, "You must declare at least one JRE in @DisabledOnJre");
-			return (Arrays.stream(versions).anyMatch(JRE::isCurrentVersion)) ? DISABLED_ON_CURRENT_JRE
-					: ENABLED_ON_CURRENT_JRE;
-		}
-		return ENABLED_BY_DEFAULT;
+	boolean isEnabled(DisabledOnJre annotation) {
+		JRE[] versions = annotation.value();
+		Preconditions.condition(versions.length > 0, "You must declare at least one JRE in @DisabledOnJre");
+		return Arrays.stream(versions).noneMatch(JRE::isCurrentVersion);
 	}
 
 }

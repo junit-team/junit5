@@ -1,4 +1,4 @@
-org.junit.platform.reporting@${platformVersion} jar:file:.+junit-platform-reporting/build/libs/junit-platform-reporting-${platformVersion}.jar/!module-info.class
+org.junit.platform.reporting@${platformVersion} jar:file:.+junit-platform-reporting/build/libs/junit-platform-reporting-${platformVersion}.jar..module-info.class
 exports org.junit.platform.reporting.legacy
 exports org.junit.platform.reporting.legacy.xml
 requires java.base mandated

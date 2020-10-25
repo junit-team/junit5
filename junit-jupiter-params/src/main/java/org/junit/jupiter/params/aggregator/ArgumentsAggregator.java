@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.aggregator;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -43,7 +43,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
  * @see ArgumentsAccessor
  * @see org.junit.jupiter.params.ParameterizedTest
  */
-@API(status = EXPERIMENTAL, since = "5.2")
+@API(status = STABLE, since = "5.7")
 public interface ArgumentsAggregator {
 
 	/**

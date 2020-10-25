@@ -27,7 +27,7 @@ public class DemoHierarchicalEngineDescriptor extends EngineDescriptor implement
 	};
 
 	public DemoHierarchicalEngineDescriptor(UniqueId uniqueId) {
-		super(uniqueId, uniqueId.getEngineId().get());
+		super(uniqueId, uniqueId.getEngineId().orElseThrow());
 	}
 
 	public void markSkipped(String reason) {

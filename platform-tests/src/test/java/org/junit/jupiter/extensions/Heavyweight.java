@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -37,9 +36,9 @@ public class Heavyweight implements ParameterResolver, BeforeEachCallback {
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext context) {
-		ExtensionContext engineContext = context.getRoot();
-		Store store = engineContext.getStore(ExtensionContext.Namespace.GLOBAL);
-		ResourceValue resource = store.getOrComputeIfAbsent(ResourceValue.class);
+		var engineContext = context.getRoot();
+		var store = engineContext.getStore(ExtensionContext.Namespace.GLOBAL);
+		var resource = store.getOrComputeIfAbsent(ResourceValue.class);
 		resource.usages.incrementAndGet();
 		return resource;
 	}

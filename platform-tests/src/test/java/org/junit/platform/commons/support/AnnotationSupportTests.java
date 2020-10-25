@@ -20,7 +20,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Tag;
@@ -36,15 +35,15 @@ class AnnotationSupportTests {
 
 	@Test
 	void isAnnotatedPreconditions() {
-		Optional<Class<Probe>> optional = Optional.of(Probe.class);
+		var optional = Optional.of(Probe.class);
 		assertPreconditionViolationException("annotationType", () -> AnnotationSupport.isAnnotated(optional, null));
 		assertPreconditionViolationException("annotationType", () -> AnnotationSupport.isAnnotated(Probe.class, null));
 	}
 
 	@Test
 	void isAnnotatedDelegates() {
-		Class<Probe> element = Probe.class;
-		Optional<Class<Probe>> optional = Optional.of(element);
+		var element = Probe.class;
+		var optional = Optional.of(element);
 
 		assertEquals(AnnotationUtils.isAnnotated(optional, Tag.class),
 			AnnotationSupport.isAnnotated(optional, Tag.class));
@@ -59,7 +58,7 @@ class AnnotationSupportTests {
 
 	@Test
 	void findAnnotationPreconditions() {
-		Optional<Class<Probe>> optional = Optional.of(Probe.class);
+		var optional = Optional.of(Probe.class);
 		assertPreconditionViolationException("annotationType", () -> AnnotationSupport.findAnnotation(optional, null));
 		assertPreconditionViolationException("annotationType",
 			() -> AnnotationSupport.findAnnotation(Probe.class, null));
@@ -67,8 +66,8 @@ class AnnotationSupportTests {
 
 	@Test
 	void findAnnotationDelegates() {
-		Class<Probe> element = Probe.class;
-		Optional<Class<Probe>> optional = Optional.of(element);
+		var element = Probe.class;
+		var optional = Optional.of(element);
 
 		assertEquals(AnnotationUtils.findAnnotation(optional, Tag.class),
 			AnnotationSupport.findAnnotation(optional, Tag.class));
@@ -132,7 +131,7 @@ class AnnotationSupportTests {
 
 	@Test
 	void findRepeatableAnnotationsDelegates() throws Throwable {
-		Method bMethod = Probe.class.getDeclaredMethod("bMethod");
+		var bMethod = Probe.class.getDeclaredMethod("bMethod");
 		assertEquals(AnnotationUtils.findRepeatableAnnotations(bMethod, Tag.class),
 			AnnotationSupport.findRepeatableAnnotations(bMethod, Tag.class));
 		Object expected = assertThrows(PreconditionViolationException.class,
@@ -185,7 +184,7 @@ class AnnotationSupportTests {
 
 	@Test
 	void findAnnotatedFieldValuesForNonStaticFields() {
-		Fields instance = new Fields();
+		var instance = new Fields();
 
 		assertThat(AnnotationSupport.findAnnotatedFieldValues(instance, Tag.class)).isEmpty();
 
@@ -203,7 +202,7 @@ class AnnotationSupportTests {
 
 	@Test
 	void findAnnotatedFieldValuesForNonStaticFieldsByType() {
-		Fields instance = new Fields();
+		var instance = new Fields();
 
 		assertThat(AnnotationSupport.findAnnotatedFieldValues(instance, FieldMarker.class, Number.class)).isEmpty();
 
@@ -227,7 +226,7 @@ class AnnotationSupportTests {
 			() -> AnnotationSupport.findAnnotatedFieldValues(this, null));
 
 		assertPreconditionViolationException("Class",
-			() -> AnnotationSupport.findAnnotatedFieldValues((Class<?>) null, FieldMarker.class));
+			() -> AnnotationSupport.findAnnotatedFieldValues(null, FieldMarker.class));
 		assertPreconditionViolationException("annotationType",
 			() -> AnnotationSupport.findAnnotatedFieldValues(Probe.class, null));
 
@@ -239,7 +238,7 @@ class AnnotationSupportTests {
 			() -> AnnotationSupport.findAnnotatedFieldValues(this, FieldMarker.class, null));
 
 		assertPreconditionViolationException("Class",
-			() -> AnnotationSupport.findAnnotatedFieldValues((Class<?>) null, FieldMarker.class, Number.class));
+			() -> AnnotationSupport.findAnnotatedFieldValues(null, FieldMarker.class, Number.class));
 		assertPreconditionViolationException("annotationType",
 			() -> AnnotationSupport.findAnnotatedFieldValues(Probe.class, null, Number.class));
 		assertPreconditionViolationException("fieldType",

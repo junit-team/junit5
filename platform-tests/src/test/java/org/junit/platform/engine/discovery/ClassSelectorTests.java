@@ -36,9 +36,9 @@ class ClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadClass() {
-		ClassSelector selector = new ClassSelector("org.example.TestClass");
+		var selector = new ClassSelector("org.example.TestClass");
 
-		PreconditionViolationException e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
+		var e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
 
 		assertThat(e).hasMessage("Could not load class with name: org.example.TestClass").hasCauseInstanceOf(
 			ClassNotFoundException.class);

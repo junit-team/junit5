@@ -43,7 +43,10 @@ class ParameterizedTestMethodContextTests {
 	}
 
 	private Method method(String name) {
-		return Arrays.stream(getClass().getDeclaredMethods()).filter(m -> m.getName().equals(name)).findFirst().get();
+		return Arrays.stream(getClass().getDeclaredMethods()) //
+				.filter(m -> m.getName().equals(name)) //
+				.findFirst() //
+				.orElseThrow();
 	}
 
 	// --- VALID ---------------------------------------------------------------

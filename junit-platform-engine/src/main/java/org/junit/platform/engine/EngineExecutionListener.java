@@ -32,6 +32,12 @@ import org.junit.platform.engine.reporting.ReportEntry;
 public interface EngineExecutionListener {
 
 	/**
+	 * No-op implementation of {@code EngineExecutionListener}
+	 */
+	EngineExecutionListener NOOP = new EngineExecutionListener() {
+	};
+
+	/**
 	 * Must be called when a new, dynamic {@link TestDescriptor} has been
 	 * registered.
 	 *
@@ -41,7 +47,8 @@ public interface EngineExecutionListener {
 	 * @param testDescriptor the descriptor of the newly registered test
 	 * or container
 	 */
-	void dynamicTestRegistered(TestDescriptor testDescriptor);
+	default void dynamicTestRegistered(TestDescriptor testDescriptor) {
+	}
 
 	/**
 	 * Must be called when the execution of a leaf or subtree of the test tree
@@ -59,7 +66,8 @@ public interface EngineExecutionListener {
 	 * @param reason a human-readable message describing why the execution
 	 * has been skipped
 	 */
-	void executionSkipped(TestDescriptor testDescriptor, String reason);
+	default void executionSkipped(TestDescriptor testDescriptor, String reason) {
+	}
 
 	/**
 	 * Must be called when the execution of a leaf or subtree of the test tree
@@ -78,7 +86,8 @@ public interface EngineExecutionListener {
 	 *
 	 * @param testDescriptor the descriptor of the started test or container
 	 */
-	void executionStarted(TestDescriptor testDescriptor);
+	default void executionStarted(TestDescriptor testDescriptor) {
+	}
 
 	/**
 	 * Must be called when the execution of a leaf or subtree of the test tree
@@ -106,7 +115,8 @@ public interface EngineExecutionListener {
 	 *
 	 * @see TestExecutionResult
 	 */
-	void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult);
+	default void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+	}
 
 	/**
 	 * Can be called for any {@link TestDescriptor} in order to publish additional
@@ -124,6 +134,7 @@ public interface EngineExecutionListener {
 	 * the reporting entry belongs
 	 * @param entry a {@code ReportEntry} instance to be published
 	 */
-	void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry);
+	default void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
+	}
 
 }

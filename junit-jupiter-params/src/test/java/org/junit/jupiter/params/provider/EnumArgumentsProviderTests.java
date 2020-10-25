@@ -35,21 +35,21 @@ class EnumArgumentsProviderTests {
 
 	@Test
 	void providesAllEnumConstants() {
-		Stream<Object[]> arguments = provideArguments(EnumWithTwoConstants.class);
+		var arguments = provideArguments(EnumWithTwoConstants.class);
 
 		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR });
 	}
 
 	@Test
 	void provideSingleEnumConstant() {
-		Stream<Object[]> arguments = provideArguments(EnumWithTwoConstants.class, "FOO");
+		var arguments = provideArguments(EnumWithTwoConstants.class, "FOO");
 
 		assertThat(arguments).containsExactly(new Object[] { FOO });
 	}
 
 	@Test
 	void provideAllEnumConstantsWithNamingAll() {
-		Stream<Object[]> arguments = provideArguments(EnumWithTwoConstants.class, "FOO", "BAR");
+		var arguments = provideArguments(EnumWithTwoConstants.class, "FOO", "BAR");
 
 		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR });
 	}
@@ -80,7 +80,7 @@ class EnumArgumentsProviderTests {
 		when(extensionContext.getRequiredTestMethod()).thenReturn(
 			TestCase.class.getDeclaredMethod("methodWithCorrectParameter", EnumWithTwoConstants.class));
 
-		Stream<Object[]> arguments = provideArguments(NullEnum.class);
+		var arguments = provideArguments(NullEnum.class);
 
 		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR });
 	}
@@ -125,14 +125,14 @@ class EnumArgumentsProviderTests {
 	}
 
 	private <E extends Enum<E>> Stream<Object[]> provideArguments(Class<E> enumClass, Mode mode, String... names) {
-		EnumSource annotation = mock(EnumSource.class);
+		var annotation = mock(EnumSource.class);
 		when(annotation.value()).thenAnswer(invocation -> enumClass);
 		when(annotation.mode()).thenAnswer(invocation -> mode);
 		when(annotation.names()).thenAnswer(invocation -> names);
 		when(annotation.toString()).thenReturn(String.format("@EnumSource(value=%s.class, mode=%s, names=%s)",
 			enumClass.getSimpleName(), mode, Arrays.toString(names)));
 
-		EnumArgumentsProvider provider = new EnumArgumentsProvider();
+		var provider = new EnumArgumentsProvider();
 		provider.accept(annotation);
 		return provider.provideArguments(extensionContext).map(Arguments::get);
 	}

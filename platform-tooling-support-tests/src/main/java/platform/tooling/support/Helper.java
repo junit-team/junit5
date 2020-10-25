@@ -24,15 +24,11 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPathFactory;
 
 /**
  * @since 1.3
@@ -79,8 +75,8 @@ public class Helper {
 	}
 
 	public static List<String> loadModuleDirectoryNames() {
-		Pattern moduleLinePattern = Pattern.compile("include\\(\"(.+)\"\\)");
-		try (Stream<String> stream = Files.lines(SETTINGS_GRADLE) //
+		var moduleLinePattern = Pattern.compile("include\\(\"(.+)\"\\)");
+		try (var stream = Files.lines(SETTINGS_GRADLE) //
 				.map(moduleLinePattern::matcher) //
 				.filter(Matcher::matches) //
 				.map(matcher -> matcher.group(1)) //
@@ -96,8 +92,8 @@ public class Helper {
 
 	public static Path createJarPath(String module) {
 		var parent = Paths.get("..", module, "build", "libs");
-		Path jar = parent.resolve(module + '-' + version(module) + ".jar");
-		Path shadowJar = parent.resolve(module + '-' + version(module) + "-all.jar");
+		var jar = parent.resolve(module + '-' + version(module) + ".jar");
+		var shadowJar = parent.resolve(module + '-' + version(module) + "-all.jar");
 		return Files.exists(jar) ? jar : shadowJar;
 	}
 
@@ -117,43 +113,15 @@ public class Helper {
 
 	public static Optional<Path> getJavaHome(String version) {
 		// First, try various system sources...
-		List<Supplier<String>> sources = List.of( //
-			() -> System.getProperty("java.home." + version), //
-			() -> System.getProperty("java." + version), //
-			() -> System.getProperty("jdk.home." + version), //
-			() -> System.getProperty("jdk." + version), //
-			() -> System.getenv("JAVA_HOME_" + version), //
-			() -> System.getenv("JAVA_" + version) //
+		var sources = Stream.of( //
+			System.getProperty("java.home." + version), //
+			System.getProperty("java." + version), //
+			System.getProperty("jdk.home." + version), //
+			System.getProperty("jdk." + version), //
+			System.getenv("JAVA_HOME_" + version), //
+			System.getenv("JAVA_" + version) //
 		);
-		var home = sources.stream().map(Supplier::get).filter(Objects::nonNull).findFirst();
-		// If no java home set then inspect Maven Toolchains configuration file...
-		return home.map(h -> Path.of(h)).or(() -> getJdkHomeFromMavenToolchains(version));
-	}
-
-	// https://maven.apache.org/guides/mini/guide-using-toolchains.html
-	static Optional<Path> getJdkHomeFromMavenToolchains(String version) {
-		var mavenToolChains = Path.of(System.getProperty("user.home"), ".m2", "toolchains.xml");
-		if (!Files.isRegularFile(mavenToolChains)) {
-			return Optional.empty();
-		}
-		try {
-			var builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			var document = builder.parse(mavenToolChains.toFile());
-			var xpath = XPathFactory.newInstance().newXPath();
-			var jdkHome = xpath.evaluate("//toolchains" //
-					+ "/toolchain[descendant::type[text()='jdk']]" //
-					+ "/provides[descendant::version[text()='" + version + "']]" //
-					+ "/.." //
-					+ "/configuration/jdkHome",
-				document);
-			if (!jdkHome.isBlank()) {
-				return Optional.of(Path.of(jdkHome));
-			}
-		}
-		catch (Exception e) {
-			// ignore
-		}
-		return Optional.empty();
+		return sources.filter(Objects::nonNull).findFirst().map(Path::of);
 	}
 
 	/** Load, here copy, modular jar files to the given target directory. */
