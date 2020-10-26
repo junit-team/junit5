@@ -1,9 +1,9 @@
 install:
+  - wget https://download.java.net/java/early_access/loom/6/openjdk-16-loom+6-105_linux-x64_bin.tar.gz
+  - tar --extract --file openjdk-16-loom+6-105_linux-x64_bin.tar.gz -C ${HOME}
+  - export JDK16=${HOME}/jdk-16
   - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
   - source ./install-jdk.sh --feature 15
-  - chmod u+x install-jdk.sh
-  - ./install-jdk.sh --url https://download.java.net/java/early_access/loom/6/openjdk-16-loom+6-105_linux-x64_bin.tar.gz --emit-java-home
-  - export JDK16=/home/jitpack/jdk-16
   - echo "JAVA_HOME=${JAVA_HOME}"
   - echo "JDK16=${JDK16}"
   - ./gradlew --version
