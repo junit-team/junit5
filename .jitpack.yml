@@ -1,5 +1,6 @@
 install:
   - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+  - chmod u+x install-jdk.sh
   - export JDK16=$(./install-jdk.sh --url https://download.java.net/java/early_access/loom/6/openjdk-16-loom+6-105_linux-x64_bin.tar.gz --emit-java-home | tail -n 1)
   - source ./install-jdk.sh --feature 15
   - echo "JAVA_HOME=${JAVA_HOME}"
