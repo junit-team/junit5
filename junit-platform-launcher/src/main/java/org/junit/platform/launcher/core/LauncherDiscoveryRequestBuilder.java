@@ -283,10 +283,10 @@ public final class LauncherDiscoveryRequestBuilder {
 		if (discoveryListeners.isEmpty() && serviceLoaderListeners.isEmpty()) {
 			return defaultDiscoveryListener;
 		}
-		if (discoveryListeners.contains(defaultDiscoveryListener) && serviceLoaderListeners.isEmpty()) {
-			return LauncherDiscoveryListeners.composite(discoveryListeners);
-		}
-		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(discoveryListeners);
+
+		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(
+			discoveryListeners.size() + serviceLoaderListeners.size() + 1);
+		allDiscoveryListeners.addAll(discoveryListeners);
 		allDiscoveryListeners.addAll(serviceLoaderListeners);
 		if (!allDiscoveryListeners.contains(defaultDiscoveryListener)) {
 			allDiscoveryListeners.add(defaultDiscoveryListener);
