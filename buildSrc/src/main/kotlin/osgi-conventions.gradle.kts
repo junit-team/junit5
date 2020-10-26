@@ -52,7 +52,7 @@ tasks.withType<Jar>().matching {
 
 			# Instruct the APIGuardianAnnotations how to operate.
 			# See https://bnd.bndtools.org/instructions/export-apiguardian.html
-			-export-apiguardian: *;version=${project.version}
+			-export-apiguardian: *;version=${'$'}{versionmask;===;${'$'}{version_cleanup;${'$'}{task.archiveVersion}}}
 		""")
 
 	// Add the convention to the jar task
