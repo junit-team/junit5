@@ -21,9 +21,7 @@ developers have plenty of time to migrate to JUnit Jupiter on their own schedule
 
 Just make sure that the `junit-vintage-engine` artifact is in your test runtime path. In
 that case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
-launcher. Limited parallel execution is supported by setting the
-`junit.jupiter.execution.parallel.enabled` configuration parameter to `true`. In addition, the
-JUnit concurrency settings in `junit.jupiter.execution.parallel.config.*` are also supported.
+launcher. 
 
 See the example projects in the {junit5-samples-repo}[`junit5-samples`] repository to
 find out how this is done with Gradle and Maven.
@@ -126,3 +124,19 @@ include::{testDir}/example/IgnoredTestsDemo.java[tags=user_guide]
 
 WARNING: JUnit 4 `@Ignore` support in JUnit Jupiter is currently an _experimental_
 feature. Consult the table in <<api-evolution-experimental-apis>> for detail.
+
+[[migrating-from-junit4-parallel-support]]
+=== Limited Parallel Execution Support
+
+As of 5.8, limited parallel execution is supported by setting the
+`junit.vintage.execution.parallel.enabled` configuration parameter to `true`. In addition, the
+following properties with the `junit.vintage.execution.parallel.config.` prefix are also supported.
+
+.Parallel Configuration Properties
+|===
+| Parameter Name | Potential Values | Description |
+| `strategy` | `fixed`, `dynamic` (default), or `custom` | If `fixed`, set an explicit number of concurrent tests to run based on the `fixed.parallelism` property. If `dynamic` or not specified, use the number of processor cores multiplied by `dynamic.factor`. If `custom` provide an implementation of `ParallelExecutionConfigurationStrategy` in `custom.class` to configure the parallelism. |
+| `fixed.parallelism` | positive integer | The maximum number of concurrent tests to run. Only applicable if `strategy=fixed`. |
+| `dynamic.factor` | positive floating point number (can be less than one) | Set the number of concurrent tests to be a multiple of the number of processor cores. Only applicable if `strategy=dynamic`. |
+| `custom.class` | Fully-qualified class name that implements `ParallelExecutionConfigurationStrategy`. | Provide a custom approach to configuring parallelism. The class must implement `org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy`. |
+|===

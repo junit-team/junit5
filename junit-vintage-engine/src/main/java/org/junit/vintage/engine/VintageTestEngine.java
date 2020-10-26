@@ -14,16 +14,21 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.function.Try;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -48,7 +53,7 @@ import org.junit.vintage.engine.execution.RunnerExecutor;
 @API(status = INTERNAL, since = "4.12")
 public final class VintageTestEngine implements TestEngine {
 
-	private static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel";
+	private static final String PARALLEL_CONFIG_PREFIX = "junit.vintage.execution.parallel";
 	private static final String PARALLEL_ENABLED_CONFIG = PARALLEL_CONFIG_PREFIX + ".enabled";
 	private static final String PARALLEL_CONFIG = PARALLEL_CONFIG_PREFIX + ".config.";
 
@@ -87,25 +92,26 @@ public final class VintageTestEngine implements TestEngine {
 		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener,
 			engineDescriptor.getTestSourceProvider());
 
-		final ConfigurationParameters configurationParameters = request.getConfigurationParameters();
-		final boolean parallelExecutionEnabled = configurationParameters.getBoolean(PARALLEL_ENABLED_CONFIG).orElse(
-			false);
-
-		try (CloseableExecutor executor = parallelExecutionEnabled ? new ParallelExecutor(configurationParameters)
-				: new SerialExecutor()) {
+		try (CloseableExecutor executor = createExecutor(request)) {
 			executeAllChildren(executor, runnerExecutor, engineDescriptor);
 		}
-		catch (final InterruptedException e) {
+		catch (InterruptedException e) {
 			throw new JUnitException("Error executing tests for engine " + getId() + ": " + e.getMessage(), e);
 		}
 
 		engineExecutionListener.executionFinished(engineDescriptor, successful());
 	}
 
-	private void executeAllChildren(final Executor executor, RunnerExecutor runnerExecutor,
-			TestDescriptor engineDescriptor) throws InterruptedException {
-		final Collection<? extends TestDescriptor> children = engineDescriptor.getChildren();
-		final CountDownLatch latch = new CountDownLatch(children.size());
+	protected CloseableExecutor createExecutor(ExecutionRequest request) {
+		ConfigurationParameters configurationParameters = request.getConfigurationParameters();
+		boolean parallelExecutionEnabled = configurationParameters.getBoolean(PARALLEL_ENABLED_CONFIG).orElse(false);
+		return parallelExecutionEnabled ? new ParallelExecutor(configurationParameters) : new SerialExecutor();
+	}
+
+	private void executeAllChildren(Executor executor, RunnerExecutor runnerExecutor, TestDescriptor engineDescriptor)
+			throws InterruptedException {
+		Collection<? extends TestDescriptor> children = engineDescriptor.getChildren();
+		CountDownLatch latch = new CountDownLatch(children.size());
 		// @formatter:off
 		children
 				.stream()
@@ -124,7 +130,7 @@ public final class VintageTestEngine implements TestEngine {
 	 */
 	@API(status = INTERNAL, since = "5.8")
 	protected interface CloseableExecutor extends Executor, AutoCloseable {
-		default public void close() throws JUnitException {
+		default public void close() {
 		};
 	}
 
@@ -135,7 +141,7 @@ public final class VintageTestEngine implements TestEngine {
 	 */
 	@API(status = INTERNAL, since = "5.8")
 	protected class SerialExecutor implements CloseableExecutor {
-		public void execute(final Runnable command) {
+		public void execute(Runnable command) {
 			command.run();
 		}
 
@@ -151,40 +157,48 @@ public final class VintageTestEngine implements TestEngine {
 	@API(status = INTERNAL, since = "5.8")
 	protected class ParallelExecutor implements CloseableExecutor {
 
-		private final ForkJoinPool pool;
+		private final ExecutorService executorService;
 
 		/**
 		 * @param parameters test execution configuration
 		 */
-		public ParallelExecutor(final ConfigurationParameters parameters) {
-			final ConfigurationParameters prefixedParameters = new PrefixedConfigurationParameters(parameters,
+		public ParallelExecutor(ConfigurationParameters parameters) {
+			ConfigurationParameters prefixedParameters = new PrefixedConfigurationParameters(parameters,
 				PARALLEL_CONFIG);
-			final String strategyName = prefixedParameters.get("strategy").orElse("dynamic");
-			final ParallelExecutionConfigurationStrategy executionStrategy = DefaultParallelExecutionConfigurationStrategy.valueOf(
+			String strategyName = prefixedParameters.get("strategy").orElse("dynamic");
+			ParallelExecutionConfigurationStrategy executionStrategy = DefaultParallelExecutionConfigurationStrategy.valueOf(
 				strategyName.toUpperCase());
-			final ParallelExecutionConfiguration executionConfiguration = executionStrategy.createConfiguration(
+			ParallelExecutionConfiguration executionConfiguration = executionStrategy.createConfiguration(
 				prefixedParameters);
-			pool = new ForkJoinPool(executionConfiguration.getParallelism());
+			executorService = createExecutorService(executionConfiguration);
 		}
 
-		public void execute(final Runnable command) {
-			getPool().execute(command);
+		public void execute(Runnable command) {
+			executorService.execute(command);
 		}
 
-		public void close() throws JUnitException {
-			final ExecutorService executor = getPool();
-			executor.shutdown();
-			try {
-				executor.awaitTermination(1, TimeUnit.MINUTES);
-			}
-			catch (final InterruptedException ie) {
-				throw new JUnitException("Interrupted while waiting for forked tests to complete; " + ie.getMessage(),
-					ie);
-			}
+		public void close() {
+			executorService.shutdown();
 		}
 
-		protected ForkJoinPool getPool() {
-			return pool;
+		/**
+		 * Create an executor service based on the parallel configuration properties. This emulates the logic in {@link org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService ForkJoinPoolHierarchicalTestExecutorService}.
+		 */
+		protected ExecutorService createExecutorService(ParallelExecutionConfiguration configuration) {
+			return Try.call(() -> {
+				// Try to use constructor available in Java >= 9
+				Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE,
+					ForkJoinWorkerThreadFactory.class, UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE,
+					Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
+				return constructor.newInstance(configuration.getParallelism(),
+					ForkJoinPool.defaultForkJoinWorkerThreadFactory, null, false, configuration.getCorePoolSize(),
+					configuration.getMaxPoolSize(), configuration.getMinimumRunnable(), null,
+					configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
+			}).orElseTry(() -> {
+				// Fallback for Java 8
+				return new ForkJoinPool(configuration.getParallelism(), ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+					null, false);
+			}).getOrThrow(cause -> new JUnitException("Failed to create ForkJoinPool", cause));
 		}
 
 	}

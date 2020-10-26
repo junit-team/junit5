@@ -21,25 +21,21 @@ public class ConcurrencyTests {
 
 	public static class A {
 		@Test
-		public final void test1() throws InterruptedException {
-			Thread.sleep(5);
+		public final void test1() {
 		}
 
 		@Test
-		public final void test2() throws InterruptedException {
-			Thread.sleep(5);
+		public final void test2() {
 		}
 	}
 
 	public static class B {
 		@Test
-		public final void test1() throws InterruptedException {
-			Thread.sleep(5);
+		public final void test1() {
 		}
 
 		@Test
-		public final void test2() throws InterruptedException {
-			Thread.sleep(5);
+		public final void test2() {
 		}
 	}
 

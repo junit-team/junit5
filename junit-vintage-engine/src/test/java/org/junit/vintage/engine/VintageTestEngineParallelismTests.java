@@ -37,10 +37,10 @@ import org.junit.vintage.engine.samples.junit4.ConcurrencyTests.B;
  */
 class VintageTestEngineParallelismTests {
 
-	private static final String PARALLELISM = "junit.jupiter.execution.parallel.config.fixed.parallelism";
-	private static final String PARALLEL_STRATEGY = "junit.jupiter.execution.parallel.config.strategy";
-	private static final String DEFAULT_PARALLEL_MODE = "junit.jupiter.execution.parallel.mode.default";
-	private static final String PARALLEL_EXECUTION_ENABLED = "junit.jupiter.execution.parallel.enabled";
+	private static final String PARALLELISM = "junit.vintage.execution.parallel.config.fixed.parallelism";
+	private static final String PARALLEL_STRATEGY = "junit.vintage.execution.parallel.config.strategy";
+	private static final String DEFAULT_PARALLEL_MODE = "junit.vintage.execution.parallel.mode.default";
+	private static final String PARALLEL_EXECUTION_ENABLED = "junit.vintage.execution.parallel.enabled";
 
 	/**
 	 * Verify that if parallel execution is enabled, tests from separate classes will run concurrently.
@@ -48,15 +48,15 @@ class VintageTestEngineParallelismTests {
 	@Test
 	void verifyTestsRunConcurrently() {
 		// given
-		final LauncherDiscoveryRequest discoveryRequest = LauncherDiscoveryRequestBuilder.request().selectors(
+		LauncherDiscoveryRequest discoveryRequest = LauncherDiscoveryRequestBuilder.request().selectors(
 			selectClass(A.class), selectClass(B.class)).configurationParameter(PARALLEL_EXECUTION_ENABLED,
 				"true").configurationParameter(DEFAULT_PARALLEL_MODE, "concurrent").configurationParameter(
 					PARALLEL_STRATEGY, "fixed").configurationParameter(PARALLELISM, "2").build();
-		final TestEngine engine = new VintageTestEngine();
-		final TestDescriptor descriptor = engine.discover(discoveryRequest, UniqueId.forEngine(engine.getId()));
+		TestEngine engine = new VintageTestEngine();
+		TestDescriptor descriptor = engine.discover(discoveryRequest, UniqueId.forEngine(engine.getId()));
 
-		final CountingListener listener = new CountingListener();
-		final ExecutionRequest executionRequest = new ExecutionRequest(descriptor, listener,
+		CountingListener listener = new CountingListener();
+		ExecutionRequest executionRequest = new ExecutionRequest(descriptor, listener,
 			discoveryRequest.getConfigurationParameters());
 
 		// when
@@ -73,14 +73,14 @@ class VintageTestEngineParallelismTests {
 	@Test
 	void verifyTestsRunSequentially() {
 		// given
-		final LauncherDiscoveryRequest discoveryRequest = LauncherDiscoveryRequestBuilder.request().selectors(
+		LauncherDiscoveryRequest discoveryRequest = LauncherDiscoveryRequestBuilder.request().selectors(
 			selectClass(A.class), selectClass(B.class)).configurationParameter(PARALLEL_EXECUTION_ENABLED,
 				"false").build();
-		final TestEngine engine = new VintageTestEngine();
-		final TestDescriptor descriptor = engine.discover(discoveryRequest, UniqueId.forEngine(engine.getId()));
+		TestEngine engine = new VintageTestEngine();
+		TestDescriptor descriptor = engine.discover(discoveryRequest, UniqueId.forEngine(engine.getId()));
 
-		final CountingListener listener = new CountingListener();
-		final ExecutionRequest executionRequest = new ExecutionRequest(descriptor, listener,
+		CountingListener listener = new CountingListener();
+		ExecutionRequest executionRequest = new ExecutionRequest(descriptor, listener,
 			discoveryRequest.getConfigurationParameters());
 
 		// when
@@ -119,7 +119,7 @@ class VintageTestEngineParallelismTests {
 
 		public void executionStarted(final TestDescriptor testDescriptor) {
 			synchronized (this) {
-				final String displayName = testDescriptor.getDisplayName();
+				String displayName = testDescriptor.getDisplayName();
 				if (testDescriptor.isTest()) {
 					testAdder.increment();
 					testSummary.accept(testAdder.intValue());
@@ -134,7 +134,7 @@ class VintageTestEngineParallelismTests {
 		public void executionFinished(final TestDescriptor testDescriptor,
 				final TestExecutionResult testExecutionResult) {
 			synchronized (this) {
-				final String displayName = testDescriptor.getDisplayName();
+				String displayName = testDescriptor.getDisplayName();
 				assertEquals(Status.SUCCESSFUL, testExecutionResult.getStatus());
 				if (testDescriptor.isTest()) {
 					testAdder.decrement();
