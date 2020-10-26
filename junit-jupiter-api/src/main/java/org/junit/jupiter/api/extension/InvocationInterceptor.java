@@ -119,7 +119,9 @@ public interface InvocationInterceptor extends Extension {
 	}
 
 	/**
-	 * Intercept the invocation of a {@link TestFactory @TestFactory} method.
+	 * Intercept the invocation of a {@link TestFactory @TestFactory} method,
+	 * such as a {@link org.junit.jupiter.api.RepeatedTest @RepeatedTest} or
+	 * {@code @ParameterizedTest} method.
 	 *
 	 * @param invocation the invocation that is being intercepted; never
 	 * {@code null}
