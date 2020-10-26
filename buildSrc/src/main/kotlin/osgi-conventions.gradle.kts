@@ -18,6 +18,11 @@ tasks.withType<Jar>().matching {
 	// We've generalized these so that they are widely applicable limiting
 	// module configurations to special cases.
 	btc.setBnd("""
+			# Set the Bundle-SymbolicName to the archiveBaseName.
+			# We don't use the archiveClassifier which Bnd will use
+			# in the default Bundle-SymbolicName value.
+			Bundle-SymbolicName: ${'$'}{task.archiveBaseName}
+
 			# These are the general rules for package imports.
 			Import-Package: \
 				!org.apiguardian.api,\
