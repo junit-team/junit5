@@ -23,6 +23,9 @@ tasks.withType<Jar>().matching {
 			# in the default Bundle-SymbolicName value.
 			Bundle-SymbolicName: ${'$'}{task.archiveBaseName}
 
+			# Set the Bundle-Name from the project description
+			Bundle-Name: ${'$'}{project.description}
+
 			# These are the general rules for package imports.
 			Import-Package: \
 				!org.apiguardian.api,\
@@ -105,13 +108,4 @@ val verifyOSGi by tasks.registering(Resolve::class) {
 
 tasks.check {
 	dependsOn(verifyOSGi)
-}
-
-// The ${project.description}, for some odd reason, is only available
-// after evaluation.
-afterEvaluate {
-	tasks.withType<Jar>().configureEach {
-		convention.findPlugin(BundleTaskConvention::class.java)
-				?.bnd("Bundle-Name: ${project.description}")
-	}
 }
