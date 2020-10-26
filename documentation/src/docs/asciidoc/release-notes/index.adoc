@@ -16,6 +16,8 @@ authors as well as build tool and IDE vendors.
 
 include::{includedir}/link-attributes.adoc[]
 
+include::{basedir}/release-notes-5.6.3.adoc[]
+
 include::{basedir}/release-notes-5.6.2.adoc[]
 
 include::{basedir}/release-notes-5.6.1.adoc[]

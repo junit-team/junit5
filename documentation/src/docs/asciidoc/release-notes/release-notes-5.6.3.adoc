@@ -1,0 +1,30 @@
+[[release-notes-5.6.3]]
+== 5.6.3
+
+*Date of Release:* October 26, 2020
+
+*Scope:* Bug fixes since 5.6.2
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/53?closed=1+[5.6.3] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.6.3-junit-platform]]
+=== JUnit Platform
+
+No changes.
+
+
+[[release-notes-5.6.3-junit-jupiter]]
+=== JUnit Jupiter
+
+No changes.
+
+
+[[release-notes-5.6.3-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
