@@ -1,5 +1,8 @@
 install:
   - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
   - source ./install-jdk.sh --url https://download.java.net/java/early_access/loom/6/openjdk-16-loom+6-105_linux-x64_bin.tar.gz
+  - JDK16=${JAVA_HOME}
+  - source ./install-jdk.sh --feature 15
+  - org.gradle.java.installations.fromEnv=JDK16
   - ./gradlew --version
   - ./gradlew publishToMavenLocal -x test
