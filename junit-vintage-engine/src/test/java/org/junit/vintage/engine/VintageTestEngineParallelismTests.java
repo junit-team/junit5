@@ -14,6 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 import java.util.IntSummaryStatistics;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.LongAdder;
 
 import org.junit.jupiter.api.Test;
@@ -55,7 +59,7 @@ class VintageTestEngineParallelismTests {
 		TestEngine engine = new VintageTestEngine();
 		TestDescriptor descriptor = engine.discover(discoveryRequest, UniqueId.forEngine(engine.getId()));
 
-		CountingListener listener = new CountingListener();
+		CountingListener listener = new CountingListener(2);
 		ExecutionRequest executionRequest = new ExecutionRequest(descriptor, listener,
 			discoveryRequest.getConfigurationParameters());
 
@@ -79,7 +83,7 @@ class VintageTestEngineParallelismTests {
 		TestEngine engine = new VintageTestEngine();
 		TestDescriptor descriptor = engine.discover(discoveryRequest, UniqueId.forEngine(engine.getId()));
 
-		CountingListener listener = new CountingListener();
+		CountingListener listener = new CountingListener(1);
 		ExecutionRequest executionRequest = new ExecutionRequest(descriptor, listener,
 			discoveryRequest.getConfigurationParameters());
 
@@ -102,6 +106,14 @@ class VintageTestEngineParallelismTests {
 		private final IntSummaryStatistics testSummary = new IntSummaryStatistics();
 		private final LongAdder testAdder = new LongAdder();
 		private final LongAdder classAdder = new LongAdder();
+		private final CyclicBarrier barrier;
+
+		/**
+		 * @param methodConcurrency the number of test methods that may execute at the same time
+		 */
+		public CountingListener(int methodConcurrency) {
+			this.barrier = new CyclicBarrier(methodConcurrency);
+		}
 
 		/**
 		 * @return the largest number of tests that ran at the same time.
@@ -118,31 +130,58 @@ class VintageTestEngineParallelismTests {
 		}
 
 		public void executionStarted(final TestDescriptor testDescriptor) {
-			synchronized (this) {
-				String displayName = testDescriptor.getDisplayName();
-				if (testDescriptor.isTest()) {
-					testAdder.increment();
-					testSummary.accept(testAdder.intValue());
-				}
-				else if (displayName.equals("A") || displayName.equals("B")) {
-					classAdder.increment();
-					classSummary.accept(classAdder.intValue());
-				}
+			String displayName = testDescriptor.getDisplayName();
+			if (testDescriptor.isTest()) {
+				incrementTests();
+			}
+			else if (displayName.equals("A") || displayName.equals("B")) {
+				incrementClasses();
 			}
 		}
 
 		public void executionFinished(final TestDescriptor testDescriptor,
 				final TestExecutionResult testExecutionResult) {
-			synchronized (this) {
-				String displayName = testDescriptor.getDisplayName();
-				assertEquals(Status.SUCCESSFUL, testExecutionResult.getStatus());
-				if (testDescriptor.isTest()) {
+			String displayName = testDescriptor.getDisplayName();
+			assertEquals(Status.SUCCESSFUL, testExecutionResult.getStatus());
+			if (testDescriptor.isTest()) {
+				decrementTests();
+			}
+			else if (displayName.equals("A") || displayName.equals("B")) {
+				decrementClasses();
+			}
+		}
+
+		protected void incrementTests() {
+			synchronized (testSummary) {
+				testAdder.increment();
+				testSummary.accept(testAdder.intValue());
+			}
+		}
+
+		protected void decrementTests() {
+			try {
+				barrier.await(100, TimeUnit.MILLISECONDS);
+				synchronized (testSummary) {
 					testAdder.decrement();
 				}
-				else if (displayName.equals("A") || displayName.equals("B")) {
-					classAdder.decrement();
-				}
+			}
+			catch (InterruptedException | BrokenBarrierException | TimeoutException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+		}
+
+		protected void incrementClasses() {
+			synchronized (classSummary) {
+				classAdder.increment();
+				classSummary.accept(classAdder.intValue());
+			}
+		}
+
+		protected void decrementClasses() {
+			synchronized (classSummary) {
+				classAdder.decrement();
 			}
 		}
 	}
+
 }
