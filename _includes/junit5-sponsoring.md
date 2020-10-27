@@ -140,3 +140,4 @@ Your donations will help to make that a reality!
 - Atsushi Komiya
 - Peter Schuster
 - André Camilo
+- Philip Riecks (rieckpil)
