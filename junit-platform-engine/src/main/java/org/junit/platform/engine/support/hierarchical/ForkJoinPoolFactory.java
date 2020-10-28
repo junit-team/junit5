@@ -16,7 +16,6 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
@@ -31,9 +30,9 @@ import org.junit.platform.commons.function.Try;
  * @see ParallelExecutionConfigurationStrategy
  */
 @API(status = Status.INTERNAL, since = "5.8")
-public class ForkJoinPoolFactory implements Function<ParallelExecutionConfiguration, ForkJoinPool> {
+public class ForkJoinPoolFactory {
 
-	public ForkJoinPool apply(ParallelExecutionConfiguration configuration) {
+	public static ForkJoinPool create(ParallelExecutionConfiguration configuration) {
 		ForkJoinWorkerThreadFactory threadFactory = new WorkerThreadFactory();
 		return Try.call(() -> {
 			// Try to use constructor available in Java >= 9

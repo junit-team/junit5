@@ -168,7 +168,7 @@ public final class VintageTestEngine implements TestEngine {
 				strategyName.toUpperCase());
 			ParallelExecutionConfiguration executionConfiguration = executionStrategy.createConfiguration(
 				prefixedParameters);
-			executorService = new ForkJoinPoolFactory().apply(executionConfiguration);
+			executorService = ForkJoinPoolFactory.create(executionConfiguration);
 		}
 
 		public void execute(Runnable command) {
@@ -185,6 +185,7 @@ public final class VintageTestEngine implements TestEngine {
 			}
 			catch (InterruptedException e) {
 				logger.warn(e, () -> "Interrupted while waiting for tests to complete.");
+				Thread.currentThread().interrupt();
 			}
 		}
 

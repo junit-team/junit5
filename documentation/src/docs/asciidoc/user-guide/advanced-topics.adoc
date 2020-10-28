@@ -19,7 +19,7 @@ implementations out of the box: `dynamic` and `fixed`. Alternatively, you may im
 `custom` strategy.
 
 To select a strategy, set the `junit.<engine>.execution.parallel.config.strategy`
-configuration parameter to one of the following options. Replace "engine" with either
+configuration parameter to one of the following options. Replace `<engine>` with either
 `jupiter` or `vintage`.
 
 `dynamic`::
@@ -41,10 +41,10 @@ strategy with a factor of `1`. Consequently, the desired parallelism will be equ
 number of available processors/cores.
 
 .Parallelism does not imply maximum number of concurrent threads
-NOTE: JUnit Jupiter does not guarantee that the number of concurrently executing tests
-will not exceed the configured parallelism. For example, when using one of the
-synchronization mechanisms described in the
-<<writing-tests-parallel-execution-synchronization,Jupiter Synchronization>>
+NOTE: JUnit does not guarantee that the number of concurrently executing tests
+will not exceed the configured parallelism. For example, when using one of
+Jupiter's synchronization mechanisms described in the
+<<writing-tests-parallel-execution-synchronization, Synchronization>>
 section, the `ForkJoinPool` that is used behind the scenes may spawn additional threads to
 ensure execution continues with sufficient parallelism. Thus, if you require such
 guarantees in a test class, please use your own means of controlling concurrency.
