@@ -1971,41 +1971,10 @@ not explicitly set, the value for `junit.jupiter.execution.parallel.mode.default
 used instead.
 
 [[writing-tests-parallel-execution-config]]
-==== Configuration
-
-Properties such as the desired parallelism and the maximum pool size can be configured
-using a `{ParallelExecutionConfigurationStrategy}`. The JUnit Platform provides two
-implementations out of the box: `dynamic` and `fixed`. Alternatively, you may implement a
-`custom` strategy.
-
-To select a strategy, set the `junit.jupiter.execution.parallel.config.strategy`
-configuration parameter to one of the following options.
-
-`dynamic`::
-  Computes the desired parallelism based on the number of available processors/cores
-  multiplied by the `junit.jupiter.execution.parallel.config.dynamic.factor`
-  configuration parameter (defaults to `1`).
-
-`fixed`::
-  Uses the mandatory `junit.jupiter.execution.parallel.config.fixed.parallelism`
-  configuration parameter as the desired parallelism.
-
-`custom`::
-  Allows you to specify a custom `{ParallelExecutionConfigurationStrategy}`
-  implementation via the mandatory `junit.jupiter.execution.parallel.config.custom.class`
-  configuration parameter to determine the desired configuration.
-
-If no configuration strategy is set, JUnit Jupiter uses the `dynamic` configuration
-strategy with a factor of `1`. Consequently, the desired parallelism will be equal to the
-number of available processors/cores.
-
-.Parallelism does not imply maximum number of concurrent threads
-NOTE: JUnit Jupiter does not guarantee that the number of concurrently executing tests
-will not exceed the configured parallelism. For example, when using one of the
-synchronization mechanisms described in the next section, the `ForkJoinPool` that is used
-behind the scenes may spawn additional threads to ensure execution continues with
-sufficient parallelism. Thus, if you require such guarantees in a test class, please use
-your own means of controlling concurrency.
+See
+<<advanced-topics-parallel-execution-config,Parallel Execution Configuration>>
+for details on customizing the number of threads used. Be sure to specify the "jupiter"
+engine in the property names (i.e. prefix with `junit.jupiter`).
 
 [[writing-tests-parallel-execution-synchronization]]
 ==== Synchronization

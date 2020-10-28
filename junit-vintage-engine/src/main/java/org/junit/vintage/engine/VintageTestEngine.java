@@ -14,21 +14,18 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.function.Try;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -38,6 +35,7 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.config.PrefixedConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolFactory;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfiguration;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
@@ -170,7 +168,7 @@ public final class VintageTestEngine implements TestEngine {
 				strategyName.toUpperCase());
 			ParallelExecutionConfiguration executionConfiguration = executionStrategy.createConfiguration(
 				prefixedParameters);
-			executorService = createExecutorService(executionConfiguration);
+			executorService = new ForkJoinPoolFactory().apply(executionConfiguration);
 		}
 
 		public void execute(Runnable command) {
@@ -179,26 +177,15 @@ public final class VintageTestEngine implements TestEngine {
 
 		public void close() {
 			executorService.shutdown();
-		}
-
-		/**
-		 * Create an executor service based on the parallel configuration properties. This emulates the logic in {@link org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService ForkJoinPoolHierarchicalTestExecutorService}.
-		 */
-		protected ExecutorService createExecutorService(ParallelExecutionConfiguration configuration) {
-			return Try.call(() -> {
-				// Try to use constructor available in Java >= 9
-				Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE,
-					ForkJoinWorkerThreadFactory.class, UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE,
-					Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
-				return constructor.newInstance(configuration.getParallelism(),
-					ForkJoinPool.defaultForkJoinWorkerThreadFactory, null, false, configuration.getCorePoolSize(),
-					configuration.getMaxPoolSize(), configuration.getMinimumRunnable(), null,
-					configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
-			}).orElseTry(() -> {
-				// Fallback for Java 8
-				return new ForkJoinPool(configuration.getParallelism(), ForkJoinPool.defaultForkJoinWorkerThreadFactory,
-					null, false);
-			}).getOrThrow(cause -> new JUnitException("Failed to create ForkJoinPool", cause));
+			Logger logger = LoggerFactory.getLogger(getClass());
+			try {
+				if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+					logger.warn(() -> "Timed out while waiting for tests to complete.");
+				}
+			}
+			catch (InterruptedException e) {
+				logger.warn(e, () -> "Interrupted while waiting for tests to complete.");
+			}
 		}
 
 	}

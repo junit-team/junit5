@@ -130,23 +130,21 @@ class VintageTestEngineParallelismTests {
 		}
 
 		public void executionStarted(final TestDescriptor testDescriptor) {
-			String displayName = testDescriptor.getDisplayName();
 			if (testDescriptor.isTest()) {
 				incrementTests();
 			}
-			else if (displayName.equals("A") || displayName.equals("B")) {
+			else if (!testDescriptor.isRoot()) {
 				incrementClasses();
 			}
 		}
 
 		public void executionFinished(final TestDescriptor testDescriptor,
 				final TestExecutionResult testExecutionResult) {
-			String displayName = testDescriptor.getDisplayName();
 			assertEquals(Status.SUCCESSFUL, testExecutionResult.getStatus());
 			if (testDescriptor.isTest()) {
 				decrementTests();
 			}
-			else if (displayName.equals("A") || displayName.equals("B")) {
+			else if (!testDescriptor.isRoot()) {
 				decrementClasses();
 			}
 		}

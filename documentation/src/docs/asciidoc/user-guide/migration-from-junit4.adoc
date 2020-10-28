@@ -129,14 +129,7 @@ feature. Consult the table in <<api-evolution-experimental-apis>> for detail.
 === Limited Parallel Execution Support
 
 As of 5.8, limited parallel execution is supported by setting the
-`junit.vintage.execution.parallel.enabled` configuration parameter to `true`. In addition, the
-following properties with the `junit.vintage.execution.parallel.config.` prefix are also supported.
-
-.Parallel Configuration Properties
-|===
-| Parameter Name | Potential Values | Description |
-| `strategy` | `fixed`, `dynamic` (default), or `custom` | If `fixed`, set an explicit number of concurrent tests to run based on the `fixed.parallelism` property. If `dynamic` or not specified, use the number of processor cores multiplied by `dynamic.factor`. If `custom` provide an implementation of `ParallelExecutionConfigurationStrategy` in `custom.class` to configure the parallelism. |
-| `fixed.parallelism` | positive integer | The maximum number of concurrent tests to run. Only applicable if `strategy=fixed`. |
-| `dynamic.factor` | positive floating point number (can be less than one) | Set the number of concurrent tests to be a multiple of the number of processor cores. Only applicable if `strategy=dynamic`. |
-| `custom.class` | Fully-qualified class name that implements `ParallelExecutionConfigurationStrategy`. | Provide a custom approach to configuring parallelism. The class must implement `org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy`. |
-|===
+`junit.vintage.execution.parallel.enabled` configuration parameter to `true`. See
+<<advanced-topics-parallel-execution-config,Parallel Execution Configuration>>
+for details on customizing the number of threads used. Be sure to specify the "vintage"
+engine in the property names (i.e. prefix with `junit.vintage`).

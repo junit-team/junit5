@@ -14,23 +14,16 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.lang.reflect.Constructor;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.ForkJoinTask;
-import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveAction;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.function.Try;
+import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -68,7 +61,20 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	 */
 	@API(status = EXPERIMENTAL, since = "1.7")
 	public ForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
-		forkJoinPool = createForkJoinPool(configuration);
+		this(new ForkJoinPoolFactory().apply(configuration));
+	}
+
+	/**
+	 * Create a new {@link ForkJoinPoolHierarchicalTestExecutorService}
+	 * based on the supplied {@link ForkJoinPool}.
+	 *
+	 * @since 5.8
+	 * @param forkJoinPool the backing pool which also determines the
+	 *                     parallelism
+	 */
+	@API(status = Status.INTERNAL, since = "5.8")
+	protected ForkJoinPoolHierarchicalTestExecutorService(ForkJoinPool forkJoinPool) {
+		this.forkJoinPool = forkJoinPool;
 		parallelism = forkJoinPool.getParallelism();
 		LoggerFactory.getLogger(getClass()).config(() -> "Using ForkJoinPool with parallelism of " + parallelism);
 	}
@@ -77,22 +83,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.getStrategy(
 			configurationParameters);
 		return strategy.createConfiguration(configurationParameters);
-	}
-
-	private ForkJoinPool createForkJoinPool(ParallelExecutionConfiguration configuration) {
-		ForkJoinWorkerThreadFactory threadFactory = new WorkerThreadFactory();
-		return Try.call(() -> {
-			// Try to use constructor available in Java >= 9
-			Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE,
-				ForkJoinWorkerThreadFactory.class, UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE,
-				Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
-			return constructor.newInstance(configuration.getParallelism(), threadFactory, null, false,
-				configuration.getCorePoolSize(), configuration.getMaxPoolSize(), configuration.getMinimumRunnable(),
-				null, configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
-		}).orElseTry(() -> {
-			// Fallback for Java 8
-			return new ForkJoinPool(configuration.getParallelism(), threadFactory, null, false);
-		}).getOrThrow(cause -> new JUnitException("Failed to create ForkJoinPool", cause));
 	}
 
 	@Override
@@ -189,24 +179,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			}
 		}
 
-	}
-
-	static class WorkerThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
-
-		private final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-
-		@Override
-		public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
-			return new WorkerThread(pool, contextClassLoader);
-		}
-	}
-
-	static class WorkerThread extends ForkJoinWorkerThread {
-
-		WorkerThread(ForkJoinPool pool, ClassLoader contextClassLoader) {
-			super(pool);
-			setContextClassLoader(contextClassLoader);
-		}
 	}
 
 }
