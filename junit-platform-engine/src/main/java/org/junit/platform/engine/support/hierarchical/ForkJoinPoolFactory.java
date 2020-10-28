@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
 
@@ -28,6 +30,7 @@ import org.junit.platform.commons.function.Try;
  * @since 5.8
  * @see ParallelExecutionConfigurationStrategy
  */
+@API(status = Status.INTERNAL, since = "5.8")
 public class ForkJoinPoolFactory implements Function<ParallelExecutionConfiguration, ForkJoinPool> {
 
 	public ForkJoinPool apply(ParallelExecutionConfiguration configuration) {
