@@ -25,7 +25,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Custom `LauncherDiscoveryListener` implementations can now be registered via Java’s
+`ServiceLoader` mechanism.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]

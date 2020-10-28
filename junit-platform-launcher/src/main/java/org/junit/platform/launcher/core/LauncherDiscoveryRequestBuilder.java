@@ -275,10 +275,12 @@ public final class LauncherDiscoveryRequestBuilder {
 				.orElseGet(LauncherDiscoveryListeners::abortOnFailure);
 
 		List<LauncherDiscoveryListener> serviceLoaderListeners = configurationParameters.getBoolean(
-			DISCOVERY_LISTENERS_AUTODETECTION_ENABLED_PROPERTY_NAME).filter(p -> p).map(
-				p -> StreamSupport.stream(
-					new ServiceLoaderLauncherDiscoveryListenerRegistry().loadListeners().spliterator(), false).collect(
-						Collectors.<LauncherDiscoveryListener> toList())).orElse(Collections.emptyList());
+			DISCOVERY_LISTENERS_AUTODETECTION_ENABLED_PROPERTY_NAME) //
+				.filter(p -> p) //
+				.map(p -> StreamSupport.stream(
+					new ServiceLoaderLauncherDiscoveryListenerRegistry().loadListeners().spliterator(), false) //
+						.collect(Collectors.<LauncherDiscoveryListener> toList())) //
+				.orElse(Collections.emptyList());
 
 		if (discoveryListeners.isEmpty() && serviceLoaderListeners.isEmpty()) {
 			return defaultDiscoveryListener;
