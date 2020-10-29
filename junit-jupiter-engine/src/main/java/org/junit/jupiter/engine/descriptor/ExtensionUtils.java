@@ -119,7 +119,7 @@ final class ExtensionUtils {
 	 * @since 5.4
 	 */
 	private static final Comparator<Field> orderComparator = //
-		(field1, field2) -> Integer.compare(getOrder(field1), getOrder(field2));
+		Comparator.comparingInt(ExtensionUtils::getOrder);
 
 	/**
 	 * @since 5.4
