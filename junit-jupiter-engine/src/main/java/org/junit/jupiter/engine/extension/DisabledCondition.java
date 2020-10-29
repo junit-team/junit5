@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
@@ -39,15 +38,14 @@ class DisabledCondition implements ExecutionCondition {
 	 */
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<AnnotatedElement> element = context.getElement();
-		Optional<Disabled> disabled = findAnnotation(element, Disabled.class);
-		if (disabled.isPresent()) {
-			String reason = disabled.map(Disabled::value).filter(StringUtils::isNotBlank).orElseGet(
-				() -> element.get() + " is @Disabled");
-			return ConditionEvaluationResult.disabled(reason);
-		}
+		AnnotatedElement element = context.getElement().orElse(null);
+		return findAnnotation(element, Disabled.class).map(annotation -> toResult(element, annotation)).orElse(ENABLED);
+	}
 
-		return ENABLED;
+	private ConditionEvaluationResult toResult(AnnotatedElement element, Disabled annotation) {
+		String value = annotation.value();
+		String reason = StringUtils.isNotBlank(value) ? value : element + " is @Disabled";
+		return ConditionEvaluationResult.disabled(reason);
 	}
 
 }
