@@ -290,7 +290,6 @@
 6944f064352706c0494f773aae61d73d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.java
 69851f66647aa76ef872b4894895c2dd  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle.png
 69b9dda3124ed22cf6c5109c734a6292  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfigurationParameters.java
-69dbc93187f8695f67f17cc5bb5d7954  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/MutableTestExecutionSummary.java
 6a06ad16a130eff6ef044284d8fd1447  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExtensionValuesStore.java
 6a0863b7d60569cabc4094ece5c63cbd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOsCondition.java
 6a1e95c175810a1af635795d282d6ee2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java
@@ -457,6 +456,7 @@ abca435c1035e37c6fb9a8e25c556e57  documentation/src/test/java/example/TestTempla
 ac804445c6eef4eed3fd8d96d142a5d4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
 ad15a703f04d1d4f97b6ccd6cee50db4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/Extensions.java
 ad5249abfb2497a3862e87effb034809  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/RegisterExtension.java
+ad8e138a08228155e2362966eea43d08  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/MutableTestExecutionSummary.java
 adbe5eb02aeb252ecf3c1d6964cfb547  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Operator.java
 ae301aa038e12e2330a720d160e32c90  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullAndEmptySource.java
 ae3ad87fb1bf944fe0b32847c59b0839  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle_source.docx
