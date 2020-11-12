@@ -1,6 +1,6 @@
 install:
-  - wget https://download.java.net/java/early_access/loom/6/openjdk-16-loom+6-105_linux-x64_bin.tar.gz
-  - tar --extract --file openjdk-16-loom+6-105_linux-x64_bin.tar.gz -C ${HOME}
+  - wget https://download.java.net/java/early_access/loom/7/openjdk-16-loom+7-285_linux-x64_bin.tar.gz
+  - tar --extract --file openjdk-16-loom+7-285_linux-x64_bin.tar.gz -C ${HOME}
   - export JDK16=${HOME}/jdk-16
   - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
   - source ./install-jdk.sh --feature 15
