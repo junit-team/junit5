@@ -650,13 +650,17 @@ several groups of tests. Here's an elaborate example.
 include::{testDir}/example/TestingAStackDemo.java[tags=user_guide]
 ----
 
+When executing this example in an IDE, the test execution tree in the GUI will look
+similar to the following image.
+
+image::writing-tests_nested_test_ide.png[caption='',title='Executing a nested test in an IDE']
+
 NOTE: _Only non-static nested classes_ (i.e. _inner classes_) can serve as `@Nested` test
-classes. Nesting can be arbitrarily deep, and those inner classes are considered to be
-full members of the test class family with one exception: `@BeforeAll` and `@AfterAll`
-methods do not work _by default_. The reason is that Java does not allow `static` members
-in inner classes. However, this restriction can be circumvented by annotating a `@Nested`
-test class with `@TestInstance(Lifecycle.PER_CLASS)` (see
-<<writing-tests-test-instance-lifecycle>>).
+classes. Nesting can be arbitrarily deep, and those inner classes are subject to full
+life cycle support with one exception:`@BeforeAll` and `@AfterAll` methods do not work
+_by default_. The reason is that Java does not allow `static` members in inner classes.
+However, this restriction can be circumvented by annotating a `@Nested` test class with
+`@TestInstance(Lifecycle.PER_CLASS)` (see <<writing-tests-test-instance-lifecycle>>).
 
 [[writing-tests-dependency-injection]]
 === Dependency Injection for Constructors and Methods
