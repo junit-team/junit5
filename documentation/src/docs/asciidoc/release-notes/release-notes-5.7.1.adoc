@@ -40,7 +40,7 @@ GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The section on Nested Tests in the user guide is now explained in more detail.
 
 
 [[release-notes-5.7.1-junit-vintage]]
