@@ -120,6 +120,8 @@ class JavacModulesTests {
 				args.add("--patch-module");
 				args.add(project.moduleName + "=" + path);
 			}
+			args.add("-encoding");
+			args.add("UTF-8");
 
 			projects.forEach(project -> args.add(project.moduleInfo.toString()));
 

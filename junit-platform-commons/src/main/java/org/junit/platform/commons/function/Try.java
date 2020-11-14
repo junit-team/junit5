@@ -150,6 +150,15 @@ public abstract class Try<V> {
 	public abstract V get() throws Exception;
 
 	/**
+	 * If this {@code Try} is a failure, get the contained exception cause; if this
+	 * {@code Try} is a success, throw the exception.
+	 *
+	 * @return the contained exception cause, if available; never {@code null}
+	 * @throws UnsupportedOperationException if this {@code Try} is a success
+	 */
+	public abstract Exception getCause();
+
+	/**
 	 * If this {@code Try} is a success, get the contained value; if this
 	 * {@code Try} is a failure, call the supplied {@link Function} with the
 	 * contained exception and throw the resulting {@link Exception}.
@@ -180,6 +189,20 @@ public abstract class Try<V> {
 	 * @return the same {@code Try} for method chaining
 	 */
 	public abstract Try<V> ifFailure(Consumer<Exception> causeConsumer);
+
+	/**
+	 * Return {@code true} if this {@code Try} is failure.
+	 *
+	 * @return {@code true} when failure
+	 */
+	public abstract boolean isFailure();
+
+	/**
+	 * Return {@code true} if this {@code Try} is success.
+	 *
+	 * @return {@code true} when success
+	 */
+	public abstract boolean isSuccess();
 
 	/**
 	 * If this {@code Try} is a failure, return an empty {@link Optional}; if
@@ -247,6 +270,11 @@ public abstract class Try<V> {
 		}
 
 		@Override
+		public Exception getCause() {
+			throw new UnsupportedOperationException("getCause on Success");
+		}
+
+		@Override
 		public <E extends Exception> V getOrThrow(Function<? super Exception, E> exceptionTransformer) {
 			// don't call exceptionTransformer because this Try is a success
 			return this.value;
@@ -263,6 +291,16 @@ public abstract class Try<V> {
 		public Try<V> ifFailure(Consumer<Exception> causeConsumer) {
 			// don't call causeConsumer because this Try was a success
 			return this;
+		}
+
+		@Override
+		public boolean isSuccess() {
+			return true;
+		}
+
+		@Override
+		public boolean isFailure() {
+			return false;
 		}
 
 		@Override
@@ -330,6 +368,11 @@ public abstract class Try<V> {
 		}
 
 		@Override
+		public Exception getCause() {
+			return this.cause;
+		}
+
+		@Override
 		public <E extends Exception> V getOrThrow(Function<? super Exception, E> exceptionTransformer) throws E {
 			checkNotNull(exceptionTransformer, "exceptionTransformer");
 			throw exceptionTransformer.apply(this.cause);
@@ -346,6 +389,16 @@ public abstract class Try<V> {
 			checkNotNull(causeConsumer, "causeConsumer");
 			causeConsumer.accept(this.cause);
 			return this;
+		}
+
+		@Override
+		public boolean isSuccess() {
+			return false;
+		}
+
+		@Override
+		public boolean isFailure() {
+			return true;
 		}
 
 		@Override

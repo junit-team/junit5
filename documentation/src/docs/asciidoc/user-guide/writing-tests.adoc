@@ -1221,6 +1221,31 @@ package example;
 include::{testDir}/example/ExternalMethodSourceDemo.java[tags=external_MethodSource_example]
 ----
 
+When you write Parameterized tests in https://kotlinlang.org/[Kotlin] you have following options to create reference
+to the _factory_ method:
+
+* With `kotlin-reflection` library on classpath you can also use Companion object's method without any additional annotation.
+
+[source,kotlin,indent=0]
+----
+include::{kotlinTestDir}/example/KotlinParameterizedTests.kt[tags=companion]
+----
+
+* Use `@TestInstance(Lifecycle.PER_CLASS)` test class.
+
+[source,kotlin,indent=0]
+----
+include::{kotlinTestDir}/example/KotlinParameterizedTests.kt[tags=test_instance_per_class]
+----
+
+* Use `@JvmStatic` annotation on Companion object's method.
+
+[source,kotlin,indent=0]
+----
+include::{kotlinTestDir}/example/KotlinParameterizedTests.kt[tags=jvm_static]
+----
+
+
 [[writing-tests-parameterized-tests-sources-CsvSource]]
 ===== @CsvSource
 

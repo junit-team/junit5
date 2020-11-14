@@ -259,6 +259,33 @@ class MethodArgumentsProviderTests {
 			"Could not find method [nonExistentMethod] in class [" + ExternalFactoryMethods.class.getName() + "]");
 	}
 
+	@Test
+	void kotlinOwnCompanionObjectProvider() {
+		var arguments = provideArguments(WithCompanionTestCase.class, null, false, "stringsProvider");
+		assertThat(arguments).containsExactly(array("with-companion"));
+	}
+
+	@Test
+	void kotlinOtherCompanionObjectProvider() {
+		var arguments = provideArguments(WithCompanionTestCase.class.getName() + "#stringsProvider");
+		assertThat(arguments).containsExactly(array("with-companion"));
+	}
+
+	@Test
+	void kotlinWithoutCompanionObject() {
+		var exception = assertThrows(JUnitException.class,
+			() -> provideArguments(WithoutCompanionTestCase.class.getName() + "#doesNotMatter").toArray());
+
+		assertThat(exception.getMessage()).isEqualTo(
+			"Could not find method [doesNotMatter] in class [" + WithoutCompanionTestCase.class.getName() + "]");
+	}
+
+	@Test
+	void kotlinJvmStaticCompanionObject() {
+		var arguments = provideArguments(JvmStaticCompanionTestCase.class.getName() + "#stringsProvider");
+		assertThat(arguments).containsExactly(array("jvm-static"));
+	}
+
 	@Nested
 	class PrimitiveArrays {
 

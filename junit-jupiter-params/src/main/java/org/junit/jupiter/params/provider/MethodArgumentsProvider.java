@@ -20,7 +20,11 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.function.Try;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.CollectionUtils;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -29,6 +33,7 @@ import org.junit.platform.commons.util.StringUtils;
  * @since 5.0
  */
 class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<MethodSource> {
+	private static final Logger logger = LoggerFactory.getLogger(MethodArgumentsProvider.class);
 
 	private String[] methodNames;
 
@@ -39,14 +44,40 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 
 	@Override
 	public Stream<Arguments> provideArguments(ExtensionContext context) {
-		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
 		return Arrays.stream(this.methodNames)
-				.map(factoryMethodName -> getMethod(context, factoryMethodName))
-				.map(method -> ReflectionUtils.invokeMethod(method, testInstance))
+				.map(factoryMethodName -> {
+					final Try<Object> fromJavaTry = resolveArgumentsJava(context, factoryMethodName);
+					if (fromJavaTry.isSuccess()) {
+						return fromJavaTry.getOrThrow(ExceptionUtils::throwAsUncheckedException);
+					} else {
+						if (MethodSourceKotlinCompanionResolver.INSTANCE.canResolveArguments(context, factoryMethodName)) {
+							final Try<Object> fromKotlinTry = resolveArgumentsKotlin(context, factoryMethodName);
+							if (fromKotlinTry.isSuccess()) {
+								return fromKotlinTry.getOrThrow(ExceptionUtils::throwAsUncheckedException);
+							} else {
+								logger.trace(fromJavaTry.getCause(), () -> "Java method argument resolve error thrown before Kotlin arguments resolve");
+								throw ExceptionUtils.throwAsUncheckedException(fromKotlinTry.getCause());
+							}
+						} else {
+							return fromJavaTry.getOrThrow(ExceptionUtils::throwAsUncheckedException);
+						}
+					}
+				})
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
 		// @formatter:on
+	}
+
+	private Try<Object> resolveArgumentsJava(ExtensionContext context, String factoryMethodName) {
+		Object testInstance = context.getTestInstance().orElse(null);
+		return Try.call(() -> getMethod(context, factoryMethodName)).andThenTry(
+			method -> ReflectionUtils.invokeMethod(method, testInstance));
+	}
+
+	private Try<Object> resolveArgumentsKotlin(ExtensionContext context, String factoryMethodName) {
+		return Try.call(
+			() -> MethodSourceKotlinCompanionResolver.INSTANCE.resolveArguments(context, factoryMethodName));
 	}
 
 	private Method getMethod(ExtensionContext context, String factoryMethodName) {

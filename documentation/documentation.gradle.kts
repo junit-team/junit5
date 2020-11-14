@@ -39,10 +39,12 @@ dependencies {
 
 	testImplementation(project(":junit-jupiter"))
 	testImplementation(project(":junit-jupiter-migrationsupport"))
+	testImplementation(project(":junit-jupiter-params"))
 	testImplementation(project(":junit-platform-console"))
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	testImplementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	testImplementation(project(":junit-vintage-engine"))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core")

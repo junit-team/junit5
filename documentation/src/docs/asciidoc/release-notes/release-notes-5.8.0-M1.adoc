@@ -46,7 +46,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Kotlin `@ParameterizedTest` with `@MethodSource` can now reference Companion object's
+  methods without `@JvmStatic` workaround placed on specific Kotlin method.
 
 
 [[release-notes-5.8.0-M1-junit-vintage]]

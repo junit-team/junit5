@@ -79,6 +79,20 @@ public class TryTests {
 	}
 
 	@Test
+	void tryTypeIndicators() throws Exception {
+		assertThat(Try.success("foo").isSuccess()).isTrue();
+		assertThat(Try.success("foo").isFailure()).isFalse();
+		assertThat(Try.failure(new IllegalStateException()).isSuccess()).isFalse();
+		assertThat(Try.failure(new IllegalStateException()).isFailure()).isTrue();
+	}
+
+	@Test
+	void tryGetCause() throws Exception {
+		assertThrows(UnsupportedOperationException.class, () -> Try.success("foo").getCause());
+		assertThat(Try.failure(new IllegalStateException()).getCause()).isInstanceOf(IllegalStateException.class);
+	}
+
+	@Test
 	void triesWithSameContentAreEqual() {
 		var cause = new Exception();
 		Callable<Object> failingCallable = () -> {

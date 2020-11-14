@@ -22,7 +22,9 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 
 	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
+	compileOnly("org.jetbrains.kotlin:kotlin-reflect")
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	testImplementation("org.jetbrains.kotlin:kotlin-reflect")
 }
 
 tasks {
