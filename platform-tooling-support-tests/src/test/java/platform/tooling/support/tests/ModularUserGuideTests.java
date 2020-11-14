@@ -99,6 +99,8 @@ class ModularUserGuideTests {
 					// Don't include command-line tools that "require io.github.classgraph"
 					.filter(s -> !s.contains("tools")).forEach(args::add);
 		}
+		args.add("-encoding");
+		args.add("UTF-8");
 
 		var javac = ToolProvider.findFirst("javac").orElseThrow();
 		var code = javac.run(new PrintWriter(out), new PrintWriter(err), args.toArray(String[]::new));

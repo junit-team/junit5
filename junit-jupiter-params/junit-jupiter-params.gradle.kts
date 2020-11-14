@@ -21,7 +21,9 @@ dependencies {
 	testImplementation(testFixtures(projects.junitJupiterEngine))
 
 	compileOnly(kotlin("stdlib"))
+	compileOnly(kotlin("reflect"))
 	testImplementation(kotlin("stdlib"))
+	testImplementation(kotlin("reflect"))
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)

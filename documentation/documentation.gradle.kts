@@ -37,11 +37,13 @@ dependencies {
 
 	testImplementation(projects.junitJupiter)
 	testImplementation(projects.junitJupiterMigrationsupport)
+	testImplementation(projects.junitJupiterParams)
 	testImplementation(projects.junitPlatformConsole)
 	testImplementation(projects.junitPlatformRunner)
 	testImplementation(projects.junitPlatformSuite)
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(kotlin("stdlib"))
+	testImplementation(kotlin("reflect"))
 
 	testImplementation(projects.junitVintageEngine)
 	testRuntimeOnly(libs.bundles.log4j)
