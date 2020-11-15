@@ -10,6 +10,13 @@ link:{junit5-repo}+/milestone/52?closed=1+[5.7.1] milestone page in the JUnit re
 GitHub.
 
 
+[[release-notes-5.7.1-general-bug-fixes]]
+=== General bug fixes
+
+* For compatibility with `JarInputStream`, all JARs now contain `META-INF/` and
+  `META-INF/MANIFEST.MF` as their first entries again.
+
+
 [[release-notes-5.7.1-junit-platform]]
 === JUnit Platform
 
