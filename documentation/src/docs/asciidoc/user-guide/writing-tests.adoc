@@ -642,7 +642,9 @@ configuration file instead of via a JVM system property.
 === Nested Tests
 
 `@Nested` tests give the test writer more capabilities to express the relationship among
-several groups of tests. Here's an elaborate example.
+several groups of tests. Such nested tests make use of Java's nested classes and
+facilitate hierarchical thinking about the test structure.
+Here's an elaborate example, both as source code and as an IDE execution screenshot.
 
 [source,java,indent=0]
 .Nested test suite for testing a stack
@@ -650,13 +652,26 @@ several groups of tests. Here's an elaborate example.
 include::{testDir}/example/TestingAStackDemo.java[tags=user_guide]
 ----
 
+When executing this example in an IDE, the test execution tree in the GUI will look
+similar to the following image.
+
+image::writing-tests_nested_test_ide.png[caption='',title='Executing a nested test in an IDE']
+
+In this example preconditions from outer tests are used in inner tests by defining
+hierarchical lifecycle methods for the setup code. E.g., the method `createNewStack()`
+annotated as a lifecycle method with `@BeforeEach` is such a setup method which is used
+at all level below in the nesting tree.
+
+The fact that setup code from outer tests is run before inner tests are executed gives
+you the ability to run all tests independently. You can even run inner tests alone
+without outer tests, because the setup code from the outer tests is always executed.
+
 NOTE: _Only non-static nested classes_ (i.e. _inner classes_) can serve as `@Nested` test
-classes. Nesting can be arbitrarily deep, and those inner classes are considered to be
-full members of the test class family with one exception: `@BeforeAll` and `@AfterAll`
-methods do not work _by default_. The reason is that Java does not allow `static` members
-in inner classes. However, this restriction can be circumvented by annotating a `@Nested`
-test class with `@TestInstance(Lifecycle.PER_CLASS)` (see
-<<writing-tests-test-instance-lifecycle>>).
+classes. Nesting can be arbitrarily deep, and those inner classes are subject to full
+lifecycle support with one exception:`@BeforeAll` and `@AfterAll` methods do not work
+_by default_. The reason is that Java does not allow `static` members in inner classes.
+However, this restriction can be circumvented by annotating a `@Nested` test class with
+`@TestInstance(Lifecycle.PER_CLASS)` (see <<writing-tests-test-instance-lifecycle>>).
 
 [[writing-tests-dependency-injection]]
 === Dependency Injection for Constructors and Methods
