@@ -210,7 +210,6 @@
 47498bdd41e084e8176fc8f9456481e4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrdererContext.java
 4810af74b85062da079e42106d432dfc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileSource.java
 49376c2e2e72b3c425b2ac43dce20542  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.java
-49bc88a2729aea09d31314df4fd6153d  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 4a1da47ce2b5b7b4d5fd1145737a933a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/package-info.java
 4a4216873a839d7f0531cbba8491cfc9  documentation/src/test/java/example/exception/IgnoreIOExceptionExtension.java
 4bfc291478e8c2effdd5a97c8ab373cc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/AbstractRepeatableAnnotationCondition.java
@@ -232,6 +231,7 @@
 50f8f550e124b8942e54012c155c95d0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeUtils.java
 511ebac57bc444bfa45e9e3dd8cee5a1  junit-platform-launcher/src/main/java/org/junit/platform/launcher/PostDiscoveryFilter.java
 5273bcb6223897e34a8170c4d6cabc86  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolution.java
+52bbf7ad842ffa6d301f9ce4bd79e543  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 52d5c59631935f0e43559f59e4669903  documentation/src/test/java/example/IgnoredTestsDemo.java
 52e924b71345bf39c27a84fe7a6fd291  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.java
 5312d57009e25ed53fd86a76cfcda065  junit-platform-commons/src/main/java/org/junit/platform/commons/util/RuntimeUtils.java
@@ -425,7 +425,6 @@
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a13777605819a6ab3a2060956fa0b743  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
-a14f24747bc6fd573f765d607eac4639  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 a19dfa211e3f0f74ea007e63e78f479f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRangeCondition.java
 a1ea21eb6905311553d061647b2c98d0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/package-info.java
 a3112552fe1385621120dbc4f07796d6  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
@@ -508,6 +507,7 @@ bdddfb3dbb13a9a26c1c9b04eb68b34d  junit-platform-engine/src/main/java/org/junit/
 be38cfd5a623af129540c1a1237b0b35  documentation/src/javadoc/junit-stylesheet.css
 be88abf533eb27f2b25077302881b0c8  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueIdFormat.java
 becc58e25b292ea7adfea345c10c40f9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/TempDir.java
+becf17c6600af566bc80c1fe640f109d  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 bf193de0eb3b3ac49e4cc149e3c9b1ec  documentation/src/test/java/org/junit/api/tools/AsciidocApiReportWriter.java
 bf2f33348f8232aede2fabe469cd87a4  documentation/src/docs/asciidoc/user-guide/launcher-api.adoc
 bf8d76cf67ea68f9d620a5fb5e2f9ab3  documentation/src/docs/asciidoc/tocbot-3.0.2/styles.css
