@@ -363,6 +363,20 @@ loadScripts(document, 'script');</script>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#nestedContainer(java.lang.Class,org.assertj.core.api.Condition)">nestedContainer</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+<a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;&nbsp;condition)</code></th>
+<td class="col-last">
+<div class="block">Create a new <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link"><code>Condition</code></a> that matches if and only if an
+ <a href="../Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a> matches the supplied <code>Condition</code>, its
+ <a href="../Event.html#getTestDescriptor()">test descriptor</a> is
+ a <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#isContainer()">container</a>, and its
+ <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#getUniqueId()">unique id</a> contains the
+ simple names of the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> and all of its
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html#getEnclosingClass()" title="class or interface in java.lang" class="external-link">enclosing classes</a>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#reason(java.lang.String)">reason</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;expectedReason)</code></th>
 <td class="col-last">
 <div class="block">Create a new <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link"><code>Condition</code></a> that matches if and only if an
@@ -370,7 +384,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> that is equal to the supplied value.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#reason(java.util.function.Predicate)">reason</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;predicate)</code></th>
 <td class="col-last">
@@ -379,7 +393,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> that matches the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link"><code>Predicate</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#reportEntry(java.util.Map)">reportEntry</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;keyValuePairs)</code></th>
 <td class="col-last">
@@ -388,7 +402,7 @@ loadScripts(document, 'script');</script>
  <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting"><code>ReportEntry</code></a> that contains the supplied key-value pairs.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#result(org.assertj.core.api.Condition)">result</a></span>&#8203;(<a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&gt;&nbsp;condition)</code></th>
 <td class="col-last">
@@ -397,7 +411,7 @@ loadScripts(document, 'script');</script>
  <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> that matches the supplied <code>Condition</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#skippedWithReason(java.lang.String)">skippedWithReason</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;expectedReason)</code></th>
 <td class="col-last">
@@ -408,7 +422,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#skippedWithReason(java.util.function.Predicate)">skippedWithReason</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;predicate)</code></th>
 <td class="col-last">
@@ -419,7 +433,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link"><code>Predicate</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#started()">started</a></span>()</code></th>
 <td class="col-last">
@@ -428,14 +442,14 @@ loadScripts(document, 'script');</script>
  <a href="../EventType.html#STARTED"><code>EventType.STARTED</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Events.</span><code><span class="member-name-link"><a href="../Events.html#stream()">stream</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Get the <a href="../Event.html" title="class in org.junit.platform.testkit.engine">events</a> as a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#test()">test</a></span>()</code></th>
 <td class="col-last">
@@ -444,7 +458,7 @@ loadScripts(document, 'script');</script>
  a <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#isTest()">test</a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#test(java.lang.String)">test</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;uniqueIdSubstring)</code></th>
 <td class="col-last">
@@ -455,7 +469,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#test(java.lang.String,java.lang.String)">test</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;uniqueIdSubstring,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName)</code></th>
@@ -465,6 +479,16 @@ loadScripts(document, 'script');</script>
  a <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#isTest()">test</a>, its
  <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#getUniqueId()">unique id</a> contains the supplied
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>, and its <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#getDisplayName()">display name</a> equals the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#test(org.assertj.core.api.Condition)">test</a></span>&#8203;(<a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;&nbsp;condition)</code></th>
+<td class="col-last">
+<div class="block">Create a new <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link"><code>Condition</code></a> that matches if and only if an
+ <a href="../Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a> matches the supplied <code>Condition</code> and its
+ <a href="../Event.html#getTestDescriptor()">test descriptor</a> is a
+ <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#isTest()">test</a>.</div>
 </td>
 </tr>
 <tr class="alt-color">
@@ -552,6 +576,30 @@ loadScripts(document, 'script');</script>
 <th class="col-second" scope="row"><span class="type-name-label">Events.</span><code><span class="member-name-link"><a href="../Events.html#map(java.util.function.Function)">map</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>,&#8203;? extends R&gt;&nbsp;mapper)</code></th>
 <td class="col-last">
 <div class="block">Shortcut for <code>events.stream().map(mapper)</code>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#nestedContainer(java.lang.Class,org.assertj.core.api.Condition)">nestedContainer</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+<a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;&nbsp;condition)</code></th>
+<td class="col-last">
+<div class="block">Create a new <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link"><code>Condition</code></a> that matches if and only if an
+ <a href="../Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a> matches the supplied <code>Condition</code>, its
+ <a href="../Event.html#getTestDescriptor()">test descriptor</a> is
+ a <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#isContainer()">container</a>, and its
+ <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#getUniqueId()">unique id</a> contains the
+ simple names of the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> and all of its
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html#getEnclosingClass()" title="class or interface in java.lang" class="external-link">enclosing classes</a>.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">EventConditions.</span><code><span class="member-name-link"><a href="../EventConditions.html#test(org.assertj.core.api.Condition)">test</a></span>&#8203;(<a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">Condition</a>&lt;<a href="../Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;&nbsp;condition)</code></th>
+<td class="col-last">
+<div class="block">Create a new <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.16.1/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link"><code>Condition</code></a> that matches if and only if an
+ <a href="../Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a> matches the supplied <code>Condition</code> and its
+ <a href="../Event.html#getTestDescriptor()">test descriptor</a> is a
+ <a href="../../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#isTest()">test</a>.</div>
 </td>
 </tr>
 </tbody>

@@ -547,7 +547,11 @@ allows to access the dynamic test executable via <code>DynamicTestInvocationCont
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>New <code>test(Condition&lt;Event&gt;)</code> and <code>nestedContainer(Class&lt;?&gt;, Condition&lt;Event&gt;)</code> methods
+in <code>EventConditions</code> that allow you to provide conditions for matching against test and
+nested container events when using the <code>EngineTestKit</code>. For example,
+<code>test(displayName("my test"))</code> can be used to match against a test whose display name is
+<code>my test</code>.</p>
 </li>
 </ul>
 </div>
@@ -803,7 +807,7 @@ called once even if they throw an exception.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2020-11-20 13:07:54 UTC
+Last updated 2020-11-20 15:41:25 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
