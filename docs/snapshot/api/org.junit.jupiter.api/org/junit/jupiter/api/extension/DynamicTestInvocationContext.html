@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 public class <span class="type-name-label">DynamicTestInvocationContext</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block"><code>DynamicTestInvocationContext</code> represents the <em>context</em> of a
- single invocation of a <a href="../DynamicTest.html" title="class in org.junit.jupiter.api">test</a>.</div>
+ single invocation of a <a href="../DynamicTest.html" title="class in org.junit.jupiter.api">dynamic test</a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.8</dd>
@@ -143,7 +143,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <td class="col-first"><code><a href="../function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getExecutable()">getExecutable</a></span>()</code></th>
 <td class="col-last">
-<div class="block">Get the <a href="../function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a> of this dynamic test invocation.</div>
+<div class="block">Get the <a href="../function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a> of this dynamic test invocation context.</div>
 </td>
 </tr>
 </tbody>
@@ -182,10 +182,10 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <section class="detail" id="getExecutable()">
 <h3>getExecutable</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a></span>&nbsp;<span class="member-name">getExecutable</span>()</div>
-<div class="block">Get the <a href="../function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a> of this dynamic test invocation.</div>
+<div class="block">Get the <a href="../function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a> of this dynamic test invocation context.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the executable of the dynamic test invocation, never null.</dd>
+<dd>the executable of the dynamic test invocation, never <code>null</code></dd>
 </dl>
 </section>
 </li>
