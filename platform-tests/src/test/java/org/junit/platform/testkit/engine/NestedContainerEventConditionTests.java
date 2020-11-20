@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.container;
+import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -107,14 +109,14 @@ class NestedContainerEventConditionTests {
 					event(container(ATestCase.class), started()),
 						event(test("test_a"), started()),
 						event(test("test_a"), finishedSuccessfully()),
-						event(nestedContainer(ATestCase.BTestCase.class), started()),
+						event(nestedContainer(ATestCase.BTestCase.class, displayName("Test case B")), started()),
 							event(test("test_b"), started()),
 							event(test("test_b"), finishedSuccessfully()),
 							event(nestedContainer(ATestCase.BTestCase.CTestCase.class), started()),
 								event(test("test_c"), started()),
 								event(test("test_c"), finishedSuccessfully()),
 							event(nestedContainer(ATestCase.BTestCase.CTestCase.class), finishedSuccessfully()),
-						event(nestedContainer(ATestCase.BTestCase.class), finishedSuccessfully()),
+						event(nestedContainer(ATestCase.BTestCase.class, displayName("Test case B")), finishedSuccessfully()),
 					event(container(ATestCase.class), finishedSuccessfully()),
 				event(engine(), finishedSuccessfully())
 			);
@@ -128,6 +130,7 @@ class NestedContainerEventConditionTests {
 		}
 
 		@Nested
+		@DisplayName("Test case B")
 		class BTestCase {
 			@Test
 			void test_b() {

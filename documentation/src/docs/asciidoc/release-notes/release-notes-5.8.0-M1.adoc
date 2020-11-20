@@ -25,7 +25,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New `test(Condition<Event>)` and `nestedContainer(Class<?>, Condition<Event>)` methods
+  in `EventConditions` that allow you to provide conditions for matching against test and
+  nested container events when using the `EngineTestKit`. For example,
+  `test(displayName("my test"))` can be used to match against a test whose display name is
+  `my test`.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
