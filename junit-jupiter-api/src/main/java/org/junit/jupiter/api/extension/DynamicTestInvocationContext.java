@@ -17,25 +17,28 @@ import org.junit.jupiter.api.function.Executable;
 
 /**
  * {@code DynamicTestInvocationContext} represents the <em>context</em> of a
- * single invocation of a {@linkplain org.junit.jupiter.api.DynamicTest test}.
+ * single invocation of a {@linkplain org.junit.jupiter.api.DynamicTest
+ * dynamic test}.
  *
  * @since 5.8
  * @see org.junit.jupiter.api.DynamicTest
  */
 @API(status = EXPERIMENTAL, since = "5.8")
 public class DynamicTestInvocationContext {
-	private Executable executable;
+
+	private final Executable executable;
 
 	public DynamicTestInvocationContext(Executable executable) {
 		this.executable = executable;
 	}
 
 	/**
-	 * Get the {@linkplain Executable} of this dynamic test invocation.
+	 * Get the {@linkplain Executable} of this dynamic test invocation context.
 	 *
-	 * @return the executable of the dynamic test invocation, never null.
+	 * @return the executable of the dynamic test invocation, never {@code null}
 	 */
 	public Executable getExecutable() {
-		return executable;
+		return this.executable;
 	}
+
 }
