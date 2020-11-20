@@ -24,21 +24,13 @@ import org.junit.jupiter.api.function.Executable;
  * @see org.junit.jupiter.api.DynamicTest
  */
 @API(status = EXPERIMENTAL, since = "5.8")
-public class DynamicTestInvocationContext {
-
-	private final Executable executable;
-
-	public DynamicTestInvocationContext(Executable executable) {
-		this.executable = executable;
-	}
+public interface DynamicTestInvocationContext {
 
 	/**
-	 * Get the {@linkplain Executable} of this dynamic test invocation context.
+	 * Get the {@code Executable} of this dynamic test invocation context.
 	 *
 	 * @return the executable of the dynamic test invocation, never {@code null}
 	 */
-	public Executable getExecutable() {
-		return this.executable;
-	}
+	Executable getExecutable();
 
 }

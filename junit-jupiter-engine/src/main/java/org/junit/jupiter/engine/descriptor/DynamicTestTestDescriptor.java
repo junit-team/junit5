@@ -53,7 +53,7 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 			dynamicTest.getExecutable().execute();
 			return null;
 		};
-		DynamicTestInvocationContext dynamicTestInvocationContext = new DynamicTestInvocationContext(
+		DynamicTestInvocationContext dynamicTestInvocationContext = new DefaultDynamicTestInvocationContext(
 			dynamicTest.getExecutable());
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
