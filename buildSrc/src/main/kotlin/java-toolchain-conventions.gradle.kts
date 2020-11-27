@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 val javaToolchainVersion: String? by project
-val defaultLanguageVersion = JavaLanguageVersion.of(15)!!
+val defaultLanguageVersion = JavaLanguageVersion.of(15)
 val javaLanguageVersion = javaToolchainVersion?.let { JavaLanguageVersion.of(it) } ?: defaultLanguageVersion
 
 project.pluginManager.withPlugin("java") {
@@ -16,6 +16,12 @@ project.pluginManager.withPlugin("java") {
 	}
 	tasks.withType<JavaCompile>().configureEach {
 		javaCompiler.set(compiler)
+	}
+	tasks.withType<GroovyCompile>().configureEach {
+		javaLauncher.set(javaToolchainService.launcherFor {
+			// Groovy does not yet support JDK 16, see https://issues.apache.org/jira/browse/GROOVY-9752
+			languageVersion.set(defaultLanguageVersion)
+		})
 	}
 	tasks.withType<JavaExec>().configureEach {
 		javaLauncher.set(javaToolchainService.launcherFor(extension.toolchain))
