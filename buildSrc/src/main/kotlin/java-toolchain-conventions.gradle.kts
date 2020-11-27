@@ -20,7 +20,7 @@ project.pluginManager.withPlugin("java") {
 	tasks.withType<GroovyCompile>().configureEach {
 		javaLauncher.set(javaToolchainService.launcherFor {
 			// Groovy does not yet support JDK 16, see https://issues.apache.org/jira/browse/GROOVY-9752
-			languageVersion.set(defaultLanguageVersion)
+			languageVersion.set(minOf(javaLanguageVersion, defaultLanguageVersion))
 		})
 	}
 	tasks.withType<JavaExec>().configureEach {
