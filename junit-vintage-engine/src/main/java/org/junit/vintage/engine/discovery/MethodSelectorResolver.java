@@ -26,6 +26,7 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
+import org.junit.vintage.engine.descriptor.DescriptionUtils;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 
 /**
@@ -87,6 +88,7 @@ class MethodSelectorResolver implements SelectorResolver {
 	 * {@link org.junit.runners.Parameterized} runner.
 	 */
 	private static Filter matchMethodDescription(final Description desiredDescription) {
+		String desiredMethodName = DescriptionUtils.getMethodName(desiredDescription);
 		return new Filter() {
 
 			@Override
@@ -105,7 +107,8 @@ class MethodSelectorResolver implements SelectorResolver {
 			}
 
 			private boolean isParameterizedMethod(Description description) {
-				return description.getMethodName().startsWith(desiredDescription.getMethodName() + "[");
+				String methodName = DescriptionUtils.getMethodName(description);
+				return methodName.startsWith(desiredMethodName + "[");
 			}
 
 			@Override
