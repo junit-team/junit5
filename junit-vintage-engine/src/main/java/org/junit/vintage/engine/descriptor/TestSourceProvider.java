@@ -40,7 +40,7 @@ public class TestSourceProvider {
 	public TestSource findTestSource(Description description) {
 		Class<?> testClass = description.getTestClass();
 		if (testClass != null) {
-			String methodName = description.getMethodName();
+			String methodName = DescriptionUtils.getMethodName(description);
 			if (methodName != null) {
 				Method method = findMethod(testClass, sanitizeMethodName(methodName));
 				if (method != null) {
