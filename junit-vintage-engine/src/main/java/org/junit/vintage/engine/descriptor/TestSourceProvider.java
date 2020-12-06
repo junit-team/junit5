@@ -10,6 +10,7 @@
 
 package org.junit.vintage.engine.descriptor;
 
+import static java.util.Collections.synchronizedMap;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -17,9 +18,9 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.support.ModifierSupport;
@@ -35,9 +36,18 @@ import org.junit.runner.Description;
 @API(status = INTERNAL, since = "5.6")
 public class TestSourceProvider {
 
-	private final Map<Class<?>, List<Method>> methodsCache = Collections.synchronizedMap(new LruCache<>(31));
+	private static final TestSource NULL_SOURCE = new TestSource() {
+	};
+
+	private final Map<Description, TestSource> testSourceCache = new ConcurrentHashMap<>();
+	private final Map<Class<?>, List<Method>> methodsCache = synchronizedMap(new LruCache<>(31));
 
 	public TestSource findTestSource(Description description) {
+		TestSource testSource = testSourceCache.computeIfAbsent(description, this::computeTestSource);
+		return testSource == NULL_SOURCE ? null : testSource;
+	}
+
+	private TestSource computeTestSource(Description description) {
 		Class<?> testClass = description.getTestClass();
 		if (testClass != null) {
 			String methodName = DescriptionUtils.getMethodName(description);
@@ -49,7 +59,7 @@ public class TestSourceProvider {
 			}
 			return ClassSource.from(testClass);
 		}
-		return null;
+		return NULL_SOURCE;
 	}
 
 	private String sanitizeMethodName(String methodName) {
