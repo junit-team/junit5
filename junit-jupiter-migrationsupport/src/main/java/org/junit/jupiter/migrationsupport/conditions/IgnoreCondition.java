@@ -45,7 +45,9 @@ public class IgnoreCondition implements ExecutionCondition {
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
 		AnnotatedElement element = context.getElement().orElse(null);
-		return findAnnotation(element, Ignore.class).map(annotation -> toResult(element, annotation)).orElse(ENABLED);
+		return findAnnotation(element, Ignore.class) //
+				.map(annotation -> toResult(element, annotation)) //
+				.orElse(ENABLED);
 	}
 
 	private ConditionEvaluationResult toResult(AnnotatedElement element, Ignore annotation) {

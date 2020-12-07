@@ -39,7 +39,9 @@ class DisabledCondition implements ExecutionCondition {
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
 		AnnotatedElement element = context.getElement().orElse(null);
-		return findAnnotation(element, Disabled.class).map(annotation -> toResult(element, annotation)).orElse(ENABLED);
+		return findAnnotation(element, Disabled.class) //
+				.map(annotation -> toResult(element, annotation)) //
+				.orElse(ENABLED);
 	}
 
 	private ConditionEvaluationResult toResult(AnnotatedElement element, Disabled annotation) {
