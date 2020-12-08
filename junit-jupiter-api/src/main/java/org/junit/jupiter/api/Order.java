@@ -23,9 +23,9 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 /**
  * {@code @Order} is an annotation that is used to configure the
- * {@linkplain #value order} in which the annotated element (i.e., field or
- * method) should be evaluated or executed relative to other elements of the
- * same category.
+ * {@linkplain #value order} in which the annotated element (i.e., field,
+ * method or class) should be evaluated or executed relative to other elements
+ * of the same category.
  *
  * <p>When used with
  * {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension},
@@ -36,11 +36,15 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
  * <p>If {@code @Order} is not explicitly declared on an element, the
  * {@link #DEFAULT} order value will be assigned to the element.
  *
+ * <p>If {@code @Order} is used on classes, ordering is performed only if
+ * the matching {@link ClassOrderer.OrderAnnotation} is configured.
+ *
  * @since 5.4
  * @see MethodOrderer.OrderAnnotation
+ * @see ClassOrderer.OrderAnnotation
  * @see org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension
  */
-@Target({ ElementType.FIELD, ElementType.METHOD })
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = EXPERIMENTAL, since = "5.4")

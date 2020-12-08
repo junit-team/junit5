@@ -463,6 +463,17 @@ public final class Constants {
 	@API(status = EXPERIMENTAL, since = "5.7")
 	public static final String DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
 
+	/**
+	 * Property name used to set the class orderer class name: {@value}
+	 *
+	 * <h3>Supported Values</h3>
+	 *
+	 * <p>Supported values include fully qualified class names for types that
+	 * implement {@link org.junit.jupiter.api.ClassOrderer}.
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
+	public static final String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME;
+
 	private Constants() {
 		/* no-op */
 	}
