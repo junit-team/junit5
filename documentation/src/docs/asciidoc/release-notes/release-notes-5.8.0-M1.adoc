@@ -74,6 +74,10 @@ on GitHub.
 * Allow rows in `@CsvSource` to start with a number sign (#)
 * New `ignoreLeadingAndTrailingWhitespace` attribute to control whether or not to trim
   whitespaces in `@CsvSource` and `@CsvFileSource` (set to `true` by default).
+* Top-level test classes can now be ordered by passing the fully-qualified name of a
+  class implementing `ClassOrderer` as value of the new
+  `junit.jupiter.testclass.order.default` configuration property.
+
 
 [[release-notes-5.8.0-M1-junit-vintage]]
 === JUnit Vintage

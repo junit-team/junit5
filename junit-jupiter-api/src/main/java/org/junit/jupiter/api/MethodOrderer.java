@@ -260,6 +260,9 @@ public interface MethodOrderer {
 		 * Property name used to set the random seed used by this
 		 * {@code MethodOrderer}: {@value}
 		 *
+		 * The same property is used by {@link ClassOrderer.Random} for consistency
+		 * between the two random orderers.
+		 *
 		 * <h3>Supported Values</h3>
 		 *
 		 * <p>Supported values include any string that can be converted to a
@@ -268,6 +271,8 @@ public interface MethodOrderer {
 		 * <p>If not specified or if the specified value cannot be converted to
 		 * a {@link Long}, the default random seed will be used (see the
 		 * {@linkplain Random class-level Javadoc} for details).
+		 *
+		 * @see ClassOrderer.Random
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
 

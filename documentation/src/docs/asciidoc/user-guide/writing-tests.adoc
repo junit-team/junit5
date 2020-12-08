@@ -511,11 +511,15 @@ custom annotations for tags.
 [[writing-tests-test-execution-order]]
 === Test Execution Order
 
-By default, test methods will be ordered using an algorithm that is deterministic but
-intentionally nonobvious. This ensures that subsequent runs of a test suite execute test
-methods in the same order, thereby allowing for repeatable builds.
+By default, test classes and methods will be ordered using an algorithm that is
+deterministic but intentionally nonobvious. This ensures that subsequent runs of several
+test suites execute test methods in the same order, thereby allowing for repeatable
+builds.
 
-NOTE: See <<writing-tests-classes-and-methods>> for a definition of _test method_.
+NOTE: See <<writing-tests-classes-and-methods>> for a definition of _test method_ and
+_test class_.
+
+==== Method Order
 
 Although true _unit tests_ typically should not rely on the order in which they are
 executed, there are times when it is necessary to enforce a specific test method execution
@@ -551,7 +555,7 @@ include::{testDir}/example/OrderedTestsDemo.java[tags=user_guide]
 ----
 
 [[writing-tests-test-execution-order-default]]
-==== Setting the Default Method Orderer
+===== Setting the Default Method Orderer
 
 You can use the `junit.jupiter.testmethod.order.default` <<running-tests-config-params,
 configuration parameter>> to specify the fully qualified class name of the
@@ -572,6 +576,43 @@ junit.jupiter.testmethod.order.default = \
 
 Similarly, you can specify the fully qualified name of any custom class that implements
 `MethodOrderer`.
+
+==== Class Order
+
+For build optimization purposes, it can be helpful to run _test classes_ in a specific
+order.
+For example:
+* previously failed tests and faster tests first: fail fast
+* with parallelism enabled, longer tests first: shortest test execution duration
+* etc.
+
+You can use the `junit.jupiter.testclass.order.default`
+<<running-tests-config-params, configuration parameter>> to specify the fully qualified
+class name of the `{ClassOrderer}` you would like to use. The supplied class has to
+implement the `ClassOrderer` interface.
+
+You can implement your own custom `ClassOrderer` or use one of the
+following built-in `ClassOrderer` implementations.
+
+* `{DisplayName}`: sorts test classes _alphanumerically_ based on their display names
+  (see <<writing-tests-display-name-generator-precedence-rules, display name generation
+  precedence rules>>).
+* `{ClassName}`: sorts test classes _alphanumerically_ based on their class name.
+* `{OrderAnnotation}`: sorts test classes _numerically_ based on values specified via the
+  `{Order}` annotation.
+* `{Random}`: orders test classes _pseudo-randomly_ and supports configuration of a
+  custom _seed_.
+
+For example for the `@Order` annotation to be honored on _test classes_, you should set
+the `{OrderAnnotation}` class orderer, using the configuration parameter with the
+corresponding fully qualified class name (e.g., in
+`src/test/resources/junit-platform.properties`):
+
+[source,properties,indent=0]
+----
+junit.jupiter.testclass.order.default = \
+    org.junit.jupiter.api.ClassOrderer$OrderAnnotation
+----
 
 [[writing-tests-test-instance-lifecycle]]
 === Test Instance Lifecycle
