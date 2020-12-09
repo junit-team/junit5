@@ -67,12 +67,13 @@ class ExtensionComposabilityTests {
 
 		// 3) Dynamically implement all Extension APIs
 		Object dynamicKitchenSinkExtension = Proxy.newProxyInstance(getClass().getClassLoader(),
-			extensionApis.toArray(new Class<?>[extensionApis.size()]), (proxy, method, args) -> null);
+			extensionApis.toArray(Class[]::new), (proxy, method, args) -> null);
 
 		// 4) Determine what ended up in the kitchen sink...
 
 		// @formatter:off
 		List<Method> actualMethods = Arrays.stream(dynamicKitchenSinkExtension.getClass().getDeclaredMethods())
+				.filter(ReflectionUtils::isNotStatic)
 				.collect(toList());
 
 		List<String> actualMethodSignatures = actualMethods.stream()
