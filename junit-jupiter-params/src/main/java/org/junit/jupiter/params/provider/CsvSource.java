@@ -118,4 +118,12 @@ public @interface CsvSource {
 	@API(status = EXPERIMENTAL, since = "5.7")
 	int maxCharsPerColumn() default 4096;
 
+	/**
+	 * The trim leading and trailing characters of per CSV column allowed.
+	 *
+	 * <p>Must be a boolean value.
+	 *
+	 * <p>Defaults to {@code true}.
+	 */
+	boolean ignoreTrailingAndLeadingWhitespace() default true;
 }

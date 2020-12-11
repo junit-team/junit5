@@ -39,6 +39,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 	protected String emptyValue = "";
 	protected String[] nullValues = new String[0];
 	protected int maxCharsPerColumn = 4096;
+	protected boolean ignoreTrailingAndLeadingWhitespace = false;
 
 	private MockCsvAnnotationBuilder() {
 	}
@@ -70,6 +71,11 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 		return getSelf();
 	}
 
+	B ignoreTrailingAndLeadingWhitespace(boolean ignoreTrailingAndLeadingWhitespace) {
+		this.ignoreTrailingAndLeadingWhitespace = ignoreTrailingAndLeadingWhitespace;
+		return getSelf();
+	}
+
 	abstract A build();
 
 	// -------------------------------------------------------------------------
@@ -98,6 +104,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
 			when(annotation.nullValues()).thenReturn(super.nullValues);
 			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
+			when(annotation.ignoreTrailingAndLeadingWhitespace()).thenReturn(super.ignoreTrailingAndLeadingWhitespace);
 
 			// @CsvSource
 			when(annotation.value()).thenReturn(this.lines);

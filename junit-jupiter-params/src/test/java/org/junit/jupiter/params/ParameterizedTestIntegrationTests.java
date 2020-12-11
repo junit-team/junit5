@@ -695,6 +695,12 @@ class ParameterizedTestIntegrationTests {
 			fail("concatenation: " + concatenation);
 		}
 
+		@ParameterizedTest
+		@CsvSource(value = { " ab,  cd", "ef, gh" }, ignoreTrailingAndLeadingWhitespace = false)
+		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespace(String argument) {
+			fail(argument);
+		}
+
 	}
 
 	static class NullSourceTestCase {
