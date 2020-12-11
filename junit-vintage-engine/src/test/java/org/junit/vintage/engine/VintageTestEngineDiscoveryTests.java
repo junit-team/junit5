@@ -168,6 +168,10 @@ class VintageTestEngineDiscoveryTests {
 
 		TestDescriptor suiteDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		assertRunnerTestDescriptor(suiteDescriptor, suiteClass);
+		assertThat(suiteDescriptor.getDisplayName()).describedAs("display name") //
+				.startsWith(suiteClass.getSimpleName());
+		assertThat(suiteDescriptor.getLegacyReportingName()).describedAs("legacy reporting name") //
+				.isEqualTo(suiteClass.getName());
 
 		TestDescriptor testClassDescriptor = getOnlyElement(suiteDescriptor.getChildren());
 		assertContainerTestDescriptor(testClassDescriptor, suiteClass, testClass);

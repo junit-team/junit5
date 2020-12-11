@@ -61,7 +61,8 @@ GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The legacy reporting name of top-level test classes is now always their fully-qualified
+  class name. Previously, a textual description was returned for JUnit 3 suites.
 
 ==== Deprecations and Breaking Changes
 
