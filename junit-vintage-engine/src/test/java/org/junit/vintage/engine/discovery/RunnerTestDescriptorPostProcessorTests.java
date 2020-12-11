@@ -28,7 +28,6 @@ import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
-import org.junit.vintage.engine.descriptor.TestSourceProvider;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCaseWithNotFilterableRunner;
 import org.junit.vintage.engine.samples.junit4.NotFilterableRunner;
@@ -75,8 +74,7 @@ class RunnerTestDescriptorPostProcessorTests {
 			mock(LauncherDiscoveryListener.class)).build();
 		TestDescriptor engineDescriptor = new VintageDiscoverer().discover(request, VintageUniqueIdBuilder.engineId());
 		var runnerTestDescriptor = (RunnerTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
-		new RunnerTestDescriptorPostProcessor(new TestSourceProvider()).applyFiltersAndCreateDescendants(
-			runnerTestDescriptor);
+		new RunnerTestDescriptorPostProcessor().applyFiltersAndCreateDescendants(runnerTestDescriptor);
 	}
 
 }
