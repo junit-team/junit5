@@ -144,6 +144,60 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
+	void defaultLeadingSpaces() {
+		var annotation = csvSource("   as, null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
+	}
+
+	@Test
+	void defaultLeadingSpacesWithIgnoredTrailingAndLeadingWhitespace() {
+		var annotation = csvSource(false, "   as, null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("   as", "null", null, "apple"));
+	}
+
+	@Test
+	void defaultTrailingSpaces() {
+		var annotation = csvSource("as      , null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
+	}
+
+	@Test
+	void defaultTrailingSpacesWithIgnoredTrailingAndLeadingSpaces() {
+		var annotation = csvSource(false, "as      , null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("as      ", "null", null, "apple"));
+	}
+
+	@Test
+	void defaultLeadingAndTrailingSpaces() {
+		var annotation = csvSource("        as      , null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
+	}
+
+	@Test
+	void defaultLeadingAndTrailingSpacesWithIgnoredTrailingAndLeadingSpaces() {
+		var annotation = csvSource(false, " as ,orange,apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array(" as ", "orange", "apple"));
+	}
+
+	@Test
 	void customEmptyValueAndDefaultNullValue() {
 		var annotation = csvSource().emptyValue("EMPTY").lines("'', null, , apple").build();
 

@@ -431,6 +431,37 @@ class CsvFileArgumentsProviderTests {
 				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
 
+	@Test
+	void ignoreTrimLeadingAndTrailingSpaces(@TempDir Path tempDir) throws java.io.IOException {
+		var csvFile = writeClasspathResourceToFile("/trailing-leading-spaces.csv",
+			tempDir.resolve("trailing-leading-spaces.csv"));
+		var annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/trailing-leading-spaces.csv")//
+				.files(csvFile.toAbsolutePath().toString())//
+				.build(true);
+		System.out.println(annotation.ignoreTrailingAndLeadingWhitespace());
+		var arguments = provideArguments(new ByteArrayInputStream(Files.readAllBytes(csvFile)), annotation);
+
+		assertThat(arguments).containsExactly(array("a", "b", "c"));
+	}
+
+	@Test
+	void notIgnoreTrimLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
+		var csvFile = writeClasspathResourceToFile("/trailing-leading-spaces.csv",
+			tempDir.resolve("trailing-leading-spaces.csv"));
+		var annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/trailing-leading-spaces.csv")//
+				.files(csvFile.toAbsolutePath().toString())//
+				.delimiter(',')//
+				.build(false);
+
+		var arguments = provideArguments(new ByteArrayInputStream(Files.readAllBytes(csvFile)), annotation);
+
+		assertThat(arguments).containsExactly(array("a", "b", "c"));
+	}
+
 	private Stream<Object[]> provideArguments(CsvFileSource annotation, String content) {
 		return provideArguments(new ByteArrayInputStream(content.getBytes(UTF_8)), annotation);
 	}

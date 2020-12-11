@@ -165,6 +165,34 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
+	void executesWithIgnoreTrailingAndLeadingSetToFalseForCsvSource() {
+		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse", String.class);
+		results.allEvents().assertThatEvents().haveAtLeast(1,
+			event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+	}
+
+	@Test
+	void executesWithIgnoreTrailingAndLeadingSetToTrueForCsvSource() {
+		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue", String.class);
+		results.allEvents().assertThatEvents().haveAtLeast(1,
+			event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+	}
+
+	@Test
+	void executesWithIgnoreTrailingAndLeadingSetToFalseForCsvFileSource() {
+		var results = execute("testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse", String.class);
+		results.allEvents().assertThatEvents().haveAtLeast(1,
+			event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+	}
+
+	@Test
+	void executesWithIgnoreTrailingAndLeadingSetToTrueForCsvFileSource() {
+		var results = execute("testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue", String.class);
+		results.allEvents().assertThatEvents().haveAtLeast(1,
+			event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+	}
+
+	@Test
 	void failsContainerOnEmptyName() {
 		var results = execute("testWithEmptyName", String.class);
 		results.allEvents().assertThatEvents() //
@@ -693,6 +721,30 @@ class ParameterizedTestIntegrationTests {
 		@CsvSource({ "ab, cd", "ef, gh" })
 		void testWithAggregator(@AggregateWith(StringAggregator.class) String concatenation) {
 			fail("concatenation: " + concatenation);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = { " ab,  cd", "ef, gh" }, ignoreTrailingAndLeadingWhitespace = false)
+		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse(String argument) {
+			fail("arg:" + argument);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = { " ab,  cd", "ef, gh" }, ignoreTrailingAndLeadingWhitespace = true)
+		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue(String argument) {
+			fail("arg:" + argument);
+		}
+
+		@ParameterizedTest
+		@CsvFileSource(resources = "/trailing-leading-spaces.csv", ignoreTrailingAndLeadingWhitespace = false)
+		void testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse(String argument) {
+			fail("arg:" + argument);
+		}
+
+		@ParameterizedTest
+		@CsvFileSource(resources = "/trailing-leading-spaces.csv", ignoreTrailingAndLeadingWhitespace = true)
+		void testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue(String argument) {
+			fail("arg:" + argument);
 		}
 
 	}

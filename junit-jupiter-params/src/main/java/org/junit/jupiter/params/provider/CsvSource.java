@@ -118,4 +118,15 @@ public @interface CsvSource {
 	@API(status = EXPERIMENTAL, since = "5.7")
 	int maxCharsPerColumn() default 4096;
 
+	/**
+	 * Identifies whether leading and trailing whitespace characters of unquoted CSV columns should be ignored.
+	 *
+	 * <p>Must be a boolean value.
+	 *
+	 * <p>Defaults to {@code true}.
+	 *
+	 * @since 5.8
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
+	boolean ignoreTrailingAndLeadingWhitespace() default true;
 }
