@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.UniqueId;
@@ -48,6 +49,12 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner) {
 		super(uniqueId, runner.getDescription(), testClass.getSimpleName(), ClassSource.from(testClass));
 		this.runner = runner;
+	}
+
+	@Override
+	public String getLegacyReportingName() {
+		return getSource().map(source -> ((ClassSource) source).getClassName()) //
+				.orElseThrow(() -> new JUnitException("source should have been present"));
 	}
 
 	public Request toRequest() {
