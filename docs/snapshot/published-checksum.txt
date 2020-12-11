@@ -169,6 +169,7 @@
 38e2a564709738f2b86c1ec204d9a117  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.java
 38e734c05b7586098145c6ef859d3e3a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineFilter.java
 391119cf768405947e03e974f032ad73  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestMethod.java
+3969128d209875b540703c296e7f4e01  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 39839c61bbdf1f1466d1e6305eccb751  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/SummaryGeneratingListener.java
 3a002dcaa527f06ebcc3755669a6c028  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
 3a275936836db0687d615d964f546ac8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/DefaultTestInstances.java
@@ -194,6 +195,7 @@
 424808bcce8c946e7deb3e3e3460bb02  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/NestedClassTestDescriptor.java
 424a1720a3ee014faee39f382bb4e639  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptingTestExecutionListener.java
 4255f3a9e3d7f3945c3cc043c8b186b0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/package-info.java
+42cf27af2b0ff1b6b76f4f35c80af137  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
 42d3572ff01ad4879bbb98f9086ccedc  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClassSelector.java
 440aedb32073706df97cbca62967f7ff  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassExtensionContext.java
 4416f3133cefce93fa07813fd7c6a985  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseResult.java
@@ -426,8 +428,6 @@
 9eeb863aa510919e6f24149c6f1c3a99  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
-a0c3bbc62bdda4d582856a9b1ad28f34  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
-a13777605819a6ab3a2060956fa0b743  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
 a19dfa211e3f0f74ea007e63e78f479f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRangeCondition.java
 a1ea21eb6905311553d061647b2c98d0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/package-info.java
 a3112552fe1385621120dbc4f07796d6  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
