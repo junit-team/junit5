@@ -697,7 +697,13 @@ class ParameterizedTestIntegrationTests {
 
 		@ParameterizedTest
 		@CsvSource(value = { " ab,  cd", "ef, gh" }, ignoreTrailingAndLeadingWhitespace = false)
-		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespace(String argument) {
+		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = { " ab,  cd", "ef, gh" }, ignoreTrailingAndLeadingWhitespace = true)
+		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue(String argument) {
 			fail(argument);
 		}
 
