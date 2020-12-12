@@ -129,10 +129,16 @@ if (project in mavenizedProjects) {
 
 normalization {
 	runtimeClasspath {
-		// Ignore the JAR manifest when checking whether runtime classpath have changed
-		// because it contains timestamps and the commit checksum. This is used when
-		// checking whether a test task is up-to-date or can be loaded from the build cache.
-		ignore("/META-INF/MANIFEST.MF")
+		metaInf {
+			// Ignore inconsequential JAR manifest attributes such as timestamps and the commit checksum.
+			// This is used when checking whether runtime classpaths, e.g. of test tasks, have changed and
+			// improves cacheability of such tasks.
+			ignoreAttribute("Built-By")
+			ignoreAttribute("Build-Date")
+			ignoreAttribute("Build-Time")
+			ignoreAttribute("Build-Revision")
+			ignoreAttribute("Created-By")
+		}
 	}
 }
 
