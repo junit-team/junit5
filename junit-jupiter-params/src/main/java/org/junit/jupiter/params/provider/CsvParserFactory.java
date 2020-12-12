@@ -69,6 +69,8 @@ class CsvParserFactory {
 		settings.getFormat().setQuoteEscape(quote);
 		settings.setEmptyValue(emptyValue);
 		settings.setAutoConfigurationEnabled(false);
+		settings.setIgnoreLeadingWhitespaces(ignoreTrailingAndLeadingWhitespace);
+		settings.setIgnoreTrailingWhitespaces(ignoreTrailingAndLeadingWhitespace);
 		Preconditions.condition(maxCharsPerColumn > 0,
 			() -> "maxCharsPerColumn must be a positive number: " + maxCharsPerColumn);
 		settings.setMaxCharsPerColumn(maxCharsPerColumn);

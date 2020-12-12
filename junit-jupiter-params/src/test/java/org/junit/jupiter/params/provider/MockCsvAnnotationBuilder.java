@@ -39,7 +39,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 	protected String emptyValue = "";
 	protected String[] nullValues = new String[0];
 	protected int maxCharsPerColumn = 4096;
-	protected boolean ignoreTrailingAndLeadingWhitespace = false;
+	protected boolean ignoreTrailingAndLeadingWhitespace = true;
 
 	private MockCsvAnnotationBuilder() {
 	}
