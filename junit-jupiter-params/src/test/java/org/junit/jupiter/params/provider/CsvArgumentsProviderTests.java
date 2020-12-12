@@ -144,6 +144,33 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
+	void defaultLeadingSpaces() {
+		var annotation = csvSource("   as, null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
+	}
+
+	@Test
+	void defaultTrailingSpaces() {
+		var annotation = csvSource("as      , null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
+	}
+
+	@Test
+	void defaultLeadingAndTrailingSpaces() {
+		var annotation = csvSource("        as      , null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
+	}
+
+	@Test
 	void customEmptyValueAndDefaultNullValue() {
 		var annotation = csvSource().emptyValue("EMPTY").lines("'', null, , apple").build();
 
