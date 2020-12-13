@@ -455,6 +455,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(nestedInstance, instanceMap.get(nestedPreDestroyCallbackTestInstanceKey).getInnermostInstance());
 
 		Object outerInstance = instanceMap.get(nestedExecutionConditionKey1).findInstance(testClass).get();
+		assertSame(outerInstance, instance);
 		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey).getInnermostInstance());
 		assertSame(outerInstance, instanceMap.get(preDestroyCallbackTestInstanceKey).getInnermostInstance());
 

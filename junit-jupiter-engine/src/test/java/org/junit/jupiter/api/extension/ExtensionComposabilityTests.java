@@ -14,8 +14,10 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.platform.commons.util.FunctionUtils.where;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +53,7 @@ class ExtensionComposabilityTests {
 				.map(Class::getDeclaredMethods)
 				.flatMap(Arrays::stream)
 				.filter(not(Method::isSynthetic))
+				.filter(not(where(Method::getModifiers, Modifier::isStatic)))
 				.collect(toList());
 
 		List<String> expectedMethodSignatures = expectedMethods.stream()
