@@ -89,16 +89,14 @@ public interface TestInstancePreDestroyCallback extends Extension {
 	 * <p>This method is intended to be called from an implementation of
 	 * {@link #preDestroyTestInstance(ExtensionContext)} like this:
 	 *
-	 * <pre>{@code
-	 * class MyExtension implements TestInstancePreDestroyCallback {
-	 *     @Override
-	 *     public void preDestroyTestInstance(ExtensionContext context) {
-	 *         TestInstancePreDestroyCallback.preDestroyTestInstances(context, testInstance -> {
-	 *             // custom logic that processes testInstance
-	 *         });
-	 *     }
-	 * }
-	 * }</pre>
+	 * <pre><code>class MyExtension implements TestInstancePreDestroyCallback {
+	 *    {@literal @}Override
+	 *    public void preDestroyTestInstance(ExtensionContext context) {
+	 *        TestInstancePreDestroyCallback.preDestroyTestInstances(context, testInstance -{@literal >} {
+	 *            // custom logic that processes testInstance
+	 *        });
+	 *    }
+	 *}</code></pre>
 	 *
 	 * @param context the current extension context; never {@code null}
 	 * @param callback the callback to be invoked for every test instance of the
