@@ -222,16 +222,14 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
  <p>This method is intended to be called from an implementation of
  <a href="#preDestroyTestInstance(org.junit.jupiter.api.extension.ExtensionContext)"><code>preDestroyTestInstance(ExtensionContext)</code></a> like this:
 
- <pre><code>
- class MyExtension implements TestInstancePreDestroyCallback {
-     @Override
-     public void preDestroyTestInstance(ExtensionContext context) {
-         TestInstancePreDestroyCallback.preDestroyTestInstances(context, testInstance -&gt; {
-             // custom logic that processes testInstance
-         });
-     }
- }
- </code></pre></div>
+ <pre><code>class MyExtension implements TestInstancePreDestroyCallback {
+    @Override
+    public void preDestroyTestInstance(ExtensionContext context) {
+        TestInstancePreDestroyCallback.preDestroyTestInstances(context, testInstance -&gt; {
+            // custom logic that processes testInstance
+        });
+    }
+}</code></pre></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>
