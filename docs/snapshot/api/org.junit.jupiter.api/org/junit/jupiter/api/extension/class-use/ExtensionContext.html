@@ -388,10 +388,20 @@ loadScripts(document, 'script');</script>
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TestInstancePreDestroyCallback.</span><code><span class="member-name-link"><a href="../TestInstancePreDestroyCallback.html#preDestroyTestInstance(org.junit.jupiter.api.extension.ExtensionContext)">preDestroyTestInstance</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="col-last">
-<div class="block">Callback for processing a test instance before it is destroyed.</div>
+<div class="block">Callback for processing test instances before they are destroyed.</div>
 </td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>static void</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">TestInstancePreDestroyCallback.</span><code><span class="member-name-link"><a href="../TestInstancePreDestroyCallback.html#preDestroyTestInstances(org.junit.jupiter.api.extension.ExtensionContext,java.util.function.Consumer)">preDestroyTestInstances</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;callback)</code></th>
+<td class="col-last">
+<div class="block">Utility method for processing <em>all</em> test instances of an
+ <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a> that are not present in any of its parent
+ contexts.</div>
+</td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="../TestTemplateInvocationContext.html" title="interface in org.junit.jupiter.api.extension">TestTemplateInvocationContext</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TestTemplateInvocationContextProvider.</span><code><span class="member-name-link"><a href="../TestTemplateInvocationContextProvider.html#provideTestTemplateInvocationContexts(org.junit.jupiter.api.extension.ExtensionContext)">provideTestTemplateInvocationContexts</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="col-last">
@@ -399,7 +409,7 @@ loadScripts(document, 'script');</script>
  for the test template method represented by the supplied <code>context</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ParameterResolver.</span><code><span class="member-name-link"><a href="../ParameterResolver.html#resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">resolveParameter</a></span>&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
 <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
@@ -408,7 +418,7 @@ loadScripts(document, 'script');</script>
  for the supplied <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ParameterResolver.</span><code><span class="member-name-link"><a href="../ParameterResolver.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">supportsParameter</a></span>&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
 <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
@@ -418,7 +428,7 @@ loadScripts(document, 'script');</script>
  <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TestTemplateInvocationContextProvider.</span><code><span class="member-name-link"><a href="../TestTemplateInvocationContextProvider.html#supportsTestTemplate(org.junit.jupiter.api.extension.ExtensionContext)">supportsTestTemplate</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="col-last">
@@ -426,7 +436,7 @@ loadScripts(document, 'script');</script>
  test template method represented by the supplied <code>context</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TestWatcher.</span><code><span class="member-name-link"><a href="../TestWatcher.html#testAborted(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">testAborted</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;cause)</code></th>
@@ -434,7 +444,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Invoked after a test has been aborted.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TestWatcher.</span><code><span class="member-name-link"><a href="../TestWatcher.html#testDisabled(org.junit.jupiter.api.extension.ExtensionContext,java.util.Optional)">testDisabled</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;reason)</code></th>
@@ -442,7 +452,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Invoked after a disabled test has been skipped.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TestWatcher.</span><code><span class="member-name-link"><a href="../TestWatcher.html#testFailed(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">testFailed</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;cause)</code></th>
@@ -450,7 +460,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Invoked after a test has failed.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TestWatcher.</span><code><span class="member-name-link"><a href="../TestWatcher.html#testSuccessful(org.junit.jupiter.api.extension.ExtensionContext)">testSuccessful</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="col-last">

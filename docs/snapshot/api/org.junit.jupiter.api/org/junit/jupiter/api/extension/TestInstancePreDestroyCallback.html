@@ -16,8 +16,8 @@
 <script type="text/javascript" src="../../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+<script type="text/javascript">var data = {"i0":6,"i1":1};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -132,7 +132,7 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t3" class="table-tab" onclick="show(4);">Abstract Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t3" class="table-tab" onclick="show(4);">Abstract Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -147,7 +147,17 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#preDestroyTestInstance(org.junit.jupiter.api.extension.ExtensionContext)">preDestroyTestInstance</a></span>&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="col-last">
-<div class="block">Callback for processing a test instance before it is destroyed.</div>
+<div class="block">Callback for processing test instances before they are destroyed.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>static void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#preDestroyTestInstances(org.junit.jupiter.api.extension.ExtensionContext,java.util.function.Consumer)">preDestroyTestInstances</a></span>&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;callback)</code></th>
+<td class="col-last">
+<div class="block">Utility method for processing <em>all</em> test instances of an
+ <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a> that are not present in any of its parent
+ contexts.</div>
 </td>
 </tr>
 </tbody>
@@ -170,7 +180,14 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <h3>preDestroyTestInstance</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="member-name">preDestroyTestInstance</span>&#8203;(<span class="parameters"><a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</span>
                      throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
-<div class="block">Callback for processing a test instance before it is destroyed.</div>
+<div class="block">Callback for processing test instances before they are destroyed.
+
+ <p>Contrary to <a href="TestInstancePostProcessor.html#postProcessTestInstance(java.lang.Object,org.junit.jupiter.api.extension.ExtensionContext)"><code>TestInstancePostProcessor.postProcessTestInstance(java.lang.Object, org.junit.jupiter.api.extension.ExtensionContext)</code></a>
+ this method is only called once for each <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a> even if
+ there are multiple test instances about to be destroyed in case of
+ <a href="../Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> tests. Please use the provided
+ <a href="#preDestroyTestInstances(org.junit.jupiter.api.extension.ExtensionContext,java.util.function.Consumer)"><code>preDestroyTestInstances(ExtensionContext, Consumer)</code></a> utility
+ method to ensure that all test instances are handled.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>
@@ -178,7 +195,51 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code></dd>
 <dt>See Also:</dt>
 <dd><a href="ExtensionContext.html#getTestInstance()"><code>ExtensionContext.getTestInstance()</code></a>, 
-<a href="ExtensionContext.html#getRequiredTestInstance()"><code>ExtensionContext.getRequiredTestInstance()</code></a></dd>
+<a href="ExtensionContext.html#getRequiredTestInstance()"><code>ExtensionContext.getRequiredTestInstance()</code></a>, 
+<a href="ExtensionContext.html#getTestInstances()"><code>ExtensionContext.getTestInstances()</code></a>, 
+<a href="ExtensionContext.html#getRequiredTestInstances()"><code>ExtensionContext.getRequiredTestInstances()</code></a>, 
+<a href="#preDestroyTestInstances(org.junit.jupiter.api.extension.ExtensionContext,java.util.function.Consumer)"><code>preDestroyTestInstances(ExtensionContext, Consumer)</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="preDestroyTestInstances(org.junit.jupiter.api.extension.ExtensionContext,java.util.function.Consumer)">
+<h3>preDestroyTestInstances</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.7.1")
+</span><span class="modifiers">static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">preDestroyTestInstances</span>&#8203;(<span class="parameters"><a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;callback)</span></div>
+<div class="block">Utility method for processing <em>all</em> test instances of an
+ <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a> that are not present in any of its parent
+ contexts.
+
+ <p>This method should be called in order to implement this interface
+ correctly since it ensures that the right test instances are processed
+ regardless of the used <a href="../TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api">lifecycle</a>. The supplied
+ callback is called once per test instance that is about to be destroyed
+ starting with the innermost one.
+
+ <p>This method is intended to be called from an implementation of
+ <a href="#preDestroyTestInstance(org.junit.jupiter.api.extension.ExtensionContext)"><code>preDestroyTestInstance(ExtensionContext)</code></a> like this:
+
+ <pre><code>
+ class MyExtension implements TestInstancePreDestroyCallback {
+     @Override
+     public void preDestroyTestInstance(ExtensionContext context) {
+         TestInstancePreDestroyCallback.preDestroyTestInstances(context, testInstance -&gt; {
+             // custom logic that processes testInstance
+         });
+     }
+ }
+ </code></pre></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - the current extension context; never <code>null</code></dd>
+<dd><code>callback</code> - the callback to be invoked for every test instance of the
+ current extension context that is about to be destroyed; never
+ <code>null</code></dd>
+<dt>Since:</dt>
+<dd>5.7.1</dd>
 </dl>
 </section>
 </li>
