@@ -56,6 +56,7 @@ GitHub.
 * The user guide now explains Nested Tests in more detail.
 * New utility method in `TestInstancePreDestroyCallback` helps to ensure all test
   instances are processed when used in conjunction with `@Nested` tests.
+* `JAVA_17` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.7.1-junit-vintage]]
