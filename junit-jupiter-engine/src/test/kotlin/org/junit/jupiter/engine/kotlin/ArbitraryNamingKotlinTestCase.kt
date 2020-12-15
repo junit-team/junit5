@@ -17,6 +17,7 @@ class ArbitraryNamingKotlinTestCase {
         val METHOD_NAME = "\uD83E\uDD86 ~|~test with a really, (really) terrible name & that needs to be changed!~|~"
     }
 
+    @Suppress("DANGEROUS_CHARACTERS")
     @Test
     fun `🦆 ~|~test with a really, (really) terrible name & that needs to be changed!~|~`() { }
 
