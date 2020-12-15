@@ -27,6 +27,9 @@ import org.apiguardian.api.API;
 @API(status = EXPERIMENTAL, since = "1.3")
 public class SameThreadHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
+	public SameThreadHierarchicalTestExecutorService() {
+	}
+
 	@Override
 	public Future<Void> submit(TestTask testTask) {
 		testTask.execute();

@@ -155,9 +155,9 @@ val compileModule by tasks.registering(JavaCompile::class) {
 	classpath = files()
 	options.release.set(9)
 	options.compilerArgs.addAll(listOf(
-			// "-verbose",
 			// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
 			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
+			"-Werror", // Terminates compilation when warnings occur.
 			"--module-version", "${project.version}",
 			"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
 	))

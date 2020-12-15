@@ -29,6 +29,9 @@ import org.junit.platform.engine.TestEngine;
 @API(status = MAINTAINED, since = "1.0")
 public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
 
+	public HierarchicalTestEngine() {
+	}
+
 	/**
 	 * Create an {@linkplain #createExecutorService(ExecutionRequest) executor
 	 * service}; create an initial {@linkplain #createExecutionContext execution
