@@ -2,6 +2,7 @@ import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
 import org.gradle.api.internal.file.archive.ZipCopyAction
+import java.nio.file.Files
 
 // This registers a `doLast` action to rewrite the timestamps of the project's output JAR
 afterEvaluate {
@@ -9,8 +10,8 @@ afterEvaluate {
 
 	jarTask.doLast {
 
-		val newFile = createTempFile("rewrite-timestamp")
-		val originalOutput = jarTask.archiveFile.get().getAsFile()
+		val newFile = Files.createTempFile("rewrite-timestamp", null).toFile()
+		val originalOutput = jarTask.archiveFile.get().asFile
 
 		newFile.outputStream().use { os ->
 
