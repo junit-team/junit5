@@ -12,6 +12,7 @@ package org.junit.jupiter.params.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.params.provider.MockCsvAnnotationBuilder.csvFileSource;
 import static org.junit.jupiter.params.provider.MockCsvAnnotationBuilder.csvSource;
 
 import java.util.stream.Stream;
@@ -151,6 +152,14 @@ class CsvArgumentsProviderTests {
 
 		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
 	}
+	@Test
+	void defaultLeadingSpacesWithIgnoredTrailingAndLeadingWhitespace() {
+		var annotation = csvSource(false,"   as, null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("   as", "null", null, "apple"));
+	}
 
 	@Test
 	void defaultTrailingSpaces() {
@@ -160,6 +169,14 @@ class CsvArgumentsProviderTests {
 
 		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
 	}
+	@Test
+	void defaultTrailingSpacesWithIgnoredTrailingAndLeadingSpaces() {
+		var annotation = csvSource(false,"as      , null, , apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("as      ", "null", null, "apple"));
+	}
 
 	@Test
 	void defaultLeadingAndTrailingSpaces() {
@@ -168,6 +185,14 @@ class CsvArgumentsProviderTests {
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("as", "null", null, "apple"));
+	}
+	@Test
+	void defaultLeadingAndTrailingSpacesWithIgnoredTrailingAndLeadingSpaces() {
+		var annotation = csvSource(false," as ,orange,apple");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array(" as ", "orange", "apple"));
 	}
 
 	@Test

@@ -23,6 +23,9 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 	static CsvSource csvSource(String... lines) {
 		return csvSource().lines(lines).build();
 	}
+	static CsvSource csvSource(boolean ignoreTrailingAndLeadingWhitespace, String... lines) {
+		return csvSource().lines(lines).build(ignoreTrailingAndLeadingWhitespace);
+	}
 
 	static MockCsvSourceBuilder csvSource() {
 		return new MockCsvSourceBuilder();
@@ -76,6 +79,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 		return getSelf();
 	}
 
+
 	abstract A build();
 
 	// -------------------------------------------------------------------------
@@ -105,6 +109,23 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			when(annotation.nullValues()).thenReturn(super.nullValues);
 			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
 			when(annotation.ignoreTrailingAndLeadingWhitespace()).thenReturn(super.ignoreTrailingAndLeadingWhitespace);
+
+			// @CsvSource
+			when(annotation.value()).thenReturn(this.lines);
+
+			return annotation;
+		}
+
+		CsvSource build(boolean ignoreTrailingAndLeadingWhitespace) {
+			var annotation = mock(CsvSource.class);
+
+			// Common
+			when(annotation.delimiter()).thenReturn(super.delimiter);
+			when(annotation.delimiterString()).thenReturn(super.delimiterString);
+			when(annotation.emptyValue()).thenReturn(super.emptyValue);
+			when(annotation.nullValues()).thenReturn(super.nullValues);
+			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
+			when(annotation.ignoreTrailingAndLeadingWhitespace()).thenReturn(ignoreTrailingAndLeadingWhitespace);
 
 			// @CsvSource
 			when(annotation.value()).thenReturn(this.lines);

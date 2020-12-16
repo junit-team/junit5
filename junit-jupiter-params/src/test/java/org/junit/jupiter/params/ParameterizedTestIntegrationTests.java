@@ -16,13 +16,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
-import static org.junit.platform.testkit.engine.EventConditions.container;
-import static org.junit.platform.testkit.engine.EventConditions.displayName;
-import static org.junit.platform.testkit.engine.EventConditions.event;
-import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.engine.EventConditions.started;
-import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.*;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
@@ -165,10 +159,24 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
+	void executesWithIgnoreTrailingAndLeadingSetToFalse() {
+		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse", String.class);
+		results.allEvents().assertThatEvents()
+				.haveAtLeast(1,
+						event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+	}
+	@Test
+	void executesWithIgnoreTrailingAndLeadingSetToTrue() {
+		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue", String.class);
+		results.allEvents().assertThatEvents()
+				.haveAtLeast(1,
+						event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+	}
+	@Test
 	void failsContainerOnEmptyName() {
 		var results = execute("testWithEmptyName", String.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(container(), displayName("testWithEmptyName(String)"), //
+				.haveAtLeast(1, event(container(), displayName("testWithEmptyName(String)"), //
 					finishedWithFailure(message(msg -> msg.contains("must be declared with a non-empty name")))));
 	}
 
@@ -698,13 +706,13 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest
 		@CsvSource(value = { " ab,  cd", "ef, gh" }, ignoreTrailingAndLeadingWhitespace = false)
 		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse(String argument) {
-			fail(argument);
+			fail("arg:" + argument);
 		}
 
 		@ParameterizedTest
 		@CsvSource(value = { " ab,  cd", "ef, gh" }, ignoreTrailingAndLeadingWhitespace = true)
 		void testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue(String argument) {
-			fail(argument);
+			fail("arg:" + argument);
 		}
 
 	}
