@@ -123,7 +123,7 @@ public @interface CsvSource {
 	 *
 	 * <p>Must be a boolean value.
 	 *
-	 * <p>Defaults to {@code false}.
+	 * <p>Defaults to {@code true}.
 	 *
 	 * @since 5.8
 	 */

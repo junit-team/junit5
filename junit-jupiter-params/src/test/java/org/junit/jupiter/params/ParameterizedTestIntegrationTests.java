@@ -160,14 +160,16 @@ class ParameterizedTestIntegrationTests {
 
 	@Test
 	void executesWithIgnoreTrailingAndLeadingSetToFalse() {
-		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse", String.class);
+		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse",
+				String.class);
 		results.allEvents().assertThatEvents()
 				.haveAtLeast(1,
 						event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
 	}
 	@Test
 	void executesWithIgnoreTrailingAndLeadingSetToTrue() {
-		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue", String.class);
+		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue",
+				String.class);
 		results.allEvents().assertThatEvents()
 				.haveAtLeast(1,
 						event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
@@ -176,7 +178,7 @@ class ParameterizedTestIntegrationTests {
 	void failsContainerOnEmptyName() {
 		var results = execute("testWithEmptyName", String.class);
 		results.allEvents().assertThatEvents() //
-				.haveAtLeast(1, event(container(), displayName("testWithEmptyName(String)"), //
+				.haveExactly(1, event(container(), displayName("testWithEmptyName(String)"), //
 					finishedWithFailure(message(msg -> msg.contains("must be declared with a non-empty name")))));
 	}
 
