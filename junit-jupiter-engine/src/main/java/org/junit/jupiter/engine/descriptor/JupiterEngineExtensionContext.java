@@ -16,10 +16,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.TestInstances;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
  * @since 5.0
@@ -27,7 +25,7 @@ import org.junit.platform.engine.support.hierarchical.Node;
 final class JupiterEngineExtensionContext extends AbstractExtensionContext<JupiterEngineDescriptor> {
 
 	JupiterEngineExtensionContext(EngineExecutionListener engineExecutionListener,
-								  JupiterEngineDescriptor testDescriptor, JupiterConfiguration configuration) {
+			JupiterEngineDescriptor testDescriptor, JupiterConfiguration configuration) {
 
 		super(null, engineExecutionListener, testDescriptor, configuration);
 	}
@@ -65,11 +63,6 @@ final class JupiterEngineExtensionContext extends AbstractExtensionContext<Jupit
 	@Override
 	public Optional<Throwable> getExecutionException() {
 		return Optional.empty();
-	}
-
-	@Override
-	public Optional<Node.ExecutionMode> getExecutionMode() {
-		return Optional.of(this.getTestDescriptor().getExecutionMode());
 	}
 
 }

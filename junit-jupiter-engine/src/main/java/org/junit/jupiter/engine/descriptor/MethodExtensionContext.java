@@ -17,10 +17,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -78,11 +76,6 @@ final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTe
 	@Override
 	public Optional<Throwable> getExecutionException() {
 		return Optional.ofNullable(this.throwableCollector.getThrowable());
-	}
-
-	@Override
-	public Optional<Node.ExecutionMode> getExecutionMode() {
-		return Optional.of(this.getTestDescriptor().getExecutionMode());
 	}
 
 }

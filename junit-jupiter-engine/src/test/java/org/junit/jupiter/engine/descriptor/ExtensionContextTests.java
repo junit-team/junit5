@@ -85,8 +85,7 @@ public class ExtensionContextTests {
 			() -> assertThrows(PreconditionViolationException.class, () -> engineContext.getRequiredTestMethod()),
 			() -> assertThat(engineContext.getDisplayName()).isEqualTo(engineTestDescriptor.getDisplayName()),
 			() -> assertThat(engineContext.getParent()).isEmpty(),
-			() -> assertThat(engineContext.getRoot()).isSameAs(engineContext),
-				() -> assertThat(engineContext.getExecutionMode()).isEmpty()
+			() -> assertThat(engineContext.getRoot()).isSameAs(engineContext)
 		);
 		// @formatter:on
 	}
@@ -110,8 +109,7 @@ public class ExtensionContextTests {
 			() -> assertThrows(PreconditionViolationException.class, () -> outerExtensionContext.getRequiredTestInstance()),
 			() -> assertThrows(PreconditionViolationException.class, () -> outerExtensionContext.getRequiredTestMethod()),
 			() -> assertThat(outerExtensionContext.getDisplayName()).isEqualTo(outerClassDescriptor.getDisplayName()),
-			() -> assertThat(outerExtensionContext.getParent()).isEmpty(),
-				() -> assertThat(outerExtensionContext.getExecutionMode()).isEmpty()
+			() -> assertThat(outerExtensionContext.getParent()).isEmpty()
 		);
 		// @formatter:on
 
@@ -177,8 +175,7 @@ public class ExtensionContextTests {
 			() -> assertThat(methodExtensionContext.getRequiredTestMethod()).isEqualTo(testMethod),
 			() -> assertThat(methodExtensionContext.getDisplayName()).isEqualTo(methodTestDescriptor.getDisplayName()),
 			() -> assertThat(methodExtensionContext.getParent()).contains(classExtensionContext),
-			() -> assertThat(methodExtensionContext.getRoot()).isSameAs(engineExtensionContext),
-				() -> assertThat(methodExtensionContext.getExecutionMode().isEmpty())
+			() -> assertThat(methodExtensionContext.getRoot()).isSameAs(engineExtensionContext)
 		);
 		// @formatter:on
 	}

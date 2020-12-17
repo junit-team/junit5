@@ -17,10 +17,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
  * @since 5.0
@@ -72,8 +70,4 @@ final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTe
 		return Optional.empty();
 	}
 
-	@Override
-	public Optional<Node.ExecutionMode> getExecutionMode() {
-		return Optional.of(this.getTestDescriptor().getExecutionMode());
-	}
 }
