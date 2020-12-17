@@ -29,6 +29,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
  * {@code ExtensionContext} encapsulates the <em>context</em> in which the
@@ -382,6 +383,14 @@ public interface ExtensionContext {
 	 * @see Namespace#GLOBAL
 	 */
 	Store getStore(Namespace namespace);
+
+	/**
+	 * Get the {@link Node.ExecutionMode} associated with the current test, if available.
+	 *
+	 * @return an {@code Optional} containing the execution method; never {@code null} but
+	 * potentially empty
+	 */
+	Optional<Node.ExecutionMode> getExecutionMode();
 
 	/**
 	 * {@code Store} provides methods for extensions to save and retrieve data.
