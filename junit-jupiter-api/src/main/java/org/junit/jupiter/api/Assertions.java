@@ -3448,4 +3448,15 @@ public class Assertions {
 		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
 	}
 
+	public static void assertInstanceOf(Class<?> expectedType, Object actualValue) {
+		AssertInstanceOf.assertInstanceOf(expectedType, actualValue);
+	}
+
+	static void assertInstanceOf(Class<?> expectedType, Object actualValue, String message) {
+		AssertInstanceOf.assertInstanceOf(expectedType, actualValue, message);
+	}
+
+	static void assertInstanceOf(Class<?> expectedType, Object actualValue, Supplier<String> messageSupplier) {
+		AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
+	}
 }
