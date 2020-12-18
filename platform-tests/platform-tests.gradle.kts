@@ -53,7 +53,7 @@ tasks {
 		useJUnitPlatform {
 			excludeTags("exclude")
 		}
-		jvmArgs = listOf("-Xmx1g")
+		jvmArgs("-Xmx1g")
 	}
 	test_4_12 {
 		useJUnitPlatform {
