@@ -717,6 +717,20 @@ class ParameterizedTestIntegrationTests {
 			fail("arg:" + argument);
 		}
 
+		@ParameterizedTest
+		@CsvFileSource(resources = "/trailing-leading-spaces.csv",
+				ignoreTrailingAndLeadingWhitespace = false)
+		void testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse(String argument) {
+			fail("arg:" + argument);
+		}
+
+		@ParameterizedTest
+		@CsvFileSource(resources = "/trailing-leading-spaces.csv",
+				ignoreTrailingAndLeadingWhitespace = true)
+		void testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue(String argument) {
+			fail("arg:" + argument);
+		}
+
 	}
 
 	static class NullSourceTestCase {

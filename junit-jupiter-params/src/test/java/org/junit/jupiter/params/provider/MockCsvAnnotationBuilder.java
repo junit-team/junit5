@@ -142,6 +142,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 		private String encoding = "UTF-8";
 		private String lineSeparator = "\n";
 		private int numLinesToSkip = 0;
+		private boolean ignoreTrailingAndLeadingWhitespace = true;
 
 		@Override
 		protected MockCsvFileSourceBuilder getSelf() {
@@ -172,6 +173,11 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			this.numLinesToSkip = numLinesToSkip;
 			return this;
 		}
+		MockCsvFileSourceBuilder ignoreTrailingAndLeadingWhitespace(boolean ignoreTrailingAndLeadingWhitespace) {
+			this.ignoreTrailingAndLeadingWhitespace = ignoreTrailingAndLeadingWhitespace;
+			return this;
+		}
+
 
 		@Override
 		CsvFileSource build() {
@@ -190,10 +196,31 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			when(annotation.encoding()).thenReturn(this.encoding);
 			when(annotation.lineSeparator()).thenReturn(this.lineSeparator);
 			when(annotation.numLinesToSkip()).thenReturn(this.numLinesToSkip);
+			when(annotation.ignoreTrailingAndLeadingWhitespace()).thenReturn(ignoreTrailingAndLeadingWhitespace);
 
 			return annotation;
 		}
 
+		CsvFileSource build(boolean ignoreTrailingAndLeadingWhitespace) {
+			var annotation = mock(CsvFileSource.class);
+
+			// Common
+			when(annotation.delimiter()).thenReturn(super.delimiter);
+			when(annotation.delimiterString()).thenReturn(super.delimiterString);
+			when(annotation.emptyValue()).thenReturn(super.emptyValue);
+			when(annotation.nullValues()).thenReturn(super.nullValues);
+			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
+
+			// @CsvFileSource
+			when(annotation.resources()).thenReturn(this.resources);
+			when(annotation.files()).thenReturn(this.files);
+			when(annotation.encoding()).thenReturn(this.encoding);
+			when(annotation.lineSeparator()).thenReturn(this.lineSeparator);
+			when(annotation.numLinesToSkip()).thenReturn(this.numLinesToSkip);
+			when(annotation.ignoreTrailingAndLeadingWhitespace()).thenReturn(ignoreTrailingAndLeadingWhitespace);
+
+			return annotation;
+		}
 	}
 
 }
