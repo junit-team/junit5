@@ -98,11 +98,15 @@ allprojects {
 	}
 
 	repositories {
-		// mavenLocal()
 		mavenCentral()
 		maven(url = "https://oss.sonatype.org/content/repositories/snapshots") {
 			mavenContent {
 				snapshotsOnly()
+			}
+		}
+		maven(url = "https://jitpack.io") {
+			mavenContent {
+				includeModule("com.github.gunnarmorling", "jfrunit")
 			}
 		}
 	}

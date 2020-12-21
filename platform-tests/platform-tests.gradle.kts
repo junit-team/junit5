@@ -12,6 +12,7 @@ dependencies {
 	testImplementation(project(":junit-platform-commons"))
 	testImplementation(project(":junit-platform-console"))
 	testImplementation(project(":junit-platform-engine"))
+	testImplementation(project(":junit-platform-jfr"))
 	testImplementation(project(":junit-platform-launcher"))
 
 	// --- Things we are testing with ---------------------------------------------
@@ -21,6 +22,7 @@ dependencies {
 	testImplementation(testFixtures(project(":junit-platform-launcher")))
 	testImplementation(project(":junit-jupiter-engine"))
 	testImplementation("org.apiguardian:apiguardian-api")
+	testImplementation("com.github.gunnarmorling:jfrunit")
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(":junit-vintage-engine"))

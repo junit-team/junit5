@@ -30,6 +30,8 @@ on GitHub.
   nested container events when using the `EngineTestKit`. For example,
   `test(displayName("my test"))` can be used to match against a test whose display name is
   `my test`.
+* The `junit-platform-jfr` module now also reports events for containers, e.g. test
+  classes.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
