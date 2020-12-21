@@ -433,7 +433,6 @@ a3d25c16de03e37c3e7bd72176aa3b05  junit-jupiter-engine/src/main/java/org/junit/j
 a3dbb51fdad33db6771c29b2c80f67da  junit-platform-engine/src/main/java/org/junit/platform/engine/package-info.java
 a4002eb561678bf9ac2facce11dfbe15  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/MethodSelector.java
 a4160080d59dd510e7f78062b37ffee5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java
-a46d8cb474130d188600a32f08588789  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 a47cfa6cdf38a654c08b75bce7dd9535  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Timeout.java
 a48585c7f533d5fe622446fc8d95fe31  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportWriter.java
 a556392d8bd7ccb7e2c34969b1346ee5  documentation/src/test/java/example/timing/TimingExtensionTests.java
@@ -559,6 +558,7 @@ ccd7729dd592bfab0748ac5782e58e85  junit-platform-engine/src/main/java/org/junit/
 cd620b12b260e014835f58a43afe679d  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ModifierSupport.java
 ce078fcf30a66241fdb7d4b38f998392  junit-platform-engine/src/main/java/org/junit/platform/engine/SelectorResolutionResult.java
 ce6bd36ce510921eac72920002e6adaa  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptions.java
+cecbfd618162bd2d7967d02d79b4cbab  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 cee7ef9837f7539dad7519ce54a02776  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultMethodDescriptor.java
 cf6db05b9372507ef6ae0b098ac1d4bf  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineExecutionListener.java
 d0292ddb3127332fdb3180abde784839  documentation/src/test/java/org/junit/api/tools/MarkdownApiReportWriter.java
