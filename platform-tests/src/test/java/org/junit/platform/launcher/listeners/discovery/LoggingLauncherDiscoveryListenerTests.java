@@ -119,8 +119,10 @@ public class LoggingLauncherDiscoveryListenerTests extends AbstractLauncherDisco
 		assertThat(log.stream(LoggingLauncherDiscoveryListener.class, Level.FINER)) //
 				.extracting(LogRecord::getMessage) //
 				.containsExactly( //
+					"Test discovery started", //
 					"Engine [engine:some-engine] has started discovering tests", //
-					"Engine [engine:some-engine] has finished discovering tests");
+					"Engine [engine:some-engine] has finished discovering tests", //
+					"Test discovery finished");
 	}
 
 }

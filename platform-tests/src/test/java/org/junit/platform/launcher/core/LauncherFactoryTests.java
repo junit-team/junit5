@@ -187,7 +187,7 @@ class LauncherFactoryTests {
 
 			assertThat(launcherDiscoveryListener.getClass().getSimpleName()).startsWith("Composite");
 			assertThat(launcherDiscoveryListener).extracting("listeners").asList() //
-					.containsExactlyInAnyOrder(new TestLauncherDiscoveryListener(), abortOnFailure());
+					.contains(new TestLauncherDiscoveryListener(), abortOnFailure());
 		});
 	}
 

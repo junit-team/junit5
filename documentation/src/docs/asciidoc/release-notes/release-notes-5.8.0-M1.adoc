@@ -32,8 +32,10 @@ on GitHub.
   nested container events when using the `EngineTestKit`. For example,
   `test(displayName("my test"))` can be used to match against a test whose display name is
   `my test`.
-* The `junit-platform-jfr` module now also reports events for containers, e.g. test
-  classes.
+* The `junit-platform-jfr` module now also reports execution events for containers, e.g.
+  test classes.
+* The `junit-platform-jfr` module now also reports test discovery events for the launcher
+  and registered test engines.
 * Custom `LauncherDiscoveryListener` implementations can now be registered via Java’s
   `ServiceLoader` mechanism.
 
