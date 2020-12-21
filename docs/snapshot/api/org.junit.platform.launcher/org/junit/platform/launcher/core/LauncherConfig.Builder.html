@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -142,19 +142,27 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr class="alt-color" id="i4">
 <td class="col-first"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#enableLauncherDiscoveryListenerAutoRegistration(boolean)">enableLauncherDiscoveryListenerAutoRegistration</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
+<td class="col-last">
+<div class="block">Configure the auto-registration flag for launcher discovery
+ listeners.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
+<td class="col-first"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#enablePostDiscoveryFilterAutoRegistration(boolean)">enablePostDiscoveryFilterAutoRegistration</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
 <td class="col-last">
 <div class="block">Configure the auto-registration flag for post discovery filters.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#enableTestEngineAutoRegistration(boolean)">enableTestEngineAutoRegistration</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
 <td class="col-last">
 <div class="block">Configure the auto-registration flag for test engines.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#enableTestExecutionListenerAutoRegistration(boolean)">enableTestExecutionListenerAutoRegistration</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
 <td class="col-last">
@@ -179,6 +187,27 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="enableLauncherDiscoveryListenerAutoRegistration(boolean)">
+<h3>enableLauncherDiscoveryListenerAutoRegistration</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></span>&nbsp;<span class="member-name">enableLauncherDiscoveryListenerAutoRegistration</span>&#8203;(<span class="parameters">boolean&nbsp;enabled)</span></div>
+<div class="block">Configure the auto-registration flag for launcher discovery
+ listeners.
+
+ <p>Defaults to <code>true</code>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>enabled</code> - <code>true</code> if launcher discovery listeners should be
+ automatically registered</dd>
+<dt>Returns:</dt>
+<dd>this builder for method chaining</dd>
+<dt>Since:</dt>
+<dd>1.8</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="enableTestExecutionListenerAutoRegistration(boolean)">
 <h3>enableTestExecutionListenerAutoRegistration</h3>
@@ -226,6 +255,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  registered</dd>
 <dt>Returns:</dt>
 <dd>this builder for method chaining</dd>
+<dt>Since:</dt>
+<dd>1.7</dd>
 </dl>
 </section>
 </li>
@@ -270,6 +301,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  never <code>null</code> or containing <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>this builder for method chaining</dd>
+<dt>Since:</dt>
+<dd>1.7</dd>
 </dl>
 </section>
 </li>

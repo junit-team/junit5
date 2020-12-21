@@ -138,6 +138,11 @@ loadScripts(document, 'script');</script>
 <div class="block"><code>EnableJUnit4MigrationSupport</code> is a class-level annotation that
  enables all JUnit 4 migration support within JUnit Jupiter.</div>
 </dd>
+<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.Builder.html#enableLauncherDiscoveryListenerAutoRegistration(boolean)">enableLauncherDiscoveryListenerAutoRegistration(boolean)</a></span> - Method in class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></dt>
+<dd>
+<div class="block">Configure the auto-registration flag for launcher discovery
+ listeners.</div>
+</dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.Builder.html#enablePostDiscoveryFilterAutoRegistration(boolean)">enablePostDiscoveryFilterAutoRegistration(boolean)</a></span> - Method in class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></dt>
 <dd>
 <div class="block">Configure the auto-registration flag for post discovery filters.</div>
@@ -202,7 +207,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Orchestrates test discovery using the configured test engines.</div>
 </dd>
-<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineDiscoveryOrchestrator.html#%3Cinit%3E(java.lang.Iterable,java.util.Collection)">EngineDiscoveryOrchestrator(Iterable&lt;TestEngine&gt;, Collection&lt;PostDiscoveryFilter&gt;)</a></span> - Constructor for class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineDiscoveryOrchestrator.html" title="class in org.junit.platform.launcher.core">EngineDiscoveryOrchestrator</a></dt>
+<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineDiscoveryOrchestrator.html#%3Cinit%3E(java.lang.Iterable,java.util.Collection,java.util.Collection)">EngineDiscoveryOrchestrator(Iterable&lt;TestEngine&gt;, Collection&lt;PostDiscoveryFilter&gt;, Collection&lt;LauncherDiscoveryListener&gt;)</a></span> - Constructor for class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineDiscoveryOrchestrator.html" title="class in org.junit.platform.launcher.core">EngineDiscoveryOrchestrator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><span class="type-name-link">EngineDiscoveryRequest</span></a> - Interface in <a href="../org.junit.platform.engine/org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
 <dd>

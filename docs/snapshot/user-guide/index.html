@@ -741,14 +741,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#launcher-api-execution">6.1.2. Executing Tests</a></li>
 <li><a href="#launcher-api-engines-custom">6.1.3. Plugging in your own Test Engine</a></li>
 <li><a href="#launcher-api-post-discovery-filters-custom">6.1.4. Plugging in your own Post-Discovery Filters</a></li>
-<li><a href="#launcher-api-listeners-custom">6.1.5. Plugging in your own Test Execution Listener</a></li>
-<li><a href="#launcher-api-listeners-custom-deactivation">6.1.6. Deactivating Test Execution Listeners</a>
+<li><a href="#launcher-api-launcher-discovery-listeners-custom">6.1.5. Plugging in your own Discovery Listeners</a></li>
+<li><a href="#launcher-api-listeners-custom">6.1.6. Plugging in your own Execution Listener</a></li>
+<li><a href="#launcher-api-listeners-custom-deactivation">6.1.7. Deactivating Execution Listeners</a>
 <ul class="sectlevel4">
 <li><a href="#launcher-api-listeners-custom-deactivation-pattern">Pattern Matching Syntax</a></li>
 </ul>
 </li>
-<li><a href="#launcher-api-listeners-reporting">6.1.7. JUnit Platform Reporting</a></li>
-<li><a href="#launcher-api-launcher-config">6.1.8. Configuring the Launcher</a></li>
+<li><a href="#launcher-api-listeners-reporting">6.1.8. JUnit Platform Reporting</a></li>
+<li><a href="#launcher-api-launcher-config">6.1.9. Configuring the Launcher</a></li>
 </ul>
 </li>
 <li><a href="#testkit">6.2. JUnit Platform Test Kit</a>
@@ -6602,7 +6603,7 @@ parameters</em> used for the following features.</p>
 <p><a href="#extensions-conditions-deactivation">Deactivating Conditions</a></p>
 </li>
 <li>
-<p><a href="#launcher-api-listeners-custom-deactivation">Deactivating Test Execution Listeners</a></p>
+<p><a href="#launcher-api-listeners-custom-deactivation">Deactivating Execution Listeners</a></p>
 </li>
 </ul>
 </div>
@@ -8611,27 +8612,46 @@ violations.</p>
 <p>In addition to specifying post-discovery filters as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
 passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, by default custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html">PostDiscoveryFilter</a></code> implementations
 will be discovered at runtime via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism and
-automatically applied by the <code>Launcher</code> in addition to those that are part of the request.
-For example, an <code>example.CustomTagFilter</code> class implementing <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html">PostDiscoveryFilter</a></code> and
+automatically applied by the <code>Launcher</code> in addition to those that are part of the request.</p>
+</div>
+<div class="paragraph">
+<p>For example, an <code>example.CustomTagFilter</code> class implementing <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html">PostDiscoveryFilter</a></code> and
 declared within the <code>/META-INF/services/org.junit.platform.launcher.PostDiscoveryFilter</code>
 file is loaded and applied automatically.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>6.1.5. Plugging in your own Test Execution Listener</h4>
+<h4 id="launcher-api-launcher-discovery-listeners-custom"><a class="anchor" href="#launcher-api-launcher-discovery-listeners-custom"></a>6.1.5. Plugging in your own Discovery Listeners</h4>
+<div class="paragraph">
+<p>In addition to specifying post-discovery filters as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
+passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code> implementations can
+be discovered at runtime via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism and automatically
+automatically registered with the <code>Launcher</code> created via the <code>LauncherFactory</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, an <code>example.CustomLauncherDiscoveryListener</code> class implementing
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code> and declared within the
+<code>/META-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener</code> file is loaded
+and applied automatically.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>6.1.6. Plugging in your own Execution Listener</h4>
 <div class="paragraph">
 <p>In addition to the public <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution
 listeners programmatically, by default custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations
 will be discovered at runtime via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism and
-automatically registered with the <code>Launcher</code> created via the <code>LauncherFactory</code>. For
-example, an <code>example.TestInfoPrinter</code> class implementing <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> and
+automatically registered with the <code>Launcher</code> created via the <code>LauncherFactory</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, an <code>example.TestInfoPrinter</code> class implementing <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> and
 declared within the
 <code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file is loaded and
 registered automatically.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.1.6. Deactivating Test Execution Listeners</h4>
+<h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.1.7. Deactivating Execution Listeners</h4>
 <div class="paragraph">
 <p>Sometimes it can be useful to run a test suite <em>without</em> certain execution listeners being
 active. For example, you might have custom a <code>TestExecutionListener</code> that sends the test
@@ -8673,7 +8693,7 @@ supplied in the <code>LauncherDiscoveryRequest</code> that is passed to the <cod
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-reporting"><a class="anchor" href="#launcher-api-listeners-reporting"></a>6.1.7. JUnit Platform Reporting</h4>
+<h4 id="launcher-api-listeners-reporting"><a class="anchor" href="#launcher-api-listeners-reporting"></a>6.1.8. JUnit Platform Reporting</h4>
 <div class="paragraph">
 <p>The <code>junit-platform-reporting</code> artifact contains <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>
 implementations that generate test reports. These listeners are typically used by IDEs
@@ -8707,7 +8727,7 @@ implementations that can be used for reporting purposes. See <code><a href="../a
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.1.8. Configuring the Launcher</h4>
+<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.1.9. Configuring the Launcher</h4>
 <div class="paragraph">
 <p>If you require fine-grained control over automatic detection and registration of test
 engines and test execution listeners, you may create an instance of <code>LauncherConfig</code> and
@@ -9869,7 +9889,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2020-12-21 15:30:49 UTC
+Last updated 2020-12-21 16:47:36 UTC
 </div>
 </div>
 <style>

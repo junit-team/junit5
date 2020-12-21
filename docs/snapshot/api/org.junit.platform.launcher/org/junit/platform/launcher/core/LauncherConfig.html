@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":1,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6};
+<script type="text/javascript">var data = {"i0":1,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -189,6 +189,15 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 </tr>
 <tr class="alt-color" id="i4">
 <td class="col-first"><code>boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isLauncherDiscoveryListenerAutoRegistrationEnabled()">isLauncherDiscoveryListenerAutoRegistrationEnabled</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Determine if launcher discovery listeners should be discovered at runtime
+ using the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html" title="class or interface in java.util" class="external-link"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
+<td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isPostDiscoveryFilterAutoRegistrationEnabled()">isPostDiscoveryFilterAutoRegistrationEnabled</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Determine if post discovery filters should be discovered at runtime
@@ -196,7 +205,7 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
  automatically registered.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isTestEngineAutoRegistrationEnabled()">isTestEngineAutoRegistrationEnabled</a></span>()</code></th>
 <td class="col-last">
@@ -205,7 +214,7 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
  automatically registered.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isTestExecutionListenerAutoRegistrationEnabled()">isTestExecutionListenerAutoRegistrationEnabled</a></span>()</code></th>
 <td class="col-last">
@@ -243,6 +252,24 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 </section>
 </li>
 <li>
+<section class="detail" id="isLauncherDiscoveryListenerAutoRegistrationEnabled()">
+<h3>isLauncherDiscoveryListenerAutoRegistrationEnabled</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
+</span><span class="return-type">boolean</span>&nbsp;<span class="member-name">isLauncherDiscoveryListenerAutoRegistrationEnabled</span>()</div>
+<div class="block">Determine if launcher discovery listeners should be discovered at runtime
+ using the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html" title="class or interface in java.util" class="external-link"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><code>true</code> if launcher discovery listeners should be
+ automatically registered</dd>
+<dt>Since:</dt>
+<dd>1.8</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="isTestExecutionListenerAutoRegistrationEnabled()">
 <h3>isTestExecutionListenerAutoRegistrationEnabled</h3>
 <div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="member-name">isTestExecutionListenerAutoRegistrationEnabled</span>()</div>
@@ -269,6 +296,8 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 <dt>Returns:</dt>
 <dd><code>true</code> if post discovery filters should be automatically
  registered</dd>
+<dt>Since:</dt>
+<dd>1.7</dd>
 </dl>
 </section>
 </li>
@@ -310,6 +339,8 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 <dt>Returns:</dt>
 <dd>the collection of additional post discovery filters; never
  <code>null</code> but potentially empty</dd>
+<dt>Since:</dt>
+<dd>1.7</dd>
 </dl>
 </section>
 </li>
