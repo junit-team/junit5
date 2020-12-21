@@ -10,5 +10,6 @@ tasks.withType<KotlinCompile>().configureEach {
 		jvmTarget = Versions.jvmTarget.toString()
 		apiVersion = "1.3"
 		languageVersion = "1.3"
+		allWarningsAsErrors = true
 	}
 }

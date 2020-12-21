@@ -100,7 +100,6 @@ internal class KotlinAssertTimeoutAssertionsTests {
         val exception = assertThrows<RuntimeException> {
             assertTimeout(ofMillis(500)) {
                 ExceptionUtils.throwAsUncheckedException(RuntimeException("not this time"))
-                "Tempus Fugit"
             }
         }
         assertMessageEquals(exception, "not this time")
@@ -121,7 +120,6 @@ internal class KotlinAssertTimeoutAssertionsTests {
         val error = assertThrows<AssertionFailedError> {
             assertTimeout(ofMillis(10)) {
                 nap()
-                "Tempus Fugit"
             }
         }
         assertMessageStartsWith(error, "execution exceeded timeout of 10 ms by")
@@ -132,7 +130,6 @@ internal class KotlinAssertTimeoutAssertionsTests {
         val error = assertThrows<AssertionFailedError> {
             assertTimeout(ofMillis(10), "Tempus Fugit") {
                 nap()
-                "Tempus Fugit"
             }
         }
         assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by")
@@ -143,7 +140,6 @@ internal class KotlinAssertTimeoutAssertionsTests {
         val error = assertThrows<AssertionFailedError> {
             assertTimeout(ofMillis(10), { "Tempus" + " " + "Fugit" }) {
                 nap()
-                "Tempus Fugit"
             }
         }
         assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by")
@@ -225,7 +221,6 @@ internal class KotlinAssertTimeoutAssertionsTests {
         val exception = assertThrows<RuntimeException> {
             assertTimeoutPreemptively(ofMillis(500)) {
                 ExceptionUtils.throwAsUncheckedException(RuntimeException("not this time"))
-                "Tempus Fugit"
             }
         }
         assertMessageEquals(exception, "not this time")
@@ -246,7 +241,6 @@ internal class KotlinAssertTimeoutAssertionsTests {
         val error = assertThrows<AssertionFailedError> {
             assertTimeoutPreemptively(ofMillis(10)) {
                 waitForInterrupt()
-                "Tempus Fugit"
             }
         }
         assertMessageEquals(error, "execution timed out after 10 ms")
@@ -257,7 +251,6 @@ internal class KotlinAssertTimeoutAssertionsTests {
         val error = assertThrows<AssertionFailedError> {
             assertTimeoutPreemptively(ofMillis(10), "Tempus Fugit") {
                 waitForInterrupt()
-                "Tempus Fugit"
             }
         }
         assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms")
@@ -268,7 +261,6 @@ internal class KotlinAssertTimeoutAssertionsTests {
         val error = assertThrows<AssertionFailedError> {
             assertTimeoutPreemptively(ofMillis(10), { "Tempus" + " " + "Fugit" }) {
                 waitForInterrupt()
-                "Tempus Fugit"
             }
         }
         assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms")

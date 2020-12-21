@@ -92,6 +92,9 @@ public interface DisplayNameGenerator {
 
 		static final DisplayNameGenerator INSTANCE = new Standard();
 
+		public Standard() {
+		}
+
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
 			String name = testClass.getName();
@@ -122,6 +125,9 @@ public interface DisplayNameGenerator {
 
 		static final DisplayNameGenerator INSTANCE = new Simple();
 
+		public Simple() {
+		}
+
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
 			String displayName = testMethod.getName();
@@ -147,6 +153,9 @@ public interface DisplayNameGenerator {
 	class ReplaceUnderscores extends Simple {
 
 		static final DisplayNameGenerator INSTANCE = new ReplaceUnderscores();
+
+		public ReplaceUnderscores() {
+		}
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
@@ -184,6 +193,9 @@ public interface DisplayNameGenerator {
 	class IndicativeSentences implements DisplayNameGenerator {
 
 		static final DisplayNameGenerator INSTANCE = new IndicativeSentences();
+
+		public IndicativeSentences() {
+		}
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {

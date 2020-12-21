@@ -14,6 +14,9 @@ on:
   schedule:
     - cron: '0 19 * * 3'
 
+env:
+  ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
+
 jobs:
   analyze:
     name: Analyze
@@ -68,10 +71,14 @@ jobs:
     # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
+    - name: Prepare Gradle Enterprise credentials
+      run: |
+        mkdir -p $HOME/.gradle/enterprise/
+        echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > $HOME/.gradle/enterprise/keys.properties
     - name: Build
       run: |
         ./gradlew --version
-        ./gradlew allMainClasses -PjavaToolchainVersion=11
+        ./gradlew --no-build-cache allMainClasses -PjavaToolchainVersion=11
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

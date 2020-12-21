@@ -88,7 +88,7 @@ public final class EventConditions {
 	 * @see #uniqueIdSubstring(String)
 	 */
 	public static Condition<Event> test(String uniqueIdSubstring) {
-		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring));
+		return test(uniqueIdSubstring(uniqueIdSubstring));
 	}
 
 	/**
@@ -100,11 +100,31 @@ public final class EventConditions {
 	 * display name} equals the supplied {@link String}.
 	 *
 	 * @see #test()
+	 * @see #test(Condition)
 	 * @see #uniqueIdSubstring(String)
 	 * @see #displayName(String)
 	 */
 	public static Condition<Event> test(String uniqueIdSubstring, String displayName) {
 		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring), displayName(displayName));
+	}
+
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event} matches the supplied {@code Condition} and its
+	 * {@linkplain Event#getTestDescriptor() test descriptor} is a
+	 * {@linkplain TestDescriptor#isTest() test}.
+	 *
+	 * <p>For example, {@code test(displayName("my display name"))} can be used
+	 * to match against a test with the given display name.
+	 *
+	 * @since 1.8
+	 * @see #test(String)
+	 * @see #test(String, String)
+	 * @see #displayName(String)
+	 */
+	@API(status = MAINTAINED, since = "1.8")
+	public static Condition<Event> test(Condition<Event> condition) {
+		return allOf(test(), condition);
 	}
 
 	/**
@@ -160,6 +180,29 @@ public final class EventConditions {
 
 	/**
 	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event} matches the supplied {@code Condition}, its
+	 * {@linkplain Event#getTestDescriptor() test descriptor} is
+	 * a {@linkplain TestDescriptor#isContainer() container}, and its
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the
+	 * simple names of the supplied {@link Class} and all of its
+	 * {@linkplain Class#getEnclosingClass() enclosing classes}.
+	 *
+	 * <p>For example, {@code nestedContainer(MyNestedTests.class, displayName("my display name"))}
+	 * can be used to match against a nested container with the given display name.
+	 *
+	 * <p>Please note that this method does not differentiate between static
+	 * nested classes and non-static member classes (e.g., inner classes).
+	 *
+	 * @since 1.8
+	 * @see #nestedContainer(Class)
+	 */
+	@API(status = MAINTAINED, since = "1.8")
+	public static Condition<Event> nestedContainer(Class<?> clazz, Condition<Event> condition) {
+		return allOf(nestedContainer(clazz), condition);
+	}
+
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
 	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
 	 * a {@linkplain TestDescriptor#isContainer() container} and its
 	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the
@@ -168,6 +211,8 @@ public final class EventConditions {
 	 *
 	 * <p>Please note that this method does not differentiate between static
 	 * nested classes and non-static member classes (e.g., inner classes).
+	 *
+	 * @see #nestedContainer(Class, Condition)
 	 */
 	public static Condition<Event> nestedContainer(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");

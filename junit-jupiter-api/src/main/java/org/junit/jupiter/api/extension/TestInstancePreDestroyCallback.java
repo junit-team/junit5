@@ -10,9 +10,18 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 /**
  * {@code TestInstancePreDestroyCallback} defines the API for {@link Extension
@@ -24,9 +33,9 @@ import org.apiguardian.api.API;
  *
  * <p>Extensions that implement {@code TestInstancePreDestroyCallback} must be
  * registered at the class level if the test class is configured with
- * {@link org.junit.jupiter.api.TestInstance.Lifecycle @TestInstance(Lifecycle.PER_CLASS)}
+ * {@link Lifecycle @TestInstance(Lifecycle.PER_CLASS)}
  * semantics. If the test class is configured with
- * {@link org.junit.jupiter.api.TestInstance.Lifecycle @TestInstance(Lifecycle.PER_METHOD)}
+ * {@link Lifecycle @TestInstance(Lifecycle.PER_METHOD)}
  * semantics, {@code TestInstancePreDestroyCallback} extensions may be registered
  * at the class level or at the method level. In the latter case, the
  * {@code TestInstancePreDestroyCallback} extension will only be applied to the
@@ -48,12 +57,62 @@ import org.apiguardian.api.API;
 public interface TestInstancePreDestroyCallback extends Extension {
 
 	/**
-	 * Callback for processing a test instance before it is destroyed.
+	 * Callback for processing test instances before they are destroyed.
+	 *
+	 * <p>Contrary to {@link TestInstancePostProcessor#postProcessTestInstance}
+	 * this method is only called once for each {@link ExtensionContext} even if
+	 * there are multiple test instances about to be destroyed in case of
+	 * {@link Nested @Nested} tests. Please use the provided
+	 * {@link #preDestroyTestInstances(ExtensionContext, Consumer)} utility
+	 * method to ensure that all test instances are handled.
 	 *
 	 * @param context the current extension context; never {@code null}
 	 * @see ExtensionContext#getTestInstance()
 	 * @see ExtensionContext#getRequiredTestInstance()
+	 * @see ExtensionContext#getTestInstances()
+	 * @see ExtensionContext#getRequiredTestInstances()
+	 * @see #preDestroyTestInstances(ExtensionContext, Consumer)
 	 */
 	void preDestroyTestInstance(ExtensionContext context) throws Exception;
+
+	/**
+	 * Utility method for processing <em>all</em> test instances of an
+	 * {@link ExtensionContext} that are not present in any of its parent
+	 * contexts.
+	 *
+	 * <p>This method should be called in order to implement this interface
+	 * correctly since it ensures that the right test instances are processed
+	 * regardless of the used {@linkplain Lifecycle lifecycle}. The supplied
+	 * callback is called once per test instance that is about to be destroyed
+	 * starting with the innermost one.
+	 *
+	 * <p>This method is intended to be called from an implementation of
+	 * {@link #preDestroyTestInstance(ExtensionContext)} like this:
+	 *
+	 * <pre>{@code class MyExtension implements TestInstancePreDestroyCallback {
+	 *    @Override
+	 *    public void preDestroyTestInstance(ExtensionContext context) {
+	 *        TestInstancePreDestroyCallback.preDestroyTestInstances(context, testInstance -> {
+	 *            // custom logic that processes testInstance
+	 *        });
+	 *    }
+	 *}}</pre>
+	 *
+	 * @param context the current extension context; never {@code null}
+	 * @param callback the callback to be invoked for every test instance of the
+	 * current extension context that is about to be destroyed; never
+	 * {@code null}
+	 * @since 5.7.1
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7.1")
+	static void preDestroyTestInstances(ExtensionContext context, Consumer<Object> callback) {
+		List<Object> destroyedInstances = new ArrayList<>(context.getRequiredTestInstances().getAllInstances());
+		for (Optional<ExtensionContext> current = context.getParent(); current.isPresent(); current = current.get().getParent()) {
+			current.get().getTestInstances().map(TestInstances::getAllInstances).ifPresent(
+				destroyedInstances::removeAll);
+		}
+		Collections.reverse(destroyedInstances);
+		destroyedInstances.forEach(callback);
+	}
 
 }

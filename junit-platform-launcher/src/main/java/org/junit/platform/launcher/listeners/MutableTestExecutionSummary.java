@@ -250,7 +250,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		}
 		int duplicates = numberOfCommonFrames(trace, parentTrace);
 		int numDistinctFrames = trace.length - duplicates;
-		int numDisplayLines = (numDistinctFrames > max) ? max : numDistinctFrames;
+		int numDisplayLines = Math.min(numDistinctFrames, max);
 		for (int i = 0; i < numDisplayLines; i++) {
 			writer.printf("%s%s%s%n", indentation, TAB, trace[i]);
 		}

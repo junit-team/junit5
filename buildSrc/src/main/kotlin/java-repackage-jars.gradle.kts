@@ -1,9 +1,8 @@
-import java.util.Calendar
-import java.util.GregorianCalendar
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
 import org.gradle.api.internal.file.archive.ZipCopyAction
+import java.nio.file.Files
 
 // This registers a `doLast` action to rewrite the timestamps of the project's output JAR
 afterEvaluate {
@@ -11,18 +10,29 @@ afterEvaluate {
 
 	jarTask.doLast {
 
-		val newFile = createTempFile("rewrite-timestamp")
-		val originalOutput = jarTask.archiveFile.get().getAsFile()
+		val newFile = Files.createTempFile("rewrite-timestamp", null).toFile()
+		val originalOutput = jarTask.archiveFile.get().asFile
 
 		newFile.outputStream().use { os ->
 
 			val newJarStream = JarOutputStream(os)
 			val oldJar = JarFile(originalOutput)
 
+			fun sortAlwaysFirst(name: String): Comparator<JarEntry> =
+				Comparator { a, b ->
+					when {
+						a.name == name -> -1
+						b.name == name -> 1
+						else -> 0
+					}
+				}
+
 			oldJar.entries()
 					.toList()
 					.distinctBy { it.name }
-					.sortedBy { it.name }
+					.sortedWith(sortAlwaysFirst("META-INF/")
+							.then(sortAlwaysFirst("META-INF/MANIFEST.MF"))
+							.thenBy { it.name })
 					.forEach { entry ->
 						val jarEntry = JarEntry(entry.name)
 

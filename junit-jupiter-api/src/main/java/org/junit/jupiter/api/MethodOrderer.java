@@ -123,6 +123,8 @@ public interface MethodOrderer {
 	@Deprecated
 	class Alphanumeric extends MethodName {
 
+		public Alphanumeric() {
+		}
 	}
 	/**
 	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
@@ -135,6 +137,9 @@ public interface MethodOrderer {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.7")
 	class MethodName implements MethodOrderer {
+
+		public MethodName() {
+		}
 
 		/**
 		 * Sort the methods encapsulated in the supplied
@@ -163,6 +168,9 @@ public interface MethodOrderer {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.7")
 	class DisplayName implements MethodOrderer {
+
+		public DisplayName() {
+		}
 
 		/**
 		 * Sort the methods encapsulated in the supplied
@@ -194,6 +202,9 @@ public interface MethodOrderer {
 	 * list.
 	 */
 	class OrderAnnotation implements MethodOrderer {
+
+		public OrderAnnotation() {
+		}
 
 		/**
 		 * Sort the methods encapsulated in the supplied
@@ -259,6 +270,9 @@ public interface MethodOrderer {
 		 * {@linkplain Random class-level Javadoc} for details).
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
+
+		public Random() {
+		}
 
 		/**
 		 * Order the methods encapsulated in the supplied

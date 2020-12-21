@@ -15,18 +15,27 @@ on GitHub.
 
 ==== Bug Fixes
 
-* `StringUtils.nullSafeToString()` now returns `"null"` if the invocation of `toString()`
-  on the supplied object returns `null`. Although this is an internal utility, the effect
-  of this change may be witnessed by end users and test engine or extension authors.
+* ❓
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , ExtensionContext)` has
+  been deprecated in favor of
+  `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , DynamicTestInvocationContext, ExtensionContext)`
+  that allows to access the dynamic test executable via
+  `DynamicTestInvocationContext.getExecutable()`.
 
 ==== New Features and Improvements
 
+* New `test(Condition<Event>)` and `nestedContainer(Class<?>, Condition<Event>)` methods
+  in `EventConditions` that allow you to provide conditions for matching against test and
+  nested container events when using the `EngineTestKit`. For example,
+  `test(displayName("my test"))` can be used to match against a test whose display name is
+  `my test`.
+* The `junit-platform-jfr` module now also reports events for containers, e.g. test
+  classes.
 * Custom `LauncherDiscoveryListener` implementations can now be registered via Java’s
-`ServiceLoader` mechanism.
+  `ServiceLoader` mechanism.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
@@ -34,10 +43,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* If the `toString()` implementation of an argument passed to a `@ParameterizedTest`
-  method returns `null`, the display name formatter for the parameterized test now treats
-  the name of the corresponding argument as `"null"` instead of throwing an exception.
-  This fixes a regression introduced in JUnit Jupiter 5.7.0.
+* ❓
 
 ==== Deprecations and Breaking Changes
 

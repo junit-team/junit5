@@ -18,6 +18,14 @@ tasks.withType<Jar>().matching {
 	// We've generalized these so that they are widely applicable limiting
 	// module configurations to special cases.
 	btc.setBnd("""
+			# Set the Bundle-SymbolicName to the archiveBaseName.
+			# We don't use the archiveClassifier which Bnd will use
+			# in the default Bundle-SymbolicName value.
+			Bundle-SymbolicName: ${'$'}{task.archiveBaseName}
+
+			# Set the Bundle-Name from the project description
+			Bundle-Name: ${'$'}{project.description}
+
 			# These are the general rules for package imports.
 			Import-Package: \
 				!org.apiguardian.api,\
@@ -47,7 +55,7 @@ tasks.withType<Jar>().matching {
 
 			# Instruct the APIGuardianAnnotations how to operate.
 			# See https://bnd.bndtools.org/instructions/export-apiguardian.html
-			-export-apiguardian: *;version=${project.version}
+			-export-apiguardian: *;version=${'$'}{versionmask;===;${'$'}{version_cleanup;${'$'}{task.archiveVersion}}}
 		""")
 
 	// Add the convention to the jar task
@@ -100,13 +108,4 @@ val verifyOSGi by tasks.registering(Resolve::class) {
 
 tasks.check {
 	dependsOn(verifyOSGi)
-}
-
-// The ${project.description}, for some odd reason, is only available
-// after evaluation.
-afterEvaluate {
-	tasks.withType<Jar>().configureEach {
-		convention.findPlugin(BundleTaskConvention::class.java)
-				?.bnd("Bundle-Name: ${project.description}")
-	}
 }

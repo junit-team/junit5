@@ -14,7 +14,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.Ignore;
@@ -45,16 +44,16 @@ public class IgnoreCondition implements ExecutionCondition {
 	 */
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<AnnotatedElement> element = context.getElement();
-		Optional<Ignore> ignoreAnnotation = findAnnotation(element, Ignore.class);
-		if (ignoreAnnotation.isPresent()) {
-			String reason = ignoreAnnotation.map(Ignore::value) //
-					.filter(StringUtils::isNotBlank) //
-					.orElseGet(() -> element.get() + " is disabled via @org.junit.Ignore");
-			return ConditionEvaluationResult.disabled(reason);
-		}
+		AnnotatedElement element = context.getElement().orElse(null);
+		return findAnnotation(element, Ignore.class) //
+				.map(annotation -> toResult(element, annotation)) //
+				.orElse(ENABLED);
+	}
 
-		return ENABLED;
+	private ConditionEvaluationResult toResult(AnnotatedElement element, Ignore annotation) {
+		String value = annotation.value();
+		String reason = StringUtils.isNotBlank(value) ? value : element + " is disabled via @org.junit.Ignore";
+		return ConditionEvaluationResult.disabled(reason);
 	}
 
 }
