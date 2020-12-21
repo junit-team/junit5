@@ -11,6 +11,8 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.Collections.unmodifiableCollection;
+import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.DISCOVERY;
+import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
 import java.util.Collection;
 
@@ -71,7 +73,7 @@ class DefaultLauncher implements Launcher {
 	@Override
 	public TestPlan discover(LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
-		return InternalTestPlan.from(discover(discoveryRequest, "discovery"));
+		return InternalTestPlan.from(discover(discoveryRequest, DISCOVERY));
 	}
 
 	@Override
@@ -79,7 +81,7 @@ class DefaultLauncher implements Launcher {
 		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
 		Preconditions.notNull(listeners, "TestExecutionListener array must not be null");
 		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
-		execute(InternalTestPlan.from(discover(discoveryRequest, "execution")), listeners);
+		execute(InternalTestPlan.from(discover(discoveryRequest, EXECUTION)), listeners);
 	}
 
 	@Override
@@ -99,7 +101,8 @@ class DefaultLauncher implements Launcher {
 		return discoveryOrchestrator.getLauncherDiscoveryListener(discoveryRequest);
 	}
 
-	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest, String phase) {
+	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest,
+			EngineDiscoveryOrchestrator.Phase phase) {
 		return discoveryOrchestrator.discover(discoveryRequest, phase);
 	}
 

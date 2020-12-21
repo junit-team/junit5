@@ -22,7 +22,9 @@ public class LauncherFactoryForTestingPurposesOnly {
 		return LauncherFactory.create(LauncherConfig.builder() //
 				.enableTestEngineAutoRegistration(false) //
 				.addTestEngines(engines) //
+				.enableLauncherDiscoveryListenerAutoRegistration(false) //
 				.enableTestExecutionListenerAutoRegistration(false) //
+				.enablePostDiscoveryFilterAutoRegistration(false) //
 				.build());
 	}
 
