@@ -67,6 +67,7 @@ public interface LauncherConfig {
 	 *
 	 * @return {@code true} if launcher discovery listeners should be
 	 * automatically registered
+	 * @since 1.8
 	 */
 	@API(status = EXPERIMENTAL, since = "1.8")
 	boolean isLauncherDiscoveryListenerAutoRegistrationEnabled();
