@@ -14,12 +14,9 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -95,8 +92,6 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * <p>If not specified, the default is {@code "logging"}.
 	 */
 	public static final String DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME = "junit.platform.discovery.listener.default";
-
-	public static final String DISCOVERY_LISTENERS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.platform.discovery.listener.autodetection.enabled";
 
 	private final List<DiscoverySelector> selectors = new ArrayList<>();
 	private final List<EngineFilter> engineFilters = new ArrayList<>();
@@ -273,26 +268,15 @@ public final class LauncherDiscoveryRequestBuilder {
 				.map(value -> LauncherDiscoveryListeners.fromConfigurationParameter(
 					DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, value)) //
 				.orElseGet(LauncherDiscoveryListeners::abortOnFailure);
-
-		List<LauncherDiscoveryListener> serviceLoaderListeners = configurationParameters.getBoolean(
-			DISCOVERY_LISTENERS_AUTODETECTION_ENABLED_PROPERTY_NAME) //
-				.filter(p -> p) //
-				.map(p -> StreamSupport.stream(
-					new ServiceLoaderLauncherDiscoveryListenerRegistry().loadListeners().spliterator(), false) //
-						.collect(Collectors.<LauncherDiscoveryListener> toList())) //
-				.orElse(Collections.emptyList());
-
-		if (discoveryListeners.isEmpty() && serviceLoaderListeners.isEmpty()) {
+		if (discoveryListeners.isEmpty()) {
 			return defaultDiscoveryListener;
 		}
-
-		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(
-			discoveryListeners.size() + serviceLoaderListeners.size() + 1);
-		allDiscoveryListeners.addAll(discoveryListeners);
-		allDiscoveryListeners.addAll(serviceLoaderListeners);
-		if (!allDiscoveryListeners.contains(defaultDiscoveryListener)) {
-			allDiscoveryListeners.add(defaultDiscoveryListener);
+		if (discoveryListeners.contains(defaultDiscoveryListener)) {
+			return LauncherDiscoveryListeners.composite(discoveryListeners);
 		}
+		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(discoveryListeners.size() + 1);
+		allDiscoveryListeners.addAll(discoveryListeners);
+		allDiscoveryListeners.add(defaultDiscoveryListener);
 		return LauncherDiscoveryListeners.composite(allDiscoveryListeners);
 	}
 

@@ -112,38 +112,39 @@ In addition to specifying post-discovery filters as part of a `{LauncherDiscover
 passed to the `{Launcher}` API, by default custom `{PostDiscoveryFilter}` implementations
 will be discovered at runtime via Java's `java.util.ServiceLoader` mechanism and
 automatically applied by the `Launcher` in addition to those that are part of the request.
+
 For example, an `example.CustomTagFilter` class implementing `{PostDiscoveryFilter}` and
 declared within the `/META-INF/services/org.junit.platform.launcher.PostDiscoveryFilter`
 file is loaded and applied automatically.
 
+[[launcher-api-launcher-discovery-listeners-custom]]
+==== Plugging in your own Discovery Listeners
+
+In addition to specifying post-discovery filters as part of a `{LauncherDiscoveryRequest}`
+passed to the `{Launcher}` API, custom `{LauncherDiscoveryListener}` implementations can
+be discovered at runtime via Java's `java.util.ServiceLoader` mechanism and automatically
+automatically registered with the `Launcher` created via the `LauncherFactory`.
+
+For example, an `example.CustomLauncherDiscoveryListener` class implementing
+`{LauncherDiscoveryListener}` and declared within the
+`/META-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener` file is loaded
+and applied automatically.
+
 [[launcher-api-listeners-custom]]
-==== Plugging in your own Test Execution Listener
+==== Plugging in your own Execution Listener
 
 In addition to the public `{Launcher}` API method for registering test execution
 listeners programmatically, by default custom `{TestExecutionListener}` implementations
 will be discovered at runtime via Java's `java.util.ServiceLoader` mechanism and
-automatically registered with the `Launcher` created via the `LauncherFactory`. For
-example, an `example.TestInfoPrinter` class implementing `{TestExecutionListener}` and
+automatically registered with the `Launcher` created via the `LauncherFactory`.
+
+For example, an `example.TestInfoPrinter` class implementing `{TestExecutionListener}` and
 declared within the
 `/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file is loaded and
 registered automatically.
 
-[[launcher-api-launcher-discovery-listeners-custom]]
-==== Plugging in your own Launcher-Discovery Listeners
-
-In addition to specifying launcher-discovery listeners as part of a `{LauncherDiscoveryRequestBuilder}`
-passed to the `{LauncherDiscoveryRequest}` API, by default custom `{LauncherDiscoveryListener}` implementations
-can be discovered at runtime via Java's `java.util.ServiceLoader` mechanism and
-automatically added to the `{LauncherDiscoveryRequest}` by the `LauncherDiscoveryRequestBuilder`
-in addition to those that are part of the request builder.
-In order to enable the automatic discovery of the `{LauncherDiscoveryListener}`(s) the configuration
-property `junit.platform.discovery.listener.autodetection.enabled` needs to be set to `true`.
-For example, an `example.CustomLauncherDiscoveryListener` class implementing `{LauncherDiscoveryListener}` and
-declared within the `/META-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener`
-file is loaded and applied automatically.
-
 [[launcher-api-listeners-custom-deactivation]]
-==== Deactivating Test Execution Listeners
+==== Deactivating Execution Listeners
 
 Sometimes it can be useful to run a test suite _without_ certain execution listeners being
 active. For example, you might have custom a `TestExecutionListener` that sends the test

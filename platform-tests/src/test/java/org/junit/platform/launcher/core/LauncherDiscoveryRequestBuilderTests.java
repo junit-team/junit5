@@ -22,14 +22,11 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DISCOVERY_LISTENERS_AUTODETECTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.abortOnFailure;
 import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.logging;
 
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +45,6 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.fakes.TestEngineStub;
 import org.junit.platform.launcher.DiscoveryFilterStub;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
-import org.junit.platform.launcher.TestLauncherDiscoveryListener;
 
 /**
  * @since 1.0
@@ -356,44 +352,6 @@ class LauncherDiscoveryRequestBuilderTests {
 					.build();
 
 			assertThat(request.getDiscoveryListener().getClass().getSimpleName()).startsWith("Composite");
-		}
-
-		@Test
-		void doesNotDiscoverLauncherDiscoverRequestListenerViaServiceApiByDefault() {
-			final var current = Thread.currentThread().getContextClassLoader();
-			try {
-				var url = getClass().getClassLoader().getResource("testservices/");
-				var classLoader = new URLClassLoader(new URL[] { url }, current);
-				Thread.currentThread().setContextClassLoader(classLoader);
-
-				var request = request().build();
-
-				assertThat(request.getDiscoveryListener()).isEqualTo(abortOnFailure());
-			}
-			finally {
-				Thread.currentThread().setContextClassLoader(current);
-			}
-		}
-
-		@Test
-		void discoversLauncherDiscoverRequestListenerViaServiceApiWhenEnabledViaConfiguration() {
-			final var current = Thread.currentThread().getContextClassLoader();
-			try {
-				var url = getClass().getClassLoader().getResource("testservices/");
-				var classLoader = new URLClassLoader(new URL[] { url }, current);
-				Thread.currentThread().setContextClassLoader(classLoader);
-
-				var request = request() //
-						.configurationParameter(DISCOVERY_LISTENERS_AUTODETECTION_ENABLED_PROPERTY_NAME, "true") //
-						.build();
-
-				assertThat(request.getDiscoveryListener().getClass().getSimpleName()).startsWith("Composite");
-				assertThat(request.getDiscoveryListener()).extracting("listeners").asList().containsExactly(
-					new TestLauncherDiscoveryListener(), abortOnFailure());
-			}
-			finally {
-				Thread.currentThread().setContextClassLoader(current);
-			}
 		}
 
 	}

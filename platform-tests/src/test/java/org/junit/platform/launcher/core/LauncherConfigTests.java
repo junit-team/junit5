@@ -50,8 +50,12 @@ class LauncherConfigTests {
 
 		assertTrue(config.isTestEngineAutoRegistrationEnabled(),
 			"Test engine auto-registration should be enabled by default");
+		assertTrue(config.isLauncherDiscoveryListenerAutoRegistrationEnabled(),
+			"Launcher discovery listener auto-registration should be enabled by default");
 		assertTrue(config.isTestExecutionListenerAutoRegistrationEnabled(),
 			"Test execution listener auto-registration should be enabled by default");
+		assertTrue(config.isPostDiscoveryFilterAutoRegistrationEnabled(),
+			"Post-discovery filter auto-registration should be enabled by default");
 
 		assertThat(config.getAdditionalTestEngines()).isEmpty();
 
@@ -66,10 +70,24 @@ class LauncherConfigTests {
 	}
 
 	@Test
+	void disableLauncherDiscoveryListenerAutoRegistration() {
+		var config = LauncherConfig.builder().enableLauncherDiscoveryListenerAutoRegistration(false).build();
+
+		assertFalse(config.isLauncherDiscoveryListenerAutoRegistrationEnabled());
+	}
+
+	@Test
 	void disableTestExecutionListenerAutoRegistration() {
 		var config = LauncherConfig.builder().enableTestExecutionListenerAutoRegistration(false).build();
 
 		assertFalse(config.isTestExecutionListenerAutoRegistrationEnabled());
+	}
+
+	@Test
+	void disablePostDiscoveryFilterAutoRegistration() {
+		var config = LauncherConfig.builder().enablePostDiscoveryFilterAutoRegistration(false).build();
+
+		assertFalse(config.isPostDiscoveryFilterAutoRegistrationEnabled());
 	}
 
 	@Test

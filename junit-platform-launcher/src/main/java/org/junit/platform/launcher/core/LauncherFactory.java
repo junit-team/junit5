@@ -28,6 +28,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 
@@ -90,26 +91,48 @@ public class LauncherFactory {
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 
+		Set<TestEngine> engines = collectTestEngines(config);
+		List<PostDiscoveryFilter> filters = collectPostDiscoveryFilters(config);
+		List<LauncherDiscoveryListener> discoveryListeners = collectLauncherDiscoveryListeners(config);
+
+		Launcher launcher = new DefaultLauncher(engines, filters, discoveryListeners);
+
+		registerTestExecutionListeners(config, launcher);
+
+		return launcher;
+	}
+
+	private static Set<TestEngine> collectTestEngines(LauncherConfig config) {
 		Set<TestEngine> engines = new LinkedHashSet<>();
 		if (config.isTestEngineAutoRegistrationEnabled()) {
 			new ServiceLoaderTestEngineRegistry().loadTestEngines().forEach(engines::add);
 		}
 		engines.addAll(config.getAdditionalTestEngines());
+		return engines;
+	}
 
+	private static List<PostDiscoveryFilter> collectPostDiscoveryFilters(LauncherConfig config) {
 		List<PostDiscoveryFilter> filters = new ArrayList<>();
 		if (config.isPostDiscoveryFilterAutoRegistrationEnabled()) {
 			new ServiceLoaderPostDiscoveryFilterRegistry().loadPostDiscoveryFilters().forEach(filters::add);
 		}
 		filters.addAll(config.getAdditionalPostDiscoveryFilters());
+		return filters;
+	}
 
-		Launcher launcher = new DefaultLauncher(engines, filters);
+	private static List<LauncherDiscoveryListener> collectLauncherDiscoveryListeners(LauncherConfig config) {
+		List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
+		if (config.isLauncherDiscoveryListenerAutoRegistrationEnabled()) {
+			new ServiceLoaderLauncherDiscoveryListenerRegistry().loadListeners().forEach(discoveryListeners::add);
+		}
+		return discoveryListeners;
+	}
 
+	private static void registerTestExecutionListeners(LauncherConfig config, Launcher launcher) {
 		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
 			loadAndFilterTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 		}
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
-
-		return launcher;
 	}
 
 	private static Stream<TestExecutionListener> loadAndFilterTestExecutionListeners() {
