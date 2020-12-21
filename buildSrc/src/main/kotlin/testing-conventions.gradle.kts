@@ -15,7 +15,7 @@ tasks.withType<Test>().configureEach {
 		exceptionFormat = FULL
 	}
 	retry {
-		maxRetries.set(2)
+		maxRetries.set(providers.gradleProperty("retries").map(String::toInt).orElse(2))
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14
