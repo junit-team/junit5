@@ -33,5 +33,6 @@ dependencies {
 		api("org.mockito:mockito-junit-jupiter:${versions["mockito"]}")
 		api("biz.aQute.bnd:biz.aQute.bndlib:${versions["bnd"]}")
 		api("org.spockframework:spock-core:${versions["spock"]}")
+		api("com.github.gunnarmorling:jfrunit:${versions["jfrunit"]}")
 	}
 }

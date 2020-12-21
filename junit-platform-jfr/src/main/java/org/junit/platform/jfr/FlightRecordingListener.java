@@ -17,7 +17,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -52,7 +51,7 @@ public class FlightRecordingListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan plan) {
-		TestPlanExecutionEvent event = new TestPlanExecutionEvent();
+		var event = new TestPlanExecutionEvent();
 		event.containsTests = plan.containsTests();
 		event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
 			Collectors.joining(", "));
@@ -62,13 +61,13 @@ public class FlightRecordingListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan plan) {
-		TestPlanExecutionEvent event = testPlanExecutionEvent.get();
+		var event = testPlanExecutionEvent.get();
 		event.commit();
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier test, String reason) {
-		SkippedTestEvent event = new SkippedTestEvent();
+		var event = new SkippedTestEvent();
 		event.initialize(test);
 		event.reason = reason;
 		event.commit();
@@ -76,7 +75,7 @@ public class FlightRecordingListener implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier test) {
-		TestExecutionEvent event = new TestExecutionEvent();
+		var event = new TestExecutionEvent();
 		testExecutionEventMap.put(test.getUniqueId(), event);
 		event.initialize(test);
 		event.begin();
@@ -84,11 +83,8 @@ public class FlightRecordingListener implements TestExecutionListener {
 
 	@Override
 	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
-		if (test.isContainer() && result.getStatus().equals(TestExecutionResult.Status.SUCCESSFUL)) {
-			return;
-		}
-		Optional<Throwable> throwable = result.getThrowable();
-		TestExecutionEvent event = testExecutionEventMap.get(test.getUniqueId()); // TODO Remove?
+		var throwable = result.getThrowable();
+		var event = testExecutionEventMap.remove(test.getUniqueId());
 		event.end();
 		event.result = result.getStatus().toString();
 		event.exceptionClass = throwable.map(Throwable::getClass).orElse(null);
@@ -98,8 +94,8 @@ public class FlightRecordingListener implements TestExecutionListener {
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier test, ReportEntry reportEntry) {
-		for (Map.Entry<String, String> entry : reportEntry.getKeyValuePairs().entrySet()) {
-			ReportEntryEvent event = new ReportEntryEvent();
+		for (var entry : reportEntry.getKeyValuePairs().entrySet()) {
+			var event = new ReportEntryEvent();
 			event.uniqueId = test.getUniqueId();
 			event.key = entry.getKey();
 			event.value = entry.getValue();
