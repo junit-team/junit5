@@ -3271,19 +3271,6 @@ following.</p>
 └─ [3] candidate=able was I ere I saw elba ✔</pre>
 </div>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Parameterized tests are currently an <em>experimental</em> feature. Consult the table
-in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
-</td>
-</tr>
-</table>
-</div>
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>2.15.1. Required Setup</h4>
 <div class="paragraph">
@@ -4788,20 +4775,6 @@ formats for a FQMN.</p>
 </div>
 <div class="sect2">
 <h3 id="writing-tests-declarative-timeouts"><a class="anchor" href="#writing-tests-declarative-timeouts"></a>2.18. Timeouts</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="title">Declarative timeouts are an experimental feature</div>
-You&#8217;re invited to give it a try and provide feedback to the JUnit team so they
-can improve and eventually <a href="#api-evolution">promote</a> this feature.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>The <code>@Timeout</code> annotation allows one to declare that a test, test factory, test template,
 or lifecycle method should fail if its execution time exceeds a given duration. The time
@@ -5543,19 +5516,6 @@ all rule migration support extensions: <code>VerifierSupport</code>, <code>Exter
 <p>However, if you intend to develop a new extension for JUnit 5 please use the new
 extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.</p>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-JUnit 4 <code>Rule</code> support in JUnit Jupiter is currently an <em>experimental</em> feature.
-Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for detail.
-</td>
-</tr>
-</table>
-</div>
 </div>
 <div class="sect2">
 <h3 id="migrating-from-junit4-ignore-annotation-support"><a class="anchor" href="#migrating-from-junit4-ignore-annotation-support"></a>3.4. JUnit 4 @Ignore Support</h3>
@@ -5593,19 +5553,6 @@ automatically registers the <code>IgnoreCondition</code> along with
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-JUnit 4 <code>@Ignore</code> support in JUnit Jupiter is currently an <em>experimental</em>
-feature. Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for detail.
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -6809,20 +6756,6 @@ was used to execute a container or test. Any output by other threads will be omi
 because particularly when
 <a href="#writing-tests-parallel-execution">executing tests in parallel</a> it would be impossible
 to attribute it to a specific test or container.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Capturing output is currently an <em>experimental</em> feature. You&#8217;re invited to give
-it a try and provide feedback to the JUnit team so they can improve and eventually
-<a href="#api-evolution">promote</a> this feature.
-</td>
-</tr>
-</table>
 </div>
 </div>
 <div class="sect2">
@@ -8810,19 +8743,6 @@ the following example.</p>
 JUnit Platform and then verifying the expected results. As of JUnit Platform 1.4, this
 support is limited to the execution of a single <code>TestEngine</code> (see <a href="#testkit-engine">Engine Test Kit</a>).</p>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Although the Test Kit is currently an <a href="#api-evolution-experimental-apis"><em>experimental</em></a> feature, the JUnit Team invites you to try it out and provide feedback to
-help improve the Test Kit APIs and eventually <a href="#api-evolution">promote</a> this feature.
-</td>
-</tr>
-</table>
-</div>
 <div class="sect3">
 <h4 id="testkit-engine"><a class="anchor" href="#testkit-engine"></a>6.2.1. Engine Test Kit</h4>
 <div class="paragraph">
@@ -9949,7 +9869,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2020-12-16 07:45:26 UTC
+Last updated 2020-12-21 11:26:02 UTC
 </div>
 </div>
 <style>
