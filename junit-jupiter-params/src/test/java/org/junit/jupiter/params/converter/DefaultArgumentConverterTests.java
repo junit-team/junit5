@@ -84,13 +84,19 @@ class DefaultArgumentConverterTests {
 	@Test
 	void convertsStringsToPrimitiveTypes() {
 		assertConverts("true", boolean.class, true);
-		assertConverts("1", byte.class, (byte) 1);
 		assertConverts("o", char.class, 'o');
+		assertConverts("1", byte.class, (byte) 1);
+		assertConverts("1_0", byte.class, (byte) 10);
 		assertConverts("1", short.class, (short) 1);
+		assertConverts("1_2", short.class, (short) 12);
 		assertConverts("42", int.class, 42);
+		assertConverts("700_050_000", int.class, 700_050_000);
 		assertConverts("42", long.class, 42L);
+		assertConverts("4_2", long.class, 42L);
 		assertConverts("42.23", float.class, 42.23f);
+		assertConverts("42.2_3", float.class, 42.23f);
 		assertConverts("42.23", double.class, 42.23);
+		assertConverts("42.2_3", double.class, 42.23);
 	}
 
 	/**
