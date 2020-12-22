@@ -46,6 +46,9 @@ public abstract class LauncherDiscoveryListener implements EngineDiscoveryListen
 	public static final LauncherDiscoveryListener NOOP = new LauncherDiscoveryListener() {
 	};
 
+	public LauncherDiscoveryListener() {
+	}
+
 	/**
 	 * Called when test discovery is about to be started for an engine.
 	 *
