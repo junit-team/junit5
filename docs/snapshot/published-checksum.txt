@@ -194,6 +194,7 @@
 4255f3a9e3d7f3945c3cc043c8b186b0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/package-info.java
 42cf27af2b0ff1b6b76f4f35c80af137  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
 42d3572ff01ad4879bbb98f9086ccedc  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClassSelector.java
+42ee001a0b28809670cb9f394c704537  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
 440aedb32073706df97cbca62967f7ff  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassExtensionContext.java
 4416f3133cefce93fa07813fd7c6a985  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseResult.java
 448abc5d1d09a50b28ba19a21badccb2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tag.java
@@ -686,7 +687,6 @@ fadece59a381fa8335c0be8668911a43  junit-platform-engine/src/main/java/org/junit/
 fb322000e2557c04a137e62cdb1581f5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariableCondition.java
 fb6cb48e67b12100aa652cfe9e1f8b78  junit-platform-commons/src/main/java/org/junit/platform/commons/util/FunctionUtils.java
 fbc0a0a1024e8999ef70bbd8a36f01fd  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/OutcomeDelayingEngineExecutionListener.java
-fbc99937f40cc5ae7e0e47113ff01fe4  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
 fbd729c2f6f643430f1e886e5cc0a4d5  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeTags.java
 fc4b792be096ae2ad2f8af4ceeb18240  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.java
 fc9f42a6dcddff966cf9f8dab30ab5d2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContext.java
