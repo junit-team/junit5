@@ -3682,7 +3682,8 @@ qualified method name</em> as demonstrated in the following example.</p>
 <span class="nd">@CsvSource</span><span class="o">({</span>
     <span class="s">"apple,         1"</span><span class="o">,</span>
     <span class="s">"banana,        2"</span><span class="o">,</span>
-    <span class="s">"'lemon, lime', 0xF1"</span>
+    <span class="s">"'lemon, lime', 0xF1"</span><span class="o">,</span>
+    <span class="s">"strawberry,    700_000"</span>
 <span class="o">})</span>
 <span class="kt">void</span> <span class="nf">testWithCsvSource</span><span class="o">(</span><span class="nc">String</span> <span class="n">fruit</span><span class="o">,</span> <span class="kt">int</span> <span class="n">rank</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">assertNotNull</span><span class="o">(</span><span class="n">fruit</span><span class="o">);</span>
@@ -3802,7 +3803,8 @@ ignored.
 <pre class="rouge highlight"><code data-lang="csv">Country, reference
 Sweden, 1
 Poland, 2
-"United States of America", 3</code></pre>
+"United States of America", 3
+France, 700_000</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -9889,7 +9891,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2020-12-21 16:47:36 UTC
+Last updated 2020-12-22 08:53:10 UTC
 </div>
 </div>
 <style>
