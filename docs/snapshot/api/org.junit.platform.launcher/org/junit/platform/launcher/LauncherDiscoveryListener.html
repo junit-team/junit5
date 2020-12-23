@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -88,9 +88,13 @@ loadScripts(document, 'script');</script>
 <dt>All Implemented Interfaces:</dt>
 <dd><code><a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineDiscoveryListener.html" title="interface in org.junit.platform.engine">EngineDiscoveryListener</a></code></dd>
 </dl>
+<dl class="notes">
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="../../../../../org.junit.platform.jfr/org/junit/platform/jfr/FlightRecordingDiscoveryListener.html" title="class in org.junit.platform.jfr">FlightRecordingDiscoveryListener</a></code></dd>
+</dl>
 <hr>
-<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
-     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.6")
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.6")
 public abstract class <span class="type-name-label">LauncherDiscoveryListener</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineDiscoveryListener.html" title="interface in org.junit.platform.engine">EngineDiscoveryListener</a></pre>
@@ -98,9 +102,9 @@ implements <a href="../../../../../org.junit.platform.engine/org/junit/platform/
  <a href="core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a>
  to be notified of events that occur during test discovery.
 
- <p>All methods in this interface have empty <em>default</em> implementations.
- Concrete implementations may therefore override one or more of these methods
- to be notified of the selected events.
+ <p>All methods in this class have empty <em>default</em> implementations.
+ Subclasses may therefore override one or more of these methods to be notified
+ of the selected events.
 
  <p>JUnit provides default implementations that are created via the factory
  methods in
@@ -200,6 +204,20 @@ implements <a href="../../../../../org.junit.platform.engine/org/junit/platform/
 <div class="block">Called when test discovery is about to be started for an engine.</div>
 </td>
 </tr>
+<tr class="alt-color" id="i2">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#launcherDiscoveryFinished(org.junit.platform.launcher.LauncherDiscoveryRequest)">launcherDiscoveryFinished</a></span>&#8203;(<a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a>&nbsp;request)</code></th>
+<td class="col-last">
+<div class="block">Called when test discovery has finished.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#launcherDiscoveryStarted(org.junit.platform.launcher.LauncherDiscoveryRequest)">launcherDiscoveryStarted</a></span>&#8203;(<a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a>&nbsp;request)</code></th>
+<td class="col-last">
+<div class="block">Called when test discovery is about to be started.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -250,6 +268,36 @@ implements <a href="../../../../../org.junit.platform.engine/org/junit/platform/
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="launcherDiscoveryStarted(org.junit.platform.launcher.LauncherDiscoveryRequest)">
+<h3>launcherDiscoveryStarted</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">launcherDiscoveryStarted</span>&#8203;(<span class="parameters"><a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a>&nbsp;request)</span></div>
+<div class="block">Called when test discovery is about to be started.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>request</code> - the request for which discovery is being started</dd>
+<dt>Since:</dt>
+<dd>1.8</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="launcherDiscoveryFinished(org.junit.platform.launcher.LauncherDiscoveryRequest)">
+<h3>launcherDiscoveryFinished</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">launcherDiscoveryFinished</span>&#8203;(<span class="parameters"><a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a>&nbsp;request)</span></div>
+<div class="block">Called when test discovery has finished.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>request</code> - the request for which discovery has finished</dd>
+<dt>Since:</dt>
+<dd>1.8</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="engineDiscoveryStarted(org.junit.platform.engine.UniqueId)">
 <h3>engineDiscoveryStarted</h3>

@@ -556,8 +556,12 @@ nested container events when using the <code>EngineTestKit</code>. For example,
 <code>my test</code>.</p>
 </li>
 <li>
-<p>The <code>junit-platform-jfr</code> module now also reports events for containers, e.g. test
-classes.</p>
+<p>The <code>junit-platform-jfr</code> module now also reports execution events for containers, e.g.
+test classes.</p>
+</li>
+<li>
+<p>The <code>junit-platform-jfr</code> module now also reports test discovery events for the launcher
+and registered test engines.</p>
 </li>
 <li>
 <p>Custom <code>LauncherDiscoveryListener</code> implementations can now be registered via Java’s
@@ -827,7 +831,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2020-12-22 12:39:31 UTC
+Last updated 2020-12-23 16:45:40 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
