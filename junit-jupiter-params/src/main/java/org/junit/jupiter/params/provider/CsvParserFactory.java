@@ -37,7 +37,7 @@ class CsvParserFactory {
 	static CsvParser createParserFor(CsvFileSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
 		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue(),
-			annotation.maxCharsPerColumn(), false);
+			annotation.maxCharsPerColumn(), annotation.ignoreTrailingAndLeadingWhitespace());
 	}
 
 	private static String selectDelimiter(Annotation annotation, char delimiter, String delimiterString) {

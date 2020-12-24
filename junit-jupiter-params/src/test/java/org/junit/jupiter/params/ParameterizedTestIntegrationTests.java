@@ -159,7 +159,7 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
-	void executesWithIgnoreTrailingAndLeadingSetToFalse() {
+	void executesWithIgnoreTrailingAndLeadingSetToFalseForCsvSource() {
 		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse",
 				String.class);
 		results.allEvents().assertThatEvents()
@@ -167,8 +167,24 @@ class ParameterizedTestIntegrationTests {
 						event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
 	}
 	@Test
-	void executesWithIgnoreTrailingAndLeadingSetToTrue() {
+	void executesWithIgnoreTrailingAndLeadingSetToTrueForCsvSource() {
 		var results = execute("testCsvSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue",
+				String.class);
+		results.allEvents().assertThatEvents()
+				.haveAtLeast(1,
+						event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+	}
+	@Test
+	void executesWithIgnoreTrailingAndLeadingSetToFalseForCsvFileSource() {
+		var results = execute("testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToFalse",
+				String.class);
+		results.allEvents().assertThatEvents()
+				.haveAtLeast(1,
+						event(test(), finishedWithFailure(instanceOf(AssertionError.class))));
+	}
+	@Test
+	void executesWithIgnoreTrailingAndLeadingSetToTrueForCsvFileSource() {
+		var results = execute("testCsvFileSourceWithIgnoreTrailingAndLeadingWhitespaceSetToTrue",
 				String.class);
 		results.allEvents().assertThatEvents()
 				.haveAtLeast(1,
