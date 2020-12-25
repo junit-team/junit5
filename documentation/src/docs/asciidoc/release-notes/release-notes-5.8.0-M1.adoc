@@ -56,6 +56,8 @@ on GitHub.
 * Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
   underscores as in some JVM languages, to improve readability of long numbers like
   `700_000_000`.
+* Add `@DisabledOnOsWithEnvironmentVariable` annotation that can disabled test class or
+  test method based on operation system and environment variable.
 
 
 [[release-notes-5.8.0-M1-junit-vintage]]

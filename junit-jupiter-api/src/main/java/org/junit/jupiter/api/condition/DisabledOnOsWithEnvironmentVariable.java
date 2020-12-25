@@ -1,0 +1,83 @@
+package org.junit.jupiter.api.condition;
+
+import org.apiguardian.api.API;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+/**
+ * {@code DisabledOnOsWithEnvironmentVariable} is used to signal that the test class or
+ * test method is <em>disabled</em> on one or more specified {@linkplain #value operating systems}
+ * only if specified {@linkplain #named() environment variable} matches the specified
+ * {@linkplain #matches() regular expression}.
+ *
+ * <p>When applied at the class level, all test methods within that class
+ * will be disabled on the same specified operating systems.
+ *
+ * <p>If a test method is disabled via this annotation, that does not prevent
+ * the test class from being instantiated. Rather, it prevents the execution of
+ * the test method and method-level lifecycle callbacks such as {@code @BeforeEach}
+ * methods, {@code @AfterEach} methods, and corresponding extension APIs.
+ *
+ * <p>This annotation may be used as a meta-annotation in order to create a
+ * custom <em>composed annotation</em> that inherits the semantics of this
+ * annotation.
+ *
+ * @see org.junit.jupiter.api.condition.EnabledOnOs
+ * @see org.junit.jupiter.api.condition.EnabledOnJre
+ * @see org.junit.jupiter.api.condition.DisabledOnJre
+ * @see org.junit.jupiter.api.condition.EnabledForJreRange
+ * @see org.junit.jupiter.api.condition.DisabledForJreRange
+ * @see org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable
+ * @see org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable
+ * @see org.junit.jupiter.api.condition.EnabledIfSystemProperty
+ * @see org.junit.jupiter.api.condition.DisabledIfSystemProperty
+ * @see org.junit.jupiter.api.condition.EnabledIf
+ * @see org.junit.jupiter.api.condition.DisabledIf
+ * @see org.junit.jupiter.api.Disabled
+ * @since 5.8
+ */
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Repeatable(DisabledOnOSWithEnvironmentVariables.class)
+@API(status = EXPERIMENTAL, since = "5.8")
+public @interface DisabledOnOsWithEnvironmentVariable {
+
+    /**
+     * Operating systems on which the annotated class or method should be
+     * disabled.
+     *
+     * @see OS
+     */
+    OS[] value();
+
+    /**
+     * The name of the environment variable to retrieve.
+     *
+     * @return the environment variable name; never <em>blank</em>
+     * @see System#getenv(String)
+     */
+    String named();
+
+    /**
+     * A regular expression that will be used to match against the retrieved
+     * value of the {@link #named} environment variable.
+     *
+     * @return the regular expression; never <em>blank</em>
+     * @see String#matches(String)
+     * @see java.util.regex.Pattern
+     */
+    String matches();
+
+    /**
+     * Reason to provide if the test of container ends up being disabled.
+     */
+    String disabledReason() default "";
+}

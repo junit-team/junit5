@@ -13,6 +13,7 @@ package org.junit.jupiter.api.extension;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.condition.DisabledOnOsWithEnvironmentVariable;
 
 /**
  * {@code ExecutionCondition} defines the {@link Extension} API for
@@ -46,6 +47,7 @@ import org.apiguardian.api.API;
  * @see org.junit.jupiter.api.condition.DisabledForJreRange
  * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.DisabledOnOs
+ * @see org.junit.jupiter.api.condition.DisabledOnOsWithEnvironmentVariable
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")
