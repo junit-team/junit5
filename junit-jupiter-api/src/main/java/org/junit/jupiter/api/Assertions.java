@@ -3448,15 +3448,48 @@ public class Assertions {
 		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
 	}
 
+	/**
+	 * <em>Assert</em> that the supplied {@code actualValue} is an instance of the
+	 * {@code expectedType}.
+	 *
+	 * <p>Like the {@code instanceof} operator a {@code null} value is not
+	 * considered to be of the {@code expectedType} and does not pass the assertion.
+	 *
+	 * @since 5.8
+	 */
 	public static void assertInstanceOf(Class<?> expectedType, Object actualValue) {
 		AssertInstanceOf.assertInstanceOf(expectedType, actualValue);
 	}
 
-	static void assertInstanceOf(Class<?> expectedType, Object actualValue, String message) {
+	/**
+	 * <em>Assert</em> that the supplied {@code actualValue} is an instance of the
+	 * {@code expectedType}.
+	 *
+	 * <p>Like the {@code instanceof} operator a {@code null} value is not
+	 * considered to be of the {@code expectedType} and does not pass the assertion.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.8
+	 */
+	public static void assertInstanceOf(Class<?> expectedType, Object actualValue, String message) {
 		AssertInstanceOf.assertInstanceOf(expectedType, actualValue, message);
 	}
 
-	static void assertInstanceOf(Class<?> expectedType, Object actualValue, Supplier<String> messageSupplier) {
+	/**
+	 * <em>Assert</em> that the supplied {@code actualValue} is an instance of the
+	 * {@code expectedType}.
+	 *
+	 * <p>Like the {@code instanceof} operator a {@code null} value is not
+	 * considered to be of the {@code expectedType} and does not pass the assertion.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @since 5.8
+	 */
+	@API(status = STABLE, since = "5.8")
+	public static void assertInstanceOf(Class<?> expectedType, Object actualValue, Supplier<String> messageSupplier) {
 		AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
 }

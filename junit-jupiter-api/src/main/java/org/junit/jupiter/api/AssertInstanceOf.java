@@ -10,12 +10,19 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionUtils.*;
+import org.opentest4j.AssertionFailedError;
 
 import java.util.function.Supplier;
 
-import org.opentest4j.AssertionFailedError;
+import static org.junit.jupiter.api.AssertionUtils.*;
 
+/**
+ * {@code AssertInstanceOf} is a collection of utility methods that support
+ * asserting that a value is of a expected instance type -
+ * in other words, if it can be assigned to the expected type.
+ *
+ * @since 5.8
+ */
 class AssertInstanceOf {
 
 	private AssertInstanceOf() {
