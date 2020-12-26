@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.api;
 
-import org.opentest4j.AssertionFailedError;
+import static org.junit.jupiter.api.AssertionUtils.*;
 
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.AssertionUtils.*;
+import org.opentest4j.AssertionFailedError;
 
 /**
  * {@code AssertInstanceOf} is a collection of utility methods that support

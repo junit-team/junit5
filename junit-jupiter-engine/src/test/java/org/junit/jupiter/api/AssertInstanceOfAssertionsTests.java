@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.api;
 
-import org.junit.jupiter.api.function.Executable;
-import org.opentest4j.AssertionFailedError;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.function.Executable;
+import org.opentest4j.AssertionFailedError;
 
 /**
  * Unit tests for JUnit Jupiter {@link Assertions#assertInstanceOf(Class, Object)}.
@@ -88,11 +88,13 @@ class AssertInstanceOfAssertionsTests {
 	private void assertInstanceOfFails(Class<?> expectedType, Object actualValue, String unexpectedSort) {
 		String valueType = actualValue == null ? "null" : actualValue.getClass().getCanonicalName();
 		String expectedMessage = String.format("Unexpected %s ==> expected: <%s> but was: <%s>", unexpectedSort,
-				expectedType.getCanonicalName(), valueType);
+			expectedType.getCanonicalName(), valueType);
 
 		assertThrowsWithMessage(expectedMessage, () -> assertInstanceOf(expectedType, actualValue));
-		assertThrowsWithMessage("extra ==> " + expectedMessage, () -> assertInstanceOf(expectedType, actualValue, "extra"));
-		assertThrowsWithMessage("extra ==> " + expectedMessage, () -> assertInstanceOf(expectedType, actualValue, () -> "extra"));
+		assertThrowsWithMessage("extra ==> " + expectedMessage,
+			() -> assertInstanceOf(expectedType, actualValue, "extra"));
+		assertThrowsWithMessage("extra ==> " + expectedMessage,
+			() -> assertInstanceOf(expectedType, actualValue, () -> "extra"));
 	}
 
 	private void assertThrowsWithMessage(String expectedMessage, Executable executable) {
