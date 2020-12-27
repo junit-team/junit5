@@ -1,6 +1,16 @@
+/*
+ * Copyright 2015-2020 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
 package org.junit.jupiter.api.condition;
 
-import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -9,7 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import org.apiguardian.api.API;
 
 /**
  * {@code DisabledOnOsWithEnvironmentVariable} is used to signal that the test class or
@@ -29,6 +39,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
  * custom <em>composed annotation</em> that inherits the semantics of this
  * annotation.
  *
+ * @since 5.8
  * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.EnabledOnJre
  * @see org.junit.jupiter.api.condition.DisabledOnJre
@@ -41,43 +52,42 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
  * @see org.junit.jupiter.api.condition.EnabledIf
  * @see org.junit.jupiter.api.condition.DisabledIf
  * @see org.junit.jupiter.api.Disabled
- * @since 5.8
  */
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Repeatable(DisabledOnOSWithEnvironmentVariables.class)
 @API(status = EXPERIMENTAL, since = "5.8")
 public @interface DisabledOnOsWithEnvironmentVariable {
 
-    /**
-     * Operating systems on which the annotated class or method should be
-     * disabled.
-     *
-     * @see OS
-     */
-    OS[] value();
+	/**
+	 * Operating systems on which the annotated class or method should be
+	 * disabled.
+	 *
+	 * @see OS
+	 */
+	OS[] value();
 
-    /**
-     * The name of the environment variable to retrieve.
-     *
-     * @return the environment variable name; never <em>blank</em>
-     * @see System#getenv(String)
-     */
-    String named();
+	/**
+	 * The name of the environment variable to retrieve.
+	 *
+	 * @return the environment variable name; never <em>blank</em>
+	 * @see System#getenv(String)
+	 */
+	String named();
 
-    /**
-     * A regular expression that will be used to match against the retrieved
-     * value of the {@link #named} environment variable.
-     *
-     * @return the regular expression; never <em>blank</em>
-     * @see String#matches(String)
-     * @see java.util.regex.Pattern
-     */
-    String matches();
+	/**
+	 * A regular expression that will be used to match against the retrieved
+	 * value of the {@link #named} environment variable.
+	 *
+	 * @return the regular expression; never <em>blank</em>
+	 * @see String#matches(String)
+	 * @see java.util.regex.Pattern
+	 */
+	String matches();
 
-    /**
-     * Reason to provide if the test of container ends up being disabled.
-     */
-    String disabledReason() default "";
+	/**
+	 * Reason to provide if the test of container ends up being disabled.
+	 */
+	String disabledReason() default "";
 }

@@ -34,8 +34,6 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 final class DisabledOnOsWithEnvironmentVariableConditionTests extends AbstractExecutionConditionTests {
 
-	private static final String OS_NAME = System.getProperty("os.name");
-
 	/**
 	 * Stubbed subclass of {@link DisabledIfEnvironmentVariableCondition}.
 	 */
@@ -84,7 +82,6 @@ final class DisabledOnOsWithEnvironmentVariableConditionTests extends AbstractEx
 		evaluateCondition();
 		assertDisabled();
 		assertReasonContains("matches regular expression");
-		assertReasonContains("Disabled on operating system");
 	}
 
 	/**
@@ -104,18 +101,7 @@ final class DisabledOnOsWithEnvironmentVariableConditionTests extends AbstractEx
 	@Test
 	void disableOnOsWithEnvironmentVariableMatches() {
 		evaluateCondition();
-		assertDisabled();
-		assertReasonContains("Disabled on operating system: " + OS_NAME);
-	}
-
-	/**
-	 * @see DisabledOnOsWithEnvironmentVariableIntegrationTests#disableOnMultipleOsWithEnvironmentVariableMatches()
-	 */
-	@Test
-	void disableOnMultipleOsWithEnvironmentVariableMatches() {
-		evaluateCondition();
-		assertDisabled();
-		assertReasonContains("Disabled on operating system: " + OS_NAME);
+		assertDisabledOnCurrentOsIf(onLinux());
 	}
 
 	/**
@@ -156,15 +142,6 @@ final class DisabledOnOsWithEnvironmentVariableConditionTests extends AbstractEx
 	}
 
 	/**
-	 * @see DisabledOnOsWithEnvironmentVariableIntegrationTests#macOsWithComposedAnnotation()
-	 */
-	@Test
-	void macOsWithComposedAnnotation() {
-		evaluateCondition();
-		assertDisabledOnCurrentOsIf(onMac());
-	}
-
-	/**
 	 * @see DisabledOnOsWithEnvironmentVariableIntegrationTests#windows()
 	 */
 	@Test
@@ -194,7 +171,7 @@ final class DisabledOnOsWithEnvironmentVariableConditionTests extends AbstractEx
 	private void assertDisabledOnCurrentOsIf(boolean condition) {
 		if (condition) {
 			assertDisabled();
-			assertReasonContains("Disabled on operating system: " + OS_NAME);
+			assertReasonContains("matches regular expression");
 		}
 		else {
 			assertEnabled();
@@ -215,8 +192,7 @@ final class DisabledOnOsWithEnvironmentVariableConditionTests extends AbstractEx
 			}
 		};
 		evaluateCondition();
-		assertDisabled();
-		assertReasonContains("matches regular expression");
+		assertDisabledOnCurrentOsIf(onLinux());
 	}
 
 	/**
@@ -225,9 +201,7 @@ final class DisabledOnOsWithEnvironmentVariableConditionTests extends AbstractEx
 	@Test
 	void disabledBecauseEnvironmentVariableMatchesExactly() {
 		evaluateCondition();
-		assertDisabled();
-		assertReasonContains("matches regular expression");
-		assertCustomDisabledReasonIs("That's an enigma");
+		assertDisabledOnCurrentOsIf(onLinux());
 	}
 
 	/**
@@ -236,8 +210,7 @@ final class DisabledOnOsWithEnvironmentVariableConditionTests extends AbstractEx
 	@Test
 	void disabledBecauseEnvironmentVariableMatchesPattern() {
 		evaluateCondition();
-		assertDisabled();
-		assertReasonContains("matches regular expression");
+		assertDisabledOnCurrentOsIf(onLinux());
 	}
 
 	/**

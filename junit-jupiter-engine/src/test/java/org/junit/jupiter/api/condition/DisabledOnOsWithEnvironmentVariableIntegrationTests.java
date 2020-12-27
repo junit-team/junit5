@@ -33,6 +33,7 @@ import java.lang.annotation.Target;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled("Only used in a unit test via reflection")
 final class DisabledOnOsWithEnvironmentVariableIntegrationTests {
 
 	static final String KEY1 = "DisabledIfEnvironmentVariableTests.key1";
@@ -69,20 +70,8 @@ final class DisabledOnOsWithEnvironmentVariableIntegrationTests {
 	}
 
 	@Test
-	@DisabledOnOsWithEnvironmentVariable(value = { LINUX, MAC, WINDOWS, SOLARIS,
-			OTHER }, named = KEY1, matches = ENIGMA)
-	void disableOnMultipleOsWithEnvironmentVariableMatches() {
-	}
-
-	@Test
 	@DisabledOnOsWithEnvironmentVariable(value = MAC, named = KEY1, matches = ENIGMA)
 	void macOs() {
-		assertFalse(onMac());
-	}
-
-	@Test
-	@DisabledOnMac
-	void macOsWithComposedAnnotation() {
 		assertFalse(onMac());
 	}
 
@@ -102,12 +91,6 @@ final class DisabledOnOsWithEnvironmentVariableIntegrationTests {
 	@DisabledOnOsWithEnvironmentVariable(value = OTHER, named = KEY1, matches = ENIGMA)
 	void other() {
 		assertTrue(onLinux() || onMac() || onSolaris() || onWindows());
-	}
-
-	@Target(ElementType.METHOD)
-	@Retention(RetentionPolicy.RUNTIME)
-	@DisabledOnOs(MAC)
-	@interface DisabledOnMac {
 	}
 
 	// -------------------------------------------------------------------------
