@@ -26,7 +26,9 @@ md5sum $(find junit-platform-engine -wholename '**/src/main/*.java') >> "${curre
 md5sum $(find junit-platform-launcher -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-reporting -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-runner -wholename '**/src/main/*.java') >> "${current}"
+md5sum $(find junit-platform-suite -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-suite-api -wholename '**/src/main/*.java') >> "${current}"
+md5sum $(find junit-platform-suite-engine -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-testkit -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-vintage-engine -wholename '**/src/main/*.java') >> "${current}"
 # skip module platform-tests because it doesn't contain relevant documentation

@@ -29,18 +29,29 @@ import org.apiguardian.api.API;
  * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
  * {@code @RunWith(JUnitPlatform.class)}.
  *
+ * <h4>JUnit 5 Suite Support</h4>
+ * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
+ * the {@code junit-platform-suite} engine.
  * @since 1.0
- * @see SuiteDisplayName
- * @see UseTechnicalNames
- * @see SelectPackages
+ * @see Suite
  * @see SelectClasses
+ * @see SelectClasspathResource
+ * @see SelectClasspathRoots
+ * @see SelectDirectories
+ * @see SelectFile
+ * @see SelectModules
+ * @see SelectPackages
+ * @see SelectUris
  * @see IncludeClassNamePatterns
  * @see ExcludeClassNamePatterns
- * @see IncludePackages
- * @see IncludeTags
- * @see ExcludeTags
  * @see IncludeEngines
  * @see ExcludeEngines
+ * @see IncludePackages
+ * @see ExcludePackages
+ * @see IncludeTags
+ * @see ExcludeTags
+ * @see SuiteDisplayName
+ * @see Configuration
  * @see org.junit.platform.runner.JUnitPlatform
  */
 @Retention(RetentionPolicy.RUNTIME)

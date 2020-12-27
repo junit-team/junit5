@@ -42,7 +42,9 @@ val platformProjects by extra(listOf(
 		project(":junit-platform-launcher"),
 		project(":junit-platform-reporting"),
 		project(":junit-platform-runner"),
+		project(":junit-platform-suite"),
 		project(":junit-platform-suite-api"),
+		project(":junit-platform-suite-engine"),
 		project(":junit-platform-testkit")
 ))
 

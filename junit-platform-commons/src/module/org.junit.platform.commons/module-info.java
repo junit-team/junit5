@@ -32,6 +32,7 @@ module org.junit.platform.commons {
 			org.junit.platform.reporting,
 			org.junit.platform.runner,
 			org.junit.platform.suite.api,
+			org.junit.platform.suite.engine,
 			org.junit.platform.testkit,
 			org.junit.vintage.engine;
 	exports org.junit.platform.commons.support;
@@ -46,6 +47,7 @@ module org.junit.platform.commons {
 			org.junit.platform.reporting,
 			org.junit.platform.runner,
 			org.junit.platform.suite.api,
+			org.junit.platform.suite.engine,
 			org.junit.platform.testkit,
 			org.junit.vintage.engine;
 }
