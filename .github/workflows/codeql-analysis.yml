@@ -39,12 +39,7 @@ jobs:
         # a pull request then we can checkout the head.
         fetch-depth: 2
 
-    # If this run was triggered by a pull request event, then checkout
-    # the head of the pull request instead of the merge commit.
-    - run: git checkout HEAD^2
-      if: ${{ github.event_name == 'pull_request' }}
-
-      # Install and setup JDK
+    # Install and setup JDK
     - name: Setup JDK 11
       uses: actions/setup-java@v1
       with:
