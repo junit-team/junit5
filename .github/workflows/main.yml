@@ -46,7 +46,7 @@ jobs:
     - name: 'Test'
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --scan --no-parallel -Dplatform.tooling.support.tests.enabled=true build
 
   windows:
     name: 'Windows'
@@ -91,7 +91,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
+        ./gradlew --scan --no-parallel -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
         ./gradlew --stop
   mac:
     name: 'Mac OS'
@@ -127,7 +127,7 @@ jobs:
     - name: 'Test'
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --scan --no-parallel -Dplatform.tooling.support.tests.enabled=true build
 
   coverage:
     name: 'Coverage'
@@ -163,7 +163,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
+        ./gradlew --scan --no-parallel --stacktrace -PenableJaCoCo build jacocoRootReport
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v1
 
