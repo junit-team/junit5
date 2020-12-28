@@ -157,8 +157,6 @@ jobs:
         ./gradlew --scan --no-parallel --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
     - name: Upload to Codecov.io
       shell: bash
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
         bash <(curl -s https://codecov.io/bash)
 
