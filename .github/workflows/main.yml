@@ -21,6 +21,8 @@ jobs:
     container: ghcr.io/junit-team/build
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
@@ -51,6 +53,8 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
@@ -94,6 +98,8 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
@@ -130,6 +136,9 @@ jobs:
     container: ghcr.io/junit-team/build
     steps:
     - uses: actions/checkout@v2
+      with:
+        # Codecov needs fetch-depth > 1
+        fetch-depth: 2
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
@@ -165,6 +174,8 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
@@ -192,6 +203,8 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:

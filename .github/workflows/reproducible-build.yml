@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
     - name: Cache Gradle wrapper and dependencies
       uses: actions/cache@v2
       with:
