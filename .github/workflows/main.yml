@@ -156,9 +156,7 @@ jobs:
         ./gradlew --version
         ./gradlew --scan --no-parallel --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
     - name: Upload to Codecov.io
-      shell: bash
-      run: |
-        bash <(curl -s https://codecov.io/bash)
+      uses: codecov/codecov-action@v1
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
