@@ -16,7 +16,7 @@ env:
 
 jobs:
   linux:
-    name: 'Linux'
+    name: Linux
     runs-on: ubuntu-latest
     container: ghcr.io/junit-team/build
     steps:
@@ -43,13 +43,15 @@ jobs:
       run: |
         mkdir -p /root/.gradle/enterprise/
         echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > /root/.gradle/enterprise/keys.properties
-    - name: 'Test'
+    - name: Test and Coverage
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --scan --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -PenableJaCoCo build jacocoRootReport
+    - name: Upload to Codecov.io
+      uses: codecov/codecov-action@v1
 
   windows:
-    name: 'Windows'
+    name: Windows
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
@@ -71,14 +73,14 @@ jobs:
         key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           test-${{ runner.os }}-maven-
-    - name: 'Set up JDK 8'
+    - name: Set up JDK 8
       uses: actions/setup-java@v1
       with:
         java-version: 8
-    - name: 'Prepare JDK8 env var'
+    - name: Prepare JDK8 env var
       shell: bash
       run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - name: 'Set up JDK 15'
+    - name: Set up JDK 15
       uses: actions/setup-java@v1
       with:
         java-version: 15
@@ -87,14 +89,15 @@ jobs:
       run: |
         mkdir -p $HOME/.gradle/enterprise/
         echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > $HOME/.gradle/enterprise/keys.properties
-    - name: 'Test'
+    - name: Test
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
+        ./gradlew --scan --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
         ./gradlew --stop
+
   mac:
-    name: 'Mac OS'
+    name: Mac OS
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
@@ -116,7 +119,7 @@ jobs:
         key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           test-${{ runner.os }}-maven-
-    - name: 'Set up JDK 15'
+    - name: Set up JDK 15
       uses: actions/setup-java@v1
       with:
         java-version: 15
@@ -127,45 +130,7 @@ jobs:
     - name: 'Test'
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel -Dplatform.tooling.support.tests.enabled=true build
-
-  coverage:
-    name: 'Coverage'
-    needs: linux
-    runs-on: ubuntu-latest
-    container: ghcr.io/junit-team/build
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        # Codecov needs fetch-depth > 1
-        fetch-depth: 2
-    - name: Cache Gradle wrapper and dependencies
-      uses: actions/cache@v2
-      with:
-        path: |
-          /root/.gradle/caches/
-          /root/.gradle/wrapper/dists
-        key: coverage-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
-        restore-keys: |
-          coverage-${{ runner.os }}-gradle-
-    - name: Cache local Maven repository
-      uses: actions/cache@v2
-      with:
-        path: /root/.m2/repository
-        key: coverage-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          coverage-${{ runner.os }}-maven-
-    - name: Prepare Gradle Enterprise credentials
-      run: |
-        mkdir -p /root/.gradle/enterprise/
-        echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > /root/.gradle/enterprise/keys.properties
-    - name: 'Run tests with JaCoCo'
-      shell: bash
-      run: |
-        ./gradlew --version
-        ./gradlew --scan --no-parallel --stacktrace -PenableJaCoCo build jacocoRootReport
-    - name: Upload to Codecov.io
-      uses: codecov/codecov-action@v1
+        ./gradlew --scan --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true build
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
@@ -185,11 +150,11 @@ jobs:
         key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
         restore-keys: |
           assemble-${{ runner.os }}-gradle-
-    - name: 'Set up JDK 15'
+    - name: Set up JDK 15
       uses: actions/setup-java@v1
       with:
         java-version: 15
-    - name: 'Publish'
+    - name: Publish
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
@@ -214,11 +179,11 @@ jobs:
         key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
         restore-keys: |
           assemble-${{ runner.os }}-gradle-
-    - name: 'Set up JDK 15'
+    - name: Set up JDK 15
       uses: actions/setup-java@v1
       with:
         java-version: 15
-    - name: 'Upload Documentation'
+    - name: Upload Documentation
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
         GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
