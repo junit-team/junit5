@@ -27,6 +27,7 @@ import org.junit.platform.launcher.TestPlan;
  * instead.
  */
 @Deprecated
+@SuppressWarnings("JavadocReference")
 @API(status = DEPRECATED, since = "1.6")
 public class LegacyReportingUtils {
 
