@@ -51,16 +51,14 @@ public final class TestIdentifier implements Serializable {
 	private static final ObjectStreamField[] serialPersistentFields = ObjectStreamClass.lookup(
 		SerializedForm.class).getFields();
 
-	// Only set during deserialization process
-	private SerializedForm serializedForm;
-
-	private final UniqueId uniqueId;
-	private final UniqueId parentId;
-	private final String displayName;
-	private final String legacyReportingName;
-	private final TestSource source;
-	private final Set<TestTag> tags;
-	private final Type type;
+	// These are effectively final but not technically due to late initialization when deserializing
+	private /* final */ UniqueId uniqueId;
+	private /* final */ UniqueId parentId;
+	private /* final */ String displayName;
+	private /* final */ String legacyReportingName;
+	private /* final */ TestSource source;
+	private /* final */ Set<TestTag> tags;
+	private /* final */ Type type;
 
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
@@ -76,12 +74,6 @@ public final class TestIdentifier implements Serializable {
 		UniqueId parentId = testDescriptor.getParent().map(TestDescriptor::getUniqueId).orElse(null);
 		String legacyReportingName = testDescriptor.getLegacyReportingName();
 		return new TestIdentifier(uniqueId, displayName, source, tags, type, parentId, legacyReportingName);
-	}
-
-	private TestIdentifier(SerializedForm serializedForm) {
-		this(UniqueId.parse(serializedForm.uniqueId), serializedForm.displayName, serializedForm.source,
-			serializedForm.tags, serializedForm.type, UniqueId.parse(serializedForm.parentId),
-			serializedForm.legacyReportingName);
 	}
 
 	private TestIdentifier(UniqueId uniqueId, String displayName, TestSource source, Set<TestTag> tags, Type type,
@@ -286,11 +278,14 @@ public final class TestIdentifier implements Serializable {
 	}
 
 	private void readObject(ObjectInputStream s) throws ClassNotFoundException, IOException {
-		serializedForm = SerializedForm.deserialize(s);
-	}
-
-	private Object readResolve() {
-		return new TestIdentifier(serializedForm);
+		SerializedForm serializedForm = SerializedForm.deserialize(s);
+		uniqueId = UniqueId.parse(serializedForm.uniqueId);
+		displayName = serializedForm.displayName;
+		source = serializedForm.source;
+		tags = serializedForm.tags;
+		type = serializedForm.type;
+		parentId = UniqueId.parse(serializedForm.parentId);
+		legacyReportingName = serializedForm.legacyReportingName;
 	}
 
 	/**
