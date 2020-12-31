@@ -79,10 +79,13 @@ class AssertInstanceOfAssertionsTests {
 		assertInstanceOfSucceeds(RuntimeException.class, new IllegalArgumentException("is a RuntimeException"));
 	}
 
-	private void assertInstanceOfSucceeds(Class<?> expectedType, Object actualValue) {
-		assertInstanceOf(expectedType, actualValue);
-		assertInstanceOf(expectedType, actualValue, "extra");
-		assertInstanceOf(expectedType, actualValue, () -> "extra");
+	private <T> void assertInstanceOfSucceeds(Class<T> expectedType, Object actualValue) {
+		T res = assertInstanceOf(expectedType, actualValue);
+		assertSame(res, actualValue);
+		res = assertInstanceOf(expectedType, actualValue, "extra");
+		assertSame(res, actualValue);
+		res = assertInstanceOf(expectedType, actualValue, () -> "extra");
+		assertSame(res, actualValue);
 	}
 
 	private void assertInstanceOfFails(Class<?> expectedType, Object actualValue, String unexpectedSort) {

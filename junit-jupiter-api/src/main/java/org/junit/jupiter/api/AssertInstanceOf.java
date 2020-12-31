@@ -29,19 +29,19 @@ class AssertInstanceOf {
 		/* no-op */
 	}
 
-	static void assertInstanceOf(Class<?> expectedType, Object actualValue) {
-		assertInstanceOf(expectedType, actualValue, (Object) null);
+	static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue) {
+		return assertInstanceOf(expectedType, actualValue, (Object) null);
 	}
 
-	static void assertInstanceOf(Class<?> expectedType, Object actualValue, String message) {
-		assertInstanceOf(expectedType, actualValue, (Object) message);
+	static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, String message) {
+		return assertInstanceOf(expectedType, actualValue, (Object) message);
 	}
 
-	static void assertInstanceOf(Class<?> expectedType, Object actualValue, Supplier<String> messageSupplier) {
-		assertInstanceOf(expectedType, actualValue, (Object) messageSupplier);
+	static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Supplier<String> messageSupplier) {
+		return assertInstanceOf(expectedType, actualValue, (Object) messageSupplier);
 	}
 
-	private static void assertInstanceOf(Class<?> expectedType, Object actualValue, Object messageOrSupplier) {
+	private static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Object messageOrSupplier) {
 		if (!expectedType.isInstance(actualValue)) {
 			String template = actualValue instanceof Throwable ? "Unexpected exception type"
 					: "Unexpected instance type";
@@ -51,5 +51,6 @@ class AssertInstanceOf {
 					+ format(expectedType, actualValue == null ? null : actualValue.getClass(), template);
 			throw new AssertionFailedError(message);
 		}
+		return expectedType.cast(actualValue);
 	}
 }

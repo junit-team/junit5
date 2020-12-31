@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.time.Duration;
@@ -3457,8 +3458,9 @@ public class Assertions {
 	 *
 	 * @since 5.8
 	 */
-	public static void assertInstanceOf(Class<?> expectedType, Object actualValue) {
-		AssertInstanceOf.assertInstanceOf(expectedType, actualValue);
+	@API(status = EXPERIMENTAL, since = "5.8")
+	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue) {
+		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue);
 	}
 
 	/**
@@ -3472,8 +3474,9 @@ public class Assertions {
 	 *
 	 * @since 5.8
 	 */
-	public static void assertInstanceOf(Class<?> expectedType, Object actualValue, String message) {
-		AssertInstanceOf.assertInstanceOf(expectedType, actualValue, message);
+	@API(status = EXPERIMENTAL, since = "5.8")
+	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, String message) {
+		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, message);
 	}
 
 	/**
@@ -3488,8 +3491,8 @@ public class Assertions {
 	 *
 	 * @since 5.8
 	 */
-	@API(status = STABLE, since = "5.8")
-	public static void assertInstanceOf(Class<?> expectedType, Object actualValue, Supplier<String> messageSupplier) {
-		AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
+	@API(status = EXPERIMENTAL, since = "5.8")
+	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Supplier<String> messageSupplier) {
+		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
 }
