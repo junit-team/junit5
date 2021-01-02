@@ -10,12 +10,13 @@
 
 package org.junit.platform.suite.engine;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
@@ -61,16 +62,16 @@ class SuiteTestDescriptorTest {
 	void suitDiscoversTestsFromClass() {
 		suite.addDiscoveryRequestFrom(SelectClassesSuite.class);
 		suite.discover();
-		assertEquals(asList(suiteEngineId, jupiterEngineId, testClassId, methodId),
-			suite.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toList()));
+		assertEquals(Set.of(suiteEngineId, jupiterEngineId, testClassId, methodId),
+			suite.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toSet()));
 	}
 
 	@Test
 	void suitDiscoversTestsFromUniqueId() {
 		suite.addDiscoveryRequestFrom(methodIdInTestPlan);
 		suite.discover();
-		assertEquals(asList(suiteEngineId, jupiterEngineId, testClassId, methodId),
-			suite.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toList()));
+		assertEquals(Set.of(suiteEngineId, jupiterEngineId, testClassId, methodId),
+			suite.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toSet()));
 	}
 
 	@Test

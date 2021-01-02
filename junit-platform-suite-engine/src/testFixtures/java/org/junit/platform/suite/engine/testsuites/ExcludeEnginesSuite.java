@@ -10,12 +10,11 @@
 
 package org.junit.platform.suite.engine.testsuites;
 
-import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.Suite;
 
 @Suite
-@ExcludeEngines(JupiterEngineDescriptor.ENGINE_ID)
+@ExcludeEngines("junit-jupiter")
 public class ExcludeEnginesSuite {
 
 }

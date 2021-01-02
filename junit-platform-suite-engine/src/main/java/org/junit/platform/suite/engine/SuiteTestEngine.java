@@ -45,7 +45,7 @@ public final class SuiteTestEngine implements TestEngine {
 	 */
 	@Override
 	public Optional<String> getGroupId() {
-		return Optional.of("org.junit.platform.suite");
+		return Optional.of("org.junit.platform");
 	}
 
 	/**

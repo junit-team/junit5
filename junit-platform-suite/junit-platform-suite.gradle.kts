@@ -9,5 +9,5 @@ dependencies {
 
 	api(platform(project(":junit-bom")))
 	api(project(":junit-platform-suite-api"))
-	api(project(":junit-platform-suite-engine"))
+	implementation(project(":junit-platform-suite-engine"))
 }

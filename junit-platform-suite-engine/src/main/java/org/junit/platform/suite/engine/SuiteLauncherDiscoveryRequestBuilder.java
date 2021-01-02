@@ -65,7 +65,7 @@ import org.junit.platform.suite.api.SelectUris;
 
 final class SuiteLauncherDiscoveryRequestBuilder {
 
-	private final LauncherDiscoveryRequestBuilder request = new LauncherDiscoveryRequestBuilder();
+	private final LauncherDiscoveryRequestBuilder request = LauncherDiscoveryRequestBuilder.request();
 
 	SuiteLauncherDiscoveryRequestBuilder configureRequestingSuiteId(UniqueId uniqueId) {
 		request.configurationParameter(SuiteConfiguration.PARENT_SUITE_ID, uniqueId.toString());

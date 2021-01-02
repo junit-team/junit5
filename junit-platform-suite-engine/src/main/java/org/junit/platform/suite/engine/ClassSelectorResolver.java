@@ -40,7 +40,6 @@ final class ClassSelectorResolver implements SelectorResolver {
 	public Resolution resolve(ClassSelector selector, Context context) {
 		Class<?> testClass = selector.getJavaClass();
 		if (isSuiteClass.test(testClass)) {
-			// Nested tests are never filtered out
 			if (classNameFilter.test(testClass.getName())) {
 				// @formatter:off
 				return toResolution(context.addToParent(parent -> newSuiteDescriptor(testClass, parent))

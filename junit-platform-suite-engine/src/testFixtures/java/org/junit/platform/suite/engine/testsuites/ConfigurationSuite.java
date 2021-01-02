@@ -10,9 +10,6 @@
 
 package org.junit.platform.suite.engine.testsuites;
 
-import static org.junit.jupiter.engine.Constants.DEACTIVATE_ALL_CONDITIONS_PATTERN;
-import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
-
 import org.junit.platform.suite.api.Configuration;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
@@ -20,7 +17,7 @@ import org.junit.platform.suite.engine.testcases.Conditional;
 
 @Suite
 @SelectClasses(Conditional.class)
-@Configuration(key = DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME, value = DEACTIVATE_ALL_CONDITIONS_PATTERN)
+@Configuration(key = "junit.jupiter.conditions.deactivate", value = "*")
 public class ConfigurationSuite {
 
 }

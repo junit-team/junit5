@@ -10,8 +10,11 @@
 
 package org.junit.platform.suite.engine;
 
+import java.util.Set;
+
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.launcher.TestIdentifier;
@@ -37,11 +40,20 @@ final class TestIdentifierAsTestDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
+	public Set<TestTag> getTags() {
+		return testIdentifier.getTags();
+	}
+
+	@Override
+	public String getLegacyReportingName() {
+		return testIdentifier.getLegacyReportingName();
+	}
+
+	@Override
 	public void removeFromHierarchy() {
 		// Do not remove from hierarchy. The hierarchy is a view on the tests
 		// in a TestPlan. Removing this node will not remove the test from
 		// the plan. So when the test plan is executed this node must be
 		// present.
 	}
-
 }
