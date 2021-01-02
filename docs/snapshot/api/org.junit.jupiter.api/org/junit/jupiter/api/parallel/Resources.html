@@ -110,37 +110,46 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LOCALE">LOCALE</a></span></code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#GLOBAL">GLOBAL</a></span></code></th>
 <td class="col-last">
-<div class="block">Represents the default locale for the current instance of the JVM.</div>
+<div class="block">Represents the global resource lock: "org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY"</div>
 </td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#LOCALE">LOCALE</a></span></code></th>
+<td class="col-last">
+<div class="block">Represents the default locale for the current instance of the JVM:
+ "java.util.Locale.default"</div>
+</td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#SYSTEM_ERR">SYSTEM_ERR</a></span></code></th>
 <td class="col-last">
-<div class="block">Represents the standard error stream of the current process.</div>
-</td>
-</tr>
-<tr class="alt-color">
-<td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#SYSTEM_OUT">SYSTEM_OUT</a></span></code></th>
-<td class="col-last">
-<div class="block">Represents the standard output stream of the current process.</div>
+<div class="block">Represents the standard error stream of the current process: "java.lang.System.err"</div>
 </td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#SYSTEM_PROPERTIES">SYSTEM_PROPERTIES</a></span></code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#SYSTEM_OUT">SYSTEM_OUT</a></span></code></th>
 <td class="col-last">
-<div class="block">Represents Java's system properties.</div>
+<div class="block">Represents the standard output stream of the current process: "java.lang.System.out"</div>
 </td>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#SYSTEM_PROPERTIES">SYSTEM_PROPERTIES</a></span></code></th>
+<td class="col-last">
+<div class="block">Represents Java's system properties: "java.lang.System.properties"</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#TIME_ZONE">TIME_ZONE</a></span></code></th>
 <td class="col-last">
-<div class="block">Represents the default time zone for the current instance of the JVM.</div>
+<div class="block">Represents the default time zone for the current instance of the JVM:
+ "java.util.TimeZone.default"</div>
 </td>
 </tr>
 </tbody>
@@ -170,7 +179,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <section class="detail" id="SYSTEM_PROPERTIES">
 <h3>SYSTEM_PROPERTIES</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">SYSTEM_PROPERTIES</span></div>
-<div class="block">Represents Java's system properties.</div>
+<div class="block">Represents Java's system properties: "java.lang.System.properties"</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html#getProperties()" title="class or interface in java.lang" class="external-link"><code>System.getProperties()</code></a>, 
@@ -183,7 +192,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <section class="detail" id="SYSTEM_OUT">
 <h3>SYSTEM_OUT</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">SYSTEM_OUT</span></div>
-<div class="block">Represents the standard output stream of the current process.</div>
+<div class="block">Represents the standard output stream of the current process: "java.lang.System.out"</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html#out" title="class or interface in java.lang" class="external-link"><code>System.out</code></a>, 
@@ -196,7 +205,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <section class="detail" id="SYSTEM_ERR">
 <h3>SYSTEM_ERR</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">SYSTEM_ERR</span></div>
-<div class="block">Represents the standard error stream of the current process.</div>
+<div class="block">Represents the standard error stream of the current process: "java.lang.System.err"</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html#err" title="class or interface in java.lang" class="external-link"><code>System.err</code></a>, 
@@ -211,7 +220,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.4")
 </span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">LOCALE</span></div>
-<div class="block">Represents the default locale for the current instance of the JVM.</div>
+<div class="block">Represents the default locale for the current instance of the JVM:
+ "java.util.Locale.default"</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.4</dd>
@@ -227,13 +237,31 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.4")
 </span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">TIME_ZONE</span></div>
-<div class="block">Represents the default time zone for the current instance of the JVM.</div>
+<div class="block">Represents the default time zone for the current instance of the JVM:
+ "java.util.TimeZone.default"</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.4</dd>
 <dt>See Also:</dt>
 <dd><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TimeZone.html#setDefault(java.util.TimeZone)" title="class or interface in java.util" class="external-link"><code>TimeZone.setDefault(java.util.TimeZone)</code></a>, 
 <a href="../../../../../../constant-values.html#org.junit.jupiter.api.parallel.Resources.TIME_ZONE">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="GLOBAL">
+<h3>GLOBAL</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8")
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">GLOBAL</span></div>
+<div class="block">Represents the global resource lock: "org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY"</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.8</dd>
+<dt>See Also:</dt>
+<dd><a href="Isolated.html" title="annotation in org.junit.jupiter.api.parallel"><code>Isolated</code></a>, 
+<code>ExclusiveResource</code>, 
+<a href="../../../../../../constant-values.html#org.junit.jupiter.api.parallel.Resources.GLOBAL">Constant Field Values</a></dd>
 </dl>
 </section>
 </li>
