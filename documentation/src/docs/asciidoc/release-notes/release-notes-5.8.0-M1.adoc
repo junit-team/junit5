@@ -38,6 +38,7 @@ on GitHub.
   and registered test engines.
 * Custom `LauncherDiscoveryListener` implementations can now be registered via Java’s
   `ServiceLoader` mechanism.
+* Documented constant value of `ExclusiveResource.GLOBAL_KEY`.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
@@ -56,6 +57,7 @@ on GitHub.
 * Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
   underscores as in some JVM languages, to improve readability of long numbers like
   `700_000_000`.
+* Documented constant values in `Resources`.
 
 
 [[release-notes-5.8.0-M1-junit-vintage]]

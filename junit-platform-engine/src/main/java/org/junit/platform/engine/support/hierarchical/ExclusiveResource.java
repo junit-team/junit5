@@ -32,7 +32,8 @@ public class ExclusiveResource {
 
 	/**
 	 * Key of the global resource lock that all direct children of the engine
-	 * descriptor acquire in {@linkplain LockMode#READ read mode} by default.
+	 * descriptor acquire in {@linkplain LockMode#READ read mode} by default:
+	 * {@value}
 	 *
 	 * <p>If any node {@linkplain Node#getExclusiveResources() requires} an
 	 * exclusive resource with the same key in
