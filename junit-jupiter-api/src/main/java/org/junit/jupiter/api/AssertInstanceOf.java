@@ -43,8 +43,7 @@ class AssertInstanceOf {
 
 	private static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Object messageOrSupplier) {
 		if (!expectedType.isInstance(actualValue)) {
-			String template = actualValue instanceof Throwable ? "Unexpected exception type"
-					: "Unexpected instance type";
+			String template = "Unexpected type";
 			if (actualValue == null)
 				template = "Unexpected null value";
 			String message = buildPrefix(nullSafeGet(messageOrSupplier))
