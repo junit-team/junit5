@@ -432,34 +432,36 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void ignoreTrimLeadingAndTrailingSpaces(@TempDir Path tempDir) throws java.io.IOException {
-		var csvFile = writeClasspathResourceToFile("/trailing-leading-spaces.csv",
-			tempDir.resolve("trailing-leading-spaces.csv"));
+	void ignoresLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
+		var csvFile = writeClasspathResourceToFile("/leading-trailing-spaces.csv",
+			tempDir.resolve("leading-trailing-spaces.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/trailing-leading-spaces.csv")//
+				.resources("/leading-trailing-spaces.csv")//
 				.files(csvFile.toAbsolutePath().toString())//
-				.build(true);
-		System.out.println(annotation.ignoreTrailingAndLeadingWhitespace());
+				.ignoreLeadingAndTrailingWhitespace(true)//
+				.build();
+
 		var arguments = provideArguments(new ByteArrayInputStream(Files.readAllBytes(csvFile)), annotation);
 
-		assertThat(arguments).containsExactly(array("a", "b", "c"));
+		assertThat(arguments).containsExactly(array("ab", "cd"), array("ef", "gh"));
 	}
 
 	@Test
-	void notIgnoreTrimLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
-		var csvFile = writeClasspathResourceToFile("/trailing-leading-spaces.csv",
-			tempDir.resolve("trailing-leading-spaces.csv"));
+	void trimsLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
+		var csvFile = writeClasspathResourceToFile("/leading-trailing-spaces.csv",
+			tempDir.resolve("leading-trailing-spaces.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/trailing-leading-spaces.csv")//
+				.resources("/leading-trailing-spaces.csv")//
 				.files(csvFile.toAbsolutePath().toString())//
 				.delimiter(',')//
-				.build(false);
+				.ignoreLeadingAndTrailingWhitespace(false)//
+				.build();
 
 		var arguments = provideArguments(new ByteArrayInputStream(Files.readAllBytes(csvFile)), annotation);
 
-		assertThat(arguments).containsExactly(array("a", "b", "c"));
+		assertThat(arguments).containsExactly(array(" ab ", " cd"), array("ef ", "gh"));
 	}
 
 	private Stream<Object[]> provideArguments(CsvFileSource annotation, String content) {

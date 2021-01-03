@@ -128,5 +128,5 @@ public @interface CsvSource {
 	 * @since 5.8
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8")
-	boolean ignoreTrailingAndLeadingWhitespace() default true;
+	boolean ignoreLeadingAndTrailingWhitespace() default true;
 }

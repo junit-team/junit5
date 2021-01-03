@@ -34,14 +34,14 @@ class CsvParserFactory {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
 		return createParser(delimiter, LINE_SEPARATOR, SINGLE_QUOTE, annotation.emptyValue(),
 			annotation.maxCharsPerColumn(), COMMENT_PROCESSING_FOR_CSV_SOURCE,
-			annotation.ignoreTrailingAndLeadingWhitespace());
+			annotation.ignoreLeadingAndTrailingWhitespace());
 	}
 
 	static CsvParser createParserFor(CsvFileSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
 		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue(),
 			annotation.maxCharsPerColumn(), COMMENT_PROCESSING_FOR_CSV_FILE_SOURCE,
-			annotation.ignoreTrailingAndLeadingWhitespace());
+			annotation.ignoreLeadingAndTrailingWhitespace());
 	}
 
 	private static String selectDelimiter(Annotation annotation, char delimiter, String delimiterString) {
@@ -58,14 +58,14 @@ class CsvParserFactory {
 	}
 
 	private static CsvParser createParser(String delimiter, String lineSeparator, char quote, String emptyValue,
-			int maxCharsPerColumn, boolean commentProcessingEnabled, boolean ignoreTrailingAndLeadingWhitespace) {
+			int maxCharsPerColumn, boolean commentProcessingEnabled, boolean ignoreLeadingAndTrailingWhitespace) {
 		return new CsvParser(createParserSettings(delimiter, lineSeparator, quote, emptyValue, maxCharsPerColumn,
-			commentProcessingEnabled, ignoreTrailingAndLeadingWhitespace));
+			commentProcessingEnabled, ignoreLeadingAndTrailingWhitespace));
 	}
 
 	private static CsvParserSettings createParserSettings(String delimiter, String lineSeparator, char quote,
 			String emptyValue, int maxCharsPerColumn, boolean commentProcessingEnabled,
-			boolean ignoreTrailingAndLeadingWhitespace) {
+			boolean ignoreLeadingAndTrailingWhitespace) {
 
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
@@ -75,8 +75,8 @@ class CsvParserFactory {
 		settings.setEmptyValue(emptyValue);
 		settings.setCommentProcessingEnabled(commentProcessingEnabled);
 		settings.setAutoConfigurationEnabled(false);
-		settings.setIgnoreLeadingWhitespaces(ignoreTrailingAndLeadingWhitespace);
-		settings.setIgnoreTrailingWhitespaces(ignoreTrailingAndLeadingWhitespace);
+		settings.setIgnoreLeadingWhitespaces(ignoreLeadingAndTrailingWhitespace);
+		settings.setIgnoreTrailingWhitespaces(ignoreLeadingAndTrailingWhitespace);
 		Preconditions.condition(maxCharsPerColumn > 0,
 			() -> "maxCharsPerColumn must be a positive number: " + maxCharsPerColumn);
 		settings.setMaxCharsPerColumn(maxCharsPerColumn);
