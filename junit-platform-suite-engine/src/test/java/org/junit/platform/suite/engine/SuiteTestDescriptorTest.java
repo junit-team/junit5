@@ -24,11 +24,8 @@ import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
-import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.suite.engine.testcases.Simple;
 import org.junit.platform.suite.engine.testsuites.CyclicSuiteSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
@@ -42,15 +39,7 @@ class SuiteTestDescriptorTest {
 	UniqueId testClassId = jupiterEngineId.append(ClassTestDescriptor.SEGMENT_TYPE, Simple.class.getName());
 	UniqueId methodId = testClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
-	// @formatter:off
-	UniqueId methodIdInTestPlan = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID)
-			.append(ClassTestDescriptor.SEGMENT_TYPE, Simple.class.getName())
-			.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
-	// @formatter:on
-
-	ConfigurationParameters parameters = new EmptyConfigurationParameters();
-	SuiteConfiguration configuration = new SuiteConfiguration(parameters);
-	SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, Object.class, configuration);
+	SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, Object.class);
 
 	@Test
 	void suiteIsEmptyBeforeDiscovery() {
@@ -62,24 +51,16 @@ class SuiteTestDescriptorTest {
 	void suitDiscoversTestsFromClass() {
 		suite.addDiscoveryRequestFrom(SelectClassesSuite.class);
 		suite.discover();
-		assertEquals(Set.of(suiteEngineId, jupiterEngineId, testClassId, methodId),
+		assertEquals(Set.of(jupiterEngineId, testClassId, methodId),
 			suite.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toSet()));
 	}
 
 	@Test
 	void suitDiscoversTestsFromUniqueId() {
-		suite.addDiscoveryRequestFrom(methodIdInTestPlan);
+		suite.addDiscoveryRequestFrom(methodId);
 		suite.discover();
-		assertEquals(Set.of(suiteEngineId, jupiterEngineId, testClassId, methodId),
+		assertEquals(Set.of(jupiterEngineId, testClassId, methodId),
 			suite.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toSet()));
-	}
-
-	@Test
-	void suiteCanOnlyDiscoverOnce() {
-		suite.addDiscoveryRequestFrom(SelectClassesSuite.class);
-		suite.discover();
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, suite::discover);
-		assertEquals("discovery can only happen once", exception.getMessage());
 	}
 
 	@Test
@@ -93,23 +74,8 @@ class SuiteTestDescriptorTest {
 
 		}, () -> {
 			PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-				() -> suite.addDiscoveryRequestFrom(methodIdInTestPlan));
+				() -> suite.addDiscoveryRequestFrom(methodId));
 			assertEquals("discovery request can not be modified after discovery", exception.getMessage());
-		});
-	}
-
-	@Test
-	void uniqueIdInSuite() {
-		TestIdentifier from = createTestIdentifier(methodIdInTestPlan);
-		assertEquals(methodId, suite.uniqueIdInSuite(from));
-	}
-
-	private TestIdentifier createTestIdentifier(UniqueId methodIdInTestPlan) {
-		return TestIdentifier.from(new AbstractTestDescriptor(methodIdInTestPlan, "test()") {
-			@Override
-			public Type getType() {
-				return Type.TEST;
-			}
 		});
 	}
 

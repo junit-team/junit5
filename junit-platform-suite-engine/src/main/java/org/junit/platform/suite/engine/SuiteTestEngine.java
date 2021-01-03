@@ -13,7 +13,6 @@ package org.junit.platform.suite.engine;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -23,9 +22,6 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.TestExecutionListener;
-import org.junit.platform.launcher.TestPlan;
 
 /**
  * The JUnit Platform Suite {@link org.junit.platform.engine.TestEngine TestEngine}.
@@ -58,8 +54,7 @@ public final class SuiteTestEngine implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		SuiteConfiguration configuration = new SuiteConfiguration(discoveryRequest.getConfigurationParameters());
-		SuiteEngineDescriptor engineDescriptor = new SuiteEngineDescriptor(uniqueId, configuration);
+		SuiteEngineDescriptor engineDescriptor = new SuiteEngineDescriptor(uniqueId);
 		new DiscoverySelectorResolver().resolveSelectors(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
 	}
@@ -75,22 +70,9 @@ public final class SuiteTestEngine implements TestEngine {
 		suiteEngineDescriptor.getChildren()
 				.stream()
 				.map(SuiteTestDescriptor.class::cast)
-				.forEach(executeSuite(engineExecutionListener));
+				.forEach(suiteTestDescriptor -> suiteTestDescriptor.execute(engineExecutionListener));
 		// @formatter:on
 		engineExecutionListener.executionFinished(suiteEngineDescriptor, TestExecutionResult.successful());
-	}
-
-	private Consumer<SuiteTestDescriptor> executeSuite(EngineExecutionListener listener) {
-		return descriptor -> {
-			listener.executionStarted(descriptor);
-
-			TestExecutionListener testExecutionListener = new EngineExecutionListenerAdaptor(descriptor, listener);
-			Launcher launcher = descriptor.getLauncher();
-			TestPlan testPlan = descriptor.getTestPlan();
-			launcher.execute(testPlan, testExecutionListener);
-
-			listener.executionFinished(descriptor, TestExecutionResult.successful());
-		};
 	}
 
 }

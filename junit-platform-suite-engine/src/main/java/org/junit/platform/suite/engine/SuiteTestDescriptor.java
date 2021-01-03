@@ -10,22 +10,24 @@
 
 package org.junit.platform.suite.engine;
 
-import java.util.function.Function;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+
 import java.util.function.Supplier;
 
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.UniqueId.Segment;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
-import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.TestPlan;
-import org.junit.platform.launcher.core.LauncherConfig;
-import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.suite.api.SuiteDisplayName;
 
 /**
@@ -44,101 +46,63 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	private final SuiteLauncherDiscoveryRequestBuilder requestBuilder;
 
-	private TestPlan testPlan;
-	private Launcher launcher;
+	private LauncherDiscoveryResult launcherDiscoveryResult;
+	private SuiteLauncher launcher;
 
-	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, SuiteConfiguration configuration) {
-		super(id, getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
+	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass) {
+		super(requireNoCycles(id), getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
+		this.requestBuilder = new SuiteLauncherDiscoveryRequestBuilder();
+	}
+
+	private static UniqueId requireNoCycles(UniqueId id) {
 		// @formatter:off
-		UniqueId requestingSuiteId = requireNoCycles(configuration).parentSuiteId()
-				.map(parentId -> UniqueIdHelper.append(parentId, getUniqueId()))
-				.orElseGet(this::getUniqueId);
+		boolean containsCycle = id.getSegments().stream()
+				.filter(segment -> SuiteTestDescriptor.SEGMENT_TYPE.equals(segment.getType()))
+				.map(Segment::getValue)
+				.collect(groupingBy(identity(), counting()))
+				.values()
+				.stream()
+				.anyMatch(count -> count > 1);
 		// @formatter:on
-		SuiteLauncherDiscoveryRequestBuilder requestBuilder = new SuiteLauncherDiscoveryRequestBuilder();
-		this.requestBuilder = requestBuilder.configureRequestingSuiteId(requestingSuiteId);
-	}
-
-	private SuiteConfiguration requireNoCycles(SuiteConfiguration configuration) {
-		configuration.parentSuiteId().ifPresent(parentSuiteId -> {
-			UniqueId fullSuiteId = UniqueIdHelper.append(parentSuiteId, getUniqueId());
-			Supplier<String> message = () -> String.format(
-				"Configuration error: The suite configuration may not contain a cycle [%s]", fullSuiteId);
-			Preconditions.condition(!UniqueIdHelper.containCycle(fullSuiteId, SEGMENT_TYPE), message);
-		});
-		return configuration;
-	}
-
-	UniqueId uniqueIdInSuite(TestIdentifier testDescriptor) {
-		Preconditions.notNull(testDescriptor, "uniqueId most not be null");
-		UniqueId uniqueIdInTestPlan = UniqueId.parse(testDescriptor.getUniqueId());
-		UniqueId uniqueIdInSuite = getUniqueId();
-		return UniqueIdHelper.append(uniqueIdInSuite, uniqueIdInTestPlan);
+		Supplier<String> message = () -> String.format(
+			"Configuration error: The suite configuration may not contain a cycle [%s]", id);
+		Preconditions.condition(!containsCycle, message);
+		return id;
 	}
 
 	SuiteTestDescriptor addDiscoveryRequestFrom(Class<?> testClass) {
-		Preconditions.condition(testPlan == null, "discovery request can not be modified after discovery");
+		Preconditions.condition(launcherDiscoveryResult == null,
+			"discovery request can not be modified after discovery");
 		requestBuilder.addRequestFrom(testClass);
 		return this;
 	}
 
 	SuiteTestDescriptor addDiscoveryRequestFrom(UniqueId uniqueId) {
-		Preconditions.condition(testPlan == null, "discovery request can not be modified after discovery");
+		Preconditions.condition(launcherDiscoveryResult == null,
+			"discovery request can not be modified after discovery");
 		requestBuilder.addRequestFrom(uniqueId);
 		return this;
 	}
 
 	void discover() {
-		Preconditions.condition(testPlan == null, "discovery can only happen once");
+		if (launcherDiscoveryResult != null) {
+			return;
+		}
 
 		LauncherDiscoveryRequest request = requestBuilder.build();
+		this.launcher = SuiteLauncher.create();
+		this.launcherDiscoveryResult = launcher.discover(request, getUniqueId());
 		// @formatter:off
-		LauncherConfig launcherConfig = LauncherConfig.builder()
-				.enableTestExecutionListenerAutoRegistration(false)
-				.enablePostDiscoveryFilterAutoRegistration(false)
-				.build();
-		// @formatter:on
-		this.launcher = LauncherFactory.create(launcherConfig);
-		this.testPlan = launcher.discover(request);
-
-		addTestIdentifiersToSuite(testPlan, testIdentifier -> {
-			UniqueId uniqueId = uniqueIdInSuite(testIdentifier);
-			return new TestIdentifierAsTestDescriptor(uniqueId, testIdentifier);
-		});
-	}
-
-	private void addTestIdentifiersToSuite(TestPlan testPlan,
-			Function<TestIdentifier, TestDescriptor> createTestDescriptor) {
-		// @formatter:off
-		testPlan.getRoots()
+		launcherDiscoveryResult.getTestEngines()
 				.stream()
-				.map(testIdentifier -> adapTestIdentifier(testPlan, testIdentifier, createTestDescriptor))
+				.map(testEngine -> launcherDiscoveryResult.getEngineTestDescriptor(testEngine))
 				.forEach(this::addChild);
 		// @formatter:on
-	}
-
-	private static TestDescriptor adapTestIdentifier(TestPlan testPlan, TestIdentifier testIdentifier,
-			Function<TestIdentifier, TestDescriptor> createTestDescriptor) {
-		TestDescriptor testDescriptor = createTestDescriptor.apply(testIdentifier);
-		// @formatter:off
-		testPlan.getChildren(testIdentifier)
-				.stream()
-				.map(childIdentifier -> adapTestIdentifier(testPlan, childIdentifier, createTestDescriptor))
-				.forEach(testDescriptor::addChild);
-		// @formatter:on
-		return testDescriptor;
 	}
 
 	@Override
 	public Type getType() {
 		return Type.CONTAINER;
-	}
-
-	TestPlan getTestPlan() {
-		return testPlan;
-	}
-
-	Launcher getLauncher() {
-		return launcher;
 	}
 
 	private static String getSuiteDisplayName(Class<?> testClass) {
@@ -148,6 +112,12 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 				.filter(StringUtils::isNotBlank)
 				.orElse(testClass.getSimpleName());
 		// @formatter:on
+	}
+
+	void execute(EngineExecutionListener listener) {
+		listener.executionStarted(this);
+		launcher.execute(launcherDiscoveryResult, listener);
+		listener.executionFinished(this, TestExecutionResult.successful());
 	}
 
 }

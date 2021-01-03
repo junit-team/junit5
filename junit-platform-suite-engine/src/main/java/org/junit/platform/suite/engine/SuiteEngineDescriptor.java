@@ -17,20 +17,13 @@ final class SuiteEngineDescriptor extends EngineDescriptor {
 
 	static final String ENGINE_ID = "junit-platform-suite";
 
-	private final SuiteConfiguration configuration;
-
-	SuiteEngineDescriptor(UniqueId uniqueId, SuiteConfiguration configuration) {
+	SuiteEngineDescriptor(UniqueId uniqueId) {
 		super(uniqueId, "JUnit Platform Suite");
-		this.configuration = configuration;
 	}
 
 	@Override
 	public Type getType() {
 		return Type.CONTAINER;
-	}
-
-	SuiteConfiguration configuration() {
-		return configuration;
 	}
 
 }

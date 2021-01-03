@@ -25,6 +25,7 @@ import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
@@ -266,10 +267,14 @@ class SuiteEngineTest {
 	}
 
 	@Test
-	void postDiscoveryCanNotRemoveTestIdentifiersAsTestDescriptors() {
+	void postDiscoveryCanRemoveTestDescriptorsInSuite() {
 		// @formatter:off
-		PostDiscoveryFilter postDiscoveryFilter = testDescriptor ->
-				FilterResult.includedIf(!(testDescriptor instanceof TestIdentifierAsTestDescriptor));
+		PostDiscoveryFilter postDiscoveryFilter = testDescriptor -> testDescriptor.getSource()
+				.filter(MethodSource.class::isInstance)
+				.map(MethodSource.class::cast)
+				.filter(classSource -> Simple.class.equals(classSource.getJavaClass()))
+				.map(classSource -> FilterResult.excluded("Was a test in SimpleTest"))
+				.orElseGet(() -> FilterResult.included("Was not a test in SimpleTest"));
 
 		EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectClass(SelectClassesSuite.class))
@@ -277,8 +282,7 @@ class SuiteEngineTest {
 				.execute()
 				.testEvents()
 				.assertThatEvents()
-				.haveExactly(1, event(test(SelectClassesSuite.class.getName()), finishedSuccessfully()))
-				.haveExactly(1, event(test(Simple.class.getName()), finishedSuccessfully()));
+				.isEmpty();
 		// @formatter:on
 	}
 

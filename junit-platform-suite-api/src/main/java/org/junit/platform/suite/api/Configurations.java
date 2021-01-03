@@ -32,7 +32,7 @@ import org.apiguardian.api.API.Status;
  * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
  * the {@code junit-platform-suite} engine.
  *
- * @since 1.8*
+ * @since 1.8
  * @see Configuration
  */
 @Retention(RetentionPolicy.RUNTIME)

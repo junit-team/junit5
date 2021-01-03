@@ -19,7 +19,7 @@ final class DiscoverySelectorResolver {
 	// @formatter:off
 	private static final EngineDiscoveryRequestResolver<SuiteEngineDescriptor> resolver = EngineDiscoveryRequestResolver.<SuiteEngineDescriptor>builder()
 			.addClassContainerSelectorResolver(new IsSuiteClass())
-			.addSelectorResolver(context -> new ClassSelectorResolver(context.getClassNameFilter(), context.getEngineDescriptor().configuration()))
+			.addSelectorResolver(context -> new ClassSelectorResolver(context.getClassNameFilter(), context.getEngineDescriptor()))
 			.addTestDescriptorVisitor(context -> DiscoverySelectorResolver::discoverSuite)
 			.addTestDescriptorVisitor(context -> TestDescriptor::prune)
 			.build();

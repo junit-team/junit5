@@ -12,12 +12,14 @@ package org.junit.platform.launcher.core;
 
 import static java.lang.String.join;
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
@@ -27,7 +29,12 @@ import org.junit.platform.engine.TestEngine;
 /**
  * @since 1.0
  */
-class ServiceLoaderTestEngineRegistry {
+@API(status = INTERNAL, since = "1.0", consumers = "suite")
+public final class ServiceLoaderTestEngineRegistry {
+
+	public ServiceLoaderTestEngineRegistry() {
+
+	}
 
 	private static final Logger logger = LoggerFactory.getLogger(ServiceLoaderTestEngineRegistry.class);
 
