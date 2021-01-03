@@ -12,12 +12,7 @@ package org.junit.platform.jfr;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -25,9 +20,7 @@ import java.util.stream.Collectors;
 import jdk.jfr.Category;
 import jdk.jfr.Event;
 import jdk.jfr.Label;
-import jdk.jfr.MetadataDefinition;
 import jdk.jfr.Name;
-import jdk.jfr.Relational;
 import jdk.jfr.StackTrace;
 
 import org.apiguardian.api.API;
@@ -42,17 +35,17 @@ import org.junit.platform.launcher.TestPlan;
  * events.
  *
  * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
- * @since 1.7
+ * @since 1.8
  */
-@API(status = EXPERIMENTAL, since = "1.7")
-public class FlightRecordingListener implements TestExecutionListener {
+@API(status = EXPERIMENTAL, since = "1.8")
+public class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	private final AtomicReference<TestPlanExecutionEvent> testPlanExecutionEvent = new AtomicReference<>();
-	private final Map<String, TestExecutionEvent> testExecutionEventMap = new ConcurrentHashMap<>();
+	private final Map<String, TestExecutionEvent> testExecutionEvents = new ConcurrentHashMap<>();
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan plan) {
-		TestPlanExecutionEvent event = new TestPlanExecutionEvent();
+		var event = new TestPlanExecutionEvent();
 		event.containsTests = plan.containsTests();
 		event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
 			Collectors.joining(", "));
@@ -62,13 +55,12 @@ public class FlightRecordingListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan plan) {
-		TestPlanExecutionEvent event = testPlanExecutionEvent.get();
-		event.commit();
+		testPlanExecutionEvent.getAndSet(null).commit();
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier test, String reason) {
-		SkippedTestEvent event = new SkippedTestEvent();
+		var event = new SkippedTestEvent();
 		event.initialize(test);
 		event.reason = reason;
 		event.commit();
@@ -76,19 +68,16 @@ public class FlightRecordingListener implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier test) {
-		TestExecutionEvent event = new TestExecutionEvent();
-		testExecutionEventMap.put(test.getUniqueId(), event);
+		var event = new TestExecutionEvent();
+		testExecutionEvents.put(test.getUniqueId(), event);
 		event.initialize(test);
 		event.begin();
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
-		if (test.isContainer() && result.getStatus().equals(TestExecutionResult.Status.SUCCESSFUL)) {
-			return;
-		}
-		Optional<Throwable> throwable = result.getThrowable();
-		TestExecutionEvent event = testExecutionEventMap.get(test.getUniqueId()); // TODO Remove?
+		var throwable = result.getThrowable();
+		var event = testExecutionEvents.remove(test.getUniqueId());
 		event.end();
 		event.result = result.getStatus().toString();
 		event.exceptionClass = throwable.map(Throwable::getClass).orElse(null);
@@ -98,8 +87,8 @@ public class FlightRecordingListener implements TestExecutionListener {
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier test, ReportEntry reportEntry) {
-		for (Map.Entry<String, String> entry : reportEntry.getKeyValuePairs().entrySet()) {
-			ReportEntryEvent event = new ReportEntryEvent();
+		for (var entry : reportEntry.getKeyValuePairs().entrySet()) {
+			var event = new ReportEntryEvent();
 			event.uniqueId = test.getUniqueId();
 			event.key = entry.getKey();
 			event.value = entry.getValue();
@@ -107,28 +96,21 @@ public class FlightRecordingListener implements TestExecutionListener {
 		}
 	}
 
-	@Category("JUnit")
-	@Label("Test Plan")
-	@Name("org.junit.TestPlan")
+	@Category({ "JUnit", "Execution" })
 	@StackTrace(false)
-	static class TestPlanExecutionEvent extends Event {
+	abstract static class ExecutionEvent extends Event {
+	}
+
+	@Label("Test Execution")
+	@Name("org.junit.TestPlanExecution")
+	static class TestPlanExecutionEvent extends ExecutionEvent {
 		@Label("Contains Tests")
 		boolean containsTests;
 		@Label("Engine Names")
 		String engineNames;
 	}
 
-	@MetadataDefinition
-	@Relational
-	@Name("org.junit.UniqueId")
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.FIELD)
-	public @interface UniqueId {
-	}
-
-	@Category("JUnit")
-	@StackTrace(false)
-	abstract static class TestEvent extends Event {
+	abstract static class TestEvent extends ExecutionEvent {
 		@UniqueId
 		@Label("Unique Id")
 		String uniqueId;
@@ -165,11 +147,9 @@ public class FlightRecordingListener implements TestExecutionListener {
 		String exceptionMessage;
 	}
 
-	@Category("JUnit")
 	@Label("Report Entry")
 	@Name("org.junit.ReportEntry")
-	@StackTrace(false)
-	static class ReportEntryEvent extends Event {
+	static class ReportEntryEvent extends ExecutionEvent {
 		@UniqueId
 		@Label("Unique Id")
 		String uniqueId;

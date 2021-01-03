@@ -23,6 +23,8 @@ module org.junit.platform.jfr {
 	requires org.junit.platform.engine;
 	requires org.junit.platform.launcher;
 
+	provides org.junit.platform.launcher.LauncherDiscoveryListener
+			with org.junit.platform.jfr.FlightRecordingDiscoveryListener;
 	provides org.junit.platform.launcher.TestExecutionListener
-			with org.junit.platform.jfr.FlightRecordingListener;
+			with org.junit.platform.jfr.FlightRecordingExecutionListener;
 }

@@ -15,11 +15,19 @@ tasks.withType<Test>().configureEach {
 		exceptionFormat = FULL
 	}
 	retry {
-		maxRetries.set(2)
+		maxRetries.set(providers.gradleProperty("retries").map(String::toInt).orElse(2))
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14
 	systemProperty("net.bytebuddy.experimental", true)
+	if (project.hasProperty("enableJFR")) {
+		jvmArgs(
+			"-XX:+UnlockDiagnosticVMOptions",
+			"-XX:+DebugNonSafepoints",
+			"-XX:StartFlightRecording=filename=${reports.junitXml.destination},dumponexit=true,settings=profile.jfc",
+			"-XX:FlightRecorderOptions=stackdepth=1024"
+		)
+	}
 }
 
 dependencies {
@@ -37,6 +45,7 @@ dependencies {
 	"testImplementation"(testFixtures(project(":junit-jupiter-api")))
 
 	"testRuntimeOnly"(project(":junit-platform-launcher"))
+	"testRuntimeOnly"(project(":junit-platform-jfr"))
 
 	"testRuntimeOnly"("org.apache.logging.log4j:log4j-core")
 	"testRuntimeOnly"("org.apache.logging.log4j:log4j-jul")

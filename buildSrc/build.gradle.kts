@@ -17,10 +17,6 @@ dependencies {
 	implementation("org.gradle:test-retry-gradle-plugin:1.2.0")
 }
 
-kotlinDslPluginOptions {
-	experimentalWarning.set(false)
-}
-
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
 		allWarningsAsErrors = true

@@ -24,6 +24,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * @since 1.6
@@ -32,6 +33,16 @@ import org.junit.platform.launcher.LauncherDiscoveryListener;
 class LoggingLauncherDiscoveryListener extends LauncherDiscoveryListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggingLauncherDiscoveryListener.class);
+
+	@Override
+	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
+		logger.trace(() -> "Test discovery started");
+	}
+
+	@Override
+	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
+		logger.trace(() -> "Test discovery finished");
+	}
 
 	@Override
 	public void engineDiscoveryStarted(UniqueId engineId) {

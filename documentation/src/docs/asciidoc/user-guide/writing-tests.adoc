@@ -1010,9 +1010,6 @@ palindromes(String) ✔
 └─ [3] candidate=able was I ere I saw elba ✔
 ....
 
-WARNING: Parameterized tests are currently an _experimental_ feature. Consult the table
-in <<api-evolution-experimental-apis>> for details.
-
 [[writing-tests-parameterized-tests-setup]]
 ==== Required Setup
 
@@ -1738,10 +1735,6 @@ implementations.
 
 [[writing-tests-declarative-timeouts]]
 === Timeouts
-
-.Declarative timeouts are an experimental feature
-WARNING: You're invited to give it a try and provide feedback to the JUnit team so they
-can improve and eventually <<api-evolution, promote>> this feature.
 
 The `@Timeout` annotation allows one to declare that a test, test factory, test template,
 or lifecycle method should fail if its execution time exceeds a given duration. The time

@@ -61,6 +61,18 @@ public interface LauncherConfig {
 	boolean isTestEngineAutoRegistrationEnabled();
 
 	/**
+	 * Determine if launcher discovery listeners should be discovered at runtime
+	 * using the {@link java.util.ServiceLoader ServiceLoader} mechanism and
+	 * automatically registered.
+	 *
+	 * @return {@code true} if launcher discovery listeners should be
+	 * automatically registered
+	 * @since 1.8
+	 */
+	@API(status = EXPERIMENTAL, since = "1.8")
+	boolean isLauncherDiscoveryListenerAutoRegistrationEnabled();
+
+	/**
 	 * Determine if test execution listeners should be discovered at runtime
 	 * using the {@link java.util.ServiceLoader ServiceLoader} mechanism and
 	 * automatically registered.
@@ -77,6 +89,7 @@ public interface LauncherConfig {
 	 *
 	 * @return {@code true} if post discovery filters should be automatically
 	 * registered
+	 * @since 1.7
 	 */
 	@API(status = EXPERIMENTAL, since = "1.7")
 	boolean isPostDiscoveryFilterAutoRegistrationEnabled();
@@ -105,6 +118,7 @@ public interface LauncherConfig {
 	 *
 	 * @return the collection of additional post discovery filters; never
 	 * {@code null} but potentially empty
+	 * @since 1.7
 	 */
 	@API(status = EXPERIMENTAL, since = "1.7")
 	Collection<PostDiscoveryFilter> getAdditionalPostDiscoveryFilters();
@@ -123,20 +137,33 @@ public interface LauncherConfig {
 	 */
 	class Builder {
 
-		private boolean listenerAutoRegistrationEnabled = true;
-
 		private boolean engineAutoRegistrationEnabled = true;
-
+		private boolean launcherDiscoveryListenerAutoRegistrationEnabled = true;
+		private boolean testExecutionListenerAutoRegistrationEnabled = true;
 		private boolean postDiscoveryFilterAutoRegistrationEnabled = true;
-
 		private final Collection<TestEngine> engines = new LinkedHashSet<>();
-
 		private final Collection<TestExecutionListener> listeners = new LinkedHashSet<>();
-
 		private final Collection<PostDiscoveryFilter> postDiscoveryFilters = new LinkedHashSet<>();
 
 		private Builder() {
 			/* no-op */
+		}
+
+		/**
+		 * Configure the auto-registration flag for launcher discovery
+		 * listeners.
+		 *
+		 * <p>Defaults to {@code true}.
+		 *
+		 * @param enabled {@code true} if launcher discovery listeners should be
+		 * automatically registered
+		 * @return this builder for method chaining
+		 * @since 1.8
+		 */
+		@API(status = EXPERIMENTAL, since = "1.8")
+		public Builder enableLauncherDiscoveryListenerAutoRegistration(boolean enabled) {
+			this.launcherDiscoveryListenerAutoRegistrationEnabled = enabled;
+			return this;
 		}
 
 		/**
@@ -149,7 +176,7 @@ public interface LauncherConfig {
 		 * @return this builder for method chaining
 		 */
 		public Builder enableTestExecutionListenerAutoRegistration(boolean enabled) {
-			this.listenerAutoRegistrationEnabled = enabled;
+			this.testExecutionListenerAutoRegistrationEnabled = enabled;
 			return this;
 		}
 
@@ -175,6 +202,7 @@ public interface LauncherConfig {
 		 * @param enabled {@code true} if post discovery filters should be automatically
 		 * registered
 		 * @return this builder for method chaining
+		 * @since 1.7
 		 */
 		@API(status = EXPERIMENTAL, since = "1.7")
 		public Builder enablePostDiscoveryFilterAutoRegistration(boolean enabled) {
@@ -217,6 +245,7 @@ public interface LauncherConfig {
 		 * @param filters additional post discovery filters to register;
 		 * never {@code null} or containing {@code null}
 		 * @return this builder for method chaining
+		 * @since 1.7
 		 */
 		@API(status = EXPERIMENTAL, since = "1.7")
 		public Builder addPostDiscoveryFilters(PostDiscoveryFilter... filters) {
@@ -231,9 +260,10 @@ public interface LauncherConfig {
 		 * builder.
 		 */
 		public LauncherConfig build() {
-			return new DefaultLauncherConfig(this.engineAutoRegistrationEnabled, this.listenerAutoRegistrationEnabled,
-				this.postDiscoveryFilterAutoRegistrationEnabled, this.engines, this.listeners,
-				this.postDiscoveryFilters);
+			return new DefaultLauncherConfig(this.engineAutoRegistrationEnabled,
+				this.launcherDiscoveryListenerAutoRegistrationEnabled,
+				this.testExecutionListenerAutoRegistrationEnabled, this.postDiscoveryFilterAutoRegistrationEnabled,
+				this.engines, this.listeners, this.postDiscoveryFilters);
 		}
 
 	}

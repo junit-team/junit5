@@ -24,6 +24,8 @@ jobs:
     container: "ghcr.io/junit-team/build:${{ matrix.jdk }}"
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
       - name: Cache Gradle wrapper and dependencies
         uses: actions/cache@v2
         with:
@@ -47,4 +49,4 @@ jobs:
       - name: Test
         run: |
           ./gradlew --version
-          ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} build "-Dscan.tag.JDK_${{ matrix.jdk }}"
+          ./gradlew --scan --no-parallel -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} build "-Dscan.tag.JDK_${{ matrix.jdk }}"

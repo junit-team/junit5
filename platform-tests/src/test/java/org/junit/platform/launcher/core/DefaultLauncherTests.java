@@ -170,14 +170,17 @@ class DefaultLauncherTests {
 
 		var launcher = createLauncher(engine);
 		var discoveryListener = mock(LauncherDiscoveryListener.class);
-		var testPlan = launcher.discover(request() //
+		var request = request() //
 				.listeners(discoveryListener) //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
-				.build());
+				.build();
+		var testPlan = launcher.discover(request);
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		var engineIdentifier = getOnlyElement(testPlan.getRoots());
 		assertThat(getOnlyElement(testPlan.getRoots()).getDisplayName()).isEqualTo("my-engine-id");
+		verify(discoveryListener).launcherDiscoveryStarted(request);
+		verify(discoveryListener).launcherDiscoveryFinished(request);
 		assertDiscoveryFailed(engine, discoveryListener);
 
 		var listener = mock(TestExecutionListener.class);

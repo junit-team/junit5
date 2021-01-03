@@ -18,6 +18,7 @@ import static java.util.stream.StreamSupport.stream;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -265,8 +266,8 @@ public final class EngineTestKit {
 	private static void executeUsingLauncherOrchestration(TestEngine testEngine,
 			LauncherDiscoveryRequest discoveryRequest, EngineExecutionListener listener) {
 		TestDescriptor engineTestDescriptor;
-		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine),
-			emptySet()).discover(discoveryRequest, "testing");
+		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine), emptySet(),
+			emptySet()).discover(discoveryRequest, EXECUTION);
 		engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
 		new EngineExecutionOrchestrator().execute(discoveryResult, listener);

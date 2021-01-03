@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
 
@@ -18,8 +19,10 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -35,6 +38,7 @@ import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 
 /**
  * Orchestrates test discovery using the configured test engines.
@@ -49,11 +53,14 @@ public class EngineDiscoveryOrchestrator {
 	private final EngineDiscoveryResultValidator discoveryResultValidator = new EngineDiscoveryResultValidator();
 	private final Iterable<TestEngine> testEngines;
 	private final Collection<PostDiscoveryFilter> postDiscoveryFilters;
+	private final Collection<LauncherDiscoveryListener> launcherDiscoveryListeners;
 
 	public EngineDiscoveryOrchestrator(Iterable<TestEngine> testEngines,
-			Collection<PostDiscoveryFilter> postDiscoveryFilters) {
+			Collection<PostDiscoveryFilter> postDiscoveryFilters,
+			Collection<LauncherDiscoveryListener> launcherDiscoveryListeners) {
 		this.testEngines = testEngines;
 		this.postDiscoveryFilters = postDiscoveryFilters;
+		this.launcherDiscoveryListeners = launcherDiscoveryListeners;
 	}
 
 	/**
@@ -64,7 +71,19 @@ public class EngineDiscoveryOrchestrator {
 	 * filters} and {@linkplain PostDiscoveryFilter post-discovery filters} and
 	 * {@linkplain TestDescriptor#prune() prunes} the resulting test tree.
 	 */
-	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, String phase) {
+	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase) {
+		LauncherDiscoveryListener listener = getLauncherDiscoveryListener(request);
+		listener.launcherDiscoveryStarted(request);
+		try {
+			return discoverSafely(request, phase, listener);
+		}
+		finally {
+			listener.launcherDiscoveryFinished(request);
+		}
+	}
+
+	private LauncherDiscoveryResult discoverSafely(LauncherDiscoveryRequest request, Phase phase,
+			LauncherDiscoveryListener listener) {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 
 		for (TestEngine testEngine : this.testEngines) {
@@ -74,7 +93,7 @@ public class EngineDiscoveryOrchestrator {
 
 			if (engineIsExcluded) {
 				logger.debug(() -> String.format(
-					"Test discovery for engine '%s' was skipped due to an EngineFilter in phase '%s'.",
+					"Test discovery for engine '%s' was skipped due to an EngineFilter in %s phase.",
 					testEngine.getId(), phase));
 				continue;
 			}
@@ -82,7 +101,7 @@ public class EngineDiscoveryOrchestrator {
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request);
+			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, listener);
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
 
@@ -95,23 +114,33 @@ public class EngineDiscoveryOrchestrator {
 		return new LauncherDiscoveryResult(testEngineDescriptors, request.getConfigurationParameters());
 	}
 
-	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
-		LauncherDiscoveryListener discoveryListener = discoveryRequest.getDiscoveryListener();
+	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest request,
+			LauncherDiscoveryListener listener) {
 		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 		try {
-			discoveryListener.engineDiscoveryStarted(uniqueEngineId);
-			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
+			listener.engineDiscoveryStarted(uniqueEngineId);
+			TestDescriptor engineRoot = testEngine.discover(request, uniqueEngineId);
 			discoveryResultValidator.validate(testEngine, engineRoot);
-			discoveryListener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
+			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
 			return engineRoot;
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
 			JUnitException cause = new JUnitException(message, throwable);
-			discoveryListener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
+			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
 			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
 		}
+	}
+
+	LauncherDiscoveryListener getLauncherDiscoveryListener(LauncherDiscoveryRequest discoveryRequest) {
+		LauncherDiscoveryListener discoveryListener = discoveryRequest.getDiscoveryListener();
+		if (!launcherDiscoveryListeners.isEmpty()) {
+			List<LauncherDiscoveryListener> allDiscoveryListeners = Stream.concat(Stream.of(discoveryListener),
+				launcherDiscoveryListeners.stream()).collect(toList());
+			discoveryListener = LauncherDiscoveryListeners.composite(allDiscoveryListeners);
+		}
+		return discoveryListener;
 	}
 
 	private void applyPostDiscoveryFilters(Map<TestEngine, TestDescriptor> testEngineDescriptors,
@@ -165,6 +194,15 @@ public class EngineDiscoveryOrchestrator {
 	private void acceptInAllTestEngines(Map<TestEngine, TestDescriptor> testEngineDescriptors,
 			TestDescriptor.Visitor visitor) {
 		testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
+	}
+
+	public enum Phase {
+		DISCOVERY, EXECUTION;
+
+		@Override
+		public String toString() {
+			return name().toLowerCase(Locale.ENGLISH);
+		}
 	}
 
 }

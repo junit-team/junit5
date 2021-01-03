@@ -19,6 +19,7 @@ import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * @since 1.6
@@ -30,6 +31,16 @@ class CompositeLauncherDiscoveryListener extends LauncherDiscoveryListener {
 
 	CompositeLauncherDiscoveryListener(List<LauncherDiscoveryListener> listeners) {
 		this.listeners = Collections.unmodifiableList(new ArrayList<>(listeners));
+	}
+
+	@Override
+	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
+		listeners.forEach(delegate -> delegate.launcherDiscoveryStarted(request));
+	}
+
+	@Override
+	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
+		listeners.forEach(delegate -> delegate.launcherDiscoveryFinished(request));
 	}
 
 	@Override

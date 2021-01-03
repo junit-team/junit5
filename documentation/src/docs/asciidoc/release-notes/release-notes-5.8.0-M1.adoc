@@ -19,9 +19,11 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , ExtensionContext)` has been deprecated in favor of
-  `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , DynamicTestInvocationContext, ExtensionContext)` that
-  allows to access the dynamic test executable via `DynamicTestInvocationContext.getExecutable()`.
+* `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , ExtensionContext)` has
+  been deprecated in favor of
+  `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , DynamicTestInvocationContext, ExtensionContext)`
+  that allows to access the dynamic test executable via
+  `DynamicTestInvocationContext.getExecutable()`.
 
 ==== New Features and Improvements
 
@@ -30,6 +32,13 @@ on GitHub.
   nested container events when using the `EngineTestKit`. For example,
   `test(displayName("my test"))` can be used to match against a test whose display name is
   `my test`.
+* The `junit-platform-jfr` module now also reports execution events for containers, e.g.
+  test classes.
+* The `junit-platform-jfr` module now also reports test discovery events for the launcher
+  and registered test engines.
+* Custom `LauncherDiscoveryListener` implementations can now be registered via Java’s
+  `ServiceLoader` mechanism.
+* Documented constant value of `ExclusiveResource.GLOBAL_KEY`.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
@@ -45,6 +54,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
+  underscores as in some JVM languages, to improve readability of long numbers like
+  `700_000_000`.
+* Documented constant values in `Resources`.
 * New `assertInstanceOf` methods as a replacement for `assertTrue(obj instanceof X)` which
   provide better error messages comparable to those of `assertThrows`.
 
