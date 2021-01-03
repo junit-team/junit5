@@ -27,7 +27,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.core.TestExecutionListenerRegistry.EagerTestExecutionListener;
+import org.junit.platform.launcher.core.CompositeTestExecutionListener.EagerTestExecutionListener;
 
 /**
  * @since 1.3

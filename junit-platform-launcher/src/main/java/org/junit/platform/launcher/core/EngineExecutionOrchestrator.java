@@ -34,13 +34,13 @@ import org.junit.platform.launcher.TestExecutionListener;
 @API(status = INTERNAL, since = "1.7", consumers = "testkit")
 public class EngineExecutionOrchestrator {
 
-	private final TestExecutionListenerRegistry listenerRegistry;
+	private final ListenerRegistry<TestExecutionListener> listenerRegistry;
 
 	public EngineExecutionOrchestrator() {
-		this(new TestExecutionListenerRegistry());
+		this(ListenerRegistry.forTestExecutionListeners());
 	}
 
-	EngineExecutionOrchestrator(TestExecutionListenerRegistry listenerRegistry) {
+	EngineExecutionOrchestrator(ListenerRegistry<TestExecutionListener> listenerRegistry) {
 		this.listenerRegistry = listenerRegistry;
 	}
 
@@ -48,7 +48,7 @@ public class EngineExecutionOrchestrator {
 		internalTestPlan.markStarted();
 		LauncherDiscoveryResult discoveryResult = internalTestPlan.getDiscoveryResult();
 		ConfigurationParameters configurationParameters = discoveryResult.getConfigurationParameters();
-		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
+		ListenerRegistry<TestExecutionListener> listenerRegistry = buildListenerRegistryForExecution(listeners);
 		withInterceptedStreams(configurationParameters, listenerRegistry, testExecutionListener -> {
 			testExecutionListener.testPlanExecutionStarted(internalTestPlan);
 			execute(discoveryResult, new ExecutionListenerAdapter(internalTestPlan, testExecutionListener));
@@ -57,14 +57,14 @@ public class EngineExecutionOrchestrator {
 	}
 
 	private void withInterceptedStreams(ConfigurationParameters configurationParameters,
-			TestExecutionListenerRegistry listenerRegistry, Consumer<TestExecutionListener> action) {
+			ListenerRegistry<TestExecutionListener> listenerRegistry, Consumer<TestExecutionListener> action) {
 
-		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeListener();
 		Optional<StreamInterceptingTestExecutionListener> streamInterceptingTestExecutionListener = StreamInterceptingTestExecutionListener.create(
 			configurationParameters, testExecutionListener::reportingEntryPublished);
-		streamInterceptingTestExecutionListener.ifPresent(listenerRegistry::registerListeners);
+		streamInterceptingTestExecutionListener.ifPresent(listenerRegistry::add);
 		try {
-			action.accept(testExecutionListener);
+			action.accept(listenerRegistry.getCompositeListener());
 		}
 		finally {
 			streamInterceptingTestExecutionListener.ifPresent(StreamInterceptingTestExecutionListener::unregister);
@@ -90,13 +90,12 @@ public class EngineExecutionOrchestrator {
 		}
 	}
 
-	private TestExecutionListenerRegistry buildListenerRegistryForExecution(TestExecutionListener... listeners) {
+	private ListenerRegistry<TestExecutionListener> buildListenerRegistryForExecution(
+			TestExecutionListener... listeners) {
 		if (listeners.length == 0) {
 			return this.listenerRegistry;
 		}
-		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry(this.listenerRegistry);
-		registry.registerListeners(listeners);
-		return registry;
+		return ListenerRegistry.copyOf(this.listenerRegistry).addAll(listeners);
 	}
 
 	private void execute(TestDescriptor engineDescriptor, EngineExecutionListener listener,

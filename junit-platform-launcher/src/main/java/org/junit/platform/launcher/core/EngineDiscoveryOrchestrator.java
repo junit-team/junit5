@@ -11,7 +11,6 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
 
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -38,7 +36,6 @@ import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
-import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 
 /**
  * Orchestrates test discovery using the configured test engines.
@@ -53,14 +50,18 @@ public class EngineDiscoveryOrchestrator {
 	private final EngineDiscoveryResultValidator discoveryResultValidator = new EngineDiscoveryResultValidator();
 	private final Iterable<TestEngine> testEngines;
 	private final Collection<PostDiscoveryFilter> postDiscoveryFilters;
-	private final Collection<LauncherDiscoveryListener> launcherDiscoveryListeners;
+	private final ListenerRegistry<LauncherDiscoveryListener> launcherDiscoveryListenerRegistry;
 
 	public EngineDiscoveryOrchestrator(Iterable<TestEngine> testEngines,
-			Collection<PostDiscoveryFilter> postDiscoveryFilters,
-			Collection<LauncherDiscoveryListener> launcherDiscoveryListeners) {
+			Collection<PostDiscoveryFilter> postDiscoveryFilters) {
+		this(testEngines, postDiscoveryFilters, ListenerRegistry.forLauncherDiscoveryListeners());
+	}
+
+	EngineDiscoveryOrchestrator(Iterable<TestEngine> testEngines, Collection<PostDiscoveryFilter> postDiscoveryFilters,
+			ListenerRegistry<LauncherDiscoveryListener> launcherDiscoveryListenerRegistry) {
 		this.testEngines = testEngines;
 		this.postDiscoveryFilters = postDiscoveryFilters;
-		this.launcherDiscoveryListeners = launcherDiscoveryListeners;
+		this.launcherDiscoveryListenerRegistry = launcherDiscoveryListenerRegistry;
 	}
 
 	/**
@@ -134,13 +135,9 @@ public class EngineDiscoveryOrchestrator {
 	}
 
 	LauncherDiscoveryListener getLauncherDiscoveryListener(LauncherDiscoveryRequest discoveryRequest) {
-		LauncherDiscoveryListener discoveryListener = discoveryRequest.getDiscoveryListener();
-		if (!launcherDiscoveryListeners.isEmpty()) {
-			List<LauncherDiscoveryListener> allDiscoveryListeners = Stream.concat(Stream.of(discoveryListener),
-				launcherDiscoveryListeners.stream()).collect(toList());
-			discoveryListener = LauncherDiscoveryListeners.composite(allDiscoveryListeners);
-		}
-		return discoveryListener;
+		return ListenerRegistry.copyOf(launcherDiscoveryListenerRegistry) //
+				.add(discoveryRequest.getDiscoveryListener()) //
+				.getCompositeListener();
 	}
 
 	private void applyPostDiscoveryFilters(Map<TestEngine, TestDescriptor> testEngineDescriptors,

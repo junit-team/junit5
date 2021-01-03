@@ -95,35 +95,6 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void registerTestExecutionListenersWithNullArray() {
-		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
-
-		var exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners((TestExecutionListener[]) null));
-
-		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
-	}
-
-	@Test
-	void registerTestExecutionListenersWithEmptyArray() {
-		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
-
-		var exception = assertThrows(PreconditionViolationException.class, launcher::registerTestExecutionListeners);
-
-		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
-	}
-
-	@Test
-	void registerTestExecutionListenersWithArrayContainingNullElements() {
-		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
-
-		var exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[] { null }));
-
-		assertThat(exception).hasMessageContaining("individual listeners must not be null");
-	}
-
-	@Test
 	void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
 		var launcher = createLauncher(new DemoHierarchicalTestEngine());
 

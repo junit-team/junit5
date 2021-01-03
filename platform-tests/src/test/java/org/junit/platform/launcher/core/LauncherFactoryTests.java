@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.abortOnFailure;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -24,6 +23,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestIdentifier;
@@ -46,7 +46,7 @@ class LauncherFactoryTests {
 	void noopTestExecutionListenerIsLoadedViaServiceApi() {
 		withTestServices(() -> {
 			var launcher = (DefaultLauncher) LauncherFactory.create();
-			var listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
+			var listeners = launcher.getTestExecutionListenerRegistry().getListeners();
 			var listener = listeners.stream().filter(NoopTestExecutionListener.class::isInstance).findFirst();
 			assertThat(listener).isPresent();
 		});
@@ -56,7 +56,7 @@ class LauncherFactoryTests {
 	void unusedTestExecutionListenerIsNotLoadedViaServiceApi() {
 		withTestServices(() -> {
 			var launcher = (DefaultLauncher) LauncherFactory.create();
-			var listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
+			var listeners = launcher.getTestExecutionListenerRegistry().getListeners();
 
 			assertThat(listeners).filteredOn(AnotherUnusedTestExecutionListener.class::isInstance).isEmpty();
 			assertThat(listeners).filteredOn(UnusedTestExecutionListener.class::isInstance).isEmpty();
@@ -173,9 +173,9 @@ class LauncherFactoryTests {
 		withTestServices(() -> {
 			var launcher = (DefaultLauncher) LauncherFactory.create(
 				LauncherConfig.builder().enableLauncherDiscoveryListenerAutoRegistration(false).build());
-			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListener(request().build());
+			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListenerRegistry().getCompositeListener();
 
-			assertThat(launcherDiscoveryListener).isEqualTo(abortOnFailure());
+			assertThat(launcherDiscoveryListener).isSameAs(LauncherDiscoveryListener.NOOP);
 		});
 	}
 
@@ -183,11 +183,11 @@ class LauncherFactoryTests {
 	void discoversLauncherDiscoverRequestListenerViaServiceApiByDefault() {
 		withTestServices(() -> {
 			var launcher = (DefaultLauncher) LauncherFactory.create();
-			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListener(request().build());
+			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListenerRegistry().getCompositeListener();
 
 			assertThat(launcherDiscoveryListener.getClass().getSimpleName()).startsWith("Composite");
 			assertThat(launcherDiscoveryListener).extracting("listeners").asList() //
-					.contains(new TestLauncherDiscoveryListener(), abortOnFailure());
+					.contains(new TestLauncherDiscoveryListener());
 		});
 	}
 

@@ -28,7 +28,6 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 
@@ -93,10 +92,10 @@ public class LauncherFactory {
 
 		Set<TestEngine> engines = collectTestEngines(config);
 		List<PostDiscoveryFilter> filters = collectPostDiscoveryFilters(config);
-		List<LauncherDiscoveryListener> discoveryListeners = collectLauncherDiscoveryListeners(config);
 
-		Launcher launcher = new DefaultLauncher(engines, filters, discoveryListeners);
+		Launcher launcher = new DefaultLauncher(engines, filters);
 
+		registerLauncherDiscoveryListeners(config, launcher);
 		registerTestExecutionListeners(config, launcher);
 
 		return launcher;
@@ -120,12 +119,11 @@ public class LauncherFactory {
 		return filters;
 	}
 
-	private static List<LauncherDiscoveryListener> collectLauncherDiscoveryListeners(LauncherConfig config) {
-		List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
+	private static void registerLauncherDiscoveryListeners(LauncherConfig config, Launcher launcher) {
 		if (config.isLauncherDiscoveryListenerAutoRegistrationEnabled()) {
-			new ServiceLoaderLauncherDiscoveryListenerRegistry().loadListeners().forEach(discoveryListeners::add);
+			new ServiceLoaderLauncherDiscoveryListenerRegistry().loadListeners().forEach(
+				launcher::registerLauncherDiscoveryListeners);
 		}
-		return discoveryListeners;
 	}
 
 	private static void registerTestExecutionListeners(LauncherConfig config, Launcher launcher) {
