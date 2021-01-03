@@ -74,8 +74,11 @@ public class LauncherDiscoveryListeners {
 
 	@API(status = INTERNAL, since = "1.6")
 	public static LauncherDiscoveryListener composite(List<LauncherDiscoveryListener> listeners) {
-		Preconditions.notEmpty(listeners, "listeners must not be empty");
+		Preconditions.notNull(listeners, "listeners must not be null");
 		Preconditions.containsNoNullElements(listeners, "listeners must not contain any null elements");
+		if (listeners.isEmpty()) {
+			return LauncherDiscoveryListener.NOOP;
+		}
 		if (listeners.size() == 1) {
 			return listeners.get(0);
 		}

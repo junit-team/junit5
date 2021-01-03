@@ -18,8 +18,8 @@ import org.junit.platform.engine.UniqueId;
 
 /**
  * Register a concrete implementation of this interface with a
- * {@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
- * to be notified of events that occur during test discovery.
+ * {@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder} or
+ * {@link Launcher} to be notified of events that occur during test discovery.
  *
  * <p>All methods in this interface have empty <em>default</em> implementations.
  * Concrete implementations may therefore override one or more of these methods
