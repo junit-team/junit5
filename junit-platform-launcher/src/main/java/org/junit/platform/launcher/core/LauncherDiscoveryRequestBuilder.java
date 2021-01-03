@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
@@ -107,7 +108,19 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @return a new builder
 	 */
 	public static LauncherDiscoveryRequestBuilder request() {
-		return new LauncherDiscoveryRequestBuilder();
+		return new LauncherDiscoveryRequestBuilder(null);
+	}
+
+	/**
+	 * @deprecated Use {@link #request()}
+	 */
+	@API(status = DEPRECATED, since = "5.8")
+	@Deprecated
+	public LauncherDiscoveryRequestBuilder() {
+		this(null);
+	}
+
+	private LauncherDiscoveryRequestBuilder(@SuppressWarnings("unused") Object ignored) {
 	}
 
 	/**
