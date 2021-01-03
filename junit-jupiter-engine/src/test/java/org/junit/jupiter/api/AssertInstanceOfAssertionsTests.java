@@ -31,17 +31,17 @@ class AssertInstanceOfAssertionsTests {
 
 	@Test
 	void assertInstanceOfFailsWrongTypeValue() {
-		assertInstanceOfFails(String.class, 1, "instance type");
+		assertInstanceOfFails(String.class, 1, "type");
 	}
 
 	@Test
 	void assertInstanceOfFailsWrongExceptionValue() {
-		assertInstanceOfFails(RuntimeException.class, new IOException(), "exception type");
+		assertInstanceOfFails(RuntimeException.class, new IOException(), "type");
 	}
 
 	@Test
 	void assertInstanceOfFailsSuperTypeExceptionValue() {
-		assertInstanceOfFails(IllegalArgumentException.class, new RuntimeException(), "exception type");
+		assertInstanceOfFails(IllegalArgumentException.class, new RuntimeException(), "type");
 	}
 
 	private static class BaseClass {
@@ -53,7 +53,7 @@ class AssertInstanceOfAssertionsTests {
 
 	@Test
 	void assertInstanceOfFailsSuperTypeValue() {
-		assertInstanceOfFails(SubClass.class, new BaseClass(), "instance type");
+		assertInstanceOfFails(SubClass.class, new BaseClass(), "type");
 	}
 
 	@Test
