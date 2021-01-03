@@ -31,9 +31,6 @@ on GitHub.
   `test(displayName("my test"))` can be used to match against a test whose display name is
   `my test`.
 
-* New `assertInstanceOf` methods as a replacement for `assertTrue(obj instanceof X)` which
-  provide better error messages comparable to those of `assertThrows`.
-
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
 === JUnit Jupiter
@@ -48,8 +45,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
-
+* New `assertInstanceOf` methods as a replacement for `assertTrue(obj instanceof X)` which
+  provide better error messages comparable to those of `assertThrows`.
 
 [[release-notes-5.8.0-M1-junit-vintage]]
 === JUnit Vintage
