@@ -72,6 +72,8 @@ on GitHub.
 * Dynamic tests now require less memory thanks to a number of improvements to internal
   data structures.
 * Allow rows in `@CsvSource` to start with a number sign (#)
+* New `ignoreLeadingAndTrailingWhitespace` attribute to control whether or not to trim
+  whitespaces in `@CsvSource` and `@CsvFileSource` (set to `true` by default).
 
 [[release-notes-5.8.0-M1-junit-vintage]]
 === JUnit Vintage

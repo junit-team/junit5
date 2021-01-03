@@ -1260,15 +1260,20 @@ reference is a primitive type.
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
 
+Unless it starts with a quote character, leading and trailing whitespaces of a
+CSV column are trimmed by default. This behavior can be changed by setting the
+`ignoreLeadingAndTrailingWhitespace` attribute to `true`.
+
 [cols="50,50"]
 |===
-| Example Input                                                       | Resulting Argument List
+| Example Input                                                                           | Resulting Argument List
 
-| `@CsvSource({ "apple, banana" })`                                   | `"apple"`, `"banana"`
-| `@CsvSource({ "apple, 'lemon, lime'" })`                            | `"apple"`, `"lemon, lime"`
-| `@CsvSource({ "apple, ''" })`                                       | `"apple"`, `""`
-| `@CsvSource({ "apple, " })`                                         | `"apple"`, `null`
-| `@CsvSource(value = { "apple, banana, NIL" }, nullValues = "NIL")` | `"apple"`, `"banana"`, `null`
+| `@CsvSource({ "apple, banana" })`                                                       | `"apple"`, `"banana"`
+| `@CsvSource({ "apple, 'lemon, lime'" })`                                                | `"apple"`, `"lemon, lime"`
+| `@CsvSource({ "apple, ''" })`                                                           | `"apple"`, `""`
+| `@CsvSource({ "apple, " })`                                                             | `"apple"`, `null`
+| `@CsvSource(value = { "apple, banana, NIL" }, nullValues = "NIL")`                      | `"apple"`, `"banana"`, `null`
+| `@CsvSource(value = { " apple , banana" }, ignoreLeadingAndTrailingWhitespace = false)` | `" apple "`, `" banana"`
 |===
 
 [[writing-tests-parameterized-tests-sources-CsvFileSource]]
@@ -1307,6 +1312,10 @@ reference is a primitive type.
 
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
+
+Unless it starts with a quote character, leading and trailing whitespaces of a
+CSV column are trimmed by default. This behavior can be changed by setting the
+`ignoreLeadingAndTrailingWhitespace` attribute to `true`.
 
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
 ===== @ArgumentsSource

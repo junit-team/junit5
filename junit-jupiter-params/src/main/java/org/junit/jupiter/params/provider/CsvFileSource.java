@@ -147,9 +147,8 @@ public @interface CsvFileSource {
 	int maxCharsPerColumn() default 4096;
 
 	/**
-	 * Identifies whether leading and trailing whitespace characters of unquoted CSV columns should be ignored.
-	 *
-	 * <p>Must be a boolean value.
+	 * Identifies whether leading and trailing whitespace characters of
+	 * unquoted CSV columns should be ignored.
 	 *
 	 * <p>Defaults to {@code true}.
 	 *
