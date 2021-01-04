@@ -19,8 +19,14 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.platform.engine.FilterResult;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.LauncherSession;
+import org.junit.platform.launcher.LauncherSessionListener;
+import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherConfig;
@@ -51,9 +57,11 @@ class UsingTheLauncherDemo {
 			)
 			.build();
 
-		Launcher launcher = LauncherFactory.create();
+		try (LauncherSession session = LauncherFactory.openSession()) {
+			TestPlan testPlan = session.getLauncher().discover(request);
 
-		TestPlan testPlan = launcher.discover(request);
+			// ... discover additional test plans or execute tests
+		}
 		// end::discovery[]
 		// @formatter:on
 	}
@@ -73,16 +81,22 @@ class UsingTheLauncherDemo {
 			)
 			.build();
 
-		Launcher launcher = LauncherFactory.create();
-
-		// Register a listener of your choice
 		SummaryGeneratingListener listener = new SummaryGeneratingListener();
-		launcher.registerTestExecutionListeners(listener);
 
-		launcher.execute(request);
+		try (LauncherSession session = LauncherFactory.openSession()) {
+			Launcher launcher = session.getLauncher();
+			// Register a listener of your choice
+			launcher.registerTestExecutionListeners(listener);
+			// Discover tests and build a test plan
+			TestPlan testPlan = launcher.discover(request);
+			// Execute test plan
+			launcher.execute(testPlan);
+			// Alternatively, execute the request directly
+			launcher.execute(request);
+		}
 
 		TestExecutionSummary summary = listener.getSummary();
-		// Do something with the TestExecutionSummary.
+		// Do something with the summary...
 
 		// end::execution[]
 		// @formatter:on
@@ -96,19 +110,25 @@ class UsingTheLauncherDemo {
 		// tag::launcherConfig[]
 		LauncherConfig launcherConfig = LauncherConfig.builder()
 			.enableTestEngineAutoRegistration(false)
+			.enableLauncherSessionListenerAutoRegistration(false)
+			.enableLauncherDiscoveryListenerAutoRegistration(false)
+			.enablePostDiscoveryFilterAutoRegistration(false)
 			.enableTestExecutionListenerAutoRegistration(false)
 			.addTestEngines(new CustomTestEngine())
+			.addLauncherSessionListeners(new CustomLauncherSessionListener())
+			.addLauncherDiscoveryListeners(new CustomLauncherDiscoveryListener())
+			.addPostDiscoveryFilters(new CustomPostDiscoveryFilter())
 			.addTestExecutionListeners(new LegacyXmlReportGeneratingListener(reportsDir, out))
 			.addTestExecutionListeners(new CustomTestExecutionListener())
 			.build();
-
-		Launcher launcher = LauncherFactory.create(launcherConfig);
 
 		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
 			.selectors(selectPackage("com.example.mytests"))
 			.build();
 
-		launcher.execute(request);
+		try (LauncherSession session = LauncherFactory.openSession(launcherConfig)) {
+			session.getLauncher().execute(request);
+		}
 		// end::launcherConfig[]
 		// @formatter:on
 	}
@@ -119,4 +139,17 @@ class MyTestClass {
 }
 
 class CustomTestExecutionListener implements TestExecutionListener {
+}
+
+class CustomLauncherSessionListener implements LauncherSessionListener {
+}
+
+class CustomLauncherDiscoveryListener implements LauncherDiscoveryListener {
+}
+
+class CustomPostDiscoveryFilter implements PostDiscoveryFilter {
+	@Override
+	public FilterResult apply(TestDescriptor object) {
+		return FilterResult.included("includes everything");
+	}
 }

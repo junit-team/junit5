@@ -19,12 +19,18 @@ import java.util.function.Function;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
+import org.junit.platform.launcher.listeners.session.LauncherSessionListeners;
 
 class ListenerRegistry<T> {
 
 	private final Function<List<T>, T> compositeListenerFactory;
+
+	static ListenerRegistry<LauncherSessionListener> forLauncherSessionListeners() {
+		return create(LauncherSessionListeners::composite);
+	}
 
 	static ListenerRegistry<LauncherDiscoveryListener> forLauncherDiscoveryListeners() {
 		return create(LauncherDiscoveryListeners::composite);

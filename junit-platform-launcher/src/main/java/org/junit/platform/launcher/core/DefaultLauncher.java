@@ -35,7 +35,7 @@ import org.junit.platform.launcher.TestPlan;
  * @see Launcher
  * @see LauncherFactory
  */
-class DefaultLauncher implements Launcher {
+class DefaultLauncher implements InternalLauncher {
 
 	private final ListenerRegistry<LauncherDiscoveryListener> launcherDiscoveryListenerRegistry = ListenerRegistry.forLauncherDiscoveryListeners();
 	private final ListenerRegistry<TestExecutionListener> testExecutionListenerRegistry = ListenerRegistry.forTestExecutionListeners();
@@ -95,11 +95,13 @@ class DefaultLauncher implements Launcher {
 		execute((InternalTestPlan) testPlan, listeners);
 	}
 
-	ListenerRegistry<TestExecutionListener> getTestExecutionListenerRegistry() {
+	@Override
+	public ListenerRegistry<TestExecutionListener> getTestExecutionListenerRegistry() {
 		return testExecutionListenerRegistry;
 	}
 
-	ListenerRegistry<LauncherDiscoveryListener> getLauncherDiscoveryListenerRegistry() {
+	@Override
+	public ListenerRegistry<LauncherDiscoveryListener> getLauncherDiscoveryListenerRegistry() {
 		return launcherDiscoveryListenerRegistry;
 	}
 

@@ -25,9 +25,11 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestLauncherDiscoveryListener;
+import org.junit.platform.launcher.TestLauncherSessionListener;
 import org.junit.platform.launcher.listeners.AnotherUnusedTestExecutionListener;
 import org.junit.platform.launcher.listeners.NoopTestExecutionListener;
 import org.junit.platform.launcher.listeners.UnusedTestExecutionListener;
@@ -45,7 +47,7 @@ class LauncherFactoryTests {
 	@Test
 	void noopTestExecutionListenerIsLoadedViaServiceApi() {
 		withTestServices(() -> {
-			var launcher = (DefaultLauncher) LauncherFactory.create();
+			var launcher = (InternalLauncher) LauncherFactory.create();
 			var listeners = launcher.getTestExecutionListenerRegistry().getListeners();
 			var listener = listeners.stream().filter(NoopTestExecutionListener.class::isInstance).findFirst();
 			assertThat(listener).isPresent();
@@ -55,7 +57,7 @@ class LauncherFactoryTests {
 	@Test
 	void unusedTestExecutionListenerIsNotLoadedViaServiceApi() {
 		withTestServices(() -> {
-			var launcher = (DefaultLauncher) LauncherFactory.create();
+			var launcher = (InternalLauncher) LauncherFactory.create();
 			var listeners = launcher.getTestExecutionListenerRegistry().getListeners();
 
 			assertThat(listeners).filteredOn(AnotherUnusedTestExecutionListener.class::isInstance).isEmpty();
@@ -171,7 +173,7 @@ class LauncherFactoryTests {
 	@Test
 	void doesNotDiscoverLauncherDiscoverRequestListenerViaServiceApiWhenDisabled() {
 		withTestServices(() -> {
-			var launcher = (DefaultLauncher) LauncherFactory.create(
+			var launcher = (InternalLauncher) LauncherFactory.create(
 				LauncherConfig.builder().enableLauncherDiscoveryListenerAutoRegistration(false).build());
 			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListenerRegistry().getCompositeListener();
 
@@ -182,12 +184,31 @@ class LauncherFactoryTests {
 	@Test
 	void discoversLauncherDiscoverRequestListenerViaServiceApiByDefault() {
 		withTestServices(() -> {
-			var launcher = (DefaultLauncher) LauncherFactory.create();
+			var launcher = (InternalLauncher) LauncherFactory.create();
 			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListenerRegistry().getCompositeListener();
 
 			assertThat(launcherDiscoveryListener.getClass().getSimpleName()).startsWith("Composite");
 			assertThat(launcherDiscoveryListener).extracting("listeners").asList() //
 					.contains(new TestLauncherDiscoveryListener());
+		});
+	}
+
+	@Test
+	void doesNotDiscoverLauncherSessionListenerViaServiceApiWhenDisabled() {
+		withTestServices(() -> {
+			var session = (DefaultLauncherSession) LauncherFactory.openSession(
+				LauncherConfig.builder().enableLauncherSessionListenerAutoRegistration(false).build());
+
+			assertThat(session.getListener()).isSameAs(LauncherSessionListener.NOOP);
+		});
+	}
+
+	@Test
+	void discoversLauncherSessionListenerViaServiceApiByDefault() {
+		withTestServices(() -> {
+			var session = (DefaultLauncherSession) LauncherFactory.openSession();
+
+			assertThat(session.getListener()).isEqualTo(new TestLauncherSessionListener());
 		});
 	}
 
