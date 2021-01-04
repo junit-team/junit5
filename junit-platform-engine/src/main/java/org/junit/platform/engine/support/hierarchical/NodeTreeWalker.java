@@ -57,11 +57,16 @@ class NodeTreeWalker {
 		}
 		else {
 			Set<ExclusiveResource> allResources = new HashSet<>(exclusiveResources);
-			advisor.forceDescendantExecutionMode(testDescriptor, SAME_THREAD);
-			doForChildrenRecursively(testDescriptor, child -> {
-				allResources.addAll(getExclusiveResources(child));
-				advisor.forceDescendantExecutionMode(child, SAME_THREAD);
-			});
+			if (isReadOnly(allResources)) {
+				doForChildrenRecursively(testDescriptor, child -> allResources.addAll(getExclusiveResources(child)));
+			}
+			if (!isReadOnly(allResources)) {
+				advisor.forceDescendantExecutionMode(testDescriptor, SAME_THREAD);
+				doForChildrenRecursively(testDescriptor, child -> {
+					allResources.addAll(getExclusiveResources(child));
+					advisor.forceDescendantExecutionMode(child, SAME_THREAD);
+				});
+			}
 			if (!globalLockDescriptor.equals(testDescriptor) && allResources.contains(GLOBAL_READ_WRITE)) {
 				advisor.forceDescendantExecutionMode(globalLockDescriptor, SAME_THREAD);
 				doForChildrenRecursively(globalLockDescriptor,
@@ -70,6 +75,11 @@ class NodeTreeWalker {
 			}
 			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(allResources));
 		}
+	}
+
+	private boolean isReadOnly(Set<ExclusiveResource> exclusiveResources) {
+		return exclusiveResources.stream().noneMatch(
+			exclusiveResource -> exclusiveResource.getLockMode() == ExclusiveResource.LockMode.READ_WRITE);
 	}
 
 	private Set<ExclusiveResource> getExclusiveResources(TestDescriptor testDescriptor) {
