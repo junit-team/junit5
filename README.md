@@ -48,6 +48,8 @@ in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
 ## Gradle Build Scans and Build Caching
 
+[![Revved up by Gradle Enterprise](https://img.shields.io/badge/Revved%20up%20by-Gradle%20Enterprise-06A0CE?logo=Gradle&labelColor=02303A)](https://ge.junit.org/scans)
+
 JUnit 5 utilizes [Gradle Enterprise](https://gradle.com/) for _Build Scans_ and the
 _Remote Build Cache_. An example build scan for JUnit 5 can be viewed
 [here](https://ge.junit.org/s/2vwrn4rn67dky). Currently, only core team members can
