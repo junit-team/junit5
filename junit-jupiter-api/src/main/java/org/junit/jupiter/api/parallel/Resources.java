@@ -72,7 +72,7 @@ public class Resources {
 	 *
 	 * @since 5.8
 	 * @see Isolated
-	 * @see ExclusiveResource
+	 * @see org.junit.platform.engine.support.hierarchical.ExclusiveResource
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8")
 	public static final String GLOBAL = "org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY";

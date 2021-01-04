@@ -9,10 +9,12 @@
  */
 
 /**
- * Provides the JUnit Platform Flight Recording Listener.
+ * Provides Java Flight Recorder events for the JUnit Platform.
  *
- * <p>The Flight Recording Listener is a {@link TestExecutionListener} that
- * generates Java Flight Recorder events.
+ * <p>The Flight Recording Listener module implements a
+ * {@link org.junit.platform.launcher.LauncherDiscoveryListener} and a
+ * {@link org.junit.platform.launcher.TestExecutionListener} that generate Java
+ * Flight Recorder (JFR) events.
  *
  * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
  * @since 1.7
