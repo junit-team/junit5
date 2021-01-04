@@ -18,8 +18,8 @@ import org.junit.platform.engine.UniqueId;
 
 /**
  * Register a concrete implementation of this class with a
- * {@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder} or
- * {@link Launcher} to be notified of events that occur during test discovery.
+ * {@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
+ * to be notified of events that occur during test discovery.
  *
  * <p>All methods in this class have empty <em>default</em> implementations.
  * Subclasses may therefore override one or more of these methods to be notified
@@ -35,7 +35,6 @@ import org.junit.platform.engine.UniqueId;
  *
  * @see org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners
  * @see LauncherDiscoveryRequest#getDiscoveryListener()
- * @see org.junit.platform.launcher.core.LauncherConfig.Builder#addLauncherDiscoveryListeners
  * @since 1.6
  */
 @API(status = EXPERIMENTAL, since = "1.6")
