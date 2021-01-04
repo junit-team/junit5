@@ -93,6 +93,7 @@ val consoleLauncherOptionsFile = File(generatedAsciiDocPath, "console-launcher-o
 val experimentalApisTableFile = File(generatedAsciiDocPath, "experimental-apis-table.txt")
 val deprecatedApisTableFile = File(generatedAsciiDocPath, "deprecated-apis-table.txt")
 
+val jdkJavadocBaseUrl = "https://docs.oracle.com/en/java/javase/11/docs/api"
 val elementListsDir = file("$buildDir/elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
 		"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
@@ -181,7 +182,8 @@ tasks {
 				"icons" to "font",
 				"sectanchors" to true,
 				"idprefix" to "",
-				"idseparator" to "-"
+				"idseparator" to "-",
+				"jdk-javadoc-base-url" to jdkJavadocBaseUrl
 		))
 
 		sourceSets["test"].apply {
@@ -268,7 +270,7 @@ tasks {
 					"implNote:a:Implementation Note:"
 			)
 
-			links("https://docs.oracle.com/en/java/javase/11/docs/api/")
+			links(jdkJavadocBaseUrl)
 			links("https://junit.org/junit4/javadoc/${versions.junit4}/")
 			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
 				linksOffline(baseUrl, "$elementListsDir/$moduleName")

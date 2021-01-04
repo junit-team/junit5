@@ -35,6 +35,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @see org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners
  * @see LauncherDiscoveryRequest#getDiscoveryListener()
+ * @see org.junit.platform.launcher.core.LauncherConfig.Builder#addLauncherDiscoveryListeners
  * @since 1.6
  */
 @API(status = EXPERIMENTAL, since = "1.6")

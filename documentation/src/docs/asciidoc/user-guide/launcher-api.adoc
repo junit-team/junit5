@@ -80,11 +80,10 @@ JUnit currently provides two `{TestEngine}` implementations.
 
 Third parties may also contribute their own `TestEngine` by implementing the interfaces
 in the {junit-platform-engine} module and _registering_ their engine. By default, engine
-registration is supported via Java's `java.util.ServiceLoader` mechanism. For example,
-the `junit-jupiter-engine` module registers its
-`org.junit.jupiter.engine.JupiterTestEngine` in a file named
-`org.junit.platform.engine.TestEngine` within the `/META-INF/services` in the
-`junit-jupiter-engine` JAR.
+registration is supported via Java's `{ServiceLoader}` mechanism. For example, the
+`junit-jupiter-engine` module registers its `org.junit.jupiter.engine.JupiterTestEngine`
+in a file named `org.junit.platform.engine.TestEngine` within the `/META-INF/services` in
+the `junit-jupiter-engine` JAR.
 
 NOTE: `{HierarchicalTestEngine}` is a convenient abstract base implementation (used by
 the `{junit-jupiter-engine}`) that only requires implementors to provide the logic for
@@ -110,36 +109,52 @@ by the JUnit Team may use the `junit-` prefix for their `TestEngine` IDs.
 
 In addition to specifying post-discovery filters as part of a `{LauncherDiscoveryRequest}`
 passed to the `{Launcher}` API, by default custom `{PostDiscoveryFilter}` implementations
-will be discovered at runtime via Java's `java.util.ServiceLoader` mechanism and
-automatically applied by the `Launcher` in addition to those that are part of the request.
+will be discovered at runtime via Java's `{ServiceLoader}` mechanism and automatically
+applied by the `Launcher` in addition to those that are part of the request.
 
 For example, an `example.CustomTagFilter` class implementing `{PostDiscoveryFilter}` and
 declared within the `/META-INF/services/org.junit.platform.launcher.PostDiscoveryFilter`
 file is loaded and applied automatically.
 
+[[launcher-api-launcher-session-listeners-custom]]
+==== Plugging in your own Launcher Sessions Listeners
+
+Registered implementations of `{LauncherSessionListener}` are notified when a
+`{LauncherSession}` is opened, i.e. before a `{Launcher}` first discovers and executes
+tests, and closed, i.e. when no more tests will be discovered or executed. They can be
+registered programmatically on the `{LauncherConfig}` that is passed to
+`{LauncherFactory}` or, unless disabled, will be discovered at runtime via Java's
+`{ServiceLoader}` mechanism and automatically registered with `{LauncherSession}`.
+
+For example, an `example.CustomLauncherSessionListener` class implementing
+`{LauncherSessionListener}` and declared within the
+`/META-INF/services/org.junit.platform.launcher.LauncherSessionListener` file is loaded
+and registered automatically.
+
 [[launcher-api-launcher-discovery-listeners-custom]]
 ==== Plugging in your own Discovery Listeners
 
-In addition to specifying post-discovery filters as part of a `{LauncherDiscoveryRequest}`
-passed to the `{Launcher}` API, custom `{LauncherDiscoveryListener}` implementations can
-be discovered at runtime via Java's `java.util.ServiceLoader` mechanism and automatically
-automatically registered with the `Launcher` created via the `LauncherFactory`.
+In addition to specifying discovery listeners as part of a `{LauncherDiscoveryRequest}`
+or registering them programmatically using the public `{Launcher}` API method,  custom
+`{LauncherDiscoveryListener}` implementations can be discovered at runtime via Java's
+`{ServiceLoader}` mechanism and automatically registered with the `{Launcher}` created via
+the `{LauncherFactory}`.
 
 For example, an `example.CustomLauncherDiscoveryListener` class implementing
 `{LauncherDiscoveryListener}` and declared within the
 `/META-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener` file is loaded
-and applied automatically.
+and registered automatically.
 
 [[launcher-api-listeners-custom]]
 ==== Plugging in your own Execution Listener
 
 In addition to the public `{Launcher}` API method for registering test execution
 listeners programmatically, by default custom `{TestExecutionListener}` implementations
-will be discovered at runtime via Java's `java.util.ServiceLoader` mechanism and
-automatically registered with the `Launcher` created via the `LauncherFactory`.
+will be discovered at runtime via Java's `{ServiceLoader}` mechanism and automatically
+registered with the `{Launcher}` created via the `{LauncherFactory}`.
 
-For example, an `example.TestInfoPrinter` class implementing `{TestExecutionListener}` and
-declared within the
+For example, an `example.CustomTestExecutionListener` class implementing
+`{TestExecutionListener}` and declared within the
 `/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file is loaded and
 registered automatically.
 
@@ -147,7 +162,7 @@ registered automatically.
 ==== Deactivating Execution Listeners
 
 Sometimes it can be useful to run a test suite _without_ certain execution listeners being
-active. For example, you might have custom a `TestExecutionListener` that sends the test
+active. For example, you might have custom a `{TestExecutionListener}` that sends the test
 results to an external system for reporting purposes, and while debugging you might not
 want these _debug_ results to be reported. To do this, provide a pattern for the
 `junit.platform.execution.listeners.deactivate` _configuration parameter_ to specify which
@@ -155,17 +170,17 @@ execution listeners should be deactivated (i.e. not registered) for the current 
 
 [NOTE]
 ====
-Only listeners registered via the `ServiceLoader` mechanism within the
+Only listeners registered via the `{ServiceLoader}` mechanism within the
 `/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file can be
 deactivated. In other words, any `TestExecutionListener` registered explicitly via the
-`LauncherDiscoveryRequest` cannot be deactivated via the
+`{LauncherDiscoveryRequest}` cannot be deactivated via the
 `junit.platform.execution.listeners.deactivate` _configuration parameter_.
 
 In addition, since execution listeners are registered before the test run starts, the
 `junit.platform.execution.listeners.deactivate` _configuration parameter_ can only be
 supplied as a JVM system property or via the JUnit Platform configuration file (see
 <<running-tests-config-params>> for details). This _configuration parameter_ cannot be
-supplied in the `LauncherDiscoveryRequest` that is passed to the `Launcher`.
+supplied in the `{LauncherDiscoveryRequest}` that is passed to the `{Launcher}`.
 ====
 
 [[launcher-api-listeners-custom-deactivation-pattern]]
@@ -195,10 +210,9 @@ implementations that can be used for reporting purposes. See `{LoggingListener}`
 ==== Configuring the Launcher
 
 If you require fine-grained control over automatic detection and registration of test
-engines and test execution listeners, you may create an instance of `LauncherConfig` and
-supply that to the `LauncherFactory.create(LauncherConfig)` method. Typically an instance
-of `LauncherConfig` is created via the built-in fluent _builder_ API, as demonstrated in
-the following example.
+engines and test execution listeners, you may create an instance of `{LauncherConfig}` and
+supply that to the `{LauncherFactory}`. Typically, an instance of `{LauncherConfig}` is
+created via the built-in fluent _builder_ API, as demonstrated in the following example.
 
 [source,java,indent=0]
 ----

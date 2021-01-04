@@ -206,8 +206,8 @@ include::{testDir}/example/registration/DocumentationDemo.java[tags=user_guide]
 In addition to <<extensions-registration-declarative,declarative extension registration>>
 and <<extensions-registration-programmatic,programmatic extension registration>> support
 using annotations, JUnit Jupiter also supports _global extension registration_ via Java's
-`java.util.ServiceLoader` mechanism, allowing third-party extensions to be auto-detected
-and automatically registered based on what is available in the classpath.
+`{ServiceLoader}` mechanism, allowing third-party extensions to be auto-detected and
+automatically registered based on what is available in the classpath.
 
 Specifically, a custom extension can be registered by supplying its fully qualified class
 name in a file named `org.junit.jupiter.api.extension.Extension` within the
@@ -227,7 +227,7 @@ following system property.
 
 `-Djunit.jupiter.extensions.autodetection.enabled=true`
 
-When auto-detection is enabled, extensions discovered via the `ServiceLoader` mechanism
+When auto-detection is enabled, extensions discovered via the `{ServiceLoader}` mechanism
 will be added to the extension registry after JUnit Jupiter's global extensions (e.g.,
 support for `TestInfo`, `TestReporter`, etc.).
 

@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.fakes.TestEngineStub;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TestExecutionListener;
 
 /**
@@ -46,7 +48,7 @@ class LauncherConfigTests {
 
 	@Test
 	void defaultConfig() {
-		var config = LauncherConfig.builder().build();
+		var config = LauncherConfig.DEFAULT;
 
 		assertTrue(config.isTestEngineAutoRegistrationEnabled(),
 			"Test engine auto-registration should be enabled by default");
@@ -98,6 +100,30 @@ class LauncherConfigTests {
 		var config = LauncherConfig.builder().addTestEngines(first, second).build();
 
 		assertThat(config.getAdditionalTestEngines()).containsOnly(first, second);
+	}
+
+	@Test
+	void addLauncherSessionListeners() {
+		var first = new LauncherSessionListener() {
+		};
+		var second = new LauncherSessionListener() {
+		};
+
+		var config = LauncherConfig.builder().addLauncherSessionListeners(first, second).build();
+
+		assertThat(config.getAdditionalLauncherSessionListeners()).containsOnly(first, second);
+	}
+
+	@Test
+	void addLauncherDiscoveryListeners() {
+		var first = new LauncherDiscoveryListener() {
+		};
+		var second = new LauncherDiscoveryListener() {
+		};
+
+		var config = LauncherConfig.builder().addLauncherDiscoveryListeners(first, second).build();
+
+		assertThat(config.getAdditionalLauncherDiscoveryListeners()).containsOnly(first, second);
 	}
 
 	@Test

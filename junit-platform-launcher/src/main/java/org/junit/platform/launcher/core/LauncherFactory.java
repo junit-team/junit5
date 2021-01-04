@@ -28,6 +28,9 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.LauncherSession;
+import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 
@@ -60,19 +63,50 @@ import org.junit.platform.launcher.TestExecutionListener;
 @API(status = STABLE, since = "1.0")
 public class LauncherFactory {
 
+	private static final ServiceLoaderRegistry SERVICE_LOADER_REGISTRY = new ServiceLoaderRegistry();
+
 	private LauncherFactory() {
 		/* no-op */
 	}
 
 	/**
-	 * Factory method for creating a new {@link Launcher} using automatic
-	 * registration for test engines and test execution listeners.
+	 * Factory method for opening a new {@link LauncherSession} using the
+	 * {@linkplain LauncherConfig#DEFAULT default} {@link LauncherConfig}.
+	 *
+	 * @throws PreconditionViolationException if no test engines are detected
+	 * @see #openSession(LauncherConfig)
+	 * @since 1.8
+	 */
+	@API(status = EXPERIMENTAL, since = "1.8")
+	public static LauncherSession openSession() throws PreconditionViolationException {
+		return openSession(LauncherConfig.DEFAULT);
+	}
+
+	/**
+	 * Factory method for opening a new {@link LauncherSession} using the
+	 * supplied {@link LauncherConfig}.
+	 *
+	 * @param config the configuration for the session and the launcher; never
+	 * {@code null}
+	 * @throws PreconditionViolationException if the supplied configuration is
+	 * {@code null}, or if no test engines are detected or
+	 * @see #openSession()
+	 * @since 1.8
+	 */
+	@API(status = EXPERIMENTAL, since = "1.8")
+	public static LauncherSession openSession(LauncherConfig config) throws PreconditionViolationException {
+		return new DefaultLauncherSession(createDefaultLauncher(config), createLauncherSessionListener(config));
+	}
+
+	/**
+	 * Factory method for creating a new {@link Launcher} using the
+	 * {@linkplain LauncherConfig#DEFAULT default} {@link LauncherConfig}.
 	 *
 	 * @throws PreconditionViolationException if no test engines are detected
 	 * @see #create(LauncherConfig)
 	 */
 	public static Launcher create() throws PreconditionViolationException {
-		return create(LauncherConfig.builder().build());
+		return create(LauncherConfig.DEFAULT);
 	}
 
 	/**
@@ -80,20 +114,24 @@ public class LauncherFactory {
 	 * {@link LauncherConfig}.
 	 *
 	 * @param config the configuration for the launcher; never {@code null}
-	 * @throws PreconditionViolationException if the supplied launcher
-	 * configuration is {@code null}, or if no test engines are detected or
+	 * @throws PreconditionViolationException if the supplied configuration is
+	 * {@code null}, or if no test engines are detected or
 	 * registered
 	 * @see #create()
 	 * @since 1.3
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3")
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
+		return new SessionPerRequestLauncher(createDefaultLauncher(config), createLauncherSessionListener(config));
+	}
+
+	private static DefaultLauncher createDefaultLauncher(LauncherConfig config) {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 
 		Set<TestEngine> engines = collectTestEngines(config);
 		List<PostDiscoveryFilter> filters = collectPostDiscoveryFilters(config);
 
-		Launcher launcher = new DefaultLauncher(engines, filters);
+		DefaultLauncher launcher = new DefaultLauncher(engines, filters);
 
 		registerLauncherDiscoveryListeners(config, launcher);
 		registerTestExecutionListeners(config, launcher);
@@ -110,10 +148,19 @@ public class LauncherFactory {
 		return engines;
 	}
 
+	private static LauncherSessionListener createLauncherSessionListener(LauncherConfig config) {
+		ListenerRegistry<LauncherSessionListener> listenerRegistry = ListenerRegistry.forLauncherSessionListeners();
+		if (config.isLauncherSessionListenerAutoRegistrationEnabled()) {
+			SERVICE_LOADER_REGISTRY.load(LauncherSessionListener.class).forEach(listenerRegistry::add);
+		}
+		config.getAdditionalLauncherSessionListeners().forEach(listenerRegistry::add);
+		return listenerRegistry.getCompositeListener();
+	}
+
 	private static List<PostDiscoveryFilter> collectPostDiscoveryFilters(LauncherConfig config) {
 		List<PostDiscoveryFilter> filters = new ArrayList<>();
 		if (config.isPostDiscoveryFilterAutoRegistrationEnabled()) {
-			new ServiceLoaderPostDiscoveryFilterRegistry().loadPostDiscoveryFilters().forEach(filters::add);
+			SERVICE_LOADER_REGISTRY.load(PostDiscoveryFilter.class).forEach(filters::add);
 		}
 		filters.addAll(config.getAdditionalPostDiscoveryFilters());
 		return filters;
@@ -121,9 +168,10 @@ public class LauncherFactory {
 
 	private static void registerLauncherDiscoveryListeners(LauncherConfig config, Launcher launcher) {
 		if (config.isLauncherDiscoveryListenerAutoRegistrationEnabled()) {
-			new ServiceLoaderLauncherDiscoveryListenerRegistry().loadListeners().forEach(
+			SERVICE_LOADER_REGISTRY.load(LauncherDiscoveryListener.class).forEach(
 				launcher::registerLauncherDiscoveryListeners);
 		}
+		config.getAdditionalLauncherDiscoveryListeners().forEach(launcher::registerLauncherDiscoveryListeners);
 	}
 
 	private static void registerTestExecutionListeners(LauncherConfig config, Launcher launcher) {
@@ -134,7 +182,7 @@ public class LauncherFactory {
 	}
 
 	private static Stream<TestExecutionListener> loadAndFilterTestExecutionListeners() {
-		Iterable<TestExecutionListener> listeners = new ServiceLoaderTestExecutionListenerRegistry().loadListeners();
+		Iterable<TestExecutionListener> listeners = SERVICE_LOADER_REGISTRY.load(TestExecutionListener.class);
 		ConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
 		String deactivatedListenersPattern = configurationParameters.get(
 			DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME).orElse(null);
