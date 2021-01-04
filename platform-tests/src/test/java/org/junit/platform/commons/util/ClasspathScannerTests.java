@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.IOException;
+import java.lang.module.ModuleFinder;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -27,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -174,6 +176,26 @@ class ClasspathScannerTests {
 		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
 		assertTrue(classes.contains(NestedClassToBeFound.class));
 		assertTrue(classes.contains(MemberClassToBeFound.class));
+	}
+
+	@Test
+	// #2500
+	void scanForClassesInPackageWithinModuleSharingNames() throws Exception {
+		var jarfile = getClass().getResource("/com.greetings@1-ea.jar");
+
+		var module = "com.greetings";
+		var before = ModuleFinder.of();
+		var finder = ModuleFinder.of(Path.of(jarfile.toURI()));
+		var boot = ModuleLayer.boot();
+		var configuration = boot.configuration().resolveAndBind(before, finder, Set.of(module));
+		var parent = ClassLoader.getPlatformClassLoader();
+		var layer = ModuleLayer.defineModulesWithOneLoader(configuration, List.of(boot), parent).layer();
+
+		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(module), ReflectionUtils::tryToLoadClass);
+
+		var classes = classpathScanner.scanForClassesInPackage("com.greetings", allClasses);
+		var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
+		assertThat(classNames).hasSize(1).contains("com.greetings.Main");
 	}
 
 	@Test
