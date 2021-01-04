@@ -67,10 +67,12 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="module-description" id="module.description">
 <!-- ============ MODULE DESCRIPTION =========== -->
-<div class="block">Provides the JUnit Platform Flight Recording Listener.
+<div class="block">Provides Java Flight Recorder events for the JUnit Platform.
 
- <p>The Flight Recording Listener is a <code>TestExecutionListener</code> that
- generates Java Flight Recorder events.</div>
+ <p>The Flight Recording Listener module implements a
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> and a
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> that generate Java
+ Flight Recorder (JFR) events.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.7</dd>
