@@ -317,6 +317,7 @@
 733f8ab9d443d19d6b71637dd487912d  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 734fe9bee220261b8256f17bd65d55b9  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/package-info.java
 738ddbff80e210ca544332d7ec1d2984  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineDiscoveryResultValidator.java
+73d84810f6b32e40f3336cbcfcb7be4e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
 74094669fe4a0e51059f45907aca59b8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepeatedTestExtension.java
 741b6dac9e79cb9de20001d085c0b640  documentation/src/javadoc/junit-overview.html
 74729595792e7c80cad71228095af4a3  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineTestKit.java
@@ -672,7 +673,6 @@ f2c18c2b64f1c281ce441736238f872c  junit-jupiter-api/src/main/java/org/junit/jupi
 f2d29095e193feeeb0a255546206c9f7  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassUtils.java
 f32fc9bb347c60b4ae59f0edac9b5001  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/TestSourceProvider.java
 f35db7ea25fcf2a1dbf8f0dfb34a388f  documentation/src/test/java/example/StandardTests.java
-f3f54fd41281620e93c7187f30c908d2  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
 f5da166ba832f0a1c1b15144ff71f816  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 f5f966bb0e1530748a9531a68e56fadd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExecutionCondition.java
 f6caafaf1bad0ed4df136a11092cf186  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
