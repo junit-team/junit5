@@ -58,7 +58,8 @@ on GitHub.
   underscores as in some JVM languages, to improve readability of long numbers like
   `700_000_000`.
 * Documented constant values in `Resources`.
-
+* New `assertInstanceOf` methods as a replacement for `assertTrue(obj instanceof X)` which
+  provide better error messages comparable to those of `assertThrows`.
 
 [[release-notes-5.8.0-M1-junit-vintage]]
 === JUnit Vintage
