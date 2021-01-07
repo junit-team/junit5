@@ -89,6 +89,38 @@ class NodeTreeWalkerIntegrationTests {
 	}
 
 	@Test
+	void setsForceExecutionModeForChildrenWithReadLocksOnClassAndWriteLockOnTest() {
+		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndWriteClockOnTest.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getReadWriteLock("a")));
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
+
+		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(List.of());
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
+	}
+
+	@Test
+	void doesntSetForceExecutionModeForChildrenWithReadLocksOnClassAndReadLockOnTest() {
+		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndReadClockOnTest.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getReadLock("a"), getReadLock("b")));
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
+
+		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(List.of());
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).isEmpty();
+	}
+
+	@Test
 	void leavesResourceLockOnTestMethodWhenClassDoesNotUseResource() {
 		var engineDescriptor = discover(TestCaseWithoutResourceLock.class);
 
@@ -203,6 +235,22 @@ class NodeTreeWalkerIntegrationTests {
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
 	static class TestCaseWithResourceReadLockOnClass {
 		@Test
+		void test() {
+		}
+	}
+
+	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
+	static class TestCaseWithResourceReadLockOnClassAndWriteClockOnTest {
+		@Test
+		@ResourceLock("a")
+		void test() {
+		}
+	}
+
+	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
+	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTest {
+		@Test
+		@ResourceLock(value = "b", mode = ResourceAccessMode.READ)
 		void test() {
 		}
 	}
