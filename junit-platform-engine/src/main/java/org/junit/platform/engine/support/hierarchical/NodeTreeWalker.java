@@ -78,8 +78,8 @@ class NodeTreeWalker {
 	}
 
 	private boolean isReadOnly(Set<ExclusiveResource> exclusiveResources) {
-		return exclusiveResources.stream().noneMatch(
-			exclusiveResource -> exclusiveResource.getLockMode() == ExclusiveResource.LockMode.READ_WRITE);
+		return exclusiveResources.stream().allMatch(
+			exclusiveResource -> exclusiveResource.getLockMode() == ExclusiveResource.LockMode.READ);
 	}
 
 	private Set<ExclusiveResource> getExclusiveResources(TestDescriptor testDescriptor) {
