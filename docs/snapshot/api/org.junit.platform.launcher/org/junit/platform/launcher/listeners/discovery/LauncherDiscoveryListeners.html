@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 public class <span class="type-name-label">LauncherDiscoveryListeners</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block">Collection of <code>static</code> factory methods for creating
- <a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher"><code>LauncherDiscoveryListeners</code></a>.</div>
+ <a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryListeners</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.6</dd>
@@ -115,29 +115,29 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>static <a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></code></td>
+<td class="col-first"><code>static <a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#abortOnFailure()">abortOnFailure</a></span>()</code></th>
 <td class="col-last">
-<div class="block">Create a <a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> that aborts test discovery on
+<div class="block">Create a <a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> that aborts test discovery on
  failures.</div>
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>static <a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#composite(java.util.List)">composite</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a>&gt;&nbsp;listeners)</code></th>
+<td class="col-first"><code>static <a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#composite(java.util.List)">composite</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a>&gt;&nbsp;listeners)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i2">
-<td class="col-first"><code>static <a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></code></td>
+<td class="col-first"><code>static <a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromConfigurationParameter(java.lang.String,java.lang.String)">fromConfigurationParameter</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i3">
-<td class="col-first"><code>static <a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></code></td>
+<td class="col-first"><code>static <a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#logging()">logging</a></span>()</code></th>
 <td class="col-last">
-<div class="block">Create a <a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> that logs test discovery
+<div class="block">Create a <a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> that logs test discovery
  events based on their severity.</div>
 </td>
 </tr>
@@ -162,8 +162,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li>
 <section class="detail" id="abortOnFailure()">
 <h3>abortOnFailure</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></span>&nbsp;<span class="member-name">abortOnFailure</span>()</div>
-<div class="block">Create a <a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> that aborts test discovery on
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a></span>&nbsp;<span class="member-name">abortOnFailure</span>()</div>
+<div class="block">Create a <a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> that aborts test discovery on
  failures.
 
  <p>The following events are considered failures:
@@ -186,8 +186,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li>
 <section class="detail" id="logging()">
 <h3>logging</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></span>&nbsp;<span class="member-name">logging</span>()</div>
-<div class="block">Create a <a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> that logs test discovery
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a></span>&nbsp;<span class="member-name">logging</span>()</div>
+<div class="block">Create a <a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> that logs test discovery
  events based on their severity.
 
  <p>For example, failures during test discovery are logged as errors.</div>
@@ -198,7 +198,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>composite</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#INTERNAL" title="class or interface in org.apiguardian.api" class="external-link">INTERNAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.6")
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></span>&nbsp;<span class="member-name">composite</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a>&gt;&nbsp;listeners)</span></div>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a></span>&nbsp;<span class="member-name">composite</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a>&gt;&nbsp;listeners)</span></div>
 </section>
 </li>
 <li>
@@ -206,7 +206,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>fromConfigurationParameter</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#INTERNAL" title="class or interface in org.apiguardian.api" class="external-link">INTERNAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.6")
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></span>&nbsp;<span class="member-name">fromConfigurationParameter</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a></span>&nbsp;<span class="member-name">fromConfigurationParameter</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</span></div>
 </section>
 </li>

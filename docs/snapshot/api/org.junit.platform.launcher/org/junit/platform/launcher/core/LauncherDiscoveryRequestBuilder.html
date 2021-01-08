@@ -250,7 +250,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr class="row-color" id="i5">
 <td class="col-first"><code><a href="LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryRequestBuilder</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#listeners(org.junit.platform.launcher.LauncherDiscoveryListener...)">listeners</a></span>&#8203;(<a href="../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a>...&nbsp;listeners)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#listeners(org.junit.platform.launcher.LauncherDiscoveryListener...)">listeners</a></span>&#8203;(<a href="../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a>...&nbsp;listeners)</code></th>
 <td class="col-last">
 <div class="block">Add all of the supplied discovery listeners to the request.</div>
 </td>
@@ -435,10 +435,10 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>listeners</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.6")
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryRequestBuilder</a></span>&nbsp;<span class="member-name">listeners</span>&#8203;(<span class="parameters"><a href="../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a>...&nbsp;listeners)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryRequestBuilder</a></span>&nbsp;<span class="member-name">listeners</span>&#8203;(<span class="parameters"><a href="../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a>...&nbsp;listeners)</span></div>
 <div class="block">Add all of the supplied discovery listeners to the request.
 
- <p>In addition to the <a href="../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">listeners</a>
+ <p>In addition to the <a href="../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">listeners</a>
  registered using this method, this builder will add a default listener
  to this request that can be specified using the
  <a href="#DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME">"junit.platform.discovery.listener.default"</a>
@@ -450,7 +450,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dt>Returns:</dt>
 <dd>this builder for method chaining</dd>
 <dt>See Also:</dt>
-<dd><a href="../LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a>, 
+<dd><a href="../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a>, 
 <a href="../listeners/discovery/LauncherDiscoveryListeners.html" title="class in org.junit.platform.launcher.listeners.discovery"><code>LauncherDiscoveryListeners</code></a>, 
 <a href="#DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME"><code>DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME</code></a></dd>
 </dl>

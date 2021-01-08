@@ -535,11 +535,8 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt; , ExtensionContext)</code> has
-been deprecated in favor of
-<code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt; , DynamicTestInvocationContext, ExtensionContext)</code>
-that allows to access the dynamic test executable via
-<code>DynamicTestInvocationContext.getExecutable()</code>.</p>
+<p>For consistency with the rest of the JUnit Platform, the experimental
+<code>LauncherDiscoveryListener</code> is now an interface instead of an abstract class.</p>
 </li>
 </ul>
 </div>
@@ -591,7 +588,11 @@ and registered test engines.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt; , ExtensionContext)</code> has
+been deprecated in favor of
+<code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt; , DynamicTestInvocationContext, ExtensionContext)</code>
+that allows to access the dynamic test executable via
+<code>DynamicTestInvocationContext.getExecutable()</code>.</p>
 </li>
 </ul>
 </div>
@@ -841,7 +842,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-05 08:59:14 UTC
+Last updated 2021-01-08 19:36:57 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
