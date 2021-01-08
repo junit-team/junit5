@@ -25,7 +25,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 1.6
  * @see LauncherDiscoveryListeners#composite(List)
  */
-class CompositeLauncherDiscoveryListener extends LauncherDiscoveryListener {
+class CompositeLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	private final List<LauncherDiscoveryListener> listeners;
 

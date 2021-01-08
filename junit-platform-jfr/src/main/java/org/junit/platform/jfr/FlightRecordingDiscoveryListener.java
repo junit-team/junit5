@@ -37,7 +37,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 1.8
  */
 @API(status = EXPERIMENTAL, since = "1.8")
-public class FlightRecordingDiscoveryListener extends LauncherDiscoveryListener {
+public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
 
 	private final AtomicReference<LauncherDiscoveryEvent> launcherDiscoveryEvent = new AtomicReference<>();
 	private final Map<org.junit.platform.engine.UniqueId, EngineDiscoveryEvent> engineDiscoveryEvents = new ConcurrentHashMap<>();

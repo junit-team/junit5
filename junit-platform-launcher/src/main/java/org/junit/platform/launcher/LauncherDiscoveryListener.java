@@ -17,13 +17,13 @@ import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * Register a concrete implementation of this class with a
+ * Register a concrete implementation of this interface with a
  * {@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
  * to be notified of events that occur during test discovery.
  *
- * <p>All methods in this class have empty <em>default</em> implementations.
- * Subclasses may therefore override one or more of these methods to be notified
- * of the selected events.
+ * <p>All methods in this interface have empty <em>default</em> implementations.
+ * Concrete implementations may therefore override one or more of these methods
+ * to be notified of the selected events.
  *
  * <p>JUnit provides default implementations that are created via the factory
  * methods in
@@ -38,16 +38,13 @@ import org.junit.platform.engine.UniqueId;
  * @since 1.6
  */
 @API(status = EXPERIMENTAL, since = "1.6")
-public abstract class LauncherDiscoveryListener implements EngineDiscoveryListener {
+public interface LauncherDiscoveryListener extends EngineDiscoveryListener {
 
 	/**
 	 * No-op implementation of {@code LauncherDiscoveryListener}
 	 */
-	public static final LauncherDiscoveryListener NOOP = new LauncherDiscoveryListener() {
+	LauncherDiscoveryListener NOOP = new LauncherDiscoveryListener() {
 	};
-
-	public LauncherDiscoveryListener() {
-	}
 
 	/**
 	 * Called when test discovery is about to be started.
@@ -56,7 +53,7 @@ public abstract class LauncherDiscoveryListener implements EngineDiscoveryListen
 	 * @since 1.8
 	 */
 	@API(status = EXPERIMENTAL, since = "1.8")
-	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
+	default void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
 	}
 
 	/**
@@ -66,7 +63,7 @@ public abstract class LauncherDiscoveryListener implements EngineDiscoveryListen
 	 * @since 1.8
 	 */
 	@API(status = EXPERIMENTAL, since = "1.8")
-	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
+	default void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
 	}
 
 	/**
@@ -74,7 +71,7 @@ public abstract class LauncherDiscoveryListener implements EngineDiscoveryListen
 	 *
 	 * @param engineId the unique ID of the engine descriptor
 	 */
-	public void engineDiscoveryStarted(UniqueId engineId) {
+	default void engineDiscoveryStarted(UniqueId engineId) {
 	}
 
 	/**
@@ -87,7 +84,7 @@ public abstract class LauncherDiscoveryListener implements EngineDiscoveryListen
 	 * @param result the discovery result of the supplied engine
 	 * @see EngineDiscoveryResult
 	 */
-	public void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
+	default void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
 	}
 
 }

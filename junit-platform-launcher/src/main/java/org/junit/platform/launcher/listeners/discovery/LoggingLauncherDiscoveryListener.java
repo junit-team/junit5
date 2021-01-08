@@ -30,7 +30,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 1.6
  * @see LauncherDiscoveryListeners#logging()
  */
-class LoggingLauncherDiscoveryListener extends LauncherDiscoveryListener {
+class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggingLauncherDiscoveryListener.class);
 
