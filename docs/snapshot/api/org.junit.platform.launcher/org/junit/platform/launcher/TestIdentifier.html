@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
+<script type="text/javascript">var data = {"i0":10,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -154,10 +154,19 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getParentId()">getParentId</a></span>()</code></th>
 <td class="col-last">
-<div class="block">Get the unique ID of this identifier's parent, if available.</div>
+<div class="block">Get the unique ID of this identifier's parent as a <code>String</code>, if
+ available.</div>
 </td>
 </tr>
 <tr class="row-color" id="i5">
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getParentIdObject()">getParentIdObject</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Get the unique ID of this identifier's parent as a <code>UniqueId</code>, if
+ available.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i6">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine">TestSource</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSource()">getSource</a></span>()</code></th>
 <td class="col-last">
@@ -165,7 +174,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
  or container, if available.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/TestTag.html" title="class in org.junit.platform.engine">TestTag</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getTags()">getTags</a></span>()</code></th>
 <td class="col-last">
@@ -173,40 +182,49 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
  test or container.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code><a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine">TestDescriptor.Type</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getType()">getType</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Get the underlying descriptor type.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getUniqueId()">getUniqueId</a></span>()</code></th>
 <td class="col-last">
-<div class="block">Get the unique ID of the represented test or container.</div>
+<div class="block">Get the unique ID of the represented test or container as a
+ <code>String</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
+<td class="col-first"><code><a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getUniqueIdObject()">getUniqueIdObject</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Get the unique ID of the represented test or container as a
+ <code>UniqueId</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i11">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hashCode()">hashCode</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isContainer()">isContainer</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Determine if this identifier represents a container.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isTest()">isTest</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Determine if this identifier represents a test.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
@@ -242,7 +260,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 <section class="detail" id="getUniqueId()">
 <h3>getUniqueId</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">getUniqueId</span>()</div>
-<div class="block">Get the unique ID of the represented test or container.
+<div class="block">Get the unique ID of the represented test or container as a
+ <code>String</code>.
 
  <p>Uniqueness must be guaranteed across an entire
  <a href="TestPlan.html" title="class in org.junit.platform.launcher">test plan</a>, regardless of how many engines are used
@@ -254,16 +273,56 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 </section>
 </li>
 <li>
+<section class="detail" id="getUniqueIdObject()">
+<h3>getUniqueIdObject</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></span>&nbsp;<span class="member-name">getUniqueIdObject</span>()</div>
+<div class="block">Get the unique ID of the represented test or container as a
+ <code>UniqueId</code>.
+
+ <p>Uniqueness must be guaranteed across an entire
+ <a href="TestPlan.html" title="class in org.junit.platform.launcher">test plan</a>, regardless of how many engines are used
+ behind the scenes.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the unique ID for this identifier; never <code>null</code></dd>
+<dt>Since:</dt>
+<dd>5.8</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getParentId()">
 <h3>getParentId</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">getParentId</span>()</div>
-<div class="block">Get the unique ID of this identifier's parent, if available.
+<div class="block">Get the unique ID of this identifier's parent as a <code>String</code>, if
+ available.
 
  <p>An identifier without a parent is called a <em>root</em>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>a container for the unique ID for this identifier's parent;
  never <code>null</code> though potentially <em>empty</em></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getParentIdObject()">
+<h3>getParentIdObject</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&gt;</span>&nbsp;<span class="member-name">getParentIdObject</span>()</div>
+<div class="block">Get the unique ID of this identifier's parent as a <code>UniqueId</code>, if
+ available.
+
+ <p>An identifier without a parent is called a <em>root</em>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a container for the unique ID for this identifier's parent;
+ never <code>null</code> though potentially <em>empty</em></dd>
+<dt>Since:</dt>
+<dd>5.8</dd>
 </dl>
 </section>
 </li>
@@ -302,7 +361,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 <dd>the legacy reporting name; never <code>null</code> or blank</dd>
 <dt>See Also:</dt>
 <dd><a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#getLegacyReportingName()"><code>TestDescriptor.getLegacyReportingName()</code></a>, 
-<a href="listeners/LegacyReportingUtils.html" title="class in org.junit.platform.launcher.listeners"><code>LegacyReportingUtils</code></a></dd>
+<a href="../../../../../org.junit.platform.reporting/org/junit/platform/reporting/legacy/LegacyReportingUtils.html" title="class in org.junit.platform.reporting.legacy"><code>LegacyReportingUtils</code></a></dd>
 </dl>
 </section>
 </li>

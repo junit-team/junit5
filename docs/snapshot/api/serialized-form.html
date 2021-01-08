@@ -563,35 +563,27 @@ loadScripts(document, 'script');</script>
 <ul class="block-list">
 <li>
 <section class="detail">
-<h4>Serialized Fields</h4>
+<h4>Serialization Methods</h4>
 <ul class="block-list">
 <li class="block-list">
-<h5>displayName</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> displayName</pre>
+<h5>readObject</h5>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">readObject</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/ObjectInputStream.html" title="class or interface in java.io" class="external-link">ObjectInputStream</a>&nbsp;s)</span>
+                 throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassNotFoundException.html" title="class or interface in java.lang" class="external-link">ClassNotFoundException</a>,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassNotFoundException.html" title="class or interface in java.lang" class="external-link">ClassNotFoundException</a></code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
+</dl>
 </li>
 <li class="block-list">
-<h5>legacyReportingName</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> legacyReportingName</pre>
-</li>
-<li class="block-list">
-<h5>parentId</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> parentId</pre>
-</li>
-<li class="block-list">
-<h5>source</h5>
-<pre><a href="org.junit.platform.engine/org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine">TestSource</a> source</pre>
-</li>
-<li class="block-list">
-<h5>tags</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="org.junit.platform.engine/org/junit/platform/engine/TestTag.html" title="class in org.junit.platform.engine">TestTag</a>&gt; tags</pre>
-</li>
-<li class="block-list">
-<h5>type</h5>
-<pre><a href="org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine">TestDescriptor.Type</a> type</pre>
-</li>
-<li class="block-list">
-<h5>uniqueId</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> uniqueId</pre>
+<h5>writeObject</h5>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">writeObject</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/ObjectOutputStream.html" title="class or interface in java.io" class="external-link">ObjectOutputStream</a>&nbsp;s)</span>
+                  throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
+</dl>
 </li>
 </ul>
 </section>

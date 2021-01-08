@@ -865,6 +865,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the method name of this source.</div>
 </dd>
+<dt><span class="member-name-link"><a href="../org.junit.vintage.engine/org/junit/vintage/engine/descriptor/DescriptionUtils.html#getMethodName(org.junit.runner.Description)">getMethodName(Description)</a></span> - Static method in class org.junit.vintage.engine.descriptor.<a href="../org.junit.vintage.engine/org/junit/vintage/engine/descriptor/DescriptionUtils.html" title="class in org.junit.vintage.engine.descriptor">DescriptionUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/MethodSelector.html#getMethodParameterTypes()">getMethodParameterTypes()</a></span> - Method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></dt>
 <dd>
 <div class="block">Get the parameter types for the selected method as a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>,
@@ -885,6 +887,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the minimum number of runnable threads to be used.</div>
 </dd>
+<dt><span class="member-name-link"><a href="../org.junit.vintage.engine/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.html#getModifiableChildren()">getModifiableChildren()</a></span> - Method in class org.junit.vintage.engine.descriptor.<a href="../org.junit.vintage.engine/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageEngineDescriptor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/ModuleSelector.html#getModuleName()">getModuleName()</a></span> - Method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a></dt>
 <dd>
 <div class="block">Get the selected module name.</div>
@@ -997,7 +1001,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html#getParentId()">getParentId()</a></span> - Method in class org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a></dt>
 <dd>
-<div class="block">Get the unique ID of this identifier's parent, if available.</div>
+<div class="block">Get the unique ID of this identifier's parent as a <code>String</code>, if
+ available.</div>
+</dd>
+<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html#getParentIdObject()">getParentIdObject()</a></span> - Method in class org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a></dt>
+<dd>
+<div class="block">Get the unique ID of this identifier's parent as a <code>UniqueId</code>, if
+ available.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DirectorySelector.html#getPath()">getPath()</a></span> - Method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a></dt>
 <dd>
@@ -1358,8 +1368,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the number of tests found.</div>
 </dd>
-<dt><span class="member-name-link"><a href="../org.junit.vintage.engine/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.html#getTestSourceProvider()">getTestSourceProvider()</a></span> - Method in class org.junit.vintage.engine.descriptor.<a href="../org.junit.vintage.engine/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageEngineDescriptor</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/DynamicNode.html#getTestSourceUri()">getTestSourceUri()</a></span> - Method in class org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/DynamicNode.html" title="class in org.junit.jupiter.api">DynamicNode</a></dt>
 <dd>
 <div class="block">Get the custom test source <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link"><code>URI</code></a> of this <code>DynamicNode</code>.</div>
@@ -1469,7 +1477,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html#getUniqueId()">getUniqueId()</a></span> - Method in class org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a></dt>
 <dd>
-<div class="block">Get the unique ID of the represented test or container.</div>
+<div class="block">Get the unique ID of the represented test or container as a
+ <code>String</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html#getUniqueIdObject()">getUniqueIdObject()</a></span> - Method in class org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a></dt>
+<dd>
+<div class="block">Get the unique ID of the represented test or container as a
+ <code>UniqueId</code>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/UriSelector.html#getUri()">getUri()</a></span> - Method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a></dt>
 <dd>

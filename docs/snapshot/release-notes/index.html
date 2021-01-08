@@ -567,6 +567,10 @@ and registered test engines.</p>
 <li>
 <p>Documented constant value of <code>ExclusiveResource.GLOBAL_KEY</code>.</p>
 </li>
+<li>
+<p>Instances of <code>TestIdentifier</code> and <code>UniqueId</code> now retain less memory because they no
+longer store <code>String</code> representations of unique IDs.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -613,6 +617,10 @@ underscores as in some JVM languages, to improve readability of long numbers lik
 <p>New <code>assertInstanceOf</code> methods as a replacement for <code>assertTrue(obj instanceof X)</code> which
 provide better error messages comparable to those of <code>assertThrows</code>.</p>
 </li>
+<li>
+<p>Dynamic tests now require less memory thanks to a number of improvements to internal
+data structures.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -644,7 +652,8 @@ provide better error messages comparable to those of <code>assertThrows</code>.<
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The JUnit Vintage engine now requires less memory and allows for earlier garbage
+collection thanks to a number of improvements to internal data structures.</p>
 </li>
 </ul>
 </div>
@@ -842,7 +851,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-08 19:36:57 UTC
+Last updated 2021-01-08 19:42:02 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
