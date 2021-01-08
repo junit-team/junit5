@@ -19,11 +19,8 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , ExtensionContext)` has
-  been deprecated in favor of
-  `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , DynamicTestInvocationContext, ExtensionContext)`
-  that allows to access the dynamic test executable via
-  `DynamicTestInvocationContext.getExecutable()`.
+* For consistency with the rest of the JUnit Platform, the experimental
+  `LauncherDiscoveryListener` is now an interface instead of an abstract class.
 
 ==== New Features and Improvements
 
@@ -50,7 +47,11 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , ExtensionContext)` has
+  been deprecated in favor of
+  `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , DynamicTestInvocationContext, ExtensionContext)`
+  that allows to access the dynamic test executable via
+  `DynamicTestInvocationContext.getExecutable()`.
 
 ==== New Features and Improvements
 
