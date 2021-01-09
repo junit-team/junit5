@@ -39,6 +39,8 @@ on GitHub.
 * Custom `LauncherDiscoveryListener` implementations can now be registered via Java’s
   `ServiceLoader` mechanism.
 * Documented constant value of `ExclusiveResource.GLOBAL_KEY`.
+* Improvement of `ExclusiveResource` handling, if a `Node` has only read locks and no read-write locks,
+  then descendants are not forced into `SAME_THREAD` execution, and can run concurrently.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
