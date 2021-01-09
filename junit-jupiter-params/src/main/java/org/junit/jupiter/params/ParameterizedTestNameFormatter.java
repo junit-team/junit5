@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.Named;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -56,10 +57,17 @@ class ParameterizedTestNameFormatter {
 	}
 
 	private String formatSafely(int invocationIndex, Object[] arguments) {
-		String pattern = prepareMessageFormatPattern(invocationIndex, arguments);
+		Object[] namedArguments = extractNamedArguments(arguments);
+		String pattern = prepareMessageFormatPattern(invocationIndex, namedArguments);
 		MessageFormat format = new MessageFormat(pattern);
-		Object[] humanReadableArguments = makeReadable(format, arguments);
+		Object[] humanReadableArguments = makeReadable(format, namedArguments);
 		return format.format(humanReadableArguments);
+	}
+
+	private Object[] extractNamedArguments(Object[] arguments) {
+		return Arrays.stream(arguments) //
+				.map(argument -> argument instanceof Named ? ((Named<?>) argument).getName() : argument) //
+				.toArray();
 	}
 
 	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
