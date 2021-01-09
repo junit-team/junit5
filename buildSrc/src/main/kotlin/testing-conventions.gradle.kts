@@ -37,10 +37,7 @@ dependencies {
 	}
 
 	if (project.name != "junit-jupiter-engine") {
-		"testImplementation"(project(":junit-jupiter-api"))
-		"testImplementation"(project(":junit-jupiter-params"))
-
-		"testRuntimeOnly"(project(":junit-jupiter-engine"))
+		"testImplementation"(project(":junit-jupiter"))
 	}
 	"testImplementation"(testFixtures(project(":junit-jupiter-api")))
 
