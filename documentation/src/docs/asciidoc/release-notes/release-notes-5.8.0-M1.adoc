@@ -19,11 +19,8 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , ExtensionContext)` has
-  been deprecated in favor of
-  `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , DynamicTestInvocationContext, ExtensionContext)`
-  that allows to access the dynamic test executable via
-  `DynamicTestInvocationContext.getExecutable()`.
+* For consistency with the rest of the JUnit Platform, the experimental
+  `LauncherDiscoveryListener` is now an interface instead of an abstract class.
 
 ==== New Features and Improvements
 
@@ -39,9 +36,10 @@ on GitHub.
 * Custom `LauncherDiscoveryListener` implementations can now be registered via Java’s
   `ServiceLoader` mechanism.
 * Documented constant value of `ExclusiveResource.GLOBAL_KEY`.
+* Instances of `TestIdentifier` and `UniqueId` now retain less memory because they no
+  longer store `String` representations of unique IDs.
 * Improvement of `ExclusiveResource` handling, if a `Node` has only read locks and no read-write locks,
   then descendants are not forced into `SAME_THREAD` execution, and can run concurrently.
-
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
 === JUnit Jupiter
@@ -52,7 +50,11 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , ExtensionContext)` has
+  been deprecated in favor of
+  `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , DynamicTestInvocationContext, ExtensionContext)`
+  that allows to access the dynamic test executable via
+  `DynamicTestInvocationContext.getExecutable()`.
 
 ==== New Features and Improvements
 
@@ -60,7 +62,10 @@ on GitHub.
   underscores as in some JVM languages, to improve readability of long numbers like
   `700_000_000`.
 * Documented constant values in `Resources`.
-
+* New `assertInstanceOf` methods as a replacement for `assertTrue(obj instanceof X)` which
+  provide better error messages comparable to those of `assertThrows`.
+* Dynamic tests now require less memory thanks to a number of improvements to internal
+  data structures.
 
 [[release-notes-5.8.0-M1-junit-vintage]]
 === JUnit Vintage
@@ -75,4 +80,5 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The JUnit Vintage engine now requires less memory and allows for earlier garbage
+  collection thanks to a number of improvements to internal data structures.

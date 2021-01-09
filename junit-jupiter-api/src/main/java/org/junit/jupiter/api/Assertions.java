@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.time.Duration;
@@ -3448,4 +3449,50 @@ public class Assertions {
 		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
 	}
 
+	/**
+	 * <em>Assert</em> that the supplied {@code actualValue} is an instance of the
+	 * {@code expectedType}.
+	 *
+	 * <p>Like the {@code instanceof} operator a {@code null} value is not
+	 * considered to be of the {@code expectedType} and does not pass the assertion.
+	 *
+	 * @since 5.8
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
+	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue) {
+		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue);
+	}
+
+	/**
+	 * <em>Assert</em> that the supplied {@code actualValue} is an instance of the
+	 * {@code expectedType}.
+	 *
+	 * <p>Like the {@code instanceof} operator a {@code null} value is not
+	 * considered to be of the {@code expectedType} and does not pass the assertion.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.8
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
+	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, String message) {
+		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, message);
+	}
+
+	/**
+	 * <em>Assert</em> that the supplied {@code actualValue} is an instance of the
+	 * {@code expectedType}.
+	 *
+	 * <p>Like the {@code instanceof} operator a {@code null} value is not
+	 * considered to be of the {@code expectedType} and does not pass the assertion.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @since 5.8
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
+	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Supplier<String> messageSupplier) {
+		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
+	}
 }

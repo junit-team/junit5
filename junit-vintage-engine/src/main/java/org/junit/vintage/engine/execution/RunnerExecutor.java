@@ -28,11 +28,10 @@ import org.junit.vintage.engine.descriptor.TestSourceProvider;
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;
-	private final TestSourceProvider testSourceProvider;
+	private final TestSourceProvider testSourceProvider = new TestSourceProvider();
 
-	public RunnerExecutor(EngineExecutionListener engineExecutionListener, TestSourceProvider testSourceProvider) {
+	public RunnerExecutor(EngineExecutionListener engineExecutionListener) {
 		this.engineExecutionListener = engineExecutionListener;
-		this.testSourceProvider = testSourceProvider;
 	}
 
 	public void execute(RunnerTestDescriptor runnerTestDescriptor) {

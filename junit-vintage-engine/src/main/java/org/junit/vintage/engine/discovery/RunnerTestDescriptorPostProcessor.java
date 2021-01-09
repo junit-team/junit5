@@ -35,11 +35,7 @@ class RunnerTestDescriptorPostProcessor {
 
 	private final UniqueIdReader uniqueIdReader = new UniqueIdReader();
 	private final UniqueIdStringifier uniqueIdStringifier = new UniqueIdStringifier();
-	private final TestSourceProvider testSourceProvider;
-
-	public RunnerTestDescriptorPostProcessor(TestSourceProvider testSourceProvider) {
-		this.testSourceProvider = testSourceProvider;
-	}
+	private final TestSourceProvider testSourceProvider = new TestSourceProvider();
 
 	void applyFiltersAndCreateDescendants(RunnerTestDescriptor runnerTestDescriptor) {
 		addChildrenRecursively(runnerTestDescriptor);
@@ -47,6 +43,9 @@ class RunnerTestDescriptorPostProcessor {
 	}
 
 	private void addChildrenRecursively(VintageTestDescriptor parent) {
+		if (parent.getDescription().isTest()) {
+			return;
+		}
 		List<Description> children = parent.getDescription().getChildren();
 		// Use LinkedHashMap to preserve order, ArrayList for fast access by index
 		Map<String, List<Description>> childrenByUniqueId = children.stream().collect(

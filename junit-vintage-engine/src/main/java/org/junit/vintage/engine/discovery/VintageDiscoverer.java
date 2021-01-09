@@ -19,7 +19,6 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
-import org.junit.vintage.engine.descriptor.TestSourceProvider;
 import org.junit.vintage.engine.descriptor.VintageEngineDescriptor;
 
 /**
@@ -39,16 +38,13 @@ public class VintageDiscoverer {
 	// @formatter:on
 
 	public VintageEngineDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		TestSourceProvider testSourceProvider = new TestSourceProvider();
-		VintageEngineDescriptor engineDescriptor = new VintageEngineDescriptor(uniqueId, testSourceProvider);
+		VintageEngineDescriptor engineDescriptor = new VintageEngineDescriptor(uniqueId);
 		resolver.resolve(discoveryRequest, engineDescriptor);
-		RunnerTestDescriptorPostProcessor postProcessor = new RunnerTestDescriptorPostProcessor(testSourceProvider);
-		// @formatter:off
-		engineDescriptor.getChildren().stream()
-				.filter(RunnerTestDescriptor.class::isInstance)
-				.map(RunnerTestDescriptor.class::cast)
-				.forEach(postProcessor::applyFiltersAndCreateDescendants);
-		// @formatter:on
+		RunnerTestDescriptorPostProcessor postProcessor = new RunnerTestDescriptorPostProcessor();
+		for (TestDescriptor testDescriptor : engineDescriptor.getChildren()) {
+			RunnerTestDescriptor runnerTestDescriptor = (RunnerTestDescriptor) testDescriptor;
+			postProcessor.applyFiltersAndCreateDescendants(runnerTestDescriptor);
+		}
 		return engineDescriptor;
 	}
 

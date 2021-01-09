@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher;
 
-public class TestLauncherDiscoveryListener extends LauncherDiscoveryListener {
+public class TestLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	@Override
 	public boolean equals(Object obj) {
