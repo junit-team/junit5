@@ -33,7 +33,6 @@ class SuiteLauncher {
 
 	static SuiteLauncher create() {
 		Set<TestEngine> engines = new LinkedHashSet<>();
-		// TODO: Document that Test engines can only be loaded via SPI
 		new ServiceLoaderTestEngineRegistry().loadTestEngines().forEach(engines::add);
 		return new SuiteLauncher(engines);
 	}

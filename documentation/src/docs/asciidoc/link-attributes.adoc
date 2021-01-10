@@ -43,8 +43,9 @@ endif::[]
 :LegacyXmlReportGeneratingListener:          {javadoc-root}/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html[LegacyXmlReportGeneratingListener]
 // Platform Runner
 :JUnitPlatform-Runner:                       {javadoc-root}/org.junit.platform.runnner/org/junit/platform/runner/JUnitPlatform.html[JUnitPlatform]
-// Platform Suite API
+// Platform Suite
 :suite-api-package:                          {javadoc-root}/org.junit.platform.suite.api/org/junit/platform/suite/api/package-summary.html[org.junit.platform.suite.api]
+:junit-platform-suite-engine                 {javadoc-root}/org.junit.platform.suite.engine/org/junit/platform/suite/engine/package-summary.html[junit-platform-suite-engine]
 // Platform Test Kit
 :testkit-engine-package:                     {javadoc-root}/org.junit.platform.testkit/org/junit/platform/testkit/engine/package-summary.html[org.junit.platform.testkit.engine]
 :EngineExecutionResults:                     {javadoc-root}/org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineExecutionResults.html[EngineExecutionResults]

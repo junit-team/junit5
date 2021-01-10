@@ -50,10 +50,17 @@ artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
   `junit-platform-runner`::
     Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
     environment. See <<running-tests-junit-platform-runner>> for details.
+  `junit-platform-suite`::
+    JUnit Platform Suite artifact that transitively pulls in dependencies on
+    `junit-platform-suite-api`, `junit-platform-suite-engine` for simplified
+    dependency management in build tools such as Gradle and Maven.
   `junit-platform-suite-api`::
     Annotations for configuring test suites on the JUnit Platform. Supported by the
-    <<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by
-    third-party `TestEngine` implementations.
+    <<junit-platform-suite-engine,JUnit Platform Suite Engine>> and
+    <<running-tests-junit-platform-runner,JUnitPlatform runner>>.
+  `junit-platform-suite-engine`::
+    Engine to execute suites on the JUnit Platform. See
+    <<junit-platform-suite-engine,JUnit Platform Suite Engine>> for details.
   `junit-platform-testkit`::
      Provides support for executing a test plan for a given `TestEngine` and then
      accessing the results via a fluent API to verify the expected results.
@@ -148,7 +155,9 @@ package org.junit.platform {
     [junit-platform-launcher] as launcher
     [junit-platform-reporting] as reporting
     [junit-platform-runner] as runner
+    [junit-platform-suite] as suite
     [junit-platform-suite-api] as suite_api
+    [junit-platform-suite-engine] as suite_engine
     [junit-platform-testkit] as testkit
 }
 
@@ -198,6 +207,12 @@ reporting ..> launcher
 runner ..> launcher
 runner ..> suite_api
 runner ..> junit4
+
+suite ..> suite_api
+suite ..> suite_engine
+
+suite_engine ..> launcher
+suite_engine ..> suite_api
 
 testkit ..> opentest4j
 testkit ..> launcher
