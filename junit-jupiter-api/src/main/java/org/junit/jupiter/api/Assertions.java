@@ -3002,7 +3002,7 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
+	 * ignore the return value.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
 		return AssertThrows.assertThrows(expectedType, executable);
@@ -3016,7 +3016,7 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
+	 * ignore the return value.
 	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
@@ -3035,7 +3035,7 @@ public class Assertions {
 	 * supplied {@code messageSupplier}.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
+	 * ignore the return value.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {

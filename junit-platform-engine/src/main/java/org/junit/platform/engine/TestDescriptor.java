@@ -60,7 +60,7 @@ public interface TestDescriptor {
 	 * reporting infrastructure &mdash; for example, for reporting systems built
 	 * on the Ant-based XML reporting format for JUnit 4.
 	 *
-	 * <p>The default implementation simply delegates to {@link #getDisplayName()}.
+	 * <p>The default implementation delegates to {@link #getDisplayName()}.
 	 *
 	 * @return the legacy reporting name; never {@code null} or blank
 	 */

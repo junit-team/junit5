@@ -41,7 +41,7 @@ class EngineTestKitAllEventsDemo {
 	void verifyAllJupiterEvents() {
 		Writer writer = // create a java.io.Writer for debug output
 		// end::user_guide[]
-				// For the demo, we are simply swallowing the debug output.
+				// For the demo, we are swallowing the debug output.
 				new StringWriter();
 		// tag::user_guide[]
 

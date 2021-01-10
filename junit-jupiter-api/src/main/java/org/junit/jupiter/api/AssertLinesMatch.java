@@ -127,7 +127,7 @@ class AssertLinesMatch {
 				}
 
 				String actualLine = actualDeque.peek();
-				// trivial case: take the fast path when they simply match
+				// trivial case: take the fast path when they match
 				if (matches(expectedLine, actualLine)) {
 					actualDeque.pop();
 					continue; // main

@@ -63,7 +63,7 @@ class EnabledIfEnvironmentVariableCondition
 	/**
 	 * Get the value of the named environment variable.
 	 *
-	 * <p>The default implementation simply delegates to
+	 * <p>The default implementation delegates to
 	 * {@link System#getenv(String)}. Can be overridden in a subclass for
 	 * testing purposes.
 	 */
