@@ -182,15 +182,15 @@ jupiter ..> jupiter_api
 jupiter ..> jupiter_params
 jupiter ..> jupiter_engine
 
-jupiter_api ..> opentest4j
-jupiter_api ..> commons
+jupiter_api ....> opentest4j
+jupiter_api ...> commons
 
-jupiter_engine ..> engine
+jupiter_engine ...> engine
 jupiter_engine ..> jupiter_api
 
 jupiter_params ..> jupiter_api
 jupiter_migration_support ..> jupiter_api
-jupiter_migration_support ..> junit4
+jupiter_migration_support ...> junit4
 
 console ..> launcher
 console ..> reporting
@@ -199,14 +199,14 @@ launcher ..> engine
 
 jfr ..> launcher
 
-engine ..> opentest4j
+engine ....> opentest4j
 engine ..> commons
 
 reporting ..> launcher
 
 runner ..> launcher
 runner ..> suite_api
-runner ..> junit4
+runner ...> junit4
 
 suite ..> suite_api
 suite ..> suite_engine
@@ -214,9 +214,9 @@ suite ..> suite_engine
 suite_engine ..> launcher
 suite_engine ..> suite_api
 
-testkit ..> opentest4j
+testkit ....> opentest4j
 testkit ..> launcher
 
-vintage_engine ..> engine
+vintage_engine ...> engine
 vintage_engine ..> junit4
 ----
