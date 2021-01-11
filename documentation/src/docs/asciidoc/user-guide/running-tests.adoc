@@ -639,14 +639,14 @@ You need the following artifacts and their dependencies on the classpath. See
 ==== Display Names vs. Technical Names
 
 To define a custom _display name_ for the class run via `@RunWith(JUnitPlatform.class)`
-simply annotate the class with `@SuiteDisplayName` and provide a custom value.
+annotate the class with `@SuiteDisplayName` and provide a custom value.
 
 By default, _display names_ will be used for test artifacts; however, when the
 `JUnitPlatform` runner is used to execute tests with a build tool such as Gradle or
 Maven, the generated test report often needs to include the _technical names_ of test
 artifacts — for example, fully qualified class names — instead of shorter display names
 like the simple name of a test class or a custom display name containing special
-characters. To enable technical names for reporting purposes, simply declare the
+characters. To enable technical names for reporting purposes, declare the
 `@UseTechnicalNames` annotation alongside `@RunWith(JUnitPlatform.class)`.
 
 Note that the presence of `@UseTechnicalNames` overrides any custom display name
@@ -808,7 +808,7 @@ expressions can be useful.
 === Capturing Standard Output/Error
 
 Since version 1.3, the JUnit Platform provides opt-in support for capturing output
-printed to `System.out` and `System.err`. To enable it, simply set the
+printed to `System.out` and `System.err`. To enable it, set the
 `junit.platform.output.capture.stdout` and/or `junit.platform.output.capture.stderr`
 <<running-tests-config-params, configuration parameter>> to `true`. In addition, you may
 configure the maximum number of buffered bytes to be used per executed test or container

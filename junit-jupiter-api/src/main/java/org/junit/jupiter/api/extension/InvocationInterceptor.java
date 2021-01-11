@@ -36,7 +36,7 @@ import org.junit.jupiter.api.TestTemplate;
  * Invocation#skip()} exactly once on the supplied invocation. Otherwise, the
  * enclosing test or container will be reported as failed.
  *
- * <p>The default implementation simply calls {@link Invocation#proceed()
+ * <p>The default implementation calls {@link Invocation#proceed()
  * proceed()} on the supplied {@linkplain Invocation invocation}.
  *
  * <h3>Constructor Requirements</h3>

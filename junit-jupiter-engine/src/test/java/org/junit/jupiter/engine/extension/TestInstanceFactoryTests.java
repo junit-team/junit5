@@ -642,7 +642,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	/**
-	 * This does not actually create a proxy. Rather, it simply simulates what
+	 * This does not actually create a proxy. Rather, it simulates what
 	 * a proxy-based implementation might do, by loading the class from a
 	 * different {@link ClassLoader}.
 	 */

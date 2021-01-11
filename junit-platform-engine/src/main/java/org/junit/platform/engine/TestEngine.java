@@ -91,7 +91,7 @@ public interface TestEngine {
 	 *
 	 * <p>This information is used solely for debugging and reporting purposes.
 	 *
-	 * <p>The default implementation simply returns an empty {@link Optional},
+	 * <p>The default implementation returns an empty {@link Optional},
 	 * signaling that the group ID is unknown.
 	 *
 	 * <p>Concrete test engine implementations may override this method in
@@ -121,7 +121,7 @@ public interface TestEngine {
 	 * {@link Package} instance with the attributes from the manifest.
 	 *
 	 * <p>If the implementation title cannot be queried from the package
-	 * attributes, the default implementation simply returns an empty
+	 * attributes, the default implementation returns an empty
 	 * {@link Optional}.
 	 *
 	 * <p>Concrete test engine implementations may override this method in

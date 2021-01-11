@@ -108,7 +108,7 @@ public final class ReflectionUtils {
 	 * <p>The pattern intentionally captures the last bracket with the
 	 * capital letter so that the combination can be looked up via
 	 * {@link #classNameToTypeMap}. For example, the last matched group
-	 * will contain {@code "[I"} instead of simply {@code "I"}.
+	 * will contain {@code "[I"} instead of {@code "I"}.
 	 *
 	 * @see Class#getName()
 	 */
@@ -891,8 +891,8 @@ public final class ReflectionUtils {
 	 * Get the outermost instance of the required type, searching recursively
 	 * through enclosing instances.
 	 *
-	 * <p>If the supplied inner object is of the required type, it will simply
-	 * be returned.
+	 * <p>If the supplied inner object is of the required type, it will be
+	 * returned.
 	 *
 	 * @param inner the inner object from which to begin the search; never {@code null}
 	 * @param requiredType the required type of the outermost instance; never {@code null}
@@ -1705,8 +1705,7 @@ public final class ReflectionUtils {
 	 * {@link InvocationTargetException}, this method will be invoked
 	 * recursively with the underlying
 	 * {@linkplain InvocationTargetException#getTargetException() target
-	 * exception}; otherwise, this method simply returns the supplied
-	 * {@code Throwable}.
+	 * exception}; otherwise, this method returns the supplied {@code Throwable}.
 	 */
 	private static Throwable getUnderlyingCause(Throwable t) {
 		if (t instanceof InvocationTargetException) {
