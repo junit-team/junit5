@@ -253,7 +253,7 @@ public interface <span class="type-name-label">TestEngine</span></pre>
 
  <p>This information is used solely for debugging and reporting purposes.
 
- <p>The default implementation simply returns an empty <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>,
+ <p>The default implementation returns an empty <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>,
  signaling that the group ID is unknown.
 
  <p>Concrete test engine implementations may override this method in
@@ -286,7 +286,7 @@ public interface <span class="type-name-label">TestEngine</span></pre>
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Package.html" title="class or interface in java.lang" class="external-link"><code>Package</code></a> instance with the attributes from the manifest.
 
  <p>If the implementation title cannot be queried from the package
- attributes, the default implementation simply returns an empty
+ attributes, the default implementation returns an empty
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>.
 
  <p>Concrete test engine implementations may override this method in
