@@ -38,7 +38,8 @@ on GitHub.
 * Documented constant value of `ExclusiveResource.GLOBAL_KEY`.
 * Instances of `TestIdentifier` and `UniqueId` now retain less memory because they no
   longer store `String` representations of unique IDs.
-
+* Improvement of `ExclusiveResource` handling, if a `Node` has only read locks and no read-write locks,
+  then descendants are not forced into `SAME_THREAD` execution, and can run concurrently.
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
 === JUnit Jupiter

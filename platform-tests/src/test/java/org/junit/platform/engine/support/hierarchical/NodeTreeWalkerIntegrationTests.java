@@ -15,6 +15,7 @@ import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ_WRITE;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -25,6 +26,7 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.TestDescriptor;
@@ -52,6 +54,70 @@ class NodeTreeWalkerIntegrationTests {
 		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
 		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(List.of());
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
+	}
+
+	@Test
+	void setsForceExecutionModeForChildrenWithWriteLocksOnClass() {
+		var engineDescriptor = discover(TestCaseWithResourceWriteLockOnClass.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getReadWriteLock("a")));
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
+
+		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(List.of());
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
+	}
+
+	@Test
+	void doesntSetForceExecutionModeForChildrenWithReadLocksOnClass() {
+		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClass.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getReadLock("a")));
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
+
+		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(List.of());
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).isEmpty();
+	}
+
+	@Test
+	void setsForceExecutionModeForChildrenWithReadLocksOnClassAndWriteLockOnTest() {
+		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndWriteClockOnTest.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getReadWriteLock("a")));
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
+
+		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(List.of());
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
+	}
+
+	@Test
+	void doesntSetForceExecutionModeForChildrenWithReadLocksOnClassAndReadLockOnTest() {
+		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndReadClockOnTest.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getReadLock("a"), getReadLock("b")));
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
+
+		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(List.of());
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).isEmpty();
 	}
 
 	@Test
@@ -112,6 +178,10 @@ class NodeTreeWalkerIntegrationTests {
 		return getLock(new ExclusiveResource(key, READ_WRITE));
 	}
 
+	private Lock getReadLock(String key) {
+		return getLock(new ExclusiveResource(key, READ));
+	}
+
 	private Lock getLock(ExclusiveResource exclusiveResource) {
 		return getOnlyElement(ResourceLockSupport.getLocks(lockManager.getLockForResource(exclusiveResource)));
 	}
@@ -152,6 +222,36 @@ class NodeTreeWalkerIntegrationTests {
 			@ResourceLock(ExclusiveResource.GLOBAL_KEY)
 			void test() {
 			}
+		}
+	}
+
+	@ResourceLock("a")
+	static class TestCaseWithResourceWriteLockOnClass {
+		@Test
+		void test() {
+		}
+	}
+
+	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
+	static class TestCaseWithResourceReadLockOnClass {
+		@Test
+		void test() {
+		}
+	}
+
+	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
+	static class TestCaseWithResourceReadLockOnClassAndWriteClockOnTest {
+		@Test
+		@ResourceLock("a")
+		void test() {
+		}
+	}
+
+	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
+	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTest {
+		@Test
+		@ResourceLock(value = "b", mode = ResourceAccessMode.READ)
+		void test() {
 		}
 	}
 }
