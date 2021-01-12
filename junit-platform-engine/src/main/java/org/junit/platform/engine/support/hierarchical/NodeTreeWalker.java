@@ -57,19 +57,37 @@ class NodeTreeWalker {
 		}
 		else {
 			Set<ExclusiveResource> allResources = new HashSet<>(exclusiveResources);
-			advisor.forceDescendantExecutionMode(testDescriptor, SAME_THREAD);
-			doForChildrenRecursively(testDescriptor, child -> {
-				allResources.addAll(getExclusiveResources(child));
-				advisor.forceDescendantExecutionMode(child, SAME_THREAD);
-			});
+			if (isReadOnly(allResources)) {
+				doForChildrenRecursively(testDescriptor, child -> allResources.addAll(getExclusiveResources(child)));
+				if (!isReadOnly(allResources)) {
+					forceDescendantExecutionModeRecursively(advisor, testDescriptor);
+				}
+			}
+			else {
+				advisor.forceDescendantExecutionMode(testDescriptor, SAME_THREAD);
+				doForChildrenRecursively(testDescriptor, child -> {
+					allResources.addAll(getExclusiveResources(child));
+					advisor.forceDescendantExecutionMode(child, SAME_THREAD);
+				});
+			}
 			if (!globalLockDescriptor.equals(testDescriptor) && allResources.contains(GLOBAL_READ_WRITE)) {
-				advisor.forceDescendantExecutionMode(globalLockDescriptor, SAME_THREAD);
-				doForChildrenRecursively(globalLockDescriptor,
-					child -> advisor.forceDescendantExecutionMode(child, SAME_THREAD));
+				forceDescendantExecutionModeRecursively(advisor, globalLockDescriptor);
 				advisor.useResourceLock(globalLockDescriptor, globalReadWriteLock);
 			}
 			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(allResources));
 		}
+	}
+
+	private void forceDescendantExecutionModeRecursively(NodeExecutionAdvisor advisor,
+			TestDescriptor globalLockDescriptor) {
+		advisor.forceDescendantExecutionMode(globalLockDescriptor, SAME_THREAD);
+		doForChildrenRecursively(globalLockDescriptor,
+			child -> advisor.forceDescendantExecutionMode(child, SAME_THREAD));
+	}
+
+	private boolean isReadOnly(Set<ExclusiveResource> exclusiveResources) {
+		return exclusiveResources.stream().allMatch(
+			exclusiveResource -> exclusiveResource.getLockMode() == ExclusiveResource.LockMode.READ);
 	}
 
 	private Set<ExclusiveResource> getExclusiveResources(TestDescriptor testDescriptor) {
