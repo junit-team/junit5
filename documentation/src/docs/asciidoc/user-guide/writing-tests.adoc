@@ -1010,6 +1010,15 @@ palindromes(String) ✔
 └─ [3] candidate=able was I ere I saw elba ✔
 ....
 
+If you want ot make the display name of the @ParameterizedTest include the method name, you can define your own custom
+pattern or use the predefined ParameterizedTest.LONG_DISPLAY_NAME pattern. The following example demonstrates a
+parameterized test with ParameterizedTest.LONG_DISPLAY_NAME.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=long_display_name_example]
+----
+
 [[writing-tests-parameterized-tests-setup]]
 ==== Required Setup
 

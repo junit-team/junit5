@@ -74,6 +74,14 @@ class ParameterizedTestDemo {
 	}
 	// end::first_example[]
 
+	// tag::long_display_name_example[]
+	@ParameterizedTest(name = ParameterizedTest.LONG_DISPLAY_NAME)
+	@ValueSource(strings = { "racecar", "radar", "able was I ere I saw elba" })
+	void palindromesWithLongPattern(String candidate) {
+		assertTrue(StringUtils.isPalindrome(candidate));
+	}
+	// end::long_display_name_example[]
+
 	// tag::ValueSource_example[]
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })

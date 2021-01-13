@@ -163,6 +163,22 @@ public @interface ParameterizedTest {
 	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
 
 	/**
+	 * <em>Short</em> display name pattern for a parameterized test: {@value}
+	 *
+	 * @see #INDEX_PLACEHOLDER
+	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 */
+	String SHORT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+
+	/**
+	 * <em>Long</em> display name pattern for a parameterized test: {@value}
+	 *
+	 * @see #DISPLAY_NAME_PLACEHOLDER
+	 * @see #SHORT_DISPLAY_NAME
+	 */
+	String LONG_DISPLAY_NAME = DISPLAY_NAME_PLACEHOLDER + " :: " + SHORT_DISPLAY_NAME;
+
+	/**
 	 * Default display name pattern for the current invocation of a
 	 * {@code @ParameterizedTest} method: {@value}
 	 *
@@ -176,7 +192,7 @@ public @interface ParameterizedTest {
 	 * @see #INDEX_PLACEHOLDER
 	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 */
-	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+	String DEFAULT_DISPLAY_NAME = SHORT_DISPLAY_NAME;
 
 	/**
 	 * The display name to be used for individual invocations of the
