@@ -10,8 +10,6 @@ plugins {
 	id("io.spring.nohttp")
 }
 
-apply(from = "gradle/build-scan-user-data.gradle")
-
 val buildTimeAndDate by extra {
 
 	// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against
