@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":1,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6};
+<script type="text/javascript">var data = {"i0":1,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -51,13 +51,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -140,6 +140,34 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 </div>
 </section>
 </li>
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field.summary">
+<h2>Field Summary</h2>
+<div class="member-summary">
+<table class="summary-table">
+<caption><span>Fields</span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Field</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#DEFAULT">DEFAULT</a></span></code></th>
+<td class="col-last">
+<div class="block">The default <code>LauncherConfig</code> which uses automatic registration for
+ test engines, supported listeners, and post-discovery filters.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method.summary">
@@ -164,6 +192,22 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 </td>
 </tr>
 <tr class="row-color" id="i1">
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getAdditionalLauncherDiscoveryListeners()">getAdditionalLauncherDiscoveryListeners</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Get the collection of additional launcher discovery listeners that should
+ be added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i2">
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../LauncherSessionListener.html" title="interface in org.junit.platform.launcher">LauncherSessionListener</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getAdditionalLauncherSessionListeners()">getAdditionalLauncherSessionListeners</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Get the collection of additional launcher session listeners that should
+ be added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getAdditionalPostDiscoveryFilters()">getAdditionalPostDiscoveryFilters</a></span>()</code></th>
 <td class="col-last">
@@ -171,7 +215,7 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
  added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getAdditionalTestEngines()">getAdditionalTestEngines</a></span>()</code></th>
 <td class="col-last">
@@ -179,7 +223,7 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
  the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="row-color" id="i5">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getAdditionalTestExecutionListeners()">getAdditionalTestExecutionListeners</a></span>()</code></th>
 <td class="col-last">
@@ -187,7 +231,7 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
  added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isLauncherDiscoveryListenerAutoRegistrationEnabled()">isLauncherDiscoveryListenerAutoRegistrationEnabled</a></span>()</code></th>
 <td class="col-last">
@@ -196,7 +240,16 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
  automatically registered.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="row-color" id="i7">
+<td class="col-first"><code>boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isLauncherSessionListenerAutoRegistrationEnabled()">isLauncherSessionListenerAutoRegistrationEnabled</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Determine if launcher session listeners should be discovered at runtime
+ using the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html" title="class or interface in java.util" class="external-link"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isPostDiscoveryFilterAutoRegistrationEnabled()">isPostDiscoveryFilterAutoRegistrationEnabled</a></span>()</code></th>
 <td class="col-last">
@@ -205,7 +258,7 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
  automatically registered.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isTestEngineAutoRegistrationEnabled()">isTestEngineAutoRegistrationEnabled</a></span>()</code></th>
 <td class="col-last">
@@ -214,7 +267,7 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
  automatically registered.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isTestExecutionListenerAutoRegistrationEnabled()">isTestExecutionListenerAutoRegistrationEnabled</a></span>()</code></th>
 <td class="col-last">
@@ -233,6 +286,22 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field.detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="DEFAULT">
+<h3>DEFAULT</h3>
+<div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a></span>&nbsp;<span class="member-name">DEFAULT</span></div>
+<div class="block">The default <code>LauncherConfig</code> which uses automatic registration for
+ test engines, supported listeners, and post-discovery filters.</div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ============ METHOD DETAIL ========== -->
 <li>
 <section class="method-details" id="method.detail">
@@ -248,6 +317,24 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>true</code> if test engines should be automatically registered</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isLauncherSessionListenerAutoRegistrationEnabled()">
+<h3>isLauncherSessionListenerAutoRegistrationEnabled</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
+</span><span class="return-type">boolean</span>&nbsp;<span class="member-name">isLauncherSessionListenerAutoRegistrationEnabled</span>()</div>
+<div class="block">Determine if launcher session listeners should be discovered at runtime
+ using the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html" title="class or interface in java.util" class="external-link"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><code>true</code> if launcher session listeners should be
+ automatically registered</dd>
+<dt>Since:</dt>
+<dd>1.8</dd>
 </dl>
 </section>
 </li>
@@ -311,6 +398,40 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 <dt>Returns:</dt>
 <dd>the collection of additional test engines; never <code>null</code> but
  potentially empty</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAdditionalLauncherSessionListeners()">
+<h3>getAdditionalLauncherSessionListeners</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
+</span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../LauncherSessionListener.html" title="interface in org.junit.platform.launcher">LauncherSessionListener</a>&gt;</span>&nbsp;<span class="member-name">getAdditionalLauncherSessionListeners</span>()</div>
+<div class="block">Get the collection of additional launcher session listeners that should
+ be added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the collection of additional launcher session listeners; never
+ <code>null</code> but potentially empty</dd>
+<dt>Since:</dt>
+<dd>1.8</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAdditionalLauncherDiscoveryListeners()">
+<h3>getAdditionalLauncherDiscoveryListeners</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
+</span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryListener</a>&gt;</span>&nbsp;<span class="member-name">getAdditionalLauncherDiscoveryListeners</span>()</div>
+<div class="block">Get the collection of additional launcher discovery listeners that should
+ be added to the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the collection of additional launcher discovery listeners; never
+ <code>null</code> but potentially empty</dd>
+<dt>Since:</dt>
+<dd>1.8</dd>
 </dl>
 </section>
 </li>
@@ -385,13 +506,13 @@ public interface <span class="type-name-label">LauncherConfig</span></pre>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

@@ -228,6 +228,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html#close()">close()</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">SameThreadHierarchicalTestExecutorService</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html#close()">close()</a></span> - Method in interface org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html" title="interface in org.junit.platform.launcher">LauncherSession</a></dt>
+<dd>
+<div class="block">Close this session and notify all registered
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html" title="interface in org.junit.platform.launcher"><code>LauncherSessionListeners</code></a>.</div>
+</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/ExtensionValuesStore.html#closeAllStoredCloseableValues()">closeAllStoredCloseableValues()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/ExtensionValuesStore.html" title="class in org.junit.jupiter.engine.execution">ExtensionValuesStore</a></dt>
 <dd>
 <div class="block">Close all values that implement <a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a>.</div>
@@ -253,6 +258,8 @@ loadScripts(document, 'script');</script>
  filters in the supplied array of <a href="../org.junit.platform.engine/org/junit/platform/engine/Filter.html" title="interface in org.junit.platform.engine"><code>filters</code></a> include it.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/discovery/LauncherDiscoveryListeners.html#composite(java.util.List)">composite(List&lt;LauncherDiscoveryListener&gt;)</a></span> - Static method in class org.junit.platform.launcher.listeners.discovery.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/discovery/LauncherDiscoveryListeners.html" title="class in org.junit.platform.launcher.listeners.discovery">LauncherDiscoveryListeners</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/session/LauncherSessionListeners.html#composite(java.util.List)">composite(List&lt;LauncherSessionListener&gt;)</a></span> - Static method in class org.junit.platform.launcher.listeners.session.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/session/LauncherSessionListeners.html" title="class in org.junit.platform.launcher.listeners.session">LauncherSessionListeners</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/CompositeTestSource.html" title="class in org.junit.platform.engine.support.descriptor"><span class="type-name-link">CompositeTestSource</span></a> - Class in <a href="../org.junit.platform.engine/org/junit/platform/engine/support/descriptor/package-summary.html">org.junit.platform.engine.support.descriptor</a></dt>
 <dd>
@@ -485,8 +492,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html#create()">create()</a></span> - Static method in class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core">LauncherFactory</a></dt>
 <dd>
-<div class="block">Factory method for creating a new <a href="../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> using automatic
- registration for test engines and test execution listeners.</div>
+<div class="block">Factory method for creating a new <a href="../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> using the
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html#DEFAULT">default</a> <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Namespace.html#create(java.lang.Object...)">create(Object...)</a></span> - Static method in class org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension">ExtensionContext.Namespace</a></dt>
 <dd>

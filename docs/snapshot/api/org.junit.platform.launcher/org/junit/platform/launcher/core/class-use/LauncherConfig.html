@@ -84,6 +84,28 @@ loadScripts(document, 'script');</script>
 <h2>Uses of <a href="../LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a> in <a href="../package-summary.html">org.junit.platform.launcher.core</a></h2>
 <div class="use-summary">
 <table class="summary-table">
+<caption><span>Fields in <a href="../package-summary.html">org.junit.platform.launcher.core</a> declared as <a href="../LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Field</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="../LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">LauncherConfig.</span><code><span class="member-name-link"><a href="../LauncherConfig.html#DEFAULT">DEFAULT</a></span></code></th>
+<td class="col-last">
+<div class="block">The default <code>LauncherConfig</code> which uses automatic registration for
+ test engines, supported listeners, and post-discovery filters.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="use-summary">
+<table class="summary-table">
 <caption><span>Methods in <a href="../package-summary.html">org.junit.platform.launcher.core</a> that return <a href="../LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a></span></caption>
 <thead>
 <tr>
@@ -121,6 +143,14 @@ loadScripts(document, 'script');</script>
 <td class="col-last">
 <div class="block">Factory method for creating a new <a href="../../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> using the supplied
  <a href="../LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static <a href="../../LauncherSession.html" title="interface in org.junit.platform.launcher">LauncherSession</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">LauncherFactory.</span><code><span class="member-name-link"><a href="../LauncherFactory.html#openSession(org.junit.platform.launcher.core.LauncherConfig)">openSession</a></span>&#8203;(<a href="../LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a>&nbsp;config)</code></th>
+<td class="col-last">
+<div class="block">Factory method for opening a new <a href="../../LauncherSession.html" title="interface in org.junit.platform.launcher"><code>LauncherSession</code></a> using the
+ supplied <a href="../LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
 </td>
 </tr>
 </tbody>

@@ -55,6 +55,7 @@ org.junit.platform.launcher
 org.junit.platform.launcher.core
 org.junit.platform.launcher.listeners
 org.junit.platform.launcher.listeners.discovery
+org.junit.platform.launcher.listeners.session
 org.junit.platform.launcher.tagexpression
 module:org.junit.platform.reporting
 org.junit.platform.reporting.legacy

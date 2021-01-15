@@ -95,8 +95,8 @@ loadScripts(document, 'script');</script>
 public interface <span class="type-name-label">LauncherDiscoveryListener</span>
 extends <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineDiscoveryListener.html" title="interface in org.junit.platform.engine">EngineDiscoveryListener</a></pre>
 <div class="block">Register a concrete implementation of this interface with a
- <a href="core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a>
- to be notified of events that occur during test discovery.
+ <a href="core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a> or
+ <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> to be notified of events that occur during test discovery.
 
  <p>All methods in this interface have empty <em>default</em> implementations.
  Concrete implementations may therefore override one or more of these methods
@@ -114,7 +114,8 @@ extends <a href="../../../../../org.junit.platform.engine/org/junit/platform/eng
 <dd>1.6</dd>
 <dt>See Also:</dt>
 <dd><a href="listeners/discovery/LauncherDiscoveryListeners.html" title="class in org.junit.platform.launcher.listeners.discovery"><code>LauncherDiscoveryListeners</code></a>, 
-<a href="LauncherDiscoveryRequest.html#getDiscoveryListener()"><code>LauncherDiscoveryRequest.getDiscoveryListener()</code></a></dd>
+<a href="LauncherDiscoveryRequest.html#getDiscoveryListener()"><code>LauncherDiscoveryRequest.getDiscoveryListener()</code></a>, 
+<a href="core/LauncherConfig.Builder.html#addLauncherDiscoveryListeners(org.junit.platform.launcher.LauncherDiscoveryListener...)"><code>LauncherConfig.Builder.addLauncherDiscoveryListeners(org.junit.platform.launcher.LauncherDiscoveryListener...)</code></a></dd>
 </dl>
 </section>
 <section class="summary">

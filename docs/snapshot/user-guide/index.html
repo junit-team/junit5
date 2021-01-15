@@ -741,15 +741,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#launcher-api-execution">6.1.2. Executing Tests</a></li>
 <li><a href="#launcher-api-engines-custom">6.1.3. Plugging in your own Test Engine</a></li>
 <li><a href="#launcher-api-post-discovery-filters-custom">6.1.4. Plugging in your own Post-Discovery Filters</a></li>
-<li><a href="#launcher-api-launcher-discovery-listeners-custom">6.1.5. Plugging in your own Discovery Listeners</a></li>
-<li><a href="#launcher-api-listeners-custom">6.1.6. Plugging in your own Execution Listener</a></li>
-<li><a href="#launcher-api-listeners-custom-deactivation">6.1.7. Deactivating Execution Listeners</a>
+<li><a href="#launcher-api-launcher-session-listeners-custom">6.1.5. Plugging in your own Launcher Sessions Listeners</a></li>
+<li><a href="#launcher-api-launcher-discovery-listeners-custom">6.1.6. Plugging in your own Discovery Listeners</a></li>
+<li><a href="#launcher-api-listeners-custom">6.1.7. Plugging in your own Execution Listener</a></li>
+<li><a href="#launcher-api-listeners-custom-deactivation">6.1.8. Deactivating Execution Listeners</a>
 <ul class="sectlevel4">
 <li><a href="#launcher-api-listeners-custom-deactivation-pattern">Pattern Matching Syntax</a></li>
 </ul>
 </li>
-<li><a href="#launcher-api-listeners-reporting">6.1.8. JUnit Platform Reporting</a></li>
-<li><a href="#launcher-api-launcher-config">6.1.9. Configuring the Launcher</a></li>
+<li><a href="#launcher-api-listeners-reporting">6.1.9. JUnit Platform Reporting</a></li>
+<li><a href="#launcher-api-launcher-config">6.1.10. Configuring the Launcher</a></li>
 </ul>
 </li>
 <li><a href="#testkit">6.2. JUnit Platform Test Kit</a>
@@ -7125,8 +7126,8 @@ instance of the extension via the <code>docs</code> field if necessary.</p>
 <p>In addition to <a href="#extensions-registration-declarative">declarative extension registration</a>
 and <a href="#extensions-registration-programmatic">programmatic extension registration</a> support
 using annotations, JUnit Jupiter also supports <em>global extension registration</em> via Java&#8217;s
-<code>java.util.ServiceLoader</code> mechanism, allowing third-party extensions to be auto-detected
-and automatically registered based on what is available in the classpath.</p>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism, allowing third-party extensions to be auto-detected and
+automatically registered based on what is available in the classpath.</p>
 </div>
 <div class="paragraph">
 <p>Specifically, a custom extension can be registered by supplying its fully qualified class
@@ -7150,7 +7151,7 @@ following system property.</p>
 <p><code>-Djunit.jupiter.extensions.autodetection.enabled=true</code></p>
 </div>
 <div class="paragraph">
-<p>When auto-detection is enabled, extensions discovered via the <code>ServiceLoader</code> mechanism
+<p>When auto-detection is enabled, extensions discovered via the <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism
 will be added to the extension registry after JUnit Jupiter&#8217;s global extensions (e.g.,
 support for <code>TestInfo</code>, <code>TestReporter</code>, etc.).</p>
 </div>
@@ -8450,8 +8451,14 @@ through to identify test classes and test methods in the past.</p>
 <span class="kn">import</span> <span class="nn">java.nio.file.Path</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.nio.file.Paths</span><span class="o">;</span>
 
+<span class="kn">import</span> <span class="nn">org.junit.platform.engine.FilterResult</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.engine.TestDescriptor</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.launcher.Launcher</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherDiscoveryListener</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherDiscoveryRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSession</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSessionListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.PostDiscoveryFilter</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestExecutionListener</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestPlan</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.launcher.core.LauncherConfig</span><span class="o">;</span>
@@ -8474,9 +8481,11 @@ through to identify test classes and test methods in the past.</p>
     <span class="o">)</span>
     <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
-<span class="nc">Launcher</span> <span class="n">launcher</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+<span class="k">try</span> <span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">())</span> <span class="o">{</span>
+    <span class="nc">TestPlan</span> <span class="n">testPlan</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">().</span><span class="na">discover</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
 
-<span class="nc">TestPlan</span> <span class="n">testPlan</span> <span class="o">=</span> <span class="n">launcher</span><span class="o">.</span><span class="na">discover</span><span class="o">(</span><span class="n">request</span><span class="o">);</span></code></pre>
+    <span class="c1">// ... discover additional test plans or execute tests</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8520,16 +8529,22 @@ following example.</p>
     <span class="o">)</span>
     <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
-<span class="nc">Launcher</span> <span class="n">launcher</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
-
-<span class="c1">// Register a listener of your choice</span>
 <span class="nc">SummaryGeneratingListener</span> <span class="n">listener</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SummaryGeneratingListener</span><span class="o">();</span>
-<span class="n">launcher</span><span class="o">.</span><span class="na">registerTestExecutionListeners</span><span class="o">(</span><span class="n">listener</span><span class="o">);</span>
 
-<span class="n">launcher</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+<span class="k">try</span> <span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">())</span> <span class="o">{</span>
+    <span class="nc">Launcher</span> <span class="n">launcher</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">();</span>
+    <span class="c1">// Register a listener of your choice</span>
+    <span class="n">launcher</span><span class="o">.</span><span class="na">registerTestExecutionListeners</span><span class="o">(</span><span class="n">listener</span><span class="o">);</span>
+    <span class="c1">// Discover tests and build a test plan</span>
+    <span class="nc">TestPlan</span> <span class="n">testPlan</span> <span class="o">=</span> <span class="n">launcher</span><span class="o">.</span><span class="na">discover</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+    <span class="c1">// Execute test plan</span>
+    <span class="n">launcher</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">testPlan</span><span class="o">);</span>
+    <span class="c1">// Alternatively, execute the request directly</span>
+    <span class="n">launcher</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+<span class="o">}</span>
 
 <span class="nc">TestExecutionSummary</span> <span class="n">summary</span> <span class="o">=</span> <span class="n">listener</span><span class="o">.</span><span class="na">getSummary</span><span class="o">();</span>
-<span class="c1">// Do something with the TestExecutionSummary.</span></code></pre>
+<span class="c1">// Do something with the summary...</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8557,11 +8572,10 @@ tests with the launcher infrastructure.</p>
 <div class="paragraph">
 <p>Third parties may also contribute their own <code>TestEngine</code> by implementing the interfaces
 in the <a href="../api/org.junit.platform.engine/org/junit/platform/engine/package-summary.html">junit-platform-engine</a> module and <em>registering</em> their engine. By default, engine
-registration is supported via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism. For example,
-the <code>junit-jupiter-engine</code> module registers its
-<code>org.junit.jupiter.engine.JupiterTestEngine</code> in a file named
-<code>org.junit.platform.engine.TestEngine</code> within the <code>/META-INF/services</code> in the
-<code>junit-jupiter-engine</code> JAR.</p>
+registration is supported via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism. For example, the
+<code>junit-jupiter-engine</code> module registers its <code>org.junit.jupiter.engine.JupiterTestEngine</code>
+in a file named <code>org.junit.platform.engine.TestEngine</code> within the <code>/META-INF/services</code> in
+the <code>junit-jupiter-engine</code> JAR.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -8613,8 +8627,8 @@ violations.</p>
 <div class="paragraph">
 <p>In addition to specifying post-discovery filters as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
 passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, by default custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html">PostDiscoveryFilter</a></code> implementations
-will be discovered at runtime via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism and
-automatically applied by the <code>Launcher</code> in addition to those that are part of the request.</p>
+will be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
+applied by the <code>Launcher</code> in addition to those that are part of the request.</p>
 </div>
 <div class="paragraph">
 <p>For example, an <code>example.CustomTagFilter</code> class implementing <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html">PostDiscoveryFilter</a></code> and
@@ -8623,40 +8637,58 @@ file is loaded and applied automatically.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-launcher-discovery-listeners-custom"><a class="anchor" href="#launcher-api-launcher-discovery-listeners-custom"></a>6.1.5. Plugging in your own Discovery Listeners</h4>
+<h4 id="launcher-api-launcher-session-listeners-custom"><a class="anchor" href="#launcher-api-launcher-session-listeners-custom"></a>6.1.5. Plugging in your own Launcher Sessions Listeners</h4>
 <div class="paragraph">
-<p>In addition to specifying post-discovery filters as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
-passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code> implementations can
-be discovered at runtime via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism and automatically
-automatically registered with the <code>Launcher</code> created via the <code>LauncherFactory</code>.</p>
+<p>Registered implementations of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> are notified when a
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code> is opened, i.e. before a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> first discovers and executes
+tests, and closed, i.e. when no more tests will be discovered or executed. They can be
+registered programmatically on the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> that is passed to
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code> or, unless disabled, will be discovered at runtime via Java&#8217;s
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, an <code>example.CustomLauncherSessionListener</code> class implementing
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> and declared within the
+<code>/META-INF/services/org.junit.platform.launcher.LauncherSessionListener</code> file is loaded
+and registered automatically.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-launcher-discovery-listeners-custom"><a class="anchor" href="#launcher-api-launcher-discovery-listeners-custom"></a>6.1.6. Plugging in your own Discovery Listeners</h4>
+<div class="paragraph">
+<p>In addition to specifying discovery listeners as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
+or registering them programmatically using the public <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method,  custom
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code> implementations can be discovered at runtime via Java&#8217;s
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> created via
+the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
 </div>
 <div class="paragraph">
 <p>For example, an <code>example.CustomLauncherDiscoveryListener</code> class implementing
 <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code> and declared within the
 <code>/META-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener</code> file is loaded
-and applied automatically.</p>
+and registered automatically.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>6.1.6. Plugging in your own Execution Listener</h4>
+<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>6.1.7. Plugging in your own Execution Listener</h4>
 <div class="paragraph">
 <p>In addition to the public <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution
 listeners programmatically, by default custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations
-will be discovered at runtime via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism and
-automatically registered with the <code>Launcher</code> created via the <code>LauncherFactory</code>.</p>
+will be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
+registered with the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> created via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
 </div>
 <div class="paragraph">
-<p>For example, an <code>example.TestInfoPrinter</code> class implementing <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> and
-declared within the
+<p>For example, an <code>example.CustomTestExecutionListener</code> class implementing
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> and declared within the
 <code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file is loaded and
 registered automatically.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.1.7. Deactivating Execution Listeners</h4>
+<h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.1.8. Deactivating Execution Listeners</h4>
 <div class="paragraph">
 <p>Sometimes it can be useful to run a test suite <em>without</em> certain execution listeners being
-active. For example, you might have custom a <code>TestExecutionListener</code> that sends the test
+active. For example, you might have custom a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> that sends the test
 results to an external system for reporting purposes, and while debugging you might not
 want these <em>debug</em> results to be reported. To do this, provide a pattern for the
 <code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em> to specify which
@@ -8670,10 +8702,10 @@ execution listeners should be deactivated (i.e. not registered) for the current 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Only listeners registered via the <code>ServiceLoader</code> mechanism within the
+<p>Only listeners registered via the <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism within the
 <code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file can be
 deactivated. In other words, any <code>TestExecutionListener</code> registered explicitly via the
-<code>LauncherDiscoveryRequest</code> cannot be deactivated via the
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> cannot be deactivated via the
 <code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em>.</p>
 </div>
 <div class="paragraph">
@@ -8681,7 +8713,7 @@ deactivated. In other words, any <code>TestExecutionListener</code> registered e
 <code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em> can only be
 supplied as a JVM system property or via the JUnit Platform configuration file (see
 <a href="#running-tests-config-params">Configuration Parameters</a> for details). This <em>configuration parameter</em> cannot be
-supplied in the <code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>.</p>
+supplied in the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> that is passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code>.</p>
 </div>
 </td>
 </tr>
@@ -8695,7 +8727,7 @@ supplied in the <code>LauncherDiscoveryRequest</code> that is passed to the <cod
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-reporting"><a class="anchor" href="#launcher-api-listeners-reporting"></a>6.1.8. JUnit Platform Reporting</h4>
+<h4 id="launcher-api-listeners-reporting"><a class="anchor" href="#launcher-api-listeners-reporting"></a>6.1.9. JUnit Platform Reporting</h4>
 <div class="paragraph">
 <p>The <code>junit-platform-reporting</code> artifact contains <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>
 implementations that generate test reports. These listeners are typically used by IDEs
@@ -8729,31 +8761,36 @@ implementations that can be used for reporting purposes. See <code><a href="../a
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.1.9. Configuring the Launcher</h4>
+<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.1.10. Configuring the Launcher</h4>
 <div class="paragraph">
 <p>If you require fine-grained control over automatic detection and registration of test
-engines and test execution listeners, you may create an instance of <code>LauncherConfig</code> and
-supply that to the <code>LauncherFactory.create(LauncherConfig)</code> method. Typically an instance
-of <code>LauncherConfig</code> is created via the built-in fluent <em>builder</em> API, as demonstrated in
-the following example.</p>
+engines and test execution listeners, you may create an instance of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> and
+supply that to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>. Typically, an instance of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> is
+created via the built-in fluent <em>builder</em> API, as demonstrated in the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="nc">LauncherConfig</span> <span class="n">launcherConfig</span> <span class="o">=</span> <span class="nc">LauncherConfig</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
     <span class="o">.</span><span class="na">enableTestEngineAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">enableLauncherSessionListenerAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">enableLauncherDiscoveryListenerAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">enablePostDiscoveryFilterAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
     <span class="o">.</span><span class="na">enableTestExecutionListenerAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
     <span class="o">.</span><span class="na">addTestEngines</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomTestEngine</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">addLauncherSessionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomLauncherSessionListener</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">addLauncherDiscoveryListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomLauncherDiscoveryListener</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">addPostDiscoveryFilters</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomPostDiscoveryFilter</span><span class="o">())</span>
     <span class="o">.</span><span class="na">addTestExecutionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">LegacyXmlReportGeneratingListener</span><span class="o">(</span><span class="n">reportsDir</span><span class="o">,</span> <span class="n">out</span><span class="o">))</span>
     <span class="o">.</span><span class="na">addTestExecutionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomTestExecutionListener</span><span class="o">())</span>
     <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-
-<span class="nc">Launcher</span> <span class="n">launcher</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">launcherConfig</span><span class="o">);</span>
 
 <span class="nc">LauncherDiscoveryRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="nc">LauncherDiscoveryRequestBuilder</span><span class="o">.</span><span class="na">request</span><span class="o">()</span>
     <span class="o">.</span><span class="na">selectors</span><span class="o">(</span><span class="n">selectPackage</span><span class="o">(</span><span class="s">"com.example.mytests"</span><span class="o">))</span>
     <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
-<span class="n">launcher</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">request</span><span class="o">);</span></code></pre>
+<span class="k">try</span> <span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="n">launcherConfig</span><span class="o">))</span> <span class="o">{</span>
+    <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 </div>
@@ -9569,6 +9606,16 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherSession</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherSessionListener</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher.listeners.discovery</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherDiscoveryListeners</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
@@ -9896,7 +9943,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-12 11:55:57 UTC
+Last updated 2021-01-15 13:41:56 UTC
 </div>
 </div>
 <style>

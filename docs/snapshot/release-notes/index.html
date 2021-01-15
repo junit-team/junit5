@@ -562,7 +562,7 @@ and registered test engines.</p>
 </li>
 <li>
 <p>Custom <code>LauncherDiscoveryListener</code> implementations can now be registered via Java’s
-<code>ServiceLoader</code> mechanism.</p>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
 </li>
 <li>
 <p>Documented constant value of <code>ExclusiveResource.GLOBAL_KEY</code>.</p>
@@ -574,6 +574,12 @@ longer store <code>String</code> representations of unique IDs.</p>
 <li>
 <p>Improvement of <code>ExclusiveResource</code> handling, if a <code>Node</code> has only read locks and no read-write locks,
 then descendants are not forced into <code>SAME_THREAD</code> execution, and can run concurrently.</p>
+</li>
+<li>
+<p>Tools that make multiple calls to the <code>Launcher</code> API should now create a
+<code>LauncherSession</code> instead in order to allow for executing global setup and teardown code
+exactly once via the new <code>LauncherSessionListener</code> interface that can be registered via
+Java’s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
 </li>
 </ul>
 </div>
@@ -855,7 +861,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-12 11:55:57 UTC
+Last updated 2021-01-15 13:41:56 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

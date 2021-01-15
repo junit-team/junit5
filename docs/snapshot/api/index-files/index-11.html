@@ -87,8 +87,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html" title="interface in org.junit.platform.launcher"><span class="type-name-link">LauncherDiscoveryListener</span></a> - Interface in <a href="../org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a></dt>
 <dd>
 <div class="block">Register a concrete implementation of this interface with a
- <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a>
- to be notified of events that occur during test discovery.</div>
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a> or
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> to be notified of events that occur during test discovery.</div>
 </dd>
 <dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/discovery/LauncherDiscoveryListeners.html" title="class in org.junit.platform.launcher.listeners.discovery"><span class="type-name-link">LauncherDiscoveryListeners</span></a> - Class in <a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/discovery/package-summary.html">org.junit.platform.launcher.listeners.discovery</a></dt>
 <dd>
@@ -126,6 +126,34 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Factory for creating <a href="../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instances by invoking <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html#create()"><code>LauncherFactory.create()</code></a>
  or <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html#create(org.junit.platform.launcher.core.LauncherConfig)"><code>LauncherFactory.create(LauncherConfig)</code></a>.</div>
+</dd>
+<dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html" title="interface in org.junit.platform.launcher"><span class="type-name-link">LauncherSession</span></a> - Interface in <a href="../org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a></dt>
+<dd>
+<div class="block">The <code>LauncherSession</code> API is the main entry point for client code that
+ wishes to repeatedly <em>discover</em> and <em>execute</em> tests using one
+ or more <a href="../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">test engines</a>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html#launcherSessionClosed(org.junit.platform.launcher.LauncherSession)">launcherSessionClosed(LauncherSession)</a></span> - Method in interface org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html" title="interface in org.junit.platform.launcher">LauncherSessionListener</a></dt>
+<dd>
+<div class="block">Called when a launcher session was closed.</div>
+</dd>
+<dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html" title="interface in org.junit.platform.launcher"><span class="type-name-link">LauncherSessionListener</span></a> - Interface in <a href="../org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a></dt>
+<dd>
+<div class="block">Register an implementation of this interface with the
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.Builder.html#addLauncherSessionListeners(org.junit.platform.launcher.LauncherSessionListener...)"><code>LauncherConfig</code></a>
+ passed to
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html#openSession(org.junit.platform.launcher.core.LauncherConfig)"><code>LauncherFactory</code></a> or via
+ ServiceLoader to be notified when a <a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html" title="interface in org.junit.platform.launcher"><code>LauncherSession</code></a> is opened and
+ closed.</div>
+</dd>
+<dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/session/LauncherSessionListeners.html" title="class in org.junit.platform.launcher.listeners.session"><span class="type-name-link">LauncherSessionListeners</span></a> - Class in <a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/session/package-summary.html">org.junit.platform.launcher.listeners.session</a></dt>
+<dd>
+<div class="block">Collection of <code>static</code> factory methods for creating
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html" title="interface in org.junit.platform.launcher"><code>LauncherSessionListeners</code></a>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html#launcherSessionOpened(org.junit.platform.launcher.LauncherSession)">launcherSessionOpened(LauncherSession)</a></span> - Method in interface org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html" title="interface in org.junit.platform.launcher">LauncherSessionListener</a></dt>
+<dd>
+<div class="block">Called when a launcher session was opened.</div>
 </dd>
 <dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/LegacyReportingUtils.html" title="class in org.junit.platform.launcher.listeners"><span class="type-name-link">LegacyReportingUtils</span></a> - Class in <a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/package-summary.html">org.junit.platform.launcher.listeners</a></dt>
 <dd>

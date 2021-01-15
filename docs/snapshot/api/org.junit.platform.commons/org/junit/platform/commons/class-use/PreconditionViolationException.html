@@ -361,8 +361,8 @@ loadScripts(document, 'script');</script>
 <td class="col-first"><code>static <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher">Launcher</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">LauncherFactory.</span><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html#create()">create</a></span>()</code></th>
 <td class="col-last">
-<div class="block">Factory method for creating a new <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> using automatic
- registration for test engines and test execution listeners.</div>
+<div class="block">Factory method for creating a new <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> using the
+ <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html#DEFAULT">default</a> <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
 </td>
 </tr>
 <tr class="row-color">
@@ -371,6 +371,22 @@ loadScripts(document, 'script');</script>
 <td class="col-last">
 <div class="block">Factory method for creating a new <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> using the supplied
  <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html" title="interface in org.junit.platform.launcher">LauncherSession</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">LauncherFactory.</span><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html#openSession()">openSession</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Factory method for opening a new <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html" title="interface in org.junit.platform.launcher"><code>LauncherSession</code></a> using the
+ <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html#DEFAULT">default</a> <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html" title="interface in org.junit.platform.launcher">LauncherSession</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">LauncherFactory.</span><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html#openSession(org.junit.platform.launcher.core.LauncherConfig)">openSession</a></span>&#8203;(<a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a>&nbsp;config)</code></th>
+<td class="col-last">
+<div class="block">Factory method for opening a new <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html" title="interface in org.junit.platform.launcher"><code>LauncherSession</code></a> using the
+ supplied <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
 </td>
 </tr>
 </tbody>
