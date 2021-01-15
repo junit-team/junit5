@@ -3720,6 +3720,11 @@ of any custom values configured via the <code>nullValues</code> attribute.
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Unless it starts with a quote character, leading and trailing whitespaces of a
+CSV column are trimmed by default. This behavior can be changed by setting the
+<code>ignoreLeadingAndTrailingWhitespace</code> attribute to <code>true</code>.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -3751,6 +3756,10 @@ of any custom values configured via the <code>nullValues</code> attribute.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource(value = { "apple, banana, NIL" }, nullValues = "NIL")</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"apple"</code>, <code>"banana"</code>, <code>null</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource(value = { " apple , banana" }, ignoreLeadingAndTrailingWhitespace = false)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>" apple "</code>, <code>" banana"</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -3829,6 +3838,11 @@ of any custom values configured via the <code>nullValues</code> attribute.
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Unless it starts with a quote character, leading and trailing whitespaces of a
+CSV column are trimmed by default. This behavior can be changed by setting the
+<code>ignoreLeadingAndTrailingWhitespace</code> attribute to <code>true</code>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -9943,7 +9957,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-15 19:56:53 UTC
+Last updated 2021-01-15 21:05:52 UTC
 </div>
 </div>
 <style>
