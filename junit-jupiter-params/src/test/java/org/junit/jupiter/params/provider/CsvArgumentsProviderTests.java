@@ -221,6 +221,15 @@ class CsvArgumentsProviderTests {
 				.withMessageStartingWith("maxCharsPerColumn must be a positive number: -1");
 	}
 
+	@Test
+	void doesNotMindSoCalledCommentCharacters() {
+		var annotation = csvSource("#foo", "#bar,baz", "baz,#quux");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("#foo"), array("#bar", "baz"), array("baz", "#quux"));
+	}
+
 	private Stream<Object[]> provideArguments(CsvSource annotation) {
 		var provider = new CsvArgumentsProvider();
 		provider.accept(annotation);
