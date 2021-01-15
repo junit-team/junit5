@@ -158,6 +158,7 @@
 356c26d6d938125b52a9d89e9bea0dd9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java
 36380f946fbb20c3f9dec2771cbf861b  documentation/src/test/java/example/defaultmethods/ComparableContract.java
 36f8768435182fb7a319dd873cfe6a6a  documentation/src/docs/asciidoc/user-guide/appendix.adoc
+370601479cc1de22d893eec9aec3dbfe  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvParserFactory.java
 3727738d0ba6a23a723a5e3b799e526e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ExclusiveResource.java
 3734ba916899d7d83c86f6e8c13b3214  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
 3735caf18d6c23d294b8834896307339  junit-platform-commons/src/main/java/org/junit/platform/commons/function/Try.java
@@ -434,7 +435,6 @@
 9ec89fbfa71485c0cdd9a45c7bc7ab10  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/Node.java
 9ece1eb173906c2552ac6595bad24177  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
 9eeb863aa510919e6f24149c6f1c3a99  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
-9fba6aaf7e2e25a505869414f52f09cd  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a19dfa211e3f0f74ea007e63e78f479f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRangeCondition.java
 a1ea21eb6905311553d061647b2c98d0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/package-info.java
@@ -577,7 +577,6 @@ d0bb7599319fa757d7f3fdc9fada70eb  junit-vintage-engine/src/main/java/org/junit/v
 d0d3a08b56cbd3dae460318edfd7a8aa  documentation/src/test/java/example/DisabledTestsDemo.java
 d0e96aaf301140cf346c344991b7d4b9  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ExcludePackageNameFilter.java
 d1ab7eedb6800a6aac9ff86a4c1c4013  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/package-info.java
-d1d5525b6184c04a04b9859a291f9264  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvParserFactory.java
 d1d6b124bc176a8ffaf7a803f767fba4  documentation/src/test/java/example/callbacks/BrokenLifecycleMethodConfigDemo.java
 d2634144f8eca1abc45957835c52cc58  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.java
 d27d9f84ff4a7510b90b8a520f7a17e9  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestParameterResolver.java
@@ -709,4 +708,5 @@ fe150fed05a64f57df74cd89a87d474e  junit-platform-engine/src/main/java/org/junit/
 fe1a6c0b59eca3e6ba26a6107c88489b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java
 fe68bd8a2799ff750d17f9e4d4156a2b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertFalse.java
 fe99b3c49b9cefe65e5a54e82859be9e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
+fef6f6c1c8faf9878825259f61aa9fd5  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 ff76dc23c01f73b8be328522d8843be7  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/FileSelector.java
