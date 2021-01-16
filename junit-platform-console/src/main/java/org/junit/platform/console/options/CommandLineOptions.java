@@ -39,6 +39,8 @@ public class CommandLineOptions {
 
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
+	private Path colorPalettePath;
+	private boolean isSingleColorPalette;
 	private boolean bannerDisabled;
 	private Details details = DEFAULT_DETAILS;
 	private Theme theme = DEFAULT_THEME;
@@ -86,6 +88,22 @@ public class CommandLineOptions {
 
 	public void setAnsiColorOutputDisabled(boolean ansiColorOutputDisabled) {
 		this.ansiColorOutputDisabled = ansiColorOutputDisabled;
+	}
+
+	public Path getColorPalettePath() {
+		return colorPalettePath;
+	}
+
+	public void setColorPalettePath(Path colorPalettePath) {
+		this.colorPalettePath = colorPalettePath;
+	}
+
+	public boolean isSingleColorPalette() {
+		return isSingleColorPalette;
+	}
+
+	public void setSingleColorPalette(boolean singleColorPalette) {
+		this.isSingleColorPalette = singleColorPalette;
 	}
 
 	public boolean isBannerDisabled() {

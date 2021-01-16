@@ -31,8 +31,8 @@ class TreePrintingListener implements TestExecutionListener {
 	private TreeNode root;
 	private final TreePrinter treePrinter;
 
-	TreePrintingListener(PrintWriter out, boolean disableAnsiColors, Theme theme) {
-		this.treePrinter = new TreePrinter(out, theme, disableAnsiColors);
+	TreePrintingListener(PrintWriter out, ColorPalette colorPalette, Theme theme) {
+		this.treePrinter = new TreePrinter(out, theme, colorPalette);
 	}
 
 	private TreeNode addNode(TestIdentifier testIdentifier, Supplier<TreeNode> nodeSupplier) {
