@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import java.lang.StackWalker.StackFrame;
 import java.net.URI;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -43,7 +44,7 @@ public final class TestSourceLocator {
 	 */
 	public static void ignoreClass(final Predicate<String> filter) {
 		Preconditions.notNull(filter, "filter must not be null");
-		StacktraceBased.sourceFilters.add(ste -> filter.test(ste.getClassName()));
+		StackWalkerBased.sourceFilters.add(ste -> filter.test(ste.getClassName()));
 	}
 
 	/**
@@ -83,28 +84,25 @@ public final class TestSourceLocator {
 	 * @return The test source uri for the current thread. Null, if it couldn't be determined.
 	 */
 	public static URI locateSource() {
-		for (final StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-			if (StacktraceBased.isntIgnored(ste)) {
-				return StacktraceBased.toUri(ste);
-			}
-		}
-		return null;
+		return StackWalker.getInstance() //
+				.walk(stream -> stream.filter(StackWalkerBased::isntIgnored).findFirst()) //
+				.map(StackWalkerBased::toUri).orElse(null);
 	}
 
 	/**
-	 * Helper for stacktrace filtering. Required due to the use of multi release jars.
+	 * Helper for StackFrame filtering. Required due to the use of multi release jars.
 	 */
 	@API(status = Status.INTERNAL, since = "1.8")
-	private static final class StacktraceBased {
+	private static final class StackWalkerBased {
 
-		private StacktraceBased() {
+		private StackWalkerBased() {
 			/* no-op */
 		}
 
 		/**
 		 * A set containing a list of source filters. Matching elements will be ignored.
 		 */
-		private static final Set<Predicate<StackTraceElement>> sourceFilters = new LinkedHashSet<>();
+		private static final Set<Predicate<StackFrame>> sourceFilters = new LinkedHashSet<>();
 
 		/**
 		 * Checks whether the given element does not match any of the ignore filters.
@@ -112,8 +110,8 @@ public final class TestSourceLocator {
 		 * @param element The element to check.
 		 * @return True, if the given element does not match any filter. False otherwise.
 		 */
-		private static boolean isntIgnored(final StackTraceElement element) {
-			for (final Predicate<StackTraceElement> filter : sourceFilters) {
+		private static boolean isntIgnored(final StackFrame element) {
+			for (final Predicate<StackFrame> filter : sourceFilters) {
 				if (filter.test(element)) {
 					return false;
 				}
@@ -127,7 +125,7 @@ public final class TestSourceLocator {
 		 * @param element The element to convert.
 		 * @return The uri representing the test source described by the given element.
 		 */
-		private static URI toUri(final StackTraceElement element) {
+		private static URI toUri(final StackFrame element) {
 			final String className = element.getClassName();
 			final String rootClassName = className.replaceFirst("\\$.*", "");
 			final int lineNumber = element.getLineNumber();
