@@ -49,4 +49,4 @@ jobs:
       - name: Test
         run: |
           ./gradlew --version
-          ./gradlew --scan --no-parallel -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} build "-Dscan.tag.JDK_${{ matrix.jdk }}"
+          ./gradlew --no-parallel -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} build "-Dscan.tag.JDK_${{ matrix.jdk }}"
