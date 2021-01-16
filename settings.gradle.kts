@@ -28,12 +28,28 @@ val junitBuildCachePassword: String? by extra
 
 gradleEnterprise {
 	buildScan {
-		server = gradleEnterpriseServer
 		isCaptureTaskInputFiles = true
 		isUploadInBackground = !isCiServer
-		publishAlways()
-		this as BuildScanExtensionWithHiddenFeatures
-		publishIfAuthenticated()
+
+		fun accessKeysAreMissingOrBlank(): Boolean {
+			val accessKeys = File(gradle.gradleUserHomeDir, "enterprise/keys.properties")
+			return !accessKeys.isFile || accessKeys.readText().isBlank()
+		}
+
+		if (gradle.startParameter.isBuildScan || (isCiServer && accessKeysAreMissingOrBlank())) {
+			termsOfServiceUrl = "https://gradle.com/terms-of-service"
+		} else {
+			server = gradleEnterpriseServer
+			publishAlways()
+			this as BuildScanExtensionWithHiddenFeatures
+			publishIfAuthenticated()
+		}
+
+		if (isCiServer) {
+			publishAlways()
+			termsOfServiceAgree = "yes"
+		}
+
 		obfuscation {
 			if (isCiServer) {
 				username { "github" }
