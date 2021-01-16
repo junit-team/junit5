@@ -181,21 +181,28 @@ class ClasspathScannerTests {
 	@Test
 	// #2500
 	void scanForClassesInPackageWithinModuleSharingNames() throws Exception {
-		var jarfile = getClass().getResource("/com.greetings@1-ea.jar");
+		var greetings = getClass().getResource("/com.greetings@1-ea.jar").toURI();
+		var tests = getClass().getResource("/com.greetings.test@0-ea.jar").toURI();
 
-		var module = "com.greetings";
+		var root = "com.greetings.test";
 		var before = ModuleFinder.of();
-		var finder = ModuleFinder.of(Path.of(jarfile.toURI()));
+		var finder = ModuleFinder.of(Path.of(greetings), Path.of(tests));
 		var boot = ModuleLayer.boot();
-		var configuration = boot.configuration().resolveAndBind(before, finder, Set.of(module));
+		var configuration = boot.configuration().resolve(before, finder, Set.of(root));
 		var parent = ClassLoader.getPlatformClassLoader();
 		var layer = ModuleLayer.defineModulesWithOneLoader(configuration, List.of(boot), parent).layer();
 
-		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(module), ReflectionUtils::tryToLoadClass);
-
-		var classes = classpathScanner.scanForClassesInPackage("com.greetings", allClasses);
-		var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
-		assertThat(classNames).hasSize(1).contains("com.greetings.Main");
+		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(root), ReflectionUtils::tryToLoadClass);
+		{
+			var classes = classpathScanner.scanForClassesInPackage("com.greetings", allClasses);
+			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
+			assertThat(classNames).hasSize(2).contains("com.greetings.Main", "com.greetings.test.Tests");
+		}
+		{
+			var classes = classpathScanner.scanForClassesInPackage("com.greetings.test", allClasses);
+			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
+			assertThat(classNames).hasSize(1).contains("com.greetings.test.Tests");
+		}
 	}
 
 	@Test
