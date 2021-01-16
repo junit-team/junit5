@@ -37,7 +37,7 @@ public final class SuiteTestEngine implements TestEngine {
 	}
 
 	/**
-	 * Returns {@code org.junit.platform.suite} as the group ID.
+	 * Returns {@code org.junit.platform} as the group ID.
 	 */
 	@Override
 	public Optional<String> getGroupId() {
