@@ -1589,6 +1589,15 @@ if they exceed the configured maximum length. The limit is configurable via the
 `junit.jupiter.params.displayname.argument.maxlength` configuration parameter and defaults
 to 512 characters.
 
+If you'd like to change the default name template for all parameterized tests in your project, you can add the following
+configuration to `junit-platform.properties`
+
+[source,properties,indent=0]
+----
+junit.jupiter.params.displayname.template = {index}
+----
+
+NOTE: `junit.jupiter.params.displayname.template` can override the `name` of `ParameterizedTest` for all test cases.
 
 [[writing-tests-parameterized-tests-lifecycle-interop]]
 ==== Lifecycle and Interoperability

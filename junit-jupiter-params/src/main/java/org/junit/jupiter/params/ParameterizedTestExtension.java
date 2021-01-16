@@ -39,6 +39,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	private static final String METHOD_CONTEXT_KEY = "context";
 	static final String ARGUMENT_MAX_LENGTH_KEY = "junit.jupiter.params.displayname.argument.maxlength";
+	static final String DISPLAY_NAME_TEMPLATE_KEY = "junit.jupiter.params.displayname.template";
 
 	@Override
 	public boolean supportsTestTemplate(ExtensionContext context) {
@@ -75,8 +76,8 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.get(METHOD_CONTEXT_KEY, ParameterizedTestMethodContext.class);
 		int argumentMaxLength = extensionContext.getConfigurationParameter(ARGUMENT_MAX_LENGTH_KEY,
 			Integer::parseInt).orElse(512);
-		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod, methodContext, displayName,
-			argumentMaxLength);
+		ParameterizedTestNameFormatter formatter = createNameFormatter(extensionContext, templateMethod, methodContext,
+			displayName, argumentMaxLength);
 		AtomicLong invocationCount = new AtomicLong(0);
 
 		// @formatter:off
@@ -122,13 +123,17 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments);
 	}
 
-	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod,
+	private ParameterizedTestNameFormatter createNameFormatter(ExtensionContext extensionContext, Method templateMethod,
 			ParameterizedTestMethodContext methodContext, String displayName, int argumentMaxLength) {
 		ParameterizedTest parameterizedTest = findAnnotation(templateMethod, ParameterizedTest.class).get();
-		String pattern = Preconditions.notBlank(parameterizedTest.name().trim(),
-			() -> String.format(
-				"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.",
-				templateMethod));
+		// the priority of pattern is shown below.
+		// 1) configuration parameter
+		// 2) ParameterizedTest name
+		String pattern = extensionContext.getConfigurationParameter(DISPLAY_NAME_TEMPLATE_KEY).map(String::trim).orElse(
+			Preconditions.notBlank(parameterizedTest.name().trim(),
+				() -> String.format(
+					"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.",
+					templateMethod)));
 		return new ParameterizedTestNameFormatter(pattern, displayName, methodContext, argumentMaxLength);
 	}
 
