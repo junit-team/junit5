@@ -73,6 +73,7 @@ val apiGuardianDocVersion = if (versions.apiguardian.contains("SNAPSHOT")) "snap
 gitPublish {
 	repoUri.set("https://github.com/junit-team/junit5.git")
 	branch.set("gh-pages")
+	sign.set(false)
 
 	contents {
 		from(docsDir)
