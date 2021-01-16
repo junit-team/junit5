@@ -155,9 +155,11 @@ public class DynamicTest extends DynamicNode {
 		Preconditions.notNull(inputStream, "inputStream must not be null");
 		Preconditions.notNull(displayNameGenerator, "displayNameGenerator must not be null");
 		Preconditions.notNull(testExecutor, "testExecutor must not be null");
+		URI testSourceUri = TestSourceLocator.locateSource();
 
 		return inputStream //
-				.map(input -> dynamicTest(displayNameGenerator.apply(input), () -> testExecutor.accept(input)));
+				.map(input -> dynamicTest(displayNameGenerator.apply(input), testSourceUri,
+					() -> testExecutor.accept(input)));
 	}
 
 	private final Executable executable;
