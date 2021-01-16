@@ -30,6 +30,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
@@ -82,14 +83,17 @@ public class EngineDiscoveryOrchestrator {
 
 	/**
 	 * Discovers tests for the supplied request in the supplied phase using the
-	 * configured test engines.
+	 * configured test engines to be used by the suite engine.
 	 *
 	 * <p>Applies {@linkplain org.junit.platform.launcher.EngineFilter engine
 	 * filters} and {@linkplain PostDiscoveryFilter post-discovery filters} and
 	 * {@linkplain TestDescriptor#prune() prunes} the resulting test tree.
 	 *
-	 * Additionally test engines without tests are pruned from from the discovery
-	 * result and the engines unique id will be prefixed with {@code parentId}.
+	 * Note: The test descriptors in the discovery result can safely be used as
+	 * non-root descriptors. Engine-test descriptor entries are pruned from
+	 * the returned result. As such execution by
+	 * {@link EngineExecutionOrchestrator#execute(LauncherDiscoveryResult, EngineExecutionListener)}
+	 * will not emit start or emit events for engines without tests.
 	 */
 	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase, UniqueId parentId) {
 		Map<TestEngine, TestDescriptor> result = discover(request, phase, parentId::appendEngine);
