@@ -258,7 +258,7 @@ class ParameterizedTestDemo {
 
 	// tag::ArgumentsSource2_example[]
 	@ParameterizedTest
-	@ArgumentsSource(My2ndArgumentsProvider.class)
+	@ArgumentsSource(LambdaArgumentsProvider.class)
 	void testWithArgumentsSource2( String opName, IntBinaryOperator op, 
 					int a, int b, int expected) {
 		assertEquals( expected, op.applyAsInt(a,b), "with opname " + opName );
@@ -266,8 +266,8 @@ class ParameterizedTestDemo {
 	// end::ArgumentsSource2_example[]
 
 	
-	// tag::My2ndArgumentsProvider_example[]
-	public static class My2ndArgumentsProvider implements ArgumentsProvider {
+	// tag::LambdaArgumentsProvider_example[]
+	public static class LambdaArgumentsProvider implements ArgumentsProvider {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
@@ -283,7 +283,7 @@ class ParameterizedTestDemo {
 				).map(Arguments::of);
 		}
 	}
-	// end::My2ndArgumentsProvider_example[]
+	// end::LambdaArgumentsProvider_example[]
 	
 
 	// tag::ParameterResolver_example[]

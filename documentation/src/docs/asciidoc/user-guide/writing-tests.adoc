@@ -1349,7 +1349,7 @@ the parameters in the method, in this example `testWithArgumentsSource2` above.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/ParameterizedTestDemo.java[tags=My2ndArgumentsProvider_example]
+include::{testDir}/example/ParameterizedTestDemo.java[tags=LambdaArgumentsProvider_example]
 ----
 
 Note that the example shows the Lambda expressions to be assigned to values of the appropriate type, like `IntBinaryOperation plus`. This 
