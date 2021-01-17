@@ -385,8 +385,19 @@ tasks {
 		into("$docsDir/current")
 	}
 
+	val configureGitAuthor by registering {
+		dependsOn(gitPublishReset)
+		doFirst {
+			File(gitPublish.repoDir.get().asFile, ".git/config").appendText("""
+				[user]
+					name = JUnit Team
+					email = team@junit.org
+			""".trimIndent())
+		}
+	}
+
 	gitPublishCommit {
-		dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder)
+		dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder, configureGitAuthor)
 	}
 }
 
