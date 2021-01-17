@@ -47,7 +47,7 @@ jobs:
     - name: Test and Coverage
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -PenableJaCoCo build jacocoRootReport
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -PenableJaCoCo build jacocoRootReport
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v1
 
@@ -94,7 +94,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
         ./gradlew --stop
 
   mac:
@@ -131,7 +131,7 @@ jobs:
     - name: 'Test'
       run: |
         ./gradlew --version
-        ./gradlew --scan --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true build
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
@@ -160,7 +160,7 @@ jobs:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
         GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
-      run: ./gradlew --scan publish -x check
+      run: ./gradlew publish -x check
 
   update_documentation:
     name: Update Snapshot Documentation

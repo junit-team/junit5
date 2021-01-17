@@ -73,6 +73,7 @@ val apiGuardianDocVersion = if (versions.apiguardian.contains("SNAPSHOT")) "snap
 gitPublish {
 	repoUri.set("https://github.com/junit-team/junit5.git")
 	branch.set("gh-pages")
+	sign.set(false)
 
 	contents {
 		from(docsDir)
@@ -106,19 +107,33 @@ require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
 
 tasks {
 
-	val consoleLauncherTest by registering(JavaExec::class) {
-		dependsOn(testClasses)
+	val consoleLauncherTest by registering {
+		val runtimeClasspath = sourceSets["test"].runtimeClasspath
+		inputs.files(runtimeClasspath).withNormalizer(ClasspathNormalizer::class)
 		val reportsDir = file("$buildDir/test-results")
 		outputs.dir(reportsDir)
 		outputs.cacheIf { true }
-		classpath = sourceSets["test"].runtimeClasspath
-		main = "org.junit.platform.console.ConsoleLauncher"
-		args("--scan-classpath")
-		args("--include-classname", ".*Tests")
-		args("--include-classname", ".*Demo")
-		args("--exclude-tag", "exclude")
-		args("--reports-dir", reportsDir)
-		systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+		doFirst {
+			val output = ByteArrayOutputStream()
+			val result = javaexec {
+				classpath = runtimeClasspath
+				main = "org.junit.platform.console.ConsoleLauncher"
+				args("--scan-classpath")
+				args("--include-classname", ".*Tests")
+				args("--include-classname", ".*Demo")
+				args("--exclude-tag", "exclude")
+				args("--reports-dir", reportsDir)
+				systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+				standardOutput = output
+				errorOutput = output
+				isIgnoreExitValue = true
+			}
+			if (result.exitValue != 0) {
+				System.out.write(output.toByteArray())
+				System.out.flush()
+			}
+			result.rethrowFailure().assertNormalExitValue()
+		}
 	}
 
 	test {
@@ -370,8 +385,19 @@ tasks {
 		into("$docsDir/current")
 	}
 
+	val configureGitAuthor by registering {
+		dependsOn(gitPublishReset)
+		doFirst {
+			File(gitPublish.repoDir.get().asFile, ".git/config").appendText("""
+				[user]
+					name = JUnit Team
+					email = team@junit.org
+			""".trimIndent())
+		}
+	}
+
 	gitPublishCommit {
-		dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder)
+		dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder, configureGitAuthor)
 	}
 }
 

@@ -25,7 +25,7 @@ dependencies {
 	testImplementation("com.tngtech.archunit:archunit-junit5-api") {
 		because("checking the architecture of JUnit 5")
 	}
-	testImplementation("org.codehaus.groovy:groovy-all") {
+	testImplementation("org.codehaus.groovy:groovy") {
 		because("it provides convenience methods to handle process output")
 		exclude(group = "org.junit.platform", module = "junit-platform-launcher")
 	}

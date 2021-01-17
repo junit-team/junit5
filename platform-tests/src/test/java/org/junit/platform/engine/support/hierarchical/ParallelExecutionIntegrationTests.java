@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -766,7 +766,7 @@ class ParallelExecutionIntegrationTests {
 			throws InterruptedException {
 		var value = sharedResource.incrementAndGet();
 		countDownLatch.countDown();
-		countDownLatch.await(100, MILLISECONDS);
+		countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
 		return value;
 	}
 
@@ -774,8 +774,23 @@ class ParallelExecutionIntegrationTests {
 			throws InterruptedException {
 		var value = sharedResource.get();
 		countDownLatch.countDown();
-		countDownLatch.await(100, MILLISECONDS);
+		countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
 		assertEquals(value, sharedResource.get());
+	}
+
+	/**
+	 * To simulate tests running in parallel tests will modify a shared
+	 * resource, simulate work by waiting, then check if the shared resource was
+	 * not modified by any other thread.
+	 *
+	 * Depending on system performance the simulation of work needs to be longer
+	 * on slower systems to ensure tests can run in parallel.
+	 *
+	 * Currently CI is known to be slow.
+	 */
+	private static long estimateSimulatedTestDurationInMiliseconds() {
+		var runningInCi = Boolean.valueOf(System.getenv("CI"));
+		return runningInCi ? 1000 : 100;
 	}
 
 	static class ThreadReporter implements AfterTestExecutionCallback {

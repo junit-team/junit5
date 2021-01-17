@@ -2,7 +2,12 @@ plugins {
 	`java-platform`
 }
 
+javaPlatform {
+	allowDependencies()
+}
+
 dependencies {
+	api(platform("org.codehaus.groovy:groovy-bom:${versions["groovy"]}"))
 	constraints {
 		// api means "the dependency is for both compilation and runtime"
 		// runtime means "the dependency is only for runtime, not for compilation"
@@ -13,7 +18,6 @@ dependencies {
 		runtime("org.apache.logging.log4j:log4j-core:${versions["log4j"]}")
 		runtime("org.apache.logging.log4j:log4j-jul:${versions["log4j"]}")
 		api("io.github.classgraph:classgraph:${versions["classgraph"]}")
-		api("org.codehaus.groovy:groovy-all:${versions["groovy"]}")
 		api("junit:junit:[${versions.junit4Min},)") {
 			version {
 				prefer(versions.junit4)

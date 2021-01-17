@@ -26,7 +26,7 @@ dependencies {
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(":junit-vintage-engine"))
-	testRuntimeOnly("org.codehaus.groovy:groovy-all") {
+	testRuntimeOnly("org.codehaus.groovy:groovy") {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
 
