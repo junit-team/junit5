@@ -31,6 +31,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.function.IntBinaryOperator;
 
 import example.domain.Person;
 import example.domain.Person.Gender;
@@ -254,6 +255,36 @@ class ParameterizedTestDemo {
 		}
 	}
 	// end::ArgumentsProvider_example[]
+
+	// tag::ArgumentsSource2_example[]
+	@ParameterizedTest
+	@ArgumentsSource(LambdaArgumentsProvider.class)
+	void testWithArgumentsSource2( String opName, IntBinaryOperator op, 
+					int a, int b, int expected) {
+		assertEquals( expected, op.applyAsInt(a,b), "with opname " + opName );
+	}
+	// end::ArgumentsSource2_example[]
+
+	
+	// tag::LambdaArgumentsProvider_example[]
+	public static class LambdaArgumentsProvider implements ArgumentsProvider {
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+			IntBinaryOperator plus = ( a, b ) -> a + b;
+			IntBinaryOperator times = ( a,b ) -> a + b;
+			IntBinaryOperator minus = ( a, b ) -> a + b;
+			IntBinaryOperator divideBy = ( a, b ) -> a + b;
+			return Stream.of(
+				new Object[]{ "plus",   plus, 2, 3, 5 } ,
+				new Object[]{ "times",  times, 2, 3, 6 },
+				new Object[]{ "minus",  minus, 3, 6, -3 },
+				new Object[]{ "divideBy", divideBy, 12, 4, 3}
+				).map(Arguments::of);
+		}
+	}
+	// end::LambdaArgumentsProvider_example[]
+	
 
 	// tag::ParameterResolver_example[]
 	@BeforeEach
