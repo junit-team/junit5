@@ -107,19 +107,33 @@ require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
 
 tasks {
 
-	val consoleLauncherTest by registering(JavaExec::class) {
-		dependsOn(testClasses)
+	val consoleLauncherTest by registering {
+		val runtimeClasspath = sourceSets["test"].runtimeClasspath
+		inputs.files(runtimeClasspath).withNormalizer(ClasspathNormalizer::class)
 		val reportsDir = file("$buildDir/test-results")
 		outputs.dir(reportsDir)
 		outputs.cacheIf { true }
-		classpath = sourceSets["test"].runtimeClasspath
-		main = "org.junit.platform.console.ConsoleLauncher"
-		args("--scan-classpath")
-		args("--include-classname", ".*Tests")
-		args("--include-classname", ".*Demo")
-		args("--exclude-tag", "exclude")
-		args("--reports-dir", reportsDir)
-		systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+		doFirst {
+			val output = ByteArrayOutputStream()
+			val result = javaexec {
+				classpath = runtimeClasspath
+				main = "org.junit.platform.console.ConsoleLauncher"
+				args("--scan-classpath")
+				args("--include-classname", ".*Tests")
+				args("--include-classname", ".*Demo")
+				args("--exclude-tag", "exclude")
+				args("--reports-dir", reportsDir)
+				systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+				standardOutput = output
+				errorOutput = output
+				isIgnoreExitValue = true
+			}
+			if (result.exitValue != 0) {
+				System.out.write(output.toByteArray())
+				System.out.flush()
+			}
+			result.rethrowFailure().assertNormalExitValue()
+		}
 	}
 
 	test {
