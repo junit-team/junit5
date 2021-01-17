@@ -11,9 +11,9 @@
 package platform.tooling.support.tests;
 
 import static aQute.bnd.osgi.Constants.VERSION_ATTRIBUTE;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static platform.tooling.support.Helper.createJarPath;
 
 import java.io.File;
