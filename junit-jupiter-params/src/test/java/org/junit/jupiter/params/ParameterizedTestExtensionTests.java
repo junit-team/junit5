@@ -90,7 +90,8 @@ class ParameterizedTestExtensionTests {
 	@Test
 	void emptyDisplayNameIsIllegal() {
 		var extensionContext = getExtensionContextReturningSingleMethod(new EmptyDisplayNameProviderTestCase());
-		assertThrows(PreconditionViolationException.class, () -> this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext));
+		assertThrows(PreconditionViolationException.class,
+			() -> this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext));
 	}
 
 	@Test
@@ -100,10 +101,14 @@ class ParameterizedTestExtensionTests {
 			if (key.equals(ParameterizedTestExtension.DISPLAY_NAME_PATTERN_KEY)) {
 				invocations.incrementAndGet();
 				return Optional.of("");
-			} else return Optional.empty();
+			}
+			else
+				return Optional.empty();
 		};
-		var extensionContext = getExtensionContextReturningSingleMethod(new DefaultDisplayNameProviderTestCase(), configurationSupplier);
-		assertThrows(PreconditionViolationException.class, () -> this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext));
+		var extensionContext = getExtensionContextReturningSingleMethod(new DefaultDisplayNameProviderTestCase(),
+			configurationSupplier);
+		assertThrows(PreconditionViolationException.class,
+			() -> this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext));
 		assertEquals(1, invocations.get());
 	}
 
@@ -171,7 +176,7 @@ class ParameterizedTestExtensionTests {
 	}
 
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase,
-																	  Function<String, Optional<String>> configurationSupplier) {
+			Function<String, Optional<String>> configurationSupplier) {
 
 		// @formatter:off
 		var optional = Arrays.stream(testCase.getClass().getDeclaredMethods())

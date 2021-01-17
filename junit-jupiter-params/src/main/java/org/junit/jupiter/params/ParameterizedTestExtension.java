@@ -128,10 +128,13 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 			ParameterizedTestMethodContext methodContext, String displayName, int argumentMaxLength) {
 		ParameterizedTest parameterizedTest = findAnnotation(templateMethod, ParameterizedTest.class).get();
 		String pattern = parameterizedTest.name().equals(DEFAULT_DISPLAY_NAME)
-				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY).orElse(ParameterizedTest.DEFAULT_DISPLAY_NAME)
+				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY).orElse(
+					ParameterizedTest.DEFAULT_DISPLAY_NAME)
 				: parameterizedTest.name();
-		pattern = Preconditions.notBlank(pattern.trim(), () -> String.format(
-			"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.", templateMethod));
+		pattern = Preconditions.notBlank(pattern.trim(),
+			() -> String.format(
+				"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.",
+				templateMethod));
 		return new ParameterizedTestNameFormatter(pattern, displayName, methodContext, argumentMaxLength);
 	}
 
