@@ -151,6 +151,7 @@
 376f77625bc2aae182300ed63e5c4fac  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 37725239b2f5f7dcf21565077d139433  documentation/src/docs/asciidoc/resources/fonts/Symbola.ttf
 38712453e07a4d8f7c492a5561e3f7a2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/InvocationInterceptor.java
+3885a195473da979d708a27d3b05c4e3  documentation/documentation.gradle.kts
 38941b97e85a0a3959947bcb975af55c  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoveryFilter.java
 390c1d45e8e1344a9dab25b7ed23172a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineDiscoveryResult.java
 3930a0234e1bfc69e0c5a50cdcb2d9c1  documentation/src/test/java/org/junit/api/tools/ApiReportGenerator.java
@@ -707,6 +708,5 @@ fdd0e6f12b2012eefe6eb56d0fe978a1  junit-platform-runner/src/main/java/org/junit/
 fddcf4cbc5673ebba69cf048bf130bce  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContext.java
 ff07c64c2ab2c87cb320b15bc1c8bc4d  documentation/src/main/java/example/util/ListWriter.java
 ff5a81ec5a4961a367f6d7af745106ce  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
-ffb46838eb928464f2ce49606b01d1f8  documentation/documentation.gradle.kts
 ffbcd411348606f020f351eaa38f690d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/DynamicTestInvocationContext.java
 ffd2b6c431bb37e94aa4825b5579ef06  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.java
