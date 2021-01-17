@@ -1352,7 +1352,7 @@ the parameters in the method, in this example `testWithArgumentsSource2` above.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=LambdaArgumentsProvider_example]
 ----
 
-Note that the example shows the Lambda expressions to be assigned to values of the appropriate type, like `IntBinaryOperation plus`. This 
+Note that the example shows the Lambda expressions to be assigned to values of the appropriate type, like `IntBinaryOperation plus`. This
 avoids to have to do an ugly cast before each of the expressions in the Object arrays.
 
 [[writing-tests-parameterized-tests-argument-conversion]]
