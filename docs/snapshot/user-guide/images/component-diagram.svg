@@ -1,51 +1,313 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="563px" preserveAspectRatio="none" style="width:1901px;height:563px;" version="1.1" viewBox="0 0 1901 563" width="1901px" zoomAndPan="magnify"><defs><filter height="300%" id="f9zf83l7ztemx" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[423490a38fdf15f9d701d98f9f242cfc]
-cluster org.junit.jupiter--><polygon fill="#FFFFFF" filter="url(#f9zf83l7ztemx)" points="1014.8147,152,1142.8147,152,1149.8147,174.2969,1661.8147,174.2969,1661.8147,455,1014.8147,455,1014.8147,152" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="1014.8147" x2="1149.8147" y1="174.2969" y2="174.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="122" x="1018.8147" y="166.9951">org.junit.jupiter</text><!--MD5=[899e7549d75556ed53cabbb57638df67]
-cluster org.junit.vintage--><polygon fill="#FFFFFF" filter="url(#f9zf83l7ztemx)" points="41.8147,288,176.8147,288,183.8147,310.2969,215.8147,310.2969,215.8147,455,41.8147,455,41.8147,288" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="41.8147" x2="183.8147" y1="310.2969" y2="310.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="129" x="45.8147" y="302.9951">org.junit.vintage</text><!--MD5=[7eecee75087ecb6f70a379822261fafe]
-cluster org.junit.platform--><polygon fill="#FFFFFF" filter="url(#f9zf83l7ztemx)" points="223.8147,16,366.8147,16,373.8147,38.2969,1006.8147,38.2969,1006.8147,551,223.8147,551,223.8147,16" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="223.8147" x2="373.8147" y1="38.2969" y2="38.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="137" x="227.8147" y="30.9951">org.junit.platform</text><!--MD5=[310a961075fb7375dfa4f21827c94e35]
-cluster org.opentest4j--><polygon fill="#FFFFFF" filter="url(#f9zf83l7ztemx)" points="82.8147,480,205.8147,480,212.8147,502.2969,215.8147,502.2969,215.8147,551,82.8147,551,82.8147,480" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="82.8147" x2="212.8147" y1="502.2969" y2="502.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="117" x="86.8147" y="494.9951">org.opentest4j</text><!--MD5=[8acdc85b3afaf40a8a892cda9d8153cf]
-cluster org.apiguardian--><polygon fill="#FFFFFF" filter="url(#f9zf83l7ztemx)" points="1669.8147,16,1799.8147,16,1806.8147,38.2969,1879.8147,38.2969,1879.8147,263,1669.8147,263,1669.8147,16" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="1669.8147" x2="1806.8147" y1="38.2969" y2="38.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="124" x="1673.8147" y="30.9951">org.apiguardian</text><!--MD5=[7639c34473ec179827bcbba76712a2e4]
-entity jupiter--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="97" x="1491.3147" y="179"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1486.3147" y="184"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1486.3147" y="205.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="77" x="1501.3147" y="201.9951">junit-jupiter</text><!--MD5=[ed6f8020ec715bb224e5be01e90531f5]
-entity jupiter_api--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="122" x="1181.8147" y="411"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1176.8147" y="416"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1176.8147" y="437.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="102" x="1191.8147" y="433.9951">junit-jupiter-api</text><!--MD5=[441ea3cc830cfeb0964e05e1fab31d32]
-entity jupiter_engine--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="150" x="1277.8147" y="315"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1272.8147" y="320"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1272.8147" y="341.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="130" x="1287.8147" y="337.9951">junit-jupiter-engine</text><!--MD5=[0e07f1ea6d76de99774c7466f06ace44]
-entity jupiter_params--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="153" x="1463.3147" y="315"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1458.3147" y="320"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1458.3147" y="341.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="133" x="1473.3147" y="337.9951">junit-jupiter-params</text><!--MD5=[18ea6b98240b8025530ab9473dcf2373]
-entity jupiter_migration_support--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="220" x="1022.8147" y="315"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1017.8147" y="320"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1017.8147" y="341.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="200" x="1032.8147" y="337.9951">junit-jupiter-migrationsupport</text><!--MD5=[afcb64d8fae65ccf72870f209580e7a2]
-entity vintage_engine--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="157" x="50.3147" y="315"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="45.3147" y="320"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="45.3147" y="341.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="137" x="60.3147" y="337.9951">junit-vintage-engine</text><!--MD5=[7d5ade99636a31ce3293aec6f1ccaf79]
-entity junit4--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="83" x="87.3147" y="411"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="82.3147" y="416"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="82.3147" y="437.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="63" x="97.3147" y="433.9951">junit:junit</text><!--MD5=[5cb3c982fc9f237863c6af934ec05e1f]
-entity commons--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="184" x="718.8147" y="507"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="713.8147" y="512"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="713.8147" y="533.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="164" x="728.8147" y="529.9951">junit-platform-commons</text><!--MD5=[5ff5fa45ad236cb7c8993bec112332ca]
-entity console--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="170" x="761.8147" y="43"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="756.8147" y="48"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="756.8147" y="69.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="150" x="771.8147" y="65.9951">junit-platform-console</text><!--MD5=[cb028c5091c687ec367cd0cbfd70389f]
-entity engine--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="163" x="618.3147" y="411"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="613.3147" y="416"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="613.3147" y="437.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="143" x="628.3147" y="433.9951">junit-platform-engine</text><!--MD5=[bcc99341bf3209081c0ac0a5db9b8813]
-entity jfr--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="127" x="621.3147" y="179"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="616.3147" y="184"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="616.3147" y="205.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="107" x="631.3147" y="201.9951">junit-platform-jfr</text><!--MD5=[1cacb5a8490e30b3bd5ac3ecbdc4ac78]
-entity launcher--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="175" x="612.3147" y="315"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="607.3147" y="320"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="607.3147" y="341.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="155" x="622.3147" y="337.9951">junit-platform-launcher</text><!--MD5=[bb652fc1ce3da2060c9c3c7211dc4a65]
-entity reporting--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="178" x="820.8147" y="179"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="815.8147" y="184"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="815.8147" y="205.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="158" x="830.8147" y="201.9951">junit-platform-reporting</text><!--MD5=[a9fdbcd7a6cbc124882de1da71397e01]
-entity runner--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="161" x="425.3147" y="179"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="420.3147" y="184"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="420.3147" y="205.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="141" x="435.3147" y="201.9951">junit-platform-runner</text><!--MD5=[26c3d440917bb993db7e0b4582132327]
-entity suite_api--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="174" x="402.8147" y="315"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="397.8147" y="320"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="397.8147" y="341.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="154" x="412.8147" y="337.9951">junit-platform-suite-api</text><!--MD5=[fcdac87879aaef72fc0ff5ea6583b90a]
-entity testkit--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="158" x="231.8147" y="179"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="226.8147" y="184"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="226.8147" y="205.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="138" x="241.8147" y="201.9951">junit-platform-testkit</text><!--MD5=[ba030213f11f5a3d5b319bb69903d2f9]
-entity opentest4j--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="95" x="112.3147" y="507"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="107.3147" y="512"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="107.3147" y="533.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="75" x="122.3147" y="529.9951">opentest4j</text><!--MD5=[55218f8824bbe5d39f8ba58cd4b6343d]
-entity apiguardian--><rect fill="#FEFECE" filter="url(#f9zf83l7ztemx)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="125" x="1712.3147" y="43"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1707.3147" y="48"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="1707.3147" y="69.2969"/><text fill="#000000" font-family="Open Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="105" x="1722.3147" y="65.9951">apiguardian-api</text><path d="M1678.3147,139 L1678.3147,254.9297 A0,0 0 0 0 1678.3147,254.9297 L1871.3147,254.9297 A0,0 0 0 0 1871.3147,254.9297 L1871.3147,149 L1861.3147,139 L1778.8147,139 L1774.8147,79.0597 L1770.8147,139 L1678.3147,139 A0,0 0 0 0 1678.3147,139 " fill="#FFFFFF" filter="url(#f9zf83l7ztemx)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1861.3147,139 L1861.3147,149 L1871.3147,149 L1861.3147,139 " fill="#FFFFFF" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="Open Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="118" x="1684.3147" y="156.0669">All artifacts except</text><text fill="#000000" font-family="Open Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="158" x="1684.3147" y="171.1997">opentest4j and junit:junit</text><text fill="#000000" font-family="Open Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="172" x="1684.3147" y="186.3325">have a dependency on this</text><text fill="#000000" font-family="Open Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="154" x="1684.3147" y="201.4653">artifact. The edges have</text><text fill="#000000" font-family="Open Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="147" x="1684.3147" y="216.5981">been omitted from this</text><text fill="#000000" font-family="Open Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="149" x="1684.3147" y="231.731">diagram for the sake of</text><text fill="#000000" font-family="Open Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="70" x="1684.3147" y="246.8638">readability.</text><!--MD5=[4009dd525e6f9a7f47142ed360ba0d57]
-link jupiter to jupiter_api--><path d="M1565.3433,215.1418 C1604.3987,245.0695 1670.7627,305.9533 1633.8147,351 C1593.5058,400.1442 1409.8079,418.9198 1309.1946,425.6071 " fill="none" id="jupiter-&gt;jupiter_api" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="1304.1711,425.9355,1313.4129,429.3397,1309.1604,425.6092,1312.8909,421.3567,1304.1711,425.9355" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[b24b86d13fe18d486aee36e6caa1f3c6]
-link jupiter to jupiter_params--><path d="M1539.8147,215.0597 C1539.8147,239.4459 1539.8147,282.9295 1539.8147,309.737 " fill="none" id="jupiter-&gt;jupiter_params" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="1539.8147,314.8656,1543.8147,305.8656,1539.8147,309.8656,1535.8147,305.8656,1539.8147,314.8656" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[3673af4386eb99ef3e448e853cc2ed05]
-link jupiter to jupiter_engine--><path d="M1514.9825,215.0597 C1480.6133,240.0555 1418.6558,285.1156 1382.0805,311.7157 " fill="none" id="jupiter-&gt;jupiter_engine" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="1377.7495,314.8656,1387.3808,312.8068,1381.7931,311.9247,1382.6753,306.337,1377.7495,314.8656" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[ab0c9ae47c398095103bf89a3c28c4c9]
-link jupiter_api to opentest4j--><path d="M1181.4937,437.3783 C1135.6689,443.3019 1071.4377,450.8926 1014.8147,455 C926.2262,461.4261 299.1254,449.2018 215.8147,480 C202.5954,484.8869 190.1353,494.2273 180.3397,503.1375 " fill="none" id="jupiter_api-&gt;opentest4j" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="176.5842,506.6517,185.8888,503.4231,180.2351,503.2354,180.4227,497.5817,176.5842,506.6517" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[c6dba83660e232a3eacf0989abc01e97]
-link jupiter_api to commons--><path d="M1181.3784,442.6525 C1106.9217,459.1984 981.0097,487.1789 896.9056,505.8687 " fill="none" id="jupiter_api-&gt;commons" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="891.9299,506.9744,901.5833,508.9267,896.8108,505.8897,899.8478,501.1172,891.9299,506.9744" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[5515becd8ae5974390a505b42c5bf28b]
-link jupiter_engine to engine--><path d="M1277.5649,348.0729 C1271.9033,349.0997 1266.2724,350.0874 1260.8147,351 C1093.5022,378.9771 896.9312,404.6684 786.5125,418.45 " fill="none" id="jupiter_engine-&gt;engine" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="781.32,419.0972,790.7456,421.9533,786.2816,418.4788,789.7561,414.0147,781.32,419.0972" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[774fec1a04f57a7fa1a43bd46173ba1b]
-link jupiter_engine to jupiter_api--><path d="M1332.1245,351.0569 C1313.8041,367.0456 1287.0273,390.4144 1267.5743,407.3916 " fill="none" id="jupiter_engine-&gt;jupiter_api" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="1263.7861,410.6977,1273.197,407.7936,1267.5532,407.41,1267.9367,401.7662,1263.7861,410.6977" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[03dfa84e06aaa30e604468ad77330edd]
-link jupiter_params to jupiter_api--><path d="M1483.9513,351.0569 C1432.5931,367.6575 1356.6218,392.2139 1303.7249,409.3119 " fill="none" id="jupiter_params-&gt;jupiter_api" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="1298.6795,410.9427,1308.4735,411.9807,1303.4371,409.4049,1306.013,404.3685,1298.6795,410.9427" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[96ef0e985d276c4c20d5e08ddc711db3]
-link jupiter_migration_support to jupiter_api--><path d="M1153.5048,351.0569 C1171.8253,367.0456 1198.602,390.4144 1218.055,407.3916 " fill="none" id="jupiter_migration_support-&gt;jupiter_api" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="1221.8433,410.6977,1217.6927,401.7662,1218.0762,407.41,1212.4324,407.7936,1221.8433,410.6977" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[4a92a44fd24ddedab72875e8b5ce5922]
-link jupiter_migration_support to junit4--><path d="M1022.617,350.0815 C1019.9923,350.4006 1017.3885,350.7075 1014.8147,351 C660.9815,391.2131 568.467,361.4886 215.8147,411 C202.7349,412.8364 188.671,415.4583 175.7448,418.1347 " fill="none" id="jupiter_migration_support-&gt;junit4" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="170.6623,419.2017,180.2922,421.267,175.5556,418.1743,178.6483,413.4377,170.6623,419.2017" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[f05aa6405411279f5c68282f5216bc3f]
-link console to launcher--><path d="M835.4554,79.0588 C826.0681,94.5335 812.8598,117.6417 803.8147,139 C781.3366,192.0774 794.7888,213.1706 765.8147,263 C755.224,281.2138 739.0461,298.4736 725.3582,311.2975 " fill="none" id="console-&gt;launcher" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="721.5703,314.794,730.8967,311.6288,725.2444,311.4026,725.4705,305.7503,721.5703,314.794" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[959093e92f79cfa82ab2e6d1e4accd10]
-link console to reporting--><path d="M855.1806,79.0597 C866.5242,103.5475 886.7883,147.2922 899.1933,174.0712 " fill="none" id="console-&gt;reporting" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="901.4142,178.8656,901.2606,169.0179,899.3125,174.3288,894.0017,172.3807,901.4142,178.8656" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[b36ac9ee04bee0cbdb8c8aff1f788bd3]
-link launcher to engine--><path d="M699.8147,351.0569 C699.8147,366.5126 699.8147,388.8647 699.8147,405.6731 " fill="none" id="launcher-&gt;engine" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="699.8147,410.6977,703.8147,401.6977,699.8147,405.6977,695.8147,401.6977,699.8147,410.6977" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[9d585c854521e03ebfb991fc39763367]
-link jfr to launcher--><path d="M686.8066,215.0597 C689.4962,239.4459 694.2922,282.9295 697.2489,309.737 " fill="none" id="jfr-&gt;launcher" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="697.8146,314.8656,700.8036,305.4812,697.2663,309.8958,692.8518,306.3585,697.8146,314.8656" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[c9628446b22c9a0cc0be936a2c86c68e]
-link engine to opentest4j--><path d="M618.2241,432.0421 C499.7745,437.3949 286.6089,450.8211 215.8147,480 C202.9881,485.2867 190.7353,494.4751 180.9794,503.1764 " fill="none" id="engine-&gt;opentest4j" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="177.2307,506.6055,186.5712,503.4822,180.9199,503.2307,181.1715,497.5794,177.2307,506.6055" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[ea2060f86e85beb92a12609e16c4fe65]
-link engine to commons--><path d="M720.6929,447.0569 C739.1799,463.0456 766.2001,486.4144 785.8299,503.3916 " fill="none" id="engine-&gt;commons" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="789.6527,506.6977,785.4621,497.7848,785.8709,503.4269,780.2289,503.8357,789.6527,506.6977" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[41dea4201c585a09229cbd97f511c3cd]
-link reporting to launcher--><path d="M881.9283,215.0597 C843.175,240.1571 773.1877,285.4823 732.1806,312.0392 " fill="none" id="reporting-&gt;launcher" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="727.8164,314.8656,737.5449,313.3307,732.0132,312.1477,733.1962,306.6159,727.8164,314.8656" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[5817c755e21cdd5c7ae5782c2bb20346]
-link runner to launcher--><path d="M531.5764,215.0597 C567.2321,240.0555 631.509,285.1156 669.4533,311.7157 " fill="none" id="runner-&gt;launcher" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="673.9464,314.8656,668.873,306.424,669.8522,311.9954,664.2808,312.9746,673.9464,314.8656" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[83dd4bf5e25301a76323c84b2d8fe61a]
-link runner to suite_api--><path d="M503.69,215.0597 C500.8211,239.4459 495.7053,282.9295 492.5515,309.737 " fill="none" id="runner-&gt;suite_api" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="491.9482,314.8656,496.9725,306.3947,492.5325,309.8999,489.0273,305.4598,491.9482,314.8656" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[d164b78841eb186049a4bbb03c13ac85]
-link runner to junit4--><path d="M485.7737,215.2137 C467.0962,230.9678 437.7033,252.7747 407.8147,263 C368.3038,276.5173 61.3439,257.5055 32.8147,288 C13.6855,308.4469 20.7811,325.7177 32.8147,351 C44.4466,375.4384 67.894,394.7195 88.7034,407.9979 " fill="none" id="runner-&gt;junit4" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="93.0987,410.74,87.5801,402.5825,88.8566,408.0934,83.3456,409.3699,93.0987,410.74" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[f9a4ffd5dbe47c724a72c261cd0dbcc1]
-link testkit to opentest4j--><path d="M231.7898,210.2734 C152.6847,225.3616 39.0445,252.5646 12.8147,288 C-9.1671,317.6964 30.337,450.2449 33.8147,455 C51.8937,479.7194 81.4831,496.802 107.4458,507.9 " fill="none" id="testkit-&gt;opentest4j" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="112.2478,509.9031,105.4815,502.7465,107.6332,507.9781,102.4016,510.1299,112.2478,509.9031" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[a03d5193873264966af50dc3cedb1169]
-link testkit to launcher--><path d="M331.1497,215.0501 C349.7431,230.4696 378.7054,251.8707 407.8147,263 C486.1361,292.9445 513.9774,265.7236 594.8147,288 C616.8476,294.0716 640.3201,303.7951 659.4719,312.6525 " fill="none" id="testkit-&gt;launcher" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="664.2444,314.883,657.7845,307.4486,659.7147,312.766,654.3973,314.6962,664.2444,314.883" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[689563d167406738417b7162b24b4b21]
-link vintage_engine to engine--><path d="M207.5047,349.4433 C210.3075,349.9772 213.0842,350.4978 215.8147,351 C354.3829,376.4874 516.1226,401.6273 613.1267,416.2119 " fill="none" id="vintage_engine-&gt;engine" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="618.271,416.9846,609.965,411.6921,613.3265,416.2419,608.7767,419.6033,618.271,416.9846" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[39cae807274abf57b2b086cda786b46e]
-link vintage_engine to junit4--><path d="M128.8147,351.0569 C128.8147,366.5126 128.8147,388.8647 128.8147,405.6731 " fill="none" id="vintage_engine-&gt;junit4" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="128.8147,410.6977,132.8147,401.6977,128.8147,405.6977,124.8147,401.6977,128.8147,410.6977" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[050ab35d149d8ad4a4f5214b9d436a6f]
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' contentScriptType='application/ecmascript' contentStyleType='text/css' height='563px' preserveAspectRatio='none' style='width:1901px;height:563px;' version='1.1' viewBox='0 0 1901 563' width='1901px' zoomAndPan='magnify'>
+  <defs>
+    <filter height='300%' id='f9zf83l7ztemx' width='300%' x='-1' y='-1'>
+      <feGaussianBlur result='blurOut' stdDeviation='2.0'/>
+      <feColorMatrix in='blurOut' result='blurOut2' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0'/>
+      <feOffset dx='4.0' dy='4.0' in='blurOut2' result='blurOut3'/>
+      <feBlend in='SourceGraphic' in2='blurOut3' mode='normal'/>
+    </filter>
+  </defs>
+  <g>
+    <!--MD5=[423490a38fdf15f9d701d98f9f242cfc]
+cluster org.junit.jupiter-->
+    <polygon fill='#FFFFFF' filter='url(#f9zf83l7ztemx)' points='1014.8147,152,1142.8147,152,1149.8147,174.2969,1661.8147,174.2969,1661.8147,455,1014.8147,455,1014.8147,152' style='stroke: #000000; stroke-width: 1.5;'/>
+    <line style='stroke: #000000; stroke-width: 1.5;' x1='1014.8147' x2='1149.8147' y1='174.2969' y2='174.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' font-weight='bold' lengthAdjust='spacingAndGlyphs' textLength='122' x='1018.8147' y='166.9951'>
+      org.junit.jupiter
+    </text>
+    <!--MD5=[899e7549d75556ed53cabbb57638df67]
+cluster org.junit.vintage-->
+    <polygon fill='#FFFFFF' filter='url(#f9zf83l7ztemx)' points='41.8147,288,176.8147,288,183.8147,310.2969,215.8147,310.2969,215.8147,455,41.8147,455,41.8147,288' style='stroke: #000000; stroke-width: 1.5;'/>
+    <line style='stroke: #000000; stroke-width: 1.5;' x1='41.8147' x2='183.8147' y1='310.2969' y2='310.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' font-weight='bold' lengthAdjust='spacingAndGlyphs' textLength='129' x='45.8147' y='302.9951'>
+      org.junit.vintage
+    </text>
+    <!--MD5=[7eecee75087ecb6f70a379822261fafe]
+cluster org.junit.platform-->
+    <polygon fill='#FFFFFF' filter='url(#f9zf83l7ztemx)' points='223.8147,16,366.8147,16,373.8147,38.2969,1006.8147,38.2969,1006.8147,551,223.8147,551,223.8147,16' style='stroke: #000000; stroke-width: 1.5;'/>
+    <line style='stroke: #000000; stroke-width: 1.5;' x1='223.8147' x2='373.8147' y1='38.2969' y2='38.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' font-weight='bold' lengthAdjust='spacingAndGlyphs' textLength='137' x='227.8147' y='30.9951'>
+      org.junit.platform
+    </text>
+    <!--MD5=[310a961075fb7375dfa4f21827c94e35]
+cluster org.opentest4j-->
+    <polygon fill='#FFFFFF' filter='url(#f9zf83l7ztemx)' points='82.8147,480,205.8147,480,212.8147,502.2969,215.8147,502.2969,215.8147,551,82.8147,551,82.8147,480' style='stroke: #000000; stroke-width: 1.5;'/>
+    <line style='stroke: #000000; stroke-width: 1.5;' x1='82.8147' x2='212.8147' y1='502.2969' y2='502.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' font-weight='bold' lengthAdjust='spacingAndGlyphs' textLength='117' x='86.8147' y='494.9951'>
+      org.opentest4j
+    </text>
+    <!--MD5=[8acdc85b3afaf40a8a892cda9d8153cf]
+cluster org.apiguardian-->
+    <polygon fill='#FFFFFF' filter='url(#f9zf83l7ztemx)' points='1669.8147,16,1799.8147,16,1806.8147,38.2969,1879.8147,38.2969,1879.8147,263,1669.8147,263,1669.8147,16' style='stroke: #000000; stroke-width: 1.5;'/>
+    <line style='stroke: #000000; stroke-width: 1.5;' x1='1669.8147' x2='1806.8147' y1='38.2969' y2='38.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' font-weight='bold' lengthAdjust='spacingAndGlyphs' textLength='124' x='1673.8147' y='30.9951'>
+      org.apiguardian
+    </text>
+    <!--MD5=[7639c34473ec179827bcbba76712a2e4]
+entity jupiter-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='97' x='1491.3147' y='179'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1486.3147' y='184'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1486.3147' y='205.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='77' x='1501.3147' y='201.9951'>
+      junit-jupiter
+    </text>
+    <!--MD5=[ed6f8020ec715bb224e5be01e90531f5]
+entity jupiter_api-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='122' x='1181.8147' y='411'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1176.8147' y='416'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1176.8147' y='437.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='102' x='1191.8147' y='433.9951'>
+      junit-jupiter-api
+    </text>
+    <!--MD5=[441ea3cc830cfeb0964e05e1fab31d32]
+entity jupiter_engine-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='150' x='1277.8147' y='315'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1272.8147' y='320'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1272.8147' y='341.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='130' x='1287.8147' y='337.9951'>
+      junit-jupiter-engine
+    </text>
+    <!--MD5=[0e07f1ea6d76de99774c7466f06ace44]
+entity jupiter_params-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='153' x='1463.3147' y='315'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1458.3147' y='320'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1458.3147' y='341.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='133' x='1473.3147' y='337.9951'>
+      junit-jupiter-params
+    </text>
+    <!--MD5=[18ea6b98240b8025530ab9473dcf2373]
+entity jupiter_migration_support-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='220' x='1022.8147' y='315'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1017.8147' y='320'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1017.8147' y='341.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='200' x='1032.8147' y='337.9951'>
+      junit-jupiter-migrationsupport
+    </text>
+    <!--MD5=[afcb64d8fae65ccf72870f209580e7a2]
+entity vintage_engine-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='157' x='50.3147' y='315'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='45.3147' y='320'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='45.3147' y='341.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='137' x='60.3147' y='337.9951'>
+      junit-vintage-engine
+    </text>
+    <!--MD5=[7d5ade99636a31ce3293aec6f1ccaf79]
+entity junit4-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='83' x='87.3147' y='411'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='82.3147' y='416'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='82.3147' y='437.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='63' x='97.3147' y='433.9951'>
+      junit:junit
+    </text>
+    <!--MD5=[5cb3c982fc9f237863c6af934ec05e1f]
+entity commons-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='184' x='718.8147' y='507'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='713.8147' y='512'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='713.8147' y='533.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='164' x='728.8147' y='529.9951'>
+      junit-platform-commons
+    </text>
+    <!--MD5=[5ff5fa45ad236cb7c8993bec112332ca]
+entity console-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='170' x='761.8147' y='43'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='756.8147' y='48'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='756.8147' y='69.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='150' x='771.8147' y='65.9951'>
+      junit-platform-console
+    </text>
+    <!--MD5=[cb028c5091c687ec367cd0cbfd70389f]
+entity engine-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='163' x='618.3147' y='411'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='613.3147' y='416'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='613.3147' y='437.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='143' x='628.3147' y='433.9951'>
+      junit-platform-engine
+    </text>
+    <!--MD5=[bcc99341bf3209081c0ac0a5db9b8813]
+entity jfr-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='127' x='621.3147' y='179'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='616.3147' y='184'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='616.3147' y='205.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='107' x='631.3147' y='201.9951'>
+      junit-platform-jfr
+    </text>
+    <!--MD5=[1cacb5a8490e30b3bd5ac3ecbdc4ac78]
+entity launcher-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='175' x='612.3147' y='315'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='607.3147' y='320'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='607.3147' y='341.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='155' x='622.3147' y='337.9951'>
+      junit-platform-launcher
+    </text>
+    <!--MD5=[bb652fc1ce3da2060c9c3c7211dc4a65]
+entity reporting-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='178' x='820.8147' y='179'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='815.8147' y='184'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='815.8147' y='205.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='158' x='830.8147' y='201.9951'>
+      junit-platform-reporting
+    </text>
+    <!--MD5=[a9fdbcd7a6cbc124882de1da71397e01]
+entity runner-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='161' x='425.3147' y='179'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='420.3147' y='184'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='420.3147' y='205.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='141' x='435.3147' y='201.9951'>
+      junit-platform-runner
+    </text>
+    <!--MD5=[26c3d440917bb993db7e0b4582132327]
+entity suite_api-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='174' x='402.8147' y='315'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='397.8147' y='320'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='397.8147' y='341.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='154' x='412.8147' y='337.9951'>
+      junit-platform-suite-api
+    </text>
+    <!--MD5=[fcdac87879aaef72fc0ff5ea6583b90a]
+entity testkit-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='158' x='231.8147' y='179'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='226.8147' y='184'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='226.8147' y='205.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='138' x='241.8147' y='201.9951'>
+      junit-platform-testkit
+    </text>
+    <!--MD5=[ba030213f11f5a3d5b319bb69903d2f9]
+entity opentest4j-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='95' x='112.3147' y='507'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='107.3147' y='512'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='107.3147' y='533.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='75' x='122.3147' y='529.9951'>
+      opentest4j
+    </text>
+    <!--MD5=[55218f8824bbe5d39f8ba58cd4b6343d]
+entity apiguardian-->
+    <rect fill='#FEFECE' filter='url(#f9zf83l7ztemx)' height='36.2969' style='stroke: #A80036; stroke-width: 1.5;' width='125' x='1712.3147' y='43'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1707.3147' y='48'/>
+    <rect fill='#FEFECE' height='5' style='stroke: #A80036; stroke-width: 1.5;' width='10' x='1707.3147' y='69.2969'/>
+    <text fill='#000000' font-family='Open Sans' font-size='14' lengthAdjust='spacingAndGlyphs' textLength='105' x='1722.3147' y='65.9951'>
+      apiguardian-api
+    </text>
+    <path d='M1678.3147,139 L1678.3147,254.9297 A0,0 0 0 0 1678.3147,254.9297 L1871.3147,254.9297 A0,0 0 0 0 1871.3147,254.9297 L1871.3147,149 L1861.3147,139 L1778.8147,139 L1774.8147,79.0597 L1770.8147,139 L1678.3147,139 A0,0 0 0 0 1678.3147,139 ' fill='#FFFFFF' filter='url(#f9zf83l7ztemx)' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <path d='M1861.3147,139 L1861.3147,149 L1871.3147,149 L1861.3147,139 ' fill='#FFFFFF' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <text fill='#000000' font-family='Open Sans' font-size='13' lengthAdjust='spacingAndGlyphs' textLength='118' x='1684.3147' y='156.0669'>
+      All artifacts except
+    </text>
+    <text fill='#000000' font-family='Open Sans' font-size='13' lengthAdjust='spacingAndGlyphs' textLength='158' x='1684.3147' y='171.1997'>
+      opentest4j and junit:junit
+    </text>
+    <text fill='#000000' font-family='Open Sans' font-size='13' lengthAdjust='spacingAndGlyphs' textLength='172' x='1684.3147' y='186.3325'>
+      have a dependency on this
+    </text>
+    <text fill='#000000' font-family='Open Sans' font-size='13' lengthAdjust='spacingAndGlyphs' textLength='154' x='1684.3147' y='201.4653'>
+      artifact. The edges have
+    </text>
+    <text fill='#000000' font-family='Open Sans' font-size='13' lengthAdjust='spacingAndGlyphs' textLength='147' x='1684.3147' y='216.5981'>
+      been omitted from this
+    </text>
+    <text fill='#000000' font-family='Open Sans' font-size='13' lengthAdjust='spacingAndGlyphs' textLength='149' x='1684.3147' y='231.731'>
+      diagram for the sake of
+    </text>
+    <text fill='#000000' font-family='Open Sans' font-size='13' lengthAdjust='spacingAndGlyphs' textLength='70' x='1684.3147' y='246.8638'>
+      readability.
+    </text>
+    <!--MD5=[4009dd525e6f9a7f47142ed360ba0d57]
+link jupiter to jupiter_api-->
+    <path d='M1565.3433,215.1418 C1604.3987,245.0695 1670.7627,305.9533 1633.8147,351 C1593.5058,400.1442 1409.8079,418.9198 1309.1946,425.6071 ' fill='none' id='jupiter-&gt;jupiter_api' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='1304.1711,425.9355,1313.4129,429.3397,1309.1604,425.6092,1312.8909,421.3567,1304.1711,425.9355' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[b24b86d13fe18d486aee36e6caa1f3c6]
+link jupiter to jupiter_params-->
+    <path d='M1539.8147,215.0597 C1539.8147,239.4459 1539.8147,282.9295 1539.8147,309.737 ' fill='none' id='jupiter-&gt;jupiter_params' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='1539.8147,314.8656,1543.8147,305.8656,1539.8147,309.8656,1535.8147,305.8656,1539.8147,314.8656' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[3673af4386eb99ef3e448e853cc2ed05]
+link jupiter to jupiter_engine-->
+    <path d='M1514.9825,215.0597 C1480.6133,240.0555 1418.6558,285.1156 1382.0805,311.7157 ' fill='none' id='jupiter-&gt;jupiter_engine' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='1377.7495,314.8656,1387.3808,312.8068,1381.7931,311.9247,1382.6753,306.337,1377.7495,314.8656' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[ab0c9ae47c398095103bf89a3c28c4c9]
+link jupiter_api to opentest4j-->
+    <path d='M1181.4937,437.3783 C1135.6689,443.3019 1071.4377,450.8926 1014.8147,455 C926.2262,461.4261 299.1254,449.2018 215.8147,480 C202.5954,484.8869 190.1353,494.2273 180.3397,503.1375 ' fill='none' id='jupiter_api-&gt;opentest4j' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='176.5842,506.6517,185.8888,503.4231,180.2351,503.2354,180.4227,497.5817,176.5842,506.6517' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[c6dba83660e232a3eacf0989abc01e97]
+link jupiter_api to commons-->
+    <path d='M1181.3784,442.6525 C1106.9217,459.1984 981.0097,487.1789 896.9056,505.8687 ' fill='none' id='jupiter_api-&gt;commons' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='891.9299,506.9744,901.5833,508.9267,896.8108,505.8897,899.8478,501.1172,891.9299,506.9744' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[5515becd8ae5974390a505b42c5bf28b]
+link jupiter_engine to engine-->
+    <path d='M1277.5649,348.0729 C1271.9033,349.0997 1266.2724,350.0874 1260.8147,351 C1093.5022,378.9771 896.9312,404.6684 786.5125,418.45 ' fill='none' id='jupiter_engine-&gt;engine' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='781.32,419.0972,790.7456,421.9533,786.2816,418.4788,789.7561,414.0147,781.32,419.0972' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[774fec1a04f57a7fa1a43bd46173ba1b]
+link jupiter_engine to jupiter_api-->
+    <path d='M1332.1245,351.0569 C1313.8041,367.0456 1287.0273,390.4144 1267.5743,407.3916 ' fill='none' id='jupiter_engine-&gt;jupiter_api' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='1263.7861,410.6977,1273.197,407.7936,1267.5532,407.41,1267.9367,401.7662,1263.7861,410.6977' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[03dfa84e06aaa30e604468ad77330edd]
+link jupiter_params to jupiter_api-->
+    <path d='M1483.9513,351.0569 C1432.5931,367.6575 1356.6218,392.2139 1303.7249,409.3119 ' fill='none' id='jupiter_params-&gt;jupiter_api' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='1298.6795,410.9427,1308.4735,411.9807,1303.4371,409.4049,1306.013,404.3685,1298.6795,410.9427' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[96ef0e985d276c4c20d5e08ddc711db3]
+link jupiter_migration_support to jupiter_api-->
+    <path d='M1153.5048,351.0569 C1171.8253,367.0456 1198.602,390.4144 1218.055,407.3916 ' fill='none' id='jupiter_migration_support-&gt;jupiter_api' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='1221.8433,410.6977,1217.6927,401.7662,1218.0762,407.41,1212.4324,407.7936,1221.8433,410.6977' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[4a92a44fd24ddedab72875e8b5ce5922]
+link jupiter_migration_support to junit4-->
+    <path d='M1022.617,350.0815 C1019.9923,350.4006 1017.3885,350.7075 1014.8147,351 C660.9815,391.2131 568.467,361.4886 215.8147,411 C202.7349,412.8364 188.671,415.4583 175.7448,418.1347 ' fill='none' id='jupiter_migration_support-&gt;junit4' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='170.6623,419.2017,180.2922,421.267,175.5556,418.1743,178.6483,413.4377,170.6623,419.2017' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[f05aa6405411279f5c68282f5216bc3f]
+link console to launcher-->
+    <path d='M835.4554,79.0588 C826.0681,94.5335 812.8598,117.6417 803.8147,139 C781.3366,192.0774 794.7888,213.1706 765.8147,263 C755.224,281.2138 739.0461,298.4736 725.3582,311.2975 ' fill='none' id='console-&gt;launcher' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='721.5703,314.794,730.8967,311.6288,725.2444,311.4026,725.4705,305.7503,721.5703,314.794' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[959093e92f79cfa82ab2e6d1e4accd10]
+link console to reporting-->
+    <path d='M855.1806,79.0597 C866.5242,103.5475 886.7883,147.2922 899.1933,174.0712 ' fill='none' id='console-&gt;reporting' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='901.4142,178.8656,901.2606,169.0179,899.3125,174.3288,894.0017,172.3807,901.4142,178.8656' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[b36ac9ee04bee0cbdb8c8aff1f788bd3]
+link launcher to engine-->
+    <path d='M699.8147,351.0569 C699.8147,366.5126 699.8147,388.8647 699.8147,405.6731 ' fill='none' id='launcher-&gt;engine' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='699.8147,410.6977,703.8147,401.6977,699.8147,405.6977,695.8147,401.6977,699.8147,410.6977' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[9d585c854521e03ebfb991fc39763367]
+link jfr to launcher-->
+    <path d='M686.8066,215.0597 C689.4962,239.4459 694.2922,282.9295 697.2489,309.737 ' fill='none' id='jfr-&gt;launcher' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='697.8146,314.8656,700.8036,305.4812,697.2663,309.8958,692.8518,306.3585,697.8146,314.8656' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[c9628446b22c9a0cc0be936a2c86c68e]
+link engine to opentest4j-->
+    <path d='M618.2241,432.0421 C499.7745,437.3949 286.6089,450.8211 215.8147,480 C202.9881,485.2867 190.7353,494.4751 180.9794,503.1764 ' fill='none' id='engine-&gt;opentest4j' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='177.2307,506.6055,186.5712,503.4822,180.9199,503.2307,181.1715,497.5794,177.2307,506.6055' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[ea2060f86e85beb92a12609e16c4fe65]
+link engine to commons-->
+    <path d='M720.6929,447.0569 C739.1799,463.0456 766.2001,486.4144 785.8299,503.3916 ' fill='none' id='engine-&gt;commons' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='789.6527,506.6977,785.4621,497.7848,785.8709,503.4269,780.2289,503.8357,789.6527,506.6977' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[41dea4201c585a09229cbd97f511c3cd]
+link reporting to launcher-->
+    <path d='M881.9283,215.0597 C843.175,240.1571 773.1877,285.4823 732.1806,312.0392 ' fill='none' id='reporting-&gt;launcher' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='727.8164,314.8656,737.5449,313.3307,732.0132,312.1477,733.1962,306.6159,727.8164,314.8656' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[5817c755e21cdd5c7ae5782c2bb20346]
+link runner to launcher-->
+    <path d='M531.5764,215.0597 C567.2321,240.0555 631.509,285.1156 669.4533,311.7157 ' fill='none' id='runner-&gt;launcher' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='673.9464,314.8656,668.873,306.424,669.8522,311.9954,664.2808,312.9746,673.9464,314.8656' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[83dd4bf5e25301a76323c84b2d8fe61a]
+link runner to suite_api-->
+    <path d='M503.69,215.0597 C500.8211,239.4459 495.7053,282.9295 492.5515,309.737 ' fill='none' id='runner-&gt;suite_api' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='491.9482,314.8656,496.9725,306.3947,492.5325,309.8999,489.0273,305.4598,491.9482,314.8656' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[d164b78841eb186049a4bbb03c13ac85]
+link runner to junit4-->
+    <path d='M485.7737,215.2137 C467.0962,230.9678 437.7033,252.7747 407.8147,263 C368.3038,276.5173 61.3439,257.5055 32.8147,288 C13.6855,308.4469 20.7811,325.7177 32.8147,351 C44.4466,375.4384 67.894,394.7195 88.7034,407.9979 ' fill='none' id='runner-&gt;junit4' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='93.0987,410.74,87.5801,402.5825,88.8566,408.0934,83.3456,409.3699,93.0987,410.74' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[f9a4ffd5dbe47c724a72c261cd0dbcc1]
+link testkit to opentest4j-->
+    <path d='M231.7898,210.2734 C152.6847,225.3616 39.0445,252.5646 12.8147,288 C-9.1671,317.6964 30.337,450.2449 33.8147,455 C51.8937,479.7194 81.4831,496.802 107.4458,507.9 ' fill='none' id='testkit-&gt;opentest4j' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='112.2478,509.9031,105.4815,502.7465,107.6332,507.9781,102.4016,510.1299,112.2478,509.9031' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[a03d5193873264966af50dc3cedb1169]
+link testkit to launcher-->
+    <path d='M331.1497,215.0501 C349.7431,230.4696 378.7054,251.8707 407.8147,263 C486.1361,292.9445 513.9774,265.7236 594.8147,288 C616.8476,294.0716 640.3201,303.7951 659.4719,312.6525 ' fill='none' id='testkit-&gt;launcher' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='664.2444,314.883,657.7845,307.4486,659.7147,312.766,654.3973,314.6962,664.2444,314.883' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[689563d167406738417b7162b24b4b21]
+link vintage_engine to engine-->
+    <path d='M207.5047,349.4433 C210.3075,349.9772 213.0842,350.4978 215.8147,351 C354.3829,376.4874 516.1226,401.6273 613.1267,416.2119 ' fill='none' id='vintage_engine-&gt;engine' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='618.271,416.9846,609.965,411.6921,613.3265,416.2419,608.7767,419.6033,618.271,416.9846' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[39cae807274abf57b2b086cda786b46e]
+link vintage_engine to junit4-->
+    <path d='M128.8147,351.0569 C128.8147,366.5126 128.8147,388.8647 128.8147,405.6731 ' fill='none' id='vintage_engine-&gt;junit4' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
+    <polygon fill='#A80036' points='128.8147,410.6977,132.8147,401.6977,128.8147,405.6977,124.8147,401.6977,128.8147,410.6977' style='stroke: #A80036; stroke-width: 1.0;'/>
+    <!--MD5=[c0b199f9086919e1a4f7ec120e51d4fa]
 @startuml
 skinparam {
     defaultFontName Open Sans
@@ -130,7 +392,7 @@ vintage_engine ..> engine
 vintage_engine ..> junit4
 @enduml
 
-PlantUML version 1.2019.12(Sun Nov 03 10:24:54 UTC 2019)
+PlantUML version 1.2020.06(Sun Apr 05 12:38:32 UTC 2020)
 (APACHE source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
@@ -139,4 +401,6 @@ Operating System: Linux
 Default Encoding: UTF-8
 Language: en
 Country: 
---></g></svg>
+-->
+  </g>
+</svg>

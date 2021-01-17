@@ -1640,16 +1640,16 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
     <span class="k">fun</span> <span class="nf">`exception</span> <span class="n">absence</span> <span class="nf">testing`</span><span class="p">()</span> <span class="p">{</span>
         <span class="kd">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="nc">Calculator</span><span class="p">()</span>
         <span class="kd">val</span> <span class="py">result</span> <span class="p">=</span> <span class="nf">assertDoesNotThrow</span><span class="p">(</span><span class="s">"Should not throw an exception"</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">calculator</span><span class="p">.</span><span class="nf">divide</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+            <span class="n">calculator</span><span class="p">.</span><span class="nf">divide</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="p">}</span>
-        <span class="nf">assertEquals</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="nf">assertEquals</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
     <span class="p">}</span>
 
     <span class="nd">@Test</span>
     <span class="k">fun</span> <span class="nf">`expected</span> <span class="n">exception</span> <span class="nf">testing`</span><span class="p">()</span> <span class="p">{</span>
         <span class="kd">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="nc">Calculator</span><span class="p">()</span>
         <span class="kd">val</span> <span class="py">exception</span> <span class="p">=</span> <span class="n">assertThrows</span><span class="p">&lt;</span><span class="nc">ArithmeticException</span><span class="p">&gt;</span> <span class="p">(</span><span class="s">"Should throw an exception"</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">calculator</span><span class="p">.</span><span class="nf">divide</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+            <span class="n">calculator</span><span class="p">.</span><span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nf">assertEquals</span><span class="p">(</span><span class="s">"/ by zero"</span><span class="p">,</span> <span class="n">exception</span><span class="p">.</span><span class="n">message</span><span class="p">)</span>
     <span class="p">}</span>
@@ -1684,19 +1684,19 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
     <span class="nd">@Test</span>
     <span class="k">fun</span> <span class="nf">`timeout</span> <span class="n">not</span> <span class="n">exceeded</span> <span class="nf">testing`</span><span class="p">()</span> <span class="p">{</span>
         <span class="kd">val</span> <span class="py">fibonacciCalculator</span> <span class="p">=</span> <span class="nc">FibonacciCalculator</span><span class="p">()</span>
-        <span class="kd">val</span> <span class="py">result</span> <span class="p">=</span> <span class="nf">assertTimeout</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="nf">ofMillis</span><span class="p">(</span><span class="m">1000</span><span class="p">))</span> <span class="p">{</span>
-            <span class="n">fibonacciCalculator</span><span class="p">.</span><span class="nf">fib</span><span class="p">(</span><span class="m">14</span><span class="p">)</span>
+        <span class="kd">val</span> <span class="py">result</span> <span class="p">=</span> <span class="nf">assertTimeout</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="nf">ofMillis</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">fibonacciCalculator</span><span class="p">.</span><span class="nf">fib</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
         <span class="p">}</span>
-        <span class="nf">assertEquals</span><span class="p">(</span><span class="m">377</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="nf">assertEquals</span><span class="p">(</span><span class="mi">377</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
     <span class="p">}</span>
 
     <span class="nd">@Test</span>
     <span class="k">fun</span> <span class="nf">`timeout</span> <span class="n">exceeded</span> <span class="n">with</span> <span class="n">preemptive</span> <span class="nf">termination`</span><span class="p">()</span> <span class="p">{</span>
         <span class="c1">// The following assertion fails with an error message similar to:</span>
         <span class="c1">// execution timed out after 10 ms</span>
-        <span class="nf">assertTimeoutPreemptively</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="nf">ofMillis</span><span class="p">(</span><span class="m">10</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nf">assertTimeoutPreemptively</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="nf">ofMillis</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="p">{</span>
             <span class="c1">// Simulate task that takes more than 10 ms.</span>
-            <span class="nc">Thread</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="m">100</span><span class="p">)</span>
+            <span class="nc">Thread</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span></code></pre>
@@ -7084,7 +7084,7 @@ has been ported to Kotlin.</p>
         <span class="c1">// Use WebClient to connect to web server using serverUrl and verify response</span>
         <span class="kd">val</span> <span class="py">webClient</span> <span class="p">=</span> <span class="nc">WebClient</span><span class="p">()</span>
         <span class="kd">val</span> <span class="py">serverUrl</span> <span class="p">=</span> <span class="n">server</span><span class="p">.</span><span class="n">serverUrl</span>
-        <span class="nf">assertEquals</span><span class="p">(</span><span class="m">200</span><span class="p">,</span> <span class="n">webClient</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s">"$serverUrl/products"</span><span class="p">).</span><span class="n">responseStatus</span><span class="p">)</span>
+        <span class="nf">assertEquals</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">webClient</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s">"$serverUrl/products"</span><span class="p">).</span><span class="n">responseStatus</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span></code></pre>
 </div>
@@ -9957,7 +9957,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-17 13:31:42 UTC
+Last updated 2021-01-17 14:11:44 UTC
 </div>
 </div>
 <style>
