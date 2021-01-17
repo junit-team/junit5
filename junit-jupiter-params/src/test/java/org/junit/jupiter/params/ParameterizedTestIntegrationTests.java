@@ -270,7 +270,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void displayNamePatternFromConfiguration() {
 		var results = EngineTestKit.engine(new JupiterTestEngine()) //
-				.configurationParameter(ParameterizedTestExtension.DISPLAY_NAME_TEMPLATE_KEY, "{index}") //
+				.configurationParameter(ParameterizedTestExtension.DISPLAY_NAME_PATTERN_KEY, "{index}") //
 				.selectors(selectMethod(TestCase.class, "testWithCsvSource", String.class.getName())) //
 				.execute();
 		results.testEvents().assertThatEvents() //
