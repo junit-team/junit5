@@ -121,7 +121,21 @@ Your donations will help to make that a reality!
           <p>Since June 2020</p>
         </div>
       </a>
-    </li>    
+    </li>
+    <li>
+      <a class="cardbronze" href="https://www.testmo.com/">
+        <div class="cardbronze-image">
+          <img style="width:80%" src="assets/img/sponsor-logo-testmo.svg" alt="testmo">
+        </div>
+        <div class="cardbronze-center">
+          <h4>testmo</h4>
+        </div>
+        <div class="cardbronze-bottom">
+          <h4>Bronze Sponsor</h4>
+          <p>Since January 2021</p>
+        </div>
+      </a>
+    </li>
   </ul>
 </div>
 
