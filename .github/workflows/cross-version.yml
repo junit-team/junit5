@@ -32,16 +32,16 @@ jobs:
           path: |
             /root/.gradle/caches/
             /root/.gradle/wrapper/dists
-          key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
           restore-keys: |
-            test-${{ runner.os }}-gradle-
+            ${{ runner.os }}-gradle-
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
           path: /root/.m2/repository
-          key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            test-${{ runner.os }}-maven-
+            ${{ runner.os }}-maven-
       - name: Prepare Gradle Enterprise credentials
         run: |
           mkdir -p /root/.gradle/enterprise/

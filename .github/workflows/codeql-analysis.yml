@@ -29,7 +29,7 @@ jobs:
         path: |
           /root/.gradle/caches/
           /root/.gradle/wrapper/dists
-        key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
         restore-keys: |
           test-${{ runner.os }}-gradle-
     - name: Setup JDK 11
