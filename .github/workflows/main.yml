@@ -47,7 +47,7 @@ jobs:
     - name: Test and Coverage
       run: |
         ./gradlew --version
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -PenableJaCoCo build jacocoRootReport
+        ./gradlew --info --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -PenableJaCoCo build jacocoRootReport
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v1
 
@@ -94,7 +94,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
+        ./gradlew --info --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
         ./gradlew --stop
 
   mac:
@@ -131,7 +131,7 @@ jobs:
     - name: 'Test'
       run: |
         ./gradlew --version
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --info --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true build
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
