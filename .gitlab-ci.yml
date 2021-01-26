@@ -1,0 +1,25 @@
+stages:  
+- build  
+- test  
+- report
+
+compile:   
+  stage: build
+  script:    
+    - ./gradlew compileJava
+  tags:   
+    - run_concurrently
+    
+sigridci:
+  stage: report
+  script:
+  - /usr/local/bin/sigrid-ci-poc.py opensource junit . 3.5
+  allow_failure: true
+  artifacts:
+    paths:
+    - "sigrid-ci/*"
+    - "sigrid-ci-output/*"
+    expire_in: 1 week
+    when: always
+  tags:
+    - run_concurrently
