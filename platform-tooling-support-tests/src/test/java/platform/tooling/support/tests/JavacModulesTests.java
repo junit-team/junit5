@@ -100,6 +100,7 @@ class JavacModulesTests {
 		try (var walk = Files.walk(base)) {
 			var projects = walk.filter(path -> path.endsWith("module-info.java")) //
 					.map(base::relativize) //
+					.filter(path -> !path.startsWith("platform-tests")) //
 					.filter(path -> !path.startsWith("platform-tooling-support-tests")) //
 					.map(base::resolve) //
 					.map(Project::new) //

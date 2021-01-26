@@ -211,7 +211,11 @@ class ClasspathScanner {
 	}
 
 	private static String packagePath(String packageName) {
-		return packageName.replace(PACKAGE_SEPARATOR_CHAR, CLASSPATH_RESOURCE_PATH_SEPARATOR);
+		if (packageName.isEmpty()) {
+			return "";
+		}
+		String path = packageName.replace(PACKAGE_SEPARATOR_CHAR, CLASSPATH_RESOURCE_PATH_SEPARATOR);
+		return path + CLASSPATH_RESOURCE_PATH_SEPARATOR;
 	}
 
 	private List<URI> getRootUrisForPackage(String basePackageName) {
