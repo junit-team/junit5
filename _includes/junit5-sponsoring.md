@@ -12,25 +12,6 @@ Your donations will help to make that a reality!
 <div align="center">
   <ul class="list-inline">
     <li>
-      <a class="cardgold" href="https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it">
-        <div class="cardgold-image">
-          <img style="width:80%" src="assets/img/sponsor-logo-SocieteGenerale.svg" alt="Société Générale">
-        </div>
-        <div class="cardgold-center">
-          <h3>Société Générale</h3>
-          <p>
-            Use, Contribute and Attract:<br>
-            learn about Société Générale's<br>
-            open source strategy.
-          </p>
-        </div>
-        <div class="cardgold-bottom">
-          <h4>Gold Sponsor</h4>
-          <p>Since October 2018</p>
-        </div>
-      </a>
-    </li>
-    <li>
       <a class="cardgold" href="https://www.jetbrains.com/idea">
         <div class="cardgold-image">
           <img style="height:100px; padding-left:30px" src="assets/img/sponsor-logo-JetBrains.svg" alt="JetBrains">
