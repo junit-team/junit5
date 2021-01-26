@@ -8,7 +8,7 @@ compile:
   script:    
     - ./gradlew compileJava
   tags:   
-    - run_concurrently
+    - run_concurrently_node10
     
 sigridci:
   stage: report
@@ -22,4 +22,4 @@ sigridci:
     expire_in: 1 week
     when: always
   tags:
-    - run_concurrently
+    - run_concurrently_node10
