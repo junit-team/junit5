@@ -27,6 +27,9 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
 
+/**
+ * @since 5.8
+ */
 class OrderedClassTests {
 
 	private static final Set<String> callSequence = Collections.synchronizedSet(new LinkedHashSet<>());
@@ -44,6 +47,30 @@ class OrderedClassTests {
 
 		assertThat(callSequence)//
 				.containsExactly("A_TestCase", "B_TestCase", "C_TestCase");
+	}
+
+	@Test
+	void classNameAcrossPackages() {
+		try {
+			example.B_TestCase.callSequence = callSequence;
+
+			// @formatter:off
+			var tests = EngineTestKit
+				.engine("junit-jupiter")
+				.configurationParameter(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME, ClassOrderer.ClassName.class.getName())
+				.selectors(selectClass(B_TestCase.class), selectClass(example.B_TestCase.class))
+				.execute()
+				.testEvents();
+			// @formatter:on
+
+			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+			assertThat(callSequence)//
+					.containsExactly("example.B_TestCase", "B_TestCase");
+		}
+		finally {
+			example.B_TestCase.callSequence = null;
+		}
 	}
 
 	@Test
@@ -75,16 +102,16 @@ class OrderedClassTests {
 
 	private Events executeTests(Class<? extends ClassOrderer> classOrderer) {
 		// @formatter:off
-        return EngineTestKit
-                .engine("junit-jupiter")
-                .configurationParameter(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME, classOrderer.getName())
-                .selectors(selectClass(A_TestCase.class), selectClass(B_TestCase.class), selectClass(C_TestCase.class))
-                .execute()
-                .testEvents();
-        // @formatter:on
+		return EngineTestKit
+			.engine("junit-jupiter")
+			.configurationParameter(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME, classOrderer.getName())
+			.selectors(selectClass(A_TestCase.class), selectClass(B_TestCase.class), selectClass(C_TestCase.class))
+			.execute()
+			.testEvents();
+		// @formatter:on
 	}
 
-	abstract static class BaseTestCase {
+	static abstract class BaseTestCase {
 
 		@BeforeEach
 		void trackInvocations(TestInfo testInfo) {
@@ -110,4 +137,5 @@ class OrderedClassTests {
 	@DisplayName("A")
 	static class C_TestCase extends BaseTestCase {
 	}
+
 }

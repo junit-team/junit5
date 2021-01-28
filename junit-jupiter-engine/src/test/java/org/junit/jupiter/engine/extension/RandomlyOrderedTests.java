@@ -28,6 +28,9 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
 
+/**
+ * @since 5.8
+ */
 class RandomlyOrderedTests {
 
 	private static final Set<String> callSequence = Collections.synchronizedSet(new LinkedHashSet<>());
@@ -88,4 +91,5 @@ class RandomlyOrderedTests {
 
 	static class C_TestCase extends BaseTestCase {
 	}
+
 }

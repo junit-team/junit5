@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
@@ -31,13 +29,11 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor implements TestDescri
 
 	@Override
 	public void visit(TestDescriptor testDescriptor) {
-		Optional<ClassOrderer> testClassOrderer = configuration.getTestClassOrderer();
-		if (!testClassOrderer.isPresent()) {
-			return;
-		}
-		doWithMatchingDescriptor(JupiterEngineDescriptor.class, testDescriptor,
-			descriptor -> orderContainedClasses(descriptor, testClassOrderer.get()),
-			descriptor -> "Failed to order classes");
+		this.configuration.getDefaultTestClassOrderer().ifPresent(testClassOrderer -> {
+			doWithMatchingDescriptor(JupiterEngineDescriptor.class, testDescriptor,
+				descriptor -> orderContainedClasses(descriptor, testClassOrderer),
+				descriptor -> "Failed to order classes");
+		});
 	}
 
 	private void orderContainedClasses(JupiterEngineDescriptor jupiterEngineDescriptor, ClassOrderer classOrderer) {
@@ -51,4 +47,5 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor implements TestDescri
 				"ClassOrderer [%s] removed %s ClassDescriptor(s) which will be retained with arbitrary ordering.",
 				classOrderer.getClass().getName(), -difference));
 	}
+
 }

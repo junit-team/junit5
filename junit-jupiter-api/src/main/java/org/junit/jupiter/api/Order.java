@@ -19,25 +19,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 /**
  * {@code @Order} is an annotation that is used to configure the
  * {@linkplain #value order} in which the annotated element (i.e., field,
- * method or class) should be evaluated or executed relative to other elements
+ * method, or class) should be evaluated or executed relative to other elements
  * of the same category.
  *
  * <p>When used with
  * {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension},
- * the category applies to <em>extension fields</em>. When used with the
- * {@link OrderAnnotation} {@link MethodOrderer}, the category applies to
- * <em>test methods</em>.
+ * the category applies to <em>extension fields</em>. When used with
+ * {@link MethodOrderer.OrderAnnotation}, the category applies to <em>test methods</em>.
+ * When used with {@link ClassOrderer.OrderAnnotation}, the category applies to
+ * top-level <em>test classes</em>.
  *
  * <p>If {@code @Order} is not explicitly declared on an element, the
  * {@link #DEFAULT} order value will be assigned to the element.
- *
- * <p>If {@code @Order} is used on classes, ordering is performed only if
- * the matching {@link ClassOrderer.OrderAnnotation} is configured.
  *
  * @since 5.4
  * @see MethodOrderer.OrderAnnotation
@@ -61,7 +58,7 @@ public @interface Order {
 	int DEFAULT = Integer.MAX_VALUE / 2;
 
 	/**
-	 * The order value for the annotated element (i.e., field or method).
+	 * The order value for the annotated element (i.e., field, method, or class).
 	 *
 	 * <p>Elements are ordered based on priority where a lower value has greater
 	 * priority than a higher value. For example, {@link Integer#MAX_VALUE} has

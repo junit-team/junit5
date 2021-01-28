@@ -464,7 +464,7 @@ public final class Constants {
 	public static final String DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
 
 	/**
-	 * Property name used to set the class orderer class name: {@value}
+	 * Property name used to set the default class orderer class name: {@value}
 	 *
 	 * <h3>Supported Values</h3>
 	 *

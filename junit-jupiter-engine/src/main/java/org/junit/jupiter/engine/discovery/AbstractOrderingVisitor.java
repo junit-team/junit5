@@ -34,6 +34,7 @@ class AbstractOrderingVisitor {
 	@SuppressWarnings({ "unchecked" })
 	protected <T extends TestDescriptor> void doWithMatchingDescriptor(Class<T> descriptorSubType,
 			TestDescriptor testDescriptor, Consumer<T> action, Function<T, String> errorMessageBuilder) {
+
 		if (descriptorSubType.isAssignableFrom(testDescriptor.getClass())) {
 			T specificTestDescriptor = (T) testDescriptor;
 			try {
@@ -48,8 +49,9 @@ class AbstractOrderingVisitor {
 
 	protected <T extends TestDescriptor, D extends AbstractAnnotatedElementDescriptor<?>> void orderChildrenTestDescriptors(
 			TestDescriptor parentTestDescriptor, Class<T> matchingChildrenType, Function<T, D> descriptorWrapperBuilder,
-			Consumer<List<D>> orderingAction, IntFunction<String> descriptorAdditionLogger,
-			IntFunction<String> descriptorDeletionLogger) {
+			Consumer<List<D>> orderingAction, IntFunction<String> descriptorsAddedLogger,
+			IntFunction<String> descriptorsRemovedLogger) {
+
 		Set<? extends TestDescriptor> children = parentTestDescriptor.getChildren();
 
 		List<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
@@ -70,10 +72,10 @@ class AbstractOrderingVisitor {
 		int difference = matchingDescriptorWrappers.size() - originalDescriptors.size();
 
 		if (difference > 0) {
-			logger.warn(() -> descriptorAdditionLogger.apply(difference));
+			logger.warn(() -> descriptorsAddedLogger.apply(difference));
 		}
 		else if (difference < 0) {
-			logger.warn(() -> descriptorDeletionLogger.apply(difference));
+			logger.warn(() -> descriptorsRemovedLogger.apply(difference));
 		}
 
 		Set<TestDescriptor> sortedTestDescriptors = matchingDescriptorWrappers.stream()//
@@ -87,4 +89,5 @@ class AbstractOrderingVisitor {
 		Stream.concat(sortedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
 				.forEach(parentTestDescriptor::addChild);
 	}
+
 }

@@ -113,7 +113,8 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public Optional<ClassOrderer> getTestClassOrderer() {
+	public Optional<ClassOrderer> getDefaultTestClassOrderer() {
 		return classOrdererConverter.get(configurationParameters, DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME);
 	}
+
 }

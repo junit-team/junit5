@@ -71,7 +71,7 @@ public interface MethodOrderer {
 	 * </pre>
 	 *
 	 * @param context the {@code MethodOrdererContext} containing the
-	 * {@link MethodDescriptor method descriptors} to order; never {@code null}
+	 * {@linkplain MethodDescriptor method descriptors} to order; never {@code null}
 	 * @see #getDefaultExecutionMode()
 	 */
 	void orderMethods(MethodOrdererContext context);
@@ -112,12 +112,11 @@ public interface MethodOrderer {
 	 *
 	 * <p>If two methods have the same name, {@code String} representations of
 	 * their formal parameter lists will be used as a fallback for comparing the
-	 * methods.</p>
-	 * <p> <b>This class has been deprecated in favor of
-	 * {@link MethodOrderer.MethodName} and will be removed in 6.0</b></p>
+	 * methods.
 	 *
 	 * @since 5.4
-	 * @deprecated Please use {@link MethodOrderer.MethodName} instead.
+	 * @deprecated as of JUnit Jupiter 5.7 in favor of {@link MethodOrderer.MethodName};
+	 * to be removed in 6.0
 	 */
 	@API(status = DEPRECATED, since = "5.7")
 	@Deprecated
@@ -126,6 +125,7 @@ public interface MethodOrderer {
 		public Alphanumeric() {
 		}
 	}
+
 	/**
 	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
 	 * names using {@link String#compareTo(String)}.
@@ -133,6 +133,7 @@ public interface MethodOrderer {
 	 * <p>If two methods have the same name, {@code String} representations of
 	 * their formal parameter lists will be used as a fallback for comparing the
 	 * methods.
+	 *
 	 * @since 5.7
 	 */
 	@API(status = EXPERIMENTAL, since = "5.7")
@@ -194,12 +195,11 @@ public interface MethodOrderer {
 	 * arbitrarily adjacent to each other.
 	 *
 	 * <p>Any methods not annotated with {@code @Order} will be assigned the
-	 * {@link org.junit.jupiter.api.Order#DEFAULT default order} value which will
-	 * effectively cause them to appear at the end of the sorted list, unless
-	 * certain methods are assigned an explicit order value greater than the default
-	 * order value. Any methods assigned an explicit order value greater than the
-	 * default order value will appear after non-annotated methods in the sorted
-	 * list.
+	 * {@link Order#DEFAULT default order} value which will effectively cause them
+	 * to appear at the end of the sorted list, unless certain methods are assigned
+	 * an explicit order value greater than the default order value. Any methods
+	 * assigned an explicit order value greater than the default order value will
+	 * appear after non-annotated methods in the sorted list.
 	 */
 	class OrderAnnotation implements MethodOrderer {
 
@@ -260,8 +260,8 @@ public interface MethodOrderer {
 		 * Property name used to set the random seed used by this
 		 * {@code MethodOrderer}: {@value}
 		 *
-		 * The same property is used by {@link ClassOrderer.Random} for consistency
-		 * between the two random orderers.
+		 * <p>The same property is used by {@link ClassOrderer.Random} for
+		 * consistency between the two random orderers.
 		 *
 		 * <h3>Supported Values</h3>
 		 *

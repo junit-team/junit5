@@ -37,4 +37,5 @@ class DefaultMethodDescriptor extends AbstractAnnotatedElementDescriptor<Method>
 	public String toString() {
 		return new ToStringBuilder(this).append("method", getMethod().toGenericString()).toString();
 	}
+
 }

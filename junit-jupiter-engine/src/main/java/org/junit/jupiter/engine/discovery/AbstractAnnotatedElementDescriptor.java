@@ -19,6 +19,9 @@ import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 
+/**
+ * @since 5.8
+ */
 abstract class AbstractAnnotatedElementDescriptor<E extends AnnotatedElement> {
 
 	private final TestDescriptor testDescriptor;
@@ -30,29 +33,30 @@ abstract class AbstractAnnotatedElementDescriptor<E extends AnnotatedElement> {
 	}
 
 	protected E getAnnotatedElement() {
-		return annotatedElement;
+		return this.annotatedElement;
 	}
 
 	TestDescriptor getTestDescriptor() {
-		return testDescriptor;
+		return this.testDescriptor;
 	}
 
 	public final String getDisplayName() {
 		return this.testDescriptor.getDisplayName();
 	}
 
-	public boolean isAnnotated(Class<? extends Annotation> annotationType) {
+	public final boolean isAnnotated(Class<? extends Annotation> annotationType) {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 		return AnnotationUtils.isAnnotated(getAnnotatedElement(), annotationType);
 	}
 
-	public <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
+	public final <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 		return AnnotationUtils.findAnnotation(getAnnotatedElement(), annotationType);
 	}
 
-	public <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
+	public final <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 		return AnnotationUtils.findRepeatableAnnotations(getAnnotatedElement(), annotationType);
 	}
+
 }

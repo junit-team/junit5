@@ -52,4 +52,5 @@ public interface ClassOrdererContext {
 	 * @see org.junit.platform.engine.ConfigurationParameters
 	 */
 	Optional<String> getConfigurationParameter(String key);
+
 }

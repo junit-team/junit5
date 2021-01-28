@@ -22,12 +22,13 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
 /**
- * {@code ClassOrderer} defines the API for ordering the <em>top-level test classes</em>,
- * without considering nested test classes.
+ * {@code ClassOrderer} defines the API for ordering the <em>top-level test
+ * classes</em>, without considering nested test classes.
  *
- * <p>In this context, the term "test class" refers to any class containing methods annotated with
- * {@code @Test}, {@code @RepeatedTest}, {@code @ParameterizedTest},
- * {@code @TestFactory}, or {@code @TestTemplate} and not being annotated with {@code @Nested}.
+ * <p>In this context, the term "test class" refers to any class containing methods
+ * annotated with {@code @Test}, {@code @RepeatedTest}, {@code @ParameterizedTest},
+ * {@code @TestFactory}, or {@code @TestTemplate}. {@link Nested @Nested} test
+ * classes cannot be ordered by a {@code ClassOrderer}.
  *
  * <h4>Built-in Implementations</h4>
  *
@@ -41,9 +42,9 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * <li>{@link ClassOrderer.Random}</li>
  * </ul>
  *
+ * @since 5.8
  * @see ClassOrdererContext
  * @see #orderClasses(ClassOrdererContext)
- * @since 5.8
  */
 @API(status = EXPERIMENTAL, since = "5.8")
 public interface ClassOrderer {
@@ -52,7 +53,7 @@ public interface ClassOrderer {
 	 * Order the classes encapsulated in the supplied {@link ClassOrdererContext}.
 	 *
 	 * <p>The classes to order or sort are made indirectly available via
-	 * {@link ClassOrdererContext#getClassDescriptors()} ()}. Since this method
+	 * {@link ClassOrdererContext#getClassDescriptors()}. Since this method
 	 * has a {@code void} return type, the list of class descriptors must be
 	 * modified directly.
 	 *
@@ -66,39 +67,34 @@ public interface ClassOrderer {
 	 * </pre>
 	 *
 	 * @param context the {@code ClassOrdererContext} containing the
-	 *                {@link ClassDescriptor class descriptors} to order; never {@code null}
+	 * {@linkplain ClassDescriptor class descriptors} to order; never {@code null}
 	 */
 	void orderClasses(ClassOrdererContext context);
 
 	/**
 	 * {@code ClassOrderer} that sorts classes alphanumerically based on their
-	 * qualified names using {@link String#compareTo(String)}.
-	 *
-	 * @since 5.8
+	 * fully qualified names using {@link String#compareTo(String)}.
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
 	class ClassName implements ClassOrderer {
 
 		/**
 		 * Sort the classes encapsulated in the supplied
-		 * {@link ClassOrdererContext} alphanumerically based on their qualified names.
+		 * {@link ClassOrdererContext} alphanumerically based on their fully
+		 * qualified names.
 		 */
 		@Override
 		public void orderClasses(ClassOrdererContext context) {
 			context.getClassDescriptors().sort(comparator);
 		}
 
-		private static final Comparator<ClassDescriptor> comparator = Comparator. //
-				comparing(descriptor -> descriptor.getTestClass().getName());
+		private static final Comparator<ClassDescriptor> comparator = Comparator.comparing(
+			descriptor -> descriptor.getTestClass().getName());
 	}
 
 	/**
 	 * {@code ClassOrderer} that sorts classes alphanumerically based on their
 	 * display names using {@link String#compareTo(String)}
-	 *
-	 * @since 5.8
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
 	class DisplayName implements ClassOrderer {
 
 		/**
@@ -123,12 +119,11 @@ public interface ClassOrderer {
 	 * arbitrarily adjacent to each other.
 	 *
 	 * <p>Any classes not annotated with {@code @Order} will be assigned the
-	 * {@link org.junit.jupiter.api.Order#DEFAULT default order} value which will
-	 * effectively cause them to appear at the end of the sorted list, unless
-	 * certain classes are assigned an explicit order value greater than the default
-	 * order value. Any classes assigned an explicit order value greater than the
-	 * default order value will appear after non-annotated classes in the sorted
-	 * list.
+	 * {@link Order#DEFAULT default order} value which will effectively cause them
+	 * to appear at the end of the sorted list, unless certain classes are assigned
+	 * an explicit order value greater than the default order value. Any classes
+	 * assigned an explicit order value greater than the default order value will
+	 * appear after non-annotated classes in the sorted list.
 	 */
 	class OrderAnnotation implements ClassOrderer {
 
@@ -186,8 +181,8 @@ public interface ClassOrderer {
 		 * Property name used to set the random seed used by this
 		 * {@code ClassOrderer}: {@value}
 		 *
-		 * The same property is used by {@link MethodOrderer.Random} for consistency
-		 * between the two random orderers.
+		 * <p>The same property is used by {@link MethodOrderer.Random} for
+		 * consistency between the two random orderers.
 		 *
 		 * <h3>Supported Values</h3>
 		 *
@@ -232,4 +227,5 @@ public interface ClassOrderer {
 			});
 		}
 	}
+
 }

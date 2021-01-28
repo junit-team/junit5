@@ -35,4 +35,5 @@ class DefaultClassDescriptor extends AbstractAnnotatedElementDescriptor<Class<?>
 	public String toString() {
 		return new ToStringBuilder(this).append("class", getTestClass().toGenericString()).toString();
 	}
+
 }

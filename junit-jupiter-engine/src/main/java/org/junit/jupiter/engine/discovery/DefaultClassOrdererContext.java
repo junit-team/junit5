@@ -34,11 +34,12 @@ class DefaultClassOrdererContext implements ClassOrdererContext {
 
 	@Override
 	public List<? extends ClassDescriptor> getClassDescriptors() {
-		return classDescriptors;
+		return this.classDescriptors;
 	}
 
 	@Override
 	public Optional<String> getConfigurationParameter(String key) {
 		return this.configuration.getRawConfigurationParameter(key);
 	}
+
 }

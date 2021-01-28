@@ -74,5 +74,6 @@ public interface JupiterConfiguration {
 
 	Optional<MethodOrderer> getDefaultTestMethodOrderer();
 
-	Optional<ClassOrderer> getTestClassOrderer();
+	Optional<ClassOrderer> getDefaultTestClassOrderer();
+
 }

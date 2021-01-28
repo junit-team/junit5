@@ -102,8 +102,9 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Optional<ClassOrderer> getTestClassOrderer() {
+	public Optional<ClassOrderer> getDefaultTestClassOrderer() {
 		return (Optional<ClassOrderer>) cache.computeIfAbsent(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME,
-			key -> delegate.getTestClassOrderer());
+			key -> delegate.getDefaultTestClassOrderer());
 	}
+
 }
