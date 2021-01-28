@@ -267,6 +267,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the children of the supplied <a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html" title="class in org.junit.platform.launcher"><code>TestIdentifier</code></a>.</div>
 </dd>
+<dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/ClassOrdererContext.html#getClassDescriptors()">getClassDescriptors()</a></span> - Method in interface org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/ClassOrdererContext.html" title="interface in org.junit.jupiter.api">ClassOrdererContext</a></dt>
+<dd>
+<div class="block">Get the list of <a href="../org.junit.jupiter.api/org/junit/jupiter/api/ClassDescriptor.html" title="interface in org.junit.jupiter.api">class descriptors</a> to
+ order.</div>
+</dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/ClassSelector.html#getClassName()">getClassName()</a></span> - Method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></dt>
 <dd>
 <div class="block">Get the selected class name.</div>
@@ -323,6 +328,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#getConfiguration()">getConfiguration()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/ClassOrdererContext.html#getConfigurationParameter(java.lang.String)">getConfigurationParameter(String)</a></span> - Method in interface org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/ClassOrdererContext.html" title="interface in org.junit.jupiter.api">ClassOrdererContext</a></dt>
+<dd>
+<div class="block">Get the configuration parameter stored under the specified <code>key</code>.</div>
+</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html#getConfigurationParameter(java.lang.String)">getConfigurationParameter(String)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></dt>
 <dd>
 <div class="block">Get the configuration parameter stored under the specified <code>key</code>.</div>
@@ -419,6 +428,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/JupiterConfiguration.html#getDefaultExecutionMode()">getDefaultExecutionMode()</a></span> - Method in interface org.junit.jupiter.engine.config.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/CachingJupiterConfiguration.html#getDefaultTestClassOrderer()">getDefaultTestClassOrderer()</a></span> - Method in class org.junit.jupiter.engine.config.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/CachingJupiterConfiguration.html" title="class in org.junit.jupiter.engine.config">CachingJupiterConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.html#getDefaultTestClassOrderer()">getDefaultTestClassOrderer()</a></span> - Method in class org.junit.jupiter.engine.config.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.html" title="class in org.junit.jupiter.engine.config">DefaultJupiterConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/JupiterConfiguration.html#getDefaultTestClassOrderer()">getDefaultTestClassOrderer()</a></span> - Method in interface org.junit.jupiter.engine.config.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/CachingJupiterConfiguration.html#getDefaultTestInstanceLifecycle()">getDefaultTestInstanceLifecycle()</a></span> - Method in class org.junit.jupiter.engine.config.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/CachingJupiterConfiguration.html" title="class in org.junit.jupiter.engine.config">CachingJupiterConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.html#getDefaultTestInstanceLifecycle()">getDefaultTestInstanceLifecycle()</a></span> - Method in class org.junit.jupiter.engine.config.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.html" title="class in org.junit.jupiter.engine.config">DefaultJupiterConfiguration</a></dt>
@@ -461,6 +476,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="../org.junit.platform.engine/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.InitializationContext.html#getDiscoveryRequest()">getDiscoveryRequest()</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.InitializationContext.html" title="interface in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.InitializationContext</a></dt>
 <dd>
 <div class="block">Get the <a href="../org.junit.platform.engine/org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> that is about to be resolved.</div>
+</dd>
+<dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/ClassDescriptor.html#getDisplayName()">getDisplayName()</a></span> - Method in interface org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/ClassDescriptor.html" title="interface in org.junit.jupiter.api">ClassDescriptor</a></dt>
+<dd>
+<div class="block">Get the display name for this descriptor's <code>class</code>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/DynamicNode.html#getDisplayName()">getDisplayName()</a></span> - Method in class org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/DynamicNode.html" title="class in org.junit.jupiter.api">DynamicNode</a></dt>
 <dd>
@@ -1292,6 +1311,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/TerminationInfo.html" title="class in org.junit.platform.testkit.engine"><code>TerminationInfo</code></a> for this <code>Execution</code>.</div>
 </dd>
+<dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/ClassDescriptor.html#getTestClass()">getTestClass()</a></span> - Method in interface org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/ClassDescriptor.html" title="interface in org.junit.jupiter.api">ClassDescriptor</a></dt>
+<dd>
+<div class="block">Get the class for this descriptor.</div>
+</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html#getTestClass()">getTestClass()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></dt>
 <dd>
 <div class="block">Get the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> associated with the current test or container,
@@ -1366,7 +1389,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html#getTestMethod()">getTestMethod()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">MethodBasedTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMethod.html#getTestRule()">getTestRule()</a></span> - Method in class org.junit.jupiter.migrationsupport.rules.member.<a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMethod.html" title="class in org.junit.jupiter.migrationsupport.rules.member">TestRuleAnnotatedMethod</a></dt>
+<dt><span class="member-name-link"><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.html#getTestRule()">getTestRule()</a></span> - Method in class org.junit.jupiter.migrationsupport.rules.member.<a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.html" title="class in org.junit.jupiter.migrationsupport.rules.member">TestRuleAnnotatedField</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.html#getTestRule()">getTestRule()</a></span> - Method in interface org.junit.jupiter.migrationsupport.rules.member.<a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.html" title="interface in org.junit.jupiter.migrationsupport.rules.member">TestRuleAnnotatedMember</a></dt>
 <dd>&nbsp;</dd>

@@ -524,7 +524,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#writing-tests-test-execution-order">2.9. Test Execution Order</a>
 <ul class="sectlevel3">
-<li><a href="#writing-tests-test-execution-order-default">2.9.1. Setting the Default Method Orderer</a></li>
+<li><a href="#method-order">2.9.1. Method Order</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-test-execution-order-default">Setting the Default Method Orderer</a></li>
+</ul>
+</li>
+<li><a href="#class-order">2.9.2. Class Order</a></li>
 </ul>
 </li>
 <li><a href="#writing-tests-test-instance-lifecycle">2.10. Test Instance Lifecycle</a>
@@ -2285,9 +2290,10 @@ custom annotations for tags.
 <div class="sect2">
 <h3 id="writing-tests-test-execution-order"><a class="anchor" href="#writing-tests-test-execution-order"></a>2.9. Test Execution Order</h3>
 <div class="paragraph">
-<p>By default, test methods will be ordered using an algorithm that is deterministic but
-intentionally nonobvious. This ensures that subsequent runs of a test suite execute test
-methods in the same order, thereby allowing for repeatable builds.</p>
+<p>By default, test classes and methods will be ordered using an algorithm that is
+deterministic but intentionally nonobvious. This ensures that subsequent runs of a test
+suite execute test classes and test methods in the same order, thereby allowing for
+repeatable builds.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2296,11 +2302,14 @@ methods in the same order, thereby allowing for repeatable builds.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-See <a href="#writing-tests-classes-and-methods">Test Classes and Methods</a> for a definition of <em>test method</em>.
+See <a href="#writing-tests-classes-and-methods">Test Classes and Methods</a> for a definition of <em>test method</em> and
+<em>test class</em>.
 </td>
 </tr>
 </table>
 </div>
+<div class="sect3">
+<h4 id="method-order"><a class="anchor" href="#method-order"></a>2.9.1. Method Order</h4>
 <div class="paragraph">
 <p>Although true <em>unit tests</em> typically should not rely on the order in which they are
 executed, there are times when it is necessary to enforce a specific test method execution
@@ -2317,25 +2326,26 @@ following built-in <code>MethodOrderer</code> implementations.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a></code>: sorts test methods <em>alphanumerically</em> based on their display names (see
-<a href="#writing-tests-display-name-generator-precedence-rules">display name generation
-precedence rules</a>)</p>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">MethodOrderer.DisplayName</a></code>: sorts test methods <em>alphanumerically</em> based on their
+display names (see <a href="#writing-tests-display-name-generator-precedence-rules">display name
+generation precedence rules</a>)</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html">MethodName</a></code>: sorts test methods <em>alphanumerically</em> based on their method name and formal
-parameter lists.</p>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html">MethodOrderer.MethodName</a></code>: sorts test methods <em>alphanumerically</em> based on their names
+and formal parameter lists</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">OrderAnnotation</a></code>: sorts test methods <em>numerically</em> based on values specified via the
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a></code> annotation.</p>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">MethodOrderer.OrderAnnotation</a></code>: sorts test methods <em>numerically</em> based on values
+specified via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a></code> annotation</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Random.html">Random</a></code>: orders test methods <em>pseudo-randomly</em> and supports configuration of a custom
-<em>seed</em>.</p>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Random.html">MethodOrderer.Random</a></code>: orders test methods <em>pseudo-randomly</em> and supports
+configuration of a custom <em>seed</em></p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Alphanumeric.html">Alphanumeric</a></code>: sorts test methods <em>alphanumerically</em> based on their names and formal
-parameter lists. <strong>Deprecated in favor of <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html">MethodName</a></code>. Will be removed in 6.0</strong></p>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Alphanumeric.html">MethodOrderer.Alphanumeric</a></code>: sorts test methods <em>alphanumerically</em> based on their
+names and formal parameter lists; <strong>deprecated in favor of <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html">MethodOrderer.MethodName</a></code>,
+to be removed in 6.0</strong></p>
 </li>
 </ul>
 </div>
@@ -2386,8 +2396,8 @@ order specified via the <code>@Order</code> annotation.</p>
 <span class="o">}</span></code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="writing-tests-test-execution-order-default"><a class="anchor" href="#writing-tests-test-execution-order-default"></a>2.9.1. Setting the Default Method Orderer</h4>
+<div class="sect4">
+<h5 id="writing-tests-test-execution-order-default"><a class="anchor" href="#writing-tests-test-execution-order-default"></a>Setting the Default Method Orderer</h5>
 <div class="paragraph">
 <p>You can use the <code>junit.jupiter.testmethod.order.default</code> <a href="#running-tests-config-params">configuration parameter</a> to specify the fully qualified class name of the
 <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> you would like to use by default. Just like for the orderer configured
@@ -2396,9 +2406,9 @@ via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestMe
 <code>@TestMethodOrder</code> annotation is present on an enclosing test class or test interface.</p>
 </div>
 <div class="paragraph">
-<p>For example, to use the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">OrderAnnotation</a></code> method orderer by default, you should set the
-configuration parameter to the corresponding fully qualified class name (e.g., in
-<code>src/test/resources/junit-platform.properties</code>):</p>
+<p>For example, to use the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">MethodOrderer.OrderAnnotation</a></code> method orderer by default, you
+should set the configuration parameter to the corresponding fully qualified class name
+(e.g., in <code>src/test/resources/junit-platform.properties</code>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2409,6 +2419,72 @@ configuration parameter to the corresponding fully qualified class name (e.g., i
 <div class="paragraph">
 <p>Similarly, you can specify the fully qualified name of any custom class that implements
 <code>MethodOrderer</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="class-order"><a class="anchor" href="#class-order"></a>2.9.2. Class Order</h4>
+<div class="paragraph">
+<p>For build optimization purposes, it can be helpful to run <em>test classes</em> in a specific
+order.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>previously failed tests and faster tests first: fail fast</p>
+</li>
+<li>
+<p>with parallelism enabled, longer tests first: shortest test execution duration</p>
+</li>
+<li>
+<p>etc.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can use the <code>junit.jupiter.testclass.order.default</code> <a href="#running-tests-config-params">configuration parameter</a> to specify the fully qualified class name of the
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.html">ClassOrderer</a></code> you would like to use. The supplied class must implement the
+<code>ClassOrderer</code> interface.</p>
+</div>
+<div class="paragraph">
+<p>You can implement your own custom <code>ClassOrderer</code> or use one of the following built-in
+<code>ClassOrderer</code> implementations.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.DisplayName.html">ClassOrderer.DisplayName</a></code>: sorts test classes <em>alphanumerically</em> based on their
+display names (see <a href="#writing-tests-display-name-generator-precedence-rules">display name
+generation precedence rules</a>)</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.ClassName.html">ClassOrderer.ClassName</a></code>: sorts test classes <em>alphanumerically</em> based on their fully
+qualified class names</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.OrderAnnotation.html">ClassOrderer.OrderAnnotation</a></code>: sorts test classes <em>numerically</em> based on values
+specified via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a></code> annotation</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.Random.html">ClassOrderer.Random</a></code>: orders test classes <em>pseudo-randomly</em> and supports
+configuration of a custom <em>seed</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, for the <code>@Order</code> annotation to be honored on <em>test classes</em>, you should
+configure the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.OrderAnnotation.html">ClassOrderer.OrderAnnotation</a></code> class orderer using the configuration
+parameter with the corresponding fully qualified class name (e.g., in
+<code>src/test/resources/junit-platform.properties</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="properties"><span class="py">junit.jupiter.testclass.order.default</span> <span class="p">=</span> <span class="se">\
+</span>    <span class="s">org.junit.jupiter.api.ClassOrderer$OrderAnnotation</span></code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -3059,7 +3135,7 @@ static text and dynamic placeholders. The following placeholders are currently s
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a></code>: display name of the <code>@RepeatedTest</code> method</p>
+<p><code>{displayName}</code>: display name of the <code>@RepeatedTest</code> method</p>
 </li>
 <li>
 <p><code>{currentRepetition}</code>: the current repetition count</p>
@@ -3076,7 +3152,7 @@ names for individual repetitions of the previous <code>repeatedTest()</code> exa
 <code>repetition 1 of 10</code>, <code>repetition 2 of 10</code>, etc. If you would like the display name of
 the <code>@RepeatedTest</code> method included in the name of each repetition, you can define your
 own custom pattern or use the predefined <code>RepeatedTest.LONG_DISPLAY_NAME</code> pattern. The
-latter is equal to <code>"<a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a> :: repetition {currentRepetition} of
+latter is equal to <code>"{displayName} :: repetition {currentRepetition} of
 {totalRepetitions}"</code> which results in display names for individual repetitions like
 <code>repeatedTest() :: repetition 1 of 10</code>, <code>repeatedTest() :: repetition 2 of 10</code>, etc.</p>
 </div>
@@ -3101,7 +3177,7 @@ current repeated test.</p>
 <p>The next two methods demonstrate how to include a custom <code>@DisplayName</code> for the
 <code>@RepeatedTest</code> method in the display name of each repetition. <code>customDisplayName()</code>
 combines a custom display name with a custom pattern and then uses <code>TestInfo</code> to verify
-the format of the generated display name. <code>Repeat!</code> is the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a></code> which comes
+the format of the generated display name. <code>Repeat!</code> is the <code>{displayName}</code> which comes
 from the <code>@DisplayName</code> declaration, and <code>1/1</code> comes from
 <code>{currentRepetition}/{totalRepetitions}</code>. In contrast,
 <code>customDisplayNameWithLongPattern()</code> uses the aforementioned predefined
@@ -4391,7 +4467,7 @@ the following.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{displayName}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the display name of the method</p></td>
 </tr>
 <tr>
@@ -5073,7 +5149,7 @@ activate parallel execution for individual test classes, one by one.</p>
 <div class="paragraph">
 <p>The default execution mode is applied to all nodes of the test tree with a few notable
 exceptions, namely test classes that use the <code>Lifecycle.PER_CLASS</code> mode or a
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (except for <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Random.html">Random</a></code>). In the former case, test authors have to
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (except for <code>{Random}</code>). In the former case, test authors have to
 ensure that the test class is thread-safe; in the latter, concurrent execution might
 conflict with the configured execution order. Thus, in both cases, test methods in such
 test classes are only executed concurrently if the <code>@Execution(CONCURRENT)</code> annotation is
@@ -9391,6 +9467,21 @@ value of lower stability.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClassDescriptor</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClassOrderer</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClassOrdererContext</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DisplayNameGenerator.IndicativeSentences</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
 </tr>
@@ -9957,7 +10048,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-26 16:47:30 UTC
+Last updated 2021-01-28 17:48:48 UTC
 </div>
 </div>
 <style>

@@ -114,85 +114,105 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="class-use/ClassDescriptor.html#org.junit.jupiter.api">ClassDescriptor</a></th>
+<td class="col-last">
+<div class="block"><code>ClassDescriptor</code> encapsulates functionality for a given <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="class-use/ClassOrderer.html#org.junit.jupiter.api">ClassOrderer</a></th>
+<td class="col-last">
+<div class="block"><code>ClassOrderer</code> defines the API for ordering the <em>top-level test
+ classes</em>, without considering nested test classes.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="class-use/ClassOrdererContext.html#org.junit.jupiter.api">ClassOrdererContext</a></th>
+<td class="col-last">
+<div class="block"><code>ClassOrdererContext</code> encapsulates the <em>context</em> in which
+ a <a href="ClassOrderer.html" title="interface in org.junit.jupiter.api"><code>ClassOrderer</code></a> will be invoked.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/DisplayNameGeneration.html#org.junit.jupiter.api">DisplayNameGeneration</a></th>
 <td class="col-last">
 <div class="block"><code>@DisplayNameGeneration</code> is used to declare a custom display name
  generator for the annotated test class.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/DisplayNameGenerator.html#org.junit.jupiter.api">DisplayNameGenerator</a></th>
 <td class="col-last">
 <div class="block"><code>DisplayNameGenerator</code> defines the SPI for generating display names
  programmatically.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/DisplayNameGenerator.Simple.html#org.junit.jupiter.api">DisplayNameGenerator.Simple</a></th>
 <td class="col-last">
 <div class="block">Simple <code>DisplayNameGenerator</code> that removes trailing parentheses
  for methods with no parameters.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/DisplayNameGenerator.Standard.html#org.junit.jupiter.api">DisplayNameGenerator.Standard</a></th>
 <td class="col-last">
 <div class="block">Standard <code>DisplayNameGenerator</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/DynamicContainer.html#org.junit.jupiter.api">DynamicContainer</a></th>
 <td class="col-last">
 <div class="block">A <code>DynamicContainer</code> is a container generated at runtime.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/DynamicNode.html#org.junit.jupiter.api">DynamicNode</a></th>
 <td class="col-last">
 <div class="block"><code>DynamicNode</code> serves as the abstract base class for a container or a
  test case generated at runtime.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/DynamicTest.html#org.junit.jupiter.api">DynamicTest</a></th>
 <td class="col-last">
 <div class="block">A <code>DynamicTest</code> is a test case generated at runtime.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/MethodDescriptor.html#org.junit.jupiter.api">MethodDescriptor</a></th>
 <td class="col-last">
 <div class="block"><code>MethodDescriptor</code> encapsulates functionality for a given <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/MethodOrderer.html#org.junit.jupiter.api">MethodOrderer</a></th>
 <td class="col-last">
 <div class="block"><code>MethodOrderer</code> defines the API for ordering the <em>test methods</em>
  in a given test class.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/MethodOrderer.MethodName.html#org.junit.jupiter.api">MethodOrderer.MethodName</a></th>
 <td class="col-last">
 <div class="block"><code>MethodOrderer</code> that sorts methods alphanumerically based on their
  names using <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#compareTo(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>String.compareTo(String)</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/MethodOrdererContext.html#org.junit.jupiter.api">MethodOrdererContext</a></th>
 <td class="col-last">
 <div class="block"><code>MethodOrdererContext</code> encapsulates the <em>context</em> in which
  a <a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a> will be invoked.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/TestInstance.Lifecycle.html#org.junit.jupiter.api">TestInstance.Lifecycle</a></th>
 <td class="col-last">
 <div class="block">Enumeration of test instance lifecycle <em>modes</em>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/TestTemplate.html#org.junit.jupiter.api">TestTemplate</a></th>
 <td class="col-last">
 <div class="block"><code>@TestTemplate</code> is used to signal that the annotated method is a
@@ -240,20 +260,27 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="class-use/ClassOrderer.html#org.junit.jupiter.engine.config">ClassOrderer</a></th>
+<td class="col-last">
+<div class="block"><code>ClassOrderer</code> defines the API for ordering the <em>top-level test
+ classes</em>, without considering nested test classes.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/DisplayNameGenerator.html#org.junit.jupiter.engine.config">DisplayNameGenerator</a></th>
 <td class="col-last">
 <div class="block"><code>DisplayNameGenerator</code> defines the SPI for generating display names
  programmatically.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/MethodOrderer.html#org.junit.jupiter.engine.config">MethodOrderer</a></th>
 <td class="col-last">
 <div class="block"><code>MethodOrderer</code> defines the API for ordering the <em>test methods</em>
  in a given test class.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/TestInstance.Lifecycle.html#org.junit.jupiter.engine.config">TestInstance.Lifecycle</a></th>
 <td class="col-last">
 <div class="block">Enumeration of test instance lifecycle <em>modes</em>.</div>

@@ -74,22 +74,23 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="description">
 <hr>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#FIELD" title="class or interface in java.lang.annotation" class="external-link">FIELD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>})
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#FIELD" title="class or interface in java.lang.annotation" class="external-link">FIELD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#TYPE" title="class or interface in java.lang.annotation" class="external-link">TYPE</a>})
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#RUNTIME" title="class or interface in java.lang.annotation" class="external-link">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Documented.html" title="class or interface in java.lang.annotation" class="external-link">@Documented</a>
 <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.4")
 public @interface <span class="type-name-label">Order</span></pre>
 <div class="block"><code>@Order</code> is an annotation that is used to configure the
- <a href="#value()">order</a> in which the annotated element (i.e., field or
- method) should be evaluated or executed relative to other elements of the
- same category.
+ <a href="#value()">order</a> in which the annotated element (i.e., field,
+ method, or class) should be evaluated or executed relative to other elements
+ of the same category.
 
  <p>When used with
  <a href="extension/RegisterExtension.html" title="annotation in org.junit.jupiter.api.extension"><code>@RegisterExtension</code></a>,
- the category applies to <em>extension fields</em>. When used with the
- <a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.OrderAnnotation</code></a> <a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>, the category applies to
- <em>test methods</em>.
+ the category applies to <em>extension fields</em>. When used with
+ <a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.OrderAnnotation</code></a>, the category applies to <em>test methods</em>.
+ When used with <a href="ClassOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>ClassOrderer.OrderAnnotation</code></a>, the category applies to
+ top-level <em>test classes</em>.
 
  <p>If <code>@Order</code> is not explicitly declared on an element, the
  <a href="#DEFAULT"><code>DEFAULT</code></a> order value will be assigned to the element.</div>
@@ -98,6 +99,7 @@ public @interface <span class="type-name-label">Order</span></pre>
 <dd>5.4</dd>
 <dt>See Also:</dt>
 <dd><a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.OrderAnnotation</code></a>, 
+<a href="ClassOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>ClassOrderer.OrderAnnotation</code></a>, 
 <a href="extension/RegisterExtension.html" title="annotation in org.junit.jupiter.api.extension"><code>@RegisterExtension</code></a></dd>
 </dl>
 </section>
@@ -122,7 +124,7 @@ public @interface <span class="type-name-label">Order</span></pre>
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#value()">value</a></span></code></th>
 <td class="col-last">
-<div class="block">The order value for the annotated element (i.e., field or method).</div>
+<div class="block">The order value for the annotated element (i.e., field, method, or class).</div>
 </td>
 </tr>
 </tbody>
@@ -196,7 +198,7 @@ public @interface <span class="type-name-label">Order</span></pre>
 <section class="detail" id="value()">
 <h3>value</h3>
 <div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="member-name">value</span></div>
-<div class="block">The order value for the annotated element (i.e., field or method).
+<div class="block">The order value for the annotated element (i.e., field, method, or class).
 
  <p>Elements are ordered based on priority where a lower value has greater
  priority than a higher value. For example, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a> has

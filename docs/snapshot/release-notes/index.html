@@ -639,6 +639,11 @@ data structures.</p>
 <p>New <code>ignoreLeadingAndTrailingWhitespace</code> attribute to control whether or not to trim
 whitespaces in <code>@CsvSource</code> and <code>@CsvFileSource</code> (set to <code>true</code> by default).</p>
 </li>
+<li>
+<p>Top-level test classes can now be ordered by passing the fully-qualified name of a
+class implementing <code>ClassOrderer</code> as the value of the new
+<code>junit.jupiter.testclass.order.default</code> configuration parameter.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -869,7 +874,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-26 16:47:30 UTC
+Last updated 2021-01-28 17:48:48 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
