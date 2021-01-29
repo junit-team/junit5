@@ -246,6 +246,7 @@
 5b143dbb7aceed36bbb3320761d77bff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/package-info.java
 5b8cb6f78d1e6f57901950d51edf0c05  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTimeout.java
 5b90c0e1d44ec1de5536cb684075d318  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportData.java
+5bedab058eb248773f69245fb6579b59  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 5beeebeb56b5d1f68ce917275a7a5b68  junit-vintage-engine/src/main/java/org/junit/vintage/engine/package-info.java
 5c8b610094cb9c50300bf03133407eca  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java
 5ccfa71d252374591268217a2f5d30b9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.java
@@ -270,7 +271,6 @@
 670403474aa4ed49430e953b2af6e6c5  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Executions.java
 674ceee334eb85965eaf89a7616ff283  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/AbstractAnnotatedElementDescriptor.java
 685933593243461d6d975095ad9db045  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
-68d629896ece2321810c7a30c3e65fa9  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 691422b491ee238ccd92ee4dc1cf1782  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
 69851f66647aa76ef872b4894895c2dd  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle.png
 6991fd42e0256bd4428209dc4f78fb38  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutInvocation.java
@@ -550,7 +550,6 @@ c56c22370c8567d0c16f8813f74d4b71  junit-platform-commons/src/main/java/org/junit
 c59db6b550fcaa6a4df6b5e712e226da  junit-platform-console/src/main/java/org/junit/platform/console/options/Details.java
 c5caf603ae9b511ac152b854cbc1bf5b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/VintageDiscoverer.java
 c665cbffd3af83710d24959605b66d5b  documentation/src/docs/asciidoc/docinfos/docinfo.html
-c6a9e981015a3a9d71adfa0089e51476  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 c7179c1e458ce74278ec1181aca8962e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnOs.java
 c757c581ab848379cd0e2657a1034a0f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/DirectorySource.java
 c77f25d530f08066bf21f2e0eae29e7a  documentation/src/docs/asciidoc/docinfos/docinfo-footer.html
@@ -692,6 +691,7 @@ f31e0e575ba6c30c2008bb968e588d4e  junit-jupiter-api/src/main/java/org/junit/jupi
 f37e1efda41861fb58bbb604f16db3b6  documentation/src/test/java/example/JUnitPlatformClassDemo.java
 f488212a3fa1caf8ca167af4a1eaa6da  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJre.java
 f4dc79fcef5829c0f4ae2753c2460a6c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ConvertWith.java
+f52d93c6b18bedec82e4702c6c0535ca  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 f5711fa2930bcd8f5e459a2c274c2d9d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java
 f57a996aed0da5d8d1510de70b1d0914  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.java
 f58a8368a4ac3469749c4dce0ea6c13e  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFilter.java
