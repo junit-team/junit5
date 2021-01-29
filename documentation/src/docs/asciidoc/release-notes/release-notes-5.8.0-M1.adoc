@@ -64,6 +64,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* `assertNull()` failure messages now include the actual object's type if the `toString()`
+  implementation for the actual object returns `null` or `"null"`. This avoids the
+  generation of confusing failure messages such as `expected <null> but was <null>`.
 * Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
   underscores as in some JVM languages, to improve readability of long numbers like
   `700_000_000`.
