@@ -554,12 +554,12 @@ nested container events when using the <code>EngineTestKit</code>. For example,
 <code>my test</code>.</p>
 </li>
 <li>
-<p>The <code>junit-platform-jfr</code> module now also reports execution events for containers, e.g.
-test classes.</p>
+<p>The <code>junit-platform-jfr</code> module now reports execution events for containers&#8201;&#8212;&#8201;for
+example, test classes.</p>
 </li>
 <li>
-<p>The <code>junit-platform-jfr</code> module now also reports test discovery events for the launcher
-and registered test engines.</p>
+<p>The <code>junit-platform-jfr</code> module now reports test discovery events for the launcher and
+registered test engines.</p>
 </li>
 <li>
 <p>Custom <code>LauncherDiscoveryListener</code> implementations can now be registered via Java’s
@@ -573,14 +573,15 @@ and registered test engines.</p>
 longer store <code>String</code> representations of unique IDs.</p>
 </li>
 <li>
-<p>Improvement of <code>ExclusiveResource</code> handling, if a <code>Node</code> has only read locks and no read-write locks,
-then descendants are not forced into <code>SAME_THREAD</code> execution, and can run concurrently.</p>
+<p>Improved of <code>ExclusiveResource</code> handling: if a <code>Node</code> has only read locks and no
+read-write locks, then descendants are not forced into <code>SAME_THREAD</code> execution and can
+run concurrently.</p>
 </li>
 <li>
 <p>Tools that make multiple calls to the <code>Launcher</code> API should now create a
-<code>LauncherSession</code> instead in order to allow for executing global setup and teardown code
-exactly once via the new <code>LauncherSessionListener</code> interface that can be registered via
-Java’s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
+<code>LauncherSession</code> in order to allow for executing global setup and teardown code exactly
+once via the new <code>LauncherSessionListener</code> interface that can be registered via Java’s
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
 </li>
 </ul>
 </div>
@@ -603,10 +604,10 @@ Java’s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.
 <div class="ulist">
 <ul>
 <li>
-<p><code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt; , ExtensionContext)</code> has
+<p><code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt;, ExtensionContext)</code> has
 been deprecated in favor of
-<code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt; , DynamicTestInvocationContext, ExtensionContext)</code>
-that allows to access the dynamic test executable via
+<code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt;, DynamicTestInvocationContext, ExtensionContext)</code>
+that provides access to the dynamic test executable via
 <code>DynamicTestInvocationContext.getExecutable()</code>.</p>
 </li>
 </ul>
@@ -616,6 +617,16 @@ that allows to access the dynamic test executable via
 <h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>Top-level test classes can now be ordered by passing the fully-qualified name of a
+class implementing <code>ClassOrderer</code> as the value of the new
+<code>junit.jupiter.testclass.order.default</code> configuration parameter.</p>
+</li>
+<li>
+<p>New <code>assertInstanceOf()</code> methods which produce better error messages comparable to those
+produced by <code>assertThrows</code>. These new methods serve as a replacement for
+<code>assertTrue(obj instanceof X)</code>.</p>
+</li>
 <li>
 <p><code>assertNull()</code> failure messages now include the actual object&#8217;s type if the <code>toString()</code>
 implementation for the actual object returns <code>null</code> or <code>"null"</code>. This avoids the
@@ -627,27 +638,18 @@ underscores as in some JVM languages, to improve readability of long numbers lik
 <code>700_000_000</code>.</p>
 </li>
 <li>
-<p>Documented constant values in <code>Resources</code>.</p>
+<p>CSV rows provided via <code>@CsvSource</code> may now start with a number sign (<code>#</code>).</p>
 </li>
 <li>
-<p>New <code>assertInstanceOf</code> methods as a replacement for <code>assertTrue(obj instanceof X)</code> which
-provide better error messages comparable to those of <code>assertThrows</code>.</p>
+<p>New <code>ignoreLeadingAndTrailingWhitespace</code> attributes in <code>@CsvSource</code> and <code>@CsvFileSource</code>
+(set to <code>true</code> by default) to control whether or not to trim whitespace.</p>
 </li>
 <li>
 <p>Dynamic tests now require less memory thanks to a number of improvements to internal
 data structures.</p>
 </li>
 <li>
-<p>Allow rows in <code>@CsvSource</code> to start with a number sign (#)</p>
-</li>
-<li>
-<p>New <code>ignoreLeadingAndTrailingWhitespace</code> attribute to control whether or not to trim
-whitespaces in <code>@CsvSource</code> and <code>@CsvFileSource</code> (set to <code>true</code> by default).</p>
-</li>
-<li>
-<p>Top-level test classes can now be ordered by passing the fully-qualified name of a
-class implementing <code>ClassOrderer</code> as the value of the new
-<code>junit.jupiter.testclass.order.default</code> configuration parameter.</p>
+<p>Documented constant values in <code>org.junit.jupiter.api.parallel.Resources</code>.</p>
 </li>
 </ul>
 </div>
@@ -879,7 +881,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-29 12:09:12 UTC
+Last updated 2021-01-29 12:20:10 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
