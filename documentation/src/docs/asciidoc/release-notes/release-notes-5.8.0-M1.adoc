@@ -30,21 +30,22 @@ on GitHub.
   nested container events when using the `EngineTestKit`. For example,
   `test(displayName("my test"))` can be used to match against a test whose display name is
   `my test`.
-* The `junit-platform-jfr` module now also reports execution events for containers, e.g.
-  test classes.
-* The `junit-platform-jfr` module now also reports test discovery events for the launcher
-  and registered test engines.
+* The `junit-platform-jfr` module now reports execution events for containers -- for
+  example, test classes.
+* The `junit-platform-jfr` module now reports test discovery events for the launcher and
+  registered test engines.
 * Custom `LauncherDiscoveryListener` implementations can now be registered via Java’s
   `{ServiceLoader}` mechanism.
 * Documented constant value of `ExclusiveResource.GLOBAL_KEY`.
 * Instances of `TestIdentifier` and `UniqueId` now retain less memory because they no
   longer store `String` representations of unique IDs.
-* Improvement of `ExclusiveResource` handling, if a `Node` has only read locks and no read-write locks,
-  then descendants are not forced into `SAME_THREAD` execution, and can run concurrently.
+* Improved of `ExclusiveResource` handling: if a `Node` has only read locks and no
+  read-write locks, then descendants are not forced into `SAME_THREAD` execution and can
+  run concurrently.
 * Tools that make multiple calls to the `Launcher` API should now create a
-  `LauncherSession` instead in order to allow for executing global setup and teardown code
-  exactly once via the new `LauncherSessionListener` interface that can be registered via
-  Java’s `{ServiceLoader}` mechanism.
+  `LauncherSession` in order to allow for executing global setup and teardown code exactly
+  once via the new `LauncherSessionListener` interface that can be registered via Java’s
+  `{ServiceLoader}` mechanism.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
@@ -56,31 +57,33 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , ExtensionContext)` has
+* `InvocationInterceptor.interceptDynamicTest(Invocation<Void>, ExtensionContext)` has
   been deprecated in favor of
-  `InvocationInterceptor.interceptDynamicTest(Invocation<Void> , DynamicTestInvocationContext, ExtensionContext)`
-  that allows to access the dynamic test executable via
+  `InvocationInterceptor.interceptDynamicTest(Invocation<Void>, DynamicTestInvocationContext, ExtensionContext)`
+  that provides access to the dynamic test executable via
   `DynamicTestInvocationContext.getExecutable()`.
 
 ==== New Features and Improvements
 
-* `assertNull()` failure messages now include the actual object's type if the `toString()`
-  implementation for the actual object returns `null` or `"null"`. This avoids the
-  generation of confusing failure messages such as `expected <null> but was <null>`.
-* Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
-  underscores as in some JVM languages, to improve readability of long numbers like
-  `700_000_000`.
-* Documented constant values in `Resources`.
-* New `assertInstanceOf` methods as a replacement for `assertTrue(obj instanceof X)` which
-  provide better error messages comparable to those of `assertThrows`.
-* Dynamic tests now require less memory thanks to a number of improvements to internal
-  data structures.
-* Allow rows in `@CsvSource` to start with a number sign (#)
-* New `ignoreLeadingAndTrailingWhitespace` attribute to control whether or not to trim
-  whitespaces in `@CsvSource` and `@CsvFileSource` (set to `true` by default).
 * Top-level test classes can now be ordered by passing the fully-qualified name of a
   class implementing `ClassOrderer` as the value of the new
   `junit.jupiter.testclass.order.default` configuration parameter.
+* New `assertInstanceOf()` methods which produce better error messages comparable to those
+  produced by `assertThrows`. These new methods serve as a replacement for
+  `assertTrue(obj instanceof X)`.
+* `assertNull()` failure messages now include the actual object's type if the `toString()`
+  implementation for the actual object returns `null` or `"null"`. This avoids the
+  generation of confusing failure messages such as `expected <null> but was <null>`.
+
+* Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
+  underscores as in some JVM languages, to improve readability of long numbers like
+  `700_000_000`.
+* CSV rows provided via `@CsvSource` may now start with a number sign (`#`).
+* New `ignoreLeadingAndTrailingWhitespace` attributes in `@CsvSource` and `@CsvFileSource`
+  (set to `true` by default) to control whether or not to trim whitespace.
+* Dynamic tests now require less memory thanks to a number of improvements to internal
+  data structures.
+* Documented constant values in `org.junit.jupiter.api.parallel.Resources`.
 
 
 [[release-notes-5.8.0-M1-junit-vintage]]
