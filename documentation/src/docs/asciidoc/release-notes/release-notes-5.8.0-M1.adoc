@@ -15,8 +15,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* Method `scanForClassesInPackage(String)` in `ClasspathScanner` now returns a valid list
-  of class names when the package name is equal to the name of a module on the module path.
+* ❓
 
 ==== Deprecations and Breaking Changes
 
