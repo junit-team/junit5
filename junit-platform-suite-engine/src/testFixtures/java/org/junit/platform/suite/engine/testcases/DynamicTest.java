@@ -15,15 +15,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
-public class Dynamic {
+public class DynamicTest {
 
 	@TestFactory
-	Collection<DynamicTest> dynamicTestsWithCollection() {
-		return Arrays.asList(DynamicTest.dynamicTest("Add test", () -> assertEquals(2, Math.addExact(1, 1))),
-			DynamicTest.dynamicTest("Multiply Test", () -> assertEquals(4, Math.multiplyExact(2, 2))));
+	Collection<org.junit.jupiter.api.DynamicTest> dynamicTestsWithCollection() {
+		return Arrays.asList(
+			org.junit.jupiter.api.DynamicTest.dynamicTest("Add test", () -> assertEquals(2, Math.addExact(1, 1))),
+			org.junit.jupiter.api.DynamicTest.dynamicTest("Multiply Test",
+				() -> assertEquals(4, Math.multiplyExact(2, 2))));
 	}
 
 }

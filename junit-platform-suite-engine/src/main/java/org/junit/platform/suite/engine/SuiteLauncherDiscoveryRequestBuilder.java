@@ -12,6 +12,7 @@ package org.junit.platform.suite.engine;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
+import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 import static org.junit.platform.suite.engine.AdditionalDiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.suite.engine.AdditionalDiscoverySelectors.selectFile;
 
@@ -49,6 +50,7 @@ import org.junit.platform.suite.api.SelectUris;
 final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private final LauncherDiscoveryRequestBuilder request;
+	private boolean classNamePatternsIncluded;
 
 	private SuiteLauncherDiscoveryRequestBuilder(LauncherDiscoveryRequestBuilder request) {
 		this.request = request;
@@ -80,7 +82,11 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 		findAnnotationValues(testClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::includeClassNamePatterns)
-				.ifPresent(request::filters);
+				.ifPresent(filters ->{
+					// can't use ifPresentOrElse :(
+					classNamePatternsIncluded = true;
+					request.filters(filters);
+				});
 		findAnnotationValues(testClass, IncludeEngines.class, IncludeEngines::value)
 				.map(EngineFilter::includeEngines)
 				.ifPresent(request::filters);
@@ -118,6 +124,9 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	LauncherDiscoveryRequest build() {
+		if (!classNamePatternsIncluded) {
+			request.filters(ClassNameFilter.includeClassNamePatterns(STANDARD_INCLUDE_PATTERN));
+		}
 		return request.build();
 	}
 

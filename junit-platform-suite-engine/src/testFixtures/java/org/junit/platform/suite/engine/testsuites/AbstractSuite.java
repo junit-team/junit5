@@ -12,10 +12,10 @@ package org.junit.platform.suite.engine.testsuites;
 
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.Simple;
+import org.junit.platform.suite.engine.testcases.SimpleTest;
 
 @Suite
-@SelectClasses(Simple.class)
+@SelectClasses(SimpleTest.class)
 public abstract class AbstractSuite {
 
 }

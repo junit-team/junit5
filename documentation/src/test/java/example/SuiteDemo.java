@@ -19,7 +19,6 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @SuiteDisplayName("JUnit Platform Suite Demo")
 @SelectPackages("example")
 //end::user_guide[]
-@org.junit.platform.suite.api.IncludeClassNamePatterns
 @org.junit.platform.suite.api.ExcludeTags("exclude")
 //tag::user_guide[]
 public class SuiteDemo {

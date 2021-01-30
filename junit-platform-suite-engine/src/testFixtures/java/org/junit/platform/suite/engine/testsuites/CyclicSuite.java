@@ -8,16 +8,15 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.suite.engine.testcases;
+package org.junit.platform.suite.engine.testsuites;
 
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-@Tag("test-tag")
-public class Tagged {
+@Suite
+@IncludeClassNamePatterns(".*")
+@SelectClasses(CyclicSuite.class)
+public class CyclicSuite {
 
-	@Test
-	void test() {
-
-	}
 }

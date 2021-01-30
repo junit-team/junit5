@@ -10,9 +10,11 @@
 
 package org.junit.platform.suite.engine.testcases;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-public class Simple {
+@Tag("test-tag")
+public class TaggedTest {
 
 	@Test
 	void test() {

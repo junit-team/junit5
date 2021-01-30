@@ -13,10 +13,10 @@ package org.junit.platform.suite.engine.testsuites;
 import org.junit.platform.suite.api.Configuration;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.Conditional;
+import org.junit.platform.suite.engine.testcases.ConditionalTest;
 
 @Suite
-@SelectClasses(Conditional.class)
+@SelectClasses(ConditionalTest.class)
 @Configuration(key = "junit.jupiter.conditions.deactivate", value = "*")
 public class ConfigurationSuite {
 

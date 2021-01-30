@@ -12,10 +12,10 @@ package org.junit.platform.suite.engine.testsuites;
 
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.Multiple;
+import org.junit.platform.suite.engine.testcases.MultipleTest;
 
 @Suite
-@SelectClasses(Multiple.class)
+@SelectClasses(MultipleTest.class)
 public class MultipleSuite {
 
 }

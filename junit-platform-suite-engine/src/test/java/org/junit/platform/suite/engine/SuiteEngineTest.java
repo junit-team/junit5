@@ -29,9 +29,9 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.Dynamic;
-import org.junit.platform.suite.engine.testcases.Multiple;
-import org.junit.platform.suite.engine.testcases.Simple;
+import org.junit.platform.suite.engine.testcases.DynamicTest;
+import org.junit.platform.suite.engine.testcases.MultipleTest;
+import org.junit.platform.suite.engine.testcases.SimpleTest;
 import org.junit.platform.suite.engine.testsuites.AbstractSuite;
 import org.junit.platform.suite.engine.testsuites.DynamicSuite;
 import org.junit.platform.suite.engine.testsuites.IncludeSuiteEngineSuite;
@@ -53,7 +53,7 @@ class SuiteEngineTest {
 				.testEvents()
 				.assertThatEvents()
 				.haveExactly(1, event(test(SelectClassesSuite.class.getName()), finishedSuccessfully()))
-				.haveExactly(1, event(test(Simple.class.getName()), finishedSuccessfully()));
+				.haveExactly(1, event(test(SimpleTest.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
 
@@ -106,7 +106,7 @@ class SuiteEngineTest {
 	}
 
 	@Suite
-	@SelectClasses(Simple.class)
+	@SelectClasses(SimpleTest.class)
 	private static class PrivateSuite {
 
 	}
@@ -125,7 +125,7 @@ class SuiteEngineTest {
 
 	@SuppressWarnings("InnerClassMayBeStatic")
 	@Suite
-	@SelectClasses(Simple.class)
+	@SelectClasses(SimpleTest.class)
 	private class InnerSuite {
 
 	}
@@ -150,7 +150,7 @@ class SuiteEngineTest {
 				.execute()
 				.testEvents()
 				.assertThatEvents()
-				.haveExactly(2, event(test(Dynamic.class.getName()), finishedSuccessfully()));
+				.haveExactly(2, event(test(DynamicTest.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
 
@@ -164,7 +164,7 @@ class SuiteEngineTest {
 				.assertThatEvents()
 				.haveExactly(1, event(test(SuiteSuite.class.getName()), finishedSuccessfully()))
 				.haveExactly(1, event(test(SelectClassesSuite.class.getName()), finishedSuccessfully()))
-				.haveExactly(1, event(test(Simple.class.getName()), finishedSuccessfully()));
+				.haveExactly(1, event(test(SimpleTest.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
 
@@ -179,7 +179,7 @@ class SuiteEngineTest {
 				.testEvents()
 				.assertThatEvents()
 				.haveExactly(1, event(test(SelectClassesSuite.class.getName()), finishedSuccessfully()))
-				.haveExactly(1, event(test(Simple.class.getName()), finishedSuccessfully()));
+				.haveExactly(1, event(test(SimpleTest.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
 
@@ -189,7 +189,7 @@ class SuiteEngineTest {
 		UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID)
 				.append(SuiteTestDescriptor.SEGMENT_TYPE, MultipleSuite.class.getName())
 				.append("engine", JupiterEngineDescriptor.ENGINE_ID)
-				.append(ClassTestDescriptor.SEGMENT_TYPE, Multiple.class.getName())
+				.append(ClassTestDescriptor.SEGMENT_TYPE, MultipleTest.class.getName())
 				.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
 		EngineTestKit.engine(ENGINE_ID)
@@ -198,7 +198,7 @@ class SuiteEngineTest {
 				.testEvents()
 				.assertThatEvents()
 				.haveExactly(1, event(test(MultipleSuite.class.getName()), finishedSuccessfully()))
-				.haveExactly(1, event(test(Multiple.class.getName()), finishedSuccessfully()));
+				.haveExactly(1, event(test(MultipleTest.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
 
@@ -214,7 +214,7 @@ class SuiteEngineTest {
 				.testEvents()
 				.assertThatEvents()
 				.haveExactly(2, event(test(MultipleSuite.class.getName()), finishedSuccessfully()))
-				.haveExactly(2, event(test(Multiple.class.getName()), finishedSuccessfully()));
+				.haveExactly(2, event(test(MultipleTest.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
 
@@ -224,7 +224,7 @@ class SuiteEngineTest {
 		UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID)
 				.append(SuiteTestDescriptor.SEGMENT_TYPE, MultipleSuite.class.getName())
 				.append("engine", JupiterEngineDescriptor.ENGINE_ID)
-				.append(ClassTestDescriptor.SEGMENT_TYPE, Multiple.class.getName())
+				.append(ClassTestDescriptor.SEGMENT_TYPE, MultipleTest.class.getName())
 				.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
 		EngineTestKit.engine(ENGINE_ID)
@@ -234,9 +234,9 @@ class SuiteEngineTest {
 				.testEvents()
 				.assertThatEvents()
 				.haveExactly(1, event(test(SelectClassesSuite.class.getName()), finishedSuccessfully()))
-				.haveExactly(1, event(test(Simple.class.getName()), finishedSuccessfully()))
+				.haveExactly(1, event(test(SimpleTest.class.getName()), finishedSuccessfully()))
 				.haveExactly(1, event(test(MultipleSuite.class.getName()), finishedSuccessfully()))
-				.haveExactly(1, event(test(Multiple.class.getName()), finishedSuccessfully()));
+				.haveExactly(1, event(test(MultipleTest.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
 
@@ -246,13 +246,13 @@ class SuiteEngineTest {
 		UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID)
 				.append(SuiteTestDescriptor.SEGMENT_TYPE, MultipleSuite.class.getName())
 				.append("engine", JupiterEngineDescriptor.ENGINE_ID)
-				.append(ClassTestDescriptor.SEGMENT_TYPE, Multiple.class.getName())
+				.append(ClassTestDescriptor.SEGMENT_TYPE, MultipleTest.class.getName())
 				.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
 		UniqueId uniqueId2 = UniqueId.forEngine(ENGINE_ID)
 				.append(SuiteTestDescriptor.SEGMENT_TYPE, MultipleSuite.class.getName())
 				.append("engine", JupiterEngineDescriptor.ENGINE_ID)
-				.append(ClassTestDescriptor.SEGMENT_TYPE, Multiple.class.getName())
+				.append(ClassTestDescriptor.SEGMENT_TYPE, MultipleTest.class.getName())
 				.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test2()");
 
 		EngineTestKit.engine(ENGINE_ID)
@@ -262,7 +262,7 @@ class SuiteEngineTest {
 				.testEvents()
 				.assertThatEvents()
 				.haveExactly(2, event(test(MultipleSuite.class.getName()), finishedSuccessfully()))
-				.haveExactly(2, event(test(Multiple.class.getName()), finishedSuccessfully()));
+				.haveExactly(2, event(test(MultipleTest.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
 
@@ -272,7 +272,7 @@ class SuiteEngineTest {
 		PostDiscoveryFilter postDiscoveryFilter = testDescriptor -> testDescriptor.getSource()
 				.filter(MethodSource.class::isInstance)
 				.map(MethodSource.class::cast)
-				.filter(classSource -> Simple.class.equals(classSource.getJavaClass()))
+				.filter(classSource -> SimpleTest.class.equals(classSource.getJavaClass()))
 				.map(classSource -> FilterResult.excluded("Was a test in SimpleTest"))
 				.orElseGet(() -> FilterResult.included("Was not a test in SimpleTest"));
 

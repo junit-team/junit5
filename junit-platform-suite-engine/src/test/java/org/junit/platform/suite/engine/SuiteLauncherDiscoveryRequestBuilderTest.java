@@ -43,7 +43,7 @@ import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
-import org.junit.platform.suite.engine.testcases.Simple;
+import org.junit.platform.suite.engine.testcases.SimpleTest;
 import org.junit.platform.suite.engine.testsuites.ConfigurationSuite;
 import org.junit.platform.suite.engine.testsuites.ExcludeClassNamePatternsSuite;
 import org.junit.platform.suite.engine.testsuites.ExcludeEnginesSuite;
@@ -82,7 +82,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 	void excludeClassNamePatterns() {
 		LauncherDiscoveryRequest request = builder.suite(ExcludeClassNamePatternsSuite.class).build();
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
-		filters.forEach(filter -> assertTrue(filter.apply(Simple.class.getName()).excluded()));
+		assertTrue(filters.stream().anyMatch(filter -> filter.apply(SimpleTest.class.getName()).excluded()));
 	}
 
 	@Test
@@ -111,7 +111,15 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 	void includeClassNamePatterns() {
 		LauncherDiscoveryRequest request = builder.suite(IncludeClassNamePatternsSuite.class).build();
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
-		filters.forEach(filter -> assertTrue(filter.apply(Simple.class.getName()).included()));
+		filters.forEach(filter -> assertTrue(filter.apply(SimpleTest.class.getName()).included()));
+	}
+
+	@Test
+	void includesStandardIncludePatternsWhenIncludeClassNamePatternsIsOmitted() {
+		LauncherDiscoveryRequest request = builder.suite(SelectClassesSuite.class).build();
+		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
+		filters.forEach(filter -> assertTrue(filter.apply(SimpleTest.class.getName()).included()));
+		filters.forEach(filter -> assertTrue(filter.apply(SelectClassesSuite.class.getName()).excluded()));
 	}
 
 	@Test
@@ -140,7 +148,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 	void selectClasses() {
 		LauncherDiscoveryRequest request = builder.suite(SelectClassesSuite.class).build();
 		List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
-		selectors.forEach(selector -> assertEquals(Simple.class, selector.getJavaClass()));
+		selectors.forEach(selector -> assertEquals(SimpleTest.class, selector.getJavaClass()));
 	}
 
 	@Test

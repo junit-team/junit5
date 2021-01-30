@@ -8,13 +8,19 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.suite.engine.testsuites;
+package org.junit.platform.suite.engine.testcases;
 
-import org.junit.platform.suite.api.SelectClasses;
-import org.junit.platform.suite.api.Suite;
+import org.junit.jupiter.api.Test;
 
-@Suite
-@SelectClasses(CyclicSuiteSuite.class)
-public class CyclicSuiteSuite {
+public class MultipleTest {
 
+	@Test
+	void test() {
+
+	}
+
+	@Test
+	void test2() {
+
+	}
 }

@@ -10,10 +10,12 @@
 
 package org.junit.platform.suite.engine.testsuites;
 
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
 @Suite
+@IncludeClassNamePatterns(".*")
 @SelectClasses(SelectClassesSuite.class)
 public class SuiteSuite {
 

@@ -12,15 +12,10 @@ package org.junit.platform.suite.engine.testcases;
 
 import org.junit.jupiter.api.Test;
 
-public class Multiple {
+public class SimpleTest {
 
 	@Test
 	void test() {
-
-	}
-
-	@Test
-	void test2() {
 
 	}
 }

@@ -27,6 +27,13 @@ import org.junit.platform.commons.annotation.Testable;
  * suite. Additionally configuration can be passed to the suite via the
  * configuration annotations.
  *
+ * <p>When the {@link IncludeClassNamePatterns @IncludeClassNamePatterns}
+ * annotation is not present, the default include pattern
+ * {@value org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN}
+ * will be used in order to avoid loading classes unnecessarily (see {@link
+ * org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN
+ * ClassNameFilter#STANDARD_INCLUDE_PATTERN}).
+ *
  * <h4>JUnit 5 Suite Support</h4>
  * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
  * the {@code junit-platform-suite} engine.

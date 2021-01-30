@@ -26,8 +26,8 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.suite.engine.testcases.Simple;
-import org.junit.platform.suite.engine.testsuites.CyclicSuiteSuite;
+import org.junit.platform.suite.engine.testcases.SimpleTest;
+import org.junit.platform.suite.engine.testsuites.CyclicSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
 
 class SuiteTestDescriptorTest {
@@ -35,8 +35,7 @@ class SuiteTestDescriptorTest {
 	UniqueId engineId = UniqueId.forEngine(SuiteEngineDescriptor.ENGINE_ID);
 	UniqueId suiteId = engineId.append(SuiteTestDescriptor.SEGMENT_TYPE, "test");
 	UniqueId jupiterEngineId = suiteId.append("engine", JupiterEngineDescriptor.ENGINE_ID);
-	UniqueId suiteEngineId = suiteId.append("engine", SuiteEngineDescriptor.ENGINE_ID);
-	UniqueId testClassId = jupiterEngineId.append(ClassTestDescriptor.SEGMENT_TYPE, Simple.class.getName());
+	UniqueId testClassId = jupiterEngineId.append(ClassTestDescriptor.SEGMENT_TYPE, SimpleTest.class.getName());
 	UniqueId methodId = testClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
 	SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, Object.class);
@@ -84,11 +83,11 @@ class SuiteTestDescriptorTest {
 		// @formatter:off
 		UniqueId expectedCycle = suiteId
 				.append("engine", SuiteEngineDescriptor.ENGINE_ID)
-				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuiteSuite.class.getName())
+				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuite.class.getName())
 				.append("engine", SuiteEngineDescriptor.ENGINE_ID)
-				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuiteSuite.class.getName());
+				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuite.class.getName());
 		// @formatter:on
-		suite.addDiscoveryRequestFrom(CyclicSuiteSuite.class);
+		suite.addDiscoveryRequestFrom(CyclicSuite.class);
 		JUnitException exception = assertThrows(JUnitException.class, suite::discover);
 		assertEquals("Configuration error: The suite configuration may not contain a cycle [" + expectedCycle + "]",
 			exception.getCause().getCause().getCause().getMessage());

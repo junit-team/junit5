@@ -13,7 +13,7 @@ package org.junit.platform.suite.engine.testcases;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIf;
 
-public class Conditional {
+public class ConditionalTest {
 
 	@Test
 	@DisabledIf("isTestDisabled")
