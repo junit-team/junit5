@@ -12,8 +12,8 @@ package org.junit.platform.suite.engine.testsuites;
 
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.engine.testcases.MultipleTest;
 import org.junit.platform.suite.engine.testcases.SimpleTest;
-import org.junit.platform.suite.engine.testcases.TaggedTest;
 
 public class NestedSuite {
 
@@ -24,7 +24,7 @@ public class NestedSuite {
 	}
 
 	@Suite
-	@SelectClasses(TaggedTest.class)
+	@SelectClasses(MultipleTest.class)
 	static public class Tagged {
 
 	}

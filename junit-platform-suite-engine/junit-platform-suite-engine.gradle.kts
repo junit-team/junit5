@@ -13,7 +13,8 @@ dependencies {
 	api("org.apiguardian:apiguardian-api")
 	api(project(":junit-platform-engine"))
 	api(project(":junit-platform-suite-api"))
-	api(project(":junit-platform-launcher"))
+
+	implementation(project(":junit-platform-suite-commons"))
 
 	testFixturesApi(project(":junit-jupiter-api"))
 	testFixturesApi(project(":junit-platform-suite-api"))

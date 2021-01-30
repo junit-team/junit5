@@ -34,7 +34,6 @@ import org.junit.platform.suite.engine.testcases.MultipleTest;
 import org.junit.platform.suite.engine.testcases.SimpleTest;
 import org.junit.platform.suite.engine.testsuites.AbstractSuite;
 import org.junit.platform.suite.engine.testsuites.DynamicSuite;
-import org.junit.platform.suite.engine.testsuites.IncludeSuiteEngineSuite;
 import org.junit.platform.suite.engine.testsuites.MultipleSuite;
 import org.junit.platform.suite.engine.testsuites.NestedSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
@@ -54,18 +53,6 @@ class SuiteEngineTest {
 				.assertThatEvents()
 				.haveExactly(1, event(test(SelectClassesSuite.class.getName()), finishedSuccessfully()))
 				.haveExactly(1, event(test(SimpleTest.class.getName()), finishedSuccessfully()));
-		// @formatter:on
-	}
-
-	@Test
-	void includeSuiteEngine() {
-		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(IncludeSuiteEngineSuite.class))
-				.execute()
-				.testEvents()
-				.assertThatEvents()
-				.isEmpty();
 		// @formatter:on
 	}
 

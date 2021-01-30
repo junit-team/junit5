@@ -8,14 +8,14 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-module org.junit.platform.suite.engine {
-	requires org.apiguardian.api;
+module org.junit.platform.suite.commons {
+	requires transitive org.apiguardian.api;
 	requires org.junit.platform.suite.api;
-	requires org.junit.platform.suite.commons;
 	requires org.junit.platform.commons;
 	requires org.junit.platform.engine;
-	requires org.junit.platform.launcher;
+	requires transitive org.junit.platform.launcher;
 
-	provides org.junit.platform.engine.TestEngine
-			with org.junit.platform.suite.engine.SuiteTestEngine;
+	exports org.junit.platform.suite.commons to
+			org.junit.platform.suite.engine,
+			org.junit.platform.runner;
 }

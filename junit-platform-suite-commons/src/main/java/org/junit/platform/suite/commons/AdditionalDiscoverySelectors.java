@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.runner;
+package org.junit.platform.suite.commons;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -34,11 +34,11 @@ class AdditionalDiscoverySelectors {
 		Preconditions.containsNoNullElements(uris, "Individual uris must not be null");
 
 		// @formatter:off
-        return uniqueStreamOf(uris)
-                .filter(String::isEmpty)
-                .map(DiscoverySelectors::selectUri)
-                .collect(Collectors.toList());
-        // @formatter:on
+		return uniqueStreamOf(uris)
+				.filter(String::isEmpty)
+				.map(DiscoverySelectors::selectUri)
+				.collect(Collectors.toList());
+		// @formatter:on
 	}
 
 	public static List<DirectorySelector> selectDirectories(String... paths) {
@@ -46,11 +46,11 @@ class AdditionalDiscoverySelectors {
 		Preconditions.containsNoNullElements(paths, "Individual directory paths must not be null");
 
 		// @formatter:off
-        return uniqueStreamOf(paths)
-                .filter(String::isEmpty)
-                .map(DiscoverySelectors::selectDirectory)
-                .collect(Collectors.toList());
-        // @formatter:on
+		return uniqueStreamOf(paths)
+				.filter(String::isEmpty)
+				.map(DiscoverySelectors::selectDirectory)
+				.collect(Collectors.toList());
+		// @formatter:on
 	}
 
 	public static List<PackageSelector> selectPackages(String... packageNames) {
@@ -58,10 +58,10 @@ class AdditionalDiscoverySelectors {
 		Preconditions.containsNoNullElements(packageNames, "Individual package names must not be null");
 
 		// @formatter:off
-        return uniqueStreamOf(packageNames)
-                .map(DiscoverySelectors::selectPackage)
-                .collect(Collectors.toList());
-        // @formatter:on
+		return uniqueStreamOf(packageNames)
+				.map(DiscoverySelectors::selectPackage)
+				.collect(Collectors.toList());
+		// @formatter:on
 	}
 
 	public static List<ClassSelector> selectClasses(Class<?>... classes) {
@@ -69,10 +69,10 @@ class AdditionalDiscoverySelectors {
 		Preconditions.containsNoNullElements(classes, "individual classes must not be null");
 
 		// @formatter:off
-        return uniqueStreamOf(classes)
-                .map(DiscoverySelectors::selectClass)
-                .collect(Collectors.toList());
-        // @formatter:on
+		return uniqueStreamOf(classes)
+				.map(DiscoverySelectors::selectClass)
+				.collect(Collectors.toList());
+		// @formatter:on
 	}
 
 	public static List<ModuleSelector> selectModules(String... moduleNames) {

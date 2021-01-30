@@ -8,13 +8,13 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.runner;
+package org.junit.platform.suite.commons;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
-import static org.junit.platform.runner.AdditionalDiscoverySelectors.selectClasspathResource;
-import static org.junit.platform.runner.AdditionalDiscoverySelectors.selectFile;
+import static org.junit.platform.suite.commons.AdditionalDiscoverySelectors.selectClasspathResource;
+import static org.junit.platform.suite.commons.AdditionalDiscoverySelectors.selectFile;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.discovery.ClassNameFilter;
@@ -47,7 +49,9 @@ import org.junit.platform.suite.api.SelectModules;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
 
-final class SuiteLauncherDiscoveryRequestBuilder {
+@API(status = Status.INTERNAL, since = "1.8", consumers = { "org.junit.platform.suite.engine",
+		"org.junit.platform.runner" })
+public final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private final LauncherDiscoveryRequestBuilder request;
 	private boolean classNamePatternsIncluded;
@@ -57,18 +61,18 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 		this.request = request;
 	}
 
-	static SuiteLauncherDiscoveryRequestBuilder request(LauncherDiscoveryRequestBuilder request) {
+	public static SuiteLauncherDiscoveryRequestBuilder request(LauncherDiscoveryRequestBuilder request) {
 		Preconditions.notNull(request, "Launcher discovery request builder must not be null");
 		return new SuiteLauncherDiscoveryRequestBuilder(request);
 	}
 
-	SuiteLauncherDiscoveryRequestBuilder includeStandardClassNamePatternsIfNotPresent(
+	public SuiteLauncherDiscoveryRequestBuilder includeStandardClassNamePatternsIfNotPresent(
 			boolean includeStandardClassNamePatternsIfNotPresent) {
 		this.includeStandardClassNamePatternsIfNotPresent = includeStandardClassNamePatternsIfNotPresent;
 		return this;
 	}
 
-	SuiteLauncherDiscoveryRequestBuilder suite(Class<?> testClass) {
+	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> testClass) {
 		// Annotations in alphabetical order
 		// @formatter:off
 		findRepeatableAnnotations(testClass, Configuration.class)
@@ -90,7 +94,6 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::includeClassNamePatterns)
 				.ifPresent(filters ->{
-					// can't use ifPresentOrElse :(
 					classNamePatternsIncluded = true;
 					request.filters(filters);
 				});
@@ -130,7 +133,7 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
-	LauncherDiscoveryRequest build() {
+	public LauncherDiscoveryRequest build() {
 		if (includeStandardClassNamePatternsIfNotPresent && !classNamePatternsIncluded) {
 			request.filters(ClassNameFilter.includeClassNamePatterns(STANDARD_INCLUDE_PATTERN));
 		}

@@ -31,6 +31,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.suite.api.SuiteDisplayName;
+import org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder;
 
 /**
  * {@link TestDescriptor} for tests based on the JUnit Platform Launcher API.

@@ -44,6 +44,7 @@ val platformProjects by extra(listOf(
 		project(":junit-platform-runner"),
 		project(":junit-platform-suite"),
 		project(":junit-platform-suite-api"),
+		project(":junit-platform-suite-commons"),
 		project(":junit-platform-suite-engine"),
 		project(":junit-platform-testkit")
 ))
@@ -78,6 +79,7 @@ val jacocoTestProjects = listOf(
 		project(":junit-jupiter-migrationsupport"),
 		project(":junit-jupiter-params"),
 		project(":junit-platform-runner"),
+		project(":junit-platform-suite-commons"),
 		project(":junit-platform-suite-engine"),
 		project(":junit-vintage-engine"),
 		project(":platform-tests")

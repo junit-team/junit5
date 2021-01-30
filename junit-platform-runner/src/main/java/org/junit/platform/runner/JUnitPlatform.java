@@ -48,6 +48,7 @@ import org.junit.platform.suite.api.SelectUris;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.api.UseTechnicalNames;
+import org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -163,8 +164,12 @@ public class JUnitPlatform extends Runner implements Filterable {
 			requestBuilder.selectors(selectClass(this.testClass));
 		}
 
-		return SuiteLauncherDiscoveryRequestBuilder.request(
-			requestBuilder).includeStandardClassNamePatternsIfNotPresent(isSuite).suite(this.testClass).build();
+		// @formatter:off
+		return SuiteLauncherDiscoveryRequestBuilder.request(requestBuilder)
+				.includeStandardClassNamePatternsIfNotPresent(isSuite)
+				.suite(this.testClass)
+				.build();
+		// @formatter:on
 	}
 
 	private boolean isSuite() {

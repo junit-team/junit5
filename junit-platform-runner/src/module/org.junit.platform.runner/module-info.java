@@ -19,6 +19,7 @@ module org.junit.platform.runner {
 	requires transitive org.apiguardian.api;
 	requires transitive org.junit.platform.launcher;
 	requires transitive org.junit.platform.suite.api;
+	requires org.junit.platform.suite.commons;
 
 	exports org.junit.platform.runner;
 }
