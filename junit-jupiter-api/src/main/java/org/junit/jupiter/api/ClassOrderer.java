@@ -77,6 +77,9 @@ public interface ClassOrderer {
 	 */
 	class ClassName implements ClassOrderer {
 
+		public ClassName() {
+		}
+
 		/**
 		 * Sort the classes encapsulated in the supplied
 		 * {@link ClassOrdererContext} alphanumerically based on their fully
@@ -96,6 +99,9 @@ public interface ClassOrderer {
 	 * display names using {@link String#compareTo(String)}
 	 */
 	class DisplayName implements ClassOrderer {
+
+		public DisplayName() {
+		}
 
 		/**
 		 * Sort the classes encapsulated in the supplied
@@ -126,6 +132,9 @@ public interface ClassOrderer {
 	 * appear after non-annotated classes in the sorted list.
 	 */
 	class OrderAnnotation implements ClassOrderer {
+
+		public OrderAnnotation() {
+		}
 
 		/**
 		 * Sort the classes encapsulated in the supplied
@@ -196,6 +205,9 @@ public interface ClassOrderer {
 		 * @see MethodOrderer.Random
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
+
+		public Random() {
+		}
 
 		/**
 		 * Order the classes encapsulated in the supplied
