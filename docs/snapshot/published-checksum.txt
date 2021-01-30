@@ -242,6 +242,7 @@
 596ddbc1adbeedc2ab4c3bac529361bd  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineTestKit.java
 59aef2a1e8f3256a381d16373ba1ada3  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.java
 59f0e46064ed163619eb4ae5600c4694  documentation/src/test/java/example/CustomTestEngine.java
+5a7057225ea4cf3ec3fbacff06567b42  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrderer.java
 5b09fedb8d0691af61f9a2a9ead17c7b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java
 5b143dbb7aceed36bbb3320761d77bff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/package-info.java
 5b8cb6f78d1e6f57901950d51edf0c05  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTimeout.java
@@ -635,7 +636,6 @@ e02f0e77d3211b23a261d65fde499cba  documentation/src/test/java/example/testkit/En
 e076aa939a140bb2c5fc0e5e0c6d8e15  junit-platform-commons/src/main/java/org/junit/platform/commons/util/PackageUtils.java
 e07a878876e4f7dcd3474f35f60e3aa8  junit-platform-engine/src/main/java/org/junit/platform/engine/reporting/package-info.java
 e087e411fe9d00bbf5ea40bb20f2e35a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertFalse.java
-e153df410a5383874ab3f80d612250b5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrderer.java
 e2b24c52c15036bb1411be99d8714dfb  documentation/src/test/java/example/exception/IgnoreIOExceptionTests.java
 e2cab4280c784a481b8e4cb5dcd7ebb6  documentation/src/test/java/example/exception/IgnoreIOExceptionExtension.java
 e315d92b650c223b2a02e73a38d7fd06  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContext.java
