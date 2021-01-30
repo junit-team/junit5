@@ -269,13 +269,13 @@ class JUnitPlatformRunnerTests {
 			var filters = request.getEngineFilters();
 			assertThat(filters).hasSize(2);
 
-			var includeFilter = filters.get(0);
+			var includeFilter = filters.get(1);
 			assertTrue(includeFilter.apply(fooEngine).included());
 			assertTrue(includeFilter.apply(barEngine).included());
 			assertTrue(includeFilter.apply(bazEngine).included());
 			assertTrue(includeFilter.apply(quuxEngine).excluded());
 
-			var excludeFilter = filters.get(1);
+			var excludeFilter = filters.get(0);
 			assertTrue(excludeFilter.apply(fooEngine).included());
 			assertTrue(excludeFilter.apply(barEngine).excluded());
 			assertTrue(excludeFilter.apply(bazEngine).included());

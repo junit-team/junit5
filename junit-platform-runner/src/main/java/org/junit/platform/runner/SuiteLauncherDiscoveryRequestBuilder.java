@@ -8,13 +8,13 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.suite.engine;
+package org.junit.platform.runner;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
-import static org.junit.platform.suite.engine.AdditionalDiscoverySelectors.selectClasspathResource;
-import static org.junit.platform.suite.engine.AdditionalDiscoverySelectors.selectFile;
+import static org.junit.platform.runner.AdditionalDiscoverySelectors.selectClasspathResource;
+import static org.junit.platform.runner.AdditionalDiscoverySelectors.selectFile;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;

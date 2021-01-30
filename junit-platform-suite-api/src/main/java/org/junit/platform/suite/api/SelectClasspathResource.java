@@ -25,6 +25,10 @@ import org.apiguardian.api.API.Status;
  * {@code @SelectClasspathResource} specifies the classpath resource to
  * <em>select</em> when running a test suite on the JUnit Platform.
  *
+ * <h4>JUnit 4 Suite Support</h4>
+ * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
+ * {@code @RunWith(JUnitPlatform.class)}.
+ *
  * <h4>JUnit 5 Suite Support</h4>
  * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
  * the {@code junit-platform-suite} engine.
