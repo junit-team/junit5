@@ -73,6 +73,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> testClass) {
+		Preconditions.notNull(testClass, "Test class must not be null");
+
 		// Annotations in alphabetical order
 		// @formatter:off
 		findRepeatableAnnotations(testClass, Configuration.class)
