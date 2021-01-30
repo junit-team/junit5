@@ -10,7 +10,6 @@
 
 package org.junit.platform.suite.engine.testsuites;
 
-import org.junit.platform.suite.api.SelectClasspathRoots;
 import org.junit.platform.suite.api.Suite;
 
 @Suite

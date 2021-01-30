@@ -34,7 +34,6 @@ import org.apiguardian.api.API.Status;
  * @see Suite
  * @see SelectClasses
  * @see SelectClasspathResource
- * @see SelectClasspathRoots
  * @see SelectDirectories
  * @see SelectFile
  * @see SelectModules

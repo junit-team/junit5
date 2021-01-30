@@ -10,41 +10,26 @@
 
 package org.junit.platform.suite.engine;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
-import static org.junit.platform.engine.discovery.ClassNameFilter.excludeClassNamePatterns;
-import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
-import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
-import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
-import static org.junit.platform.launcher.EngineFilter.excludeEngines;
-import static org.junit.platform.launcher.EngineFilter.includeEngines;
-import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
-import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.FilePosition;
 import org.junit.platform.engine.discovery.FileSelector;
-import org.junit.platform.engine.discovery.ModuleSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
-import org.junit.platform.engine.discovery.UriSelector;
+import org.junit.platform.engine.discovery.PackageNameFilter;
+import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.suite.api.Configuration;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
@@ -57,7 +42,6 @@ import org.junit.platform.suite.api.IncludePackages;
 import org.junit.platform.suite.api.IncludeTags;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectClasspathResource;
-import org.junit.platform.suite.api.SelectClasspathRoots;
 import org.junit.platform.suite.api.SelectDirectories;
 import org.junit.platform.suite.api.SelectFile;
 import org.junit.platform.suite.api.SelectModules;
@@ -80,52 +64,70 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 				.forEach(configuration -> request.configurationParameter(configuration.key(), configuration.value()));
 		findAnnotation(testClass, ExcludeClassNamePatterns.class)
 				.map(ExcludeClassNamePatterns::value)
-				.map(this::trimmed)
-				.ifPresent(patterns -> request.filters(excludeClassNamePatterns(patterns)));
+				.map(SuiteLauncherDiscoveryRequestBuilder::trimmed)
+				.map(ClassNameFilter::excludeClassNamePatterns)
+				.ifPresent(request::filters);
 		findAnnotation(testClass, ExcludeEngines.class).
 				map(ExcludeEngines::value)
-				.ifPresent(engineIds -> request.filters(excludeEngines(engineIds)));
+				.map(EngineFilter::excludeEngines)
+				.ifPresent(request::filters);
 		findAnnotation(testClass, ExcludePackages.class)
 				.map(ExcludePackages::value)
-				.ifPresent(packageNames -> request.filters(excludePackageNames(packageNames)));
+				.map(PackageNameFilter::excludePackageNames)
+				.ifPresent(request::filters);
 		findAnnotation(testClass, ExcludeTags.class)
 				.map(ExcludeTags::value)
-				.ifPresent(tagExpressions -> request.filters(excludeTags(tagExpressions)));
+				.map(TagFilter::excludeTags)
+				.ifPresent(request::filters);
 		findAnnotation(testClass, IncludeClassNamePatterns.class)
 				.map(IncludeClassNamePatterns::value)
-				.map(this::trimmed)
-				.ifPresent(patterns -> request.filters(includeClassNamePatterns(patterns)));
+				.map(SuiteLauncherDiscoveryRequestBuilder::trimmed)
+				.map(ClassNameFilter::includeClassNamePatterns)
+				.ifPresent(request::filters);
 		findAnnotation(testClass, IncludeEngines.class)
 				.map(IncludeEngines::value)
-				.ifPresent(engineIds -> request.filters(includeEngines(engineIds)));
+				.map(EngineFilter::includeEngines)
+				.ifPresent(request::filters);
 		findAnnotation(testClass, IncludePackages.class)
 				.map(IncludePackages::value)
-				.ifPresent(packageNames -> request.filters(includePackageNames(packageNames)));
+				.map(PackageNameFilter::includePackageNames)
+				.ifPresent(request::filters);
 		findAnnotation(testClass, IncludeTags.class)
 				.map(IncludeTags::value)
 				.ifPresent(tagExpressions -> request.filters(includeTags(tagExpressions)));
 		findAnnotation(testClass, SelectClasses.class)
 				.map(SelectClasses::value)
-				.ifPresent(classes -> request.selectors(selectClasses(classes)));
+				.map(Arrays::asList)
+				.map(HashSet::new)
+				.map(DiscoverySelectors::selectClasses)
+				.ifPresent(request::selectors);
 		findRepeatableAnnotations(testClass, SelectClasspathResource.class)
-				.forEach(resource -> request.selectors(selectClasspathResourceAndFilePosition(resource)));
-		findAnnotation(testClass, SelectClasspathRoots.class)
-				.map(SelectClasspathRoots::value)
-				.ifPresent(classPathRoots -> request.selectors(selectClasspathRoots(classPathRoots)));
+				.stream()
+				.map(SuiteLauncherDiscoveryRequestBuilder::selectClasspathResourceAndFilePosition)
+				.forEach(request::selectors);
 		findAnnotation(testClass, SelectDirectories.class)
 				.map(SelectDirectories::value)
-				.ifPresent(directory -> request.selectors(selectDirectory(directory)));
+				.map(DiscoverySelectors::selectDirectory)
+				.ifPresent(request::selectors);
 		findRepeatableAnnotations(testClass, SelectFile.class)
 				.forEach(file -> request.selectors(selectFileAndPosition(file)));
 		findAnnotation(testClass, SelectModules.class)
 				.map(SelectModules::value)
-				.ifPresent(modules -> request.selectors(selectModules(modules)));
+				.map(Arrays::asList)
+				.map(HashSet::new)
+				.map(DiscoverySelectors::selectModules)
+				.ifPresent(request::selectors);
 		findAnnotation(testClass, SelectUris.class)
 				.map(SelectUris::value)
-				.ifPresent(uris -> request.selectors(selectUris(uris)));
+				.map(Arrays::asList)
+				.map(DiscoverySelectors::selectUris)
+				.ifPresent(request::selectors);
 		findAnnotation(testClass, SelectPackages.class)
 				.map(SelectPackages::value)
-				.ifPresent(packages -> request.selectors(selectPackages(packages)));
+				.map(Arrays::asList)
+				.map(HashSet::new)
+				.map(DiscoverySelectors::selectPackages)
+				.ifPresent(request::selectors);
 		// @formatter:on
 		return this;
 	}
@@ -134,7 +136,7 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 		return request.build();
 	}
 
-	private ClasspathResourceSelector selectClasspathResourceAndFilePosition(SelectClasspathResource select) {
+	private static ClasspathResourceSelector selectClasspathResourceAndFilePosition(SelectClasspathResource select) {
 		if (select.line() <= 0) {
 			return selectClasspathResource(select.value());
 		}
@@ -154,45 +156,7 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 		return selectFile(select.value(), FilePosition.from(select.line(), select.column()));
 	}
 
-	private static List<UriSelector> selectUris(String[] uris) {
-		// @formatter:off
-		return Arrays.stream(uris)
-				.map(DiscoverySelectors::selectUri)
-				.collect(toList());
-		// @formatter:on
-	}
-
-	private static List<ModuleSelector> selectModules(String[] modules) {
-		Set<String> moduleSet = new HashSet<>(Arrays.asList(modules));
-		return DiscoverySelectors.selectModules(moduleSet);
-	}
-
-	private static List<ClasspathRootSelector> selectClasspathRoots(String[] classpathRoots) {
-		// @formatter:off
-		Set<Path> classpathRootSet = Arrays.stream(classpathRoots)
-				.map(Paths::get)
-				.collect(Collectors.toSet());
-		// @formatter:on
-		return DiscoverySelectors.selectClasspathRoots(classpathRootSet);
-	}
-
-	private static List<ClassSelector> selectClasses(Class<?>[] classes) {
-		// @formatter:off
-		return Arrays.stream(classes)
-				.map(DiscoverySelectors::selectClass)
-				.collect(toList());
-		// @formatter:on
-	}
-
-	private static List<PackageSelector> selectPackages(String[] packages) {
-		// @formatter:off
-		return Arrays.stream(packages)
-				.map(DiscoverySelectors::selectPackage)
-				.collect(toList());
-		// @formatter:on
-	}
-
-	private String[] trimmed(String[] patterns) {
+	private static String[] trimmed(String[] patterns) {
 		if (patterns.length == 0) {
 			return patterns;
 		}

@@ -34,7 +34,6 @@ import org.junit.platform.commons.annotation.Testable;
  * @since 1.8
  * @see SelectClasses
  * @see SelectClasspathResource
- * @see SelectClasspathRoots
  * @see SelectDirectories
  * @see SelectFile
  * @see SelectModules

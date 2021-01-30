@@ -42,7 +42,6 @@ import org.apiguardian.api.API;
  * @see Suite
  * @see SelectClasses
  * @see SelectClasspathResource
- * @see SelectClasspathRoots
  * @see SelectDirectories
  * @see SelectFile
  * @see SelectModules
