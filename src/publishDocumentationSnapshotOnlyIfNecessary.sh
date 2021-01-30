@@ -28,6 +28,7 @@ md5sum $(find junit-platform-reporting -wholename '**/src/main/*.java') >> "${cu
 md5sum $(find junit-platform-runner -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-suite -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-suite-api -wholename '**/src/main/*.java') >> "${current}"
+md5sum $(find junit-platform-suite-commons -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-suite-engine -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-testkit -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-vintage-engine -wholename '**/src/main/*.java') >> "${current}"
