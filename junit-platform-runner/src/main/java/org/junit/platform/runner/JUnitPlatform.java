@@ -45,6 +45,7 @@ import org.junit.platform.suite.api.SelectFile;
 import org.junit.platform.suite.api.SelectModules;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
+import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.runner.Description;
@@ -108,9 +109,20 @@ import org.junit.runner.notification.RunNotifier;
 @API(status = STABLE, since = "1.0")
 public class JUnitPlatform extends Runner implements Filterable {
 
-	private static final List<Class<? extends Annotation>> SELECTOR_ANNOTATIONS = Arrays.asList(SelectClasses.class,
-		SelectClasspathResource.class, SelectDirectories.class, SelectFile.class, SelectFile.class, SelectModules.class,
-		SelectPackages.class, SelectUris.class);
+	// @formatter:off
+	private static final List<Class<? extends Annotation>> SUITE_ANNOTATIONS = Arrays.asList(
+			Suite.class,
+			// These implicitly declare a suite
+			SelectClasses.class,
+			SelectClasspathResource.class,
+			SelectDirectories.class,
+			SelectFile.class,
+			SelectFile.class,
+			SelectModules.class,
+			SelectPackages.class,
+			SelectUris.class
+	);
+	// @formatter:on
 
 	private final Class<?> testClass;
 	private final Launcher launcher;
@@ -156,7 +168,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	private boolean isSuite() {
-		return SELECTOR_ANNOTATIONS.stream().anyMatch(annotation -> testClass.getAnnotation(annotation) != null);
+		return SUITE_ANNOTATIONS.stream().anyMatch(annotation -> testClass.getAnnotation(annotation) != null);
 	}
 
 	@Override

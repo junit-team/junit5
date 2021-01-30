@@ -28,14 +28,6 @@ import org.apiguardian.api.API.Status;
  * completely optional since {@code @SelectFile} is a
  * {@linkplain java.lang.annotation.Repeatable repeatable} annotation.
  *
- * <h4>JUnit 4 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
- * {@code @RunWith(JUnitPlatform.class)}.
- *
- * <h4>JUnit 5 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
- * the {@code junit-platform-suite} engine.
- *
  * @since 1.8
  * @see SelectFile
  */

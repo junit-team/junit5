@@ -26,33 +26,9 @@ import org.apiguardian.api.API.Status;
  * {@linkplain #value value} pairs to be added to the discovery request when running
  * a test suite on the JUnit Platform.
  *
- * <h4>JUnit 4 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
- * {@code @RunWith(JUnitPlatform.class)}.
- *
- * <h4>JUnit 5 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
- * the {@code junit-platform-suite} engine.
- *
  * @since 1.8
  * @see Suite
- * @see SelectClasses
- * @see SelectClasspathResource
- * @see SelectDirectories
- * @see SelectFile
- * @see SelectModules
- * @see SelectPackages
- * @see SelectUris
- * @see IncludeClassNamePatterns
- * @see ExcludeClassNamePatterns
- * @see IncludeEngines
- * @see ExcludeEngines
- * @see IncludePackages
- * @see ExcludePackages
- * @see IncludeTags
- * @see ExcludeTags
- * @see SuiteDisplayName
- * @see Configuration
+ * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder#configurationParameter(String, String)
  */
 @Retention(RetentionPolicy.RUNTIME)

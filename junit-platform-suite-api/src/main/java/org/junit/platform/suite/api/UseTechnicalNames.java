@@ -42,24 +42,6 @@ import org.apiguardian.api.API;
  * {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 1.0
- * @see SelectClasses
- * @see SelectClasspathResource
- * @see SelectDirectories
- * @see SelectFile
- * @see SelectModules
- * @see SelectPackages
- * @see SelectUris
- * @see IncludeClassNamePatterns
- * @see ExcludeClassNamePatterns
- * @see IncludeEngines
- * @see ExcludeEngines
- * @see IncludePackages
- * @see ExcludePackages
- * @see IncludeTags
- * @see ExcludeTags
- * @see SuiteDisplayName
- * @see UseTechnicalNames
- * @see Configuration
  * @see org.junit.platform.runner.JUnitPlatform
  */
 @Retention(RetentionPolicy.RUNTIME)

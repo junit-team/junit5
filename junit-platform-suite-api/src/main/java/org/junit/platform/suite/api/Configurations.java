@@ -24,14 +24,6 @@ import org.apiguardian.api.API.Status;
  * {@code @Configurations} is a container for one or more
  * {@link Configuration @Configuration} declarations.
  *
- * <p>Note, however, that use of the {@code @Configurations} container is
- * completely optional since {@code @Configuration} is a
- * {@linkplain java.lang.annotation.Repeatable repeatable} annotation.
- *
- * <h4>JUnit 5 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
- * the {@code junit-platform-suite} engine.
- *
  * @since 1.8
  * @see Configuration
  */

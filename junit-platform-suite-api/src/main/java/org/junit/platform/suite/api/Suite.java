@@ -34,10 +34,6 @@ import org.junit.platform.commons.annotation.Testable;
  * org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN
  * ClassNameFilter#STANDARD_INCLUDE_PATTERN}).
  *
- * <h4>JUnit 5 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
- * the {@code junit-platform-suite} engine.
- *
  * @since 1.8
  * @see SelectClasses
  * @see SelectClasspathResource

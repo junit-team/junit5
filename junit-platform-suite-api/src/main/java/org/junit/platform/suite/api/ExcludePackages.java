@@ -24,34 +24,11 @@ import org.apiguardian.api.API;
 /**
  * {@code @ExcludePackages} specifies the {@linkplain #value packages} to be
  * excluded when running a test suite on the JUnit Platform.
- *
- * <h4>JUnit 4 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
- * {@code @RunWith(JUnitPlatform.class)}.
- *
- * <h4>JUnit 5 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
- * the {@code junit-platform-suite} engine.
+
  * @since 1.0
  * @see Suite
- * @see SelectClasses
- * @see SelectClasspathResource
- * @see SelectDirectories
- * @see SelectFile
- * @see SelectModules
- * @see SelectPackages
- * @see SelectUris
- * @see IncludeClassNamePatterns
- * @see ExcludeClassNamePatterns
- * @see IncludeEngines
- * @see ExcludeEngines
- * @see IncludePackages
- * @see ExcludePackages
- * @see IncludeTags
- * @see ExcludeTags
- * @see SuiteDisplayName
- * @see Configuration
  * @see org.junit.platform.runner.JUnitPlatform
+ * @see org.junit.platform.engine.discovery.PackageNameFilter#excludePackageNames(String...)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
