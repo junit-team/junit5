@@ -18,6 +18,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
@@ -98,4 +99,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 		return (Optional<MethodOrderer>) cache.computeIfAbsent(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME,
 			key -> delegate.getDefaultTestMethodOrderer());
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Optional<ClassOrderer> getDefaultTestClassOrderer() {
+		return (Optional<ClassOrderer>) cache.computeIfAbsent(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME,
+			key -> delegate.getDefaultTestClassOrderer());
+	}
+
 }

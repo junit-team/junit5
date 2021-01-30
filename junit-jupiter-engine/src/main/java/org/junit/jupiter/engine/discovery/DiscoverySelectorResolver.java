@@ -36,6 +36,7 @@ public class DiscoverySelectorResolver {
 			.addClassContainerSelectorResolver(new IsTestClassWithTests())
 			.addSelectorResolver(context -> new ClassSelectorResolver(context.getClassNameFilter(), context.getEngineDescriptor().getConfiguration()))
 			.addSelectorResolver(context -> new MethodSelectorResolver(context.getEngineDescriptor().getConfiguration()))
+			.addTestDescriptorVisitor(context -> new ClassOrderingVisitor(context.getEngineDescriptor().getConfiguration()))
 			.addTestDescriptorVisitor(context -> new MethodOrderingVisitor(context.getEngineDescriptor().getConfiguration()))
 			.addTestDescriptorVisitor(context -> TestDescriptor::prune)
 			.build();
