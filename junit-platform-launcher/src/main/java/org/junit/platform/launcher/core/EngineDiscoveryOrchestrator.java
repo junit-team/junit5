@@ -46,7 +46,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *
  * @since 1.7
  */
-@API(status = INTERNAL, since = "1.7", consumers = { "testkit", "suite" })
+@API(status = INTERNAL, since = "1.7", consumers = { "org.junit.platform.testkit", "org.junit.platform.suite.engine" })
 public class EngineDiscoveryOrchestrator {
 
 	private static final Logger logger = LoggerFactory.getLogger(EngineDiscoveryOrchestrator.class);

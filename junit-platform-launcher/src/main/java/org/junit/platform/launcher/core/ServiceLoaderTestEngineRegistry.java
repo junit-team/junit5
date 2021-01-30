@@ -29,7 +29,7 @@ import org.junit.platform.engine.TestEngine;
 /**
  * @since 1.0
  */
-@API(status = INTERNAL, since = "1.0", consumers = "suite")
+@API(status = INTERNAL, since = "1.0", consumers = "org.junit.platform.suite.engine")
 public final class ServiceLoaderTestEngineRegistry {
 
 	public ServiceLoaderTestEngineRegistry() {
