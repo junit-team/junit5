@@ -12,6 +12,7 @@ package org.junit.platform.runner;
 
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -173,7 +174,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	private boolean isSuite() {
-		return SUITE_ANNOTATIONS.stream().anyMatch(annotation -> testClass.getAnnotation(annotation) != null);
+		return SUITE_ANNOTATIONS.stream().anyMatch(annotation -> isAnnotated(testClass, annotation));
 	}
 
 	@Override
