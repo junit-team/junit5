@@ -29,7 +29,7 @@ import org.junit.platform.engine.discovery.UriSelector;
 
 class AdditionalDiscoverySelectors {
 
-	public static List<UriSelector> selectUris(String... uris) {
+	static List<UriSelector> selectUris(String... uris) {
 		Preconditions.notNull(uris, "Uris must not be null");
 		Preconditions.containsNoNullElements(uris, "Individual uris must not be null");
 
@@ -41,7 +41,7 @@ class AdditionalDiscoverySelectors {
 		// @formatter:on
 	}
 
-	public static List<DirectorySelector> selectDirectories(String... paths) {
+	static List<DirectorySelector> selectDirectories(String... paths) {
 		Preconditions.notNull(paths, "Directory paths must not be null");
 		Preconditions.containsNoNullElements(paths, "Individual directory paths must not be null");
 
@@ -53,7 +53,7 @@ class AdditionalDiscoverySelectors {
 		// @formatter:on
 	}
 
-	public static List<PackageSelector> selectPackages(String... packageNames) {
+	static List<PackageSelector> selectPackages(String... packageNames) {
 		Preconditions.notNull(packageNames, "Package names must not be null");
 		Preconditions.containsNoNullElements(packageNames, "Individual package names must not be null");
 
@@ -64,7 +64,7 @@ class AdditionalDiscoverySelectors {
 		// @formatter:on
 	}
 
-	public static List<ClassSelector> selectClasses(Class<?>... classes) {
+	static List<ClassSelector> selectClasses(Class<?>... classes) {
 		Preconditions.notNull(classes, "classes must not be null");
 		Preconditions.containsNoNullElements(classes, "individual classes must not be null");
 
@@ -75,7 +75,7 @@ class AdditionalDiscoverySelectors {
 		// @formatter:on
 	}
 
-	public static List<ModuleSelector> selectModules(String... moduleNames) {
+	static List<ModuleSelector> selectModules(String... moduleNames) {
 		Preconditions.notNull(moduleNames, "Module names must not be null");
 		Preconditions.containsNoNullElements(moduleNames, "Individual module name must not be null");
 
