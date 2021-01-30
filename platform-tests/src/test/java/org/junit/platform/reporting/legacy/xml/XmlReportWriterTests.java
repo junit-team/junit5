@@ -11,6 +11,7 @@
 package org.junit.platform.reporting.legacy.xml;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.joox.JOOX.$;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
@@ -20,6 +21,7 @@ import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_
 import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
 import static org.junit.platform.reporting.legacy.xml.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
 
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.time.Clock;
@@ -27,8 +29,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.joox.Match;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -52,16 +54,13 @@ class XmlReportWriterTests {
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 
-		var content = writeXmlReport(testPlan, reportData);
+		var testsuite = writeXmlReport(testPlan, reportData);
 
-		assertValidAccordingToJenkinsSchema(content);
-		//@formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite name=\"Engine\" tests=\"0\"",
-				"</testsuite>")
-			.doesNotContain("<testcase");
-		//@formatter:on
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+		assertThat(testsuite.document().getDocumentElement().getTagName()).isEqualTo("testsuite");
+		assertThat(testsuite.attr("name")).isEqualTo("Engine");
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(0);
+		assertThat(testsuite.find("testcase")).isEmpty();
 	}
 
 	@Test
@@ -75,17 +74,11 @@ class XmlReportWriterTests {
 		reportData.addReportEntry(TestIdentifier.from(testDescriptor), ReportEntry.from("myKey", "myValue"));
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), successful());
 
-		var content = writeXmlReport(testPlan, reportData);
+		var testsuite = writeXmlReport(testPlan, reportData);
 
-		assertValidAccordingToJenkinsSchema(content);
-		//@formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<system-out>",
-					"Report Entry #1 (timestamp: ",
-					"- myKey: myValue",
-				"</system-out>");
-		//@formatter:on
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+		assertThat(String.join("\n", testsuite.find("system-out").texts())) //
+				.containsSubsequence("Report Entry #1 (timestamp: ", "- myKey: myValue");
 	}
 
 	@Test
@@ -104,30 +97,18 @@ class XmlReportWriterTests {
 		reportData.addReportEntry(TestIdentifier.from(testDescriptor), ReportEntry.from(Map.of("baz", "qux")));
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), successful());
 
-		var content = writeXmlReport(testPlan, reportData);
+		var testsuite = writeXmlReport(testPlan, reportData);
 
-		assertValidAccordingToJenkinsSchema(content);
-		//@formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<system-out>",
-					"unique-id: ", "test:test",
-					"display-name: successfulTest",
-				"</system-out>",
-				"<system-out>",
-					"Report Entry #1 (timestamp: ",
-					"- foo: bar",
-					"Report Entry #2 (timestamp: ",
-					"- baz: qux",
-				"</system-out>",
-				"<system-out>",
-					"normal output",
-				"</system-out>",
-				"<system-err>",
-					"error output",
-				"</system-err>")
-			.doesNotContain(STDOUT_REPORT_ENTRY_KEY, STDERR_REPORT_ENTRY_KEY);
-		//@formatter:on
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+		assertThat(testsuite.find("system-out").text(0)) //
+				.containsSubsequence("unique-id: ", "test:test", "display-name: successfulTest");
+		assertThat(testsuite.find("system-out").text(1)) //
+				.containsSubsequence("Report Entry #1 (timestamp: ", "- foo: bar", "Report Entry #2 (timestamp: ",
+					"- baz: qux");
+		assertThat(testsuite.find("system-out").text(2).trim()) //
+				.isEqualTo("normal output");
+		assertThat(testsuite.find("system-err").text().trim()) //
+				.isEqualTo("error output");
 	}
 
 	@Test
@@ -139,16 +120,14 @@ class XmlReportWriterTests {
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markSkipped(testPlan.getTestIdentifier(uniqueId.toString()), null);
 
-		var content = writeXmlReport(testPlan, reportData);
+		var testsuite = writeXmlReport(testPlan, reportData);
 
-		assertValidAccordingToJenkinsSchema(content);
-		//@formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testcase name=\"skippedTest\"",
-				"<skipped/>",
-				"</testcase>");
-		//@formatter:on
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("skippedTest");
+		var skipped = testcase.child("skipped");
+		assertThat(skipped.size()).isEqualTo(1);
+		assertThat(skipped.children()).isEmpty();
 	}
 
 	@Test
@@ -171,16 +150,15 @@ class XmlReportWriterTests {
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(null));
 
-		var content = writeXmlReport(testPlan, reportData);
+		var testsuite = writeXmlReport(testPlan, reportData);
 
-		assertValidAccordingToJenkinsSchema(content);
-		//@formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testcase name=\"failedTest\" classname=\"myEngine\"",
-				"<error/>",
-				"</testcase>");
-		//@formatter:on
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("failedTest");
+		assertThat(testcase.attr("classname")).isEqualTo("myEngine");
+		var error = testcase.child("error");
+		assertThat(error.size()).isEqualTo(1);
+		assertThat(error.children()).isEmpty();
 	}
 
 	@Test
@@ -192,16 +170,12 @@ class XmlReportWriterTests {
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(new NullPointerException()));
 
-		var content = writeXmlReport(testPlan, reportData);
+		var testsuite = writeXmlReport(testPlan, reportData);
 
-		assertValidAccordingToJenkinsSchema(content);
-		//@formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testcase name=\"failedTest\"",
-				"<error type=\"java.lang.NullPointerException\">",
-				"</testcase>");
-		//@formatter:on
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+		var error = testsuite.find("error");
+		assertThat(error.attr("type")).isEqualTo("java.lang.NullPointerException");
+		assertThat(error.attr("message")).isNull();
 	}
 
 	@Test
@@ -214,21 +188,14 @@ class XmlReportWriterTests {
 		var assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
 
-		var content = writeXmlReport(testPlan, reportData);
+		var testsuite = writeXmlReport(testPlan, reportData);
 
-		assertValidAccordingToJenkinsSchema(content);
-		//@formatter:off
-		assertThat(content)
-				.containsSubsequence(
-						"<![CDATA[",
-						"<foo><![CDATA[bar]]]]><![CDATA[></foo>",
-						"]]>")
-				.doesNotContain(assertionError.getMessage());
-		//@formatter:on
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+		assertThat(testsuite.find("failure").attr("message")).isEqualTo("<foo><![CDATA[bar]]></foo>");
 	}
 
 	@Test
-	void escapesInvalidCharactersInSystemPropertiesAndExceptionMessages(TestInfo testInfo) throws Exception {
+	void escapesInvalidCharactersInSystemPropertiesAndExceptionMessages() throws Exception {
 		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
 		var testPlan = TestPlan.from(Set.of(engineDescriptor));
@@ -238,18 +205,21 @@ class XmlReportWriterTests {
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
 
 		System.setProperty("foo.bar", "\1");
-		String content;
+		Match testsuite;
 		try {
-			content = writeXmlReport(testPlan, reportData);
+			testsuite = writeXmlReport(testPlan, reportData);
 		}
 		finally {
 			System.getProperties().remove("foo.bar");
 		}
 
-		assertValidAccordingToJenkinsSchema(content);
-		assertThat(content) //
-				.contains("<property name=\"foo.bar\" value=\"&amp;#1;\"/>") //
-				.contains("failure message=\"expected: &lt;A&gt; but was: &lt;B&amp;#0;&gt;\"") //
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+		assertThat(testsuite.find("property").matchAttr("name", "foo\\.bar").attr("value")) //
+				.isEqualTo("&#1;");
+		var failure = testsuite.find("failure");
+		assertThat(failure.attr("message")) //
+				.isEqualTo("expected: <A> but was: <B&#0;>");
+		assertThat(failure.text()) //
 				.contains("AssertionError: expected: <A> but was: <B&#0;>");
 	}
 
@@ -264,9 +234,10 @@ class XmlReportWriterTests {
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
 		Writer assertingWriter = new StringWriter() {
 
+			@SuppressWarnings("NullableProblems")
 			@Override
-			public void write(char[] cbuf, int off, int len) {
-				assertThat(new String(cbuf, off, len)).doesNotContain("]]><![CDATA[");
+			public void write(char[] buffer, int off, int len) {
+				assertThat(new String(buffer, off, len)).doesNotContain("]]><![CDATA[");
 			}
 		};
 
@@ -293,10 +264,10 @@ class XmlReportWriterTests {
 		);
 	}
 
-	private String writeXmlReport(TestPlan testPlan, XmlReportData reportData) throws Exception {
+	private Match writeXmlReport(TestPlan testPlan, XmlReportData reportData) throws Exception {
 		var out = new StringWriter();
 		writeXmlReport(testPlan, reportData, out);
-		return out.toString();
+		return $(new StringReader(out.toString()));
 	}
 
 	private void writeXmlReport(TestPlan testPlan, XmlReportData reportData, Writer out) throws Exception {

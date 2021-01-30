@@ -11,6 +11,7 @@
 package org.junit.platform.reporting.legacy.xml;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.joox.JOOX.$;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -37,8 +38,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.joox.Match;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
@@ -65,29 +66,26 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory);
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"0\"",
+		assertThat(testsuite.attr("name")).isEqualTo("dummy");
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("skipped", int.class)).isEqualTo(0);
+		assertThat(testsuite.attr("failures", int.class)).isEqualTo(0);
+		assertThat(testsuite.attr("errors", int.class)).isEqualTo(0);
+		assertThat(testsuite.child("system-out").text()) //
+				.containsSubsequence("unique-id: [engine:dummy]", "display-name: dummy");
 
-					"<testcase name=\"display&lt;--&gt;Name 😎\" classname=\"dummy\"",
-						"<system-out>",
-							"unique-id: [engine:dummy]/[test:succeedingTest]",
-							"display-name: display<-->Name 😎",
-						"</system-out>",
-					"</testcase>",
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("display<-->Name 😎");
+		assertThat(testcase.attr("classname")).isEqualTo("dummy");
+		assertThat(testcase.child("system-out").text()) //
+				.containsSubsequence("unique-id: [engine:dummy]/[test:succeedingTest]",
+					"display-name: display<-->Name 😎");
 
-					"<system-out>",
-						"unique-id: [engine:dummy]",
-						"display-name: dummy",
-					"</system-out>",
-				"</testsuite>")
-			.doesNotContain("<skipped")
-			.doesNotContain("<failure")
-			.doesNotContain("<error");
-		// @formatter:on
+		assertThat(testsuite.find("skipped")).isEmpty();
+		assertThat(testsuite.find("failure")).isEmpty();
+		assertThat(testsuite.find("error")).isEmpty();
 	}
 
 	@Test
@@ -97,22 +95,23 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory);
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"1\" errors=\"0\"",
-				"<testcase name=\"failingTest\"",
-				"<failure message=\"expected to &lt;b&gt;fail&lt;/b&gt;\" type=\"" + AssertionFailedError.class.getName() + "\">",
-				"AssertionFailedError: expected to <b>fail</b>",
-				"\tat",
-				"</failure>",
-				"</testcase>",
-				"</testsuite>")
-			.doesNotContain("<skipped")
-			.doesNotContain("<error");
-		// @formatter:on
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("skipped", int.class)).isEqualTo(0);
+		assertThat(testsuite.attr("failures", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("errors", int.class)).isEqualTo(0);
+
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("failingTest");
+
+		var failure = testcase.child("failure");
+		assertThat(failure.attr("message")).isEqualTo("expected to <b>fail</b>");
+		assertThat(failure.attr("type")).isEqualTo(AssertionFailedError.class.getName());
+		assertThat(failure.text()).containsSubsequence("AssertionFailedError: expected to <b>fail</b>", "\tat");
+
+		assertThat(testsuite.find("skipped")).isEmpty();
+		assertThat(testsuite.find("error")).isEmpty();
 	}
 
 	@Test
@@ -124,22 +123,23 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory);
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"1\"",
-				"<testcase name=\"failingTest\"",
-				"<error message=\"error occurred\" type=\"java.lang.RuntimeException\">",
-				"RuntimeException: error occurred",
-				"\tat ",
-				"</error>",
-				"</testcase>",
-				"</testsuite>")
-			.doesNotContain("<skipped")
-			.doesNotContain("<failure");
-		// @formatter:on
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("skipped", int.class)).isEqualTo(0);
+		assertThat(testsuite.attr("failures", int.class)).isEqualTo(0);
+		assertThat(testsuite.attr("errors", int.class)).isEqualTo(1);
+
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("failingTest");
+
+		var error = testcase.child("error");
+		assertThat(error.attr("message")).isEqualTo("error occurred");
+		assertThat(error.attr("type")).isEqualTo(RuntimeException.class.getName());
+		assertThat(error.text()).containsSubsequence("RuntimeException: error occurred", "\tat");
+
+		assertThat(testsuite.find("skipped")).isEmpty();
+		assertThat(testsuite.find("failure")).isEmpty();
 	}
 
 	@Test
@@ -150,23 +150,22 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory);
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
-				"<testcase name=\"skippedTest\"",
-				"<skipped>",
-				"should be skipped",
-				"</skipped>",
-				"</testcase>",
-				"</testsuite>")
-			.doesNotContain("<failure")
-			.doesNotContain("<error");
-		// @formatter:on
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("skipped", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("failures", int.class)).isEqualTo(0);
+		assertThat(testsuite.attr("errors", int.class)).isEqualTo(0);
+
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("skippedTest");
+		assertThat(testcase.child("skipped").text()).isEqualTo("should be skipped");
+
+		assertThat(testsuite.find("failure")).isEmpty();
+		assertThat(testsuite.find("error")).isEmpty();
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	void writesFileForSingleAbortedTest(@TempDir Path tempDirectory) throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
@@ -174,23 +173,20 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory);
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
-				"<testcase name=\"abortedTest\"",
-				"<skipped>",
-				"TestAbortedException: ",
-				"deliberately aborted",
-				"at ",
-				"</skipped>",
-				"</testcase>",
-				"</testsuite>")
-			.doesNotContain("<failure")
-			.doesNotContain("<error");
-		// @formatter:on
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("skipped", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("failures", int.class)).isEqualTo(0);
+		assertThat(testsuite.attr("errors", int.class)).isEqualTo(0);
+
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("abortedTest");
+		assertThat(testcase.child("skipped").text()) //
+				.containsSubsequence("TestAbortedException: ", "deliberately aborted", "at ");
+
+		assertThat(testsuite.find("failure")).isEmpty();
+		assertThat(testsuite.find("error")).isEmpty();
 	}
 
 	@Test
@@ -203,20 +199,20 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory, new IncrementingClock(0, Duration.ofMillis(333)));
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
-		// @formatter:off
 		//               start        end
 		// ----------- ---------- -----------
 		// engine          0 (1)    1,665 (6)
 		// firstTest     333 (2)      666 (3)
 		// secondTest    999 (4)    1,332 (5)
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite", "time=\"1.665\"",
-				"<testcase name=\"firstTest\" classname=\"dummy\" time=\"0.333\"",
-				"<testcase name=\"secondTest\" classname=\"dummy\" time=\"0.333\"");
-		// @formatter:on
+
+		assertThat(testsuite.attr("time", double.class)) //
+				.isEqualTo(1.665);
+		assertThat(testsuite.children("testcase").matchAttr("name", "firstTest").attr("time", double.class)) //
+				.isEqualTo(0.333);
+		assertThat(testsuite.children("testcase").matchAttr("name", "secondTest").attr("time", double.class)) //
+				.isEqualTo(0.333);
 	}
 
 	@Test
@@ -227,14 +223,9 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory, Clock.fixed(Instant.EPOCH, ZoneId.systemDefault()));
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite",
-				"<testcase name=\"test\" classname=\"dummy\" time=\"0\"");
-		// @formatter:on
+		assertThat(testsuite.child("testcase").attr("time")).isEqualTo("0");
 	}
 
 	@Test
@@ -245,19 +236,14 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory);
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
-				"<testcase name=\"test\"",
-				"<skipped>",
-				"parent was skipped: should be skipped",
-				"</skipped>",
-				"</testcase>",
-				"</testsuite>");
-		// @formatter:on
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("skipped", int.class)).isEqualTo(1);
+
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("test");
+		assertThat(testcase.child("skipped").text()).isEqualTo("parent was skipped: should be skipped");
 	}
 
 	@Test
@@ -268,20 +254,18 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory);
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"1\" errors=\"0\"",
-				"<testcase name=\"test\"",
-				"<failure message=\"failure before all tests\" type=\"" + AssertionFailedError.class.getName() + "\">",
-				"AssertionFailedError: failure before all tests",
-				"\tat",
-				"</failure>",
-				"</testcase>",
-				"</testsuite>");
-		// @formatter:on
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("failures", int.class)).isEqualTo(1);
+
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("test");
+
+		var failure = testcase.child("failure");
+		assertThat(failure.attr("message")).isEqualTo("failure before all tests");
+		assertThat(failure.attr("type")).isEqualTo(AssertionFailedError.class.getName());
+		assertThat(failure.text()).containsSubsequence("AssertionFailedError: failure before all tests", "\tat");
 	}
 
 	@Test
@@ -292,19 +276,10 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory);
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
-
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite",
-				"<properties>",
-				"<property name=\"file.separator\" value=\"" + File.separator + "\"/>",
-				"<property name=\"path.separator\" value=\"" + File.pathSeparator + "\"/>",
-				"</properties>",
-				"<testcase",
-				"</testsuite>");
-		// @formatter:on
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		var properties = testsuite.child("properties").children("property");
+		assertThat(properties.matchAttr("name", "file\\.separator").attr("value")).isEqualTo(File.separator);
+		assertThat(properties.matchAttr("name", "path\\.separator").attr("value")).isEqualTo(File.pathSeparator);
 	}
 
 	@Test
@@ -318,17 +293,9 @@ class LegacyXmlReportGeneratingListenerTests {
 
 		executeTests(engine, tempDirectory, Clock.fixed(ZonedDateTime.of(now, zone).toInstant(), zone));
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
-
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite",
-				"hostname=\"" + InetAddress.getLocalHost().getHostName() + "\"",
-				"timestamp=\"2016-01-28T14:02:59\"",
-				"<testcase",
-				"</testsuite>");
-		// @formatter:on
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+		assertThat(testsuite.attr("hostname")).isEqualTo(InetAddress.getLocalHost().getHostName());
+		assertThat(testsuite.attr("timestamp")).isEqualTo("2016-01-28T14:02:59");
 	}
 
 	@Test
@@ -362,8 +329,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesReportEntriesToSystemOutElement(@TempDir Path tempDirectory, TestReporter testReporter)
-			throws Exception {
+	void writesReportEntriesToSystemOutElement(@TempDir Path tempDirectory) throws Exception {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
 		var testPlan = TestPlan.from(Set.of(engineDescriptor));
@@ -382,24 +348,12 @@ class LegacyXmlReportGeneratingListenerTests {
 		listener.executionFinished(testIdentifier, successful());
 		listener.executionFinished(testPlan.getTestIdentifier("[engine:engine]"), successful());
 
-		var content = readValidXmlFile(tempDirectory.resolve("TEST-engine.xml"));
-		//testReporter.publishEntry("xml", content);
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-engine.xml"));
 
-		// @formatter:off
-		assertThat(content)
-			.containsSubsequence(
-				"<testsuite",
-				"<testcase",
-				"<system-out>",
-				"Report Entry #1 (timestamp: " + Year.now(),
-				"- foo: bar\n",
-				"Report Entry #2 (timestamp: " + Year.now(),
-				"- bar: baz\n",
-				"- qux: foo\n",
-				"</system-out>",
-				"</testcase>",
-				"</testsuite>");
-		// @formatter:on
+		assertThat(String.join("\n", testsuite.child("testcase").children("system-out").texts())) //
+				.containsSubsequence( //
+					"Report Entry #1 (timestamp: " + Year.now(), "- foo: bar\n",
+					"Report Entry #2 (timestamp: " + Year.now(), "- bar: baz\n", "- qux: foo\n");
 	}
 
 	private void executeTests(TestEngine engine, Path tempDirectory) {
@@ -414,11 +368,13 @@ class LegacyXmlReportGeneratingListenerTests {
 		launcher.execute(request().selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))).build());
 	}
 
-	private String readValidXmlFile(Path xmlFile) throws Exception {
+	private Match readValidXmlFile(Path xmlFile) throws Exception {
 		assertTrue(Files.exists(xmlFile), () -> "File does not exist: " + xmlFile);
-		var content = Files.readString(xmlFile);
-		assertValidAccordingToJenkinsSchema(content);
-		return content;
+		try (var reader = Files.newBufferedReader(xmlFile)) {
+			var xml = $(reader);
+			assertValidAccordingToJenkinsSchema(xml.document());
+			return xml;
+		}
 	}
 
 }
