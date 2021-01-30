@@ -59,6 +59,6 @@ public @interface SelectDirectories {
 	/**
 	 * One or more directories to select.
 	 */
-	String value();
+	String[] value();
 
 }

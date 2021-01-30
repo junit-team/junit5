@@ -12,20 +12,17 @@ package org.junit.platform.suite.engine;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
-import static org.junit.platform.launcher.TagFilter.includeTags;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
-import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.engine.discovery.FilePosition;
-import org.junit.platform.engine.discovery.FileSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -62,71 +59,54 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 		// @formatter:off
 		findRepeatableAnnotations(testClass, Configuration.class)
 				.forEach(configuration -> request.configurationParameter(configuration.key(), configuration.value()));
-		findAnnotation(testClass, ExcludeClassNamePatterns.class)
-				.map(ExcludeClassNamePatterns::value)
-				.map(SuiteLauncherDiscoveryRequestBuilder::trimmed)
+		findAnnotationValues(testClass, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
+				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::excludeClassNamePatterns)
 				.ifPresent(request::filters);
-		findAnnotation(testClass, ExcludeEngines.class).
-				map(ExcludeEngines::value)
+		findAnnotationValues(testClass, ExcludeEngines.class, ExcludeEngines::value)
 				.map(EngineFilter::excludeEngines)
 				.ifPresent(request::filters);
-		findAnnotation(testClass, ExcludePackages.class)
-				.map(ExcludePackages::value)
+		findAnnotationValues(testClass, ExcludePackages.class, ExcludePackages::value)
 				.map(PackageNameFilter::excludePackageNames)
 				.ifPresent(request::filters);
-		findAnnotation(testClass, ExcludeTags.class)
-				.map(ExcludeTags::value)
+		findAnnotationValues(testClass, ExcludeTags.class, ExcludeTags::value)
 				.map(TagFilter::excludeTags)
 				.ifPresent(request::filters);
-		findAnnotation(testClass, IncludeClassNamePatterns.class)
-				.map(IncludeClassNamePatterns::value)
-				.map(SuiteLauncherDiscoveryRequestBuilder::trimmed)
+		findAnnotationValues(testClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
+				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::includeClassNamePatterns)
 				.ifPresent(request::filters);
-		findAnnotation(testClass, IncludeEngines.class)
-				.map(IncludeEngines::value)
+		findAnnotationValues(testClass, IncludeEngines.class, IncludeEngines::value)
 				.map(EngineFilter::includeEngines)
 				.ifPresent(request::filters);
-		findAnnotation(testClass, IncludePackages.class)
-				.map(IncludePackages::value)
+		findAnnotationValues(testClass, IncludePackages.class, IncludePackages::value)
 				.map(PackageNameFilter::includePackageNames)
 				.ifPresent(request::filters);
-		findAnnotation(testClass, IncludeTags.class)
-				.map(IncludeTags::value)
-				.ifPresent(tagExpressions -> request.filters(includeTags(tagExpressions)));
-		findAnnotation(testClass, SelectClasses.class)
-				.map(SelectClasses::value)
-				.map(Arrays::asList)
-				.map(HashSet::new)
-				.map(DiscoverySelectors::selectClasses)
+		findAnnotationValues(testClass, IncludeTags.class, IncludeTags::value)
+				.map(TagFilter::includeTags)
+				.ifPresent(request::filters);
+		findAnnotationValues(testClass, SelectClasses.class, SelectClasses::value)
+				.map(AdditionalDiscoverySelectors::selectClasses)
 				.ifPresent(request::selectors);
 		findRepeatableAnnotations(testClass, SelectClasspathResource.class)
 				.stream()
-				.map(SuiteLauncherDiscoveryRequestBuilder::selectClasspathResourceAndFilePosition)
+				.map(AdditionalDiscoverySelectors::selectClasspathResourceAndFilePosition)
 				.forEach(request::selectors);
-		findAnnotation(testClass, SelectDirectories.class)
-				.map(SelectDirectories::value)
-				.map(DiscoverySelectors::selectDirectory)
+		findAnnotationValues(testClass, SelectDirectories.class, SelectDirectories::value)
+				.map(AdditionalDiscoverySelectors::selectDirectories)
 				.ifPresent(request::selectors);
 		findRepeatableAnnotations(testClass, SelectFile.class)
-				.forEach(file -> request.selectors(selectFileAndPosition(file)));
-		findAnnotation(testClass, SelectModules.class)
-				.map(SelectModules::value)
-				.map(Arrays::asList)
-				.map(HashSet::new)
-				.map(DiscoverySelectors::selectModules)
+				.stream()
+				.map(AdditionalDiscoverySelectors::selectFileAndPosition)
+				.forEach(request::selectors);
+		findAnnotationValues(testClass, SelectModules.class, SelectModules::value)
+				.map(AdditionalDiscoverySelectors::selectModules)
 				.ifPresent(request::selectors);
-		findAnnotation(testClass, SelectUris.class)
-				.map(SelectUris::value)
-				.map(Arrays::asList)
-				.map(DiscoverySelectors::selectUris)
+		findAnnotationValues(testClass, SelectUris.class, SelectUris::value)
+				.map(AdditionalDiscoverySelectors::selectUris)
 				.ifPresent(request::selectors);
-		findAnnotation(testClass, SelectPackages.class)
-				.map(SelectPackages::value)
-				.map(Arrays::asList)
-				.map(HashSet::new)
-				.map(DiscoverySelectors::selectPackages)
+		findAnnotationValues(testClass, SelectPackages.class, SelectPackages::value)
+				.map(AdditionalDiscoverySelectors::selectPackages)
 				.ifPresent(request::selectors);
 		// @formatter:on
 		return this;
@@ -136,35 +116,20 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 		return request.build();
 	}
 
-	private static ClasspathResourceSelector selectClasspathResourceAndFilePosition(SelectClasspathResource select) {
-		if (select.line() <= 0) {
-			return selectClasspathResource(select.value());
-		}
-		if (select.column() <= 0) {
-			return selectClasspathResource(select.value(), FilePosition.from(select.line()));
-		}
-		return selectClasspathResource(select.value(), FilePosition.from(select.line(), select.column()));
+	public static <A extends Annotation, V> Optional<V[]> findAnnotationValues(AnnotatedElement element,
+			Class<A> annotationType, Function<A, V[]> valueExtractor) {
+		return findAnnotation(element, annotationType).map(valueExtractor).filter(values -> values.length > 0);
 	}
 
-	private FileSelector selectFileAndPosition(SelectFile select) {
-		if (select.line() <= 0) {
-			return selectFile(select.value());
-		}
-		if (select.column() <= 0) {
-			return selectFile(select.value(), FilePosition.from(select.line()));
-		}
-		return selectFile(select.value(), FilePosition.from(select.line(), select.column()));
-	}
-
-	private static String[] trimmed(String[] patterns) {
+	private static Optional<String[]> trimmed(String[] patterns) {
 		if (patterns.length == 0) {
-			return patterns;
+			return Optional.empty();
 		}
 		// @formatter:off
-		return Arrays.stream(patterns)
+		return Optional.of(Arrays.stream(patterns)
 				.filter(StringUtils::isNotBlank)
 				.map(String::trim)
-				.toArray(String[]::new);
+				.toArray(String[]::new));
 		// @formatter:on
 	}
 

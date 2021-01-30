@@ -31,7 +31,6 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
-import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.FilePosition;
 import org.junit.platform.engine.discovery.FileSelector;
@@ -56,7 +55,6 @@ import org.junit.platform.suite.engine.testsuites.IncludeTagsSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClasspathResourcePositionSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClasspathResourceSuite;
-import org.junit.platform.suite.engine.testsuites.SelectClasspathRootSuite;
 import org.junit.platform.suite.engine.testsuites.SelectDirectoriesSuite;
 import org.junit.platform.suite.engine.testsuites.SelectFilePositionSuite;
 import org.junit.platform.suite.engine.testsuites.SelectFileSuite;
@@ -167,13 +165,6 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		assertEquals(Optional.empty(), selectors.get(0).getPosition());
 		assertEquals(Optional.empty(), selectors.get(1).getPosition());
 		assertEquals(Optional.of(FilePosition.from(42)), selectors.get(2).getPosition());
-	}
-
-	@Test
-	void selectClasspathRoots() {
-		LauncherDiscoveryRequest request = builder.addRequestFrom(SelectClasspathRootSuite.class).build();
-		List<ClasspathRootSelector> selectors = request.getSelectorsByType(ClasspathRootSelector.class);
-		selectors.forEach(selector -> assertEquals(URI.create("path/to/root"), selector.getClasspathRoot()));
 	}
 
 	@Test

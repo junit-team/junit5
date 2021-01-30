@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -63,7 +62,6 @@ public final class DiscoverySelectors {
 	 * @param uri the URI to select; never {@code null} or blank
 	 * @see UriSelector
 	 * @see #selectUri(URI)
-	 * @see #selectUris(List)
 	 * @see #selectFile(String)
 	 * @see #selectFile(File)
 	 * @see #selectDirectory(String)
@@ -85,7 +83,6 @@ public final class DiscoverySelectors {
 	 * @param uri the URI to select; never {@code null}
 	 * @see UriSelector
 	 * @see #selectUri(String)
-	 * @see #selectUris(List)
 	 * @see #selectFile(String)
 	 * @see #selectFile(File)
 	 * @see #selectDirectory(String)
@@ -94,30 +91,6 @@ public final class DiscoverySelectors {
 	public static UriSelector selectUri(URI uri) {
 		Preconditions.notNull(uri, "URI must not be null");
 		return new UriSelector(uri);
-	}
-
-	/**
-	 * Creates a list of {@code UriSelector}s for the supplied URIs.
-	 *
-	 * @param uris the URIs to select; never {@code null} or blank
-	 * @see UriSelector
-	 * @see #selectUri(String)
-	 * @see #selectUris(List)
-	 * @see #selectFile(String)
-	 * @see #selectFile(File)
-	 * @see #selectDirectory(String)
-	 * @see #selectDirectory(File)
-	 */
-	public static List<UriSelector> selectUris(List<String> uris) {
-		Preconditions.notNull(uris, "URIs must not be null");
-
-		// @formatter:off
-		return uris.stream()
-				.filter(String::isEmpty)
-				.map(DiscoverySelectors::selectUri)
-				// unmodifiable since selectClasspathRoots is a public, non-internal method
-				.collect(toUnmodifiableList());
-		// @formatter:on
 	}
 
 	/**
@@ -370,8 +343,8 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.1")
 	public static List<ModuleSelector> selectModules(Set<String> moduleNames) {
-		Preconditions.notNull(moduleNames, "moduleNames must not be null");
-		Preconditions.containsNoNullElements(moduleNames, "individual module name must not be null");
+		Preconditions.notNull(moduleNames, "Module names must not be null");
+		Preconditions.containsNoNullElements(moduleNames, "Individual module name must not be null");
 
 		// @formatter:off
 		return moduleNames.stream()
@@ -398,27 +371,6 @@ public final class DiscoverySelectors {
 	}
 
 	/**
-	 * Creates a list of  {@code PackageSelector} for the supplied package
-	 * names.
-	 *
-	 * <p>The default package is represented by an empty string ({@code ""}).
-	 *
-	 * @param packageNames the package names to select; never {@code null} and
-	 * never containing whitespace only
-	 * @see PackageSelector
-	 */
-	public static List<PackageSelector> selectPackages(Set<String> packageNames) {
-		Preconditions.notNull(packageNames, "Package names must not be null");
-
-		// @formatter:off
-		return packageNames.stream()
-				.map(DiscoverySelectors::selectPackage)
-				// unmodifiable since this is a public, non-internal method
-				.collect(Collectors.toUnmodifiableList());
-		// @formatter:on
-	}
-
-	/**
 	 * Create a {@code ClassSelector} for the supplied {@link Class}.
 	 *
 	 * @param clazz the class to select; never {@code null}
@@ -439,23 +391,6 @@ public final class DiscoverySelectors {
 	public static ClassSelector selectClass(String className) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		return new ClassSelector(className);
-	}
-
-	/**
-	 * Create a list of {@code ClassSelector}s for the supplied {@link Class}s.
-	 *
-	 * @param classes the classes to select; never {@code null}
-	 * @see ClassSelector
-	 */
-	public static List<ClassSelector> selectClasses(Set<Class<?>> classes) {
-		Preconditions.notNull(classes, "Classes must not be null");
-
-		// @formatter:off
-		return classes.stream()
-				.map(DiscoverySelectors::selectClass)
-				// unmodifiable since this is a public, non-internal method
-				.collect(Collectors.toUnmodifiableList());
-		// @formatter:on
 	}
 
 	/**
