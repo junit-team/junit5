@@ -54,8 +54,8 @@ import org.junit.platform.suite.api.SelectUris;
 public final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private final LauncherDiscoveryRequestBuilder request;
-	private boolean classNamePatternsIncluded;
-	private boolean includeStandardClassNamePatternsIfNotPresent = true;
+	private boolean includeClassNamePatternsUsed;
+	private boolean filterStandardClassNamePatterns = true;
 
 	private SuiteLauncherDiscoveryRequestBuilder(LauncherDiscoveryRequestBuilder request) {
 		this.request = request;
@@ -66,9 +66,9 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return new SuiteLauncherDiscoveryRequestBuilder(request);
 	}
 
-	public SuiteLauncherDiscoveryRequestBuilder includeStandardClassNamePatternsIfNotPresent(
-			boolean includeStandardClassNamePatternsIfNotPresent) {
-		this.includeStandardClassNamePatternsIfNotPresent = includeStandardClassNamePatternsIfNotPresent;
+	public SuiteLauncherDiscoveryRequestBuilder filterStandardClassNamePatterns(
+			boolean filterStandardClassNamePatterns) {
+		this.filterStandardClassNamePatterns = filterStandardClassNamePatterns;
 		return this;
 	}
 
@@ -94,7 +94,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::includeClassNamePatterns)
 				.ifPresent(filters ->{
-					classNamePatternsIncluded = true;
+					includeClassNamePatternsUsed = true;
 					request.filters(filters);
 				});
 		findAnnotationValues(testClass, IncludeEngines.class, IncludeEngines::value)
@@ -134,7 +134,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	public LauncherDiscoveryRequest build() {
-		if (includeStandardClassNamePatternsIfNotPresent && !classNamePatternsIncluded) {
+		if (filterStandardClassNamePatterns && !includeClassNamePatternsUsed) {
 			request.filters(ClassNameFilter.includeClassNamePatterns(STANDARD_INCLUDE_PATTERN));
 		}
 		return request.build();

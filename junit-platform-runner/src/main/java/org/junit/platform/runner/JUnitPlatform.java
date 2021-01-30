@@ -166,7 +166,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 		// @formatter:off
 		return SuiteLauncherDiscoveryRequestBuilder.request(requestBuilder)
-				.includeStandardClassNamePatternsIfNotPresent(isSuite)
+				.filterStandardClassNamePatterns(isSuite)
 				.suite(this.testClass)
 				.build();
 		// @formatter:on

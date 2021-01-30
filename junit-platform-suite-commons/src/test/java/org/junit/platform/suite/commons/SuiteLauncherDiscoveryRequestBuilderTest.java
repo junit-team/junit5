@@ -133,8 +133,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 	}
 
 	@Test
-	void includesStandardIncludePatternsWhenIncludeClassNamePatternsIsOmitted() {
-		@SelectClasses(TestCase.class)
+	void filtersOnStandardClassNamePatternsWhenIncludeClassNamePatternsIsOmitted() {
 		class Suite {
 
 		}
@@ -145,14 +144,13 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 	}
 
 	@Test
-	void includesStandardIncludePatternsWhenIncludeClassNamePatternsIsOmittedUnlessDisabled() {
-		@SelectClasses(TestCase.class)
+	void filtersOnStandardClassNamePatternsWhenIncludeClassNamePatternsIsOmittedUnlessDisabled() {
 		class Suite {
 
 		}
 		// @formatter:off
 		LauncherDiscoveryRequest request = builder
-				.includeStandardClassNamePatternsIfNotPresent(false)
+				.filterStandardClassNamePatterns(false)
 				.suite(Suite.class)
 				.build();
 		// @formatter:on
