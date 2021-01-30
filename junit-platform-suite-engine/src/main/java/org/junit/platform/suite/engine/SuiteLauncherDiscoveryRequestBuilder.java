@@ -12,6 +12,8 @@ package org.junit.platform.suite.engine;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
+import static org.junit.platform.suite.engine.AdditionalDiscoverySelectors.selectClasspathResource;
+import static org.junit.platform.suite.engine.AdditionalDiscoverySelectors.selectFile;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -19,10 +21,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
-import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -47,14 +48,18 @@ import org.junit.platform.suite.api.SelectUris;
 
 final class SuiteLauncherDiscoveryRequestBuilder {
 
-	private final LauncherDiscoveryRequestBuilder request = LauncherDiscoveryRequestBuilder.request();
+	private final LauncherDiscoveryRequestBuilder request;
 
-	SuiteLauncherDiscoveryRequestBuilder addRequestFrom(UniqueId uniqueId) {
-		request.selectors(DiscoverySelectors.selectUniqueId(uniqueId));
-		return this;
+	private SuiteLauncherDiscoveryRequestBuilder(LauncherDiscoveryRequestBuilder request) {
+		this.request = request;
 	}
 
-	SuiteLauncherDiscoveryRequestBuilder addRequestFrom(Class<?> testClass) {
+	static SuiteLauncherDiscoveryRequestBuilder request(LauncherDiscoveryRequestBuilder request) {
+		Preconditions.notNull(request, "Launcher discovery request builder must not be null");
+		return new SuiteLauncherDiscoveryRequestBuilder(request);
+	}
+
+	SuiteLauncherDiscoveryRequestBuilder suite(Class<?> testClass) {
 		// Annotations in alphabetical order
 		// @formatter:off
 		findRepeatableAnnotations(testClass, Configuration.class)
@@ -90,14 +95,14 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 				.ifPresent(request::selectors);
 		findRepeatableAnnotations(testClass, SelectClasspathResource.class)
 				.stream()
-				.map(AdditionalDiscoverySelectors::selectClasspathResourceAndFilePosition)
+				.map(annotation -> selectClasspathResource(annotation.value(), annotation.line(), annotation.column()))
 				.forEach(request::selectors);
 		findAnnotationValues(testClass, SelectDirectories.class, SelectDirectories::value)
 				.map(AdditionalDiscoverySelectors::selectDirectories)
 				.ifPresent(request::selectors);
 		findRepeatableAnnotations(testClass, SelectFile.class)
 				.stream()
-				.map(AdditionalDiscoverySelectors::selectFileAndPosition)
+				.map(annotation -> selectFile(annotation.value(), annotation.line(), annotation.column()))
 				.forEach(request::selectors);
 		findAnnotationValues(testClass, SelectModules.class, SelectModules::value)
 				.map(AdditionalDiscoverySelectors::selectModules)

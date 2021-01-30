@@ -24,9 +24,11 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.UniqueId.Segment;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.suite.api.SuiteDisplayName;
 
@@ -44,14 +46,16 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	static final String SEGMENT_TYPE = "suite";
 
-	private final SuiteLauncherDiscoveryRequestBuilder requestBuilder;
+	private final LauncherDiscoveryRequestBuilder launcherDiscoveryRequest;
+	private final SuiteLauncherDiscoveryRequestBuilder suiteDiscoveryRequest;
 
 	private LauncherDiscoveryResult launcherDiscoveryResult;
 	private SuiteLauncher launcher;
 
 	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass) {
 		super(requireNoCycles(id), getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
-		this.requestBuilder = new SuiteLauncherDiscoveryRequestBuilder();
+		launcherDiscoveryRequest = LauncherDiscoveryRequestBuilder.request();
+		suiteDiscoveryRequest = SuiteLauncherDiscoveryRequestBuilder.request(launcherDiscoveryRequest);
 	}
 
 	private static UniqueId requireNoCycles(UniqueId id) {
@@ -73,14 +77,14 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	SuiteTestDescriptor addDiscoveryRequestFrom(Class<?> testClass) {
 		Preconditions.condition(launcherDiscoveryResult == null,
 			"discovery request can not be modified after discovery");
-		requestBuilder.addRequestFrom(testClass);
+		suiteDiscoveryRequest.suite(testClass);
 		return this;
 	}
 
 	SuiteTestDescriptor addDiscoveryRequestFrom(UniqueId uniqueId) {
 		Preconditions.condition(launcherDiscoveryResult == null,
 			"discovery request can not be modified after discovery");
-		requestBuilder.addRequestFrom(uniqueId);
+		launcherDiscoveryRequest.selectors(DiscoverySelectors.selectUniqueId(uniqueId));
 		return this;
 	}
 
@@ -89,7 +93,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 			return;
 		}
 
-		LauncherDiscoveryRequest request = requestBuilder.build();
+		LauncherDiscoveryRequest request = suiteDiscoveryRequest.build();
 		this.launcher = SuiteLauncher.create();
 		this.launcherDiscoveryResult = launcher.discover(request, getUniqueId());
 		// @formatter:off

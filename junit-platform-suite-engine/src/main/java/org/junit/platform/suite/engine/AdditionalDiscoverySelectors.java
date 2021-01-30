@@ -26,8 +26,6 @@ import org.junit.platform.engine.discovery.FileSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UriSelector;
-import org.junit.platform.suite.api.SelectClasspathResource;
-import org.junit.platform.suite.api.SelectFile;
 
 class AdditionalDiscoverySelectors {
 
@@ -84,11 +82,7 @@ class AdditionalDiscoverySelectors {
 		return DiscoverySelectors.selectModules(uniqueStreamOf(moduleNames).collect(Collectors.toSet()));
 	}
 
-	static FileSelector selectFileAndPosition(SelectFile select) {
-		return selectFileAndPosition(select.value(), select.line(), select.column());
-	}
-
-	static FileSelector selectFileAndPosition(String path, int line, int column) {
+	static FileSelector selectFile(String path, int line, int column) {
 		Preconditions.notBlank(path, "File path must not be null or blank");
 
 		if (line <= 0) {
@@ -100,12 +94,7 @@ class AdditionalDiscoverySelectors {
 		return DiscoverySelectors.selectFile(path, FilePosition.from(line, column));
 	}
 
-	static ClasspathResourceSelector selectClasspathResourceAndFilePosition(SelectClasspathResource select) {
-		return selectClasspathResourceAndFilePosition(select.value(), select.line(), select.column());
-	}
-
-	static ClasspathResourceSelector selectClasspathResourceAndFilePosition(String classpathResourceName, int line,
-			int column) {
+	static ClasspathResourceSelector selectClasspathResource(String classpathResourceName, int line, int column) {
 		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
 
 		if (line <= 0) {
