@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,6 +17,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -45,6 +46,9 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	private static final InstantiatingConfigurationParameterConverter<MethodOrderer> methodOrdererConverter = //
 		new InstantiatingConfigurationParameterConverter<>(MethodOrderer.class, "method orderer");
+
+	private static final InstantiatingConfigurationParameterConverter<ClassOrderer> classOrdererConverter = //
+		new InstantiatingConfigurationParameterConverter<>(ClassOrderer.class, "class orderer");
 
 	private final ConfigurationParameters configurationParameters;
 
@@ -106,6 +110,11 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public Optional<MethodOrderer> getDefaultTestMethodOrderer() {
 		return methodOrdererConverter.get(configurationParameters, DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME);
+	}
+
+	@Override
+	public Optional<ClassOrderer> getDefaultTestClassOrderer() {
+		return classOrdererConverter.get(configurationParameters, DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME);
 	}
 
 }

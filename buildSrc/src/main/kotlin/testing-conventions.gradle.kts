@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	id("org.gradle.test-retry")
@@ -28,6 +29,8 @@ tasks.withType<Test>().configureEach {
 			"-XX:FlightRecorderOptions=stackdepth=1024"
 		)
 	}
+	// Track OS as input so that tests are executed on all configured operating systems on CI
+	inputs.property("os", OperatingSystem.current().familyName)
 }
 
 dependencies {

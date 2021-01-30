@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -63,7 +63,7 @@ class EnabledIfEnvironmentVariableCondition
 	/**
 	 * Get the value of the named environment variable.
 	 *
-	 * <p>The default implementation simply delegates to
+	 * <p>The default implementation delegates to
 	 * {@link System#getenv(String)}. Can be overridden in a subclass for
 	 * testing purposes.
 	 */

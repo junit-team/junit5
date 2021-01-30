@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -27,7 +27,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.core.TestExecutionListenerRegistry.EagerTestExecutionListener;
+import org.junit.platform.launcher.core.CompositeTestExecutionListener.EagerTestExecutionListener;
 
 /**
  * @since 1.3

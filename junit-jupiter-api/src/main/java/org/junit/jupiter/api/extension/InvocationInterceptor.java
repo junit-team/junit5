@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -36,7 +36,7 @@ import org.junit.jupiter.api.TestTemplate;
  * Invocation#skip()} exactly once on the supplied invocation. Otherwise, the
  * enclosing test or container will be reported as failed.
  *
- * <p>The default implementation simply calls {@link Invocation#proceed()
+ * <p>The default implementation calls {@link Invocation#proceed()
  * proceed()} on the supplied {@linkplain Invocation invocation}.
  *
  * <h3>Constructor Requirements</h3>

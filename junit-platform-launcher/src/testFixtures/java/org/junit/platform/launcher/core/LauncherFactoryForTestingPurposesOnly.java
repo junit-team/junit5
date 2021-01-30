@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -19,13 +19,18 @@ import org.junit.platform.launcher.Launcher;
 public class LauncherFactoryForTestingPurposesOnly {
 
 	public static Launcher createLauncher(TestEngine... engines) {
-		return LauncherFactory.create(LauncherConfig.builder() //
-				.enableTestEngineAutoRegistration(false) //
+		return LauncherFactory.create(createLauncherConfigBuilderWithDisabledServiceLoading() //
 				.addTestEngines(engines) //
+				.build());
+	}
+
+	public static LauncherConfig.Builder createLauncherConfigBuilderWithDisabledServiceLoading() {
+		return LauncherConfig.builder() //
+				.enableTestEngineAutoRegistration(false) //
 				.enableLauncherDiscoveryListenerAutoRegistration(false) //
 				.enableTestExecutionListenerAutoRegistration(false) //
 				.enablePostDiscoveryFilterAutoRegistration(false) //
-				.build());
+				.enableLauncherSessionListenerAutoRegistration(false);
 	}
 
 }

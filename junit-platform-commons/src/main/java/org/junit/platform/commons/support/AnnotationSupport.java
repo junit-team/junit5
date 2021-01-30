@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -177,8 +177,8 @@ public final class AnnotationSupport {
 	 * discovered within the class hierarchy, this method will additionally
 	 * search on interfaces implemented by each class in the hierarchy.
 	 *
-	 * <p>If the supplied {@code element} is {@code null}, this method simply
-	 * returns an empty list.
+	 * <p>If the supplied {@code element} is {@code null}, this method returns
+	 * an empty list.
 	 *
 	 * <p>As of JUnit Platform 1.5, the search algorithm will also find
 	 * repeatable annotations used as meta-annotations on other repeatable

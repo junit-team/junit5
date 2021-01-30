@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -39,6 +39,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 	protected String emptyValue = "";
 	protected String[] nullValues = new String[0];
 	protected int maxCharsPerColumn = 4096;
+	protected boolean ignoreLeadingAndTrailingWhitespace = true;
 
 	private MockCsvAnnotationBuilder() {
 	}
@@ -70,6 +71,11 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 		return getSelf();
 	}
 
+	B ignoreLeadingAndTrailingWhitespace(boolean ignoreLeadingAndTrailingWhitespace) {
+		this.ignoreLeadingAndTrailingWhitespace = ignoreLeadingAndTrailingWhitespace;
+		return getSelf();
+	}
+
 	abstract A build();
 
 	// -------------------------------------------------------------------------
@@ -98,6 +104,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
 			when(annotation.nullValues()).thenReturn(super.nullValues);
 			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
+			when(annotation.ignoreLeadingAndTrailingWhitespace()).thenReturn(super.ignoreLeadingAndTrailingWhitespace);
 
 			// @CsvSource
 			when(annotation.value()).thenReturn(this.lines);
@@ -155,6 +162,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
 			when(annotation.nullValues()).thenReturn(super.nullValues);
 			when(annotation.maxCharsPerColumn()).thenReturn(super.maxCharsPerColumn);
+			when(annotation.ignoreLeadingAndTrailingWhitespace()).thenReturn(super.ignoreLeadingAndTrailingWhitespace);
 
 			// @CsvFileSource
 			when(annotation.resources()).thenReturn(this.resources);

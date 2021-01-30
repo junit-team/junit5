@@ -19,5 +19,5 @@ dependencies {
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
-	testImplementation("org.codehaus.groovy:groovy-all")
+	testImplementation("org.codehaus.groovy:groovy")
 }

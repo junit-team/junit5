@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -429,6 +429,39 @@ class CsvFileArgumentsProviderTests {
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
 				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+	}
+
+	@Test
+	void ignoresLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
+		var csvFile = writeClasspathResourceToFile("/leading-trailing-spaces.csv",
+			tempDir.resolve("leading-trailing-spaces.csv"));
+		var annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/leading-trailing-spaces.csv")//
+				.files(csvFile.toAbsolutePath().toString())//
+				.ignoreLeadingAndTrailingWhitespace(true)//
+				.build();
+
+		var arguments = provideArguments(new ByteArrayInputStream(Files.readAllBytes(csvFile)), annotation);
+
+		assertThat(arguments).containsExactly(array("ab", "cd"), array("ef", "gh"));
+	}
+
+	@Test
+	void trimsLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
+		var csvFile = writeClasspathResourceToFile("/leading-trailing-spaces.csv",
+			tempDir.resolve("leading-trailing-spaces.csv"));
+		var annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/leading-trailing-spaces.csv")//
+				.files(csvFile.toAbsolutePath().toString())//
+				.delimiter(',')//
+				.ignoreLeadingAndTrailingWhitespace(false)//
+				.build();
+
+		var arguments = provideArguments(new ByteArrayInputStream(Files.readAllBytes(csvFile)), annotation);
+
+		assertThat(arguments).containsExactly(array(" ab ", " cd"), array("ef ", "gh"));
 	}
 
 	private Stream<Object[]> provideArguments(CsvFileSource annotation, String content) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -78,11 +78,11 @@ import org.junit.runner.notification.RunNotifier;
  * package for configuration options.
  *
  * <p>If you do not use any configuration annotations from the
- * {@code org.junit.platform.suite.api} package, you can simply use this runner
- * on a test class whose programming model is supported on the JUnit Platform
- * &mdash; for example, a JUnit Jupiter test class. Note, however, that any test
- * class run with this runner must be {@code public} in order to be picked up by
- * IDEs and build tools.
+ * {@code org.junit.platform.suite.api} package, you can use this runner on a
+ * test class whose programming model is supported on the JUnit Platform &mdash;
+ * for example, a JUnit Jupiter test class. Note, however, that any test class
+ * run with this runner must be {@code public} in order to be picked up by IDEs
+ * and build tools.
  *
  * <p>When used on a class that serves as a test suite and the
  * {@link IncludeClassNamePatterns @IncludeClassNamePatterns} annotation is not
@@ -147,7 +147,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private LauncherDiscoveryRequest createDiscoveryRequest() {
 		List<DiscoverySelector> selectors = getSelectorsFromAnnotations();
 
-		// Allows to simply add @RunWith(JUnitPlatform.class) to any test case
+		// Allows @RunWith(JUnitPlatform.class) to be added to any test case
 		boolean isSuite = !selectors.isEmpty();
 		if (!isSuite) {
 			selectors.add(selectClass(this.testClass));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -20,8 +20,8 @@ import org.opentest4j.AssertionFailedError;
 
 /**
  * {@code AssertInstanceOf} is a collection of utility methods that support
- * asserting that a value is of a expected instance type -
- * in other words, if it can be assigned to the expected type.
+ * asserting that an object is of an expected type &mdash; in other words, if it
+ * can be assigned to the expected type.
  *
  * @since 5.8
  */
@@ -45,13 +45,12 @@ class AssertInstanceOf {
 
 	private static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Object messageOrSupplier) {
 		if (!expectedType.isInstance(actualValue)) {
-			String template = "Unexpected type";
-			if (actualValue == null)
-				template = "Unexpected null value";
+			String reason = (actualValue == null ? "Unexpected null value" : "Unexpected type");
 			String message = buildPrefix(nullSafeGet(messageOrSupplier))
-					+ format(expectedType, actualValue == null ? null : actualValue.getClass(), template);
+					+ format(expectedType, actualValue == null ? null : actualValue.getClass(), reason);
 			throw new AssertionFailedError(message);
 		}
 		return expectedType.cast(actualValue);
 	}
+
 }

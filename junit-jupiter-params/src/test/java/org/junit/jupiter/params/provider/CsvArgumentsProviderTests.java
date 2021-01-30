@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -77,6 +77,17 @@ class CsvArgumentsProviderTests {
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(new Object[][] { { "1", "" }, { "2", "" }, { "3", "" }, { "4", "" } });
+	}
+
+	@Test
+	void ignoresLeadingAndTrailingSpaces() {
+		var annotation = csvSource().lines("1,a", "2, b", "3,c ", "4, d ") //
+				.ignoreLeadingAndTrailingWhitespace(false).build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(
+			new Object[][] { { "1", "a" }, { "2", " b" }, { "3", "c " }, { "4", " d " } });
 	}
 
 	@Test
@@ -219,6 +230,15 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(() -> provideArguments(annotation))//
 				.withMessageStartingWith("maxCharsPerColumn must be a positive number: -1");
+	}
+
+	@Test
+	void doesNotMindSoCalledCommentCharacters() {
+		var annotation = csvSource("#foo", "#bar,baz", "baz,#quux");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("#foo"), array("#bar", "baz"), array("baz", "#quux"));
 	}
 
 	private Stream<Object[]> provideArguments(CsvSource annotation) {

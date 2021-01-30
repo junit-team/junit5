@@ -70,6 +70,11 @@ tasks {
 			excludeTags("missing-junit4")
 		}
 	}
+	withType<Test>().configureEach {
+		// Workaround for Groovy 2.5
+		jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
+		jvmArgs("--add-opens", "java.base/java.util=ALL-UNNAMED")
+	}
 	check {
 		dependsOn(testWithoutJUnit4)
 	}

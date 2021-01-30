@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -92,35 +92,6 @@ class DefaultLauncherTests {
 				new DemoHierarchicalTestEngine("dummy id")));
 
 		assertThat(exception).hasMessageContaining("multiple engines with the same ID");
-	}
-
-	@Test
-	void registerTestExecutionListenersWithNullArray() {
-		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
-
-		var exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners((TestExecutionListener[]) null));
-
-		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
-	}
-
-	@Test
-	void registerTestExecutionListenersWithEmptyArray() {
-		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
-
-		var exception = assertThrows(PreconditionViolationException.class, launcher::registerTestExecutionListeners);
-
-		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
-	}
-
-	@Test
-	void registerTestExecutionListenersWithArrayContainingNullElements() {
-		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
-
-		var exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[] { null }));
-
-		assertThat(exception).hasMessageContaining("individual listeners must not be null");
 	}
 
 	@Test

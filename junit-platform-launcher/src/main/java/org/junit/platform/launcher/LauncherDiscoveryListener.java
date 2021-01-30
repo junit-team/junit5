@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -18,8 +18,8 @@ import org.junit.platform.engine.UniqueId;
 
 /**
  * Register a concrete implementation of this interface with a
- * {@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
- * to be notified of events that occur during test discovery.
+ * {@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder} or
+ * {@link Launcher} to be notified of events that occur during test discovery.
  *
  * <p>All methods in this interface have empty <em>default</em> implementations.
  * Concrete implementations may therefore override one or more of these methods
@@ -35,6 +35,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @see org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners
  * @see LauncherDiscoveryRequest#getDiscoveryListener()
+ * @see org.junit.platform.launcher.core.LauncherConfig.Builder#addLauncherDiscoveryListeners
  * @since 1.6
  */
 @API(status = EXPERIMENTAL, since = "1.6")

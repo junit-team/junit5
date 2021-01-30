@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -35,10 +35,12 @@ import org.junit.platform.launcher.TestPlan;
  * @see Launcher
  * @see LauncherFactory
  */
-class DefaultLauncher implements Launcher {
+class DefaultLauncher implements InternalLauncher {
 
-	private final TestExecutionListenerRegistry listenerRegistry = new TestExecutionListenerRegistry();
-	private final EngineExecutionOrchestrator executionOrchestrator = new EngineExecutionOrchestrator(listenerRegistry);
+	private final ListenerRegistry<LauncherDiscoveryListener> launcherDiscoveryListenerRegistry = ListenerRegistry.forLauncherDiscoveryListeners();
+	private final ListenerRegistry<TestExecutionListener> testExecutionListenerRegistry = ListenerRegistry.forTestExecutionListeners();
+	private final EngineExecutionOrchestrator executionOrchestrator = new EngineExecutionOrchestrator(
+		testExecutionListenerRegistry);
 	private final EngineDiscoveryOrchestrator discoveryOrchestrator;
 
 	/**
@@ -48,11 +50,8 @@ class DefaultLauncher implements Launcher {
 	 * empty
 	 * @param postDiscoveryFilters the additional post discovery filters for
 	 * discovery requests; never {@code null}
-	 * @param launcherDiscoveryListeners the additional launcher discovery
-	 * listeners for discovery requests; never {@code null}
 	 */
-	DefaultLauncher(Iterable<TestEngine> testEngines, Collection<PostDiscoveryFilter> postDiscoveryFilters,
-			Collection<LauncherDiscoveryListener> launcherDiscoveryListeners) {
+	DefaultLauncher(Iterable<TestEngine> testEngines, Collection<PostDiscoveryFilter> postDiscoveryFilters) {
 		Preconditions.condition(testEngines != null && testEngines.iterator().hasNext(),
 			() -> "Cannot create Launcher without at least one TestEngine; "
 					+ "consider adding an engine implementation JAR to the classpath");
@@ -60,14 +59,17 @@ class DefaultLauncher implements Launcher {
 		Preconditions.containsNoNullElements(postDiscoveryFilters,
 			"PostDiscoveryFilter array must not contain null elements");
 		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(EngineIdValidator.validate(testEngines),
-			unmodifiableCollection(postDiscoveryFilters), unmodifiableCollection(launcherDiscoveryListeners));
+			unmodifiableCollection(postDiscoveryFilters), launcherDiscoveryListenerRegistry);
+	}
+
+	@Override
+	public void registerLauncherDiscoveryListeners(LauncherDiscoveryListener... listeners) {
+		this.launcherDiscoveryListenerRegistry.addAll(listeners);
 	}
 
 	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		Preconditions.notEmpty(listeners, "listeners array must not be null or empty");
-		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
-		this.listenerRegistry.registerListeners(listeners);
+		this.testExecutionListenerRegistry.addAll(listeners);
 	}
 
 	@Override
@@ -93,12 +95,14 @@ class DefaultLauncher implements Launcher {
 		execute((InternalTestPlan) testPlan, listeners);
 	}
 
-	TestExecutionListenerRegistry getTestExecutionListenerRegistry() {
-		return listenerRegistry;
+	@Override
+	public ListenerRegistry<TestExecutionListener> getTestExecutionListenerRegistry() {
+		return testExecutionListenerRegistry;
 	}
 
-	LauncherDiscoveryListener getLauncherDiscoveryListener(LauncherDiscoveryRequest discoveryRequest) {
-		return discoveryOrchestrator.getLauncherDiscoveryListener(discoveryRequest);
+	@Override
+	public ListenerRegistry<LauncherDiscoveryListener> getLauncherDiscoveryListenerRegistry() {
+		return launcherDiscoveryListenerRegistry;
 	}
 
 	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -3002,7 +3002,7 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
+	 * ignore the return value.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
 		return AssertThrows.assertThrows(expectedType, executable);
@@ -3016,7 +3016,7 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
+	 * ignore the return value.
 	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
@@ -3035,7 +3035,7 @@ public class Assertions {
 	 * supplied {@code messageSupplier}.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
-	 * simply ignore the return value.
+	 * ignore the return value.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {
@@ -3449,6 +3449,8 @@ public class Assertions {
 		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
 	}
 
+	// --- assertInstanceOf ----------------------------------------------------
+
 	/**
 	 * <em>Assert</em> that the supplied {@code actualValue} is an instance of the
 	 * {@code expectedType}.
@@ -3495,4 +3497,5 @@ public class Assertions {
 	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Supplier<String> messageSupplier) {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
+
 }

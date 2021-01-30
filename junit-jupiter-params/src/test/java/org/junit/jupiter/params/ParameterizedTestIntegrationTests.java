@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -163,6 +163,42 @@ class ParameterizedTestIntegrationTests {
 					event(test(), displayName("[1] ab, cd"), finishedWithFailure(message("concatenation: abcd")))) //
 				.haveExactly(1,
 					event(test(), displayName("[2] ef, gh"), finishedWithFailure(message("concatenation: efgh"))));
+	}
+
+	@Test
+	void executesWithIgnoreLeadingAndTrailingSetToFalseForCsvSource() {
+		var results = execute("testWithIgnoreLeadingAndTrailingWhitespaceSetToFalseForCsvSource", String.class,
+			String.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: ' ab ', ' cd'")))) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ef ', 'gh'"))));
+	}
+
+	@Test
+	void executesWithIgnoreLeadingAndTrailingSetToTrueForCsvSource() {
+		var results = execute("testWithIgnoreLeadingAndTrailingWhitespaceSetToTrueForCsvSource", String.class,
+			String.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ab', 'cd'")))) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ef', 'gh'"))));
+	}
+
+	@Test
+	void executesWithIgnoreLeadingAndTrailingSetToFalseForCsvFileSource() {
+		var results = execute("testWithIgnoreLeadingAndTrailingWhitespaceSetToFalseForCsvFileSource", String.class,
+			String.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: ' ab ', ' cd'")))) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ef ', 'gh'"))));
+	}
+
+	@Test
+	void executesWithIgnoreLeadingAndTrailingSetToTrueForCsvFileSource() {
+		var results = execute("testWithIgnoreLeadingAndTrailingWhitespaceSetToTrueForCsvFileSource", String.class,
+			String.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ab', 'cd'")))) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("arguments: 'ef', 'gh'"))));
 	}
 
 	@Test
@@ -703,6 +739,30 @@ class ParameterizedTestIntegrationTests {
 		@CsvSource({ "ab, cd", "ef, gh" })
 		void testWithAggregator(@AggregateWith(StringAggregator.class) String concatenation) {
 			fail("concatenation: " + concatenation);
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = { " ab , cd", "ef ,gh" }, ignoreLeadingAndTrailingWhitespace = false)
+		void testWithIgnoreLeadingAndTrailingWhitespaceSetToFalseForCsvSource(String argument1, String argument2) {
+			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
+		}
+
+		@ParameterizedTest
+		@CsvSource(value = { " ab , cd", "ef ,gh" }, ignoreLeadingAndTrailingWhitespace = true)
+		void testWithIgnoreLeadingAndTrailingWhitespaceSetToTrueForCsvSource(String argument1, String argument2) {
+			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
+		}
+
+		@ParameterizedTest
+		@CsvFileSource(resources = "/leading-trailing-spaces.csv", ignoreLeadingAndTrailingWhitespace = false)
+		void testWithIgnoreLeadingAndTrailingWhitespaceSetToFalseForCsvFileSource(String argument1, String argument2) {
+			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
+		}
+
+		@ParameterizedTest
+		@CsvFileSource(resources = "/leading-trailing-spaces.csv", ignoreLeadingAndTrailingWhitespace = true)
+		void testWithIgnoreLeadingAndTrailingWhitespaceSetToTrueForCsvFileSource(String argument1, String argument2) {
+			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
 		}
 
 	}

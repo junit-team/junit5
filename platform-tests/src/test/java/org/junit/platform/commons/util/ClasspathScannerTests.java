@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,6 +33,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.spi.ToolProvider;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -180,22 +181,45 @@ class ClasspathScannerTests {
 
 	@Test
 	// #2500
-	void scanForClassesInPackageWithinModuleSharingNames() throws Exception {
-		var jarfile = getClass().getResource("/com.greetings@1-ea.jar");
+	void scanForClassesInPackageWithinModulesSharingNamePrefix(@TempDir Path temp) throws Exception {
+		var moduleSourcePath = Path.of(getClass().getResource("/modules-2500/").toURI()).toString();
+		run("javac", "--module", "foo,foo.bar", "--module-source-path", moduleSourcePath, "-d", temp.toString());
 
-		var module = "com.greetings";
+		checkModules2500(ModuleFinder.of(temp)); // exploded modules
+
+		var foo = temp.resolve("foo.jar");
+		var bar = temp.resolve("foo.bar.jar");
+		run("jar", "--create", "--file", foo.toString(), "-C", temp.resolve("foo").toString(), ".");
+		run("jar", "--create", "--file", bar.toString(), "-C", temp.resolve("foo.bar").toString(), ".");
+
+		checkModules2500(ModuleFinder.of(foo, bar)); // jarred modules
+
+		System.gc(); // required on Windows in order to release JAR file handles
+	}
+
+	private static int run(String tool, String... args) {
+		return ToolProvider.findFirst(tool).orElseThrow().run(System.out, System.err, args);
+	}
+
+	private void checkModules2500(ModuleFinder finder) {
+		var root = "foo.bar";
 		var before = ModuleFinder.of();
-		var finder = ModuleFinder.of(Path.of(jarfile.toURI()));
 		var boot = ModuleLayer.boot();
-		var configuration = boot.configuration().resolveAndBind(before, finder, Set.of(module));
+		var configuration = boot.configuration().resolve(before, finder, Set.of(root));
 		var parent = ClassLoader.getPlatformClassLoader();
 		var layer = ModuleLayer.defineModulesWithOneLoader(configuration, List.of(boot), parent).layer();
 
-		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(module), ReflectionUtils::tryToLoadClass);
-
-		var classes = classpathScanner.scanForClassesInPackage("com.greetings", allClasses);
-		var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
-		assertThat(classNames).hasSize(1).contains("com.greetings.Main");
+		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(root), ReflectionUtils::tryToLoadClass);
+		{
+			var classes = classpathScanner.scanForClassesInPackage("foo", allClasses);
+			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
+			assertThat(classNames).hasSize(2).contains("foo.Foo", "foo.bar.FooBar");
+		}
+		{
+			var classes = classpathScanner.scanForClassesInPackage("foo.bar", allClasses);
+			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
+			assertThat(classNames).hasSize(1).contains("foo.bar.FooBar");
+		}
 	}
 
 	@Test

@@ -3,6 +3,7 @@ import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionW
 pluginManagement {
 	plugins {
 		id("com.gradle.enterprise") version settings.extra["gradle.enterprise.plugin.version"] as String
+		id("com.gradle.common-custom-user-data-gradle-plugin") version settings.extra["gradle.user-data.plugin.version"] as String
 		id("net.nemerosa.versioning") version settings.extra["versioning.plugin.version"] as String
 		id("com.github.ben-manes.versions") version settings.extra["versions.plugin.version"] as String
 		id("com.diffplug.spotless") version settings.extra["spotless.plugin.version"] as String
@@ -17,6 +18,7 @@ pluginManagement {
 
 plugins {
 	id("com.gradle.enterprise")
+	id("com.gradle.common-custom-user-data-gradle-plugin")
 }
 
 val gradleEnterpriseServer = "https://ge.junit.org"
@@ -26,12 +28,28 @@ val junitBuildCachePassword: String? by extra
 
 gradleEnterprise {
 	buildScan {
-		server = gradleEnterpriseServer
 		isCaptureTaskInputFiles = true
 		isUploadInBackground = !isCiServer
-		publishAlways()
-		this as BuildScanExtensionWithHiddenFeatures
-		publishIfAuthenticated()
+
+		fun accessKeysAreMissingOrBlank(): Boolean {
+			val accessKeys = File(gradle.gradleUserHomeDir, "enterprise/keys.properties")
+			return !accessKeys.isFile || accessKeys.readText().isBlank()
+		}
+
+		if (gradle.startParameter.isBuildScan || (isCiServer && accessKeysAreMissingOrBlank())) {
+			termsOfServiceUrl = "https://gradle.com/terms-of-service"
+		} else {
+			server = gradleEnterpriseServer
+			publishAlways()
+			this as BuildScanExtensionWithHiddenFeatures
+			publishIfAuthenticated()
+		}
+
+		if (isCiServer) {
+			publishAlways()
+			termsOfServiceAgree = "yes"
+		}
+
 		obfuscation {
 			if (isCiServer) {
 				username { "github" }
