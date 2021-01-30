@@ -157,6 +157,7 @@ package org.junit.platform {
     [junit-platform-runner] as runner
     [junit-platform-suite] as suite
     [junit-platform-suite-api] as suite_api
+    [junit-platform-suite-commons] as suite_commons
     [junit-platform-suite-engine] as suite_engine
     [junit-platform-testkit] as testkit
 }
@@ -204,15 +205,16 @@ engine ..> commons
 
 reporting ..> launcher
 
-runner ..> launcher
-runner ..> suite_api
+runner ..> suite_commons
 runner ...> junit4
 
 suite ..> suite_api
 suite ..> suite_engine
 
-suite_engine ..> launcher
-suite_engine ..> suite_api
+suite_engine ..> suite_commons
+
+suite_commons ..> launcher
+suite_commons ..> suite_api
 
 testkit ....> opentest4j
 testkit ..> launcher
