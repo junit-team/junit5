@@ -19,6 +19,7 @@ group IDs, artifact IDs, and versions.
 
 ===== Transitive Dependencies
 
+* `junit-platform-suite-commons` in _test_ scope
 * `junit-platform-launcher` in _test_ scope
 * `junit-platform-engine` in _test_ scope
 * `junit-platform-commons` in _test_ scope
