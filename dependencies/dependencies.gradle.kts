@@ -38,5 +38,6 @@ dependencies {
 		api("biz.aQute.bnd:biz.aQute.bndlib:${versions["bnd"]}")
 		api("org.spockframework:spock-core:${versions["spock"]}")
 		api("com.github.gunnarmorling:jfrunit:${versions["jfrunit"]}")
+		api("org.jooq:joox:${versions["joox"]}")
 	}
 }
