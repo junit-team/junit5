@@ -10,11 +10,16 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
-@API(status = EXPERIMENTAL, since = "5.8")
+/**
+ * {@code Named} is used to wrap an object and give it a name..
+ *
+ * @param <T> the type of the payload
+ */
+@API(status = STABLE, since = "5.8")
 public interface Named<T> {
 
 	static <T> Named<T> of(String name, T payload) {

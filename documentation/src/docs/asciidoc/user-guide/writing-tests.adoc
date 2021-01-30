@@ -1580,6 +1580,20 @@ if they exceed the configured maximum length. The limit is configurable via the
 `junit.jupiter.params.displayname.argument.maxlength` configuration parameter and defaults
 to 512 characters.
 
+When using `@MethodSource` or `@ArgumentSource`, you can give names to arguments. This
+name will be used if the argument is included in the invocation display name, like in
+the example below.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=named_arguments]
+----
+
+....
+A parameterized test with named arguments ✔
+├─ 1: An important file ✔
+└─ 2: Another file ✔
+....
 
 [[writing-tests-parameterized-tests-lifecycle-interop]]
 ==== Lifecycle and Interoperability
