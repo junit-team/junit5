@@ -155,6 +155,7 @@
 38712453e07a4d8f7c492a5561e3f7a2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/InvocationInterceptor.java
 3885a195473da979d708a27d3b05c4e3  documentation/documentation.gradle.kts
 38941b97e85a0a3959947bcb975af55c  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoveryFilter.java
+38f5296042e4a225b669de0652449674  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
 390c1d45e8e1344a9dab25b7ed23172a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineDiscoveryResult.java
 3930a0234e1bfc69e0c5a50cdcb2d9c1  documentation/src/test/java/org/junit/api/tools/ApiReportGenerator.java
 393835471d2bc0ec13e3966a4645ab5f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestMethodContext.java
@@ -490,7 +491,6 @@ b38baa557564a9dda28062dadabc4005  junit-platform-engine/src/main/java/org/junit/
 b3f9596b19add74b8dfadff04707186a  junit-platform-console/src/main/java/org/junit/platform/console/tasks/CustomContextClassLoaderExecutor.java
 b40c37c5054497f233d6d3984ae0fa04  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/MethodInvocation.java
 b40de603f3c3a315c96cd35df0b6e5f8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicExtensionContext.java
-b443a6a36568b933723d6570f1cbc1a0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
 b5023d7e3d5fbd527ffee074f6eb5db4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
 b5a5cbe3ff5ef421664a74f0438554ed  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassNamePatternFilterUtils.java
 b5deaa459a2b76cf6897c8ba6a2d902c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/NamespaceAwareStore.java
