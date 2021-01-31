@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertThrowsExactly.assertThrowsExactly;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,7 +30,7 @@ import org.opentest4j.AssertionFailedError;
 /**
  * Unit tests for JUnit Jupiter {@link Assertions}.
  *
- * @since 5.8
+ * @since 5.0
  */
 class AssertThrowsExactlyAssertionsTests {
 
