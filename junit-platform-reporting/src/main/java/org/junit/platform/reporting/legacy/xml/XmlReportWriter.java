@@ -41,6 +41,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.reporting.legacy.LegacyReportingUtils;
 
 /**
@@ -62,14 +63,19 @@ class XmlReportWriter {
 		this.reportData = reportData;
 	}
 
-	void writeXmlReport(TestIdentifier testIdentifier, Writer out) throws XMLStreamException {
+	void writeXmlReport(TestIdentifier rootDescriptor, Writer out) throws XMLStreamException {
+		TestPlan testPlan = this.reportData.getTestPlan();
 		// @formatter:off
-		List<TestIdentifier> tests = this.reportData.getTestPlan().getDescendants(testIdentifier)
+		List<TestIdentifier> tests = testPlan.getDescendants(rootDescriptor)
 				.stream()
-				.filter(TestIdentifier::isTest)
+				.filter(testIdentifier -> shouldInclude(testPlan, testIdentifier))
 				.collect(toList());
 		// @formatter:on
-		writeXmlReport(testIdentifier, tests, out);
+		writeXmlReport(rootDescriptor, tests, out);
+	}
+
+	private boolean shouldInclude(TestPlan testPlan, TestIdentifier testIdentifier) {
+		return testIdentifier.isTest() || testPlan.getChildren(testIdentifier).isEmpty();
 	}
 
 	private void writeXmlReport(TestIdentifier testIdentifier, List<TestIdentifier> tests, Writer out)
