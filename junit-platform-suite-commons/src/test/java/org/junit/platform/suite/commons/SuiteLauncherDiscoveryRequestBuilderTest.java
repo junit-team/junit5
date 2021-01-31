@@ -11,6 +11,7 @@
 package org.junit.platform.suite.commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URI;
@@ -40,7 +41,6 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.suite.api.Configuration;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
@@ -60,8 +60,7 @@ import org.junit.platform.suite.api.SelectUris;
 
 class SuiteLauncherDiscoveryRequestBuilderTest {
 
-	LauncherDiscoveryRequestBuilder launcherRequest = LauncherDiscoveryRequestBuilder.request();
-	SuiteLauncherDiscoveryRequestBuilder builder = SuiteLauncherDiscoveryRequestBuilder.request(launcherRequest);
+	SuiteLauncherDiscoveryRequestBuilder builder = SuiteLauncherDiscoveryRequestBuilder.request();
 
 	@Test
 	void configuration() {
@@ -83,7 +82,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
-		assertTrue(filters.stream().anyMatch(filter -> filter.apply(TestCase.class.getName()).excluded()));
+		assertTrue(exactlyOne(filters).apply(TestCase.class.getName()).excluded());
 	}
 
 	@Test
@@ -94,7 +93,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<EngineFilter> filters = request.getEngineFilters();
-		filters.forEach(filter -> assertTrue(filter.apply(new JupiterTestEngine()).excluded()));
+		assertTrue(exactlyOne(filters).apply(new JupiterTestEngine()).excluded());
 	}
 
 	@Test
@@ -105,7 +104,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<PackageNameFilter> filters = request.getFiltersByType(PackageNameFilter.class);
-		filters.forEach(filter -> assertTrue(filter.apply("org.junit.platform.suite.commons.testcases").excluded()));
+		assertTrue(exactlyOne(filters).apply("org.junit.platform.suite.commons.testcases").excluded());
 	}
 
 	@Test
@@ -117,7 +116,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
 		TestDescriptor testDescriptor = new StubAbstractTestDescriptor();
-		filters.forEach(filter -> assertTrue(filter.apply(testDescriptor).excluded()));
+		assertTrue(exactlyOne(filters).apply(testDescriptor).excluded());
 	}
 
 	@Test
@@ -128,8 +127,8 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
-		filters.forEach(filter -> assertTrue(filter.apply(TestCase.class.getName()).included()));
-		filters.forEach(filter -> assertTrue(filter.apply(Suite.class.getName()).excluded()));
+		assertTrue(exactlyOne(filters).apply(TestCase.class.getName()).included());
+		assertTrue(exactlyOne(filters).apply(Suite.class.getName()).excluded());
 	}
 
 	@Test
@@ -138,9 +137,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
-		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
-		filters.forEach(filter -> assertTrue(filter.apply(TestCase.class.getName()).included()));
-		filters.forEach(filter -> assertTrue(filter.apply(Suite.class.getName()).excluded()));
+		assertTrue(request.getFiltersByType(ClassNameFilter.class).isEmpty());
 	}
 
 	@Test
@@ -150,13 +147,13 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		// @formatter:off
 		LauncherDiscoveryRequest request = builder
-				.filterStandardClassNamePatterns(false)
+				.filterStandardClassNamePatterns(true)
 				.suite(Suite.class)
 				.build();
 		// @formatter:on
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
-		filters.forEach(filter -> assertTrue(filter.apply(TestCase.class.getName()).included()));
-		filters.forEach(filter -> assertTrue(filter.apply(Suite.class.getName()).included()));
+		assertTrue(exactlyOne(filters).apply(TestCase.class.getName()).included());
+		assertTrue(exactlyOne(filters).apply(Suite.class.getName()).excluded());
 	}
 
 	@Test
@@ -167,7 +164,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<EngineFilter> filters = request.getEngineFilters();
-		filters.forEach(filter -> assertTrue(filter.apply(new JupiterTestEngine()).included()));
+		assertTrue(exactlyOne(filters).apply(new JupiterTestEngine()).included());
 	}
 
 	@Test
@@ -178,7 +175,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<PackageNameFilter> filters = request.getFiltersByType(PackageNameFilter.class);
-		filters.forEach(filter -> assertTrue(filter.apply("org.junit.platform.suite.commons.testcases").included()));
+		assertTrue(exactlyOne(filters).apply("org.junit.platform.suite.commons.testcases").included());
 	}
 
 	@Test
@@ -190,7 +187,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
 		TestDescriptor testDescriptor = new StubAbstractTestDescriptor();
-		filters.forEach(filter -> assertTrue(filter.apply(testDescriptor).included()));
+		assertTrue(exactlyOne(filters).apply(testDescriptor).included());
 	}
 
 	@Test
@@ -201,7 +198,8 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
-		selectors.forEach(selector -> assertEquals(TestCase.class, selector.getJavaClass()));
+		assertFalse(selectors.isEmpty());
+		assertEquals(TestCase.class, exactlyOne(selectors).getJavaClass());
 	}
 
 	@Test
@@ -212,8 +210,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<ClasspathResourceSelector> selectors = request.getSelectorsByType(ClasspathResourceSelector.class);
-		selectors.forEach(selector -> assertEquals("org.junit.platform.suite.commons.testcases",
-			selector.getClasspathResourceName()));
+		assertEquals("org.junit.platform.suite.commons.testcases", exactlyOne(selectors).getClasspathResourceName());
 	}
 
 	@Test
@@ -252,7 +249,17 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<DirectorySelector> selectors = request.getSelectorsByType(DirectorySelector.class);
-		selectors.forEach(selector -> assertEquals(Paths.get("path/to/root"), selector.getPath()));
+		assertEquals(Paths.get("path/to/root"), exactlyOne(selectors).getPath());
+	}
+
+	@Test
+	void selectDirectoriesFiltersEmptyPaths() {
+		@SelectDirectories("")
+		class Suite {
+
+		}
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		assertTrue(request.getSelectorsByType(DirectorySelector.class).isEmpty());
 	}
 
 	@Test
@@ -263,7 +270,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<FileSelector> selectors = request.getSelectorsByType(FileSelector.class);
-		selectors.forEach(selector -> assertEquals(Paths.get("path/to/root"), selector.getPath()));
+		assertEquals(Paths.get("path/to/root"), exactlyOne(selectors).getPath());
 	}
 
 	@Test
@@ -302,8 +309,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<ModuleSelector> selectors = request.getSelectorsByType(ModuleSelector.class);
-		selectors.forEach(
-			selector -> assertEquals("org.junit.platform.suite.commons.testcases", selector.getModuleName()));
+		assertEquals("org.junit.platform.suite.commons.testcases", exactlyOne(selectors).getModuleName());
 	}
 
 	@Test
@@ -314,7 +320,17 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<UriSelector> selectors = request.getSelectorsByType(UriSelector.class);
-		selectors.forEach(selector -> assertEquals(URI.create("path/to/root"), selector.getUri()));
+		assertEquals(URI.create("path/to/root"), exactlyOne(selectors).getUri());
+	}
+
+	@Test
+	void selectUrisFiltersEmptyUris() {
+		@SelectUris("")
+		class Suite {
+
+		}
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		assertTrue(request.getSelectorsByType(UriSelector.class).isEmpty());
 	}
 
 	@Test
@@ -325,8 +341,12 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<PackageSelector> selectors = request.getSelectorsByType(PackageSelector.class);
-		selectors.forEach(
-			selector -> assertEquals("org.junit.platform.suite.commons.testcases", selector.getPackageName()));
+		assertEquals("org.junit.platform.suite.commons.testcases", exactlyOne(selectors).getPackageName());
+	}
+
+	private static <T> T exactlyOne(List<T> list) {
+		assertEquals(1, list.size());
+		return list.get(0);
 	}
 
 	private static class TestCase {

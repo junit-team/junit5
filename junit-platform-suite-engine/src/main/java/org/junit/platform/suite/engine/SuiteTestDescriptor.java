@@ -13,6 +13,7 @@ package org.junit.platform.suite.engine;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
+import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
 
 import java.util.function.Supplier;
 
@@ -28,7 +29,6 @@ import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder;
@@ -47,16 +47,13 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	static final String SEGMENT_TYPE = "suite";
 
-	private final LauncherDiscoveryRequestBuilder launcherDiscoveryRequest;
-	private final SuiteLauncherDiscoveryRequestBuilder suiteDiscoveryRequest;
+	private final SuiteLauncherDiscoveryRequestBuilder discoveryRequestBuilder = request();
 
 	private LauncherDiscoveryResult launcherDiscoveryResult;
 	private SuiteLauncher launcher;
 
 	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass) {
 		super(requireNoCycles(id), getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
-		launcherDiscoveryRequest = LauncherDiscoveryRequestBuilder.request();
-		suiteDiscoveryRequest = SuiteLauncherDiscoveryRequestBuilder.request(launcherDiscoveryRequest);
 	}
 
 	private static UniqueId requireNoCycles(UniqueId id) {
@@ -78,14 +75,14 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	SuiteTestDescriptor addDiscoveryRequestFrom(Class<?> testClass) {
 		Preconditions.condition(launcherDiscoveryResult == null,
 			"discovery request can not be modified after discovery");
-		suiteDiscoveryRequest.suite(testClass);
+		discoveryRequestBuilder.suite(testClass);
 		return this;
 	}
 
 	SuiteTestDescriptor addDiscoveryRequestFrom(UniqueId uniqueId) {
 		Preconditions.condition(launcherDiscoveryResult == null,
 			"discovery request can not be modified after discovery");
-		launcherDiscoveryRequest.selectors(DiscoverySelectors.selectUniqueId(uniqueId));
+		discoveryRequestBuilder.selectors(DiscoverySelectors.selectUniqueId(uniqueId));
 		return this;
 	}
 
@@ -94,7 +91,11 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 			return;
 		}
 
-		LauncherDiscoveryRequest request = suiteDiscoveryRequest.build();
+		// @formatter:off
+		LauncherDiscoveryRequest request = discoveryRequestBuilder
+				.filterStandardClassNamePatterns(true)
+				.build();
+		// @formatter:on
 		this.launcher = SuiteLauncher.create();
 		this.launcherDiscoveryResult = launcher.discover(request, getUniqueId());
 		// @formatter:off

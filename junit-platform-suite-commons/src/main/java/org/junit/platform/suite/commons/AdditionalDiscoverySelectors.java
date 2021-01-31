@@ -35,7 +35,7 @@ class AdditionalDiscoverySelectors {
 
 		// @formatter:off
 		return uniqueStreamOf(uris)
-				.filter(String::isEmpty)
+				.filter(s -> !s.isEmpty())
 				.map(DiscoverySelectors::selectUri)
 				.collect(Collectors.toList());
 		// @formatter:on
@@ -47,7 +47,7 @@ class AdditionalDiscoverySelectors {
 
 		// @formatter:off
 		return uniqueStreamOf(paths)
-				.filter(String::isEmpty)
+				.filter(s -> !s.isEmpty())
 				.map(DiscoverySelectors::selectDirectory)
 				.collect(Collectors.toList());
 		// @formatter:on

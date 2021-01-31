@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -28,7 +28,6 @@ import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.suite.api.Configuration;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
@@ -155,7 +154,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	private LauncherDiscoveryRequest createDiscoveryRequest() {
-		LauncherDiscoveryRequestBuilder requestBuilder = request();
+		SuiteLauncherDiscoveryRequestBuilder requestBuilder = request();
 		// Allows @RunWith(JUnitPlatform.class) to be added to any test case
 		boolean isSuite = isSuite();
 		if (!isSuite) {
@@ -163,7 +162,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 		}
 
 		// @formatter:off
-		return SuiteLauncherDiscoveryRequestBuilder.request(requestBuilder)
+		return requestBuilder
 				.filterStandardClassNamePatterns(isSuite)
 				.suite(this.testClass)
 				.build();
