@@ -12,12 +12,23 @@ package org.junit.platform.reporting.legacy.xml;
 
 import static java.text.MessageFormat.format;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+import static java.util.Collections.emptyList;
+import static java.util.Comparator.naturalOrder;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
 import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
+import static org.junit.platform.reporting.legacy.xml.XmlReportWriter.AggregatedTestResult.Type.ERROR;
+import static org.junit.platform.reporting.legacy.xml.XmlReportWriter.AggregatedTestResult.Type.FAILURE;
+import static org.junit.platform.reporting.legacy.xml.XmlReportWriter.AggregatedTestResult.Type.SKIPPED;
+import static org.junit.platform.reporting.legacy.xml.XmlReportWriter.AggregatedTestResult.Type.SUCCESS;
 
 import java.io.Writer;
 import java.net.InetAddress;
@@ -25,10 +36,13 @@ import java.net.UnknownHostException;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TreeSet;
@@ -43,6 +57,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.reporting.legacy.LegacyReportingUtils;
+import org.junit.platform.reporting.legacy.xml.XmlReportWriter.AggregatedTestResult.Type;
 
 /**
  * {@code XmlReportWriter} writes an XML report whose format is compatible
@@ -65,21 +80,26 @@ class XmlReportWriter {
 
 	void writeXmlReport(TestIdentifier rootDescriptor, Writer out) throws XMLStreamException {
 		TestPlan testPlan = this.reportData.getTestPlan();
-		// @formatter:off
-		List<TestIdentifier> tests = testPlan.getDescendants(rootDescriptor)
-				.stream()
-				.filter(testIdentifier -> shouldInclude(testPlan, testIdentifier))
-				.collect(toList());
-		// @formatter:on
+		Map<TestIdentifier, AggregatedTestResult> tests = testPlan.getDescendants(rootDescriptor) //
+				.stream() //
+				.filter(testIdentifier -> shouldInclude(testPlan, testIdentifier)) //
+				.collect(toMap(identity(), this::toAggregatedResult)); //
 		writeXmlReport(rootDescriptor, tests, out);
+	}
+
+	private AggregatedTestResult toAggregatedResult(TestIdentifier testIdentifier) {
+		if (this.reportData.wasSkipped(testIdentifier)) {
+			return AggregatedTestResult.skipped();
+		}
+		return AggregatedTestResult.nonSkipped(this.reportData.getResults(testIdentifier));
 	}
 
 	private boolean shouldInclude(TestPlan testPlan, TestIdentifier testIdentifier) {
 		return testIdentifier.isTest() || testPlan.getChildren(testIdentifier).isEmpty();
 	}
 
-	private void writeXmlReport(TestIdentifier testIdentifier, List<TestIdentifier> tests, Writer out)
-			throws XMLStreamException {
+	private void writeXmlReport(TestIdentifier testIdentifier, Map<TestIdentifier, AggregatedTestResult> tests,
+			Writer out) throws XMLStreamException {
 
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		XMLStreamWriter xmlWriter = factory.createXMLStreamWriter(out);
@@ -91,8 +111,8 @@ class XmlReportWriter {
 		xmlWriter.close();
 	}
 
-	private void writeTestsuite(TestIdentifier testIdentifier, List<TestIdentifier> tests, XMLStreamWriter writer)
-			throws XMLStreamException {
+	private void writeTestsuite(TestIdentifier testIdentifier, Map<TestIdentifier, AggregatedTestResult> tests,
+			XMLStreamWriter writer) throws XMLStreamException {
 
 		// NumberFormat is not thread-safe. Thus, we instantiate it here and pass it to
 		// writeTestcase instead of using a constant
@@ -100,13 +120,13 @@ class XmlReportWriter {
 
 		writer.writeStartElement("testsuite");
 
-		writeSuiteAttributes(testIdentifier, tests, numberFormat, writer);
+		writeSuiteAttributes(testIdentifier, tests.values(), numberFormat, writer);
 
 		newLine(writer);
 		writeSystemProperties(writer);
 
-		for (TestIdentifier test : tests) {
-			writeTestcase(test, numberFormat, writer);
+		for (Entry<TestIdentifier, AggregatedTestResult> entry : tests.entrySet()) {
+			writeTestcase(entry.getKey(), entry.getValue(), numberFormat, writer);
 		}
 
 		writeOutputElement("system-out", formatNonStandardAttributesAsString(testIdentifier), writer);
@@ -115,22 +135,24 @@ class XmlReportWriter {
 		newLine(writer);
 	}
 
-	private void writeSuiteAttributes(TestIdentifier testIdentifier, List<TestIdentifier> tests,
+	private void writeSuiteAttributes(TestIdentifier testIdentifier, Collection<AggregatedTestResult> testResults,
 			NumberFormat numberFormat, XMLStreamWriter writer) throws XMLStreamException {
 
 		writeAttributeSafely(writer, "name", testIdentifier.getDisplayName());
-		writeTestCounts(tests, writer);
+		writeTestCounts(testResults, writer);
 		writeAttributeSafely(writer, "time", getTime(testIdentifier, numberFormat));
 		writeAttributeSafely(writer, "hostname", getHostname().orElse("<unknown host>"));
 		writeAttributeSafely(writer, "timestamp", ISO_LOCAL_DATE_TIME.format(getCurrentDateTime()));
 	}
 
-	private void writeTestCounts(List<TestIdentifier> tests, XMLStreamWriter writer) throws XMLStreamException {
-		TestCounts testCounts = TestCounts.from(this.reportData, tests);
-		writeAttributeSafely(writer, "tests", String.valueOf(testCounts.getTotal()));
-		writeAttributeSafely(writer, "skipped", String.valueOf(testCounts.getSkipped()));
-		writeAttributeSafely(writer, "failures", String.valueOf(testCounts.getFailures()));
-		writeAttributeSafely(writer, "errors", String.valueOf(testCounts.getErrors()));
+	private void writeTestCounts(Collection<AggregatedTestResult> testResults, XMLStreamWriter writer)
+			throws XMLStreamException {
+		Map<Type, Long> counts = testResults.stream().map(it -> it.type).collect(groupingBy(identity(), counting()));
+		long total = counts.values().stream().mapToLong(Long::longValue).sum();
+		writeAttributeSafely(writer, "tests", String.valueOf(total));
+		writeAttributeSafely(writer, "skipped", counts.getOrDefault(SKIPPED, 0L).toString());
+		writeAttributeSafely(writer, "failures", counts.getOrDefault(FAILURE, 0L).toString());
+		writeAttributeSafely(writer, "errors", counts.getOrDefault(ERROR, 0L).toString());
 	}
 
 	private void writeSystemProperties(XMLStreamWriter writer) throws XMLStreamException {
@@ -147,8 +169,8 @@ class XmlReportWriter {
 		newLine(writer);
 	}
 
-	private void writeTestcase(TestIdentifier testIdentifier, NumberFormat numberFormat, XMLStreamWriter writer)
-			throws XMLStreamException {
+	private void writeTestcase(TestIdentifier testIdentifier, AggregatedTestResult testResult,
+			NumberFormat numberFormat, XMLStreamWriter writer) throws XMLStreamException {
 
 		writer.writeStartElement("testcase");
 
@@ -157,7 +179,7 @@ class XmlReportWriter {
 		writeAttributeSafely(writer, "time", getTime(testIdentifier, numberFormat));
 		newLine(writer);
 
-		writeSkippedOrErrorOrFailureElement(testIdentifier, writer);
+		writeSkippedOrErrorOrFailureElement(testIdentifier, testResult, writer);
 
 		List<String> systemOutElements = new ArrayList<>();
 		List<String> systemErrElements = new ArrayList<>();
@@ -178,16 +200,18 @@ class XmlReportWriter {
 		return LegacyReportingUtils.getClassName(this.reportData.getTestPlan(), testIdentifier);
 	}
 
-	private void writeSkippedOrErrorOrFailureElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
-			throws XMLStreamException {
+	private void writeSkippedOrErrorOrFailureElement(TestIdentifier testIdentifier, AggregatedTestResult testResult,
+			XMLStreamWriter writer) throws XMLStreamException {
 
-		if (this.reportData.wasSkipped(testIdentifier)) {
+		if (testResult.type == SKIPPED) {
 			writeSkippedElement(this.reportData.getSkipReason(testIdentifier), writer);
 		}
 		else {
-			Optional<TestExecutionResult> result = this.reportData.getResult(testIdentifier);
-			if (result.isPresent() && result.get().getStatus() == FAILED) {
-				writeErrorOrFailureElement(result.get(), writer);
+			Map<Type, List<Optional<Throwable>>> throwablesByType = testResult.getThrowablesByType();
+			for (Type type : EnumSet.of(FAILURE, ERROR)) {
+				for (Optional<Throwable> throwable : throwablesByType.getOrDefault(type, emptyList())) {
+					writeErrorOrFailureElement(type, throwable.orElse(null), writer);
+				}
 			}
 		}
 	}
@@ -204,17 +228,17 @@ class XmlReportWriter {
 		newLine(writer);
 	}
 
-	private void writeErrorOrFailureElement(TestExecutionResult result, XMLStreamWriter writer)
+	private void writeErrorOrFailureElement(Type type, Throwable throwable, XMLStreamWriter writer)
 			throws XMLStreamException {
 
-		Optional<Throwable> throwable = result.getThrowable();
-		if (throwable.isPresent()) {
-			writer.writeStartElement(isFailure(result) ? "failure" : "error");
-			writeFailureAttributesAndContent(throwable.get(), writer);
+		String elementName = type == FAILURE ? "failure" : "error";
+		if (throwable != null) {
+			writer.writeStartElement(elementName);
+			writeFailureAttributesAndContent(throwable, writer);
 			writer.writeEndElement();
 		}
 		else {
-			writer.writeEmptyElement("error");
+			writer.writeEmptyElement(elementName);
 		}
 		newLine(writer);
 	}
@@ -348,54 +372,46 @@ class XmlReportWriter {
 		return throwable.isPresent() && throwable.get() instanceof AssertionError;
 	}
 
-	private static class TestCounts {
+	static class AggregatedTestResult {
 
-		static TestCounts from(XmlReportData reportData, List<TestIdentifier> tests) {
-			TestCounts counts = new TestCounts(tests.size());
-			for (TestIdentifier test : tests) {
-				if (reportData.wasSkipped(test)) {
-					counts.skipped++;
+		private static final AggregatedTestResult SKIPPED_RESULT = new AggregatedTestResult(SKIPPED, emptyList());
+
+		public static AggregatedTestResult skipped() {
+			return SKIPPED_RESULT;
+		}
+
+		public static AggregatedTestResult nonSkipped(List<TestExecutionResult> executionResults) {
+			Type type = executionResults.stream() //
+					.map(Type::from) //
+					.max(naturalOrder()) //
+					.orElse(SUCCESS);
+			return new AggregatedTestResult(type, executionResults);
+		}
+
+		private final Type type;
+		private final List<TestExecutionResult> executionResults;
+
+		private AggregatedTestResult(Type type, List<TestExecutionResult> executionResults) {
+			this.type = type;
+			this.executionResults = executionResults;
+		}
+
+		public Map<Type, List<Optional<Throwable>>> getThrowablesByType() {
+			return executionResults.stream() //
+					.collect(groupingBy(Type::from, mapping(TestExecutionResult::getThrowable, toList())));
+		}
+
+		enum Type {
+
+			SUCCESS, SKIPPED, FAILURE, ERROR;
+
+			private static Type from(TestExecutionResult executionResult) {
+				if (executionResult.getStatus() == FAILED) {
+					return isFailure(executionResult) ? FAILURE : ERROR;
 				}
-				else {
-					Optional<TestExecutionResult> result = reportData.getResult(test);
-					if (result.isPresent() && result.get().getStatus() == FAILED) {
-						if (isFailure(result.get())) {
-							counts.failures++;
-						}
-						else {
-							counts.errors++;
-						}
-					}
-				}
+				return SUCCESS;
 			}
-			return counts;
 		}
-
-		private final long total;
-		private long skipped;
-		private long failures;
-		private long errors;
-
-		TestCounts(long total) {
-			this.total = total;
-		}
-
-		public long getTotal() {
-			return total;
-		}
-
-		public long getSkipped() {
-			return skipped;
-		}
-
-		public long getFailures() {
-			return failures;
-		}
-
-		public long getErrors() {
-			return errors;
-		}
-
 	}
 
 }

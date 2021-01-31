@@ -45,6 +45,9 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoEngineExecutionContext;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalContainerDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
@@ -288,6 +291,38 @@ class LegacyXmlReportGeneratingListenerTests {
 		var testcase = testsuite.child("testcase");
 		assertThat(testcase.attr("name")).isEqualTo("failingContainer");
 		assertThat(testcase.attr("classname")).isEqualTo("dummy");
+
+		var error = testcase.child("error");
+		assertThat(error.attr("message")).isEqualTo("boom");
+		assertThat(error.attr("type")).isEqualTo(RuntimeException.class.getName());
+		assertThat(error.text()).containsSubsequence("RuntimeException: boom", "\tat");
+	}
+
+	@Test
+	void writesFileForContainerFailingAfterTest() throws Exception {
+		var engine = new DemoHierarchicalTestEngine("dummy");
+
+		var container = engine.addChild("failingContainer",
+			uniqueId -> new DemoHierarchicalContainerDescriptor(uniqueId, "failingContainer", null, null) {
+				@Override
+				public void after(DemoEngineExecutionContext context) {
+					throw new RuntimeException("boom");
+				}
+			}, "child");
+		container.addChild(
+			new DemoHierarchicalTestDescriptor(container.getUniqueId().append("test", "someTest"), "someTest", () -> {
+			}));
+
+		executeTests(engine, tempDirectory);
+
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("errors", int.class)).isEqualTo(1);
+
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("someTest");
+		assertThat(testcase.attr("classname")).isEqualTo("failingContainer");
 
 		var error = testcase.child("error");
 		assertThat(error.attr("message")).isEqualTo("boom");
