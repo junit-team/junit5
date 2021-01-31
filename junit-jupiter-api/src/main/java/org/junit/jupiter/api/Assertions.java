@@ -2996,6 +2996,55 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
+	 * an exception of exactly the {@code expectedType} and return the exception.
+	 *
+	 * <p>If no exception is thrown, or if an exception of a different type is
+	 * thrown, this method will fail.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * ignore the return value.
+	 */
+	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable) {
+		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable);
+	}
+
+	/**
+	 * <em>Assert</em> that execution of the supplied {@code executable} throws
+	 * an exception of exactly the {@code expectedType} and return the exception.
+	 *
+	 * <p>If no exception is thrown, or if an exception of a different type is
+	 * thrown, this method will fail.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * ignore the return value.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 */
+	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
+			String message) {
+		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, message);
+	}
+
+	/**
+	 * <em>Assert</em> that execution of the supplied {@code executable} throws
+	 * an exception of exactly the {@code expectedType} and return the exception.
+	 *
+	 * <p>If no exception is thrown, or if an exception of a different type is
+	 * thrown, this method will fail.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * <p>If you do not want to perform additional checks on the exception instance,
+	 * ignore the return value.
+	 */
+	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
+			Supplier<String> messageSupplier) {
+		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, messageSupplier);
+	}
+
+	/**
+	 * <em>Assert</em> that execution of the supplied {@code executable} throws
 	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
