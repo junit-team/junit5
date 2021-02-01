@@ -15,7 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.apiguardian.api.API;
 
 /**
- * {@code Named} is used to wrap an object and give it a name..
+ * {@code Named} is used to wrap an object and give it a name.
  *
  * @param <T> the type of the payload
  */
