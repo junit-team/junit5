@@ -90,6 +90,9 @@ on GitHub.
 * `DynamicTests.stream()` can now consume `Named` input and will use each name-value pair
   as the display name and value for each generated dynamic test (see
   <<../user-guide/index.adoc#writing-tests-dynamic-tests-examples,User Guide>> for details).
+* New `assertThrowsExactly` method is introduced as a more strict version of the `assertThrows`
+  allowing you to assert that the thrown exception has the exact specified class.
+
 
 
 [[release-notes-5.8.0-M1-junit-vintage]]

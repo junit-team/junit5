@@ -3019,7 +3019,10 @@ public class Assertions {
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
+	 *
+	 * @since 5.8
 	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable) {
 		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable);
 	}
@@ -3035,7 +3038,10 @@ public class Assertions {
 	 * ignore the return value.
 	 *
 	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.8
 	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
 			String message) {
 		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, message);
@@ -3053,7 +3059,10 @@ public class Assertions {
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
+	 *
+	 * @since 5.8
 	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {
 		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, messageSupplier);
