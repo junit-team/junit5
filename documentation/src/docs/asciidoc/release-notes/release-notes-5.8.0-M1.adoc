@@ -83,6 +83,9 @@ on GitHub.
 * Dynamic tests now require less memory thanks to a number of improvements to internal
   data structures.
 * Documented constant values in `org.junit.jupiter.api.parallel.Resources`.
+* New `assertThrowsExactly` method is introduced as a more strict version of the `assertThrows`
+  allowing you to assert that the thrown exception has the exact specified class.
+
 
 
 [[release-notes-5.8.0-M1-junit-vintage]]
