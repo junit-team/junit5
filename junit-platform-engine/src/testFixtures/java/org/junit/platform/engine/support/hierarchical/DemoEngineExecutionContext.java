@@ -13,5 +13,5 @@ package org.junit.platform.engine.support.hierarchical;
 /**
  * @since 1.0
  */
-class DemoEngineExecutionContext implements EngineExecutionContext {
+public class DemoEngineExecutionContext implements EngineExecutionContext {
 }
