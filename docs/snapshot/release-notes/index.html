@@ -730,6 +730,10 @@ of this change may be witnessed by end users and test engine or extension author
 <p>Method <code>scanForClassesInPackage(String)</code> in <code>ClasspathScanner</code> now returns a valid list
 of class names when the package name is equal to the name of a module on the module path.</p>
 </li>
+<li>
+<p>The legacy XML report now always includes container-level failures (e.g. from
+<code>@BeforeAll</code> Jupiter lifecycle methods).</p>
+</li>
 </ul>
 </div>
 </div>
@@ -884,7 +888,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-01-30 16:54:56 UTC
+Last updated 2021-02-01 18:35:21 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

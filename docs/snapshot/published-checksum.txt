@@ -247,8 +247,6 @@
 5b09fedb8d0691af61f9a2a9ead17c7b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java
 5b143dbb7aceed36bbb3320761d77bff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/package-info.java
 5b8cb6f78d1e6f57901950d51edf0c05  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTimeout.java
-5b90c0e1d44ec1de5536cb684075d318  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportData.java
-5bedab058eb248773f69245fb6579b59  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 5beeebeb56b5d1f68ce917275a7a5b68  junit-vintage-engine/src/main/java/org/junit/vintage/engine/package-info.java
 5c8b610094cb9c50300bf03133407eca  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java
 5ccfa71d252374591268217a2f5d30b9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.java
@@ -299,6 +297,7 @@
 71f7c1550e8cffd6f4c9603806c76d66  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrinter.java
 731c9b4a3afb51c550b56e900b1a916b  junit-platform-engine/src/main/java/org/junit/platform/engine/TestEngine.java
 734fe9bee220261b8256f17bd65d55b9  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/package-info.java
+7356c99dc47b551b7d7946de22d4d970  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 741b6dac9e79cb9de20001d085c0b640  documentation/src/javadoc/junit-overview.html
 741b75f1df6e6f28e85ba37a1b8dabe9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.java
 747bdad666a04e6bab23552aa3860db7  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileSource.java
@@ -364,7 +363,6 @@
 8962f07b44b6632eb4736c94f57b7589  documentation/src/test/java/example/MyFirstJUnitJupiterTests.java
 89702a39f5df287ea6c5fbba1ad441da  junit-platform-commons/src/main/java/org/junit/platform/commons/util/Preconditions.java
 89718e551cfe40a123823f221bebaa67  documentation/src/docs/asciidoc/resources/themes/junit-pdf-theme.yml
-8aa67667e90754cf7b7f9a7c28962d6d  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportWriter.java
 8aead14dcd0500e33a4d7c6415bbaa71  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertAll.java
 8b2ec00e1a83f83774569cc966ded6eb  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 8b7776a2fdc090a4eb9d1dfed28eff69  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
@@ -429,6 +427,7 @@
 9cf97f2ca731433f885cccae25c524a7  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
 9e4f7d89c04e3583b4b8865d6e947c7e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerDecorator.java
 9ea373bc7d3094021b9b644cd22ad07a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvParserFactory.java
+9edacf3f65feaa4cac0276a318cbe915  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportData.java
 9f33e47190e39681346d10fd10dd6087  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/InternalTestPlan.java
 9f6029a3f8cddc7886079b88c9c9e036  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestMethodOrder.java
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
@@ -443,6 +442,7 @@ a200e1b3a2bbfd666bed2463332d2b86  junit-jupiter-api/src/main/java/org/junit/jupi
 a2c9897258cf62c63a134160a15bd5ec  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 a2d5a21301467b5b8d1a9d31da980744  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreeNode.java
 a301913810e179be713433d9ce11c78d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.java
+a315fc394a47aed8f6244b9cb45d2b8a  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportWriter.java
 a3ae464f2543ea2ca3d5be210080c479  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceAccessMode.java
 a3dbb51fdad33db6771c29b2c80f67da  junit-platform-engine/src/main/java/org/junit/platform/engine/package-info.java
 a44a324af4b5f614f365e9fe57ce58d5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotSame.java
