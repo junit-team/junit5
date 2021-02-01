@@ -12,7 +12,7 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -26,9 +26,9 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 class ParameterizedTestParameterResolver implements ParameterResolver {
 
 	private final ParameterizedTestMethodContext methodContext;
-	private final List<Named<Object>> arguments;
+	private final Object[] arguments;
 
-	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, List<Named<Object>> arguments) {
+	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, Object[] arguments) {
 		this.methodContext = methodContext;
 		this.arguments = arguments;
 	}
@@ -56,13 +56,25 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		}
 
 		// Else fallback to behavior for parameterized test methods without aggregators.
-		return parameterIndex < this.arguments.size();
+		return parameterIndex < this.arguments.length;
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return this.methodContext.resolve(parameterContext, this.arguments.stream().map(Named::getPayload).toArray());
+		return this.methodContext.resolve(parameterContext, extractPayloads(this.arguments));
+	}
+
+	@SuppressWarnings("unchecked")
+	private Object[] extractPayloads(Object[] arguments) {
+		return Arrays.stream(arguments) //
+				.map(argument -> {
+					if (argument instanceof Named) {
+						return ((Named<Object>) argument).getPayload();
+					}
+					return argument;
+				}) //
+				.toArray();
 	}
 
 }

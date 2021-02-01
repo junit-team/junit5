@@ -14,7 +14,6 @@ import static java.util.Collections.singletonList;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 
@@ -25,10 +24,10 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	private final ParameterizedTestNameFormatter formatter;
 	private final ParameterizedTestMethodContext methodContext;
-	private final List<Named<Object>> arguments;
+	private final Object[] arguments;
 
 	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, List<Named<Object>> arguments) {
+			ParameterizedTestMethodContext methodContext, Object[] arguments) {
 		this.formatter = formatter;
 		this.methodContext = methodContext;
 		this.arguments = arguments;
@@ -36,7 +35,7 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	@Override
 	public String getDisplayName(int invocationIndex) {
-		return this.formatter.format(invocationIndex, this.arguments.toArray());
+		return this.formatter.format(invocationIndex, this.arguments);
 	}
 
 	@Override
