@@ -30,7 +30,7 @@ import org.opentest4j.AssertionFailedError;
 /**
  * Unit tests for JUnit Jupiter {@link Assertions}.
  *
- * @since 5.0
+ * @since 5.8
  */
 class AssertThrowsExactlyAssertionsTests {
 
