@@ -45,6 +45,9 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoEngineExecutionContext;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalContainerDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
@@ -58,8 +61,11 @@ import org.opentest4j.AssertionFailedError;
  */
 class LegacyXmlReportGeneratingListenerTests {
 
+	@TempDir
+	Path tempDirectory;
+
 	@Test
-	void writesFileForSingleSucceedingTest(@TempDir Path tempDirectory) throws Exception {
+	void writesFileForSingleSucceedingTest() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("succeedingTest", "display<-->Name 😎", () -> {
 		});
@@ -89,7 +95,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleFailingTest(@TempDir Path tempDirectory) throws Exception {
+	void writesFileForSingleFailingTest() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("failingTest", () -> fail("expected to <b>fail</b>"));
 
@@ -115,7 +121,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleErroneousTest(@TempDir Path tempDirectory) throws Exception {
+	void writesFileForSingleErroneousTest() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("failingTest", () -> {
 			throw new RuntimeException("error occurred");
@@ -143,7 +149,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleSkippedTest(@TempDir Path tempDirectory) throws Exception {
+	void writesFileForSingleSkippedTest() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		var testDescriptor = engine.addTest("skippedTest", () -> fail("never called"));
 		testDescriptor.markSkipped("should be skipped");
@@ -167,7 +173,7 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	@SuppressWarnings("ConstantConditions")
 	@Test
-	void writesFileForSingleAbortedTest(@TempDir Path tempDirectory) throws Exception {
+	void writesFileForSingleAbortedTest() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("abortedTest", () -> assumeFalse(true, "deliberately aborted"));
 
@@ -190,7 +196,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void measuresTimesInSeconds(@TempDir Path tempDirectory) throws Exception {
+	void measuresTimesInSeconds() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("firstTest", () -> {
 		});
@@ -216,7 +222,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void testWithImmeasurableTimeIsOutputCorrectly(@TempDir Path tempDirectory) throws Exception {
+	void testWithImmeasurableTimeIsOutputCorrectly() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
@@ -229,7 +235,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForSkippedContainer(@TempDir Path tempDirectory) throws Exception {
+	void writesFileForSkippedContainer() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().markSkipped("should be skipped");
@@ -247,7 +253,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForFailingContainer(@TempDir Path tempDirectory) throws Exception {
+	void writesFileForFailingContainer() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().setBeforeAllBehavior(() -> fail("failure before all tests"));
@@ -269,7 +275,63 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesSystemProperties(@TempDir Path tempDirectory) throws Exception {
+	void writesFileForFailingContainerWithoutTest() throws Exception {
+		var engine = new DemoHierarchicalTestEngine("dummy");
+		engine.addContainer("failingContainer", () -> {
+			throw new RuntimeException("boom");
+		});
+
+		executeTests(engine, tempDirectory);
+
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("errors", int.class)).isEqualTo(1);
+
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("failingContainer");
+		assertThat(testcase.attr("classname")).isEqualTo("dummy");
+
+		var error = testcase.child("error");
+		assertThat(error.attr("message")).isEqualTo("boom");
+		assertThat(error.attr("type")).isEqualTo(RuntimeException.class.getName());
+		assertThat(error.text()).containsSubsequence("RuntimeException: boom", "\tat");
+	}
+
+	@Test
+	void writesFileForContainerFailingAfterTest() throws Exception {
+		var engine = new DemoHierarchicalTestEngine("dummy");
+
+		var container = engine.addChild("failingContainer",
+			uniqueId -> new DemoHierarchicalContainerDescriptor(uniqueId, "failingContainer", null, null) {
+				@Override
+				public void after(DemoEngineExecutionContext context) {
+					throw new RuntimeException("boom");
+				}
+			}, "child");
+		container.addChild(
+			new DemoHierarchicalTestDescriptor(container.getUniqueId().append("test", "someTest"), "someTest", () -> {
+			}));
+
+		executeTests(engine, tempDirectory);
+
+		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+
+		assertThat(testsuite.attr("tests", int.class)).isEqualTo(1);
+		assertThat(testsuite.attr("errors", int.class)).isEqualTo(1);
+
+		var testcase = testsuite.child("testcase");
+		assertThat(testcase.attr("name")).isEqualTo("someTest");
+		assertThat(testcase.attr("classname")).isEqualTo("failingContainer");
+
+		var error = testcase.child("error");
+		assertThat(error.attr("message")).isEqualTo("boom");
+		assertThat(error.attr("type")).isEqualTo(RuntimeException.class.getName());
+		assertThat(error.text()).containsSubsequence("RuntimeException: boom", "\tat");
+	}
+
+	@Test
+	void writesSystemProperties() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
@@ -283,7 +345,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesHostNameAndTimestamp(@TempDir Path tempDirectory) throws Exception {
+	void writesHostNameAndTimestamp() throws Exception {
 		var engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
@@ -299,7 +361,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void printsExceptionWhenReportsDirCannotBeCreated(@TempDir Path tempDirectory) throws Exception {
+	void printsExceptionWhenReportsDirCannotBeCreated() throws Exception {
 		var reportsDir = tempDirectory.resolve("dummy.txt");
 		Files.write(reportsDir, Set.of("content"));
 
@@ -313,7 +375,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void printsExceptionWhenReportCouldNotBeWritten(@TempDir Path tempDirectory) throws Exception {
+	void printsExceptionWhenReportCouldNotBeWritten() throws Exception {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 
 		var xmlFile = tempDirectory.resolve("TEST-engine.xml");
@@ -329,7 +391,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesReportEntriesToSystemOutElement(@TempDir Path tempDirectory) throws Exception {
+	void writesReportEntriesToSystemOutElement() throws Exception {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
 		var testPlan = TestPlan.from(Set.of(engineDescriptor));
