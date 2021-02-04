@@ -224,6 +224,7 @@
 528be010351842bcd3d9b8e3d7534d20  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoverySelector.java
 5375cb0b67ee3eeaaba83e84d44cc81b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ThrowableCollector.java
 537cb22a29cc0e3a33871b3d45a47f4d  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/IncludePackageNameFilter.java
+5394034678b700000f14cc6105657580  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 53bc8f6216e05afc4a6c43f56a454b05  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/InternalLauncher.java
 5445be94bd22129367dac89bb76e9a68  documentation/src/main/java/example/util/StringUtils.java
 544627eae0658a8f7c2bebac5d80637f  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LogRecordListener.java
@@ -297,7 +298,6 @@
 71f7c1550e8cffd6f4c9603806c76d66  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrinter.java
 731c9b4a3afb51c550b56e900b1a916b  junit-platform-engine/src/main/java/org/junit/platform/engine/TestEngine.java
 734fe9bee220261b8256f17bd65d55b9  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/package-info.java
-7356c99dc47b551b7d7946de22d4d970  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
 741b6dac9e79cb9de20001d085c0b640  documentation/src/javadoc/junit-overview.html
 741b75f1df6e6f28e85ba37a1b8dabe9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.java
 747bdad666a04e6bab23552aa3860db7  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileSource.java
