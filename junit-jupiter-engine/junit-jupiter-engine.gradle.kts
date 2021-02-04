@@ -1,3 +1,5 @@
+import aQute.bnd.gradle.BundleTaskConvention;
+
 plugins {
 	`kotlin-library-conventions`
 	`testing-conventions`
@@ -21,4 +23,17 @@ dependencies {
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 	testImplementation("org.codehaus.groovy:groovy")
+}
+
+tasks {
+	jar {
+		withConvention(BundleTaskConvention::class) {
+			bnd("""
+				Provide-Capability:\
+					org.junit.platform.engine;\
+						org.junit.platform.engine='junit-jupiter';\
+						version:Version="${'$'}{version_cleanup;${project.version}}"
+			""")
+		}
+	}
 }
