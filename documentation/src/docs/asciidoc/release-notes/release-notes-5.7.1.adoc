@@ -1,7 +1,7 @@
 [[release-notes-5.7.1]]
 == 5.7.1
 
-*Date of Release:* ❓
+*Date of Release:* February 4, 2021
 
 *Scope:* Bug fixes since 5.7.0
 
@@ -30,14 +30,6 @@ GitHub.
 * The legacy XML report now always includes container-level failures (e.g. from
   `@BeforeAll` Jupiter lifecycle methods).
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
-
 
 [[release-notes-5.7.1-junit-jupiter]]
 === JUnit Jupiter
@@ -50,10 +42,6 @@ GitHub.
   This fixes a regression introduced in JUnit Jupiter 5.7.0.
 * Creator functions passed to `ExtensionContext.Store.getOrComputeIfAbsent()` are now only
   called once even if they throw an exception.
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
@@ -70,11 +58,3 @@ GitHub.
 
 * The legacy reporting name of top-level test classes is now always their fully-qualified
   class name. Previously, a textual description was returned for JUnit 3 suites.
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
