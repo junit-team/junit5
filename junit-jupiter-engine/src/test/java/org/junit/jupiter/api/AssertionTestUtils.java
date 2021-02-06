@@ -38,6 +38,13 @@ class AssertionTestUtils {
 		}
 	}
 
+	static void assertMessageMatches(Throwable ex, String regex) throws AssertionError {
+		if (!ex.getMessage().matches(regex)) {
+			throw new AssertionError("Exception message should match regular expression [" + regex + "], but was ["
+					+ ex.getMessage() + "].");
+		}
+	}
+
 	static void assertMessageStartsWith(Throwable ex, String msg) throws AssertionError {
 		if (!ex.getMessage().startsWith(msg)) {
 			throw new AssertionError(

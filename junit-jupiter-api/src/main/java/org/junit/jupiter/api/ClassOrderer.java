@@ -78,7 +78,6 @@ public interface ClassOrderer {
 	class ClassName implements ClassOrderer {
 
 		public ClassName() {
-
 		}
 
 		/**
@@ -102,7 +101,6 @@ public interface ClassOrderer {
 	class DisplayName implements ClassOrderer {
 
 		public DisplayName() {
-
 		}
 
 		/**
@@ -136,7 +134,6 @@ public interface ClassOrderer {
 	class OrderAnnotation implements ClassOrderer {
 
 		public OrderAnnotation() {
-
 		}
 
 		/**
@@ -210,7 +207,6 @@ public interface ClassOrderer {
 		public static final String RANDOM_SEED_PROPERTY_NAME = MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
 
 		public Random() {
-
 		}
 
 		/**

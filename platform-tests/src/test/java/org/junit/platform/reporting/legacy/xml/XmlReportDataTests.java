@@ -29,19 +29,19 @@ import org.junit.platform.launcher.TestPlan;
 class XmlReportDataTests {
 
 	@Test
-	void resultOfTestIdentifierWithoutAnyReportedEventsIsEmpty() {
+	void resultsOfTestIdentifierWithoutAnyReportedEventsAreEmpty() {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
 		var testPlan = TestPlan.from(Set.of(engineDescriptor));
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		var result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
+		var results = reportData.getResults(testPlan.getTestIdentifier("[child:test]"));
 
-		assertThat(result).isEmpty();
+		assertThat(results).isEmpty();
 	}
 
 	@Test
-	void resultOfTestIdentifierWithoutReportedEventsIsFailureOfAncestor() {
+	void resultsOfTestIdentifierWithoutReportedEventsContainsOnlyFailureOfAncestor() {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
 		var testPlan = TestPlan.from(Set.of(engineDescriptor));
@@ -50,13 +50,13 @@ class XmlReportDataTests {
 		var failureOfAncestor = failed(new RuntimeException("failed!"));
 		reportData.markFinished(testPlan.getTestIdentifier("[engine:engine]"), failureOfAncestor);
 
-		var result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
+		var results = reportData.getResults(testPlan.getTestIdentifier("[child:test]"));
 
-		assertThat(result).contains(failureOfAncestor);
+		assertThat(results).containsExactly(failureOfAncestor);
 	}
 
 	@Test
-	void resultOfTestIdentifierWithoutReportedEventsIsEmptyWhenAncestorWasSuccessful() {
+	void resultsOfTestIdentifierWithoutReportedEventsContainsOnlySuccessOfAncestor() {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
 		var testPlan = TestPlan.from(Set.of(engineDescriptor));
@@ -64,8 +64,8 @@ class XmlReportDataTests {
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markFinished(testPlan.getTestIdentifier("[engine:engine]"), successful());
 
-		var result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
+		var results = reportData.getResults(testPlan.getTestIdentifier("[child:test]"));
 
-		assertThat(result).isEmpty();
+		assertThat(results).containsExactly(successful());
 	}
 }

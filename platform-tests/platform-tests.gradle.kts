@@ -23,6 +23,7 @@ dependencies {
 	testImplementation(project(":junit-jupiter-engine"))
 	testImplementation("org.apiguardian:apiguardian-api")
 	testImplementation("com.github.gunnarmorling:jfrunit")
+	testImplementation("org.jooq:joox")
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(":junit-vintage-engine"))

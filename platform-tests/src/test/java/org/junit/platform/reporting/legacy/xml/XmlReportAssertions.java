@@ -12,14 +12,13 @@ package org.junit.platform.reporting.legacy.xml;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.StringReader;
-
 import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -27,14 +26,14 @@ import org.xml.sax.SAXException;
  */
 class XmlReportAssertions {
 
-	static void assertValidAccordingToJenkinsSchema(String content) throws Exception {
+	static void assertValidAccordingToJenkinsSchema(Document document) throws Exception {
 		try {
 			// Schema is thread-safe, Validator is not
 			var validator = CachedSchema.JENKINS.newValidator();
-			validator.validate(new StreamSource(new StringReader(content)));
+			validator.validate(new DOMSource(document));
 		}
 		catch (SAXException e) {
-			fail("Invalid XML document: " + content, e);
+			fail("Invalid XML document: " + document, e);
 		}
 	}
 

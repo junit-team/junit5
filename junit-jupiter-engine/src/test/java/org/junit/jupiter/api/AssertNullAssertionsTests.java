@@ -11,8 +11,8 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionTestUtils.assertExpectedAndActualValues;
-import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEndsWith;
-import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageMatches;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -46,7 +46,7 @@ class AssertNullAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertMessageEquals(ex, "expected: <null> but was: <foo>");
 			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
@@ -74,10 +74,9 @@ class AssertNullAssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			// Should look something like:
-			// expected: null<null> but was: java.lang.String@264b3504<null>
+			// expected: <null> but was: java.lang.String@264b3504<null>
 			String prefix = (messageSupplier != null ? messageSupplier.get() + " ==> " : "");
-			assertMessageStartsWith(ex, prefix + "expected: null<null> but was: java.lang.String@");
-			assertMessageEndsWith(ex, "<null>");
+			assertMessageMatches(ex, prefix + "expected: <null> but was: java\\.lang\\.String@.+<null>");
 			assertExpectedAndActualValues(ex, null, actual);
 		}
 	}
@@ -105,11 +104,10 @@ class AssertNullAssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			// Should look something like:
-			// expected: null<null> but was: org.junit.jupiter.api.AssertNullAssertionsTests$NullToString@4e7912d8<null>
+			// expected: <null> but was: org.junit.jupiter.api.AssertNullAssertionsTests$NullToString@4e7912d8<null>
 			String prefix = (messageSupplier != null ? messageSupplier.get() + " ==> " : "");
-			assertMessageStartsWith(ex,
-				prefix + "expected: null<null> but was: org.junit.jupiter.api.AssertNullAssertionsTests$NullToString@");
-			assertMessageEndsWith(ex, "<null>");
+			assertMessageMatches(ex, prefix
+					+ "expected: <null> but was: org\\.junit\\.jupiter\\.api\\.AssertNullAssertionsTests\\$NullToString@.+<null>");
 			assertExpectedAndActualValues(ex, null, actual);
 		}
 	}
@@ -121,8 +119,7 @@ class AssertNullAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageStartsWith(ex, "a message");
-			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertMessageEquals(ex, "a message ==> expected: <null> but was: <foo>");
 			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
@@ -134,8 +131,7 @@ class AssertNullAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageStartsWith(ex, "test");
-			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertMessageEquals(ex, "test ==> expected: <null> but was: <foo>");
 			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
