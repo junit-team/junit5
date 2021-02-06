@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -76,6 +78,9 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void excludeClassNamePatterns() {
+		class TestCase {
+
+		}
 		@ExcludeClassNamePatterns("^.*TestCase$")
 		class Suite {
 
@@ -98,13 +103,13 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void excludePackages() {
-		@ExcludePackages("org.junit.platform.suite.commons.testcases")
+		@ExcludePackages("com.example.testcases")
 		class Suite {
 
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<PackageNameFilter> filters = request.getFiltersByType(PackageNameFilter.class);
-		assertTrue(exactlyOne(filters).apply("org.junit.platform.suite.commons.testcases").excluded());
+		assertTrue(exactlyOne(filters).apply("com.example.testcases").excluded());
 	}
 
 	@Test
@@ -121,6 +126,9 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void includeClassNamePatterns() {
+		class TestCase {
+
+		}
 		@IncludeClassNamePatterns("^.*TestCase$")
 		class Suite {
 
@@ -142,6 +150,9 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void filtersOnStandardClassNamePatternsWhenIncludeClassNamePatternsIsOmittedUnlessDisabled() {
+		class ExampleTest {
+
+		}
 		class Suite {
 
 		}
@@ -152,7 +163,7 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 				.build();
 		// @formatter:on
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
-		assertTrue(exactlyOne(filters).apply(TestCase.class.getName()).included());
+		assertTrue(exactlyOne(filters).apply(ExampleTest.class.getName()).included());
 		assertTrue(exactlyOne(filters).apply(Suite.class.getName()).excluded());
 	}
 
@@ -169,13 +180,13 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void includePackages() {
-		@IncludePackages("org.junit.platform.suite.commons.testcases")
+		@IncludePackages("com.example.testcases")
 		class Suite {
 
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<PackageNameFilter> filters = request.getFiltersByType(PackageNameFilter.class);
-		assertTrue(exactlyOne(filters).apply("org.junit.platform.suite.commons.testcases").included());
+		assertTrue(exactlyOne(filters).apply("com.example.testcases").included());
 	}
 
 	@Test
@@ -192,6 +203,9 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void selectClasses() {
+		class TestCase {
+
+		}
 		@SelectClasses(TestCase.class)
 		class Suite {
 
@@ -204,19 +218,19 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void selectClasspathResource() {
-		@SelectClasspathResource("org.junit.platform.suite.commons.testcases")
+		@SelectClasspathResource("com.example.testcases")
 		class Suite {
 
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<ClasspathResourceSelector> selectors = request.getSelectorsByType(ClasspathResourceSelector.class);
-		assertEquals("org.junit.platform.suite.commons.testcases", exactlyOne(selectors).getClasspathResourceName());
+		assertEquals("com.example.testcases", exactlyOne(selectors).getClasspathResourceName());
 	}
 
 	@Test
 	void selectClasspathResourcePosition() {
-		@SelectClasspathResource(value = "org.junit.platform.suite.commons.testcases", line = 42)
-		@SelectClasspathResource(value = "org.junit.platform.suite.commons.testcases", line = 14, column = 15)
+		@SelectClasspathResource(value = "com.example.testcases", line = 42)
+		@SelectClasspathResource(value = "com.example.testcases", line = 14, column = 15)
 		class Suite {
 
 		}
@@ -228,9 +242,9 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void ignoreClasspathResourcePosition() {
-		@SelectClasspathResource(value = "org.junit.platform.suite.commons.testcases", line = -1)
-		@SelectClasspathResource(value = "org.junit.platform.suite.commons.testcases", column = 12)
-		@SelectClasspathResource(value = "org.junit.platform.suite.commons.testcases", line = 42, column = -12)
+		@SelectClasspathResource(value = "com.example.testcases", line = -1)
+		@SelectClasspathResource(value = "com.example.testcases", column = 12)
+		@SelectClasspathResource(value = "com.example.testcases", line = 42, column = -12)
 		class Suite {
 
 		}
@@ -303,13 +317,13 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void selectModules() {
-		@SelectModules("org.junit.platform.suite.commons.testcases")
+		@SelectModules("com.example.testcases")
 		class Suite {
 
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<ModuleSelector> selectors = request.getSelectorsByType(ModuleSelector.class);
-		assertEquals("org.junit.platform.suite.commons.testcases", exactlyOne(selectors).getModuleName());
+		assertEquals("com.example.testcases", exactlyOne(selectors).getModuleName());
 	}
 
 	@Test
@@ -335,22 +349,35 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 
 	@Test
 	void selectPackages() {
-		@SelectPackages("org.junit.platform.suite.commons.testcases")
+		@SelectPackages("com.example.testcases")
 		class Suite {
 
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<PackageSelector> selectors = request.getSelectorsByType(PackageSelector.class);
-		assertEquals("org.junit.platform.suite.commons.testcases", exactlyOne(selectors).getPackageName());
+		assertEquals("com.example.testcases", exactlyOne(selectors).getPackageName());
+	}
+
+	@SelectPackages("com.example.testcases")
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface Meta {
+
+	}
+
+	@Test
+	void metaAnnotations() {
+		@Meta
+		class Suite {
+
+		}
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		List<PackageSelector> pSelectors = request.getSelectorsByType(PackageSelector.class);
+		assertEquals("com.example.testcases", exactlyOne(pSelectors).getPackageName());
 	}
 
 	private static <T> T exactlyOne(List<T> list) {
 		assertEquals(1, list.size());
 		return list.get(0);
-	}
-
-	private static class TestCase {
-
 	}
 
 	private static class StubAbstractTestDescriptor extends AbstractTestDescriptor {

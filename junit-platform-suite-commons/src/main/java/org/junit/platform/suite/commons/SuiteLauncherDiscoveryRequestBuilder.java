@@ -95,63 +95,63 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return delegate.configurationParameters(configurationParameters);
 	}
 
-	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> testClass) {
-		Preconditions.notNull(testClass, "Test class must not be null");
+	public SuiteLauncherDiscoveryRequestBuilder suite(AnnotatedElement suite) {
+		Preconditions.notNull(suite, "Test class must not be null");
 
 		// Annotations in alphabetical order
 		// @formatter:off
-		findRepeatableAnnotations(testClass, Configuration.class)
+		findRepeatableAnnotations(suite, Configuration.class)
 				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
-		findAnnotationValues(testClass, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
+		findAnnotationValues(suite, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::excludeClassNamePatterns)
 				.ifPresent(this::filters);
-		findAnnotationValues(testClass, ExcludeEngines.class, ExcludeEngines::value)
+		findAnnotationValues(suite, ExcludeEngines.class, ExcludeEngines::value)
 				.map(EngineFilter::excludeEngines)
 				.ifPresent(this::filters);
-		findAnnotationValues(testClass, ExcludePackages.class, ExcludePackages::value)
+		findAnnotationValues(suite, ExcludePackages.class, ExcludePackages::value)
 				.map(PackageNameFilter::excludePackageNames)
 				.ifPresent(this::filters);
-		findAnnotationValues(testClass, ExcludeTags.class, ExcludeTags::value)
+		findAnnotationValues(suite, ExcludeTags.class, ExcludeTags::value)
 				.map(TagFilter::excludeTags)
 				.ifPresent(this::filters);
-		findAnnotationValues(testClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
+		findAnnotationValues(suite, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::includeClassNamePatterns)
 				.ifPresent(filters ->{
 					includeClassNamePatternsUsed = true;
 					this.filters(filters);
 				});
-		findAnnotationValues(testClass, IncludeEngines.class, IncludeEngines::value)
+		findAnnotationValues(suite, IncludeEngines.class, IncludeEngines::value)
 				.map(EngineFilter::includeEngines)
 				.ifPresent(this::filters);
-		findAnnotationValues(testClass, IncludePackages.class, IncludePackages::value)
+		findAnnotationValues(suite, IncludePackages.class, IncludePackages::value)
 				.map(PackageNameFilter::includePackageNames)
 				.ifPresent(this::filters);
-		findAnnotationValues(testClass, IncludeTags.class, IncludeTags::value)
+		findAnnotationValues(suite, IncludeTags.class, IncludeTags::value)
 				.map(TagFilter::includeTags)
 				.ifPresent(this::filters);
-		findAnnotationValues(testClass, SelectClasses.class, SelectClasses::value)
+		findAnnotationValues(suite, SelectClasses.class, SelectClasses::value)
 				.map(AdditionalDiscoverySelectors::selectClasses)
 				.ifPresent(this::selectors);
-		findRepeatableAnnotations(testClass, SelectClasspathResource.class)
+		findRepeatableAnnotations(suite, SelectClasspathResource.class)
 				.stream()
 				.map(annotation -> selectClasspathResource(annotation.value(), annotation.line(), annotation.column()))
 				.forEach(this::selectors);
-		findAnnotationValues(testClass, SelectDirectories.class, SelectDirectories::value)
+		findAnnotationValues(suite, SelectDirectories.class, SelectDirectories::value)
 				.map(AdditionalDiscoverySelectors::selectDirectories)
 				.ifPresent(this::selectors);
-		findRepeatableAnnotations(testClass, SelectFile.class)
+		findRepeatableAnnotations(suite, SelectFile.class)
 				.stream()
 				.map(annotation -> selectFile(annotation.value(), annotation.line(), annotation.column()))
 				.forEach(this::selectors);
-		findAnnotationValues(testClass, SelectModules.class, SelectModules::value)
+		findAnnotationValues(suite, SelectModules.class, SelectModules::value)
 				.map(AdditionalDiscoverySelectors::selectModules)
 				.ifPresent(this::selectors);
-		findAnnotationValues(testClass, SelectUris.class, SelectUris::value)
+		findAnnotationValues(suite, SelectUris.class, SelectUris::value)
 				.map(AdditionalDiscoverySelectors::selectUris)
 				.ifPresent(this::selectors);
-		findAnnotationValues(testClass, SelectPackages.class, SelectPackages::value)
+		findAnnotationValues(suite, SelectPackages.class, SelectPackages::value)
 				.map(AdditionalDiscoverySelectors::selectPackages)
 				.ifPresent(this::selectors);
 		// @formatter:on
