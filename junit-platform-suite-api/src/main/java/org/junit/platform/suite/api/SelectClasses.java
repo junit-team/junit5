@@ -27,7 +27,7 @@ import org.apiguardian.api.API;
  *
  * @since 1.0
  * @see org.junit.platform.runner.JUnitPlatform
- * @see DiscoverySelectors#selectClass(String)
+ * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectClass(Class)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
