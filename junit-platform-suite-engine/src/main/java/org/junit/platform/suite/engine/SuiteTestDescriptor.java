@@ -72,10 +72,10 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		return id;
 	}
 
-	SuiteTestDescriptor addDiscoveryRequestFrom(Class<?> testClass) {
+	SuiteTestDescriptor addDiscoveryRequestFrom(Class<?> suiteClass) {
 		Preconditions.condition(launcherDiscoveryResult == null,
 			"discovery request can not be modified after discovery");
-		discoveryRequestBuilder.suite(testClass);
+		discoveryRequestBuilder.suite(suiteClass);
 		return this;
 	}
 

@@ -64,11 +64,12 @@ final class ClassSelectorResolver implements SelectorResolver {
 				.findFirst()
 				.filter(suiteSegment -> SuiteTestDescriptor.SEGMENT_TYPE.equals(suiteSegment.getType()))
 				.flatMap(ClassSelectorResolver::tryLoadSuiteClass)
-				.map(testClass -> context
-						.addToParent(parent -> newSuiteDescriptor(testClass, parent))
+				.filter(isSuiteClass)
+				.map(suiteClass -> context
+						.addToParent(parent -> newSuiteDescriptor(suiteClass, parent))
 						.map(suite -> uniqueId.equals(suite.getUniqueId())
 								// The uniqueId selector either targeted a class annotated with @Suite;
-								? suite.addDiscoveryRequestFrom(testClass)
+								? suite.addDiscoveryRequestFrom(suiteClass)
 								// or a specific test in that suite
 								: suite.addDiscoveryRequestFrom(uniqueId)))
 				.map(ClassSelectorResolver::toResolution)
@@ -77,16 +78,16 @@ final class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private static Optional<Class<?>> tryLoadSuiteClass(UniqueId.Segment segment) {
-		return ReflectionUtils.tryToLoadClass(segment.getValue()).toOptional().filter(isSuiteClass);
+		return ReflectionUtils.tryToLoadClass(segment.getValue()).toOptional();
 	}
 
 	private static Resolution toResolution(Optional<SuiteTestDescriptor> suite) {
 		return suite.map(Match::exact).map(Resolution::match).orElseGet(Resolution::unresolved);
 	}
 
-	private static Optional<SuiteTestDescriptor> newSuiteDescriptor(Class<?> testClass, TestDescriptor parent) {
-		UniqueId id = parent.getUniqueId().append(SuiteTestDescriptor.SEGMENT_TYPE, testClass.getName());
-		return Optional.of(new SuiteTestDescriptor(id, testClass));
+	private static Optional<SuiteTestDescriptor> newSuiteDescriptor(Class<?> suiteClass, TestDescriptor parent) {
+		UniqueId id = parent.getUniqueId().append(SuiteTestDescriptor.SEGMENT_TYPE, suiteClass.getName());
+		return Optional.of(new SuiteTestDescriptor(id, suiteClass));
 	}
 
 }
