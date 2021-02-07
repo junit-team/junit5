@@ -17,6 +17,9 @@ group IDs, artifact IDs, and versions.
                                 `TestEngine` API for the declarative Junit Platform
                                 Suites
 
+Note: Both dependencies are aggregated in `junit-platform-suite` which can be used in
+_test_ scope.
+
 ===== Transitive Dependencies
 
 * `junit-platform-suite-commons` in _test_ scope
