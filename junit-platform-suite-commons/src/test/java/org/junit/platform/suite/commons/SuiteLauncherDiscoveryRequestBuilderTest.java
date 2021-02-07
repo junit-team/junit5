@@ -43,7 +43,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
-import org.junit.platform.suite.api.Configuration;
+import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.ExcludePackages;
@@ -65,8 +65,8 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 	SuiteLauncherDiscoveryRequestBuilder builder = SuiteLauncherDiscoveryRequestBuilder.request();
 
 	@Test
-	void configuration() {
-		@Configuration(key = "com.example", value = "*")
+	void configurationParameter() {
+		@ConfigurationParameter(key = "com.example", value = "*")
 		class Suite {
 
 		}

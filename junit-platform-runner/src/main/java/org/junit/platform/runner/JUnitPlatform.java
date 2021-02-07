@@ -29,7 +29,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.suite.api.Configuration;
+import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.ExcludePackages;
@@ -104,7 +104,7 @@ import org.junit.runner.notification.RunNotifier;
  * @see ExcludeTags
  * @see SuiteDisplayName
  * @see UseTechnicalNames
- * @see Configuration
+ * @see ConfigurationParameter
  */
 @API(status = STABLE, since = "1.0")
 public class JUnitPlatform extends Runner implements Filterable {

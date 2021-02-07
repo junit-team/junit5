@@ -22,20 +22,20 @@ import org.apiguardian.api.API.Status;
 
 /**
  * {@code @Configurations} is a container for one or more
- * {@link Configuration @Configuration} declarations.
+ * {@link ConfigurationParameter @Configuration} declarations.
  *
  * @since 1.8
- * @see Configuration
+ * @see ConfigurationParameter
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
 @API(status = Status.EXPERIMENTAL, since = "1.8")
-public @interface Configurations {
+public @interface ConfigurationParameters {
 
 	/**
-	 * An array of one or more {@link Configuration Configurations}.
+	 * An array of one or more {@link ConfigurationParameter Configurations}.
 	 */
-	Configuration[] value();
+	ConfigurationParameter[] value();
 }

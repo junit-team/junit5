@@ -36,8 +36,8 @@ import org.apiguardian.api.API.Status;
 @Inherited
 @Documented
 @API(status = Status.EXPERIMENTAL, since = "1.8")
-@Repeatable(Configurations.class)
-public @interface Configuration {
+@Repeatable(ConfigurationParameters.class)
+public @interface ConfigurationParameter {
 
 	/**
 	 * The configuration parameter key under which to add the
