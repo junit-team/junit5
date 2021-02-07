@@ -20,20 +20,21 @@ final class DiscoverySelectorResolver {
 	private static final EngineDiscoveryRequestResolver<SuiteEngineDescriptor> resolver = EngineDiscoveryRequestResolver.<SuiteEngineDescriptor>builder()
 			.addClassContainerSelectorResolver(new IsSuiteClass())
 			.addSelectorResolver(context -> new ClassSelectorResolver(context.getClassNameFilter(), context.getEngineDescriptor()))
-			.addTestDescriptorVisitor(context -> TestDescriptor::prune)
 			.build();
 	// @formatter:on
 
-	private static void discoverSuite(TestDescriptor descriptor) {
-		if (descriptor instanceof SuiteTestDescriptor) {
-			SuiteTestDescriptor suite = (SuiteTestDescriptor) descriptor;
-			suite.discover();
-		}
+	private static void discoverSuites(SuiteEngineDescriptor engineDescriptor) {
+		// @formatter:off
+		engineDescriptor.getChildren().stream()
+				.map(SuiteTestDescriptor.class::cast)
+				.forEach(SuiteTestDescriptor::discover);
+		// @formatter:on
 	}
 
 	void resolveSelectors(EngineDiscoveryRequest request, SuiteEngineDescriptor engineDescriptor) {
 		resolver.resolve(request, engineDescriptor);
-		engineDescriptor.getChildren().forEach(DiscoverySelectorResolver::discoverSuite);
+		discoverSuites(engineDescriptor);
+		engineDescriptor.accept(TestDescriptor::prune);
 	}
 
 }
