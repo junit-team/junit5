@@ -206,7 +206,7 @@ public class EngineDiscoveryOrchestrator {
 		// @formatter:off
 		return result.entrySet()
 				.stream()
-				.filter(entry -> !entry.getValue().getChildren().isEmpty())
+				.filter(entry -> TestDescriptor.containsTests(entry.getValue()))
 				.collect(toMap(Entry::getKey, Entry::getValue));
 		// @formatter:on
 	}
