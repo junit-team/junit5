@@ -46,7 +46,7 @@ on GitHub.
   once via the new `LauncherSessionListener` interface that can be registered via Java’s
   `{ServiceLoader}` mechanism.
 * New `junit-platform-suite-engine` to execute declarative test suites using the JUnit
-Platform Launcher.
+  Platform Launcher.
 * Added additional selectors to the `junit-platform-suite-api`
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
