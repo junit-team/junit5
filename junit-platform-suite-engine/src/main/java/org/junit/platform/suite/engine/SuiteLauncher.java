@@ -38,13 +38,13 @@ class SuiteLauncher {
 	}
 
 	private SuiteLauncher(Set<TestEngine> testEngines) {
-		Preconditions.condition(hasTestEngineOtherThenSuiteEngine(testEngines),
+		Preconditions.condition(hasTestEngineOtherThanSuiteEngine(testEngines),
 			() -> "Cannot create SuiteLauncher without at least one other TestEngine; "
 					+ "consider adding an engine implementation JAR to the classpath");
 		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(testEngines, emptyList());
 	}
 
-	private boolean hasTestEngineOtherThenSuiteEngine(Set<TestEngine> testEngines) {
+	private boolean hasTestEngineOtherThanSuiteEngine(Set<TestEngine> testEngines) {
 		return testEngines.stream().anyMatch(testEngine -> !SuiteEngineDescriptor.ENGINE_ID.equals(testEngine.getId()));
 	}
 
