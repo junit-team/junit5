@@ -20,7 +20,6 @@ final class DiscoverySelectorResolver {
 	private static final EngineDiscoveryRequestResolver<SuiteEngineDescriptor> resolver = EngineDiscoveryRequestResolver.<SuiteEngineDescriptor>builder()
 			.addClassContainerSelectorResolver(new IsSuiteClass())
 			.addSelectorResolver(context -> new ClassSelectorResolver(context.getClassNameFilter(), context.getEngineDescriptor()))
-			.addTestDescriptorVisitor(context -> DiscoverySelectorResolver::discoverSuite)
 			.addTestDescriptorVisitor(context -> TestDescriptor::prune)
 			.build();
 	// @formatter:on
@@ -34,6 +33,7 @@ final class DiscoverySelectorResolver {
 
 	void resolveSelectors(EngineDiscoveryRequest request, SuiteEngineDescriptor engineDescriptor) {
 		resolver.resolve(request, engineDescriptor);
+		engineDescriptor.getChildren().forEach(DiscoverySelectorResolver::discoverSuite);
 	}
 
 }
