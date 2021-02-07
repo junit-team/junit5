@@ -170,7 +170,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 * <p>This {@code UniqueId} will not be modified.
 	 *
 	 * <p>The engine ID will be stored in a {@link Segment} with
-	 * {@link Segment#getType type} {@code "engine"}.
+	 * {@link Segment#getType type} {@value ENGINE_SEGMENT_TYPE}.
 	 *
 	 * @param engineId the engine ID; never {@code null} or blank
 	 *
