@@ -155,6 +155,30 @@ public class DynamicTest extends DynamicNode {
 				.map(input -> dynamicTest(displayNameGenerator.apply(input), () -> testExecutor.accept(input)));
 	}
 
+	/**
+	 * TODO
+	 */
+	@API(status = MAINTAINED, since = "5.8")
+	public static <T> Stream<DynamicTest> stream(Iterator<? extends Named<T>> inputGenerator,
+			ThrowingConsumer<? super T> testExecutor) {
+		Preconditions.notNull(inputGenerator, "inputGenerator must not be null");
+
+		return stream(StreamSupport.stream(spliteratorUnknownSize(inputGenerator, ORDERED), false), testExecutor);
+	}
+
+	/**
+	 * TODO
+	 */
+	@API(status = MAINTAINED, since = "5.8")
+	public static <T> Stream<DynamicTest> stream(Stream<? extends Named<T>> inputStream,
+			ThrowingConsumer<? super T> testExecutor) {
+		Preconditions.notNull(inputStream, "inputStream must not be null");
+		Preconditions.notNull(testExecutor, "testExecutor must not be null");
+
+		return inputStream //
+				.map(input -> dynamicTest(input.getName(), () -> testExecutor.accept(input.getPayload())));
+	}
+
 	private final Executable executable;
 
 	private DynamicTest(String displayName, URI testSourceUri, Executable executable) {
