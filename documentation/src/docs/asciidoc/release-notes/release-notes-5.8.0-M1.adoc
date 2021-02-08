@@ -83,7 +83,9 @@ on GitHub.
 * Dynamic tests now require less memory thanks to a number of improvements to internal
   data structures.
 * Documented constant values in `org.junit.jupiter.api.parallel.Resources`.
-
+* In parameterized tests with `@MethodSource` or `@ArgumentSource`, arguments can now have
+  optional names. When the argument is included in the display name of an iteration, this
+  name will be used instead of the value.
 
 [[release-notes-5.8.0-M1-junit-vintage]]
 === JUnit Vintage
