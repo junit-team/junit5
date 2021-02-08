@@ -4503,6 +4503,32 @@ to 512 characters.
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>When using <code>@MethodSource</code> or <code>@ArgumentSource</code>, you can give names to arguments. This
+name will be used if the argument is included in the invocation display name, like in
+the example below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@DisplayName</span><span class="o">(</span><span class="s">"A parameterized test with named arguments"</span><span class="o">)</span>
+<span class="nd">@ParameterizedTest</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"{index}: {0}"</span><span class="o">)</span>
+<span class="nd">@MethodSource</span><span class="o">(</span><span class="s">"namedArguments"</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">testWithNamedArguments</span><span class="o">(</span><span class="nc">File</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span>
+<span class="o">}</span>
+
+<span class="kd">static</span> <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">Arguments</span><span class="o">&gt;</span> <span class="nf">namedArguments</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">arguments</span><span class="o">(</span><span class="nc">Named</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"An important file"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">"path1"</span><span class="o">))),</span>
+        <span class="n">arguments</span><span class="o">(</span><span class="nc">Named</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"Another file"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">"path2"</span><span class="o">))));</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>A parameterized test with named arguments ✔
+├─ 1: An important file ✔
+└─ 2: Another file ✔</pre>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>2.15.7. Lifecycle and Interoperability</h4>
@@ -10048,7 +10074,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-02-04 22:26:50 UTC
+Last updated 2021-02-08 12:36:27 UTC
 </div>
 </div>
 <style>
