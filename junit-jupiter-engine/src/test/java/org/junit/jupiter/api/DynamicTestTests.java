@@ -71,6 +71,26 @@ class DynamicTestTests {
 	}
 
 	@Test
+	void streamFromStreamWithNamesPreconditions() {
+		ThrowingConsumer<Object> testExecutor = input -> {
+		};
+
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream((Stream<? extends Named<Object>>) null, testExecutor));
+		assertThrows(PreconditionViolationException.class, () -> DynamicTest.stream(Stream.empty(), null));
+	}
+
+	@Test
+	void streamFromIteratorWithNamesPreconditions() {
+		ThrowingConsumer<Object> testExecutor = input -> {
+		};
+
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream((Iterator<? extends Named<Object>>) null, testExecutor));
+		assertThrows(PreconditionViolationException.class, () -> DynamicTest.stream(emptyIterator(), null));
+	}
+
+	@Test
 	void streamFromStream() throws Throwable {
 		Stream<DynamicTest> stream = DynamicTest.stream(Stream.of("foo", "bar", "baz"), String::toUpperCase,
 			this::throwingConsumer);
@@ -80,6 +100,21 @@ class DynamicTestTests {
 	@Test
 	void streamFromIterator() throws Throwable {
 		Stream<DynamicTest> stream = DynamicTest.stream(List.of("foo", "bar", "baz").iterator(), String::toUpperCase,
+			this::throwingConsumer);
+		assertStream(stream);
+	}
+
+	@Test
+	void streamFromStreamWithNames() throws Throwable {
+		Stream<DynamicTest> stream = DynamicTest.stream(
+			Stream.of(Named.of("FOO", "foo"), Named.of("BAR", "bar"), Named.of("BAZ", "baz")), this::throwingConsumer);
+		assertStream(stream);
+	}
+
+	@Test
+	void streamFromIteratorWithNames() throws Throwable {
+		Stream<DynamicTest> stream = DynamicTest.stream(
+			List.of(Named.of("FOO", "foo"), Named.of("BAR", "bar"), Named.of("BAZ", "baz")).iterator(),
 			this::throwingConsumer);
 		assertStream(stream);
 	}
