@@ -4851,6 +4851,7 @@ a nested hierarchy of dynamic tests utilizing <code>DynamicContainer</code>.</p>
 
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.DynamicNode</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.DynamicTest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Named</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Tag</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.TestFactory</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.function.ThrowingConsumer</span><span class="o">;</span>
@@ -4955,6 +4956,23 @@ a nested hierarchy of dynamic tests utilizing <code>DynamicContainer</code>.</p>
 
         <span class="c1">// Returns a stream of dynamic tests.</span>
         <span class="k">return</span> <span class="nc">DynamicTest</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">,</span> <span class="n">displayNameGenerator</span><span class="o">,</span> <span class="n">testExecutor</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@TestFactory</span>
+    <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">DynamicTest</span><span class="o">&gt;</span> <span class="nf">dynamicTestsFromStreamFactoryMethodWithNames</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// Stream of palindromes to check</span>
+        <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">Named</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;&gt;</span> <span class="n">inputStream</span> <span class="o">=</span> <span class="nc">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span>
+                <span class="nc">Named</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"racecar is a palindrome"</span><span class="o">,</span> <span class="s">"racecar"</span><span class="o">),</span>
+                <span class="nc">Named</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"radar is also a palindrome"</span><span class="o">,</span> <span class="s">"radar"</span><span class="o">),</span>
+                <span class="nc">Named</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"mom also seems to be a palindrome"</span><span class="o">,</span> <span class="s">"mom"</span><span class="o">),</span>
+                <span class="nc">Named</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"dad is yet another palindrome"</span><span class="o">,</span> <span class="s">"dad"</span><span class="o">)</span>
+        <span class="o">);</span>
+
+        <span class="c1">// Executes tests based on the current input value.</span>
+        <span class="nc">ThrowingConsumer</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">testExecutor</span> <span class="o">=</span> <span class="n">text</span> <span class="o">-&gt;</span> <span class="n">assertTrue</span><span class="o">(</span><span class="n">isPalindrome</span><span class="o">(</span><span class="n">text</span><span class="o">));</span>
+
+        <span class="c1">// Returns a stream of dynamic tests.</span>
+        <span class="k">return</span> <span class="nc">DynamicTest</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">,</span> <span class="n">testExecutor</span><span class="o">);</span>
     <span class="o">}</span>
 
     <span class="nd">@TestFactory</span>
@@ -10378,7 +10396,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-02-09 13:23:43 UTC
+Last updated 2021-02-09 21:03:16 UTC
 </div>
 </div>
 <style>
