@@ -87,7 +87,8 @@ on GitHub.
   optional names. When the argument is included in the display name of an iteration, this
   name will be used instead of the value.
 * `DynamicTests.stream()` can now consume `Named` input and will use each name-value
-   pair as the display name and value for each generated dynamic test.
+  pair as the display name and value for each generated dynamic test (see
+  link:{userguide-root}++/#writing-tests-dynamic-tests-examples++[User Guide] for details).
 
 
 [[release-notes-5.8.0-M1-junit-vintage]]

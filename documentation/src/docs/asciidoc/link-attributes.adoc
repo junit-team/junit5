@@ -2,6 +2,7 @@
 ifdef::backend-pdf[]
 :javadoc-root:                               https://junit.org/junit5/docs/{docs-version}/api
 endif::[]
+:userguide-root:                             https://junit.org/junit5/docs/{docs-version}/user-guide
 // Snapshot Repository
 :snapshot-repo:                              https://oss.sonatype.org/content/repositories/snapshots
 // Base Links
