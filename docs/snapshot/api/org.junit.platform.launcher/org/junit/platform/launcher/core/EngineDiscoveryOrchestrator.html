@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -87,7 +87,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#INTERNAL" title="class or interface in org.apiguardian.api" class="external-link">INTERNAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.7",
-     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#consumers()" title="class or interface in org.apiguardian.api" class="external-link">consumers</a>="testkit")
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#consumers()" title="class or interface in org.apiguardian.api" class="external-link">consumers</a>={"org.junit.platform.testkit","org.junit.platform.suite.engine"})
 public class <span class="type-name-label">EngineDiscoveryOrchestrator</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block">Orchestrates test discovery using the configured test engines.</div>
@@ -172,6 +172,16 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  configured test engines.</div>
 </td>
 </tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code><a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryResult</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#discover(org.junit.platform.launcher.LauncherDiscoveryRequest,org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase,org.junit.platform.engine.UniqueId)">discover</a></span>&#8203;(<a href="../LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a>&nbsp;request,
+<a href="EngineDiscoveryOrchestrator.Phase.html" title="enum in org.junit.platform.launcher.core">EngineDiscoveryOrchestrator.Phase</a>&nbsp;phase,
+<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;parentId)</code></th>
+<td class="col-last">
+<div class="block">Discovers tests for the supplied request in the supplied phase using the
+ configured test engines to be used by the suite engine.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -216,6 +226,26 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  <p>Applies <a href="../EngineFilter.html" title="class in org.junit.platform.launcher">engine
  filters</a> and <a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">post-discovery filters</a> and
  <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#prune()">prunes</a> the resulting test tree.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="discover(org.junit.platform.launcher.LauncherDiscoveryRequest,org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase,org.junit.platform.engine.UniqueId)">
+<h3>discover</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryResult</a></span>&nbsp;<span class="member-name">discover</span>&#8203;(<span class="parameters"><a href="../LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a>&nbsp;request,
+<a href="EngineDiscoveryOrchestrator.Phase.html" title="enum in org.junit.platform.launcher.core">EngineDiscoveryOrchestrator.Phase</a>&nbsp;phase,
+<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;parentId)</span></div>
+<div class="block">Discovers tests for the supplied request in the supplied phase using the
+ configured test engines to be used by the suite engine.
+
+ <p>Applies <a href="../EngineFilter.html" title="class in org.junit.platform.launcher">engine
+ filters</a> and <a href="../PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">post-discovery filters</a> and
+ <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#prune()">prunes</a> the resulting test tree.
+
+ Note: The test descriptors in the discovery result can safely be used as
+ non-root descriptors. Engine-test descriptor entries are pruned from
+ the returned result. As such execution by
+ <a href="EngineExecutionOrchestrator.html#execute(org.junit.platform.launcher.core.LauncherDiscoveryResult,org.junit.platform.engine.EngineExecutionListener)"><code>EngineExecutionOrchestrator.execute(LauncherDiscoveryResult, EngineExecutionListener)</code></a>
+ will not emit start or emit events for engines without tests.</div>
 </section>
 </li>
 </ul>

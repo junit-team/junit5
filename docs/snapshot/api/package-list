@@ -62,8 +62,13 @@ org.junit.platform.reporting.legacy
 org.junit.platform.reporting.legacy.xml
 module:org.junit.platform.runner
 org.junit.platform.runner
+module:org.junit.platform.suite
 module:org.junit.platform.suite.api
 org.junit.platform.suite.api
+module:org.junit.platform.suite.commons
+org.junit.platform.suite.commons
+module:org.junit.platform.suite.engine
+org.junit.platform.suite.engine
 module:org.junit.platform.testkit
 org.junit.platform.testkit.engine
 module:org.junit.vintage.engine

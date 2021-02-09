@@ -58,7 +58,15 @@ loadScripts(document, 'script');</script>
 <h1 title="Package" class="title">Package&nbsp;org.junit.platform.suite.api</h1>
 </div>
 <section class="package-description" id="package.description">
-<div class="block">Annotations for configuring a <em>test suite</em> on the JUnit Platform.</div>
+<div class="block">Annotations for configuring a <em>test suite</em> on the JUnit Platform.
+
+ <h4>JUnit 4 Suite Support</h4>
+ <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
+ <code>@RunWith(JUnitPlatform.class)</code> with the <code>junit-platform-runner</code>.
+
+ <h4>JUnit 5 Suite Support</h4>
+ <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
+ <a href="Suite.html" title="annotation in org.junit.platform.suite.api"><code>@Suite</code></a> with the <code>junit-platform-suite-engine</code>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -73,6 +81,21 @@ loadScripts(document, 'script');</script>
 </tr>
 </thead>
 <tbody>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api">ConfigurationParameter</a></th>
+<td class="col-last">
+<div class="block"><code>@Configuration</code> specifies the configuration <a href="ConfigurationParameter.html#key()">key</a> and
+ <a href="ConfigurationParameter.html#value()">value</a> pairs to be added to the discovery request when running
+ a test suite on the JUnit Platform.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="ConfigurationParameters.html" title="annotation in org.junit.platform.suite.api">ConfigurationParameters</a></th>
+<td class="col-last">
+<div class="block"><code>@Configurations</code> is a container for one or more
+ <a href="ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>@Configuration</code></a> declarations.</div>
+</td>
+</tr>
 <tr class="alt-color">
 <th class="col-first" scope="row"><a href="ExcludeClassNamePatterns.html" title="annotation in org.junit.platform.suite.api">ExcludeClassNamePatterns</a></th>
 <td class="col-last">
@@ -143,10 +166,65 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="row-color">
+<th class="col-first" scope="row"><a href="SelectClasspathResource.html" title="annotation in org.junit.platform.suite.api">SelectClasspathResource</a></th>
+<td class="col-last">
+<div class="block"><code>@SelectClasspathResource</code> specifies the classpath resource to
+ <em>select</em> when running a test suite on the JUnit Platform.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="SelectClasspathResources.html" title="annotation in org.junit.platform.suite.api">SelectClasspathResources</a></th>
+<td class="col-last">
+<div class="block"><code>@SelectClasspathResources</code> is a container for one or more
+ <a href="SelectClasspathResource.html" title="annotation in org.junit.platform.suite.api"><code>@SelectClasspathResource</code></a> declarations.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="SelectDirectories.html" title="annotation in org.junit.platform.suite.api">SelectDirectories</a></th>
+<td class="col-last">
+<div class="block"><code>@SelectDirectories</code> specifies the directories to
+ <em>select</em> when running a test suite on the JUnit Platform.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="SelectFile.html" title="annotation in org.junit.platform.suite.api">SelectFile</a></th>
+<td class="col-last">
+<div class="block"><code>@SelectFiles</code> specifies the files to
+ <em>select</em> when running a test suite on the JUnit Platform.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="SelectFiles.html" title="annotation in org.junit.platform.suite.api">SelectFiles</a></th>
+<td class="col-last">
+<div class="block"><code>@SelectFiles</code> is a container for one or more
+ <a href="SelectFile.html" title="annotation in org.junit.platform.suite.api"><code>@SelectFile</code></a> declarations.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="SelectModules.html" title="annotation in org.junit.platform.suite.api">SelectModules</a></th>
+<td class="col-last">
+<div class="block"><code>@SelectModules</code> specifies the modules to
+ <em>select</em> when running a test suite on the JUnit Platform.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="SelectPackages.html" title="annotation in org.junit.platform.suite.api">SelectPackages</a></th>
 <td class="col-last">
 <div class="block"><code>@SelectPackages</code> specifies the names of packages to <em>select</em>
  when running a test suite on the JUnit Platform.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="SelectUris.html" title="annotation in org.junit.platform.suite.api">SelectUris</a></th>
+<td class="col-last">
+<div class="block"><code>@SelectUris</code> specifies the uris to
+ <em>select</em> when running a test suite on the JUnit Platform.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="Suite.html" title="annotation in org.junit.platform.suite.api">Suite</a></th>
+<td class="col-last">
+<div class="block"><code>@Suite</code> marks class as a test suite on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="alt-color">

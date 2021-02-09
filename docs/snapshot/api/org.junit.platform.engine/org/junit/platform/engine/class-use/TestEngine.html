@@ -96,13 +96,19 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="#org.junit.platform.suite.engine">org.junit.platform.suite.engine</a></th>
+<td class="col-last">
+<div class="block">Core package for the JUnit Platform Suite test engine.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#org.junit.platform.testkit.engine">org.junit.platform.testkit.engine</a></th>
 <td class="col-last">
 <div class="block">Test Kit for testing the execution of a <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>
  running on the JUnit Platform.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#org.junit.vintage.engine">org.junit.vintage.engine</a></th>
 <td class="col-last">
 <div class="block">Core package for the JUnit Vintage test engine.</div>
@@ -212,6 +218,16 @@ loadScripts(document, 'script');</script>
  the <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">LauncherDiscoveryResult.</span><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryResult.html#getTestEngines()">getTestEngines</a></span>()</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ServiceLoaderTestEngineRegistry.</span><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.html#loadTestEngines()">loadTestEngines</a></span>()</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -255,6 +271,32 @@ loadScripts(document, 'script');</script>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/EngineDiscoveryOrchestrator.html#%3Cinit%3E(java.lang.Iterable,java.util.Collection)">EngineDiscoveryOrchestrator</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&gt;&nbsp;testEngines,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&gt;&nbsp;postDiscoveryFilters)</code></th>
 <td class="col-last">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="org.junit.platform.suite.engine">
+<h2>Uses of <a href="../TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a> in <a href="../../../../../../org.junit.platform.suite.engine/org/junit/platform/suite/engine/package-summary.html">org.junit.platform.suite.engine</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Classes in <a href="../../../../../../org.junit.platform.suite.engine/org/junit/platform/suite/engine/package-summary.html">org.junit.platform.suite.engine</a> that implement <a href="../TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Class</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.suite.engine/org/junit/platform/suite/engine/SuiteTestEngine.html" title="class in org.junit.platform.suite.engine">SuiteTestEngine</a></span></code></th>
+<td class="col-last">
+<div class="block">The JUnit Platform Suite <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
+</td>
 </tr>
 </tbody>
 </table>

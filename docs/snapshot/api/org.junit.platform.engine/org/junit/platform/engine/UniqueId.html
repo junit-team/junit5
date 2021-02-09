@@ -16,7 +16,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":9,"i11":10,"i12":9,"i13":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":9,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":9,"i12":10,"i13":9,"i14":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -170,16 +170,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 </td>
 </tr>
 <tr class="alt-color" id="i2">
+<td class="col-first"><code><a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#appendEngine(java.lang.String)">appendEngine</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;engineId)</code></th>
+<td class="col-last">
+<div class="block">Construct a new <code>UniqueId</code> by appending a new <a href="UniqueId.Segment.html" title="class in org.junit.platform.engine"><code>UniqueId.Segment</code></a>, based
+ on the supplied <code>engineId</code>, to the end of this <code>UniqueId</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#clone()">clone</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static <a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#forEngine(java.lang.String)">forEngine</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;engineId)</code></th>
 <td class="col-last">
@@ -187,21 +195,21 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
  format.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getEngineId()">getEngineId</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Get the engine ID stored in this <code>UniqueId</code>, if available.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code><a href="UniqueId.Segment.html" title="class in org.junit.platform.engine">UniqueId.Segment</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getLastSegment()">getLastSegment</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Get the last <a href="UniqueId.Segment.html" title="class in org.junit.platform.engine"><code>UniqueId.Segment</code></a> of this <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="UniqueId.Segment.html" title="class in org.junit.platform.engine">UniqueId.Segment</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSegments()">getSegments</a></span>()</code></th>
 <td class="col-last">
@@ -209,12 +217,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
  <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hashCode()">hashCode</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hasPrefix(org.junit.platform.engine.UniqueId)">hasPrefix</a></span>&#8203;(<a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;potentialPrefix)</code></th>
 <td class="col-last">
@@ -222,7 +230,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
  <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static <a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parse(java.lang.String)">parse</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;uniqueId)</code></th>
 <td class="col-last">
@@ -230,7 +238,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
  default format.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code><a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeLastSegment()">removeLastSegment</a></span>()</code></th>
 <td class="col-last">
@@ -238,7 +246,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
  this <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static <a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#root(java.lang.String,java.lang.String)">root</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;segmentType,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></th>
@@ -247,7 +255,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
  <code>value</code> using the default format.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></th>
 <td class="col-last">
@@ -378,6 +386,27 @@ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base
 <dd><code>segment</code> - the segment to be appended; never <code>null</code></dd>
 <dt>Since:</dt>
 <dd>1.1</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="appendEngine(java.lang.String)">
+<h3>appendEngine</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.1/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></span>&nbsp;<span class="member-name">appendEngine</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;engineId)</span></div>
+<div class="block">Construct a new <code>UniqueId</code> by appending a new <a href="UniqueId.Segment.html" title="class in org.junit.platform.engine"><code>UniqueId.Segment</code></a>, based
+ on the supplied <code>engineId</code>, to the end of this <code>UniqueId</code>.
+
+ <p>This <code>UniqueId</code> will not be modified.
+
+ <p>The engine ID will be stored in a <a href="UniqueId.Segment.html" title="class in org.junit.platform.engine"><code>UniqueId.Segment</code></a> with
+ <a href="UniqueId.Segment.html#getType()"><code>type</code></a> "engine".</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>engineId</code> - the engine ID; never <code>null</code> or blank</dd>
+<dt>Since:</dt>
+<dd>1.8</dd>
 </dl>
 </section>
 </li>

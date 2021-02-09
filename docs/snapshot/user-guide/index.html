@@ -758,11 +758,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#launcher-api-launcher-config">6.1.10. Configuring the Launcher</a></li>
 </ul>
 </li>
-<li><a href="#testkit">6.2. JUnit Platform Test Kit</a>
+<li><a href="#junit-platform-suite-engine">6.2. JUnit Platform Suite Engine</a>
 <ul class="sectlevel3">
-<li><a href="#testkit-engine">6.2.1. Engine Test Kit</a></li>
-<li><a href="#testkit-engine-statistics">6.2.2. Asserting Statistics</a></li>
-<li><a href="#testkit-engine-events">6.2.3. Asserting Events</a></li>
+<li><a href="#setup">6.2.1. Setup</a>
+<ul class="sectlevel4">
+<li><a href="#explicit-dependencies-2">Explicit Dependencies</a></li>
+<li><a href="#transitive-dependencies-2">Transitive Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#test-suite">6.2.2. Test Suite</a></li>
+</ul>
+</li>
+<li><a href="#testkit">6.3. JUnit Platform Test Kit</a>
+<ul class="sectlevel3">
+<li><a href="#testkit-engine">6.3.1. Engine Test Kit</a></li>
+<li><a href="#testkit-engine-statistics">6.3.2. Asserting Statistics</a></li>
+<li><a href="#testkit-engine-events">6.3.3. Asserting Events</a></li>
 </ul>
 </li>
 </ul>
@@ -796,6 +807,130 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>:junit-platform-suite-engine                 <a href="../api/org.junit.platform.suite.engine/org/junit/platform/suite/engine/package-summary.html">junit-platform-suite-engine</a>
+:testkit-engine-package:                     <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a>
+:EngineExecutionResults:                     <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineExecutionResults.html">EngineExecutionResults</a>
+:EngineTestKit:                              <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html">EngineTestKit</a>
+:Event:                                      <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html">Event</a>
+:EventConditions:                            <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html">EventConditions</a>
+:Events:                                     <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/Events.html">Events</a>
+:EventStatistics:                            <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/EventStatistics.html">EventStatistics</a>
+:EventType:                                  <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/EventType.html">EventType</a>
+:Execution:                                  <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/Execution.html">Execution</a>
+:Executions:                                 <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/Executions.html">Executions</a>
+:TerminationInfo:                            <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/TerminationInfo.html">TerminationInfo</a>
+:TestExecutionResultConditions:              <a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/TestExecutionResultConditions.html">TestExecutionResultConditions</a>
+:api-package:                                <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a>
+:Assertions:                                 <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.api.Assertions</a>
+:Assumptions:                                <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a>
+:ClassOrderer_ClassName:                     <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.ClassName.html">ClassOrderer.ClassName</a>
+:ClassOrderer_DisplayName:                   <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.DisplayName.html">ClassOrderer.DisplayName</a>
+:ClassOrderer_OrderAnnotation:               <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.OrderAnnotation.html">ClassOrderer.OrderAnnotation</a>
+:ClassOrderer_Random:                        <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.Random.html">ClassOrderer.Random</a>
+:ClassOrderer:                               <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.html">ClassOrderer</a>
+:Disabled:                                   <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html">@Disabled</a>
+:MethodOrderer_Alphanumeric:                 <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Alphanumeric.html">MethodOrderer.Alphanumeric</a>
+:MethodOrderer_DisplayName:                  <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">MethodOrderer.DisplayName</a>
+:MethodOrderer_MethodName:                   <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html">MethodOrderer.MethodName</a>
+:MethodOrderer_OrderAnnotation:              <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">MethodOrderer.OrderAnnotation</a>
+:MethodOrderer_Random:                       <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Random.html">MethodOrderer.Random</a>
+:MethodOrderer:                              <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a>
+:Order:                                      <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a>
+:RepetitionInfo:                             <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/RepetitionInfo.html">RepetitionInfo</a>
+:TestInfo:                                   <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestInfo.html">TestInfo</a>
+:TestMethodOrder:                            <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestMethodOrder.html">@TestMethodOrder</a>
+:TestReporter:                               <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestReporter.html">TestReporter</a>
+:TestTemplate:                               <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a>
+:Execution:                                  <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Execution.html">@Execution</a>
+:Isolated:                                   <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Isolated.html">@Isolated</a>
+:ResourceLock:                               <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a>
+:Resources:                                  <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Resources.html">Resources</a>
+:extension-api-package:                      <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a>
+:AfterAllCallback:                           <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterAllCallback.html">AfterAllCallback</a>
+:AfterEachCallback:                          <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html">AfterEachCallback</a>
+:AfterTestExecutionCallback:                 <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html">AfterTestExecutionCallback</a>
+:ParameterContext:                           <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html">ParameterContext</a>
+:BeforeAllCallback:                          <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/BeforeAllCallback.html">BeforeAllCallback</a>
+:BeforeEachCallback:                         <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/BeforeEachCallback.html">BeforeEachCallback</a>
+:BeforeTestExecutionCallback:                <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html">BeforeTestExecutionCallback</a>
+:ExecutionCondition:                         <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ExecutionCondition.html">ExecutionCondition</a>
+:ExtendWith:                                 <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtendWith.html">@ExtendWith</a>
+:ExtensionContext:                           <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html">ExtensionContext</a>
+:ExtensionContext_Store:                     <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a>
+:InvocationInterceptor:                      <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/InvocationInterceptor.html">InvocationInterceptor</a>
+:LifecycleMethodExecutionExceptionHandler:   <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/LifecycleMethodExecutionExceptionHandler.html">LifecycleMethodExecutionExceptionHandler</a>
+:ParameterResolver:                          <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a>
+:RegisterExtension:                          <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/RegisterExtension.html">@RegisterExtension</a>
+:TestExecutionExceptionHandler:              <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.html">TestExecutionExceptionHandler</a>
+:TestInstanceFactory:                        <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstanceFactory.html">TestInstanceFactory</a>
+:TestInstancePostProcessor:                  <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstancePostProcessor.html">TestInstancePostProcessor</a>
+:TestInstancePreDestroyCallback:             <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstancePreDestroyCallback.html">TestInstancePreDestroyCallback</a>
+:TestTemplateInvocationContext:              <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContext.html">TestTemplateInvocationContext</a>
+:TestTemplateInvocationContextProvider:      <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a>
+:TestWatcher:                                <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestWatcher.html">TestWatcher</a>
+:DisabledForJreRange:                        <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledForJreRange.html">@DisabledForJreRange</a>
+:DisabledIfEnvironmentVariable:              <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html">@DisabledIfEnvironmentVariable</a>
+:DisabledIfSystemProperty:                   <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html">@DisabledIfSystemProperty</a>
+:DisabledOnJre:                              <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html">@DisabledOnJre</a>
+:DisabledOnOs:                               <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html">@DisabledOnOs</a>
+:DisabledIf:                                 <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a>
+:EnabledForJreRange:                         <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledForJreRange.html">@EnabledForJreRange</a>
+:EnabledIfEnvironmentVariable:               <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html">@EnabledIfEnvironmentVariable</a>
+:EnabledIfSystemProperty:                    <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html">@EnabledIfSystemProperty</a>
+:EnabledOnJre:                               <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledOnJre.html">@EnabledOnJre</a>
+:EnabledOnOs:                                <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledOnOs.html">@EnabledOnOs</a>
+:EnabledIf:                                  <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a>
+:JRE:                                        <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/JRE.html">JRE</a>
+:TempDir:                                    <a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a>
+:params-provider-package:                    <a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/package-summary.html">org.junit.jupiter.params.provider</a>
+:ArgumentsAccessor:                          <a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAccessor.html">ArgumentsAccessor</a>
+:ArgumentsAggregator:                        <a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html">ArgumentsAggregator</a>
+:EmptySource:                                <a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/EmptySource.html">@EmptySource</a>
+:MethodSource:                               <a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/MethodSource.html">@MethodSource</a>
+:NullAndEmptySource:                         <a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/NullAndEmptySource.html">@NullAndEmptySource</a>
+:NullSource:                                 <a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/NullSource.html">@NullSource</a>
+:ParameterizedTest:                          <a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/ParameterizedTest.html">@ParameterizedTest</a>
+:junit-jupiter-engine:                       <a href="../api/org.junit.jupiter.engine/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a>
+:DisabledCondition:                          <a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a>
+:RepetitionInfoParameterResolver:            <a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java">RepetitionInfoParameterResolver</a>
+:TempDirectory:                              <a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a>
+:TestInfoParameterResolver:                  <a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a>
+:TestReporterParameterResolver:              <a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a>
+:TypeBasedParameterResolver:                 <a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java">TypeBasedParameterResolver</a>
+:CustomAnnotationParameterResolver:          <a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a>
+:CustomTypeParameterResolver:                <a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a>
+:MapOfListsTypeBasedParameterResolver:       <a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/MapOfListsTypeBasedParameterResolver.java">MapOfListsTypeBasedParameterResolver</a>
+:EnableJUnit4MigrationSupport:               <a href="../api/org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html">@EnableJUnit4MigrationSupport</a>
+:EnableRuleMigrationSupport:                 <a href="../api/org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html">@EnableRuleMigrationSupport</a>
+:junit-vintage-engine:                       <a href="../api/org.junit.vintage.engine/org/junit/vintage/engine/package-summary.html">junit-vintage-engine</a>
+:junit5-samples-repo:                        <a href="https://github.com/junit-team/junit5-samples" class="bare">https://github.com/junit-team/junit5-samples</a>
+:junit5-jupiter-starter-ant:                 {junit5-samples-repo}/tree/HEAD/junit5-jupiter-starter-ant[junit5-jupiter-starter-ant]
+:junit5-jupiter-starter-gradle-groovy:       {junit5-samples-repo}/tree/HEAD/junit5-jupiter-starter-gradle-groovy[junit5-jupiter-starter-gradle-groovy]
+:junit5-jupiter-starter-gradle-kotlin:       {junit5-samples-repo}/tree/HEAD/junit5-jupiter-starter-gradle-kotlin[junit5-jupiter-starter-gradle-kotlin]
+:junit5-jupiter-starter-gradle:              {junit5-samples-repo}/tree/HEAD/junit5-jupiter-starter-gradle[junit5-jupiter-starter-gradle]
+:junit5-jupiter-starter-maven:               {junit5-samples-repo}/tree/HEAD/junit5-jupiter-starter-maven[junit5-jupiter-starter-maven]
+:RandomParametersExtension:                  {junit5-samples-repo}/tree/HEAD/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java[RandomParametersExtension]
+:API:                                        <a href="https://apiguardian-team.github.io/apiguardian/docs/current/api/">@API</a>
+:API_Guardian:                               <a href="https://github.com/apiguardian-team/apiguardian">@API Guardian</a>
+:AssertJ:                                    <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a>
+:Gitter:                                     <a href="https://gitter.im/junit-team/junit5">Gitter</a>
+:Hamcrest:                                   <a href="https://hamcrest.org/JavaHamcrest/">Hamcrest</a>
+:Log4j:                                      <a href="https://logging.apache.org/log4j/2.x/">Log4j</a>
+:Log4j_JDK_Logging_Adapter:                  <a href="https://logging.apache.org/log4j/2.x/log4j-jul/index.html">Log4j JDK Logging Adapter</a>
+:Logback:                                    <a href="https://logback.qos.ch/">Logback</a>
+:LogManager:                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a>
+:Maven_Central:                              <a href="https://search.maven.org/">Maven Central</a>
+:MockitoExtension:                           <a href="https://github.com/mockito/mockito/blob/release/2.x/subprojects/junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java">MockitoExtension</a>
+:ServiceLoader:                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a>
+:SpringExtension:                            <a href="https://github.com/spring-projects/spring-framework/tree/HEAD/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a>
+:StackOverflow:                              <a href="https://stackoverflow.com/questions/tagged/junit5">Stack Overflow</a>
+:Truth:                                      <a href="https://truth.dev/">Truth</a></p>
+</div>
+</div>
+</div>
 <div class="sect1">
 <h2 id="overview"><a class="anchor" href="#overview"></a>1. Overview</h2>
 <div class="sectionbody">
@@ -846,7 +981,7 @@ has been compiled with previous versions of the JDK.</p>
 <div class="sect2">
 <h3 id="overview-getting-help"><a class="anchor" href="#overview-getting-help"></a>1.3. Getting Help</h3>
 <div class="paragraph">
-<p>Ask JUnit 5 related questions on <a href="https://stackoverflow.com/questions/tagged/junit5">Stack Overflow</a> or chat with us on <a href="https://gitter.im/junit-team/junit5">Gitter</a>.</p>
+<p>Ask JUnit 5 related questions on {StackOverflow} or chat with us on {Gitter}.</p>
 </div>
 </div>
 <div class="sect2">
@@ -899,7 +1034,7 @@ corresponding sections of this User Guide, organized by topic.</p>
 <h4 id="overview-getting-started-example-projects"><a class="anchor" href="#overview-getting-started-example-projects"></a>1.4.3. Example Projects</h4>
 <div class="paragraph">
 <p>To see complete, working examples of projects that you can copy and experiment with, the
-<a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository is a good place to start. The
+{junit5-samples-repo}[<code>junit5-samples</code>] repository is a good place to start. The
 <code>junit5-samples</code> repository hosts a collection of sample projects based on JUnit Jupiter,
 JUnit Vintage, and other testing frameworks. You&#8217;ll find appropriate build scripts (e.g.,
 <code>build.gradle</code>, <code>pom.xml</code>, etc.) in the example projects. The links below highlight some
@@ -908,19 +1043,19 @@ of the combinations you can choose from.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>For Gradle and Java, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-gradle">junit5-jupiter-starter-gradle</a></code> project.</p>
+<p>For Gradle and Java, check out the <code>{junit5-jupiter-starter-gradle}</code> project.</p>
 </li>
 <li>
-<p>For Gradle and Kotlin, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-gradle-kotlin">junit5-jupiter-starter-gradle-kotlin</a></code> project.</p>
+<p>For Gradle and Kotlin, check out the <code>{junit5-jupiter-starter-gradle-kotlin}</code> project.</p>
 </li>
 <li>
-<p>For Gradle and Groovy, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-gradle-groovy">junit5-jupiter-starter-gradle-groovy</a></code> project.</p>
+<p>For Gradle and Groovy, check out the <code>{junit5-jupiter-starter-gradle-groovy}</code> project.</p>
 </li>
 <li>
-<p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project.</p>
+<p>For Maven, check out the <code>{junit5-jupiter-starter-maven}</code> project.</p>
 </li>
 <li>
-<p>For Ant, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-ant">junit5-jupiter-starter-ant</a></code> project.</p>
+<p>For Ant, check out the <code>{junit5-jupiter-starter-ant}</code> project.</p>
 </li>
 </ul>
 </div>
@@ -964,7 +1099,7 @@ available features.</p>
 framework.</p>
 </div>
 <div class="paragraph">
-<p>Unless otherwise stated, all core annotations are located in the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></code> package
+<p>Unless otherwise stated, all core annotations are located in the <code>{api-package}</code> package
 in the <code>junit-jupiter-api</code> module.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1448,7 +1583,7 @@ parameter, if present</p>
 <div class="paragraph">
 <p>JUnit Jupiter comes with many of the assertion methods that JUnit 4 has and adds a few
 that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assertions
-are <code>static</code> methods in the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.api.Assertions</a></code> class.</p>
+are <code>static</code> methods in the <code>{Assertions}</code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1714,12 +1849,12 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 <p>Even though the assertion facilities provided by JUnit Jupiter are sufficient for many
 testing scenarios, there are times when more power and additional functionality such as
 <em>matchers</em> are desired or required. In such cases, the JUnit team recommends the use of
-third-party assertion libraries such as <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a>, <a href="https://hamcrest.org/JavaHamcrest/">Hamcrest</a>, <a href="https://truth.dev/">Truth</a>, etc. Developers
+third-party assertion libraries such as {AssertJ}, {Hamcrest}, {Truth}, etc. Developers
 are therefore free to use the assertion library of their choice.</p>
 </div>
 <div class="paragraph">
 <p>For example, the combination of <em>matchers</em> and a fluent API can be used to make
-assertions more descriptive and readable. However, JUnit Jupiter&#8217;s <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.api.Assertions</a></code> class
+assertions more descriptive and readable. However, JUnit Jupiter&#8217;s <code>{Assertions}</code> class
 does not provide an
 <a href="https://junit.org/junit4/javadoc/latest/org/junit/Assert.html#assertThat"><code>assertThat()</code></a>
 method like the one found in JUnit 4&#8217;s <code>org.junit.Assert</code> class which accepts a Hamcrest
@@ -1767,7 +1902,7 @@ then use them in tests like in the <code>assertWithHamcrestMatcher()</code> meth
 <p>JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and
 adds a few that lend themselves well to being used with Java 8 lambda expressions and
 method references. All JUnit Jupiter assumptions are static methods in the
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> class.</p>
+<code>{Assumptions}</code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1830,7 +1965,7 @@ as a failure.
 <div class="sect2">
 <h3 id="writing-tests-disabling"><a class="anchor" href="#writing-tests-disabling"></a>2.6. Disabling Tests</h3>
 <div class="paragraph">
-<p>Entire test classes or individual test methods may be <em>disabled</em> via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code>
+<p>Entire test classes or individual test methods may be <em>disabled</em> via the <code>{Disabled}</code>
 annotation, via one of the annotations discussed in
 <a href="#writing-tests-conditional-execution">Conditional Test Execution</a>, or via a custom <a href="#extensions-conditions"><code>ExecutionCondition</code></a>.</p>
 </div>
@@ -1897,7 +2032,7 @@ traceability, etc.
 <p>The <a href="#extensions-conditions"><code>ExecutionCondition</code></a> extension API in JUnit Jupiter allows
 developers to either <em>enable</em> or <em>disable</em> a container or test based on certain
 conditions <em>programmatically</em>. The simplest example of such a condition is the built-in
-<code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> which supports the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation (see
+<code>{DisabledCondition}</code> which supports the <code>{Disabled}</code> annotation (see
 <a href="#writing-tests-disabling">Disabling Tests</a>). In addition to <code>@Disabled</code>, JUnit Jupiter also supports
 several other annotation-based conditions in the <code>org.junit.jupiter.api.condition</code>
 package that allow developers to enable or disable containers and tests <em>declaratively</em>.
@@ -1953,7 +2088,7 @@ the <code>org.junit.jupiter.api.condition</code> package.</p>
 <h4 id="writing-tests-conditional-execution-os"><a class="anchor" href="#writing-tests-conditional-execution-os"></a>2.7.1. Operating System Conditions</h4>
 <div class="paragraph">
 <p>A container or test may be enabled or disabled on a particular operating system via the
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledOnOs.html">@EnabledOnOs</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html">@DisabledOnOs</a></code> annotations.</p>
+<code>{EnabledOnOs}</code> and <code>{DisabledOnOs}</code> annotations.</p>
 </div>
 <div id="writing-tests-conditional-execution-os-demo" class="listingblock">
 <div class="content">
@@ -1993,10 +2128,10 @@ the <code>org.junit.jupiter.api.condition</code> package.</p>
 <h4 id="writing-tests-conditional-execution-jre"><a class="anchor" href="#writing-tests-conditional-execution-jre"></a>2.7.2. Java Runtime Environment Conditions</h4>
 <div class="paragraph">
 <p>A container or test may be enabled or disabled on particular versions of the Java
-Runtime Environment (JRE) via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledOnJre.html">@EnabledOnJre</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html">@DisabledOnJre</a></code> annotations
-or on a particular range of versions of the JRE via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledForJreRange.html">@EnabledForJreRange</a></code> and
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledForJreRange.html">@DisabledForJreRange</a></code> annotations. The range defaults to <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/JRE.html">JRE</a>.JAVA_8</code> as the lower
-border (<code>min</code>) and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/JRE.html">JRE</a>.OTHER</code> as the higher border (<code>max</code>), which allows usage of
+Runtime Environment (JRE) via the <code>{EnabledOnJre}</code> and <code>{DisabledOnJre}</code> annotations
+or on a particular range of versions of the JRE via the <code>{EnabledForJreRange}</code> and
+<code>{DisabledForJreRange}</code> annotations. The range defaults to <code>{JRE}.JAVA_8</code> as the lower
+border (<code>min</code>) and <code>{JRE}.OTHER</code> as the higher border (<code>max</code>), which allows usage of
 half open ranges.</p>
 </div>
 <div class="listingblock">
@@ -2061,7 +2196,7 @@ half open ranges.</p>
 <h4 id="writing-tests-conditional-execution-system-properties"><a class="anchor" href="#writing-tests-conditional-execution-system-properties"></a>2.7.3. System Property Conditions</h4>
 <div class="paragraph">
 <p>A container or test may be enabled or disabled based on the value of the <code>named</code> JVM
-system property via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html">@EnabledIfSystemProperty</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html">@DisabledIfSystemProperty</a></code>
+system property via the <code>{EnabledIfSystemProperty}</code> and <code>{DisabledIfSystemProperty}</code>
 annotations. The value supplied via the <code>matches</code> attribute will be interpreted as a
 regular expression.</p>
 </div>
@@ -2088,7 +2223,7 @@ regular expression.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>As of JUnit Jupiter 5.6, <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html">@EnabledIfSystemProperty</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html">@DisabledIfSystemProperty</a></code> are
+<p>As of JUnit Jupiter 5.6, <code>{EnabledIfSystemProperty}</code> and <code>{DisabledIfSystemProperty}</code> are
 <em>repeatable annotations</em>. Consequently, these annotations may be declared multiple times
 on a test interface, test class, or test method. Specifically, these annotations will be
 found if they are directly present, indirectly present, or meta-present on a given element.</p>
@@ -2103,7 +2238,7 @@ found if they are directly present, indirectly present, or meta-present on a giv
 <div class="paragraph">
 <p>A container or test may be enabled or disabled based on the value of the <code>named</code>
 environment variable from the underlying operating system via the
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html">@EnabledIfEnvironmentVariable</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html">@DisabledIfEnvironmentVariable</a></code> annotations. The
+<code>{EnabledIfEnvironmentVariable}</code> and <code>{DisabledIfEnvironmentVariable}</code> annotations. The
 value supplied via the <code>matches</code> attribute will be interpreted as a regular expression.</p>
 </div>
 <div class="listingblock">
@@ -2129,8 +2264,8 @@ value supplied via the <code>matches</code> attribute will be interpreted as a r
 </td>
 <td class="content">
 <div class="paragraph">
-<p>As of JUnit Jupiter 5.6, <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html">@EnabledIfEnvironmentVariable</a></code> and
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html">@DisabledIfEnvironmentVariable</a></code> are <em>repeatable annotations</em>. Consequently, these
+<p>As of JUnit Jupiter 5.6, <code>{EnabledIfEnvironmentVariable}</code> and
+<code>{DisabledIfEnvironmentVariable}</code> are <em>repeatable annotations</em>. Consequently, these
 annotations may be declared multiple times on a test interface, test class, or test
 method. Specifically, these annotations will be found if they are directly present,
 indirectly present, or meta-present on a given element.</p>
@@ -2144,7 +2279,7 @@ indirectly present, or meta-present on a given element.</p>
 <h4 id="writing-tests-conditional-execution-custom"><a class="anchor" href="#writing-tests-conditional-execution-custom"></a>2.7.5. Custom Conditions</h4>
 <div class="paragraph">
 <p>A container or test may be enabled or disabled based on the boolean return of a
-method via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> annotations. The method is provided to
+method via the <code>{EnabledIf}</code> and <code>{DisabledIf}</code> annotations. The method is provided to
 the annotation via its name, or its fully qualified name if located outside the test
 class.
 If needed, the condition method can take a single parameter of type <code>ExtensionContext</code>.</p>
@@ -2175,7 +2310,7 @@ If needed, the condition method can take a single parameter of type <code>Extens
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> or <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> is used at class level, the condition method
+When <code>{EnabledIf}</code> or <code>{DisabledIf}</code> is used at class level, the condition method
 must always be <code>static</code>. Condition methods located in external classes must also be
 <code>static</code>. In any other case, you can use both static or instance methods.
 </td>
@@ -2319,32 +2454,32 @@ sequence of the tests is important, especially in conjunction with
 </div>
 <div class="paragraph">
 <p>To control the order in which test methods are executed, annotate your test class or test
-interface with <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestMethodOrder.html">@TestMethodOrder</a></code> and specify the desired <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code>
+interface with <code>{TestMethodOrder}</code> and specify the desired <code>{MethodOrderer}</code>
 implementation. You can implement your own custom <code>MethodOrderer</code> or use one of the
 following built-in <code>MethodOrderer</code> implementations.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">MethodOrderer.DisplayName</a></code>: sorts test methods <em>alphanumerically</em> based on their
+<p><code>{MethodOrderer_DisplayName}</code>: sorts test methods <em>alphanumerically</em> based on their
 display names (see <a href="#writing-tests-display-name-generator-precedence-rules">display name
 generation precedence rules</a>)</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html">MethodOrderer.MethodName</a></code>: sorts test methods <em>alphanumerically</em> based on their names
+<p><code>{MethodOrderer_MethodName}</code>: sorts test methods <em>alphanumerically</em> based on their names
 and formal parameter lists</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">MethodOrderer.OrderAnnotation</a></code>: sorts test methods <em>numerically</em> based on values
-specified via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a></code> annotation</p>
+<p><code>{MethodOrderer_OrderAnnotation}</code>: sorts test methods <em>numerically</em> based on values
+specified via the <code>{Order}</code> annotation</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Random.html">MethodOrderer.Random</a></code>: orders test methods <em>pseudo-randomly</em> and supports
+<p><code>{MethodOrderer_Random}</code>: orders test methods <em>pseudo-randomly</em> and supports
 configuration of a custom <em>seed</em></p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Alphanumeric.html">MethodOrderer.Alphanumeric</a></code>: sorts test methods <em>alphanumerically</em> based on their
-names and formal parameter lists; <strong>deprecated in favor of <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html">MethodOrderer.MethodName</a></code>,
+<p><code>{MethodOrderer_Alphanumeric}</code>: sorts test methods <em>alphanumerically</em> based on their
+names and formal parameter lists; <strong>deprecated in favor of <code>{MethodOrderer_MethodName}</code>,
 to be removed in 6.0</strong></p>
 </li>
 </ul>
@@ -2400,13 +2535,13 @@ order specified via the <code>@Order</code> annotation.</p>
 <h5 id="writing-tests-test-execution-order-default"><a class="anchor" href="#writing-tests-test-execution-order-default"></a>Setting the Default Method Orderer</h5>
 <div class="paragraph">
 <p>You can use the <code>junit.jupiter.testmethod.order.default</code> <a href="#running-tests-config-params">configuration parameter</a> to specify the fully qualified class name of the
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> you would like to use by default. Just like for the orderer configured
-via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestMethodOrder.html">@TestMethodOrder</a></code> annotation, the supplied class has to implement the
+<code>{MethodOrderer}</code> you would like to use by default. Just like for the orderer configured
+via the <code>{TestMethodOrder}</code> annotation, the supplied class has to implement the
 <code>MethodOrderer</code> interface. The default orderer will be used for all tests unless the
 <code>@TestMethodOrder</code> annotation is present on an enclosing test class or test interface.</p>
 </div>
 <div class="paragraph">
-<p>For example, to use the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">MethodOrderer.OrderAnnotation</a></code> method orderer by default, you
+<p>For example, to use the <code>{MethodOrderer_OrderAnnotation}</code> method orderer by default, you
 should set the configuration parameter to the corresponding fully qualified class name
 (e.g., in <code>src/test/resources/junit-platform.properties</code>):</p>
 </div>
@@ -2446,7 +2581,7 @@ order.</p>
 </div>
 <div class="paragraph">
 <p>You can use the <code>junit.jupiter.testclass.order.default</code> <a href="#running-tests-config-params">configuration parameter</a> to specify the fully qualified class name of the
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.html">ClassOrderer</a></code> you would like to use. The supplied class must implement the
+<code>{ClassOrderer}</code> you would like to use. The supplied class must implement the
 <code>ClassOrderer</code> interface.</p>
 </div>
 <div class="paragraph">
@@ -2456,27 +2591,27 @@ order.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.DisplayName.html">ClassOrderer.DisplayName</a></code>: sorts test classes <em>alphanumerically</em> based on their
+<p><code>{ClassOrderer_DisplayName}</code>: sorts test classes <em>alphanumerically</em> based on their
 display names (see <a href="#writing-tests-display-name-generator-precedence-rules">display name
 generation precedence rules</a>)</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.ClassName.html">ClassOrderer.ClassName</a></code>: sorts test classes <em>alphanumerically</em> based on their fully
+<p><code>{ClassOrderer_ClassName}</code>: sorts test classes <em>alphanumerically</em> based on their fully
 qualified class names</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.OrderAnnotation.html">ClassOrderer.OrderAnnotation</a></code>: sorts test classes <em>numerically</em> based on values
-specified via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a></code> annotation</p>
+<p><code>{ClassOrderer_OrderAnnotation}</code>: sorts test classes <em>numerically</em> based on values
+specified via the <code>{Order}</code> annotation</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.Random.html">ClassOrderer.Random</a></code>: orders test classes <em>pseudo-randomly</em> and supports
+<p><code>{ClassOrderer_Random}</code>: orders test classes <em>pseudo-randomly</em> and supports
 configuration of a custom <em>seed</em></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>For example, for the <code>@Order</code> annotation to be honored on <em>test classes</em>, you should
-configure the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.OrderAnnotation.html">ClassOrderer.OrderAnnotation</a></code> class orderer using the configuration
+configure the <code>{ClassOrderer_OrderAnnotation}</code> class orderer using the configuration
 parameter with the corresponding fully qualified class name (e.g., in
 <code>src/test/resources/junit-platform.properties</code>):</p>
 </div>
@@ -2729,7 +2864,7 @@ parameters. This allows for greater flexibility and enables <em>Dependency Injec
 constructors and methods.</p>
 </div>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
+<p><code>{ParameterResolver}</code> defines the API for test extensions that wish to <em>dynamically</em>
 resolve parameters at runtime. If a <em>test class</em> constructor, a <em>test method</em>, or a
 <em>lifecycle method</em> (see <a href="#writing-tests-classes-and-methods">Test Classes and Methods</a>) accepts a parameter, the
 parameter must be resolved at runtime by a registered <code>ParameterResolver</code>.</p>
@@ -2740,15 +2875,15 @@ parameter must be resolved at runtime by a registered <code>ParameterResolver</c
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a constructor or method parameter is of type
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code>, the <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code>
+<p><code>{TestInfoParameterResolver}</code>: if a constructor or method parameter is of type
+<code>{TestInfo}</code>, the <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code>
 corresponding to the current container or test as the value for the parameter. The
 <code>TestInfo</code> can then be used to retrieve information about the current container or test
 such as the display name, the test class, the test method, and associated tags. The
 display name is either a technical name, such as the name of the test class or test
 method, or a custom name configured via <code>@DisplayName</code>.</p>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code> rule from JUnit 4. The
+<p><code>{TestInfo}</code> acts as a drop-in replacement for the <code>TestName</code> rule from JUnit 4. The
 following demonstrates how to have <code>TestInfo</code> injected into a test constructor,
 <code>@BeforeEach</code> method, and <code>@Test</code> method.</p>
 </div>
@@ -2797,8 +2932,8 @@ following demonstrates how to have <code>TestInfo</code> injected into a test co
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java">RepetitionInfoParameterResolver</a></code>: if a method parameter in a <code>@RepeatedTest</code>,
-<code>@BeforeEach</code>, or <code>@AfterEach</code> method is of type <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/RepetitionInfo.html">RepetitionInfo</a></code>, the
+<p><code>{RepetitionInfoParameterResolver}</code>: if a method parameter in a <code>@RepeatedTest</code>,
+<code>@BeforeEach</code>, or <code>@AfterEach</code> method is of type <code>{RepetitionInfo}</code>, the
 <code>RepetitionInfoParameterResolver</code> will supply an instance of <code>RepetitionInfo</code>.
 <code>RepetitionInfo</code> can then be used to retrieve information about the current repetition
 and the total number of repetitions for the corresponding <code>@RepeatedTest</code>. Note,
@@ -2806,8 +2941,8 @@ however, that <code>RepetitionInfoParameterResolver</code> is not registered out
 of a <code>@RepeatedTest</code>. See <a href="#writing-tests-repeated-tests-examples">Repeated Test Examples</a>.</p>
 </li>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a constructor or method parameter is of type
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>, the <code>TestReporterParameterResolver</code> will supply an instance of
+<p><code>{TestReporterParameterResolver}</code>: if a constructor or method parameter is of type
+<code>{TestReporter}</code>, the <code>TestReporterParameterResolver</code> will supply an instance of
 <code>TestReporter</code>. The <code>TestReporter</code> can be used to publish additional data about the
 current test run. The data can be consumed via the <code>reportingEntryPublished()</code> method in
 a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>, allowing it to be viewed in IDEs or included in reports.</p>
@@ -2860,8 +2995,8 @@ Other parameter resolvers must be explicitly enabled by registering appropriate
 </table>
 </div>
 <div class="paragraph">
-<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java">RandomParametersExtension</a></code> for an example of a custom
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>. While not intended to be production-ready, it demonstrates the
+<p>Check out the <code>{RandomParametersExtension}</code> for an example of a custom
+<code>{ParameterResolver}</code>. While not intended to be production-ready, it demonstrates the
 simplicity and expressiveness of both the extension model and the parameter resolution
 process. <code>MyRandomParametersTest</code> demonstrates how to inject random values into <code>@Test</code>
 methods.</p>
@@ -2885,12 +3020,12 @@ methods.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For real-world use cases, check out the source code for the <code><a href="https://github.com/mockito/mockito/blob/release/2.x/subprojects/junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java">MockitoExtension</a></code> and the
-<code><a href="https://github.com/spring-projects/spring-framework/tree/HEAD/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
+<p>For real-world use cases, check out the source code for the <code>{MockitoExtension}</code> and the
+<code>{SpringExtension}</code>.</p>
 </div>
 <div class="paragraph">
 <p>When the type of the parameter to inject is the only condition for your
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>, you can use the generic <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java">TypeBasedParameterResolver</a></code> base class.
+<code>{ParameterResolver}</code>, you can use the generic <code>{TypeBasedParameterResolver}</code> base class.
 The <code>supportsParameters</code> method is implemented behind the scenes and supports
 parameterized types.</p>
 </div>
@@ -3319,7 +3454,7 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman</pre>
 <div class="paragraph">
 <p>Parameterized tests make it possible to run a test multiple times with different
 arguments. They are declared just like regular <code>@Test</code> methods but use the
-<code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/ParameterizedTest.html">@ParameterizedTest</a></code> annotation instead. In addition, you must declare at least one
+<code>{ParameterizedTest}</code> annotation instead. In addition, you must declare at least one
 <em>source</em> that will provide the arguments for each invocation and then <em>consume</em> the
 arguments in the test method.</p>
 </div>
@@ -3395,7 +3530,7 @@ parameterized method at the same index in the method&#8217;s formal parameter li
 <div class="paragraph">
 <p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
-refer to the Javadoc in the <code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/package-summary.html">org.junit.jupiter.params.provider</a></code> package for additional
+refer to the Javadoc in the <code>{params-provider-package}</code> package for additional
 information.</p>
 </div>
 <div class="sect4">
@@ -3467,7 +3602,7 @@ for parameterized tests that accept a single argument.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/NullSource.html">@NullSource</a></code>: provides a single <code>null</code> argument to the annotated <code>@ParameterizedTest</code>
+<p><code>{NullSource}</code>: provides a single <code>null</code> argument to the annotated <code>@ParameterizedTest</code>
 method.</p>
 <div class="ulist">
 <ul>
@@ -3478,7 +3613,7 @@ method.</p>
 </div>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/EmptySource.html">@EmptySource</a></code>: provides a single <em>empty</em> argument to the annotated <code>@ParameterizedTest</code>
+<p><code>{EmptySource}</code>: provides a single <em>empty</em> argument to the annotated <code>@ParameterizedTest</code>
 method for parameters of the following types: <code>java.lang.String</code>, <code>java.util.List</code>,
 <code>java.util.Set</code>, <code>java.util.Map</code>, primitive arrays (e.g., <code>int[]</code>, <code>char[][]</code>, etc.),
 object arrays (e.g.,<code>String[]</code>, <code>Integer[][]</code>, etc.).</p>
@@ -3491,7 +3626,7 @@ object arrays (e.g.,<code>String[]</code>, <code>Integer[][]</code>, etc.).</p>
 </div>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/NullAndEmptySource.html">@NullAndEmptySource</a></code>: a <em>composed annotation</em> that combines the functionality of
+<p><code>{NullAndEmptySource}</code>: a <em>composed annotation</em> that combines the functionality of
 <code>@NullSource</code> and <code>@EmptySource</code>.</p>
 </li>
 </ul>
@@ -3618,7 +3753,7 @@ following examples.</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-MethodSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-MethodSource"></a>@MethodSource</h5>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/MethodSource.html">@MethodSource</a></code> allows you to refer to one or more <em>factory</em> methods of the test class
+<p><code>{MethodSource}</code> allows you to refer to one or more <em>factory</em> methods of the test class
 or external classes.</p>
 </div>
 <div class="paragraph">
@@ -3693,7 +3828,7 @@ supported as demonstrated by the following example.</p>
 <div class="paragraph">
 <p>If a parameterized test method declares multiple parameters, you need to return a
 collection, stream, or array of <code>Arguments</code> instances or object arrays as shown below
-(see the Javadoc for <code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/MethodSource.html">@MethodSource</a></code> for further details on supported return types).
+(see the Javadoc for <code>{MethodSource}</code> for further details on supported return types).
 Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory method defined in the <code>Arguments</code>
 interface. In addition, <code>Arguments.of(Object&#8230;&#8203;)</code> may be used as an alternative to
 <code>arguments(Object&#8230;&#8203;)</code>.</p>
@@ -4311,7 +4446,7 @@ single method parameter. Consequently, argument sources which are expected to su
 large number of arguments can lead to large method signatures.</p>
 </div>
 <div class="paragraph">
-<p>In such cases, an <code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAccessor.html">ArgumentsAccessor</a></code> can be used instead of multiple parameters. Using
+<p>In such cases, an <code>{ArgumentsAccessor}</code> can be used instead of multiple parameters. Using
 this API, you can access the provided arguments through a single argument passed to your
 test method. In addition, type conversion is supported as discussed in
 <a href="#writing-tests-parameterized-tests-argument-conversion-implicit">Implicit Conversion</a>.</p>
@@ -4352,7 +4487,7 @@ test method. In addition, type conversion is supported as discussed in
 <em>aggregators</em>.</p>
 </div>
 <div class="paragraph">
-<p>To use a custom aggregator, implement the <code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html">ArgumentsAggregator</a></code> interface and register
+<p>To use a custom aggregator, implement the <code>{ArgumentsAggregator}</code> interface and register
 it via the <code>@AggregateWith</code> annotation on a compatible parameter in the
 <code>@ParameterizedTest</code> method. The result of the aggregation will then be provided as an
 argument for the corresponding parameter when the parameterized test is invoked. Note
@@ -4570,10 +4705,10 @@ lifecycle methods (e.g. <code>@BeforeEach</code>) and test class constructors.</
 <div class="sect2">
 <h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>2.16. Test Templates</h3>
 <div class="paragraph">
-<p>A <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method is not a regular test case but rather a template for test
+<p>A <code>{TestTemplate}</code> method is not a regular test case but rather a template for test
 cases. As such, it is designed to be invoked multiple times depending on the number of
 invocation contexts returned by the registered providers. Thus, it must be used in
-conjunction with a registered <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> extension. Each
+conjunction with a registered <code>{TestTemplateInvocationContextProvider}</code> extension. Each
 invocation of a test template method behaves like the execution of a regular <code>@Test</code>
 method with full support for the same lifecycle callbacks and extensions. Please refer to
 <a href="#extensions-test-templates">Providing Invocation Contexts for Test Templates</a> for usage examples.</p>
@@ -5161,7 +5296,7 @@ method, the test method will be executed in the same thread as any <code>@Before
 <div class="paragraph">
 <p>By default, nodes in the test tree use the <code>SAME_THREAD</code> execution mode. You can change
 the default by setting the <code>junit.jupiter.execution.parallel.mode.default</code> configuration
-parameter. Alternatively, you can use the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Execution.html">@Execution</a></code> annotation to change the
+parameter. Alternatively, you can use the <code>{Execution}</code> annotation to change the
 execution mode for the annotated element and its subelements (if any) which allows you to
 activate parallel execution for individual test classes, one by one.</p>
 </div>
@@ -5175,7 +5310,7 @@ activate parallel execution for individual test classes, one by one.</p>
 <div class="paragraph">
 <p>The default execution mode is applied to all nodes of the test tree with a few notable
 exceptions, namely test classes that use the <code>Lifecycle.PER_CLASS</code> mode or a
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (except for <code>{Random}</code>). In the former case, test authors have to
+<code>{MethodOrderer}</code> (except for <code>{Random}</code>). In the former case, test authors have to
 ensure that the test class is thread-safe; in the latter, concurrent execution might
 conflict with the configured execution order. Thus, in both cases, test methods in such
 test classes are only executed concurrently if the <code>@Execution(CONCURRENT)</code> annotation is
@@ -5292,22 +5427,22 @@ your own means of controlling concurrency.
 <div class="sect3">
 <h4 id="writing-tests-parallel-execution-synchronization"><a class="anchor" href="#writing-tests-parallel-execution-synchronization"></a>2.19.2. Synchronization</h4>
 <div class="paragraph">
-<p>In addition to controlling the execution mode using the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Execution.html">@Execution</a></code> annotation, JUnit
+<p>In addition to controlling the execution mode using the <code>{Execution}</code> annotation, JUnit
 Jupiter provides another annotation-based declarative synchronization mechanism. The
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a></code> annotation allows you to declare that a test class or method uses a
+<code>{ResourceLock}</code> annotation allows you to declare that a test class or method uses a
 specific shared resource that requires synchronized access to ensure reliable test
 execution. The shared resource is identified by a unique name which is a <code>String</code>. The
-name can be user-defined or one of the predefined constants in <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Resources.html">Resources</a></code>:
+name can be user-defined or one of the predefined constants in <code>{Resources}</code>:
 <code>SYSTEM_PROPERTIES</code>, <code>SYSTEM_OUT</code>, <code>SYSTEM_ERR</code>, <code>LOCALE</code>, or <code>TIME_ZONE</code>.</p>
 </div>
 <div class="paragraph">
 <p>If the tests in the following example were run in parallel <em>without</em> the use of
-<a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a>, they would be <em>flaky</em>. Sometimes they would pass, and at other times they
+{ResourceLock}, they would be <em>flaky</em>. Sometimes they would pass, and at other times they
 would fail due to the inherent race condition of writing and then reading the same JVM
 System Property.</p>
 </div>
 <div class="paragraph">
-<p>When access to shared resources is declared using the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a></code> annotation, the
+<p>When access to shared resources is declared using the <code>{ResourceLock}</code> annotation, the
 JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
 parallel.</p>
 </div>
@@ -5322,7 +5457,7 @@ parallel.</p>
 <div class="paragraph">
 <p>If most of your test classes can be run in parallel without any synchronization but you
 have some test classes that need to run in isolation, you can mark the latter with the
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Isolated.html">@Isolated</a></code> annotation. Tests in such classes are executed sequentially without any other
+<code>{Isolated}</code> annotation. Tests in such classes are executed sequentially without any other
 tests running at the same time.</p>
 </div>
 </td>
@@ -5403,10 +5538,10 @@ can improve and eventually <a href="#api-evolution">promote</a> this feature.
 </table>
 </div>
 <div class="paragraph">
-<p>The built-in <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a></code> extension is used to create and clean up a temporary
+<p>The built-in <code>{TempDirectory}</code> extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
 default. To use it, annotate a non-private field of type <code>java.nio.file.Path</code> or
-<code>java.io.File</code> with <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or add a parameter of type <code>java.nio.file.Path</code> or
+<code>java.io.File</code> with <code>{TempDir}</code> or add a parameter of type <code>java.nio.file.Path</code> or
 <code>java.io.File</code> annotated with <code>@TempDir</code> to a lifecycle method or test method.</p>
 </div>
 <div class="paragraph">
@@ -5502,7 +5637,7 @@ that case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit
 launcher.</p>
 </div>
 <div class="paragraph">
-<p>See the example projects in the <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository to
+<p>See the example projects in the {junit5-samples-repo}[<code>junit5-samples</code>] repository to
 find out how this is done with Gradle and Maven.</p>
 </div>
 <div class="sect3">
@@ -5534,7 +5669,7 @@ tests to JUnit Jupiter.</p>
 <ul>
 <li>
 <p>Note that you may continue to use assertion methods from <code>org.junit.Assert</code> or any
-other assertion library such as <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a>, <a href="https://hamcrest.org/JavaHamcrest/">Hamcrest</a>, <a href="https://truth.dev/">Truth</a>, etc.</p>
+other assertion library such as {AssertJ}, {Hamcrest}, {Truth}, etc.</p>
 </li>
 </ul>
 </div>
@@ -5626,7 +5761,7 @@ can be <em>left unchanged</em> including the JUnit 4 rule import statements.</p>
 </div>
 <div class="paragraph">
 <p>This limited form of <code>Rule</code> support can be switched on by the class-level annotation
-<code><a href="../api/org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html">@EnableRuleMigrationSupport</a></code>. This annotation is a <em>composed annotation</em> which enables
+<code>{EnableRuleMigrationSupport}</code>. This annotation is a <em>composed annotation</em> which enables
 all rule migration support extensions: <code>VerifierSupport</code>, <code>ExternalResourceSupport</code>, and
 <code>ExpectedExceptionSupport</code>. You may alternatively choose to annotate your test class with
 <code>@EnableJUnit4MigrationSupport</code> which registers migration support for rules <em>and</em> JUnit
@@ -5642,15 +5777,15 @@ extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.</p>
 <div class="paragraph">
 <p>In order to provide a smooth migration path from JUnit 4 to JUnit Jupiter, the
 <code>junit-jupiter-migrationsupport</code> module provides support for JUnit 4&#8217;s <code>@Ignore</code>
-annotation analogous to Jupiter&#8217;s <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation.</p>
+annotation analogous to Jupiter&#8217;s <code>{Disabled}</code> annotation.</p>
 </div>
 <div class="paragraph">
 <p>To use <code>@Ignore</code> with JUnit Jupiter based tests, configure a <em>test</em> dependency on the
 <code>junit-jupiter-migrationsupport</code> module in your build and then annotate your test class
-with <code>@ExtendWith(IgnoreCondition.class)</code> or <code><a href="../api/org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html">@EnableJUnit4MigrationSupport</a></code> (which
+with <code>@ExtendWith(IgnoreCondition.class)</code> or <code>{EnableJUnit4MigrationSupport}</code> (which
 automatically registers the <code>IgnoreCondition</code> along with
 <a href="#migrating-from-junit4-rule-support">Limited JUnit 4 Rule Support</a>). The <code>IgnoreCondition</code> is an
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ExecutionCondition.html">ExecutionCondition</a></code> that disables test classes or test methods that are annotated with
+<code>{ExecutionCondition}</code> that disables test classes or test methods that are annotated with
 <code>@Ignore</code>.</p>
 </div>
 <div class="listingblock">
@@ -5911,14 +6046,14 @@ implementation similar to the following.</p>
 <div class="paragraph">
 <p>JUnit uses the Java Logging APIs in the <code>java.util.logging</code> package (a.k.a. <em>JUL</em>) to
 emit warnings and debug information. Please refer to the official documentation of
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> for configuration options.</p>
+<code>{LogManager}</code> for configuration options.</p>
 </div>
 <div class="paragraph">
 <p>Alternatively, it&#8217;s possible to redirect log messages to other logging frameworks such as
-<a href="https://logging.apache.org/log4j/2.x/">Log4j</a> or <a href="https://logback.qos.ch/">Logback</a>. To use a logging framework that provides a custom implementation of
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code>, set the <code>java.util.logging.manager</code> system property to the <em>fully
-qualified class name</em> of the <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a></code> implementation to use. The example below
-demonstrates how to configure Log4j&#160;2.x (see <a href="https://logging.apache.org/log4j/2.x/log4j-jul/index.html">Log4j JDK Logging Adapter</a> for
+{Log4j} or {Logback}. To use a logging framework that provides a custom implementation of
+<code>{LogManager}</code>, set the <code>java.util.logging.manager</code> system property to the <em>fully
+qualified class name</em> of the <code>{LogManager}</code> implementation to use. The example below
+demonstrates how to configure Log4j&#160;2.x (see {Log4j_JDK_Logging_Adapter} for
 details).</p>
 </div>
 <div class="listingblock">
@@ -5930,7 +6065,7 @@ details).</p>
 </div>
 <div class="paragraph">
 <p>Other logging frameworks provide different means to redirect messages logged using
-<code>java.util.logging</code>. For example, for <a href="https://logback.qos.ch/">Logback</a> you can use the
+<code>java.util.logging</code>. For example, for {Logback} you can use the
 <a href="https://www.slf4j.org/legacy.html#jul-to-slf4j">JUL to SLF4J Bridge</a> by adding an
 additional dependency to the runtime classpath.</p>
 </div>
@@ -5960,7 +6095,7 @@ native support instead.</p>
 Surefire and Maven Failsafe provide
 <a href="https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html">native support</a>
 for executing tests on the JUnit Platform. The <code>pom.xml</code> file in the
-<code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use the Maven Surefire plugin
+<code>{junit5-jupiter-starter-maven}</code> project demonstrates how to use the Maven Surefire plugin
 and can serve as a starting point for configuring your Maven build.</p>
 </div>
 <div class="sect4">
@@ -6195,7 +6330,7 @@ gives the task a consistent and natural feel when compared to many other core An
 <a href="https://ant.apache.org/manual/Tasks/junitlauncher.html#fork">forking the tests in a separate JVM</a>.</p>
 </div>
 <div class="paragraph">
-<p>The <code>build.xml</code> file in the <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-ant">junit5-jupiter-starter-ant</a></code> project demonstrates how to use
+<p>The <code>build.xml</code> file in the <code>{junit5-jupiter-starter-ant}</code> project demonstrates how to use
 the task and can serve as a starting point.</p>
 </div>
 <div class="sect4">
@@ -6270,7 +6405,7 @@ Jupiter tests and print test execution results to the console.</p>
 </div>
 <div class="paragraph">
 <p>An executable <code>junit-platform-console-standalone-1.8.0-SNAPSHOT.jar</code> with all
-dependencies included is published in the <a href="https://search.maven.org/">Maven Central</a> repository under the
+dependencies included is published in the {Maven_Central} repository under the
 <a href="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone">junit-platform-console-standalone</a>
 directory. You can <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/run.html">run</a>
 the standalone <code>ConsoleLauncher</code> as shown below.</p>
@@ -6504,6 +6639,9 @@ for JUnit Jupiter</p>
 <ul>
 <li>
 <p><code>junit-platform-suite-api</code> in <em>test</em> scope</p>
+</li>
+<li>
+<p><code>junit-platform-suite-commons</code> in <em>test</em> scope</p>
 </li>
 <li>
 <p><code>junit-platform-launcher</code> in <em>test</em> scope</p>
@@ -7058,7 +7196,7 @@ which they are declared in the source code. For example, the execution of tests 
 <h4 id="extensions-registration-programmatic"><a class="anchor" href="#extensions-registration-programmatic"></a>5.2.2. Programmatic Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register extensions <em>programmatically</em> by annotating fields in test classes
-with <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/RegisterExtension.html">@RegisterExtension</a></code>.</p>
+with <code>{RegisterExtension}</code>.</p>
 </div>
 <div class="paragraph">
 <p>When an extension is registered <em>declaratively</em> via
@@ -7081,7 +7219,7 @@ ordered using an algorithm that is deterministic but intentionally nonobvious. T
 ensures that subsequent runs of a test suite execute extensions in the same order, thereby
 allowing for repeatable builds. However, there are times when extensions need to be
 registered in an explicit order. To achieve that, annotate <code>@RegisterExtension</code> fields
-with <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a></code>.</p>
+with <code>{Order}</code>.</p>
 </div>
 <div class="paragraph">
 <p>Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will be ordered using the
@@ -7242,7 +7380,7 @@ instance of the extension via the <code>docs</code> field if necessary.</p>
 <p>In addition to <a href="#extensions-registration-declarative">declarative extension registration</a>
 and <a href="#extensions-registration-programmatic">programmatic extension registration</a> support
 using annotations, JUnit Jupiter also supports <em>global extension registration</em> via Java&#8217;s
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism, allowing third-party extensions to be auto-detected and
+<code>{ServiceLoader}</code> mechanism, allowing third-party extensions to be auto-detected and
 automatically registered based on what is available in the classpath.</p>
 </div>
 <div class="paragraph">
@@ -7267,7 +7405,7 @@ following system property.</p>
 <p><code>-Djunit.jupiter.extensions.autodetection.enabled=true</code></p>
 </div>
 <div class="paragraph">
-<p>When auto-detection is enabled, extensions discovered via the <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism
+<p>When auto-detection is enabled, extensions discovered via the <code>{ServiceLoader}</code> mechanism
 will be added to the extension registry after JUnit Jupiter&#8217;s global extensions (e.g.,
 support for <code>TestInfo</code>, <code>TestReporter</code>, etc.).</p>
 </div>
@@ -7287,7 +7425,7 @@ register a duplicate extension implementation will be ignored.</p>
 <div class="sect2">
 <h3 id="extensions-conditions"><a class="anchor" href="#extensions-conditions"></a>5.3. Conditional Test Execution</h3>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ExecutionCondition.html">ExecutionCondition</a></code> defines the <code>Extension</code> API for programmatic, <em>conditional test
+<p><code>{ExecutionCondition}</code> defines the <code>Extension</code> API for programmatic, <em>conditional test
 execution</em>.</p>
 </div>
 <div class="paragraph">
@@ -7305,7 +7443,7 @@ container or test to be disabled. In other words, the evaluation works like the
 short-circuiting boolean OR operator.</p>
 </div>
 <div class="paragraph">
-<p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
+<p>See the source code of <code>{DisabledCondition}</code> and <code>{Disabled}</code> for concrete examples.</p>
 </div>
 <div class="sect3">
 <h4 id="extensions-conditions-deactivation"><a class="anchor" href="#extensions-conditions-deactivation"></a>5.3.1. Deactivating Conditions</h4>
@@ -7337,7 +7475,7 @@ following system property.</p>
 <div class="sect2">
 <h3 id="extensions-test-instance-factories"><a class="anchor" href="#extensions-test-instance-factories"></a>5.4. Test Instance Factories</h3>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstanceFactory.html">TestInstanceFactory</a></code> defines the API for <code>Extensions</code> that wish to <em>create</em> test class
+<p><code>{TestInstanceFactory}</code> defines the API for <code>Extensions</code> that wish to <em>create</em> test class
 instances.</p>
 </div>
 <div class="paragraph">
@@ -7376,7 +7514,7 @@ registered for any specific test class.</p>
 <div class="sect2">
 <h3 id="extensions-test-instance-post-processing"><a class="anchor" href="#extensions-test-instance-post-processing"></a>5.5. Test Instance Post-processing</h3>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstancePostProcessor.html">TestInstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
+<p><code>{TestInstancePostProcessor}</code> defines the API for <code>Extensions</code> that wish to <em>post
 process</em> test instances.</p>
 </div>
 <div class="paragraph">
@@ -7384,14 +7522,14 @@ process</em> test instances.</p>
 initialization methods on the test instance, etc.</p>
 </div>
 <div class="paragraph">
-<p>For a concrete example, consult the source code for the <code><a href="https://github.com/mockito/mockito/blob/release/2.x/subprojects/junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java">MockitoExtension</a></code> and the
-<code><a href="https://github.com/spring-projects/spring-framework/tree/HEAD/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
+<p>For a concrete example, consult the source code for the <code>{MockitoExtension}</code> and the
+<code>{SpringExtension}</code>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="extensions-test-instance-pre-destroy-callback"><a class="anchor" href="#extensions-test-instance-pre-destroy-callback"></a>5.6. Test Instance Pre-destroy Callback</h3>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstancePreDestroyCallback.html">TestInstancePreDestroyCallback</a></code> defines the API for <code>Extensions</code> that wish to process
+<p><code>{TestInstancePreDestroyCallback}</code> defines the API for <code>Extensions</code> that wish to process
 test instances <em>after</em> they have been used in tests and <em>before</em> they are destroyed.</p>
 </div>
 <div class="paragraph">
@@ -7402,25 +7540,25 @@ test instance, invoking custom de-initialization methods on the test instance, e
 <div class="sect2">
 <h3 id="extensions-parameter-resolution"><a class="anchor" href="#extensions-parameter-resolution"></a>5.7. Parameter Resolution</h3>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving parameters at
+<p><code>{ParameterResolver}</code> defines the <code>Extension</code> API for dynamically resolving parameters at
 runtime.</p>
 </div>
 <div class="paragraph">
 <p>If a <em>test class</em> constructor, <em>test method</em>, or <em>lifecycle method</em> (see
 <a href="#writing-tests-classes-and-methods">Test Classes and Methods</a>) declares a parameter, the parameter must be
 <em>resolved</em> at runtime by a <code>ParameterResolver</code>. A <code>ParameterResolver</code> can either be
-built-in (see <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extensions-registration">registered by
+built-in (see <code>{TestInfoParameterResolver}</code>) or <a href="#extensions-registration">registered by
 the user</a>. Generally speaking, parameters may be resolved by <em>name</em>, <em>type</em>,
 <em>annotation</em>, or any combination thereof.</p>
 </div>
 <div class="paragraph">
-<p>If you wish to implement a custom <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> that resolves parameters based
+<p>If you wish to implement a custom <code>{ParameterResolver}</code> that resolves parameters based
 solely on the type of the parameter, you may find it convenient to extend the
-<code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java">TypeBasedParameterResolver</a></code> which serves as a generic adapter for such use cases.</p>
+<code>{TypeBasedParameterResolver}</code> which serves as a generic adapter for such use cases.</p>
 </div>
 <div class="paragraph">
-<p>For concrete examples, consult the source code for <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code>,
-<code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>, and <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/MapOfListsTypeBasedParameterResolver.java">MapOfListsTypeBasedParameterResolver</a></code>.</p>
+<p>For concrete examples, consult the source code for <code>{CustomTypeParameterResolver}</code>,
+<code>{CustomAnnotationParameterResolver}</code>, and <code>{MapOfListsTypeBasedParameterResolver}</code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -7436,7 +7574,7 @@ API will always fail for <em>inner class</em> constructors (e.g., a constructor 
 test class).</p>
 </div>
 <div class="paragraph">
-<p>The <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html">ParameterContext</a></code> API supplied to <code>ParameterResolver</code> implementations therefore
+<p>The <code>{ParameterContext}</code> API supplied to <code>ParameterResolver</code> implementations therefore
 includes the following convenience methods for correctly looking up annotations on
 parameters. Extension authors are strongly encouraged to use these methods instead of
 those provided in <code>java.lang.reflect.Parameter</code> in order to avoid this bug in the JDK.</p>
@@ -7462,7 +7600,7 @@ those provided in <code>java.lang.reflect.Parameter</code> in order to avoid thi
 <div class="sect2">
 <h3 id="extensions-test-result-processing"><a class="anchor" href="#extensions-test-result-processing"></a>5.8. Test Result Processing</h3>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestWatcher.html">TestWatcher</a></code> defines the API for extensions that wish to process the results of <em>test
+<p><code>{TestWatcher}</code> defines the API for extensions that wish to process the results of <em>test
 method</em> executions. Specifically, a <code>TestWatcher</code> will be invoked with contextual
 information for the following events.</p>
 </div>
@@ -7511,7 +7649,7 @@ including those in <code>@Nested</code> classes.</p>
 <td class="content">
 <div class="paragraph">
 <p>Any instances of <code>ExtensionContext.Store.CloseableResource</code> stored in the <code>Store</code> of the
-provided <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html">ExtensionContext</a></code> will be closed <em>before</em> methods in this API are invoked (see
+provided <code>{ExtensionContext}</code> will be closed <em>before</em> methods in this API are invoked (see
 <a href="#extensions-keeping-state">Keeping State in Extensions</a>). You can use the parent context&#8217;s <code>Store</code> to work with such
 resources.</p>
 </div>
@@ -7525,35 +7663,35 @@ resources.</p>
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the following sections for examples and the Javadoc for
-each of these interfaces in the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></code> package for further details.</p>
+each of these interfaces in the <code>{extension-api-package}</code> package for further details.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/BeforeAllCallback.html">BeforeAllCallback</a></code></p>
+<p><code>{BeforeAllCallback}</code></p>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/BeforeEachCallback.html">BeforeEachCallback</a></code></p>
+<p><code>{BeforeEachCallback}</code></p>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html">BeforeTestExecutionCallback</a></code></p>
+<p><code>{BeforeTestExecutionCallback}</code></p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html">AfterTestExecutionCallback</a></code></p>
+<p><code>{AfterTestExecutionCallback}</code></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html">AfterEachCallback</a></code></p>
+<p><code>{AfterEachCallback}</code></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterAllCallback.html">AfterAllCallback</a></code></p>
+<p><code>{AfterAllCallback}</code></p>
 </li>
 </ul>
 </div>
@@ -7566,7 +7704,7 @@ each of these interfaces in the <code><a href="../api/org.junit.jupiter.api/org/
 <td class="content">
 <div class="title">Implementing Multiple Extension APIs</div>
 Extension developers may choose to implement any number of these interfaces
-within a single extension. Consult the source code of the <code><a href="https://github.com/spring-projects/spring-framework/tree/HEAD/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code> for a
+within a single extension. Consult the source code of the <code>{SpringExtension}</code> for a
 concrete example.
 </td>
 </tr>
@@ -7575,7 +7713,7 @@ concrete example.
 <div class="sect3">
 <h4 id="extensions-lifecycle-callbacks-before-after-execution"><a class="anchor" href="#extensions-lifecycle-callbacks-before-after-execution"></a>5.9.1. Before and After Test Execution Callbacks</h4>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html">BeforeTestExecutionCallback</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html">AfterTestExecutionCallback</a></code> define the APIs for
+<p><code>{BeforeTestExecutionCallback}</code> and <code>{AfterTestExecutionCallback}</code> define the APIs for
 <code>Extensions</code> that wish to add behavior that will be executed <em>immediately before</em> and
 <em>immediately after</em> a test method is executed, respectively. As such, these callbacks are
 well suited for timing, tracing, and similar use cases. If you need to implement
@@ -7667,9 +7805,9 @@ INFO: Method [sleep50ms] took 53 ms.</pre>
 <p>Exceptions thrown during the test execution may be intercepted and handled accordingly
 before propagating further, so that certain actions like error logging or resource releasing
 may be defined in specialized <code>Extensions</code>. JUnit Jupiter offers API for <code>Extensions</code> that
-wish to handle exceptions thrown during <code>@Test</code> methods via <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.html">TestExecutionExceptionHandler</a></code>
+wish to handle exceptions thrown during <code>@Test</code> methods via <code>{TestExecutionExceptionHandler}</code>
 and for those thrown during one of test lifecycle methods (<code>@BeforeAll</code>, <code>@BeforeEach</code>,
-<code>@AfterEach</code> and <code>@AfterAll</code>) via <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/LifecycleMethodExecutionExceptionHandler.html">LifecycleMethodExecutionExceptionHandler</a></code>.</p>
+<code>@AfterEach</code> and <code>@AfterAll</code>) via <code>{LifecycleMethodExecutionExceptionHandler}</code>.</p>
 </div>
 <div class="paragraph">
 <p>The following example shows an extension which will swallow all instances of <code>IOException</code>
@@ -7742,7 +7880,7 @@ exception was never thrown. Handlers may also choose to rethrow the exception or
 a different one, potentially wrapping the original.</p>
 </div>
 <div class="paragraph">
-<p>Extensions implementing <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/LifecycleMethodExecutionExceptionHandler.html">LifecycleMethodExecutionExceptionHandler</a></code> that wish to handle
+<p>Extensions implementing <code>{LifecycleMethodExecutionExceptionHandler}</code> that wish to handle
 exceptions thrown during <code>@BeforeAll</code> or <code>@AfterAll</code> need to be registered on a class level,
 while handlers for <code>BeforeEach</code> and <code>AfterEach</code> may be also registered for individual
 test methods.</p>
@@ -7768,7 +7906,7 @@ test methods.</p>
 <div class="sect2">
 <h3 id="extensions-intercepting-invocations"><a class="anchor" href="#extensions-intercepting-invocations"></a>5.11. Intercepting Invocations</h3>
 <div class="paragraph">
-<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/InvocationInterceptor.html">InvocationInterceptor</a></code> defines the API for <code>Extensions</code> that wish to intercept calls to
+<p><code>{InvocationInterceptor}</code> defines the API for <code>Extensions</code> that wish to intercept calls to
 test code.</p>
 </div>
 <div class="paragraph">
@@ -7807,15 +7945,15 @@ Dispatch Thread.</p>
 <div class="sect2">
 <h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>5.12. Providing Invocation Contexts for Test Templates</h3>
 <div class="paragraph">
-<p>A <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method can only be executed when at least one
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> is registered. Each such provider is responsible
-for providing a <code>Stream</code> of <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContext.html">TestTemplateInvocationContext</a></code> instances. Each context may
+<p>A <code>{TestTemplate}</code> method can only be executed when at least one
+<code>{TestTemplateInvocationContextProvider}</code> is registered. Each such provider is responsible
+for providing a <code>Stream</code> of <code>{TestTemplateInvocationContext}</code> instances. Each context may
 specify a custom display name and a list of additional extensions that will only be used
-for the next invocation of the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method.</p>
+for the next invocation of the <code>{TestTemplate}</code> method.</p>
 </div>
 <div class="paragraph">
 <p>The following example shows how to write a test template as well as how to register and
-implement a <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code>.</p>
+implement a <code>{TestTemplateInvocationContextProvider}</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">A test template with accompanying extension</div>
@@ -7874,7 +8012,7 @@ implement a <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ex
 <div class="paragraph">
 <p>In this example, the test template will be invoked twice. The display names of the
 invocations will be <code>apple</code> and <code>banana</code> as specified by the invocation context. Each
-invocation registers a custom <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> which is used to resolve the method
+invocation registers a custom <code>{ParameterResolver}</code> which is used to resolve the method
 parameter. The output when using the <code>ConsoleLauncher</code> is as follows.</p>
 </div>
 <div class="literalblock">
@@ -7885,7 +8023,7 @@ parameter. The output when using the <code>ConsoleLauncher</code> is as follows.
 </div>
 </div>
 <div class="paragraph">
-<p>The <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> extension API is primarily intended for
+<p>The <code>{TestTemplateInvocationContextProvider}</code> extension API is primarily intended for
 implementing different kinds of tests that rely on repetitive invocation of a test-like
 method albeit in different contexts — for example, with different parameters, by preparing
 the test class instance differently, or multiple times without modifying the context.
@@ -7906,7 +8044,7 @@ using the <code>Store</code> with a method-level scope. It is important to remem
 stored in an <code>ExtensionContext</code> during test execution will not be available in the
 surrounding <code>ExtensionContext</code>. Since <code>ExtensionContexts</code> may be nested, the scope of
 inner contexts may also be limited. Consult the corresponding Javadoc for details on the
-methods available for storing and retrieving values via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a></code>.</p>
+methods available for storing and retrieving values via the <code>{ExtensionContext_Store}</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -8677,18 +8815,22 @@ aggregate the final results in an object of your own. For examples see the
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org.junit.jupiter.engine/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a></code>: The core of JUnit Jupiter.</p>
+<p><code>{junit-jupiter-engine}</code>: The core of JUnit Jupiter.</p>
 </li>
 <li>
-<p><code><a href="../api/org.junit.vintage.engine/org/junit/vintage/engine/package-summary.html">junit-vintage-engine</a></code>: A thin layer on top of JUnit 4 to allow running <em>vintage</em>
+<p><code>{junit-vintage-engine}</code>: A thin layer on top of JUnit 4 to allow running <em>vintage</em>
 tests with the launcher infrastructure.</p>
+</li>
+<li>
+<p><code>{junit-platform-suite-engine}</code>: To execute declarative suites of tests with the
+launcher infrastructure.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>Third parties may also contribute their own <code>TestEngine</code> by implementing the interfaces
 in the <a href="../api/org.junit.platform.engine/org/junit/platform/engine/package-summary.html">junit-platform-engine</a> module and <em>registering</em> their engine. By default, engine
-registration is supported via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism. For example, the
+registration is supported via Java&#8217;s <code>{ServiceLoader}</code> mechanism. For example, the
 <code>junit-jupiter-engine</code> module registers its <code>org.junit.jupiter.engine.JupiterTestEngine</code>
 in a file named <code>org.junit.platform.engine.TestEngine</code> within the <code>/META-INF/services</code> in
 the <code>junit-jupiter-engine</code> JAR.</p>
@@ -8701,7 +8843,7 @@ the <code>junit-jupiter-engine</code> JAR.</p>
 </td>
 <td class="content">
 <code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html">HierarchicalTestEngine</a></code> is a convenient abstract base implementation (used by
-the <code><a href="../api/org.junit.jupiter.engine/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a></code>) that only requires implementors to provide the logic for
+the <code>{junit-jupiter-engine}</code>) that only requires implementors to provide the logic for
 test discovery. It implements execution of <code>TestDescriptors</code> that implement the <code>Node</code>
 interface, including support for parallel execution.
 </td>
@@ -8743,7 +8885,7 @@ violations.</p>
 <div class="paragraph">
 <p>In addition to specifying post-discovery filters as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
 passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, by default custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html">PostDiscoveryFilter</a></code> implementations
-will be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
+will be discovered at runtime via Java&#8217;s <code>{ServiceLoader}</code> mechanism and automatically
 applied by the <code>Launcher</code> in addition to those that are part of the request.</p>
 </div>
 <div class="paragraph">
@@ -8760,7 +8902,7 @@ file is loaded and applied automatically.</p>
 tests, and closed, i.e. when no more tests will be discovered or executed. They can be
 registered programmatically on the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> that is passed to
 <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code> or, unless disabled, will be discovered at runtime via Java&#8217;s
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code>.</p>
+<code>{ServiceLoader}</code> mechanism and automatically registered with <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code>.</p>
 </div>
 <div class="paragraph">
 <p>For example, an <code>example.CustomLauncherSessionListener</code> class implementing
@@ -8775,7 +8917,7 @@ and registered automatically.</p>
 <p>In addition to specifying discovery listeners as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
 or registering them programmatically using the public <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method,  custom
 <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code> implementations can be discovered at runtime via Java&#8217;s
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> created via
+<code>{ServiceLoader}</code> mechanism and automatically registered with the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> created via
 the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
 </div>
 <div class="paragraph">
@@ -8790,7 +8932,7 @@ and registered automatically.</p>
 <div class="paragraph">
 <p>In addition to the public <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution
 listeners programmatically, by default custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations
-will be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
+will be discovered at runtime via Java&#8217;s <code>{ServiceLoader}</code> mechanism and automatically
 registered with the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> created via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
 </div>
 <div class="paragraph">
@@ -8818,7 +8960,7 @@ execution listeners should be deactivated (i.e. not registered) for the current 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Only listeners registered via the <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism within the
+<p>Only listeners registered via the <code>{ServiceLoader}</code> mechanism within the
 <code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file can be
 deactivated. In other words, any <code>TestExecutionListener</code> registered explicitly via the
 <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> cannot be deactivated via the
@@ -8912,19 +9054,120 @@ created via the built-in fluent <em>builder</em> API, as demonstrated in the fol
 </div>
 </div>
 <div class="sect2">
-<h3 id="testkit"><a class="anchor" href="#testkit"></a>6.2. JUnit Platform Test Kit</h3>
+<h3 id="junit-platform-suite-engine"><a class="anchor" href="#junit-platform-suite-engine"></a>6.2. JUnit Platform Suite Engine</h3>
+<div class="paragraph">
+<p>The JUnit Platform supports declarative definition and execution of suites of tests from
+<em>any</em> test engine using the Junit Platform.</p>
+</div>
+<div class="sect3">
+<h4 id="setup"><a class="anchor" href="#setup"></a>6.2.1. Setup</h4>
+<div class="paragraph">
+<p>In addition to <em>at least one</em> other test engine, you need the following artifacts and
+their dependencies on the classpath. See <a href="#dependency-metadata">Dependency Metadata</a> for details regarding
+group IDs, artifact IDs, and versions.</p>
+</div>
+<div class="sect4">
+<h5 id="explicit-dependencies-2"><a class="anchor" href="#explicit-dependencies-2"></a>Explicit Dependencies</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>junit-platform-suite-api</code> in <em>test</em> scope</p>
+</li>
+<li>
+<p><code>junit-platform-suite-engine</code> in <em>test runtime</em> scope: implementation of the
+<code>TestEngine</code> API for the declarative Junit Platform
+Suites</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Both dependencies are aggregated in <code>junit-platform-suite</code> which can be used in
+<em>test</em> scope.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="transitive-dependencies-2"><a class="anchor" href="#transitive-dependencies-2"></a>Transitive Dependencies</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>junit-platform-suite-commons</code> in <em>test</em> scope</p>
+</li>
+<li>
+<p><code>junit-platform-launcher</code> in <em>test</em> scope</p>
+</li>
+<li>
+<p><code>junit-platform-engine</code> in <em>test</em> scope</p>
+</li>
+<li>
+<p><code>junit-platform-commons</code> in <em>test</em> scope</p>
+</li>
+<li>
+<p><code>opentest4j</code> in <em>test</em> scope</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="test-suite"><a class="anchor" href="#test-suite"></a>6.2.2. Test Suite</h4>
+<div class="paragraph">
+<p>By annotating a class with <code>@Suite</code> it is marked as a test suite on the JUnit Platform.
+As seen in the following example, selector and filter annotations can then be used to
+control the contents of the suite.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.SelectPackages</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.Suite</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.SuiteDisplayName</span><span class="o">;</span>
+
+<span class="nd">@Suite</span>
+<span class="nd">@SuiteDisplayName</span><span class="o">(</span><span class="s">"JUnit Platform Suite Demo"</span><span class="o">)</span>
+<span class="nd">@SelectPackages</span><span class="o">(</span><span class="s">"example"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SuiteDemo</span> <span class="o">{</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Additional Configuration Options</div>
+There are more configuration options for discovering and filtering tests than just
+<code>@SelectPackages</code>. Please consult the Javadoc of the <code><a href="../api/org.junit.platform.suite.api/org/junit/platform/suite/api/package-summary.html">org.junit.platform.suite.api</a></code> package for
+further details.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="testkit"><a class="anchor" href="#testkit"></a>6.3. JUnit Platform Test Kit</h3>
 <div class="paragraph">
 <p>The <code>junit-platform-testkit</code> artifact provides support for executing a test plan on the
 JUnit Platform and then verifying the expected results. As of JUnit Platform 1.4, this
 support is limited to the execution of a single <code>TestEngine</code> (see <a href="#testkit-engine">Engine Test Kit</a>).</p>
 </div>
 <div class="sect3">
-<h4 id="testkit-engine"><a class="anchor" href="#testkit-engine"></a>6.2.1. Engine Test Kit</h4>
+<h4 id="testkit-engine"><a class="anchor" href="#testkit-engine"></a>6.3.1. Engine Test Kit</h4>
 <div class="paragraph">
-<p>The <code><a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></code> package provides support for executing a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code> for a
+<p>The <code>{testkit-engine-package}</code> package provides support for executing a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code> for a
 given <code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> running on the JUnit Platform and then accessing the results via a
 fluent API to verify the expected results. The key entry point into this API is the
-<code><a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/EngineTestKit.html">EngineTestKit</a></code> which provides static factory methods named <code>engine()</code> and <code>execute()</code>.
+<code>{EngineTestKit}</code> which provides static factory methods named <code>engine()</code> and <code>execute()</code>.
 It is recommended that you select one of the <code>engine()</code> variants to benefit from the
 fluent API for building a <code>LauncherDiscoveryRequest</code>.</p>
 </div>
@@ -9002,12 +9245,12 @@ may test your own <code>TestEngine</code> by supplying an instance of it to the
 </div>
 </div>
 <div class="sect3">
-<h4 id="testkit-engine-statistics"><a class="anchor" href="#testkit-engine-statistics"></a>6.2.2. Asserting Statistics</h4>
+<h4 id="testkit-engine-statistics"><a class="anchor" href="#testkit-engine-statistics"></a>6.3.2. Asserting Statistics</h4>
 <div class="paragraph">
 <p>One of the most common features of the Test Kit is the ability to assert statistics
 against events fired during the execution of a <code>TestPlan</code>. The following tests demonstrate
 how to assert statistics for <em>containers</em> and <em>tests</em> in the JUnit Jupiter <code>TestEngine</code>.
-For details on what statistics are available, consult the Javadoc for <code><a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/EventStatistics.html">EventStatistics</a></code>.</p>
+For details on what statistics are available, consult the Javadoc for <code>{EventStatistics}</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9092,11 +9335,11 @@ In the <code>verifyJupiterContainerStats()</code> test method, the counts for th
 </div>
 </div>
 <div class="sect3">
-<h4 id="testkit-engine-events"><a class="anchor" href="#testkit-engine-events"></a>6.2.3. Asserting Events</h4>
+<h4 id="testkit-engine-events"><a class="anchor" href="#testkit-engine-events"></a>6.3.3. Asserting Events</h4>
 <div class="paragraph">
 <p>If you find that <a href="#testkit-engine-statistics">asserting statistics</a> alone is insufficient
 for verifying the expected behavior of test execution, you can work directly with the
-recorded <code><a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html">Event</a></code> elements and perform assertions against them.</p>
+recorded <code>{Event}</code> elements and perform assertions against them.</p>
 </div>
 <div class="paragraph">
 <p>For example, if you want to verify the reason that the <code>skippedTest()</code> method in
@@ -9112,12 +9355,12 @@ follows.</p>
 <td class="content">
 <div class="paragraph">
 <p>The <code>assertThatEvents()</code> method in the following example is a shortcut for
-<code>org.assertj.core.api.Assertions.assertThat(events.list())</code> from the <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a> assertion
+<code>org.assertj.core.api.Assertions.assertThat(events.list())</code> from the {AssertJ} assertion
 library.</p>
 </div>
 <div class="paragraph">
 <p>For details on what <em>conditions</em> are available for use with AssertJ assertions against
-events, consult the Javadoc for <code><a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html">EventConditions</a></code>.</p>
+events, consult the Javadoc for <code>{EventConditions}</code>.</p>
 </div>
 </td>
 </tr>
@@ -9204,8 +9447,8 @@ events, consult the Javadoc for <code><a href="../api/org.junit.platform.testkit
 <td class="content">
 <div class="paragraph">
 <p>For details on what <em>conditions</em> are available for use with AssertJ assertions against
-events and execution results, consult the Javadoc for <code><a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html">EventConditions</a></code> and
-<code><a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/TestExecutionResultConditions.html">TestExecutionResultConditions</a></code>, respectively.</p>
+events and execution results, consult the Javadoc for <code>{EventConditions}</code> and
+<code>{TestExecutionResultConditions}</code>, respectively.</p>
 </div>
 </td>
 </tr>
@@ -9422,8 +9665,8 @@ classes, and methods.</p>
 <h3 id="api-evolution-version-and-status"><a class="anchor" href="#api-evolution-version-and-status"></a>7.1. API Version and Status</h3>
 <div class="paragraph">
 <p>Every published artifact has a version number <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code>, and all publicly
-available interfaces, classes, and methods are annotated with <a href="https://apiguardian-team.github.io/apiguardian/docs/current/api/">@API</a> from the
-<a href="https://github.com/apiguardian-team/apiguardian">@API Guardian</a> project. The annotation&#8217;s <code>status</code> attribute can be assigned one of the
+available interfaces, classes, and methods are annotated with {API} from the
+{API_Guardian} project. The annotation&#8217;s <code>status</code> attribute can be assigned one of the
 following values.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -9751,6 +9994,56 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherDiscoveryListeners</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConfigurationParameter</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConfigurationParameters</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectClasspathResource</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectClasspathResources</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectDirectories</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectFile</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectFiles</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectModules</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectUris</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Suite</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -9811,8 +10104,8 @@ since such APIs will likely be removed in an upcoming release.</p>
 <div class="sect2">
 <h3 id="api-evolution-tooling"><a class="anchor" href="#api-evolution-tooling"></a>7.4. @API Tooling Support</h3>
 <div class="paragraph">
-<p>The <a href="https://github.com/apiguardian-team/apiguardian">@API Guardian</a> project plans to provide tooling support for publishers and consumers
-of APIs annotated with <a href="https://apiguardian-team.github.io/apiguardian/docs/current/api/">@API</a>. For example, the tooling support will likely provide a
+<p>The {API_Guardian} project plans to provide tooling support for publishers and consumers
+of APIs annotated with {API}. For example, the tooling support will likely provide a
 means to check if JUnit APIs are being used in accordance with <code>@API</code> annotation
 declarations.</p>
 </div>
@@ -9856,7 +10149,7 @@ artifacts in the repositories were actually generated from this source code.</p>
 <div class="sect2">
 <h3 id="dependency-metadata"><a class="anchor" href="#dependency-metadata"></a>10.2. Dependency Metadata</h3>
 <div class="paragraph">
-<p>Artifacts for final releases and milestones are deployed to <a href="https://search.maven.org/">Maven Central</a>, and snapshot
+<p>Artifacts for final releases and milestones are deployed to {Maven_Central}, and snapshot
 artifacts are deployed to Sonatype&#8217;s <a href="https://oss.sonatype.org/content/repositories/snapshots">snapshots repository</a> under
 <a href="https://oss.sonatype.org/content/repositories/snapshots/org/junit/">/org/junit</a>.</p>
 </div>
@@ -9914,11 +10207,22 @@ by IDEs and build tools. See <a href="#launcher-api-listeners-reporting">JUnit P
 <p>Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
 environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to run the JUnit Platform</a> for details.</p>
 </dd>
+<dt class="hdlist1"><code>junit-platform-suite</code></dt>
+<dd>
+<p>JUnit Platform Suite artifact that transitively pulls in dependencies on
+<code>junit-platform-suite-api</code>, <code>junit-platform-suite-engine</code> for simplified
+dependency management in build tools such as Gradle and Maven.</p>
+</dd>
 <dt class="hdlist1"><code>junit-platform-suite-api</code></dt>
 <dd>
 <p>Annotations for configuring test suites on the JUnit Platform. Supported by the
-<a href="#running-tests-junit-platform-runner">JUnitPlatform runner</a> and possibly by
-third-party <code>TestEngine</code> implementations.</p>
+<a href="#junit-platform-suite-engine">JUnit Platform Suite Engine</a> and
+<a href="#running-tests-junit-platform-runner">JUnitPlatform runner</a>.</p>
+</dd>
+<dt class="hdlist1"><code>junit-platform-suite-engine</code></dt>
+<dd>
+<p>Engine to execute suites on the JUnit Platform. See
+<a href="#junit-platform-suite-engine">JUnit Platform Suite Engine</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-testkit</code></dt>
 <dd>
@@ -10064,7 +10368,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <h3 id="dependency-diagram"><a class="anchor" href="#dependency-diagram"></a>10.3. Dependency Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="1901" height="563">
+<img src="images/component-diagram.svg" alt="component diagram" width="2048" height="816">
 </div>
 </div>
 </div>
@@ -10074,7 +10378,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-02-08 12:36:27 UTC
+Last updated 2021-02-09 13:23:43 UTC
 </div>
 </div>
 <style>
