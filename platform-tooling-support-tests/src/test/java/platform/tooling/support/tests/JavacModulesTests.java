@@ -105,7 +105,7 @@ class JavacModulesTests {
 					.map(base::resolve) //
 					.map(Project::new) //
 					.collect(Collectors.toList());
-			assertEquals(15, projects.size());
+			assertEquals(18, projects.size());
 
 			args.add("--module-source-path");
 			args.add(projects.stream() //

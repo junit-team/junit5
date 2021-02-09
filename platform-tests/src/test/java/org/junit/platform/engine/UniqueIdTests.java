@@ -36,6 +36,7 @@ import org.junit.platform.engine.UniqueId.Segment;
 class UniqueIdTests {
 
 	private static final String ENGINE_ID = "junit-jupiter";
+	private static final String SUITE_ENGINE_ID = "junit-platform-suite";
 
 	@Nested
 	class Creation {
@@ -46,6 +47,13 @@ class UniqueIdTests {
 
 			assertEquals("[engine:junit-jupiter]", uniqueId.toString());
 			assertSegment(uniqueId.getSegments().get(0), "engine", "junit-jupiter");
+		}
+
+		@Test
+		void engineIdCanBeAppended() {
+			var suiteEngineId = UniqueId.forEngine(SUITE_ENGINE_ID);
+			var uniqueId = suiteEngineId.appendEngine(ENGINE_ID);
+			assertSegment(uniqueId.getSegments().get(1), "engine", "junit-jupiter");
 		}
 
 		@Test

@@ -16,6 +16,8 @@ dependencies {
 	api(project(":junit-platform-launcher"))
 	api(project(":junit-platform-suite-api"))
 
+	implementation(project(":junit-platform-suite-commons"))
+
 	testImplementation(testFixtures(project(":junit-platform-engine")))
 	testImplementation(testFixtures(project(":junit-platform-launcher")))
 }

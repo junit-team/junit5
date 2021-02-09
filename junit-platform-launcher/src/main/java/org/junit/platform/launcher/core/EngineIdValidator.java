@@ -61,6 +61,10 @@ class EngineIdValidator {
 			validateWellKnownClassName(testEngine, "org.junit.vintage.engine.VintageTestEngine");
 			return true;
 		}
+		if (engineId.equals("junit-platform-suite")) {
+			validateWellKnownClassName(testEngine, "org.junit.platform.suite.engine.SuiteTestEngine");
+			return true;
+		}
 		return false;
 	}
 

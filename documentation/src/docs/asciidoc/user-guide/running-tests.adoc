@@ -630,6 +630,7 @@ You need the following artifacts and their dependencies on the classpath. See
 ===== Transitive Dependencies
 
 * `junit-platform-suite-api` in _test_ scope
+* `junit-platform-suite-commons` in _test_ scope
 * `junit-platform-launcher` in _test_ scope
 * `junit-platform-engine` in _test_ scope
 * `junit-platform-commons` in _test_ scope

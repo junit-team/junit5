@@ -26,24 +26,10 @@ import org.apiguardian.api.API;
  * {@link org.junit.platform.engine.TestEngine TestEngines} to be included
  * when running a test suite on the JUnit Platform.
  *
- * <h4>JUnit 4 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
- * {@code @RunWith(JUnitPlatform.class)}.
- *
  * @since 1.0
- * @see SuiteDisplayName
- * @see UseTechnicalNames
- * @see SelectPackages
- * @see SelectClasses
- * @see IncludeClassNamePatterns
- * @see ExcludeClassNamePatterns
- * @see IncludePackages
- * @see ExcludePackages
- * @see IncludeTags
- * @see ExcludeTags
- * @see ExcludeEngines
- * @see org.junit.platform.launcher.EngineFilter#includeEngines
+ * @see Suite
  * @see org.junit.platform.runner.JUnitPlatform
+ * @see org.junit.platform.launcher.EngineFilter#includeEngines
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
