@@ -164,7 +164,7 @@ public class DynamicTest extends DynamicNode {
 	 * {@link #stream(Stream, ThrowingConsumer)} as an alternative.
 	 *
 	 * <p>The given {@code inputGenerator} is responsible for generating
-	 * input values and test names. A {@link DynamicTest} will be added to
+	 * input values and display names. A {@link DynamicTest} will be added to
 	 * the resulting stream for each dynamically generated input value,
 	 * using the given {@code testExecutor}.
 	 *
@@ -199,7 +199,7 @@ public class DynamicTest extends DynamicNode {
 	 * {@link #stream(Iterator, ThrowingConsumer)} as an alternative.
 	 *
 	 * <p>The given {@code inputStream} is responsible for supplying input values
-	 * and test names. A {@link DynamicTest} will be added to the resulting stream for
+	 * and display names. A {@link DynamicTest} will be added to the resulting stream for
 	 * each dynamically supplied input value, using the given {@code testExecutor}.
 	 *
 	 * @param inputStream a {@code Stream} that supplies dynamic {@code Named}
