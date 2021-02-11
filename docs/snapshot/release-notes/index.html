@@ -664,8 +664,7 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>SummaryGeneratingListener</code> is now thread-safe and can handle concurrently failing
-tests.</p>
+<p><code>SummaryGeneratingListener</code> is now thread-safe and can handle concurrently failing tests.</p>
 </li>
 </ul>
 </div>
@@ -712,9 +711,9 @@ registered test engines.</p>
 longer store <code>String</code> representations of unique IDs.</p>
 </li>
 <li>
-<p>Improved of <code>ExclusiveResource</code> handling: if a <code>Node</code> has only read locks and no
-read-write locks, then descendants are not forced into <code>SAME_THREAD</code> execution and can
-run concurrently.</p>
+<p>Improved <code>ExclusiveResource</code> handling: if a <code>Node</code> has only read locks and no read-write
+locks, then descendants are not forced into <code>SAME_THREAD</code> execution and can run
+concurrently.</p>
 </li>
 <li>
 <p>Tools that make multiple calls to the <code>Launcher</code> API should now create a
@@ -727,7 +726,7 @@ once via the new <code>LauncherSessionListener</code> interface that can be regi
 Platform Launcher.</p>
 </li>
 <li>
-<p>Added additional selectors to the <code>junit-platform-suite-api</code></p>
+<p>Additional selectors in the suite API in the <code>junit-platform-suite-api</code> module.</p>
 </li>
 </ul>
 </div>
@@ -754,8 +753,8 @@ that provides access to the dynamic test executable via
 <div class="ulist">
 <ul>
 <li>
-<p>Top-level test classes can now be ordered by passing the fully-qualified name of a
-class implementing <code>ClassOrderer</code> as the value of the new
+<p>Top-level test classes can now be ordered by passing the fully-qualified name of a class
+implementing <code>ClassOrderer</code> as the value of the new
 <code>junit.jupiter.testclass.order.default</code> configuration parameter.</p>
 </li>
 <li>
@@ -789,12 +788,12 @@ data structures.</p>
 </li>
 <li>
 <p>In parameterized tests with <code>@MethodSource</code> or <code>@ArgumentSource</code>, arguments can now have
-optional names. When the argument is included in the display name of an iteration, this
-name will be used instead of the value.</p>
+optional names (supplied via the new <code>Named</code> API). When the argument is included in the
+display name of an iteration, this name will be used instead of the value.</p>
 </li>
 <li>
-<p><code>DynamicTests.stream()</code> can now consume <code>Named</code> input and will use each name-value
-pair as the display name and value for each generated dynamic test (see
+<p><code>DynamicTests.stream()</code> can now consume <code>Named</code> input and will use each name-value pair
+as the display name and value for each generated dynamic test (see
 <a href="../user-guide/index.html#writing-tests-dynamic-tests-examples">User Guide</a> for details).</p>
 </li>
 </ul>
@@ -965,7 +964,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-02-11 17:45:13 UTC
+Last updated 2021-02-11 17:58:45 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

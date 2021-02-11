@@ -57,7 +57,6 @@
 14e47861fcf1924b5f1478535ce03931  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 1506e94dba1a17ba73a4a5d3965e5d96  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsPotentialTestContainer.java
 1522cd3bd05300e771c4d46920c3b443  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DirectorySelector.java
-154ed182f1372f27f0b7dc71440645c8  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 156efa3fcfb67eeabc4a25fffcca11d9  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectModules.java
 16677cb0d70b0ac2544b3228611f3fcb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
 168c4017ad0e54b809ed13b9b74c66cb  junit-platform-engine/src/main/java/org/junit/platform/engine/TestSource.java
@@ -529,6 +528,7 @@ b711113ecc1891724808ce0361a863ed  junit-jupiter-engine/src/main/java/org/junit/j
 b780b79cf3eb0930dee64450ab337da4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertIterableEquals.java
 b7d2932e4e5c229f759b1e298b6fc938  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClassSelector.java
 b81c8be322768efefcce20a5cd3b9cbb  documentation/src/test/java/example/JUnit4Tests.java
+b871c72f38df1c6a0cec5b95fc89ec53  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 b878dc62356b34a1920b843e7ca50d5c  documentation/src/test/java/example/RepeatedTestsDemo.java
 b8971226760404fcbc29a88ec1243f68  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestNameFormatter.java
 b8ab4c847b5a0d343d1a1fbcf1a2f1de  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java
