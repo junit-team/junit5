@@ -15,7 +15,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* `SummaryGeneratingListener` is now thread-safe and can handle concurrently failing
+  tests.
 
 ==== Deprecations and Breaking Changes
 

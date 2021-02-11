@@ -15,12 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
@@ -218,6 +220,27 @@ class SummaryGenerationTests {
 			() -> assertFalse(failuresString.contains("Caused by: "),
 				"'Caused by: ' omitted because of Circular reference") //
 		);
+	}
+
+	@RepeatedTest(10)
+	void reportingConcurrentlyFinishedTests() throws Exception {
+		var numThreads = 250;
+		var testIdentifier = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
+			@Override
+			public Optional<TestSource> getSource() {
+				return Optional.of(ClassSource.from(Object.class));
+			}
+		});
+		var result = TestExecutionResult.failed(new RuntimeException());
+
+		listener.testPlanExecutionStarted(testPlan);
+		executeConcurrently(numThreads, () -> {
+			listener.executionStarted(testIdentifier);
+			listener.executionFinished(testIdentifier, result);
+		});
+		listener.testPlanExecutionFinished(testPlan);
+
+		assertThat(listener.getSummary().getFailures()).hasSize(numThreads);
 	}
 
 	@SuppressWarnings("deprecation")
