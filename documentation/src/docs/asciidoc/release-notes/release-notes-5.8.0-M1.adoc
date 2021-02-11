@@ -1,9 +1,15 @@
 [[release-notes-5.8.0-M1]]
 == 5.8.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* February 11, 2021
 
-*Scope:* ❓
+*Scope:*
+
+* Declarative test suites
+* Test class ordering
+* `LauncherSession` and accompanying listener
+* More fine-grained JFR events
+* Memory and performance optimizations
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/51?closed=1+[5.8 M1] milestone page in the JUnit repository
@@ -50,12 +56,9 @@ on GitHub.
   Platform Launcher.
 * Added additional selectors to the `junit-platform-suite-api`
 
+
 [[release-notes-5.8.0-M1-junit-jupiter]]
 === JUnit Jupiter
-
-==== Bug Fixes
-
-* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -76,7 +79,6 @@ on GitHub.
 * `assertNull()` failure messages now include the actual object's type if the `toString()`
   implementation for the actual object returns `null` or `"null"`. This avoids the
   generation of confusing failure messages such as `expected <null> but was <null>`.
-
 * Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
   underscores as in some JVM languages, to improve readability of long numbers like
   `700_000_000`.
@@ -96,14 +98,6 @@ on GitHub.
 
 [[release-notes-5.8.0-M1-junit-vintage]]
 === JUnit Vintage
-
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
