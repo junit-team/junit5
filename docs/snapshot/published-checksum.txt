@@ -57,6 +57,7 @@
 14e47861fcf1924b5f1478535ce03931  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 1506e94dba1a17ba73a4a5d3965e5d96  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsPotentialTestContainer.java
 1522cd3bd05300e771c4d46920c3b443  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DirectorySelector.java
+154ed182f1372f27f0b7dc71440645c8  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 156efa3fcfb67eeabc4a25fffcca11d9  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectModules.java
 16677cb0d70b0ac2544b3228611f3fcb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
 168c4017ad0e54b809ed13b9b74c66cb  junit-platform-engine/src/main/java/org/junit/platform/engine/TestSource.java
@@ -623,7 +624,6 @@ d4fe811c167b6bbaf3f427b4a26faa0b  junit-jupiter-api/src/main/java/org/junit/jupi
 d594a948855b00dab1f8418e1a3540b6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariables.java
 d5faf51f203d8e60ddc3f69aa5476f90  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertArrayEquals.java
 d662b8c353004e73350e2c16c891e268  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
-d6752f85464ac01386cce1d840b0a66e  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M1.adoc
 d67601c515227a5c83a01bd8262e2297  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdStringifier.java
 d77dc8fc60ee1e687e82d5c9389693fe  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/ClassSelectorResolver.java
 d79307778567135290a35fbe99de194d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultMethodOrdererContext.java
