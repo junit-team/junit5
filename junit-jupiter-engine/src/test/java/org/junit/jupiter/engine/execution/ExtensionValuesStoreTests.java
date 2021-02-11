@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContextException;
-import org.junit.platform.commons.test.ConcurrencyTestingUtils;
 
 /**
  * Unit tests for {@link ExtensionValuesStore}.
