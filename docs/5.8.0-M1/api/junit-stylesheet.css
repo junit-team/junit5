@@ -1,0 +1,131 @@
+/*
+ * CSS customizations for JUnit
+ */
+
+@import url('https://fonts.googleapis.com/css?family=Fira+Mono:400,700|Open+Sans:300,300i,400,400i,700,700i');
+
+body, .title {
+    color:#333333;
+}
+
+body, div.block, .deprecationBlock, button {
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+}
+
+.title {
+    font-weight: 300;
+    font-size: 32px;
+    margin-top: 0;
+}
+
+a:link, a:visited {
+    text-decoration:none;
+    color:#dc524a;
+}
+
+a[href]:hover, a[href]:focus {
+    text-decoration:none;
+    color:#b62b23;
+}
+
+pre, code, tt, dt code, table tr td dt code {
+    font-family: "Fira Mono", monospace;
+}
+
+.bar {
+    background-color:#25a162;
+}
+
+.topNav {
+    background-color:#25a162;
+}
+
+.bottomNav {
+    background-color:#25a162;
+}
+
+.subNav {
+    background-color:#f5f5f5;
+}
+
+.topNav a:hover, .bottomNav a:hover {
+    text-decoration:underline;
+    color:inherit;
+}
+
+.navBarCell1Rev {
+    background-color:#fff;
+    color:#dc524a;
+    border-radius: 6px;
+}
+
+.indexNav {
+    background-color:#eee;
+}
+
+div.details ul.blockList ul.blockList ul.blockList li.blockList h4, div.details ul.blockList ul.blockList ul.blockListLast li.blockList h4 {
+    background-color:#ddd;
+    border:1px solid #ddd;
+}
+
+ul.blockList ul.blockList ul.blockList li.blockList h3 {
+    background-color:#ddd;
+    border:1px solid #ddd;
+}
+
+.constantsSummary caption a:link, .constantsSummary caption a:visited,
+.useSummary caption a:link, .useSummary caption a:visited {
+    color:#fff;
+}
+
+.overviewSummary caption span, .memberSummary caption span, .typeSummary caption span,
+.useSummary caption span, .constantsSummary caption span, .deprecatedSummary caption span,
+.requiresSummary caption span, .packagesSummary caption span, .providesSummary caption span,
+.usesSummary caption span,
+.memberSummary caption span.activeTableTab span, .packagesSummary caption span.activeTableTab span,
+.overviewSummary caption span.activeTableTab span, .typeSummary caption span.activeTableTab span,
+.overviewSummary .tabEnd, .memberSummary .tabEnd, .typeSummary .tabEnd,
+.useSummary .tabEnd, .constantsSummary .tabEnd, .deprecatedSummary .tabEnd,
+.requiresSummary .tabEnd, .packagesSummary .tabEnd, .providesSummary .tabEnd, .usesSummary .tabEnd,
+.memberSummary .activeTableTab .tabEnd, .packagesSummary .activeTableTab .tabEnd,
+.overviewSummary .activeTableTab .tabEnd, .typeSummary .activeTableTab .tabEnd {
+    background-color:#dc524a;
+    color: #fff;
+}
+
+.memberSummary caption span.tableTab span, .packagesSummary caption span.tableTab span,
+.overviewSummary caption span.tableTab span, .typeSummary caption span.tableTab span,
+.memberSummary .tableTab .tabEnd, .packagesSummary .tableTab .tabEnd,
+.overviewSummary .tableTab .tabEnd, .typeSummary .tableTab .tabEnd,
+.ui-autocomplete-category {
+    background-color:#aaa;
+    color: #fff;
+}
+
+th.colFirst, th.colSecond, th.colLast, th.colConstructorName, th.colDeprecatedItemName, .constantsSummary th,
+.packagesSummary th {
+    background:#eee;
+}
+
+.tableSubHeadingColor {
+    background-color:#eee;
+}
+
+.altColor, .altColor th {
+    background-color:#fff;
+}
+
+.rowColor, .rowColor th {
+    background-color:#eee;
+}
+
+.block {
+    margin:0px 10px 5px 0px;
+}
+
+th.colFirst, th.colSecond, th.colLast, th.colConstructorName, th.colDeprecatedItemName, .constantsSummary th,
+.packagesSummary th, .overviewSummary td, .memberSummary td, .typeSummary td,
+.useSummary td, .constantsSummary td, .deprecatedSummary td,
+.requiresSummary td, .packagesSummary td, .providesSummary td, .usesSummary td {
+    padding-left:7px;
+}
