@@ -37,7 +37,7 @@ class VintageMavenIntegrationTests {
 	}
 
 	@ParameterizedTest(name = "{0}")
-	@ValueSource(strings = { "4.12", "4.13.1" })
+	@ValueSource(strings = { "4.12", "4.13.2" })
 	void supportedVersions(String version) {
 		var result = run(version);
 
