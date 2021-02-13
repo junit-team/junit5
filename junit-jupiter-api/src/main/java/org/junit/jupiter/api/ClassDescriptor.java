@@ -35,7 +35,7 @@ public interface ClassDescriptor {
 	Class<?> getTestClass();
 
 	/**
-	 * Get the display name for this descriptor's {@link #getClass() class}.
+	 * Get the display name for this descriptor's {@link #getTestClass() class}.
 	 *
 	 * @return the display name for this descriptor's class; never {@code null}
 	 * or blank
