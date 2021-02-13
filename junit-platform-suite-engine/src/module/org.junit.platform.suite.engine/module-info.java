@@ -8,6 +8,13 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * Provides a {@linkplain org.junit.platform.engine.TestEngine} for running
+ * declarative test suites.
+ *
+ * @since 1.8
+ * @provides org.junit.platform.engine.TestEngine
+ */
 module org.junit.platform.suite.engine {
 	requires org.apiguardian.api;
 	requires org.junit.platform.suite.api;
