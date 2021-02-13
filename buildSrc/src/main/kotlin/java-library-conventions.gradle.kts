@@ -222,16 +222,21 @@ tasks.compileTestJava {
 }
 
 inner class ModulePathArgumentProvider : CommandLineArgumentProvider, Named {
-	@get:CompileClasspath val modulePath: Provider<Configuration> = configurations.compileClasspath
+	@get:CompileClasspath
+	val modulePath: Provider<Configuration> = configurations.compileClasspath
 	override fun asArguments() = listOf("--module-path", modulePath.get().asPath)
+	@Internal
 	override fun getName() = "module-path"
 }
 
 inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider, Named {
 
-	@get:Input val module: String = it.javaModuleName
+	@get:Input
+	val module: String = it.javaModuleName
 
-	@get:InputFiles @get:PathSensitive(RELATIVE) val patch: Provider<FileCollection> = provider {
+	@get:InputFiles
+	@get:PathSensitive(RELATIVE)
+	val patch: Provider<FileCollection> = provider {
 		if (it == project)
 			files(sourceSets.matching { it.name.startsWith("main") }.map { it.output })
 		else
@@ -246,6 +251,7 @@ inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvid
 		return listOf("--patch-module", "$module=$path")
 	}
 
+	@Internal
 	override fun getName() = "patch-module($module)"
 }
 
