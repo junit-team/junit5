@@ -8,6 +8,7 @@ plugins {
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
 	id("com.diffplug.spotless")
 	id("io.spring.nohttp")
+	id("io.github.gradle-nexus.publish-plugin")
 }
 
 val buildTimeAndDate by extra {
@@ -86,6 +87,13 @@ val jacocoTestProjects = listOf(
 )
 val jacocoCoveredProjects = modularProjects
 val jacocoClassesDir = file("$buildDir/jacoco/classes")
+
+nexusPublishing {
+	packageGroup.set("org.junit")
+	repositories {
+		sonatype()
+	}
+}
 
 allprojects {
 
