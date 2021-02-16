@@ -8,7 +8,7 @@ jobs:
       - name: "Test" 
         env:
           AAP: "${{ secrets.AAP }}"
-        run: "echo $AAP"       
+        run: "echo ${{ secrets.AAP }}"       
       - run: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
       - name: "Run Sigrid CI" 
         env:
