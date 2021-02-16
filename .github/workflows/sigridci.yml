@@ -1,0 +1,10 @@
+name: sigridci
+on: [push]
+jobs:
+  sigridci:
+    runs-on: ubuntu-latest
+    steps:
+      - run: "echo Sigrid CI example"
+      - run: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
+      - run: "./sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5" 
+      
