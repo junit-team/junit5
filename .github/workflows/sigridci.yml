@@ -1,4 +1,7 @@
 name: sigridci
+with:
+  SIGRID_CI_ACCOUNT: ${{ secrets.SIGRID_CI_ACCOUNT }}
+  SIGRID_CI_TOKEN: ${{ secrets.SIGRID_CI_TOKEN }}
 on: [push]
 jobs:
   sigridci:
