@@ -5,10 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: "echo Sigrid CI example"
-      - name: "Test" 
-        env:
-          AAP: "${{ secrets.AAP }}"
-        run: "echo ${{ secrets.AAP }}"       
       - run: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
       - name: "Run Sigrid CI" 
         env:
