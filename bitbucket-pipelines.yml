@@ -1,0 +1,9 @@
+image: python:3.9-buster
+
+pipelines:
+  default:
+  - step:
+      name: Sigrid CI
+      script:
+      - "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
+      - "./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5"
