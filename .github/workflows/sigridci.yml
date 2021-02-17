@@ -4,7 +4,6 @@ jobs:
   sigridci:
     runs-on: ubuntu-latest
     steps:
-      - run: "echo Sigrid CI example"
       - run: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
       - name: "Run Sigrid CI" 
         env:
