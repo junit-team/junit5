@@ -212,11 +212,12 @@ public class Assumptions {
 	 * Execute the supplied {@link Executable}, but only if the supplied
 	 * assumption is valid.
 	 *
-	 * <p>If the assumption is invalid, this method does nothing.
-	 *
-	 * <p>If the {@code executable} throws an exception, it will be rethrown
-	 * <em>as is</em> but  {@link ExceptionUtils#throwAsUncheckedException masked}
-	 * as an unchecked exception.
+	 * <p>Unlike the other assumption methods, this method will not abort the test.
+	 * If the assumption is invalid, this method does nothing. If the assumption is
+	 * valid and the {@code executable} throws an exception, it will be treated like
+	 * a regular test <em>error</em>. That exception will be rethrown <em>as is</em>
+	 * but {@link ExceptionUtils#throwAsUncheckedException masked} as an unchecked
+	 * exception.
 	 *
 	 * @param assumptionSupplier the supplier of the assumption to validate
 	 * @param executable the block of code to execute if the assumption is valid
@@ -230,11 +231,12 @@ public class Assumptions {
 	 * Execute the supplied {@link Executable}, but only if the supplied
 	 * assumption is valid.
 	 *
-	 * <p>If the assumption is invalid, this method does nothing.
-	 *
-	 * <p>If the {@code executable} throws an exception, it will be rethrown
-	 * <em>as is</em> but  {@link ExceptionUtils#throwAsUncheckedException masked}
-	 * as an unchecked exception.
+	 * <p>Unlike the other assumption methods, this method will not abort the test.
+	 * If the assumption is invalid, this method does nothing. If the assumption is
+	 * valid and the {@code executable} throws an exception, it will be treated like
+	 * a regular test <em>error</em>. That exception will be rethrown <em>as is</em>
+	 * but {@link ExceptionUtils#throwAsUncheckedException masked} as an unchecked
+	 * exception.
 	 *
 	 * @param assumption the assumption to validate
 	 * @param executable the block of code to execute if the assumption is valid
