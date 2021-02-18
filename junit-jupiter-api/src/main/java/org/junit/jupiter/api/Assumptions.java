@@ -215,7 +215,7 @@ public class Assumptions {
 	 * <p>Unlike the other assumption methods, this method will not abort the test.
 	 * If the assumption is invalid, this method does nothing. If the assumption is
 	 * valid and the {@code executable} throws an exception, it will be treated like
-	 * a regular test <em>error</em>. That exception will be rethrown <em>as is</em>
+	 * a regular test <em>failure</em>. That exception will be rethrown <em>as is</em>
 	 * but {@link ExceptionUtils#throwAsUncheckedException masked} as an unchecked
 	 * exception.
 	 *
@@ -234,7 +234,7 @@ public class Assumptions {
 	 * <p>Unlike the other assumption methods, this method will not abort the test.
 	 * If the assumption is invalid, this method does nothing. If the assumption is
 	 * valid and the {@code executable} throws an exception, it will be treated like
-	 * a regular test <em>error</em>. That exception will be rethrown <em>as is</em>
+	 * a regular test <em>failure</em>. That exception will be rethrown <em>as is</em>
 	 * but {@link ExceptionUtils#throwAsUncheckedException masked} as an unchecked
 	 * exception.
 	 *
