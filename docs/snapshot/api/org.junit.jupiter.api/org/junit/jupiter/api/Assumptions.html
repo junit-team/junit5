@@ -504,11 +504,12 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Execute the supplied <a href="function/Executable.html" title="interface in org.junit.jupiter.api.function"><code>Executable</code></a>, but only if the supplied
  assumption is valid.
 
- <p>If the assumption is invalid, this method does nothing.
-
- <p>If the <code>executable</code> throws an exception, it will be rethrown
- <em>as is</em> but  <a href="../../../../../org.junit.platform.commons/org/junit/platform/commons/util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)"><code>masked</code></a>
- as an unchecked exception.</div>
+ <p>Unlike the other assumption methods, this method will not abort the test.
+ If the assumption is invalid, this method does nothing. If the assumption is
+ valid and the <code>executable</code> throws an exception, it will be treated like
+ a regular test <em>failure</em>. That exception will be rethrown <em>as is</em>
+ but <a href="../../../../../org.junit.platform.commons/org/junit/platform/commons/util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)"><code>masked</code></a> as an unchecked
+ exception.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>assumptionSupplier</code> - the supplier of the assumption to validate</dd>
@@ -526,11 +527,12 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Execute the supplied <a href="function/Executable.html" title="interface in org.junit.jupiter.api.function"><code>Executable</code></a>, but only if the supplied
  assumption is valid.
 
- <p>If the assumption is invalid, this method does nothing.
-
- <p>If the <code>executable</code> throws an exception, it will be rethrown
- <em>as is</em> but  <a href="../../../../../org.junit.platform.commons/org/junit/platform/commons/util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)"><code>masked</code></a>
- as an unchecked exception.</div>
+ <p>Unlike the other assumption methods, this method will not abort the test.
+ If the assumption is invalid, this method does nothing. If the assumption is
+ valid and the <code>executable</code> throws an exception, it will be treated like
+ a regular test <em>failure</em>. That exception will be rethrown <em>as is</em>
+ but <a href="../../../../../org.junit.platform.commons/org/junit/platform/commons/util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)"><code>masked</code></a> as an unchecked
+ exception.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>assumption</code> - the assumption to validate</dd>
