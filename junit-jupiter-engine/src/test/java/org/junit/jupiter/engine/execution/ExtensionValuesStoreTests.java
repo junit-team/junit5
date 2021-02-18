@@ -10,22 +10,16 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -300,7 +294,7 @@ public class ExtensionValuesStoreTests {
 		}
 
 		@Test
-		void simulateRaceConditionInGetOrComputeIfAbsent() {
+		void simulateRaceConditionInGetOrComputeIfAbsent() throws Exception {
 			int threads = 10;
 			AtomicInteger counter = new AtomicInteger();
 			ExtensionValuesStore localStore = new ExtensionValuesStore(null);
@@ -310,30 +304,6 @@ public class ExtensionValuesStoreTests {
 
 			assertEquals(1, counter.get());
 			assertThat(values).hasSize(threads).containsOnly(1);
-		}
-	}
-
-	private <T> List<T> executeConcurrently(int threads, Supplier<T> supplier) {
-		ExecutorService executorService = Executors.newFixedThreadPool(threads);
-		try {
-			CountDownLatch latch = new CountDownLatch(threads);
-			List<CompletableFuture<T>> futures = new ArrayList<>();
-			for (int i = 0; i < threads; i++) {
-				futures.add(CompletableFuture.supplyAsync(() -> {
-					latch.countDown();
-					try {
-						latch.await();
-					}
-					catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-					}
-					return supplier.get();
-				}, executorService));
-			}
-			return futures.stream().map(CompletableFuture::join).collect(toList());
-		}
-		finally {
-			executorService.shutdown();
 		}
 	}
 

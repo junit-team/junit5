@@ -12,7 +12,9 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -60,8 +62,19 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
+		return this.methodContext.resolve(parameterContext, extractPayloads(this.arguments));
+	}
 
-		return this.methodContext.resolve(parameterContext, this.arguments);
+	@SuppressWarnings("unchecked")
+	private Object[] extractPayloads(Object[] arguments) {
+		return Arrays.stream(arguments) //
+				.map(argument -> {
+					if (argument instanceof Named) {
+						return ((Named<Object>) argument).getPayload();
+					}
+					return argument;
+				}) //
+				.toArray();
 	}
 
 }

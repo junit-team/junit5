@@ -13,6 +13,7 @@ pluginManagement {
 		id("org.asciidoctor.jvm.pdf") version settings.extra["asciidoctor.plugin.version"] as String
 		id("me.champeau.gradle.jmh") version settings.extra["jmh.plugin.version"] as String
 		id("io.spring.nohttp") version settings.extra["nohttp.plugin.version"] as String
+		id("io.github.gradle-nexus.publish-plugin") version settings.extra["nexus-publish.plugin.version"] as String
 	}
 }
 
@@ -97,7 +98,10 @@ include("junit-platform-jfr")
 include("junit-platform-launcher")
 include("junit-platform-reporting")
 include("junit-platform-runner")
+include("junit-platform-suite")
 include("junit-platform-suite-api")
+include("junit-platform-suite-commons")
+include("junit-platform-suite-engine")
 include("junit-platform-testkit")
 include("junit-vintage-engine")
 include("platform-tests")

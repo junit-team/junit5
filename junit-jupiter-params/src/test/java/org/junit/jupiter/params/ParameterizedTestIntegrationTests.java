@@ -46,6 +46,7 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -636,6 +637,15 @@ class ParameterizedTestIntegrationTests {
 				methodParameterTypes);
 		}
 
+		@Test
+		void namedParameters() {
+			execute("namedParameters", String.class).allEvents().assertThatEvents() //
+					.haveAtLeast(1,
+						event(test(), displayName("cool name"), finishedWithFailure(message("parameter value")))) //
+					.haveAtLeast(1,
+						event(test(), displayName("default name"), finishedWithFailure(message("default name"))));
+		}
+
 	}
 
 	@Nested
@@ -1020,6 +1030,12 @@ class ParameterizedTestIntegrationTests {
 			fail(Arrays.deepToString(array));
 		}
 
+		@MethodSourceTest
+		@Order(13)
+		void namedParameters(String string) {
+			fail(string);
+		}
+
 		// ---------------------------------------------------------------------
 
 		static Stream<Arguments> emptyMethodSource() {
@@ -1075,6 +1091,10 @@ class ParameterizedTestIntegrationTests {
 		static Stream<Object[][]> streamOfTwoDimensionalObjectArrays() {
 			return Stream.of(new Object[][] { { "one", 2 }, { "three", 4 } },
 				new Object[][] { { "five", 6 }, { "seven", 8 } });
+		}
+
+		static Stream<Arguments> namedParameters() {
+			return Stream.of(arguments(Named.of("cool name", "parameter value")), arguments("default name"));
 		}
 
 		// ---------------------------------------------------------------------

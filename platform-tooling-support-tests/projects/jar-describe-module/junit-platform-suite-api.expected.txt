@@ -2,3 +2,4 @@ org.junit.platform.suite.api@${platformVersion} jar:file:.+junit-platform-suite-
 exports org.junit.platform.suite.api
 requires java.base mandated
 requires org.apiguardian.api transitive
+requires org.junit.platform.commons transitive

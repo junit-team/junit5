@@ -32,6 +32,7 @@ class JUnit4VersionCheckTests {
 		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.12"));
 		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.13"));
 		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.13.1"));
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.13.2"));
 	}
 
 	/**

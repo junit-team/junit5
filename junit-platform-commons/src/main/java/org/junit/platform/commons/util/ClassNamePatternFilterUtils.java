@@ -31,9 +31,9 @@ import org.apiguardian.api.API;
  * itself. <strong>Any usage by external parties is not supported.</strong>
  * Use at your own risk!
  *
- * @since 5.7
+ * @since 1.7
  */
-@API(status = INTERNAL, since = "5.7")
+@API(status = INTERNAL, since = "1.7")
 public class ClassNamePatternFilterUtils {
 
 	private ClassNamePatternFilterUtils() {

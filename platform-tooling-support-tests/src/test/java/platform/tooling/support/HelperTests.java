@@ -41,7 +41,10 @@ class HelperTests {
 			"junit-platform-launcher", //
 			"junit-platform-reporting", //
 			"junit-platform-runner", //
+			"junit-platform-suite", //
 			"junit-platform-suite-api", //
+			"junit-platform-suite-commons", //
+			"junit-platform-suite-engine", //
 			"junit-platform-testkit", //
 			"junit-vintage-engine"//
 		), Helper.loadModuleDirectoryNames());

@@ -8,6 +8,7 @@ plugins {
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
 	id("com.diffplug.spotless")
 	id("io.spring.nohttp")
+	id("io.github.gradle-nexus.publish-plugin")
 }
 
 val buildTimeAndDate by extra {
@@ -42,7 +43,10 @@ val platformProjects by extra(listOf(
 		project(":junit-platform-launcher"),
 		project(":junit-platform-reporting"),
 		project(":junit-platform-runner"),
+		project(":junit-platform-suite"),
 		project(":junit-platform-suite-api"),
+		project(":junit-platform-suite-commons"),
+		project(":junit-platform-suite-engine"),
 		project(":junit-platform-testkit")
 ))
 
@@ -76,11 +80,20 @@ val jacocoTestProjects = listOf(
 		project(":junit-jupiter-migrationsupport"),
 		project(":junit-jupiter-params"),
 		project(":junit-platform-runner"),
+		project(":junit-platform-suite-commons"),
+		project(":junit-platform-suite-engine"),
 		project(":junit-vintage-engine"),
 		project(":platform-tests")
 )
 val jacocoCoveredProjects = modularProjects
 val jacocoClassesDir = file("$buildDir/jacoco/classes")
+
+nexusPublishing {
+	packageGroup.set("org.junit")
+	repositories {
+		sonatype()
+	}
+}
 
 allprojects {
 

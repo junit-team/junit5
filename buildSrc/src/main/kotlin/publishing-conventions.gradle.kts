@@ -1,9 +1,6 @@
-import java.time.Duration
-
 plugins {
 	`maven-publish`
 	signing
-	id("de.marcphilipp.nexus-publish")
 }
 
 val isSnapshot = project.version.toString().contains("SNAPSHOT")
@@ -26,15 +23,6 @@ signing {
 tasks.withType<Sign>().configureEach {
 	onlyIf {
 		!isSnapshot // Gradle Module Metadata currently does not support signing snapshots
-	}
-}
-
-nexusPublishing {
-	connectTimeout.set(Duration.ofMinutes(2))
-	clientTimeout.set(Duration.ofMinutes(2))
-	packageGroup.set("org.junit")
-	repositories {
-		sonatype()
 	}
 }
 

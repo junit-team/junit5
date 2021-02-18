@@ -15,6 +15,7 @@
  */
 module org.junit.platform.suite.api {
 	requires transitive org.apiguardian.api;
+	requires transitive org.junit.platform.commons;
 
 	exports org.junit.platform.suite.api;
 }

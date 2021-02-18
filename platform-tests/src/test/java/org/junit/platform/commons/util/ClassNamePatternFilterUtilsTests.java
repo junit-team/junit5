@@ -30,7 +30,7 @@ import org.junit.platform.launcher.TestExecutionListener;
 /**
  * Unit tests for {@link ClassNamePatternFilterUtils}.
  *
- * @since 5.7
+ * @since 1.7
  */
 @TestInstance(Lifecycle.PER_CLASS)
 class ClassNamePatternFilterUtilsTests {

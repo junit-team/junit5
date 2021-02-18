@@ -551,6 +551,32 @@ class AssertEqualsAssertionsTests {
 	}
 
 	@Test
+	void assertEqualsWithObjectWithNullStringReturnedFromToStringVsNull() {
+		try {
+			assertEquals("null", null);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "expected: java.lang.String@");
+			assertMessageEndsWith(ex, "<null> but was: <null>");
+			assertExpectedAndActualValues(ex, "null", null);
+		}
+	}
+
+	@Test
+	void assertEqualsWithNullVsObjectWithNullStringReturnedFromToString() {
+		try {
+			assertEquals(null, "null");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "expected: <null> but was: java.lang.String@");
+			assertMessageEndsWith(ex, "<null>");
+			assertExpectedAndActualValues(ex, null, "null");
+		}
+	}
+
+	@Test
 	void assertEqualsWithNullVsObjectAndMessageSupplier() {
 		try {
 			assertEquals(null, "foo", () -> "test");

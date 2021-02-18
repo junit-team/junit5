@@ -10,6 +10,8 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import java.util.function.Function;
+
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -47,10 +49,8 @@ public final class DemoHierarchicalTestEngine extends HierarchicalTestEngine<Dem
 	}
 
 	public DemoHierarchicalTestDescriptor addTest(String uniqueName, String displayName, Runnable executeBlock) {
-		var uniqueId = engineDescriptor.getUniqueId().append("test", uniqueName);
-		var child = new DemoHierarchicalTestDescriptor(uniqueId, displayName, executeBlock);
-		engineDescriptor.addChild(child);
-		return child;
+		return addChild(uniqueName, uniqueId -> new DemoHierarchicalTestDescriptor(uniqueId, displayName, executeBlock),
+			"test");
 	}
 
 	public DemoHierarchicalContainerDescriptor addContainer(String uniqueName, String displayName, TestSource source) {
@@ -64,10 +64,17 @@ public final class DemoHierarchicalTestEngine extends HierarchicalTestEngine<Dem
 	public DemoHierarchicalContainerDescriptor addContainer(String uniqueName, String displayName, TestSource source,
 			Runnable beforeBlock) {
 
-		var uniqueId = engineDescriptor.getUniqueId().append("container", uniqueName);
-		var container = new DemoHierarchicalContainerDescriptor(uniqueId, displayName, source, beforeBlock);
-		engineDescriptor.addChild(container);
-		return container;
+		return addChild(uniqueName,
+			uniqueId -> new DemoHierarchicalContainerDescriptor(uniqueId, displayName, source, beforeBlock),
+			"container");
+	}
+
+	public <T extends TestDescriptor & Node<DemoEngineExecutionContext>> T addChild(String uniqueName,
+			Function<UniqueId, T> creator, String segmentType) {
+		var uniqueId = engineDescriptor.getUniqueId().append(segmentType, uniqueName);
+		var child = creator.apply(uniqueId);
+		engineDescriptor.addChild(child);
+		return child;
 	}
 
 	@Override

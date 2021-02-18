@@ -11,8 +11,8 @@
 package org.junit.platform.reporting.legacy.xml;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
-import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
@@ -103,19 +104,11 @@ class XmlReportData {
 		}).orElse(null);
 	}
 
-	Optional<TestExecutionResult> getResult(TestIdentifier testIdentifier) {
-		if (this.finishedTests.containsKey(testIdentifier)) {
-			return Optional.of(this.finishedTests.get(testIdentifier));
-		}
-		Optional<TestIdentifier> parent = this.testPlan.getParent(testIdentifier);
-		Optional<TestIdentifier> ancestor = findAncestor(parent, this.finishedTests::containsKey);
-		if (ancestor.isPresent()) {
-			TestExecutionResult result = this.finishedTests.get(ancestor.get());
-			if (result.getStatus() != SUCCESSFUL) {
-				return Optional.of(result);
-			}
-		}
-		return Optional.empty();
+	List<TestExecutionResult> getResults(TestIdentifier testIdentifier) {
+		return getAncestors(testIdentifier).stream() //
+				.map(this.finishedTests::get) //
+				.filter(Objects::nonNull) //
+				.collect(toList());
 	}
 
 	List<ReportEntry> getReportEntries(TestIdentifier testIdentifier) {
@@ -123,12 +116,11 @@ class XmlReportData {
 	}
 
 	private Optional<TestIdentifier> findSkippedAncestor(TestIdentifier testIdentifier) {
-		return findAncestor(Optional.of(testIdentifier), this.skippedTests::containsKey);
+		return findAncestor(testIdentifier, this.skippedTests::containsKey);
 	}
 
-	private Optional<TestIdentifier> findAncestor(Optional<TestIdentifier> testIdentifier,
-			Predicate<TestIdentifier> predicate) {
-		Optional<TestIdentifier> current = testIdentifier;
+	private Optional<TestIdentifier> findAncestor(TestIdentifier testIdentifier, Predicate<TestIdentifier> predicate) {
+		Optional<TestIdentifier> current = Optional.of(testIdentifier);
 		while (current.isPresent()) {
 			if (predicate.test(current.get())) {
 				return current;
@@ -136,6 +128,16 @@ class XmlReportData {
 			current = this.testPlan.getParent(current.get());
 		}
 		return Optional.empty();
+	}
+
+	private List<TestIdentifier> getAncestors(TestIdentifier testIdentifier) {
+		TestIdentifier current = testIdentifier;
+		List<TestIdentifier> ancestors = new ArrayList<>();
+		while (current != null) {
+			ancestors.add(current);
+			current = this.testPlan.getParent(current).orElse(null);
+		}
+		return ancestors;
 	}
 
 }

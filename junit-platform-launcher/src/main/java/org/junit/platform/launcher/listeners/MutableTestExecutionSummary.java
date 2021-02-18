@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.listeners;
 
 import static java.lang.String.join;
+import static java.util.Collections.synchronizedList;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	final AtomicLong testsFailed = new AtomicLong();
 
 	private final TestPlan testPlan;
-	private final List<Failure> failures = new ArrayList<>();
+	private final List<Failure> failures = synchronizedList(new ArrayList<>());
 	private final long timeStarted;
 	long timeFinished;
 

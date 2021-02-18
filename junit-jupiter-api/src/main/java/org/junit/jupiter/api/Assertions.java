@@ -3449,6 +3449,8 @@ public class Assertions {
 		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
 	}
 
+	// --- assertInstanceOf ----------------------------------------------------
+
 	/**
 	 * <em>Assert</em> that the supplied {@code actualValue} is an instance of the
 	 * {@code expectedType}.
@@ -3495,4 +3497,5 @@ public class Assertions {
 	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Supplier<String> messageSupplier) {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
+
 }

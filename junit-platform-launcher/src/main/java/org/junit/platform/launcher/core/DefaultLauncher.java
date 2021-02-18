@@ -58,7 +58,7 @@ class DefaultLauncher implements InternalLauncher {
 		Preconditions.notNull(postDiscoveryFilters, "PostDiscoveryFilter array must not be null");
 		Preconditions.containsNoNullElements(postDiscoveryFilters,
 			"PostDiscoveryFilter array must not contain null elements");
-		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(EngineIdValidator.validate(testEngines),
+		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(testEngines,
 			unmodifiableCollection(postDiscoveryFilters), launcherDiscoveryListenerRegistry);
 	}
 
