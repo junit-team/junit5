@@ -11,11 +11,13 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -38,6 +40,13 @@ import platform.tooling.support.Request;
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StandaloneTests {
+
+	@Test
+	@Disabled("https://github.com/junit-team/junit5/issues/2557")
+	void compiledModuleDescriptorIsMissing() throws Exception {
+		var jar = Helper.createJarPath("junit-platform-console-standalone");
+		assertFalse(Files.exists(FileSystems.newFileSystem(jar).getPath("module-info.class")));
+	}
 
 	@Test
 	@Order(1)
