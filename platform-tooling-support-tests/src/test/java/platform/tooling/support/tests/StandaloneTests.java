@@ -42,7 +42,6 @@ import platform.tooling.support.Request;
 class StandaloneTests {
 
 	@Test
-	@Disabled("https://github.com/junit-team/junit5/issues/2557")
 	void compiledModuleDescriptorIsMissing() throws Exception {
 		var jar = Helper.createJarPath("junit-platform-console-standalone");
 		assertFalse(Files.exists(FileSystems.newFileSystem(jar).getPath("module-info.class")));
