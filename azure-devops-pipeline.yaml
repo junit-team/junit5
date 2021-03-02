@@ -4,7 +4,12 @@ stages:
     - job: SigridCI
       container: python:3.9-buster
       continueOnError: true
+      variables:
+        
       steps:
-      - script: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
-      - script: "./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5"
+      - bash: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
+      - bash: "./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5"
+        env:
+          SIGRID_CI_ACCOUNT: $(SIGRID_CI_ACCOUNT)
+          SIGRID_CI_TOKEN: $(SIGRID_CI_TOKEN)
       
