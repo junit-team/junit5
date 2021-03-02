@@ -13,12 +13,12 @@ compile:
 sigridci:
   stage: report
   script:
-  - /usr/local/bin/sigrid-ci-poc.py opensource junit . 3.5
+    - git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci
+    - ./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5
   allow_failure: true
   artifacts:
     paths:
-    - "sigrid-ci/*"
-    - "sigrid-ci-output/*"
+      - "sigrid-ci-output/*"
     expire_in: 1 week
     when: always
   tags:
