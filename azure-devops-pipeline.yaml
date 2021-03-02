@@ -5,6 +5,7 @@ stages:
       container: python:3.9-buster
       continueOnError: true
       steps:
+      - script: "echo 'Sigrid CI account: $SIGRID_CI_ACCOUNT'"
       - script: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
       - script: "./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5"
       
