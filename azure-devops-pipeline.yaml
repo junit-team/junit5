@@ -1,0 +1,10 @@
+stages:
+  - stage: Report
+    jobs:
+    - job: Sigrid CI
+      container: python:3.9-buster
+      continueOnError: true
+      steps:
+      - script: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
+      - script: "./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5"
+      
