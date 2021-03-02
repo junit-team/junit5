@@ -10,4 +10,3 @@ stages:
         env:
           SIGRID_CI_ACCOUNT: $(SIGRID_CI_ACCOUNT)
           SIGRID_CI_TOKEN: $(SIGRID_CI_TOKEN)
-      
