@@ -1,7 +1,7 @@
 stages:
   - stage: Report
     jobs:
-    - job: Sigrid CI
+    - job: SigridCI
       container: python:3.9-buster
       continueOnError: true
       steps:
