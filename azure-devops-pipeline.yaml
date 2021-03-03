@@ -10,3 +10,5 @@ stages:
         env:
           SIGRID_CI_ACCOUNT: $(SIGRID_CI_ACCOUNT)
           SIGRID_CI_TOKEN: $(SIGRID_CI_TOKEN)
+      - publish: sigrid-ci-output
+        artifact: sigrid-ci-output
