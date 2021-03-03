@@ -10,5 +10,9 @@ stages:
         env:
           SIGRID_CI_ACCOUNT: $(SIGRID_CI_ACCOUNT)
           SIGRID_CI_TOKEN: $(SIGRID_CI_TOKEN)
+    - job: PublishSigridResults
+      dependsOn: SigridCI
+      container: python:3.9-buster
+      steps:
       - publish: sigrid-ci-output
         artifact: sigrid-ci-output
