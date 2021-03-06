@@ -4540,6 +4540,31 @@ the example below.</p>
 └─ 2: Another file ✔</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>If you&#8217;d like to set default name pattern for all parameterized tests in your project, you can add the following
+configuration to <code>junit-platform.properties</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="properties"><span class="py">junit.jupiter.params.displayname.default</span> <span class="p">=</span> <span class="s">{index}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the display name for a parameterized method is determined according to the following precedence rules:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>name</code> of <code>@ParameterizedTest</code>, if present</p>
+</li>
+<li>
+<p>the value of <code>junit.jupiter.params.displayname.default</code> (from junit-platform.properties), if present</p>
+</li>
+<li>
+<p><code>DEFAULT_DISPLAY_NAME</code> constant defined in <code>@ParameterizedTest</code></p>
+</li>
+</ol>
+</div>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>2.15.7. Lifecycle and Interoperability</h4>
@@ -10272,7 +10297,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-02-18 09:36:30 UTC
+Last updated 2021-03-06 19:20:14 UTC
 </div>
 </div>
 <style>

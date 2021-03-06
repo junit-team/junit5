@@ -376,7 +376,11 @@ public @interface <span class="type-name-label">ParameterizedTest</span></pre>
 <div class="block">The display name to be used for individual invocations of the
  parameterized test; never blank or consisting solely of whitespace.
 
- <p>Defaults to <a href="#DEFAULT_DISPLAY_NAME"><code>DEFAULT_DISPLAY_NAME</code></a>.
+ <p> If "{default_display_name}" is returned when invoking name(), we will:
+ <ul>
+ <li>Look up the new config param from junit-platform.properties, and if it has been set, use it</li>
+ <li>otherwise, we will use the value of the <a href="#DEFAULT_DISPLAY_NAME"><code>DEFAULT_DISPLAY_NAME</code></a> constant.</li>
+ </ul>
 
  <h4>Supported placeholders</h4>
  <ul>
@@ -385,6 +389,8 @@ public @interface <span class="type-name-label">ParameterizedTest</span></pre>
  <li><a href="#ARGUMENTS_PLACEHOLDER"><code>ARGUMENTS_PLACEHOLDER</code></a></li>
  <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
  </ul>
+
+ <p>Note that "{default_display_name}" is a flag rather than a placeholder.
 
  <p>For the latter, you may use <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/MessageFormat.html" title="class or interface in java.text" class="external-link"><code>MessageFormat</code></a> patterns
  to customize formatting. Please note that the original arguments are
@@ -396,7 +402,7 @@ public @interface <span class="type-name-label">ParameterizedTest</span></pre>
 </dl>
 <dl class="notes">
 <dt>Default:</dt>
-<dd>"[{index}] {argumentsWithNames}"</dd>
+<dd>"{default_display_name}"</dd>
 </dl>
 </section>
 </li>
