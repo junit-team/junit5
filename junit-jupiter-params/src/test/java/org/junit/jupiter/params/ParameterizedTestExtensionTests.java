@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -37,6 +38,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link ParameterizedTestExtension}.
@@ -83,6 +85,31 @@ class ParameterizedTestExtensionTests {
 		// cause the stream to be evaluated
 		stream.count();
 		assertTrue(streamWasClosed);
+	}
+
+	@Test
+	void emptyDisplayNameIsIllegal() {
+		var extensionContext = getExtensionContextReturningSingleMethod(new EmptyDisplayNameProviderTestCase());
+		assertThrows(PreconditionViolationException.class,
+			() -> this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext));
+	}
+
+	@Test
+	void defaultDisplayNameWithEmptyStringInConfigurationIsIllegal() {
+		AtomicInteger invocations = new AtomicInteger();
+		Function<String, Optional<String>> configurationSupplier = key -> {
+			if (key.equals(ParameterizedTestExtension.DISPLAY_NAME_PATTERN_KEY)) {
+				invocations.incrementAndGet();
+				return Optional.of("");
+			}
+			else
+				return Optional.empty();
+		};
+		var extensionContext = getExtensionContextReturningSingleMethod(new DefaultDisplayNameProviderTestCase(),
+			configurationSupplier);
+		assertThrows(PreconditionViolationException.class,
+			() -> this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext));
+		assertEquals(1, invocations.get());
 	}
 
 	@Test
@@ -145,6 +172,11 @@ class ParameterizedTestExtensionTests {
 	}
 
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase) {
+		return getExtensionContextReturningSingleMethod(testCase, ignored -> Optional.empty());
+	}
+
+	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase,
+			Function<String, Optional<String>> configurationSupplier) {
 
 		// @formatter:off
 		var optional = Arrays.stream(testCase.getClass().getDeclaredMethods())
@@ -218,12 +250,12 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<String> getConfigurationParameter(String key) {
-				return Optional.empty();
+				return configurationSupplier.apply(key);
 			}
 
 			@Override
 			public <T> Optional<T> getConfigurationParameter(String key, Function<String, T> transformer) {
-				return Optional.empty();
+				return configurationSupplier.apply(key).map(transformer);
 			}
 
 			@Override
@@ -287,6 +319,22 @@ class ParameterizedTestExtensionTests {
 	}
 
 	static class MissingNoArgumentsConstructorArgumentsProviderTestCase {
+
+		@ParameterizedTest
+		@ArgumentsSource(MissingNoArgumentsConstructorArgumentsProvider.class)
+		void method() {
+		}
+	}
+
+	static class EmptyDisplayNameProviderTestCase {
+
+		@ParameterizedTest(name = "")
+		@ArgumentsSource(MissingNoArgumentsConstructorArgumentsProvider.class)
+		void method() {
+		}
+	}
+
+	static class DefaultDisplayNameProviderTestCase {
 
 		@ParameterizedTest
 		@ArgumentsSource(MissingNoArgumentsConstructorArgumentsProvider.class)
