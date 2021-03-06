@@ -1661,7 +1661,7 @@ the display name for a parameterized method is determined according to the follo
 
 1. `name` of `@ParameterizedTest`, if present
 2. the value of `junit.jupiter.params.displayname.default` (from junit-platform.properties), if present
-3. by calling `DEFAULT_DISPLAY_NAME` of `@ParameterizedTest`
+3. `DEFAULT_DISPLAY_NAME` constant defined in `@ParameterizedTest`
 
 [[writing-tests-parameterized-tests-lifecycle-interop]]
 ==== Lifecycle and Interoperability
