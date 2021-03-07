@@ -3008,7 +3008,7 @@ public class Assertions {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable) {
-		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable);
+		return AssertThrows.assertThrowsExactly(expectedType, executable);
 	}
 
 	/**
@@ -3028,7 +3028,7 @@ public class Assertions {
 	@API(status = EXPERIMENTAL, since = "5.8")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
 			String message) {
-		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, message);
+		return AssertThrows.assertThrowsExactly(expectedType, executable, message);
 	}
 
 	/**
@@ -3049,7 +3049,7 @@ public class Assertions {
 	@API(status = EXPERIMENTAL, since = "5.8")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {
-		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, messageSupplier);
+		return AssertThrows.assertThrowsExactly(expectedType, executable, messageSupplier);
 	}
 
 	/**
