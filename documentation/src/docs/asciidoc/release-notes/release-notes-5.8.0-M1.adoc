@@ -1,15 +1,9 @@
 [[release-notes-5.8.0-M1]]
 == 5.8.0-M1
 
-*Date of Release:* February 11, 2021
+*Date of Release:* ❓
 
-*Scope:*
-
-* Declarative test suites
-* Test class ordering
-* `LauncherSession` and accompanying listener
-* More fine-grained JFR events
-* Memory and performance optimizations
+*Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/51?closed=1+[5.8 M1] milestone page in the JUnit repository
@@ -21,7 +15,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* `SummaryGeneratingListener` is now thread-safe and can handle concurrently failing tests.
+* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -44,20 +38,21 @@ on GitHub.
 * Documented constant value of `ExclusiveResource.GLOBAL_KEY`.
 * Instances of `TestIdentifier` and `UniqueId` now retain less memory because they no
   longer store `String` representations of unique IDs.
-* Improved `ExclusiveResource` handling: if a `Node` has only read locks and no read-write
-  locks, then descendants are not forced into `SAME_THREAD` execution and can run
-  concurrently.
+* Improved of `ExclusiveResource` handling: if a `Node` has only read locks and no
+  read-write locks, then descendants are not forced into `SAME_THREAD` execution and can
+  run concurrently.
 * Tools that make multiple calls to the `Launcher` API should now create a
   `LauncherSession` in order to allow for executing global setup and teardown code exactly
   once via the new `LauncherSessionListener` interface that can be registered via Java’s
   `{ServiceLoader}` mechanism.
-* New `junit-platform-suite-engine` to execute declarative test suites using the JUnit
-  Platform Launcher.
-* Additional selectors in the suite API in the `junit-platform-suite-api` module.
 
 
 [[release-notes-5.8.0-M1-junit-jupiter]]
 === JUnit Jupiter
+
+==== Bug Fixes
+
+* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -69,8 +64,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Top-level test classes can now be ordered by passing the fully-qualified name of a class
-  implementing `ClassOrderer` as the value of the new
+* Top-level test classes can now be ordered by passing the fully-qualified name of a
+  class implementing `ClassOrderer` as the value of the new
   `junit.jupiter.testclass.order.default` configuration parameter.
 * New `assertInstanceOf()` methods which produce better error messages comparable to those
   produced by `assertThrows`. These new methods serve as a replacement for
@@ -78,6 +73,7 @@ on GitHub.
 * `assertNull()` failure messages now include the actual object's type if the `toString()`
   implementation for the actual object returns `null` or `"null"`. This avoids the
   generation of confusing failure messages such as `expected <null> but was <null>`.
+
 * Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
   underscores as in some JVM languages, to improve readability of long numbers like
   `700_000_000`.
@@ -87,12 +83,6 @@ on GitHub.
 * Dynamic tests now require less memory thanks to a number of improvements to internal
   data structures.
 * Documented constant values in `org.junit.jupiter.api.parallel.Resources`.
-* In parameterized tests with `@MethodSource` or `@ArgumentSource`, arguments can now have
-  optional names (supplied via the new `Named` API). When the argument is included in the
-  display name of an iteration, this name will be used instead of the value.
-* `DynamicTests.stream()` can now consume `Named` input and will use each name-value pair
-  as the display name and value for each generated dynamic test (see
-  <<../user-guide/index.adoc#writing-tests-dynamic-tests-examples,User Guide>> for details).
 * New `assertThrowsExactly` method is introduced as a more strict version of `assertThrows`
   allowing you to assert that the thrown exception has the exact specified class.
 
@@ -100,6 +90,14 @@ on GitHub.
 
 [[release-notes-5.8.0-M1-junit-vintage]]
 === JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
 
 ==== New Features and Improvements
 
