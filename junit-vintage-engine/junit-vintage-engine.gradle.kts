@@ -37,6 +37,12 @@ configurations.all {
 }
 
 tasks {
+	compileTestFixturesGroovy {
+		javaLauncher.set(project.the<JavaToolchainService>().launcherFor {
+			// Groovy 2.x (used for Spock tests) does not support JDK 16
+			languageVersion.set(JavaLanguageVersion.of(11))
+		})
+	}
 	jar {
 		withConvention(BundleTaskConvention::class) {
 			bnd("""
