@@ -9,6 +9,7 @@ project.pluginManager.withPlugin("java") {
 	val javaToolchainService = the<JavaToolchainService>()
 	extension.toolchain.languageVersion.set(javaLanguageVersion)
 	val compiler = javaToolchainService.compilerFor(extension.toolchain)
+	val launcher = javaToolchainService.launcherFor(extension.toolchain)
 	tasks.withType<KotlinJvmCompile>().configureEach {
 		doFirst {
 			kotlinOptions.jdkHome = compiler.get().metadata.installationPath.asFile.absolutePath
@@ -20,12 +21,9 @@ project.pluginManager.withPlugin("java") {
 		options.forkOptions.jvmArgs!!.addAll(listOf("--add-opens", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED"))
 	}
 	tasks.withType<GroovyCompile>().configureEach {
-		javaLauncher.set(javaToolchainService.launcherFor {
-			// Groovy does not yet support JDK 16, see https://issues.apache.org/jira/browse/GROOVY-9752
-			languageVersion.set(minOf(javaLanguageVersion, defaultLanguageVersion))
-		})
+		javaLauncher.set(launcher)
 	}
 	tasks.withType<JavaExec>().configureEach {
-		javaLauncher.set(javaToolchainService.launcherFor(extension.toolchain))
+		javaLauncher.set(launcher)
 	}
 }
