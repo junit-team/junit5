@@ -32,10 +32,7 @@ gradleEnterprise {
 		isCaptureTaskInputFiles = true
 		isUploadInBackground = !isCiServer
 
-		fun accessKeysAreMissingOrBlank(): Boolean {
-			val accessKeys = File(gradle.gradleUserHomeDir, "enterprise/keys.properties")
-			return !accessKeys.isFile || accessKeys.readText().isBlank()
-		}
+		fun accessKeysAreMissingOrBlank() = System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNullOrBlank()
 
 		if (gradle.startParameter.isBuildScan || (isCiServer && accessKeysAreMissingOrBlank())) {
 			termsOfServiceUrl = "https://gradle.com/terms-of-service"
