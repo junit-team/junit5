@@ -13,6 +13,7 @@ env:
   ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
   ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
   ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
+  GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:
   openjdk:
@@ -42,10 +43,6 @@ jobs:
           key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             test-${{ runner.os }}-maven-
-      - name: Prepare Gradle Enterprise credentials
-        run: |
-          mkdir -p /root/.gradle/enterprise/
-          echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > /root/.gradle/enterprise/keys.properties
       - name: Test
         run: |
           ./gradlew --version

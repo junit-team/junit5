@@ -11,6 +11,7 @@ on:
 
 env:
   ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
+  GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:
   analyze:
@@ -40,10 +41,6 @@ jobs:
       uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
-    - name: Prepare Gradle Enterprise credentials
-      run: |
-        mkdir -p $HOME/.gradle/enterprise/
-        echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > $HOME/.gradle/enterprise/keys.properties
     - name: Build
       run: |
         ./gradlew --version
