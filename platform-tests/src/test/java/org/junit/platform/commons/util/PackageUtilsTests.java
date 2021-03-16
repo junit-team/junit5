@@ -130,7 +130,7 @@ class PackageUtilsTests {
 	class JavaNameUtilsTests {
 
 		@ParameterizedTest
-		@ValueSource(strings = { "name", "_NAME", "null", "var", "public", "$+!", "", "  ", "123", "true" })
+		@ValueSource(strings = { "name", "_NAME", "null", "var", "int", "public", "$+!", "", "  ", "123", "true" })
 		void isJavaName(String s) {
 			assertEquals(SourceVersion.isName(s), JavaNameUtils.isJavaName(s));
 		}
