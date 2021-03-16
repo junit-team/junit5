@@ -149,11 +149,16 @@ public final class PackageUtils {
 	 */
 	static class JavaNameUtils {
 
+		/*
+		 * Based on https://docs.oracle.com/javase/specs/jls/se16/html/jls-3.html#jls-Identifier
+		 * */
 		private static final Set<String> RESTRICTED_KEYWORDS = Collections.unmodifiableSet(
-			new HashSet<>(Arrays.asList("_", "abstract", "assert", "break", "case", "catch", "const", "continue",
-				"default", "do", "else", "enum", "false", "final", "finally", "for", "goto", "if", "import",
-				"instanceof", "native", "new", "null", "private", "protected", "public", "return", "static", "strictfp",
-				"super", "switch", "synchronized", "this", "throw", "transient", "true", "try", "volatile", "while")));
+			new HashSet<>(Arrays.asList("_", "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char",
+				"class", "const", "continue", "default", "do", "double", "else", "enum", "extends", "false", "final",
+				"finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int", "interface",
+				"long", "native", "new", "null", "package", "private", "protected", "public", "return", "short",
+				"static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "true",
+				"try", "void", "volatile", "while")));
 
 		/**
 		 * Determine if the supplied {@code name} is a syntactically valid qualified name.
