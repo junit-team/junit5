@@ -58,7 +58,8 @@ so that local builds can reuse task outputs from previous CI builds.
 
 ## Building from Source
 
-You need [JDK 15] to build JUnit 5.
+You need [JDK 11] to build JUnit 5. [Gradle toolchains] are used to detect and
+potentially download additional JDKs for compilation and test execution.
 
 All modules can be _built_ with the [Gradle Wrapper] using the following command.
 
@@ -91,10 +92,11 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md
 [Dependency Metadata]: https://junit.org/junit5/docs/current/user-guide/#dependency-metadata
 [Gitter]: https://gitter.im/junit-team/junit5
+[Gradle toolchains]: https://docs.gradle.org/current/userguide/toolchains.html
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK 15]: https://jdk.java.net/15/
+[JDK 11]: https://adoptopenjdk.net/archive.html?variant=openjdk11&jvmVariant=hotspot
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [Samples]: https://github.com/junit-team/junit5-samples
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5

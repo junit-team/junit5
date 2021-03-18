@@ -82,11 +82,18 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 15
+    - name: Prepare JDK15 env var
+      shell: bash
+      run: echo "JDK15=$JAVA_HOME" >> $GITHUB_ENV
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
     - name: Test
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8 build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK15 build
         ./gradlew --stop
 
   mac:
@@ -112,19 +119,34 @@ jobs:
         key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           test-${{ runner.os }}-maven-
+    - name: Set up JDK 8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 8
+    - name: Prepare JDK8 env var
+      shell: bash
+      run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
     - name: Set up JDK 15
       uses: actions/setup-java@v1
       with:
         java-version: 15
+    - name: Prepare JDK15 env var
+      shell: bash
+      run: echo "JDK15=$JAVA_HOME" >> $GITHUB_ENV
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
     - name: 'Test'
       run: |
         ./gradlew --version
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK15 build
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
     needs: linux
     runs-on: ubuntu-latest
+    container: ghcr.io/junit-team/build
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
     - uses: actions/checkout@v2
@@ -139,10 +161,6 @@ jobs:
         key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
         restore-keys: |
           assemble-${{ runner.os }}-gradle-
-    - name: Set up JDK 15
-      uses: actions/setup-java@v1
-      with:
-        java-version: 15
     - name: Publish
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
@@ -153,6 +171,7 @@ jobs:
     name: Update Snapshot Documentation
     needs: linux
     runs-on: ubuntu-latest
+    container: ghcr.io/junit-team/build
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v2
@@ -167,10 +186,6 @@ jobs:
         key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
         restore-keys: |
           assemble-${{ runner.os }}-gradle-
-    - name: Set up JDK 15
-      uses: actions/setup-java@v1
-      with:
-        java-version: 15
     - name: Upload Documentation
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
