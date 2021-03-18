@@ -17,6 +17,7 @@ jobs:
   check_build_reproducibility:
     name: 'Check build reproducibility'
     runs-on: ubuntu-latest
+    container: ghcr.io/junit-team/build
     steps:
     - uses: actions/checkout@v2
       with:
@@ -30,10 +31,6 @@ jobs:
         key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
         restore-keys: |
           assemble-${{ runner.os }}-gradle-
-    - name: 'Set up JDK 15'
-      uses: actions/setup-java@v1
-      with:
-        java-version: 15
     - name: Build and compare checksums
       shell: bash
       run: |
