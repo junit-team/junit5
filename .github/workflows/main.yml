@@ -78,13 +78,13 @@ jobs:
     - name: Prepare JDK8 env var
       shell: bash
       run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - name: Set up JDK 15
+    - name: Set up JDK 16
       uses: actions/setup-java@v1
       with:
-        java-version: 15
-    - name: Prepare JDK15 env var
+        java-version: 16
+    - name: Prepare JDK16 env var
       shell: bash
-      run: echo "JDK15=$JAVA_HOME" >> $GITHUB_ENV
+      run: echo "JDK16=$JAVA_HOME" >> $GITHUB_ENV
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
@@ -93,7 +93,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK15 build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 build
         ./gradlew --stop
 
   mac:
@@ -126,13 +126,13 @@ jobs:
     - name: Prepare JDK8 env var
       shell: bash
       run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - name: Set up JDK 15
+    - name: Set up JDK 16
       uses: actions/setup-java@v1
       with:
-        java-version: 15
-    - name: Prepare JDK15 env var
+        java-version: 16
+    - name: Prepare JDK16 env var
       shell: bash
-      run: echo "JDK15=$JAVA_HOME" >> $GITHUB_ENV
+      run: echo "JDK16=$JAVA_HOME" >> $GITHUB_ENV
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
@@ -140,7 +140,7 @@ jobs:
     - name: 'Test'
       run: |
         ./gradlew --version
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK15 build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 build
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
@@ -185,13 +185,13 @@ jobs:
         key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
         restore-keys: |
           assemble-${{ runner.os }}-gradle-
-    - name: Set up JDK 15
+    - name: Set up JDK 16
       uses: actions/setup-java@v1
       with:
-        java-version: 15
-    - name: Prepare JDK15 env var
+        java-version: 16
+    - name: Prepare JDK16 env var
       shell: bash
-      run: echo "JDK15=$JAVA_HOME" >> $GITHUB_ENV
+      run: echo "JDK16=$JAVA_HOME" >> $GITHUB_ENV
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
@@ -200,7 +200,7 @@ jobs:
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
         GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
-        ORG_GRADLE_PROJECT_org.gradle.java.installations.fromEnv: 'JDK15'
+        ORG_GRADLE_PROJECT_org.gradle.java.installations.fromEnv: 'JDK16'
       run: |
         sudo apt-get install graphviz
         ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
