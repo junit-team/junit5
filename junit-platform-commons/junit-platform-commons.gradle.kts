@@ -19,10 +19,16 @@ tasks.jar {
 	val release9ClassesDir = sourceSets.mainRelease9.get().output.classesDirs.singleFile
 	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
 	doLast {
-		ToolProvider.findFirst("jar").get().run(System.out, System.err, "--update",
+		exec {
+			executable = project.the<JavaToolchainService>().launcherFor(java.toolchain).get()
+				.metadata.installationPath.file("bin/jar").asFile.absolutePath
+			args(
+				"--update",
 				"--file", archiveFile.get().asFile.absolutePath,
 				"--release", "9",
-				"-C", release9ClassesDir.absolutePath, ".")
+				"-C", release9ClassesDir.absolutePath, "."
+			)
+		}
 	}
 }
 
