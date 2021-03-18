@@ -31,7 +31,7 @@ tasks {
 		from(sourceSets.mainRelease9.get().output.classesDirs)
 		doLast {
 			exec {
-				executable = project.the<JavaToolchainService>().launcherFor(project.the<JavaPluginExtension>().toolchain).get()
+				executable = project.the<JavaToolchainService>().launcherFor(java.toolchain).get()
 					.metadata.installationPath.file("bin/jar").asFile.absolutePath
 				args(
 					"--update",
