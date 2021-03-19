@@ -20,3 +20,5 @@ sigridci:
       - "sigrid-ci-output/*"
     expire_in: 1 week
     when: always
+  tags:   
+    - run_concurrently_node10
