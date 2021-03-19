@@ -44,6 +44,7 @@ jobs:
     - name: Test and Coverage
       run: |
         ./gradlew --version
+        ./gradlew javaToolchains
         ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -PenableJaCoCo build jacocoRootReport
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v1
@@ -93,6 +94,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
+        ./gradlew javaToolchains
         ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 build
         ./gradlew --stop
 
@@ -140,6 +142,7 @@ jobs:
     - name: 'Test'
       run: |
         ./gradlew --version
+        ./gradlew javaToolchains
         ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 build
 
   publish_artifacts:
@@ -165,7 +168,9 @@ jobs:
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
-      run: ./gradlew publish -x check
+      run: |
+        ./gradlew javaToolchains
+        ./gradlew publish -x check
 
   update_documentation:
     name: Update Snapshot Documentation
@@ -203,4 +208,5 @@ jobs:
         ORG_GRADLE_PROJECT_org.gradle.java.installations.fromEnv: 'JDK16'
       run: |
         sudo apt-get install graphviz
+        ./gradlew javaToolchains
         ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
