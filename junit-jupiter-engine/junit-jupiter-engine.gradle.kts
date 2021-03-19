@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
+
 plugins {
 	`kotlin-library-conventions`
 	`testing-conventions`
@@ -21,4 +23,10 @@ dependencies {
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 	testImplementation("org.codehaus.groovy:groovy")
+}
+
+tasks {
+	test {
+		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
+	}
 }

@@ -78,6 +78,10 @@ tasks.test {
 		includeEngines("archunit")
 	}
 
+	distribution {
+		enabled.set(false)
+	}
+
 	maxParallelForks = 1 // Bartholdy.install is not parallel safe, see https://github.com/sormuras/bartholdy/issues/4
 }
 

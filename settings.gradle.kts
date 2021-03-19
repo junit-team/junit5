@@ -1,8 +1,13 @@
 import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
+	repositories {
+		gradlePluginPortal()
+		maven(url = "https://repo.gradle.org/gradle/enterprise-libs-release-candidates-local/")
+	}
 	plugins {
 		id("com.gradle.enterprise") version settings.extra["gradle.enterprise.plugin.version"] as String
+		id("com.gradle.enterprise.test-distribution") version settings.extra["test.distribution.plugin.version"] as String
 		id("com.gradle.common-custom-user-data-gradle-plugin") version settings.extra["gradle.user-data.plugin.version"] as String
 		id("net.nemerosa.versioning") version settings.extra["versioning.plugin.version"] as String
 		id("com.github.ben-manes.versions") version settings.extra["versions.plugin.version"] as String
@@ -19,6 +24,7 @@ pluginManagement {
 
 plugins {
 	id("com.gradle.enterprise")
+	id("com.gradle.enterprise.test-distribution")
 	id("com.gradle.common-custom-user-data-gradle-plugin")
 }
 

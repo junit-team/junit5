@@ -63,9 +63,7 @@ tasks {
 		(options as JUnitPlatformOptions).apply {
 			includeTags("missing-junit4")
 		}
-		filter {
-			includeTestsMatching("org.junit.vintage.engine.JUnit4VersionCheckTests")
-		}
+		setIncludes(listOf("**/JUnit4VersionCheckTests.class"))
 		classpath = classpath.filter {
 			!it.name.startsWith("junit-4")
 		}
