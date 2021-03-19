@@ -26,6 +26,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.platform.commons.JUnitException;
@@ -265,7 +267,7 @@ class PicocliCommandLineOptionsParserTests {
 
 	@ParameterizedTest
 	@EnumSource
-	void parseValidAdditionalClasspathEntries(ArgsType type) {
+	void parseValidAdditionalClasspathEntries(ArgsType type, @TempDir Path tempDir) {
 		var dir = Paths.get(".");
 		// @formatter:off
 		assertAll(
@@ -277,8 +279,8 @@ class PicocliCommandLineOptionsParserTests {
 			() -> assertEquals(List.of(dir), type.parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
 			() -> assertEquals(List.of(dir), type.parseArgLine("--class-path .").getAdditionalClasspathEntries()),
 			() -> assertEquals(List.of(dir), type.parseArgLine("--class-path=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(List.of(dir, Paths.get("src", "test", "java")), type.parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
-			() -> assertEquals(List.of(dir, Paths.get("src", "test", "java")), type.parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
+			() -> assertEquals(List.of(dir, tempDir), type.parseArgLine("-cp . -cp " + tempDir).getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir, tempDir), type.parseArgLine("-cp ." + File.pathSeparator + tempDir).getAdditionalClasspathEntries())
 		);
 		// @formatter:on
 	}
