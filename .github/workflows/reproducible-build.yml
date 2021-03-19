@@ -10,8 +10,6 @@ on:
     - '*'
 
 env:
-  ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
-  ORG_GRADLE_PROJECT_org.gradle.java.installations.fromEnv: 'JDK16'
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:

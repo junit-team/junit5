@@ -10,7 +10,6 @@ on:
     - cron: '0 19 * * 3'
 
 env:
-  ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:
