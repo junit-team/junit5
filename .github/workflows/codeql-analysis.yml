@@ -44,6 +44,6 @@ jobs:
       run: |
         ./gradlew --version
         ./gradlew javaToolchains
-        ./gradlew --no-build-cache allMainClasses -PjavaToolchainVersion=11
+        ./gradlew --no-build-cache allMainClasses -PjavaToolchainVersion=11 -Porg.gradle.java.installations.auto-download=false
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
