@@ -15,6 +15,7 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.ClassFileVisitor.CLASS_FILE_SUFFIX;
+import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.io.IOException;
 import java.net.URI;
@@ -69,8 +70,9 @@ class ClasspathScanner {
 	}
 
 	List<Class<?>> scanForClassesInPackage(String basePackageName, ClassFilter classFilter) {
-
-		PackageUtils.assertPackageNameIsValid(basePackageName);
+		Preconditions.condition(
+			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
+			"basePackageName must not be null or blank");
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 		basePackageName = basePackageName.trim();
 
