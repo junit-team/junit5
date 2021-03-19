@@ -13,7 +13,6 @@ compile:
 sigridci:
   stage: report
   script:
-    - git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci
     - /usr/local/bin/sigridci.py --customer opensource --system junit --source . --targetquality 4.0
   allow_failure: true
   artifacts:
