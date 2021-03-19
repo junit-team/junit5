@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
