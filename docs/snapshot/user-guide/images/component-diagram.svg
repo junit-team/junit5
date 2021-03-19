@@ -347,7 +347,7 @@ link vintage_engine to engine-->
 link vintage_engine to junit4-->
     <path d='M812.0406,351.0569 C806.0837,366.5126 797.4688,388.8647 790.9906,405.6731 ' fill='none' id='vintage_engine-&gt;junit4' style='stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;'/>
     <polygon fill='#A80036' points='789.054,410.6977,796.0231,403.7384,790.8522,406.0322,788.5583,400.8613,789.054,410.6977' style='stroke: #A80036; stroke-width: 1.0;'/>
-    <!--MD5=[a8bf8915aabd91515d6d922d9a2a7927]
+    <!--MD5=[ad15e1fa103453ca2a3269bc8d8b6f11]
 @startuml
 skinparam {
     defaultFontName Open Sans
@@ -446,11 +446,11 @@ PlantUML version 1.2020.06(Sun Apr 05 12:38:32 UTC 2020)
 (APACHE source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 15.0.2+7
+Java Version: 11.0.10+9
 Operating System: Linux
 Default Encoding: UTF-8
 Language: en
-Country: 
+Country: US
 -->
   </g>
 </svg>
