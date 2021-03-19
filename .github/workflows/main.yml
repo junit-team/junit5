@@ -94,7 +94,7 @@ jobs:
       run: |
         ./gradlew --version
         ./gradlew javaToolchains
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 -Porg.gradle.java.installations.auto-download=false build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.auto-download=false build
         ./gradlew --stop
 
   mac:
@@ -142,7 +142,7 @@ jobs:
       run: |
         ./gradlew --version
         ./gradlew javaToolchains
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 -Porg.gradle.java.installations.auto-download=false build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.auto-download=false build
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
