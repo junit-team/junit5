@@ -194,6 +194,4 @@ jobs:
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
         GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
-      run: |
-        ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
-        ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
+      run: ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
