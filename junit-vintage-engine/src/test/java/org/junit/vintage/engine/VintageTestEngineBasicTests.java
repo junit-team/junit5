@@ -39,9 +39,4 @@ class VintageTestEngineBasicTests {
 		assertEquals("junit-vintage-engine", vintage.getArtifactId().get());
 	}
 
-	@Test
-	void version() {
-		assertEquals("DEVELOPMENT", vintage.getVersion().get());
-	}
-
 }

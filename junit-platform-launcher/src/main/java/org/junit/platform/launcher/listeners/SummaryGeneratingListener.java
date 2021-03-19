@@ -51,6 +51,7 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
 		this.summary.timeFinished = System.currentTimeMillis();
+		this.summary.timeFinishedNanos = System.nanoTime();
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import static java.lang.String.join;
 import static java.util.Collections.synchronizedList;
 
 import java.io.PrintWriter;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -57,13 +58,16 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	private final TestPlan testPlan;
 	private final List<Failure> failures = synchronizedList(new ArrayList<>());
 	private final long timeStarted;
+	private final long timeStartedNanos;
 	long timeFinished;
+	long timeFinishedNanos;
 
 	MutableTestExecutionSummary(TestPlan testPlan) {
 		this.testPlan = testPlan;
 		this.containersFound.set(testPlan.countTestIdentifiers(TestIdentifier::isContainer));
 		this.testsFound.set(testPlan.countTestIdentifiers(TestIdentifier::isTest));
 		this.timeStarted = System.currentTimeMillis();
+		this.timeStartedNanos = System.nanoTime();
 	}
 
 	void addFailure(TestIdentifier testIdentifier, Throwable throwable) {
@@ -165,7 +169,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 			+ "[%10d tests failed          ]%n"
 			+ "%n",
 
-			(this.timeFinished - this.timeStarted),
+			Duration.ofNanos(this.timeFinishedNanos - this.timeStartedNanos).toMillis(),
 
 			getContainersFoundCount(),
 			getContainersSkippedCount(),

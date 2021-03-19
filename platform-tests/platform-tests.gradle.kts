@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
+
 plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
@@ -58,6 +60,9 @@ tasks {
 			excludeTags("exclude")
 		}
 		jvmArgs("-Xmx1g")
+	}
+	test {
+		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
 	}
 	test_4_12 {
 		useJUnitPlatform {
