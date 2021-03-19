@@ -46,4 +46,5 @@ jobs:
       - name: Test
         run: |
           ./gradlew --version
+          ./gradlew javaToolchains
           ./gradlew --no-parallel -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} build "-Dscan.tag.JDK_${{ matrix.jdk }}"

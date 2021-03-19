@@ -45,4 +45,5 @@ jobs:
     - name: Build and compare checksums
       shell: bash
       run: |
+        ./gradlew javaToolchains
         ./src/checkBuildReproducibility.sh
