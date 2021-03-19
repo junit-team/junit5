@@ -105,10 +105,6 @@ class ReflectionSupportTests {
 
 	@Test
 	void findAllClassesInPackageDelegates() {
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findAllClassesInPackage("void.return.null", allTypes, allNames));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionSupport.findAllClassesInPackage("void.return.null", allTypes, allNames));
 		assertNotEquals(0, ReflectionSupport.findAllClassesInPackage("org.junit", allTypes, allNames).size());
 		assertEquals(ReflectionUtils.findAllClassesInPackage("org.junit", allTypes, allNames),
 			ReflectionSupport.findAllClassesInPackage("org.junit", allTypes, allNames));
@@ -116,8 +112,6 @@ class ReflectionSupportTests {
 
 	@Test
 	void findAllClassesInPackagePreconditions() {
-		assertPreconditionViolationException("package name",
-			() -> ReflectionSupport.findAllClassesInPackage(null, allTypes, allNames));
 		assertPreconditionViolationException("class predicate",
 			() -> ReflectionSupport.findAllClassesInPackage("org.junit", null, allNames));
 		assertPreconditionViolationException("name predicate",
