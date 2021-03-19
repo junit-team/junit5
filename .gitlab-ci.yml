@@ -14,7 +14,7 @@ sigridci:
   stage: report
   script:
     - git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci
-    - ./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 4.0
+    - /usr/local/bin/sigridci.py --customer opensource --system junit --source . --targetquality 4.0
   allow_failure: true
   artifacts:
     paths:
