@@ -43,5 +43,5 @@ jobs:
     - name: Build and compare checksums
       shell: bash
       run: |
-        ./gradlew javaToolchains
+        ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
         ./src/checkBuildReproducibility.sh
