@@ -71,6 +71,7 @@ class ClasspathScanner {
 
 	List<Class<?>> scanForClassesInPackage(String basePackageName, ClassFilter classFilter) {
 
+		Preconditions.condition(DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName), "basePackageName must not be blank");
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 		basePackageName = basePackageName.trim();
 
