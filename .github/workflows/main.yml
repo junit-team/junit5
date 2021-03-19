@@ -44,7 +44,7 @@ jobs:
       run: |
         ./gradlew --version
         ./gradlew javaToolchains
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -PenableJaCoCo build jacocoRootReport
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -PenableJaCoCo -Porg.gradle.java.installations.auto-download=false build jacocoRootReport
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v1
 
@@ -94,7 +94,7 @@ jobs:
       run: |
         ./gradlew --version
         ./gradlew javaToolchains
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 -Porg.gradle.java.installations.auto-download=false build
         ./gradlew --stop
 
   mac:
@@ -142,7 +142,7 @@ jobs:
       run: |
         ./gradlew --version
         ./gradlew javaToolchains
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 build
+        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.fromEnv=JDK8,JDK16 -Porg.gradle.java.installations.auto-download=false build
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
@@ -169,7 +169,7 @@ jobs:
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       run: |
         ./gradlew javaToolchains
-        ./gradlew publish -x check
+        ./gradlew publish -x check -Porg.gradle.java.installations.auto-download=false
 
   update_documentation:
     name: Update Snapshot Documentation
