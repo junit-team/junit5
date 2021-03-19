@@ -19,7 +19,6 @@ dependencies {
 	api("junit:junit")
 
 	testFixturesApi("org.spockframework:spock-core")
-	testFixturesApi(project(":junit-jupiter-api"))
 	testFixturesImplementation(project(":junit-platform-runner"))
 
 	testImplementation(project(":junit-platform-launcher"))

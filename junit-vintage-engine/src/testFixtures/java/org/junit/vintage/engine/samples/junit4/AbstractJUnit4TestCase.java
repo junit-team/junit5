@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public abstract class AbstractJUnit4TestCase {
 
