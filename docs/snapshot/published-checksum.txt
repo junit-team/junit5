@@ -319,7 +319,6 @@
 734fe9bee220261b8256f17bd65d55b9  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/package-info.java
 741b6dac9e79cb9de20001d085c0b640  documentation/src/javadoc/junit-overview.html
 741b75f1df6e6f28e85ba37a1b8dabe9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.java
-7471c4c7f55c15b3987acabeeb57f1ce  documentation/src/docs/asciidoc/user-guide/index.adoc
 747bdad666a04e6bab23552aa3860db7  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileSource.java
 7498d87d710bbe54f88548e8d69d615b  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Execution.java
 74a4366a533b4506a0ce1d3a3905e19e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/DefaultTestInstances.java
@@ -339,6 +338,7 @@
 78256810122c8fab15681f490e1aa08e  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
 78e3da888f3b7f7543f2b8297f60ebb8  documentation/src/main/java/example/registration/package-info.java
 796db01b59a6000e715153a73904e961  documentation/src/test/java/extensions/ExpectToFail.java
+79787c80943b40d745cb06af1f3238ad  documentation/src/docs/asciidoc/user-guide/index.adoc
 798b113e8441267e4eaeac5bb3660344  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
 79bdc5bb6553997402c5166aaa9e40ac  junit-platform-commons/src/main/java/org/junit/platform/commons/PreconditionViolationException.java
 79c1265249b501ccf3ac5e2fa59ca105  documentation/src/test/java/example/ConditionalTestExecutionDemo.java
