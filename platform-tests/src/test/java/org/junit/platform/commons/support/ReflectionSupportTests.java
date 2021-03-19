@@ -112,6 +112,8 @@ class ReflectionSupportTests {
 
 	@Test
 	void findAllClassesInPackagePreconditions() {
+		assertPreconditionViolationExceptionForString("basePackageName",
+			() -> ReflectionSupport.findAllClassesInPackage(null, allTypes, allNames));
 		assertPreconditionViolationException("class predicate",
 			() -> ReflectionSupport.findAllClassesInPackage("org.junit", null, allNames));
 		assertPreconditionViolationException("name predicate",

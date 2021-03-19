@@ -15,6 +15,7 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.ClassFileVisitor.CLASS_FILE_SUFFIX;
+import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.io.IOException;
 import java.net.URI;
@@ -50,7 +51,6 @@ class ClasspathScanner {
 
 	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
 	private static final char PACKAGE_SEPARATOR_CHAR = '.';
-	private static final String DEFAULT_PACKAGE_NAME = "";
 	private static final String PACKAGE_SEPARATOR_STRING = String.valueOf(PACKAGE_SEPARATOR_CHAR);
 
 	/**
@@ -70,8 +70,9 @@ class ClasspathScanner {
 	}
 
 	List<Class<?>> scanForClassesInPackage(String basePackageName, ClassFilter classFilter) {
-
-		Preconditions.condition(DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName), "basePackageName must not be blank");
+		Preconditions.condition(
+			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
+			"basePackageName must not be null or blank");
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 		basePackageName = basePackageName.trim();
 
@@ -82,7 +83,7 @@ class ClasspathScanner {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 
-		return findClassesForUri(root, DEFAULT_PACKAGE_NAME, classFilter);
+		return findClassesForUri(root, PackageUtils.DEFAULT_PACKAGE_NAME, classFilter);
 	}
 
 	/**

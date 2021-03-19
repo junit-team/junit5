@@ -11,16 +11,12 @@
 package org.junit.platform.engine;
 
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.commons.util.ModuleUtils.getModuleName;
-import static org.junit.platform.commons.util.ModuleUtils.getModuleVersion;
 
-import java.io.File;
-import java.net.URL;
 import java.util.Optional;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ModuleUtils;
+import org.junit.platform.commons.util.PackageUtils;
 
 /**
  * A {@code TestEngine} facilitates <em>discovery</em> and <em>execution</em> of
@@ -143,11 +139,11 @@ public interface TestEngine {
 	 * @see #getVersion()
 	 */
 	default Optional<String> getArtifactId() {
-		Optional<String> moduleName = getModuleName(getClass());
+		Optional<String> moduleName = ModuleUtils.getModuleName(getClass());
 		if (moduleName.isPresent()) {
 			return moduleName;
 		}
-		return Optional.ofNullable(getClass().getPackage()).map(Package::getImplementationTitle);
+		return PackageUtils.getAttribute(getClass(), Package::getImplementationTitle);
 	}
 
 	/**
@@ -184,26 +180,16 @@ public interface TestEngine {
 	 * @see #getArtifactId()
 	 */
 	default Optional<String> getVersion() {
-		try {
-			URL jarUrl = getClass().getProtectionDomain().getCodeSource().getLocation();
-			try (JarFile jarFile = new JarFile(new File(jarUrl.toURI()))) {
-				Attributes mainAttributes = jarFile.getManifest().getMainAttributes();
-				Optional<String> standalone = Optional.ofNullable(mainAttributes.getValue("Engine-Version-" + getId()));
-				if (standalone.isPresent()) {
-					return standalone;
-				}
-			}
+		Optional<String> standalone = PackageUtils.getAttribute(getClass(), "Engine-Version-" + getId());
+		if (standalone.isPresent()) {
+			return standalone;
 		}
-		catch (Exception ignored) {
-		}
-
-		Optional<String> moduleVersion = getModuleVersion(getClass());
+		String fallback = "DEVELOPMENT";
+		Optional<String> moduleVersion = ModuleUtils.getModuleVersion(getClass());
 		if (moduleVersion.isPresent()) {
 			return moduleVersion;
 		}
-
-		return Optional.of(
-			Optional.ofNullable(getClass().getPackage()).map(Package::getImplementationVersion).orElse("DEVELOPMENT"));
+		return Optional.of(PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse(fallback));
 	}
 
 }

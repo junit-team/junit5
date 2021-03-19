@@ -255,6 +255,18 @@ class ClasspathScannerTests {
 	}
 
 	@Test
+	void scanForClassesInPackageForNullBasePackage() {
+		assertThrows(PreconditionViolationException.class,
+			() -> classpathScanner.scanForClassesInPackage(null, allClasses));
+	}
+
+	@Test
+	void scanForClassesInPackageForWhitespaceBasePackage() {
+		assertThrows(PreconditionViolationException.class,
+			() -> classpathScanner.scanForClassesInPackage("    ", allClasses));
+	}
+
+	@Test
 	void scanForClassesInPackageForNullClassFilter() {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInPackage("org.junit.platform.commons", null));
