@@ -10,16 +10,3 @@ compile:
   tags:   
     - run_concurrently_node10
     
-sigridci:
-  stage: report
-  script:
-    - git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci
-    - ./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5
-  allow_failure: true
-  artifacts:
-    paths:
-      - "sigrid-ci-output/*"
-    expire_in: 1 week
-    when: always
-  tags:
-    - run_concurrently_node10
