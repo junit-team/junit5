@@ -462,13 +462,23 @@ indirectly present, or meta-present on a given element.
 
 A container or test may be enabled or disabled based on the boolean return of a
 method via the `{EnabledIf}` and `{DisabledIf}` annotations. The method is provided to
-the annotation via its name, or its fully qualified name if located outside the test
-class.
+the annotation via its name.
 If needed, the condition method can take a single parameter of type `ExtensionContext`.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_custom]
+----
+
+Alternatively, the condition method can be located outside the test class. In this case,
+it has to be referenced by its _fully qualified name_ as demonstrated in the following
+example.
+
+[source,java,indent=0]
+----
+package example;
+
+include::{testDir}/example/ExternalCustomConditionDemo.java[tags=user_guide_external_custom_condition]
 ----
 
 NOTE: When `{EnabledIf}` or `{DisabledIf}` is used at class level, the condition method
