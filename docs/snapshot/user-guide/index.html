@@ -2156,8 +2156,7 @@ indirectly present, or meta-present on a given element.</p>
 <div class="paragraph">
 <p>A container or test may be enabled or disabled based on the boolean return of a
 method via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> annotations. The method is provided to
-the annotation via its name, or its fully qualified name if located outside the test
-class.
+the annotation via its name.
 If needed, the condition method can take a single parameter of type <code>ExtensionContext</code>.</p>
 </div>
 <div class="listingblock">
@@ -2176,6 +2175,37 @@ If needed, the condition method can take a single parameter of type <code>Extens
 
 <span class="kt">boolean</span> <span class="nf">customCondition</span><span class="o">()</span> <span class="o">{</span>
     <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, the condition method can be located outside the test class. In this case,
+it has to be referenced by its <em>fully qualified name</em> as demonstrated in the following
+example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">example</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.condition.EnabledIf</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">ExternalCustomConditionDemo</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="nd">@EnabledIf</span><span class="o">(</span><span class="s">"example.ExternalCondition#customCondition"</span><span class="o">)</span>
+    <span class="kt">void</span> <span class="nf">enabled</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// ...</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">ExternalCondition</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">customCondition</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -10297,7 +10327,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-03-19 11:09:38 UTC
+Last updated 2021-03-21 18:42:34 UTC
 </div>
 </div>
 <style>
