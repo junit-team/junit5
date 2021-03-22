@@ -1,10 +1,4 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.9-buster'
-        }
-    }
-    
     environment {
         SIGRID_CI_ACCOUNT = credentials('SIGRID_CI_ACCOUNT')
         SIGRID_CI_TOKEN = credentials('SIGRID_CI_TOKEN')
