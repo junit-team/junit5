@@ -9,8 +9,8 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'if cd repo; then git pull; else git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci; fi'
-                sh './sigridci/sigridci/sigridci.py --customer opensource --system junit --source .'
+                sh 'git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci-client'
+                sh './sigridci-client/sigridci/sigridci.py --customer opensource --system junit --source .'
             }
         }
     }
