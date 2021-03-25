@@ -123,6 +123,12 @@ allprojects {
 	}
 }
 
+val clearTempRepoDir by tasks.registering {
+	doFirst {
+		tempRepoDir.deleteRecursively()
+	}
+}
+
 subprojects {
 
 	if (project in jupiterProjects) {
@@ -199,6 +205,11 @@ subprojects {
 						url = uri(tempRepoDir)
 					}
 				}
+			}
+		}
+		tasks.withType<PublishToMavenRepository>().configureEach {
+			if (name.endsWith("To${tempRepoName.capitalize()}Repository")) {
+				dependsOn(clearTempRepoDir)
 			}
 		}
 	}
