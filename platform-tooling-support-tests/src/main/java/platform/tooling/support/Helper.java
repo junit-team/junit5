@@ -117,7 +117,8 @@ public class Helper {
 			System.getProperty("jdk.home." + version), //
 			System.getProperty("jdk." + version), //
 			System.getenv("JAVA_HOME_" + version), //
-			System.getenv("JAVA_" + version) //
+			System.getenv("JAVA_" + version), //
+			System.getenv("JDK" + version) //
 		);
 		return sources.filter(Objects::nonNull).findFirst().map(Path::of);
 	}
