@@ -91,6 +91,9 @@ class MavenRepo(@get:InputDirectory @get:PathSensitive(PathSensitivity.RELATIVE)
 
 class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgumentProvider {
 	@Internal
+	val passToolchain = project.providers.gradleProperty("enableTestDistribution").map(String::toBoolean).orElse(false).map { !it }
+
+	@Internal
 	val javaLauncher: Property<JavaLauncher> = project.objects.property<JavaLauncher>()
 			.value(project.provider {
 				try {
@@ -103,8 +106,11 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 			})
 
 	override fun asArguments(): List<String> {
-		val metadata = javaLauncher.map { it.metadata }
-		val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
-		return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
+		if (passToolchain.get()) {
+			val metadata = javaLauncher.map { it.metadata }
+			val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
+			return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
+		}
+		return emptyList()
 	}
 }
