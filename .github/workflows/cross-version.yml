@@ -43,7 +43,14 @@ jobs:
           restore-keys: |
             test-${{ runner.os }}-maven-
       - name: Test
+        env:
+          ORG_GRADLE_PROJECT_enableTestDistribution: true
         run: |
           ./gradlew --version
           ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
           ./gradlew --no-parallel -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} -Porg.gradle.java.installations.auto-download=false build "-Dscan.tag.JDK_${{ matrix.jdk }}"
+      - name: Upload Test Distribution trace files
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test Distribution trace files
+          path: '**/build/test-results/*/trace.json'
