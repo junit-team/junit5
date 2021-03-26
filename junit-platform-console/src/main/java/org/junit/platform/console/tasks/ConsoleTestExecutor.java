@@ -74,7 +74,7 @@ public class ConsoleTestExecutor {
 	}
 
 	private Optional<ClassLoader> createCustomClassLoader() {
-		List<Path> additionalClasspathEntries = options.getAdditionalClasspathEntries();
+		List<Path> additionalClasspathEntries = options.getExistingAdditionalClasspathEntries();
 		if (!additionalClasspathEntries.isEmpty()) {
 			URL[] urls = additionalClasspathEntries.stream().map(this::toURL).toArray(URL[]::new);
 			ClassLoader parentClassLoader = ClassLoaderUtils.getDefaultClassLoader();

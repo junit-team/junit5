@@ -13,6 +13,7 @@ package org.junit.platform.console.options;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
@@ -20,7 +21,6 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -128,14 +128,16 @@ public class CommandLineOptions {
 		this.theme = theme;
 	}
 
+	public List<Path> getExistingAdditionalClasspathEntries() {
+		return this.additionalClasspathEntries.stream().filter(Files::exists).collect(toList());
+	}
+
 	public List<Path> getAdditionalClasspathEntries() {
 		return this.additionalClasspathEntries;
 	}
 
 	public void setAdditionalClasspathEntries(List<Path> additionalClasspathEntries) {
-		// Create a modifiable copy
-		this.additionalClasspathEntries = new ArrayList<>(additionalClasspathEntries);
-		this.additionalClasspathEntries.removeIf(path -> !Files.exists(path));
+		this.additionalClasspathEntries = additionalClasspathEntries;
 	}
 
 	public boolean isFailIfNoTests() {
