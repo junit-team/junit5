@@ -22,6 +22,13 @@ tasks.withType<Test>().configureEach {
 		enabled.convention(providers.gradleProperty("enableTestDistribution").map(String::toBoolean).orElse(false))
 		maxLocalExecutors.set(providers.gradleProperty("testDistribution.maxLocalExecutors").map(String::toInt).orElse(1))
 		maxRemoteExecutors.set(providers.gradleProperty("testDistribution.maxRemoteExecutors").map(String::toInt))
+		if (System.getenv("CI") != null) {
+			when {
+				OperatingSystem.current().isLinux -> requirements.add("os=linux")
+				OperatingSystem.current().isWindows -> requirements.add("os=windows")
+				OperatingSystem.current().isMacOsX -> requirements.add("os=macos")
+			}
+		}
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14
