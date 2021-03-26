@@ -19,10 +19,14 @@ tasks.withType<Test>().configureEach {
 		maxRetries.set(providers.gradleProperty("retries").map(String::toInt).orElse(2))
 	}
 	distribution {
-		enabled.convention(providers.gradleProperty("enableTestDistribution").map(String::toBoolean).orElse(false))
+		val isCiServer = System.getenv("CI") != null
+		enabled.convention(providers.gradleProperty("enableTestDistribution")
+			.map(String::toBoolean)
+			.map { enabled -> enabled && (!isCiServer || System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNotBlank()) }
+			.orElse(false))
 		maxLocalExecutors.set(providers.gradleProperty("testDistribution.maxLocalExecutors").map(String::toInt).orElse(1))
 		maxRemoteExecutors.set(providers.gradleProperty("testDistribution.maxRemoteExecutors").map(String::toInt))
-		if (System.getenv("CI") != null) {
+		if (isCiServer) {
 			when {
 				OperatingSystem.current().isLinux -> requirements.add("os=linux")
 				OperatingSystem.current().isWindows -> requirements.add("os=windows")
