@@ -77,7 +77,7 @@ class DiscoveryRequestCreator {
 	private Set<Path> determineClasspathRoots(CommandLineOptions options) {
 		if (options.getSelectedClasspathEntries().isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
-			rootDirs.addAll(options.getAdditionalClasspathEntries());
+			rootDirs.addAll(options.getExistingAdditionalClasspathEntries());
 			return rootDirs;
 		}
 		return new LinkedHashSet<>(options.getSelectedClasspathEntries());
