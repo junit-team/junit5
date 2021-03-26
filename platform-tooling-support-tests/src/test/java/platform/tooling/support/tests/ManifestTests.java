@@ -14,10 +14,7 @@ import static aQute.bnd.osgi.Constants.VERSION_ATTRIBUTE;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static platform.tooling.support.Helper.createJarPath;
 
-import java.io.File;
-import java.lang.module.ModuleFinder;
 import java.util.jar.Attributes;
 
 import aQute.bnd.osgi.Domain;
@@ -28,7 +25,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.osgi.framework.Version;
 import org.osgi.framework.VersionRange;
+
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 
 /**
  * @since 1.5
@@ -39,9 +38,7 @@ class ManifestTests {
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void manifestEntriesAdhereToConventions(String module) throws Exception {
 		var version = Helper.version(module);
-		var modulePath = createJarPath(module);
-		var uri = ModuleFinder.of(modulePath).findAll().iterator().next().location().orElseThrow();
-		var jarFile = new File(uri);
+		var jarFile = MavenRepo.jar(module).toFile();
 		try (var jar = new Jar(jarFile)) {
 			var manifest = jar.getManifest();
 			var attributes = manifest.getMainAttributes();

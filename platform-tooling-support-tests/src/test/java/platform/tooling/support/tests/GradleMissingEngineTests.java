@@ -11,10 +11,11 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.List;
 
 import de.sormuras.bartholdy.Tool;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 /**
@@ -42,13 +44,13 @@ class GradleMissingEngineTests {
 				.setProject(project) //
 				.setWorkspace(project + "-wrapper") //
 				.setTool(gradle) //
-				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
+				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
-				.build() //
+				.setTimeout(Duration.ofMinutes(2)).build() //
 				.run();
 
-		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		assertEquals(1, result.getExitCode());
 		assertLinesMatch(List.of( //
