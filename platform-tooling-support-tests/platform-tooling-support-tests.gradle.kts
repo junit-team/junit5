@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
 
 plugins {
@@ -41,8 +42,6 @@ dependencies {
 }
 
 tasks.test {
-	inputs.dir("projects")
-
 	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
 	enabled = System.getProperty("platform.tooling.support.tests.enabled")?.toBoolean() ?: false
 
@@ -53,34 +52,45 @@ tasks.test {
 		// All maven-aware projects must be installed, i.e. published to the local repository
 		val mavenizedProjects: List<Project> by rootProject
 		val tempRepoName: String by rootProject
-		val tempRepoDir: File by rootProject
 
 		(mavenizedProjects + project(":junit-bom"))
 				.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
 				.forEach { dependsOn(it) }
-
-		// Pass version constants (declared in Versions.kt) to tests as system properties
-		systemProperty("Versions.apiGuardian", versions.apiguardian)
-		systemProperty("Versions.assertJ", versions.assertj)
-		systemProperty("Versions.junit4", versions.junit4)
-		systemProperty("Versions.ota4j", versions.opentest4j)
-
-		jvmArgumentProviders += MavenRepo(tempRepoDir)
-		jvmArgumentProviders += JavaHomeDir(project, 8)
 	}
+
+	val tempRepoDir: File by rootProject
+	jvmArgumentProviders += MavenRepo(tempRepoDir)
+
+	// Pass version constants (declared in Versions.kt) to tests as system properties
+	systemProperty("Versions.apiGuardian", versions.apiguardian)
+	systemProperty("Versions.assertJ", versions.assertj)
+	systemProperty("Versions.junit4", versions.junit4)
+	systemProperty("Versions.ota4j", versions.opentest4j)
 
 	(options as JUnitPlatformOptions).apply {
 		includeEngines("archunit")
 	}
 
-	distribution {
-		enabled.set(false)
+	inputs.apply {
+		dir("projects").withPathSensitivity(RELATIVE)
+		file("${rootDir}/gradle.properties")
+		file("${rootDir}/settings.gradle.kts")
+		file("${rootDir}/gradlew")
+		file("${rootDir}/gradlew.bat")
+		dir("${rootDir}/gradle/wrapper").withPathSensitivity(RELATIVE)
+		dir("${rootDir}/documentation/src/main").withPathSensitivity(RELATIVE)
+		dir("${rootDir}/documentation/src/test").withPathSensitivity(RELATIVE)
 	}
+
+	distribution {
+		requirements.add("jdk=8")
+	}
+	jvmArgumentProviders += JavaHomeDir(project, 8)
 
 	maxParallelForks = 1 // Bartholdy.install is not parallel safe, see https://github.com/sormuras/bartholdy/issues/4
 }
 
-class MavenRepo(@get:InputDirectory @get:PathSensitive(PathSensitivity.RELATIVE) val repoDir: File) : CommandLineArgumentProvider {
+class MavenRepo(@get:InputDirectory @get:PathSensitive(RELATIVE) val repoDir: File) : CommandLineArgumentProvider {
 	override fun asArguments() = listOf("-Dmaven.repo=$repoDir")
 }
 

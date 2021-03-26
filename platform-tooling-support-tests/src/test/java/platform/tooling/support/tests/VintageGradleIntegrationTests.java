@@ -11,7 +11,7 @@
 package platform.tooling.support.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -25,6 +25,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 class VintageGradleIntegrationTests {
@@ -60,12 +61,12 @@ class VintageGradleIntegrationTests {
 				.setProject("vintage") //
 				.setWorkspace("vintage-gradle-" + version) //
 				.addArguments("clean", "test", "--stacktrace") //
-				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
+				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.build() //
 				.run();
-		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 		return result;
 	}
 

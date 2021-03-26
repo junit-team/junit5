@@ -11,8 +11,8 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.nio.file.Path;
@@ -24,6 +24,7 @@ import de.sormuras.bartholdy.tool.Java;
 import org.junit.jupiter.api.Test;
 
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 /**
@@ -52,12 +53,12 @@ class JavaVersionsTests {
 				.setTool(Request.maven()) //
 				.setProject("java-versions") //
 				.setWorkspace("java-versions-" + version) //
-				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
+				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--debug", "verify") //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.setJavaHome(javaHome) //
 				.build().run();
-		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"));
 		return result.getOutputLines("out");
