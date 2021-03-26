@@ -69,11 +69,6 @@ tasks.test {
 		jvmArgumentProviders += JavaHomeDir(project, 8)
 	}
 
-	filter {
-		// Include only tests from this module
-		includeTestsMatching("platform.tooling.support.*")
-	}
-
 	(options as JUnitPlatformOptions).apply {
 		includeEngines("archunit")
 	}
