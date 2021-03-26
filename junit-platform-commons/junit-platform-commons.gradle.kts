@@ -1,5 +1,3 @@
-import java.util.spi.ToolProvider
-
 plugins {
 	`java-library-conventions`
 	`java-multi-release-sources`
