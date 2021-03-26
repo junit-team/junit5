@@ -11,11 +11,10 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static platform.tooling.support.Helper.createJarPath;
 
 import java.lang.module.ModuleFinder;
 import java.nio.file.Files;
@@ -29,6 +28,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 /**
@@ -39,7 +39,7 @@ class JarDescribeModuleTests {
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void describeModule(String module) throws Exception {
-		var modulePath = createJarPath(module);
+		var modulePath = MavenRepo.jar(module);
 		var result = Request.builder() //
 				.setTool(new Jar()) //
 				.setProject("jar-describe-module") //
@@ -49,7 +49,7 @@ class JarDescribeModuleTests {
 				.build() //
 				.run();
 
-		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"), "error log isn't empty");
@@ -66,7 +66,7 @@ class JarDescribeModuleTests {
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void packageNamesStartWithNameOfTheModule(String module) {
-		var modulePath = createJarPath(module);
+		var modulePath = MavenRepo.jar(module);
 		var moduleDescriptor = ModuleFinder.of(modulePath).findAll().iterator().next().descriptor();
 		var moduleName = moduleDescriptor.name();
 		for (var packageName : moduleDescriptor.packages()) {

@@ -67,6 +67,19 @@ public class Helper {
 		return System.getProperty("Versions." + moduleOrSystemProperty, defaultVersion);
 	}
 
+	static String groupId(String artifactId) {
+		if (artifactId.startsWith("junit-jupiter")) {
+			return "org.junit.jupiter";
+		}
+		if (artifactId.startsWith("junit-platform")) {
+			return "org.junit.platform";
+		}
+		if (artifactId.startsWith("junit-vintage")) {
+			return "org.junit.vintage";
+		}
+		return "org.junit";
+	}
+
 	public static String replaceVersionPlaceholders(String line) {
 		line = line.replace("${jupiterVersion}", version("junit-jupiter"));
 		line = line.replace("${vintageVersion}", version("junit-vintage"));
@@ -90,13 +103,8 @@ public class Helper {
 		}
 	}
 
-	public static Path createJarPath(String module) {
-		return Paths.get("..", module, "build", "libs") //
-				.resolve(module + '-' + version(module) + ".jar");
-	}
-
 	static JarFile createJarFile(String module) {
-		var path = createJarPath(module);
+		var path = MavenRepo.jar(module);
 		try {
 			return new JarFile(path.toFile());
 		}
@@ -126,7 +134,7 @@ public class Helper {
 	/** Load, here copy, modular jar files to the given target directory. */
 	public static void loadAllJUnitModules(Path target) throws Exception {
 		for (var module : loadModuleDirectoryNames()) {
-			var jar = createJarPath(module);
+			var jar = MavenRepo.jar(module);
 			Files.copy(jar, target.resolve(jar.getFileName()));
 		}
 	}

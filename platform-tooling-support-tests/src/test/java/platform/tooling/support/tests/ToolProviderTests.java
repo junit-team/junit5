@@ -26,7 +26,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -39,6 +38,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 /**
@@ -52,10 +52,15 @@ class ToolProviderTests {
 	static void prepareLocalLibraryDirectoryWithJUnitPlatformModules() {
 		try {
 			var lib = Files.createDirectories(LIB);
+			try (var directoryStream = Files.newDirectoryStream(lib, "*.jar")) {
+				for (Path jarFile : directoryStream) {
+					Files.delete(jarFile);
+				}
+			}
 			for (var module : Helper.loadModuleDirectoryNames()) {
 				if (module.startsWith("junit-platform")) {
-					var jar = Helper.createJarPath(module);
-					Files.copy(jar, lib.resolve(jar.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+					var jar = MavenRepo.jar(module);
+					Files.copy(jar, lib.resolve(module + ".jar"));
 				}
 			}
 			Helper.load(lib, "org.apiguardian", "apiguardian-api", Helper.version("apiGuardian", "1.1.0"));
