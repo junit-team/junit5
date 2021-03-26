@@ -1,5 +1,3 @@
-import java.util.spi.ToolProvider
-
 plugins {
 	`java-library-conventions`
 	`shadow-conventions`
