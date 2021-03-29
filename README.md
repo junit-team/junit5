@@ -4,6 +4,8 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 [![Support JUnit](https://img.shields.io/badge/%F0%9F%92%9A-Support%20JUnit-brightgreen.svg)](https://junit.org/sponsoring)
 
+[![sigridci](https://github.com/dennis-sig/junit5/actions/workflows/sigridci.yml/badge.svg)](https://github.com/dennis-sig/junit5/actions/workflows/sigridci.yml)
+
 ## Latest Releases
 
 - General Availability (GA): [JUnit 5.7.0](https://github.com/junit-team/junit5/releases/tag/r5.7.0) (September 13, 2020)
