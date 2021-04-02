@@ -23,4 +23,7 @@ module org.junit.platform.reporting {
 	// exports org.junit.platform.reporting; empty package
 	exports org.junit.platform.reporting.legacy;
 	exports org.junit.platform.reporting.legacy.xml;
+
+	provides org.junit.platform.launcher.TestExecutionListener
+			with org.junit.platform.reporting.open.xml.OpenTestReportGeneratingListener;
 }

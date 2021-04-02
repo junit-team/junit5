@@ -125,6 +125,7 @@ tasks {
 			val debugging = findProperty("consoleLauncherTestDebug")?.toString()?.toBoolean() ?: false
 			val output = ByteArrayOutputStream()
 			val result = javaexec {
+				debug = project.findProperty("debug") == "true"
 				classpath = runtimeClasspath
 				mainClass.set("org.junit.platform.console.ConsoleLauncher")
 				args("--scan-classpath")
@@ -134,6 +135,7 @@ tasks {
 				args("--exclude-tag", "exclude")
 				args("--reports-dir", reportsDir)
 				systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+				systemProperty("junit.platform.reports.dir", reportsDir)
 				debug = debugging
 				if (!debugging) {
 					standardOutput = output
