@@ -1,3 +1,13 @@
+/*
+ * Copyright 2015-2021 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
 package org.junit.platform.reporting.open.xml;
 
 import org.junit.platform.engine.TestDescriptor;
@@ -6,16 +16,20 @@ import org.opentest4j.reporting.events.api.Namespace;
 
 class JUnitFactory {
 
-    public static Namespace NAMESPACE = Namespace.of("https://schemas.opentest4j.org/reporting/junit/1.0");
+	public static Namespace NAMESPACE = Namespace.of("https://schemas.opentest4j.org/reporting/junit/1.0");
 
-    private JUnitFactory() {
-    }
+	private JUnitFactory() {
+	}
 
-    static Factory<LegacyReportingName> legacyReportingName(String legacyReportingName) {
-        return context -> new LegacyReportingName(context, legacyReportingName);
-    }
+	static Factory<UniqueId> uniqueId(org.junit.platform.engine.UniqueId uniqueId) {
+		return context -> new UniqueId(context, uniqueId);
+	}
 
-    static Factory<Type> type(TestDescriptor.Type type) {
-        return context -> new Type(context, type);
-    }
+	static Factory<LegacyReportingName> legacyReportingName(String legacyReportingName) {
+		return context -> new LegacyReportingName(context, legacyReportingName);
+	}
+
+	static Factory<Type> type(TestDescriptor.Type type) {
+		return context -> new Type(context, type);
+	}
 }
