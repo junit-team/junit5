@@ -23,7 +23,8 @@ import org.apiguardian.api.API;
 public interface Named<T> {
 
 	/**
-	 * Factory method for creating an instance of {@code Named} based on a {@code name} and a {@code payload}
+	 * Factory method for creating an instance of {@code Named} based on a
+     * {@code name} and a {@code payload}.
 	 *
 	 * @param name the name to be used for the wrapped object
 	 * @param payload the object to be wrapped
@@ -51,7 +52,8 @@ public interface Named<T> {
 	}
 
 	/**
-	 * Factory method for creating an instance of {@code Named} based on a {@code name} and a {@code payload}
+	 * Factory method for creating an instance of {@code Named} based on a
+     * {@code name} and a {@code payload}.
 	 *
 	 * <p>This method is an <em>alias</em> for {@link Named#of} and is
 	 * intended to be used when statically imported &mdash; for example, via:
