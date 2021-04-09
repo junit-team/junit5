@@ -14,6 +14,8 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
+import java.lang.Object;
+
 /**
  * {@code Named} is used to wrap an object and give it a name.
  *
@@ -22,6 +24,15 @@ import org.apiguardian.api.API;
 @API(status = STABLE, since = "5.8")
 public interface Named<T> {
 
+    /**
+     * Factory method for creating an instance of {@code Named} based on a {@code name} and a {@code payload}
+     *
+     * @param name the name to be used for the wrapped object
+     * @param payload the object to be wrapped
+     * @param <T> the type of the payload
+     * @return an instance of {@code Named}; never {@code null}
+     * @see #named(String, java.lang.Object)
+     */
 	static <T> Named<T> of(String name, T payload) {
 		return new Named<T>() {
 			@Override
@@ -41,6 +52,18 @@ public interface Named<T> {
 		};
 	}
 
+    /**
+     * Factory method for creating an instance of {@code Named} based on a {@code name} and a {@code payload}
+     *
+     * <p>This method is an <em>alias</em> for {@link Named#of} and is
+     * intended to be used when statically imported &mdash; for example, via:
+     * {@code import static org.junit.jupiter.api.Named.named;}
+     *
+     * @param name the name to be used for the wrapped object
+     * @param payload the object to be wrapped
+     * @param <T> the type of the payload
+     * @return an instance of {@code Named}; never {@code null}
+q     */
 	static <T> Named<T> named(String name, T payload) {
 		return of(name, payload);
 	}
