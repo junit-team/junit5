@@ -18,6 +18,8 @@ import org.apiguardian.api.API;
  * {@code Named} is used to wrap an object and give it a name.
  *
  * @param <T> the type of the payload
+ *
+ * @since 5.8
  */
 @API(status = STABLE, since = "5.8")
 public interface Named<T> {
