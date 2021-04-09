@@ -42,7 +42,7 @@ public interface Named<T> {
 	}
 
 	static <T> Named<T> named(String name, T payload) {
-		return of(named, payload);
+		return of(name, payload);
 	}
 
 	String getName();
