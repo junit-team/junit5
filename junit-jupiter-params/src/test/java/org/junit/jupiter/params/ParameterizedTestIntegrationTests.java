@@ -1046,11 +1046,11 @@ class ParameterizedTestIntegrationTests {
 			fail(string);
 		}
 
-        @MethodSourceTest
-        @Order(14)
-        void namedParametersAlias(String string) {
-            fail(string);
-        }
+		@MethodSourceTest
+		@Order(14)
+		void namedParametersAlias(String string) {
+			fail(string);
+		}
 
 		// ---------------------------------------------------------------------
 
