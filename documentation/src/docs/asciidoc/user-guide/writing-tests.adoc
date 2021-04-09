@@ -1766,8 +1766,8 @@ and dynamic tests.
 The first method returns an invalid return type. Since an invalid return type cannot be
 detected at compile time, a `JUnitException` is thrown when it is detected at runtime.
 
-The next five methods are very simple examples that demonstrate the generation of a
-`Collection`, `Iterable`, `Iterator`, or `Stream` of `DynamicTest` instances. Most of
+The next six methods are very simple examples that demonstrate the generation of a
+`Collection`, `Iterable`, `Iterator`, array, or `Stream` of `DynamicTest` instances. Most of
 these examples do not really exhibit dynamic behavior but merely demonstrate the
 supported return types in principle. However, `dynamicTestsFromStream()` and
 `dynamicTestsFromIntStream()` demonstrate how easy it is to generate dynamic tests for a
