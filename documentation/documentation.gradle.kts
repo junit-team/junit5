@@ -116,11 +116,10 @@ tasks {
 		inputs.files(runtimeClasspath).withNormalizer(ClasspathNormalizer::class)
 		val reportsDir = file("$buildDir/test-results")
 		outputs.dir(reportsDir)
-		outputs.cacheIf { true }
+		outputs.cacheIf { project.findProperty("debug") != "true" }
 
 		// Track OS as input so that tests are executed on all configured operating systems on CI
 		trackOperationSystemAsInput()
-
 		doFirst {
 			val debugging = findProperty("consoleLauncherTestDebug")?.toString()?.toBoolean() ?: false
 			val output = ByteArrayOutputStream()
