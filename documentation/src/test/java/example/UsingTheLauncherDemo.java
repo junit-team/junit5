@@ -66,6 +66,7 @@ class UsingTheLauncherDemo {
 		// @formatter:on
 	}
 
+	@org.junit.jupiter.api.Tag("exclude")
 	@org.junit.jupiter.api.Test
 	@SuppressWarnings("unused")
 	void execution() {
