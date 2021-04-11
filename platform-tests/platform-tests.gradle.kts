@@ -8,8 +8,6 @@ plugins {
 }
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	// --- Things we are testing --------------------------------------------------
 	testImplementation(project(":junit-platform-commons"))
 	testImplementation(project(":junit-platform-console"))

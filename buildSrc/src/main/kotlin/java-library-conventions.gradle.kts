@@ -15,24 +15,11 @@ val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
 val builtByValue: String by rootProject.extra
 
-val internal by configurations.creating {
-	isVisible = false
-	isCanBeConsumed = false
-	isCanBeResolved = false
-}
-
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
 val moduleSourceDir = file("src/module/$javaModuleName")
 val moduleOutputDir = file("$buildDir/classes/java/module")
 val javaVersion = JavaVersion.current()
-
-configurations {
-	compileClasspath.get().extendsFrom(internal)
-	runtimeClasspath.get().extendsFrom(internal)
-	testCompileClasspath.get().extendsFrom(internal)
-	testRuntimeClasspath.get().extendsFrom(internal)
-}
 
 eclipse {
 	jdt {
@@ -98,8 +85,6 @@ if (project in mavenizedProjects) {
 		val javaComponent = components["java"] as AdhocComponentWithVariants
 		javaComponent.withVariantsFromConfiguration(configurations["testFixturesApiElements"]) { skip() }
 		javaComponent.withVariantsFromConfiguration(configurations["testFixturesRuntimeElements"]) { skip() }
-		configurations["testFixturesCompileClasspath"].extendsFrom(internal)
-		configurations["testFixturesRuntimeClasspath"].extendsFrom(internal)
 	}
 
 	configure<PublishingExtension> {

@@ -7,8 +7,6 @@ plugins {
 description = "JUnit Platform Suite Engine"
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	api(platform(project(":junit-bom")))
 	api(libs.apiguardian)
 	api(project(":junit-platform-engine"))
