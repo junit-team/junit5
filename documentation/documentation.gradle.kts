@@ -52,7 +52,7 @@ dependencies {
 asciidoctorj {
 	modules {
 		diagram.use()
-		pdf.version(versions["asciidoctor-pdf"])
+		pdf.version(libs.versions.asciidoctor.pdf)
 	}
 }
 
@@ -179,7 +179,7 @@ tasks {
 				"junit4-version" to libs.versions.junit4.get(),
 				"apiguardian-version" to libs.versions.apiguardian.get(),
 				"ota4j-version" to libs.versions.opentest4j.get(),
-				"surefire-version" to versions["surefire"],
+				"surefire-version" to libs.versions.surefire.get(),
 				"release-branch" to releaseBranch,
 				"docs-version" to docsVersion,
 				"revnumber" to version,
