@@ -104,7 +104,7 @@ allprojects {
 	if (enableJaCoCo) {
 		apply(plugin = "jacoco")
 		configure<JacocoPluginExtension> {
-			toolVersion = libs.versions.jacoco.get()
+			toolVersion = rootProject.libs.versions.jacoco.get()
 		}
 	}
 
