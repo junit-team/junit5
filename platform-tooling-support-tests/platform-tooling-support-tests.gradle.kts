@@ -26,7 +26,7 @@ dependencies {
 	testImplementation(libs.groovy3) {
 		because("it provides convenience methods to handle process output")
 	}
-	testImplementation("biz.aQute.bnd:biz.aQute.bndlib") {
+	testImplementation(libs.bnd) {
 		because("parsing OSGi metadata")
 	}
 	testRuntimeOnly(libs.slf4j.julBinding) {
