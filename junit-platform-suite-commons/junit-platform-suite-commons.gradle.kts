@@ -6,12 +6,12 @@ plugins {
 description = "JUnit Platform Suite Commons"
 
 dependencies {
-	api(platform(project(":junit-bom")))
+	api(platform(projects.bom))
 	api(libs.apiguardian)
-	api(project(":junit-platform-launcher"))
+	api(projects.platform.launcher)
 
-	implementation(project(":junit-platform-engine"))
-	implementation(project(":junit-platform-suite-api"))
+	implementation(projects.platform.engine)
+	implementation(projects.platform.suite.api)
 
-	testImplementation(project(":junit-jupiter-engine"))
+	testImplementation(projects.jupiter.engine)
 }

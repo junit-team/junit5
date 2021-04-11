@@ -35,35 +35,35 @@ val buildRevision by extra { versioning.info.commit }
 val builtByValue by extra { project.findProperty("builtBy") ?: project.property("defaultBuiltBy") }
 
 val platformProjects by extra(listOf(
-		project(":junit-platform-commons"),
-		project(":junit-platform-console"),
-		project(":junit-platform-console-standalone"),
-		project(":junit-platform-engine"),
-		project(":junit-platform-jfr"),
-		project(":junit-platform-launcher"),
-		project(":junit-platform-reporting"),
-		project(":junit-platform-runner"),
-		project(":junit-platform-suite"),
-		project(":junit-platform-suite-api"),
-		project(":junit-platform-suite-commons"),
-		project(":junit-platform-suite-engine"),
-		project(":junit-platform-testkit")
+		projects.platform.commons,
+		projects.platform.console,
+		projects.platform.`console-standalone`,
+		projects.platform.engine,
+		projects.platform.jfr,
+		projects.platform.launcher,
+		projects.platform.reporting,
+		projects.platform.runner,
+		projects.platform.suite.aggregator,
+		projects.platform.suite.api,
+		projects.platform.suite.commons,
+		projects.platform.suite.engine,
+		projects.platform.testkit
 ))
 
 val jupiterProjects by extra(listOf(
-		project(":junit-jupiter"),
-		project(":junit-jupiter-api"),
-		project(":junit-jupiter-engine"),
-		project(":junit-jupiter-migrationsupport"),
-		project(":junit-jupiter-params")
+		projects.jupiter.aggregator,
+		projects.jupiter.api,
+		projects.jupiter.engine,
+		projects.jupiter.migrationsupport,
+		projects.jupiter.params
 ))
 
 val vintageProjects by extra(listOf(
-		project(":junit-vintage-engine")
+		projects.vintage.engine
 ))
 
 val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProjects)
-val modularProjects by extra(mavenizedProjects - listOf(project(":junit-platform-console-standalone")))
+val modularProjects by extra(mavenizedProjects - listOf(projects.platform.`console-standalone`))
 
 val license by extra(License(
 		name = "Eclipse Public License v2.0",
@@ -76,14 +76,14 @@ val tempRepoDir by extra(file("$buildDir/repo"))
 
 val enableJaCoCo = project.hasProperty("enableJaCoCo")
 val jacocoTestProjects = listOf(
-		project(":junit-jupiter-engine"),
-		project(":junit-jupiter-migrationsupport"),
-		project(":junit-jupiter-params"),
-		project(":junit-platform-runner"),
-		project(":junit-platform-suite-commons"),
-		project(":junit-platform-suite-engine"),
-		project(":junit-vintage-engine"),
-		project(":platform-tests")
+		projects.jupiter.engine,
+		projects.jupiter.migrationsupport,
+		projects.jupiter.params,
+		projects.platform.runner,
+		projects.platform.suite.commons,
+		projects.platform.suite.engine,
+		projects.vintage.engine,
+		projects.platform.tests
 )
 val jacocoCoveredProjects = modularProjects
 val jacocoClassesDir = file("$buildDir/jacoco/classes")

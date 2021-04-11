@@ -54,13 +54,13 @@ dependencies {
 	"testImplementation"(libs.findDependency("assertj").get())
 	"testImplementation"(libs.findDependency("mockito").get())
 
-	if (project.name != "junit-jupiter-engine") {
-		"testImplementation"(project(":junit-jupiter"))
+	if (project != projects.jupiter.engine) {
+		"testImplementation"(projects.jupiter.aggregator)
 	}
-	"testImplementation"(testFixtures(project(":junit-jupiter-api")))
+	"testImplementation"(testFixtures(projects.jupiter.api))
 
-	"testRuntimeOnly"(project(":junit-platform-launcher"))
-	"testRuntimeOnly"(project(":junit-platform-jfr"))
+	"testRuntimeOnly"(projects.platform.launcher)
+	"testRuntimeOnly"(projects.platform.jfr)
 
 	"testRuntimeOnly"(libs.findBundle("log4j").get())
 }

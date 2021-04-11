@@ -7,16 +7,16 @@ plugins {
 description = "JUnit Platform Suite Engine"
 
 dependencies {
-	api(platform(project(":junit-bom")))
+	api(platform(projects.bom))
 	api(libs.apiguardian)
-	api(project(":junit-platform-engine"))
-	api(project(":junit-platform-suite-api"))
+	api(projects.platform.engine)
+	api(projects.platform.suite.api)
 
-	implementation(project(":junit-platform-suite-commons"))
+	implementation(projects.platform.suite.commons)
 
-	testFixturesApi(project(":junit-jupiter-api"))
-	testFixturesApi(project(":junit-platform-suite-api"))
+	testFixturesApi(projects.jupiter.api)
+	testFixturesApi(projects.platform.suite.api)
 
-	testImplementation(project(":junit-platform-testkit"))
-	testImplementation(project(":junit-jupiter-engine"))
+	testImplementation(projects.platform.testkit)
+	testImplementation(projects.jupiter.engine)
 }
