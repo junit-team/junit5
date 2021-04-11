@@ -274,7 +274,8 @@ afterEvaluate {
 }
 
 checkstyle {
-	toolVersion = versions["checkstyle"]
+	val libs = project.extensions["libs"] as VersionCatalog
+	toolVersion = libs.findVersion("checkstyle").get().requiredVersion
 	configDirectory.set(rootProject.file("src/checkstyle"))
 }
 
