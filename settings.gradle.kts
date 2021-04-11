@@ -6,19 +6,19 @@ pluginManagement {
 		maven(url = "https://repo.gradle.org/gradle/enterprise-libs-release-candidates-local/")
 	}
 	plugins {
-		id("com.gradle.enterprise") version settings.extra["gradle.enterprise.plugin.version"] as String
-		id("com.gradle.enterprise.test-distribution") version settings.extra["test.distribution.plugin.version"] as String
-		id("com.gradle.common-custom-user-data-gradle-plugin") version settings.extra["gradle.user-data.plugin.version"] as String
-		id("net.nemerosa.versioning") version settings.extra["versioning.plugin.version"] as String
-		id("com.github.ben-manes.versions") version settings.extra["versions.plugin.version"] as String
-		id("com.diffplug.spotless") version settings.extra["spotless.plugin.version"] as String
-		id("org.ajoberstar.git-publish") version settings.extra["git-publish.plugin.version"] as String
-		kotlin("jvm") version settings.extra["kotlin.plugin.version"] as String
-		id("org.asciidoctor.jvm.convert") version settings.extra["asciidoctor.plugin.version"] as String
-		id("org.asciidoctor.jvm.pdf") version settings.extra["asciidoctor.plugin.version"] as String
-		id("me.champeau.gradle.jmh") version settings.extra["jmh.plugin.version"] as String
-		id("io.spring.nohttp") version settings.extra["nohttp.plugin.version"] as String
-		id("io.github.gradle-nexus.publish-plugin") version settings.extra["nexus-publish.plugin.version"] as String
+		id("com.gradle.enterprise") version "3.6.1"
+		id("com.gradle.enterprise.test-distribution") version "2.0.2"
+		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.2.1"
+		id("net.nemerosa.versioning") version "2.14.0"
+		id("com.github.ben-manes.versions") version "0.38.0"
+		id("com.diffplug.spotless") version "5.12.0"
+		id("org.ajoberstar.git-publish") version "3.0.0"
+		kotlin("jvm") version "1.4.0"
+		id("org.asciidoctor.jvm.convert") version "3.3.2"
+		id("org.asciidoctor.jvm.pdf") version "3.3.2"
+		id("me.champeau.gradle.jmh") version "0.5.3"
+		id("io.spring.nohttp") version "0.0.6.RELEASE"
+		id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
 	}
 }
 
