@@ -23,9 +23,8 @@ dependencies {
 	testImplementation(libs.archunit) {
 		because("checking the architecture of JUnit 5")
 	}
-	testImplementation("org.codehaus.groovy:groovy") {
+	testImplementation(libs.groovy3) {
 		because("it provides convenience methods to handle process output")
-		exclude(group = "org.junit.platform", module = "junit-platform-launcher")
 	}
 	testImplementation("biz.aQute.bnd:biz.aQute.bndlib") {
 		because("parsing OSGi metadata")

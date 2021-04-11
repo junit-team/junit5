@@ -2,12 +2,7 @@ plugins {
 	`java-platform`
 }
 
-javaPlatform {
-	allowDependencies()
-}
-
 dependencies {
-	api(platform("org.codehaus.groovy:groovy-bom:${versions["groovy"]}"))
 	constraints {
 		// api means "the dependency is for both compilation and runtime"
 		// runtime means "the dependency is only for runtime, not for compilation"

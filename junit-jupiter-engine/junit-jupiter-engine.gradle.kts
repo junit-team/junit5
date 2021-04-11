@@ -22,7 +22,7 @@ dependencies {
 	testImplementation(testFixtures(project(":junit-platform-commons")))
 	testImplementation(kotlin("stdlib"))
 	testImplementation(libs.kotlinx.coroutines)
-	testImplementation("org.codehaus.groovy:groovy")
+	testImplementation(libs.groovy3)
 }
 
 tasks {
