@@ -12,6 +12,7 @@ archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "0.17.0"
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.104" }
+commons-io = { module = "commons-io:commons-io", version = "2.8.0" }
 junit4 = { module = "junit:junit", version = { strictly = "[4.12,)", prefer = "4.13.2" } }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
 picocli = { module = "info.picocli:picocli", version = "4.6.1" }
