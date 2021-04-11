@@ -20,9 +20,6 @@ dependencies {
 		because("moving/deleting directory trees")
 	}
 
-	testImplementation("org.assertj:assertj-core") {
-		because("more assertions")
-	}
 	testImplementation(libs.archunit) {
 		because("checking the architecture of JUnit 5")
 	}
