@@ -17,7 +17,6 @@ dependencies {
 		runtime("org.apache.logging.log4j:log4j-jul:${versions["log4j"]}")
 		api("org.openjdk.jmh:jmh-core:${versions["jmh"]}")
 		api("org.openjdk.jmh:jmh-generator-annprocess:${versions["jmh"]}")
-		api("commons-io:commons-io:${versions["commons-io"]}")
 		api("org.slf4j:slf4j-jdk14:${versions["slf4j"]}")
 		api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions["kotlinx-coroutines-core"]}")
 		api("org.mockito:mockito-junit-jupiter:${versions["mockito"]}")
