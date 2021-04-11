@@ -13,7 +13,7 @@ javaLibrary {
 dependencies {
 	internal(platform(project(":dependencies")))
 
-	implementation("de.sormuras:bartholdy") {
+	implementation(libs.bartholdy) {
 		because("manage external tool installations")
 	}
 	implementation("commons-io:commons-io") {

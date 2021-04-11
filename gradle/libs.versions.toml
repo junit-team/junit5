@@ -13,6 +13,7 @@ univocity-parsers = "2.9.1"
 apiguardian = { module = "org.apiguardian:apiguardian-api", version.ref = "apiguardian" }
 archunit = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 junit4 = { module = "junit:junit", version = { strictly = "[4.12,)", prefer = "4.13.2" } }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }

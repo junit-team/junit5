@@ -18,7 +18,6 @@ dependencies {
 		api("io.github.classgraph:classgraph:${versions["classgraph"]}")
 		api("org.openjdk.jmh:jmh-core:${versions["jmh"]}")
 		api("org.openjdk.jmh:jmh-generator-annprocess:${versions["jmh"]}")
-		api("de.sormuras:bartholdy:${versions["bartholdy"]}")
 		api("commons-io:commons-io:${versions["commons-io"]}")
 		api("org.slf4j:slf4j-jdk14:${versions["slf4j"]}")
 		api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions["kotlinx-coroutines-core"]}")
