@@ -46,8 +46,7 @@ dependencies {
 	testImplementation(kotlin("stdlib"))
 
 	testImplementation(project(":junit-vintage-engine"))
-	testRuntimeOnly("org.apache.logging.log4j:log4j-core")
-	testRuntimeOnly("org.apache.logging.log4j:log4j-jul")
+	testRuntimeOnly(libs.bundles.log4j)
 
 	testImplementation(libs.classgraph) {
 		because("ApiReportGenerator needs it")
