@@ -1,6 +1,7 @@
 [versions]
 apiguardian = "1.1.1"
 assertj = "3.19.0"
+jmh = "1.29"
 junit4 = "4.13.2"
 junit4Osgi = "4.13.2_1"
 junit4Min = "4.12"
@@ -17,6 +18,8 @@ commons-io = { module = "commons-io:commons-io", version = "2.8.0" }
 groovy3 = { module = "org.codehaus.groovy:groovy", version = "3.0.7" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.14" }
 jfrunit = { module = "com.github.gunnarmorling:jfrunit", version = "main-SNAPSHOT" }
+jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
+jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 joox = { module = "org.jooq:joox", version = "1.6.2" }
 junit4 = { module = "junit:junit", version = { strictly = "[4.12,)", prefer = "4.13.2" } }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.4.3" }
