@@ -18,21 +18,13 @@ dependencies {
 	api(project(":junit-platform-engine"))
 	api(libs.junit4)
 
+	testFixturesApi(platform(libs.groovy2.bom))
 	testFixturesApi("org.spockframework:spock-core")
 	testFixturesImplementation(project(":junit-platform-runner"))
 
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
-}
-
-configurations.all {
-	resolutionStrategy.eachDependency {
-		if (requested.group == "org.codehaus.groovy") {
-			useVersion("2.5.11")
-			because("Spock is not yet compatible with Groovy 3.x")
-		}
-	}
 }
 
 tasks {
