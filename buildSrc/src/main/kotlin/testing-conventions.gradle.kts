@@ -64,6 +64,5 @@ dependencies {
 	"testRuntimeOnly"(project(":junit-platform-launcher"))
 	"testRuntimeOnly"(project(":junit-platform-jfr"))
 
-	"testRuntimeOnly"("org.apache.logging.log4j:log4j-core")
-	"testRuntimeOnly"("org.apache.logging.log4j:log4j-jul")
+	"testRuntimeOnly"(libs.findBundle("log4j").get())
 }
