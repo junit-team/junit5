@@ -23,7 +23,7 @@ dependencies {
 	testImplementation("org.assertj:assertj-core") {
 		because("more assertions")
 	}
-	testImplementation("com.tngtech.archunit:archunit-junit5-api") {
+	testImplementation(libs.archunit) {
 		because("checking the architecture of JUnit 5")
 	}
 	testImplementation("org.codehaus.groovy:groovy") {
@@ -32,9 +32,6 @@ dependencies {
 	}
 	testImplementation("biz.aQute.bnd:biz.aQute.bndlib") {
 		because("parsing OSGi metadata")
-	}
-	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine") {
-		because("contains the ArchUnit TestEngine implementation")
 	}
 	testRuntimeOnly("org.slf4j:slf4j-jdk14") {
 		because("provide appropriate SLF4J binding")
