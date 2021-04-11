@@ -3,9 +3,7 @@ plugins {
 	id("com.github.johnrengelman.shadow")
 }
 
-val shadowed by configurations.creating {
-	extendsFrom(configurations["internal"])
-}
+val shadowed by configurations.creating
 
 configurations.forEach { configuration ->
 	configuration.outgoing.apply {

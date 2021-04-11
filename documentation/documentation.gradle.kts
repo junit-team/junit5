@@ -22,13 +22,9 @@ javaLibrary {
 	testJavaVersion = JavaVersion.VERSION_1_8
 }
 
-val apiReport by configurations.creating {
-	extendsFrom(configurations.internal.get())
-}
+val apiReport by configurations.creating
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	implementation(project(":junit-jupiter-api")) {
 		because("Jupiter API is used in src/main/java")
 	}

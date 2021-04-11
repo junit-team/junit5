@@ -6,8 +6,6 @@ plugins {
 description = "JUnit Platform Suite Commons"
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	api(platform(project(":junit-bom")))
 	api(libs.apiguardian)
 	api(project(":junit-platform-launcher"))

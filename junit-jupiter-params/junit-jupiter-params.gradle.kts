@@ -7,8 +7,6 @@ plugins {
 description = "JUnit Jupiter Params"
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	api(platform(project(":junit-bom")))
 	api(libs.apiguardian)
 	api(project(":junit-jupiter-api"))
