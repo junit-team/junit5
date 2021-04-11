@@ -25,7 +25,7 @@ dependencies {
 	testImplementation(testFixtures(project(":junit-platform-launcher")))
 	testImplementation(project(":junit-jupiter-engine"))
 	testImplementation(libs.apiguardian)
-	testImplementation("com.github.gunnarmorling:jfrunit")
+	testImplementation(libs.jfrunit)
 	testImplementation("org.jooq:joox")
 
 	// --- Test run-time dependencies ---------------------------------------------
