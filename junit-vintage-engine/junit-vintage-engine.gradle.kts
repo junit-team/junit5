@@ -19,7 +19,7 @@ dependencies {
 	api(libs.junit4)
 
 	testFixturesApi(platform(libs.groovy2.bom))
-	testFixturesApi("org.spockframework:spock-core")
+	testFixturesApi(libs.spock1)
 	testFixturesImplementation(project(":junit-platform-runner"))
 
 	testImplementation(project(":junit-platform-launcher"))
