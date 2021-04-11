@@ -26,7 +26,7 @@ dependencies {
 	testImplementation(project(":junit-jupiter-engine"))
 	testImplementation(libs.apiguardian)
 	testImplementation(libs.jfrunit)
-	testImplementation("org.jooq:joox")
+	testImplementation(libs.joox)
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(":junit-vintage-engine"))
