@@ -1,5 +1,6 @@
 [versions]
 apiguardian = "1.1.1"
+archunit = "0.17.0"
 assertj = "3.19.0"
 junit4 = "4.13.2"
 junit4Osgi = "4.13.2_1"
@@ -10,6 +11,7 @@ univocity-parsers = "2.9.1"
 
 [libraries]
 apiguardian = { module = "org.apiguardian:apiguardian-api", version.ref = "apiguardian" }
+archunit = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 junit4 = { module = "junit:junit", version = { strictly = "[4.12,)", prefer = "4.13.2" } }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
