@@ -11,5 +11,5 @@ dependencies {
 	api(libs.opentest4j)
 	api(project(":junit-platform-commons"))
 
-	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
+	compileOnly(kotlin("stdlib"))
 }

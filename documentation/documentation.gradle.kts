@@ -43,7 +43,7 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-suite"))
 	testImplementation(project(":junit-platform-testkit"))
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	testImplementation(kotlin("stdlib"))
 
 	testImplementation(project(":junit-vintage-engine"))
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core")
