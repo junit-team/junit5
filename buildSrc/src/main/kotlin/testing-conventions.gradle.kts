@@ -52,9 +52,7 @@ tasks.withType<Test>().configureEach {
 dependencies {
 	val libs = project.extensions["libs"] as VersionCatalog
 	"testImplementation"(libs.findDependency("assertj").get())
-	"testImplementation"("org.mockito:mockito-junit-jupiter") {
-		exclude(module = "junit-jupiter-engine")
-	}
+	"testImplementation"(libs.findDependency("mockito").get())
 
 	if (project.name != "junit-jupiter-engine") {
 		"testImplementation"(project(":junit-jupiter"))

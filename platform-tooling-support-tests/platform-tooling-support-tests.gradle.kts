@@ -29,7 +29,7 @@ dependencies {
 	testImplementation("biz.aQute.bnd:biz.aQute.bndlib") {
 		because("parsing OSGi metadata")
 	}
-	testRuntimeOnly("org.slf4j:slf4j-jdk14") {
+	testRuntimeOnly(libs.slf4j.julBinding) {
 		because("provide appropriate SLF4J binding")
 	}
 }
