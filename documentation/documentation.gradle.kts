@@ -49,7 +49,7 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul")
 
-	testImplementation("io.github.classgraph:classgraph") {
+	testImplementation(libs.classgraph) {
 		because("ApiReportGenerator needs it")
 	}
 }
