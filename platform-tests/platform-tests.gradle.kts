@@ -9,32 +9,32 @@ plugins {
 
 dependencies {
 	// --- Things we are testing --------------------------------------------------
-	testImplementation(project(":junit-platform-commons"))
-	testImplementation(project(":junit-platform-console"))
-	testImplementation(project(":junit-platform-engine"))
-	testImplementation(project(":junit-platform-jfr"))
-	testImplementation(project(":junit-platform-launcher"))
+	testImplementation(projects.platform.commons)
+	testImplementation(projects.platform.console)
+	testImplementation(projects.platform.engine)
+	testImplementation(projects.platform.jfr)
+	testImplementation(projects.platform.launcher)
 
 	// --- Things we are testing with ---------------------------------------------
-	testImplementation(project(":junit-platform-runner"))
-	testImplementation(project(":junit-platform-testkit"))
-	testImplementation(testFixtures(project(":junit-platform-commons")))
-	testImplementation(testFixtures(project(":junit-platform-engine")))
-	testImplementation(testFixtures(project(":junit-platform-launcher")))
-	testImplementation(project(":junit-jupiter-engine"))
+	testImplementation(projects.platform.runner)
+	testImplementation(projects.platform.testkit)
+	testImplementation(testFixtures(projects.platform.commons))
+	testImplementation(testFixtures(projects.platform.engine))
+	testImplementation(testFixtures(projects.platform.launcher))
+	testImplementation(projects.jupiter.engine)
 	testImplementation(libs.apiguardian)
 	testImplementation(libs.jfrunit)
 	testImplementation(libs.joox)
 
 	// --- Test run-time dependencies ---------------------------------------------
-	testRuntimeOnly(project(":junit-vintage-engine"))
+	testRuntimeOnly(projects.vintage.engine)
 	testRuntimeOnly(libs.groovy3) {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
 
 	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
 	jmh(libs.jmh.core)
-	jmh(project(":junit-jupiter-api"))
+	jmh(projects.jupiter.api)
 	jmh(libs.junit4)
 	jmhAnnotationProcessor(libs.jmh.generator.annprocess)
 }
@@ -70,12 +70,12 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(project(":junit-platform-console").configurations["shadowed"])
+		plusConfigurations.add(projects.platform.console.configurations["shadowed"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(project(":junit-platform-console").configurations["shadowed"])
+		scopes["PROVIDED"]!!["plus"]!!.add(projects.platform.console.configurations["shadowed"])
 	}
 }

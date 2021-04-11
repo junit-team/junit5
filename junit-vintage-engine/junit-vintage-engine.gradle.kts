@@ -11,18 +11,18 @@ plugins {
 description = "JUnit Vintage Engine"
 
 dependencies {
-	api(platform(project(":junit-bom")))
+	api(platform(projects.bom))
 	api(libs.apiguardian)
-	api(project(":junit-platform-engine"))
+	api(projects.platform.engine)
 	api(libs.junit4)
 
 	testFixturesApi(platform(libs.groovy2.bom))
 	testFixturesApi(libs.spock1)
-	testFixturesImplementation(project(":junit-platform-runner"))
+	testFixturesImplementation(projects.platform.runner)
 
-	testImplementation(project(":junit-platform-launcher"))
-	testImplementation(project(":junit-platform-runner"))
-	testImplementation(project(":junit-platform-testkit"))
+	testImplementation(projects.platform.launcher)
+	testImplementation(projects.platform.runner)
+	testImplementation(projects.platform.testkit)
 }
 
 tasks {

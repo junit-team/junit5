@@ -5,7 +5,7 @@ plugins {
 description = "JUnit Platform Reporting"
 
 dependencies {
-	api(platform(project(":junit-bom")))
+	api(platform(projects.bom))
 	api(libs.apiguardian)
-	api(project(":junit-platform-launcher"))
+	api(projects.platform.launcher)
 }

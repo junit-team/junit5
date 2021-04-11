@@ -8,7 +8,7 @@ plugins {
 description = "JUnit Platform Commons"
 
 dependencies {
-	api(platform(project(":junit-bom")))
+	api(platform(projects.bom))
 	api(libs.apiguardian)
 }
 

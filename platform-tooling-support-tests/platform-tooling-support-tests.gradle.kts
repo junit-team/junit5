@@ -44,7 +44,7 @@ tasks.test {
 		val mavenizedProjects: List<Project> by rootProject
 		val tempRepoName: String by rootProject
 
-		(mavenizedProjects + project(":junit-bom"))
+		(mavenizedProjects + projects.bom)
 				.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
 				.forEach { dependsOn(it) }
 	}
