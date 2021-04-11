@@ -13,19 +13,9 @@ dependencies {
 		// runtime means "the dependency is only for runtime, not for compilation"
 		// In other words, marking dependency as "runtime" would avoid accidental
 		// dependency on it during compilation
-		api("org.apiguardian:apiguardian-api:${versions.apiguardian}")
-		api("org.opentest4j:opentest4j:${versions.opentest4j}")
 		runtime("org.apache.logging.log4j:log4j-core:${versions["log4j"]}")
 		runtime("org.apache.logging.log4j:log4j-jul:${versions["log4j"]}")
 		api("io.github.classgraph:classgraph:${versions["classgraph"]}")
-		api("junit:junit:[${versions.junit4Min},)") {
-			version {
-				prefer(versions.junit4)
-			}
-		}
-		api("com.univocity:univocity-parsers:${versions["univocity-parsers"]}")
-		api("info.picocli:picocli:${versions["picocli"]}")
-		api("org.assertj:assertj-core:${versions.assertj}")
 		api("org.openjdk.jmh:jmh-core:${versions["jmh"]}")
 		api("org.openjdk.jmh:jmh-generator-annprocess:${versions["jmh"]}")
 		api("de.sormuras:bartholdy:${versions["bartholdy"]}")

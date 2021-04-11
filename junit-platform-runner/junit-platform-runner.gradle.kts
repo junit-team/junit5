@@ -8,11 +8,9 @@ plugins {
 description = "JUnit Platform Runner"
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	api(platform(project(":junit-bom")))
-	api("junit:junit")
-	api("org.apiguardian:apiguardian-api")
+	api(libs.junit4)
+	api(libs.apiguardian)
 	api(project(":junit-platform-launcher"))
 	api(project(":junit-platform-suite-api"))
 
@@ -29,7 +27,7 @@ tasks.jar {
 			Import-Package: \
 				!org.apiguardian.api,\
 				org.junit.platform.commons.logging;status=INTERNAL,\
-				org.junit.runner.*;version="[${versions.junit4Min},5)",\
+				org.junit.runner.*;version="[${libs.versions.junit4Min.get()},5)",\
 				*
 		""")
 	}

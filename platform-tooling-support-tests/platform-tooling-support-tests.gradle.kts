@@ -62,10 +62,10 @@ tasks.test {
 	jvmArgumentProviders += MavenRepo(tempRepoDir)
 
 	// Pass version constants (declared in Versions.kt) to tests as system properties
-	systemProperty("Versions.apiGuardian", versions.apiguardian)
-	systemProperty("Versions.assertJ", versions.assertj)
-	systemProperty("Versions.junit4", versions.junit4)
-	systemProperty("Versions.ota4j", versions.opentest4j)
+	systemProperty("Versions.apiGuardian", libs.versions.apiguardian.get())
+	systemProperty("Versions.assertJ", libs.versions.assertj.get())
+	systemProperty("Versions.junit4", libs.versions.junit4.get())
+	systemProperty("Versions.ota4j", libs.versions.opentest4j.get())
 
 	(options as JUnitPlatformOptions).apply {
 		includeEngines("archunit")
