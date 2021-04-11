@@ -15,7 +15,6 @@ dependencies {
 		// dependency on it during compilation
 		runtime("org.apache.logging.log4j:log4j-core:${versions["log4j"]}")
 		runtime("org.apache.logging.log4j:log4j-jul:${versions["log4j"]}")
-		api("io.github.classgraph:classgraph:${versions["classgraph"]}")
 		api("org.openjdk.jmh:jmh-core:${versions["jmh"]}")
 		api("org.openjdk.jmh:jmh-generator-annprocess:${versions["jmh"]}")
 		api("commons-io:commons-io:${versions["commons-io"]}")
