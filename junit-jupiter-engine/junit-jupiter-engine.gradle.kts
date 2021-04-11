@@ -21,7 +21,7 @@ dependencies {
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation(testFixtures(project(":junit-platform-commons")))
 	testImplementation(kotlin("stdlib"))
-	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+	testImplementation(libs.kotlinx.coroutines)
 	testImplementation("org.codehaus.groovy:groovy")
 }
 

@@ -14,6 +14,7 @@ bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.104" }
 commons-io = { module = "commons-io:commons-io", version = "2.8.0" }
 junit4 = { module = "junit:junit", version = { strictly = "[4.12,)", prefer = "4.13.2" } }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.4.3" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
 picocli = { module = "info.picocli:picocli", version = "4.6.1" }
 univocity-parsers = { module = "com.univocity:univocity-parsers", version = "2.9.1" }
