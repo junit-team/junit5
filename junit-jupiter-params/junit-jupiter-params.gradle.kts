@@ -20,8 +20,8 @@ dependencies {
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation(project(":junit-platform-runner"))
 
-	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	compileOnly(kotlin("stdlib"))
+	testImplementation(kotlin("stdlib"))
 }
 
 tasks {
