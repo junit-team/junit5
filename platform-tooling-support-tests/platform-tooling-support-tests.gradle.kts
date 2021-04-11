@@ -11,8 +11,6 @@ javaLibrary {
 }
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	implementation(libs.bartholdy) {
 		because("manage external tool installations")
 	}
