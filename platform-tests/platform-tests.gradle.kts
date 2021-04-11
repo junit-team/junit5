@@ -35,18 +35,14 @@ dependencies {
 	}
 
 	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh("org.openjdk.jmh:jmh-core") {
-		exclude(module = "jopt-simple")
-	}
-	jmhAnnotationProcessor(platform(project(":dependencies")))
-	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess")
-	jmh(platform(project(":dependencies")))
+	jmh(libs.jmh.core)
 	jmh(project(":junit-jupiter-api"))
 	jmh(libs.junit4)
+	jmhAnnotationProcessor(libs.jmh.generator.annprocess)
 }
 
 jmh {
-	jmhVersion = versions["jmh"]
+	jmhVersion = libs.versions.jmh.get()
 
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 0 // Too long command line on Windows...
