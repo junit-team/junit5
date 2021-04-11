@@ -1,0 +1,17 @@
+[versions]
+apiguardian = "1.1.1"
+assertj = "3.19.0"
+junit4 = "4.13.2"
+junit4Osgi = "4.13.2_1"
+junit4Min = "4.12"
+opentest4j = "1.2.0"
+picocli = "4.6.1"
+univocity-parsers = "2.9.1"
+
+[libraries]
+apiguardian = { module = "org.apiguardian:apiguardian-api", version.ref = "apiguardian" }
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+junit4 = { module = "junit:junit", version = { strictly = "[4.12,)", prefer = "4.13.2" } }
+opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
+picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
+univocity-parsers = { module = "com.univocity:univocity-parsers", version.ref = "univocity-parsers" }

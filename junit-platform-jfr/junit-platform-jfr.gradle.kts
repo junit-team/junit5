@@ -5,10 +5,8 @@ plugins {
 description = "JUnit Platform Flight Recorder Support"
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	api(platform(project(":junit-bom")))
-	api("org.apiguardian:apiguardian-api")
+	api(libs.apiguardian)
 	api(project(":junit-platform-launcher"))
 }
 

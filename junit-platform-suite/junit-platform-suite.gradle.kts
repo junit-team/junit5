@@ -5,8 +5,6 @@ plugins {
 description = "JUnit Platform Suite (Aggregator)"
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	api(platform(project(":junit-bom")))
 	api(project(":junit-platform-suite-api"))
 	implementation(project(":junit-platform-suite-engine"))
