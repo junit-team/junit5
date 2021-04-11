@@ -13,7 +13,9 @@ dependencies {
 		}
 	}
 	pluginManager.withPlugin("osgi-conventions") {
-		"osgiVerification"("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:${versions["junit4.osgi"]}")
+		val libs = project.extensions["libs"] as VersionCatalog
+		val junit4Osgi = libs.findVersion("junit4Osgi").get().requiredVersion
+		"osgiVerification"("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:${junit4Osgi}")
 	}
 }
 

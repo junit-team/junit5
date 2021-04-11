@@ -10,11 +10,10 @@ dependencies {
 	internal(platform(project(":dependencies")))
 
 	api(platform(project(":junit-bom")))
-	api("org.apiguardian:apiguardian-api")
+	api(libs.apiguardian)
 	api(project(":junit-jupiter-api"))
 
-	shadowed(platform(project(":dependencies")))
-	shadowed("com.univocity:univocity-parsers")
+	shadowed(libs.univocity.parsers)
 
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation(project(":junit-jupiter-engine"))

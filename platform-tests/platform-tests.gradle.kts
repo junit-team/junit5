@@ -42,7 +42,7 @@ dependencies {
 	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess")
 	jmh(platform(project(":dependencies")))
 	jmh(project(":junit-jupiter-api"))
-	jmh("junit:junit")
+	jmh(libs.junit4)
 }
 
 jmh {

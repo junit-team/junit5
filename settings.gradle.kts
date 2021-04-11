@@ -130,3 +130,5 @@ rootProject.children.forEach { project ->
 		"${project.buildFile} must exist"
 	}
 }
+
+enableFeaturePreview("VERSION_CATALOGS")

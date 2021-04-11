@@ -68,8 +68,8 @@ val docsDir = file("$buildDir/ghpages-docs")
 val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
 val uploadPdfs = !snapshot
 val userGuidePdfFileName = "junit-user-guide-${rootProject.version}.pdf"
-val ota4jDocVersion = if (versions.opentest4j.contains("SNAPSHOT")) "snapshot" else versions.opentest4j
-val apiGuardianDocVersion = if (versions.apiguardian.contains("SNAPSHOT")) "snapshot" else versions.apiguardian
+val ota4jDocVersion = if (libs.versions.opentest4j.get().contains("SNAPSHOT")) "snapshot" else libs.versions.opentest4j.get()
+val apiGuardianDocVersion = if (libs.versions.apiguardian.get().contains("SNAPSHOT")) "snapshot" else libs.versions.apiguardian.get()
 
 gitPublish {
 	repoUri.set("https://github.com/junit-team/junit5.git")
@@ -99,7 +99,7 @@ val jdkJavadocBaseUrl = "https://docs.oracle.com/en/java/javase/11/docs/api"
 val elementListsDir = file("$buildDir/elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
 		"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
-		"org.assertj.core" to "https://javadoc.io/doc/org.assertj/assertj-core/${versions.assertj}/",
+		"org.assertj.core" to "https://javadoc.io/doc/org.assertj/assertj-core/${libs.versions.assertj.get()}/",
 		"org.opentest4j" to "https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/"
 )
 require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
@@ -181,9 +181,9 @@ tasks {
 				"platform-version" to project.property("platformVersion"),
 				"vintage-version" to project.property("vintageVersion"),
 				"bom-version" to version,
-				"junit4-version" to versions.junit4,
-				"apiguardian-version" to versions.apiguardian,
-				"ota4j-version" to versions.opentest4j,
+				"junit4-version" to libs.versions.junit4.get(),
+				"apiguardian-version" to libs.versions.apiguardian.get(),
+				"ota4j-version" to libs.versions.opentest4j.get(),
 				"surefire-version" to versions["surefire"],
 				"release-branch" to releaseBranch,
 				"docs-version" to docsVersion,
@@ -287,7 +287,7 @@ tasks {
 			)
 
 			links(jdkJavadocBaseUrl)
-			links("https://junit.org/junit4/javadoc/${versions.junit4}/")
+			links("https://junit.org/junit4/javadoc/${libs.versions.junit4.get()}/")
 			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
 				linksOffline(baseUrl, "$elementListsDir/$moduleName")
 			}
