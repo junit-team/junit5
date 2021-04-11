@@ -27,6 +27,7 @@ import org.junit.vintage.engine.discovery.IsPotentialJUnit4TestClass;
 
 class DescriptionUtilsTests {
 
+	@SuppressWarnings("deprecation")
 	AllDefaultPossibilitiesBuilder builder = new AllDefaultPossibilitiesBuilder(true);
 
 	@TestFactory
