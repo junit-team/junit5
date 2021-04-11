@@ -16,7 +16,7 @@ dependencies {
 	implementation(libs.bartholdy) {
 		because("manage external tool installations")
 	}
-	implementation("commons-io:commons-io") {
+	implementation(libs.commons.io) {
 		because("moving/deleting directory trees")
 	}
 
