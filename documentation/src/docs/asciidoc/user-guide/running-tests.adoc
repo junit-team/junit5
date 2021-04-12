@@ -267,18 +267,6 @@ following.
 [source,xml,indent=0]
 [subs=attributes+]
 ----
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>{surefire-version}</version>
-			</plugin>
-			<plugin>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>{surefire-version}</version>
-			</plugin>
-		</plugins>
-	</build>
 	<!-- ... -->
 	<dependencies>
 		<!-- ... -->
@@ -290,17 +278,6 @@ following.
 		</dependency>
 		<!-- ... -->
 	</dependencies>
-	<!-- ... -->
-----
-
-Maven Surefire and Maven Failsafe can run JUnit 4 based tests alongside Jupiter tests as
-long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintage
-`TestEngine` implementation similar to the following.
-
-[source,xml,indent=0]
-[subs=attributes+]
-----
-	<!-- ... -->
 	<build>
 		<plugins>
 			<plugin>
@@ -313,6 +290,16 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 			</plugin>
 		</plugins>
 	</build>
+	<!-- ... -->
+----
+
+Maven Surefire and Maven Failsafe can run JUnit 4 based tests alongside Jupiter tests as
+long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintage
+`TestEngine` implementation similar to the following.
+
+[source,xml,indent=0]
+[subs=attributes+]
+----
 	<!-- ... -->
 	<dependencies>
 		<!-- ... -->
@@ -330,6 +317,19 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 		</dependency>
 		<!-- ... -->
 	</dependencies>
+	<!-- ... -->
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>{surefire-version}</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>{surefire-version}</version>
+			</plugin>
+		</plugins>
+	</build>
 	<!-- ... -->
 ----
 
