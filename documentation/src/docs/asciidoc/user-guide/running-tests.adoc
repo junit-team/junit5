@@ -186,15 +186,13 @@ test {
 In order to run any tests at all, a `TestEngine` implementation must be on the classpath.
 
 To configure support for JUnit Jupiter based tests, configure a `testImplementation` dependency
-on the JUnit Jupiter API and a `testRuntimeOnly` dependency on the JUnit Jupiter `TestEngine`
-implementation similar to the following.
+on the dependency-aggregating JUnit Jupiter artifact similar to the following.
 
 [source,groovy,indent=0]
 [subs=attributes+]
 ----
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter-api:{jupiter-version}")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
+	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
 }
 ----
 
@@ -286,13 +284,7 @@ following.
 		<!-- ... -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>{jupiter-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
+			<artifactId>junit-jupiter</artifactId>
 			<version>{jupiter-version}</version>
 			<scope>test</scope>
 		</dependency>
