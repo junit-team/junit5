@@ -14,9 +14,9 @@ pluginManagement {
 		id("com.diffplug.spotless") version "5.12.0"
 		id("org.ajoberstar.git-publish") version "3.0.0"
 		kotlin("jvm") version "1.4.0"
-		// Don't upgrade until https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/599 is fixed
-		id("org.asciidoctor.jvm.convert") version "3.3.0"
-		id("org.asciidoctor.jvm.pdf") version "3.3.0"
+		// Check if workaround in documentation.gradle.kts can be removed when upgrading
+		id("org.asciidoctor.jvm.convert") version "3.3.2"
+		id("org.asciidoctor.jvm.pdf") version "3.3.2"
 		id("me.champeau.gradle.jmh") version "0.5.3"
 		id("io.spring.nohttp") version "0.0.6.RELEASE"
 		id("io.github.gradle-nexus.publish-plugin") version "1.0.0"

@@ -1,4 +1,5 @@
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.junit.gradle.exec.ClasspathSystemPropertyProvider
 import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
@@ -170,6 +171,9 @@ tasks {
 				include("**/images/**/*.svg")
 			}
 		}
+
+		// Temporary workaround for https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/599
+		inputs.dir(sourceDir).withPropertyName("sourceDir").withPathSensitivity(RELATIVE)
 
 		attributes(mapOf(
 				"jupiter-version" to version,
