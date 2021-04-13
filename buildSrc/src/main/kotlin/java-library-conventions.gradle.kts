@@ -150,6 +150,7 @@ val compileModule by tasks.registering(JavaCompile::class) {
 	))
 	options.compilerArgumentProviders.add(ModulePathArgumentProvider())
 	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
+	modularity.inferModulePath.set(false)
 }
 
 tasks.withType<Jar>().configureEach {
