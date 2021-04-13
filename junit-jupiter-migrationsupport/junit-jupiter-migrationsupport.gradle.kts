@@ -9,15 +9,15 @@ plugins {
 description = "JUnit Jupiter Migration Support"
 
 dependencies {
-	api(platform(projects.bom))
+	api(platform(projects.junitBom))
 	api(libs.junit4)
 	api(libs.apiguardian)
-	api(projects.jupiter.api)
+	api(projects.junitJupiterApi)
 
-	testImplementation(projects.jupiter.engine)
-	testImplementation(projects.platform.launcher)
-	testImplementation(projects.platform.runner)
-	testImplementation(projects.platform.testkit)
+	testImplementation(projects.junitJupiterEngine)
+	testImplementation(projects.junitPlatformLauncher)
+	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformTestkit)
 }
 
 tasks.jar {

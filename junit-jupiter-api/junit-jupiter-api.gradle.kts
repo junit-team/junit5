@@ -6,10 +6,10 @@ plugins {
 description = "JUnit Jupiter API"
 
 dependencies {
-	api(platform(projects.bom))
+	api(platform(projects.junitBom))
 	api(libs.apiguardian)
 	api(libs.opentest4j)
-	api(projects.platform.commons)
+	api(projects.junitPlatformCommons)
 
 	compileOnly(kotlin("stdlib"))
 }

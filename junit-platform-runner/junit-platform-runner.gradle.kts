@@ -8,16 +8,16 @@ plugins {
 description = "JUnit Platform Runner"
 
 dependencies {
-	api(platform(projects.bom))
+	api(platform(projects.junitBom))
 	api(libs.junit4)
 	api(libs.apiguardian)
-	api(projects.platform.launcher)
-	api(projects.platform.suite.api)
+	api(projects.junitPlatformLauncher)
+	api(projects.junitPlatformSuiteApi)
 
-	implementation(projects.platform.suite.commons)
+	implementation(projects.junitPlatformSuiteCommons)
 
-	testImplementation(testFixtures(projects.platform.engine))
-	testImplementation(testFixtures(projects.platform.launcher))
+	testImplementation(testFixtures(projects.junitPlatformEngine))
+	testImplementation(testFixtures(projects.junitPlatformLauncher))
 }
 
 tasks.jar {

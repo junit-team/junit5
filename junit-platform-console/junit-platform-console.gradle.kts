@@ -8,9 +8,9 @@ plugins {
 description = "JUnit Platform Console"
 
 dependencies {
-	api(platform(projects.bom))
+	api(platform(projects.junitBom))
 	api(libs.apiguardian)
-	api(projects.platform.reporting)
+	api(projects.junitPlatformReporting)
 
 	shadowed(libs.picocli)
 }
