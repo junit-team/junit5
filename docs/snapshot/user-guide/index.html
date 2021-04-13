@@ -5800,34 +5800,46 @@ include the corresponding versions of the <code>junit-platform-launcher</code>,
 <div class="listingblock">
 <div class="title">Additional Gradle Dependencies</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="groovy"><span class="c1">// Only needed to run tests in a version of IntelliJ IDEA that bundles older versions</span>
-<span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.platform:junit-platform-launcher:1.8.0-SNAPSHOT"</span><span class="o">)</span>
-<span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.jupiter:junit-jupiter-engine:5.8.0-SNAPSHOT"</span><span class="o">)</span>
-<span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.vintage:junit-vintage-engine:5.8.0-SNAPSHOT"</span><span class="o">)</span></code></pre>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">testImplementation</span><span class="o">(</span><span class="n">platform</span><span class="o">(</span><span class="s2">"org.junit:junit-bom:5.8.0-SNAPSHOT"</span><span class="o">))</span>
+<span class="c1">// Only needed to run tests in a version of IntelliJ IDEA that bundles older versions</span>
+<span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.platform:junit-platform-launcher"</span><span class="o">)</span>
+<span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.jupiter:junit-jupiter-engine"</span><span class="o">)</span>
+<span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.vintage:junit-vintage-engine"</span><span class="o">)</span></code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Additional Maven Dependencies</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="xml"><span class="c">&lt;!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions --&gt;</span>
-<span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>org.junit.platform<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>junit-platform-launcher<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>1.8.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
-    <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-<span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>org.junit.jupiter<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>junit-jupiter-engine<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>5.8.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
-    <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-<span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>org.junit.vintage<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>junit-vintage-engine<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>5.8.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
-    <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span></code></pre>
+<pre class="rouge highlight"><code data-lang="xml"><span class="c">&lt;!-- ... --&gt;</span>
+<span class="nt">&lt;dependencies&gt;</span>
+    <span class="c">&lt;!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions --&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>org.junit.platform<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>junit-platform-launcher<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>org.junit.jupiter<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>junit-jupiter-engine<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>org.junit.vintage<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>junit-vintage-engine<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;dependencyManagement&gt;</span>
+    <span class="nt">&lt;dependencies&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.junit<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>junit-bom<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>5.8.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
+            <span class="nt">&lt;scope&gt;</span>import<span class="nt">&lt;/scope&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/dependencyManagement&gt;</span></code></pre>
 </div>
 </div>
 </div>
@@ -5910,7 +5922,7 @@ for executing tests on the JUnit Platform. To enable it, you just need to specif
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">test</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">test</span> <span class="o">{</span>
     <span class="n">useJUnitPlatform</span><span class="o">()</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -5920,12 +5932,12 @@ for executing tests on the JUnit Platform. To enable it, you just need to specif
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">test</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">test</span> <span class="o">{</span>
     <span class="n">useJUnitPlatform</span> <span class="o">{</span>
-        <span class="n">includeTags</span> <span class="err">'</span><span class="n">fast</span><span class="err">'</span><span class="o">,</span> <span class="err">'</span><span class="n">smoke</span> <span class="o">&amp;</span> <span class="n">feature</span><span class="o">-</span><span class="n">a</span><span class="err">'</span>
-        <span class="c1">// excludeTags 'slow', 'ci'</span>
-        <span class="n">includeEngines</span> <span class="err">'</span><span class="n">junit</span><span class="o">-</span><span class="n">jupiter</span><span class="err">'</span>
-        <span class="c1">// excludeEngines 'junit-vintage'</span>
+        <span class="n">includeTags</span><span class="o">(</span><span class="s2">"fast"</span><span class="o">,</span> <span class="s2">"smoke &amp; feature-a"</span><span class="o">)</span>
+        <span class="c1">// excludeTags("slow", "ci")</span>
+        <span class="n">includeEngines</span><span class="o">(</span><span class="s2">"junit-jupiter"</span><span class="o">)</span>
+        <span class="c1">// excludeEngines("junit-vintage")</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -5946,13 +5958,11 @@ build script via system properties (as shown below) or via the
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">test</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">test</span> <span class="o">{</span>
     <span class="c1">// ...</span>
-    <span class="n">systemProperty</span> <span class="err">'</span><span class="n">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">conditions</span><span class="o">.</span><span class="na">deactivate</span><span class="err">'</span><span class="o">,</span> <span class="sc">'*'</span>
-    <span class="n">systemProperties</span> <span class="o">=</span> <span class="o">[</span>
-        <span class="err">'</span><span class="n">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">extensions</span><span class="o">.</span><span class="na">autodetection</span><span class="o">.</span><span class="na">enabled</span><span class="err">'</span><span class="o">:</span> <span class="err">'</span><span class="kc">true</span><span class="err">'</span><span class="o">,</span>
-        <span class="err">'</span><span class="n">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">testinstance</span><span class="o">.</span><span class="na">lifecycle</span><span class="o">.</span><span class="na">default</span><span class="err">'</span><span class="o">:</span> <span class="err">'</span><span class="n">per_class</span><span class="err">'</span>
-    <span class="o">]</span>
+    <span class="n">systemProperty</span><span class="o">(</span><span class="s2">"junit.jupiter.conditions.deactivate"</span><span class="o">,</span> <span class="s2">"*"</span><span class="o">)</span>
+    <span class="n">systemProperty</span><span class="o">(</span><span class="s2">"junit.jupiter.extensions.autodetection.enabled"</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
+    <span class="n">systemProperty</span><span class="o">(</span><span class="s2">"junit.jupiter.testinstance.lifecycle.default"</span><span class="o">,</span> <span class="s2">"per_class"</span><span class="o">)</span>
     <span class="c1">// ...</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -5965,14 +5975,12 @@ build script via system properties (as shown below) or via the
 </div>
 <div class="paragraph">
 <p>To configure support for JUnit Jupiter based tests, configure a <code>testImplementation</code> dependency
-on the JUnit Jupiter API and a <code>testRuntimeOnly</code> dependency on the JUnit Jupiter <code>TestEngine</code>
-implementation similar to the following.</p>
+on the dependency-aggregating JUnit Jupiter artifact similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">dependencies</span> <span class="o">{</span>
-    <span class="n">testImplementation</span><span class="o">(</span><span class="s">"org.junit.jupiter:junit-jupiter-api:5.8.0-SNAPSHOT"</span><span class="o">)</span>
-    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s">"org.junit.jupiter:junit-jupiter-engine:5.8.0-SNAPSHOT"</span><span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
+    <span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.junit.jupiter:junit-jupiter:5.8.0-SNAPSHOT"</span><span class="o">)</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -5983,9 +5991,9 @@ implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">dependencies</span> <span class="o">{</span>
-    <span class="n">testImplementation</span><span class="o">(</span><span class="s">"junit:junit:4.13.2"</span><span class="o">)</span>
-    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s">"org.junit.vintage:junit-vintage-engine:5.8.0-SNAPSHOT"</span><span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
+    <span class="n">testImplementation</span><span class="o">(</span><span class="s2">"junit:junit:4.13.2"</span><span class="o">)</span>
+    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.vintage:junit-vintage-engine:5.8.0-SNAPSHOT"</span><span class="o">)</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -6007,8 +6015,8 @@ details).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="n">test</span> <span class="o">{</span>
-    <span class="n">systemProperty</span> <span class="err">'</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">logging</span><span class="o">.</span><span class="na">manager</span><span class="err">'</span><span class="o">,</span> <span class="err">'</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">logging</span><span class="o">.</span><span class="na">log4j</span><span class="o">.</span><span class="na">jul</span><span class="o">.</span><span class="na">LogManager</span><span class="err">'</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">test</span> <span class="o">{</span>
+    <span class="n">systemProperty</span><span class="o">(</span><span class="s2">"java.util.logging.manager"</span><span class="o">,</span> <span class="s2">"org.apache.logging.log4j.jul.LogManager"</span><span class="o">)</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -6060,46 +6068,17 @@ following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;build&gt;</span>
-    <span class="nt">&lt;plugins&gt;</span>
-        <span class="nt">&lt;plugin&gt;</span>
-            <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
-        <span class="nt">&lt;/plugin&gt;</span>
-        <span class="nt">&lt;plugin&gt;</span>
-            <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
-        <span class="nt">&lt;/plugin&gt;</span>
-    <span class="nt">&lt;/plugins&gt;</span>
-<span class="nt">&lt;/build&gt;</span>
-<span class="c">&lt;!-- ... --&gt;</span>
+<pre class="rouge highlight"><code data-lang="xml"><span class="c">&lt;!-- ... --&gt;</span>
 <span class="nt">&lt;dependencies&gt;</span>
     <span class="c">&lt;!-- ... --&gt;</span>
     <span class="nt">&lt;dependency&gt;</span>
         <span class="nt">&lt;groupId&gt;</span>org.junit.jupiter<span class="nt">&lt;/groupId&gt;</span>
-        <span class="nt">&lt;artifactId&gt;</span>junit-jupiter-api<span class="nt">&lt;/artifactId&gt;</span>
-        <span class="nt">&lt;version&gt;</span>5.8.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
-        <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
-    <span class="nt">&lt;/dependency&gt;</span>
-    <span class="nt">&lt;dependency&gt;</span>
-        <span class="nt">&lt;groupId&gt;</span>org.junit.jupiter<span class="nt">&lt;/groupId&gt;</span>
-        <span class="nt">&lt;artifactId&gt;</span>junit-jupiter-engine<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>junit-jupiter<span class="nt">&lt;/artifactId&gt;</span>
         <span class="nt">&lt;version&gt;</span>5.8.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
         <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
     <span class="nt">&lt;/dependency&gt;</span>
     <span class="c">&lt;!-- ... --&gt;</span>
 <span class="nt">&lt;/dependencies&gt;</span>
-<span class="c">&lt;!-- ... --&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Maven Surefire and Maven Failsafe can run JUnit 4 based tests alongside Jupiter tests as
-long as you configure <code>test</code> scoped dependencies on JUnit 4 and the JUnit Vintage
-<code>TestEngine</code> implementation similar to the following.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="xml"><span class="c">&lt;!-- ... --&gt;</span>
 <span class="nt">&lt;build&gt;</span>
     <span class="nt">&lt;plugins&gt;</span>
         <span class="nt">&lt;plugin&gt;</span>
@@ -6112,7 +6091,17 @@ long as you configure <code>test</code> scoped dependencies on JUnit 4 and the J
         <span class="nt">&lt;/plugin&gt;</span>
     <span class="nt">&lt;/plugins&gt;</span>
 <span class="nt">&lt;/build&gt;</span>
-<span class="c">&lt;!-- ... --&gt;</span>
+<span class="c">&lt;!-- ... --&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Maven Surefire and Maven Failsafe can run JUnit 4 based tests alongside Jupiter tests as
+long as you configure <code>test</code> scoped dependencies on JUnit 4 and the JUnit Vintage
+<code>TestEngine</code> implementation similar to the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="xml"><span class="c">&lt;!-- ... --&gt;</span>
 <span class="nt">&lt;dependencies&gt;</span>
     <span class="c">&lt;!-- ... --&gt;</span>
     <span class="nt">&lt;dependency&gt;</span>
@@ -6129,6 +6118,19 @@ long as you configure <code>test</code> scoped dependencies on JUnit 4 and the J
     <span class="nt">&lt;/dependency&gt;</span>
     <span class="c">&lt;!-- ... --&gt;</span>
 <span class="nt">&lt;/dependencies&gt;</span>
+<span class="c">&lt;!-- ... --&gt;</span>
+<span class="nt">&lt;build&gt;</span>
+    <span class="nt">&lt;plugins&gt;</span>
+        <span class="nt">&lt;plugin&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/plugin&gt;</span>
+        <span class="nt">&lt;plugin&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/plugin&gt;</span>
+    <span class="nt">&lt;/plugins&gt;</span>
+<span class="nt">&lt;/build&gt;</span>
 <span class="c">&lt;!-- ... --&gt;</span></code></pre>
 </div>
 </div>
@@ -10327,7 +10329,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-04-12 06:11:03 UTC
+Last updated 2021-04-13 17:29:58 UTC
 </div>
 </div>
 <style>
