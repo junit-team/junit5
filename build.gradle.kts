@@ -268,6 +268,7 @@ rootProject.apply {
 			register<JacocoReport>("jacocoRootReport") {
 				dependsOn(jacocoMerge)
 				jacocoCoveredProjects.forEach {
+					dependsOn(it.tasks.named("extractJar"))
 					it.pluginManager.withPlugin("java") {
 						sourceDirectories.from(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
 					}
