@@ -9,15 +9,15 @@ plugins {
 description = "JUnit Jupiter Engine"
 
 dependencies {
-	api(platform(projects.bom))
+	api(platform(projects.junitBom))
 	api(libs.apiguardian)
-	api(projects.platform.engine)
-	api(projects.jupiter.api)
+	api(projects.junitPlatformEngine)
+	api(projects.junitJupiterApi)
 
-	testImplementation(projects.platform.launcher)
-	testImplementation(projects.platform.runner)
-	testImplementation(projects.platform.testkit)
-	testImplementation(testFixtures(projects.platform.commons))
+	testImplementation(projects.junitPlatformLauncher)
+	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformTestkit)
+	testImplementation(testFixtures(projects.junitPlatformCommons))
 	testImplementation(kotlin("stdlib"))
 	testImplementation(libs.kotlinx.coroutines)
 	testImplementation(libs.groovy3)

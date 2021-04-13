@@ -9,32 +9,32 @@ plugins {
 
 dependencies {
 	// --- Things we are testing --------------------------------------------------
-	testImplementation(projects.platform.commons)
-	testImplementation(projects.platform.console)
-	testImplementation(projects.platform.engine)
-	testImplementation(projects.platform.jfr)
-	testImplementation(projects.platform.launcher)
+	testImplementation(projects.junitPlatformCommons)
+	testImplementation(projects.junitPlatformConsole)
+	testImplementation(projects.junitPlatformEngine)
+	testImplementation(projects.junitPlatformJfr)
+	testImplementation(projects.junitPlatformLauncher)
 
 	// --- Things we are testing with ---------------------------------------------
-	testImplementation(projects.platform.runner)
-	testImplementation(projects.platform.testkit)
-	testImplementation(testFixtures(projects.platform.commons))
-	testImplementation(testFixtures(projects.platform.engine))
-	testImplementation(testFixtures(projects.platform.launcher))
-	testImplementation(projects.jupiter.engine)
+	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformTestkit)
+	testImplementation(testFixtures(projects.junitPlatformCommons))
+	testImplementation(testFixtures(projects.junitPlatformEngine))
+	testImplementation(testFixtures(projects.junitPlatformLauncher))
+	testImplementation(projects.junitJupiterEngine)
 	testImplementation(libs.apiguardian)
 	testImplementation(libs.jfrunit)
 	testImplementation(libs.joox)
 
 	// --- Test run-time dependencies ---------------------------------------------
-	testRuntimeOnly(projects.vintage.engine)
+	testRuntimeOnly(projects.junitVintageEngine)
 	testRuntimeOnly(libs.groovy3) {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
 
 	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
 	jmh(libs.jmh.core)
-	jmh(projects.jupiter.api)
+	jmh(projects.junitJupiterApi)
 	jmh(libs.junit4)
 	jmhAnnotationProcessor(libs.jmh.generator.annprocess)
 }
@@ -70,12 +70,12 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.platform.console.configurations["shadowed"])
+		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.platform.console.configurations["shadowed"])
+		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
 	}
 }

@@ -7,16 +7,16 @@ plugins {
 description = "JUnit Jupiter Params"
 
 dependencies {
-	api(platform(projects.bom))
+	api(platform(projects.junitBom))
 	api(libs.apiguardian)
-	api(projects.jupiter.api)
+	api(projects.junitJupiterApi)
 
 	shadowed(libs.univocity.parsers)
 
-	testImplementation(projects.platform.testkit)
-	testImplementation(projects.jupiter.engine)
-	testImplementation(projects.platform.launcher)
-	testImplementation(projects.platform.runner)
+	testImplementation(projects.junitPlatformTestkit)
+	testImplementation(projects.junitJupiterEngine)
+	testImplementation(projects.junitPlatformLauncher)
+	testImplementation(projects.junitPlatformRunner)
 
 	compileOnly(kotlin("stdlib"))
 	testImplementation(kotlin("stdlib"))

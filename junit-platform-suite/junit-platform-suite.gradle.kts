@@ -5,7 +5,7 @@ plugins {
 description = "JUnit Platform Suite (Aggregator)"
 
 dependencies {
-	api(platform(projects.bom))
-	api(projects.platform.suite.api)
-	implementation(projects.platform.suite.engine)
+	api(platform(projects.junitBom))
+	api(projects.junitPlatformSuiteApi)
+	implementation(projects.junitPlatformSuiteEngine)
 }

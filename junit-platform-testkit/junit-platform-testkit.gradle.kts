@@ -5,9 +5,9 @@ plugins {
 description = "JUnit Platform Test Kit"
 
 dependencies {
-	api(platform(projects.bom))
+	api(platform(projects.junitBom))
 	api(libs.apiguardian)
 	api(libs.assertj)
 	api(libs.opentest4j)
-	api(projects.platform.launcher)
+	api(projects.junitPlatformLauncher)
 }
