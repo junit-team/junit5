@@ -11,7 +11,7 @@ plugins {
 	id("io.github.gradle-nexus.publish-plugin")
 }
 
-val buildTimeAndDate by extra {
+val buildTimeAndDate: OffsetDateTime by extra {
 
 	// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against
 	// in order to achieve reproducible builds
@@ -29,9 +29,9 @@ val buildTimeAndDate by extra {
 	}
 }
 
-val buildDate by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
-val buildTime by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
-val buildRevision by extra { versioning.info.commit }
+val buildDate: String by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
+val buildTime: String by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
+val buildRevision: String by extra { versioning.info.commit }
 val builtByValue by extra { project.findProperty("builtBy") ?: project.property("defaultBuiltBy") }
 
 val platformProjects by extra(listOf(
@@ -131,16 +131,18 @@ val clearTempRepoDir by tasks.registering {
 
 subprojects {
 
-	if (project in jupiterProjects) {
-		group = property("jupiterGroup")!!
-	}
-	else if (project in platformProjects) {
-		group = property("platformGroup")!!
-		version = property("platformVersion")!!
-	}
-	else if (project in vintageProjects) {
-		group = property("vintageGroup")!!
-		version = property("vintageVersion")!!
+	when (project) {
+		in jupiterProjects -> {
+			group = property("jupiterGroup")!!
+		}
+		in platformProjects -> {
+			group = property("platformGroup")!!
+			version = property("platformVersion")!!
+		}
+		in vintageProjects -> {
+			group = property("vintageGroup")!!
+			version = property("vintageVersion")!!
+		}
 	}
 
 	tasks.withType<AbstractArchiveTask>().configureEach {
@@ -181,7 +183,7 @@ subprojects {
 			if (enableJaCoCo && project in jacocoCoveredProjects) {
 				val jarTask = (tasks.findByName("shadowJar") ?: tasks["jar"]) as Jar
 				val extractJar by tasks.registering(Copy::class) {
-					from(zipTree(jarTask.archivePath))
+					from(zipTree(jarTask.archiveFile))
 					into(jacocoClassesDir)
 					include("**/*.class")
 					// don't report coverage for shadowed classes
