@@ -84,7 +84,7 @@ val jacocoTestProjects = listOf(
 		projects.junitPlatformSuiteEngine,
 		projects.junitVintageEngine,
 		projects.platformTests
-)
+).map { it.dependencyProject }
 val jacocoCoveredProjects = modularProjects
 val jacocoClassesDir = file("$buildDir/jacoco/classes")
 
