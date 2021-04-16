@@ -16,7 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import de.sormuras.bartholdy.jdk.Jar;
@@ -38,6 +40,22 @@ import platform.tooling.support.Request;
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StandaloneTests {
+
+	@Test
+	void jarFileWithoutCompiledModuleDescriptorClass() throws Exception {
+		var jar = MavenRepo.jar("junit-platform-console-standalone");
+		var name = "module-info.class";
+		var found = new ArrayList<Path>();
+		try (var fileSystem = FileSystems.newFileSystem(jar)) {
+			for (var rootDirectory : fileSystem.getRootDirectories()) {
+				try (var stream = Files.walk(rootDirectory)) {
+					stream.filter(path -> path.getNameCount() > 0) // skip root entry
+							.filter(path -> path.getFileName().toString().equals(name)).forEach(found::add);
+				}
+			}
+		}
+		assertTrue(found.isEmpty(), jar + " must not contain any " + name + " files: " + found);
+	}
 
 	@Test
 	@Order(1)

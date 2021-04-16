@@ -16,6 +16,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class MavenRepo {
 
@@ -23,7 +24,9 @@ public class MavenRepo {
 	}
 
 	public static Path dir() {
-		return Path.of(System.getProperty("maven.repo"));
+		var candidates = Stream.of(Path.of("../build/repo"));
+		var candidate = candidates.filter(Files::isDirectory).findFirst().orElse(Path.of("build/repo"));
+		return Path.of(System.getProperty("maven.repo", candidate.toString()));
 	}
 
 	public static Path jar(String artifactId) {

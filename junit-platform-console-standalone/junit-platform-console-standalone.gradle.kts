@@ -25,6 +25,9 @@ tasks {
 		}
 	}
 	shadowJar {
+		// https://github.com/junit-team/junit5/issues/2557
+		// exclude compiled module declarations from any source (e.g. /*, /META-INF/versions/N/*)
+		exclude("**/module-info.class")
 		// https://github.com/junit-team/junit5/issues/761
 		// prevent duplicates, add 3rd-party licenses explicitly
 		exclude("META-INF/LICENSE*.md")
