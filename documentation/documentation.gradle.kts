@@ -396,8 +396,12 @@ tasks {
 		}
 	}
 
+	gitPublishCopy {
+		dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder)
+	}
+
 	gitPublishCommit {
-		dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder, configureGitAuthor)
+		dependsOn(configureGitAuthor)
 	}
 }
 
