@@ -80,8 +80,6 @@ val jacocoTestProjects = listOf(
 		projects.junitJupiterMigrationsupport,
 		projects.junitJupiterParams,
 		projects.junitPlatformRunner,
-		projects.junitPlatformSuiteCommons,
-		projects.junitPlatformSuiteEngine,
 		projects.junitVintageEngine,
 		projects.platformTests
 ).map { it.dependencyProject }
