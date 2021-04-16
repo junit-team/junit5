@@ -38,10 +38,10 @@
 0e0a34eab84a3a9690c7d224685cf66b  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludePackages.java
 0ebf6ee36e5ee13e6957838ccf25f866  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DisplayNameUtils.java
 0fc00a26aa1100ee5d82a4ebdd99dd32  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeArgumentConverter.java
+0fc06f835b571d11f418d8a7f5bab3a3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Named.java
 110605c0b87c661ead89b906e39970d5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.java
 11454846144f95ba3662c3b7ce1b7172  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Isolated.java
 1169f867db0a1119dfcacae235048205  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultDynamicTestInvocationContext.java
-122f53982ded54ccfcb6a8843621ebd6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Named.java
 12ac22d7c11eeb5033b9dd0f5daa3d01  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
 12f30c80106ce2be4887794e54794615  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
 1332f51fe67c019f9dd779db569b1f81  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherSession.java
@@ -378,6 +378,7 @@
 864e908ff3b6031055636c4001658eef  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullAndEmptySource.java
 86bbd3191ba51edca888d12709510653  junit-platform-engine/src/main/java/org/junit/platform/engine/FilterResult.java
 86c5a36f3376a5a28ce60f35d440bc8d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectFile.java
+878e00e9a7e7637b52d376c39371dacd  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 87e4fc66d387d2d92fae5ef4635086f9  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/CompositeTestExecutionListener.java
 892148d1f1b31624c93a0adab2956a4a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullEnum.java
 8962f07b44b6632eb4736c94f57b7589  documentation/src/test/java/example/MyFirstJUnitJupiterTests.java
