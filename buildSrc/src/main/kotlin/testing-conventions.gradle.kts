@@ -54,7 +54,7 @@ dependencies {
 	"testImplementation"(libs.findDependency("assertj").get())
 	"testImplementation"(libs.findDependency("mockito").get())
 
-	if (project != project(":junit-jupiter-engine")) {
+	if (!project.name.startsWith("junit-jupiter")) {
 		"testImplementation"(project(":junit-jupiter"))
 	}
 	"testImplementation"(testFixtures(project(":junit-jupiter-api")))
