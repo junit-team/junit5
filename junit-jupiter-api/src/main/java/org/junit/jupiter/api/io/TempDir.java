@@ -73,4 +73,11 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 @Documented
 @API(status = EXPERIMENTAL, since = "5.4")
 public @interface TempDir {
+	/**
+	 * Returns an identifier for temp directory.
+	 *
+	 * @return an identifier for the underlying temp directory, where an empty String represents the old identifier
+	 * @since 5.8
+	 */
+	String value() default "";
 }

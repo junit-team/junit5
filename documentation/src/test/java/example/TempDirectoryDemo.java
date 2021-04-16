@@ -35,6 +35,19 @@ class TempDirectoryDemo {
 	}
 	// end::user_guide_parameter_injection[]
 
+	// tag::user_guide_parameter_injection[]
+	@Test
+	void copyFileFromSourceToTarget(@TempDir("source") Path source, @TempDir("target") Path target) throws IOException {
+		Path sourceFile = source.resolve("test.txt");
+
+		new ListWriter(sourceFile).write("a", "b", "c");
+
+		Path targetFile = Files.copy(sourceFile, target.resolve("tested.txt"));
+
+		assertEquals(singletonList("a,b,c"), Files.readAllLines(targetFile));
+	}
+	// end::user_guide_parameter_injection[]
+
 	static
 	// tag::user_guide_field_injection[]
 	class SharedTempDirectoryDemo {
