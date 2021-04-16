@@ -14,6 +14,8 @@ dependencies {
 	testImplementation(projects.junitPlatformEngine)
 	testImplementation(projects.junitPlatformJfr)
 	testImplementation(projects.junitPlatformLauncher)
+	testImplementation(projects.junitPlatformSuiteCommons)
+	testImplementation(projects.junitPlatformSuiteEngine)
 
 	// --- Things we are testing with ---------------------------------------------
 	testImplementation(projects.junitPlatformRunner)
