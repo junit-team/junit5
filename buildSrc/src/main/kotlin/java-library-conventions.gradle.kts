@@ -33,6 +33,10 @@ eclipse {
 	}
 }
 
+java {
+	modularity.inferModulePath.set(false)
+}
+
 if (project in mavenizedProjects) {
 
 	apply(plugin = "publishing-conventions")
