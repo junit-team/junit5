@@ -13,9 +13,10 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@code Named} is used to wrap an object and give it a name.
+ * {@code Named} is a container that associates a name with a given payload.
  *
  * @param <T> the type of the payload
  *
@@ -28,13 +29,17 @@ public interface Named<T> {
 	 * Factory method for creating an instance of {@code Named} based on a
 	 * {@code name} and a {@code payload}.
 	 *
-	 * @param name the name to be used for the wrapped object
-	 * @param payload the object to be wrapped
+	 * @param name the name associated with the payload; never {@code null} or
+	 * blank
+	 * @param payload the object that serves as the payload; may be {@code null}
+	 * depending on the use case
 	 * @param <T> the type of the payload
 	 * @return an instance of {@code Named}; never {@code null}
 	 * @see #named(String, java.lang.Object)
 	 */
 	static <T> Named<T> of(String name, T payload) {
+		Preconditions.notBlank(name, "name must not be null or blank");
+
 		return new Named<T>() {
 			@Override
 			public String getName() {
@@ -61,8 +66,10 @@ public interface Named<T> {
 	 * intended to be used when statically imported &mdash; for example, via:
 	 * {@code import static org.junit.jupiter.api.Named.named;}
 	 *
-	 * @param name the name to be used for the wrapped object
-	 * @param payload the object to be wrapped
+	 * @param name the name associated with the payload; never {@code null} or
+	 * blank
+	 * @param payload the object that serves as the payload; may be {@code null}
+	 * depending on the use case
 	 * @param <T> the type of the payload
 	 * @return an instance of {@code Named}; never {@code null}
 	 */
@@ -70,8 +77,18 @@ public interface Named<T> {
 		return of(name, payload);
 	}
 
+	/**
+	 * Get the name of the payload.
+	 *
+	 * @return the name of the payload; never {@code null} or blank
+	 */
 	String getName();
 
+	/**
+	 * Get the payload.
+	 *
+	 * @return the payload; may be {@code null} depending on the use case
+	 */
 	T getPayload();
 
 }
