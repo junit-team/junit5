@@ -72,7 +72,7 @@ class LauncherFactoryTests {
 
 		var testPlan = LauncherFactory.create().discover(discoveryRequest);
 		var roots = testPlan.getRoots();
-		assertThat(roots).hasSize(2);
+		assertThat(roots).hasSize(3);
 
 		// @formatter:off
 		var ids = roots.stream()
@@ -80,7 +80,8 @@ class LauncherFactoryTests {
 				.collect(toList());
 		// @formatter:on
 
-		assertThat(ids).containsOnly("[engine:junit-vintage]", "[engine:junit-jupiter]");
+		assertThat(ids).containsOnly("[engine:junit-vintage]", "[engine:junit-jupiter]",
+			"[engine:junit-platform-suite]");
 	}
 
 	@Test

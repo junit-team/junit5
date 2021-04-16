@@ -1,6 +1,5 @@
 plugins {
 	`java-library-conventions`
-	`testing-conventions`
 }
 
 description = "JUnit Platform Suite Commons"
@@ -12,6 +11,4 @@ dependencies {
 
 	implementation(projects.junitPlatformEngine)
 	implementation(projects.junitPlatformSuiteApi)
-
-	testImplementation(projects.junitJupiterEngine)
 }
