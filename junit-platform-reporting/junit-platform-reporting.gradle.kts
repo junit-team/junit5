@@ -10,7 +10,7 @@ dependencies {
 
 	compileOnlyApi(libs.apiguardian)
 
-	implementation("org.opentest4j.reporting:lib")
+	implementation(libs.openTestReporting)
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
