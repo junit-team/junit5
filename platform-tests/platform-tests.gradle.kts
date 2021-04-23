@@ -45,7 +45,7 @@ jmh {
 	jmhVersion = libs.versions.jmh.get()
 
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
-	fork = 0 // Too long command line on Windows...
+	fork = 1
 	warmupIterations = 1
 	iterations = 5
 }
