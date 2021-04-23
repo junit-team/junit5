@@ -71,6 +71,11 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void m(@TempDir("m1") Path m1, @TempDir("m2") Path m2) {
+		assertNotEquals(m1.toAbsolutePath(), m2.toAbsolutePath());
+	}
+
+	@Test
 	@DisplayName("does not prevent constructor parameter resolution")
 	void tempDirectoryDoesNotPreventConstructorParameterResolution() {
 		executeTestsForClass(TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase.class).testEvents()//

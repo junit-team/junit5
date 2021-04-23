@@ -37,12 +37,12 @@ class TempDirectoryDemo {
 
 	// tag::user_guide_parameter_injection[]
 	@Test
-	void copyFileFromSourceToTarget(@TempDir("source") Path source, @TempDir("target") Path target) throws IOException {
+	void copyFileFromSourceToTarget(@TempDir("from") Path source, @TempDir("to") Path target) throws IOException {
 		Path sourceFile = source.resolve("test.txt");
 
 		new ListWriter(sourceFile).write("a", "b", "c");
 
-		Path targetFile = Files.copy(sourceFile, target.resolve("tested.txt"));
+		Path targetFile = Files.copy(sourceFile, target.resolve("test.txt"));
 
 		assertEquals(singletonList("a,b,c"), Files.readAllLines(targetFile));
 	}
