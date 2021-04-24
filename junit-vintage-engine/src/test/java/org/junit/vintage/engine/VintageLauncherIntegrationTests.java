@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import org.junit.internal.runners.SuiteMethod;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
@@ -40,6 +41,8 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.runners.Suite;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
+import org.junit.vintage.engine.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
+import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit4.Categories;
 import org.junit.vintage.engine.samples.junit4.EnclosedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithFilterableChildRunner;
@@ -190,6 +193,28 @@ class VintageLauncherIntegrationTests {
 		assertThat(logRecordListener.stream(RunnerTestDescriptor.class, Level.WARNING).map(LogRecord::getMessage)) //
 				.containsExactly("Runner " + Suite.class.getName() + " (used on class " + suiteClass.getName() + ")" //
 						+ " was not able to satisfy all filter requests.");
+	}
+
+	@TrackLogRecords
+	@Test
+	void executesAllTestsWhenFilterDidNotExcludeTestForJUnit3Suite(LogRecordListener logRecordListener) {
+		Class<?> suiteClass = JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails.class;
+		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
+		var request = request() //
+				.selectors(selectClass(suiteClass)) //
+				.filters((PostDiscoveryFilter) descriptor -> excluded("not today"));
+
+		var testPlan = discover(request);
+		logRecordListener.clear();
+		assertThat(testPlan.getDescendants(getOnlyElement(testPlan.getRoots()))).hasSize(3);
+
+		var results = execute(request);
+		assertThat(results.keySet().stream().map(TestIdentifier::getDisplayName)) //
+				.containsExactlyInAnyOrder("JUnit Vintage", suiteClass.getSimpleName(), testClass.getName(), "test");
+		assertThat(logRecordListener.stream(RunnerTestDescriptor.class, Level.WARNING).map(LogRecord::getMessage)) //
+				.containsExactly(
+					"Runner " + SuiteMethod.class.getName() + " (used on class " + suiteClass.getName() + ")" //
+							+ " was not able to satisfy all filter requests.");
 	}
 
 	@Test

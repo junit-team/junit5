@@ -115,8 +115,7 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	private void logIncompleteFiltering() {
 		if (runner instanceof Filterable) {
 			logger.warn(() -> "Runner " + getRunnerToReport().getClass().getName() //
-					+ " (used on class " + getDescription().getTestClass().getName()
-					+ ") was not able to satisfy all filter requests.");
+					+ " (used on class " + getLegacyReportingName() + ") was not able to satisfy all filter requests.");
 		}
 		else {
 			warnAboutUnfilterableRunner();
@@ -125,7 +124,7 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	private void warnAboutUnfilterableRunner() {
 		logger.warn(() -> "Runner " + getRunnerToReport().getClass().getName() //
-				+ " (used on class " + getDescription().getTestClass().getName() + ") does not support filtering" //
+				+ " (used on class " + getLegacyReportingName() + ") does not support filtering" //
 				+ " and will therefore be run completely.");
 	}
 
