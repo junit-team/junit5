@@ -36,7 +36,7 @@ support for the JUnit Platform also exists in popular IDEs (see
 sub-project provides a `TestEngine` for running Jupiter based tests on the platform.
 
 **JUnit Vintage** provides a `TestEngine` for running JUnit 3 and JUnit 4 based tests on
-the platform.
+the platform. It requires JUnit 4.12 or later to be present on the class/module path.
 
 [[overview-java-versions]]
 === Supported Java Versions
