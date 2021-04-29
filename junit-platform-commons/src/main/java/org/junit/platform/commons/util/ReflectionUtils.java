@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.lang.String.format;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -1036,7 +1037,7 @@ public final class ReflectionUtils {
 		findNestedClasses(clazz.getSuperclass(), predicate, candidates);
 
 		// Search interface hierarchy
-		for (Class<?> ifc : clazz.getInterfaces()) {
+		for (Class<?> ifc : getInterfaces(clazz)) {
 			findNestedClasses(ifc, predicate, candidates);
 		}
 	}
@@ -1309,7 +1310,7 @@ public final class ReflectionUtils {
 			}
 
 			// Search for match in interfaces implemented by current type
-			for (Class<?> ifc : current.getInterfaces()) {
+			for (Class<?> ifc : getInterfaces(current)) {
 				Optional<Method> optional = findMethod(ifc, predicate);
 				if (optional.isPresent()) {
 					return optional;
@@ -1484,12 +1485,26 @@ public final class ReflectionUtils {
 		if (visibleDefaultMethods.isEmpty()) {
 			return visibleDefaultMethods;
 		}
-		return Arrays.stream(clazz.getInterfaces())
+		return getInterfaces(clazz).stream()
 				.map(ReflectionUtils::getMethods)
 				.flatMap(List::stream)
 				.filter(visibleDefaultMethods::contains)
 				.collect(toCollection(ArrayList::new));
 		// @formatter:on
+	}
+
+	/**
+	 * Get a sorted list of all interfaces directly implemented by the supplied type.
+	 * This list will be sorted alphanumerically by the fully qualified names of the implemented interfaces
+	 * and will therefore by unaffected by the declaration order in an 'implements' or 'extends' clause
+	 * in the supplied type.
+	 *
+	 * @since 5.8
+	 */
+	private static List<Class<?>> getInterfaces(Class<?> clazz) {
+		Class<?>[] interfaces = clazz.getInterfaces();
+		Arrays.sort(interfaces, comparing(Class::getName));
+		return Arrays.asList(interfaces);
 	}
 
 	private static List<Field> toSortedMutableList(Field[] fields) {
@@ -1537,7 +1552,7 @@ public final class ReflectionUtils {
 
 	private static List<Method> getInterfaceMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		List<Method> allInterfaceMethods = new ArrayList<>();
-		for (Class<?> ifc : clazz.getInterfaces()) {
+		for (Class<?> ifc : getInterfaces(clazz)) {
 
 			// @formatter:off
 			List<Method> localInterfaceMethods = getMethods(ifc).stream()
@@ -1562,7 +1577,7 @@ public final class ReflectionUtils {
 
 	private static List<Field> getInterfaceFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		List<Field> allInterfaceFields = new ArrayList<>();
-		for (Class<?> ifc : clazz.getInterfaces()) {
+		for (Class<?> ifc : getInterfaces(clazz)) {
 			List<Field> localInterfaceFields = getFields(ifc);
 
 			// @formatter:off
@@ -1678,7 +1693,7 @@ public final class ReflectionUtils {
 	private static void getAllAssignmentCompatibleClasses(Class<?> clazz, Set<Class<?>> result) {
 		for (Class<?> current = clazz; current != null; current = current.getSuperclass()) {
 			result.add(current);
-			for (Class<?> interfaceClass : current.getInterfaces()) {
+			for (Class<?> interfaceClass : getInterfaces(current)) {
 				if (!result.contains(interfaceClass)) {
 					getAllAssignmentCompatibleClasses(interfaceClass, result);
 				}
