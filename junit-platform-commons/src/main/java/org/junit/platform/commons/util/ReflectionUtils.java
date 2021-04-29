@@ -1502,6 +1502,8 @@ public final class ReflectionUtils {
 	 * @since 5.8
 	 */
 	private static List<Class<?>> getInterfaces(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+
 		Class<?>[] interfaces = clazz.getInterfaces();
 		Arrays.sort(interfaces, comparing(Class::getName));
 		return Arrays.asList(interfaces);
