@@ -30,6 +30,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
@@ -121,6 +122,73 @@ class StandaloneTests {
 
 	@Test
 	@Order(3)
+	void testOnJava8() throws IOException {
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.setProject("standalone") //
+				.addArguments("--show-version") //
+				.addArguments("-enableassertions") //
+				.addArguments("-Djava.util.logging.config.file=logging.properties") //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("--scan-class-path") //
+				.addArguments("--disable-banner") //
+				.addArguments("--include-classname", "standalone.*") //
+				.addArguments("--classpath", "bin").build() //
+				.run(false);
+
+		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+
+		var workspace = Request.WORKSPACE.resolve("standalone");
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
+		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
+		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
+
+		var jupiterVersion = Helper.version("junit-jupiter-engine");
+		var vintageVersion = Helper.version("junit-vintage-engine");
+		assertTrue(result.getOutput("err").contains("junit-jupiter"
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+		assertTrue(result.getOutput("err").contains("junit-vintage"
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+	}
+
+	@Test
+	@Order(3)
+	// https://github.com/junit-team/junit5/issues/2600
+	void testOnJava8SelectPackage() throws IOException {
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.setProject("standalone") //
+				.addArguments("--show-version") //
+				.addArguments("-enableassertions") //
+				.addArguments("-Djava.util.logging.config.file=logging.properties") //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("--select-package", "standalone") //
+				.addArguments("--disable-banner") //
+				.addArguments("--include-classname", "standalone.*") //
+				.addArguments("--classpath", "bin").build() //
+				.run(false);
+
+		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+
+		var workspace = Request.WORKSPACE.resolve("standalone");
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
+		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
+		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
+
+		var jupiterVersion = Helper.version("junit-jupiter-engine");
+		var vintageVersion = Helper.version("junit-vintage-engine");
+		assertTrue(result.getOutput("err").contains("junit-jupiter"
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+		assertTrue(result.getOutput("err").contains("junit-vintage"
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+	}
+
+	@Test
+	@Order(5)
 	@Disabled("https://github.com/junit-team/junit5/issues/1724")
 	void testWithJarredTestClasses() {
 		var jar = MavenRepo.jar("junit-platform-console-standalone");
