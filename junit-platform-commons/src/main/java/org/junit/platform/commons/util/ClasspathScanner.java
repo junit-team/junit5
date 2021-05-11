@@ -25,7 +25,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -50,6 +52,8 @@ class ClasspathScanner {
 	private static final Logger logger = LoggerFactory.getLogger(ClasspathScanner.class);
 
 	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
+	private static final String CLASSPATH_RESOURCE_PATH_SEPARATOR_STRING = String.valueOf(
+		CLASSPATH_RESOURCE_PATH_SEPARATOR);
 	private static final char PACKAGE_SEPARATOR_CHAR = '.';
 	private static final String PACKAGE_SEPARATOR_STRING = String.valueOf(PACKAGE_SEPARATOR_CHAR);
 
@@ -76,7 +80,8 @@ class ClasspathScanner {
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 		basePackageName = basePackageName.trim();
 
-		return findClassesForUris(getRootUrisForPackage(basePackageName), basePackageName, classFilter);
+		return findClassesForUris(getRootUrisForPackageNameOnClassPathAndModulePath(basePackageName), basePackageName,
+			classFilter);
 	}
 
 	List<Class<?>> scanForClassesInClasspathRoot(URI root, ClassFilter classFilter) {
@@ -212,12 +217,29 @@ class ClasspathScanner {
 		return this.classLoaderSupplier.get();
 	}
 
+	private List<URI> getRootUrisForPackageNameOnClassPathAndModulePath(String basePackageName) {
+		Set<URI> uriSet = new LinkedHashSet<>(getRootUrisForPackage(basePackageName));
+		if (!basePackageName.isEmpty() && !basePackageName.endsWith(PACKAGE_SEPARATOR_STRING)) {
+			getRootUrisForPackage(basePackageName + PACKAGE_SEPARATOR_STRING).stream() //
+					.map(ClasspathScanner::removeTrailingClasspathResourcePathSeparator) //
+					.forEach(uriSet::add);
+		}
+		return new ArrayList<>(uriSet);
+	}
+
+	private static URI removeTrailingClasspathResourcePathSeparator(URI uri) {
+		String string = uri.toString();
+		if (string.endsWith(CLASSPATH_RESOURCE_PATH_SEPARATOR_STRING)) {
+			return URI.create(string.substring(0, string.length() - 1));
+		}
+		return uri;
+	}
+
 	private static String packagePath(String packageName) {
 		if (packageName.isEmpty()) {
 			return "";
 		}
-		String path = packageName.replace(PACKAGE_SEPARATOR_CHAR, CLASSPATH_RESOURCE_PATH_SEPARATOR);
-		return path + CLASSPATH_RESOURCE_PATH_SEPARATOR;
+		return packageName.replace(PACKAGE_SEPARATOR_CHAR, CLASSPATH_RESOURCE_PATH_SEPARATOR);
 	}
 
 	private List<URI> getRootUrisForPackage(String basePackageName) {
