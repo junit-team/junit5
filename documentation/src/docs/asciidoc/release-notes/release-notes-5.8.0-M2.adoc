@@ -15,7 +15,9 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Method `getRootUrisForPackage()` in class `ClasspathScanner` now returns a
+  valid list of class names when the package name is equal to the name of a
+  module on the module path and when running on Java 8.
 
 ==== Deprecations and Breaking Changes
 
