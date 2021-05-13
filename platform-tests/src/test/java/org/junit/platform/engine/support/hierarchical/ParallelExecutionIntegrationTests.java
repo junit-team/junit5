@@ -243,6 +243,13 @@ class ParallelExecutionIntegrationTests {
 		assertThat(events.stream().filter(event(test(), finishedWithFailure())::matches)).isEmpty();
 	}
 
+	@RepeatedTest(10)
+	void canRunTestsIsolatedFromEachOtherAcrossClassesWithOtherResourceLocks() {
+		var events = executeConcurrently(4, IndependentClasses.B.class, IndependentClasses.C.class);
+
+		assertThat(events.stream().filter(event(test(), finishedWithFailure())::matches)).isEmpty();
+	}
+
 	@Isolated("testing")
 	static class IsolatedTestCase {
 		static AtomicInteger sharedResource;
@@ -336,6 +343,19 @@ class ParallelExecutionIntegrationTests {
 			@Test
 			void a() throws Exception {
 				incrementBlockAndCheck(sharedResource, countDownLatch);
+			}
+
+			@Test
+			void b() throws Exception {
+				storeAndBlockAndCheck(sharedResource, countDownLatch);
+			}
+		}
+
+		@ResourceLock("other")
+		static class C {
+			@Test
+			void a() throws Exception {
+				storeAndBlockAndCheck(sharedResource, countDownLatch);
 			}
 
 			@Test

@@ -48,7 +48,7 @@ class NodeTreeWalkerIntegrationTests {
 
 		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getReadWriteLock("a"), getReadWriteLock("b")));
+				.isEqualTo(List.of(getLock(GLOBAL_READ), getReadWriteLock("a"), getReadWriteLock("b")));
 		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
 
 		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
@@ -64,7 +64,7 @@ class NodeTreeWalkerIntegrationTests {
 
 		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getReadWriteLock("a")));
+				.isEqualTo(List.of(getLock(GLOBAL_READ), getReadWriteLock("a")));
 		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
 
 		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
@@ -80,7 +80,7 @@ class NodeTreeWalkerIntegrationTests {
 
 		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getReadLock("a")));
+				.isEqualTo(List.of(getLock(GLOBAL_READ), getReadLock("a")));
 		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
 
 		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
@@ -96,7 +96,7 @@ class NodeTreeWalkerIntegrationTests {
 
 		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getReadWriteLock("a")));
+				.isEqualTo(List.of(getLock(GLOBAL_READ), getReadWriteLock("a")));
 		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
 
 		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
@@ -112,7 +112,7 @@ class NodeTreeWalkerIntegrationTests {
 
 		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getReadLock("a"), getReadLock("b")));
+				.isEqualTo(List.of(getLock(GLOBAL_READ), getReadLock("a"), getReadLock("b")));
 		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
 
 		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
