@@ -168,6 +168,7 @@ tasks {
 				"apiguardian-version" to versions.apiguardian,
 				"ota4j-version" to versions.opentest4j,
 				"surefire-version" to versions["surefire"],
+				"assertj-version" to versions.assertj,
 				"release-branch" to releaseBranch,
 				"docs-version" to docsVersion,
 				"revnumber" to version,

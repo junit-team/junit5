@@ -80,8 +80,10 @@ events, consult the Javadoc for `{EventConditions}`.
 
 [WARNING]
 ====
-Version {platform-version} of `junit-platform-testkit` is incompatible with version 3.19.0
-of the {AssertJ} assertion library.
+Version {platform-version} of `junit-platform-testkit` is compatible with versions
+{assertj-version} up to 3.18.1 of the {AssertJ} assertion library but incompatible with
+version 3.19.0. The next feature release of JUnit will update the required version of
+AssertJ to 3.19.0 or later.
 ====
 
 [source,java,indent=0]
