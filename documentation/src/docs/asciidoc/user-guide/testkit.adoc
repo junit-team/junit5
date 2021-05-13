@@ -78,6 +78,12 @@ For details on what _conditions_ are available for use with AssertJ assertions a
 events, consult the Javadoc for `{EventConditions}`.
 ====
 
+[WARNING]
+====
+Version {platform-version} of `junit-platform-testkit` is incompatible with version 3.19.0
+of the {AssertJ} assertion library.
+====
+
 [source,java,indent=0]
 ----
 include::{testDir}/example/testkit/EngineTestKitSkippedMethodDemo.java[tags=user_guide]
