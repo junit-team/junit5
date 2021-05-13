@@ -448,7 +448,6 @@
 9b3b191448d552432e8e30960a8980a5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/SummaryGeneratingListener.java
 9b4ce208e39d0154e430705779716eba  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineDiscoveryResultValidator.java
 9ba60aa50c0e40107db81841b6d92799  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassExtensionContext.java
-9c24117eb55c067c680cd23cb2306924  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.2.adoc
 9c6dba9da8e9d81a0d4fa859f646b30d  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/ExternalResourceAdapter.java
 9ceda4f47f8e7b490c5b7de46537506e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/RunnerTestDescriptorPostProcessor.java
 9cf97f2ca731433f885cccae25c524a7  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
@@ -543,6 +542,7 @@ ba9025621971898730c5593bbee89212  junit-jupiter-api/src/main/java/org/junit/jupi
 bab36b4db649fecc5afa63e4e4ba8ac0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NopLock.java
 bad9a33a05d7ed8808f3902a3ceaad3a  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdReader.java
 bb416ad222a61115472459842b0572d2  documentation/src/main/java/example/domain/Person.java
+bb8809cc5c87ebd5eecd56076d04916b  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.2.adoc
 bbb5d85083bc8d996fd5bcbc8a0a8222  documentation/src/test/java/example/registration/WebServerDemo.java
 bc1cba5da6cfc7cfb107a540bc335f2d  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassUtils.java
 bc259e2e9997ba9c86f4ba543081b8cf  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherConstants.java
