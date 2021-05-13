@@ -47,6 +47,7 @@ tasks {
 	shadowJar {
 		configurations = listOf(shadowed)
 		exclude("META-INF/maven/**")
+		excludes.remove("module-info.class")
 		archiveClassifier.set("")
 	}
 	jar {

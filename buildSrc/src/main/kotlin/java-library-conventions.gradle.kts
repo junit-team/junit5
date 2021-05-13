@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 
 plugins {
@@ -163,7 +164,7 @@ tasks.withType<Jar>().configureEach {
 		into("META-INF")
 	}
 	val suffix = archiveClassifier.getOrElse("")
-	if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
+	if (suffix.isBlank() || this is ShadowJar) {
 		dependsOn(allMainClasses, compileModule)
 		from("$moduleOutputDir/$javaModuleName") {
 			include("module-info.class")
