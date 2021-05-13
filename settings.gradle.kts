@@ -7,7 +7,7 @@ pluginManagement {
 		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.3"
 		id("net.nemerosa.versioning") version "2.14.0"
 		id("com.github.ben-manes.versions") version "0.38.0"
-		id("com.diffplug.spotless") version "5.12.0"
+		id("com.diffplug.spotless") version "5.12.4"
 		id("org.ajoberstar.git-publish") version "3.0.0"
 		kotlin("jvm") version "1.4.0"
 		// Check if workaround in documentation.gradle.kts can be removed when upgrading
