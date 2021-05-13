@@ -107,6 +107,8 @@ class StandaloneTests {
 	@Test
 	@Order(3)
 	void testOnJava8() throws IOException {
+		var root = Path.of("../../..");
+		var jar = root.resolve(Helper.createJarPath("junit-platform-console-standalone"));
 		var result = Request.builder() //
 				.setTool(new Java()) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
@@ -114,7 +116,7 @@ class StandaloneTests {
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
-				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("-jar", jar) //
 				.addArguments("--scan-class-path") //
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
@@ -141,6 +143,8 @@ class StandaloneTests {
 	@Order(3)
 	// https://github.com/junit-team/junit5/issues/2600
 	void testOnJava8SelectPackage() throws IOException {
+		var root = Path.of("../../..");
+		var jar = root.resolve(Helper.createJarPath("junit-platform-console-standalone"));
 		var result = Request.builder() //
 				.setTool(new Java()) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
@@ -148,7 +152,7 @@ class StandaloneTests {
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
-				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("-jar", jar) //
 				.addArguments("--select-package", "standalone") //
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
