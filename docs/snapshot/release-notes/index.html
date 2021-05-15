@@ -851,6 +851,10 @@ GitHub.</p>
 class names when the package name is equal to the name of a module on the module path
 and when running on Java 8.</p>
 </li>
+<li>
+<p>Direct child descriptors of the engine descriptor now also acquire the global read lock
+when they require other exclusive resources.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -862,7 +866,8 @@ and when running on Java 8.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Test classes annotated with <code>@ResourceLock</code> no longer run in parallel with <code>@Isolated</code>
+ones.</p>
 </li>
 </ul>
 </div>
@@ -1031,7 +1036,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-05-13 16:26:28 UTC
+Last updated 2021-05-15 08:35:32 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
