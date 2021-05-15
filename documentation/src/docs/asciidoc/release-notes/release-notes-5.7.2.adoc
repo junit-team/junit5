@@ -30,6 +30,12 @@ GitHub.
 * Test classes annotated with `@ResourceLock` no longer run in parallel with `@Isolated`
   ones.
 
+==== New Features and Improvements
+
+* Improved `ExclusiveResource` handling: if a `Node` has only read locks and no read-write
+  locks, then descendants are not forced into `SAME_THREAD` execution and can run
+  concurrently.
+
 
 [[release-notes-5.7.2-junit-vintage]]
 === JUnit Vintage
