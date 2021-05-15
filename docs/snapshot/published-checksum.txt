@@ -475,6 +475,7 @@ a3077c6b3b213d1cf150e48d2c65f22e  junit-platform-suite-api/src/main/java/org/jun
 a315fc394a47aed8f6244b9cb45d2b8a  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportWriter.java
 a3ae464f2543ea2ca3d5be210080c479  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceAccessMode.java
 a3dbb51fdad33db6771c29b2c80f67da  junit-platform-engine/src/main/java/org/junit/platform/engine/package-info.java
+a3e4ef795108cd76acc00cce67473c01  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.2.adoc
 a44a324af4b5f614f365e9fe57ce58d5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotSame.java
 a4749c7253d6c1c2e8c84907c0fe94cf  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 a5995d59ecdc0810e86898fe51d5b95f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInstance.java
@@ -675,7 +676,6 @@ e5e43289f1866cd692897728112f064f  junit-jupiter-api/src/main/java/org/junit/jupi
 e64b79064e9f15819eb568f28380a074  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfiguration.java
 e6b7b517ca49ae4f6d8f452ae9a0b915  junit-platform-commons/src/main/java/org/junit/platform/commons/JUnitException.java
 e6dfc865076a2c844d6f0b5da8917212  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrdererContext.java
-e7e6e8ddbba19c61cdd47e9541f43925  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.2.adoc
 e82c52957e5f90e1c56e45cf89f5ac97  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodOrderingVisitor.java
 e946aa9c5e1bbbb490056ac39cad480d  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 ea0031f0f1e254c65ca59ec3ff5dbdcc  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineIdValidator.java
