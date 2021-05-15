@@ -721,11 +721,6 @@ registered test engines.</p>
 longer store <code>String</code> representations of unique IDs.</p>
 </li>
 <li>
-<p>Improved <code>ExclusiveResource</code> handling: if a <code>Node</code> has only read locks and no read-write
-locks, then descendants are not forced into <code>SAME_THREAD</code> execution and can run
-concurrently.</p>
-</li>
-<li>
 <p>Tools that make multiple calls to the <code>Launcher</code> API should now create a
 <code>LauncherSession</code> in order to allow for executing global setup and teardown code exactly
 once via the new <code>LauncherSessionListener</code> interface that can be registered via Java’s
@@ -872,6 +867,18 @@ ones.</p>
 </ul>
 </div>
 </div>
+<div class="sect3">
+<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Improved <code>ExclusiveResource</code> handling: if a <code>Node</code> has only read locks and no read-write
+locks, then descendants are not forced into <code>SAME_THREAD</code> execution and can run
+concurrently.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.7.2-junit-vintage"><a class="anchor" href="#release-notes-5.7.2-junit-vintage"></a>JUnit Vintage</h3>
@@ -956,7 +963,7 @@ called once even if they throw an exception.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1036,7 +1043,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-05-15 08:35:32 UTC
+Last updated 2021-05-15 08:39:40 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
