@@ -1,7 +1,7 @@
 [[release-notes-5.7.2]]
 == 5.7.2
 
-*Date of Release:* ❓
+*Date of Release:* May 15, 2021
 
 *Scope:* Bug fixes since 5.7.1
 

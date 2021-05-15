@@ -6,8 +6,7 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.7.1](https://github.com/junit-team/junit5/releases/tag/r5.7.1) (February 4, 2021)
-- Preview (Milestone/Release Candidate): n/a
+- General Availability (GA): [JUnit 5.7.2](https://github.com/junit-team/junit5/releases/tag/r5.7.2) (May 15, 2021)
 
 ## Documentation
 
