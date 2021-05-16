@@ -35,6 +35,14 @@ import org.junit.platform.commons.annotation.Testable;
  * org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN
  * ClassNameFilter#STANDARD_INCLUDE_PATTERN}).
  *
+ * <p>By default a suite discovers tests using the configuration parameters
+ * explicitly configured by {@link ConfigurationParameter @ConfigurationParameter}
+ * and the configuration parameters from the discovery request that discovered
+ * the suite. Annotating a suite with
+ * {@link DisableParentConfigurationParameters @DisableParentConfigurationParameters}
+ * annotation disables the latter as a source of parameters so that only explicit
+ * configuration parameters are taken into account.
+ *
  * @since 1.8
  * @see SelectClasses
  * @see SelectClasspathResource
@@ -53,7 +61,9 @@ import org.junit.platform.commons.annotation.Testable;
  * @see ExcludeTags
  * @see SuiteDisplayName
  * @see ConfigurationParameter
+ * @see DisableParentConfigurationParameters
  * @see org.junit.platform.launcher.LauncherDiscoveryRequest
+ * @see org.junit.platform.launcher.LauncherDiscoveryRequestBuilder
  * @see org.junit.platform.launcher.Launcher
  */
 @Retention(RetentionPolicy.RUNTIME)

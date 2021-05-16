@@ -86,6 +86,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		private final Map<String, String> explicitParameters = new HashMap<>();
 		private boolean implicitProvidersEnabled = true;
 		private String configFileName = ConfigurationParameters.CONFIG_FILE_NAME;
+		private ConfigurationParameters parentConfigurationParameters;
 
 		private Builder() {
 		}
@@ -107,11 +108,22 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			return this;
 		}
 
+		Builder parentConfigurationParameters(ConfigurationParameters parameters) {
+			Preconditions.notNull(parameters, "parent configuration parameters must not be null");
+			this.parentConfigurationParameters = parameters;
+			return this;
+		}
+
 		LauncherConfigurationParameters build() {
 			List<ParameterProvider> parameterProviders = new ArrayList<>();
 			if (!explicitParameters.isEmpty()) {
 				parameterProviders.add(ParameterProvider.explicit(explicitParameters));
 			}
+
+			if (parentConfigurationParameters != null) {
+				parameterProviders.add(ParameterProvider.inherited(parentConfigurationParameters));
+			}
+
 			if (implicitProvidersEnabled) {
 				parameterProviders.add(ParameterProvider.systemProperties());
 				parameterProviders.add(ParameterProvider.propertiesFile(configFileName));
@@ -181,6 +193,27 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				public String toString() {
 					ToStringBuilder builder = new ToStringBuilder("propertiesFile");
 					properties.stringPropertyNames().forEach(key -> builder.append(key, getValue(key)));
+					return builder.toString();
+				}
+			};
+		}
+
+		static ParameterProvider inherited(ConfigurationParameters configParams) {
+			return new ParameterProvider() {
+				@Override
+				public String getValue(String key) {
+					return configParams.get(key).orElse(null);
+				}
+
+				@Override
+				public int size() {
+					return configParams.size();
+				}
+
+				@Override
+				public String toString() {
+					ToStringBuilder builder = new ToStringBuilder("inherited");
+					builder.append("parent", configParams);
 					return builder.toString();
 				}
 			};

@@ -22,7 +22,10 @@ final class DiscoverySelectorResolver {
 	// @formatter:off
 	private static final EngineDiscoveryRequestResolver<SuiteEngineDescriptor> resolver = EngineDiscoveryRequestResolver.<SuiteEngineDescriptor>builder()
 			.addClassContainerSelectorResolver(new IsSuiteClass())
-			.addSelectorResolver(context -> new ClassSelectorResolver(context.getClassNameFilter(), context.getEngineDescriptor()))
+			.addSelectorResolver(context -> new ClassSelectorResolver(
+					context.getClassNameFilter(),
+					context.getEngineDescriptor(),
+					context.getDiscoveryRequest().getConfigurationParameters()))
 			.build();
 	// @formatter:on
 

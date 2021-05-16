@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -48,12 +49,14 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	static final String SEGMENT_TYPE = "suite";
 
 	private final SuiteLauncherDiscoveryRequestBuilder discoveryRequestBuilder = request();
+	private final ConfigurationParameters configurationParameters;
 
 	private LauncherDiscoveryResult launcherDiscoveryResult;
 	private SuiteLauncher launcher;
 
-	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass) {
+	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, ConfigurationParameters configurationParameters) {
 		super(requireNoCycles(id), getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
+		this.configurationParameters = configurationParameters;
 	}
 
 	private static UniqueId requireNoCycles(UniqueId id) {
@@ -94,6 +97,8 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		// @formatter:off
 		LauncherDiscoveryRequest request = discoveryRequestBuilder
 				.filterStandardClassNamePatterns(true)
+				.enableImplicitConfigurationParameters(false)
+				.parentConfigurationParameters(configurationParameters)
 				.build();
 		// @formatter:on
 		this.launcher = SuiteLauncher.create();

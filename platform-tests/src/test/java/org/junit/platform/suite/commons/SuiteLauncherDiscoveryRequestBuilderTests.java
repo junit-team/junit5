@@ -20,6 +20,7 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -44,6 +45,7 @@ import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.DisableParentConfigurationParameters;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.ExcludePackages;
@@ -370,6 +372,37 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		assertEquals("com.example.testcases", exactlyOne(pSelectors).getPackageName());
 	}
 
+	@Test
+	void enableParentConfigurationParametersByDefault() {
+		class Suite {
+
+		}
+		// @formatter:off
+		var configuration = new ParentConfigurationParameters("parent", "parent parameters were used");
+		var request = builder.suite(Suite.class)
+				.parentConfigurationParameters(configuration)
+				.build();
+		// @formatter:on
+		var configurationParameters = request.getConfigurationParameters();
+		assertEquals(Optional.of("parent parameters were used"), configurationParameters.get("parent"));
+	}
+
+	@Test
+	void disableParentConfigurationParameters() {
+		@DisableParentConfigurationParameters
+		class Suite {
+
+		}
+		// @formatter:off
+		var configuration = new ParentConfigurationParameters("parent", "parent parameters were used");
+		var request = builder.suite(Suite.class)
+				.parentConfigurationParameters(configuration)
+				.build();
+		// @formatter:on
+		var configurationParameters = request.getConfigurationParameters();
+		assertEquals(Optional.empty(), configurationParameters.get("parent"));
+	}
+
 	private static <T> T exactlyOne(List<T> list) {
 		assertEquals(1, list.size());
 		return list.get(0);
@@ -388,6 +421,30 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		@Override
 		public Set<TestTag> getTags() {
 			return Collections.singleton(TestTag.create("test-tag"));
+		}
+
+	}
+
+	private static class ParentConfigurationParameters implements ConfigurationParameters {
+		private final Map<String, String> map;
+
+		public ParentConfigurationParameters(String key, String value) {
+			this.map = Map.of(key, value);
+		}
+
+		@Override
+		public Optional<String> get(String key) {
+			return Optional.ofNullable(map.get(key));
+		}
+
+		@Override
+		public Optional<Boolean> getBoolean(String key) {
+			return Optional.empty();
+		}
+
+		@Override
+		public int size() {
+			return map.size();
 		}
 
 	}
