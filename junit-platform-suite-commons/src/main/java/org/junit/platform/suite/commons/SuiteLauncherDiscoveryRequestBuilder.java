@@ -76,28 +76,34 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
-		return delegate.selectors(selectors);
+	public SuiteLauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
+		delegate.selectors(selectors);
+		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
-		return delegate.selectors(selectors);
+	public SuiteLauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
+		delegate.selectors(selectors);
+		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
-		return delegate.filters(filters);
+	public SuiteLauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
+		delegate.filters(filters);
+		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
-		return delegate.configurationParameter(key, value);
+	public SuiteLauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
+		delegate.configurationParameter(key, value);
+		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
-		return delegate.configurationParameters(configurationParameters);
+	public SuiteLauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
+		delegate.configurationParameters(configurationParameters);
+		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
-		return delegate.enableImplicitConfigurationParameters(enabled);
+	public SuiteLauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
+		delegate.enableImplicitConfigurationParameters(enabled);
+		return this;
 	}
 
 	public SuiteLauncherDiscoveryRequestBuilder suite(AnnotatedElement suite) {
