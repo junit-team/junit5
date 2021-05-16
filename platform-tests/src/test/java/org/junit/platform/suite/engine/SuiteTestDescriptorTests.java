@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
@@ -41,7 +43,8 @@ class SuiteTestDescriptorTests {
 	UniqueId testClassId = jupiterEngineId.append(ClassTestDescriptor.SEGMENT_TYPE, SingleTestTestCase.class.getName());
 	UniqueId methodId = testClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
-	SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, Object.class);
+	ConfigurationParameters configurationParameters = new EmptyConfigurationParameters();
+	SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, Object.class, configurationParameters);
 
 	@Test
 	void suiteIsEmptyBeforeDiscovery() {
@@ -94,6 +97,24 @@ class SuiteTestDescriptorTests {
 		JUnitException exception = assertThrows(JUnitException.class, suite::discover);
 		assertEquals("Configuration error: The suite configuration may not contain a cycle [" + expectedCycle + "]",
 			exception.getCause().getCause().getCause().getMessage());
+	}
+
+	private static class EmptyConfigurationParameters implements ConfigurationParameters {
+		@Override
+		public Optional<String> get(String key) {
+			return Optional.empty();
+		}
+
+		@Override
+		public Optional<Boolean> getBoolean(String key) {
+			return Optional.empty();
+		}
+
+		@Override
+		public int size() {
+			return 0;
+		}
+
 	}
 
 }

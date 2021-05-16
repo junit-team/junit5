@@ -107,4 +107,6 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Suites executed by the `junit-platform-suite` module will inherit the
+  configuration parameters from the parent discovery request. This behaviour can
+  be disabled by the `DisableParentConfigurationParameters` annotation.

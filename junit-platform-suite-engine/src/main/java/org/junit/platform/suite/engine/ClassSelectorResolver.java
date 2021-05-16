@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.UniqueId.Segment;
@@ -33,10 +34,13 @@ final class ClassSelectorResolver implements SelectorResolver {
 
 	private final Predicate<String> classNameFilter;
 	private final SuiteEngineDescriptor suiteEngineDescriptor;
+	private final ConfigurationParameters configurationParameters;
 
-	ClassSelectorResolver(Predicate<String> classNameFilter, SuiteEngineDescriptor suiteEngineDescriptor) {
+	ClassSelectorResolver(Predicate<String> classNameFilter, SuiteEngineDescriptor suiteEngineDescriptor,
+			ConfigurationParameters configurationParameters) {
 		this.classNameFilter = classNameFilter;
 		this.suiteEngineDescriptor = suiteEngineDescriptor;
+		this.configurationParameters = configurationParameters;
 	}
 
 	@Override
@@ -88,9 +92,9 @@ final class ClassSelectorResolver implements SelectorResolver {
 		return suite.map(Match::exact).map(Resolution::match).orElseGet(Resolution::unresolved);
 	}
 
-	private static Optional<SuiteTestDescriptor> newSuiteDescriptor(Class<?> suiteClass, TestDescriptor parent) {
+	private Optional<SuiteTestDescriptor> newSuiteDescriptor(Class<?> suiteClass, TestDescriptor parent) {
 		UniqueId id = parent.getUniqueId().append(SuiteTestDescriptor.SEGMENT_TYPE, suiteClass.getName());
-		return Optional.of(new SuiteTestDescriptor(id, suiteClass));
+		return Optional.of(new SuiteTestDescriptor(id, suiteClass, configurationParameters));
 	}
 
 }
