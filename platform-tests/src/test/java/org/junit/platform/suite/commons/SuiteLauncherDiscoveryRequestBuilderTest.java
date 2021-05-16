@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
@@ -382,11 +384,13 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		class Suite {
 
 		}
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
-		ConfigurationParameters configurationParameters = request.getConfigurationParameters();
-		Optional<String> canary = configurationParameters.get(
-			"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
-		assertEquals("implicit parameters were used", canary.get());
+		withTestServices(() -> {
+			LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+			ConfigurationParameters configurationParameters = request.getConfigurationParameters();
+			Optional<String> canary = configurationParameters.get(
+				"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
+			assertEquals("implicit parameters were used", canary.get());
+		});
 	}
 
 	@Test
@@ -394,11 +398,13 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		class Suite {
 
 		}
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
-		ConfigurationParameters configurationParameters = request.getConfigurationParameters();
-		Optional<String> canary = configurationParameters.get(
-			"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
-		assertEquals("implicit parameters were used", canary.get());
+		withTestServices(() -> {
+			LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+			ConfigurationParameters configurationParameters = request.getConfigurationParameters();
+			Optional<String> canary = configurationParameters.get(
+				"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
+			assertEquals("implicit parameters were used", canary.get());
+		});
 	}
 
 	@Test
@@ -407,16 +413,31 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		class Suite {
 
 		}
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
-		ConfigurationParameters configurationParameters = request.getConfigurationParameters();
-		Optional<String> canary = configurationParameters.get(
-			"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
-		assertTrue(canary.isEmpty());
+		withTestServices(() -> {
+			LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+			ConfigurationParameters configurationParameters = request.getConfigurationParameters();
+			Optional<String> canary = configurationParameters.get(
+				"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
+			assertTrue(canary.isEmpty());
+		});
 	}
 
 	private static <T> T exactlyOne(List<T> list) {
 		assertEquals(1, list.size());
 		return list.get(0);
+	}
+
+	private static void withTestServices(Runnable runnable) {
+		var current = Thread.currentThread().getContextClassLoader();
+		try {
+			var url = SuiteLauncherDiscoveryRequestBuilderTest.class.getClassLoader().getResource("testservices/");
+			var classLoader = new URLClassLoader(new URL[] { url }, current);
+			Thread.currentThread().setContextClassLoader(classLoader);
+			runnable.run();
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(current);
+		}
 	}
 
 	private static class StubAbstractTestDescriptor extends AbstractTestDescriptor {
