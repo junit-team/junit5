@@ -30,6 +30,7 @@ import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.core.LauncherConfigurationParameters.Builder;
 import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 
 /**
@@ -101,6 +102,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	private final Map<String, String> configurationParameters = new HashMap<>();
 	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
 	private boolean implicitConfigurationParametersEnabled = true;
+	private ConfigurationParameters parentConfigurationParameters;
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
@@ -198,6 +200,11 @@ public final class LauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	public void parentConfigurationParameters(ConfigurationParameters configurationParameters) {
+		Preconditions.notNull(configurationParameters, "parent configuration parameters must not be null");
+		this.parentConfigurationParameters = configurationParameters;
+	}
+
 	/**
 	 * Add all of the supplied discovery listeners to the request.
 	 *
@@ -269,10 +276,15 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {
-		return LauncherConfigurationParameters.builder() //
+		Builder builder = LauncherConfigurationParameters.builder() //
 				.explicitParameters(this.configurationParameters) //
-				.enableImplicitProviders(this.implicitConfigurationParametersEnabled) //
-				.build();
+				.enableImplicitProviders(this.implicitConfigurationParametersEnabled);
+
+		if (parentConfigurationParameters != null) {
+			builder.parentConfigurationParameters(this.parentConfigurationParameters);
+		}
+
+		return builder.build();
 	}
 
 	private LauncherDiscoveryListener getLauncherDiscoveryListener(ConfigurationParameters configurationParameters) {

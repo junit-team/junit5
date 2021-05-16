@@ -13,7 +13,6 @@ package org.junit.platform.suite.api;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -22,33 +21,24 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 /**
- * {@code @Configuration} specifies the configuration {@linkplain #key key} and
- * {@linkplain #value value} pairs to be added to the discovery request when running
- * a test suite on the JUnit Platform.
+ * Disable parent configuration parameters.
  *
- * @since 1.8
- * @see DisableParentConfigurationParameters
+ * <p>By default a suite discovers tests using the configuration parameters
+ * explicitly configured by {@link ConfigurationParameter @ConfigurationParameter}
+ * and the configuration parameters from the discovery request that discovered
+ * the suite.
+ *
+ * <p>Annotating a suite with this annotation disables the latter source so
+ * that only explicit configuration parameters are taken into account.
+ *
+ * @see ConfigurationParameter
  * @see Suite
- * @see org.junit.platform.runner.JUnitPlatform
- * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder#configurationParameter(String, String)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
 @API(status = Status.EXPERIMENTAL, since = "1.8")
-@Repeatable(ConfigurationParameters.class)
-public @interface ConfigurationParameter {
-
-	/**
-	 * The configuration parameter key under which to add the
-	 * value to the discovery request; never {@code null} or blank.
-	 */
-	String key();
-
-	/**
-	 * The value to add to the discovery request.
-	 */
-	String value();
+public @interface DisableParentConfigurationParameters {
 
 }
