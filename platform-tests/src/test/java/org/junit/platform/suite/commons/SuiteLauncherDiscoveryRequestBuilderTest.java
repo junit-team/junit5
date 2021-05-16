@@ -44,6 +44,7 @@ import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.EnableImplicitConfigurationParameters;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.ExcludePackages;
@@ -373,6 +374,44 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 		List<PackageSelector> pSelectors = request.getSelectorsByType(PackageSelector.class);
 		assertEquals("com.example.testcases", exactlyOne(pSelectors).getPackageName());
+	}
+
+	@Test
+	void enableImplicitConfigurationParameters() {
+		@EnableImplicitConfigurationParameters
+		class Suite {
+
+		}
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		ConfigurationParameters configurationParameters = request.getConfigurationParameters();
+		Optional<String> canary = configurationParameters.get(
+			"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
+		assertEquals("implicit parameters were used", canary.get());
+	}
+
+	@Test
+	void enableImplicitConfigurationParametersByDefault() {
+		class Suite {
+
+		}
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		ConfigurationParameters configurationParameters = request.getConfigurationParameters();
+		Optional<String> canary = configurationParameters.get(
+			"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
+		assertEquals("implicit parameters were used", canary.get());
+	}
+
+	@Test
+	void disableImplicitConfigurationParameters() {
+		@EnableImplicitConfigurationParameters(enabled = false)
+		class Suite {
+
+		}
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		ConfigurationParameters configurationParameters = request.getConfigurationParameters();
+		Optional<String> canary = configurationParameters.get(
+			"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
+		assertTrue(canary.isEmpty());
 	}
 
 	private static <T> T exactlyOne(List<T> list) {
