@@ -24,7 +24,7 @@ import org.apiguardian.api.API.Status;
  * Disable implicit configuration parameters.
  *
  * <p>By default, in addition to those parameters that are passed explicitly
- * by {@link @ConfigurationParameter}, configuration parameters are read from
+ * by {@link ConfigurationParameter}, configuration parameters are read from
  * system properties and from the {@code junit-platform.properties} classpath
  * resource.
  *
