@@ -21,7 +21,15 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 /**
- * Configure whether implicit configuration parameters should be considered.
+ * Disable implicit configuration parameters.
+ *
+ * <p>By default, in addition to those parameters that are passed explicitly
+ * by {@link @ConfigurationParameter}, configuration parameters are read from
+ * system properties and from the {@code junit-platform.properties} classpath
+ * resource.
+ *
+ * Annotating a suite with this annotation disables the latter two sources so
+ * that only explicit configuration parameters are taken into account.
  *
  * @see ConfigurationParameter
  * @see Suite
@@ -32,10 +40,6 @@ import org.apiguardian.api.API.Status;
 @Inherited
 @Documented
 @API(status = Status.EXPERIMENTAL, since = "1.8")
-public @interface EnableImplicitConfigurationParameters {
+public @interface DisableImplicitConfigurationParameters {
 
-	/**
-	 * By default implicit configuration parameters are considered.
-	 */
-	boolean enabled() default true;
 }

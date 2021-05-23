@@ -56,5 +56,5 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Added `EnableImplicitConfigurationParameters` annotation in the suite API in
+* Added `DisableImplicitConfigurationParameters` annotation in the suite API in
   the `junit-platform-suite-api` module.

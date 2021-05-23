@@ -27,7 +27,7 @@ import org.apiguardian.api.API.Status;
  * a test suite on the JUnit Platform.
  *
  * @since 1.8
- * @see EnableImplicitConfigurationParameters
+ * @see DisableImplicitConfigurationParameters
  * @see Suite
  * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder#configurationParameter(String, String)

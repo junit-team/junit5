@@ -46,7 +46,7 @@ import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.ConfigurationParameter;
-import org.junit.platform.suite.api.EnableImplicitConfigurationParameters;
+import org.junit.platform.suite.api.DisableImplicitConfigurationParameters;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.ExcludePackages;
@@ -379,41 +379,26 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 	}
 
 	@Test
-	void enableImplicitConfigurationParameters() {
-		@EnableImplicitConfigurationParameters
-		class Suite {
-
-		}
-		withTestServices(() -> {
-			LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
-			ConfigurationParameters configurationParameters = request.getConfigurationParameters();
-			Optional<String> canary = configurationParameters.get(
-				"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
-			assertEquals("implicit parameters were used", canary.get());
-		});
-	}
-
-	@Test
 	void enableImplicitConfigurationParametersByDefault() {
 		class Suite {
 
 		}
-		withTestServices(() -> {
+		withImplicitSuiteConfiguration(() -> {
 			LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 			ConfigurationParameters configurationParameters = request.getConfigurationParameters();
 			Optional<String> canary = configurationParameters.get(
 				"org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTest.implicit");
-			assertEquals("implicit parameters were used", canary.get());
+			assertEquals(Optional.of("implicit parameters were used"), canary);
 		});
 	}
 
 	@Test
 	void disableImplicitConfigurationParameters() {
-		@EnableImplicitConfigurationParameters(enabled = false)
+		@DisableImplicitConfigurationParameters
 		class Suite {
 
 		}
-		withTestServices(() -> {
+		withImplicitSuiteConfiguration(() -> {
 			LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
 			ConfigurationParameters configurationParameters = request.getConfigurationParameters();
 			Optional<String> canary = configurationParameters.get(
@@ -427,10 +412,10 @@ class SuiteLauncherDiscoveryRequestBuilderTest {
 		return list.get(0);
 	}
 
-	private static void withTestServices(Runnable runnable) {
+	private static void withImplicitSuiteConfiguration(Runnable runnable) {
 		var current = Thread.currentThread().getContextClassLoader();
 		try {
-			var url = SuiteLauncherDiscoveryRequestBuilderTest.class.getClassLoader().getResource("testservices/");
+			var url = SuiteLauncherDiscoveryRequestBuilderTest.class.getClassLoader().getResource("implicitsuiteconfiguration/");
 			var classLoader = new URLClassLoader(new URL[] { url }, current);
 			Thread.currentThread().setContextClassLoader(classLoader);
 			runnable.run();

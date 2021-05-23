@@ -37,7 +37,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.suite.api.ConfigurationParameter;
-import org.junit.platform.suite.api.EnableImplicitConfigurationParameters;
+import org.junit.platform.suite.api.DisableImplicitConfigurationParameters;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.ExcludePackages;
@@ -113,8 +113,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		// @formatter:off
 		findRepeatableAnnotations(suite, ConfigurationParameter.class)
 				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
-		findAnnotation(suite, EnableImplicitConfigurationParameters.class)
-				.map(EnableImplicitConfigurationParameters::enabled)
+		findAnnotation(suite, DisableImplicitConfigurationParameters.class)
+				.map(disableImplicitConfigurationParameters -> false)
 				.ifPresent(this::enableImplicitConfigurationParameters);
 		findAnnotationValues(suite, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
