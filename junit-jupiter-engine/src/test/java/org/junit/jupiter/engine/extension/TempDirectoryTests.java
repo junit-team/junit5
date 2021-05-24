@@ -58,6 +58,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  *
  * @since 5.4
  */
+@SuppressWarnings("ALL")
 @DisplayName("TempDirectory extension")
 class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
@@ -93,18 +94,16 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	@DisplayName("is capable of removal of non-executable, non-writable, or non-readable directories and folders")
-	@Disabled("Reactivate when #2609 is fixed – currently only 10 out of 13 tests succeed")
 	void nonMintPermissionsContentDoesNotCauseFailure() {
 		executeTestsForClass(NonMintPermissionContentInTempDirectoryDoesNotCauseFailureTestCase.class).testEvents()//
-			.assertStatistics(stats -> stats.started(13).succeeded(13));
+				.assertStatistics(stats -> stats.started(13).succeeded(13));
 	}
 
 	@Test
 	@DisplayName("is capable of removal when its permissions were been changed")
-	@Disabled("Reactivate when #2609 is fixed – currently only 12 out of 42 (14 x 3) tests succeed")
 	void nonMintPermissionsDoNotCauseFailure() {
 		executeTestsForClass(NonMintTempDirectoryPermissionsDoNotCauseFailureTestCase.class).testEvents()//
-			.assertStatistics(stats -> stats.started(42).succeeded(42));
+				.assertStatistics(stats -> stats.started(42).succeeded(42));
 	}
 
 	@Test
@@ -873,7 +872,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void createNonReadableDirectory(@TempDir Path tempDir) throws IOException {
 			Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setReadable(false);
-			// TODO Prevent AccessDeniedException when closing context
 		}
 
 		@Test
@@ -893,7 +891,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
 			Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 			subDir.toFile().setReadable(false);
-			// TODO Prevent AccessDeniedException when closing context
 		}
 
 		@Test
@@ -901,7 +898,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
 			Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 			subDir.toFile().setExecutable(false);
-			// TODO Prevent AccessDeniedException when closing context
 		}
 
 		@Test
@@ -926,7 +922,8 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	// https://github.com/junit-team/junit5/issues/2609
 	static class NonMintTempDirectoryPermissionsDoNotCauseFailureTestCase {
 
-		@Nested class NonWritable {
+		@Nested
+		class NonWritable {
 
 			@Test
 			void makeEmptyTempDirectoryNonWritable(@TempDir Path tempDir) {
@@ -967,7 +964,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			void makeTempDirectoryWithNonReadableFolderNonWritable(@TempDir Path tempDir) throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setReadable(false);
 				tempDir.toFile().setWritable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -982,7 +978,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				subDir.toFile().setReadable(false);
 				tempDir.toFile().setWritable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -999,7 +994,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				subDir.toFile().setExecutable(false);
 				tempDir.toFile().setWritable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -1010,77 +1004,70 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Test
-			void makeTempDirectoryWithNonEmptyFolderContainingNonWritableFileNonWritable(@TempDir Path tempDir) throws IOException {
+			void makeTempDirectoryWithNonEmptyFolderContainingNonWritableFileNonWritable(@TempDir Path tempDir)
+					throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setWritable(false);
 				tempDir.toFile().setWritable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
-			void makeTempDirectoryWithNonEmptyFolderContainingNonReadableFileNonWritable(@TempDir Path tempDir) throws IOException {
+			void makeTempDirectoryWithNonEmptyFolderContainingNonReadableFileNonWritable(@TempDir Path tempDir)
+					throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setReadable(false);
 				tempDir.toFile().setWritable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 		}
 
-		@Nested class NonReadable {
+		@Nested
+		class NonReadable {
 
 			@Test
 			void makeEmptyTempDirectoryNonReadable(@TempDir Path tempDir) {
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithFileNonReadable(@TempDir Path tempDir) throws IOException {
 				Files.createFile(tempDir.resolve("test-file.txt"));
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithEmptyFolderNonReadable(@TempDir Path tempDir) throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonWritableFileNonReadable(@TempDir Path tempDir) throws IOException {
 				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setWritable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonReadableFileNonReadable(@TempDir Path tempDir) throws IOException {
 				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setReadable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonWritableFolderNonReadable(@TempDir Path tempDir) throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setWritable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonReadableFolderNonReadable(@TempDir Path tempDir) throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setReadable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonExecutableFolderNonReadable(@TempDir Path tempDir) throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setExecutable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -1089,7 +1076,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				subDir.toFile().setWritable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -1098,7 +1084,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				subDir.toFile().setReadable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -1107,7 +1092,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				subDir.toFile().setExecutable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -1115,27 +1099,27 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
-			void makeTempDirectoryWithNonEmptyFolderContainingNonWritableFileNonReadable(@TempDir Path tempDir) throws IOException {
+			void makeTempDirectoryWithNonEmptyFolderContainingNonWritableFileNonReadable(@TempDir Path tempDir)
+					throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setWritable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
-			void makeTempDirectoryWithNonEmptyFolderContainingNonReadableFileNonReadable(@TempDir Path tempDir) throws IOException {
+			void makeTempDirectoryWithNonEmptyFolderContainingNonReadableFileNonReadable(@TempDir Path tempDir)
+					throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setReadable(false);
 				tempDir.toFile().setReadable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 		}
 
-		@Nested class NonExecutable {
+		@Nested
+		class NonExecutable {
 
 			@Test
 			void makeEmptyTempDirectoryNonExecutable(@TempDir Path tempDir) {
@@ -1146,49 +1130,42 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			void makeTempDirectoryWithFileNonExecutable(@TempDir Path tempDir) throws IOException {
 				Files.createFile(tempDir.resolve("test-file.txt"));
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithEmptyFolderNonExecutable(@TempDir Path tempDir) throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonWritableFileNonExecutable(@TempDir Path tempDir) throws IOException {
 				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setWritable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonReadableFileNonExecutable(@TempDir Path tempDir) throws IOException {
 				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setReadable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonWritableFolderNonExecutable(@TempDir Path tempDir) throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setWritable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonReadableFolderNonExecutable(@TempDir Path tempDir) throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setReadable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
 			void makeTempDirectoryWithNonExecutableFolderNonExecutable(@TempDir Path tempDir) throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setExecutable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -1197,7 +1174,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				subDir.toFile().setWritable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -1206,16 +1182,15 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				subDir.toFile().setReadable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
-			void makeTempDirectoryWithNonEmptyNonExecutableFolderNonExecutable(@TempDir Path tempDir) throws IOException {
+			void makeTempDirectoryWithNonEmptyNonExecutableFolderNonExecutable(@TempDir Path tempDir)
+					throws IOException {
 				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				subDir.toFile().setExecutable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
@@ -1223,23 +1198,22 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
-			void makeTempDirectoryWithNonEmptyFolderContainingNonWritableFileNonExecutable(@TempDir Path tempDir) throws IOException {
+			void makeTempDirectoryWithNonEmptyFolderContainingNonWritableFileNonExecutable(@TempDir Path tempDir)
+					throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setWritable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 
 			@Test
-			void makeTempDirectoryWithNonEmptyFolderContainingNonReadableFileNonExecutable(@TempDir Path tempDir) throws IOException {
+			void makeTempDirectoryWithNonEmptyFolderContainingNonReadableFileNonExecutable(@TempDir Path tempDir)
+					throws IOException {
 				Files.createDirectory(tempDir.resolve("test-sub-dir"));
 				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setReadable(false);
 				tempDir.toFile().setExecutable(false);
-				// TODO Prevent AccessDeniedException when closing context
 			}
 		}
 	}
