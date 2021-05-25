@@ -23,7 +23,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New `UniqueIdTrackingListener` which is a `TestExecutionListener` that tracks the unique
+  IDs of all tests that were executed during the `TestPlan` and generates a file
+  containing the unique IDs. The generated file can be used to rerun those tests -- for
+  example, in order to run the same set of tests executed on the JVM subsequently within a
+  GraalVM native image. See the Javadoc for `{UniqueIdTrackingListener}` for details.
 
 
 [[release-notes-5.8.0-M2-junit-jupiter]]
