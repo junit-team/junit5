@@ -77,10 +77,10 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 				return;
 			}
 
-			try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(outputFile, StandardCharsets.UTF_8),
-				true)) {
+			try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(outputFile, StandardCharsets.UTF_8))) {
 				logger.debug(() -> "Writing unique IDs to output file " + outputFile.toAbsolutePath());
-				this.uniqueIds.stream().forEach(writer::println);
+				this.uniqueIds.forEach(writer::println);
+				writer.flush();
 			}
 			catch (IOException ex) {
 				logger.error(ex, () -> "Failed to write unique IDs to output file " + outputFile.toAbsolutePath());
