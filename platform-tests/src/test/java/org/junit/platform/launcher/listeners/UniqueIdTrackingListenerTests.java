@@ -10,10 +10,8 @@
 
 package org.junit.platform.launcher.listeners;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -59,16 +57,16 @@ import org.opentest4j.TestAbortedException;
  */
 class UniqueIdTrackingListenerTests {
 
-	private final String passingTestUid = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[method:passingTest()]";
-	private final String abortedTestUid = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[method:abortedTest()]";
-	private final String failingTestUid = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[method:failingTest()]";
-	private final String dynamicTest1Uid = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[test-factory:dynamicTests()]/[dynamic-test:#1]";
-	private final String dynamicTest2Uid = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[test-factory:dynamicTests()]/[dynamic-test:#2]";
-	private final String test1Uid = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase2]/[method:test1()]";
-	private final String test2Uid = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase2]/[method:test2()]";
+	private static final String passingTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[method:passingTest()]";
+	private static final String abortedTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[method:abortedTest()]";
+	private static final String failingTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[method:failingTest()]";
+	private static final String dynamicTest1 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[test-factory:dynamicTests()]/[dynamic-test:#1]";
+	private static final String dynamicTest2 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[test-factory:dynamicTests()]/[dynamic-test:#2]";
+	private static final String test1 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase2]/[method:test1()]";
+	private static final String test2 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase2]/[method:test2()]";
 
-	private final List<String> expectedUniqueIds = List.of(passingTestUid, abortedTestUid, failingTestUid,
-		dynamicTest1Uid, dynamicTest2Uid, test1Uid, test2Uid).stream().sorted().collect(toList());
+	private static final String[] expectedUniqueIds = { passingTest, abortedTest, failingTest, dynamicTest1,
+			dynamicTest2, test1, test2 };
 
 	@Test
 	void confirmExpectedUniqueIdsViaEngineTestKit() {
@@ -79,13 +77,13 @@ class UniqueIdTrackingListenerTests {
 			.testEvents()
 			.assertStatistics(stats -> stats.started(7).skipped(1).aborted(1).succeeded(5).failed(1))
 			.assertEventsMatchLoosely(
-				event(test(uniqueId(passingTestUid)), finishedSuccessfully()),
-				event(test(uniqueId(abortedTestUid)), abortedWithReason(instanceOf(TestAbortedException.class))),
-				event(test(uniqueId(failingTestUid)), finishedWithFailure(instanceOf(AssertionFailedError.class))),
-				event(test(uniqueId(dynamicTest1Uid)), finishedSuccessfully()),
-				event(test(uniqueId(dynamicTest2Uid)), finishedSuccessfully()),
-				event(test(uniqueId(test1Uid)), finishedSuccessfully()),
-				event(test(uniqueId(test2Uid)), finishedSuccessfully())
+				event(test(uniqueId(passingTest)), finishedSuccessfully()),
+				event(test(uniqueId(abortedTest)), abortedWithReason(instanceOf(TestAbortedException.class))),
+				event(test(uniqueId(failingTest)), finishedWithFailure(instanceOf(AssertionFailedError.class))),
+				event(test(uniqueId(dynamicTest1)), finishedSuccessfully()),
+				event(test(uniqueId(dynamicTest2)), finishedSuccessfully()),
+				event(test(uniqueId(test1)), finishedSuccessfully()),
+				event(test(uniqueId(test2)), finishedSuccessfully())
 			);
 		// @formatter:on
 	}
@@ -102,10 +100,10 @@ class UniqueIdTrackingListenerTests {
 			List<String> actualUniqueIds = execute(request);
 
 			// Sanity check using the results of our local TestExecutionListener
-			assertThat(actualUniqueIds).isEqualTo(expectedUniqueIds);
+			assertThat(actualUniqueIds).containsExactlyInAnyOrder(expectedUniqueIds);
 
 			// Check contents of the file generated by the UniqueIdTrackingListener
-			assertLinesMatch(expectedUniqueIds, Files.readAllLines(path));
+			assertThat(Files.readAllLines(path)).containsExactlyInAnyOrder(expectedUniqueIds);
 		}
 		finally {
 			Files.deleteIfExists(path);
@@ -128,8 +126,10 @@ class UniqueIdTrackingListenerTests {
 				}
 			}
 		});
-		return uniqueIds.stream().sorted().collect(toList());
+		return uniqueIds;
 	}
+
+	// -------------------------------------------------------------------------
 
 	static class TestCase1 {
 
