@@ -30,9 +30,10 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
- * {@code UniqueIdTrackingListener} is a {@link TestExecutionListener} that
- * tracks the unique IDs of all tests that were executed and generates a file
- * containing the unique IDs.
+ * {@code UniqueIdTrackingListener} is a {@link TestExecutionListener} that tracks
+ * the {@linkplain TestIdentifier#getUniqueId() unique IDs} of all
+ * {@linkplain TestIdentifier#isTest() tests} that were executed and generates a
+ * file containing the unique IDs, one ID per line, encoding using UTF-8.
  *
  * <p>The file is currently hard coded to {@code ./build/junit-platform-unique-test-ids.txt}
  * with Gradle or {@code ./target/junit-platform-unique-test-ids.txt} with Maven.
@@ -42,37 +43,48 @@ import org.junit.platform.launcher.TestPlan;
 @API(status = EXPERIMENTAL, since = "1.8")
 public class UniqueIdTrackingListener implements TestExecutionListener {
 
+	public static final String LISTENER_ENABLED_PROPERTY_NAME = "junit.platform.listeners.uid.tracking.enabled";
+
 	public static final String DEFAULT_FILE_NAME = "junit-platform-unique-test-ids.txt";
 
 	private final Logger logger = LoggerFactory.getLogger(UniqueIdTrackingListener.class);
 
 	private final List<String> uniqueIds = new ArrayList<>();
 
+	private final boolean enabled;
+
+	public UniqueIdTrackingListener() {
+		this.enabled = Boolean.getBoolean(LISTENER_ENABLED_PROPERTY_NAME);
+	}
+
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		if (testIdentifier.isTest()) {
+		if (this.enabled && testIdentifier.isTest()) {
 			this.uniqueIds.add(testIdentifier.getUniqueId());
 		}
 	}
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
-		Path outputFile;
-		try {
-			outputFile = getOutputFile();
-		}
-		catch (IOException ex) {
-			logger.error(ex, () -> "Failed to create output file");
-			// Abort since we cannot generate the file.
-			return;
-		}
+		if (this.enabled) {
+			Path outputFile;
+			try {
+				outputFile = getOutputFile();
+			}
+			catch (IOException ex) {
+				logger.error(ex, () -> "Failed to create output file");
+				// Abort since we cannot generate the file.
+				return;
+			}
 
-		try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(outputFile, StandardCharsets.UTF_8), true)) {
-			logger.debug(() -> "Writing unique IDs to output file " + outputFile.toAbsolutePath());
-			this.uniqueIds.stream().forEach(writer::println);
-		}
-		catch (IOException ex) {
-			logger.error(ex, () -> "Failed to write unique IDs to output file " + outputFile.toAbsolutePath());
+			try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(outputFile, StandardCharsets.UTF_8),
+				true)) {
+				logger.debug(() -> "Writing unique IDs to output file " + outputFile.toAbsolutePath());
+				this.uniqueIds.stream().forEach(writer::println);
+			}
+			catch (IOException ex) {
+				logger.error(ex, () -> "Failed to write unique IDs to output file " + outputFile.toAbsolutePath());
+			}
 		}
 	}
 
