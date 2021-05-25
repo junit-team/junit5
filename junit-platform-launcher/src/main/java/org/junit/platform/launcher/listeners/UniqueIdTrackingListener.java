@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -32,15 +34,17 @@ import org.junit.platform.launcher.TestPlan;
  * tracks the unique IDs of all tests that were executed and generates a file
  * containing the unique IDs.
  *
- * <p>The file is currently hard coded to {@code ./build/junit-platform-unique-ids.txt}
- * with Gradle or {@code ./target/junit-platform-unique-ids.txt} with Maven.
+ * <p>The file is currently hard coded to {@code ./build/junit-platform-unique-test-ids.txt}
+ * with Gradle or {@code ./target/junit-platform-unique-test-ids.txt} with Maven.
  *
  * @since 1.8
  */
 @API(status = EXPERIMENTAL, since = "1.8")
 public class UniqueIdTrackingListener implements TestExecutionListener {
 
-	public static final String DEFAULT_FILE_NAME = "junit-platform-unique-ids.txt";
+	public static final String DEFAULT_FILE_NAME = "junit-platform-unique-test-ids.txt";
+
+	private final Logger logger = LoggerFactory.getLogger(UniqueIdTrackingListener.class);
 
 	private final List<String> uniqueIds = new ArrayList<>();
 
@@ -58,19 +62,17 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 			outputFile = getOutputFile();
 		}
 		catch (IOException ex) {
-			System.err.println("Failed to create output file");
-			ex.printStackTrace(System.err);
-			// TODO Throw exception or log error.
+			logger.error(ex, () -> "Failed to create output file");
+			// Abort since we cannot generate the file.
 			return;
 		}
 
 		try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(outputFile, StandardCharsets.UTF_8), true)) {
-			this.uniqueIds.stream().sorted().forEach(writer::println);
+			logger.debug(() -> "Writing unique IDs to output file " + outputFile.toAbsolutePath());
+			this.uniqueIds.stream().forEach(writer::println);
 		}
 		catch (IOException ex) {
-			System.err.println("Failed to write unique IDs to output file " + outputFile.toAbsolutePath());
-			ex.printStackTrace(System.err);
-			// TODO Throw exception or log error.
+			logger.error(ex, () -> "Failed to write unique IDs to output file " + outputFile.toAbsolutePath());
 		}
 	}
 
