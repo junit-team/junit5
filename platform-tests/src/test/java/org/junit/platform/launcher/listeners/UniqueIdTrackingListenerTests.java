@@ -20,6 +20,8 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.listeners.UniqueIdTrackingListener.LISTENER_ENABLED_PROPERTY_NAME;
+import static org.junit.platform.launcher.listeners.UniqueIdTrackingListener.OUTPUT_DIR_PROPERTY_NAME;
+import static org.junit.platform.launcher.listeners.UniqueIdTrackingListener.OUTPUT_FILE_PROPERTY_NAME;
 import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -28,6 +30,7 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedWithFail
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,6 +41,7 @@ import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -72,10 +76,12 @@ class UniqueIdTrackingListenerTests {
 	private static final String[] expectedUniqueIds = { passingTest, abortedTest, failingTest, dynamicTest1,
 			dynamicTest2, test1, test2 };
 
-
+	@BeforeEach
 	@AfterEach
-	void disableListener() {
+	void clearSystemProperties() {
 		System.clearProperty(LISTENER_ENABLED_PROPERTY_NAME);
+		System.clearProperty(OUTPUT_DIR_PROPERTY_NAME);
+		System.clearProperty(OUTPUT_FILE_PROPERTY_NAME);
 	}
 
 	@Test
@@ -106,7 +112,7 @@ class UniqueIdTrackingListenerTests {
 		assertThat(numListenersRegistered).isEqualTo(1);
 
 		Path path = Paths.get("build", UniqueIdTrackingListener.DEFAULT_FILE_NAME);
-		assertThat(path).doesNotExist();
+		Files.deleteIfExists(path);
 
 		try {
 			List<String> actualUniqueIds = executeTests();
@@ -123,12 +129,23 @@ class UniqueIdTrackingListenerTests {
 	}
 
 	@Test
-	void verifyUniqueIdsAreTrackedViaLauncherApi() throws Exception {
-		enableListener();
-
+	void verifyUniqueIdsAreTrackedWithDefaults() throws Exception {
 		Path path = Paths.get("build", UniqueIdTrackingListener.DEFAULT_FILE_NAME);
-		assertThat(path).doesNotExist();
+		verifyUniqueIdsAreTracked(path);
+	}
 
+	@Test
+	void verifyUniqueIdsAreTrackedWithCustomOutputFile() throws Exception {
+		String customFilename = "test_ids.txt";
+		System.setProperty(OUTPUT_FILE_PROPERTY_NAME, customFilename);
+
+		Path path = Paths.get("build", customFilename);
+		verifyUniqueIdsAreTracked(path);
+	}
+
+	private void verifyUniqueIdsAreTracked(Path path) throws IOException {
+		enableListener();
+		Files.deleteIfExists(path);
 		try {
 			List<String> actualUniqueIds = executeTests();
 

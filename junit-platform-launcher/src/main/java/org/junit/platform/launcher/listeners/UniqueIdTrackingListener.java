@@ -43,8 +43,24 @@ import org.junit.platform.launcher.TestPlan;
 @API(status = EXPERIMENTAL, since = "1.8")
 public class UniqueIdTrackingListener implements TestExecutionListener {
 
+	/**
+	 * TODO Document constant.
+	 */
 	public static final String LISTENER_ENABLED_PROPERTY_NAME = "junit.platform.listeners.uid.tracking.enabled";
 
+	/**
+	 * TODO Document constant.
+	 */
+	public static final String OUTPUT_DIR_PROPERTY_NAME = "junit.platform.listeners.uid.tracking.output.dir";
+
+	/**
+	 * TODO Document constant.
+	 */
+	public static final String OUTPUT_FILE_PROPERTY_NAME = "junit.platform.listeners.uid.tracking.output.file";
+
+	/**
+	 * TODO Document constant.
+	 */
 	public static final String DEFAULT_FILE_NAME = "junit-platform-unique-test-ids.txt";
 
 	private final Logger logger = LoggerFactory.getLogger(UniqueIdTrackingListener.class);
@@ -89,7 +105,8 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	}
 
 	private Path getOutputFile() throws IOException {
-		Path outputFile = getOutputDir().resolve(DEFAULT_FILE_NAME);
+		String filename = System.getProperty(OUTPUT_FILE_PROPERTY_NAME, DEFAULT_FILE_NAME);
+		Path outputFile = getOutputDir().resolve(filename);
 
 		if (Files.exists(outputFile)) {
 			Files.delete(outputFile);
