@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -72,10 +73,6 @@ class UniqueIdTrackingListenerTests {
 			dynamicTest2, test1, test2 };
 
 
-	private void enableListener() {
-		System.setProperty(LISTENER_ENABLED_PROPERTY_NAME, "true");
-	}
-
 	@AfterEach
 	void disableListener() {
 		System.clearProperty(LISTENER_ENABLED_PROPERTY_NAME);
@@ -85,7 +82,7 @@ class UniqueIdTrackingListenerTests {
 	void confirmExpectedUniqueIdsViaEngineTestKit() {
 		// @formatter:off
 		EngineTestKit.engine("junit-jupiter")
-			.selectors(selectClass(TestCase1.class), selectClass(TestCase2.class))
+			.selectors(selectClasses())
 			.execute()
 			.testEvents()
 			.assertStatistics(stats -> stats.started(7).skipped(1).aborted(1).succeeded(5).failed(1))
@@ -109,14 +106,10 @@ class UniqueIdTrackingListenerTests {
 		assertThat(numListenersRegistered).isEqualTo(1);
 
 		Path path = Paths.get("build", UniqueIdTrackingListener.DEFAULT_FILE_NAME);
-		Files.deleteIfExists(path);
+		assertThat(path).doesNotExist();
 
 		try {
-			LauncherDiscoveryRequest request = request() //
-					.selectors(selectClass(TestCase1.class), selectClass(TestCase2.class)) //
-					.filters(includeEngines("junit-jupiter")).build();
-
-			List<String> actualUniqueIds = execute(request);
+			List<String> actualUniqueIds = executeTests();
 
 			// Sanity check using the results of our local TestExecutionListener
 			assertThat(actualUniqueIds).containsExactlyInAnyOrder(expectedUniqueIds);
@@ -132,14 +125,12 @@ class UniqueIdTrackingListenerTests {
 	@Test
 	void verifyUniqueIdsAreTrackedViaLauncherApi() throws Exception {
 		enableListener();
+
 		Path path = Paths.get("build", UniqueIdTrackingListener.DEFAULT_FILE_NAME);
+		assertThat(path).doesNotExist();
 
 		try {
-			LauncherDiscoveryRequest request = request() //
-					.selectors(selectClass(TestCase1.class), selectClass(TestCase2.class)) //
-					.filters(includeEngines("junit-jupiter")).build();
-
-			List<String> actualUniqueIds = execute(request);
+			List<String> actualUniqueIds = executeTests();
 
 			// Sanity check using the results of our local TestExecutionListener
 			assertThat(actualUniqueIds).containsExactlyInAnyOrder(expectedUniqueIds);
@@ -152,14 +143,21 @@ class UniqueIdTrackingListenerTests {
 		}
 	}
 
+	private static void enableListener() {
+		System.setProperty(LISTENER_ENABLED_PROPERTY_NAME, "true");
+	}
+
 	private static Condition<Event> uniqueId(String uniqueId) {
 		return new Condition<>(
 			byTestDescriptor(where(TestDescriptor::getUniqueId, uid -> uid.toString().equals(uniqueId))),
 			"descriptor with uniqueId '%s'", uniqueId);
 	}
 
-	private static List<String> execute(LauncherDiscoveryRequest request) {
+	private static List<String> executeTests() {
 		List<String> uniqueIds = new ArrayList<>();
+		LauncherDiscoveryRequest request = request()//
+				.selectors(selectClasses())//
+				.filters(includeEngines("junit-jupiter")).build();
 		LauncherFactory.create().execute(request, new TestExecutionListener() {
 			@Override
 			public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
@@ -169,6 +167,10 @@ class UniqueIdTrackingListenerTests {
 			}
 		});
 		return uniqueIds;
+	}
+
+	private static ClassSelector[] selectClasses() {
+		return new ClassSelector[] { selectClass(TestCase1.class), selectClass(TestCase2.class) };
 	}
 
 	// -------------------------------------------------------------------------
