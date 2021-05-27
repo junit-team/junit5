@@ -24,6 +24,7 @@ import java.util.List;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -120,7 +121,11 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	private Path getOutputDir() throws IOException {
 		Path outputDir;
 
-		if (Files.exists(Paths.get("pom.xml"))) {
+		String customDir = System.getProperty(OUTPUT_DIR_PROPERTY_NAME);
+		if (StringUtils.isNotBlank(customDir)) {
+			outputDir = Paths.get(customDir);
+		}
+		else if (Files.exists(Paths.get("pom.xml"))) {
 			outputDir = Paths.get("target");
 		}
 		else {

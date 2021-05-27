@@ -19,6 +19,7 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.listeners.UniqueIdTrackingListener.DEFAULT_FILE_NAME;
 import static org.junit.platform.launcher.listeners.UniqueIdTrackingListener.LISTENER_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.launcher.listeners.UniqueIdTrackingListener.OUTPUT_DIR_PROPERTY_NAME;
 import static org.junit.platform.launcher.listeners.UniqueIdTrackingListener.OUTPUT_FILE_PROPERTY_NAME;
@@ -111,7 +112,7 @@ class UniqueIdTrackingListenerTests {
 				.count();
 		assertThat(numListenersRegistered).isEqualTo(1);
 
-		Path path = Paths.get("build", UniqueIdTrackingListener.DEFAULT_FILE_NAME);
+		Path path = Paths.get("build", DEFAULT_FILE_NAME);
 		Files.deleteIfExists(path);
 
 		try {
@@ -130,7 +131,7 @@ class UniqueIdTrackingListenerTests {
 
 	@Test
 	void verifyUniqueIdsAreTrackedWithDefaults() throws Exception {
-		Path path = Paths.get("build", UniqueIdTrackingListener.DEFAULT_FILE_NAME);
+		Path path = Paths.get("build", DEFAULT_FILE_NAME);
 		verifyUniqueIdsAreTracked(path);
 	}
 
@@ -140,6 +141,26 @@ class UniqueIdTrackingListenerTests {
 		System.setProperty(OUTPUT_FILE_PROPERTY_NAME, customFilename);
 
 		Path path = Paths.get("build", customFilename);
+		verifyUniqueIdsAreTracked(path);
+	}
+
+	@Test
+	void verifyUniqueIdsAreTrackedWithCustomOutputDir() throws Exception {
+		String customDir = "build/UniqueIdTrackingListenerTests";
+		System.setProperty(OUTPUT_DIR_PROPERTY_NAME, customDir);
+
+		Path path = Paths.get(customDir, DEFAULT_FILE_NAME);
+		verifyUniqueIdsAreTracked(path);
+	}
+
+	@Test
+	void verifyUniqueIdsAreTrackedWithCustomOutputFileAndCustomOutputDir() throws Exception {
+		String customFilename = "test_ids.txt";
+		String customDir = "build/UniqueIdTrackingListenerTests";
+		System.setProperty(OUTPUT_DIR_PROPERTY_NAME, customDir);
+		System.setProperty(OUTPUT_FILE_PROPERTY_NAME, customFilename);
+
+		Path path = Paths.get(customDir, customFilename);
 		verifyUniqueIdsAreTracked(path);
 	}
 
