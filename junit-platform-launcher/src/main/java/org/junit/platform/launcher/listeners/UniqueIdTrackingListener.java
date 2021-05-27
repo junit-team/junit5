@@ -118,31 +118,53 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 		return outputFile;
 	}
 
-	private Path getOutputDir() throws IOException {
+	Path getOutputDir() throws IOException {
+		Path cwd = currentWorkingDir();
 		Path outputDir;
 
 		String customDir = System.getProperty(OUTPUT_DIR_PROPERTY_NAME);
 		if (StringUtils.isNotBlank(customDir)) {
-			outputDir = Paths.get(customDir);
+			outputDir = cwd.resolve(customDir);
 		}
-		else if (Files.exists(Paths.get("pom.xml"))) {
-			outputDir = Paths.get("target");
+		else if (Files.exists(cwd.resolve("pom.xml"))) {
+			outputDir = cwd.resolve("target");
+		}
+		else if (containsFilesWithExtensions(cwd, ".gradle", "gradle.kts")) {
+			outputDir = cwd.resolve("build");
 		}
 		else {
-			outputDir = Paths.get("build");
+			outputDir = cwd;
 		}
-		//		else if (Files.exists(Paths.get("build.gradle")) || Files.exists(Paths.get("build.gradle.kts"))) {
-		//			outputDir = new File("build");
-		//		}
-		//		else {
-		//			outputDir = new File(".");
-		//		}
 
 		if (!Files.exists(outputDir)) {
 			Files.createDirectories(outputDir);
 		}
 
 		return outputDir;
+	}
+
+	/**
+	 * Get the current working directory.
+	 * <p>Package private for testing purposes.
+	 */
+	Path currentWorkingDir() {
+		return Paths.get(".");
+	}
+
+	/**
+	 * Determine if the supplied directory contains files with any of the
+	 * supplied extensions.
+	 */
+	private boolean containsFilesWithExtensions(Path dir, String... extensions) throws IOException {
+		return Files.find(dir, 1, //
+			(path, basicFileAttributes) -> {
+				for (String extension : extensions) {
+					if (path.getFileName().toString().endsWith(extension)) {
+						return true;
+					}
+				}
+				return false;
+			}).findFirst().isPresent();
 	}
 
 }

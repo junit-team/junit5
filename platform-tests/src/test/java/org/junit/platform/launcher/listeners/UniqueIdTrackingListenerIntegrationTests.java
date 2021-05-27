@@ -64,15 +64,15 @@ import org.opentest4j.TestAbortedException;
  *
  * @since 1.8
  */
-class UniqueIdTrackingListenerTests {
+class UniqueIdTrackingListenerIntegrationTests {
 
-	private static final String passingTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[method:passingTest()]";
-	private static final String abortedTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[method:abortedTest()]";
-	private static final String failingTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[method:failingTest()]";
-	private static final String dynamicTest1 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[test-factory:dynamicTests()]/[dynamic-test:#1]";
-	private static final String dynamicTest2 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase1]/[test-factory:dynamicTests()]/[dynamic-test:#2]";
-	private static final String test1 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase2]/[method:test1()]";
-	private static final String test2 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerTests$TestCase2]/[method:test2()]";
+	private static final String passingTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[method:passingTest()]";
+	private static final String abortedTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[method:abortedTest()]";
+	private static final String failingTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[method:failingTest()]";
+	private static final String dynamicTest1 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[test-factory:dynamicTests()]/[dynamic-test:#1]";
+	private static final String dynamicTest2 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[test-factory:dynamicTests()]/[dynamic-test:#2]";
+	private static final String test1 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase2]/[method:test1()]";
+	private static final String test2 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase2]/[method:test2()]";
 
 	private static final String[] expectedUniqueIds = { passingTest, abortedTest, failingTest, dynamicTest1,
 			dynamicTest2, test1, test2 };
@@ -146,7 +146,7 @@ class UniqueIdTrackingListenerTests {
 
 	@Test
 	void verifyUniqueIdsAreTrackedWithCustomOutputDir() throws Exception {
-		String customDir = "build/UniqueIdTrackingListenerTests";
+		String customDir = "build/UniqueIdTrackingListenerIntegrationTests";
 		System.setProperty(OUTPUT_DIR_PROPERTY_NAME, customDir);
 
 		Path path = Paths.get(customDir, DEFAULT_FILE_NAME);
@@ -156,7 +156,7 @@ class UniqueIdTrackingListenerTests {
 	@Test
 	void verifyUniqueIdsAreTrackedWithCustomOutputFileAndCustomOutputDir() throws Exception {
 		String customFilename = "test_ids.txt";
-		String customDir = "build/UniqueIdTrackingListenerTests";
+		String customDir = "build/UniqueIdTrackingListenerIntegrationTests";
 		System.setProperty(OUTPUT_DIR_PROPERTY_NAME, customDir);
 		System.setProperty(OUTPUT_FILE_PROPERTY_NAME, customFilename);
 

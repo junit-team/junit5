@@ -170,6 +170,7 @@ subprojects {
 			}
 
 			kotlin {
+				targetExclude("**/src/test/resources/**")
 				ktlint(libs.versions.ktlint.get())
 				licenseHeaderFile(headerFile)
 				trimTrailingWhitespace()
