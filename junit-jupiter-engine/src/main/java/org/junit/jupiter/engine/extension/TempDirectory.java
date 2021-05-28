@@ -207,16 +207,16 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				}
 
 				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
 					return deleteAndContinue(file);
 				}
 
 				@Override
-				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+				public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
 					return deleteAndContinue(dir);
 				}
 
-				private FileVisitResult deleteAndContinue(Path path) throws IOException {
+				private FileVisitResult deleteAndContinue(Path path) {
 					try {
 						Files.delete(path);
 					}
@@ -225,6 +225,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					}
 					catch (DirectoryNotEmptyException exception) {
 						failures.put(path, exception);
+					}
+					catch (IOException exception) {
+						// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
+						resetPermissionsAndTryToDeleteAgain(path, exception);
 					}
 					return CONTINUE;
 				}
