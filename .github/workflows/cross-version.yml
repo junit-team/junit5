@@ -21,7 +21,6 @@ jobs:
         jdk: [17]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
-    container: "ghcr.io/junit-team/build:${{ matrix.jdk }}"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -42,6 +41,28 @@ jobs:
           key: test-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             test-${{ runner.os }}-maven-
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '8'
+      - name: Prepare JDK8 env var
+        shell: bash
+        run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
+      - name: 'Set up JDK ${{ matrix.jdk }}'
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '${{ matrix.jdk }}'
+          check-latest: true
+      - name: 'Prepare JDK${{ matrix.jdk }} env var'
+        shell: bash
+        run: echo "JDK${{ matrix.jdk }}=$JAVA_HOME" >> $GITHUB_ENV
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
       - name: Test
         env:
           ORG_GRADLE_PROJECT_enableTestDistribution: true
