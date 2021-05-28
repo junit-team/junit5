@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
-import java.nio.file.AccessDeniedException;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -190,40 +189,35 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			}
 
 			SortedMap<Path, IOException> failures = new TreeMap<>();
-			resetDirPermissions(dir);
+			resetPermissions(dir);
 			Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
 
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 					if (!dir.equals(CloseablePath.this.dir)) {
-						resetDirPermissions(dir);
+						resetPermissions(dir);
 					}
 					return CONTINUE;
 				}
 
 				@Override
-				public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-					if (exc instanceof AccessDeniedException) {
-						if (Files.isDirectory(file)) {
-							resetDirPermissions(file);
-							Files.walkFileTree(file, this);
-							return CONTINUE;
-						}
-					}
-					throw exc;
+				public FileVisitResult visitFileFailed(Path file, IOException exc) {
+					// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
+					resetPermissionsAndTryToDeleteAgain(file, exc);
+					return CONTINUE;
 				}
 
 				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
 					return deleteAndContinue(file);
 				}
 
 				@Override
-				public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 					return deleteAndContinue(dir);
 				}
 
-				private FileVisitResult deleteAndContinue(Path path) {
+				private FileVisitResult deleteAndContinue(Path path) throws IOException {
 					try {
 						Files.delete(path);
 					}
@@ -233,71 +227,51 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					catch (DirectoryNotEmptyException exception) {
 						failures.put(path, exception);
 					}
-					catch (IOException exception) {
-						// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
-						resetPermissionsAndTryToDeleteAgain(path, exception);
-					}
 					return CONTINUE;
 				}
 
 				private void resetPermissionsAndTryToDeleteAgain(Path path, IOException exception) {
 					try {
-						tryToResetParentDirsPermissions(path);
-						makeWritable(path);
-						makeReadable(path);
-						if (path.toFile().isDirectory()) {
-							makeExecutable(path);
-						}
-						Files.delete(path);
+						resetPermissions(path);
+						Files.walkFileTree(path, this);
 					}
 					catch (Exception suppressed) {
 						exception.addSuppressed(suppressed);
 						failures.put(path, exception);
 					}
 				}
-
-				private void tryToResetParentDirsPermissions(Path path) {
-					Path relativePath = dir.relativize(path);
-					Path parent = dir;
-					for (int i = 0; i < relativePath.getNameCount(); i++) {
-						boolean successful = resetDirPermissions(parent);
-						if (!successful) {
-							break;
-						}
-						parent = parent.resolve(relativePath.getName(i));
-					}
-				}
-
-				private void makeReadable(Path path) {
-					boolean readable = path.toFile().setReadable(true);
-					if (!readable) {
-						throw new UndeletableFileException("Attempt to make file '" + path + "' readable failed");
-					}
-				}
-
-				private void makeExecutable(Path path) {
-					boolean executable = path.toFile().setExecutable(true);
-					if (!executable) {
-						throw new UndeletableFileException("Attempt to make folder '" + path + "' executable failed");
-					}
-				}
-
-				private void makeWritable(Path path) {
-					boolean writable = path.toFile().setWritable(true);
-					if (!writable) {
-						throw new UndeletableFileException("Attempt to make file '" + path + "' writable failed");
-					}
-				}
 			});
 			return failures;
 		}
 
-		private static boolean resetDirPermissions(Path parent) {
-			File file = parent.toFile();
-			boolean writable = file.setWritable(true);
+		private static void resetPermissions(Path path) {
+			File file = path.toFile();
+			makeWritable(file);
+			makeReadable(file);
+			if (Files.isDirectory(path)) {
+				makeExecutable(file);
+			}
+		}
+
+		private static void makeReadable(File file) {
 			boolean readable = file.setReadable(true);
-			boolean executable = file.setExecutable(true);
-			return writable && readable && executable;
+			if (!readable) {
+				throw new UndeletableFileException("Attempt to make file '" + file + "' readable failed");
+			}
+		}
+
+		private static void makeExecutable(File dir) {
+			boolean executable = dir.setExecutable(true);
+			if (!executable) {
+				throw new UndeletableFileException("Attempt to make folder '" + dir + "' executable failed");
+			}
+		}
+
+		private static void makeWritable(File file) {
+			boolean writable = file.setWritable(true);
+			if (!writable) {
+				throw new UndeletableFileException("Attempt to make file '" + file + "' writable failed");
+			}
 		}
 
 		private IOException createIOExceptionWithAttachedFailures(SortedMap<Path, IOException> failures) {
