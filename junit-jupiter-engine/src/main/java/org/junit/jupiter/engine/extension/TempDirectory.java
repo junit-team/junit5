@@ -232,7 +232,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				private void resetPermissionsAndTryToDeleteAgain(Path path, IOException exception) {
 					try {
 						resetPermissions(path);
-						Files.walkFileTree(path, this);
+						if (Files.isDirectory(path)) {
+							Files.walkFileTree(path, this);
+						}
+						else {
+							Files.delete(path);
+						}
 					}
 					catch (Exception suppressed) {
 						exception.addSuppressed(suppressed);
