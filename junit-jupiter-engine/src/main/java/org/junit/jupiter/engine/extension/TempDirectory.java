@@ -43,7 +43,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -232,11 +231,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 				private void resetPermissionsAndTryToDeleteAgain(Path path, IOException exception) {
 					try {
-						boolean successful = resetPermissions(path);
-						if (!successful) {
-							throw new UndeletableFileException(
-								"Attempt to reset permissions for '" + path + "' failed");
-						}
+						resetPermissions(path);
 						Files.walkFileTree(path, this);
 					}
 					catch (Exception suppressed) {
@@ -248,14 +243,14 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			return failures;
 		}
 
-		private static boolean resetPermissions(Path path) {
+		@SuppressWarnings("ResultOfMethodCallIgnored")
+		private static void resetPermissions(Path path) {
 			File file = path.toFile();
-			boolean successful = file.setReadable(true);
-			successful &= file.setWritable(true);
+			file.setReadable(true);
+			file.setWritable(true);
 			if (Files.isDirectory(path)) {
-				successful &= file.setExecutable(true);
+				file.setExecutable(true);
 			}
-			return successful;
 		}
 
 		private IOException createIOExceptionWithAttachedFailures(SortedMap<Path, IOException> failures) {
@@ -289,21 +284,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				return path;
 			}
 		}
-	}
-
-	private static class UndeletableFileException extends JUnitException {
-
-		private static final long serialVersionUID = 1L;
-
-		UndeletableFileException(String message) {
-			super(message);
-		}
-
-		@Override
-		public synchronized Throwable fillInStackTrace() {
-			return this; // Make the output smaller by omitting the stacktrace
-		}
-
 	}
 
 }
