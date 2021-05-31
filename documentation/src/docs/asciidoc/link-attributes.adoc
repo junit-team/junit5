@@ -39,6 +39,7 @@ endif::[]
 :SummaryGeneratingListener:                  {javadoc-root}/org.junit.platform.launcher/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html[SummaryGeneratingListener]
 :TestExecutionListener:                      {javadoc-root}/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html[TestExecutionListener]
 :TestPlan:                                   {javadoc-root}/org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html[TestPlan]
+:UniqueIdTrackingListener:                   {javadoc-root}/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html[UniqueIdTrackingListener]
 // Platform Reporting
 :LegacyXmlReportGeneratingListener:          {javadoc-root}/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html[LegacyXmlReportGeneratingListener]
 // Platform Runner
