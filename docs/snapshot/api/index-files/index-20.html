@@ -109,6 +109,17 @@ loadScripts(document, 'script');</script>
  <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html#getTestDescriptor()">test descriptor</a>
  contains all of the supplied strings.</div>
 </dd>
+<dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html" title="class in org.junit.platform.launcher.listeners"><span class="type-name-link">UniqueIdTrackingListener</span></a> - Class in <a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/package-summary.html">org.junit.platform.launcher.listeners</a></dt>
+<dd>
+<div class="block"><code>UniqueIdTrackingListener</code> is a <a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> that tracks
+ the <a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html#getUniqueId()">unique IDs</a> of all
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html#isTest()">tests</a> that were
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html#executionFinished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.TestExecutionResult)">executed</a> during the execution of the
+ <a href="../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> and generates a file containing the unique IDs once execution
+ of the <code>TestPlan</code> has <a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)">finished</a>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html#%3Cinit%3E()">UniqueIdTrackingListener()</a></span> - Constructor for class org.junit.platform.launcher.listeners.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html" title="class in org.junit.platform.launcher.listeners">UniqueIdTrackingListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/Timeout.html#unit()">unit()</a></span> - Element in annotation interface org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/Timeout.html" title="annotation in org.junit.jupiter.api">Timeout</a></dt>
 <dd>
 <div class="block">The time unit of this timeout.</div>

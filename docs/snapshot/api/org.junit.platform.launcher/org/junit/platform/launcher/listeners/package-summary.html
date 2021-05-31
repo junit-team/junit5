@@ -102,6 +102,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Simple <a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> that generates a
  <a href="TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">summary</a> of the test execution.</div>
 </div>
+<div class="col-first odd-row-color"><a href="UniqueIdTrackingListener.html" title="class in org.junit.platform.launcher.listeners">UniqueIdTrackingListener</a></div>
+<div class="col-last odd-row-color">
+<div class="block"><code>UniqueIdTrackingListener</code> is a <a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> that tracks
+ the <a href="../TestIdentifier.html#getUniqueId()">unique IDs</a> of all
+ <a href="../TestIdentifier.html#isTest()">tests</a> that were
+ <a href="UniqueIdTrackingListener.html#executionFinished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.TestExecutionResult)">executed</a> during the execution of the
+ <a href="../TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> and generates a file containing the unique IDs once execution
+ of the <code>TestPlan</code> has <a href="UniqueIdTrackingListener.html#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)">finished</a>.</div>
+</div>
 </div>
 </li>
 </ul>

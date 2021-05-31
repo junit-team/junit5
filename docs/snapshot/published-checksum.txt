@@ -15,6 +15,7 @@
 05e2076aafd2d8c40d2eeb6caa5d3f70  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ExcludeClassNameFilter.java
 074907a0f2ac535e60a3916d85c46615  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/SuiteTestDescriptor.java
 07513531d27ab8c14d82f5e736fe5d8d  documentation/src/test/java/example/defaultmethods/ComparableContract.java
+077026e93541e0c8810326caeeb287c4  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.java
 07cda11803843808633365b852f91c20  documentation/src/test/java/example/TaggingDemo.java
 082d327cdd5db176712ef3fbd9b0ab74  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ExecutionListenerAdapter.java
 087f28519b5b4717f8fb8708102d5319  documentation/src/docs/asciidoc/user-guide/junit-platform-suite-engine.adoc
@@ -287,7 +288,6 @@
 674ceee334eb85965eaf89a7616ff283  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/AbstractAnnotatedElementDescriptor.java
 685933593243461d6d975095ad9db045  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
 689546b5b30829999b1f8a5a383f1284  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
-68bcf28d67ec8be937e9f8283d4b7b36  documentation/src/docs/asciidoc/link-attributes.adoc
 691422b491ee238ccd92ee4dc1cf1782  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
 69851f66647aa76ef872b4894895c2dd  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle.png
 6991fd42e0256bd4428209dc4f78fb38  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutInvocation.java
@@ -428,6 +428,7 @@
 93a0a83624d1727553a6c7e9daf9af93  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNull.java
 93b77898bfaae095c09ea08af3dbceb5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolutionException.java
 951de5f1db3ad7633cecb37c18c14510  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/LockManager.java
+952a76153089396661aed8132205bb96  documentation/src/docs/asciidoc/link-attributes.adoc
 95efa41a20049000b8a5408839715a5f  junit-platform-commons/src/main/java/org/junit/platform/commons/util/FunctionUtils.java
 95fd646c722d3bb695c1bb9a43141370  documentation/src/test/java/example/TestingAStackDemo.java
 960af4283a63a8570bbb37c9bb48c24c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnJre.java
@@ -614,6 +615,7 @@ d1ab7eedb6800a6aac9ff86a4c1c4013  junit-platform-commons/src/main/java/org/junit
 d1b105ef31f86da790a46afa801fada0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExecutableInvoker.java
 d1d8b062ea2323c2a3fc59a0a3ce6b26  junit-platform-engine/src/main/java/org/junit/platform/engine/CompositeFilter.java
 d32fbca3363f5393a7dcfef9fa746e72  junit-platform-console/src/main/java9/org/junit/platform/console/ConsoleLauncherToolProvider.java
+d3579b82339201401c70cc9182c7ac39  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 d3752a81bf1647dc41a622b26f7c2064  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
 d41d8cd98f00b204e9800998ecf8427e  -
 d41d8cd98f00b204e9800998ecf8427e  -
@@ -677,7 +679,6 @@ e64b79064e9f15819eb568f28380a074  junit-platform-engine/src/main/java/org/junit/
 e6b7b517ca49ae4f6d8f452ae9a0b915  junit-platform-commons/src/main/java/org/junit/platform/commons/JUnitException.java
 e6dfc865076a2c844d6f0b5da8917212  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrdererContext.java
 e82c52957e5f90e1c56e45cf89f5ac97  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodOrderingVisitor.java
-e946aa9c5e1bbbb490056ac39cad480d  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 ea0031f0f1e254c65ca59ec3ff5dbdcc  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineIdValidator.java
 ea253702a64ee9614c2a5342ac23fb2a  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.css
 ea4740424fca288c5a249ba8739ffdfa  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java

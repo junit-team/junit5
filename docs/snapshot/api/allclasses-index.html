@@ -2003,46 +2003,55 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.vintage.engine/org/junit/vintage/engine/support/UniqueIdStringifier.html" title="class in org.junit.vintage.engine.support">UniqueIdStringifier</a></div>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.platform.commons/org/junit/platform/commons/util/UnrecoverableExceptions.html" title="class in org.junit.platform.commons.util">UnrecoverableExceptions</a></div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html" title="class in org.junit.platform.launcher.listeners">UniqueIdTrackingListener</a></div>
 <div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="block"><code>UniqueIdTrackingListener</code> is a <a href="org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> that tracks
+ the <a href="org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html#getUniqueId()">unique IDs</a> of all
+ <a href="org.junit.platform.launcher/org/junit/platform/launcher/TestIdentifier.html#isTest()">tests</a> that were
+ <a href="org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html#executionFinished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.TestExecutionResult)">executed</a> during the execution of the
+ <a href="org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> and generates a file containing the unique IDs once execution
+ of the <code>TestPlan</code> has <a href="org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)">finished</a>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.platform.commons/org/junit/platform/commons/util/UnrecoverableExceptions.html" title="class in org.junit.platform.commons.util">UnrecoverableExceptions</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Internal utilities for working with <em>unrecoverable</em> exceptions.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.platform.engine/org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.platform.engine/org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">A <a href="org.junit.platform.engine/org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link"><code>URI</code></a> so that
  <a href="org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
  can discover tests or containers based on URIs.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab1 all-classes-table"><a href="org.junit.platform.engine/org/junit/platform/engine/support/descriptor/UriSource.html" title="interface in org.junit.platform.engine.support.descriptor">UriSource</a></div>
-<div class="col-last even-row-color all-classes-table-tab1 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab1 all-classes-table"><a href="org.junit.platform.engine/org/junit/platform/engine/support/descriptor/UriSource.html" title="interface in org.junit.platform.engine.support.descriptor">UriSource</a></div>
+<div class="col-last odd-row-color all-classes-table-tab1 all-classes-table">
 <div class="block">A <a href="org.junit.platform.engine/org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine"><code>TestSource</code></a> that can be represented as a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link"><code>URI</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab6"><a href="org.junit.platform.suite.api/org/junit/platform/suite/api/UseTechnicalNames.html" title="annotation in org.junit.platform.suite.api">UseTechnicalNames</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab6">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab6"><a href="org.junit.platform.suite.api/org/junit/platform/suite/api/UseTechnicalNames.html" title="annotation in org.junit.platform.suite.api">UseTechnicalNames</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab6">
 <div class="block"><code>@UseTechnicalNames</code> specifies that <em>technical names</em> should be
  used instead of <em>display names</em> when running a test suite on the
  JUnit Platform.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab6"><a href="org.junit.jupiter.params/org/junit/jupiter/params/provider/ValueSource.html" title="annotation in org.junit.jupiter.params.provider">ValueSource</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab6">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab6"><a href="org.junit.jupiter.params/org/junit/jupiter/params/provider/ValueSource.html" title="annotation in org.junit.jupiter.params.provider">ValueSource</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab6">
 <div class="block"><code>@ValueSource</code> is an <a href="org.junit.jupiter.params/org/junit/jupiter/params/provider/ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a> which provides access to
  an array of literal values.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/adapter/VerifierAdapter.html" title="class in org.junit.jupiter.migrationsupport.rules.adapter">VerifierAdapter</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/VerifierSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">VerifierSupport</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/adapter/VerifierAdapter.html" title="class in org.junit.jupiter.migrationsupport.rules.adapter">VerifierAdapter</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/VerifierSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">VerifierSupport</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">This <code>Extension</code> provides native support for subclasses of
  the <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/rules/Verifier.html" title="class or interface in org.junit.rules" class="external-link"><code>Verifier</code></a> rule from JUnit 4.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.vintage.engine/org/junit/vintage/engine/discovery/VintageDiscoverer.html" title="class in org.junit.vintage.engine.discovery">VintageDiscoverer</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.vintage.engine/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageEngineDescriptor</a></div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.vintage.engine/org/junit/vintage/engine/discovery/VintageDiscoverer.html" title="class in org.junit.vintage.engine.discovery">VintageDiscoverer</a></div>
 <div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.vintage.engine/org/junit/vintage/engine/descriptor/VintageTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageTestDescriptor</a></div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.vintage.engine/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageEngineDescriptor</a></div>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.vintage.engine/org/junit/vintage/engine/VintageTestEngine.html" title="class in org.junit.vintage.engine">VintageTestEngine</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.vintage.engine/org/junit/vintage/engine/descriptor/VintageTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageTestDescriptor</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="org.junit.vintage.engine/org/junit/vintage/engine/VintageTestEngine.html" title="class in org.junit.vintage.engine">VintageTestEngine</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">The JUnit Vintage <a href="org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
 </div>
 </div>
