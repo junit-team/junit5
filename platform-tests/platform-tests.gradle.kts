@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 
 plugins {
@@ -58,7 +59,9 @@ tasks {
 		jvmArgs("-Xmx1g")
 	}
 	test {
+		// Additional inputs for remote execution with Test Distribution
 		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
+		inputs.file(buildFile).withPathSensitivity(NONE) // for UniqueIdTrackingListenerIntegrationTests
 	}
 	test_4_12 {
 		useJUnitPlatform {
