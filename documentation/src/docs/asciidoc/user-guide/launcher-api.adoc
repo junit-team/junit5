@@ -120,7 +120,7 @@ declared within the `/META-INF/services/org.junit.platform.launcher.PostDiscover
 file is loaded and applied automatically.
 
 [[launcher-api-launcher-session-listeners-custom]]
-==== Plugging in your own Launcher Sessions Listeners
+==== Plugging in your own Launcher Session Listeners
 
 Registered implementations of `{LauncherSessionListener}` are notified when a
 `{LauncherSession}` is opened, i.e. before a `{Launcher}` first discovers and executes
@@ -160,6 +160,20 @@ For example, an `example.CustomTestExecutionListener` class implementing
 `{TestExecutionListener}` and declared within the
 `/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file is loaded and
 registered automatically.
+
+[[launcher-api-listeners-config]]
+==== Configuring an Execution Listener
+
+When a `{TestExecutionListener}` is registered programmatically via the `{Launcher}` API,
+the listener may provide programmatic ways for it to be configured -- for example, via its
+constructor, setter methods, etc. However, when a `TestExecutionListener` is registered
+automatically via Java's `ServiceLoader` mechanism (see
+<<launcher-api-listeners-custom>>), there is no way for the user to directly configure the
+listener. In such cases, the author of a `TestExecutionListener` may choose to make the
+listener configurable via <<running-tests-config-params, configuration parameters>>. The
+listener can then access the configuration parameters via the `TestPlan` supplied to the
+`testPlanExecutionStarted(TestPlan)` and `testPlanExecutionFinished(TestPlan)` callback
+methods. See the `{UniqueIdTrackingListener}` for an example.
 
 [[launcher-api-listeners-custom-deactivation]]
 ==== Deactivating Execution Listeners
