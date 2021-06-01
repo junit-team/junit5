@@ -5,7 +5,7 @@ plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
 	`testing-conventions`
-	id("me.champeau.gradle.jmh")
+	id("me.champeau.jmh")
 }
 
 dependencies {
@@ -43,12 +43,12 @@ dependencies {
 }
 
 jmh {
-	jmhVersion = libs.versions.jmh.get()
+	jmhVersion.set(libs.versions.jmh)
 
-	duplicateClassesStrategy = DuplicatesStrategy.WARN
-	fork = 1
-	warmupIterations = 1
-	iterations = 5
+	duplicateClassesStrategy.set(DuplicatesStrategy.WARN)
+	fork.set(1)
+	warmupIterations.set(1)
+	iterations.set(5)
 }
 
 tasks {
