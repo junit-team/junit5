@@ -23,6 +23,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New `getConfigurationParameters()` method in the `TestPlan` which allows a
+  `TestExecutionListener` to access
+  <<../user-guide/index.adoc#running-tests-config-params, configuration parameters>>. See
+  <<../user-guide/index.adoc#launcher-api-listeners-config, Configuring an Execution
+  Listener>> for details.
 * New `UniqueIdTrackingListener` which is a `TestExecutionListener` that tracks the unique
   IDs of all tests that were executed during the `TestPlan` and generates a file
   containing the unique IDs. The generated file can be used to rerun those tests -- for

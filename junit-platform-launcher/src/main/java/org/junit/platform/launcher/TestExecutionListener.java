@@ -39,6 +39,13 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * Jupiter engines comply with this contract, there is no way to guarantee this for
  * third-party engines.
  *
+ * <p>As of JUnit Platform 1.8, a {@code TestExecutionListener} can access
+ * {@linkplain org.junit.platform.engine.ConfigurationParameters configuration
+ * parameters} via the {@link TestPlan#getConfigurationParameters()
+ * getConfigurationParameters()} method in the {@code TestPlan} supplied to
+ * {@link #testPlanExecutionStarted(TestPlan)} and
+ * {@link #testPlanExecutionFinished(TestPlan)}.
+ *
  * @since 1.0
  * @see Launcher
  * @see TestPlan

@@ -699,8 +699,8 @@ infrastructure.
 
 In addition to instructing the platform which test classes and test engines to include,
 which packages to scan, etc., it is sometimes necessary to provide additional custom
-configuration parameters that are specific to a particular test engine or registered
-extension. For example, the JUnit Jupiter `TestEngine` supports _configuration
+configuration parameters that are specific to a particular test engine, listener, or
+registered extension. For example, the JUnit Jupiter `TestEngine` supports _configuration
 parameters_ for the following use cases.
 
 - <<writing-tests-test-instance-lifecycle-changing-default>>
