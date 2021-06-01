@@ -36,13 +36,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -77,14 +77,6 @@ class UniqueIdTrackingListenerIntegrationTests {
 	private static final String[] expectedUniqueIds = { passingTest, abortedTest, failingTest, dynamicTest1,
 			dynamicTest2, test1, test2 };
 
-	@BeforeEach
-	@AfterEach
-	void clearSystemProperties() {
-		System.clearProperty(LISTENER_ENABLED_PROPERTY_NAME);
-		System.clearProperty(OUTPUT_DIR_PROPERTY_NAME);
-		System.clearProperty(OUTPUT_FILE_PROPERTY_NAME);
-	}
-
 	@Test
 	void confirmExpectedUniqueIdsViaEngineTestKit() {
 		// @formatter:off
@@ -116,7 +108,7 @@ class UniqueIdTrackingListenerIntegrationTests {
 		Files.deleteIfExists(path);
 
 		try {
-			List<String> actualUniqueIds = executeTests();
+			List<String> actualUniqueIds = executeTests(Map.of());
 
 			// Sanity check using the results of our local TestExecutionListener
 			assertThat(actualUniqueIds).containsExactlyInAnyOrder(expectedUniqueIds);
@@ -132,43 +124,42 @@ class UniqueIdTrackingListenerIntegrationTests {
 	@Test
 	void verifyUniqueIdsAreTrackedWithDefaults() throws Exception {
 		Path path = Paths.get("build", DEFAULT_FILE_NAME);
-		verifyUniqueIdsAreTracked(path);
+		verifyUniqueIdsAreTracked(path, Map.of());
 	}
 
 	@Test
 	void verifyUniqueIdsAreTrackedWithCustomOutputFile() throws Exception {
 		String customFilename = "test_ids.txt";
-		System.setProperty(OUTPUT_FILE_PROPERTY_NAME, customFilename);
 
 		Path path = Paths.get("build", customFilename);
-		verifyUniqueIdsAreTracked(path);
+		verifyUniqueIdsAreTracked(path, Map.of(OUTPUT_FILE_PROPERTY_NAME, customFilename));
 	}
 
 	@Test
 	void verifyUniqueIdsAreTrackedWithCustomOutputDir() throws Exception {
 		String customDir = "build/UniqueIdTrackingListenerIntegrationTests";
-		System.setProperty(OUTPUT_DIR_PROPERTY_NAME, customDir);
 
 		Path path = Paths.get(customDir, DEFAULT_FILE_NAME);
-		verifyUniqueIdsAreTracked(path);
+		verifyUniqueIdsAreTracked(path, Map.of(OUTPUT_DIR_PROPERTY_NAME, customDir));
 	}
 
 	@Test
 	void verifyUniqueIdsAreTrackedWithCustomOutputFileAndCustomOutputDir() throws Exception {
 		String customFilename = "test_ids.txt";
 		String customDir = "build/UniqueIdTrackingListenerIntegrationTests";
-		System.setProperty(OUTPUT_DIR_PROPERTY_NAME, customDir);
-		System.setProperty(OUTPUT_FILE_PROPERTY_NAME, customFilename);
 
 		Path path = Paths.get(customDir, customFilename);
-		verifyUniqueIdsAreTracked(path);
+		verifyUniqueIdsAreTracked(path,
+			Map.of(OUTPUT_DIR_PROPERTY_NAME, customDir, OUTPUT_FILE_PROPERTY_NAME, customFilename));
 	}
 
-	private void verifyUniqueIdsAreTracked(Path path) throws IOException {
-		enableListener();
+	private void verifyUniqueIdsAreTracked(Path path, Map<String, String> configurationParameters) throws IOException {
+		configurationParameters = new HashMap<>(configurationParameters);
+		configurationParameters.put(LISTENER_ENABLED_PROPERTY_NAME, "true");
+
 		Files.deleteIfExists(path);
 		try {
-			List<String> actualUniqueIds = executeTests();
+			List<String> actualUniqueIds = executeTests(configurationParameters);
 
 			// Sanity check using the results of our local TestExecutionListener
 			assertThat(actualUniqueIds).containsExactlyInAnyOrder(expectedUniqueIds);
@@ -181,21 +172,19 @@ class UniqueIdTrackingListenerIntegrationTests {
 		}
 	}
 
-	private static void enableListener() {
-		System.setProperty(LISTENER_ENABLED_PROPERTY_NAME, "true");
-	}
-
 	private static Condition<Event> uniqueId(String uniqueId) {
 		return new Condition<>(
 			byTestDescriptor(where(TestDescriptor::getUniqueId, uid -> uid.toString().equals(uniqueId))),
 			"descriptor with uniqueId '%s'", uniqueId);
 	}
 
-	private static List<String> executeTests() {
+	private static List<String> executeTests(Map<String, String> configurationParameters) {
 		List<String> uniqueIds = new ArrayList<>();
 		LauncherDiscoveryRequest request = request()//
 				.selectors(selectClasses())//
-				.filters(includeEngines("junit-jupiter")).build();
+				.filters(includeEngines("junit-jupiter"))//
+				.configurationParameters(configurationParameters)//
+				.build();
 		LauncherFactory.create().execute(request, new TestExecutionListener() {
 			@Override
 			public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {

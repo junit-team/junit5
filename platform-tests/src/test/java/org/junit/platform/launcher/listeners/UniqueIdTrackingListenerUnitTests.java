@@ -12,13 +12,17 @@ package org.junit.platform.launcher.listeners;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.launcher.listeners.UniqueIdTrackingListener.OUTPUT_DIR_PROPERTY_NAME;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.ConfigurationParameters;
 
 /**
  * Unit tests for the {@link UniqueIdTrackingListener}.
@@ -27,41 +31,31 @@ import org.junit.jupiter.api.Test;
  */
 class UniqueIdTrackingListenerUnitTests {
 
+	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+
 	@Test
 	void getOutputDirUsesCustomOutputDir() throws Exception {
-		try {
-			String customDir = "build/UniqueIdTrackingListenerIntegrationTests";
-			System.setProperty(OUTPUT_DIR_PROPERTY_NAME, customDir);
+		String customDir = "build/UniqueIdTrackingListenerIntegrationTests";
 
-			UniqueIdTrackingListener listener = new UniqueIdTrackingListener();
-			Path outputDir = listener.getOutputDir();
-			assertThat(Files.isSameFile(Paths.get(customDir), outputDir)).isTrue();
-			assertThat(outputDir).exists();
-		}
-		finally {
-			System.clearProperty(OUTPUT_DIR_PROPERTY_NAME);
-		}
+		when(configParams.get(OUTPUT_DIR_PROPERTY_NAME)).thenReturn(Optional.of(customDir));
+
+		Path outputDir = new UniqueIdTrackingListener().getOutputDir(configParams);
+		assertThat(Files.isSameFile(Paths.get(customDir), outputDir)).isTrue();
+		assertThat(outputDir).exists();
 	}
 
 	@Test
 	void getOutputDirFallsBackToCurrentWorkingDir() throws Exception {
 		String cwd = "src/test/resources/listeners/uidtracking";
+		String expected = cwd;
 
-		UniqueIdTrackingListener listener = new UniqueIdTrackingListener() {
-			@Override
-			Path currentWorkingDir() {
-				return Paths.get(cwd);
-			}
-		};
-		Path outputDir = listener.getOutputDir();
-		assertThat(Files.isSameFile(Paths.get(cwd), outputDir)).isTrue();
-		assertThat(outputDir).exists();
+		assertOutputDirIsDetected(cwd, expected);
 	}
 
 	@Test
 	void getOutputDirDetectsMavenPom() throws Exception {
 		String cwd = "src/test/resources/listeners/uidtracking/maven";
-		String expected = "target";
+		String expected = cwd + "/target";
 
 		assertOutputDirIsDetected(cwd, expected);
 	}
@@ -69,7 +63,7 @@ class UniqueIdTrackingListenerUnitTests {
 	@Test
 	void getOutputDirDetectsGradleGroovyDefaultBuildScript() throws Exception {
 		String cwd = "src/test/resources/listeners/uidtracking/gradle/groovy";
-		String expected = "build";
+		String expected = cwd + "/build";
 
 		assertOutputDirIsDetected(cwd, expected);
 	}
@@ -77,7 +71,7 @@ class UniqueIdTrackingListenerUnitTests {
 	@Test
 	void getOutputDirDetectsGradleGroovyCustomBuildScript() throws Exception {
 		String cwd = "src/test/resources/listeners/uidtracking/gradle/groovy/sub-project";
-		String expected = "build";
+		String expected = cwd + "/build";
 
 		assertOutputDirIsDetected(cwd, expected);
 	}
@@ -85,7 +79,7 @@ class UniqueIdTrackingListenerUnitTests {
 	@Test
 	void getOutputDirDetectsGradleKotlinDefaultBuildScript() throws Exception {
 		String cwd = "src/test/resources/listeners/uidtracking/gradle/kotlin";
-		String expected = "build";
+		String expected = cwd + "/build";
 
 		assertOutputDirIsDetected(cwd, expected);
 	}
@@ -93,20 +87,22 @@ class UniqueIdTrackingListenerUnitTests {
 	@Test
 	void getOutputDirDetectsGradleKotlinCustomBuildScript() throws Exception {
 		String cwd = "src/test/resources/listeners/uidtracking/gradle/kotlin/sub-project";
-		String expected = "build";
+		String expected = cwd + "/build";
 
 		assertOutputDirIsDetected(cwd, expected);
 	}
 
 	private void assertOutputDirIsDetected(String cwd, String expected) throws IOException {
+		when(configParams.get(OUTPUT_DIR_PROPERTY_NAME)).thenReturn(Optional.empty());
+
 		UniqueIdTrackingListener listener = new UniqueIdTrackingListener() {
 			@Override
 			Path currentWorkingDir() {
 				return Paths.get(cwd);
 			}
 		};
-		Path outputDir = listener.getOutputDir();
-		assertThat(Files.isSameFile(Paths.get(cwd, expected), outputDir)).isTrue();
+		Path outputDir = listener.getOutputDir(configParams);
+		assertThat(Files.isSameFile(Paths.get(expected), outputDir)).isTrue();
 		assertThat(outputDir).exists();
 	}
 

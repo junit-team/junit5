@@ -25,6 +25,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -56,11 +57,11 @@ import org.junit.platform.launcher.TestPlan;
  * is {@code OUTPUT_DIR}/{@code OUTPUT_FILE}.
  *
  * <p>The name of the {@code OUTPUT_FILE} defaults to {@link #DEFAULT_FILE_NAME},
- * but a custom file name can be configured via the {@link #OUTPUT_FILE_PROPERTY_NAME}
- * JVM system property.
+ * but a custom file name can be set via the {@link #OUTPUT_FILE_PROPERTY_NAME}
+ * configuration property.
  *
  * <p>The {@code OUTPUT_DIR} can be set to a custom directory via the
- * {@link #OUTPUT_DIR_PROPERTY_NAME} JVM system property. Otherwise the following
+ * {@link #OUTPUT_DIR_PROPERTY_NAME} configuration property. Otherwise the following
  * algorithm is used to select a default output directory.
  *
  * <ul>
@@ -77,6 +78,10 @@ import org.junit.platform.launcher.TestPlan;
  * <p>For example, in a project using Gradle as the build tool, the file generated
  * by this listener would be {@code ./build/junit-platform-unique-test-ids.txt}
  * by default.
+ *
+ * <p>Configuration properties can be set via JVM system properties, via a
+ * {@code junit-platform.properties} file in the root of the classpath, or as
+ * JUnit Platform {@linkplain ConfigurationParameters configuration parameters}.
  *
  * @since 1.8
  */
@@ -121,10 +126,11 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 
 	private final List<String> uniqueIds = new ArrayList<>();
 
-	private final boolean enabled;
+	private boolean enabled;
 
-	public UniqueIdTrackingListener() {
-		this.enabled = Boolean.getBoolean(LISTENER_ENABLED_PROPERTY_NAME);
+	@Override
+	public void testPlanExecutionStarted(TestPlan testPlan) {
+		this.enabled = testPlan.getConfigurationParameters().getBoolean(LISTENER_ENABLED_PROPERTY_NAME).orElse(false);
 	}
 
 	@Override
@@ -139,7 +145,7 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 		if (this.enabled) {
 			Path outputFile;
 			try {
-				outputFile = getOutputFile();
+				outputFile = getOutputFile(testPlan.getConfigurationParameters());
 			}
 			catch (IOException ex) {
 				logger.error(ex, () -> "Failed to create output file");
@@ -158,9 +164,9 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 		}
 	}
 
-	private Path getOutputFile() throws IOException {
-		String filename = System.getProperty(OUTPUT_FILE_PROPERTY_NAME, DEFAULT_FILE_NAME);
-		Path outputFile = getOutputDir().resolve(filename);
+	private Path getOutputFile(ConfigurationParameters configurationParameters) throws IOException {
+		String filename = configurationParameters.get(OUTPUT_FILE_PROPERTY_NAME).orElse(DEFAULT_FILE_NAME);
+		Path outputFile = getOutputDir(configurationParameters).resolve(filename);
 
 		if (Files.exists(outputFile)) {
 			Files.delete(outputFile);
@@ -171,11 +177,11 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 		return outputFile;
 	}
 
-	Path getOutputDir() throws IOException {
+	Path getOutputDir(ConfigurationParameters configurationParameters) throws IOException {
 		Path cwd = currentWorkingDir();
 		Path outputDir;
 
-		String customDir = System.getProperty(OUTPUT_DIR_PROPERTY_NAME);
+		String customDir = configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME).orElse(null);
 		if (StringUtils.isNotBlank(customDir)) {
 			outputDir = cwd.resolve(customDir);
 		}
