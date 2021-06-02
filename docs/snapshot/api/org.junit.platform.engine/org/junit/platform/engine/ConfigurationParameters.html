@@ -92,7 +92,11 @@ loadScripts(document, 'script');</script>
  influence test discovery and execution.
 
  <p>For example, the JUnit Jupiter engine uses a configuration parameter to
- enable IDEs and build tools to deactivate conditional test execution.</div>
+ enable IDEs and build tools to deactivate conditional test execution.
+
+ <p>As of JUnit Platform 1.8, configuration parameters are also made available to
+ implementations of the <a href="../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a>
+ API via the <a href="../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.0</dd>

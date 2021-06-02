@@ -81,6 +81,10 @@ loadScripts(document, 'script');</script>
  hierarchically based on the
  <a href="../support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a> abstraction.</div>
 </div>
+<div class="col-first even-row-color"><a href="#org.junit.platform.launcher">org.junit.platform.launcher</a></div>
+<div class="col-last even-row-color">
+<div class="block">Public API for configuring and launching test plans.</div>
+</div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
@@ -187,6 +191,45 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a new <code>ForkJoinPoolHierarchicalTestExecutorService</code> based on
  the supplied <a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a>.</div>
 </div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="org.junit.platform.launcher">
+<h2>Uses of <a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a> in <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a></h2>
+<div class="caption"><span>Methods in <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a> that return <a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TestPlan.</span><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html#getConfigurationParameters()">getConfigurationParameters</a></span>()</code></div>
+<div class="col-last even-row-color">
+<div class="block">Get the <a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> for this test plan.</div>
+</div>
+</div>
+<div class="caption"><span>Methods in <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a> with parameters of type <a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TestPlan.</span><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html#from(java.util.Collection,org.junit.platform.engine.ConfigurationParameters)">from</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;&nbsp;engineDescriptors,
+ <a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Construct a new <code>TestPlan</code> from the supplied collection of
+ <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a>.</div>
+</div>
+</div>
+<div class="caption"><span>Constructors in <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a> with parameters of type <a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected </code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html#%3Cinit%3E(boolean,org.junit.platform.engine.ConfigurationParameters)">TestPlan</a></span>&#8203;(boolean&nbsp;containsTests,
+ <a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

@@ -117,11 +117,11 @@ implements <a href="../TestExecutionListener.html" title="interface in org.junit
  is <code>OUTPUT_DIR</code>/<code>OUTPUT_FILE</code>.
 
  <p>The name of the <code>OUTPUT_FILE</code> defaults to <a href="#DEFAULT_FILE_NAME"><code>DEFAULT_FILE_NAME</code></a>,
- but a custom file name can be configured via the <a href="#OUTPUT_FILE_PROPERTY_NAME"><code>OUTPUT_FILE_PROPERTY_NAME</code></a>
- JVM system property.
+ but a custom file name can be set via the <a href="#OUTPUT_FILE_PROPERTY_NAME"><code>OUTPUT_FILE_PROPERTY_NAME</code></a>
+ configuration property.
 
  <p>The <code>OUTPUT_DIR</code> can be set to a custom directory via the
- <a href="#OUTPUT_DIR_PROPERTY_NAME"><code>OUTPUT_DIR_PROPERTY_NAME</code></a> JVM system property. Otherwise the following
+ <a href="#OUTPUT_DIR_PROPERTY_NAME"><code>OUTPUT_DIR_PROPERTY_NAME</code></a> configuration property. Otherwise the following
  algorithm is used to select a default output directory.
 
  <ul>
@@ -137,7 +137,11 @@ implements <a href="../TestExecutionListener.html" title="interface in org.junit
 
  <p>For example, in a project using Gradle as the build tool, the file generated
  by this listener would be <code>./build/junit-platform-unique-test-ids.txt</code>
- by default.</div>
+ by default.
+
+ <p>Configuration properties can be set via JVM system properties, via a
+ <code>junit-platform.properties</code> file in the root of the classpath, or as
+ JUnit Platform <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">configuration parameters</a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.8</dd>
@@ -216,6 +220,12 @@ implements <a href="../TestExecutionListener.html" title="interface in org.junit
 <div class="block">Called when the execution of the <a href="../TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> has finished,
  <em>after</em> all tests have been executed.</div>
 </div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)">testPlanExecutionStarted</a></span>&#8203;(<a href="../TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Called when the execution of the <a href="../TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> has started,
+ <em>before</em> any test has been executed.</div>
+</div>
 </div>
 </div>
 </div>
@@ -224,7 +234,7 @@ implements <a href="../TestExecutionListener.html" title="interface in org.junit
 <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.org.junit.platform.launcher.TestExecutionListener">Methods inherited from interface&nbsp;org.junit.platform.launcher.<a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a></h3>
-<code><a href="../TestExecutionListener.html#dynamicTestRegistered(org.junit.platform.launcher.TestIdentifier)">dynamicTestRegistered</a>, <a href="../TestExecutionListener.html#executionSkipped(org.junit.platform.launcher.TestIdentifier,java.lang.String)">executionSkipped</a>, <a href="../TestExecutionListener.html#executionStarted(org.junit.platform.launcher.TestIdentifier)">executionStarted</a>, <a href="../TestExecutionListener.html#reportingEntryPublished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a>, <a href="../TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)">testPlanExecutionStarted</a></code></div>
+<code><a href="../TestExecutionListener.html#dynamicTestRegistered(org.junit.platform.launcher.TestIdentifier)">dynamicTestRegistered</a>, <a href="../TestExecutionListener.html#executionSkipped(org.junit.platform.launcher.TestIdentifier,java.lang.String)">executionSkipped</a>, <a href="../TestExecutionListener.html#executionStarted(org.junit.platform.launcher.TestIdentifier)">executionStarted</a>, <a href="../TestExecutionListener.html#reportingEntryPublished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a></code></div>
 </section>
 </li>
 </ul>
@@ -315,6 +325,21 @@ implements <a href="../TestExecutionListener.html" title="interface in org.junit
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)">
+<h3>testPlanExecutionStarted</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">testPlanExecutionStarted</span>&#8203;<span class="parameters">(<a href="../TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)">TestExecutionListener</a></code></span></div>
+<div class="block">Called when the execution of the <a href="../TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> has started,
+ <em>before</em> any test has been executed.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)">testPlanExecutionStarted</a></code>&nbsp;in interface&nbsp;<code><a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>testPlan</code> - describes the tree of tests about to be executed</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="executionFinished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.TestExecutionResult)">
 <h3>executionFinished</h3>

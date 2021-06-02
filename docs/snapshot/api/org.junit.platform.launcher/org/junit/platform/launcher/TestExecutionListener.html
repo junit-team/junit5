@@ -107,7 +107,13 @@ loadScripts(document, 'script');</script>
  that represent executable leaves in the <a href="TestPlan.html" title="class in org.junit.platform.launcher">test plan</a> but also
  for all intermediate containers. However, while both the JUnit Vintage and JUnit
  Jupiter engines comply with this contract, there is no way to guarantee this for
- third-party engines.</div>
+ third-party engines.
+
+ <p>As of JUnit Platform 1.8, a <code>TestExecutionListener</code> can access
+ <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">configuration
+ parameters</a> via the <a href="TestPlan.html#getConfigurationParameters()"><code>getConfigurationParameters()</code></a> method in the <code>TestPlan</code> supplied to
+ <a href="#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)"><code>testPlanExecutionStarted(TestPlan)</code></a> and
+ <a href="#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)"><code>testPlanExecutionFinished(TestPlan)</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.0</dd>
