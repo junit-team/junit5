@@ -94,6 +94,17 @@ loadScripts(document, 'script');</script>
  <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
  <a href="https://ota4j-team.github.io/opentest4j/docs/1.2.0/api/org/opentest4j/AssertionFailedError.html" title="class or interface in org.opentest4j" class="external-link"><code>AssertionFailedError</code></a> or a subclass thereof.
 
+ <p>Assertion methods comparing two values for equality, such as <code>assertEquals</code>,
+ are <em>only</em> intended to test equality for an (un-)expected and an actual result
+ value. They are not designed for testing whether a class correctly implements
+ <code>equals(Object)</code>. For example <code>assertEquals</code> might return fast when
+ provided with the same object as expected and actual value without calling
+ <code>equals(Object)</code> at all. Such tests trying to verify the <code>equals(Object)</code>
+ implementation should instead be written explicitly and
+ <a href="#assertTrue(boolean)"><code>assertTrue</code></a> or <a href="#assertFalse(boolean)"><code>assertFalse</code></a>
+ should be used to verify the result, e.g.: <code>assertTrue(obj.equals(obj))</code>,
+ <code>assertFalse(obj.equals(null))</code>.
+
  <h3>Kotlin Support</h3>
 
  <p>Additional <a href="https://kotlinlang.org/">Kotlin</a> assertions can be
