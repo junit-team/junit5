@@ -116,8 +116,16 @@ inherited from superclasses, or inherited from interfaces (see
 lifecycle methods must not be `abstract` and must not return a value (except `@TestFactory`
 methods which are required to return a value).
 
-NOTE: Test classes, test methods, and lifecycle methods are not required to be `public`,
-but they must _not_ be `private`.
+[NOTE]
+.Class and method visibility
+====
+Test classes, test methods, and lifecycle methods are not required to be `public`, but
+they must _not_ be `private`.
+
+It is generally recommended to omit the `public` modifier for test classes, test methods,
+and lifecycle methods unless there is a technical reason for doing so – for example, when
+a test class is extended by a test class in another package.
+====
 
 The following test class demonstrates the use of `@Test` methods and all supported
 lifecycle methods. For further information on runtime semantics, see
