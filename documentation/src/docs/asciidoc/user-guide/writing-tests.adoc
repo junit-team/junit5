@@ -1830,6 +1830,10 @@ implementations.
   refer to the Javadoc for `DiscoverySelectors.selectMethod(String)` for the supported
   formats for a FQMN.
 
+`ClassSource` ::
+  If the `URI` contains the `class` scheme and the fully qualified class name --
+  for example, `class:/org.junit.Foo?line=42`.
+
 `UriSource` ::
   If none of the above `TestSource` implementations are applicable.
 
