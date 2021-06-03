@@ -94,16 +94,20 @@ loadScripts(document, 'script');</script>
  <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
  <a href="https://ota4j-team.github.io/opentest4j/docs/1.2.0/api/org/opentest4j/AssertionFailedError.html" title="class or interface in org.opentest4j" class="external-link"><code>AssertionFailedError</code></a> or a subclass thereof.
 
- <p>Assertion methods comparing two values for equality, such as <code>assertEquals</code>,
- are <em>only</em> intended to test equality for an (un-)expected and an actual result
- value. They are not designed for testing whether a class correctly implements
- <code>equals(Object)</code>. For example <code>assertEquals</code> might return fast when
- provided with the same object as expected and actual value without calling
- <code>equals(Object)</code> at all. Such tests trying to verify the <code>equals(Object)</code>
- implementation should instead be written explicitly and
- <a href="#assertTrue(boolean)"><code>assertTrue</code></a> or <a href="#assertFalse(boolean)"><code>assertFalse</code></a>
- should be used to verify the result, e.g.: <code>assertTrue(obj.equals(obj))</code>,
- <code>assertFalse(obj.equals(null))</code>.
+ <h3>Object Equality</h3>
+
+ <p>Assertion methods comparing two objects for <em>equality</em>, such as the
+ <code>assertEquals(expected, actual)</code> and <code>assertNotEquals(unexpected, actual)</code>
+ variants, are <em>only</em> intended to test equality for an (un-)expected value
+ and an actual value. They are not designed for testing whether a class correctly
+ implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>. For example, <code>assertEquals()</code>
+ might immediately return <code>true</code> when provided the same object for the
+ expected and actual values, without calling <code>equals(Object)</code> at all.
+ Tests that aim to verify the <code>equals(Object)</code> implementation should instead
+ be written to explicitly verify the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a> contract by
+ using <a href="#assertTrue(boolean)"><code>assertTrue()</code></a> or <a href="#assertFalse(boolean)"><code>assertFalse()</code></a> &mdash; for example, <code>assertTrue(expected.equals(actual))</code>,
+ <code>assertTrue(actual.equals(expected))</code>, <code>assertFalse(expected.equals(null))</code>,
+ etc.
 
  <h3>Kotlin Support</h3>
 
