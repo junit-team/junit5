@@ -1183,7 +1183,8 @@ that can be used as a drop-in replacement for <code>@Tag("fast")</code> <em>and<
 <p>Test methods and lifecycle methods may be declared locally within the current test class,
 inherited from superclasses, or inherited from interfaces (see
 <a href="#writing-tests-test-interfaces-and-default-methods">Test Interfaces and Default Methods</a>). In addition, test methods and
-lifecycle methods must not be <code>abstract</code> and must not return a value.</p>
+lifecycle methods must not be <code>abstract</code> and must not return a value (except <code>@TestFactory</code>
+methods which are required to return a value).</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1192,8 +1193,16 @@ lifecycle methods must not be <code>abstract</code> and must not return a value.
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Test classes, test methods, and lifecycle methods are not required to be <code>public</code>,
-but they must <em>not</em> be <code>private</code>.
+<div class="title">Class and method visibility</div>
+<div class="paragraph">
+<p>Test classes, test methods, and lifecycle methods are not required to be <code>public</code>, but
+they must <em>not</em> be <code>private</code>.</p>
+</div>
+<div class="paragraph">
+<p>It is generally recommended to omit the <code>public</code> modifier for test classes, test methods,
+and lifecycle methods unless there is a technical reason for doing so – for example, when
+a test class is extended by a test class in another package.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -10352,7 +10361,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-06-03 15:22:39 UTC
+Last updated 2021-06-03 16:07:39 UTC
 </div>
 </div>
 <style>
