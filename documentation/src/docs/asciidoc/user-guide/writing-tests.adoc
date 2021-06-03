@@ -113,7 +113,8 @@ Test classes must not be `abstract` and must have a single constructor.
 Test methods and lifecycle methods may be declared locally within the current test class,
 inherited from superclasses, or inherited from interfaces (see
 <<writing-tests-test-interfaces-and-default-methods>>). In addition, test methods and
-lifecycle methods must not be `abstract` and must not return a value.
+lifecycle methods must not be `abstract` and must not return a value (except `@TestFactory`
+methods which are required to return a value).
 
 NOTE: Test classes, test methods, and lifecycle methods are not required to be `public`,
 but they must _not_ be `private`.
