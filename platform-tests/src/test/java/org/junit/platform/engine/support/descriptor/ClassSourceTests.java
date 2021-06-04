@@ -96,11 +96,27 @@ class ClassSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void classSourceFromURI() throws URISyntaxException {
-		var source = ClassSource.from(new URI("class:java.lang.Object?line=42"));
+		var source = ClassSource.from( new URI( "class:java.lang.Object" ) );
 
-		assertThat(source.getJavaClass()).isEqualTo(Object.class);
-		assertThat(source.getPosition()).isNotEmpty();
-		assertThat(source.getPosition().get().getLine()).isEqualTo(42);
+		assertThat( source.getJavaClass() ).isEqualTo( Object.class );
+		assertThat( source.getPosition() ).isEmpty();
+	}
+
+	@Test
+	void classSourceFromURIWithLineQuery() throws URISyntaxException {
+		var source = ClassSource.from( new URI( "class:java.lang.Object?line=42" ) );
+
+		assertThat( source.getJavaClass() ).isEqualTo( Object.class );
+		assertThat( source.getPosition() ).isNotEmpty();
+		assertThat( source.getPosition().get().getLine() ).isEqualTo( 42 );
+	}
+
+	@Test
+	void classSourceFromURIWithMalformedQuery() throws URISyntaxException {
+		var source = ClassSource.from( new URI( "class:java.lang.Object?foo=42" ) );
+
+		assertThat( source.getJavaClass() ).isEqualTo( Object.class );
+		assertThat( source.getPosition() ).isEmpty();
 	}
 
 	@Test
