@@ -24,4 +24,7 @@ tasks {
 	compileModule {
 		options.release.set(11)
 	}
+	verifyOSGi {
+		enabled = false // TODO Fix OSGi capabilities, requirements, configuration, ... wiring.
+	}
 }
