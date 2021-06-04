@@ -62,7 +62,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
 	private static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
-	private static final String KEY = "temp.dir";
 	private static final String TEMP_DIR_PREFIX = "junit";
 
 	/**
@@ -150,9 +149,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private Object getPathOrFile(Class<?> type, ExtensionContext extensionContext, String id) {
-		String key = id.isEmpty() ? KEY : KEY + '+' + id;
 		Path path = extensionContext.getStore(NAMESPACE) //
-				.getOrComputeIfAbsent(key, __ -> createTempDir(), CloseablePath.class) //
+				.getOrComputeIfAbsent(id, __ -> createTempDir(), CloseablePath.class) //
 				.get();
 
 		return (type == Path.class) ? path : path.toFile();
