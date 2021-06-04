@@ -675,7 +675,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#running-tests-tag-expressions">4.6. Tag Expressions</a></li>
 <li><a href="#running-tests-capturing-output">4.7. Capturing Standard Output/Error</a></li>
-<li><a href="#running-tests-flight-recorder">4.8. Flight Recorder Support</a></li>
+<li><a href="#running-tests-listeners">4.8. Using Listeners</a>
+<ul class="sectlevel3">
+<li><a href="#running-tests-listeners-flight-recorder">4.8.1. Flight Recorder Support</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#extensions">5. Extension Model</a>
@@ -755,26 +759,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#launcher-api-listeners-custom-deactivation-pattern">Pattern Matching Syntax</a></li>
 </ul>
 </li>
-<li><a href="#launcher-api-listeners-reporting">6.1.10. JUnit Platform Reporting</a></li>
-<li><a href="#launcher-api-launcher-config">6.1.11. Configuring the Launcher</a></li>
+<li><a href="#launcher-api-launcher-config">6.1.10. Configuring the Launcher</a></li>
 </ul>
 </li>
-<li><a href="#junit-platform-suite-engine">6.2. JUnit Platform Suite Engine</a>
+<li><a href="#junit-platform-reporting">6.2. JUnit Platform Reporting</a></li>
+<li><a href="#junit-platform-suite-engine">6.3. JUnit Platform Suite Engine</a>
 <ul class="sectlevel3">
-<li><a href="#setup">6.2.1. Setup</a>
+<li><a href="#setup">6.3.1. Setup</a>
 <ul class="sectlevel4">
 <li><a href="#explicit-dependencies-2">Explicit Dependencies</a></li>
 <li><a href="#transitive-dependencies-2">Transitive Dependencies</a></li>
 </ul>
 </li>
-<li><a href="#test-suite">6.2.2. Test Suite</a></li>
+<li><a href="#test-suite">6.3.2. Test Suite</a></li>
 </ul>
 </li>
-<li><a href="#testkit">6.3. JUnit Platform Test Kit</a>
+<li><a href="#testkit">6.4. JUnit Platform Test Kit</a>
 <ul class="sectlevel3">
-<li><a href="#testkit-engine">6.3.1. Engine Test Kit</a></li>
-<li><a href="#testkit-engine-statistics">6.3.2. Asserting Statistics</a></li>
-<li><a href="#testkit-engine-events">6.3.3. Asserting Events</a></li>
+<li><a href="#testkit-engine">6.4.1. Engine Test Kit</a></li>
+<li><a href="#testkit-engine-statistics">6.4.2. Asserting Statistics</a></li>
+<li><a href="#testkit-engine-events">6.4.3. Asserting Events</a></li>
 </ul>
 </li>
 </ul>
@@ -6978,7 +6982,97 @@ to attribute it to a specific test or container.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-flight-recorder"><a class="anchor" href="#running-tests-flight-recorder"></a>4.8. Flight Recorder Support</h3>
+<h3 id="running-tests-listeners"><a class="anchor" href="#running-tests-listeners"></a>4.8. Using Listeners</h3>
+<div class="paragraph">
+<p>The JUnit Platform provides the following listener APIs that allow JUnit, third parties,
+and custom user code to react to events fired at various points during the discovery and
+execution of a <code>TestPlan</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code>: receives events when a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code> is opened and
+closed.</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code>: receives events that occur during test discovery.</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>: receives events that occur during test execution.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>LauncherSessionListener</code> API is typically implemented by build tools or IDEs and
+registered automatically for you in order to support some feature of the build tool or IDE.</p>
+</div>
+<div class="paragraph">
+<p>The <code>LauncherDiscoveryListener</code> and <code>TestExecutionListener</code> APIs are often implemented in
+order to produce some form of report or to display a graphical representation of the test
+plan in an IDE. Such listeners may be implemented and automatically registered by a build
+tool or IDE, or they may be included in a third-party library – potentially registered
+for you automatically. You can also implement and register your own listeners.</p>
+</div>
+<div class="paragraph">
+<p>For details on registering and configuring listeners, see the following sections of this
+guide.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#launcher-api-launcher-session-listeners-custom">Registering a LauncherSessionListener</a></p>
+</li>
+<li>
+<p><a href="#launcher-api-launcher-discovery-listeners-custom">Registering a LauncherDiscoveryListener</a></p>
+</li>
+<li>
+<p><a href="#launcher-api-listeners-custom">Registering a TestExecutionListener</a></p>
+</li>
+<li>
+<p><a href="#launcher-api-listeners-config">Configuring a TestExecutionListener</a></p>
+</li>
+<li>
+<p><a href="#launcher-api-listeners-custom-deactivation">Deactivating a TestExecutionListener</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The JUnit Platform provides the following listeners which you may wish to use with your
+test suite.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#running-tests-listeners-flight-recorder">Flight Recorder Support</a> </dt>
+<dd>
+<p><code>FlightRecordingExecutionListener</code> and <code>FlightRecordingDiscoveryListener</code> that generate
+Java Flight Recorder events during test discovery and execution.</p>
+</dd>
+<dt class="hdlist1"><code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code> </dt>
+<dd>
+<p><code>TestExecutionListener</code> that generates XML reports compatible with the de facto
+standard for JUnit 4 based test reports. See <a href="#junit-platform-reporting">JUnit Platform Reporting</a> for
+details.</p>
+</dd>
+<dt class="hdlist1"><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/LoggingListener.html">LoggingListener</a></code> </dt>
+<dd>
+<p><code>TestExecutionListener</code> for logging informational messages for all events via a
+<code>BiConsumer</code> that consumes <code>Throwable</code> and <code>Supplier&lt;String&gt;</code>.</p>
+</dd>
+<dt class="hdlist1"><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code> </dt>
+<dd>
+<p><code>TestExecutionListener</code> that generates a summary of the test execution which can be
+printed via a <code>PrintWriter</code>.</p>
+</dd>
+<dt class="hdlist1"><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code> </dt>
+<dd>
+<p><code>TestExecutionListener</code> that that tracks the unique IDs of all tests that were
+executed during the execution of the <code>TestPlan</code> and generates a file containing the
+unique IDs once execution of the <code>TestPlan</code> has finished.</p>
+</dd>
+</dl>
+</div>
+<div class="sect3">
+<h4 id="running-tests-listeners-flight-recorder"><a class="anchor" href="#running-tests-listeners-flight-recorder"></a>4.8.1. Flight Recorder Support</h4>
 <div class="paragraph">
 <p>Since version 1.7, the JUnit Platform provides opt-in support for generating Flight
 Recorder events. <a href="https://openjdk.java.net/jeps/328">JEP 328</a> describes the Java Flight
@@ -7005,7 +7099,10 @@ to a problem.
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Provide module <code>org.junit.platform.jfr</code> (<code>junit-platform-jfr-1.8.0-SNAPSHOT.jar</code>)
+<p>Ensure that you are using Java 11 or later.</p>
+</li>
+<li>
+<p>Provide the <code>org.junit.platform.jfr</code> module (<code>junit-platform-jfr-1.8.0-SNAPSHOT.jar</code>)
 on the class-path or module-path at test runtime.</p>
 </li>
 <li>
@@ -7035,12 +7132,13 @@ command line tool shipped with recent JDKs or open the recording file with
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Flight Recorder support is currently an <em>experimental</em> feature. You&#8217;re
-invited to give it a try and provide feedback to the JUnit team so they can improve
-and eventually <a href="#api-evolution">promote</a> this feature.
+Flight Recorder support is currently an <em>experimental</em> feature. You&#8217;re invited to
+give it a try and provide feedback to the JUnit team so they can improve and eventually
+<a href="#api-evolution">promote</a> this feature.
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -8963,41 +9061,7 @@ supplied in the <code>LauncherDiscoveryRequest</code> that is passed to the <cod
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-reporting"><a class="anchor" href="#launcher-api-listeners-reporting"></a>6.1.10. JUnit Platform Reporting</h4>
-<div class="paragraph">
-<p>The <code>junit-platform-reporting</code> artifact contains <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>
-implementations that generate test reports. These listeners are typically used by IDEs
-and build tools. The package <code>org.junit.platform.reporting.legacy.xml</code> currently contains
-the following implementation.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code> generates a separate XML report for each root in
-the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code>. Note that the generated XML format is compatible with the de facto
-standard for JUnit 4 based test reports that was made popular by the Ant build system.
-The <code>LegacyXmlReportGeneratingListener</code> is used by the
-<a href="#running-tests-console-launcher">Console Launcher</a> as well.</p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module also contains <code>TestExecutionListener</code>
-implementations that can be used for reporting purposes. See <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/LoggingListener.html">LoggingListener</a></code> and
-<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code> for details.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.1.11. Configuring the Launcher</h4>
+<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.1.10. Configuring the Launcher</h4>
 <div class="paragraph">
 <p>If you require fine-grained control over automatic detection and registration of test
 engines and listeners, you may create an instance of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> and supply that to
@@ -9032,13 +9096,47 @@ built-in fluent <em>builder</em> API, as demonstrated in the following example.<
 </div>
 </div>
 <div class="sect2">
-<h3 id="junit-platform-suite-engine"><a class="anchor" href="#junit-platform-suite-engine"></a>6.2. JUnit Platform Suite Engine</h3>
+<h3 id="junit-platform-reporting"><a class="anchor" href="#junit-platform-reporting"></a>6.2. JUnit Platform Reporting</h3>
+<div class="paragraph">
+<p>The <code>junit-platform-reporting</code> artifact contains <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>
+implementations that generate test reports. These listeners are typically used by IDEs
+and build tools. The package <code>org.junit.platform.reporting.legacy.xml</code> currently contains
+the following implementation.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code> generates a separate XML report for each root in
+the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code>. Note that the generated XML format is compatible with the de facto
+standard for JUnit 4 based test reports that was made popular by the Ant build system.
+The <code>LegacyXmlReportGeneratingListener</code> is used by the
+<a href="#running-tests-console-launcher">Console Launcher</a> as well.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module also contains <code>TestExecutionListener</code>
+implementations that can be used for reporting purposes. See <a href="#running-tests-listeners">Using Listeners</a>
+for details.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="junit-platform-suite-engine"><a class="anchor" href="#junit-platform-suite-engine"></a>6.3. JUnit Platform Suite Engine</h3>
 <div class="paragraph">
 <p>The JUnit Platform supports declarative definition and execution of suites of tests from
 <em>any</em> test engine using the Junit Platform.</p>
 </div>
 <div class="sect3">
-<h4 id="setup"><a class="anchor" href="#setup"></a>6.2.1. Setup</h4>
+<h4 id="setup"><a class="anchor" href="#setup"></a>6.3.1. Setup</h4>
 <div class="paragraph">
 <p>In addition to <em>at least one</em> other test engine, you need the following artifacts and
 their dependencies on the classpath. See <a href="#dependency-metadata">Dependency Metadata</a> for details regarding
@@ -9096,7 +9194,7 @@ Both dependencies are aggregated in <code>junit-platform-suite</code> which can 
 </div>
 </div>
 <div class="sect3">
-<h4 id="test-suite"><a class="anchor" href="#test-suite"></a>6.2.2. Test Suite</h4>
+<h4 id="test-suite"><a class="anchor" href="#test-suite"></a>6.3.2. Test Suite</h4>
 <div class="paragraph">
 <p>By annotating a class with <code>@Suite</code> it is marked as a test suite on the JUnit Platform.
 As seen in the following example, selector and filter annotations can then be used to
@@ -9133,14 +9231,14 @@ further details.
 </div>
 </div>
 <div class="sect2">
-<h3 id="testkit"><a class="anchor" href="#testkit"></a>6.3. JUnit Platform Test Kit</h3>
+<h3 id="testkit"><a class="anchor" href="#testkit"></a>6.4. JUnit Platform Test Kit</h3>
 <div class="paragraph">
 <p>The <code>junit-platform-testkit</code> artifact provides support for executing a test plan on the
 JUnit Platform and then verifying the expected results. As of JUnit Platform 1.4, this
 support is limited to the execution of a single <code>TestEngine</code> (see <a href="#testkit-engine">Engine Test Kit</a>).</p>
 </div>
 <div class="sect3">
-<h4 id="testkit-engine"><a class="anchor" href="#testkit-engine"></a>6.3.1. Engine Test Kit</h4>
+<h4 id="testkit-engine"><a class="anchor" href="#testkit-engine"></a>6.4.1. Engine Test Kit</h4>
 <div class="paragraph">
 <p>The <code><a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></code> package provides support for executing a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code> for a
 given <code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> running on the JUnit Platform and then accessing the results via a
@@ -9223,7 +9321,7 @@ may test your own <code>TestEngine</code> by supplying an instance of it to the
 </div>
 </div>
 <div class="sect3">
-<h4 id="testkit-engine-statistics"><a class="anchor" href="#testkit-engine-statistics"></a>6.3.2. Asserting Statistics</h4>
+<h4 id="testkit-engine-statistics"><a class="anchor" href="#testkit-engine-statistics"></a>6.4.2. Asserting Statistics</h4>
 <div class="paragraph">
 <p>One of the most common features of the Test Kit is the ability to assert statistics
 against events fired during the execution of a <code>TestPlan</code>. The following tests demonstrate
@@ -9313,7 +9411,7 @@ In the <code>verifyJupiterContainerStats()</code> test method, the counts for th
 </div>
 </div>
 <div class="sect3">
-<h4 id="testkit-engine-events"><a class="anchor" href="#testkit-engine-events"></a>6.3.3. Asserting Events</h4>
+<h4 id="testkit-engine-events"><a class="anchor" href="#testkit-engine-events"></a>6.4.3. Asserting Events</h4>
 <div class="paragraph">
 <p>If you find that <a href="#testkit-engine-statistics">asserting statistics</a> alone is insufficient
 for verifying the expected behavior of test execution, you can work directly with the
@@ -10173,7 +10271,9 @@ directory. See <a href="#running-tests-console-launcher">Console Launcher</a> fo
 </dd>
 <dt class="hdlist1"><code>junit-platform-jfr</code></dt>
 <dd>
-<p>Provides a <code>TestExecutionListener</code> for Java Flight Recorder events on the JUnit Platform. See <a href="#running-tests-flight-recorder">Flight Recorder Support</a> for details.</p>
+<p>   Provides a <code>LauncherDiscoveryListener</code> and <code>TestExecutionListener</code> for Java Flight
+Recorder events on the JUnit Platform. See <a href="#running-tests-listeners-flight-recorder">Flight Recorder Support</a>
+for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-launcher</code></dt>
 <dd>
@@ -10183,7 +10283,7 @@ build tools. See <a href="#launcher-api">JUnit Platform Launcher API</a> for det
 <dt class="hdlist1"><code>junit-platform-reporting</code></dt>
 <dd>
 <p><code>TestExecutionListener</code> implementations that generate test reports&#8201;&#8212;&#8201;typically used
-by IDEs and build tools. See <a href="#launcher-api-listeners-reporting">JUnit Platform Reporting</a> for details.</p>
+by IDEs and build tools. See <a href="#junit-platform-reporting">JUnit Platform Reporting</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-runner</code></dt>
 <dd>
@@ -10361,7 +10461,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-06-03 16:07:39 UTC
+Last updated 2021-06-04 12:05:54 UTC
 </div>
 </div>
 <style>
