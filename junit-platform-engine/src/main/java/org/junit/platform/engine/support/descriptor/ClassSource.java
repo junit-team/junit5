@@ -95,18 +95,18 @@ public class ClassSource implements TestSource {
 
 	/**
 	 * Create a new {@code ClassSource} from the supplied {@link URI}.
-	 *
-	 * <p>The {@link URI#getPath() path} component of the {@code URI} (excluding
-	 * the query) will be used as the class name. The
-	 * {@linkplain URI#getQuery() query} component of the {@code URI}, if present,
-	 * will be used to retrieve the {@link FilePosition} via
-	 * {@link FilePosition#fromQuery(String)}.
+	 * <p>
+	 * URIs should be formatted as <code>class:fully.qualified.class.Name</code>. An
+	 * optional query can be appended detailing <code>line</code> and
+	 * <code>column</code> numbers, e.g.
+	 * <code>class:com.foo.Bar?line=42&column=13</code>. The URI fragment, if
+	 * present, is ignored.
 	 *
 	 * @param uri the {@code URI} for the class source; never {@code null}
 	 * @return a new {@code ClassSource}; never {@code null}
 	 * @throws PreconditionViolationException if the supplied {@code URI} is
 	 * {@code null} or if the scheme of the supplied {@code URI} is not equal
-	 * to the {@link #CLASS_SCHEME}
+	 * to the {@link #CLASS_SCHEME}, or if the specified class name is empty.
 	 * @since 1.3
 	 * @see #CLASS_SCHEME
 	 */
@@ -115,8 +115,16 @@ public class ClassSource implements TestSource {
 		Preconditions.condition(CLASS_SCHEME.equals(uri.getScheme()),
 			() -> "URI [" + uri + "] must have [" + CLASS_SCHEME + "] scheme");
 
-		String classSource = ResourceUtils.stripQueryComponent(uri).getPath().substring(1);
-		FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
+		String classSource = uri.getSchemeSpecificPart();
+		FilePosition filePosition = null;
+		int qi = classSource.indexOf('?');
+		if (qi >= 0) {
+			filePosition = FilePosition.fromQuery(classSource.substring(qi + 1)).orElse(null);
+			classSource = classSource.substring(0, qi);
+		}
+
+		Preconditions.condition(!classSource.isEmpty(), () -> "Class name cannot be empty");
+
 		return ClassSource.from(classSource, filePosition);
 	}
 

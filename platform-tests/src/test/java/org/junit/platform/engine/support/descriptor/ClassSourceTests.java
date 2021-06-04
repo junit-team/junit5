@@ -48,6 +48,7 @@ class ClassSourceTests extends AbstractTestSourceTests {
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((Class<?>) null, null));
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((URI) null));
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from(new URI("badscheme:/com.foo.Bar")));
+		assertThrows(PreconditionViolationException.class, () -> ClassSource.from(new URI("class:?line=1")));
 	}
 
 	@Test
@@ -95,7 +96,7 @@ class ClassSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void classSourceFromURI() throws URISyntaxException {
-		var source = ClassSource.from(new URI("class:/java.lang.Object?line=42"));
+		var source = ClassSource.from(new URI("class:java.lang.Object?line=42"));
 
 		assertThat(source.getJavaClass()).isEqualTo(Object.class);
 		assertThat(source.getPosition()).isNotEmpty();
