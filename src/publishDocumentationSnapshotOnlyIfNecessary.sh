@@ -22,7 +22,7 @@ md5sum $(find junit-platform-commons -wholename '**/src/main/*.java') >> "${curr
 md5sum $(find junit-platform-console -wholename '**/src/main/*.java') >> "${current}"
 # skip module junit-platform-console-standalone because it doesn't contain relevant documentation
 md5sum $(find junit-platform-engine -wholename '**/src/main/*.java') >> "${current}"
-# TODO md5sum $(find junit-platform-jfr -wholename '**/src/main/*.java') >> "${current}"
+md5sum $(find junit-platform-jfr -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-launcher -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-reporting -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-runner -wholename '**/src/main/*.java') >> "${current}"
