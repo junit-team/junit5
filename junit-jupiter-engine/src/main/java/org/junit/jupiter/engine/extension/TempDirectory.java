@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
@@ -61,7 +62,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
 	private static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
-	private static final String KEY = "temp.dir";
 	private static final String TEMP_DIR_PREFIX = "junit";
 
 	/**
@@ -98,8 +98,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
 			assertValidFieldCandidate(field);
+			String id = findAnnotation(field, TempDir.class).map(TempDir::value).orElse("");
 			try {
-				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), context));
+				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), context, id));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
@@ -136,7 +137,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
-		return getPathOrFile(parameterType, extensionContext);
+		String id = parameterContext.findAnnotation(TempDir.class).map(TempDir::value).orElse("");
+		return getPathOrFile(parameterType, extensionContext, id);
 	}
 
 	private void assertSupportedType(String target, Class<?> type) {
@@ -146,9 +148,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private Object getPathOrFile(Class<?> type, ExtensionContext extensionContext) {
+	private Object getPathOrFile(Class<?> type, ExtensionContext extensionContext, String id) {
 		Path path = extensionContext.getStore(NAMESPACE) //
-				.getOrComputeIfAbsent(KEY, key -> createTempDir(), CloseablePath.class) //
+				.getOrComputeIfAbsent(id, __ -> createTempDir(), CloseablePath.class) //
 				.get();
 
 		return (type == Path.class) ? path : path.toFile();

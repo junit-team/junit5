@@ -2187,6 +2187,15 @@ its content.
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_parameter_injection]
 ----
 
+You can inject multiple temporary directories by specifying explicit identifiers via the
+annotation parameter.
+
+[source,java,indent=0]
+.A test method that requires multiple temporary directories
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_multiple_directories]
+----
+
 WARNING: `@TempDir` is not supported on constructor parameters. If you wish to retain a
 single reference to a temp directory across lifecycle methods and the current test method,
 please use field injection, by annotating a non-private instance field with `@TempDir`.
