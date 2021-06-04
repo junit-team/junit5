@@ -44,7 +44,7 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 
 	@Override
 	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
-		var event = new LauncherDiscoveryEvent();
+		LauncherDiscoveryEvent event = new LauncherDiscoveryEvent();
 		event.selectors = request.getSelectorsByType(DiscoverySelector.class).size();
 		event.filters = request.getFiltersByType(DiscoveryFilter.class).size();
 		event.begin();
@@ -58,7 +58,7 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 
 	@Override
 	public void engineDiscoveryStarted(org.junit.platform.engine.UniqueId engineId) {
-		var event = new EngineDiscoveryEvent();
+		EngineDiscoveryEvent event = new EngineDiscoveryEvent();
 		event.uniqueId = engineId.toString();
 		event.begin();
 		engineDiscoveryEvents.put(engineId, event);
@@ -66,7 +66,7 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 
 	@Override
 	public void engineDiscoveryFinished(org.junit.platform.engine.UniqueId engineId, EngineDiscoveryResult result) {
-		var event = engineDiscoveryEvents.remove(engineId);
+		EngineDiscoveryEvent event = engineDiscoveryEvents.remove(engineId);
 		event.result = result.getStatus().toString();
 		event.commit();
 	}

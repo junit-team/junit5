@@ -13,6 +13,7 @@ package org.junit.platform.jfr;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan plan) {
-		var event = new TestPlanExecutionEvent();
+		TestPlanExecutionEvent event = new TestPlanExecutionEvent();
 		event.containsTests = plan.containsTests();
 		event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
 			Collectors.joining(", "));
@@ -60,7 +61,7 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier test, String reason) {
-		var event = new SkippedTestEvent();
+		SkippedTestEvent event = new SkippedTestEvent();
 		event.initialize(test);
 		event.reason = reason;
 		event.commit();
@@ -68,7 +69,7 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier test) {
-		var event = new TestExecutionEvent();
+		TestExecutionEvent event = new TestExecutionEvent();
 		testExecutionEvents.put(test.getUniqueId(), event);
 		event.initialize(test);
 		event.begin();
@@ -76,8 +77,8 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	@Override
 	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
-		var throwable = result.getThrowable();
-		var event = testExecutionEvents.remove(test.getUniqueId());
+		Optional<Throwable> throwable = result.getThrowable();
+		TestExecutionEvent event = testExecutionEvents.remove(test.getUniqueId());
 		event.end();
 		event.result = result.getStatus().toString();
 		event.exceptionClass = throwable.map(Throwable::getClass).orElse(null);
@@ -87,8 +88,8 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier test, ReportEntry reportEntry) {
-		for (var entry : reportEntry.getKeyValuePairs().entrySet()) {
-			var event = new ReportEntryEvent();
+		for (Map.Entry<String, String> entry : reportEntry.getKeyValuePairs().entrySet()) {
+			ReportEntryEvent event = new ReportEntryEvent();
 			event.uniqueId = test.getUniqueId();
 			event.key = entry.getKey();
 			event.value = entry.getValue();
