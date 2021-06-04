@@ -35,18 +35,17 @@ class TempDirectoryDemo {
 	}
 	// end::user_guide_parameter_injection[]
 
-	// tag::user_guide_parameter_injection[]
+	// tag::user_guide_multiple_directories[]
 	@Test
 	void copyFileFromSourceToTarget(@TempDir("from") Path source, @TempDir("to") Path target) throws IOException {
 		Path sourceFile = source.resolve("test.txt");
 
 		new ListWriter(sourceFile).write("a", "b", "c");
-
 		Path targetFile = Files.copy(sourceFile, target.resolve("test.txt"));
 
 		assertEquals(singletonList("a,b,c"), Files.readAllLines(targetFile));
 	}
-	// end::user_guide_parameter_injection[]
+	// end::user_guide_multiple_directories[]
 
 	static
 	// tag::user_guide_field_injection[]
