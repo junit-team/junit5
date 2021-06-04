@@ -115,17 +115,17 @@ public class ClassSource implements TestSource {
 		Preconditions.condition(CLASS_SCHEME.equals(uri.getScheme()),
 			() -> "URI [" + uri + "] must have [" + CLASS_SCHEME + "] scheme");
 
-		String classSource = uri.getSchemeSpecificPart();
+		String className = uri.getSchemeSpecificPart();
 		FilePosition filePosition = null;
-		int qi = classSource.indexOf('?');
+		int qi = className.indexOf('?');
 		if (qi >= 0) {
-			filePosition = FilePosition.fromQuery(classSource.substring(qi + 1)).orElse(null);
-			classSource = classSource.substring(0, qi);
+			filePosition = FilePosition.fromQuery(className.substring(qi + 1)).orElse(null);
+			className = className.substring(0, qi);
 		}
 
-		Preconditions.condition(!classSource.isEmpty(), () -> "Class name cannot be empty");
+		Preconditions.condition(!className.isEmpty(), () -> "Class name cannot be empty");
 
-		return ClassSource.from(classSource, filePosition);
+		return ClassSource.from(className, filePosition);
 	}
 
 	private final String className;
