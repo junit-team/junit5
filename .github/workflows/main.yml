@@ -252,6 +252,10 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '11'
+    - name: Install Graphviz
+      run: |
+        sudo apt-get update
+        sudo apt-get install graphviz
     - name: Upload Documentation
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
