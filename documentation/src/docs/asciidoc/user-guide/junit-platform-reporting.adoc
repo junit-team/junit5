@@ -1,0 +1,17 @@
+[[junit-platform-reporting]]
+=== JUnit Platform Reporting
+
+The `junit-platform-reporting` artifact contains `{TestExecutionListener}`
+implementations that generate test reports. These listeners are typically used by IDEs
+and build tools. The package `org.junit.platform.reporting.legacy.xml` currently contains
+the following implementation.
+
+* `{LegacyXmlReportGeneratingListener}` generates a separate XML report for each root in
+  the `{TestPlan}`. Note that the generated XML format is compatible with the de facto
+  standard for JUnit 4 based test reports that was made popular by the Ant build system.
+  The `LegacyXmlReportGeneratingListener` is used by the
+  <<running-tests-console-launcher>> as well.
+
+NOTE: The `{junit-platform-launcher}` module also contains `TestExecutionListener`
+implementations that can be used for reporting purposes. See <<running-tests-listeners>>
+for details.
