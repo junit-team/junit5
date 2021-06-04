@@ -5525,6 +5525,24 @@ its content.</p>
 <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>You can inject multiple temporary directories by specifying explicit identifiers via the
+annotation parameter.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test method that requires multiple temporary directories</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">copyFileFromSourceToTarget</span><span class="o">(</span><span class="nd">@TempDir</span><span class="o">(</span><span class="s">"from"</span><span class="o">)</span> <span class="nc">Path</span> <span class="n">source</span><span class="o">,</span> <span class="nd">@TempDir</span><span class="o">(</span><span class="s">"to"</span><span class="o">)</span> <span class="nc">Path</span> <span class="n">target</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+    <span class="nc">Path</span> <span class="n">sourceFile</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">"test.txt"</span><span class="o">);</span>
+
+    <span class="k">new</span> <span class="nf">ListWriter</span><span class="o">(</span><span class="n">sourceFile</span><span class="o">).</span><span class="na">write</span><span class="o">(</span><span class="s">"a"</span><span class="o">,</span> <span class="s">"b"</span><span class="o">,</span> <span class="s">"c"</span><span class="o">);</span>
+    <span class="nc">Path</span> <span class="n">targetFile</span> <span class="o">=</span> <span class="nc">Files</span><span class="o">.</span><span class="na">copy</span><span class="o">(</span><span class="n">sourceFile</span><span class="o">,</span> <span class="n">target</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">"test.txt"</span><span class="o">));</span>
+
+    <span class="n">assertEquals</span><span class="o">(</span><span class="n">singletonList</span><span class="o">(</span><span class="s">"a,b,c"</span><span class="o">),</span> <span class="nc">Files</span><span class="o">.</span><span class="na">readAllLines</span><span class="o">(</span><span class="n">targetFile</span><span class="o">));</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -10461,7 +10479,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-06-04 12:05:54 UTC
+Last updated 2021-06-04 14:15:08 UTC
 </div>
 </div>
 <style>
