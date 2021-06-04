@@ -97,9 +97,9 @@ public class ClassSource implements TestSource {
 	 * Create a new {@code ClassSource} from the supplied {@link URI}.
 	 * <p>
 	 * URIs should be formatted as <code>class:fully.qualified.class.Name</code>. An
-	 * optional query can be appended detailing <code>line</code> and
+	 * optional query can be appended detailing <code>line</code> and/or
 	 * <code>column</code> numbers, e.g.
-	 * <code>class:com.foo.Bar?line=42&column=13</code>. The URI fragment, if
+	 * <code>class:com.foo.Bar?line=42&amp;column=13</code>. The URI fragment, if
 	 * present, is ignored.
 	 *
 	 * @param uri the {@code URI} for the class source; never {@code null}
