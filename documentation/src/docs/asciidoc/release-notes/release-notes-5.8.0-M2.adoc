@@ -48,6 +48,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* `@TempDir` now supports creating multiple temporary directories via an identifier
+  specified on the annotation (e.g. `@TempDir("a")` and `@TempDir("b")`).
 * New `named()` static factory method in the `Named` interface that serves as an
   _alias_ for `Named.of()`. `named()` is intended to be used via `import static`.
 
