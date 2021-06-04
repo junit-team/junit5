@@ -76,7 +76,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: JaCoCo reports
-        path: 'build/reports/jacoco/jacocoRootReport/**'
+        path: '**/build/reports/jacoco/**'
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v1
 

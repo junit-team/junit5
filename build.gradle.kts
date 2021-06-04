@@ -179,20 +179,42 @@ subprojects {
 		}
 
 		afterEvaluate {
-			if (enableJaCoCo && project in jacocoCoveredProjects) {
-				val jarTask = (tasks.findByName("shadowJar") ?: tasks["jar"]) as Jar
-				val extractJar by tasks.registering(Copy::class) {
-					from(zipTree(jarTask.archiveFile))
-					into(jacocoClassesDir)
-					include("**/*.class")
-					// don't report coverage for shadowed classes
-					exclude("**/shadow/**")
-					// don't version-specific classes of MR JARs
-					exclude("META-INF/versions/**")
-					includeEmptyDirs = false
-					onlyIf { jarTask.enabled }
+			if (enableJaCoCo) {
+				if (project in jacocoCoveredProjects) {
+					val jarTask = (tasks.findByName("shadowJar") ?: tasks["jar"]) as Jar
+					val extractJar by tasks.registering(Copy::class) {
+						from(zipTree(jarTask.archiveFile))
+						into(jacocoClassesDir)
+						include("**/*.class")
+						// don't report coverage for shadowed classes
+						exclude("**/shadow/**")
+						// don't version-specific classes of MR JARs
+						exclude("META-INF/versions/**")
+						includeEmptyDirs = false
+						onlyIf { jarTask.enabled }
+					}
+					jarTask.finalizedBy(extractJar)
 				}
-				jarTask.finalizedBy(extractJar)
+				if (project in jacocoTestProjects) {
+					tasks.named<Test>("test") {
+						finalizedBy("jacocoTestReport")
+					}
+					tasks.named<JacocoReport>("jacocoTestReport").configure {
+						dependsOn("test")
+						reports {
+							html.isEnabled = true
+							xml.isEnabled = true
+							csv.isEnabled = false
+						}
+						jacocoCoveredProjects.forEach {
+							dependsOn(it.tasks.named("extractJar"))
+							it.pluginManager.withPlugin("java") {
+								sourceDirectories.setFrom(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
+							}
+						}
+						classDirectories.setFrom(files(jacocoClassesDir))
+					}
+				}
 			}
 		}
 	}
