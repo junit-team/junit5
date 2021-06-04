@@ -217,9 +217,11 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	private boolean containsFilesWithExtensions(Path dir, String... extensions) throws IOException {
 		return Files.find(dir, 1, //
 			(path, basicFileAttributes) -> {
-				for (String extension : extensions) {
-					if (path.getFileName().toString().endsWith(extension)) {
-						return true;
+				if (basicFileAttributes.isRegularFile()) {
+					for (String extension : extensions) {
+						if (path.getFileName().toString().endsWith(extension)) {
+							return true;
+						}
 					}
 				}
 				return false;
