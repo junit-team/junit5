@@ -80,8 +80,6 @@ val jacocoTestProjects = listOf(
 		projects.junitJupiterMigrationsupport,
 		projects.junitJupiterParams,
 		projects.junitPlatformRunner,
-		projects.junitPlatformSuiteCommons,
-		projects.junitPlatformSuiteEngine,
 		projects.junitVintageEngine,
 		projects.platformTests
 ).map { it.dependencyProject }
@@ -172,6 +170,7 @@ subprojects {
 			}
 
 			kotlin {
+				targetExclude("**/src/test/resources/**")
 				ktlint(libs.versions.ktlint.get())
 				licenseHeaderFile(headerFile)
 				trimTrailingWhitespace()

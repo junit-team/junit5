@@ -1,3 +1,4 @@
+import aQute.bnd.gradle.BundleTaskConvention
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 
 plugins {
@@ -26,5 +27,18 @@ dependencies {
 tasks {
 	test {
 		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
+	}
+}
+
+tasks {
+	jar {
+		withConvention(BundleTaskConvention::class) {
+			bnd("""
+				Provide-Capability:\
+					org.junit.platform.engine;\
+						org.junit.platform.engine='junit-jupiter';\
+						version:Version="${'$'}{version_cleanup;${project.version}}"
+			""")
+		}
 	}
 }

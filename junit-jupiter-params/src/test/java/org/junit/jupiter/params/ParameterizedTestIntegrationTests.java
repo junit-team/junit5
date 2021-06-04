@@ -13,6 +13,7 @@ package org.junit.jupiter.params;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -646,6 +647,15 @@ class ParameterizedTestIntegrationTests {
 						event(test(), displayName("default name"), finishedWithFailure(message("default name"))));
 		}
 
+		@Test
+		void nameParametersAlias() {
+			execute("namedParametersAlias", String.class).allEvents().assertThatEvents() //
+					.haveAtLeast(1,
+						event(test(), displayName("cool name"), finishedWithFailure(message("parameter value")))) //
+					.haveAtLeast(1,
+						event(test(), displayName("default name"), finishedWithFailure(message("default name"))));
+		}
+
 	}
 
 	@Nested
@@ -1036,6 +1046,12 @@ class ParameterizedTestIntegrationTests {
 			fail(string);
 		}
 
+		@MethodSourceTest
+		@Order(14)
+		void namedParametersAlias(String string) {
+			fail(string);
+		}
+
 		// ---------------------------------------------------------------------
 
 		static Stream<Arguments> emptyMethodSource() {
@@ -1095,6 +1111,10 @@ class ParameterizedTestIntegrationTests {
 
 		static Stream<Arguments> namedParameters() {
 			return Stream.of(arguments(Named.of("cool name", "parameter value")), arguments("default name"));
+		}
+
+		static Stream<Arguments> namedParametersAlias() {
+			return Stream.of(arguments(named("cool name", "parameter value")), arguments("default name"));
 		}
 
 		// ---------------------------------------------------------------------

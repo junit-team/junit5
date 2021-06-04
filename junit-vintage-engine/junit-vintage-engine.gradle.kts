@@ -1,4 +1,4 @@
-import aQute.bnd.gradle.BundleTaskConvention;
+import aQute.bnd.gradle.BundleTaskConvention
 
 plugins {
 	`java-library-conventions`
@@ -47,6 +47,11 @@ tasks {
 					org.junit.runner.*;version="[${junit4Min},5)",\
 					org.junit.runners.model;version="[${junit4Min},5)",\
 					*
+
+				Provide-Capability:\
+					org.junit.platform.engine;\
+						org.junit.platform.engine='junit-vintage';\
+						version:Version="${'$'}{version_cleanup;${project.version}}"
 			""")
 		}
 	}

@@ -1,10 +1,11 @@
+import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 
 plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
 	`testing-conventions`
-	id("me.champeau.gradle.jmh")
+	id("me.champeau.jmh")
 }
 
 dependencies {
@@ -42,12 +43,12 @@ dependencies {
 }
 
 jmh {
-	jmhVersion = libs.versions.jmh.get()
+	jmhVersion.set(libs.versions.jmh)
 
-	duplicateClassesStrategy = DuplicatesStrategy.WARN
-	fork = 0 // Too long command line on Windows...
-	warmupIterations = 1
-	iterations = 5
+	duplicateClassesStrategy.set(DuplicatesStrategy.WARN)
+	fork.set(1)
+	warmupIterations.set(1)
+	iterations.set(5)
 }
 
 tasks {
@@ -58,7 +59,9 @@ tasks {
 		jvmArgs("-Xmx1g")
 	}
 	test {
+		// Additional inputs for remote execution with Test Distribution
 		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
+		inputs.file(buildFile).withPathSensitivity(NONE) // for UniqueIdTrackingListenerIntegrationTests
 	}
 	test_4_12 {
 		useJUnitPlatform {

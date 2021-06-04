@@ -44,9 +44,6 @@ on GitHub.
 * Documented constant value of `ExclusiveResource.GLOBAL_KEY`.
 * Instances of `TestIdentifier` and `UniqueId` now retain less memory because they no
   longer store `String` representations of unique IDs.
-* Improved `ExclusiveResource` handling: if a `Node` has only read locks and no read-write
-  locks, then descendants are not forced into `SAME_THREAD` execution and can run
-  concurrently.
 * Tools that make multiple calls to the `Launcher` API should now create a
   `LauncherSession` in order to allow for executing global setup and teardown code exactly
   once via the new `LauncherSessionListener` interface that can be registered via Java’s

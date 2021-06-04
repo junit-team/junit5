@@ -28,7 +28,7 @@ import org.junit.platform.launcher.TestPlan;
 
 class CompositeTestExecutionListener implements TestExecutionListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CompositeTestExecutionListener.class);
+	private static final Logger logger = LoggerFactory.getLogger(CompositeTestExecutionListener.class);
 
 	private final List<TestExecutionListener> testExecutionListeners;
 	private final List<EagerTestExecutionListener> eagerTestExecutionListeners;
@@ -96,7 +96,7 @@ class CompositeTestExecutionListener implements TestExecutionListener {
 			}
 			catch (Throwable throwable) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
-				LOGGER.warn(throwable, () -> String.format("TestExecutionListener [%s] threw exception for method: %s",
+				logger.warn(throwable, () -> String.format("TestExecutionListener [%s] threw exception for method: %s",
 					listener.getClass().getName(), description.get()));
 			}
 		});

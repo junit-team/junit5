@@ -20,6 +20,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqu
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.platform.reporting.legacy.xml.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -41,6 +42,7 @@ import java.util.Set;
 import org.joox.Match;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -368,7 +370,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(reportsDir, new PrintWriter(out));
 
-		listener.testPlanExecutionStarted(TestPlan.from(Set.of()));
+		listener.testPlanExecutionStarted(TestPlan.from(Set.of(), mock(ConfigurationParameters.class)));
 
 		assertThat(out.toString()).containsSubsequence("Could not create reports directory",
 			"FileAlreadyExistsException", "at ");
@@ -384,7 +386,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));
 
-		listener.testPlanExecutionStarted(TestPlan.from(Set.of(engineDescriptor)));
+		listener.testPlanExecutionStarted(TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class)));
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
 
 		assertThat(out.toString()).containsSubsequence("Could not write XML report", "Exception", "at ");
@@ -394,7 +396,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	void writesReportEntriesToSystemOutElement() throws Exception {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class));
 
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));

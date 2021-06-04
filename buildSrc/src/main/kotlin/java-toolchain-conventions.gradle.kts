@@ -14,15 +14,6 @@ project.pluginManager.withPlugin("java") {
 			kotlinOptions.jdkHome = compiler.get().metadata.installationPath.asFile.absolutePath
 		}
 	}
-	tasks.withType<JavaCompile>().configureEach {
-		javaCompiler.set(compiler)
-	}
-	tasks.withType<GroovyCompile>().configureEach {
-		javaLauncher.set(javaToolchainService.launcherFor {
-			// Groovy does not yet support JDK 17, see https://issues.apache.org/jira/browse/GROOVY-9943
-			languageVersion.set(minOf(javaLanguageVersion, defaultLanguageVersion))
-		})
-	}
 	tasks.withType<JavaExec>().configureEach {
 		javaLauncher.set(javaToolchainService.launcherFor(extension.toolchain))
 	}

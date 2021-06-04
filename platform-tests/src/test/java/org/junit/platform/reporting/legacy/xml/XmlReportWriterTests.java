@@ -20,6 +20,7 @@ import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
 import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
 import static org.junit.platform.reporting.legacy.xml.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
+import static org.mockito.Mockito.mock;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -34,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -46,11 +48,13 @@ import org.junit.platform.launcher.TestPlan;
  */
 class XmlReportWriterTests {
 
+	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+
 	private EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 
 	@Test
 	void writesTestsuiteElementsWithoutTestcaseElementsWithoutAnyTests() throws Exception {
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 
@@ -68,7 +72,7 @@ class XmlReportWriterTests {
 		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		var testDescriptor = new TestDescriptorStub(uniqueId, "successfulTest");
 		engineDescriptor.addChild(testDescriptor);
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.addReportEntry(TestIdentifier.from(testDescriptor), ReportEntry.from("myKey", "myValue"));
@@ -86,7 +90,7 @@ class XmlReportWriterTests {
 		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		var testDescriptor = new TestDescriptorStub(uniqueId, "successfulTest");
 		engineDescriptor.addChild(testDescriptor);
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var reportEntry = ReportEntry.from(Map.of( //
@@ -115,7 +119,7 @@ class XmlReportWriterTests {
 	void writesEmptySkippedElementForSkippedTestWithoutReason() throws Exception {
 		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "skippedTest"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markSkipped(testPlan.getTestIdentifier(uniqueId.toString()), null);
@@ -145,7 +149,7 @@ class XmlReportWriterTests {
 				return "failedTest";
 			}
 		});
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(null));
@@ -165,7 +169,7 @@ class XmlReportWriterTests {
 	void omitsMessageAttributeForFailedTestWithThrowableWithoutMessage() throws Exception {
 		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "failedTest"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(new NullPointerException()));
@@ -182,7 +186,7 @@ class XmlReportWriterTests {
 	void writesValidXmlEvenIfExceptionMessageContainsCData() throws Exception {
 		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");
@@ -198,7 +202,7 @@ class XmlReportWriterTests {
 	void escapesInvalidCharactersInSystemPropertiesAndExceptionMessages() throws Exception {
 		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var assertionError = new AssertionError("expected: <A> but was: <B\0>");
@@ -227,7 +231,7 @@ class XmlReportWriterTests {
 	void doesNotReopenCDataWithinCDataContent() throws Exception {
 		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");

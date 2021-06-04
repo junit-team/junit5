@@ -26,6 +26,10 @@ import org.junit.platform.commons.util.Preconditions;
  * <p>For example, the JUnit Jupiter engine uses a configuration parameter to
  * enable IDEs and build tools to deactivate conditional test execution.
  *
+ * <p>As of JUnit Platform 1.8, configuration parameters are also made available to
+ * implementations of the {@link org.junit.platform.launcher.TestExecutionListener}
+ * API via the {@link org.junit.platform.launcher.TestPlan}.
+ *
  * @see TestEngine
  * @see EngineDiscoveryRequest
  * @see ExecutionRequest

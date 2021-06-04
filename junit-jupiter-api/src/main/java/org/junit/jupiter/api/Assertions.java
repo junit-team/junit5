@@ -34,6 +34,22 @@ import org.opentest4j.MultipleFailuresError;
  * <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
  * {@link org.opentest4j.AssertionFailedError} or a subclass thereof.
  *
+ * <h3>Object Equality</h3>
+ *
+ * <p>Assertion methods comparing two objects for <em>equality</em>, such as the
+ * {@code assertEquals(expected, actual)} and {@code assertNotEquals(unexpected, actual)}
+ * variants, are <em>only</em> intended to test equality for an (un-)expected value
+ * and an actual value. They are not designed for testing whether a class correctly
+ * implements {@link Object#equals(Object)}. For example, {@code assertEquals()}
+ * might immediately return {@code true} when provided the same object for the
+ * expected and actual values, without calling {@code equals(Object)} at all.
+ * Tests that aim to verify the {@code equals(Object)} implementation should instead
+ * be written to explicitly verify the {@link Object#equals(Object)} contract by
+ * using {@link #assertTrue(boolean) assertTrue()} or {@link #assertFalse(boolean)
+ * assertFalse()} &mdash; for example, {@code assertTrue(expected.equals(actual))},
+ * {@code assertTrue(actual.equals(expected))}, {@code assertFalse(expected.equals(null))},
+ * etc.
+ *
  * <h3>Kotlin Support</h3>
  *
  * <p>Additional <a href="https://kotlinlang.org/">Kotlin</a> assertions can be
