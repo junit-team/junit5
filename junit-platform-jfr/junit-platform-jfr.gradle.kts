@@ -11,11 +11,11 @@ dependencies {
 }
 
 javaLibrary {
-	mainJavaVersion = JavaVersion.VERSION_1_8
+	mainJavaVersion = JavaVersion.VERSION_11
 }
 
 tasks {
 	compileModule {
-		options.release.set(8)
+		options.release.set(9)
 	}
 }
