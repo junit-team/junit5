@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -90,7 +91,7 @@ public class TestPlan {
 		Preconditions.notNull(configurationParameters, "Cannot create TestPlan from null ConfigurationParameters");
 		TestPlan testPlan = new TestPlan(engineDescriptors.stream().anyMatch(TestDescriptor::containsTests),
 			configurationParameters);
-		Visitor visitor = descriptor -> testPlan.add(TestIdentifier.from(descriptor));
+		Visitor visitor = descriptor -> testPlan.addInternal(TestIdentifier.from(descriptor));
 		engineDescriptors.forEach(engineDescriptor -> engineDescriptor.accept(visitor));
 		return testPlan;
 	}
@@ -105,12 +106,19 @@ public class TestPlan {
 	 * Add the supplied {@link TestIdentifier} to this test plan.
 	 *
 	 * @param testIdentifier the identifier to add; never {@code null}
-	 * @deprecated Please discontinue use of this method. A future version of the
-	 * JUnit Platform will ignore this call and eventually even throw an exception.
+	 * @deprecated Calling this method is no longer supported and will throw an
+	 * exception.
+	 * @throws JUnitException always
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.4")
-	public void add(TestIdentifier testIdentifier) {
+	public void add(@SuppressWarnings("unused") TestIdentifier testIdentifier) {
+		throw new JUnitException("Unsupported attempt to modify the TestPlan was detected. "
+				+ "Please contact your IDE/tool vendor and request a fix or downgrade to JUnit 5.7.x (see https://github.com/junit-team/junit5/issues/1732 for details).");
+	}
+
+	@API(status = INTERNAL, since = "1.8")
+	public void addInternal(TestIdentifier testIdentifier) {
 		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
 		allIdentifiers.put(testIdentifier.getUniqueIdObject(), testIdentifier);
 		if (testIdentifier.getParentIdObject().isPresent()) {

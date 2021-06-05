@@ -245,14 +245,12 @@ class SummaryGenerationTests {
 		assertThat(listener.getSummary().getFailures()).hasSize(numThreads);
 	}
 
-	@SuppressWarnings("deprecation")
 	private TestIdentifier createTestIdentifier(String uniqueId) {
 		var identifier = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("test", uniqueId), uniqueId));
-		testPlan.add(identifier);
+		testPlan.addInternal(identifier);
 		return identifier;
 	}
 
-	@SuppressWarnings("deprecation")
 	private TestIdentifier createContainerIdentifier(String uniqueId) {
 		var identifier = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("container", uniqueId), uniqueId) {
 
@@ -261,7 +259,7 @@ class SummaryGenerationTests {
 				return Type.CONTAINER;
 			}
 		});
-		testPlan.add(identifier);
+		testPlan.addInternal(identifier);
 		return identifier;
 	}
 

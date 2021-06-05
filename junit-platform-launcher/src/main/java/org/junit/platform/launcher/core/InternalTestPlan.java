@@ -16,8 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -26,10 +24,7 @@ import org.junit.platform.launcher.TestPlan;
  */
 class InternalTestPlan extends TestPlan {
 
-	private static final Logger logger = LoggerFactory.getLogger(InternalTestPlan.class);
-
 	private final AtomicBoolean executionStarted = new AtomicBoolean(false);
-	private final AtomicBoolean warningEmitted = new AtomicBoolean(false);
 	private final LauncherDiscoveryResult discoveryResult;
 	private final TestPlan delegate;
 
@@ -58,17 +53,12 @@ class InternalTestPlan extends TestPlan {
 	@Override
 	@SuppressWarnings("deprecation")
 	public void add(TestIdentifier testIdentifier) {
-		if (warningEmitted.compareAndSet(false, true)) {
-			logger.warn(() -> "Attempt to modify the TestPlan was detected. "
-					+ "A future version of the JUnit Platform will ignore this call and eventually even throw an exception. "
-					+ "Please contact your IDE/tool vendor and request a fix (see https://github.com/junit-team/junit5/issues/1732 for details).");
-		}
-		addInternal(testIdentifier);
+		delegate.add(testIdentifier);
 	}
 
-	@SuppressWarnings("deprecation")
-	void addInternal(TestIdentifier testIdentifier) {
-		delegate.add(testIdentifier);
+	@Override
+	public void addInternal(TestIdentifier testIdentifier) {
+		delegate.addInternal(testIdentifier);
 	}
 
 	@Override
