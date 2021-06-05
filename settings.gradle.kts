@@ -16,6 +16,7 @@ pluginManagement {
 		id("me.champeau.jmh") version "0.6.5"
 		id("io.spring.nohttp") version "0.0.8"
 		id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+		id("org.openrewrite.rewrite") version "5.0.0"
 	}
 }
 

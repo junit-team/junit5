@@ -9,6 +9,14 @@ plugins {
 	id("com.diffplug.spotless")
 	id("io.spring.nohttp")
 	id("io.github.gradle-nexus.publish-plugin")
+	id("org.openrewrite.rewrite")
+}
+
+rewrite {
+	activeRecipe("org.openrewrite.java.OrderImports")
+	activeStyle("org.openrewrite.java.style.ImportLayoutStyle", "org.openrewrite.java.style.TabsAndIndentsStyle")
+	configFile = file("src/rewrite.yml")
+	failOnDryRunResults = true
 }
 
 val buildTimeAndDate: OffsetDateTime by extra {
