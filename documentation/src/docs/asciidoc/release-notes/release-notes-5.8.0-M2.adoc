@@ -52,6 +52,8 @@ on GitHub.
   specified on the annotation (e.g. `@TempDir("a")` and `@TempDir("b")`).
 * New `named()` static factory method in the `Named` interface that serves as an
   _alias_ for `Named.of()`. `named()` is intended to be used via `import static`.
+* New `class` URI scheme added for dynamic test sources. This allows tests to be located
+  using the information available in a `StackTraceElement`.
 
 
 [[release-notes-5.8.0-M2-junit-vintage]]

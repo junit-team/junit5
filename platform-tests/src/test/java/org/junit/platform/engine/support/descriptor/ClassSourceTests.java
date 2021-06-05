@@ -14,6 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Serializable;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -44,6 +46,9 @@ class ClassSourceTests extends AbstractTestSourceTests {
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from("    ", null));
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((Class<?>) null));
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((Class<?>) null, null));
+		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((URI) null));
+		assertThrows(PreconditionViolationException.class, () -> ClassSource.from(new URI("badscheme:/com.foo.Bar")));
+		assertThrows(PreconditionViolationException.class, () -> ClassSource.from(new URI("class:?line=1")));
 	}
 
 	@Test
@@ -87,6 +92,31 @@ class ClassSourceTests extends AbstractTestSourceTests {
 		assertThat(source.getJavaClass()).isEqualTo(testClass);
 		assertThat(source.getPosition()).isNotEmpty();
 		assertThat(source.getPosition()).hasValue(position);
+	}
+
+	@Test
+	void classSourceFromURI() throws URISyntaxException {
+		var source = ClassSource.from(new URI("class:java.lang.Object"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).isEmpty();
+	}
+
+	@Test
+	void classSourceFromURIWithLineQuery() throws URISyntaxException {
+		var source = ClassSource.from(new URI("class:java.lang.Object?line=42"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).isNotEmpty();
+		assertThat(source.getPosition().get().getLine()).isEqualTo(42);
+	}
+
+	@Test
+	void classSourceFromURIWithMalformedQuery() throws URISyntaxException {
+		var source = ClassSource.from(new URI("class:java.lang.Object?foo=42"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).isEmpty();
 	}
 
 	@Test
