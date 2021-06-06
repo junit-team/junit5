@@ -741,17 +741,17 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@DisplayName("resolves java.io.File injection type")
 	class FileAndPathInjection {
 
-		@TempDir
-		File fileTempDir;
+		Path path;
 
-		@TempDir
-		Path pathTempDir;
+		@BeforeEach
+		void beforeEach(@TempDir Path path) {
+			this.path = path;
+		}
 
 		@Test
 		@DisplayName("and injected File and Path reference the same temp directory")
-		void checkFile(@TempDir File tempDir, @TempDir Path ref) {
-			assertFileAndPathAreEqual(tempDir, ref);
-			assertFileAndPathAreEqual(this.fileTempDir, this.pathTempDir);
+		void checkFile(@TempDir File file) {
+			assertFileAndPathAreEqual(file, path);
 		}
 
 		private void assertFileAndPathAreEqual(File tempDir, Path ref) {
