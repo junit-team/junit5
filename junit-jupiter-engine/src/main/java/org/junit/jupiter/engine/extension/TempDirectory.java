@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
@@ -30,9 +31,11 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -121,12 +124,28 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 */
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		boolean annotated = parameterContext.isAnnotated(TempDir.class);
-		if (annotated && parameterContext.getDeclaringExecutable() instanceof Constructor) {
-			throw new ParameterResolutionException(
-				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
+		TempDir annotation = parameterContext.findAnnotation(TempDir.class).orElse(null);
+		if (annotation != null) {
+			if (parameterContext.getDeclaringExecutable() instanceof Constructor) {
+				throw new ParameterResolutionException(
+					"@TempDir is not supported on constructor parameters. Please use field injection instead.");
+			}
+			boolean hasAnotherParameterWithTempDirAnnotationWithSameIdentifier = Stream.of(
+				parameterContext.getDeclaringExecutable().getParameters()) //
+					.skip(parameterContext.getIndex() + 1) //
+					.map(parameter -> findAnnotation(parameter, TempDir.class).orElse(null)) //
+					.filter(Objects::nonNull) //
+					.map(TempDir::value) //
+					.anyMatch(isEqual(annotation.value()));
+			if (hasAnotherParameterWithTempDirAnnotationWithSameIdentifier) {
+				throw new ParameterResolutionException(String.format(
+					"The same @TempDir was declared on multiple parameters of the following method: %s. "
+							+ "Please specify distinct identifiers to create different temporary directories via @TempDir(...) or remove the duplicate parameter.",
+					parameterContext.getDeclaringExecutable()));
+			}
+			return true;
 		}
-		return annotated;
+		return false;
 	}
 
 	/**

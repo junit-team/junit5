@@ -339,6 +339,24 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@Nested
+	@DisplayName("reports illegal usage")
+	class IllegalUsage {
+
+		@Test
+		@DisplayName("when @TempDir with same identifier is used on multiple method parameters")
+		void doesNotSupportMultipleTempDirAnnotationsWithSameIdentifierOnOneMethod() throws NoSuchMethodException {
+			var testClass = IllegalUsageTestCase.MultipleMethodParameters.class;
+			var results = executeTestsForClass(testClass);
+			var method = testClass.getDeclaredMethod("test", Path.class, File.class);
+
+			assertSingleFailedTest(results, ParameterResolutionException.class,
+				"The same @TempDir was declared on multiple parameters of the following method: " + method
+						+ ". Please specify distinct identifiers to create different temporary directories via @TempDir(...) or remove the duplicate parameter.");
+		}
+
+	}
+
 	private static void assertSingleFailedContainer(EngineExecutionResults results, Class<? extends Throwable> clazz,
 			String message) {
 
@@ -981,6 +999,16 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			assertTrue(Files.notExists(C));
 			assertTrue(Files.notExists(D));
 			assertTrue(Files.notExists(E));
+		}
+	}
+
+	static class IllegalUsageTestCase {
+
+		static class MultipleMethodParameters {
+			@Test
+			void test(@TempDir Path path, @TempDir File file) {
+				// never called
+			}
 		}
 	}
 }
