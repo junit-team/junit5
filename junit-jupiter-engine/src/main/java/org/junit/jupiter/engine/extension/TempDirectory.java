@@ -20,6 +20,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -31,6 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -103,7 +105,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			assertValidFieldCandidate(field);
 			String id = findAnnotation(field, TempDir.class).map(TempDir::value).orElse("");
 			try {
-				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), context, id));
+				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), context, id, field));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
@@ -157,7 +159,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
 		String id = parameterContext.findAnnotation(TempDir.class).map(TempDir::value).orElse("");
-		return getPathOrFile(parameterType, extensionContext, id);
+		return getPathOrFile(parameterType, extensionContext, id, parameterContext.getParameter());
 	}
 
 	private void assertSupportedType(String target, Class<?> type) {
@@ -167,33 +169,45 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private Object getPathOrFile(Class<?> type, ExtensionContext extensionContext, String id) {
-		Path path = extensionContext.getStore(NAMESPACE) //
-				.getOrComputeIfAbsent(id, __ -> createTempDir(), CloseablePath.class) //
-				.get();
-
+	private Object getPathOrFile(Class<?> type, ExtensionContext extensionContext, String id,
+			AnnotatedElement location) {
+		CloseablePath closeablePath = extensionContext.getStore(NAMESPACE) //
+				.getOrComputeIfAbsent(id, __ -> createTempDir(location), CloseablePath.class);
+		validateCompatibility(closeablePath.location, location);
+		Path path = closeablePath.dir;
 		return (type == Path.class) ? path : path.toFile();
 	}
 
-	private static CloseablePath createTempDir() {
+	private static CloseablePath createTempDir(AnnotatedElement location) {
 		try {
-			return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX));
+			return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX), location);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
 		}
 	}
 
+	private static void validateCompatibility(AnnotatedElement initial, AnnotatedElement current) {
+		if ((!(initial instanceof Parameter) || !(current instanceof Parameter)) && !initial.equals(current)) {
+			throw new JUnitException(String.format(
+				"The same @TempDir was declared in redundant locations: (1) on %s %s and (2) on %s %s. "
+						+ "Please specify distinct identifiers to create different temporary directories via @TempDir(...) or remove the redundancy.",
+				getShortName(initial.getClass()), initial, getShortName(current.getClass()), current));
+		}
+	}
+
+	private static String getShortName(Class<? extends AnnotatedElement> type) {
+		return type.getSimpleName().toLowerCase(Locale.ROOT);
+	}
+
 	private static class CloseablePath implements CloseableResource {
 
 		private final Path dir;
+		private final AnnotatedElement location;
 
-		CloseablePath(Path dir) {
+		CloseablePath(Path dir, AnnotatedElement location) {
 			this.dir = dir;
-		}
-
-		Path get() {
-			return dir;
+			this.location = location;
 		}
 
 		@Override
