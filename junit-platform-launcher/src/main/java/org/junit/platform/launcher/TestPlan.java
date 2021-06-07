@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,13 +11,14 @@
 package org.junit.platform.launcher;
 
 import static java.util.Collections.emptySet;
+import static java.util.Collections.synchronizedSet;
 import static java.util.Collections.unmodifiableSet;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
@@ -26,10 +27,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestDescriptor.Visitor;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * {@code TestPlan} describes the tree of tests and containers as discovered
@@ -57,13 +61,15 @@ import org.junit.platform.engine.TestDescriptor.Visitor;
 @API(status = STABLE, since = "1.0")
 public class TestPlan {
 
-	private final Set<TestIdentifier> roots = Collections.synchronizedSet(new LinkedHashSet<>(4));
+	private final Set<TestIdentifier> roots = synchronizedSet(new LinkedHashSet<>(4));
 
-	private final Map<String, Set<TestIdentifier>> children = new ConcurrentHashMap<>(32);
+	private final Map<UniqueId, Set<TestIdentifier>> children = new ConcurrentHashMap<>(32);
 
-	private final Map<String, TestIdentifier> allIdentifiers = new ConcurrentHashMap<>(32);
+	private final Map<UniqueId, TestIdentifier> allIdentifiers = new ConcurrentHashMap<>(32);
 
 	private final boolean containsTests;
+
+	private final ConfigurationParameters configurationParameters;
 
 	/**
 	 * Construct a new {@code TestPlan} from the supplied collection of
@@ -74,38 +80,51 @@ public class TestPlan {
 	 *
 	 * @param engineDescriptors the engine test descriptors from which the test
 	 * plan should be created; never {@code null}
+	 * @param configurationParameters the {@code ConfigurationParameters} for
+	 * this test plan; never {@code null}
 	 * @return a new test plan
 	 */
 	@API(status = INTERNAL, since = "1.0")
-	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
+	public static TestPlan from(Collection<TestDescriptor> engineDescriptors,
+			ConfigurationParameters configurationParameters) {
 		Preconditions.notNull(engineDescriptors, "Cannot create TestPlan from a null collection of TestDescriptors");
-		TestPlan testPlan = new TestPlan(engineDescriptors.stream().anyMatch(TestDescriptor::containsTests));
-		Visitor visitor = descriptor -> testPlan.add(TestIdentifier.from(descriptor));
+		Preconditions.notNull(configurationParameters, "Cannot create TestPlan from null ConfigurationParameters");
+		TestPlan testPlan = new TestPlan(engineDescriptors.stream().anyMatch(TestDescriptor::containsTests),
+			configurationParameters);
+		Visitor visitor = descriptor -> testPlan.addInternal(TestIdentifier.from(descriptor));
 		engineDescriptors.forEach(engineDescriptor -> engineDescriptor.accept(visitor));
 		return testPlan;
 	}
 
 	@API(status = INTERNAL, since = "1.4")
-	protected TestPlan(boolean containsTests) {
+	protected TestPlan(boolean containsTests, ConfigurationParameters configurationParameters) {
 		this.containsTests = containsTests;
+		this.configurationParameters = configurationParameters;
 	}
 
 	/**
 	 * Add the supplied {@link TestIdentifier} to this test plan.
 	 *
 	 * @param testIdentifier the identifier to add; never {@code null}
-	 * @deprecated Please discontinue use of this method. A future version of the
-	 * JUnit Platform will ignore this call and eventually even throw an exception.
+	 * @deprecated Calling this method is no longer supported and will throw an
+	 * exception.
+	 * @throws JUnitException always
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.4")
-	public void add(TestIdentifier testIdentifier) {
+	public void add(@SuppressWarnings("unused") TestIdentifier testIdentifier) {
+		throw new JUnitException("Unsupported attempt to modify the TestPlan was detected. "
+				+ "Please contact your IDE/tool vendor and request a fix or downgrade to JUnit 5.7.x (see https://github.com/junit-team/junit5/issues/1732 for details).");
+	}
+
+	@API(status = INTERNAL, since = "1.8")
+	public void addInternal(TestIdentifier testIdentifier) {
 		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
-		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);
-		if (testIdentifier.getParentId().isPresent()) {
-			String parentId = testIdentifier.getParentId().get();
+		allIdentifiers.put(testIdentifier.getUniqueIdObject(), testIdentifier);
+		if (testIdentifier.getParentIdObject().isPresent()) {
+			UniqueId parentId = testIdentifier.getParentIdObject().get();
 			Set<TestIdentifier> directChildren = children.computeIfAbsent(parentId,
-				key -> Collections.synchronizedSet(new LinkedHashSet<>(16)));
+				key -> synchronizedSet(new LinkedHashSet<>(16)));
 			directChildren.add(testIdentifier);
 		}
 		else {
@@ -155,7 +174,8 @@ public class TestPlan {
 	 */
 	public Set<TestIdentifier> getChildren(String parentId) {
 		Preconditions.notBlank(parentId, "parent ID must not be null or blank");
-		return children.containsKey(parentId) ? unmodifiableSet(children.get(parentId)) : emptySet();
+		UniqueId uniqueId = UniqueId.parse(parentId);
+		return children.containsKey(uniqueId) ? unmodifiableSet(children.get(uniqueId)) : emptySet();
 	}
 
 	/**
@@ -169,9 +189,10 @@ public class TestPlan {
 	 */
 	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
 		Preconditions.notBlank(uniqueId, "unique ID must not be null or blank");
-		Preconditions.condition(allIdentifiers.containsKey(uniqueId),
+		UniqueId uniqueIdObject = UniqueId.parse(uniqueId);
+		Preconditions.condition(allIdentifiers.containsKey(uniqueIdObject),
 			() -> "No TestIdentifier with unique ID [" + uniqueId + "] has been added to this TestPlan.");
-		return allIdentifiers.get(uniqueId);
+		return allIdentifiers.get(uniqueIdObject);
 	}
 
 	/**
@@ -217,6 +238,17 @@ public class TestPlan {
 	 */
 	public boolean containsTests() {
 		return containsTests;
+	}
+
+	/**
+	 * Get the {@link ConfigurationParameters} for this test plan.
+	 *
+	 * @return the configuration parameters; never {@code null}
+	 * @since 1.8
+	 */
+	@API(status = MAINTAINED, since = "1.8")
+	public ConfigurationParameters getConfigurationParameters() {
+		return this.configurationParameters;
 	}
 
 }

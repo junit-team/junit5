@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,6 +33,7 @@ import example.util.Calculator;
 
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.ThrowingConsumer;
@@ -149,6 +150,23 @@ class DynamicTestsDemo {
 
 		// Returns a stream of dynamic tests.
 		return DynamicTest.stream(inputStream, displayNameGenerator, testExecutor);
+	}
+
+	@TestFactory
+	Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodWithNames() {
+		// Stream of palindromes to check
+		Stream<Named<String>> inputStream = Stream.of(
+				Named.of("racecar is a palindrome", "racecar"),
+				Named.of("radar is also a palindrome", "radar"),
+				Named.of("mom also seems to be a palindrome", "mom"),
+				Named.of("dad is yet another palindrome", "dad")
+		);
+
+		// Executes tests based on the current input value.
+		ThrowingConsumer<String> testExecutor = text -> assertTrue(isPalindrome(text));
+
+		// Returns a stream of dynamic tests.
+		return DynamicTest.stream(inputStream, testExecutor);
 	}
 
 	@TestFactory

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -24,14 +24,25 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * @since 1.6
  * @see LauncherDiscoveryListeners#logging()
  */
-class LoggingLauncherDiscoveryListener extends LauncherDiscoveryListener {
+class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggingLauncherDiscoveryListener.class);
+
+	@Override
+	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
+		logger.trace(() -> "Test discovery started");
+	}
+
+	@Override
+	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
+		logger.trace(() -> "Test discovery finished");
+	}
 
 	@Override
 	public void engineDiscoveryStarted(UniqueId engineId) {

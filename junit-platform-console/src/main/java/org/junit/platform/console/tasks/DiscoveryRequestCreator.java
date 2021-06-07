@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -77,7 +77,7 @@ class DiscoveryRequestCreator {
 	private Set<Path> determineClasspathRoots(CommandLineOptions options) {
 		if (options.getSelectedClasspathEntries().isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
-			rootDirs.addAll(options.getAdditionalClasspathEntries());
+			rootDirs.addAll(options.getExistingAdditionalClasspathEntries());
 			return rootDirs;
 		}
 		return new LinkedHashSet<>(options.getSelectedClasspathEntries());

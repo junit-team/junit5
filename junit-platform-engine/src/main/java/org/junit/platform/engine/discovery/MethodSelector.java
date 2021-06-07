@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -32,7 +32,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * <p>If a Java {@link Method} is provided, the selector will return that
  * {@linkplain #getJavaMethod() method} and its method name, class name, and
  * parameter types accordingly. If a {@link Class} and method name, a class name
- * and method name, or simply a <em>fully qualified method name</em> is provided,
+ * and method name, or a <em>fully qualified method name</em> is provided,
  * this selector will only attempt to lazily load the {@link Class} and
  * {@link Method} if {@link #getJavaClass()} or {@link #getJavaMethod()} is
  * invoked.

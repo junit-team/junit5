@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -25,11 +25,9 @@ import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
-import org.junit.vintage.engine.descriptor.TestSourceProvider;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCaseWithNotFilterableRunner;
 import org.junit.vintage.engine.samples.junit4.NotFilterableRunner;
@@ -72,13 +70,11 @@ class RunnerTestDescriptorPostProcessorTests {
 	}
 
 	private void resolve(DiscoverySelector selector) {
-		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(selector).listeners(
+		var request = LauncherDiscoveryRequestBuilder.request().selectors(selector).listeners(
 			mock(LauncherDiscoveryListener.class)).build();
 		TestDescriptor engineDescriptor = new VintageDiscoverer().discover(request, VintageUniqueIdBuilder.engineId());
-		RunnerTestDescriptor runnerTestDescriptor = (RunnerTestDescriptor) getOnlyElement(
-			engineDescriptor.getChildren());
-		new RunnerTestDescriptorPostProcessor(new TestSourceProvider()).applyFiltersAndCreateDescendants(
-			runnerTestDescriptor);
+		var runnerTestDescriptor = (RunnerTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
+		new RunnerTestDescriptorPostProcessor().applyFiltersAndCreateDescendants(runnerTestDescriptor);
 	}
 
 }

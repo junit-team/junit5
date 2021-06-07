@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -46,22 +46,26 @@ final class DisplayNameUtils {
 	/**
 	 * Pre-defined standard display name generator instance.
 	 */
-	private static final DisplayNameGenerator standardGenerator = new Standard();
+	private static final DisplayNameGenerator standardGenerator = DisplayNameGenerator.getDisplayNameGenerator(
+		Standard.class);
 
 	/**
 	 * Pre-defined simple display name generator instance.
 	 */
-	private static final DisplayNameGenerator simpleGenerator = new Simple();
+	private static final DisplayNameGenerator simpleGenerator = DisplayNameGenerator.getDisplayNameGenerator(
+		Simple.class);
 
 	/**
 	 * Pre-defined display name generator instance replacing underscores.
 	 */
-	private static final DisplayNameGenerator replaceUnderscoresGenerator = new ReplaceUnderscores();
+	private static final DisplayNameGenerator replaceUnderscoresGenerator = DisplayNameGenerator.getDisplayNameGenerator(
+		ReplaceUnderscores.class);
 
 	/**
 	 * Pre-defined display name generator instance producing indicative sentences.
 	 */
-	private static final DisplayNameGenerator indicativeSentencesGenerator = new IndicativeSentences();
+	private static final DisplayNameGenerator indicativeSentencesGenerator = DisplayNameGenerator.getDisplayNameGenerator(
+		IndicativeSentences.class);
 
 	static String determineDisplayName(AnnotatedElement element, Supplier<String> displayNameSupplier) {
 		Preconditions.notNull(element, "Annotated element must not be null");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -119,7 +119,7 @@ final class ExtensionUtils {
 	 * @since 5.4
 	 */
 	private static final Comparator<Field> orderComparator = //
-		(field1, field2) -> Integer.compare(getOrder(field1), getOrder(field2));
+		Comparator.comparingInt(ExtensionUtils::getOrder);
 
 	/**
 	 * @since 5.4

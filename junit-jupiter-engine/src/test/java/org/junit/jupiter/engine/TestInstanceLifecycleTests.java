@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -455,6 +455,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(nestedInstance, instanceMap.get(nestedPreDestroyCallbackTestInstanceKey).getInnermostInstance());
 
 		Object outerInstance = instanceMap.get(nestedExecutionConditionKey1).findInstance(testClass).get();
+		assertSame(outerInstance, instance);
 		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey).getInnermostInstance());
 		assertSame(outerInstance, instanceMap.get(preDestroyCallbackTestInstanceKey).getInnermostInstance());
 

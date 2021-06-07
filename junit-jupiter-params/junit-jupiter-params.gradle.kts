@@ -7,22 +7,19 @@ plugins {
 description = "JUnit Jupiter Params"
 
 dependencies {
-	internal(platform(project(":dependencies")))
+	api(platform(projects.junitBom))
+	api(libs.apiguardian)
+	api(projects.junitJupiterApi)
 
-	api(platform(project(":junit-bom")))
-	api("org.apiguardian:apiguardian-api")
-	api(project(":junit-jupiter-api"))
+	shadowed(libs.univocity.parsers)
 
-	shadowed(platform(project(":dependencies")))
-	shadowed("com.univocity:univocity-parsers")
+	testImplementation(projects.junitPlatformTestkit)
+	testImplementation(projects.junitJupiterEngine)
+	testImplementation(projects.junitPlatformLauncher)
+	testImplementation(projects.junitPlatformRunner)
 
-	testImplementation(project(":junit-platform-testkit"))
-	testImplementation(project(":junit-jupiter-engine"))
-	testImplementation(project(":junit-platform-launcher"))
-	testImplementation(project(":junit-platform-runner"))
-
-	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	compileOnly(kotlin("stdlib"))
+	testImplementation(kotlin("stdlib"))
 }
 
 tasks {

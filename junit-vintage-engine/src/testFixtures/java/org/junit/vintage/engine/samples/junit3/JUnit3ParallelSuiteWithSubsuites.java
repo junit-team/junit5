@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -28,10 +28,10 @@ public class JUnit3ParallelSuiteWithSubsuites extends TestCase {
 
 	public static TestSuite suite() {
 		TestSuite root = new ActiveTestSuite("allTests");
-		TestSuite case1 = new TestSuite("Case1");
+		var case1 = new TestSuite("Case1");
 		case1.addTest(new JUnit3ParallelSuiteWithSubsuites("hello", "world"));
 		root.addTest(case1);
-		TestSuite case2 = new TestSuite("Case2");
+		var case2 = new TestSuite("Case2");
 		case2.addTest(new JUnit3ParallelSuiteWithSubsuites("hello", "WORLD"));
 		root.addTest(case2);
 		return root;

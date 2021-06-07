@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -24,10 +24,9 @@ abstract class AbstractLauncherDiscoveryListenerTests {
 		return new TestEngineStub(engineId) {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-				discoveryRequest.getSelectorsByType(DiscoverySelector.class).forEach(selector -> {
-					discoveryRequest.getDiscoveryListener().selectorProcessed(uniqueId, selector,
-						SelectorResolutionResult.unresolved());
-				});
+				discoveryRequest.getSelectorsByType(DiscoverySelector.class) //
+						.forEach(selector -> discoveryRequest.getDiscoveryListener().selectorProcessed(uniqueId,
+							selector, SelectorResolutionResult.unresolved()));
 				return new EngineDescriptor(uniqueId, "Some Engine");
 			}
 		};
@@ -37,10 +36,9 @@ abstract class AbstractLauncherDiscoveryListenerTests {
 		return new TestEngineStub(engineId) {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-				discoveryRequest.getSelectorsByType(DiscoverySelector.class).forEach(selector -> {
-					discoveryRequest.getDiscoveryListener().selectorProcessed(uniqueId, selector,
-						SelectorResolutionResult.failed(rootCause));
-				});
+				discoveryRequest.getSelectorsByType(DiscoverySelector.class) //
+						.forEach(selector -> discoveryRequest.getDiscoveryListener().selectorProcessed(uniqueId,
+							selector, SelectorResolutionResult.failed(rootCause)));
 				return new EngineDescriptor(uniqueId, "Some Engine");
 			}
 		};

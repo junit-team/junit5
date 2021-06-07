@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -46,11 +46,11 @@ public class ClassSource implements TestSource {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * {@link URI} {@linkplain URI#getScheme() scheme} for class
-	 * sources: {@value}
+	 * {@link URI} {@linkplain URI#getScheme() scheme} for class sources: {@value}
 	 *
-	 * @since 1.3
+	 * @since 1.8
 	 */
+	@API(status = STABLE, since = "1.8")
 	public static final String CLASS_SCHEME = "class";
 
 	/**
@@ -96,28 +96,37 @@ public class ClassSource implements TestSource {
 	/**
 	 * Create a new {@code ClassSource} from the supplied {@link URI}.
 	 *
-	 * <p>The {@link URI#getPath() path} component of the {@code URI} (excluding
-	 * the query) will be used as the class name. The
-	 * {@linkplain URI#getQuery() query} component of the {@code URI}, if present,
-	 * will be used to retrieve the {@link FilePosition} via
-	 * {@link FilePosition#fromQuery(String)}.
+	 * <p>URIs should be formatted as {@code class:fully.qualified.class.Name}.
+	 * The {@linkplain URI#getQuery() query} component of the {@code URI}, if
+	 * present, will be used to retrieve the {@link FilePosition} via
+	 * {@link FilePosition#fromQuery(String)}. For example, line 42 and column
+	 * 13 can be referenced in class {@code org.example.MyType} via the following
+	 * URI: {@code class:com.example.MyType?line=42&column=13}. The URI fragment,
+	 * if present, will be ignored.
 	 *
 	 * @param uri the {@code URI} for the class source; never {@code null}
 	 * @return a new {@code ClassSource}; never {@code null}
 	 * @throws PreconditionViolationException if the supplied {@code URI} is
-	 * {@code null} or if the scheme of the supplied {@code URI} is not equal
-	 * to the {@link #CLASS_SCHEME}
-	 * @since 1.3
+	 * {@code null}, if the scheme of the supplied {@code URI} is not equal
+	 * to the {@link #CLASS_SCHEME}, or if the specified class name is empty
+	 * @since 1.8
 	 * @see #CLASS_SCHEME
 	 */
+	@API(status = STABLE, since = "1.8")
 	public static ClassSource from(URI uri) {
 		Preconditions.notNull(uri, "URI must not be null");
 		Preconditions.condition(CLASS_SCHEME.equals(uri.getScheme()),
 			() -> "URI [" + uri + "] must have [" + CLASS_SCHEME + "] scheme");
 
-		String classSource = ResourceUtils.stripQueryComponent(uri).getPath().substring(1);
-		FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
-		return ClassSource.from(classSource, filePosition);
+		String className = uri.getSchemeSpecificPart();
+		FilePosition filePosition = null;
+		int indexOfQuery = className.indexOf('?');
+		if (indexOfQuery >= 0) {
+			filePosition = FilePosition.fromQuery(className.substring(indexOfQuery + 1)).orElse(null);
+			className = className.substring(0, indexOfQuery);
+		}
+
+		return ClassSource.from(className, filePosition);
 	}
 
 	private final String className;

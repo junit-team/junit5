@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.fakes.TestEngineStub;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TestExecutionListener;
 
 /**
@@ -36,7 +38,7 @@ class LauncherConfigTests {
 			() -> LauncherConfig.builder().addTestExecutionListeners((TestExecutionListener[]) null));
 
 		TestEngine engine = new TestEngineStub();
-		TestExecutionListener listener = new TestExecutionListener() {
+		var listener = new TestExecutionListener() {
 		};
 		assertThrows(PreconditionViolationException.class,
 			() -> LauncherConfig.builder().addTestEngines(engine, engine, null));
@@ -46,12 +48,16 @@ class LauncherConfigTests {
 
 	@Test
 	void defaultConfig() {
-		LauncherConfig config = LauncherConfig.builder().build();
+		var config = LauncherConfig.DEFAULT;
 
 		assertTrue(config.isTestEngineAutoRegistrationEnabled(),
 			"Test engine auto-registration should be enabled by default");
+		assertTrue(config.isLauncherDiscoveryListenerAutoRegistrationEnabled(),
+			"Launcher discovery listener auto-registration should be enabled by default");
 		assertTrue(config.isTestExecutionListenerAutoRegistrationEnabled(),
 			"Test execution listener auto-registration should be enabled by default");
+		assertTrue(config.isPostDiscoveryFilterAutoRegistrationEnabled(),
+			"Post-discovery filter auto-registration should be enabled by default");
 
 		assertThat(config.getAdditionalTestEngines()).isEmpty();
 
@@ -60,16 +66,30 @@ class LauncherConfigTests {
 
 	@Test
 	void disableTestEngineAutoRegistration() {
-		LauncherConfig config = LauncherConfig.builder().enableTestEngineAutoRegistration(false).build();
+		var config = LauncherConfig.builder().enableTestEngineAutoRegistration(false).build();
 
 		assertFalse(config.isTestEngineAutoRegistrationEnabled());
 	}
 
 	@Test
+	void disableLauncherDiscoveryListenerAutoRegistration() {
+		var config = LauncherConfig.builder().enableLauncherDiscoveryListenerAutoRegistration(false).build();
+
+		assertFalse(config.isLauncherDiscoveryListenerAutoRegistrationEnabled());
+	}
+
+	@Test
 	void disableTestExecutionListenerAutoRegistration() {
-		LauncherConfig config = LauncherConfig.builder().enableTestExecutionListenerAutoRegistration(false).build();
+		var config = LauncherConfig.builder().enableTestExecutionListenerAutoRegistration(false).build();
 
 		assertFalse(config.isTestExecutionListenerAutoRegistrationEnabled());
+	}
+
+	@Test
+	void disablePostDiscoveryFilterAutoRegistration() {
+		var config = LauncherConfig.builder().enablePostDiscoveryFilterAutoRegistration(false).build();
+
+		assertFalse(config.isPostDiscoveryFilterAutoRegistrationEnabled());
 	}
 
 	@Test
@@ -77,19 +97,43 @@ class LauncherConfigTests {
 		TestEngine first = new TestEngineStub();
 		TestEngine second = new TestEngineStub();
 
-		LauncherConfig config = LauncherConfig.builder().addTestEngines(first, second).build();
+		var config = LauncherConfig.builder().addTestEngines(first, second).build();
 
 		assertThat(config.getAdditionalTestEngines()).containsOnly(first, second);
 	}
 
 	@Test
-	void addTestExecutionListeners() {
-		TestExecutionListener first = new TestExecutionListener() {
+	void addLauncherSessionListeners() {
+		var first = new LauncherSessionListener() {
 		};
-		TestExecutionListener second = new TestExecutionListener() {
+		var second = new LauncherSessionListener() {
 		};
 
-		LauncherConfig config = LauncherConfig.builder().addTestExecutionListeners(first, second).build();
+		var config = LauncherConfig.builder().addLauncherSessionListeners(first, second).build();
+
+		assertThat(config.getAdditionalLauncherSessionListeners()).containsOnly(first, second);
+	}
+
+	@Test
+	void addLauncherDiscoveryListeners() {
+		var first = new LauncherDiscoveryListener() {
+		};
+		var second = new LauncherDiscoveryListener() {
+		};
+
+		var config = LauncherConfig.builder().addLauncherDiscoveryListeners(first, second).build();
+
+		assertThat(config.getAdditionalLauncherDiscoveryListeners()).containsOnly(first, second);
+	}
+
+	@Test
+	void addTestExecutionListeners() {
+		var first = new TestExecutionListener() {
+		};
+		var second = new TestExecutionListener() {
+		};
+
+		var config = LauncherConfig.builder().addTestExecutionListeners(first, second).build();
 
 		assertThat(config.getAdditionalTestExecutionListeners()).containsOnly(first, second);
 	}

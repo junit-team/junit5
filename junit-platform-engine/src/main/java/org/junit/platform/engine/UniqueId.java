@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,9 +12,11 @@ package org.junit.platform.engine;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -85,11 +87,10 @@ public class UniqueId implements Cloneable, Serializable {
 	// lazily computed
 	private transient int hashCode;
 	// lazily computed
-	private transient String toString;
+	private transient SoftReference<String> toString;
 
 	private UniqueId(UniqueIdFormat uniqueIdFormat, Segment segment) {
-		this.uniqueIdFormat = uniqueIdFormat;
-		this.segments = singletonList(segment);
+		this(uniqueIdFormat, singletonList(segment));
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 */
 	UniqueId(UniqueIdFormat uniqueIdFormat, List<Segment> segments) {
 		this.uniqueIdFormat = uniqueIdFormat;
-		this.segments = unmodifiableList(segments);
+		this.segments = segments;
 	}
 
 	final Optional<Segment> getRoot() {
@@ -122,7 +123,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 * {@code UniqueId}.
 	 */
 	public final List<Segment> getSegments() {
-		return this.segments;
+		return unmodifiableList(this.segments);
 	}
 
 	/**
@@ -156,9 +157,28 @@ public class UniqueId implements Cloneable, Serializable {
 	@API(status = STABLE, since = "1.1")
 	public final UniqueId append(Segment segment) {
 		Preconditions.notNull(segment, "segment must not be null");
-		List<Segment> baseSegments = new ArrayList<>(this.segments);
+		List<Segment> baseSegments = new ArrayList<>(this.segments.size() + 1);
+		baseSegments.addAll(this.segments);
 		baseSegments.add(segment);
 		return new UniqueId(this.uniqueIdFormat, baseSegments);
+	}
+
+	/**
+	 * Construct a new {@code UniqueId} by appending a new {@link Segment}, based
+	 * on the supplied {@code engineId}, to the end of this {@code UniqueId}.
+	 *
+	 * <p>This {@code UniqueId} will not be modified.
+	 *
+	 * <p>The engine ID will be stored in a {@link Segment} with
+	 * {@link Segment#getType type} {@value ENGINE_SEGMENT_TYPE}.
+	 *
+	 * @param engineId the engine ID; never {@code null} or blank
+	 *
+	 * @since 1.8
+	 */
+	@API(status = EXPERIMENTAL, since = "1.8")
+	public UniqueId appendEngine(String engineId) {
+		return append(new Segment(ENGINE_SEGMENT_TYPE, engineId));
 	}
 
 	/**
@@ -191,7 +211,7 @@ public class UniqueId implements Cloneable, Serializable {
 	@API(status = STABLE, since = "1.5")
 	public UniqueId removeLastSegment() {
 		Preconditions.condition(this.segments.size() > 1, "Cannot remove last remaining segment");
-		return new UniqueId(uniqueIdFormat, new ArrayList<>(segments.subList(0, segments.size() - 1)));
+		return new UniqueId(uniqueIdFormat, new ArrayList<>(this.segments.subList(0, this.segments.size() - 1)));
 	}
 
 	/**
@@ -250,9 +270,10 @@ public class UniqueId implements Cloneable, Serializable {
 	 */
 	@Override
 	public String toString() {
-		String s = this.toString;
-		if (s == null) {
-			s = this.uniqueIdFormat.format(this);
+		SoftReference<String> s = this.toString;
+		String value = s == null ? null : s.get();
+		if (value == null) {
+			value = this.uniqueIdFormat.format(this);
 			// this is a benign race like String#hash
 			// we potentially read and write values from multiple threads
 			// without a happens-before relationship
@@ -260,9 +281,9 @@ public class UniqueId implements Cloneable, Serializable {
 			// that were valid at one point, either null or the toString value
 			// so we might end up not seeing a value that a different thread
 			// has computed or multiple threads writing the same value
-			this.toString = s;
+			this.toString = new SoftReference<>(value);
 		}
-		return s;
+		return value;
 	}
 
 	/**

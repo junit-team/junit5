@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -74,8 +74,11 @@ public class LauncherDiscoveryListeners {
 
 	@API(status = INTERNAL, since = "1.6")
 	public static LauncherDiscoveryListener composite(List<LauncherDiscoveryListener> listeners) {
-		Preconditions.notEmpty(listeners, "listeners must not be empty");
+		Preconditions.notNull(listeners, "listeners must not be null");
 		Preconditions.containsNoNullElements(listeners, "listeners must not contain any null elements");
+		if (listeners.isEmpty()) {
+			return LauncherDiscoveryListener.NOOP;
+		}
 		if (listeners.size() == 1) {
 			return listeners.get(0);
 		}

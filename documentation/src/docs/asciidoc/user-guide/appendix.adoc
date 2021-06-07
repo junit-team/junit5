@@ -40,20 +40,29 @@ artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
   `junit-platform-engine`::
     Public API for test engines. See <<launcher-api-engines-custom>> for details.
   `junit-platform-jfr`::
-    Provides a `TestExecutionListener` for Java Flight Recorder events on the JUnit Platform. See <<running-tests-flight-recorder>> for details.
+    Provides a `LauncherDiscoveryListener` and `TestExecutionListener` for Java Flight
+	Recorder events on the JUnit Platform. See <<running-tests-listeners-flight-recorder>>
+	for details.
   `junit-platform-launcher`::
     Public API for configuring and launching test plans -- typically used by IDEs and
     build tools. See <<launcher-api>> for details.
   `junit-platform-reporting`::
     `TestExecutionListener` implementations that generate test reports -- typically used
-    by IDEs and build tools. See <<launcher-api-listeners-reporting>> for details.
+    by IDEs and build tools. See <<junit-platform-reporting>> for details.
   `junit-platform-runner`::
     Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
     environment. See <<running-tests-junit-platform-runner>> for details.
+  `junit-platform-suite`::
+    JUnit Platform Suite artifact that transitively pulls in dependencies on
+    `junit-platform-suite-api`, `junit-platform-suite-engine` for simplified
+    dependency management in build tools such as Gradle and Maven.
   `junit-platform-suite-api`::
     Annotations for configuring test suites on the JUnit Platform. Supported by the
-    <<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by
-    third-party `TestEngine` implementations.
+    <<junit-platform-suite-engine,JUnit Platform Suite Engine>> and
+    <<running-tests-junit-platform-runner,JUnitPlatform runner>>.
+  `junit-platform-suite-engine`::
+    Engine to execute suites on the JUnit Platform. See
+    <<junit-platform-suite-engine,JUnit Platform Suite Engine>> for details.
   `junit-platform-testkit`::
      Provides support for executing a test plan for a given `TestEngine` and then
      accessing the results via a fluent API to verify the expected results.
@@ -148,7 +157,10 @@ package org.junit.platform {
     [junit-platform-launcher] as launcher
     [junit-platform-reporting] as reporting
     [junit-platform-runner] as runner
+    [junit-platform-suite] as suite
     [junit-platform-suite-api] as suite_api
+    [junit-platform-suite-commons] as suite_commons
+    [junit-platform-suite-engine] as suite_engine
     [junit-platform-testkit] as testkit
 }
 
@@ -173,15 +185,15 @@ jupiter ..> jupiter_api
 jupiter ..> jupiter_params
 jupiter ..> jupiter_engine
 
-jupiter_api ..> opentest4j
-jupiter_api ..> commons
+jupiter_api ....> opentest4j
+jupiter_api ...> commons
 
-jupiter_engine ..> engine
+jupiter_engine ...> engine
 jupiter_engine ..> jupiter_api
 
 jupiter_params ..> jupiter_api
 jupiter_migration_support ..> jupiter_api
-jupiter_migration_support ..> junit4
+jupiter_migration_support ...> junit4
 
 console ..> launcher
 console ..> reporting
@@ -190,18 +202,25 @@ launcher ..> engine
 
 jfr ..> launcher
 
-engine ..> opentest4j
+engine ....> opentest4j
 engine ..> commons
 
 reporting ..> launcher
 
-runner ..> launcher
-runner ..> suite_api
-runner ..> junit4
+runner ..> suite_commons
+runner ...> junit4
 
-testkit ..> opentest4j
+suite ..> suite_api
+suite ..> suite_engine
+
+suite_engine ..> suite_commons
+
+suite_commons ..> launcher
+suite_commons ..> suite_api
+
+testkit ....> opentest4j
 testkit ..> launcher
 
-vintage_engine ..> engine
+vintage_engine ...> engine
 vintage_engine ..> junit4
 ----

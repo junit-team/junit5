@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,15 +12,13 @@ package org.junit.platform.reporting.legacy.xml;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.StringReader;
-import java.net.URL;
-
 import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -28,14 +26,14 @@ import org.xml.sax.SAXException;
  */
 class XmlReportAssertions {
 
-	static void assertValidAccordingToJenkinsSchema(String content) throws Exception {
+	static void assertValidAccordingToJenkinsSchema(Document document) throws Exception {
 		try {
 			// Schema is thread-safe, Validator is not
-			Validator validator = CachedSchema.JENKINS.newValidator();
-			validator.validate(new StreamSource(new StringReader(content)));
+			var validator = CachedSchema.JENKINS.newValidator();
+			validator.validate(new DOMSource(document));
 		}
 		catch (SAXException e) {
-			fail("Invalid XML document: " + content, e);
+			fail("Invalid XML document: " + document, e);
 		}
 	}
 
@@ -46,8 +44,8 @@ class XmlReportAssertions {
 		private final Schema schema;
 
 		CachedSchema(String resourcePath) {
-			URL schemaFile = LegacyXmlReportGeneratingListener.class.getResource(resourcePath);
-			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			var schemaFile = LegacyXmlReportGeneratingListener.class.getResource(resourcePath);
+			var schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			try {
 				this.schema = schemaFactory.newSchema(schemaFile);
 			}

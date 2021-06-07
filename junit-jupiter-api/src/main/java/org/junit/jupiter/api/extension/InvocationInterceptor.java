@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Constructor;
@@ -35,7 +36,7 @@ import org.junit.jupiter.api.TestTemplate;
  * Invocation#skip()} exactly once on the supplied invocation. Otherwise, the
  * enclosing test or container will be reported as failed.
  *
- * <p>The default implementation simply calls {@link Invocation#proceed()
+ * <p>The default implementation calls {@link Invocation#proceed()
  * proceed()} on the supplied {@linkplain Invocation invocation}.
  *
  * <h3>Constructor Requirements</h3>
@@ -118,7 +119,9 @@ public interface InvocationInterceptor extends Extension {
 	}
 
 	/**
-	 * Intercept the invocation of a {@link TestFactory @TestFactory} method.
+	 * Intercept the invocation of a {@link TestFactory @TestFactory} method,
+	 * such as a {@link org.junit.jupiter.api.RepeatedTest @RepeatedTest} or
+	 * {@code @ParameterizedTest} method.
 	 *
 	 * @param invocation the invocation that is being intercepted; never
 	 * {@code null}
@@ -156,9 +159,29 @@ public interface InvocationInterceptor extends Extension {
 	 * {@code null}
 	 * @param extensionContext the current extension context; never {@code null}
 	 * @throws Throwable in case of failures
+	 * @deprecated use {@link #interceptDynamicTest(Invocation, DynamicTestInvocationContext, ExtensionContext)} instead
 	 */
+	@Deprecated
+	@API(status = DEPRECATED, since = "5.8")
 	default void interceptDynamicTest(Invocation<Void> invocation, ExtensionContext extensionContext) throws Throwable {
 		invocation.proceed();
+	}
+
+	/**
+	 * Intercept the invocation of a {@link DynamicTest}.
+	 *
+	 * @param invocation the invocation that is being intercepted; never
+	 * {@code null}
+	 * @param invocationContext the context of the invocation that is being
+	 * intercepted; never {@code null}
+	 * @param extensionContext the current extension context; never {@code null}
+	 * @throws Throwable in case of failures
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
+	default void interceptDynamicTest(Invocation<Void> invocation, DynamicTestInvocationContext invocationContext,
+			ExtensionContext extensionContext) throws Throwable {
+		// by default call the old interceptDynamicTest(Invocation, ExtensionContext) method so that existing extensions still work
+		interceptDynamicTest(invocation, extensionContext);
 	}
 
 	/**

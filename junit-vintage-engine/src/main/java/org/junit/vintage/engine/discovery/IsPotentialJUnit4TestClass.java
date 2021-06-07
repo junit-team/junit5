@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,16 +10,20 @@
 
 package org.junit.vintage.engine.discovery;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 import static org.junit.platform.commons.util.ReflectionUtils.isPublic;
 
 import java.util.function.Predicate;
 
+import org.apiguardian.api.API;
+
 /**
  * @since 4.12
  */
-class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
+@API(status = INTERNAL, since = "5.8", consumers = "org.junit.vintage.**")
+public class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {

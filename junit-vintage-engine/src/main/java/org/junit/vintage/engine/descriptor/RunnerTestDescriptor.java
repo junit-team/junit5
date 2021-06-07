@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.UniqueId;
@@ -48,6 +49,12 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner) {
 		super(uniqueId, runner.getDescription(), testClass.getSimpleName(), ClassSource.from(testClass));
 		this.runner = runner;
+	}
+
+	@Override
+	public String getLegacyReportingName() {
+		return getSource().map(source -> ((ClassSource) source).getClassName()) //
+				.orElseThrow(() -> new JUnitException("source should have been present"));
 	}
 
 	public Request toRequest() {
@@ -108,8 +115,7 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	private void logIncompleteFiltering() {
 		if (runner instanceof Filterable) {
 			logger.warn(() -> "Runner " + getRunnerToReport().getClass().getName() //
-					+ " (used on class " + getDescription().getTestClass().getName()
-					+ ") was not able to satisfy all filter requests.");
+					+ " (used on class " + getLegacyReportingName() + ") was not able to satisfy all filter requests.");
 		}
 		else {
 			warnAboutUnfilterableRunner();
@@ -118,7 +124,7 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	private void warnAboutUnfilterableRunner() {
 		logger.warn(() -> "Runner " + getRunnerToReport().getClass().getName() //
-				+ " (used on class " + getDescription().getTestClass().getName() + ") does not support filtering" //
+				+ " (used on class " + getLegacyReportingName() + ") does not support filtering" //
 				+ " and will therefore be run completely.");
 	}
 

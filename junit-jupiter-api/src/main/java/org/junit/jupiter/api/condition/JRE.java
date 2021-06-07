@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -107,10 +107,18 @@ public enum JRE {
 	JAVA_16,
 
 	/**
+	 * Java 17.
+	 *
+	 * @since 5.7.1
+	 */
+	@API(status = STABLE, since = "5.7.1")
+	JAVA_17,
+
+	/**
 	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
 	 * {@link #JAVA_10}, {@link #JAVA_11}, {@link #JAVA_12},
-	 * {@link #JAVA_13}, {@link #JAVA_14}, {@link #JAVA_15}, or
-	 * {@link #JAVA_16}.
+	 * {@link #JAVA_13}, {@link #JAVA_14}, {@link #JAVA_15},
+	 * {@link #JAVA_16}, or {@link #JAVA_17}.
 	 */
 	OTHER;
 
@@ -156,6 +164,8 @@ public enum JRE {
 					return JAVA_15;
 				case 16:
 					return JAVA_16;
+				case 17:
+					return JAVA_17;
 				default:
 					return OTHER;
 			}

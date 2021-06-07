@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,7 +11,11 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -66,6 +70,21 @@ class ExtensionContextStoreTests {
 		assertThat(store.get(KEY)).isEqualTo(VALUE);
 
 		assertThat(store.getOrDefault(KEY, String.class, VALUE)).isEqualTo(VALUE);
+	}
+
+	@Test
+	void getOrComputeIfAbsentWithFailingCreator() {
+		var invocations = new AtomicInteger();
+
+		var e1 = assertThrows(RuntimeException.class, () -> store.getOrComputeIfAbsent(KEY, __ -> {
+			invocations.incrementAndGet();
+			throw new RuntimeException();
+		}));
+		var e2 = assertThrows(RuntimeException.class, () -> store.get(KEY));
+		assertSame(e1, e2);
+
+		assertDoesNotThrow(localStore::closeAllStoredCloseableValues);
+		assertThat(invocations).hasValue(1);
 	}
 
 }

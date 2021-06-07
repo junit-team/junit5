@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,18 +10,21 @@
 
 package org.junit.platform.launcher;
 
-import static java.util.Collections.singleton;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.commons.util.SerializationUtils.serializeAndDeserialize;
+import static org.junit.platform.commons.util.SerializationUtils.deserialize;
+import static org.junit.platform.commons.util.SerializationUtils.serialize;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.fakes.TestDescriptorStub;
 
 /**
@@ -32,7 +35,7 @@ class TestIdentifierTests {
 	@Test
 	void inheritsIdAndNamesFromDescriptor() {
 		TestDescriptor testDescriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "displayName");
-		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
+		var testIdentifier = TestIdentifier.from(testDescriptor);
 
 		assertEquals("[aType:uniqueId]", testIdentifier.getUniqueId());
 		assertEquals("displayName", testIdentifier.getDisplayName());
@@ -41,7 +44,7 @@ class TestIdentifierTests {
 	@Test
 	void inheritsTypeFromDescriptor() {
 		TestDescriptor descriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "displayName");
-		TestIdentifier identifier = TestIdentifier.from(descriptor);
+		var identifier = TestIdentifier.from(descriptor);
 		assertEquals(TestDescriptor.Type.TEST, identifier.getType());
 		assertTrue(identifier.isTest());
 		assertFalse(identifier.isContainer());
@@ -54,20 +57,57 @@ class TestIdentifierTests {
 	}
 
 	@Test
-	void serialization() throws Exception {
-		TestIdentifier identifier = serializeAndDeserialize(//
-			new TestIdentifier("uniqueId", "displayName", ClassSource.from(TestIdentifierTests.class),
-				singleton(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName"));
+	void currentVersionCanBeSerializedAndDeserialized() throws Exception {
+		var originalIdentifier = createOriginalTestIdentifier();
+		var deserializedIdentifier = (TestIdentifier) deserialize(serialize(originalIdentifier));
+		assertDeepEquals(originalIdentifier, deserializedIdentifier);
+	}
 
-		assertEquals("uniqueId", identifier.getUniqueId());
-		assertEquals("displayName", identifier.getDisplayName());
-		assertEquals("reportingName", identifier.getLegacyReportingName());
-		assertThat(identifier.getSource()).contains(ClassSource.from(TestIdentifierTests.class));
-		assertEquals(singleton(TestTag.create("aTag")), identifier.getTags());
-		assertEquals(TestDescriptor.Type.TEST, identifier.getType());
-		assertTrue(identifier.isTest());
-		assertFalse(identifier.isContainer());
-		assertThat(identifier.getParentId()).contains("parentId");
+	@Test
+	void initialVersionCanBeDeserialized() throws Exception {
+		try (var inputStream = getClass().getResourceAsStream("/serialized-test-identifier")) {
+			var bytes = inputStream.readAllBytes();
+			var deserializedIdentifier = (TestIdentifier) deserialize(bytes);
+			assertDeepEquals(createOriginalTestIdentifier(), deserializedIdentifier);
+		}
+	}
+
+	private static void assertDeepEquals(TestIdentifier first, TestIdentifier second) {
+		assertEquals(first, second);
+		assertEquals(first.getUniqueId(), second.getUniqueId());
+		assertEquals(first.getUniqueIdObject(), second.getUniqueIdObject());
+		assertEquals(first.getDisplayName(), second.getDisplayName());
+		assertEquals(first.getLegacyReportingName(), second.getLegacyReportingName());
+		assertEquals(first.getSource(), second.getSource());
+		assertEquals(first.getTags(), second.getTags());
+		assertEquals(first.getType(), second.getType());
+		assertEquals(first.getParentId(), second.getParentId());
+		assertEquals(first.getParentIdObject(), second.getParentIdObject());
+	}
+
+	private static TestIdentifier createOriginalTestIdentifier() {
+		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+		var uniqueId = engineDescriptor.getUniqueId().append("child", "child");
+		var testSource = ClassSource.from(TestIdentifierTests.class);
+		var testDescriptor = new AbstractTestDescriptor(uniqueId, "displayName", testSource) {
+
+			@Override
+			public Type getType() {
+				return Type.TEST;
+			}
+
+			@Override
+			public String getLegacyReportingName() {
+				return "reportingName";
+			}
+
+			@Override
+			public Set<TestTag> getTags() {
+				return Set.of(TestTag.create("aTag"));
+			}
+		};
+		engineDescriptor.addChild(testDescriptor);
+		return TestIdentifier.from(testDescriptor);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,15 +10,20 @@
 
 package org.junit.platform.launcher;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 class TestPlanTests {
+
+	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 
 	private EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("foo"), "Foo");
 
@@ -32,7 +37,7 @@ class TestPlanTests {
 				}
 			});
 
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		assertThat(testPlan.containsTests()).as("contains tests").isFalse();
 	}
@@ -47,7 +52,7 @@ class TestPlanTests {
 				}
 			});
 
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}
@@ -67,8 +72,9 @@ class TestPlanTests {
 				}
 			});
 
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}
+
 }

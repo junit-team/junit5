@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -32,7 +32,7 @@ class FilterCompositionTests {
 
 	@Test
 	void composingNoFiltersCreatesFilterThatIncludesEverything() {
-		Filter<Object> composedFilter = Filter.composeFilters();
+		var composedFilter = Filter.composeFilters();
 
 		assertTrue(composedFilter.apply(String.class).included());
 		assertTrue(composedFilter.toPredicate().test(String.class));
@@ -43,7 +43,7 @@ class FilterCompositionTests {
 	@Test
 	void composingSingleFilterWillReturnTheOriginalOne() {
 		Filter<?> singleFilter = ClassNameFilter.includeClassNamePatterns(".*ring.*");
-		Filter<?> composed = Filter.composeFilters(singleFilter);
+		var composed = Filter.composeFilters(singleFilter);
 		assertSame(singleFilter, composed);
 	}
 
@@ -52,7 +52,7 @@ class FilterCompositionTests {
 		Filter<String> firstFilter = ClassNameFilter.includeClassNamePatterns(".*ring.*");
 		Filter<String> secondFilter = ClassNameFilter.includeClassNamePatterns(".*Join.*");
 
-		Filter<String> composed = Filter.composeFilters(firstFilter, secondFilter);
+		var composed = Filter.composeFilters(firstFilter, secondFilter);
 
 		assertFalse(composed.apply("java.lang.String").included());
 		assertFalse(composed.toPredicate().test("java.lang.String"));
@@ -65,7 +65,7 @@ class FilterCompositionTests {
 		Filter<Object> firstFilter = new FilterStub<>(o -> excluded("wrong"), () -> "1st");
 		Filter<Object> secondFilter = new FilterStub<>(o -> included("right"), () -> "2nd");
 
-		Filter<Object> composed = Filter.composeFilters(firstFilter, secondFilter);
+		var composed = Filter.composeFilters(firstFilter, secondFilter);
 
 		assertFalse(composed.apply(String.class).included());
 		assertEquals("(1st) and (2nd)", composed.toString());

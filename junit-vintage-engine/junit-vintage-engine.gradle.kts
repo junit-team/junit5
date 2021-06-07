@@ -1,4 +1,4 @@
-import aQute.bnd.gradle.BundleTaskConvention;
+import aQute.bnd.gradle.BundleTaskConvention
 
 plugins {
 	`java-library-conventions`
@@ -11,46 +11,47 @@ plugins {
 description = "JUnit Vintage Engine"
 
 dependencies {
-	internal(platform(project(":dependencies")))
+	api(platform(projects.junitBom))
+	api(libs.apiguardian)
+	api(projects.junitPlatformEngine)
+	api(libs.junit4)
 
-	api(platform(project(":junit-bom")))
-	api("org.apiguardian:apiguardian-api")
-	api(project(":junit-platform-engine"))
-	api("junit:junit")
+	testFixturesApi(platform(libs.groovy2.bom))
+	testFixturesApi(libs.spock1)
+	testFixturesImplementation(projects.junitPlatformRunner)
 
-	testFixturesApi("org.spockframework:spock-core")
-	testFixturesApi(project(":junit-jupiter-api"))
-	testFixturesImplementation(project(":junit-platform-runner"))
-
-	testImplementation(project(":junit-platform-launcher"))
-	testImplementation(project(":junit-platform-runner"))
-	testImplementation(project(":junit-platform-testkit"))
-}
-
-configurations.all {
-	resolutionStrategy.eachDependency {
-		if (requested.group == "org.codehaus.groovy") {
-			useVersion("2.5.11")
-			because("Spock is not yet compatible with Groovy 3.x")
-		}
-	}
+	testImplementation(projects.junitPlatformLauncher)
+	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformTestkit)
 }
 
 tasks {
+	compileTestFixturesGroovy {
+		javaLauncher.set(project.the<JavaToolchainService>().launcherFor {
+			// Groovy 2.x (used for Spock tests) does not support JDK 16
+			languageVersion.set(JavaLanguageVersion.of(11))
+		})
+	}
 	jar {
 		withConvention(BundleTaskConvention::class) {
+			val junit4Min = libs.versions.junit4Min.get()
 			bnd("""
 				# Import JUnit4 packages with a version
 				Import-Package: \
 					!org.apiguardian.api,\
-					junit.runner;version="[${versions.junit4Min},5)",\
-					org.junit;version="[${versions.junit4Min},5)",\
-					org.junit.experimental.categories;version="[${versions.junit4Min},5)",\
-					org.junit.internal.builders;version="[${versions.junit4Min},5)",\
+					junit.runner;version="[${junit4Min},5)",\
+					org.junit;version="[${junit4Min},5)",\
+					org.junit.experimental.categories;version="[${junit4Min},5)",\
+					org.junit.internal.builders;version="[${junit4Min},5)",\
 					org.junit.platform.commons.logging;status=INTERNAL,\
-					org.junit.runner.*;version="[${versions.junit4Min},5)",\
-					org.junit.runners.model;version="[${versions.junit4Min},5)",\
+					org.junit.runner.*;version="[${junit4Min},5)",\
+					org.junit.runners.model;version="[${junit4Min},5)",\
 					*
+
+				Provide-Capability:\
+					org.junit.platform.engine;\
+						org.junit.platform.engine='junit-vintage';\
+						version:Version="${'$'}{version_cleanup;${project.version}}"
 			""")
 		}
 	}
@@ -58,9 +59,7 @@ tasks {
 		(options as JUnitPlatformOptions).apply {
 			includeTags("missing-junit4")
 		}
-		filter {
-			includeTestsMatching("org.junit.vintage.engine.JUnit4VersionCheckTests")
-		}
+		setIncludes(listOf("**/JUnit4VersionCheckTests.class"))
 		classpath = classpath.filter {
 			!it.name.startsWith("junit-4")
 		}
@@ -69,6 +68,11 @@ tasks {
 		(options as JUnitPlatformOptions).apply {
 			excludeTags("missing-junit4")
 		}
+	}
+	withType<Test>().configureEach {
+		// Workaround for Groovy 2.5
+		jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
+		jvmArgs("--add-opens", "java.base/java.util=ALL-UNNAMED")
 	}
 	check {
 		dependsOn(testWithoutJUnit4)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -28,16 +28,12 @@ class ToStringBuilderTests {
 
 	@Test
 	void withNullObject() {
-		assertThrows(PreconditionViolationException.class, () -> {
-			new ToStringBuilder((Object) null);
-		});
+		assertThrows(PreconditionViolationException.class, () -> new ToStringBuilder((Object) null));
 	}
 
 	@Test
 	void withNullClass() {
-		assertThrows(PreconditionViolationException.class, () -> {
-			new ToStringBuilder((Class<?>) null);
-		});
+		assertThrows(PreconditionViolationException.class, () -> new ToStringBuilder((Class<?>) null));
 	}
 
 	@Test

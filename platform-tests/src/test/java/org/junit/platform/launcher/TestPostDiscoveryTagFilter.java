@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,7 +17,7 @@ import org.junit.platform.engine.TestTag;
 public class TestPostDiscoveryTagFilter implements PostDiscoveryFilter {
 	@Override
 	public FilterResult apply(final TestDescriptor object) {
-		boolean include = object.getTags().stream().map(TestTag::getName).anyMatch("test-post-discovery"::equals);
+		var include = object.getTags().stream().map(TestTag::getName).anyMatch("test-post-discovery"::equals);
 		return FilterResult.includedIf(include);
 	}
 }

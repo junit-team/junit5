@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -38,6 +38,13 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * for all intermediate containers. However, while both the JUnit Vintage and JUnit
  * Jupiter engines comply with this contract, there is no way to guarantee this for
  * third-party engines.
+ *
+ * <p>As of JUnit Platform 1.8, a {@code TestExecutionListener} can access
+ * {@linkplain org.junit.platform.engine.ConfigurationParameters configuration
+ * parameters} via the {@link TestPlan#getConfigurationParameters()
+ * getConfigurationParameters()} method in the {@code TestPlan} supplied to
+ * {@link #testPlanExecutionStarted(TestPlan)} and
+ * {@link #testPlanExecutionFinished(TestPlan)}.
  *
  * @since 1.0
  * @see Launcher

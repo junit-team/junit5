@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 class IsPotentialJUnit4TestClassTests {
 
-	private IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
+	private final IsPotentialJUnit4TestClass isPotentialJUnit4TestClass = new IsPotentialJUnit4TestClass();
 
 	@Test
 	void staticMemberClass() {
@@ -25,7 +25,6 @@ class IsPotentialJUnit4TestClassTests {
 	}
 
 	public static class Foo {
-
 	}
 
 	@Test
@@ -34,7 +33,6 @@ class IsPotentialJUnit4TestClassTests {
 	}
 
 	static class Bar {
-
 	}
 
 	@Test
@@ -43,20 +41,17 @@ class IsPotentialJUnit4TestClassTests {
 	}
 
 	public static abstract class Baz {
-
 	}
 
 	@Test
 	void anonymousClass() {
-		Foo foo = new Foo() {
-
+		var foo = new Foo() {
 		};
 
 		assertFalse(isPotentialJUnit4TestClass.test(foo.getClass()));
 	}
 
 	public class FooBaz {
-
 	}
 
 	@Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -71,6 +71,26 @@ class DynamicTestTests {
 	}
 
 	@Test
+	void streamFromStreamWithNamesPreconditions() {
+		ThrowingConsumer<Object> testExecutor = input -> {
+		};
+
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream((Stream<? extends Named<Object>>) null, testExecutor));
+		assertThrows(PreconditionViolationException.class, () -> DynamicTest.stream(Stream.empty(), null));
+	}
+
+	@Test
+	void streamFromIteratorWithNamesPreconditions() {
+		ThrowingConsumer<Object> testExecutor = input -> {
+		};
+
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream((Iterator<? extends Named<Object>>) null, testExecutor));
+		assertThrows(PreconditionViolationException.class, () -> DynamicTest.stream(emptyIterator(), null));
+	}
+
+	@Test
 	void streamFromStream() throws Throwable {
 		Stream<DynamicTest> stream = DynamicTest.stream(Stream.of("foo", "bar", "baz"), String::toUpperCase,
 			this::throwingConsumer);
@@ -80,6 +100,21 @@ class DynamicTestTests {
 	@Test
 	void streamFromIterator() throws Throwable {
 		Stream<DynamicTest> stream = DynamicTest.stream(List.of("foo", "bar", "baz").iterator(), String::toUpperCase,
+			this::throwingConsumer);
+		assertStream(stream);
+	}
+
+	@Test
+	void streamFromStreamWithNames() throws Throwable {
+		Stream<DynamicTest> stream = DynamicTest.stream(
+			Stream.of(Named.of("FOO", "foo"), Named.of("BAR", "bar"), Named.of("BAZ", "baz")), this::throwingConsumer);
+		assertStream(stream);
+	}
+
+	@Test
+	void streamFromIteratorWithNames() throws Throwable {
+		Stream<DynamicTest> stream = DynamicTest.stream(
+			List.of(Named.of("FOO", "foo"), Named.of("BAR", "bar"), Named.of("BAZ", "baz")).iterator(),
 			this::throwingConsumer);
 		assertStream(stream);
 	}
@@ -129,7 +164,7 @@ class DynamicTestTests {
 
 	@Test
 	void sourceUriIsPresentByDefault() {
-		String testSourceName = "class:/" + getClass().getName() + "?line=";
+		String testSourceName = "class:" + getClass().getName() + "?line=";
 		DynamicTest test = dynamicTest("foo", nix);
 		assertThat(test.getTestSourceUri()).isPresent().get().asString().startsWith(testSourceName);
 		assertThat(test.toString()).startsWith("DynamicTest [displayName = 'foo',");

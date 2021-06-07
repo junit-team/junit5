@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -41,7 +41,7 @@ class EngineTestKitAllEventsDemo {
 	void verifyAllJupiterEvents() {
 		Writer writer = // create a java.io.Writer for debug output
 		// end::user_guide[]
-				// For the demo, we are simply swallowing the debug output.
+				// For the demo, we are swallowing the debug output.
 				new StringWriter();
 		// tag::user_guide[]
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -30,7 +30,7 @@ class ConsoleLauncherExecutionResultTests {
 	void hasStatusCode0ForNoTotalFailures() {
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -39,7 +39,7 @@ class ConsoleLauncherExecutionResultTests {
 	void hasStatusCode1ForForAnyFailure() {
 		when(summary.getTotalFailureCount()).thenReturn(1L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(1);
 	}
@@ -52,7 +52,7 @@ class ConsoleLauncherExecutionResultTests {
 		options.setFailIfNoTests(true);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(2);
 	}
@@ -66,7 +66,7 @@ class ConsoleLauncherExecutionResultTests {
 		when(summary.getTestsFoundCount()).thenReturn(1L);
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -79,7 +79,7 @@ class ConsoleLauncherExecutionResultTests {
 		options.setFailIfNoTests(false);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -105,15 +105,14 @@ class JavaTimeArgumentConverterTests {
 
 	@Test
 	void throwsExceptionOnInvalidTargetType() {
-		ArgumentConversionException exception = assertThrows(ArgumentConversionException.class,
-			() -> convert("2017", "yyyy", Integer.class));
+		var exception = assertThrows(ArgumentConversionException.class, () -> convert("2017", "yyyy", Integer.class));
 
 		assertThat(exception).hasMessage("Cannot convert to java.lang.Integer: 2017");
 	}
 
 	private Object convert(Object input, String pattern, Class<?> targetClass) {
-		JavaTimeArgumentConverter converter = new JavaTimeArgumentConverter();
-		JavaTimeConversionPattern annotation = mock(JavaTimeConversionPattern.class);
+		var converter = new JavaTimeArgumentConverter();
+		var annotation = mock(JavaTimeConversionPattern.class);
 		when(annotation.value()).thenReturn(pattern);
 		converter.accept(annotation);
 

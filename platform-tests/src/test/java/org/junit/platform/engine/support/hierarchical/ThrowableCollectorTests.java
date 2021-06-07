@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -19,7 +19,6 @@ import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.TestExecutionResult;
 
 /**
  * @since 1.6
@@ -28,10 +27,10 @@ class ThrowableCollectorTests {
 
 	@Test
 	void successfulExecution() {
-		ThrowableCollector collector = new ThrowableCollector(x -> true);
+		var collector = new ThrowableCollector(x -> true);
 		collector.execute(() -> {
 		});
-		TestExecutionResult result = collector.toTestExecutionResult();
+		var result = collector.toTestExecutionResult();
 
 		assertEquals(SUCCESSFUL, result.getStatus());
 		assertEquals(Optional.empty(), result.getThrowable());
@@ -39,13 +38,13 @@ class ThrowableCollectorTests {
 
 	@Test
 	void abortedExecution() {
-		CustomAbort customAbort = new CustomAbort();
+		var customAbort = new CustomAbort();
 
-		ThrowableCollector collector = new ThrowableCollector(CustomAbort.class::isInstance);
+		var collector = new ThrowableCollector(CustomAbort.class::isInstance);
 		collector.execute(() -> {
 			throw customAbort;
 		});
-		TestExecutionResult result = collector.toTestExecutionResult();
+		var result = collector.toTestExecutionResult();
 
 		assertEquals(ABORTED, result.getStatus());
 		assertSame(customAbort, result.getThrowable().get());
@@ -53,13 +52,13 @@ class ThrowableCollectorTests {
 
 	@Test
 	void failedExecution() {
-		AssertionError assertionError = new AssertionError("assertion violated");
+		var assertionError = new AssertionError("assertion violated");
 
-		ThrowableCollector collector = new ThrowableCollector(CustomAbort.class::isInstance);
+		var collector = new ThrowableCollector(CustomAbort.class::isInstance);
 		collector.execute(() -> {
 			throw assertionError;
 		});
-		TestExecutionResult result = collector.toTestExecutionResult();
+		var result = collector.toTestExecutionResult();
 
 		assertEquals(FAILED, result.getStatus());
 		assertSame(assertionError, result.getThrowable().get());

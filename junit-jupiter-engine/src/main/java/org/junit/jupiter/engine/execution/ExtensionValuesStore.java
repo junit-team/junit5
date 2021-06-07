@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -62,7 +62,7 @@ public class ExtensionValuesStore {
 	public void closeAllStoredCloseableValues() {
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		storedValues.values().stream() //
-				.filter(storedValue -> storedValue.evaluate() instanceof CloseableResource) //
+				.filter(storedValue -> storedValue.evaluateSafely() instanceof CloseableResource) //
 				.sorted(REVERSE_INSERT_ORDER) //
 				.map(storedValue -> (CloseableResource) storedValue.evaluate()) //
 				.forEach(resource -> throwableCollector.execute(resource::close));
@@ -178,6 +178,15 @@ public class ExtensionValuesStore {
 			this.supplier = supplier;
 		}
 
+		private Object evaluateSafely() {
+			try {
+				return evaluate();
+			}
+			catch (RuntimeException e) {
+				return null;
+			}
+		}
+
 		private Object evaluate() {
 			return supplier.get();
 		}
@@ -199,17 +208,36 @@ public class ExtensionValuesStore {
 		@Override
 		public Object get() {
 			if (value == NO_VALUE_SET) {
-				lock.lock();
-				try {
-					if (value == NO_VALUE_SET) {
-						value = delegate.get();
-					}
-				}
-				finally {
-					lock.unlock();
-				}
+				computeValue();
+			}
+			if (value instanceof Failure) {
+				throw ((Failure) value).exception;
 			}
 			return value;
+		}
+
+		private void computeValue() {
+			lock.lock();
+			try {
+				if (value == NO_VALUE_SET) {
+					value = delegate.get();
+				}
+			}
+			catch (RuntimeException e) {
+				value = new Failure(e);
+			}
+			finally {
+				lock.unlock();
+			}
+		}
+
+		private static class Failure {
+
+			private final RuntimeException exception;
+
+			public Failure(RuntimeException exception) {
+				this.exception = exception;
+			}
 		}
 
 	}

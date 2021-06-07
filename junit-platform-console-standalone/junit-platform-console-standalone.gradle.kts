@@ -8,12 +8,11 @@ plugins {
 description = "JUnit Platform Console Standalone"
 
 dependencies {
-	internal(platform(project(":dependencies")))
-	shadowed(project(":junit-platform-reporting"))
-	shadowed(project(":junit-platform-console"))
-	shadowed(project(":junit-jupiter-engine"))
-	shadowed(project(":junit-jupiter-params"))
-	shadowed(project(":junit-vintage-engine"))
+	shadowed(projects.junitPlatformReporting)
+	shadowed(projects.junitPlatformConsole)
+	shadowed(projects.junitJupiterEngine)
+	shadowed(projects.junitJupiterParams)
+	shadowed(projects.junitVintageEngine)
 }
 
 val jupiterVersion = rootProject.version
@@ -26,14 +25,17 @@ tasks {
 		}
 	}
 	shadowJar {
+		// https://github.com/junit-team/junit5/issues/2557
+		// exclude compiled module declarations from any source (e.g. /*, /META-INF/versions/N/*)
+		exclude("**/module-info.class")
 		// https://github.com/junit-team/junit5/issues/761
 		// prevent duplicates, add 3rd-party licenses explicitly
 		exclude("META-INF/LICENSE*.md")
-		from(project(":junit-platform-console").projectDir) {
+		from(project.projects.junitPlatformConsole.dependencyProject.projectDir) {
 			include("LICENSE-picocli.md")
 			into("META-INF")
 		}
-		from(project(":junit-jupiter-params").projectDir) {
+		from(project.projects.junitJupiterParams.dependencyProject.projectDir) {
 			include("LICENSE-univocity-parsers.md")
 			into("META-INF")
 		}

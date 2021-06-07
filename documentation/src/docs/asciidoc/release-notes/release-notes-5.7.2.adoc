@@ -1,0 +1,45 @@
+[[release-notes-5.7.2]]
+== 5.7.2
+
+*Date of Release:* May 15, 2021
+
+*Scope:* Bug fixes since 5.7.1
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/56?closed=1+[5.7.2] milestone page in the JUnit repository on
+GitHub.
+
+
+[[release-notes-5.7.2-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* Method `getRootUrisForPackage()` in class `ClasspathScanner` now returns a valid list of
+  class names when the package name is equal to the name of a module on the module path
+  and when running on Java 8.
+* Direct child descriptors of the engine descriptor now also acquire the global read lock
+  when they require other exclusive resources.
+
+
+[[release-notes-5.7.2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* Test classes annotated with `@ResourceLock` no longer run in parallel with `@Isolated`
+  ones.
+
+==== New Features and Improvements
+
+* Improved `ExclusiveResource` handling: if a `Node` has only read locks and no read-write
+  locks, then descendants are not forced into `SAME_THREAD` execution and can run
+  concurrently.
+
+
+[[release-notes-5.7.2-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* Fix `NullPointerException` that occurred when using JUnit 3 style `suite()` methods in conjunction with `PostDiscoveryFilters`.

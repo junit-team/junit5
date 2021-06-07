@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -76,7 +76,8 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
 
 	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList( //
-		new StringToPrimitiveConverter(), //
+		new StringToBooleanAndCharPrimitiveConverter(), //
+		new StringToNumericPrimitiveConverter(), //
 		new StringToEnumConverter(), //
 		new StringToJavaTimeConverter(), //
 		new StringToCommonJavaTypesConverter(), //
@@ -140,7 +141,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	}
 
-	private static class StringToPrimitiveConverter implements StringToObjectConverter {
+	private static class StringToBooleanAndCharPrimitiveConverter implements StringToObjectConverter {
 
 		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
 		static {
@@ -150,6 +151,25 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 				Preconditions.condition(source.length() == 1, () -> "String must have length of 1: " + source);
 				return source.charAt(0);
 			});
+			CONVERTERS = unmodifiableMap(converters);
+		}
+
+		@Override
+		public boolean canConvert(Class<?> targetType) {
+			return CONVERTERS.containsKey(targetType);
+		}
+
+		@Override
+		public Object convert(String source, Class<?> targetType) {
+			return CONVERTERS.get(targetType).apply(source);
+		}
+	}
+
+	private static class StringToNumericPrimitiveConverter implements StringToObjectConverter {
+
+		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
+		static {
+			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
 			converters.put(Byte.class, Byte::decode);
 			converters.put(Short.class, Short::decode);
 			converters.put(Integer.class, Integer::decode);
@@ -166,7 +186,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 		@Override
 		public Object convert(String source, Class<?> targetType) {
-			return CONVERTERS.get(targetType).apply(source);
+			return CONVERTERS.get(targetType).apply(source.replace("_", ""));
 		}
 	}
 

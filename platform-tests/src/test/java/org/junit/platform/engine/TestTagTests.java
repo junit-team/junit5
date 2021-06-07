@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -97,8 +97,7 @@ class TestTagTests {
 	}
 
 	private void assertSyntaxViolation(String tag) {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> TestTag.create(tag));
+		var exception = assertThrows(PreconditionViolationException.class, () -> TestTag.create(tag));
 		assertThat(exception).hasMessageStartingWith("Tag name");
 		assertThat(exception).hasMessageEndingWith("must be syntactically valid");
 	}

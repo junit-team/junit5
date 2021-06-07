@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -83,13 +84,19 @@ class DefaultArgumentConverterTests {
 	@Test
 	void convertsStringsToPrimitiveTypes() {
 		assertConverts("true", boolean.class, true);
-		assertConverts("1", byte.class, (byte) 1);
 		assertConverts("o", char.class, 'o');
+		assertConverts("1", byte.class, (byte) 1);
+		assertConverts("1_0", byte.class, (byte) 10);
 		assertConverts("1", short.class, (short) 1);
+		assertConverts("1_2", short.class, (short) 12);
 		assertConverts("42", int.class, 42);
+		assertConverts("700_050_000", int.class, 700_050_000);
 		assertConverts("42", long.class, 42L);
+		assertConverts("4_2", long.class, 42L);
 		assertConverts("42.23", float.class, 42.23f);
+		assertConverts("42.2_3", float.class, 42.23f);
 		assertConverts("42.23", double.class, 42.23);
+		assertConverts("42.2_3", double.class, 42.23);
 	}
 
 	/**
@@ -124,8 +131,8 @@ class DefaultArgumentConverterTests {
 
 	@Test
 	void convertsStringToCharset() {
-		assertConverts("ISO-8859-1", Charset.class, Charset.forName("ISO-8859-1"));
-		assertConverts("UTF-8", Charset.class, Charset.forName("UTF-8"));
+		assertConverts("ISO-8859-1", Charset.class, StandardCharsets.ISO_8859_1);
+		assertConverts("UTF-8", Charset.class, StandardCharsets.UTF_8);
 	}
 
 	@Test
@@ -218,14 +225,14 @@ class DefaultArgumentConverterTests {
 
 	@Test
 	void convertsStringToUUID() {
-		String uuid = "d043e930-7b3b-48e3-bdbe-5a3ccfb833db";
+		var uuid = "d043e930-7b3b-48e3-bdbe-5a3ccfb833db";
 		assertConverts(uuid, UUID.class, UUID.fromString(uuid));
 	}
 
 	// -------------------------------------------------------------------------
 
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
-		Object result = DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
+		var result = DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
 
 		assertThat(result) //
 				.describedAs(input + " --(" + targetClass.getName() + ")--> " + expectedOutput) //

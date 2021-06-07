@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -36,9 +36,9 @@ class ClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadClass() {
-		ClassSelector selector = new ClassSelector("org.example.TestClass");
+		var selector = new ClassSelector("org.example.TestClass");
 
-		PreconditionViolationException e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
+		var e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
 
 		assertThat(e).hasMessage("Could not load class with name: org.example.TestClass").hasCauseInstanceOf(
 			ClassNotFoundException.class);

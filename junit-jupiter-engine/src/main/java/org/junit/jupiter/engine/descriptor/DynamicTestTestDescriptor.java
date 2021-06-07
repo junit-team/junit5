@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.extension.DynamicTestInvocationContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.function.Executable;
@@ -52,10 +53,13 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 			dynamicTest.getExecutable().execute();
 			return null;
 		};
+		DynamicTestInvocationContext dynamicTestInvocationContext = new DefaultDynamicTestInvocationContext(
+			dynamicTest.getExecutable());
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
 		interceptorChain.invoke(invocation, extensionRegistry, InterceptorCall.ofVoid(
-			(interceptor, wrappedInvocation) -> interceptor.interceptDynamicTest(wrappedInvocation, extensionContext)));
+			(interceptor, wrappedInvocation) -> interceptor.interceptDynamicTest(wrappedInvocation,
+				dynamicTestInvocationContext, extensionContext)));
 		return context;
 	}
 

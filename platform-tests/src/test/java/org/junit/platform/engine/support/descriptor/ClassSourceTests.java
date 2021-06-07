@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,6 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Serializable;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -44,6 +46,9 @@ class ClassSourceTests extends AbstractTestSourceTests {
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from("    ", null));
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((Class<?>) null));
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((Class<?>) null, null));
+		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((URI) null));
+		assertThrows(PreconditionViolationException.class, () -> ClassSource.from(new URI("badscheme:/com.foo.Bar")));
+		assertThrows(PreconditionViolationException.class, () -> ClassSource.from(new URI("class:?line=1")));
 	}
 
 	@Test
@@ -54,7 +59,7 @@ class ClassSourceTests extends AbstractTestSourceTests {
 		assertThat(source.getClassName()).isEqualTo(testClassName);
 		assertThat(source.getPosition()).isEmpty();
 
-		var exception = assertThrows(PreconditionViolationException.class, () -> source.getJavaClass());
+		var exception = assertThrows(PreconditionViolationException.class, source::getJavaClass);
 		assertThat(exception).hasMessage("Could not load class with name: " + testClassName);
 	}
 
@@ -87,6 +92,48 @@ class ClassSourceTests extends AbstractTestSourceTests {
 		assertThat(source.getJavaClass()).isEqualTo(testClass);
 		assertThat(source.getPosition()).isNotEmpty();
 		assertThat(source.getPosition()).hasValue(position);
+	}
+
+	@Test
+	void classSourceFromUri() throws URISyntaxException {
+		var source = ClassSource.from(new URI("class:java.lang.Object"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).isEmpty();
+	}
+
+	@Test
+	void classSourceFromUriWithLineNumber() throws URISyntaxException {
+		var position = FilePosition.from(42);
+		var source = ClassSource.from(new URI("class:java.lang.Object?line=42"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).hasValue(position);
+	}
+
+	@Test
+	void classSourceFromUriWithLineAndColumnNumbers() throws URISyntaxException {
+		var position = FilePosition.from(42, 23);
+		var source = ClassSource.from(new URI("class:java.lang.Object?line=42&foo=bar&column=23"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).hasValue(position);
+	}
+
+	@Test
+	void classSourceFromUriWithEmptyQuery() throws URISyntaxException {
+		var source = ClassSource.from(new URI("class:java.lang.Object?"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).isEmpty();
+	}
+
+	@Test
+	void classSourceFromUriWithUnsupportedParametersInQuery() throws URISyntaxException {
+		var source = ClassSource.from(new URI("class:java.lang.Object?foo=42&bar"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).isEmpty();
 	}
 
 	@Test

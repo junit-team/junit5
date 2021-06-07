@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.container;
+import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 
-import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -53,13 +54,13 @@ class NestedContainerEventConditionTests {
 
 	@Test
 	void nestedContainerChecksSuppliedClassAndAllEnclosingClasses() {
-		UniqueId uniqueId = UniqueId.root("top-level", getClass().getName())//
+		var uniqueId = UniqueId.root("top-level", getClass().getName())//
 				.append("nested", ATestCase.class.getSimpleName())//
 				.append("nested", BTestCase.class.getSimpleName())//
 				.append("nested", CTestCase.class.getSimpleName());
-		Event event = createEvent(uniqueId);
+		var event = createEvent(uniqueId);
 
-		Condition<Event> condition = nestedContainer(HashMap.Entry.class);
+		var condition = nestedContainer(HashMap.Entry.class);
 		assertThat(condition.matches(event)).isFalse();
 		assertThat(condition.toString()).contains(//
 			"is a container", "with uniqueId substring 'Map'", "with uniqueId substring 'Entry'");
@@ -73,11 +74,11 @@ class NestedContainerEventConditionTests {
 	}
 
 	private Event createEvent(UniqueId uniqueId) {
-		TestDescriptor testDescriptor = mock(TestDescriptor.class);
+		var testDescriptor = mock(TestDescriptor.class);
 		when(testDescriptor.isContainer()).thenReturn(true);
 		when(testDescriptor.getUniqueId()).thenReturn(uniqueId);
 
-		Event event = mock(Event.class);
+		var event = mock(Event.class);
 		when(event.getTestDescriptor()).thenReturn(testDescriptor);
 		return event;
 	}
@@ -108,14 +109,14 @@ class NestedContainerEventConditionTests {
 					event(container(ATestCase.class), started()),
 						event(test("test_a"), started()),
 						event(test("test_a"), finishedSuccessfully()),
-						event(nestedContainer(ATestCase.BTestCase.class), started()),
+						event(nestedContainer(ATestCase.BTestCase.class, displayName("Test case B")), started()),
 							event(test("test_b"), started()),
 							event(test("test_b"), finishedSuccessfully()),
 							event(nestedContainer(ATestCase.BTestCase.CTestCase.class), started()),
 								event(test("test_c"), started()),
 								event(test("test_c"), finishedSuccessfully()),
 							event(nestedContainer(ATestCase.BTestCase.CTestCase.class), finishedSuccessfully()),
-						event(nestedContainer(ATestCase.BTestCase.class), finishedSuccessfully()),
+						event(nestedContainer(ATestCase.BTestCase.class, displayName("Test case B")), finishedSuccessfully()),
 					event(container(ATestCase.class), finishedSuccessfully()),
 				event(engine(), finishedSuccessfully())
 			);
@@ -129,6 +130,7 @@ class NestedContainerEventConditionTests {
 		}
 
 		@Nested
+		@DisplayName("Test case B")
 		class BTestCase {
 			@Test
 			void test_b() {

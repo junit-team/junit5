@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -58,8 +58,8 @@ abstract class AbstractTestSourceTests extends AbstractEqualsAndHashCodeTests {
 	private <T extends Serializable> void assertSerializable(T instance) {
 		try {
 			Class<?> type = instance.getClass();
-			byte[] serialized = serialize(instance);
-			Object deserialized = deserialize(serialized);
+			var serialized = serialize(instance);
+			var deserialized = deserialize(serialized);
 
 			assertTrue(type.isAssignableFrom(deserialized.getClass()));
 			assertEquals(instance, deserialized);
@@ -70,15 +70,15 @@ abstract class AbstractTestSourceTests extends AbstractEqualsAndHashCodeTests {
 	}
 
 	private byte[] serialize(Object obj) throws Exception {
-		ByteArrayOutputStream b = new ByteArrayOutputStream();
-		ObjectOutputStream o = new ObjectOutputStream(b);
+		var b = new ByteArrayOutputStream();
+		var o = new ObjectOutputStream(b);
 		o.writeObject(obj);
 		return b.toByteArray();
 	}
 
 	private Object deserialize(byte[] bytes) throws Exception {
-		ByteArrayInputStream b = new ByteArrayInputStream(bytes);
-		ObjectInputStream o = new ObjectInputStream(b);
+		var b = new ByteArrayInputStream(bytes);
+		var o = new ObjectInputStream(b);
 		return o.readObject();
 	}
 

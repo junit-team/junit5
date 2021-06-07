@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,6 +17,7 @@ class ArbitraryNamingKotlinTestCase {
         val METHOD_NAME = "\uD83E\uDD86 ~|~test with a really, (really) terrible name & that needs to be changed!~|~"
     }
 
+    @Suppress("DANGEROUS_CHARACTERS")
     @Test
     fun `🦆 ~|~test with a really, (really) terrible name & that needs to be changed!~|~`() { }
 

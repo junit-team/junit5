@@ -9,17 +9,15 @@ plugins {
 description = "JUnit Jupiter Migration Support"
 
 dependencies {
-	internal(platform(project(":dependencies")))
+	api(platform(projects.junitBom))
+	api(libs.junit4)
+	api(libs.apiguardian)
+	api(projects.junitJupiterApi)
 
-	api(platform(project(":junit-bom")))
-	api("junit:junit")
-	api("org.apiguardian:apiguardian-api")
-	api(project(":junit-jupiter-api"))
-
-	testImplementation(project(":junit-jupiter-engine"))
-	testImplementation(project(":junit-platform-launcher"))
-	testImplementation(project(":junit-platform-runner"))
-	testImplementation(project(":junit-platform-testkit"))
+	testImplementation(projects.junitJupiterEngine)
+	testImplementation(projects.junitPlatformLauncher)
+	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformTestkit)
 }
 
 tasks.jar {
@@ -28,9 +26,9 @@ tasks.jar {
 			# Import JUnit4 packages with a version
 			Import-Package: \
 				!org.apiguardian.api,\
-				org.junit;version="[${versions.junit4Min},5)",\
+				org.junit;version="[${libs.versions.junit4Min.get()},5)",\
 				org.junit.platform.commons.logging;status=INTERNAL,\
-				org.junit.rules;version="[${versions.junit4Min},5)",\
+				org.junit.rules;version="[${libs.versions.junit4Min.get()},5)",\
 				*
 		""")
 	}

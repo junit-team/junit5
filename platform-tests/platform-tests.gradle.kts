@@ -1,51 +1,54 @@
+import org.gradle.api.tasks.PathSensitivity.NONE
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
+
 plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
 	`testing-conventions`
-	id("me.champeau.gradle.jmh")
+	id("me.champeau.jmh")
 }
 
 dependencies {
-	internal(platform(project(":dependencies")))
-
 	// --- Things we are testing --------------------------------------------------
-	testImplementation(project(":junit-platform-commons"))
-	testImplementation(project(":junit-platform-console"))
-	testImplementation(project(":junit-platform-engine"))
-	testImplementation(project(":junit-platform-launcher"))
+	testImplementation(projects.junitPlatformCommons)
+	testImplementation(projects.junitPlatformConsole)
+	testImplementation(projects.junitPlatformEngine)
+	testImplementation(projects.junitPlatformJfr)
+	testImplementation(projects.junitPlatformLauncher)
+	testImplementation(projects.junitPlatformSuiteCommons)
+	testImplementation(projects.junitPlatformSuiteEngine)
 
 	// --- Things we are testing with ---------------------------------------------
-	testImplementation(project(":junit-platform-runner"))
-	testImplementation(project(":junit-platform-testkit"))
-	testImplementation(testFixtures(project(":junit-platform-engine")))
-	testImplementation(testFixtures(project(":junit-platform-launcher")))
-	testImplementation(project(":junit-jupiter-engine"))
-	testImplementation("org.apiguardian:apiguardian-api")
+	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformTestkit)
+	testImplementation(testFixtures(projects.junitPlatformCommons))
+	testImplementation(testFixtures(projects.junitPlatformEngine))
+	testImplementation(testFixtures(projects.junitPlatformLauncher))
+	testImplementation(projects.junitJupiterEngine)
+	testImplementation(libs.apiguardian)
+	testImplementation(libs.jfrunit)
+	testImplementation(libs.joox)
 
 	// --- Test run-time dependencies ---------------------------------------------
-	testRuntimeOnly(project(":junit-vintage-engine"))
-	testRuntimeOnly("org.codehaus.groovy:groovy-all") {
+	testRuntimeOnly(projects.junitVintageEngine)
+	testRuntimeOnly(libs.groovy3) {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
 
 	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh("org.openjdk.jmh:jmh-core") {
-		exclude(module = "jopt-simple")
-	}
-	jmhAnnotationProcessor(platform(project(":dependencies")))
-	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess")
-	jmh(platform(project(":dependencies")))
-	jmh(project(":junit-jupiter-api"))
-	jmh("junit:junit")
+	jmh(libs.jmh.core)
+	jmh(projects.junitJupiterApi)
+	jmh(libs.junit4)
+	jmhAnnotationProcessor(libs.jmh.generator.annprocess)
 }
 
 jmh {
-	jmhVersion = versions["jmh"]
+	jmhVersion.set(libs.versions.jmh)
 
-	duplicateClassesStrategy = DuplicatesStrategy.WARN
-	fork = 0 // Too long command line on Windows...
-	warmupIterations = 1
-	iterations = 5
+	duplicateClassesStrategy.set(DuplicatesStrategy.WARN)
+	fork.set(1)
+	warmupIterations.set(1)
+	iterations.set(5)
 }
 
 tasks {
@@ -53,7 +56,12 @@ tasks {
 		useJUnitPlatform {
 			excludeTags("exclude")
 		}
-		jvmArgs = listOf("-Xmx1g")
+		jvmArgs("-Xmx1g")
+	}
+	test {
+		// Additional inputs for remote execution with Test Distribution
+		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
+		inputs.file(buildFile).withPathSensitivity(NONE) // for UniqueIdTrackingListenerIntegrationTests
 	}
 	test_4_12 {
 		useJUnitPlatform {
@@ -67,12 +75,12 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(project(":junit-platform-console").configurations["shadowed"])
+		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(project(":junit-platform-console").configurations["shadowed"])
+		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
 	}
 }

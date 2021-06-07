@@ -1,0 +1,76 @@
+[[release-notes-5.8.0-M2]]
+== 5.8.0-M2
+
+*Date of Release:* ❓
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/55?closed=1+[5.8 M2] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.8.0-M2-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* New `ClassSource.from(URI)` static factory method for creating a `ClassSource` from a
+  URI using the `class` scheme and optional query parameters specifying the line number
+  and column number. This is analogous to the existing `ClasspathResourceSource.from(URI)`
+  factory method.
+* New `getConfigurationParameters()` method in the `TestPlan` which allows a
+  `TestExecutionListener` to access
+  <<../user-guide/index.adoc#running-tests-config-params, configuration parameters>>. See
+  <<../user-guide/index.adoc#launcher-api-listeners-config, Configuring an Execution
+  Listener>> for details.
+* New `UniqueIdTrackingListener` which is a `TestExecutionListener` that tracks the unique
+  IDs of all tests that were executed during the `TestPlan` and generates a file
+  containing the unique IDs. The generated file can be used to rerun those tests -- for
+  example, in order to run the same set of tests executed on the JVM subsequently within a
+  GraalVM native image. See the Javadoc for `{UniqueIdTrackingListener}` for details.
+
+
+[[release-notes-5.8.0-M2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* `@TempDir` now supports creating multiple temporary directories via an identifier
+  specified on the annotation (e.g. `@TempDir("a")` and `@TempDir("b")`).
+* New `named()` static factory method in the `Named` interface that serves as an _alias_
+  for `Named.of()`. `named()` is intended to be used via `import static`.
+* New `class` URI scheme for dynamic test sources. This allows tests to be located using
+  the information available in a `StackTraceElement`.
+
+
+[[release-notes-5.8.0-M2-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓

@@ -1,9 +1,12 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
+
 plugins {
 	`java-library`
 	eclipse
 	idea
 	checkstyle
-	id("custom-java-home")
+	id("java-toolchain-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
@@ -13,24 +16,11 @@ val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
 val builtByValue: String by rootProject.extra
 
-val internal by configurations.creating {
-	isVisible = false
-	isCanBeConsumed = false
-	isCanBeResolved = false
-}
-
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
 val moduleSourceDir = file("src/module/$javaModuleName")
 val moduleOutputDir = file("$buildDir/classes/java/module")
 val javaVersion = JavaVersion.current()
-
-configurations {
-	compileClasspath.get().extendsFrom(internal)
-	runtimeClasspath.get().extendsFrom(internal)
-	testCompileClasspath.get().extendsFrom(internal)
-	testRuntimeClasspath.get().extendsFrom(internal)
-}
 
 eclipse {
 	jdt {
@@ -42,6 +32,10 @@ eclipse {
 			}
 		}
 	}
+}
+
+java {
+	modularity.inferModulePath.set(false)
 }
 
 if (project in mavenizedProjects) {
@@ -96,8 +90,6 @@ if (project in mavenizedProjects) {
 		val javaComponent = components["java"] as AdhocComponentWithVariants
 		javaComponent.withVariantsFromConfiguration(configurations["testFixturesApiElements"]) { skip() }
 		javaComponent.withVariantsFromConfiguration(configurations["testFixturesRuntimeElements"]) { skip() }
-		configurations["testFixturesCompileClasspath"].extendsFrom(internal)
-		configurations["testFixturesRuntimeClasspath"].extendsFrom(internal)
 	}
 
 	configure<PublishingExtension> {
@@ -129,10 +121,16 @@ if (project in mavenizedProjects) {
 
 normalization {
 	runtimeClasspath {
-		// Ignore the JAR manifest when checking whether runtime classpath have changed
-		// because it contains timestamps and the commit checksum. This is used when
-		// checking whether a test task is up-to-date or can be loaded from the build cache.
-		ignore("/META-INF/MANIFEST.MF")
+		metaInf {
+			// Ignore inconsequential JAR manifest attributes such as timestamps and the commit checksum.
+			// This is used when checking whether runtime classpaths, e.g. of test tasks, have changed and
+			// improves cacheability of such tasks.
+			ignoreAttribute("Built-By")
+			ignoreAttribute("Build-Date")
+			ignoreAttribute("Build-Time")
+			ignoreAttribute("Build-Revision")
+			ignoreAttribute("Created-By")
+		}
 	}
 }
 
@@ -149,14 +147,15 @@ val compileModule by tasks.registering(JavaCompile::class) {
 	classpath = files()
 	options.release.set(9)
 	options.compilerArgs.addAll(listOf(
-			// "-verbose",
 			// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
 			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
+			"-Werror", // Terminates compilation when warnings occur.
 			"--module-version", "${project.version}",
 			"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
 	))
 	options.compilerArgumentProviders.add(ModulePathArgumentProvider())
 	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
+	modularity.inferModulePath.set(false)
 }
 
 tasks.withType<Jar>().configureEach {
@@ -165,7 +164,7 @@ tasks.withType<Jar>().configureEach {
 		into("META-INF")
 	}
 	val suffix = archiveClassifier.getOrElse("")
-	if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
+	if (suffix.isBlank() || this is ShadowJar) {
 		dependsOn(allMainClasses, compileModule)
 		from("$moduleOutputDir/$javaModuleName") {
 			include("module-info.class")
@@ -213,18 +212,24 @@ tasks.compileTestJava {
 	))
 }
 
-inner class ModulePathArgumentProvider : CommandLineArgumentProvider {
-	@get:Input val modulePath: Provider<Configuration> = configurations.compileClasspath
-	override fun asArguments(): List<String> = listOf("--module-path", modulePath.get().asPath)
+inner class ModulePathArgumentProvider : CommandLineArgumentProvider, Named {
+	@get:CompileClasspath
+	val modulePath: Provider<Configuration> = configurations.compileClasspath
+	override fun asArguments() = listOf("--module-path", modulePath.get().asPath)
+	@Internal
+	override fun getName() = "module-path"
 }
 
-inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
+inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider, Named {
 
-	@get:Input val module: String = it.javaModuleName
+	@get:Input
+	val module: String = it.javaModuleName
 
-	@get:Input val patch: Provider<FileCollection> = provider {
+	@get:InputFiles
+	@get:PathSensitive(RELATIVE)
+	val patch: Provider<FileCollection> = provider {
 		if (it == project)
-			files(sourceSets.matching { it.name.startsWith("main") }.map { it.output }) + configurations.compileClasspath.get()
+			files(sourceSets.matching { it.name.startsWith("main") }.map { it.output })
 		else
 			files(it.sourceSets["main"].java.srcDirs)
 	}
@@ -236,6 +241,9 @@ inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvid
 		}
 		return listOf("--patch-module", "$module=$path")
 	}
+
+	@Internal
+	override fun getName() = "patch-module($module)"
 }
 
 afterEvaluate {
@@ -272,7 +280,8 @@ afterEvaluate {
 }
 
 checkstyle {
-	toolVersion = versions["checkstyle"]
+	val libs = project.extensions["libs"] as VersionCatalog
+	toolVersion = libs.findVersion("checkstyle").get().requiredVersion
 	configDirectory.set(rootProject.file("src/checkstyle"))
 }
 
@@ -286,7 +295,10 @@ tasks {
 }
 
 pluginManager.withPlugin("java-test-fixtures") {
-	tasks.named<Checkstyle>("checkstyleTestFixtures").configure {
+	tasks.named<Checkstyle>("checkstyleTestFixtures") {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+	}
+	tasks.named<JavaCompile>("compileTestFixturesJava") {
+		options.release.set(extension.testJavaVersion.majorVersion.toInt())
 	}
 }

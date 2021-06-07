@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -42,17 +42,6 @@ import org.apiguardian.api.API;
  * {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 1.0
- * @see SuiteDisplayName
- * @see SelectPackages
- * @see SelectClasses
- * @see IncludeClassNamePatterns
- * @see ExcludeClassNamePatterns
- * @see IncludePackages
- * @see ExcludePackages
- * @see IncludeTags
- * @see ExcludeTags
- * @see IncludeEngines
- * @see ExcludeEngines
  * @see org.junit.platform.runner.JUnitPlatform
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -31,9 +31,9 @@ import org.apiguardian.api.API;
  * itself. <strong>Any usage by external parties is not supported.</strong>
  * Use at your own risk!
  *
- * @since 5.7
+ * @since 1.7
  */
-@API(status = INTERNAL, since = "5.7")
+@API(status = INTERNAL, since = "1.7")
 public class ClassNamePatternFilterUtils {
 
 	private ClassNamePatternFilterUtils() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -74,7 +74,7 @@ public class ConsoleTestExecutor {
 	}
 
 	private Optional<ClassLoader> createCustomClassLoader() {
-		List<Path> additionalClasspathEntries = options.getAdditionalClasspathEntries();
+		List<Path> additionalClasspathEntries = options.getExistingAdditionalClasspathEntries();
 		if (!additionalClasspathEntries.isEmpty()) {
 			URL[] urls = additionalClasspathEntries.stream().map(this::toURL).toArray(URL[]::new);
 			ClassLoader parentClassLoader = ClassLoaderUtils.getDefaultClassLoader();

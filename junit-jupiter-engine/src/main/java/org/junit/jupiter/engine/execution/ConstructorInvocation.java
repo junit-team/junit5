@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,17 +33,17 @@ class ConstructorInvocation<T> implements Invocation<T>, ReflectiveInvocationCon
 
 	@Override
 	public Class<?> getTargetClass() {
-		return constructor.getDeclaringClass();
+		return this.constructor.getDeclaringClass();
 	}
 
 	@Override
 	public Constructor<T> getExecutable() {
-		return constructor;
+		return this.constructor;
 	}
 
 	@Override
 	public List<Object> getArguments() {
-		return unmodifiableList(Arrays.asList(arguments));
+		return unmodifiableList(Arrays.asList(this.arguments));
 	}
 
 	@Override
@@ -53,6 +53,7 @@ class ConstructorInvocation<T> implements Invocation<T>, ReflectiveInvocationCon
 
 	@Override
 	public T proceed() {
-		return ReflectionUtils.newInstance(constructor, arguments);
+		return ReflectionUtils.newInstance(this.constructor, this.arguments);
 	}
+
 }

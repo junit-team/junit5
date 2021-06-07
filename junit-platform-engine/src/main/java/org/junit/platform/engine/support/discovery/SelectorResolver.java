@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -74,7 +74,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link ClasspathResourceSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -93,7 +93,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link ClasspathRootSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -112,7 +112,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link ClassSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -131,7 +131,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link NestedClassSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -150,7 +150,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link DirectorySelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -169,7 +169,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link FileSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -188,7 +188,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link MethodSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -207,7 +207,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link NestedMethodSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -226,7 +226,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link ModuleSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -245,7 +245,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link PackageSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -264,7 +264,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link UniqueIdSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}
@@ -283,7 +283,7 @@ public interface SelectorResolver {
 	 * Resolve the supplied {@link UriSelector} using the supplied
 	 * {@link Context Context}.
 	 *
-	 * <p>The default implementation simply delegates to {@link
+	 * <p>The default implementation delegates to {@link
 	 * #resolve(DiscoverySelector, Context)}.
 	 *
 	 * @param selector the selector to be resolved; never {@code null}

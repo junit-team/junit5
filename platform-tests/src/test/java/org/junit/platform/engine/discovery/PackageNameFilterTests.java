@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -38,9 +38,9 @@ class PackageNameFilterTests {
 
 	@Test
 	void includePackageWithMultiplePackages() {
-		String includedPackage1 = "java.lang";
-		String includedPackage2 = "java.util";
-		PackageNameFilter filter = PackageNameFilter.includePackageNames(includedPackage1, includedPackage2);
+		var includedPackage1 = "java.lang";
+		var includedPackage2 = "java.util";
+		var filter = PackageNameFilter.includePackageNames(includedPackage1, includedPackage2);
 
 		assertThat(filter).hasToString(
 			"IncludePackageNameFilter that includes packages whose names are either equal to or start with one of the following: '"
@@ -89,9 +89,9 @@ class PackageNameFilterTests {
 
 	@Test
 	void excludePackageWithMultiplePackages() {
-		String excludedPackage1 = "java.lang";
-		String excludedPackage2 = "java.util";
-		PackageNameFilter filter = PackageNameFilter.excludePackageNames(excludedPackage1, excludedPackage2);
+		var excludedPackage1 = "java.lang";
+		var excludedPackage2 = "java.util";
+		var filter = PackageNameFilter.excludePackageNames(excludedPackage1, excludedPackage2);
 
 		assertThat(filter).hasToString(
 			"ExcludePackageNameFilter that excludes packages whose names are either equal to or start with one of the following: '"

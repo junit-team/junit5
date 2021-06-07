@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
@@ -68,19 +69,17 @@ public final class VintageTestEngine implements TestEngine {
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
 		VintageEngineDescriptor engineDescriptor = (VintageEngineDescriptor) request.getRootTestDescriptor();
 		engineExecutionListener.executionStarted(engineDescriptor);
-		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener,
-			engineDescriptor.getTestSourceProvider());
-		executeAllChildren(runnerExecutor, engineDescriptor);
+		executeAllChildren(engineDescriptor, engineExecutionListener);
 		engineExecutionListener.executionFinished(engineDescriptor, successful());
 	}
 
-	private void executeAllChildren(RunnerExecutor runnerExecutor, TestDescriptor engineDescriptor) {
-		// @formatter:off
-		engineDescriptor.getChildren()
-				.stream()
-				.map(RunnerTestDescriptor.class::cast)
-				.forEach(runnerExecutor::execute);
-		// @formatter:on
+	private void executeAllChildren(VintageEngineDescriptor engineDescriptor,
+			EngineExecutionListener engineExecutionListener) {
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
+		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
+			runnerExecutor.execute((RunnerTestDescriptor) iterator.next());
+			iterator.remove();
+		}
 	}
 
 }

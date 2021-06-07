@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,11 +13,11 @@ package org.junit.platform.launcher.core;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
@@ -34,19 +34,18 @@ class ExecutionListenerAdapterTests {
 
 	@Test
 	void testReportingEntryPublished() {
-		TestDescriptor testDescriptor = getSampleMethodTestDescriptor();
+		var testDescriptor = getSampleMethodTestDescriptor();
 
-		LauncherDiscoveryResult discoveryResult = new LauncherDiscoveryResult(
-			Map.of(mock(TestEngine.class), testDescriptor), null);
-		InternalTestPlan testPlan = InternalTestPlan.from(discoveryResult);
-		TestIdentifier testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
+		var discoveryResult = new LauncherDiscoveryResult(Map.of(mock(TestEngine.class), testDescriptor),
+			mock(ConfigurationParameters.class));
+		var testPlan = InternalTestPlan.from(discoveryResult);
+		var testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
 
 		//not yet spyable with mockito? -> https://github.com/mockito/mockito/issues/146
-		MockTestExecutionListener testExecutionListener = new MockTestExecutionListener();
-		ExecutionListenerAdapter executionListenerAdapter = new ExecutionListenerAdapter(testPlan,
-			testExecutionListener);
+		var testExecutionListener = new MockTestExecutionListener();
+		var executionListenerAdapter = new ExecutionListenerAdapter(testPlan, testExecutionListener);
 
-		ReportEntry entry = ReportEntry.from("one", "two");
+		var entry = ReportEntry.from("one", "two");
 		executionListenerAdapter.reportingEntryPublished(testDescriptor, entry);
 
 		assertThat(testExecutionListener.entry).isEqualTo(entry);
@@ -54,7 +53,7 @@ class ExecutionListenerAdapterTests {
 	}
 
 	private TestDescriptor getSampleMethodTestDescriptor() {
-		Method localMethodNamedNothing = ReflectionUtils.findMethod(this.getClass(), "nothing", new Class<?>[0]).get();
+		var localMethodNamedNothing = ReflectionUtils.findMethod(this.getClass(), "nothing", new Class<?>[0]).get();
 		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(),
 			localMethodNamedNothing);
 	}

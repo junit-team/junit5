@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -35,11 +35,7 @@ class RunnerTestDescriptorPostProcessor {
 
 	private final UniqueIdReader uniqueIdReader = new UniqueIdReader();
 	private final UniqueIdStringifier uniqueIdStringifier = new UniqueIdStringifier();
-	private final TestSourceProvider testSourceProvider;
-
-	public RunnerTestDescriptorPostProcessor(TestSourceProvider testSourceProvider) {
-		this.testSourceProvider = testSourceProvider;
-	}
+	private final TestSourceProvider testSourceProvider = new TestSourceProvider();
 
 	void applyFiltersAndCreateDescendants(RunnerTestDescriptor runnerTestDescriptor) {
 		addChildrenRecursively(runnerTestDescriptor);
@@ -47,6 +43,9 @@ class RunnerTestDescriptorPostProcessor {
 	}
 
 	private void addChildrenRecursively(VintageTestDescriptor parent) {
+		if (parent.getDescription().isTest()) {
+			return;
+		}
 		List<Description> children = parent.getDescription().getChildren();
 		// Use LinkedHashMap to preserve order, ArrayList for fast access by index
 		Map<String, List<Description>> childrenByUniqueId = children.stream().collect(

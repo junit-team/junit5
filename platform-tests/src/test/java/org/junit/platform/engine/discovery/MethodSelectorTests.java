@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -40,9 +40,9 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadClass() {
-		MethodSelector selector = new MethodSelector("TestClass", "method", "int, boolean");
+		var selector = new MethodSelector("TestClass", "method", "int, boolean");
 
-		PreconditionViolationException e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
+		var e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
 
 		assertThat(e).hasMessage("Could not load class with name: TestClass").hasCauseInstanceOf(
 			ClassNotFoundException.class);

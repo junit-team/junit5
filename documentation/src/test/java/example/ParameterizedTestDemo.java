@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -19,6 +19,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
 
+import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -39,6 +40,7 @@ import example.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestReporter;
@@ -210,7 +212,8 @@ class ParameterizedTestDemo {
 	@CsvSource({
 		"apple,         1",
 		"banana,        2",
-		"'lemon, lime', 0xF1"
+		"'lemon, lime', 0xF1",
+		"strawberry,    700_000"
 	})
 	void testWithCsvSource(String fruit, int rank) {
 		assertNotNull(fruit);
@@ -440,4 +443,17 @@ class ParameterizedTestDemo {
 	void testWithCustomDisplayNames(String fruit, int rank) {
 	}
 	// end::custom_display_names[]
+
+	// tag::named_arguments[]
+	@DisplayName("A parameterized test with named arguments")
+	@ParameterizedTest(name = "{index}: {0}")
+	@MethodSource("namedArguments")
+	void testWithNamedArguments(File file) {
+	}
+
+	static Stream<Arguments> namedArguments() {
+		return Stream.of(arguments(Named.of("An important file", new File("path1"))),
+			arguments(Named.of("Another file", new File("path2"))));
+	}
+	// end::named_arguments[]
 }

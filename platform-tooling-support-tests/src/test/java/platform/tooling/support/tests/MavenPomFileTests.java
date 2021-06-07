@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,10 +13,10 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import platform.tooling.support.MavenRepo;
 
 /**
  * @since 1.4
@@ -60,10 +60,7 @@ class MavenPomFileTests {
 			"  </dependencies>", //
 			">> TAIL >>");
 
-		System.out.println(Path.of(".").toAbsolutePath().normalize());
-
-		assertLinesMatch(expected,
-			Files.readAllLines(Path.of("../junit-jupiter/build/publications/maven/pom-default.xml")));
+		assertLinesMatch(expected, Files.readAllLines(MavenRepo.pom("junit-jupiter")));
 	}
 
 	@Test
@@ -73,9 +70,6 @@ class MavenPomFileTests {
 			"  <!-- do_not_remove: published-with-gradle-metadata -->", //
 			">> TAIL >>");
 
-		System.out.println(Path.of(".").toAbsolutePath().normalize());
-
-		assertLinesMatch(expected,
-			Files.readAllLines(Path.of("../junit-jupiter/build/publications/maven/pom-default.xml")));
+		assertLinesMatch(expected, Files.readAllLines(MavenRepo.pom("junit-jupiter")));
 	}
 }

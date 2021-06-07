@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,8 +12,8 @@ package platform.tooling.support.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 /**
@@ -33,7 +34,7 @@ class AntStarterTests {
 
 	@Test
 	void ant_1_10_6() {
-		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
+		var standalone = MavenRepo.jar("junit-platform-console-standalone").getParent();
 		var result = Request.builder() //
 				.setTool(Ant.install("1.10.6", Paths.get("build", "test-tools"))) //
 				.setProject("ant-starter") //
@@ -42,7 +43,7 @@ class AntStarterTests {
 				.build() //
 				.run();
 
-		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"), "error log isn't empty");

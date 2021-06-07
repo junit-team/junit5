@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
 
@@ -18,14 +19,18 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
@@ -41,7 +46,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
  *
  * @since 1.7
  */
-@API(status = INTERNAL, since = "1.7", consumers = "testkit")
+@API(status = INTERNAL, since = "1.7", consumers = { "org.junit.platform.testkit", "org.junit.platform.suite.engine" })
 public class EngineDiscoveryOrchestrator {
 
 	private static final Logger logger = LoggerFactory.getLogger(EngineDiscoveryOrchestrator.class);
@@ -49,11 +54,18 @@ public class EngineDiscoveryOrchestrator {
 	private final EngineDiscoveryResultValidator discoveryResultValidator = new EngineDiscoveryResultValidator();
 	private final Iterable<TestEngine> testEngines;
 	private final Collection<PostDiscoveryFilter> postDiscoveryFilters;
+	private final ListenerRegistry<LauncherDiscoveryListener> launcherDiscoveryListenerRegistry;
 
 	public EngineDiscoveryOrchestrator(Iterable<TestEngine> testEngines,
 			Collection<PostDiscoveryFilter> postDiscoveryFilters) {
-		this.testEngines = testEngines;
+		this(testEngines, postDiscoveryFilters, ListenerRegistry.forLauncherDiscoveryListeners());
+	}
+
+	EngineDiscoveryOrchestrator(Iterable<TestEngine> testEngines, Collection<PostDiscoveryFilter> postDiscoveryFilters,
+			ListenerRegistry<LauncherDiscoveryListener> launcherDiscoveryListenerRegistry) {
+		this.testEngines = EngineIdValidator.validate(testEngines);
 		this.postDiscoveryFilters = postDiscoveryFilters;
+		this.launcherDiscoveryListenerRegistry = launcherDiscoveryListenerRegistry;
 	}
 
 	/**
@@ -64,7 +76,44 @@ public class EngineDiscoveryOrchestrator {
 	 * filters} and {@linkplain PostDiscoveryFilter post-discovery filters} and
 	 * {@linkplain TestDescriptor#prune() prunes} the resulting test tree.
 	 */
-	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, String phase) {
+	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase) {
+		Map<TestEngine, TestDescriptor> result = discover(request, phase, UniqueId::forEngine);
+		return new LauncherDiscoveryResult(result, request.getConfigurationParameters());
+	}
+
+	/**
+	 * Discovers tests for the supplied request in the supplied phase using the
+	 * configured test engines to be used by the suite engine.
+	 *
+	 * <p>Applies {@linkplain org.junit.platform.launcher.EngineFilter engine
+	 * filters} and {@linkplain PostDiscoveryFilter post-discovery filters} and
+	 * {@linkplain TestDescriptor#prune() prunes} the resulting test tree.
+	 *
+	 * Note: The test descriptors in the discovery result can safely be used as
+	 * non-root descriptors. Engine-test descriptor entries are pruned from
+	 * the returned result. As such execution by
+	 * {@link EngineExecutionOrchestrator#execute(LauncherDiscoveryResult, EngineExecutionListener)}
+	 * will not emit start or emit events for engines without tests.
+	 */
+	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase, UniqueId parentId) {
+		Map<TestEngine, TestDescriptor> result = discover(request, phase, parentId::appendEngine);
+		return new LauncherDiscoveryResult(pruneEngines(result), request.getConfigurationParameters());
+	}
+
+	private Map<TestEngine, TestDescriptor> discover(LauncherDiscoveryRequest request, Phase phase,
+			Function<String, UniqueId> uniqueIdCreator) {
+		LauncherDiscoveryListener listener = getLauncherDiscoveryListener(request);
+		listener.launcherDiscoveryStarted(request);
+		try {
+			return discoverSafely(request, phase, listener, uniqueIdCreator);
+		}
+		finally {
+			listener.launcherDiscoveryFinished(request);
+		}
+	}
+
+	private Map<TestEngine, TestDescriptor> discoverSafely(LauncherDiscoveryRequest request, Phase phase,
+			LauncherDiscoveryListener listener, Function<String, UniqueId> uniqueIdCreator) {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 
 		for (TestEngine testEngine : this.testEngines) {
@@ -74,7 +123,7 @@ public class EngineDiscoveryOrchestrator {
 
 			if (engineIsExcluded) {
 				logger.debug(() -> String.format(
-					"Test discovery for engine '%s' was skipped due to an EngineFilter in phase '%s'.",
+					"Test discovery for engine '%s' was skipped due to an EngineFilter in %s phase.",
 					testEngine.getId(), phase));
 				continue;
 			}
@@ -82,7 +131,7 @@ public class EngineDiscoveryOrchestrator {
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request);
+			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, listener, uniqueIdCreator);
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
 
@@ -92,26 +141,32 @@ public class EngineDiscoveryOrchestrator {
 		applyPostDiscoveryFilters(testEngineDescriptors, filters);
 		prune(testEngineDescriptors);
 
-		return new LauncherDiscoveryResult(testEngineDescriptors, request.getConfigurationParameters());
+		return testEngineDescriptors;
 	}
 
-	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
-		LauncherDiscoveryListener discoveryListener = discoveryRequest.getDiscoveryListener();
-		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
+	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest request,
+			LauncherDiscoveryListener listener, Function<String, UniqueId> uniqueIdCreator) {
+		UniqueId uniqueEngineId = uniqueIdCreator.apply(testEngine.getId());
 		try {
-			discoveryListener.engineDiscoveryStarted(uniqueEngineId);
-			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
+			listener.engineDiscoveryStarted(uniqueEngineId);
+			TestDescriptor engineRoot = testEngine.discover(request, uniqueEngineId);
 			discoveryResultValidator.validate(testEngine, engineRoot);
-			discoveryListener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
+			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
 			return engineRoot;
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
 			JUnitException cause = new JUnitException(message, throwable);
-			discoveryListener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
+			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
 			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
 		}
+	}
+
+	LauncherDiscoveryListener getLauncherDiscoveryListener(LauncherDiscoveryRequest discoveryRequest) {
+		return ListenerRegistry.copyOf(launcherDiscoveryListenerRegistry) //
+				.add(discoveryRequest.getDiscoveryListener()) //
+				.getCompositeListener();
 	}
 
 	private void applyPostDiscoveryFilters(Map<TestEngine, TestDescriptor> testEngineDescriptors,
@@ -147,6 +202,15 @@ public class EngineDiscoveryOrchestrator {
 		});
 	}
 
+	private Map<TestEngine, TestDescriptor> pruneEngines(Map<TestEngine, TestDescriptor> result) {
+		// @formatter:off
+		return result.entrySet()
+				.stream()
+				.filter(entry -> TestDescriptor.containsTests(entry.getValue()))
+				.collect(toMap(Entry::getKey, Entry::getValue));
+		// @formatter:on
+	}
+
 	/**
 	 * Prune all branches in the tree of {@link TestDescriptor TestDescriptors}
 	 * that do not have executable tests.
@@ -165,6 +229,15 @@ public class EngineDiscoveryOrchestrator {
 	private void acceptInAllTestEngines(Map<TestEngine, TestDescriptor> testEngineDescriptors,
 			TestDescriptor.Visitor visitor) {
 		testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
+	}
+
+	public enum Phase {
+		DISCOVERY, EXECUTION;
+
+		@Override
+		public String toString() {
+			return name().toLowerCase(Locale.ENGLISH);
+		}
 	}
 
 }

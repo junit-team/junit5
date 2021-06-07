@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
@@ -107,7 +108,19 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @return a new builder
 	 */
 	public static LauncherDiscoveryRequestBuilder request() {
-		return new LauncherDiscoveryRequestBuilder();
+		return new LauncherDiscoveryRequestBuilder(null);
+	}
+
+	/**
+	 * @deprecated Use {@link #request()}
+	 */
+	@API(status = DEPRECATED, since = "5.8")
+	@Deprecated
+	public LauncherDiscoveryRequestBuilder() {
+		this(null);
+	}
+
+	private LauncherDiscoveryRequestBuilder(@SuppressWarnings("unused") Object ignored) {
 	}
 
 	/**
@@ -274,7 +287,8 @@ public final class LauncherDiscoveryRequestBuilder {
 		if (discoveryListeners.contains(defaultDiscoveryListener)) {
 			return LauncherDiscoveryListeners.composite(discoveryListeners);
 		}
-		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(discoveryListeners);
+		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(discoveryListeners.size() + 1);
+		allDiscoveryListeners.addAll(discoveryListeners);
 		allDiscoveryListeners.add(defaultDiscoveryListener);
 		return LauncherDiscoveryListeners.composite(allDiscoveryListeners);
 	}

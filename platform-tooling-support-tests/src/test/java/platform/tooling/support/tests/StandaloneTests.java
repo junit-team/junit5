@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,8 +30,10 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 /**
@@ -40,6 +43,22 @@ import platform.tooling.support.Request;
 class StandaloneTests {
 
 	@Test
+	void jarFileWithoutCompiledModuleDescriptorClass() throws Exception {
+		var jar = MavenRepo.jar("junit-platform-console-standalone");
+		var name = "module-info.class";
+		var found = new ArrayList<Path>();
+		try (var fileSystem = FileSystems.newFileSystem(jar)) {
+			for (var rootDirectory : fileSystem.getRootDirectories()) {
+				try (var stream = Files.walk(rootDirectory)) {
+					stream.filter(path -> path.getNameCount() > 0) // skip root entry
+							.filter(path -> path.getFileName().toString().equals(name)).forEach(found::add);
+				}
+			}
+		}
+		assertTrue(found.isEmpty(), jar + " must not contain any " + name + " files: " + found);
+	}
+
+	@Test
 	@Order(1)
 	void compile() throws Exception {
 		var workspace = Request.WORKSPACE.resolve("standalone");
@@ -47,7 +66,7 @@ class StandaloneTests {
 				.setTool(new Javac()) //
 				.setProject("standalone") //
 				.addArguments("-d", workspace.resolve("bin")) //
-				.addArguments("--class-path", Helper.createJarPath("junit-platform-console-standalone")) //
+				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments(workspace.resolve("src/standalone/JupiterIntegration.java")) //
 				.addArguments(workspace.resolve("src/standalone/JupiterParamsIntegration.java")) //
 				.addArguments(workspace.resolve("src/standalone/VintageIntegration.java")).build() //
@@ -72,15 +91,13 @@ class StandaloneTests {
 	@Test
 	@Order(2)
 	void test() throws IOException {
-		var root = Path.of("../../..");
-		var jar = root.resolve(Helper.createJarPath("junit-platform-console-standalone"));
 		var result = Request.builder() //
 				.setTool(new Java()) //
 				.setProject("standalone") //
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
-				.addArguments("-jar", jar) //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("--scan-class-path") //
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
@@ -105,10 +122,76 @@ class StandaloneTests {
 
 	@Test
 	@Order(3)
+	void testOnJava8() throws IOException {
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.setProject("standalone") //
+				.addArguments("--show-version") //
+				.addArguments("-enableassertions") //
+				.addArguments("-Djava.util.logging.config.file=logging.properties") //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("--scan-class-path") //
+				.addArguments("--disable-banner") //
+				.addArguments("--include-classname", "standalone.*") //
+				.addArguments("--classpath", "bin").build() //
+				.run(false);
+
+		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+
+		var workspace = Request.WORKSPACE.resolve("standalone");
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
+		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
+		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
+
+		var jupiterVersion = Helper.version("junit-jupiter-engine");
+		var vintageVersion = Helper.version("junit-vintage-engine");
+		assertTrue(result.getOutput("err").contains("junit-jupiter"
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+		assertTrue(result.getOutput("err").contains("junit-vintage"
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+	}
+
+	@Test
+	@Order(3)
+	// https://github.com/junit-team/junit5/issues/2600
+	void testOnJava8SelectPackage() throws IOException {
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.setProject("standalone") //
+				.addArguments("--show-version") //
+				.addArguments("-enableassertions") //
+				.addArguments("-Djava.util.logging.config.file=logging.properties") //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("--select-package", "standalone") //
+				.addArguments("--disable-banner") //
+				.addArguments("--include-classname", "standalone.*") //
+				.addArguments("--classpath", "bin").build() //
+				.run(false);
+
+		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+
+		var workspace = Request.WORKSPACE.resolve("standalone");
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
+		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
+		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
+
+		var jupiterVersion = Helper.version("junit-jupiter-engine");
+		var vintageVersion = Helper.version("junit-vintage-engine");
+		assertTrue(result.getOutput("err").contains("junit-jupiter"
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+		assertTrue(result.getOutput("err").contains("junit-vintage"
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+	}
+
+	@Test
+	@Order(5)
 	@Disabled("https://github.com/junit-team/junit5/issues/1724")
 	void testWithJarredTestClasses() {
-		var root = Path.of("../../..");
-		var jar = root.resolve(Helper.createJarPath("junit-platform-console-standalone"));
+		var jar = MavenRepo.jar("junit-platform-console-standalone");
 		var path = new ArrayList<String>();
 		// path.add("bin"); // "exploded" test classes are found, see also test() above
 		path.add(Request.WORKSPACE.resolve("standalone/jar/tests.jar").toAbsolutePath().toString());

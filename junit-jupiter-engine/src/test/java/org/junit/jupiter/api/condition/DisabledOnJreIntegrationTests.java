@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava14;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava15;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava16;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava17;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 import static org.junit.jupiter.api.condition.JRE.JAVA_10;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_13;
 import static org.junit.jupiter.api.condition.JRE.JAVA_14;
 import static org.junit.jupiter.api.condition.JRE.JAVA_15;
 import static org.junit.jupiter.api.condition.JRE.JAVA_16;
+import static org.junit.jupiter.api.condition.JRE.JAVA_17;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
@@ -55,7 +57,7 @@ class DisabledOnJreIntegrationTests {
 	}
 
 	@Test
-	@DisabledOnJre(value = { JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15, JAVA_16,
+	@DisabledOnJre(value = { JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15, JAVA_16, JAVA_17,
 			OTHER }, disabledReason = "Disabled on every JRE")
 	void disabledOnAllJavaVersions() {
 		fail("should be disabled");
@@ -116,10 +118,16 @@ class DisabledOnJreIntegrationTests {
 	}
 
 	@Test
+	@DisabledOnJre(JAVA_17)
+	void java17() {
+		assertFalse(onJava17());
+	}
+
+	@Test
 	@DisabledOnJre(OTHER)
 	void other() {
 		assertTrue(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
-				|| onJava15() || onJava16());
+				|| onJava15() || onJava16() || onJava17());
 	}
 
 }

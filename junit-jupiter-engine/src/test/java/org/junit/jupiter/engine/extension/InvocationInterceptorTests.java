@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -35,6 +35,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.DynamicTestInvocationContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -287,8 +288,9 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public void interceptDynamicTest(Invocation<Void> invocation, ExtensionContext extensionContext)
-				throws Throwable {
+		public void interceptDynamicTest(Invocation<Void> invocation, DynamicTestInvocationContext invocationContext,
+				ExtensionContext extensionContext) throws Throwable {
+			assertThat(invocationContext.getExecutable()).isNotNull();
 			assertThat(extensionContext.getUniqueId()).isNotBlank();
 			assertThat(extensionContext.getElement()).isEmpty();
 			assertThat(extensionContext.getParent().flatMap(ExtensionContext::getTestMethod)).contains(

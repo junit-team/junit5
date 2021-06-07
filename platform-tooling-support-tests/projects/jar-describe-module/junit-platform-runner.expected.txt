@@ -1,7 +1,8 @@
-org.junit.platform.runner@${platformVersion} jar:file:.+junit-platform-runner/build/libs/junit-platform-runner-${platformVersion}.jar/!module-info.class
+org.junit.platform.runner@${platformVersion} jar:file:.+/junit-platform-runner-\d.+\.jar..module-info\.class
 exports org.junit.platform.runner
 requires java.base mandated
 requires junit transitive
 requires org.apiguardian.api transitive
 requires org.junit.platform.launcher transitive
 requires org.junit.platform.suite.api transitive
+requires org.junit.platform.suite.commons

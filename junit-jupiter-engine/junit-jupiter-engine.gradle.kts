@@ -1,3 +1,6 @@
+import aQute.bnd.gradle.BundleTaskConvention
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
+
 plugins {
 	`kotlin-library-conventions`
 	`testing-conventions`
@@ -7,17 +10,35 @@ plugins {
 description = "JUnit Jupiter Engine"
 
 dependencies {
-	internal(platform(project(":dependencies")))
+	api(platform(projects.junitBom))
+	api(libs.apiguardian)
+	api(projects.junitPlatformEngine)
+	api(projects.junitJupiterApi)
 
-	api(platform(project(":junit-bom")))
-	api("org.apiguardian:apiguardian-api")
-	api(project(":junit-platform-engine"))
-	api(project(":junit-jupiter-api"))
+	testImplementation(projects.junitPlatformLauncher)
+	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformTestkit)
+	testImplementation(testFixtures(projects.junitPlatformCommons))
+	testImplementation(kotlin("stdlib"))
+	testImplementation(libs.kotlinx.coroutines)
+	testImplementation(libs.groovy3)
+}
 
-	testImplementation(project(":junit-platform-launcher"))
-	testImplementation(project(":junit-platform-runner"))
-	testImplementation(project(":junit-platform-testkit"))
-	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
-	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
-	testImplementation("org.codehaus.groovy:groovy-all")
+tasks {
+	test {
+		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
+	}
+}
+
+tasks {
+	jar {
+		withConvention(BundleTaskConvention::class) {
+			bnd("""
+				Provide-Capability:\
+					org.junit.platform.engine;\
+						org.junit.platform.engine='junit-jupiter';\
+						version:Version="${'$'}{version_cleanup;${project.version}}"
+			""")
+		}
+	}
 }

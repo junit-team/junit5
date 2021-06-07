@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -36,14 +36,14 @@ class ConsoleLauncherTests {
 
 	@Test
 	void displayHelp() {
-		CommandLineOptions options = new CommandLineOptions();
+		var options = new CommandLineOptions();
 		options.setDisplayHelp(true);
 
-		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
+		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
 		when(commandLineOptionsParser.parse(any())).thenReturn(options);
 
-		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		int exitCode = consoleLauncher.execute("--help").getExitCode();
+		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
+		var exitCode = consoleLauncher.execute("--help").getExitCode();
 
 		assertEquals(0, exitCode);
 		verify(commandLineOptionsParser).parse("--help");
@@ -51,15 +51,15 @@ class ConsoleLauncherTests {
 
 	@Test
 	void displayBanner() {
-		CommandLineOptions options = new CommandLineOptions();
+		var options = new CommandLineOptions();
 		options.setBannerDisabled(false);
 		options.setDisplayHelp(true);
 
-		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
+		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
 		when(commandLineOptionsParser.parse(any())).thenReturn(options);
 
-		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		int exitCode = consoleLauncher.execute("--help").getExitCode();
+		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
+		var exitCode = consoleLauncher.execute("--help").getExitCode();
 
 		assertEquals(0, exitCode);
 		assertLinesMatch(
@@ -69,15 +69,15 @@ class ConsoleLauncherTests {
 
 	@Test
 	void disableBanner() {
-		CommandLineOptions options = new CommandLineOptions();
+		var options = new CommandLineOptions();
 		options.setBannerDisabled(true);
 		options.setDisplayHelp(true);
 
-		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
+		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
 		when(commandLineOptionsParser.parse(any())).thenReturn(options);
 
-		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		int exitCode = consoleLauncher.execute("--help", "--disable-banner").getExitCode();
+		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
+		var exitCode = consoleLauncher.execute("--help", "--disable-banner").getExitCode();
 
 		assertEquals(0, exitCode);
 		assertLinesMatch(List.of(), stringWriter.toString().lines().collect(Collectors.toList()));
@@ -85,11 +85,11 @@ class ConsoleLauncherTests {
 
 	@Test
 	void executeWithUnknownCommandLineOption() {
-		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
+		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
 		when(commandLineOptionsParser.parse(any())).thenReturn(new CommandLineOptions());
 
-		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		int exitCode = consoleLauncher.execute("--all").getExitCode();
+		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
+		var exitCode = consoleLauncher.execute("--all").getExitCode();
 
 		assertEquals(-1, exitCode);
 		verify(commandLineOptionsParser).parse("--all");
@@ -97,11 +97,11 @@ class ConsoleLauncherTests {
 
 	@Test
 	void executeWithSupportedCommandLineOption() {
-		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
+		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
 		when(commandLineOptionsParser.parse(any())).thenReturn(new CommandLineOptions());
 
-		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		int exitCode = consoleLauncher.execute("--scan-classpath").getExitCode();
+		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
+		var exitCode = consoleLauncher.execute("--scan-classpath").getExitCode();
 
 		assertEquals(-1, exitCode);
 		verify(commandLineOptionsParser).parse("--scan-classpath");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,10 +10,13 @@
 
 package org.junit.platform.reporting.legacy;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -31,8 +34,8 @@ class LegacyReportingUtilsTests {
 
 	@Test
 	void legacyReportingClassNameForTestIdentifierWithoutClassSourceIsParentLegacyReportingName() {
-		UniqueId uniqueId = engineDescriptor.getUniqueId().append("child", "bar");
-		TestDescriptor testDescriptor = createTestDescriptor(uniqueId, "Bar", null);
+		var uniqueId = engineDescriptor.getUniqueId().append("child", "bar");
+		var testDescriptor = createTestDescriptor(uniqueId, "Bar", null);
 		engineDescriptor.addChild(testDescriptor);
 
 		assertThat(getClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
@@ -44,17 +47,17 @@ class LegacyReportingUtilsTests {
 
 	@Test
 	void legacyReportingClassNameForDescendantOfTestIdentifierWithClassSourceIsClassName() {
-		UniqueId classUniqueId = engineDescriptor.getUniqueId().append("class", "class");
-		TestDescriptor classDescriptor = createTestDescriptor(classUniqueId, "Class",
+		var classUniqueId = engineDescriptor.getUniqueId().append("class", "class");
+		var classDescriptor = createTestDescriptor(classUniqueId, "Class",
 			ClassSource.from(LegacyReportingUtilsTests.class));
 		engineDescriptor.addChild(classDescriptor);
 
-		UniqueId subUniqueId = classUniqueId.append("sub", "baz");
-		TestDescriptor subDescriptor = createTestDescriptor(subUniqueId, "Baz", null);
+		var subUniqueId = classUniqueId.append("sub", "baz");
+		var subDescriptor = createTestDescriptor(subUniqueId, "Baz", null);
 		classDescriptor.addChild(subDescriptor);
 
-		UniqueId subSubUniqueId = subUniqueId.append("subsub", "qux");
-		TestDescriptor subSubDescriptor = createTestDescriptor(subSubUniqueId, "Qux", null);
+		var subSubUniqueId = subUniqueId.append("subsub", "qux");
+		var subSubDescriptor = createTestDescriptor(subSubUniqueId, "Qux", null);
 		subDescriptor.addChild(subSubDescriptor);
 
 		assertThat(getClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
@@ -69,13 +72,13 @@ class LegacyReportingUtilsTests {
 	}
 
 	private String getClassName(UniqueId uniqueId) {
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class));
 		return LegacyReportingUtils.getClassName(testPlan, testPlan.getTestIdentifier(uniqueId.toString()));
 	}
 
 	@SuppressWarnings("deprecation")
 	private String getClassNameFromOldLocation(UniqueId uniqueId) {
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class));
 		return org.junit.platform.launcher.listeners.LegacyReportingUtils.getClassName(testPlan,
 			testPlan.getTestIdentifier(uniqueId.toString()));
 	}

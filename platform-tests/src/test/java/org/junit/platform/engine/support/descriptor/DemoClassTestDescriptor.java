@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -45,7 +45,7 @@ public class DemoClassTestDescriptor extends AbstractTestDescriptor {
 		return findRepeatableAnnotations(this.testClass, Tag.class).stream()
 				.map(Tag::value)
 				.filter(tag -> {
-					boolean isValid = TestTag.isValid(tag);
+					var isValid = TestTag.isValid(tag);
 					if (!isValid) {
 						// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
 						// handling validation exceptions during the TestEngine discovery phase.

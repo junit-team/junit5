@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,16 +10,16 @@
 
 package org.junit.platform.reporting.legacy.xml;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
+import static org.mockito.Mockito.mock;
 
 import java.time.Clock;
-import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.fakes.TestDescriptorStub;
@@ -30,44 +30,47 @@ import org.junit.platform.launcher.TestPlan;
  */
 class XmlReportDataTests {
 
+	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+
 	@Test
-	void resultOfTestIdentifierWithoutAnyReportedEventsIsEmpty() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+	void resultsOfTestIdentifierWithoutAnyReportedEventsAreEmpty() {
+		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
-		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
+		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		var results = reportData.getResults(testPlan.getTestIdentifier("[child:test]"));
 
-		assertThat(result).isEmpty();
+		assertThat(results).isEmpty();
 	}
 
 	@Test
-	void resultOfTestIdentifierWithoutReportedEventsIsFailureOfAncestor() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+	void resultsOfTestIdentifierWithoutReportedEventsContainsOnlyFailureOfAncestor() {
+		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
-		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		TestExecutionResult failureOfAncestor = failed(new RuntimeException("failed!"));
+		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		var failureOfAncestor = failed(new RuntimeException("failed!"));
 		reportData.markFinished(testPlan.getTestIdentifier("[engine:engine]"), failureOfAncestor);
 
-		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
+		var results = reportData.getResults(testPlan.getTestIdentifier("[child:test]"));
 
-		assertThat(result).contains(failureOfAncestor);
+		assertThat(results).containsExactly(failureOfAncestor);
 	}
 
 	@Test
-	void resultOfTestIdentifierWithoutReportedEventsIsEmptyWhenAncestorWasSuccessful() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+	void resultsOfTestIdentifierWithoutReportedEventsContainsOnlySuccessOfAncestor() {
+		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
-		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
-		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markFinished(testPlan.getTestIdentifier("[engine:engine]"), successful());
 
-		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier("[child:test]"));
+		var results = reportData.getResults(testPlan.getTestIdentifier("[child:test]"));
 
-		assertThat(result).isEmpty();
+		assertThat(results).containsExactly(successful());
 	}
+
 }

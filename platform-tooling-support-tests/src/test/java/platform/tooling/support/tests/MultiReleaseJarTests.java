@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,9 +11,9 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +23,8 @@ import java.util.List;
 import de.sormuras.bartholdy.Result;
 
 import org.junit.jupiter.api.Test;
+
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 /**
@@ -81,13 +83,13 @@ class MultiReleaseJarTests {
 		var result = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject("multi-release-jar") //
-				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
+				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--show-version", "--errors", "--file", variant, "test") //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.build() //
 				.run();
 
-		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		return result;
 	}

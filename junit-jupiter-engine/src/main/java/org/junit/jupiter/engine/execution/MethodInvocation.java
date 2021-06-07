@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -23,9 +23,9 @@ import org.junit.platform.commons.util.ReflectionUtils;
 
 class MethodInvocation<T> implements Invocation<T>, ReflectiveInvocationContext<Method> {
 
-	protected final Method method;
-	protected final Optional<Object> target;
-	protected final Object[] arguments;
+	private final Method method;
+	private final Optional<Object> target;
+	private final Object[] arguments;
 
 	MethodInvocation(Method method, Optional<Object> target, Object[] arguments) {
 		this.method = method;
@@ -35,29 +35,29 @@ class MethodInvocation<T> implements Invocation<T>, ReflectiveInvocationContext<
 
 	@Override
 	public Class<?> getTargetClass() {
-		return target.<Class<?>> map(Object::getClass).orElseGet(method::getDeclaringClass);
+		return this.target.<Class<?>> map(Object::getClass).orElseGet(this.method::getDeclaringClass);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Optional<Object> getTarget() {
-		return target;
+		return this.target;
 	}
 
 	@Override
 	public Method getExecutable() {
-		return method;
+		return this.method;
 	}
 
 	@Override
 	public List<Object> getArguments() {
-		return unmodifiableList(Arrays.asList(arguments));
+		return unmodifiableList(Arrays.asList(this.arguments));
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public T proceed() {
-		return (T) ReflectionUtils.invokeMethod(method, target.orElse(null), arguments);
+		return (T) ReflectionUtils.invokeMethod(this.method, this.target.orElse(null), this.arguments);
 	}
 
 }

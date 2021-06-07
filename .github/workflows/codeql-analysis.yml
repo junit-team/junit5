@@ -1,0 +1,50 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [main, releases/**]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [main, releases/**]
+  schedule:
+    - cron: '0 19 * * 3'
+
+env:
+  GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['java', 'javascript']
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Cache Gradle wrapper and dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          /root/.gradle/caches/
+          /root/.gradle/wrapper/dists
+        key: test-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
+        restore-keys: |
+          test-${{ runner.os }}-gradle-
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+    - name: Build
+      run: |
+        ./gradlew --version
+        ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
+        ./gradlew --no-build-cache allMainClasses -PjavaToolchainVersion=11 -Porg.gradle.java.installations.auto-download=false
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,6 +15,7 @@
  *
  * @since 1.0
  * @uses org.junit.platform.engine.TestEngine
+ * @uses org.junit.platform.launcher.LauncherDiscoveryListener
  * @uses org.junit.platform.launcher.PostDiscoveryFilter
  * @uses org.junit.platform.launcher.TestExecutionListener
  */
@@ -30,6 +31,8 @@ module org.junit.platform.launcher {
 	exports org.junit.platform.launcher.listeners.discovery;
 
 	uses org.junit.platform.engine.TestEngine;
+	uses org.junit.platform.launcher.LauncherDiscoveryListener;
+	uses org.junit.platform.launcher.LauncherSessionListener;
 	uses org.junit.platform.launcher.PostDiscoveryFilter;
 	uses org.junit.platform.launcher.TestExecutionListener;
 }

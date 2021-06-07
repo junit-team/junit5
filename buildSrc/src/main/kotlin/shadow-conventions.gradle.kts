@@ -3,9 +3,7 @@ plugins {
 	id("com.github.johnrengelman.shadow")
 }
 
-val shadowed by configurations.creating {
-	extendsFrom(configurations["internal"])
-}
+val shadowed by configurations.creating
 
 configurations.forEach { configuration ->
 	configuration.outgoing.apply {
@@ -49,6 +47,8 @@ tasks {
 	shadowJar {
 		configurations = listOf(shadowed)
 		exclude("META-INF/maven/**")
+		excludes.remove("module-info.class")
+		archiveClassifier.set("")
 	}
 	jar {
 		dependsOn(shadowJar)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -23,8 +23,8 @@ class VintageTestDescriptorTests {
 
 	@Test
 	void legacyReportingNameUsesClassName() {
-		Description description = Description.createSuiteDescription(ConcreteJUnit4TestCase.class);
-		VintageTestDescriptor testDescriptor = new VintageTestDescriptor(uniqueId, description, null);
+		var description = Description.createSuiteDescription(ConcreteJUnit4TestCase.class);
+		var testDescriptor = new VintageTestDescriptor(uniqueId, description, null);
 
 		assertEquals("org.junit.vintage.engine.samples.junit4.ConcreteJUnit4TestCase",
 			testDescriptor.getLegacyReportingName());
@@ -32,17 +32,17 @@ class VintageTestDescriptorTests {
 
 	@Test
 	void legacyReportingNameUsesMethodName() {
-		Description description = Description.createTestDescription(ConcreteJUnit4TestCase.class, "legacyTest");
-		VintageTestDescriptor testDescriptor = new VintageTestDescriptor(uniqueId, description, null);
+		var description = Description.createTestDescription(ConcreteJUnit4TestCase.class, "legacyTest");
+		var testDescriptor = new VintageTestDescriptor(uniqueId, description, null);
 
 		assertEquals("legacyTest", testDescriptor.getLegacyReportingName());
 	}
 
 	@Test
 	void legacyReportingNameFallbackToDisplayName() {
-		String suiteName = "Legacy Suite";
-		Description description = Description.createSuiteDescription(suiteName);
-		VintageTestDescriptor testDescriptor = new VintageTestDescriptor(uniqueId, description, null);
+		var suiteName = "Legacy Suite";
+		var description = Description.createSuiteDescription(suiteName);
+		var testDescriptor = new VintageTestDescriptor(uniqueId, description, null);
 
 		assertEquals(testDescriptor.getDisplayName(), testDescriptor.getLegacyReportingName());
 		assertEquals(suiteName, testDescriptor.getLegacyReportingName());

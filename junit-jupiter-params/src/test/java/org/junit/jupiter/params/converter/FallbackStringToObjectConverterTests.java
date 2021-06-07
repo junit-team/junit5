@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -108,21 +108,21 @@ class FallbackStringToObjectConverterTests {
 	}
 
 	private static Method bookMethod(String methodName, Class<?> parameterType) {
-		return findMethod(Book.class, methodName, parameterType).get();
+		return findMethod(Book.class, methodName, parameterType).orElseThrow();
 	}
 
 	private static Method newspaperMethod(String methodName) {
-		return findMethod(Newspaper.class, methodName, String.class).get();
+		return findMethod(Newspaper.class, methodName, String.class).orElseThrow();
 	}
 
 	private static Method magazineMethod(String methodName) {
-		return findMethod(Magazine.class, methodName, String.class).get();
+		return findMethod(Magazine.class, methodName, String.class).orElseThrow();
 	}
 
 	private static void assertConverts(String input, Class<?> targetType, Object expectedOutput) throws Exception {
 		assertThat(converter.canConvert(targetType)).isTrue();
 
-		Object result = converter.convert(input, targetType);
+		var result = converter.convert(input, targetType);
 
 		assertThat(result) //
 				.describedAs(input + " --(" + targetType.getName() + ")--> " + expectedOutput) //
@@ -164,7 +164,7 @@ class FallbackStringToObjectConverterTests {
 			if (!(obj instanceof Book)) {
 				return false;
 			}
-			Book that = (Book) obj;
+			var that = (Book) obj;
 			return Objects.equals(this.title, that.title);
 		}
 
@@ -186,7 +186,7 @@ class FallbackStringToObjectConverterTests {
 			if (!(obj instanceof Journal)) {
 				return false;
 			}
-			Journal that = (Journal) obj;
+			var that = (Journal) obj;
 			return Objects.equals(this.title, that.title);
 		}
 
@@ -216,7 +216,7 @@ class FallbackStringToObjectConverterTests {
 			if (!(obj instanceof Newspaper)) {
 				return false;
 			}
-			Newspaper that = (Newspaper) obj;
+			var that = (Newspaper) obj;
 			return Objects.equals(this.title, that.title);
 		}
 

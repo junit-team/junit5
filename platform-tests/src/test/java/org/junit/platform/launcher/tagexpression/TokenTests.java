@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,8 +11,6 @@
 package org.junit.platform.launcher.tagexpression;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -41,10 +39,10 @@ class TokenTests {
 
 	@Test
 	void concatenateTwoTokens() {
-		List<Token> tokens = new Tokenizer().tokenize(" ! foo");
-		Token one = tokens.get(0);
-		Token two = tokens.get(1);
-		Token joined = one.concatenate(two);
+		var tokens = new Tokenizer().tokenize(" ! foo");
+		var one = tokens.get(0);
+		var two = tokens.get(1);
+		var joined = one.concatenate(two);
 		assertThat(joined.rawString).isEqualTo(" ! foo");
 		assertThat(joined.startIndex).isEqualTo(0);
 	}

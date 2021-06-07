@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -42,7 +42,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		when(configParams.get("fixed.parallelism")).thenReturn(Optional.of("42"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.FIXED;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
+		var configuration = strategy.createConfiguration(configParams);
 
 		assertThat(configuration.getParallelism()).isEqualTo(42);
 		assertThat(configuration.getCorePoolSize()).isEqualTo(42);
@@ -56,9 +56,9 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("2.0"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
+		var configuration = strategy.createConfiguration(configParams);
 
-		int availableProcessors = Runtime.getRuntime().availableProcessors();
+		var availableProcessors = Runtime.getRuntime().availableProcessors();
 		assertThat(configuration.getParallelism()).isEqualTo(availableProcessors * 2);
 		assertThat(configuration.getCorePoolSize()).isEqualTo(availableProcessors * 2);
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors * 2);
@@ -72,7 +72,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 			Optional.of(CustomParallelExecutionConfigurationStrategy.class.getName()));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.CUSTOM;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
+		var configuration = strategy.createConfiguration(configParams);
 
 		assertThat(configuration.getParallelism()).isEqualTo(1);
 		assertThat(configuration.getCorePoolSize()).isEqualTo(4);
@@ -110,9 +110,9 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		when(configParams.get("dynamic.factor")).thenReturn(Optional.empty());
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
+		var configuration = strategy.createConfiguration(configParams);
 
-		int availableProcessors = Runtime.getRuntime().availableProcessors();
+		var availableProcessors = Runtime.getRuntime().availableProcessors();
 		assertThat(configuration.getParallelism()).isEqualTo(availableProcessors);
 		assertThat(configuration.getCorePoolSize()).isEqualTo(availableProcessors);
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors);
@@ -149,7 +149,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("0.00000000001"));
 
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
-		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configParams);
+		var configuration = strategy.createConfiguration(configParams);
 
 		assertThat(configuration.getParallelism()).isEqualTo(1);
 		assertThat(configuration.getCorePoolSize()).isEqualTo(1);

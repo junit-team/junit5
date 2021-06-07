@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -69,7 +69,7 @@ class ModularUserGuideTests {
 		args.add(temp.resolve("destination").toString());
 
 		var lib = Files.createDirectories(temp.resolve("lib"));
-		Helper.load(lib, "junit", "junit", Helper.version("junit4", "4.13"));
+		Helper.load(lib, "junit", "junit", Helper.version("junit4", "4.13.2"));
 		Helper.load(lib, "org.assertj", "assertj-core", Helper.version("assertJ", "3.14.0"));
 		Helper.load(lib, "org.apiguardian", "apiguardian-api", Helper.version("apiGuardian", "1.1.0"));
 		Helper.load(lib, "org.hamcrest", "hamcrest", Helper.version("hamcrest", "2.2"));
@@ -103,7 +103,7 @@ class ModularUserGuideTests {
 		return args;
 	}
 
-	private static List<String> junit(Path temp, Writer out, Writer err) throws Exception {
+	private static void junit(Path temp, Writer out, Writer err) throws Exception {
 		var command = new ArrayList<String>();
 		var projectDir = Path.of("../documentation");
 		command.add(Path.of(System.getProperty("java.home"), "bin", "java").toString());
@@ -154,7 +154,6 @@ class ModularUserGuideTests {
 			System.err.println(err);
 			fail("Unexpected exit code: " + code);
 		}
-		return command;
 	}
 
 	@Test

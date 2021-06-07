@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -97,7 +96,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void parentChildRelationshipIsEstablished() {
+	void parentRelationshipIsEstablished() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithSingleRegisteredExtension")).build();
 
@@ -107,7 +106,6 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			container("templateWithSingleRegisteredExtension"));
 		TestDescriptor invocationDescriptor = findTestDescriptor(executionResults, test("test-template-invocation:#1"));
 		assertThat(invocationDescriptor.getParent()).hasValue(templateMethodDescriptor);
-		assertThat(templateMethodDescriptor.getChildren()).isEqualTo(singleton(invocationDescriptor));
 	}
 
 	@Test

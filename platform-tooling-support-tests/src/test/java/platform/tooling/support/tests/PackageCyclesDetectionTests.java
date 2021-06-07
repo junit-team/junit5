@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -18,7 +18,7 @@ import de.sormuras.bartholdy.tool.CyclesDetector;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 
 /**
  * @since 1.3
@@ -29,7 +29,7 @@ class PackageCyclesDetectionTests {
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	@Disabled("Need to pass --module-path...")
 	void moduleDoesNotContainCyclicPackageReferences(String module) {
-		var jar = Helper.createJarPath(module);
+		var jar = MavenRepo.jar(module);
 		var result = new CyclesDetector(jar, this::ignore).run(Configuration.of());
 		assertEquals(0, result.getExitCode(), "result=" + result);
 	}

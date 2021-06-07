@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -22,12 +22,12 @@ import org.junit.platform.commons.PreconditionViolationException;
 class PreconditionAssertions {
 
 	static void assertPreconditionViolationException(String name, Executable executable) {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, executable);
+		var exception = assertThrows(PreconditionViolationException.class, executable);
 		assertEquals(name + " must not be null", exception.getMessage());
 	}
 
 	static void assertPreconditionViolationExceptionForString(String name, Executable executable) {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, executable);
+		var exception = assertThrows(PreconditionViolationException.class, executable);
 		assertEquals(name + " must not be null or blank", exception.getMessage());
 	}
 

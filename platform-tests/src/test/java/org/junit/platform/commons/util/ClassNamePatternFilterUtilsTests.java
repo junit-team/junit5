@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -31,7 +30,7 @@ import org.junit.platform.launcher.TestExecutionListener;
 /**
  * Unit tests for {@link ClassNamePatternFilterUtils}.
  *
- * @since 5.7
+ * @since 1.7
  */
 @TestInstance(Lifecycle.PER_CLASS)
 class ClassNamePatternFilterUtilsTests {
@@ -47,7 +46,7 @@ class ClassNamePatternFilterUtilsTests {
 	//@formatter:on
 	@ParameterizedTest
 	void alwaysEnabledConditions(String pattern) {
-		List<? extends ExecutionCondition> executionConditions = asList(new AExecutionConditionClass(),
+		List<? extends ExecutionCondition> executionConditions = List.of(new AExecutionConditionClass(),
 			new BExecutionConditionClass());
 		assertThat(executionConditions).filteredOn(
 			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isNotEmpty();
@@ -64,7 +63,7 @@ class ClassNamePatternFilterUtilsTests {
 	//@formatter:on
 	@ParameterizedTest
 	void alwaysDisabledConditions(String pattern) {
-		List<? extends ExecutionCondition> executionConditions = asList(new AExecutionConditionClass(),
+		List<? extends ExecutionCondition> executionConditions = List.of(new AExecutionConditionClass(),
 			new BExecutionConditionClass());
 		assertThat(executionConditions).filteredOn(
 			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isEmpty();
@@ -81,7 +80,7 @@ class ClassNamePatternFilterUtilsTests {
 	//@formatter:on
 	@ParameterizedTest
 	void alwaysEnabledListeners(String pattern) {
-		List<? extends TestExecutionListener> executionConditions = asList(new ATestExecutionListenerClass(),
+		List<? extends TestExecutionListener> executionConditions = List.of(new ATestExecutionListenerClass(),
 			new BTestExecutionListenerClass());
 		assertThat(executionConditions).filteredOn(
 			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isNotEmpty();
@@ -98,7 +97,7 @@ class ClassNamePatternFilterUtilsTests {
 	//@formatter:on
 	@ParameterizedTest
 	void alwaysDisabledListeners(String pattern) {
-		List<? extends TestExecutionListener> executionConditions = asList(new ATestExecutionListenerClass(),
+		List<? extends TestExecutionListener> executionConditions = List.of(new ATestExecutionListenerClass(),
 			new BTestExecutionListenerClass());
 		assertThat(executionConditions).filteredOn(
 			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isEmpty();
@@ -115,7 +114,7 @@ class ClassNamePatternFilterUtilsTests {
 	//@formatter:on
 	@ParameterizedTest
 	void alwaysEnabledClass(String pattern) {
-		List<Object> executionConditions = asList(new AVanillaEmpty(), new BVanillaEmpty());
+		var executionConditions = List.of(new AVanillaEmpty(), new BVanillaEmpty());
 		assertThat(executionConditions).filteredOn(
 			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isNotEmpty();
 	}
@@ -131,7 +130,7 @@ class ClassNamePatternFilterUtilsTests {
 	//@formatter:on
 	@ParameterizedTest
 	void alwaysDisabledClass(String pattern) {
-		List<Object> executionConditions = asList(new AVanillaEmpty(), new BVanillaEmpty());
+		var executionConditions = List.of(new AVanillaEmpty(), new BVanillaEmpty());
 		assertThat(executionConditions).filteredOn(
 			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isEmpty();
 	}

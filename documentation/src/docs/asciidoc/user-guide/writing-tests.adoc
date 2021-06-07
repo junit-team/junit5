@@ -113,10 +113,19 @@ Test classes must not be `abstract` and must have a single constructor.
 Test methods and lifecycle methods may be declared locally within the current test class,
 inherited from superclasses, or inherited from interfaces (see
 <<writing-tests-test-interfaces-and-default-methods>>). In addition, test methods and
-lifecycle methods must not be `abstract` and must not return a value.
+lifecycle methods must not be `abstract` and must not return a value (except `@TestFactory`
+methods which are required to return a value).
 
-NOTE: Test classes, test methods, and lifecycle methods are not required to be `public`,
-but they must _not_ be `private`.
+[NOTE]
+.Class and method visibility
+====
+Test classes, test methods, and lifecycle methods are not required to be `public`, but
+they must _not_ be `private`.
+
+It is generally recommended to omit the `public` modifier for test classes, test methods,
+and lifecycle methods unless there is a technical reason for doing so – for example, when
+a test class is extended by a test class in another package.
+====
 
 The following test class demonstrates the use of `@Test` methods and all supported
 lifecycle methods. For further information on runtime semantics, see
@@ -462,13 +471,23 @@ indirectly present, or meta-present on a given element.
 
 A container or test may be enabled or disabled based on the boolean return of a
 method via the `{EnabledIf}` and `{DisabledIf}` annotations. The method is provided to
-the annotation via its name, or its fully qualified name if located outside the test
-class.
+the annotation via its name.
 If needed, the condition method can take a single parameter of type `ExtensionContext`.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_custom]
+----
+
+Alternatively, the condition method can be located outside the test class. In this case,
+it has to be referenced by its _fully qualified name_ as demonstrated in the following
+example.
+
+[source,java,indent=0]
+----
+package example;
+
+include::{testDir}/example/ExternalCustomConditionDemo.java[tags=user_guide_external_custom_condition]
 ----
 
 NOTE: When `{EnabledIf}` or `{DisabledIf}` is used at class level, the condition method
@@ -511,11 +530,15 @@ custom annotations for tags.
 [[writing-tests-test-execution-order]]
 === Test Execution Order
 
-By default, test methods will be ordered using an algorithm that is deterministic but
-intentionally nonobvious. This ensures that subsequent runs of a test suite execute test
-methods in the same order, thereby allowing for repeatable builds.
+By default, test classes and methods will be ordered using an algorithm that is
+deterministic but intentionally nonobvious. This ensures that subsequent runs of a test
+suite execute test classes and test methods in the same order, thereby allowing for
+repeatable builds.
 
-NOTE: See <<writing-tests-classes-and-methods>> for a definition of _test method_.
+NOTE: See <<writing-tests-classes-and-methods>> for a definition of _test method_ and
+_test class_.
+
+==== Method Order
 
 Although true _unit tests_ typically should not rely on the order in which they are
 executed, there are times when it is necessary to enforce a specific test method execution
@@ -528,17 +551,18 @@ interface with `{TestMethodOrder}` and specify the desired `{MethodOrderer}`
 implementation. You can implement your own custom `MethodOrderer` or use one of the
 following built-in `MethodOrderer` implementations.
 
-* `{DisplayName}`: sorts test methods _alphanumerically_ based on their display names (see
-  <<writing-tests-display-name-generator-precedence-rules, display name generation
-  precedence rules>>)
-* `{MethodName}`: sorts test methods _alphanumerically_ based on their method name and formal
-  parameter lists.
-* `{OrderAnnotation}`: sorts test methods _numerically_ based on values specified via the
-  `{Order}` annotation.
-* `{Random}`: orders test methods _pseudo-randomly_ and supports configuration of a custom
-  _seed_.
-* `{Alphanumeric}`: sorts test methods _alphanumerically_ based on their names and formal
-  parameter lists. **Deprecated in favor of `{MethodName}`. Will be removed in 6.0**
+* `{MethodOrderer_DisplayName}`: sorts test methods _alphanumerically_ based on their
+  display names (see <<writing-tests-display-name-generator-precedence-rules, display name
+  generation precedence rules>>)
+* `{MethodOrderer_MethodName}`: sorts test methods _alphanumerically_ based on their names
+  and formal parameter lists
+* `{MethodOrderer_OrderAnnotation}`: sorts test methods _numerically_ based on values
+  specified via the `{Order}` annotation
+* `{MethodOrderer_Random}`: orders test methods _pseudo-randomly_ and supports
+  configuration of a custom _seed_
+* `{MethodOrderer_Alphanumeric}`: sorts test methods _alphanumerically_ based on their
+  names and formal parameter lists; **deprecated in favor of `{MethodOrderer_MethodName}`,
+  to be removed in 6.0**
 
 NOTE: See also: <<extensions-execution-order-wrapping-behavior>>
 
@@ -551,7 +575,7 @@ include::{testDir}/example/OrderedTestsDemo.java[tags=user_guide]
 ----
 
 [[writing-tests-test-execution-order-default]]
-==== Setting the Default Method Orderer
+===== Setting the Default Method Orderer
 
 You can use the `junit.jupiter.testmethod.order.default` <<running-tests-config-params,
 configuration parameter>> to specify the fully qualified class name of the
@@ -560,9 +584,9 @@ via the `{TestMethodOrder}` annotation, the supplied class has to implement the
 `MethodOrderer` interface. The default orderer will be used for all tests unless the
 `@TestMethodOrder` annotation is present on an enclosing test class or test interface.
 
-For example, to use the `{OrderAnnotation}` method orderer by default, you should set the
-configuration parameter to the corresponding fully qualified class name (e.g., in
-`src/test/resources/junit-platform.properties`):
+For example, to use the `{MethodOrderer_OrderAnnotation}` method orderer by default, you
+should set the configuration parameter to the corresponding fully qualified class name
+(e.g., in `src/test/resources/junit-platform.properties`):
 
 [source,properties,indent=0]
 ----
@@ -572,6 +596,46 @@ junit.jupiter.testmethod.order.default = \
 
 Similarly, you can specify the fully qualified name of any custom class that implements
 `MethodOrderer`.
+
+==== Class Order
+
+For build optimization purposes, it can be helpful to run _test classes_ in a specific
+order.
+
+For example:
+
+* previously failed tests and faster tests first: fail fast
+* with parallelism enabled, longer tests first: shortest test execution duration
+* etc.
+
+You can use the `junit.jupiter.testclass.order.default` <<running-tests-config-params,
+configuration parameter>> to specify the fully qualified class name of the
+`{ClassOrderer}` you would like to use. The supplied class must implement the
+`ClassOrderer` interface.
+
+You can implement your own custom `ClassOrderer` or use one of the following built-in
+`ClassOrderer` implementations.
+
+* `{ClassOrderer_DisplayName}`: sorts test classes _alphanumerically_ based on their
+  display names (see <<writing-tests-display-name-generator-precedence-rules, display name
+  generation precedence rules>>)
+* `{ClassOrderer_ClassName}`: sorts test classes _alphanumerically_ based on their fully
+  qualified class names
+* `{ClassOrderer_OrderAnnotation}`: sorts test classes _numerically_ based on values
+  specified via the `{Order}` annotation
+* `{ClassOrderer_Random}`: orders test classes _pseudo-randomly_ and supports
+  configuration of a custom _seed_
+
+For example, for the `@Order` annotation to be honored on _test classes_, you should
+configure the `{ClassOrderer_OrderAnnotation}` class orderer using the configuration
+parameter with the corresponding fully qualified class name (e.g., in
+`src/test/resources/junit-platform.properties`):
+
+[source,properties,indent=0]
+----
+junit.jupiter.testclass.order.default = \
+    org.junit.jupiter.api.ClassOrderer$OrderAnnotation
+----
 
 [[writing-tests-test-instance-lifecycle]]
 === Test Instance Lifecycle
@@ -642,7 +706,9 @@ configuration file instead of via a JVM system property.
 === Nested Tests
 
 `@Nested` tests give the test writer more capabilities to express the relationship among
-several groups of tests. Here's an elaborate example.
+several groups of tests. Such nested tests make use of Java's nested classes and
+facilitate hierarchical thinking about the test structure. Here's an elaborate example,
+both as source code and as a screenshot of the execution within an IDE.
 
 [source,java,indent=0]
 .Nested test suite for testing a stack
@@ -650,13 +716,26 @@ several groups of tests. Here's an elaborate example.
 include::{testDir}/example/TestingAStackDemo.java[tags=user_guide]
 ----
 
+When executing this example in an IDE, the test execution tree in the GUI will look
+similar to the following image.
+
+image::writing-tests_nested_test_ide.png[caption='',title='Executing a nested test in an IDE']
+
+In this example, preconditions from outer tests are used in inner tests by defining
+hierarchical lifecycle methods for the setup code. For example, `createNewStack()` is a
+`@BeforeEach` lifecycle method that is used in the test class in which it is defined and
+in all levels in the nesting tree below the class in which it is defined.
+
+The fact that setup code from outer tests is run before inner tests are executed gives you
+the ability to run all tests independently. You can even run inner tests alone without
+running the outer tests, because the setup code from the outer tests is always executed.
+
 NOTE: _Only non-static nested classes_ (i.e. _inner classes_) can serve as `@Nested` test
-classes. Nesting can be arbitrarily deep, and those inner classes are considered to be
-full members of the test class family with one exception: `@BeforeAll` and `@AfterAll`
-methods do not work _by default_. The reason is that Java does not allow `static` members
-in inner classes. However, this restriction can be circumvented by annotating a `@Nested`
-test class with `@TestInstance(Lifecycle.PER_CLASS)` (see
-<<writing-tests-test-instance-lifecycle>>).
+classes. Nesting can be arbitrarily deep, and those inner classes are subject to full
+lifecycle support with one exception: `@BeforeAll` and `@AfterAll` methods do not work
+_by default_. The reason is that Java does not allow `static` members in inner classes.
+However, this restriction can be circumvented by annotating a `@Nested` test class with
+`@TestInstance(Lifecycle.PER_CLASS)` (see <<writing-tests-test-instance-lifecycle>>).
 
 [[writing-tests-dependency-injection]]
 === Dependency Injection for Constructors and Methods
@@ -995,9 +1074,6 @@ palindromes(String) ✔
 └─ [3] candidate=able was I ere I saw elba ✔
 ....
 
-WARNING: Parameterized tests are currently an _experimental_ feature. Consult the table
-in <<api-evolution-experimental-apis>> for details.
-
 [[writing-tests-parameterized-tests-setup]]
 ==== Required Setup
 
@@ -1248,15 +1324,20 @@ reference is a primitive type.
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
 
+Unless it starts with a quote character, leading and trailing whitespaces of a
+CSV column are trimmed by default. This behavior can be changed by setting the
+`ignoreLeadingAndTrailingWhitespace` attribute to `true`.
+
 [cols="50,50"]
 |===
-| Example Input                                                       | Resulting Argument List
+| Example Input                                                                           | Resulting Argument List
 
-| `@CsvSource({ "apple, banana" })`                                   | `"apple"`, `"banana"`
-| `@CsvSource({ "apple, 'lemon, lime'" })`                            | `"apple"`, `"lemon, lime"`
-| `@CsvSource({ "apple, ''" })`                                       | `"apple"`, `""`
-| `@CsvSource({ "apple, " })`                                         | `"apple"`, `null`
-| `@CsvSource(value = { "apple, banana, NIL" }, nullValues = "NIL")` | `"apple"`, `"banana"`, `null`
+| `@CsvSource({ "apple, banana" })`                                                       | `"apple"`, `"banana"`
+| `@CsvSource({ "apple, 'lemon, lime'" })`                                                | `"apple"`, `"lemon, lime"`
+| `@CsvSource({ "apple, ''" })`                                                           | `"apple"`, `""`
+| `@CsvSource({ "apple, " })`                                                             | `"apple"`, `null`
+| `@CsvSource(value = { "apple, banana, NIL" }, nullValues = "NIL")`                      | `"apple"`, `"banana"`, `null`
+| `@CsvSource(value = { " apple , banana" }, ignoreLeadingAndTrailingWhitespace = false)` | `" apple "`, `" banana"`
 |===
 
 [[writing-tests-parameterized-tests-sources-CsvFileSource]]
@@ -1295,6 +1376,10 @@ reference is a primitive type.
 
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
+
+Unless it starts with a quote character, leading and trailing whitespaces of a
+CSV column are trimmed by default. This behavior can be changed by setting the
+`ignoreLeadingAndTrailingWhitespace` attribute to `true`.
 
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
 ===== @ArgumentsSource
@@ -1568,6 +1653,34 @@ if they exceed the configured maximum length. The limit is configurable via the
 `junit.jupiter.params.displayname.argument.maxlength` configuration parameter and defaults
 to 512 characters.
 
+When using `@MethodSource` or `@ArgumentSource`, you can give names to arguments. This
+name will be used if the argument is included in the invocation display name, like in
+the example below.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=named_arguments]
+----
+
+....
+A parameterized test with named arguments ✔
+├─ 1: An important file ✔
+└─ 2: Another file ✔
+....
+
+If you'd like to set default name pattern for all parameterized tests in your project, you can add the following
+configuration to `junit-platform.properties`
+
+[source,properties,indent=0]
+----
+junit.jupiter.params.displayname.default = {index}
+----
+
+the display name for a parameterized method is determined according to the following precedence rules:
+
+1. `name` of `@ParameterizedTest`, if present
+2. the value of `junit.jupiter.params.displayname.default` (from junit-platform.properties), if present
+3. `DEFAULT_DISPLAY_NAME` constant defined in `@ParameterizedTest`
 
 [[writing-tests-parameterized-tests-lifecycle-interop]]
 ==== Lifecycle and Interoperability
@@ -1662,8 +1775,8 @@ and dynamic tests.
 The first method returns an invalid return type. Since an invalid return type cannot be
 detected at compile time, a `JUnitException` is thrown when it is detected at runtime.
 
-The next five methods are very simple examples that demonstrate the generation of a
-`Collection`, `Iterable`, `Iterator`, or `Stream` of `DynamicTest` instances. Most of
+The next six methods are very simple examples that demonstrate the generation of a
+`Collection`, `Iterable`, `Iterator`, array, or `Stream` of `DynamicTest` instances. Most of
 these examples do not really exhibit dynamic behavior but merely demonstrate the
 supported return types in principle. However, `dynamicTestsFromStream()` and
 `dynamicTestsFromIntStream()` demonstrate how easy it is to generate dynamic tests for a
@@ -1717,16 +1830,16 @@ implementations.
   refer to the Javadoc for `DiscoverySelectors.selectMethod(String)` for the supported
   formats for a FQMN.
 
+`ClassSource` ::
+  If the `URI` contains the `class` scheme and the fully qualified class name --
+  for example, `class:org.junit.Foo?line=42`.
+
 `UriSource` ::
   If none of the above `TestSource` implementations are applicable.
 
 
 [[writing-tests-declarative-timeouts]]
 === Timeouts
-
-.Declarative timeouts are an experimental feature
-WARNING: You're invited to give it a try and provide feedback to the JUnit team so they
-can improve and eventually <<api-evolution, promote>> this feature.
 
 The `@Timeout` annotation allows one to declare that a test, test factory, test template,
 or lifecycle method should fail if its execution time exceeds a given duration. The time
@@ -2076,6 +2189,15 @@ its content.
 .A test method that requires a temporary directory
 ----
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_parameter_injection]
+----
+
+You can inject multiple temporary directories by specifying explicit identifiers via the
+annotation parameter.
+
+[source,java,indent=0]
+.A test method that requires multiple temporary directories
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_multiple_directories]
 ----
 
 WARNING: `@TempDir` is not supported on constructor parameters. If you wish to retain a

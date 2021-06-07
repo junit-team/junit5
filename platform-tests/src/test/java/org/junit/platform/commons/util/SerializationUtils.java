@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,25 +14,18 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 public class SerializationUtils {
 
-	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T serializeAndDeserialize(T object) throws Exception {
-		byte[] bytes = serialize(object);
-		return (T) deserialize(bytes);
-	}
-
-	private static Object deserialize(byte[] bytes) throws Exception {
-		try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+	public static Object deserialize(byte[] bytes) throws Exception {
+		try (var in = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
 			return in.readObject();
 		}
 	}
 
-	private static byte[] serialize(Object object) throws Exception {
-		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-				ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+	public static byte[] serialize(Object object) throws Exception {
+		try (var byteArrayOutputStream = new ByteArrayOutputStream();
+				var objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
 			objectOutputStream.writeObject(object);
 			objectOutputStream.flush();
 			return byteArrayOutputStream.toByteArray();

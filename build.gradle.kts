@@ -8,17 +8,10 @@ plugins {
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
 	id("com.diffplug.spotless")
 	id("io.spring.nohttp")
+	id("io.github.gradle-nexus.publish-plugin")
 }
 
-apply(from = "gradle/build-scan-user-data.gradle")
-
-buildScan {
-	if (project.hasProperty("javaHome")) {
-		value("Custom Java home", project.property("javaHome") as String)
-	}
-}
-
-val buildTimeAndDate by extra {
+val buildTimeAndDate: OffsetDateTime by extra {
 
 	// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against
 	// in order to achieve reproducible builds
@@ -36,38 +29,41 @@ val buildTimeAndDate by extra {
 	}
 }
 
-val buildDate by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
-val buildTime by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
-val buildRevision by extra { versioning.info.commit }
+val buildDate: String by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
+val buildTime: String by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
+val buildRevision: String by extra { versioning.info.commit }
 val builtByValue by extra { project.findProperty("builtBy") ?: project.property("defaultBuiltBy") }
 
 val platformProjects by extra(listOf(
-		project(":junit-platform-commons"),
-		project(":junit-platform-console"),
-		project(":junit-platform-console-standalone"),
-		project(":junit-platform-engine"),
-		project(":junit-platform-jfr"),
-		project(":junit-platform-launcher"),
-		project(":junit-platform-reporting"),
-		project(":junit-platform-runner"),
-		project(":junit-platform-suite-api"),
-		project(":junit-platform-testkit")
-))
+		projects.junitPlatformCommons,
+		projects.junitPlatformConsole,
+		projects.junitPlatformConsoleStandalone,
+		projects.junitPlatformEngine,
+		projects.junitPlatformJfr,
+		projects.junitPlatformLauncher,
+		projects.junitPlatformReporting,
+		projects.junitPlatformRunner,
+		projects.junitPlatformSuite,
+		projects.junitPlatformSuiteApi,
+		projects.junitPlatformSuiteCommons,
+		projects.junitPlatformSuiteEngine,
+		projects.junitPlatformTestkit
+).map { it.dependencyProject })
 
 val jupiterProjects by extra(listOf(
-		project(":junit-jupiter"),
-		project(":junit-jupiter-api"),
-		project(":junit-jupiter-engine"),
-		project(":junit-jupiter-migrationsupport"),
-		project(":junit-jupiter-params")
-))
+		projects.junitJupiter,
+		projects.junitJupiterApi,
+		projects.junitJupiterEngine,
+		projects.junitJupiterMigrationsupport,
+		projects.junitJupiterParams
+).map { it.dependencyProject })
 
 val vintageProjects by extra(listOf(
-		project(":junit-vintage-engine")
+		projects.junitVintageEngine.dependencyProject
 ))
 
 val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProjects)
-val modularProjects by extra(mavenizedProjects - listOf(project(":junit-platform-console-standalone")))
+val modularProjects by extra(mavenizedProjects - listOf(projects.junitPlatformConsoleStandalone.dependencyProject))
 
 val license by extra(License(
 		name = "Eclipse Public License v2.0",
@@ -80,15 +76,22 @@ val tempRepoDir by extra(file("$buildDir/repo"))
 
 val enableJaCoCo = project.hasProperty("enableJaCoCo")
 val jacocoTestProjects = listOf(
-		project(":junit-jupiter-engine"),
-		project(":junit-jupiter-migrationsupport"),
-		project(":junit-jupiter-params"),
-		project(":junit-platform-runner"),
-		project(":junit-vintage-engine"),
-		project(":platform-tests")
-)
+		projects.junitJupiterEngine,
+		projects.junitJupiterMigrationsupport,
+		projects.junitJupiterParams,
+		projects.junitPlatformRunner,
+		projects.junitVintageEngine,
+		projects.platformTests
+).map { it.dependencyProject }
 val jacocoCoveredProjects = modularProjects
 val jacocoClassesDir = file("$buildDir/jacoco/classes")
+
+nexusPublishing {
+	packageGroup.set("org.junit")
+	repositories {
+		sonatype()
+	}
+}
 
 allprojects {
 
@@ -99,33 +102,45 @@ allprojects {
 	if (enableJaCoCo) {
 		apply(plugin = "jacoco")
 		configure<JacocoPluginExtension> {
-			toolVersion = versions["jacoco"]
+			toolVersion = rootProject.libs.versions.jacoco.get()
 		}
 	}
 
 	repositories {
-		// mavenLocal()
 		mavenCentral()
 		maven(url = "https://oss.sonatype.org/content/repositories/snapshots") {
 			mavenContent {
 				snapshotsOnly()
 			}
 		}
+		maven(url = "https://jitpack.io") {
+			mavenContent {
+				includeModule("com.github.gunnarmorling", "jfrunit")
+			}
+		}
+	}
+}
+
+val clearTempRepoDir by tasks.registering {
+	doFirst {
+		tempRepoDir.deleteRecursively()
 	}
 }
 
 subprojects {
 
-	if (project in jupiterProjects) {
-		group = property("jupiterGroup")!!
-	}
-	else if (project in platformProjects) {
-		group = property("platformGroup")!!
-		version = property("platformVersion")!!
-	}
-	else if (project in vintageProjects) {
-		group = property("vintageGroup")!!
-		version = property("vintageVersion")!!
+	when (project) {
+		in jupiterProjects -> {
+			group = property("jupiterGroup")!!
+		}
+		in platformProjects -> {
+			group = property("platformGroup")!!
+			version = property("platformVersion")!!
+		}
+		in vintageProjects -> {
+			group = property("vintageGroup")!!
+			version = property("vintageVersion")!!
+		}
 	}
 
 	tasks.withType<AbstractArchiveTask>().configureEach {
@@ -146,13 +161,17 @@ subprojects {
 				licenseHeaderFile(headerFile, "(package|import|open|module) ")
 				importOrderFile(importOrderConfigFile)
 				eclipse().configFile(javaFormatterConfigFile)
-				removeUnusedImports()
+				if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {
+					// Doesn't work with Java 15 text blocks, see https://github.com/diffplug/spotless/issues/713
+					removeUnusedImports()
+				}
 				trimTrailingWhitespace()
 				endWithNewline()
 			}
 
 			kotlin {
-				ktlint(versions["ktlint"])
+				targetExclude("**/src/test/resources/**")
+				ktlint(libs.versions.ktlint.get())
 				licenseHeaderFile(headerFile)
 				trimTrailingWhitespace()
 				endWithNewline()
@@ -160,20 +179,42 @@ subprojects {
 		}
 
 		afterEvaluate {
-			if (enableJaCoCo && project in jacocoCoveredProjects) {
-				val jarTask = (tasks.findByName("shadowJar") ?: tasks["jar"]) as Jar
-				val extractJar by tasks.registering(Copy::class) {
-					from(zipTree(jarTask.archivePath))
-					into(jacocoClassesDir)
-					include("**/*.class")
-					// don't report coverage for shadowed classes
-					exclude("**/shadow/**")
-					// don't version-specific classes of MR JARs
-					exclude("META-INF/versions/**")
-					includeEmptyDirs = false
-					onlyIf { jarTask.enabled }
+			if (enableJaCoCo) {
+				if (project in jacocoCoveredProjects) {
+					val jarTask = (tasks.findByName("shadowJar") ?: tasks["jar"]) as Jar
+					val extractJar by tasks.registering(Copy::class) {
+						from(zipTree(jarTask.archiveFile))
+						into(jacocoClassesDir)
+						include("**/*.class")
+						// don't report coverage for shadowed classes
+						exclude("**/shadow/**")
+						// don't version-specific classes of MR JARs
+						exclude("META-INF/versions/**")
+						includeEmptyDirs = false
+						onlyIf { jarTask.enabled }
+					}
+					jarTask.finalizedBy(extractJar)
 				}
-				jarTask.finalizedBy(extractJar)
+				if (project in jacocoTestProjects) {
+					tasks.named<Test>("test") {
+						finalizedBy("jacocoTestReport")
+					}
+					tasks.named<JacocoReport>("jacocoTestReport").configure {
+						dependsOn("test")
+						reports {
+							html.isEnabled = true
+							xml.isEnabled = true
+							csv.isEnabled = false
+						}
+						jacocoCoveredProjects.forEach {
+							dependsOn(it.tasks.named("extractJar"))
+							it.pluginManager.withPlugin("java") {
+								sourceDirectories.setFrom(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
+							}
+						}
+						classDirectories.setFrom(files(jacocoClassesDir))
+					}
+				}
 			}
 		}
 	}
@@ -187,6 +228,11 @@ subprojects {
 						url = uri(tempRepoDir)
 					}
 				}
+			}
+		}
+		tasks.withType<PublishToMavenRepository>().configureEach {
+			if (name.endsWith("To${tempRepoName.capitalize()}Repository")) {
+				dependsOn(clearTempRepoDir)
 			}
 		}
 	}
@@ -245,6 +291,7 @@ rootProject.apply {
 			register<JacocoReport>("jacocoRootReport") {
 				dependsOn(jacocoMerge)
 				jacocoCoveredProjects.forEach {
+					dependsOn(it.tasks.named("extractJar"))
 					it.pluginManager.withPlugin("java") {
 						sourceDirectories.from(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
 					}

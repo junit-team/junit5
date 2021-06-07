@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,10 +11,11 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.List;
 
 import de.sormuras.bartholdy.Tool;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 /**
@@ -33,22 +35,22 @@ class GradleMissingEngineTests {
 
 	@Test
 	void gradle_wrapper() {
-		test(new GradleWrapper(Paths.get("..")), "wrapper");
+		test(new GradleWrapper(Paths.get("..")));
 	}
 
-	private void test(Tool gradle, String version) {
+	private void test(Tool gradle) {
 		var project = "gradle-missing-engine";
 		var result = Request.builder() //
 				.setProject(project) //
-				.setWorkspace(project + '-' + version) //
+				.setWorkspace(project + "-wrapper") //
 				.setTool(gradle) //
-				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
+				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
-				.build() //
+				.setTimeout(Duration.ofMinutes(2)).build() //
 				.run();
 
-		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		assertEquals(1, result.getExitCode());
 		assertLinesMatch(List.of( //

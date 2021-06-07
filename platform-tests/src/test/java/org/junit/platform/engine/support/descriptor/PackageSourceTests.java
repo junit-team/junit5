@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -48,24 +48,24 @@ class PackageSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void packageSourceFromPackageName() {
-		String testPackage = getClass().getPackage().getName();
-		PackageSource source = PackageSource.from(testPackage);
+		var testPackage = getClass().getPackage().getName();
+		var source = PackageSource.from(testPackage);
 
 		assertThat(source.getPackageName()).isEqualTo(testPackage);
 	}
 
 	@Test
 	void packageSourceFromPackageReference() {
-		Package testPackage = getClass().getPackage();
-		PackageSource source = PackageSource.from(testPackage);
+		var testPackage = getClass().getPackage();
+		var source = PackageSource.from(testPackage);
 
 		assertThat(source.getPackageName()).isEqualTo(testPackage.getName());
 	}
 
 	@Test
 	void equalsAndHashCodeForPackageSource() {
-		Package pkg1 = getClass().getPackage();
-		Package pkg2 = String.class.getPackage();
+		var pkg1 = getClass().getPackage();
+		var pkg2 = String.class.getPackage();
 		assertEqualsAndHashCode(PackageSource.from(pkg1), PackageSource.from(pkg1), PackageSource.from(pkg2));
 	}
 

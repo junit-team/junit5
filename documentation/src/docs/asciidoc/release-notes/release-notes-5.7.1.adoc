@@ -1,0 +1,60 @@
+[[release-notes-5.7.1]]
+== 5.7.1
+
+*Date of Release:* February 4, 2021
+
+*Scope:* Bug fixes since 5.7.0
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/52?closed=1+[5.7.1] milestone page in the JUnit repository on
+GitHub.
+
+
+[[release-notes-5.7.1-general-bug-fixes]]
+=== General bug fixes
+
+* For compatibility with `JarInputStream`, all JARs now contain `META-INF/` and
+  `META-INF/MANIFEST.MF` as their first entries again.
+
+
+[[release-notes-5.7.1-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* `StringUtils.nullSafeToString()` now returns `"null"` if the invocation of `toString()`
+  on the supplied object returns `null`. Although this is an internal utility, the effect
+  of this change may be witnessed by end users and test engine or extension authors.
+* Method `scanForClassesInPackage(String)` in `ClasspathScanner` now returns a valid list
+  of class names when the package name is equal to the name of a module on the module path.
+* The legacy XML report now always includes container-level failures (e.g. from
+  `@BeforeAll` Jupiter lifecycle methods).
+
+
+[[release-notes-5.7.1-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* If the `toString()` implementation of an argument passed to a `@ParameterizedTest`
+  method returns `null`, the display name formatter for the parameterized test now treats
+  the name of the corresponding argument as `"null"` instead of throwing an exception.
+  This fixes a regression introduced in JUnit Jupiter 5.7.0.
+* Creator functions passed to `ExtensionContext.Store.getOrComputeIfAbsent()` are now only
+  called once even if they throw an exception.
+
+==== New Features and Improvements
+
+* The user guide now explains Nested Tests in more detail.
+* New utility method in `TestInstancePreDestroyCallback` helps to ensure all test
+  instances are processed when used in conjunction with `@Nested` tests.
+* `JAVA_17` has been added to the `JRE` enum for use with JRE-based execution conditions.
+
+
+[[release-notes-5.7.1-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* The legacy reporting name of top-level test classes is now always their fully-qualified
+  class name. Previously, a textual description was returned for JUnit 3 suites.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -285,16 +285,36 @@ class AssertLinesMatchAssertionsTests {
 
 		@Test
 		void assertLinesMatchPlainEqualLists() {
-			List<String> expected = List.of("first line", "second line", "third line", "last line");
-			List<String> actual = List.of("first line", "second line", "third line", "last line");
-			assertLinesMatch(expected, actual);
+			var expected = """
+					first line
+					second line
+					third line
+					last line
+					""";
+			var actual = """
+					first line
+					second line
+					third line
+					last line
+					""";
+			assertLinesMatch(expected.lines(), actual.lines());
 		}
 
 		@Test
 		void assertLinesMatchUsingRegexPatterns() {
-			List<String> expected = List.of("^first.+line", "second\\s*line", "th.rd l.ne", "last line$");
-			List<String> actual = List.of("first line", "second line", "third line", "last line");
-			assertLinesMatch(expected, actual);
+			var expected = """
+					^first.+line
+					second\\s*line
+					th.rd l.ne
+					last line$
+					""";
+			var actual = """
+					first line
+					second line
+					third line
+					last line
+					""";
+			assertLinesMatch(expected.lines(), actual.lines());
 		}
 	}
 

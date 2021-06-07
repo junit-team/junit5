@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -41,7 +41,10 @@ class HelperTests {
 			"junit-platform-launcher", //
 			"junit-platform-reporting", //
 			"junit-platform-runner", //
+			"junit-platform-suite", //
 			"junit-platform-suite-api", //
+			"junit-platform-suite-commons", //
+			"junit-platform-suite-engine", //
 			"junit-platform-testkit", //
 			"junit-vintage-engine"//
 		), Helper.loadModuleDirectoryNames());
@@ -56,13 +59,13 @@ class HelperTests {
 
 	@Test
 	void nonExistingJdkVersionYieldsAnEmptyOptional() {
-		assertEquals(Optional.empty(), Helper.getJdkHomeFromMavenToolchains("does not exist"));
+		assertEquals(Optional.empty(), Helper.getJavaHome("does not exist"));
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = { 8, 9, 10, 11, 12, 13 })
-	void checkMavenToolchainsPointingValidJdkInstallations(int version) {
-		var home = Helper.getJdkHomeFromMavenToolchains("" + version);
+	@ValueSource(ints = 8)
+	void checkJavaHome(int version) {
+		var home = Helper.getJavaHome(String.valueOf(version));
 		assumeTrue(home.isPresent(), "No 'jdk' element found in Maven toolchain for: " + version);
 		assertTrue(Files.isDirectory(home.get()));
 	}

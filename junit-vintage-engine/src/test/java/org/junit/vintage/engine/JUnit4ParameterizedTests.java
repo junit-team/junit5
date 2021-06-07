@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,6 @@
 
 package org.junit.vintage.engine;
 
-import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
@@ -25,7 +24,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.core.LauncherFactory;
@@ -53,11 +51,11 @@ class JUnit4ParameterizedTests {
 	void selectingOneTestFromParameterizedClassRunsWithAllValues() {
 		executeTests(selectMethod(JUnit4ParameterizedTestCase.class, "test1"));
 
-		assertEquals(singletonMap(FAILED, 3), callCounts);
+		assertEquals(Map.of(FAILED, 3), callCounts);
 	}
 
 	private void executeTests(DiscoverySelector selector) {
-		Launcher launcher = LauncherFactory.create();
+		var launcher = LauncherFactory.create();
 		launcher.registerTestExecutionListeners(new StatusTrackingListener());
 
 		// @formatter:off

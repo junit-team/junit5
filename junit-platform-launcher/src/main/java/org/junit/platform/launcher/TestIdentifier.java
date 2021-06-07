@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,10 +10,18 @@
 
 package org.junit.platform.launcher;
 
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 import static java.util.Collections.unmodifiableSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -27,6 +35,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestDescriptor.Type;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * Immutable data transfer object that represents a test or container which is
@@ -39,14 +48,17 @@ import org.junit.platform.engine.TestTag;
 public final class TestIdentifier implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final ObjectStreamField[] serialPersistentFields = ObjectStreamClass.lookup(
+		SerializedForm.class).getFields();
 
-	private final String uniqueId;
-	private final String parentId;
-	private final String displayName;
-	private final String legacyReportingName;
-	private final TestSource source;
-	private final Set<TestTag> tags;
-	private final Type type;
+	// These are effectively final but not technically due to late initialization when deserializing
+	private /* final */ UniqueId uniqueId;
+	private /* final */ UniqueId parentId;
+	private /* final */ String displayName;
+	private /* final */ String legacyReportingName;
+	private /* final */ TestSource source;
+	private /* final */ Set<TestTag> tags;
+	private /* final */ Type type;
 
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
@@ -54,31 +66,42 @@ public final class TestIdentifier implements Serializable {
 	@API(status = INTERNAL, since = "1.0")
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
-		String uniqueId = testDescriptor.getUniqueId().toString();
+		UniqueId uniqueId = testDescriptor.getUniqueId();
 		String displayName = testDescriptor.getDisplayName();
 		TestSource source = testDescriptor.getSource().orElse(null);
 		Set<TestTag> tags = testDescriptor.getTags();
 		Type type = testDescriptor.getType();
-		String parentId = testDescriptor.getParent().map(
-			parentDescriptor -> parentDescriptor.getUniqueId().toString()).orElse(null);
+		UniqueId parentId = testDescriptor.getParent().map(TestDescriptor::getUniqueId).orElse(null);
 		String legacyReportingName = testDescriptor.getLegacyReportingName();
 		return new TestIdentifier(uniqueId, displayName, source, tags, type, parentId, legacyReportingName);
 	}
 
-	TestIdentifier(String uniqueId, String displayName, TestSource source, Set<TestTag> tags, Type type,
-			String parentId, String legacyReportingName) {
+	private TestIdentifier(UniqueId uniqueId, String displayName, TestSource source, Set<TestTag> tags, Type type,
+			UniqueId parentId, String legacyReportingName) {
 		Preconditions.notNull(type, "TestDescriptor.Type must not be null");
 		this.uniqueId = uniqueId;
 		this.parentId = parentId;
 		this.displayName = displayName;
 		this.source = source;
-		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
+		this.tags = copyOf(tags);
 		this.type = type;
 		this.legacyReportingName = legacyReportingName;
 	}
 
+	private Set<TestTag> copyOf(Set<TestTag> tags) {
+		switch (tags.size()) {
+			case 0:
+				return emptySet();
+			case 1:
+				return singleton(getOnlyElement(tags));
+			default:
+				return new LinkedHashSet<>(tags);
+		}
+	}
+
 	/**
-	 * Get the unique ID of the represented test or container.
+	 * Get the unique ID of the represented test or container as a
+	 * {@code String}.
 	 *
 	 * <p>Uniqueness must be guaranteed across an entire
 	 * {@linkplain TestPlan test plan}, regardless of how many engines are used
@@ -87,11 +110,28 @@ public final class TestIdentifier implements Serializable {
 	 * @return the unique ID for this identifier; never {@code null}
 	 */
 	public String getUniqueId() {
+		return this.uniqueId.toString();
+	}
+
+	/**
+	 * Get the unique ID of the represented test or container as a
+	 * {@code UniqueId}.
+	 *
+	 * <p>Uniqueness must be guaranteed across an entire
+	 * {@linkplain TestPlan test plan}, regardless of how many engines are used
+	 * behind the scenes.
+	 *
+	 * @return the unique ID for this identifier; never {@code null}
+	 * @since 5.8
+	 */
+	@API(status = STABLE, since = "5.8")
+	public UniqueId getUniqueIdObject() {
 		return this.uniqueId;
 	}
 
 	/**
-	 * Get the unique ID of this identifier's parent, if available.
+	 * Get the unique ID of this identifier's parent as a {@code String}, if
+	 * available.
 	 *
 	 * <p>An identifier without a parent is called a <em>root</em>.
 	 *
@@ -99,6 +139,21 @@ public final class TestIdentifier implements Serializable {
 	 * never {@code null} though potentially <em>empty</em>
 	 */
 	public Optional<String> getParentId() {
+		return getParentIdObject().map(UniqueId::toString);
+	}
+
+	/**
+	 * Get the unique ID of this identifier's parent as a {@code UniqueId}, if
+	 * available.
+	 *
+	 * <p>An identifier without a parent is called a <em>root</em>.
+	 *
+	 * @return a container for the unique ID for this identifier's parent;
+	 * never {@code null} though potentially <em>empty</em>
+	 * @since 5.8
+	 */
+	@API(status = STABLE, since = "5.8")
+	public Optional<UniqueId> getParentIdObject() {
 		return Optional.ofNullable(this.parentId);
 	}
 
@@ -126,12 +181,13 @@ public final class TestIdentifier implements Serializable {
 	 * reporting infrastructure &mdash; for example, for reporting systems built
 	 * on the Ant-based XML reporting format for JUnit 4.
 	 *
-	 * <p>The default implementation simply delegates to {@link #getDisplayName()}.
+	 * <p>The default implementation delegates to {@link #getDisplayName()}.
 	 *
 	 * @return the legacy reporting name; never {@code null} or blank
 	 * @see org.junit.platform.engine.TestDescriptor#getLegacyReportingName()
-	 * @see org.junit.platform.launcher.listeners.LegacyReportingUtils
+	 * @see org.junit.platform.reporting.legacy.LegacyReportingUtils
 	 */
+	@SuppressWarnings("JavadocReference")
 	public String getLegacyReportingName() {
 		return this.legacyReportingName;
 	}
@@ -184,7 +240,7 @@ public final class TestIdentifier implements Serializable {
 	 * @see TestTag
 	 */
 	public Set<TestTag> getTags() {
-		return this.tags;
+		return unmodifiableSet(this.tags);
 	}
 
 	@Override
@@ -214,6 +270,77 @@ public final class TestIdentifier implements Serializable {
 				.append("type", this.type)
 				.toString();
 		// @formatter:on
+	}
+
+	private void writeObject(ObjectOutputStream s) throws IOException {
+		SerializedForm serializedForm = new SerializedForm(this);
+		serializedForm.serialize(s);
+	}
+
+	private void readObject(ObjectInputStream s) throws ClassNotFoundException, IOException {
+		SerializedForm serializedForm = SerializedForm.deserialize(s);
+		uniqueId = UniqueId.parse(serializedForm.uniqueId);
+		displayName = serializedForm.displayName;
+		source = serializedForm.source;
+		tags = serializedForm.tags;
+		type = serializedForm.type;
+		parentId = UniqueId.parse(serializedForm.parentId);
+		legacyReportingName = serializedForm.legacyReportingName;
+	}
+
+	/**
+	 * Represents the serialized output of {@code TestIdentifier}. The fields on this
+	 * class match the fields that {@code TestIdentifier} had prior to 5.8.
+	 */
+	private static class SerializedForm implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		private final String uniqueId;
+		private final String parentId;
+		private final String displayName;
+		private final String legacyReportingName;
+		private final TestSource source;
+		private final Set<TestTag> tags;
+		private final Type type;
+
+		SerializedForm(TestIdentifier testIdentifier) {
+			this.uniqueId = testIdentifier.uniqueId.toString();
+			this.parentId = testIdentifier.parentId.toString();
+			this.displayName = testIdentifier.displayName;
+			this.legacyReportingName = testIdentifier.legacyReportingName;
+			this.source = testIdentifier.source;
+			this.tags = testIdentifier.tags;
+			this.type = testIdentifier.type;
+		}
+
+		@SuppressWarnings("unchecked")
+		private SerializedForm(ObjectInputStream.GetField fields) throws IOException {
+			this.uniqueId = (String) fields.get("uniqueId", null);
+			this.parentId = (String) fields.get("parentId", null);
+			this.displayName = (String) fields.get("displayName", null);
+			this.legacyReportingName = (String) fields.get("legacyReportingName", null);
+			this.source = (TestSource) fields.get("source", null);
+			this.tags = (Set<TestTag>) fields.get("tags", null);
+			this.type = (Type) fields.get("type", null);
+		}
+
+		void serialize(ObjectOutputStream s) throws IOException {
+			ObjectOutputStream.PutField fields = s.putFields();
+			fields.put("uniqueId", uniqueId);
+			fields.put("parentId", parentId);
+			fields.put("displayName", displayName);
+			fields.put("legacyReportingName", legacyReportingName);
+			fields.put("source", source);
+			fields.put("tags", tags);
+			fields.put("type", type);
+			s.writeFields();
+		}
+
+		static SerializedForm deserialize(ObjectInputStream s) throws ClassNotFoundException, IOException {
+			ObjectInputStream.GetField fields = s.readFields();
+			return new SerializedForm(fields);
+		}
 	}
 
 }

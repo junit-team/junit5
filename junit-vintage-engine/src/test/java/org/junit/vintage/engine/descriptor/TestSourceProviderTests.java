@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.runner.Description;
 import org.junit.vintage.engine.samples.junit4.ConcreteJUnit4TestCase;
@@ -26,12 +25,12 @@ class TestSourceProviderTests {
 
 	@Test
 	void findsInheritedMethod() {
-		Description description = Description.createTestDescription(ConcreteJUnit4TestCase.class, "theTest");
+		var description = Description.createTestDescription(ConcreteJUnit4TestCase.class, "theTest");
 
-		TestSource source = new TestSourceProvider().findTestSource(description);
+		var source = new TestSourceProvider().findTestSource(description);
 		assertThat(source).isInstanceOf(MethodSource.class);
 
-		MethodSource methodSource = (MethodSource) source;
+		var methodSource = (MethodSource) source;
 		assertEquals(ConcreteJUnit4TestCase.class.getName(), methodSource.getClassName());
 		assertEquals("theTest", methodSource.getMethodName());
 	}

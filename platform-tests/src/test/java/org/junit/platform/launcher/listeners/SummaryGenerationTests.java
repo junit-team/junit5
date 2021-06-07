@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,14 +15,17 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
+import static org.mockito.Mockito.mock;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -37,7 +40,7 @@ import org.junit.platform.launcher.TestPlan;
 class SummaryGenerationTests {
 
 	private final SummaryGeneratingListener listener = new SummaryGeneratingListener();
-	private final TestPlan testPlan = TestPlan.from(Collections.emptyList());
+	private final TestPlan testPlan = TestPlan.from(List.of(), mock(ConfigurationParameters.class));
 
 	@Test
 	void emptyReport() {
@@ -46,7 +49,7 @@ class SummaryGenerationTests {
 
 		assertEquals(0, listener.getSummary().getTestsFailedCount());
 
-		String summaryString = summaryAsString();
+		var summaryString = summaryAsString();
 		assertAll("summary", //
 			() -> assertTrue(summaryString.contains("Test run finished after"), "test run"), //
 
@@ -70,15 +73,15 @@ class SummaryGenerationTests {
 
 	@Test
 	void reportingCorrectCounts() {
-		TestIdentifier successfulContainer = createContainerIdentifier("c1");
-		TestIdentifier failedContainer = createContainerIdentifier("c2");
-		TestIdentifier abortedContainer = createContainerIdentifier("c3");
-		TestIdentifier skippedContainer = createContainerIdentifier("c4");
+		var successfulContainer = createContainerIdentifier("c1");
+		var failedContainer = createContainerIdentifier("c2");
+		var abortedContainer = createContainerIdentifier("c3");
+		var skippedContainer = createContainerIdentifier("c4");
 
-		TestIdentifier successfulTest = createTestIdentifier("t1");
-		TestIdentifier failedTest = createTestIdentifier("t2");
-		TestIdentifier abortedTest = createTestIdentifier("t3");
-		TestIdentifier skippedTest = createTestIdentifier("t4");
+		var successfulTest = createTestIdentifier("t1");
+		var failedTest = createTestIdentifier("t2");
+		var abortedTest = createTestIdentifier("t3");
+		var skippedTest = createTestIdentifier("t4");
 
 		listener.testPlanExecutionStarted(testPlan);
 
@@ -105,7 +108,7 @@ class SummaryGenerationTests {
 
 		listener.testPlanExecutionFinished(testPlan);
 
-		String summaryString = summaryAsString();
+		var summaryString = summaryAsString();
 		try {
 			assertAll("summary", //
 				() -> assertTrue(summaryString.contains("4 containers found"), "containers found"), //
@@ -131,20 +134,20 @@ class SummaryGenerationTests {
 
 	@Test
 	void canGetListOfFailures() {
-		RuntimeException failedException = new RuntimeException("Pow!");
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "1"), "failingTest") {
+		var failedException = new RuntimeException("Pow!");
+		var testDescriptor = new TestDescriptorStub(UniqueId.root("root", "1"), "failingTest") {
 
 			@Override
 			public Optional<TestSource> getSource() {
 				return Optional.of(ClassSource.from(Object.class));
 			}
 		};
-		TestIdentifier failingTest = TestIdentifier.from(testDescriptor);
+		var failingTest = TestIdentifier.from(testDescriptor);
 		listener.testPlanExecutionStarted(testPlan);
 		listener.executionStarted(failingTest);
 		listener.executionFinished(failingTest, TestExecutionResult.failed(failedException));
 		listener.testPlanExecutionFinished(testPlan);
-		final List<TestExecutionSummary.Failure> failures = listener.getSummary().getFailures();
+		final var failures = listener.getSummary().getFailures();
 		assertThat(failures).hasSize(1);
 		assertThat(failures.get(0).getException()).isEqualTo(failedException);
 		assertThat(failures.get(0).getTestIdentifier()).isEqualTo(failingTest);
@@ -152,20 +155,20 @@ class SummaryGenerationTests {
 
 	@Test
 	void reportingCorrectFailures() {
-		IllegalArgumentException iaeCausedBy = new IllegalArgumentException("Illegal Argument Exception");
-		RuntimeException failedException = new RuntimeException("Runtime Exception", iaeCausedBy);
-		NullPointerException npeSuppressed = new NullPointerException("Null Pointer Exception");
+		var iaeCausedBy = new IllegalArgumentException("Illegal Argument Exception");
+		var failedException = new RuntimeException("Runtime Exception", iaeCausedBy);
+		var npeSuppressed = new NullPointerException("Null Pointer Exception");
 		failedException.addSuppressed(npeSuppressed);
 
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
+		var testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
 
 			@Override
 			public Optional<TestSource> getSource() {
 				return Optional.of(ClassSource.from(Object.class));
 			}
 		};
-		TestIdentifier failed = TestIdentifier.from(testDescriptor);
-		TestIdentifier aborted = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("root", "3"), "abortedTest"));
+		var failed = TestIdentifier.from(testDescriptor);
+		var aborted = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("root", "3"), "abortedTest"));
 
 		listener.testPlanExecutionStarted(testPlan);
 		listener.executionStarted(failed);
@@ -177,7 +180,7 @@ class SummaryGenerationTests {
 		// An aborted test is not a failure
 		assertEquals(1, listener.getSummary().getTestsFailedCount());
 
-		String failuresString = failuresAsString();
+		var failuresString = failuresAsString();
 		assertAll("failures", //
 			() -> assertTrue(failuresString.contains("Failures (1)"), "test failures"), //
 			() -> assertTrue(failuresString.contains(Object.class.getName()), "source"), //
@@ -190,20 +193,20 @@ class SummaryGenerationTests {
 
 	@Test
 	public void reportingCircularFailure() {
-		IllegalArgumentException iaeCausedBy = new IllegalArgumentException("Illegal Argument Exception");
-		RuntimeException failedException = new RuntimeException("Runtime Exception", iaeCausedBy);
-		NullPointerException npeSuppressed = new NullPointerException("Null Pointer Exception");
+		var iaeCausedBy = new IllegalArgumentException("Illegal Argument Exception");
+		var failedException = new RuntimeException("Runtime Exception", iaeCausedBy);
+		var npeSuppressed = new NullPointerException("Null Pointer Exception");
 		failedException.addSuppressed(npeSuppressed);
 		npeSuppressed.addSuppressed(iaeCausedBy);
 
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
+		var testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
 
 			@Override
 			public Optional<TestSource> getSource() {
 				return Optional.of(ClassSource.from(Object.class));
 			}
 		};
-		TestIdentifier failed = TestIdentifier.from(testDescriptor);
+		var failed = TestIdentifier.from(testDescriptor);
 
 		listener.testPlanExecutionStarted(testPlan);
 		listener.executionStarted(failed);
@@ -212,7 +215,7 @@ class SummaryGenerationTests {
 
 		assertEquals(1, listener.getSummary().getTestsFailedCount());
 
-		String failuresString = failuresAsString();
+		var failuresString = failuresAsString();
 		assertAll("failures", //
 			() -> assertTrue(failuresString.contains("Suppressed: " + npeSuppressed), "Suppressed exception"), //
 			() -> assertTrue(failuresString.contains("Circular reference: " + iaeCausedBy), "Circular reference"), //
@@ -221,36 +224,53 @@ class SummaryGenerationTests {
 		);
 	}
 
-	@SuppressWarnings("deprecation")
+	@RepeatedTest(10)
+	void reportingConcurrentlyFinishedTests() throws Exception {
+		var numThreads = 250;
+		var testIdentifier = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
+			@Override
+			public Optional<TestSource> getSource() {
+				return Optional.of(ClassSource.from(Object.class));
+			}
+		});
+		var result = TestExecutionResult.failed(new RuntimeException());
+
+		listener.testPlanExecutionStarted(testPlan);
+		executeConcurrently(numThreads, () -> {
+			listener.executionStarted(testIdentifier);
+			listener.executionFinished(testIdentifier, result);
+		});
+		listener.testPlanExecutionFinished(testPlan);
+
+		assertThat(listener.getSummary().getFailures()).hasSize(numThreads);
+	}
+
 	private TestIdentifier createTestIdentifier(String uniqueId) {
-		TestIdentifier identifier = TestIdentifier.from(
-			new TestDescriptorStub(UniqueId.root("test", uniqueId), uniqueId));
-		testPlan.add(identifier);
+		var identifier = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("test", uniqueId), uniqueId));
+		testPlan.addInternal(identifier);
 		return identifier;
 	}
 
-	@SuppressWarnings("deprecation")
 	private TestIdentifier createContainerIdentifier(String uniqueId) {
-		TestIdentifier identifier = TestIdentifier.from(
-			new TestDescriptorStub(UniqueId.root("container", uniqueId), uniqueId) {
+		var identifier = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("container", uniqueId), uniqueId) {
 
-				@Override
-				public Type getType() {
-					return Type.CONTAINER;
-				}
-			});
-		testPlan.add(identifier);
+			@Override
+			public Type getType() {
+				return Type.CONTAINER;
+			}
+		});
+		testPlan.addInternal(identifier);
 		return identifier;
 	}
 
 	private String summaryAsString() {
-		StringWriter summaryWriter = new StringWriter();
+		var summaryWriter = new StringWriter();
 		listener.getSummary().printTo(new PrintWriter(summaryWriter));
 		return summaryWriter.toString();
 	}
 
 	private String failuresAsString() {
-		StringWriter failuresWriter = new StringWriter();
+		var failuresWriter = new StringWriter();
 		listener.getSummary().printFailuresTo(new PrintWriter(failuresWriter));
 		return failuresWriter.toString();
 	}

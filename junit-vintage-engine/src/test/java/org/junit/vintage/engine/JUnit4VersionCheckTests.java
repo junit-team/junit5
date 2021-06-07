@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2021 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -31,6 +31,8 @@ class JUnit4VersionCheckTests {
 	void handlesParsingSupportedVersionIdWithStandardVersionFormat() {
 		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.12"));
 		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.13"));
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.13.1"));
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.13.2"));
 	}
 
 	/**
@@ -46,8 +48,7 @@ class JUnit4VersionCheckTests {
 
 	@Test
 	void throwsExceptionForUnsupportedVersion() {
-		JUnitException exception = assertThrows(JUnitException.class,
-			() -> JUnit4VersionCheck.checkSupported(() -> "4.11"));
+		var exception = assertThrows(JUnitException.class, () -> JUnit4VersionCheck.checkSupported(() -> "4.11"));
 
 		assertEquals("Unsupported version of junit:junit: 4.11. Please upgrade to version 4.12 or later.",
 			exception.getMessage());
@@ -57,7 +58,7 @@ class JUnit4VersionCheckTests {
 	void handlesErrorsReadingVersion() {
 		Error error = new NoClassDefFoundError();
 
-		JUnitException exception = assertThrows(JUnitException.class, () -> JUnit4VersionCheck.checkSupported(() -> {
+		var exception = assertThrows(JUnitException.class, () -> JUnit4VersionCheck.checkSupported(() -> {
 			throw error;
 		}));
 
@@ -67,7 +68,7 @@ class JUnit4VersionCheckTests {
 
 	@Test
 	void handlesErrorsParsingVersion() {
-		JUnitException exception = assertThrows(JUnitException.class,
+		var exception = assertThrows(JUnitException.class,
 			() -> JUnit4VersionCheck.checkSupported(() -> "not a version"));
 
 		assertEquals("Failed to parse version of junit:junit: not a version", exception.getMessage());
@@ -76,7 +77,7 @@ class JUnit4VersionCheckTests {
 	@Test
 	@Tag("missing-junit4")
 	void handlesMissingJUnit() {
-		JUnitException exception = assertThrows(JUnitException.class, JUnit4VersionCheck::checkSupported);
+		var exception = assertThrows(JUnitException.class, JUnit4VersionCheck::checkSupported);
 
 		assertEquals("Invalid class/module path: junit-vintage-engine is present but junit:junit is not. "
 				+ "Please either remove junit-vintage-engine or add junit:junit, or alternatively use "
