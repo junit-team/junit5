@@ -97,6 +97,7 @@ public class ClasspathResourceSource implements TestSource {
 	 * @since 1.3
 	 * @see #CLASSPATH_SCHEME
 	 */
+	@API(status = STABLE, since = "1.3")
 	public static ClasspathResourceSource from(URI uri) {
 		Preconditions.notNull(uri, "URI must not be null");
 		Preconditions.condition(CLASSPATH_SCHEME.equals(uri.getScheme()),

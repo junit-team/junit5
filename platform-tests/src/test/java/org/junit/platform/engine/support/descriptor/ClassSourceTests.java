@@ -95,7 +95,7 @@ class ClassSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void classSourceFromURI() throws URISyntaxException {
+	void classSourceFromUri() throws URISyntaxException {
 		var source = ClassSource.from(new URI("class:java.lang.Object"));
 
 		assertThat(source.getJavaClass()).isEqualTo(Object.class);
@@ -103,17 +103,34 @@ class ClassSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void classSourceFromURIWithLineQuery() throws URISyntaxException {
+	void classSourceFromUriWithLineNumber() throws URISyntaxException {
+		var position = FilePosition.from(42);
 		var source = ClassSource.from(new URI("class:java.lang.Object?line=42"));
 
 		assertThat(source.getJavaClass()).isEqualTo(Object.class);
-		assertThat(source.getPosition()).isNotEmpty();
-		assertThat(source.getPosition().get().getLine()).isEqualTo(42);
+		assertThat(source.getPosition()).hasValue(position);
 	}
 
 	@Test
-	void classSourceFromURIWithMalformedQuery() throws URISyntaxException {
-		var source = ClassSource.from(new URI("class:java.lang.Object?foo=42"));
+	void classSourceFromUriWithLineAndColumnNumbers() throws URISyntaxException {
+		var position = FilePosition.from(42, 23);
+		var source = ClassSource.from(new URI("class:java.lang.Object?line=42&foo=bar&column=23"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).hasValue(position);
+	}
+
+	@Test
+	void classSourceFromUriWithEmptyQuery() throws URISyntaxException {
+		var source = ClassSource.from(new URI("class:java.lang.Object?"));
+
+		assertThat(source.getJavaClass()).isEqualTo(Object.class);
+		assertThat(source.getPosition()).isEmpty();
+	}
+
+	@Test
+	void classSourceFromUriWithUnsupportedParametersInQuery() throws URISyntaxException {
+		var source = ClassSource.from(new URI("class:java.lang.Object?foo=42&bar"));
 
 		assertThat(source.getJavaClass()).isEqualTo(Object.class);
 		assertThat(source.getPosition()).isEmpty();

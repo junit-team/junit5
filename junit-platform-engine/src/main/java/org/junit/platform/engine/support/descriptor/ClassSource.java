@@ -46,11 +46,11 @@ public class ClassSource implements TestSource {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * {@link URI} {@linkplain URI#getScheme() scheme} for class
-	 * sources: {@value}
+	 * {@link URI} {@linkplain URI#getScheme() scheme} for class sources: {@value}
 	 *
-	 * @since 1.3
+	 * @since 1.8
 	 */
+	@API(status = STABLE, since = "1.8")
 	public static final String CLASS_SCHEME = "class";
 
 	/**
@@ -95,21 +95,24 @@ public class ClassSource implements TestSource {
 
 	/**
 	 * Create a new {@code ClassSource} from the supplied {@link URI}.
-	 * <p>
-	 * URIs should be formatted as <code>class:fully.qualified.class.Name</code>. An
-	 * optional query can be appended detailing <code>line</code> and/or
-	 * <code>column</code> numbers, e.g.
-	 * <code>class:com.foo.Bar?line=42&amp;column=13</code>. The URI fragment, if
-	 * present, is ignored.
+	 *
+	 * <p>URIs should be formatted as {@code class:fully.qualified.class.Name}.
+	 * The {@linkplain URI#getQuery() query} component of the {@code URI}, if
+	 * present, will be used to retrieve the {@link FilePosition} via
+	 * {@link FilePosition#fromQuery(String)}. For example, line 42 and column
+	 * 13 can be referenced in class {@code org.example.MyType} via the following
+	 * URI: {@code class:com.example.MyType?line=42&column=13}. The URI fragment,
+	 * if present, will be ignored.
 	 *
 	 * @param uri the {@code URI} for the class source; never {@code null}
 	 * @return a new {@code ClassSource}; never {@code null}
 	 * @throws PreconditionViolationException if the supplied {@code URI} is
-	 * {@code null} or if the scheme of the supplied {@code URI} is not equal
-	 * to the {@link #CLASS_SCHEME}, or if the specified class name is empty.
-	 * @since 1.3
+	 * {@code null}, if the scheme of the supplied {@code URI} is not equal
+	 * to the {@link #CLASS_SCHEME}, or if the specified class name is empty
+	 * @since 1.8
 	 * @see #CLASS_SCHEME
 	 */
+	@API(status = STABLE, since = "1.8")
 	public static ClassSource from(URI uri) {
 		Preconditions.notNull(uri, "URI must not be null");
 		Preconditions.condition(CLASS_SCHEME.equals(uri.getScheme()),
@@ -117,13 +120,11 @@ public class ClassSource implements TestSource {
 
 		String className = uri.getSchemeSpecificPart();
 		FilePosition filePosition = null;
-		int qi = className.indexOf('?');
-		if (qi >= 0) {
-			filePosition = FilePosition.fromQuery(className.substring(qi + 1)).orElse(null);
-			className = className.substring(0, qi);
+		int indexOfQuery = className.indexOf('?');
+		if (indexOfQuery >= 0) {
+			filePosition = FilePosition.fromQuery(className.substring(indexOfQuery + 1)).orElse(null);
+			className = className.substring(0, indexOfQuery);
 		}
-
-		Preconditions.condition(!className.isEmpty(), () -> "Class name cannot be empty");
 
 		return ClassSource.from(className, filePosition);
 	}
