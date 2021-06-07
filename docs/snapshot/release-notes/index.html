@@ -559,6 +559,12 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>New <code>ClassSource.from(URI)</code> static factory method for creating a <code>ClassSource</code> from a
+URI using the <code>class</code> scheme and optional query parameters specifying the line number
+and column number. This is analogous to the existing <code>ClasspathResourceSource.from(URI)</code>
+factory method.</p>
+</li>
+<li>
 <p>New <code>getConfigurationParameters()</code> method in the <code>TestPlan</code> which allows a
 <code>TestExecutionListener</code> to access
 <a href="../user-guide/index.html#running-tests-config-params">configuration parameters</a>. See
@@ -607,12 +613,12 @@ GraalVM native image. See the Javadoc for <code><a href="../api/org.junit.platfo
 specified on the annotation (e.g. <code>@TempDir("a")</code> and <code>@TempDir("b")</code>).</p>
 </li>
 <li>
-<p>New <code>named()</code> static factory method in the <code>Named</code> interface that serves as an
-<em>alias</em> for <code>Named.of()</code>. <code>named()</code> is intended to be used via <code>import static</code>.</p>
+<p>New <code>named()</code> static factory method in the <code>Named</code> interface that serves as an <em>alias</em>
+for <code>Named.of()</code>. <code>named()</code> is intended to be used via <code>import static</code>.</p>
 </li>
 <li>
-<p>New <code>class</code> URI scheme added for dynamic test sources. This allows tests to be located
-using the information available in a <code>StackTraceElement</code>.</p>
+<p>New <code>class</code> URI scheme for dynamic test sources. This allows tests to be located using
+the information available in a <code>StackTraceElement</code>.</p>
 </li>
 </ul>
 </div>
@@ -1062,7 +1068,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-06-05 09:04:34 UTC
+Last updated 2021-06-07 10:43:38 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
