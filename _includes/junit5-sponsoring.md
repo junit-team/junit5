@@ -90,20 +90,6 @@ Your donations will help to make that a reality!
       </a>
     </li>
     <li>
-      <a class="cardbronze" href="https://kreuzwerker.de/en/solution/remastering">
-        <div class="cardbronze-image">
-          <img style="width:80%" src="assets/img/sponsor-logo-kreuzwerker.svg" alt="kreuzwerker">
-        </div>
-        <div class="cardbronze-center">
-          <h4>kreuzwerker</h4>
-        </div>
-        <div class="cardbronze-bottom">
-          <h4>Bronze Sponsor</h4>
-          <p>Since June 2020</p>
-        </div>
-      </a>
-    </li>
-    <li>
       <a class="cardbronze" href="https://www.testmo.com/">
         <div class="cardbronze-image">
           <img style="width:80%" src="assets/img/sponsor-logo-testmo.svg" alt="testmo">
@@ -126,7 +112,6 @@ Your donations will help to make that a reality!
 - Stefan Gwihs
 - linux_china
 - Danny Preussler
-- Peter Quiel
 - Zerocode
 - Simon Schrottner
 - Zoran Regvart
