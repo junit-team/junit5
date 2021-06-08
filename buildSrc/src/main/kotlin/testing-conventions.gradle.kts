@@ -41,7 +41,7 @@ tasks.withType<Test>().configureEach {
 		jvmArgs(
 			"-XX:+UnlockDiagnosticVMOptions",
 			"-XX:+DebugNonSafepoints",
-			"-XX:StartFlightRecording=filename=${reports.junitXml.destination},dumponexit=true,settings=profile.jfc",
+			"-XX:StartFlightRecording=filename=${reports.junitXml.outputLocation.get()},dumponexit=true,settings=profile.jfc",
 			"-XX:FlightRecorderOptions=stackdepth=1024"
 		)
 	}

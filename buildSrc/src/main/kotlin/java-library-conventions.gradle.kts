@@ -141,7 +141,7 @@ val allMainClasses by tasks.registering {
 val compileModule by tasks.registering(JavaCompile::class) {
 	dependsOn(allMainClasses)
 	source = fileTree(moduleSourceDir)
-	destinationDir = moduleOutputDir
+	destinationDirectory.set(moduleOutputDir)
 	sourceCompatibility = "9"
 	targetCompatibility = "9"
 	classpath = files()
