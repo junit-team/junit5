@@ -37,7 +37,9 @@ on GitHub.
   containing the unique IDs. The generated file can be used to rerun those tests -- for
   example, in order to run the same set of tests executed on the JVM subsequently within a
   GraalVM native image. See the Javadoc for `{UniqueIdTrackingListener}` for details.
-
+* Generating Java Flight Recorder events via module `org.junit.platform.jfr` is now also
+  supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
+  <<../user-guide/index.adoc#running-tests, Flight Recorder Support>> for details.
 
 [[release-notes-5.8.0-M2-junit-jupiter]]
 === JUnit Jupiter
