@@ -261,10 +261,20 @@ afterEvaluate {
 	}
 	tasks {
 		compileJava {
-			options.release.set(extension.mainJavaVersion.majorVersion.toInt())
+			if (extension.configureRelease) {
+				options.release.set(extension.mainJavaVersion.majorVersion.toInt())
+			} else {
+				sourceCompatibility = extension.mainJavaVersion.majorVersion
+				targetCompatibility = extension.mainJavaVersion.majorVersion
+			}
 		}
 		compileTestJava {
-			options.release.set(extension.testJavaVersion.majorVersion.toInt())
+			if (extension.configureRelease) {
+				options.release.set(extension.testJavaVersion.majorVersion.toInt())
+			} else {
+				sourceCompatibility = extension.testJavaVersion.majorVersion
+				targetCompatibility = extension.testJavaVersion.majorVersion
+			}
 		}
 	}
 	pluginManager.withPlugin("groovy") {
