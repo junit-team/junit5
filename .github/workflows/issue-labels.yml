@@ -1,0 +1,14 @@
+name: Label new issues
+on:
+  issues:
+      types: ['opened']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Renato66/auto-label@69b3cbe79438b2079aed0a49474275d3e572cae5 # or v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          labels-synonyms: '{"3rd-party: Eclipse":["Eclipse"],"3rd-party: Gradle":["Gradle"],"3rd-party: IntelliJ IDEA":["IDEA","IntelliJ"],"3rd-party: Maven Surefire":["Failsafe","Maven","Surefire"],"3rd-party: Pioneer":["pioneer"],"component: Groovy":["Groovy"],"component: Test Kit":["Test Kit","TestKit"]}'
+          labels-not-allowed: '["dependencies","status: blocked","status: declined","status: duplicate","status: in progress","status: invalid","status: stale","status: superseded","status: team discussion","status: waiting-for-feedback","status: waiting-for-interest","status: works-as-designed","up-for-grabs"]'
+          default-labels: '["status: new"]'
