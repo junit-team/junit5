@@ -9,7 +9,14 @@ val isJitPackEnvironment = System.getenv("JITPACK")?.toBoolean() ?: false
 
 // ensure project is built successfully before publishing it
 tasks.withType<PublishToMavenRepository>().configureEach {
-	dependsOn(tasks.build)
+	dependsOn(provider {
+		val tempRepoName: String by rootProject
+		if (repository.name != tempRepoName) {
+			listOf(tasks.build)
+		} else {
+			emptyList()
+		}
+	})
 }
 tasks.withType<PublishToMavenLocal>().configureEach {
 	dependsOn(tasks.build)

@@ -43,6 +43,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -432,7 +433,7 @@ class JUnitPlatformRunnerTests {
 			TestDescriptor container2 = new TestDescriptorStub(UniqueId.root("root", "container2"), "container2");
 			container2.addChild(new TestDescriptorStub(UniqueId.root("root", "test2a"), "test2a"));
 			container2.addChild(new TestDescriptorStub(UniqueId.root("root", "test2b"), "test2b"));
-			var testPlan = TestPlan.from(List.of(container1, container2));
+			var testPlan = TestPlan.from(List.of(container1, container2), mock(ConfigurationParameters.class));
 
 			var launcher = mock(Launcher.class);
 			when(launcher.discover(any())).thenReturn(testPlan);
@@ -461,6 +462,8 @@ class JUnitPlatformRunnerTests {
 	@Nested
 	class Filtering {
 
+		private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+
 		@Test
 		void appliesFilter() throws Exception {
 
@@ -469,11 +472,11 @@ class JUnitPlatformRunnerTests {
 			TestDescriptor originalParent2 = new TestDescriptorStub(UniqueId.root("root", "parent2"), "parent2");
 			originalParent2.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf2a"), "leaf2a"));
 			originalParent2.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf2b"), "leaf2b"));
-			var fullTestPlan = TestPlan.from(List.of(originalParent1, originalParent2));
+			var fullTestPlan = TestPlan.from(List.of(originalParent1, originalParent2), configParams);
 
 			TestDescriptor filteredParent = new TestDescriptorStub(UniqueId.root("root", "parent2"), "parent2");
 			filteredParent.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf2b"), "leaf2b"));
-			var filteredTestPlan = TestPlan.from(Set.of(filteredParent));
+			var filteredTestPlan = TestPlan.from(Set.of(filteredParent), configParams);
 
 			var launcher = mock(Launcher.class);
 			var captor = ArgumentCaptor.forClass(LauncherDiscoveryRequest.class);
@@ -495,7 +498,8 @@ class JUnitPlatformRunnerTests {
 
 		@Test
 		void throwsNoTestsRemainExceptionWhenNoTestIdentifierMatchesFilter() {
-			var testPlan = TestPlan.from(Set.of(new TestDescriptorStub(UniqueId.root("root", "test"), "test")));
+			var testPlan = TestPlan.from(Set.of(new TestDescriptorStub(UniqueId.root("root", "test"), "test")),
+				configParams);
 
 			var launcher = mock(Launcher.class);
 			when(launcher.discover(any())).thenReturn(testPlan);
@@ -733,7 +737,8 @@ class JUnitPlatformRunnerTests {
 	private LauncherDiscoveryRequest instantiateRunnerAndCaptureGeneratedRequest(Class<?> testClass) {
 		var launcher = mock(Launcher.class);
 		var captor = ArgumentCaptor.forClass(LauncherDiscoveryRequest.class);
-		when(launcher.discover(captor.capture())).thenReturn(TestPlan.from(Set.of()));
+		when(launcher.discover(captor.capture())).thenReturn(
+			TestPlan.from(Set.of(), mock(ConfigurationParameters.class)));
 
 		new JUnitPlatform(testClass, launcher);
 

@@ -59,6 +59,7 @@ tasks.withType<Jar>().matching {
 		""")
 
 	// Add the convention to the jar task
+	@Suppress("deprecation") // https://github.com/bndtools/bnd/issues/4699
 	convention.plugins["bundle"] = btc
 
 	doLast {
@@ -79,7 +80,7 @@ val osgiProperties by tasks.registering(WriteProperties::class) {
 		property("-runee", "JavaSE-${javaLibrary.mainJavaVersion}")
 	}
 	property("-runrequires", "osgi.identity;filter:='(osgi.identity=${project.name})'")
-	property("-runsystempackages", "jdk.internal.misc,sun.misc")
+	property("-runsystempackages", "jdk.internal.misc,jdk.jfr,sun.misc")
 }
 
 val osgiVerification by configurations.creating {
@@ -93,6 +94,7 @@ val verifyOSGi by tasks.registering(Resolve::class) {
 	dependsOn(osgiProperties)
 	setBndrun(osgiPropertiesFile)
 	isReportOptional = false
+	@Suppress("deprecation") // https://github.com/bndtools/bnd/issues/4699
 	withConvention(FileSetRepositoryConvention::class) {
 
 		// By default bnd will use jars found in:

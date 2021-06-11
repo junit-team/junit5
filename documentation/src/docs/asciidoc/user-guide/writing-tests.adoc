@@ -113,10 +113,19 @@ Test classes must not be `abstract` and must have a single constructor.
 Test methods and lifecycle methods may be declared locally within the current test class,
 inherited from superclasses, or inherited from interfaces (see
 <<writing-tests-test-interfaces-and-default-methods>>). In addition, test methods and
-lifecycle methods must not be `abstract` and must not return a value.
+lifecycle methods must not be `abstract` and must not return a value (except `@TestFactory`
+methods which are required to return a value).
 
-NOTE: Test classes, test methods, and lifecycle methods are not required to be `public`,
-but they must _not_ be `private`.
+[NOTE]
+.Class and method visibility
+====
+Test classes, test methods, and lifecycle methods are not required to be `public`, but
+they must _not_ be `private`.
+
+It is generally recommended to omit the `public` modifier for test classes, test methods,
+and lifecycle methods unless there is a technical reason for doing so – for example, when
+a test class is extended by a test class in another package.
+====
 
 The following test class demonstrates the use of `@Test` methods and all supported
 lifecycle methods. For further information on runtime semantics, see
@@ -1821,6 +1830,10 @@ implementations.
   refer to the Javadoc for `DiscoverySelectors.selectMethod(String)` for the supported
   formats for a FQMN.
 
+`ClassSource` ::
+  If the `URI` contains the `class` scheme and the fully qualified class name --
+  for example, `class:org.junit.Foo?line=42`.
+
 `UriSource` ::
   If none of the above `TestSource` implementations are applicable.
 
@@ -2176,6 +2189,15 @@ its content.
 .A test method that requires a temporary directory
 ----
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_parameter_injection]
+----
+
+You can inject multiple temporary directories by specifying explicit identifiers via the
+annotation parameter.
+
+[source,java,indent=0]
+.A test method that requires multiple temporary directories
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_multiple_directories]
 ----
 
 WARNING: `@TempDir` is not supported on constructor parameters. If you wish to retain a

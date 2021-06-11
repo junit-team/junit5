@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.descriptor;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,6 +44,14 @@ import org.junit.platform.engine.TestSource;
 public class ClassSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * {@link URI} {@linkplain URI#getScheme() scheme} for class sources: {@value}
+	 *
+	 * @since 1.8
+	 */
+	@API(status = STABLE, since = "1.8")
+	public static final String CLASS_SCHEME = "class";
 
 	/**
 	 * Create a new {@code ClassSource} using the supplied class name.
@@ -82,6 +91,42 @@ public class ClassSource implements TestSource {
 	 */
 	public static ClassSource from(Class<?> javaClass, FilePosition filePosition) {
 		return new ClassSource(javaClass, filePosition);
+	}
+
+	/**
+	 * Create a new {@code ClassSource} from the supplied {@link URI}.
+	 *
+	 * <p>URIs should be formatted as {@code class:fully.qualified.class.Name}.
+	 * The {@linkplain URI#getQuery() query} component of the {@code URI}, if
+	 * present, will be used to retrieve the {@link FilePosition} via
+	 * {@link FilePosition#fromQuery(String)}. For example, line 42 and column
+	 * 13 can be referenced in class {@code org.example.MyType} via the following
+	 * URI: {@code class:com.example.MyType?line=42&column=13}. The URI fragment,
+	 * if present, will be ignored.
+	 *
+	 * @param uri the {@code URI} for the class source; never {@code null}
+	 * @return a new {@code ClassSource}; never {@code null}
+	 * @throws PreconditionViolationException if the supplied {@code URI} is
+	 * {@code null}, if the scheme of the supplied {@code URI} is not equal
+	 * to the {@link #CLASS_SCHEME}, or if the specified class name is empty
+	 * @since 1.8
+	 * @see #CLASS_SCHEME
+	 */
+	@API(status = STABLE, since = "1.8")
+	public static ClassSource from(URI uri) {
+		Preconditions.notNull(uri, "URI must not be null");
+		Preconditions.condition(CLASS_SCHEME.equals(uri.getScheme()),
+			() -> "URI [" + uri + "] must have [" + CLASS_SCHEME + "] scheme");
+
+		String className = uri.getSchemeSpecificPart();
+		FilePosition filePosition = null;
+		int indexOfQuery = className.indexOf('?');
+		if (indexOfQuery >= 0) {
+			filePosition = FilePosition.fromQuery(className.substring(indexOfQuery + 1)).orElse(null);
+			className = className.substring(0, indexOfQuery);
+		}
+
+		return ClassSource.from(className, filePosition);
 	}
 
 	private final String className;

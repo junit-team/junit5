@@ -114,7 +114,7 @@ public class InvocationInterceptorChain {
 
 	private static class ValidatingInvocation<T> implements Invocation<T> {
 
-		private static final Logger LOG = LoggerFactory.getLogger(ValidatingInvocation.class);
+		private static final Logger logger = LoggerFactory.getLogger(ValidatingInvocation.class);
 
 		private final AtomicBoolean invokedOrSkipped = new AtomicBoolean();
 		private final Invocation<T> delegate;
@@ -133,7 +133,7 @@ public class InvocationInterceptorChain {
 
 		@Override
 		public void skip() {
-			LOG.debug(() -> "The invocation is skipped");
+			logger.debug(() -> "The invocation is skipped");
 			markInvokedOrSkipped();
 			delegate.skip();
 		}

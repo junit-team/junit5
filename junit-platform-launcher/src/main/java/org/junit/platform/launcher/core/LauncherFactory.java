@@ -89,7 +89,7 @@ public class LauncherFactory {
 	 * @param config the configuration for the session and the launcher; never
 	 * {@code null}
 	 * @throws PreconditionViolationException if the supplied configuration is
-	 * {@code null}, or if no test engines are detected or
+	 * {@code null}, or if no test engines are detected
 	 * @see #openSession()
 	 * @since 1.8
 	 */
@@ -115,7 +115,7 @@ public class LauncherFactory {
 	 *
 	 * @param config the configuration for the launcher; never {@code null}
 	 * @throws PreconditionViolationException if the supplied configuration is
-	 * {@code null}, or if no test engines are detected or
+	 * {@code null}, or if no test engines are detected
 	 * registered
 	 * @see #create()
 	 * @since 1.3

@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.MethodSourceSupport.METHOD_SCHEME;
+import static org.junit.platform.engine.support.descriptor.ClassSource.CLASS_SCHEME;
 import static org.junit.platform.engine.support.descriptor.ClasspathResourceSource.CLASSPATH_SCHEME;
 
 import java.lang.reflect.Method;
@@ -39,6 +40,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
 import org.junit.platform.engine.support.descriptor.UriSource;
 
@@ -168,6 +170,9 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		Preconditions.notNull(uri, "URI must not be null");
 		if (CLASSPATH_SCHEME.equals(uri.getScheme())) {
 			return ClasspathResourceSource.from(uri);
+		}
+		if (CLASS_SCHEME.equals(uri.getScheme())) {
+			return ClassSource.from(uri);
 		}
 		if (METHOD_SCHEME.equals(uri.getScheme())) {
 			return MethodSourceSupport.from(uri);

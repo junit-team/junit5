@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -69,6 +70,12 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		BaseSharedTempDirParameterInjectionTestCase.tempDir = null;
 		BaseSeparateTempDirsFieldInjectionTestCase.tempDirs.clear();
 		BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.clear();
+	}
+
+	@Test
+	void supportsMultipleTempDirs() {
+		executeTestsForClass(MultipleTempDirsTestCase.class).allEvents()//
+				.assertStatistics(stats -> stats.started(3).succeeded(3));
 	}
 
 	@Test
@@ -1274,6 +1281,98 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				assertTrue(tempDir.exists());
 				assertSame(initialTempDir, tempDir);
 			}
+		}
+	}
+
+	static class MultipleTempDirsTestCase {
+
+		@TempDir("a")
+		static Path A;
+		static Path B;
+
+		@BeforeAll
+		static void beforeAll(@TempDir("a") Path dir1, @TempDir("b") Path dir2) {
+			assertEquals(A, requireNonNull(dir1));
+			B = requireNonNull(dir2);
+			assertNotEquals(A, B);
+			assertTrue(Files.exists(A));
+			assertTrue(Files.exists(B));
+		}
+
+		@TempDir("c")
+		Path c;
+		static Path C, D, E;
+
+		@BeforeEach
+		void beforeEach(@TempDir("d") Path dir1, @TempDir("b") Path dir2, @TempDir("c") Path dir3,
+				@TempDir("a") Path dir4) {
+			assertEquals(A, dir4);
+			assertEquals(B, dir2);
+			assertEquals(c, dir3);
+
+			C = requireNonNull(dir3);
+			assertNotEquals(A, C);
+			assertNotEquals(B, C);
+
+			D = requireNonNull(dir1);
+			assertNotEquals(A, D);
+			assertNotEquals(B, D);
+			assertNotEquals(C, D);
+
+			assertTrue(Files.exists(A));
+			assertTrue(Files.exists(B));
+			assertTrue(Files.exists(C));
+			assertTrue(Files.exists(D));
+		}
+
+		@Test
+		void test(@TempDir("c") Path dir1, @TempDir("e") Path dir2, @TempDir("a") Path dir3, @TempDir("d") Path dir4,
+				@TempDir("b") Path dir5) {
+			assertEquals(A, dir3);
+			assertEquals(B, dir5);
+			assertEquals(C, dir1);
+			assertEquals(D, dir4);
+
+			E = requireNonNull(dir2);
+			assertNotEquals(A, E);
+			assertNotEquals(B, E);
+			assertNotEquals(C, E);
+			assertNotEquals(D, E);
+
+			assertTrue(Files.exists(A));
+			assertTrue(Files.exists(B));
+			assertTrue(Files.exists(C));
+			assertTrue(Files.exists(D));
+			assertTrue(Files.exists(E));
+		}
+
+		@AfterEach
+		void afterEach(@TempDir("b") Path dir1, @TempDir("a") Path dir2, @TempDir("c") Path dir3,
+				@TempDir("e") Path dir4, @TempDir("d") Path dir5) {
+			assertEquals(A, dir2);
+			assertEquals(B, dir1);
+			assertEquals(C, dir3);
+			assertEquals(D, dir5);
+			assertEquals(E, dir4);
+
+			assertTrue(Files.exists(A));
+			assertTrue(Files.exists(B));
+			assertTrue(Files.exists(C));
+			assertTrue(Files.exists(D));
+			assertTrue(Files.exists(E));
+		}
+
+		@AfterAll
+		static void afterAll(@TempDir("b") Path dir1, @TempDir("a") Path dir2) {
+			assertEquals(A, dir2);
+			assertEquals(B, dir1);
+
+			assertTrue(Files.exists(A));
+			assertTrue(Files.exists(B));
+
+			assertTrue(Files.notExists(C));
+			assertTrue(Files.notExists(D));
+			assertTrue(Files.notExists(E));
 		}
 	}
 }
