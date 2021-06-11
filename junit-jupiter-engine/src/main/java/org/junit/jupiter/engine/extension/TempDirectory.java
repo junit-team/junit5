@@ -44,7 +44,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -191,7 +190,23 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			}
 
 			SortedMap<Path, IOException> failures = new TreeMap<>();
+			resetPermissions(dir);
 			Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
+
+				@Override
+				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+					if (!dir.equals(CloseablePath.this.dir)) {
+						resetPermissions(dir);
+					}
+					return CONTINUE;
+				}
+
+				@Override
+				public FileVisitResult visitFileFailed(Path file, IOException exc) {
+					// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
+					resetPermissionsAndTryToDeleteAgain(file, exc);
+					return CONTINUE;
+				}
 
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
@@ -214,43 +229,39 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 						failures.put(path, exception);
 					}
 					catch (IOException exception) {
-						makeWritableAndTryToDeleteAgain(path, exception);
+						// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
+						resetPermissionsAndTryToDeleteAgain(path, exception);
 					}
 					return CONTINUE;
 				}
 
-				private void makeWritableAndTryToDeleteAgain(Path path, IOException exception) {
+				private void resetPermissionsAndTryToDeleteAgain(Path path, IOException exception) {
 					try {
-						tryToMakeParentDirsWritable(path);
-						makeWritable(path);
-						Files.delete(path);
+						resetPermissions(path);
+						if (Files.isDirectory(path)) {
+							Files.walkFileTree(path, this);
+						}
+						else {
+							Files.delete(path);
+						}
 					}
 					catch (Exception suppressed) {
 						exception.addSuppressed(suppressed);
 						failures.put(path, exception);
 					}
 				}
-
-				private void tryToMakeParentDirsWritable(Path path) {
-					Path relativePath = dir.relativize(path);
-					Path parent = dir;
-					for (int i = 0; i < relativePath.getNameCount(); i++) {
-						boolean writable = parent.toFile().setWritable(true);
-						if (!writable) {
-							break;
-						}
-						parent = parent.resolve(relativePath.getName(i));
-					}
-				}
-
-				private void makeWritable(Path path) {
-					boolean writable = path.toFile().setWritable(true);
-					if (!writable) {
-						throw new UndeletableFileException("Attempt to make file '" + path + "' writable failed");
-					}
-				}
 			});
 			return failures;
+		}
+
+		@SuppressWarnings("ResultOfMethodCallIgnored")
+		private static void resetPermissions(Path path) {
+			File file = path.toFile();
+			file.setReadable(true);
+			file.setWritable(true);
+			if (Files.isDirectory(path)) {
+				file.setExecutable(true);
+			}
 		}
 
 		private IOException createIOExceptionWithAttachedFailures(SortedMap<Path, IOException> failures) {
@@ -284,21 +295,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				return path;
 			}
 		}
-	}
-
-	private static class UndeletableFileException extends JUnitException {
-
-		private static final long serialVersionUID = 1L;
-
-		UndeletableFileException(String message) {
-			super(message);
-		}
-
-		@Override
-		public synchronized Throwable fillInStackTrace() {
-			return this; // Make the output smaller by omitting the stacktrace
-		}
-
 	}
 
 }

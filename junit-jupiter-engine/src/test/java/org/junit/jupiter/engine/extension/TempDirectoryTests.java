@@ -59,6 +59,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  *
  * @since 5.4
  */
+@SuppressWarnings("ALL")
 @DisplayName("TempDirectory extension")
 class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
@@ -96,6 +97,20 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	void nonWritableFileDoesNotCauseFailure() {
 		executeTestsForClass(NonWritableFileDoesNotCauseFailureTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
+	@DisplayName("is capable of removal of non-executable, non-writable, or non-readable directories and folders")
+	void nonMintPermissionsContentDoesNotCauseFailure() {
+		executeTestsForClass(NonMintPermissionContentInTempDirectoryDoesNotCauseFailureTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(13).succeeded(13));
+	}
+
+	@Test
+	@DisplayName("is capable of removal when its permissions were been changed")
+	void nonMintPermissionsDoNotCauseFailure() {
+		executeTestsForClass(NonMintTempDirectoryPermissionsDoNotCauseFailureTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(42).succeeded(42));
 	}
 
 	@Test
@@ -831,6 +846,383 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			assumeTrue(file.setReadOnly());
 		}
 
+	}
+
+	// https://github.com/junit-team/junit5/issues/2609
+	static class NonMintPermissionContentInTempDirectoryDoesNotCauseFailureTestCase {
+
+		@Test
+		void createFile(@TempDir Path tempDir) throws IOException {
+			Files.createFile(tempDir.resolve("test-file.txt")).toFile();
+		}
+
+		@Test
+		void createFolder(@TempDir Path tempDir) throws IOException {
+			Files.createFile(tempDir.resolve("test-file.txt")).toFile();
+		}
+
+		@Test
+		void createNonWritableFile(@TempDir Path tempDir) throws IOException {
+			Files.createFile(tempDir.resolve("test-file.txt")).toFile().setWritable(false);
+		}
+
+		@Test
+		void createNonReadableFile(@TempDir Path tempDir) throws IOException {
+			Files.createFile(tempDir.resolve("test-file.txt")).toFile().setReadable(false);
+		}
+
+		@Test
+		void createNonWritableDirectory(@TempDir Path tempDir) throws IOException {
+			Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setWritable(false);
+		}
+
+		@Test
+		void createNonReadableDirectory(@TempDir Path tempDir) throws IOException {
+			Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setReadable(false);
+		}
+
+		@Test
+		void createNonExecutableDirectory(@TempDir Path tempDir) throws IOException {
+			Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setExecutable(false);
+		}
+
+		@Test
+		void createNonEmptyNonWritableDirectory(@TempDir Path tempDir) throws IOException {
+			Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+			Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+			subDir.toFile().setWritable(false);
+		}
+
+		@Test
+		void createNonEmptyNonReadableDirectory(@TempDir Path tempDir) throws IOException {
+			Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+			Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+			subDir.toFile().setReadable(false);
+		}
+
+		@Test
+		void createNonEmptyNonExecutableDirectory(@TempDir Path tempDir) throws IOException {
+			Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+			Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+			subDir.toFile().setExecutable(false);
+		}
+
+		@Test
+		void createNonEmptyDirectory(@TempDir Path tempDir) throws IOException {
+			Files.createDirectory(tempDir.resolve("test-sub-dir"));
+			Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+		}
+
+		@Test
+		void createNonEmptyDirectoryWithNonWritableFile(@TempDir Path tempDir) throws IOException {
+			Files.createDirectory(tempDir.resolve("test-sub-dir"));
+			Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setWritable(false);
+		}
+
+		@Test
+		void createNonEmptyDirectoryWithNonReadableFile(@TempDir Path tempDir) throws IOException {
+			Files.createDirectory(tempDir.resolve("test-sub-dir"));
+			Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setReadable(false);
+		}
+	}
+
+	// https://github.com/junit-team/junit5/issues/2609
+	static class NonMintTempDirectoryPermissionsDoNotCauseFailureTestCase {
+
+		@Nested
+		class NonWritable {
+
+			@Test
+			void makeEmptyTempDirectoryNonWritable(@TempDir Path tempDir) {
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithFileNonWritable(@TempDir Path tempDir) throws IOException {
+				Files.createFile(tempDir.resolve("test-file.txt"));
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithEmptyFolderNonWritable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonWritableFileNonWritable(@TempDir Path tempDir) throws IOException {
+				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setWritable(false);
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonReadableFileNonWritable(@TempDir Path tempDir) throws IOException {
+				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setReadable(false);
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonWritableFolderNonWritable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setWritable(false);
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonReadableFolderNonWritable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setReadable(false);
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonExecutableFolderNonWritable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setExecutable(false);
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyNonReadableFolderNonWritable(@TempDir Path tempDir) throws IOException {
+				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				subDir.toFile().setReadable(false);
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyNonWritableFolderNonWritable(@TempDir Path tempDir) throws IOException {
+				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				subDir.toFile().setWritable(false);
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyNonExecutableFolderNonWritable(@TempDir Path tempDir) throws IOException {
+				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				subDir.toFile().setExecutable(false);
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyFolderNonWritable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyFolderContainingNonWritableFileNonWritable(@TempDir Path tempDir)
+					throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setWritable(false);
+				tempDir.toFile().setWritable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyFolderContainingNonReadableFileNonWritable(@TempDir Path tempDir)
+					throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setReadable(false);
+				tempDir.toFile().setWritable(false);
+			}
+		}
+
+		@Nested
+		class NonReadable {
+
+			@Test
+			void makeEmptyTempDirectoryNonReadable(@TempDir Path tempDir) {
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithFileNonReadable(@TempDir Path tempDir) throws IOException {
+				Files.createFile(tempDir.resolve("test-file.txt"));
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithEmptyFolderNonReadable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonWritableFileNonReadable(@TempDir Path tempDir) throws IOException {
+				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setWritable(false);
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonReadableFileNonReadable(@TempDir Path tempDir) throws IOException {
+				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setReadable(false);
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonWritableFolderNonReadable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setWritable(false);
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonReadableFolderNonReadable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setReadable(false);
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonExecutableFolderNonReadable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setExecutable(false);
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyNonWritableFolderNonReadable(@TempDir Path tempDir) throws IOException {
+				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				subDir.toFile().setWritable(false);
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyNonReadableFolderNonReadable(@TempDir Path tempDir) throws IOException {
+				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				subDir.toFile().setReadable(false);
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyNonExecutableFolderNonReadable(@TempDir Path tempDir) throws IOException {
+				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				subDir.toFile().setExecutable(false);
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyFolderNonReadable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyFolderContainingNonWritableFileNonReadable(@TempDir Path tempDir)
+					throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setWritable(false);
+				tempDir.toFile().setReadable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyFolderContainingNonReadableFileNonReadable(@TempDir Path tempDir)
+					throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setReadable(false);
+				tempDir.toFile().setReadable(false);
+			}
+		}
+
+		@Nested
+		class NonExecutable {
+
+			@Test
+			void makeEmptyTempDirectoryNonExecutable(@TempDir Path tempDir) {
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithFileNonExecutable(@TempDir Path tempDir) throws IOException {
+				Files.createFile(tempDir.resolve("test-file.txt"));
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithEmptyFolderNonExecutable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonWritableFileNonExecutable(@TempDir Path tempDir) throws IOException {
+				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setWritable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonReadableFileNonExecutable(@TempDir Path tempDir) throws IOException {
+				Files.createFile(tempDir.resolve("test-file.txt")).toFile().setReadable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonWritableFolderNonExecutable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setWritable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonReadableFolderNonExecutable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setReadable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonExecutableFolderNonExecutable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir")).toFile().setExecutable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyNonWritableFolderNonExecutable(@TempDir Path tempDir) throws IOException {
+				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				subDir.toFile().setWritable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyNonReadableFolderNonExecutable(@TempDir Path tempDir) throws IOException {
+				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				subDir.toFile().setReadable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyNonExecutableFolderNonExecutable(@TempDir Path tempDir)
+					throws IOException {
+				Path subDir = Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				subDir.toFile().setExecutable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyFolderNonExecutable(@TempDir Path tempDir) throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt"));
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyFolderContainingNonWritableFileNonExecutable(@TempDir Path tempDir)
+					throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setWritable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+
+			@Test
+			void makeTempDirectoryWithNonEmptyFolderContainingNonReadableFileNonExecutable(@TempDir Path tempDir)
+					throws IOException {
+				Files.createDirectory(tempDir.resolve("test-sub-dir"));
+				Files.createFile(tempDir.resolve("test-sub-dir/test-file.txt")).toFile().setReadable(false);
+				tempDir.toFile().setExecutable(false);
+			}
+		}
 	}
 
 	// https://github.com/junit-team/junit5/issues/2079
