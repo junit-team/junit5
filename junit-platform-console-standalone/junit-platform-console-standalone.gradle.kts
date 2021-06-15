@@ -44,7 +44,7 @@ tasks {
 			bnd("""
 				# Customize the imports because this is an aggregate jar
 				Import-Package: \
-					!org.apiguardian.api,\
+					${extra["importAPIGuardian"]},\
 					kotlin.*;resolution:="optional",\
 					*
 				# Disable the APIGuardian plugin since everything was already

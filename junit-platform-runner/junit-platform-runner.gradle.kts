@@ -25,7 +25,7 @@ tasks.jar {
 		bnd("""
 			# Import JUnit4 packages with a version
 			Import-Package: \
-				!org.apiguardian.api,\
+				${extra["importAPIGuardian"]},\
 				org.junit.platform.commons.logging;status=INTERNAL,\
 				org.junit.runner.*;version="[${libs.versions.junit4Min.get()},5)",\
 				*
