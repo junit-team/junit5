@@ -38,7 +38,7 @@ tasks {
 			bnd("""
 				# Import JUnit4 packages with a version
 				Import-Package: \
-					!org.apiguardian.api,\
+					${extra["importAPIGuardian"]},\
 					junit.runner;version="[${junit4Min},5)",\
 					org.junit;version="[${junit4Min},5)",\
 					org.junit.experimental.categories;version="[${junit4Min},5)",\

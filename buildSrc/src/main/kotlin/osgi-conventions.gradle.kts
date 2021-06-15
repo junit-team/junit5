@@ -6,6 +6,12 @@ plugins {
 	`java-library`
 }
 
+// Because the current build version of apiguardian (1.1.1) doesn't have OSGi metadata, bnd
+// cannot automatically determine the correct version to use in the Import-Package statement.
+// Fetch the current version out of the libs.versions.toml file.
+val apiguardianVersion = project.extensions.getByType(VersionCatalogsExtension::class).named("libs").findVersion("apiguardian").get()
+val importAPIGuardian = "org.apiguardian.*;version=\"\${range;[==,+);${apiguardianVersion}}\";resolution:=\"optional\""
+
 // This task enhances `jar` and `shadowJar` tasks with the bnd
 // `BundleTaskConvention` convention which allows for generating OSGi
 // metadata into the jar
@@ -13,6 +19,8 @@ tasks.withType<Jar>().matching {
 	task: Jar -> task.name == "jar" || task.name == "shadowJar"
 }.configureEach {
 	val btc = BundleTaskConvention(this)
+
+	extra["importAPIGuardian"] = importAPIGuardian
 
 	// These are bnd instructions necessary for generating OSGi metadata.
 	// We've generalized these so that they are widely applicable limiting
@@ -28,14 +36,15 @@ tasks.withType<Jar>().matching {
 
 			# These are the general rules for package imports.
 			Import-Package: \
-				!org.apiguardian.api,\
+				${importAPIGuardian},\
 				org.junit.platform.commons.logging;status=INTERNAL,\
 				kotlin.*;resolution:="optional",\
 				*
 
 			# This tells bnd not to complain if a module doesn't actually import
-			# the kotlin packages, but enough modules do to make it a default.
+			# the kotlin and apiguardian packages, but enough modules do to make it a default.
 			-fixupmessages.kotlin.import: "Unused Import-Package instructions: \\[kotlin.*\\]";is:=ignore
+			-fixupmessages.apiguardian.import: "Unused Import-Package instructions: \\[org.apiguardian.*\\]";is:=ignore
 
 			# This tells bnd to ignore classes it finds in `META-INF/versions/`
 			# because bnd doesn't yet support multi-release jars.
@@ -81,6 +90,9 @@ val osgiProperties by tasks.registering(WriteProperties::class) {
 	}
 	property("-runrequires", "osgi.identity;filter:='(osgi.identity=${project.name})'")
 	property("-runsystempackages", "jdk.internal.misc,jdk.jfr,sun.misc")
+	// API Guardian should be optional -> instruct resolver to ignore it
+	// during resolution. Resolve should still pass.
+	property("-runblacklist", "org.apiguardian.api")
 }
 
 val osgiVerification by configurations.creating {
