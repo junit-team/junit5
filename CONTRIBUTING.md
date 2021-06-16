@@ -87,6 +87,11 @@ possible.
 
 In multi-line bullet point entries, subsequent lines should be indented.
 
+### Spelling
+
+Use American English spelling rules when writing documentation as well as for
+code -- class names, method names, variable names, etc.
+
 ### Javadoc
 
 - Javadoc comments should be wrapped after 80 characters whenever possible.
