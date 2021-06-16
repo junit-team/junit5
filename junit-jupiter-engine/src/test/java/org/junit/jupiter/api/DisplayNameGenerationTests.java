@@ -82,7 +82,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void indicativeSentencesGenerator() {
+	void indicativeSentencesGeneratorOnStaticNestedClass() {
 		var expectedDisplayNames = List.of( //
 			"CONTAINER: DisplayNameGenerationTests$IndicativeStyleTestCase", //
 			"TEST: @DisplayName prevails", //
@@ -94,6 +94,26 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase -> testUsingCamelCaseStyle" //
 		);
 		check(IndicativeStyleTestCase.class, expectedDisplayNames);
+	}
+
+	@Test
+	void indicativeSentencesGeneratorOnTopLevelClass() {
+		var expectedDisplayNames = List.of( //
+			"CONTAINER: A year is a leap year", //
+			"CONTAINER: IndicativeSentencesTopLevelTestCase", //
+			"TEST: A year is a leap year -> if it is divisible by 4 but not by 100" //
+		);
+		check(IndicativeSentencesTopLevelTestCase.class, expectedDisplayNames);
+	}
+
+	@Test
+	void indicativeSentencesGeneratorOnNestedClass() {
+		var expectedDisplayNames = List.of( //
+			"CONTAINER: A year is a leap year", //
+			"CONTAINER: IndicativeSentencesNestedTestCase", //
+			"TEST: A year is a leap year -> if it is divisible by 4 but not by 100" //
+		);
+		check(IndicativeSentencesNestedTestCase.class, expectedDisplayNames);
 	}
 
 	@Test
@@ -130,11 +150,11 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	void checkDisplayNameGeneratedForIndicativeGeneratorTestCase() {
 		check(IndicativeGeneratorTestCase.class, List.of( //
 			"CONTAINER: A stack", //
-			"CONTAINER: A stack, when is new", //
-			"CONTAINER: A stack, when is new, after pushing an element to an empty stack", //
+			"CONTAINER: A stack, when new", //
+			"CONTAINER: A stack, when new, after pushing an element to an empty stack", //
 			"TEST: A stack, is instantiated with new constructor", //
-			"TEST: A stack, when is new, after pushing an element to an empty stack, is no longer empty", //
-			"TEST: A stack, when is new, throws EmptyStackException when peeked" //
+			"TEST: A stack, when new, after pushing an element to an empty stack, is no longer empty", //
+			"TEST: A stack, when new, throws EmptyStackException when peeked" //
 		));
 	}
 
@@ -319,7 +339,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Nested
-		class when_is_new {
+		class when_new {
 
 			@BeforeEach
 			void create_with_new_stack() {

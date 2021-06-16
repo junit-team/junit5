@@ -13,6 +13,7 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
+import static org.junit.platform.commons.support.ModifierSupport.isStatic;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -30,6 +31,14 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * tools and may contain spaces, special characters, and even emoji.
  *
  * <p>Concrete implementations must have a <em>default constructor</em>.
+ *
+ * <h4>Built-in Implementations</h4>
+ * <ul>
+ * <li>{@link Standard}</li>
+ * <li>{@link Simple}</li>
+ * <li>{@link ReplaceUnderscores}</li>
+ * <li>{@link IndicativeSentences}</li>
+ * </ul>
  *
  * @since 5.4
  * @see DisplayName @DisplayName
@@ -181,11 +190,12 @@ public interface DisplayNameGenerator {
 	/**
 	 * {@code DisplayNameGenerator} that generates complete sentences.
 	 *
-	 * <p>This implements the functionality of {@link DisplayNameGenerator}
-	 * by generating complete sentences display names, these
-	 * sentences are divided with a separator, and the generator and separator
-	 * can be customisable by using the {@link IndicativeSentencesGeneration}
-	 * interface as annotation.
+	 * <p>This generator generates display names that build up complete sentences
+	 * by concatenating the names of the test and the enclosing classes. The
+	 * sentence fragments are concatenated using a separator. The separator and
+	 * the display name generator for individual sentence fragments can be configured
+	 * via the {@link IndicativeSentencesGeneration @IndicativeSentencesGeneration}
+	 * annotation.
 	 *
 	 * @since 5.7
 	 */
@@ -199,7 +209,7 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
-			return getGeneratorForIndicativeSentence(testClass).generateDisplayNameForClass(testClass);
+			return getGeneratorFor(testClass).generateDisplayNameForClass(testClass);
 		}
 
 		@Override
@@ -209,93 +219,108 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			return getSentenceBeginning(testClass) + getSentenceSeparator(testClass)
-					+ getGeneratorForIndicativeSentence(testClass).generateDisplayNameForMethod(testClass, testMethod);
+			return getSentenceBeginning(testClass) + getFragmentSeparator(testClass)
+					+ getGeneratorFor(testClass).generateDisplayNameForMethod(testClass, testMethod);
 		}
 
 		private String getSentenceBeginning(Class<?> testClass) {
-			Class<?> enclosingParent = testClass.getEnclosingClass();
+			Class<?> enclosingClass = testClass.getEnclosingClass();
+			boolean topLevelTestClass = (enclosingClass == null || isStatic(testClass));
 			Optional<DisplayName> displayName = findAnnotation(testClass, DisplayName.class);
-			Optional<DisplayNameGeneration> displayNameGeneration = findAnnotation(testClass,
-				DisplayNameGeneration.class);
 
-			if (enclosingParent == null || displayNameGeneration.isPresent()) {
-				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
-			}
-			String separator = getSentenceSeparator(testClass);
-			String sentenceBeginning = getSentenceBeginning(enclosingParent);
-			return displayName.map(name -> sentenceBeginning + separator + name.value()) //
-					.orElseGet(() -> sentenceBeginning + separator
-							+ getGeneratorForIndicativeSentence(testClass).generateDisplayNameForNestedClass(
-								testClass));
-		}
-
-		/**
-		 * Gets the separator for {@link IndicativeSentencesGeneration} when extracting the
-		 * annotation from {@code IndicativeSentencesGeneration}, if it doesn't find it,
-		 * then search for the parent classes, if no separator is found use @code{", "} by default.
-		 *
-		 * @param testClass Class to get Indicative sentence annotation separator either custom or default
-		 * @return the indicative sentence separator
-		 */
-		private String getSentenceSeparator(Class<?> testClass) {
-			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = getIndicativeSentencesGeneration(
-				testClass);
-			if (indicativeSentencesGeneration.isPresent()) {
-				if (indicativeSentencesGeneration.get().separator().equals("")) {
-					return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
+			if (topLevelTestClass) {
+				if (displayName.isPresent()) {
+					return displayName.map(DisplayName::value).get();
 				}
-				return indicativeSentencesGeneration.get().separator();
-			}
-
-			return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
-		}
-
-		/**
-		 * Gets the generator for {@link IndicativeSentencesGeneration} when extracting the
-		 * annotation from {@code IndicativeSentencesGeneration}, if it doesn't find it,
-		 * then search for the parent classes, if no generator value is found use
-		 * {@link Standard} by default.
-		 *
-		 * @param testClass Class to get Indicative sentence generator either custom or default
-		 * @return the {@code DisplayNameGenerator} instance to use in indicative sentences generator
-		 */
-		private DisplayNameGenerator getGeneratorForIndicativeSentence(Class<?> testClass) {
-			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = getIndicativeSentencesGeneration(
-				testClass);
-			if (indicativeSentencesGeneration.isPresent()) {
-				DisplayNameGenerator displayNameGenerator = getDisplayNameGenerator(
-					indicativeSentencesGeneration.get().generator());
-				if (displayNameGenerator.getClass() == IndicativeSentences.class) {
-					return getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR);
+				Optional<DisplayNameGeneration> displayNameGeneration = findAnnotation(testClass,
+					DisplayNameGeneration.class);
+				if (displayNameGeneration.isPresent()) {
+					Class<? extends DisplayNameGenerator> generatorClass = displayNameGeneration.get().value();
+					if (generatorClass != IndicativeSentences.class) {
+						return getDisplayNameGenerator(generatorClass).generateDisplayNameForClass(testClass);
+					}
 				}
-				return displayNameGenerator;
+				return generateDisplayNameForClass(testClass);
 			}
 
-			return getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR);
+			String prefix = "";
+			// Only generate prefix based on the enclosing class if the current
+			// test class is at least doubly nested. In other words, an indicative
+			// sentence is not constructed until one level below a @Nested test
+			// class that is configured to use the IndicativeSentences generator.
+			if (enclosingClass != null && enclosingClass.getEnclosingClass() != null) {
+				prefix = getSentenceBeginning(enclosingClass) + getFragmentSeparator(testClass);
+			}
+			String prefixToUse = prefix;
+
+			return displayName//
+					.map(DisplayName::value)//
+					.map(name -> prefixToUse + name)//
+					.orElseGet(
+						() -> prefixToUse + getGeneratorFor(testClass).generateDisplayNameForNestedClass(testClass));
 		}
 
 		/**
-		 * Finds the {@code IndicativeSentencesGeneration} annotation that is present,
-		 * meta-present or if it doesn't find it, then search for the enclosing
-		 * parent classes, if no annotation is found returns empty.
+		 * Get the sentence fragment separator.
 		 *
-		 * @param testClass the test class to find the {@code IndicativeSentencesGeneration}
-		 * annotation
-		 * @return the optional annotation retrieved from the test class.
+		 * <p>If {@link IndicativeSentencesGeneration @IndicativeSentencesGeneration}
+		 * is present (searching enclosing classes if not found locally), the
+		 * configured {@link IndicativeSentencesGeneration#separator() separator}
+		 * will be used. Otherwise, {@link IndicativeSentencesGeneration#DEFAULT_SEPARATOR}
+		 * will be used.
+		 *
+		 * @param testClass the test class to search on for {@code @IndicativeSentencesGeneration}
+		 * @return the sentence fragment separator
 		 */
-		private Optional<IndicativeSentencesGeneration> getIndicativeSentencesGeneration(Class<?> testClass) {
+		private String getFragmentSeparator(Class<?> testClass) {
+			return findConfigAnnotation(testClass)//
+					.map(IndicativeSentencesGeneration::separator)//
+					.orElse(IndicativeSentencesGeneration.DEFAULT_SEPARATOR);
+		}
+
+		/**
+		 * Get the display name generator to use for the supplied test class.
+		 *
+		 * <p>If {@link IndicativeSentencesGeneration @IndicativeSentencesGeneration}
+		 * is present (searching enclosing classes if not found locally), the
+		 * configured {@link IndicativeSentencesGeneration#generator() generator}
+		 * will be used. Otherwise, {@link IndicativeSentencesGeneration#DEFAULT_GENERATOR}
+		 * will be used.
+		 *
+		 * @param testClass the test class to search on for {@code @IndicativeSentencesGeneration}
+		 * @return the {@code DisplayNameGenerator} instance to use
+		 */
+		private DisplayNameGenerator getGeneratorFor(Class<?> testClass) {
+			return findConfigAnnotation(testClass)//
+					.map(IndicativeSentencesGeneration::generator)//
+					.filter(clazz -> clazz != IndicativeSentences.class)//
+					.map(DisplayNameGenerator::getDisplayNameGenerator)//
+					.orElseGet(() -> getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR));
+		}
+
+		/**
+		 * Find an {@code @IndicativeSentencesGeneration} annotation that is present
+		 * or meta-present on the supplied test class, recursively searching the
+		 * enclosing class hierarchy if not found locally.
+		 *
+		 * @param testClass the test class on which to find the
+		 * {@code IndicativeSentencesGeneration} annotation; may be {@code null}
+		 * @return an {@code Optional} containing the annotation, potentially
+		 * empty if not found
+		 */
+		private Optional<IndicativeSentencesGeneration> findConfigAnnotation(Class<?> testClass) {
+			if (testClass == null) {
+				return Optional.empty();
+			}
+
 			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = findAnnotation(testClass,
 				IndicativeSentencesGeneration.class);
 
 			if (indicativeSentencesGeneration.isPresent()) {
 				return indicativeSentencesGeneration;
 			}
-			if (testClass.getEnclosingClass() != null) {
-				return getIndicativeSentencesGeneration(testClass.getEnclosingClass());
-			}
 
-			return Optional.empty();
+			return findConfigAnnotation(testClass.getEnclosingClass());
 		}
 	}
 

@@ -20,18 +20,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences;
 
 /**
- * {@code @IndicativeSentencesGeneration} is used to declare a custom parameters
- * by {@code IndicativeSentences}, if this notation has some not declared
- * parameters, it will use the default values instead.
+ * {@code @IndicativeSentencesGeneration} is used to register the
+ * {@link IndicativeSentences} display name generator and configure it.
+ *
+ * <p>The {@link #separator} for sentence fragments and the display name
+ * {@link #generator} for sentence fragments are configurable. If this annotation
+ * is declared without any attributes &mdash; for example,
+ * {@code @IndicativeSentencesGeneration} or {@code @IndicativeSentencesGeneration()}
+ * &mdash; the default configuration will be used.
  *
  * @since 5.7
  * @see DisplayName
  * @see DisplayNameGenerator
  * @see DisplayNameGenerator.IndicativeSentences
  */
-@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
+@DisplayNameGeneration(IndicativeSentences.class)
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -40,15 +46,21 @@ import org.apiguardian.api.API;
 public @interface IndicativeSentencesGeneration {
 
 	String DEFAULT_SEPARATOR = ", ";
+
 	Class<? extends DisplayNameGenerator> DEFAULT_GENERATOR = DisplayNameGenerator.Standard.class;
 
 	/**
-	 * Custom separator for indicative sentences generator.
+	 * Custom separator for sentence fragments.
+	 *
+	 * <p>Defaults to {@value #DEFAULT_SEPARATOR}.
 	 */
-	String separator() default "";
+	String separator() default DEFAULT_SEPARATOR;
 
 	/**
-	 * Custom display name generator.
+	 * Custom display name generator to use for sentence fragments.
+	 *
+	 * <p>Defaults to {@link DisplayNameGenerator.Standard}.
 	 */
 	Class<? extends DisplayNameGenerator> generator() default DisplayNameGenerator.Standard.class;
+
 }
