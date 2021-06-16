@@ -127,8 +127,8 @@ See [`ExtensionContext`](junit-jupiter-api/src/main/java/org/junit/jupiter/api/e
 ### Logging
 
 - In general, logging should be used sparingly.
-- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](https://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/LoggerFactory.html).
-- Levels defined in JUnit's [Logger](https://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/Logger.html) façade.
+- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](https://github.com/junit-team/junit5/blob/main/junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java).
+- Levels defined in JUnit's [Logger](https://github.com/junit-team/junit5/blob/main/junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java) façade, which delegates to Java Util Logging (JUL) for the actual logging.
   - _error_ (JUL: `SEVERE`, Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
   - _warn_ (JUL: `WARNING`, Log4J: `WARN`): potential usage or configuration errors that should not halt execution
   - _info_ (JUL: `INFO`, Log4J: `INFO`): information the users might want to know but not by default
