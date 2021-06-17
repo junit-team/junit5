@@ -124,7 +124,9 @@ they must _not_ be `private`.
 
 It is generally recommended to omit the `public` modifier for test classes, test methods,
 and lifecycle methods unless there is a technical reason for doing so – for example, when
-a test class is extended by a test class in another package.
+a test class is extended by a test class in another package. Another technical reason for
+making classes and methods `public` is to simplify testing on the module path when using
+the Java Module System.
 ====
 
 The following test class demonstrates the use of `@Test` methods and all supported
