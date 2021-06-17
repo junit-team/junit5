@@ -99,11 +99,12 @@ loadScripts(document, 'script');</script>
 implements <a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></span></div>
 <div class="block"><code>DisplayNameGenerator</code> that generates complete sentences.
 
- <p>This implements the functionality of <a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api"><code>DisplayNameGenerator</code></a>
- by generating complete sentences display names, these
- sentences are divided with a separator, and the generator and separator
- can be customisable by using the <a href="IndicativeSentencesGeneration.html" title="annotation in org.junit.jupiter.api"><code>IndicativeSentencesGeneration</code></a>
- interface as annotation.</div>
+ <p>This generator generates display names that build up complete sentences
+ by concatenating the names of the test and the enclosing classes. The
+ sentence fragments are concatenated using a separator. The separator and
+ the display name generator for individual sentence fragments can be configured
+ via the <a href="IndicativeSentencesGeneration.html" title="annotation in org.junit.jupiter.api"><code>@IndicativeSentencesGeneration</code></a>
+ annotation.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.7</dd>
