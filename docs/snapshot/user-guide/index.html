@@ -1205,7 +1205,9 @@ they must <em>not</em> be <code>private</code>.</p>
 <div class="paragraph">
 <p>It is generally recommended to omit the <code>public</code> modifier for test classes, test methods,
 and lifecycle methods unless there is a technical reason for doing so – for example, when
-a test class is extended by a test class in another package.</p>
+a test class is extended by a test class in another package. Another technical reason for
+making classes and methods <code>public</code> is to simplify testing on the module path when using
+the Java Module System.</p>
 </div>
 </td>
 </tr>
@@ -10483,7 +10485,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-06-17 16:11:18 UTC
+Last updated 2021-06-17 16:29:50 UTC
 </div>
 </div>
 <style>

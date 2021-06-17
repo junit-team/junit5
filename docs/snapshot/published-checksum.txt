@@ -457,7 +457,6 @@
 9cf97f2ca731433f885cccae25c524a7  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
 9e4f7d89c04e3583b4b8865d6e947c7e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerDecorator.java
 9ea373bc7d3094021b9b644cd22ad07a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvParserFactory.java
-9ed1f3dd335619057ec00e445b5aedf9  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 9edacf3f65feaa4cac0276a318cbe915  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportData.java
 9f6029a3f8cddc7886079b88c9c9e036  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestMethodOrder.java
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
@@ -620,6 +619,7 @@ d1d8b062ea2323c2a3fc59a0a3ce6b26  junit-platform-engine/src/main/java/org/junit/
 d32fbca3363f5393a7dcfef9fa746e72  junit-platform-console/src/main/java9/org/junit/platform/console/ConsoleLauncherToolProvider.java
 d3752a81bf1647dc41a622b26f7c2064  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
 d3ca3365a44880344c30f8cdbb4c0f5a  documentation/src/docs/asciidoc/user-guide/appendix.adoc
+d413cad25720fc3fb78ecd1c9373e97f  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 d41d8cd98f00b204e9800998ecf8427e  -
 d41d8cd98f00b204e9800998ecf8427e  -
 d41ff551fe5fccc22c877b2fee7bc3c5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Parser.java
