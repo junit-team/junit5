@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static java.util.function.Predicate.not;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
@@ -18,6 +17,7 @@ import static org.junit.platform.commons.support.ModifierSupport.isStatic;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -237,7 +237,7 @@ public interface DisplayNameGenerator {
 				}
 				Class<? extends DisplayNameGenerator> generatorClass = findDisplayNameGeneration(testClass)//
 						.map(DisplayNameGeneration::value)//
-						.filter(not(IndicativeSentences.class::equals))//
+						.filter(not(IndicativeSentences.class))//
 						.orElse(null);
 				if (generatorClass != null) {
 					return getDisplayNameGenerator(generatorClass).generateDisplayNameForClass(testClass);
@@ -291,7 +291,7 @@ public interface DisplayNameGenerator {
 		private static DisplayNameGenerator getGeneratorFor(Class<?> testClass) {
 			return findIndicativeSentencesGeneration(testClass)//
 					.map(IndicativeSentencesGeneration::generator)//
-					.filter(not(IndicativeSentences.class::equals))//
+					.filter(not(IndicativeSentences.class))//
 					.map(DisplayNameGenerator::getDisplayNameGenerator)//
 					.orElseGet(() -> getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR));
 		}
@@ -342,6 +342,10 @@ public interface DisplayNameGenerator {
 				candidate = candidate.getEnclosingClass();
 			} while (candidate != null);
 			return Optional.empty();
+		}
+
+		private static Predicate<Class<?>> not(Class<?> clazz) {
+			return ((Predicate<Class<?>>) clazz::equals).negate();
 		}
 
 	}
