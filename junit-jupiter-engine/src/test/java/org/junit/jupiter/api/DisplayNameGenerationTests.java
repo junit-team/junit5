@@ -10,10 +10,9 @@
 
 package org.junit.jupiter.api;
 
-import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -21,7 +20,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.lang.reflect.Method;
 import java.util.EmptyStackException;
-import java.util.List;
 import java.util.Stack;
 
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -39,7 +37,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void standardGenerator() {
-		check(DefaultStyleTestCase.class, List.of( //
+		check(DefaultStyleTestCase.class, //
 			"CONTAINER: DisplayNameGenerationTests$DefaultStyleTestCase", //
 			"TEST: @DisplayName prevails", //
 			"TEST: test()", //
@@ -48,12 +46,12 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: testUsingCamelCase_and_also_UnderScores()", //
 			"TEST: testUsingCamelCase_and_also_UnderScores_keepingParameterTypeNamesIntact(TestInfo)", //
 			"TEST: test_with_underscores()" //
-		));
+		);
 	}
 
 	@Test
 	void simpleGenerator() {
-		check(SimpleStyleTestCase.class, List.of( //
+		check(SimpleStyleTestCase.class, //
 			"CONTAINER: DisplayNameGenerationTests$SimpleStyleTestCase", //
 			"TEST: @DisplayName prevails", //
 			"TEST: test", //
@@ -62,28 +60,32 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: testUsingCamelCase_and_also_UnderScores", //
 			"TEST: testUsingCamelCase_and_also_UnderScores_keepingParameterTypeNamesIntact (TestInfo)", //
 			"TEST: test_with_underscores" //
-		));
+		);
 	}
 
 	@Test
 	void underscoreGenerator() {
-		var expectedDisplayNames = List.of( //
-			"CONTAINER: DisplayNameGenerationTests\\$UnderscoreStyle.*", //
-			"TEST: @DisplayName prevails", //
-			"TEST: test", //
-			"TEST: test (TestInfo)", //
-			"TEST: test with underscores", //
-			"TEST: testUsingCamelCase and also UnderScores", //
-			"TEST: testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact (TestInfo)", //
-			"TEST: testUsingCamelCaseStyle" //
-		);
+		var expectedDisplayNames = new String[] { //
+				"<replace me>", //
+				"TEST: @DisplayName prevails", //
+				"TEST: test", //
+				"TEST: test (TestInfo)", //
+				"TEST: test with underscores", //
+				"TEST: testUsingCamelCase and also UnderScores", //
+				"TEST: testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact (TestInfo)", //
+				"TEST: testUsingCamelCaseStyle" //
+		};
+
+		expectedDisplayNames[0] = "CONTAINER: DisplayNameGenerationTests$UnderscoreStyleTestCase";
 		check(UnderscoreStyleTestCase.class, expectedDisplayNames);
+
+		expectedDisplayNames[0] = "CONTAINER: DisplayNameGenerationTests$UnderscoreStyleInheritedFromSuperClassTestCase";
 		check(UnderscoreStyleInheritedFromSuperClassTestCase.class, expectedDisplayNames);
 	}
 
 	@Test
 	void indicativeSentencesGeneratorOnStaticNestedClass() {
-		var expectedDisplayNames = List.of( //
+		check(IndicativeStyleTestCase.class, //
 			"CONTAINER: DisplayNameGenerationTests$IndicativeStyleTestCase", //
 			"TEST: @DisplayName prevails", //
 			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase -> test", //
@@ -93,32 +95,29 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase -> testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact (TestInfo)", //
 			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase -> testUsingCamelCaseStyle" //
 		);
-		check(IndicativeStyleTestCase.class, expectedDisplayNames);
 	}
 
 	@Test
 	void indicativeSentencesGeneratorOnTopLevelClass() {
-		var expectedDisplayNames = List.of( //
+		check(IndicativeSentencesTopLevelTestCase.class, //
 			"CONTAINER: IndicativeSentencesTopLevelTestCase", //
 			"CONTAINER: IndicativeSentencesTopLevelTestCase -> A year is a leap year", //
 			"TEST: IndicativeSentencesTopLevelTestCase -> A year is a leap year -> if it is divisible by 4 but not by 100" //
 		);
-		check(IndicativeSentencesTopLevelTestCase.class, expectedDisplayNames);
 	}
 
 	@Test
 	void indicativeSentencesGeneratorOnNestedClass() {
-		var expectedDisplayNames = List.of( //
-			"CONTAINER: A year is a leap year", //
+		check(IndicativeSentencesNestedTestCase.class, //
 			"CONTAINER: IndicativeSentencesNestedTestCase", //
+			"CONTAINER: A year is a leap year", //
 			"TEST: A year is a leap year -> if it is divisible by 4 but not by 100" //
 		);
-		check(IndicativeSentencesNestedTestCase.class, expectedDisplayNames);
 	}
 
 	@Test
 	void noNameGenerator() {
-		check(NoNameStyleTestCase.class, List.of( //
+		check(NoNameStyleTestCase.class, //
 			"CONTAINER: nn", //
 			"TEST: @DisplayName prevails", //
 			"TEST: nn", //
@@ -127,54 +126,81 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: nn", //
 			"TEST: nn", //
 			"TEST: nn" //
-		));
+		);
 	}
 
 	@Test
 	void checkDisplayNameGeneratedForTestingAStackDemo() {
-		check(StackTestCase.class, List.of( //
-			"CONTAINER: A new stack", //
+		check(StackTestCase.class, //
 			"CONTAINER: A stack", //
-			"CONTAINER: After pushing an element to an empty stack", //
-			"TEST: is empty", //
 			"TEST: is instantiated using its noarg constructor", //
+			"CONTAINER: A new stack", //
+			"TEST: throws an EmptyStackException when peeked", //
+			"TEST: throws an EmptyStackException when popped", //
+			"TEST: is empty", //
+			"CONTAINER: After pushing an element to an empty stack", //
 			"TEST: peek returns that element without removing it from the stack", //
 			"TEST: pop returns that element and leaves an empty stack", //
-			"TEST: the stack is no longer empty", //
-			"TEST: throws an EmptyStackException when peeked", //
-			"TEST: throws an EmptyStackException when popped" //
-		));
+			"TEST: the stack is no longer empty" //
+		);
 	}
 
 	@Test
 	void checkDisplayNameGeneratedForIndicativeGeneratorTestCase() {
-		check(IndicativeGeneratorTestCase.class, List.of( //
+		check(IndicativeGeneratorTestCase.class, //
 			"CONTAINER: A stack", //
-			"CONTAINER: A stack, when new", //
-			"CONTAINER: A stack, when new, after pushing an element to an empty stack", //
 			"TEST: A stack, is instantiated with new constructor", //
-			"TEST: A stack, when new, after pushing an element to an empty stack, is no longer empty", //
-			"TEST: A stack, when new, throws EmptyStackException when peeked" //
-		));
+			"CONTAINER: A stack, when new", //
+			"TEST: A stack, when new, throws EmptyStackException when peeked", //
+			"CONTAINER: A stack, when new, after pushing an element to an empty stack", //
+			"TEST: A stack, when new, after pushing an element to an empty stack, is no longer empty" //
+		);
 	}
 
 	@Test
 	void checkDisplayNameGeneratedForIndicativeGeneratorWithCustomSeparatorTestCase() {
-		check(IndicativeGeneratorWithCustomSeparatorTestCase.class, List.of( //
+		check(IndicativeGeneratorWithCustomSeparatorTestCase.class, //
 			"CONTAINER: A stack", //
-			"CONTAINER: A stack >> when new", //
-			"CONTAINER: A stack >> when new >> after pushing an element to an empty stack", //
 			"TEST: A stack >> is instantiated with new constructor", //
-			"TEST: A stack >> when new >> after pushing an element to an empty stack >> is no longer empty", //
-			"TEST: A stack >> when new >> throws EmptyStackException when peeked"//
-		));
+			"CONTAINER: A stack >> when new", //
+			"TEST: A stack >> when new >> throws EmptyStackException when peeked", //
+			"CONTAINER: A stack >> when new >> after pushing an element to an empty stack", //
+			"TEST: A stack >> when new >> after pushing an element to an empty stack >> is no longer empty" //
+		);
 	}
 
-	private void check(Class<?> testClass, List<String> expectedDisplayNames) {
+	@Test
+	void displayNameGenerationInheritance() {
+		check(DisplayNameGenerationInheritanceTestCase.InnerNestedTestCase.class, //
+			"CONTAINER: DisplayNameGenerationInheritanceTestCase", //
+			"CONTAINER: InnerNestedTestCase", //
+			"TEST: this is a test"//
+		);
+
+		check(DisplayNameGenerationInheritanceTestCase.StaticNestedTestCase.class, //
+			"CONTAINER: DisplayNameGenerationInheritanceTestCase$StaticNestedTestCase", //
+			"TEST: this_is_a_test()"//
+		);
+	}
+
+	@Test
+	void indicativeSentencesGenerationInheritance() {
+		check(IndicativeSentencesGenerationInheritanceTestCase.InnerNestedTestCase.class, //
+			"CONTAINER: IndicativeSentencesGenerationInheritanceTestCase", //
+			"CONTAINER: IndicativeSentencesGenerationInheritanceTestCase -> InnerNestedTestCase", //
+			"TEST: IndicativeSentencesGenerationInheritanceTestCase -> InnerNestedTestCase -> this is a test"//
+		);
+
+		check(IndicativeSentencesGenerationInheritanceTestCase.StaticNestedTestCase.class, //
+			"CONTAINER: IndicativeSentencesGenerationInheritanceTestCase$StaticNestedTestCase", //
+			"TEST: this_is_a_test()"//
+		);
+	}
+
+	private void check(Class<?> testClass, String... expectedDisplayNames) {
 		var request = request().selectors(selectClass(testClass)).build();
 		var descriptors = discoverTests(request).getDescendants();
-		var sortedNames = descriptors.stream().map(this::describe).sorted().collect(toList());
-		assertLinesMatch(expectedDisplayNames, sortedNames);
+		assertThat(descriptors).map(this::describe).containsExactlyInAnyOrder(expectedDisplayNames);
 	}
 
 	private String describe(TestDescriptor descriptor) {

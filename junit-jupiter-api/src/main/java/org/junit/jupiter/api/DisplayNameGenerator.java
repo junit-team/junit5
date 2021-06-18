@@ -13,14 +13,13 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -228,7 +227,7 @@ public interface DisplayNameGenerator {
 		private String getSentenceBeginning(Class<?> testClass) {
 			Class<?> enclosingClass = testClass.getEnclosingClass();
 			boolean topLevelTestClass = (enclosingClass == null || isStatic(testClass));
-			Optional<String> displayName = AnnotationSupport.findAnnotation(testClass, DisplayName.class)//
+			Optional<String> displayName = findAnnotation(testClass, DisplayName.class)//
 					.map(DisplayName::value).map(String::trim);
 
 			if (topLevelTestClass) {
@@ -305,7 +304,7 @@ public interface DisplayNameGenerator {
 		 * @return an {@code Optional} containing the annotation, potentially empty if not found
 		 */
 		private static Optional<DisplayNameGeneration> findDisplayNameGeneration(Class<?> testClass) {
-			return findAnnotation(testClass, DisplayNameGeneration.class);
+			return findAnnotation(testClass, DisplayNameGeneration.class, true);
 		}
 
 		/**
@@ -317,31 +316,7 @@ public interface DisplayNameGenerator {
 		 * @return an {@code Optional} containing the annotation, potentially empty if not found
 		 */
 		private static Optional<IndicativeSentencesGeneration> findIndicativeSentencesGeneration(Class<?> testClass) {
-			return findAnnotation(testClass, IndicativeSentencesGeneration.class);
-		}
-
-		/**
-		 * Find the first annotation of the specified type that is either
-		 * <em>directly present</em>, <em>meta-present</em>, or <em>indirectly
-		 * present</em> on the supplied {@code testClass} or on an enclosing class.
-		 *
-		 * @param <A> the annotation type
-		 * @param testClass the test class on which to search for the annotation;
-		 * never {@code null}
-		 * @param annotationType the annotation type to search for; never {@code null}
-		 * @return an {@code Optional} containing the annotation; never {@code null} but
-		 * potentially empty
-		 */
-		private static <A extends Annotation> Optional<A> findAnnotation(Class<?> testClass, Class<A> annotationType) {
-			Class<?> candidate = testClass;
-			do {
-				Optional<A> annotation = AnnotationSupport.findAnnotation(candidate, annotationType);
-				if (annotation.isPresent()) {
-					return annotation;
-				}
-				candidate = candidate.getEnclosingClass();
-			} while (candidate != null);
-			return Optional.empty();
+			return findAnnotation(testClass, IndicativeSentencesGeneration.class, true);
 		}
 
 		private static Predicate<Class<?>> not(Class<?> clazz) {

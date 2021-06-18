@@ -41,11 +41,14 @@ on GitHub.
   supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
   <<../user-guide/index.adoc#running-tests, Flight Recorder Support>> for details.
 
+
 [[release-notes-5.8.0-M2-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
 
+* `@DisplayNameGeneration` and `@IndicativeSentencesGeneration` are now only inherited
+  from enclosing classes if the current class is a `@Nested` test class.
 * The `IndicativeSentences` `DisplayNameGenerator` no longer includes the display name of
   the enclosing class when generating an _indicative sentence_ if the enclosing class is
   not configured to use the `IndicativeSentences` display name generator as well.

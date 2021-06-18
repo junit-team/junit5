@@ -32,10 +32,15 @@ import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences;
  * {@code @IndicativeSentencesGeneration} or {@code @IndicativeSentencesGeneration()}
  * &mdash; the default configuration will be used.
  *
+ * <p>This annotation is <em>inherited</em> from superclasses and implemented
+ * interfaces. It is also inherited from {@linkplain Class#getEnclosingClass()
+ * enclosing classes} for {@link Nested @Nested} test classes.
+ *
  * @since 5.7
  * @see DisplayName
  * @see DisplayNameGenerator
  * @see DisplayNameGenerator.IndicativeSentences
+ * @see DisplayNameGeneration
  */
 @DisplayNameGeneration(IndicativeSentences.class)
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })

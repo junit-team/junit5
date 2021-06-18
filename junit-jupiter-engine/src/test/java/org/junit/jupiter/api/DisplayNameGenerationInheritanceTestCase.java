@@ -13,20 +13,23 @@ package org.junit.jupiter.api;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 
 /**
- * This test case declares {@link IndicativeSentencesGeneration} on a top-level
- * test class that contains a nested test class.
- *
- * @see IndicativeSentencesNestedTestCase
  * @since 5.8
  */
-@IndicativeSentencesGeneration(separator = " -> ", generator = ReplaceUnderscores.class)
-class IndicativeSentencesTopLevelTestCase {
+@DisplayNameGeneration(ReplaceUnderscores.class)
+class DisplayNameGenerationInheritanceTestCase {
 
 	@Nested
-	class A_year_is_a_leap_year {
+	class InnerNestedTestCase {
 
 		@Test
-		void if_it_is_divisible_by_4_but_not_by_100() {
+		void this_is_a_test() {
+		}
+	}
+
+	static class StaticNestedTestCase {
+
+		@Test
+		void this_is_a_test() {
 		}
 	}
 

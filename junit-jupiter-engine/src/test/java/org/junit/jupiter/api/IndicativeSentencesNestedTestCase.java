@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
  * that is nested directly within a top-level test class.
  *
  * @see IndicativeSentencesTopLevelTestCase
+ * @since 5.8
  */
 class IndicativeSentencesNestedTestCase {
 

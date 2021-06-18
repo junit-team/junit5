@@ -13,6 +13,7 @@ package org.junit.platform.commons.util;
 import static java.util.Arrays.asList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
@@ -179,6 +180,45 @@ public final class AnnotationUtils {
 					return metaAnnotation;
 				}
 			}
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Find the first annotation of the specified type that is either
+	 * <em>directly present</em>, <em>meta-present</em>, or <em>indirectly
+	 * present</em> on the supplied class, optionally searching recursively
+	 * through the enclosing class hierarchy if not found on the supplied class.
+	 *
+	 * <p>The enclosing class hierarchy will only be searched above an <em>inner
+	 * class</em> (i.e., a non-static member class).
+	 *
+	 * @param <A> the annotation type
+	 * @param clazz the class on which to search for the annotation; may be {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @param searchEnclosingClasses whether the enclosing class hierarchy should
+	 * be searched
+	 * @return an {@code Optional} containing the annotation; never {@code null} but
+	 * potentially empty
+	 * @since 1.8
+	 * @see #findAnnotation(AnnotatedElement, Class)
+	 */
+	public static <A extends Annotation> Optional<A> findAnnotation(Class<?> clazz, Class<A> annotationType,
+			boolean searchEnclosingClasses) {
+
+		Preconditions.notNull(annotationType, "annotationType must not be null");
+
+		if (!searchEnclosingClasses) {
+			return findAnnotation(clazz, annotationType);
+		}
+
+		Class<?> candidate = clazz;
+		while (candidate != null) {
+			Optional<A> annotation = findAnnotation(candidate, annotationType);
+			if (annotation.isPresent()) {
+				return annotation;
+			}
+			candidate = (isInnerClass(candidate) ? candidate.getEnclosingClass() : null);
 		}
 		return Optional.empty();
 	}

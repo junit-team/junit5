@@ -27,6 +27,7 @@ import org.junit.jupiter.api.DisplayNameGenerator.Standard;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -106,7 +107,7 @@ final class DisplayNameUtils {
 			JupiterConfiguration configuration) {
 		Preconditions.notNull(testClass, "Test class must not be null");
 
-		return getDisplayNameGeneration(testClass) //
+		return AnnotationUtils.findAnnotation(testClass, DisplayNameGeneration.class, true) //
 				.map(DisplayNameGeneration::value) //
 				.map(displayNameGeneratorClass -> {
 					if (displayNameGeneratorClass == Standard.class) {
@@ -124,23 +125,6 @@ final class DisplayNameUtils {
 					return ReflectionUtils.newInstance(displayNameGeneratorClass);
 				}) //
 				.orElseGet(configuration::getDefaultDisplayNameGenerator);
-	}
-
-	/**
-	 * Find the first {@code DisplayNameGeneration} annotation that is either
-	 * <em>directly present</em>, <em>meta-present</em>, or <em>indirectly present</em>
-	 * on the supplied {@code testClass} or on an enclosing class.
-	 */
-	private static Optional<DisplayNameGeneration> getDisplayNameGeneration(Class<?> testClass) {
-		Class<?> candidate = testClass;
-		do {
-			Optional<DisplayNameGeneration> generation = findAnnotation(candidate, DisplayNameGeneration.class);
-			if (generation.isPresent()) {
-				return generation;
-			}
-			candidate = candidate.getEnclosingClass();
-		} while (candidate != null);
-		return Optional.empty();
 	}
 
 }
