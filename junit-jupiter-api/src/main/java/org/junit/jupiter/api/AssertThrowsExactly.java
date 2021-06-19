@@ -23,7 +23,7 @@ import org.opentest4j.AssertionFailedError;
 
 /**
  * {@code AssertThrowsExactly} is a collection of utility methods that support asserting
- * an exception of an expected type is thrown.
+ * an exception of an exact type is thrown.
  *
  * @since 5.8
  */
