@@ -279,12 +279,20 @@ afterEvaluate {
 	}
 	pluginManager.withPlugin("groovy") {
 		tasks.named<GroovyCompile>("compileGroovy").configure {
-			sourceCompatibility = extension.mainJavaVersion.majorVersion
-			targetCompatibility = extension.mainJavaVersion.majorVersion
+			if (extension.configureRelease) {
+				options.release.set(extension.mainJavaVersion.majorVersion.toInt())
+			} else {
+				sourceCompatibility = extension.mainJavaVersion.majorVersion
+				targetCompatibility = extension.mainJavaVersion.majorVersion
+			}
 		}
 		tasks.named<GroovyCompile>("compileTestGroovy").configure {
-			sourceCompatibility = extension.testJavaVersion.majorVersion
-			targetCompatibility = extension.testJavaVersion.majorVersion
+			if (extension.configureRelease) {
+				options.release.set(extension.testJavaVersion.majorVersion.toInt())
+			} else {
+				sourceCompatibility = extension.testJavaVersion.majorVersion
+				targetCompatibility = extension.testJavaVersion.majorVersion
+			}
 		}
 	}
 }
