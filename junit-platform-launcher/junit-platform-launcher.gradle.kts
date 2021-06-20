@@ -7,6 +7,7 @@ description = "JUnit Platform Launcher"
 
 dependencies {
 	api(platform(projects.junitBom))
-	api(libs.apiguardian)
 	api(projects.junitPlatformEngine)
+
+	compileOnlyApi(libs.apiguardian)
 }

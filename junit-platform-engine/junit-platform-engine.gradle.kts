@@ -7,9 +7,10 @@ description = "JUnit Platform Engine API"
 
 dependencies {
 	api(platform(projects.junitBom))
-	api(libs.apiguardian)
 	api(libs.opentest4j)
 	api(projects.junitPlatformCommons)
+
+	compileOnlyApi(libs.apiguardian)
 
 	testImplementation(libs.assertj)
 }

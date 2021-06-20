@@ -13,6 +13,9 @@ dependencies {
 	shadowed(projects.junitJupiterEngine)
 	shadowed(projects.junitJupiterParams)
 	shadowed(projects.junitVintageEngine)
+	shadowed(libs.apiguardian) {
+		because("downstream projects need it to avoid compiler warnings")
+	}
 }
 
 val jupiterVersion = rootProject.version

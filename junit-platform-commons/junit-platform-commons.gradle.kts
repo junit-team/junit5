@@ -9,7 +9,8 @@ description = "JUnit Platform Commons"
 
 dependencies {
 	api(platform(projects.junitBom))
-	api(libs.apiguardian)
+
+	compileOnlyApi(libs.apiguardian)
 }
 
 tasks.jar {

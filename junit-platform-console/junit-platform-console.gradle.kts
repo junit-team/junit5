@@ -9,8 +9,9 @@ description = "JUnit Platform Console"
 
 dependencies {
 	api(platform(projects.junitBom))
-	api(libs.apiguardian)
 	api(projects.junitPlatformReporting)
+
+	compileOnlyApi(libs.apiguardian)
 
 	shadowed(libs.picocli)
 }

@@ -12,9 +12,10 @@ description = "JUnit Vintage Engine"
 
 dependencies {
 	api(platform(projects.junitBom))
-	api(libs.apiguardian)
 	api(projects.junitPlatformEngine)
 	api(libs.junit4)
+
+	compileOnlyApi(libs.apiguardian)
 
 	testFixturesApi(platform(libs.groovy2.bom))
 	testFixturesApi(libs.spock1)

@@ -11,8 +11,9 @@ description = "JUnit Jupiter Migration Support"
 dependencies {
 	api(platform(projects.junitBom))
 	api(libs.junit4)
-	api(libs.apiguardian)
 	api(projects.junitJupiterApi)
+
+	compileOnlyApi(libs.apiguardian)
 
 	testImplementation(projects.junitJupiterEngine)
 	testImplementation(projects.junitPlatformLauncher)

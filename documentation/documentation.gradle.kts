@@ -44,6 +44,9 @@ dependencies {
 
 	testImplementation(projects.junitVintageEngine)
 	testRuntimeOnly(libs.bundles.log4j)
+	testRuntimeOnly(libs.apiguardian) {
+		because("it's required to generate API tables")
+	}
 
 	testImplementation(libs.classgraph) {
 		because("ApiReportGenerator needs it")

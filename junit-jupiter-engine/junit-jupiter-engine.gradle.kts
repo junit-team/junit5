@@ -11,9 +11,10 @@ description = "JUnit Jupiter Engine"
 
 dependencies {
 	api(platform(projects.junitBom))
-	api(libs.apiguardian)
 	api(projects.junitPlatformEngine)
 	api(projects.junitJupiterApi)
+
+	compileOnlyApi(libs.apiguardian)
 
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformRunner)

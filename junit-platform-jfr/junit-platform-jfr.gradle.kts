@@ -6,8 +6,9 @@ description = "JUnit Platform Flight Recorder Support"
 
 dependencies {
 	api(platform(projects.junitBom))
-	api(libs.apiguardian)
 	api(projects.junitPlatformLauncher)
+
+	compileOnlyApi(libs.apiguardian)
 }
 
 javaLibrary {

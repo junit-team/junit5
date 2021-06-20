@@ -10,6 +10,13 @@ link:{junit5-repo}+/milestone/55?closed=1+[5.8 M2] milestone page in the JUnit r
 on GitHub.
 
 
+[[release-notes-5.8.0-M2-general-improvements]]
+=== General improvements
+
+* The API Guardian dependency is now exported as a compile-only dependency for consuming
+  Gradle projects.
+
+
 [[release-notes-5.8.0-M2-junit-platform]]
 === JUnit Platform
 

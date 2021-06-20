@@ -10,9 +10,10 @@ description = "JUnit Platform Runner"
 dependencies {
 	api(platform(projects.junitBom))
 	api(libs.junit4)
-	api(libs.apiguardian)
 	api(projects.junitPlatformLauncher)
 	api(projects.junitPlatformSuiteApi)
+
+	compileOnlyApi(libs.apiguardian)
 
 	implementation(projects.junitPlatformSuiteCommons)
 
