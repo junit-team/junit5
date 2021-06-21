@@ -6,11 +6,7 @@ plugins {
 	`java-library`
 }
 
-// Because the current build version of apiguardian (1.1.1) doesn't have OSGi metadata, bnd
-// cannot automatically determine the correct version to use in the Import-Package statement.
-// Fetch the current version out of the libs.versions.toml file.
-val apiguardianVersion = project.extensions.getByType(VersionCatalogsExtension::class).named("libs").findVersion("apiguardian").get()
-val importAPIGuardian = "org.apiguardian.*;version=\"\${range;[==,+);${apiguardianVersion}}\";resolution:=\"optional\""
+val importAPIGuardian = "org.apiguardian.*;resolution:=\"optional\""
 
 // This task enhances `jar` and `shadowJar` tasks with the bnd
 // `BundleTaskConvention` convention which allows for generating OSGi
