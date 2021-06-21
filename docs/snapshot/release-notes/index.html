@@ -474,6 +474,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#release-notes-5.8.0-M2">5.8.0-M2</a>
 <ul class="sectlevel2">
+<li><a href="#release-notes-5.8.0-M2-general-improvements">General improvements</a></li>
 <li><a href="#release-notes-5.8.0-M2-junit-platform">JUnit Platform</a></li>
 <li><a href="#release-notes-5.8.0-M2-junit-jupiter">JUnit Jupiter</a></li>
 <li><a href="#release-notes-5.8.0-M2-junit-vintage">JUnit Vintage</a></li>
@@ -531,6 +532,17 @@ authors as well as build tool and IDE vendors.</p>
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
 <a href="https://github.com/junit-team/junit5/milestone/55?closed=1">5.8 M2</a> milestone page in the JUnit repository
 on GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.8.0-M2-general-improvements"><a class="anchor" href="#release-notes-5.8.0-M2-general-improvements"></a>General improvements</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The API Guardian dependency is now exported as a compile-only dependency for consuming
+Gradle projects.</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.8.0-M2-junit-platform"><a class="anchor" href="#release-notes-5.8.0-M2-junit-platform"></a>JUnit Platform</h3>
@@ -634,6 +646,10 @@ the information available in a <code>StackTraceElement</code>.</p>
 <li>
 <p><code>@TempDir</code> cleanup resets readable and executable permissions of the root temporary
 directory and any contained directories instead of failing to delete them.</p>
+</li>
+<li>
+<p>New <code>assertThrowsExactly</code> method which is a more strict version of <code>assertThrows</code>
+that allows you to assert that the thrown exception has the exact specified class.</p>
 </li>
 </ul>
 </div>
@@ -1083,7 +1099,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-06-18 14:02:19 UTC
+Last updated 2021-06-21 06:55:12 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
