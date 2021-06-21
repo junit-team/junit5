@@ -21,6 +21,9 @@ dependencies {
 	testImplementation(libs.archunit) {
 		because("checking the architecture of JUnit 5")
 	}
+	testImplementation(libs.apiguardian) {
+		because("we validate that public classes are annotated")
+	}
 	testImplementation(libs.groovy3) {
 		because("it provides convenience methods to handle process output")
 	}
