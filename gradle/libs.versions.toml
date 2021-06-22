@@ -23,6 +23,7 @@ classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.106" }
 commons-io = { module = "commons-io:commons-io", version = "2.9.0" }
 groovy3 = { module = "org.codehaus.groovy:groovy", version = "3.0.8" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.14" }
+hamcrest = { module = "org.hamcrest:hamcrest", version = "2.2" }
 jfrunit = { module = "com.github.gunnarmorling:jfrunit", version = "main-SNAPSHOT" }
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }

@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.ThirdPartyJars;
 
 /**
  * @since 1.6
@@ -63,8 +64,8 @@ class ToolProviderTests {
 					Files.copy(jar, lib.resolve(module + ".jar"));
 				}
 			}
-			Helper.load(lib, "org.apiguardian", "apiguardian-api", Helper.version("apiGuardian", "1.1.0"));
-			Helper.load(lib, "org.opentest4j", "opentest4j", Helper.version("ota4j", "1.2.0"));
+			ThirdPartyJars.copy(lib, "org.apiguardian", "apiguardian-api");
+			ThirdPartyJars.copy(lib, "org.opentest4j", "opentest4j");
 		}
 		catch (Exception e) {
 			throw new AssertionError("Preparing local library folder failed", e);

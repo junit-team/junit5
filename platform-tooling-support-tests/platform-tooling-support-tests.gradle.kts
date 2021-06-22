@@ -10,6 +10,8 @@ javaLibrary {
 	mainJavaVersion = JavaVersion.VERSION_11
 }
 
+val thirdPartyJars by configurations.creating
+
 dependencies {
 	implementation(libs.bartholdy) {
 		because("manage external tool installations")
@@ -33,6 +35,12 @@ dependencies {
 	testRuntimeOnly(libs.slf4j.julBinding) {
 		because("provide appropriate SLF4J binding")
 	}
+
+	thirdPartyJars(libs.junit4)
+	thirdPartyJars(libs.assertj)
+	thirdPartyJars(libs.apiguardian)
+	thirdPartyJars(libs.hamcrest)
+	thirdPartyJars(libs.opentest4j)
 }
 
 tasks.test {
@@ -54,12 +62,7 @@ tasks.test {
 
 	val tempRepoDir: File by rootProject
 	jvmArgumentProviders += MavenRepo(tempRepoDir)
-
-	// Pass version constants (declared in Versions.kt) to tests as system properties
-	systemProperty("Versions.apiGuardian", libs.versions.apiguardian.get())
-	systemProperty("Versions.assertJ", libs.versions.assertj.get())
-	systemProperty("Versions.junit4", libs.versions.junit4.get())
-	systemProperty("Versions.ota4j", libs.versions.opentest4j.get())
+	jvmArgumentProviders += ThirdPartyJars(thirdPartyJars)
 
 	(options as JUnitPlatformOptions).apply {
 		includeEngines("archunit")
@@ -112,4 +115,8 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 		}
 		return emptyList()
 	}
+}
+
+class ThirdPartyJars(@Classpath val configuration: Configuration) : CommandLineArgumentProvider {
+	override fun asArguments() = listOf("-DthirdPartyJars=${configuration.asPath}")
 }
