@@ -35,7 +35,7 @@ class MavenStarterTests {
 				.setTool(Request.maven()) //
 				.setProject("maven-starter") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("--debug", "verify") //
+				.addArguments("--debug", "--batch-mode", "verify") //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //
