@@ -1,5 +1,5 @@
 [versions]
-apiguardian = "1.1.2-SNAPSHOT"
+apiguardian = "1.1.2"
 asciidoctor-pdf = "1.5.3"
 assertj = "3.19.0"
 checkstyle = "8.36.2"
