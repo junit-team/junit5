@@ -12,4 +12,7 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 
 	implementation(projects.junitPlatformSuiteCommons)
+
+	osgiVerification(projects.junitJupiterEngine)
+	osgiVerification(projects.junitPlatformLauncher)
 }
