@@ -207,4 +207,15 @@ public @interface ParameterizedTest {
 	 */
 	String name() default "{default_display_name}";
 
+	/**
+	 * If true, all arguments of the parameterized test implementing {@link AutoCloseable}
+	 * will be closed after {@code @AfterEach} methods and {@code AfterEachCallbacks}
+	 * have been called.
+	 *
+	 * @since 5.8
+	 * @see java.lang.AutoCloseable
+	 * @see ParameterizedTestParameterResolver
+	 */
+	boolean autoCloseArguments() default true;
+
 }

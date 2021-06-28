@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Named.named;
@@ -21,6 +22,7 @@ import static org.junit.platform.testkit.engine.EventConditions.abortedWithReaso
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
@@ -704,6 +706,15 @@ class ParameterizedTestIntegrationTests {
 
 	}
 
+	@Test
+	void closeAutoCloseableArgumentsAfterTest() {
+		var results = execute("testWithAutoCloseableArgument", AutoCloseableArgument.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedSuccessfully()));
+
+		assertTrue(AutoCloseableArgument.isClosed);
+	}
+
 	// -------------------------------------------------------------------------
 
 	static class TestCase {
@@ -784,6 +795,12 @@ class ParameterizedTestIntegrationTests {
 		@CsvFileSource(resources = "/leading-trailing-spaces.csv", ignoreLeadingAndTrailingWhitespace = true)
 		void testWithIgnoreLeadingAndTrailingWhitespaceSetToTrueForCsvFileSource(String argument1, String argument2) {
 			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
+		}
+
+		@ParameterizedTest
+		@ArgumentsSource(AutoCloseableArgumentProvider.class)
+		void testWithAutoCloseableArgument(AutoCloseableArgument autoCloseable) {
+			assertFalse(AutoCloseableArgument.isClosed);
 		}
 
 	}
@@ -1255,6 +1272,24 @@ class ParameterizedTestIntegrationTests {
 		@Override
 		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
 			throw new ArgumentConversionException("something went horribly wrong");
+		}
+	}
+
+	private static class AutoCloseableArgumentProvider implements ArgumentsProvider {
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+			return Stream.of(arguments(new AutoCloseableArgument()));
+		}
+	}
+
+	static class AutoCloseableArgument implements AutoCloseable {
+
+		static boolean isClosed = false;
+
+		@Override
+		public void close() {
+			isClosed = true;
 		}
 	}
 

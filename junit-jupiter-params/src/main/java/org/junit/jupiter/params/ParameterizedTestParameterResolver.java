@@ -13,17 +13,25 @@ package org.junit.jupiter.params;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.platform.commons.util.AnnotationUtils;
 
 /**
  * @since 5.0
  */
-class ParameterizedTestParameterResolver implements ParameterResolver {
+class ParameterizedTestParameterResolver implements ParameterResolver, AfterTestExecutionCallback {
+
+	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestParameterResolver.class);
 
 	private final ParameterizedTestMethodContext methodContext;
 	private final Object[] arguments;
@@ -63,6 +71,43 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 		return this.methodContext.resolve(parameterContext, extractPayloads(this.arguments));
+	}
+
+	/**
+	 * @since 5.8
+	 */
+	@Override
+	public void afterTestExecution(ExtensionContext context) {
+		ParameterizedTest parameterizedTest = AnnotationUtils.findAnnotation(context.getRequiredTestMethod(),
+			ParameterizedTest.class).get();
+		if (!parameterizedTest.autoCloseArguments()) {
+			return;
+		}
+
+		List<CloseableArgument> closeableArguments = Arrays.stream(arguments) //
+				.filter(argument -> argument instanceof AutoCloseable) //
+				.map(autoCloseable -> new CloseableArgument((AutoCloseable) autoCloseable)) //
+				.collect(Collectors.toList());
+
+		Store store = context.getStore(NAMESPACE);
+		for (int i = 0; i < closeableArguments.size(); i++) {
+			store.put("closeableArgument" + i, closeableArguments.get(i));
+		}
+	}
+
+	private static class CloseableArgument implements Store.CloseableResource {
+
+		private final AutoCloseable autoCloseable;
+
+		CloseableArgument(AutoCloseable autoCloseable) {
+			this.autoCloseable = autoCloseable;
+		}
+
+		@Override
+		public void close() throws Throwable {
+			autoCloseable.close();
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
