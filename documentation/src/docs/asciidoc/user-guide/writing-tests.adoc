@@ -1400,6 +1400,10 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsSource_examp
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsProvider_example]
 ----
 
+NOTE: Arguments of type `AutoCloseable` will be closed once `@AfterEach` methods and
+`AfterEachCallback` implementations have been called. To prevent this from happening, set
+attribute `autoCloseArguments` of `ParameterizedTest` to false.
+
 
 [[writing-tests-parameterized-tests-argument-conversion]]
 ==== Argument Conversion
