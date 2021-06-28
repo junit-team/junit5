@@ -12,4 +12,7 @@ dependencies {
 
 	implementation(projects.junitPlatformEngine)
 	implementation(projects.junitPlatformSuiteApi)
+
+	osgiVerification(projects.junitJupiterEngine)
+	osgiVerification(projects.junitPlatformLauncher)
 }

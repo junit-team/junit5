@@ -13,4 +13,7 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 
 	testImplementation(libs.assertj)
+
+	osgiVerification(projects.junitJupiterEngine)
+	osgiVerification(projects.junitPlatformLauncher)
 }
