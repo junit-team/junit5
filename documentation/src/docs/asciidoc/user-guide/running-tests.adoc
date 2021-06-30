@@ -879,8 +879,8 @@ test suite.
   printed via a `PrintWriter`.
 
 `{UniqueIdTrackingListener}` ::
-  `TestExecutionListener` that that tracks the unique IDs of all tests that were
-  executed during the execution of the `TestPlan` and generates a file containing the
+  `TestExecutionListener` that that tracks the unique IDs of all tests that were skipped
+  or executed during the execution of the `TestPlan` and generates a file containing the
   unique IDs once execution of the `TestPlan` has finished.
 
 [[running-tests-listeners-flight-recorder]]

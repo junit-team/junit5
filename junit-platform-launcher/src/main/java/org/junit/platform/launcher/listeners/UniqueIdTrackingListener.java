@@ -40,8 +40,9 @@ import org.junit.platform.launcher.TestPlan;
  * of the {@code TestPlan} has {@linkplain #testPlanExecutionFinished(TestPlan)
  * finished}.
  *
- * <p>Tests are tracked regardless of their {@link TestExecutionResult}, and the
- * unique IDs are written to the output file, one ID per line, encoding using UTF-8.
+ * <p>Tests are tracked regardless of their {@link TestExecutionResult} or whether
+ * they were skipped, and the unique IDs are written to the output file, one ID
+ * per line, encoding using UTF-8.
  *
  * <p>The output file can be used to execute the same set of tests again without
  * having to query the user configuration for the test plan and without having to
@@ -134,7 +135,16 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	}
 
 	@Override
+	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
+		trackTestUid(testIdentifier);
+	}
+
+	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+		trackTestUid(testIdentifier);
+	}
+
+	private void trackTestUid(TestIdentifier testIdentifier) {
 		if (this.enabled && testIdentifier.isTest()) {
 			this.uniqueIds.add(testIdentifier.getUniqueId());
 		}

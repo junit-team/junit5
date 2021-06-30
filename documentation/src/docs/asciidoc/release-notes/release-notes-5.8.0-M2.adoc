@@ -40,10 +40,11 @@ on GitHub.
   <<../user-guide/index.adoc#launcher-api-listeners-config, Configuring an Execution
   Listener>> for details.
 * New `UniqueIdTrackingListener` which is a `TestExecutionListener` that tracks the unique
-  IDs of all tests that were executed during the `TestPlan` and generates a file
-  containing the unique IDs. The generated file can be used to rerun those tests -- for
-  example, in order to run the same set of tests executed on the JVM subsequently within a
-  GraalVM native image. See the Javadoc for `{UniqueIdTrackingListener}` for details.
+  IDs of all tests that were skipped or executed during the `TestPlan` and generates a
+  file containing the unique IDs. The generated file can be used to rerun those tests --
+  for example, in order to run the same set of tests executed on the JVM subsequently
+  within a GraalVM native image. See the Javadoc for `{UniqueIdTrackingListener}` for
+  details.
 * Generating Java Flight Recorder events via module `org.junit.platform.jfr` is now also
   supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
   <<../user-guide/index.adoc#running-tests, Flight Recorder Support>> for details.

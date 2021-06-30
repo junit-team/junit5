@@ -67,6 +67,7 @@ import org.opentest4j.TestAbortedException;
 class UniqueIdTrackingListenerIntegrationTests {
 
 	private static final String passingTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[method:passingTest()]";
+	private static final String skippedTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[method:skippedTest()]";
 	private static final String abortedTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[method:abortedTest()]";
 	private static final String failingTest = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[method:failingTest()]";
 	private static final String dynamicTest1 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase1]/[test-factory:dynamicTests()]/[dynamic-test:#1]";
@@ -74,8 +75,8 @@ class UniqueIdTrackingListenerIntegrationTests {
 	private static final String test1 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase2]/[method:test1()]";
 	private static final String test2 = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase2]/[method:test2()]";
 
-	private static final String[] expectedUniqueIds = { passingTest, abortedTest, failingTest, dynamicTest1,
-			dynamicTest2, test1, test2 };
+	private static final String[] expectedUniqueIds = { passingTest, skippedTest, abortedTest, failingTest,
+			dynamicTest1, dynamicTest2, test1, test2 };
 
 	@Test
 	void confirmExpectedUniqueIdsViaEngineTestKit() {
@@ -186,6 +187,14 @@ class UniqueIdTrackingListenerIntegrationTests {
 				.configurationParameters(configurationParameters)//
 				.build();
 		LauncherFactory.create().execute(request, new TestExecutionListener() {
+
+			@Override
+			public void executionSkipped(TestIdentifier testIdentifier, String reason) {
+				if (testIdentifier.isTest()) {
+					uniqueIds.add(testIdentifier.getUniqueId());
+				}
+			}
+
 			@Override
 			public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 				if (testIdentifier.isTest()) {
@@ -210,7 +219,7 @@ class UniqueIdTrackingListenerIntegrationTests {
 
 		@Test
 		@Disabled("testing")
-		void disabledTest() {
+		void skippedTest() {
 		}
 
 		@Test
