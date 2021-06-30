@@ -85,8 +85,9 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 		}
 
 		List<CloseableArgument> closeableArguments = Arrays.stream(arguments) //
-				.filter(argument -> argument instanceof AutoCloseable) //
-				.map(autoCloseable -> new CloseableArgument((AutoCloseable) autoCloseable)) //
+				.filter(AutoCloseable.class::isInstance) //
+				.map(AutoCloseable.class::cast) //
+				.map(CloseableArgument::new) //
 				.collect(Collectors.toList());
 
 		Store store = context.getStore(NAMESPACE);
