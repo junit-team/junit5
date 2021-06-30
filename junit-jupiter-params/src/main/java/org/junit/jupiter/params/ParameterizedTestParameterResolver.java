@@ -13,8 +13,7 @@ package org.junit.jupiter.params;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -84,16 +83,14 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 			return;
 		}
 
-		List<CloseableArgument> closeableArguments = Arrays.stream(arguments) //
+		Store store = context.getStore(NAMESPACE);
+		AtomicInteger argumentIndex = new AtomicInteger();
+
+		Arrays.stream(arguments) //
 				.filter(AutoCloseable.class::isInstance) //
 				.map(AutoCloseable.class::cast) //
 				.map(CloseableArgument::new) //
-				.collect(Collectors.toList());
-
-		Store store = context.getStore(NAMESPACE);
-		for (int i = 0; i < closeableArguments.size(); i++) {
-			store.put("closeableArgument" + i, closeableArguments.get(i));
-		}
+				.forEach(closeable -> store.put("closeableArgument" + argumentIndex.getAndIncrement(), closeable));
 	}
 
 	private static class CloseableArgument implements Store.CloseableResource {
