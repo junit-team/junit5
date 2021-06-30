@@ -76,7 +76,7 @@ on GitHub.
   directory and any contained directories instead of failing to delete them.
 * New `assertThrowsExactly` method which is a more strict version of `assertThrows`
   that allows you to assert that the thrown exception has the exact specified class.
-* New `autoCloseArguments` attribute on `@ParameterizedTest` to close `AutoCloseable`
+* New `autoCloseArguments` attribute in `@ParameterizedTest` to close `AutoCloseable`
   arguments at the end of the test. This attribute defaults to true.
 
 
