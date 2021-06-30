@@ -585,10 +585,10 @@ Listener</a> for details.</p>
 </li>
 <li>
 <p>New <code>UniqueIdTrackingListener</code> which is a <code>TestExecutionListener</code> that tracks the unique
-IDs of all tests that were executed during the <code>TestPlan</code> and generates a file
-containing the unique IDs. The generated file can be used to rerun those tests&#8201;&#8212;&#8201;for
-example, in order to run the same set of tests executed on the JVM subsequently within a
-GraalVM native image. See the Javadoc for <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code> for details.</p>
+IDs of all tests that were skipped or executed during the <code>TestPlan</code> and generates a
+file containing the unique IDs. The generated file can be used to rerun those tests&#8201;&#8212;&#8201;for example, in order to run the same set of tests executed on the JVM subsequently
+within a GraalVM native image. See the Javadoc for <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code> for
+details.</p>
 </li>
 <li>
 <p>Generating Java Flight Recorder events via module <code>org.junit.platform.jfr</code> is now also
@@ -1099,7 +1099,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-06-21 06:55:12 UTC
+Last updated 2021-06-30 13:14:09 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
