@@ -2,7 +2,8 @@ stages:
   - stage: Report
     jobs:
     - job: SigridCI
-      pool: windows-latest
+      pool:
+        vmImage: "windows-latest"
       container: python:3-windowsservercore-1809
       continueOnError: true
       steps:
