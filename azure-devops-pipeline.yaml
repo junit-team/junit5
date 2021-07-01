@@ -7,8 +7,8 @@ stages:
       container: python:3-windowsservercore-1809
       continueOnError: true
       steps:
-      - pwsh: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
-      - pwsh: "./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5"
+      - bash: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
+      - bash: "./sigridci/sigridci/sigridci.py --customer opensource --system junit --source . --targetquality 3.5"
         env:
           SIGRID_CI_ACCOUNT: $(SIGRID_CI_ACCOUNT)
           SIGRID_CI_TOKEN: $(SIGRID_CI_TOKEN)
