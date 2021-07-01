@@ -2,7 +2,7 @@ stages:
   - stage: Report
     jobs:
     - job: SigridCI
-      container: python:3.9-buster
+      container: python:3-windowsservercore-1809
       continueOnError: true
       steps:
       - pwsh: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
