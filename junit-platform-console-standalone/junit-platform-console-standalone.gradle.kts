@@ -1,5 +1,3 @@
-import aQute.bnd.gradle.BundleTaskConvention;
-
 plugins {
 	`java-library-conventions`
 	`shadow-conventions`
@@ -43,7 +41,7 @@ tasks {
 			into("META-INF")
 		}
 
-		withConvention(BundleTaskConvention::class) {
+		bundle {
 			bnd("""
 				# Customize the imports because this is an aggregate jar
 				Import-Package: \

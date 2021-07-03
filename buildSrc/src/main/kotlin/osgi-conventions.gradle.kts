@@ -1,5 +1,4 @@
-import aQute.bnd.gradle.BundleTaskConvention
-import aQute.bnd.gradle.FileSetRepositoryConvention
+import aQute.bnd.gradle.BundleTaskExtension
 import aQute.bnd.gradle.Resolve
 
 plugins {
@@ -9,19 +8,19 @@ plugins {
 val importAPIGuardian = "org.apiguardian.*;resolution:=\"optional\""
 
 // This task enhances `jar` and `shadowJar` tasks with the bnd
-// `BundleTaskConvention` convention which allows for generating OSGi
+// `BundleTaskExtension` extension which allows for generating OSGi
 // metadata into the jar
 tasks.withType<Jar>().matching {
 	task: Jar -> task.name == "jar" || task.name == "shadowJar"
 }.configureEach {
-	val btc = BundleTaskConvention(this)
+	val bte = extensions.create<BundleTaskExtension>(BundleTaskExtension.NAME, this)
 
 	extra["importAPIGuardian"] = importAPIGuardian
 
 	// These are bnd instructions necessary for generating OSGi metadata.
 	// We've generalized these so that they are widely applicable limiting
 	// module configurations to special cases.
-	btc.setBnd("""
+	bte.setBnd("""
 			# Set the Bundle-SymbolicName to the archiveBaseName.
 			# We don't use the archiveClassifier which Bnd will use
 			# in the default Bundle-SymbolicName value.
@@ -63,23 +62,15 @@ tasks.withType<Jar>().matching {
 			-export-apiguardian: *;version=${'$'}{versionmask;===;${'$'}{version_cleanup;${'$'}{task.archiveVersion}}}
 		""")
 
-	// Add the convention to the jar task
-	@Suppress("deprecation") // https://github.com/bndtools/bnd/issues/4699
-	convention.plugins["bundle"] = btc
-
-	doLast {
-		// Do the actual work putting OSGi stuff in the jar.
-		btc.buildBundle()
-	}
+	// Do the actual work putting OSGi stuff in the jar.
+	doLast(bte.buildAction())
 }
-
-val osgiPropertiesFile = file("$buildDir/verifyOSGiProperties.bndrun")
 
 // Bnd's Resolve task uses a properties file for its configuration. This
 // task writes out the properties necessary for it to verify the OSGi
 // metadata.
 val osgiProperties by tasks.registering(WriteProperties::class) {
-	outputFile = osgiPropertiesFile
+	setOutputFile(layout.getBuildDirectory().file("verifyOSGiProperties.bndrun"))
 	property("-standalone", true)
 	project.extensions.getByType(JavaLibraryExtension::class.java).let { javaLibrary ->
 		property("-runee", "JavaSE-${javaLibrary.mainJavaVersion}")
@@ -99,21 +90,17 @@ val osgiVerification by configurations.creating {
 // that its metadata is valid. If the metadata is invalid this task will
 // fail.
 val verifyOSGi by tasks.registering(Resolve::class) {
-	dependsOn(osgiProperties)
-	setBndrun(osgiPropertiesFile)
-	isReportOptional = false
-	@Suppress("deprecation") // https://github.com/bndtools/bnd/issues/4699
-	withConvention(FileSetRepositoryConvention::class) {
-
-		// By default bnd will use jars found in:
-		// 1. project.sourceSets.main.runtimeClasspath
-		// 2. project.configurations.archives.artifacts.files
-		// to validate the metadata.
-		// This adds jars defined in `osgiVerification` also so that bnd
-		// can use them to validate the metadata without causing those to
-		// end up in the dependencies of those projects.
-		bundles(osgiVerification)
-	}
+	getBndrun().fileProvider(osgiProperties.map{ it.getOutputFile() })
+	getOutputBndrun().set(layout.getBuildDirectory().file("resolvedOSGiProperties.bndrun"))
+	setReportOptional(false)
+	// By default bnd will use jars found in:
+	// 1. project.sourceSets.main.runtimeClasspath
+	// 2. project.configurations.archives.artifacts.files
+	// to validate the metadata.
+	// This adds jars defined in `osgiVerification` also so that bnd
+	// can use them to validate the metadata without causing those to
+	// end up in the dependencies of those projects.
+	bundles(osgiVerification)
 }
 
 tasks.check {
