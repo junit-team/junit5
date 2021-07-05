@@ -8,7 +8,7 @@ stages:
       continueOnError: true
       steps:
       - script: "pip install --upgrade certifi"
-      - script: "python3 -c \"import urllib.request; print(urllib.request.urlopen('https://sigrid-says.com').status)\""
+      - script: "python -c \"import urllib.request; print(urllib.request.urlopen('https://sigrid-says.com').status)\""
       - script: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
       - script: "python sigridci\\sigridci\\sigridci.py --customer opensource --system junit --source . --targetquality 3.5"
         env:
