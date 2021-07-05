@@ -7,8 +7,9 @@ stages:
       container: python:3-windowsservercore-1809
       continueOnError: true
       steps:
+      - script: "curl.exe --output cert.pem --url https://letsencrypt.org/certs/isrgrootx1.pem"
+      - script: "certutil.exe -addstore root cert.pem"
       - script: "python --version"
-      - script: "pip install --upgrade certifi"
       - script: "python -c \"import urllib.request; print(urllib.request.urlopen('https://sigrid-says.com').status)\""
       - script: "git clone https://github.com/Software-Improvement-Group/sigridci.git sigridci"
       - script: "python sigridci\\sigridci\\sigridci.py --customer opensource --system junit --source . --targetquality 3.5"
