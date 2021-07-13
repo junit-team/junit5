@@ -10,4 +10,7 @@ dependencies {
 	api(projects.junitJupiterParams)
 
 	runtimeOnly(projects.junitJupiterEngine)
+
+	osgiVerification(projects.junitJupiterEngine)
+	osgiVerification(projects.junitPlatformLauncher)
 }

@@ -14,6 +14,9 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 
 	shadowed(libs.picocli)
+
+	osgiVerification(projects.junitJupiterEngine)
+	osgiVerification(projects.junitPlatformLauncher)
 }
 
 tasks {

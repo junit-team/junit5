@@ -8,4 +8,7 @@ dependencies {
 	api(platform(projects.junitBom))
 	api(projects.junitPlatformSuiteApi)
 	implementation(projects.junitPlatformSuiteEngine)
+
+	osgiVerification(projects.junitJupiterEngine)
+	osgiVerification(projects.junitPlatformLauncher)
 }
