@@ -651,6 +651,10 @@ directory and any contained directories instead of failing to delete them.</p>
 <p>New <code>assertThrowsExactly</code> method which is a more strict version of <code>assertThrows</code>
 that allows you to assert that the thrown exception has the exact specified class.</p>
 </li>
+<li>
+<p>New <code>autoCloseArguments</code> attribute in <code>@ParameterizedTest</code> to close <code>AutoCloseable</code>
+arguments at the end of the test. This attribute defaults to true.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1099,7 +1103,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-06-30 13:14:09 UTC
+Last updated 2021-07-13 14:34:55 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

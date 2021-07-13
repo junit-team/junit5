@@ -190,9 +190,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Optional Element</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#name()">name</a></span></code></div>
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#autoCloseArguments()">autoCloseArguments</a></span></code></div>
 <div class="col-last even-row-color">
+<div class="block">If true, all arguments of the parameterized test implementing <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link"><code>AutoCloseable</code></a>
+ will be closed after <code>@AfterEach</code> methods and <code>AfterEachCallbacks</code>
+ have been called.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#name()">name</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">The display name to be used for individual invocations of the
  parameterized test; never blank or consisting solely of whitespace.</div>
 </div>
@@ -376,6 +383,28 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>"{default_display_name}"</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="autoCloseArguments()">
+<h3>autoCloseArguments</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8")
+</span><span class="return-type">boolean</span>&nbsp;<span class="element-name">autoCloseArguments</span></div>
+<div class="block">If true, all arguments of the parameterized test implementing <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link"><code>AutoCloseable</code></a>
+ will be closed after <code>@AfterEach</code> methods and <code>AfterEachCallbacks</code>
+ have been called.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.8</dd>
+<dt>See Also:</dt>
+<dd><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link"><code>AutoCloseable</code></a>, 
+<code>ParameterizedTestParameterResolver</code></dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>true</dd>
 </dl>
 </section>
 </li>

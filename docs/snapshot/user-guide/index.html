@@ -3446,6 +3446,20 @@ parameterized method at the same index in the method&#8217;s formal parameter li
 <em>aggregator</em> is any parameter of type <code>ArgumentsAccessor</code> or any parameter annotated with
 <code>@AggregateWith</code>.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Arguments of type <code>AutoCloseable</code> will be closed once <code>@AfterEach</code> methods and
+<code>AfterEachCallback</code> implementations have been called. To prevent this from happening, set
+the <code>autoCloseArguments</code> attribute in <code>@ParameterizedTest</code> to <code>false</code>.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>2.15.3. Sources of Arguments</h4>
@@ -10485,7 +10499,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-06-30 13:14:10 UTC
+Last updated 2021-07-13 14:34:55 UTC
 </div>
 </div>
 <style>
