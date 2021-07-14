@@ -145,7 +145,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		if (isPerMethodLifecycle(context) && context.getExtensionContext().getTestInstance().isPresent()) {
 			invokeTestInstancePreDestroyCallbacks(context);
 		}
-		super.cleanUp(context);
+		context.getThrowableCollector().execute(() -> super.cleanUp(context));
 		context.getThrowableCollector().assertEmpty();
 	}
 
