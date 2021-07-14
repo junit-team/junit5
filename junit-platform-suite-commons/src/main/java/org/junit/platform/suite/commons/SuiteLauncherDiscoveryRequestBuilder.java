@@ -28,6 +28,7 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.ClassNameFilter;
@@ -37,6 +38,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.DisableParentConfigurationParameters;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.ExcludePackages;
@@ -60,6 +62,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	private final LauncherDiscoveryRequestBuilder delegate = LauncherDiscoveryRequestBuilder.request();
 	private boolean includeClassNamePatternsUsed;
 	private boolean filterStandardClassNamePatterns = false;
+	private ConfigurationParameters parentConfigurationParameters;
+	private boolean enableParentConfigurationParameters = true;
 
 	private SuiteLauncherDiscoveryRequestBuilder() {
 
@@ -75,24 +79,45 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
-		return delegate.selectors(selectors);
+	public SuiteLauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
+		delegate.selectors(selectors);
+		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
-		return delegate.selectors(selectors);
+	public SuiteLauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
+		delegate.selectors(selectors);
+		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
-		return delegate.filters(filters);
+	public SuiteLauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
+		delegate.filters(filters);
+		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
-		return delegate.configurationParameter(key, value);
+	public SuiteLauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
+		delegate.configurationParameter(key, value);
+		return this;
 	}
 
-	public LauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
-		return delegate.configurationParameters(configurationParameters);
+	public SuiteLauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
+		delegate.configurationParameters(configurationParameters);
+		return this;
+	}
+
+	public SuiteLauncherDiscoveryRequestBuilder parentConfigurationParameters(
+			ConfigurationParameters parentConfigurationParameters) {
+		this.parentConfigurationParameters = parentConfigurationParameters;
+		return this;
+	}
+
+	public SuiteLauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
+		delegate.enableImplicitConfigurationParameters(enabled);
+		return this;
+	}
+
+	public SuiteLauncherDiscoveryRequestBuilder enableParentConfigurationParameters(boolean enabled) {
+		this.enableParentConfigurationParameters = enabled;
+		return this;
 	}
 
 	public SuiteLauncherDiscoveryRequestBuilder suite(AnnotatedElement suite) {
@@ -102,6 +127,9 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		// @formatter:off
 		findRepeatableAnnotations(suite, ConfigurationParameter.class)
 				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
+		findAnnotation(suite, DisableParentConfigurationParameters.class)
+				.map(disableParentConfigurationParameters -> false)
+				.ifPresent(this::enableParentConfigurationParameters);
 		findAnnotationValues(suite, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::excludeClassNamePatterns)
@@ -162,6 +190,11 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		if (filterStandardClassNamePatterns && !includeClassNamePatternsUsed) {
 			delegate.filters(ClassNameFilter.includeClassNamePatterns(STANDARD_INCLUDE_PATTERN));
 		}
+
+		if (enableParentConfigurationParameters && parentConfigurationParameters != null) {
+			delegate.parentConfigurationParameters(parentConfigurationParameters);
+		}
+
 		return delegate.build();
 	}
 

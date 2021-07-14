@@ -21,8 +21,8 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 /**
- * {@code @Configurations} is a container for one or more
- * {@link ConfigurationParameter @Configuration} declarations.
+ * {@code @ConfigurationParameters} is a container for one or more
+ * {@link ConfigurationParameter @ConfigurationParameter} declarations.
  *
  * @since 1.8
  * @see ConfigurationParameter
@@ -35,7 +35,7 @@ import org.apiguardian.api.API.Status;
 public @interface ConfigurationParameters {
 
 	/**
-	 * An array of one or more {@link ConfigurationParameter Configurations}.
+	 * An array of one or more {@link ConfigurationParameter ConfigurationParameter}.
 	 */
 	ConfigurationParameter[] value();
 }
