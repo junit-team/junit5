@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("TypeParameterExplicitlyExtendsObject")
 class ReflectionUtilsWithGenericTypeHierarchiesTests {
 	@Test
-	@Disabled("Describes a new case that does not yet yield the expected result.")
 	void findsMethodsIndependentlyFromOrderOfImplementationsOfInterfaces() {
 
 		class AB implements InterfaceDouble, InterfaceGenericNumber<Number> {
