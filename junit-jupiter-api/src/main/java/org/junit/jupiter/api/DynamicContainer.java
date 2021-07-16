@@ -18,6 +18,7 @@ import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.TestSourceLocator;
 
 /**
  * A {@code DynamicContainer} is a container generated at runtime.
@@ -36,6 +37,10 @@ import org.junit.platform.commons.util.Preconditions;
  */
 @API(status = MAINTAINED, since = "5.3")
 public class DynamicContainer extends DynamicNode {
+
+	static {
+		TestSourceLocator.ignoreClass(DynamicContainer.class);
+	}
 
 	/**
 	 * Factory for creating a new {@code DynamicContainer} for the supplied display

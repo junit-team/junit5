@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.TestSourceLocator;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -30,6 +31,10 @@ import org.junit.platform.commons.util.ToStringBuilder;
 @API(status = MAINTAINED, since = "5.3")
 public abstract class DynamicNode {
 
+	static {
+		TestSourceLocator.ignoreClass(DynamicNode.class);
+	}
+
 	private final String displayName;
 
 	/** Custom test source {@link URI} associated with this node; potentially {@code null}. */
@@ -37,7 +42,7 @@ public abstract class DynamicNode {
 
 	DynamicNode(String displayName, URI testSourceUri) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
-		this.testSourceUri = testSourceUri;
+		this.testSourceUri = testSourceUri == null ? TestSourceLocator.locateSource() : testSourceUri;
 	}
 
 	/**

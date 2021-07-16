@@ -163,13 +163,14 @@ class DynamicTestTests {
 	}
 
 	@Test
-	void sourceUriIsNotPresentByDefault() {
+	void sourceUriIsPresentByDefault() {
+		String testSourceName = "class:" + getClass().getName() + "?line=";
 		DynamicTest test = dynamicTest("foo", nix);
-		assertThat(test.getTestSourceUri()).isNotPresent();
-		assertThat(test.toString()).isEqualTo("DynamicTest [displayName = 'foo', testSourceUri = null]");
+		assertThat(test.getTestSourceUri()).isPresent().get().asString().startsWith(testSourceName);
+		assertThat(test.toString()).startsWith("DynamicTest [displayName = 'foo',");
 		DynamicContainer container = dynamicContainer("bar", Stream.of(test));
-		assertThat(container.getTestSourceUri()).isNotPresent();
-		assertThat(container.toString()).isEqualTo("DynamicContainer [displayName = 'bar', testSourceUri = null]");
+		assertThat(container.getTestSourceUri()).isPresent().get().asString().startsWith(testSourceName);
+		assertThat(container.toString()).startsWith("DynamicContainer [displayName = 'bar',");
 	}
 
 	@Test
