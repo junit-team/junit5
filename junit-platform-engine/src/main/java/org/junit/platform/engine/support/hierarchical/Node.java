@@ -359,4 +359,10 @@ public interface Node<C extends EngineExecutionContext> {
 		 */
 		void invoke(C context) throws Exception;
 	}
+
+	default void beforeAllClasses(C context) throws Exception {
+	}
+
+	default void afterAllClasses(C context) throws Exception {
+	}
 }

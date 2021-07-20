@@ -491,4 +491,13 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			ReflectiveInterceptorCall.ofVoidMethod(interceptorCall));
 	}
 
+	@Override
+	public void beforeAllClasses(JupiterEngineExecutionContext context) {
+		AllClassesCallbackActions.invokeBeforeAllClassesCallbacks(context);
+	}
+
+	@Override
+	public void afterAllClasses(JupiterEngineExecutionContext context) {
+		AllClassesCallbackActions.invokeAfterAllClassesCallbacks(context);
+	}
 }

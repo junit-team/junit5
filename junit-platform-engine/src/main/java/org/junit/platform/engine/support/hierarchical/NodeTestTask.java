@@ -137,6 +137,9 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 		throwableCollector.execute(() -> {
 			node.around(context, ctx -> {
+				if(!testDescriptor.getParent().isPresent()) {
+					node.beforeAllClasses(context);
+				}
 				context = ctx;
 				throwableCollector.execute(() -> {
 					// @formatter:off
@@ -159,6 +162,9 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				});
 
 				throwableCollector.execute(() -> node.after(context));
+				if(!testDescriptor.getParent().isPresent()) {
+					node.afterAllClasses(context);
+				}
 			});
 		});
 	}
