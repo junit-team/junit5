@@ -121,3 +121,4 @@ Your donations will help to make that a reality!
 - Philip Riecks (rieckpil)
 - Christian Femers
 - Alex K
+- Niklas Seyfarth
