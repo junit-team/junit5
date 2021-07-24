@@ -5293,11 +5293,11 @@ activate parallel execution for individual test classes, one by one.</p>
 <div class="paragraph">
 <p>The default execution mode is applied to all nodes of the test tree with a few notable
 exceptions, namely test classes that use the <code>Lifecycle.PER_CLASS</code> mode or a
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (except for <code>{Random}</code>). In the former case, test authors have to
-ensure that the test class is thread-safe; in the latter, concurrent execution might
-conflict with the configured execution order. Thus, in both cases, test methods in such
-test classes are only executed concurrently if the <code>@Execution(CONCURRENT)</code> annotation is
-present on the test class or method.</p>
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (except for <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Random.html">MethodOrderer.Random</a></code>). In the former case, test authors
+have to ensure that the test class is thread-safe; in the latter, concurrent execution
+might conflict with the configured execution order. Thus, in both cases, test methods in
+such test classes are only executed concurrently if the <code>@Execution(CONCURRENT)</code>
+annotation is present on the test class or method.</p>
 </div>
 <div class="paragraph">
 <p>All nodes of the test tree that are configured with the <code>CONCURRENT</code> execution mode will
@@ -10499,7 +10499,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-07-13 14:34:55 UTC
+Last updated 2021-07-24 10:07:51 UTC
 </div>
 </div>
 <style>
