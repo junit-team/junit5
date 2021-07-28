@@ -10,13 +10,14 @@
 
 package org.junit.jupiter.engine.discovery;
 
+import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
+
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -30,7 +31,7 @@ public class JupiterUniqueIdBuilder {
 
 	public static UniqueId uniqueIdForClass(Class<?> clazz) {
 		UniqueId containerId = engineId();
-		if (clazz.getEnclosingClass() != null && !ReflectionUtils.isStatic(clazz)) {
+		if (isInnerClass(clazz)) {
 			containerId = uniqueIdForClass(clazz.getEnclosingClass());
 			return containerId.append(NestedClassTestDescriptor.SEGMENT_TYPE, clazz.getSimpleName());
 		}

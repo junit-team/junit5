@@ -12,11 +12,9 @@ package platform.tooling.support;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -50,21 +48,30 @@ public class Helper {
 		}
 	}
 
-	public static String version(String moduleOrSystemProperty) {
-		return version(moduleOrSystemProperty, "<no default version specified>");
-	}
-
-	public static String version(String moduleOrSystemProperty, String defaultVersion) {
-		if (moduleOrSystemProperty.startsWith("junit-jupiter")) {
+	public static String version(String module) {
+		if (module.startsWith("junit-jupiter")) {
 			return gradleProperties.getProperty("version");
 		}
-		if (moduleOrSystemProperty.startsWith("junit-platform")) {
+		if (module.startsWith("junit-platform")) {
 			return gradleProperties.getProperty("platformVersion");
 		}
-		if (moduleOrSystemProperty.startsWith("junit-vintage")) {
+		if (module.startsWith("junit-vintage")) {
 			return gradleProperties.getProperty("vintageVersion");
 		}
-		return System.getProperty("Versions." + moduleOrSystemProperty, defaultVersion);
+		throw new AssertionError("Unknown module: " + module);
+	}
+
+	static String groupId(String artifactId) {
+		if (artifactId.startsWith("junit-jupiter")) {
+			return "org.junit.jupiter";
+		}
+		if (artifactId.startsWith("junit-platform")) {
+			return "org.junit.platform";
+		}
+		if (artifactId.startsWith("junit-vintage")) {
+			return "org.junit.vintage";
+		}
+		return "org.junit";
 	}
 
 	public static String replaceVersionPlaceholders(String line) {
@@ -90,15 +97,8 @@ public class Helper {
 		}
 	}
 
-	public static Path createJarPath(String module) {
-		var parent = Paths.get("..", module, "build", "libs");
-		var jar = parent.resolve(module + '-' + version(module) + ".jar");
-		var shadowJar = parent.resolve(module + '-' + version(module) + "-all.jar");
-		return Files.exists(jar) ? jar : shadowJar;
-	}
-
 	static JarFile createJarFile(String module) {
-		var path = createJarPath(module);
+		var path = MavenRepo.jar(module);
 		try {
 			return new JarFile(path.toFile());
 		}
@@ -119,7 +119,8 @@ public class Helper {
 			System.getProperty("jdk.home." + version), //
 			System.getProperty("jdk." + version), //
 			System.getenv("JAVA_HOME_" + version), //
-			System.getenv("JAVA_" + version) //
+			System.getenv("JAVA_" + version), //
+			System.getenv("JDK" + version) //
 		);
 		return sources.filter(Objects::nonNull).findFirst().map(Path::of);
 	}
@@ -127,19 +128,8 @@ public class Helper {
 	/** Load, here copy, modular jar files to the given target directory. */
 	public static void loadAllJUnitModules(Path target) throws Exception {
 		for (var module : loadModuleDirectoryNames()) {
-			var jar = createJarPath(module);
+			var jar = MavenRepo.jar(module);
 			Files.copy(jar, target.resolve(jar.getFileName()));
-		}
-	}
-
-	/** Load single JAR from Maven Central. */
-	public static void load(Path target, String group, String artifact, String version) throws Exception {
-		var jar = String.format("%s-%s.jar", artifact, version);
-		var mvn = "https://repo1.maven.org/maven2/";
-		var grp = group.replace('.', '/');
-		var url = new URL(mvn + String.join("/", grp, artifact, version, jar));
-		try (var stream = url.openStream()) {
-			Files.copy(stream, target.resolve(jar), StandardCopyOption.REPLACE_EXISTING);
 		}
 	}
 

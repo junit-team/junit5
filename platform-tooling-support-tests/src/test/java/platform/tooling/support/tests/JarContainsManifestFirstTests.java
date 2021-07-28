@@ -12,7 +12,6 @@ package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
-import static platform.tooling.support.Helper.createJarPath;
 
 import java.io.FileInputStream;
 import java.nio.file.Files;
@@ -20,6 +19,7 @@ import java.util.jar.JarInputStream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import platform.tooling.support.MavenRepo;
 
 /**
  * @since 1.8
@@ -29,7 +29,7 @@ class JarContainsManifestFirstTests {
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void manifestFirst(String module) throws Exception {
-		var modulePath = createJarPath(module);
+		var modulePath = MavenRepo.jar(module);
 
 		if (Files.notExists(modulePath)) {
 			fail("No such file: " + modulePath);

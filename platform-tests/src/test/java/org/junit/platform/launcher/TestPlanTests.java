@@ -11,15 +11,19 @@
 package org.junit.platform.launcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 class TestPlanTests {
+
+	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 
 	private EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("foo"), "Foo");
 
@@ -33,7 +37,7 @@ class TestPlanTests {
 				}
 			});
 
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		assertThat(testPlan.containsTests()).as("contains tests").isFalse();
 	}
@@ -48,7 +52,7 @@ class TestPlanTests {
 				}
 			});
 
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}
@@ -68,8 +72,9 @@ class TestPlanTests {
 				}
 			});
 
-		var testPlan = TestPlan.from(Set.of(engineDescriptor));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}
+
 }

@@ -22,11 +22,14 @@ md5sum $(find junit-platform-commons -wholename '**/src/main/*.java') >> "${curr
 md5sum $(find junit-platform-console -wholename '**/src/main/*.java') >> "${current}"
 # skip module junit-platform-console-standalone because it doesn't contain relevant documentation
 md5sum $(find junit-platform-engine -wholename '**/src/main/*.java') >> "${current}"
-# TODO md5sum $(find junit-platform-jfr -wholename '**/src/main/*.java') >> "${current}"
+md5sum $(find junit-platform-jfr -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-launcher -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-reporting -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-runner -wholename '**/src/main/*.java') >> "${current}"
+md5sum $(find junit-platform-suite -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-suite-api -wholename '**/src/main/*.java') >> "${current}"
+md5sum $(find junit-platform-suite-commons -wholename '**/src/main/*.java') >> "${current}"
+md5sum $(find junit-platform-suite-engine -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-platform-testkit -wholename '**/src/main/*.java') >> "${current}"
 md5sum $(find junit-vintage-engine -wholename '**/src/main/*.java') >> "${current}"
 # skip module platform-tests because it doesn't contain relevant documentation
@@ -55,5 +58,5 @@ else
   echo "Creating and publishing documentation..."
   echo
   cp --force "${current}" "${published}"
-  ./gradlew --scan gitPublishPush
+  ./gradlew javaToolchains gitPublishPush -Porg.gradle.java.installations.auto-download=false
 fi

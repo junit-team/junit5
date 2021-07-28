@@ -12,6 +12,7 @@ package org.junit.platform.engine;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
@@ -160,6 +161,24 @@ public class UniqueId implements Cloneable, Serializable {
 		baseSegments.addAll(this.segments);
 		baseSegments.add(segment);
 		return new UniqueId(this.uniqueIdFormat, baseSegments);
+	}
+
+	/**
+	 * Construct a new {@code UniqueId} by appending a new {@link Segment}, based
+	 * on the supplied {@code engineId}, to the end of this {@code UniqueId}.
+	 *
+	 * <p>This {@code UniqueId} will not be modified.
+	 *
+	 * <p>The engine ID will be stored in a {@link Segment} with
+	 * {@link Segment#getType type} {@value ENGINE_SEGMENT_TYPE}.
+	 *
+	 * @param engineId the engine ID; never {@code null} or blank
+	 *
+	 * @since 1.8
+	 */
+	@API(status = EXPERIMENTAL, since = "1.8")
+	public UniqueId appendEngine(String engineId) {
+		return append(new Segment(ENGINE_SEGMENT_TYPE, engineId));
 	}
 
 	/**

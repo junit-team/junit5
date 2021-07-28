@@ -6,9 +6,8 @@ plugins {
 description = "JUnit Platform Launcher"
 
 dependencies {
-	internal(platform(project(":dependencies")))
+	api(platform(projects.junitBom))
+	api(projects.junitPlatformEngine)
 
-	api(platform(project(":junit-bom")))
-	api("org.apiguardian:apiguardian-api")
-	api(project(":junit-platform-engine"))
+	compileOnlyApi(libs.apiguardian)
 }

@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -91,7 +92,8 @@ class CompositeTestExecutionListenerTests {
 			LogRecordListener logRecordListener) {
 		var testDescriptor = getDemoMethodTestDescriptor();
 
-		compositeTestExecutionListener().testPlanExecutionStarted(TestPlan.from(Set.of(testDescriptor)));
+		compositeTestExecutionListener().testPlanExecutionStarted(
+			TestPlan.from(Set.of(testDescriptor), mock(ConfigurationParameters.class)));
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"testPlanExecutionStarted");
@@ -102,7 +104,8 @@ class CompositeTestExecutionListenerTests {
 			LogRecordListener logRecordListener) {
 		var testDescriptor = getDemoMethodTestDescriptor();
 
-		compositeTestExecutionListener().testPlanExecutionFinished(TestPlan.from(Set.of(testDescriptor)));
+		compositeTestExecutionListener().testPlanExecutionFinished(
+			TestPlan.from(Set.of(testDescriptor), mock(ConfigurationParameters.class)));
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"testPlanExecutionFinished");

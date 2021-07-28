@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
@@ -21,12 +20,14 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.DisplayNameGenerator.Simple;
 import org.junit.jupiter.api.DisplayNameGenerator.Standard;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -106,7 +107,7 @@ final class DisplayNameUtils {
 			JupiterConfiguration configuration) {
 		Preconditions.notNull(testClass, "Test class must not be null");
 
-		return getDisplayNameGeneration(testClass) //
+		return AnnotationUtils.findAnnotation(testClass, DisplayNameGeneration.class, true) //
 				.map(DisplayNameGeneration::value) //
 				.map(displayNameGeneratorClass -> {
 					if (displayNameGeneratorClass == Standard.class) {
@@ -126,20 +127,4 @@ final class DisplayNameUtils {
 				.orElseGet(configuration::getDefaultDisplayNameGenerator);
 	}
 
-	/**
-	 * Find the first {@code DisplayNameGeneration} annotation that is either
-	 * <em>directly present</em>, <em>meta-present</em>, <em>indirectly present</em>
-	 * on the supplied {@code testClass} or on an enclosing class.
-	 */
-	private static Optional<DisplayNameGeneration> getDisplayNameGeneration(Class<?> testClass) {
-		Class<?> candidate = testClass;
-		do {
-			Optional<DisplayNameGeneration> generation = findAnnotation(candidate, DisplayNameGeneration.class);
-			if (generation.isPresent()) {
-				return generation;
-			}
-			candidate = candidate.getEnclosingClass();
-		} while (candidate != null);
-		return Optional.empty();
-	}
 }

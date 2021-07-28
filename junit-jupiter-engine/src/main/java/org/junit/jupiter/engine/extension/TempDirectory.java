@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
@@ -43,7 +44,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -61,7 +61,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
 	private static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
-	private static final String KEY = "temp.dir";
 	private static final String TEMP_DIR_PREFIX = "junit";
 
 	/**
@@ -98,8 +97,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
 			assertValidFieldCandidate(field);
+			String id = findAnnotation(field, TempDir.class).map(TempDir::value).orElse("");
 			try {
-				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), context));
+				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), context, id));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
@@ -136,7 +136,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
-		return getPathOrFile(parameterType, extensionContext);
+		String id = parameterContext.findAnnotation(TempDir.class).map(TempDir::value).orElse("");
+		return getPathOrFile(parameterType, extensionContext, id);
 	}
 
 	private void assertSupportedType(String target, Class<?> type) {
@@ -146,9 +147,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private Object getPathOrFile(Class<?> type, ExtensionContext extensionContext) {
+	private Object getPathOrFile(Class<?> type, ExtensionContext extensionContext, String id) {
 		Path path = extensionContext.getStore(NAMESPACE) //
-				.getOrComputeIfAbsent(KEY, key -> createTempDir(), CloseablePath.class) //
+				.getOrComputeIfAbsent(id, __ -> createTempDir(), CloseablePath.class) //
 				.get();
 
 		return (type == Path.class) ? path : path.toFile();
@@ -189,7 +190,23 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			}
 
 			SortedMap<Path, IOException> failures = new TreeMap<>();
+			resetPermissions(dir);
 			Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
+
+				@Override
+				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+					if (!dir.equals(CloseablePath.this.dir)) {
+						resetPermissions(dir);
+					}
+					return CONTINUE;
+				}
+
+				@Override
+				public FileVisitResult visitFileFailed(Path file, IOException exc) {
+					// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
+					resetPermissionsAndTryToDeleteAgain(file, exc);
+					return CONTINUE;
+				}
 
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
@@ -212,43 +229,39 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 						failures.put(path, exception);
 					}
 					catch (IOException exception) {
-						makeWritableAndTryToDeleteAgain(path, exception);
+						// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
+						resetPermissionsAndTryToDeleteAgain(path, exception);
 					}
 					return CONTINUE;
 				}
 
-				private void makeWritableAndTryToDeleteAgain(Path path, IOException exception) {
+				private void resetPermissionsAndTryToDeleteAgain(Path path, IOException exception) {
 					try {
-						tryToMakeParentDirsWritable(path);
-						makeWritable(path);
-						Files.delete(path);
+						resetPermissions(path);
+						if (Files.isDirectory(path)) {
+							Files.walkFileTree(path, this);
+						}
+						else {
+							Files.delete(path);
+						}
 					}
 					catch (Exception suppressed) {
 						exception.addSuppressed(suppressed);
 						failures.put(path, exception);
 					}
 				}
-
-				private void tryToMakeParentDirsWritable(Path path) {
-					Path relativePath = dir.relativize(path);
-					Path parent = dir;
-					for (int i = 0; i < relativePath.getNameCount(); i++) {
-						boolean writable = parent.toFile().setWritable(true);
-						if (!writable) {
-							break;
-						}
-						parent = parent.resolve(relativePath.getName(i));
-					}
-				}
-
-				private void makeWritable(Path path) {
-					boolean writable = path.toFile().setWritable(true);
-					if (!writable) {
-						throw new UndeletableFileException("Attempt to make file '" + path + "' writable failed");
-					}
-				}
 			});
 			return failures;
+		}
+
+		@SuppressWarnings("ResultOfMethodCallIgnored")
+		private static void resetPermissions(Path path) {
+			File file = path.toFile();
+			file.setReadable(true);
+			file.setWritable(true);
+			if (Files.isDirectory(path)) {
+				file.setExecutable(true);
+			}
 		}
 
 		private IOException createIOExceptionWithAttachedFailures(SortedMap<Path, IOException> failures) {
@@ -282,21 +295,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				return path;
 			}
 		}
-	}
-
-	private static class UndeletableFileException extends JUnitException {
-
-		private static final long serialVersionUID = 1L;
-
-		UndeletableFileException(String message) {
-			super(message);
-		}
-
-		@Override
-		public synchronized Throwable fillInStackTrace() {
-			return this; // Make the output smaller by omitting the stacktrace
-		}
-
 	}
 
 }

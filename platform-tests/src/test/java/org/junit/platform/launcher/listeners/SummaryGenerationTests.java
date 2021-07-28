@@ -15,13 +15,17 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
+import static org.mockito.Mockito.mock;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -36,7 +40,7 @@ import org.junit.platform.launcher.TestPlan;
 class SummaryGenerationTests {
 
 	private final SummaryGeneratingListener listener = new SummaryGeneratingListener();
-	private final TestPlan testPlan = TestPlan.from(List.of());
+	private final TestPlan testPlan = TestPlan.from(List.of(), mock(ConfigurationParameters.class));
 
 	@Test
 	void emptyReport() {
@@ -220,14 +224,33 @@ class SummaryGenerationTests {
 		);
 	}
 
-	@SuppressWarnings("deprecation")
+	@RepeatedTest(10)
+	void reportingConcurrentlyFinishedTests() throws Exception {
+		var numThreads = 250;
+		var testIdentifier = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
+			@Override
+			public Optional<TestSource> getSource() {
+				return Optional.of(ClassSource.from(Object.class));
+			}
+		});
+		var result = TestExecutionResult.failed(new RuntimeException());
+
+		listener.testPlanExecutionStarted(testPlan);
+		executeConcurrently(numThreads, () -> {
+			listener.executionStarted(testIdentifier);
+			listener.executionFinished(testIdentifier, result);
+		});
+		listener.testPlanExecutionFinished(testPlan);
+
+		assertThat(listener.getSummary().getFailures()).hasSize(numThreads);
+	}
+
 	private TestIdentifier createTestIdentifier(String uniqueId) {
 		var identifier = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("test", uniqueId), uniqueId));
-		testPlan.add(identifier);
+		testPlan.addInternal(identifier);
 		return identifier;
 	}
 
-	@SuppressWarnings("deprecation")
 	private TestIdentifier createContainerIdentifier(String uniqueId) {
 		var identifier = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("container", uniqueId), uniqueId) {
 
@@ -236,7 +259,7 @@ class SummaryGenerationTests {
 				return Type.CONTAINER;
 			}
 		});
-		testPlan.add(identifier);
+		testPlan.addInternal(identifier);
 		return identifier;
 	}
 

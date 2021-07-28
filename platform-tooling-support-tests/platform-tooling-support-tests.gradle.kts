@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
 
 plugins {
@@ -9,40 +10,40 @@ javaLibrary {
 	mainJavaVersion = JavaVersion.VERSION_11
 }
 
-dependencies {
-	internal(platform(project(":dependencies")))
+val thirdPartyJars by configurations.creating
 
-	implementation("de.sormuras:bartholdy") {
+dependencies {
+	implementation(libs.bartholdy) {
 		because("manage external tool installations")
 	}
-	implementation("commons-io:commons-io") {
+	implementation(libs.commons.io) {
 		because("moving/deleting directory trees")
 	}
 
-	testImplementation("org.assertj:assertj-core") {
-		because("more assertions")
-	}
-	testImplementation("com.tngtech.archunit:archunit-junit5-api") {
+	testImplementation(libs.archunit) {
 		because("checking the architecture of JUnit 5")
 	}
-	testImplementation("org.codehaus.groovy:groovy") {
-		because("it provides convenience methods to handle process output")
-		exclude(group = "org.junit.platform", module = "junit-platform-launcher")
+	testImplementation(libs.apiguardian) {
+		because("we validate that public classes are annotated")
 	}
-	testImplementation("biz.aQute.bnd:biz.aQute.bndlib") {
+	testImplementation(libs.groovy3) {
+		because("it provides convenience methods to handle process output")
+	}
+	testImplementation(libs.bnd) {
 		because("parsing OSGi metadata")
 	}
-	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine") {
-		because("contains the ArchUnit TestEngine implementation")
-	}
-	testRuntimeOnly("org.slf4j:slf4j-jdk14") {
+	testRuntimeOnly(libs.slf4j.julBinding) {
 		because("provide appropriate SLF4J binding")
 	}
+
+	thirdPartyJars(libs.junit4)
+	thirdPartyJars(libs.assertj)
+	thirdPartyJars(libs.apiguardian)
+	thirdPartyJars(libs.hamcrest)
+	thirdPartyJars(libs.opentest4j)
 }
 
 tasks.test {
-	inputs.dir("projects")
-
 	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
 	enabled = System.getProperty("platform.tooling.support.tests.enabled")?.toBoolean() ?: false
 
@@ -53,39 +54,47 @@ tasks.test {
 		// All maven-aware projects must be installed, i.e. published to the local repository
 		val mavenizedProjects: List<Project> by rootProject
 		val tempRepoName: String by rootProject
-		val tempRepoDir: File by rootProject
 
-		(mavenizedProjects + project(":junit-bom"))
+		(mavenizedProjects + projects.junitBom.dependencyProject)
 				.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
 				.forEach { dependsOn(it) }
-
-		// Pass version constants (declared in Versions.kt) to tests as system properties
-		systemProperty("Versions.apiGuardian", versions.apiguardian)
-		systemProperty("Versions.assertJ", versions.assertj)
-		systemProperty("Versions.junit4", versions.junit4)
-		systemProperty("Versions.ota4j", versions.opentest4j)
-
-		jvmArgumentProviders += MavenRepo(tempRepoDir)
-		jvmArgumentProviders += JavaHomeDir(project, 8)
 	}
 
-	filter {
-		// Include only tests from this module
-		includeTestsMatching("platform.tooling.support.*")
-	}
+	val tempRepoDir: File by rootProject
+	jvmArgumentProviders += MavenRepo(tempRepoDir)
+	jvmArgumentProviders += ThirdPartyJars(thirdPartyJars)
 
 	(options as JUnitPlatformOptions).apply {
 		includeEngines("archunit")
 	}
 
+	inputs.apply {
+		dir("projects").withPathSensitivity(RELATIVE)
+		file("${rootDir}/gradle.properties")
+		file("${rootDir}/settings.gradle.kts")
+		file("${rootDir}/gradlew")
+		file("${rootDir}/gradlew.bat")
+		dir("${rootDir}/gradle/wrapper").withPathSensitivity(RELATIVE)
+		dir("${rootDir}/documentation/src/main").withPathSensitivity(RELATIVE)
+		dir("${rootDir}/documentation/src/test").withPathSensitivity(RELATIVE)
+	}
+
+	distribution {
+		requirements.add("jdk=8")
+	}
+	jvmArgumentProviders += JavaHomeDir(project, 8)
+
 	maxParallelForks = 1 // Bartholdy.install is not parallel safe, see https://github.com/sormuras/bartholdy/issues/4
 }
 
-class MavenRepo(@get:InputDirectory @get:PathSensitive(PathSensitivity.RELATIVE) val repoDir: File) : CommandLineArgumentProvider {
+class MavenRepo(@get:InputDirectory @get:PathSensitive(RELATIVE) val repoDir: File) : CommandLineArgumentProvider {
 	override fun asArguments() = listOf("-Dmaven.repo=$repoDir")
 }
 
 class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgumentProvider {
+	@Internal
+	val passToolchain = project.providers.gradleProperty("enableTestDistribution").map(String::toBoolean).orElse(false).map { !it }
+
 	@Internal
 	val javaLauncher: Property<JavaLauncher> = project.objects.property<JavaLauncher>()
 			.value(project.provider {
@@ -99,8 +108,15 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 			})
 
 	override fun asArguments(): List<String> {
-		val metadata = javaLauncher.map { it.metadata }
-		val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
-		return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
+		if (passToolchain.get()) {
+			val metadata = javaLauncher.map { it.metadata }
+			val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
+			return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
+		}
+		return emptyList()
 	}
+}
+
+class ThirdPartyJars(@Classpath val configuration: Configuration) : CommandLineArgumentProvider {
+	override fun asArguments() = listOf("-DthirdPartyJars=${configuration.asPath}")
 }

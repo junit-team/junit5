@@ -26,7 +26,7 @@ public class DemoHierarchicalTestDescriptor extends AbstractTestDescriptor imple
 	private String skippedReason;
 	private boolean skipped;
 
-	DemoHierarchicalTestDescriptor(UniqueId uniqueId, String displayName, Runnable executeBlock) {
+	public DemoHierarchicalTestDescriptor(UniqueId uniqueId, String displayName, Runnable executeBlock) {
 		this(uniqueId, displayName, null, executeBlock);
 	}
 

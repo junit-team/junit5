@@ -10,22 +10,30 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 
 /**
  * @since 4.12
  */
-@DisplayName("(TestClass)")
+@Label("(TestClass)")
 @RunWith(RunnerWithCustomUniqueIdsAndDisplayNames.class)
 public class JUnit4TestCaseWithRunnerWithCustomUniqueIdsAndDisplayNames {
 
 	@Test
-	@DisplayName("(TestMethod)")
+	@Label("(TestMethod)")
 	public void test() {
 		Assert.fail();
 	}
 
+}
+
+@Retention(RUNTIME)
+@interface Label {
+	String value();
 }

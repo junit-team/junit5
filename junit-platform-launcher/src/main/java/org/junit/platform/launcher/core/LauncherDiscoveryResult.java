@@ -28,7 +28,7 @@ import org.junit.platform.engine.TestEngine;
  *
  * @since 1.7
  */
-@API(status = INTERNAL, since = "1.7", consumers = "testkit")
+@API(status = INTERNAL, since = "1.7", consumers = { "org.junit.platform.testkit", "org.junit.platform.suite.engine" })
 public class LauncherDiscoveryResult {
 
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors;
@@ -48,7 +48,7 @@ public class LauncherDiscoveryResult {
 		return configurationParameters;
 	}
 
-	Collection<TestEngine> getTestEngines() {
+	public Collection<TestEngine> getTestEngines() {
 		return this.testEngineDescriptors.keySet();
 	}
 

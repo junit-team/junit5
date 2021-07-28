@@ -123,6 +123,10 @@ class AssertionUtils {
 	}
 
 	private static String formatClassAndValue(Object value, String valueString) {
+		// If the value is null, return <null> instead of null<null>.
+		if (value == null) {
+			return "<null>";
+		}
 		String classAndHash = getClassName(value) + toHash(value);
 		// if it's a class, there's no need to repeat the class name contained in the valueString.
 		return (value instanceof Class ? "<" + classAndHash + ">" : classAndHash + "<" + valueString + ">");

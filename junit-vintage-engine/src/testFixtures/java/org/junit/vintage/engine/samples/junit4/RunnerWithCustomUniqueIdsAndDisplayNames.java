@@ -12,12 +12,14 @@ package org.junit.vintage.engine.samples.junit4;
 
 import static org.junit.runner.Description.createTestDescription;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.function.Supplier;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.Description;
 import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.Annotatable;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
@@ -32,23 +34,28 @@ public class RunnerWithCustomUniqueIdsAndDisplayNames extends BlockJUnit4ClassRu
 
 	@Override
 	protected String getName() {
-		var displayName = getTestClass().getAnnotation(DisplayName.class);
-		return displayName == null ? super.getName() : displayName.value();
+		return getLabel(getTestClass(), super::getName);
 	}
 
 	@Override
 	protected Description describeChild(FrameworkMethod method) {
-		var testName = getTestName(method);
+		var testName = testName(method);
 		return createTestDescription(getTestClass().getJavaClass().getName(), testName, new CustomUniqueId(testName));
 	}
 
-	private String getTestName(FrameworkMethod method) {
-		var displayName = method.getAnnotation(DisplayName.class);
-		return displayName == null ? testName(method) : displayName.value();
+	@Override
+	protected String testName(FrameworkMethod method) {
+		return getLabel(method, () -> super.testName(method));
+	}
+
+	private String getLabel(Annotatable element, Supplier<String> fallback) {
+		var label = element.getAnnotation(Label.class);
+		return label == null ? fallback.get() : label.value();
 	}
 
 	private static class CustomUniqueId implements Serializable {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		private final String testName;

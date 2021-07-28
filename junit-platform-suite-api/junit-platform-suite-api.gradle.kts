@@ -5,10 +5,10 @@ plugins {
 description = "JUnit Platform Suite API"
 
 dependencies {
-	internal(platform(project(":dependencies")))
+	api(platform(projects.junitBom))
+	api(projects.junitPlatformCommons)
 
-	api(platform(project(":junit-bom")))
-	api("org.apiguardian:apiguardian-api")
+	compileOnlyApi(libs.apiguardian)
 
-	osgiVerification(project(":junit-platform-commons"))
+	osgiVerification(projects.junitPlatformCommons)
 }

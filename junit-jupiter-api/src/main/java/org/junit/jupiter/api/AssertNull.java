@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
 import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionUtils.format;
 import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.function.Supplier;
@@ -45,6 +46,13 @@ class AssertNull {
 	}
 
 	private static void failNotNull(Object actual, String message) {
-		fail(buildPrefix(message) + "expected: <null> but was: <" + actual + ">", null, actual);
+		String stringRepresentation = actual.toString();
+		if (stringRepresentation == null || stringRepresentation.equals("null")) {
+			fail(format(null, actual, message), null, actual);
+		}
+		else {
+			fail(buildPrefix(message) + "expected: <null> but was: <" + actual + ">", null, actual);
+		}
 	}
+
 }

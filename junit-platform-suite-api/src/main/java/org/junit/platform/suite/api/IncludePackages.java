@@ -25,23 +25,10 @@ import org.apiguardian.api.API;
  * {@code @IncludePackages} specifies the {@linkplain #value packages} to be
  * included when running a test suite on the JUnit Platform.
  *
- * <h4>JUnit 4 Suite Support</h4>
- * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
- * {@code @RunWith(JUnitPlatform.class)}.
- *
  * @since 1.0
- * @see SuiteDisplayName
- * @see UseTechnicalNames
- * @see SelectPackages
- * @see SelectClasses
- * @see IncludeClassNamePatterns
- * @see ExcludeClassNamePatterns
- * @see ExcludePackages
- * @see IncludeTags
- * @see ExcludeTags
- * @see IncludeEngines
- * @see ExcludeEngines
+ * @see Suite
  * @see org.junit.platform.runner.JUnitPlatform
+ * @see org.junit.platform.engine.discovery.PackageNameFilter#includePackageNames(String...)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

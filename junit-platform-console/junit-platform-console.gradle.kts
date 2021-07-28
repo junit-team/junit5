@@ -1,5 +1,3 @@
-import java.util.spi.ToolProvider
-
 plugins {
 	`java-library-conventions`
 	`shadow-conventions`
@@ -10,14 +8,12 @@ plugins {
 description = "JUnit Platform Console"
 
 dependencies {
-	internal(platform(project(":dependencies")))
+	api(platform(projects.junitBom))
+	api(projects.junitPlatformReporting)
 
-	api(platform(project(":junit-bom")))
-	api("org.apiguardian:apiguardian-api")
-	api(project(":junit-platform-reporting"))
+	compileOnlyApi(libs.apiguardian)
 
-	shadowed(platform(project(":dependencies")))
-	shadowed("info.picocli:picocli")
+	shadowed(libs.picocli)
 }
 
 tasks {
@@ -30,9 +26,15 @@ tasks {
 		}
 		from(sourceSets.mainRelease9.get().output.classesDirs)
 		doLast {
-			ToolProvider.findFirst("jar").get().run(System.out, System.err, "--update",
+			exec {
+				executable = project.the<JavaToolchainService>().launcherFor(java.toolchain).get()
+					.metadata.installationPath.file("bin/jar").asFile.absolutePath
+				args(
+					"--update",
 					"--file", archiveFile.get().asFile.absolutePath,
-					"--main-class", "org.junit.platform.console.ConsoleLauncher")
+					"--main-class", "org.junit.platform.console.ConsoleLauncher"
+				)
+			}
 		}
 	}
 	jar {

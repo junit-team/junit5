@@ -28,35 +28,47 @@ include the corresponding versions of the `junit-platform-launcher`,
 [source,groovy]
 [subs=attributes+]
 ----
+testImplementation(platform("org.junit:junit-bom:{bom-version}"))
 // Only needed to run tests in a version of IntelliJ IDEA that bundles older versions
-testRuntimeOnly("org.junit.platform:junit-platform-launcher:{platform-version}")
-testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
-testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 ----
 
 .Additional Maven Dependencies
 [source,xml]
 [subs=attributes+]
 ----
-<!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
-<dependency>
-	<groupId>org.junit.platform</groupId>
-	<artifactId>junit-platform-launcher</artifactId>
-	<version>{platform-version}</version>
-	<scope>test</scope>
-</dependency>
-<dependency>
-	<groupId>org.junit.jupiter</groupId>
-	<artifactId>junit-jupiter-engine</artifactId>
-	<version>{jupiter-version}</version>
-	<scope>test</scope>
-</dependency>
-<dependency>
-	<groupId>org.junit.vintage</groupId>
-	<artifactId>junit-vintage-engine</artifactId>
-	<version>{vintage-version}</version>
-	<scope>test</scope>
-</dependency>
+<!-- ... -->
+<dependencies>
+	<!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
+	<dependency>
+		<groupId>org.junit.platform</groupId>
+		<artifactId>junit-platform-launcher</artifactId>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-engine</artifactId>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.junit.vintage</groupId>
+		<artifactId>junit-vintage-engine</artifactId>
+		<scope>test</scope>
+	</dependency>
+</dependencies>
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.junit</groupId>
+			<artifactId>junit-bom</artifactId>
+			<version>{bom-version}</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
 ----
 
 [[running-tests-ide-eclipse]]
@@ -121,25 +133,25 @@ https://docs.gradle.org/current/userguide/java_testing.html#using_junit5[native 
 for executing tests on the JUnit Platform. To enable it, you just need to specify
 `useJUnitPlatform()` within a `test` task declaration in `build.gradle`:
 
-[source,java,indent=0]
+[source,groovy,indent=0]
 [subs=attributes+]
 ----
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
 ----
 
 Filtering by tags or engines is also supported:
 
-[source,java,indent=0]
+[source,groovy,indent=0]
 [subs=attributes+]
 ----
 test {
-    useJUnitPlatform {
-        includeTags 'fast', 'smoke & feature-a'
-        // excludeTags 'slow', 'ci'
-        includeEngines 'junit-jupiter'
-        // excludeEngines 'junit-vintage'
+	useJUnitPlatform {
+		includeTags("fast", "smoke & feature-a")
+		// excludeTags("slow", "ci")
+		includeEngines("junit-jupiter")
+		// excludeEngines("junit-vintage")
 	}
 }
 ----
@@ -157,15 +169,13 @@ discovery and execution. However, you can provide configuration parameters withi
 build script via system properties (as shown below) or via the
 `junit-platform.properties` file.
 
-[source,java,indent=0]
+[source,groovy,indent=0]
 ----
 test {
 	// ...
-	systemProperty 'junit.jupiter.conditions.deactivate', '*'
-	systemProperties = [
-		'junit.jupiter.extensions.autodetection.enabled': 'true',
-		'junit.jupiter.testinstance.lifecycle.default': 'per_class'
-	]
+	systemProperty("junit.jupiter.conditions.deactivate", "*")
+	systemProperty("junit.jupiter.extensions.autodetection.enabled", true)
+	systemProperty("junit.jupiter.testinstance.lifecycle.default", "per_class")
 	// ...
 }
 ----
@@ -176,15 +186,13 @@ test {
 In order to run any tests at all, a `TestEngine` implementation must be on the classpath.
 
 To configure support for JUnit Jupiter based tests, configure a `testImplementation` dependency
-on the JUnit Jupiter API and a `testRuntimeOnly` dependency on the JUnit Jupiter `TestEngine`
-implementation similar to the following.
+on the dependency-aggregating JUnit Jupiter artifact similar to the following.
 
-[source,java,indent=0]
+[source,groovy,indent=0]
 [subs=attributes+]
 ----
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter-api:{jupiter-version}")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
+	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
 }
 ----
 
@@ -192,7 +200,7 @@ The JUnit Platform can run JUnit 4 based tests as long as you configure a `testI
 dependency on JUnit 4 and a `testRuntimeOnly` dependency on the JUnit Vintage `TestEngine`
 implementation similar to the following.
 
-[source,java,indent=0]
+[source,groovy,indent=0]
 [subs=attributes+]
 ----
 dependencies {
@@ -215,11 +223,11 @@ qualified class name_ of the `{LogManager}` implementation to use. The example b
 demonstrates how to configure Log4j{nbsp}2.x (see {Log4j_JDK_Logging_Adapter} for
 details).
 
-[source,java,indent=0]
+[source,groovy,indent=0]
 [subs=attributes+]
 ----
 test {
-	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
+	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 }
 ----
 
@@ -259,6 +267,17 @@ following.
 [source,xml,indent=0]
 [subs=attributes+]
 ----
+	<!-- ... -->
+	<dependencies>
+		<!-- ... -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>{jupiter-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- ... -->
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -271,23 +290,6 @@ following.
 			</plugin>
 		</plugins>
 	</build>
-	<!-- ... -->
-	<dependencies>
-		<!-- ... -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>{jupiter-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>{jupiter-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- ... -->
-	</dependencies>
 	<!-- ... -->
 ----
 
@@ -298,19 +300,6 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 [source,xml,indent=0]
 [subs=attributes+]
 ----
-	<!-- ... -->
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>{surefire-version}</version>
-			</plugin>
-			<plugin>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>{surefire-version}</version>
-			</plugin>
-		</plugins>
-	</build>
 	<!-- ... -->
 	<dependencies>
 		<!-- ... -->
@@ -328,6 +317,19 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 		</dependency>
 		<!-- ... -->
 	</dependencies>
+	<!-- ... -->
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>{surefire-version}</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>{surefire-version}</version>
+			</plugin>
+		</plugins>
+	</build>
 	<!-- ... -->
 ----
 
@@ -394,7 +396,7 @@ the following configuration properties.
 				<configuration>
 					<groups>acceptance | !feature-a</groups>
 					<excludedGroups>integration, regression</excludedGroups>
-			    </configuration>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -630,6 +632,7 @@ You need the following artifacts and their dependencies on the classpath. See
 ===== Transitive Dependencies
 
 * `junit-platform-suite-api` in _test_ scope
+* `junit-platform-suite-commons` in _test_ scope
 * `junit-platform-launcher` in _test_ scope
 * `junit-platform-engine` in _test_ scope
 * `junit-platform-commons` in _test_ scope
@@ -696,8 +699,8 @@ infrastructure.
 
 In addition to instructing the platform which test classes and test engines to include,
 which packages to scan, etc., it is sometimes necessary to provide additional custom
-configuration parameters that are specific to a particular test engine or registered
-extension. For example, the JUnit Jupiter `TestEngine` supports _configuration
+configuration parameters that are specific to a particular test engine, listener, or
+registered extension. For example, the JUnit Jupiter `TestEngine` supports _configuration
 parameters_ for the following use cases.
 
 - <<writing-tests-test-instance-lifecycle-changing-default>>
@@ -825,8 +828,63 @@ because particularly when
 <<writing-tests-parallel-execution, executing tests in parallel>> it would be impossible
 to attribute it to a specific test or container.
 
-[[running-tests-flight-recorder]]
-=== Flight Recorder Support
+[[running-tests-listeners]]
+=== Using Listeners
+
+The JUnit Platform provides the following listener APIs that allow JUnit, third parties,
+and custom user code to react to events fired at various points during the discovery and
+execution of a `TestPlan`.
+
+* `{LauncherSessionListener}`: receives events when a `{LauncherSession}` is opened and
+  closed.
+* `{LauncherDiscoveryListener}`: receives events that occur during test discovery.
+* `{TestExecutionListener}`: receives events that occur during test execution.
+
+The `LauncherSessionListener` API is typically implemented by build tools or IDEs and
+registered automatically for you in order to support some feature of the build tool or IDE.
+
+The `LauncherDiscoveryListener` and `TestExecutionListener` APIs are often implemented in
+order to produce some form of report or to display a graphical representation of the test
+plan in an IDE. Such listeners may be implemented and automatically registered by a build
+tool or IDE, or they may be included in a third-party library – potentially registered
+for you automatically. You can also implement and register your own listeners.
+
+For details on registering and configuring listeners, see the following sections of this
+guide.
+
+* <<launcher-api-launcher-session-listeners-custom>>
+* <<launcher-api-launcher-discovery-listeners-custom>>
+* <<launcher-api-listeners-custom>>
+* <<launcher-api-listeners-config>>
+* <<launcher-api-listeners-custom-deactivation>>
+
+The JUnit Platform provides the following listeners which you may wish to use with your
+test suite.
+
+<<running-tests-listeners-flight-recorder>> ::
+  `FlightRecordingExecutionListener` and `FlightRecordingDiscoveryListener` that generate
+  Java Flight Recorder events during test discovery and execution.
+
+`{LegacyXmlReportGeneratingListener}` ::
+  `TestExecutionListener` that generates XML reports compatible with the de facto
+  standard for JUnit 4 based test reports. See <<junit-platform-reporting>> for
+  details.
+
+`{LoggingListener}` ::
+  `TestExecutionListener` for logging informational messages for all events via a
+  `BiConsumer` that consumes `Throwable` and `Supplier<String>`.
+
+`{SummaryGeneratingListener}` ::
+  `TestExecutionListener` that generates a summary of the test execution which can be
+  printed via a `PrintWriter`.
+
+`{UniqueIdTrackingListener}` ::
+  `TestExecutionListener` that that tracks the unique IDs of all tests that were skipped
+  or executed during the execution of the `TestPlan` and generates a file containing the
+  unique IDs once execution of the `TestPlan` has finished.
+
+[[running-tests-listeners-flight-recorder]]
+==== Flight Recorder Support
 
 Since version 1.7, the JUnit Platform provides opt-in support for generating Flight
 Recorder events. https://openjdk.java.net/jeps/328[JEP 328] describes the Java Flight
@@ -839,9 +897,10 @@ to a problem.
 
 In order to record Flight Recorder events generated while running tests, you need to:
 
-1. Provide module `org.junit.platform.jfr` (`junit-platform-jfr-{platform-version}.jar`)
+1. Ensure that you are using either Java 8 Update 262 or higher or Java 11 or later.
+2. Provide the `org.junit.platform.jfr` module (`junit-platform-jfr-{platform-version}.jar`)
    on the class-path or module-path at test runtime.
-2. Start flight recording when launching a test run. Flight Recorder can be started via
+3. Start flight recording when launching a test run. Flight Recorder can be started via
    java command line option:
 
    -XX:StartFlightRecording:filename=...
@@ -853,6 +912,6 @@ https://docs.oracle.com/en/java/javase/14/docs/specs/man/jfr.html[jfr]
 command line tool shipped with recent JDKs or open the recording file with
 https://jdk.java.net/jmc/[JDK Mission Control].
 
-WARNING: Flight Recorder support is currently an _experimental_ feature. You're
-invited to give it a try and provide feedback to the JUnit team so they can improve
-and eventually <<api-evolution, promote>> this feature.
+WARNING: Flight Recorder support is currently an _experimental_ feature. You're invited to
+give it a try and provide feedback to the JUnit team so they can improve and eventually
+<<api-evolution, promote>> this feature.

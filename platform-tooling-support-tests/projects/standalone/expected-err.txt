@@ -5,6 +5,6 @@
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
 .+ Loaded LauncherDiscoveryListener instances: ..
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
-.+ Loaded TestExecutionListener instances: ..
+.+ Loaded TestExecutionListener instances: .+
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
 .+ Loaded LauncherSessionListener instances: ..

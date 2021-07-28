@@ -31,7 +31,7 @@ import org.junit.platform.launcher.TestExecutionListener;
  *
  * @since 1.7
  */
-@API(status = INTERNAL, since = "1.7", consumers = "testkit")
+@API(status = INTERNAL, since = "1.7", consumers = { "org.junit.platform.testkit", "org.junit.platform.suite.engine" })
 public class EngineExecutionOrchestrator {
 
 	private final ListenerRegistry<TestExecutionListener> listenerRegistry;

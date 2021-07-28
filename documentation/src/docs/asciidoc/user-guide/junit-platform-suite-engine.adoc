@@ -1,0 +1,45 @@
+[[junit-platform-suite-engine]]
+=== JUnit Platform Suite Engine
+
+The JUnit Platform supports declarative definition and execution of suites of tests from
+_any_ test engine using the Junit Platform.
+
+==== Setup
+
+In addition to _at least one_ other test engine, you need the following artifacts and
+their dependencies on the classpath. See <<dependency-metadata>> for details regarding
+group IDs, artifact IDs, and versions.
+
+===== Explicit Dependencies
+
+* `junit-platform-suite-api` in _test_ scope
+* `junit-platform-suite-engine` in _test runtime_ scope: implementation of the
+                                `TestEngine` API for the declarative Junit Platform
+                                Suites
+
+NOTE: Both dependencies are aggregated in `junit-platform-suite` which can be used in
+_test_ scope.
+
+===== Transitive Dependencies
+
+* `junit-platform-suite-commons` in _test_ scope
+* `junit-platform-launcher` in _test_ scope
+* `junit-platform-engine` in _test_ scope
+* `junit-platform-commons` in _test_ scope
+* `opentest4j` in _test_ scope
+
+==== Test Suite
+
+By annotating a class with `@Suite` it is marked as a test suite on the JUnit Platform.
+As seen in the following example, selector and filter annotations can then be used to
+control the contents of the suite.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/SuiteDemo.java[tags=user_guide]
+----
+
+.Additional Configuration Options
+NOTE: There are more configuration options for discovering and filtering tests than just
+`@SelectPackages`. Please consult the Javadoc of the `{suite-api-package}` package for
+further details.

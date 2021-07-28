@@ -1,0 +1,4 @@
+org.junit.platform.suite@${platformVersion} jar:file:.+/junit-platform-suite-\d.+\.jar..module-info\.class
+requires java.base mandated
+requires org.junit.platform.suite.api transitive
+requires org.junit.platform.suite.engine transitive

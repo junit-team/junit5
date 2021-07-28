@@ -6,6 +6,8 @@ plugins {
 	`java-library`
 }
 
+val importAPIGuardian = "org.apiguardian.*;resolution:=\"optional\""
+
 // This task enhances `jar` and `shadowJar` tasks with the bnd
 // `BundleTaskConvention` convention which allows for generating OSGi
 // metadata into the jar
@@ -13,6 +15,8 @@ tasks.withType<Jar>().matching {
 	task: Jar -> task.name == "jar" || task.name == "shadowJar"
 }.configureEach {
 	val btc = BundleTaskConvention(this)
+
+	extra["importAPIGuardian"] = importAPIGuardian
 
 	// These are bnd instructions necessary for generating OSGi metadata.
 	// We've generalized these so that they are widely applicable limiting
@@ -28,14 +32,15 @@ tasks.withType<Jar>().matching {
 
 			# These are the general rules for package imports.
 			Import-Package: \
-				!org.apiguardian.api,\
+				${importAPIGuardian},\
 				org.junit.platform.commons.logging;status=INTERNAL,\
 				kotlin.*;resolution:="optional",\
 				*
 
 			# This tells bnd not to complain if a module doesn't actually import
-			# the kotlin packages, but enough modules do to make it a default.
+			# the kotlin and apiguardian packages, but enough modules do to make it a default.
 			-fixupmessages.kotlin.import: "Unused Import-Package instructions: \\[kotlin.*\\]";is:=ignore
+			-fixupmessages.apiguardian.import: "Unused Import-Package instructions: \\[org.apiguardian.*\\]";is:=ignore
 
 			# This tells bnd to ignore classes it finds in `META-INF/versions/`
 			# because bnd doesn't yet support multi-release jars.
@@ -59,6 +64,7 @@ tasks.withType<Jar>().matching {
 		""")
 
 	// Add the convention to the jar task
+	@Suppress("deprecation") // https://github.com/bndtools/bnd/issues/4699
 	convention.plugins["bundle"] = btc
 
 	doLast {
@@ -79,7 +85,10 @@ val osgiProperties by tasks.registering(WriteProperties::class) {
 		property("-runee", "JavaSE-${javaLibrary.mainJavaVersion}")
 	}
 	property("-runrequires", "osgi.identity;filter:='(osgi.identity=${project.name})'")
-	property("-runsystempackages", "jdk.internal.misc,sun.misc")
+	property("-runsystempackages", "jdk.internal.misc,jdk.jfr,sun.misc")
+	// API Guardian should be optional -> instruct resolver to ignore it
+	// during resolution. Resolve should still pass.
+	property("-runblacklist", "org.apiguardian.api")
 }
 
 val osgiVerification by configurations.creating {
@@ -93,6 +102,7 @@ val verifyOSGi by tasks.registering(Resolve::class) {
 	dependsOn(osgiProperties)
 	setBndrun(osgiPropertiesFile)
 	isReportOptional = false
+	@Suppress("deprecation") // https://github.com/bndtools/bnd/issues/4699
 	withConvention(FileSetRepositoryConvention::class) {
 
 		// By default bnd will use jars found in:

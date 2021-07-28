@@ -11,7 +11,7 @@
 package platform.tooling.support.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.time.Duration;
 
@@ -23,6 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
 class VintageMavenIntegrationTests {
@@ -37,7 +38,7 @@ class VintageMavenIntegrationTests {
 	}
 
 	@ParameterizedTest(name = "{0}")
-	@ValueSource(strings = { "4.12", "4.13.1" })
+	@ValueSource(strings = { "4.12", "4.13.2" })
 	void supportedVersions(String version) {
 		var result = run(version);
 
@@ -59,13 +60,13 @@ class VintageMavenIntegrationTests {
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.setProject("vintage") //
 				.setWorkspace("vintage-maven-" + version) //
-				.addArguments("clean", "test", "--debug") //
-				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
+				.addArguments("clean", "test", "--debug", "--batch-mode") //
+				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.build() //
 				.run();
-		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 		return result;
 	}
 

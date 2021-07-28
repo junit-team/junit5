@@ -25,9 +25,14 @@ import org.apiguardian.api.API;
  * {@code @DisplayNameGeneration} is used to declare a custom display name
  * generator for the annotated test class.
  *
+ * <p>This annotation is <em>inherited</em> from superclasses and implemented
+ * interfaces. It is also inherited from {@linkplain Class#getEnclosingClass()
+ * enclosing classes} for {@link Nested @Nested} test classes.
+ *
  * @since 5.4
  * @see DisplayName
  * @see DisplayNameGenerator
+ * @see IndicativeSentencesGeneration
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

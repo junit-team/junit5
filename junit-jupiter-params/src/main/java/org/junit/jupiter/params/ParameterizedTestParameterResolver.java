@@ -12,16 +12,25 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.platform.commons.util.AnnotationUtils;
 
 /**
  * @since 5.0
  */
-class ParameterizedTestParameterResolver implements ParameterResolver {
+class ParameterizedTestParameterResolver implements ParameterResolver, AfterTestExecutionCallback {
+
+	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestParameterResolver.class);
 
 	private final ParameterizedTestMethodContext methodContext;
 	private final Object[] arguments;
@@ -60,8 +69,55 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
+		return this.methodContext.resolve(parameterContext, extractPayloads(this.arguments));
+	}
 
-		return this.methodContext.resolve(parameterContext, this.arguments);
+	/**
+	 * @since 5.8
+	 */
+	@Override
+	public void afterTestExecution(ExtensionContext context) {
+		ParameterizedTest parameterizedTest = AnnotationUtils.findAnnotation(context.getRequiredTestMethod(),
+			ParameterizedTest.class).get();
+		if (!parameterizedTest.autoCloseArguments()) {
+			return;
+		}
+
+		Store store = context.getStore(NAMESPACE);
+		AtomicInteger argumentIndex = new AtomicInteger();
+
+		Arrays.stream(arguments) //
+				.filter(AutoCloseable.class::isInstance) //
+				.map(AutoCloseable.class::cast) //
+				.map(CloseableArgument::new) //
+				.forEach(closeable -> store.put("closeableArgument" + argumentIndex.getAndIncrement(), closeable));
+	}
+
+	private static class CloseableArgument implements Store.CloseableResource {
+
+		private final AutoCloseable autoCloseable;
+
+		CloseableArgument(AutoCloseable autoCloseable) {
+			this.autoCloseable = autoCloseable;
+		}
+
+		@Override
+		public void close() throws Throwable {
+			autoCloseable.close();
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	private Object[] extractPayloads(Object[] arguments) {
+		return Arrays.stream(arguments) //
+				.map(argument -> {
+					if (argument instanceof Named) {
+						return ((Named<Object>) argument).getPayload();
+					}
+					return argument;
+				}) //
+				.toArray();
 	}
 
 }

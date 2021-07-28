@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -182,7 +183,11 @@ public @interface ParameterizedTest {
 	 * The display name to be used for individual invocations of the
 	 * parameterized test; never blank or consisting solely of whitespace.
 	 *
-	 * <p>Defaults to {@link #DEFAULT_DISPLAY_NAME}.
+	 * <p> If "{default_display_name}" is returned when invoking name(), we will:
+	 * <ul>
+	 * <li>Look up the new config param from junit-platform.properties, and if it has been set, use it</li>
+	 * <li>otherwise, we will use the value of the {@link #DEFAULT_DISPLAY_NAME} constant.</li>
+	 * </ul>
 	 *
 	 * <h4>Supported placeholders</h4>
 	 * <ul>
@@ -192,6 +197,8 @@ public @interface ParameterizedTest {
 	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
 	 * </ul>
 	 *
+	 * <p>Note that "{default_display_name}" is a flag rather than a placeholder.
+	 *
 	 * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
 	 * to customize formatting. Please note that the original arguments are
 	 * passed when formatting, regardless of any implicit or explicit argument
@@ -199,6 +206,18 @@ public @interface ParameterizedTest {
 	 *
 	 * @see java.text.MessageFormat
 	 */
-	String name() default DEFAULT_DISPLAY_NAME;
+	String name() default "{default_display_name}";
+
+	/**
+	 * If true, all arguments of the parameterized test implementing {@link AutoCloseable}
+	 * will be closed after {@code @AfterEach} methods and {@code AfterEachCallbacks}
+	 * have been called.
+	 *
+	 * @since 5.8
+	 * @see java.lang.AutoCloseable
+	 * @see ParameterizedTestParameterResolver
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8")
+	boolean autoCloseArguments() default true;
 
 }

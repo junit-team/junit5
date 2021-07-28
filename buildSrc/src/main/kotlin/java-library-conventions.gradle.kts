@@ -1,3 +1,6 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
+
 plugins {
 	`java-library`
 	eclipse
@@ -13,24 +16,11 @@ val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
 val builtByValue: String by rootProject.extra
 
-val internal by configurations.creating {
-	isVisible = false
-	isCanBeConsumed = false
-	isCanBeResolved = false
-}
-
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
 val moduleSourceDir = file("src/module/$javaModuleName")
 val moduleOutputDir = file("$buildDir/classes/java/module")
 val javaVersion = JavaVersion.current()
-
-configurations {
-	compileClasspath.get().extendsFrom(internal)
-	runtimeClasspath.get().extendsFrom(internal)
-	testCompileClasspath.get().extendsFrom(internal)
-	testRuntimeClasspath.get().extendsFrom(internal)
-}
 
 eclipse {
 	jdt {
@@ -42,6 +32,10 @@ eclipse {
 			}
 		}
 	}
+}
+
+java {
+	modularity.inferModulePath.set(false)
 }
 
 if (project in mavenizedProjects) {
@@ -96,8 +90,6 @@ if (project in mavenizedProjects) {
 		val javaComponent = components["java"] as AdhocComponentWithVariants
 		javaComponent.withVariantsFromConfiguration(configurations["testFixturesApiElements"]) { skip() }
 		javaComponent.withVariantsFromConfiguration(configurations["testFixturesRuntimeElements"]) { skip() }
-		configurations["testFixturesCompileClasspath"].extendsFrom(internal)
-		configurations["testFixturesRuntimeClasspath"].extendsFrom(internal)
 	}
 
 	configure<PublishingExtension> {
@@ -149,7 +141,7 @@ val allMainClasses by tasks.registering {
 val compileModule by tasks.registering(JavaCompile::class) {
 	dependsOn(allMainClasses)
 	source = fileTree(moduleSourceDir)
-	destinationDir = moduleOutputDir
+	destinationDirectory.set(moduleOutputDir)
 	sourceCompatibility = "9"
 	targetCompatibility = "9"
 	classpath = files()
@@ -163,6 +155,7 @@ val compileModule by tasks.registering(JavaCompile::class) {
 	))
 	options.compilerArgumentProviders.add(ModulePathArgumentProvider())
 	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
+	modularity.inferModulePath.set(false)
 }
 
 tasks.withType<Jar>().configureEach {
@@ -171,7 +164,7 @@ tasks.withType<Jar>().configureEach {
 		into("META-INF")
 	}
 	val suffix = archiveClassifier.getOrElse("")
-	if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
+	if (suffix.isBlank() || this is ShadowJar) {
 		dependsOn(allMainClasses, compileModule)
 		from("$moduleOutputDir/$javaModuleName") {
 			include("module-info.class")
@@ -219,18 +212,24 @@ tasks.compileTestJava {
 	))
 }
 
-inner class ModulePathArgumentProvider : CommandLineArgumentProvider {
-	@get:Input val modulePath: Provider<Configuration> = configurations.compileClasspath
-	override fun asArguments(): List<String> = listOf("--module-path", modulePath.get().asPath)
+inner class ModulePathArgumentProvider : CommandLineArgumentProvider, Named {
+	@get:CompileClasspath
+	val modulePath: Provider<Configuration> = configurations.compileClasspath
+	override fun asArguments() = listOf("--module-path", modulePath.get().asPath)
+	@Internal
+	override fun getName() = "module-path"
 }
 
-inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
+inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider, Named {
 
-	@get:Input val module: String = it.javaModuleName
+	@get:Input
+	val module: String = it.javaModuleName
 
-	@get:Input val patch: Provider<FileCollection> = provider {
+	@get:InputFiles
+	@get:PathSensitive(RELATIVE)
+	val patch: Provider<FileCollection> = provider {
 		if (it == project)
-			files(sourceSets.matching { it.name.startsWith("main") }.map { it.output }) + configurations.compileClasspath.get()
+			files(sourceSets.matching { it.name.startsWith("main") }.map { it.output })
 		else
 			files(it.sourceSets["main"].java.srcDirs)
 	}
@@ -242,6 +241,9 @@ inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvid
 		}
 		return listOf("--patch-module", "$module=$path")
 	}
+
+	@Internal
+	override fun getName() = "patch-module($module)"
 }
 
 afterEvaluate {
@@ -259,26 +261,45 @@ afterEvaluate {
 	}
 	tasks {
 		compileJava {
-			options.release.set(extension.mainJavaVersion.majorVersion.toInt())
+			if (extension.configureRelease) {
+				options.release.set(extension.mainJavaVersion.majorVersion.toInt())
+			} else {
+				sourceCompatibility = extension.mainJavaVersion.majorVersion
+				targetCompatibility = extension.mainJavaVersion.majorVersion
+			}
 		}
 		compileTestJava {
-			options.release.set(extension.testJavaVersion.majorVersion.toInt())
+			if (extension.configureRelease) {
+				options.release.set(extension.testJavaVersion.majorVersion.toInt())
+			} else {
+				sourceCompatibility = extension.testJavaVersion.majorVersion
+				targetCompatibility = extension.testJavaVersion.majorVersion
+			}
 		}
 	}
 	pluginManager.withPlugin("groovy") {
 		tasks.named<GroovyCompile>("compileGroovy").configure {
-			sourceCompatibility = extension.mainJavaVersion.majorVersion
-			targetCompatibility = extension.mainJavaVersion.majorVersion
+			if (extension.configureRelease) {
+				options.release.set(extension.mainJavaVersion.majorVersion.toInt())
+			} else {
+				sourceCompatibility = extension.mainJavaVersion.majorVersion
+				targetCompatibility = extension.mainJavaVersion.majorVersion
+			}
 		}
 		tasks.named<GroovyCompile>("compileTestGroovy").configure {
-			sourceCompatibility = extension.testJavaVersion.majorVersion
-			targetCompatibility = extension.testJavaVersion.majorVersion
+			if (extension.configureRelease) {
+				options.release.set(extension.testJavaVersion.majorVersion.toInt())
+			} else {
+				sourceCompatibility = extension.testJavaVersion.majorVersion
+				targetCompatibility = extension.testJavaVersion.majorVersion
+			}
 		}
 	}
 }
 
 checkstyle {
-	toolVersion = versions["checkstyle"]
+	val libs = project.extensions["libs"] as VersionCatalog
+	toolVersion = libs.findVersion("checkstyle").get().requiredVersion
 	configDirectory.set(rootProject.file("src/checkstyle"))
 }
 

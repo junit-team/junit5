@@ -26,6 +26,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -277,8 +278,8 @@ class PicocliCommandLineOptionsParserTests {
 			() -> assertEquals(List.of(dir), type.parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
 			() -> assertEquals(List.of(dir), type.parseArgLine("--class-path .").getAdditionalClasspathEntries()),
 			() -> assertEquals(List.of(dir), type.parseArgLine("--class-path=.").getAdditionalClasspathEntries()),
-			() -> assertEquals(List.of(dir, Paths.get("src", "test", "java")), type.parseArgLine("-cp . -cp src/test/java").getAdditionalClasspathEntries()),
-			() -> assertEquals(List.of(dir, Paths.get("src", "test", "java")), type.parseArgLine("-cp ." + File.pathSeparator + "src/test/java").getAdditionalClasspathEntries())
+			() -> assertEquals(List.of(dir, Path.of("lib/some.jar")), type.parseArgLine("-cp . -cp lib/some.jar").getAdditionalClasspathEntries()),
+			() -> assertEquals(List.of(dir, Path.of("lib/some.jar")), type.parseArgLine("-cp ." + File.pathSeparator + "lib/some.jar").getAdditionalClasspathEntries())
 		);
 		// @formatter:on
 	}

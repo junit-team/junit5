@@ -3,16 +3,6 @@
   <component name="GitSharedSettings">
     <option name="synchronizeBranchProtectionRules" value="false" />
   </component>
-  <component name="GithubSharedProjectSettings">
-    <option name="branchProtectionPatterns">
-      <list>
-        <option value="gh-pages" />
-        <option value="releases\/.*" />
-        <option value="proposals" />
-        <option value="main" />
-      </list>
-    </option>
-  </component>
   <component name="IssueNavigationConfiguration">
     <option name="links">
       <list>
