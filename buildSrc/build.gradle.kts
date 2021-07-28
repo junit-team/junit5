@@ -8,6 +8,7 @@ repositories {
 	mavenCentral()
 	gradlePluginPortal()
 	maven(url = "https://repo.gradle.org/gradle/enterprise-libs-release-candidates-local/")
+	maven(url = "https://jitpack.io")
 }
 
 dependencies {
