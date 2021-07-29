@@ -24,7 +24,7 @@ commons-io = { module = "commons-io:commons-io", version = "2.9.0" }
 groovy3 = { module = "org.codehaus.groovy:groovy", version = "3.0.8" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.14" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "2.2" }
-jfrunit = { module = "com.github.gunnarmorling:jfrunit", version = "main-SNAPSHOT" }
+jfrunit = { module = "com.github.gunnarmorling:jfrunit", version = "f3b30c0784" }
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 joox = { module = "org.jooq:joox", version = "1.6.2" }
