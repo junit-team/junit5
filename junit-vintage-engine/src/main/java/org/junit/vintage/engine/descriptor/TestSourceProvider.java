@@ -36,6 +36,7 @@ import org.junit.runner.Description;
 @API(status = INTERNAL, since = "5.6")
 public class TestSourceProvider {
 
+	@SuppressWarnings("serial")
 	private static final TestSource NULL_SOURCE = new TestSource() {
 	};
 
