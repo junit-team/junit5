@@ -334,7 +334,6 @@
 76e0156925d80c38cf389e4f4883b7d5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestIdentifier.java
 77252a89a1128bfc790ff3e47d8b8d38  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
 7736882f31681723cbc72a235290a3af  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodSourceSupport.java
-777442d1fe7bc0aacd2eb9b2b3703393  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/TestSourceProvider.java
 77a4aacd081e65883608693ea690037c  documentation/src/test/java/example/timing/TimingExtension.java
 7815758be2b0e855d541267cbeeb406f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileArgumentsProvider.java
 78256810122c8fab15681f490e1aa08e  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
@@ -752,5 +751,6 @@ fd8e4f9460c81793282c681f21241cef  junit-platform-engine/src/main/java/org/junit/
 fdd0e6f12b2012eefe6eb56d0fe978a1  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatformRunnerListener.java
 fddcf4cbc5673ebba69cf048bf130bce  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContext.java
 ff07c64c2ab2c87cb320b15bc1c8bc4d  documentation/src/main/java/example/util/ListWriter.java
+ff920a0ec96bf29fbdccddcbcf5d1054  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/TestSourceProvider.java
 ffbcd411348606f020f351eaa38f690d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/DynamicTestInvocationContext.java
 ffd2b6c431bb37e94aa4825b5579ef06  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.java
