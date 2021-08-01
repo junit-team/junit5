@@ -14,12 +14,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -50,6 +55,8 @@ import org.junit.jupiter.engine.execution.injection.sample.LongParameterResolver
  * @since 5.8
  */
 class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTestEngineTests {
+
+	static final List<String> instantiationSequence = new ArrayList<>();
 
 	@Test
 	void constructorParameter() {
@@ -94,6 +101,15 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	@Test
 	void testTemplateMethodParameter() {
 		assertTestsSucceeded(TestTemplateMethodParameterTestCase.class, 2);
+	}
+
+	@Test
+	void registrationOrder() {
+		instantiationSequence.clear();
+
+		assertOneTestSucceeded(AllInOneTestCase.class);
+		assertThat(instantiationSequence).containsExactly("ConstructorParameter", "BeforeAllParameter",
+			"AfterAllParameter", "BeforeEachParameter", "AfterEachParameter", "TestParameter");
 	}
 
 	private void assertOneTestSucceeded(Class<?> testClass) {
@@ -397,6 +413,39 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		}
 	}
 
+	static class AllInOneTestCase {
+
+		AllInOneTestCase(@ConstructorParameter String text) {
+			assertThat(text).isNotNull();
+		}
+
+		@BeforeAll
+		static void beforeAll(@BeforeAllParameter String text) {
+			assertThat(text).isNotNull();
+		}
+
+		@BeforeEach
+		void beforeEach(@BeforeEachParameter String text) {
+			assertThat(text).isNotNull();
+		}
+
+		@Test
+		void test(@TestParameter String text) {
+			assertThat(text).isNotNull();
+		}
+
+		@AfterEach
+		void afterEach(@AfterEachParameter String text) {
+			assertThat(text).isNotNull();
+		}
+
+		@AfterAll
+		static void afterAll(@AfterAllParameter String text) {
+			assertThat(text).isNotNull();
+		}
+
+	}
+
 }
 
 @Target(ElementType.PARAMETER)
@@ -425,5 +474,78 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			return String.format("%s-%d-%s", name, parameterContext.getIndex(), text);
 		}
 	}
+}
 
+@SuppressWarnings("unused")
+class BaseExtension<T extends Annotation> implements ParameterResolver {
+
+	private final Class<T> annotationType;
+
+	@SuppressWarnings("unchecked")
+	BaseExtension() {
+		Type genericSuperclass = getClass().getGenericSuperclass();
+		this.annotationType = (Class<T>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
+
+		ExtensionRegistrationViaParametersAndFieldsTests.instantiationSequence//
+				.add(getClass().getEnclosingClass().getSimpleName());
+	}
+
+	@Override
+	public final boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return parameterContext.isAnnotated(this.annotationType)
+				&& parameterContext.getParameter().getType() == String.class;
+	}
+
+	@Override
+	public final Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return "enigma";
+	}
+}
+
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(ConstructorParameter.Extension.class)
+@interface ConstructorParameter {
+	class Extension extends BaseExtension<ConstructorParameter> {
+	}
+}
+
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(BeforeAllParameter.Extension.class)
+@interface BeforeAllParameter {
+	class Extension extends BaseExtension<BeforeAllParameter> {
+	}
+}
+
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(AfterAllParameter.Extension.class)
+@interface AfterAllParameter {
+	class Extension extends BaseExtension<AfterAllParameter> {
+	}
+}
+
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(BeforeEachParameter.Extension.class)
+@interface BeforeEachParameter {
+	class Extension extends BaseExtension<BeforeEachParameter> {
+	}
+}
+
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(AfterEachParameter.Extension.class)
+@interface AfterEachParameter {
+	class Extension extends BaseExtension<AfterEachParameter> {
+	}
+}
+
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(TestParameter.Extension.class)
+@interface TestParameter {
+	class Extension extends BaseExtension<TestParameter> {
+	}
 }
