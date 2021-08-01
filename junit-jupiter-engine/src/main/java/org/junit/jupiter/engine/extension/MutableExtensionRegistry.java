@@ -139,16 +139,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		// @formatter:on
 	}
 
-	/**
-	 * Instantiate an extension of the given type using its default constructor
-	 * and register it in this registry.
-	 *
-	 * <p>A new {@link Extension} will not be registered if an extension of the
-	 * given type already exists in this registry or a parent registry.
-	 *
-	 * @param extensionType the type of extension to register
-	 */
-	void registerExtension(Class<? extends Extension> extensionType) {
+	@Override
+	public void registerExtension(Class<? extends Extension> extensionType) {
 		if (!isAlreadyRegistered(extensionType)) {
 			registerLocalExtension(ReflectionUtils.newInstance(extensionType));
 		}

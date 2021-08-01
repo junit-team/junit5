@@ -14,15 +14,19 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
+import static org.junit.platform.commons.util.ReflectionUtils.getDeclaredConstructor;
 import static org.junit.platform.commons.util.ReflectionUtils.isNotPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
 
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Order;
@@ -78,7 +82,7 @@ final class ExtensionUtils {
 	}
 
 	/**
-	 * Register extensions in the supplied registry from fields in the supplied
+	 * Register extensions using the supplied registrar from fields in the supplied
 	 * class that are annotated with {@link RegisterExtension @RegisterExtension}.
 	 *
 	 * <p>The extensions will be sorted according to {@link Order @Order} semantics
@@ -113,6 +117,44 @@ final class ExtensionUtils {
 				registrar.registerExtension((Extension) value, field);
 			});
 		});
+	}
+
+	/**
+	 * Register extensions using the supplied registrar from parameters in the
+	 * declared constructor of the supplied class that are annotated with
+	 * {@link ExtendWith @ExtendWith}.
+	 *
+	 * @param registrar the registrar with which to register the extensions; never {@code null}
+	 * @param clazz the class in which to find the declared constructor; never {@code null}
+	 * @since 5.8
+	 */
+	static void registerExtensionsFromConstructorParameters(ExtensionRegistrar registrar, Class<?> clazz) {
+		registerExtensionsFromExecutableParameters(registrar, getDeclaredConstructor(clazz));
+	}
+
+	/**
+	 * Register extensions using the supplied registrar from parameters in the
+	 * supplied {@link Executable} (i.e., a {@link java.lang.reflect.Constructor}
+	 * or {@link java.lang.reflect.Method}) that are annotated with{@link ExtendWith @ExtendWith}.
+	 *
+	 * @param registrar the registrar with which to register the extensions; never {@code null}
+	 * @param executable the constructor or method whose parameters should be searched; never {@code null}
+	 * @since 5.8
+	 */
+	static void registerExtensionsFromExecutableParameters(ExtensionRegistrar registrar, Executable executable) {
+		Preconditions.notNull(registrar, "ExtensionRegistrar must not be null");
+		Preconditions.notNull(executable, "Executable must not be null");
+
+		AtomicInteger index = new AtomicInteger();
+
+		// @formatter:off
+		Arrays.stream(executable.getParameters())
+				.map(parameter -> findRepeatableAnnotations(parameter, index.getAndIncrement(), ExtendWith.class))
+				.flatMap(Collection::stream)
+				.map(ExtendWith::value)
+				.flatMap(Arrays::stream)
+				.forEach(registrar::registerExtension);
+		// @formatter:on
 	}
 
 	/**
