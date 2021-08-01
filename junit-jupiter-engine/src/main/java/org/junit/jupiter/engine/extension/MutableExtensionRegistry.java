@@ -10,10 +10,11 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.Extension;
@@ -71,12 +71,6 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	public static MutableExtensionRegistry createRegistryWithDefaultExtensions(JupiterConfiguration configuration) {
 		MutableExtensionRegistry extensionRegistry = new MutableExtensionRegistry(null);
 
-		// @formatter:off
-		logger.trace(() -> "Registering default extensions: " + DEFAULT_EXTENSIONS.stream()
-						.map(extension -> extension.getClass().getName())
-						.collect(toList()));
-		// @formatter:on
-
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
 		if (configuration.isExtensionAutoDetectionEnabled()) {
@@ -87,16 +81,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	}
 
 	private static void registerAutoDetectedExtensions(MutableExtensionRegistry extensionRegistry) {
-		Iterable<Extension> extensions = ServiceLoader.load(Extension.class, ClassLoaderUtils.getDefaultClassLoader());
-
-		// @formatter:off
-		logger.config(() -> "Registering auto-detected extensions: "
-				+ StreamSupport.stream(extensions.spliterator(), false)
-						.map(extension -> extension.getClass().getName())
-						.collect(toList()));
-		// @formatter:on
-
-		extensions.forEach(extensionRegistry::registerDefaultExtension);
+		ServiceLoader.load(Extension.class, ClassLoaderUtils.getDefaultClassLoader())//
+				.forEach(extensionRegistry::registerAutoDetectedExtension);
 	}
 
 	/**
@@ -154,15 +140,6 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	}
 
 	/**
-	 * Determine if the supplied type is already registered in this registry or in a
-	 * parent registry.
-	 */
-	private boolean isAlreadyRegistered(Class<? extends Extension> extensionType) {
-		return (this.registeredExtensionTypes.contains(extensionType)
-				|| (this.parent != null && this.parent.isAlreadyRegistered(extensionType)));
-	}
-
-	/**
 	 * Instantiate an extension of the given type using its default constructor
 	 * and register it in this registry.
 	 *
@@ -173,28 +150,62 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 */
 	void registerExtension(Class<? extends Extension> extensionType) {
 		if (!isAlreadyRegistered(extensionType)) {
-			registerExtension(ReflectionUtils.newInstance(extensionType));
-			this.registeredExtensionTypes.add(extensionType);
+			registerLocalExtension(ReflectionUtils.newInstance(extensionType));
 		}
 	}
 
-	private void registerDefaultExtension(Extension extension) {
-		this.registeredExtensions.add(extension);
-		this.registeredExtensionTypes.add(extension.getClass());
-	}
-
-	private void registerExtension(Extension extension) {
-		registerExtension(extension, extension);
+	/**
+	 * Determine if the supplied type is already registered in this registry or in a
+	 * parent registry.
+	 */
+	private boolean isAlreadyRegistered(Class<? extends Extension> extensionType) {
+		return (this.registeredExtensionTypes.contains(extensionType)
+				|| (this.parent != null && this.parent.isAlreadyRegistered(extensionType)));
 	}
 
 	@Override
 	public void registerExtension(Extension extension, Object source) {
-		Preconditions.notNull(extension, "Extension must not be null");
 		Preconditions.notNull(source, "source must not be null");
+		registerExtension("local", extension, source);
+	}
 
-		logger.trace(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
+	private void registerDefaultExtension(Extension extension) {
+		registerExtension("default", extension);
+	}
+
+	private void registerAutoDetectedExtension(Extension extension) {
+		registerExtension("auto-detected", extension);
+	}
+
+	private void registerLocalExtension(Extension extension) {
+		registerExtension("local", extension);
+	}
+
+	private void registerExtension(String category, Extension extension) {
+		registerExtension(category, extension, null);
+	}
+
+	private void registerExtension(String category, Extension extension, Object source) {
+		Preconditions.notBlank(category, "category must not be null or blank");
+		Preconditions.notNull(extension, "Extension must not be null");
+
+		logger.trace(
+			() -> String.format("Registering %s extension [%s]%s.", category, extension, buildSourceInfo(source)));
 
 		this.registeredExtensions.add(extension);
+		this.registeredExtensionTypes.add(extension.getClass());
+	}
+
+	private String buildSourceInfo(Object source) {
+		if (source == null) {
+			return "";
+		}
+		if (source instanceof Member) {
+			Member member = (Member) source;
+			Object type = (member instanceof Method ? "method" : "field");
+			source = String.format("%s %s.%s", type, member.getDeclaringClass().getName(), member.getName());
+		}
+		return " from source [" + source + "]";
 	}
 
 }
