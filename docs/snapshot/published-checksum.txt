@@ -337,6 +337,7 @@
 77a4aacd081e65883608693ea690037c  documentation/src/test/java/example/timing/TimingExtension.java
 7815758be2b0e855d541267cbeeb406f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileArgumentsProvider.java
 78256810122c8fab15681f490e1aa08e  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
+788936bcdbaf10b02629a8e51351d44b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/MutableExtensionRegistry.java
 78e3da888f3b7f7543f2b8297f60ebb8  documentation/src/main/java/example/registration/package-info.java
 796db01b59a6000e715153a73904e961  documentation/src/test/java/extensions/ExpectToFail.java
 79787c80943b40d745cb06af1f3238ad  documentation/src/docs/asciidoc/user-guide/index.adoc
@@ -378,7 +379,6 @@
 859e3281da617d211fbd8a50a1bc8249  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java
 86067c4676134fdb8934d40ac58bb493  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/UseTechnicalNames.java
 861447092afe63c995ca4ed2a11b6ae9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfCondition.java
-8620ea34cf44e8182f5d2a151ca0cafe  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/MutableExtensionRegistry.java
 864cd0dcb75661698bbb9d52364e61d5  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectFiles.java
 864e908ff3b6031055636c4001658eef  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullAndEmptySource.java
 86bbd3191ba51edca888d12709510653  junit-platform-engine/src/main/java/org/junit/platform/engine/FilterResult.java
