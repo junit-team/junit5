@@ -24,6 +24,18 @@ import org.junit.jupiter.api.extension.Extension;
 public interface ExtensionRegistrar {
 
 	/**
+	 * Instantiate an extension of the given type using its default constructor
+	 * and register it in the registry.
+	 *
+	 * <p>A new {@link Extension} should not be registered if an extension of the
+	 * given type already exists in the registry or a parent registry.
+	 *
+	 * @param extensionType the type of extension to register
+	 * @since 5.8
+	 */
+	void registerExtension(Class<? extends Extension> extensionType);
+
+	/**
 	 * Register the supplied {@link Extension}, without checking if an extension
 	 * of that type has already been registered.
 	 *
