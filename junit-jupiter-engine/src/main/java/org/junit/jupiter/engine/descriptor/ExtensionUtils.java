@@ -11,9 +11,11 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
+import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
+import static org.junit.platform.commons.util.ReflectionUtils.findFields;
 import static org.junit.platform.commons.util.ReflectionUtils.getDeclaredConstructor;
 import static org.junit.platform.commons.util.ReflectionUtils.isNotPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
@@ -99,24 +101,34 @@ final class ExtensionUtils {
 
 		Predicate<Field> predicate = (instance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
 
-		// Ensure that the list is modifiable, since findAnnotatedFields() returns an unmodifiable list.
-		List<Field> fields = new ArrayList<>(findAnnotatedFields(clazz, RegisterExtension.class, predicate));
+		// Ensure that the list is modifiable, since findFields() returns an unmodifiable list.
+		List<Field> fields = new ArrayList<>(findFields(clazz, predicate, TOP_DOWN));
 
 		// Sort fields based on @Order.
 		fields.sort(orderComparator);
 
+		// @formatter:off
 		fields.forEach(field -> {
-			Preconditions.condition(isNotPrivate(field),
-				() -> String.format(
+			findRepeatableAnnotations(field, ExtendWith.class).stream()
+				.map(ExtendWith::value)
+				.flatMap(Arrays::stream)
+				.forEach(registrar::registerExtension);
+		});
+
+		fields.stream()
+			.filter(field -> isAnnotated(field, RegisterExtension.class))
+			.forEach(field -> {
+				Preconditions.condition(isNotPrivate(field), () -> String.format(
 					"Failed to register extension via @RegisterExtension field [%s]: field must not be private.",
 					field));
-			tryToReadFieldValue(field, instance).ifSuccess(value -> {
-				Preconditions.condition(value instanceof Extension, () -> String.format(
-					"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",
-					field, (value != null ? value.getClass().getName() : null), Extension.class.getName()));
-				registrar.registerExtension((Extension) value, field);
+				tryToReadFieldValue(field, instance).ifSuccess(value -> {
+					Preconditions.condition(value instanceof Extension, () -> String.format(
+						"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",
+						field, (value != null ? value.getClass().getName() : null), Extension.class.getName()));
+					registrar.registerExtension((Extension) value, field);
+				});
 			});
-		});
+		// @formatter:on
 	}
 
 	/**
