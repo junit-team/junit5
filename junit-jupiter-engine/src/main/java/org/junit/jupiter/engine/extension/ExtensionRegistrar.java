@@ -51,6 +51,7 @@ public interface ExtensionRegistrar {
 	 *
 	 * @param extension the extension to register; never {@code null}
 	 * @param source the source of the extension; never {@code null}
+	 * @since 5.8
 	 * @see #registerExtension(Extension, Object)
 	 */
 	void registerSyntheticExtension(Extension extension, Object source);
