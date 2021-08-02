@@ -169,6 +169,11 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		registerExtension("local", extension, source);
 	}
 
+	@Override
+	public void registerSyntheticExtension(Extension extension, Object source) {
+		registerExtension("synthetic", extension, source);
+	}
+
 	private void registerDefaultExtension(Extension extension) {
 		registerExtension("default", extension);
 	}

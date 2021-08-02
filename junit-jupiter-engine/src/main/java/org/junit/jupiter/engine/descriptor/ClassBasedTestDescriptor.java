@@ -468,7 +468,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	private void registerMethodsAsExtensions(List<Method> methods, ExtensionRegistrar registrar,
 			Function<Method, Extension> extensionSynthesizer) {
 
-		methods.forEach(method -> registrar.registerExtension(extensionSynthesizer.apply(method), method));
+		methods.forEach(method -> registrar.registerSyntheticExtension(extensionSynthesizer.apply(method), method));
 	}
 
 	private BeforeEachMethodAdapter synthesizeBeforeEachMethodAdapter(Method method) {

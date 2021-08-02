@@ -45,4 +45,14 @@ public interface ExtensionRegistrar {
 	 */
 	void registerExtension(Extension extension, Object source);
 
+	/**
+	 * Register the supplied {@link Extension} as a <em>synthetic</em> extension,
+	 * without checking if an extension of that type has already been registered.
+	 *
+	 * @param extension the extension to register; never {@code null}
+	 * @param source the source of the extension; never {@code null}
+	 * @see #registerExtension(Extension, Object)
+	 */
+	void registerSyntheticExtension(Extension extension, Object source);
+
 }
