@@ -85,7 +85,8 @@ final class ExtensionUtils {
 
 	/**
 	 * Register extensions using the supplied registrar from fields in the supplied
-	 * class that are annotated with {@link RegisterExtension @RegisterExtension}.
+	 * class that are meta-annotated with {@link ExtendWith @ExtendWith} or
+	 * annotated with {@link RegisterExtension @RegisterExtension}.
 	 *
 	 * <p>The extensions will be sorted according to {@link Order @Order} semantics
 	 * prior to registration.
