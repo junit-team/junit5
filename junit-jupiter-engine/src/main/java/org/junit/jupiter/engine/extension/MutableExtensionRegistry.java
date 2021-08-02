@@ -195,7 +195,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		Preconditions.notNull(extension, "Extension must not be null");
 
 		logger.trace(
-			() -> String.format("Registering %s extension [%s]%s.", category, extension, buildSourceInfo(source)));
+			() -> String.format("Registering %s extension [%s]%s", category, extension, buildSourceInfo(source)));
 
 		this.registeredExtensions.add(extension);
 		this.registeredExtensionTypes.add(extension.getClass());
