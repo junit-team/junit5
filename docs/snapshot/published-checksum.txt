@@ -425,6 +425,7 @@
 9397c69593a58709ec9aea549720823a  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/IsPotentialTestContainer.java
 93a0a83624d1727553a6c7e9daf9af93  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNull.java
 93b77898bfaae095c09ea08af3dbceb5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolutionException.java
+94fa4de291b66cb8ad6c3053c31ae870  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistrar.java
 951de5f1db3ad7633cecb37c18c14510  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/LockManager.java
 952a76153089396661aed8132205bb96  documentation/src/docs/asciidoc/link-attributes.adoc
 95efa41a20049000b8a5408839715a5f  junit-platform-commons/src/main/java/org/junit/platform/commons/util/FunctionUtils.java
@@ -611,7 +612,6 @@ d01fca8f5e7bc87e5e3c16b031b4fa31  junit-platform-suite-commons/src/main/java/org
 d031ee2f108aecb7ea845cea498b6ad3  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/Suite.java
 d04146c15b2fbdc9c5ebf63ea503902b  documentation/src/test/java/example/AssertionsDemo.java
 d07c9ba77609a613f3ea6cf61e410177  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
-d1209421e05a3f84973dc1bc62cafdb2  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistrar.java
 d132e55d690eff931e81c65074c8579c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventType.java
 d1ab7eedb6800a6aac9ff86a4c1c4013  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/package-info.java
 d1b105ef31f86da790a46afa801fada0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExecutableInvoker.java
