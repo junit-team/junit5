@@ -77,7 +77,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 
 	@Test
 	void constructorParameterForNestedTestClass() {
-		assertOneTestSucceeded(NestedConstructorParameterTestCase.class);
+		assertTestsSucceeded(NestedConstructorParameterTestCase.class, 2);
 	}
 
 	@Test
@@ -210,10 +210,11 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	@ExtendWith(LongParameterResolver.class)
 	class NestedConstructorParameterTestCase {
 
-		NestedConstructorParameterTestCase(@MagicParameter("constructor") String text) {
-			// Index is 1 instead of 0, since constructors for non-static nested classes
+		NestedConstructorParameterTestCase(TestInfo testInfo, @MagicParameter("constructor") String text) {
+			assertThat(testInfo).isNotNull();
+			// Index is 2 instead of 1, since constructors for non-static nested classes
 			// receive a reference to the enclosing instance as the first argument: this$0
-			assertThat(text).isEqualTo("NestedConstructorParameterTestCase-1-constructor");
+			assertThat(text).isEqualTo("NestedConstructorParameterTestCase-2-constructor");
 		}
 
 		@BeforeEach
@@ -237,6 +238,40 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			assertThat(number).isEqualTo(42L);
 			assertThat(testInfo).isNotNull();
 			assertThat(text).isEqualTo("afterEach-2-method");
+		}
+
+		@Nested
+		class DoublyNestedConstructorParameterTestCase {
+
+			DoublyNestedConstructorParameterTestCase(TestInfo testInfo, String text) {
+				assertThat(testInfo).isNotNull();
+				// Index is 2 instead of 1, since constructors for non-static nested classes
+				// receive a reference to the enclosing instance as the first argument: this$0
+				assertThat(text).isEqualTo("DoublyNestedConstructorParameterTestCase-2-enigma");
+			}
+
+			@BeforeEach
+			void beforeEach(String text, TestInfo testInfo) {
+				assertThat(text).isEqualTo("beforeEach-0-enigma");
+				assertThat(testInfo).isNotNull();
+			}
+
+			@Test
+			void test(TestInfo testInfo, String text) {
+				assertThat(testInfo).isNotNull();
+				assertThat(text).isEqualTo("test-1-enigma");
+			}
+
+			/**
+			 * Redeclaring {@code @MagicParameter} should not result in a
+			 * {@link ParameterResolutionException}.
+			 */
+			@AfterEach
+			void afterEach(Long number, TestInfo testInfo, @MagicParameter("method") String text) {
+				assertThat(number).isEqualTo(42L);
+				assertThat(testInfo).isNotNull();
+				assertThat(text).isEqualTo("afterEach-2-method");
+			}
 		}
 
 	}
