@@ -128,6 +128,7 @@
 2ebb3f1de33cb5c9218829560fb0a14f  junit-platform-console/src/main/java/org/junit/platform/console/tasks/VerboseTreePrintingListener.java
 2ee3b4136dbdbdb379010aa499d17ea3  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeEngines.java
 2f113fbb7e8dd0517dfc52a852c52916  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueIdFormat.java
+2f3b42572e26a5205af3b30801b43109  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/MutableExtensionRegistry.java
 2f6c53349ee30bd5b0ac609dcd27fa35  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/package-info.java
 2f711868b63dbf4e16c773ac23c66fd5  documentation/src/test/java/example/PollingTimeoutDemo.java
 2f7d5465e70de440aa14c5359da11c6a  documentation/src/test/java/example/FastTest.java
@@ -646,7 +647,6 @@ da81008910269ab5e126a56fb2b3cd4b  junit-platform-suite-api/src/main/java/org/jun
 dabf78f57645c7175e4ce206e1163a93  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Operator.java
 dad3ddb36e2702fe96f0ae933a9905f6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertThrows.java
 daefc9f57506447963928b848fb57411  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumArgumentsProvider.java
-db0002287624d4bf2211a4b76ce04e73  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/MutableExtensionRegistry.java
 db2e98900785b50b6a69ea0f9c58461d  junit-platform-console/src/main/java/org/junit/platform/console/options/package-info.java
 db568ac4ee5f2c617c82b26315e8ffb1  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.txt
 db570ec1abefa4c0cc3043c26940eb2d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/package-info.java
