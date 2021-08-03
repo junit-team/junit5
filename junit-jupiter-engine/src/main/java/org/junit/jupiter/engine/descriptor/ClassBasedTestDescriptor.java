@@ -164,7 +164,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		this.beforeAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
 		// Since registerBeforeEachMethodAdapters() and registerAfterEachMethodAdapters() also
 		// invoke registerExtensionsFromExecutableParameters(), we invoke those methods before
-		// invoking registerExtensionsFromExecutableParameters() for @BeforeAll methods,
+		// invoking registerExtensionsFromExecutableParameters() for @AfterAll methods,
 		// thereby ensuring proper registration order for extensions registered via @ExtendWith
 		// on parameters in lifecycle methods.
 		registerBeforeEachMethodAdapters(registry);

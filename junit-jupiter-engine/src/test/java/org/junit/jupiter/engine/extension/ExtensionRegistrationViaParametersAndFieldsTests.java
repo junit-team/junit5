@@ -354,7 +354,10 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	}
 
 	/**
-	 * The {@link MagicParameter.Extension} is first registered for the {@code @AfterAll} method.
+	 * The {@link MagicParameter.Extension} is first registered for the {@code @AfterAll}
+	 * method, but that registration occurs before the test method is invoked, which
+	 * allows the string parameters in the after-each and test methods to be resolved
+	 * by the {@link MagicParameter.Extension} as well.
 	 */
 	@ExtendWith(LongParameterResolver.class)
 	static class AfterAllParameterTestCase {
@@ -363,6 +366,13 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		void test(TestInfo testInfo, String text) {
 			assertThat(testInfo).isNotNull();
 			assertThat(text).isEqualTo("test-1-enigma");
+		}
+
+		@AfterEach
+		void afterEach(Long number, TestInfo testInfo, String text) {
+			assertThat(number).isEqualTo(42L);
+			assertThat(testInfo).isNotNull();
+			assertThat(text).isEqualTo("afterEach-2-enigma");
 		}
 
 		@AfterAll
@@ -407,13 +417,18 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	}
 
 	/**
-	 * The {@link MagicParameter.Extension} is first registered for the {@code @AfterEach} method.
+	 * The {@link MagicParameter.Extension} is first registered for the {@code @AfterEach}
+	 * method, but that registration occurs before the test method is invoked, which
+	 * allows the test method's parameter to be resolved by the {@link MagicParameter.Extension}
+	 * as well.
 	 */
 	@ExtendWith(LongParameterResolver.class)
 	static class AfterEachParameterTestCase {
 
 		@Test
-		void test() {
+		void test(TestInfo testInfo, String text) {
+			assertThat(testInfo).isNotNull();
+			assertThat(text).isEqualTo("test-1-enigma");
 		}
 
 		@AfterEach
@@ -438,10 +453,6 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			assertThat(text).isEqualTo("test-1-method");
 		}
 
-		/**
-		 * Redeclaring {@code @MagicParameter} should not result in a
-		 * {@link ParameterResolutionException}.
-		 */
 		@AfterEach
 		void afterEach(Long number, TestInfo testInfo, String text) {
 			assertThat(number).isEqualTo(42L);
@@ -466,10 +477,6 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			return IntStream.of(2, 4).mapToObj(num -> dynamicTest("" + num, () -> assertTrue(num % 2 == 0)));
 		}
 
-		/**
-		 * Redeclaring {@code @MagicParameter} should not result in a
-		 * {@link ParameterResolutionException}.
-		 */
 		@AfterEach
 		void afterEach(Long number, TestInfo testInfo, String text) {
 			assertThat(number).isEqualTo(42L);
@@ -493,10 +500,6 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			assertThat(text).isEqualTo("testTemplate-1-method");
 		}
 
-		/**
-		 * Redeclaring {@code @MagicParameter} should not result in a
-		 * {@link ParameterResolutionException}.
-		 */
 		@AfterEach
 		void afterEach(Long number, TestInfo testInfo, String text) {
 			assertThat(number).isEqualTo(42L);
