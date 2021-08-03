@@ -148,7 +148,8 @@ final class ExtensionUtils {
 	/**
 	 * Register extensions using the supplied registrar from parameters in the
 	 * supplied {@link Executable} (i.e., a {@link java.lang.reflect.Constructor}
-	 * or {@link java.lang.reflect.Method}) that are annotated with{@link ExtendWith @ExtendWith}.
+	 * or {@link java.lang.reflect.Method}) that are meta-annotated with
+	 * {@link ExtendWith @ExtendWith}.
 	 *
 	 * @param registrar the registrar with which to register the extensions; never {@code null}
 	 * @param executable the constructor or method whose parameters should be searched; never {@code null}
