@@ -10,9 +10,6 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -104,12 +102,12 @@ class ExtensionRegistryTests {
 		MutableExtensionRegistry parent = registry;
 		parent.registerExtension(MyExtension.class);
 
-		MutableExtensionRegistry child = createRegistryFrom(parent, singletonList(YourExtension.class));
+		MutableExtensionRegistry child = createRegistryFrom(parent, Stream.of(YourExtension.class));
 		assertExtensionRegistered(child, MyExtension.class);
 		assertExtensionRegistered(child, YourExtension.class);
 		assertEquals(2, countExtensions(child, MyExtensionApi.class));
 
-		ExtensionRegistry grandChild = createRegistryFrom(child, emptyList());
+		ExtensionRegistry grandChild = createRegistryFrom(child, Stream.empty());
 		assertExtensionRegistered(grandChild, MyExtension.class);
 		assertExtensionRegistered(grandChild, YourExtension.class);
 		assertEquals(2, countExtensions(grandChild, MyExtensionApi.class));
@@ -121,12 +119,12 @@ class ExtensionRegistryTests {
 		parent.registerExtension(MyExtension.class);
 		assertEquals(1, countExtensions(parent, MyExtensionApi.class));
 
-		MutableExtensionRegistry child = createRegistryFrom(parent, asList(MyExtension.class, YourExtension.class));
+		MutableExtensionRegistry child = createRegistryFrom(parent, Stream.of(MyExtension.class, YourExtension.class));
 		assertExtensionRegistered(child, MyExtension.class);
 		assertExtensionRegistered(child, YourExtension.class);
 		assertEquals(2, countExtensions(child, MyExtensionApi.class));
 
-		ExtensionRegistry grandChild = createRegistryFrom(child, asList(MyExtension.class, YourExtension.class));
+		ExtensionRegistry grandChild = createRegistryFrom(child, Stream.of(MyExtension.class, YourExtension.class));
 		assertExtensionRegistered(grandChild, MyExtension.class);
 		assertExtensionRegistered(grandChild, YourExtension.class);
 		assertEquals(2, countExtensions(grandChild, MyExtensionApi.class));

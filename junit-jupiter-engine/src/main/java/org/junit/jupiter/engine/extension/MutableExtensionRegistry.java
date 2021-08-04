@@ -95,7 +95,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 * @return a new {@code ExtensionRegistry}; never {@code null}
 	 */
 	public static MutableExtensionRegistry createRegistryFrom(MutableExtensionRegistry parentRegistry,
-			List<Class<? extends Extension>> extensionTypes) {
+			Stream<Class<? extends Extension>> extensionTypes) {
 
 		Preconditions.notNull(parentRegistry, "parentRegistry must not be null");
 
