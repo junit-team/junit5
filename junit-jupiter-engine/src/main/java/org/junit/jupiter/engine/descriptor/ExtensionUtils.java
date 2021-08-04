@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
@@ -25,11 +24,11 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,14 +72,7 @@ final class ExtensionUtils {
 		Preconditions.notNull(parentRegistry, "Parent ExtensionRegistry must not be null");
 		Preconditions.notNull(annotatedElement, "AnnotatedElement must not be null");
 
-		// @formatter:off
-		List<Class<? extends Extension>> extensionTypes = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
-				.map(ExtendWith::value)
-				.flatMap(Arrays::stream)
-				.collect(toList());
-		// @formatter:on
-
-		return MutableExtensionRegistry.createRegistryFrom(parentRegistry, extensionTypes);
+		return MutableExtensionRegistry.createRegistryFrom(parentRegistry, streamExtensionTypes(annotatedElement));
 	}
 
 	/**
@@ -109,12 +101,9 @@ final class ExtensionUtils {
 		fields.sort(orderComparator);
 
 		// @formatter:off
-		fields.forEach(field -> {
-			findRepeatableAnnotations(field, ExtendWith.class).stream()
-				.map(ExtendWith::value)
-				.flatMap(Arrays::stream)
-				.forEach(registrar::registerExtension);
-		});
+		fields.stream()
+			.flatMap(ExtensionUtils::streamExtensionTypes)
+			.forEach(registrar::registerExtension);
 
 		fields.stream()
 			.filter(field -> isAnnotated(field, RegisterExtension.class))
@@ -164,11 +153,23 @@ final class ExtensionUtils {
 		// @formatter:off
 		Arrays.stream(executable.getParameters())
 				.map(parameter -> findRepeatableAnnotations(parameter, index.getAndIncrement(), ExtendWith.class))
-				.flatMap(Collection::stream)
-				.map(ExtendWith::value)
-				.flatMap(Arrays::stream)
+				.flatMap(ExtensionUtils::streamExtensionTypes)
 				.forEach(registrar::registerExtension);
 		// @formatter:on
+	}
+
+	/**
+	 * @since 5.8
+	 */
+	private static Stream<Class<? extends Extension>> streamExtensionTypes(AnnotatedElement annotatedElement) {
+		return streamExtensionTypes(findRepeatableAnnotations(annotatedElement, ExtendWith.class));
+	}
+
+	/**
+	 * @since 5.8
+	 */
+	private static Stream<Class<? extends Extension>> streamExtensionTypes(List<ExtendWith> extendWithAnnotations) {
+		return extendWithAnnotations.stream().map(ExtendWith::value).flatMap(Arrays::stream);
 	}
 
 	/**
