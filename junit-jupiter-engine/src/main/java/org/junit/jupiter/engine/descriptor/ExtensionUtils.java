@@ -21,7 +21,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValu
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -93,28 +92,24 @@ final class ExtensionUtils {
 
 		Predicate<Field> predicate = (instance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
 
-		// Ensure that the list is modifiable, since findFields() returns an unmodifiable list.
-		List<Field> fields = new ArrayList<>(findFields(clazz, predicate, TOP_DOWN));
-
-		// Sort fields based on @Order.
-		fields.sort(orderComparator);
-
-		// @formatter:off
-		fields.stream()
-			.flatMap(ExtensionUtils::streamExtensionTypes)
-			.forEach(registrar::registerExtension);
-
-		fields.stream()
-			.filter(field -> isAnnotated(field, RegisterExtension.class))
-			.forEach(field -> {
-				tryToReadFieldValue(field, instance).ifSuccess(value -> {
-					Preconditions.condition(value instanceof Extension, () -> String.format(
-						"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",
-						field, (value != null ? value.getClass().getName() : null), Extension.class.getName()));
-					registrar.registerExtension((Extension) value, field);
+		findFields(clazz, predicate, TOP_DOWN).stream()//
+				.sorted(orderComparator)//
+				.forEach(field -> {
+					List<ExtendWith> extendWithAnnotations = findRepeatableAnnotations(field, ExtendWith.class);
+					boolean isExtendWithPresent = !extendWithAnnotations.isEmpty();
+					boolean isRegisterExtensionPresent = isAnnotated(field, RegisterExtension.class);
+					if (isExtendWithPresent) {
+						streamExtensionTypes(extendWithAnnotations).forEach(registrar::registerExtension);
+					}
+					if (isRegisterExtensionPresent) {
+						tryToReadFieldValue(field, instance).ifSuccess(value -> {
+							Preconditions.condition(value instanceof Extension, () -> String.format(
+								"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",
+								field, (value != null ? value.getClass().getName() : null), Extension.class.getName()));
+							registrar.registerExtension((Extension) value, field);
+						});
+					}
 				});
-			});
-		// @formatter:on
 	}
 
 	/**
