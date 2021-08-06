@@ -30,20 +30,16 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * or a parameter in a lifecycle method or test method of type {@link Path} or
  * {@link File} that should be resolved into a temporary directory.
  *
- * <p>Multiple temporary directories can be created by supplying different
- * {@linkplain #value identifiers} on the annotation.
- *
  * <p>Please note that {@code @TempDir} is not supported on constructor
  * parameters. Please use field injection instead, by annotating a non-private
  * instance field with {@code @TempDir}.
  *
  * <h3>Temporary Directory Creation</h3>
  *
- * <p>The temporary directory with the supplied {@linkplain #value identifier}
- * is only created if a field in a test class or a parameter in a lifecycle
- * method or test method is annotated with {@code @TempDir}. If the field type
- * or parameter type is neither {@link Path} nor {@link File} or if the
- * temporary directory cannot be created, an
+ * <p>The temporary directory is only created if a field in a test class or a
+ * parameter in a lifecycle method or test method is annotated with
+ * {@code @TempDir}. If the field type or parameter type is neither {@link Path}
+ * nor {@link File} or if the temporary directory cannot be created, an
  * {@link ExtensionConfigurationException} or a
  * {@link ParameterResolutionException} will be thrown as appropriate. In
  * addition, a {@code ParameterResolutionException} will be thrown for a
@@ -52,25 +48,23 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * <h3>Temporary Directory Scope</h3>
  *
  * <p>The scope of the temporary directory depends on where the first
- * {@code @TempDir} annotation with the supplied {@linkplain #value identifier}
- * is encountered when executing a test class. The temporary directory with that
- * identifier will be shared by all tests in a class when the annotation is
- * present with the same identifier on a {@code static} field or on a parameter
- * of a {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method. Otherwise –
+ * {@code @TempDir} annotation is encountered when executing a test class. The
+ * temporary directory will be shared by all tests in a class when the
+ * annotation is present on a {@code static} field or on a parameter of a
+ * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method. Otherwise &mdash;
  * for example, when {@code @TempDir} is only used on instance fields or on
- * parameters in test, {@link org.junit.jupiter.api.BeforeEach @BeforeEach}, or
- * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods – each test will
- * use its own temporary directory.
+ * parameters in test, {@link org.junit.jupiter.api.BeforeEach @BeforeEach},
+ * or {@link org.junit.jupiter.api.AfterEach @AfterEach} methods &mdash; each test
+ * will use its own temporary directory.
  *
  * <h3>Temporary Directory Deletion</h3>
  *
- * <p>When the end of the scope of a temporary directory with a certain
- * {@linkplain #value identifier} is reached, i.e. when the test method or class
- * has finished execution, JUnit will attempt to recursively delete all files
- * and directories in the temporary directory and, finally, the temporary
- * directory itself. In case deletion of a file or directory fails, an
- * {@link IOException} will be thrown that will cause the test or test class to
- * fail.
+ * <p>When the end of the scope of a temporary directory is reached, i.e. when
+ * the test method or class has finished execution, JUnit will attempt to
+ * recursively delete all files and directories in the temporary directory
+ * and, finally, the temporary directory itself. In case deletion of a file or
+ * directory fails, an {@link IOException} will be thrown that will cause the
+ * test or test class to fail.
  *
  * @since 5.4
  */
@@ -79,10 +73,4 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 @Documented
 @API(status = EXPERIMENTAL, since = "5.4")
 public @interface TempDir {
-	/**
-	 * The identifier of the temporary directory.
-	 *
-	 * @since 5.8
-	 */
-	String value() default "";
 }
