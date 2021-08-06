@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
+import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
@@ -44,7 +45,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.engine.config.TempDirBehavior;
+import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -64,12 +65,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	private static final String KEY = "temp.dir";
 	private static final String TEMP_DIR_PREFIX = "junit";
-
-	private final TempDirBehavior behavior;
-
-	TempDirectory(TempDirBehavior behavior) {
-		this.behavior = behavior;
-	}
 
 	/**
 	 * Perform field injection for non-private, {@code static} fields (i.e.,
@@ -154,7 +149,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, ExtensionContext extensionContext) {
-		Namespace namespace = behavior == TempDirBehavior.PER_DECLARATION //
+		Namespace namespace = getScope(extensionContext) == Scope.PER_DECLARATION //
 				? NAMESPACE.append(sourceElement) //
 				: NAMESPACE;
 		Path path = extensionContext.getStore(namespace) //
@@ -162,6 +157,15 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				.get();
 
 		return (type == Path.class) ? path : path.toFile();
+	}
+
+	private Scope getScope(ExtensionContext context) {
+		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent( //
+			Scope.class, //
+			__ -> new EnumConfigurationParameterConverter<>(Scope.class, "@TempDir scope") //
+					.get(TEMP_DIR_SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
+			Scope.class //
+		);
 	}
 
 	private static CloseablePath createTempDir() {
@@ -304,6 +308,14 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				return path;
 			}
 		}
+	}
+
+	enum Scope {
+
+		PER_CONTEXT,
+
+		PER_DECLARATION
+
 	}
 
 }

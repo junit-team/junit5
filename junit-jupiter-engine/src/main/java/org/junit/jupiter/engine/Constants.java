@@ -459,7 +459,7 @@ public final class Constants {
 	 * implement {@link org.junit.jupiter.api.MethodOrderer}.
 	 *
 	 * <p>If not specified, test methods will be ordered using an algorithm that
-	 * is deterministic but intentionally nonobvious.
+	 * is deterministic but intentionally non-obvious.
 	 */
 	@API(status = EXPERIMENTAL, since = "5.7")
 	public static final String DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
@@ -476,19 +476,23 @@ public final class Constants {
 	public static final String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME;
 
 	/**
-	 * Property name used to set the behavior for {@link org.junit.jupiter.api.io.TempDir}: {@value}
+	 * Property name used to set the scope of temporary directories created via
+	 * {@link org.junit.jupiter.api.io.TempDir @TempDir} annotation: {@value}
 	 *
 	 * <h3>Supported Values</h3>
 	 * <ul>
-	 * <li>{@code "per_context"}: enables timeouts
-	 * <li>{@code "per_declaration"}: disables timeouts
+	 * <li>{@code per_context}: creates a single temporary directory for the
+	 * entire test class or method, depending on where it's first declared
+	 * <li>{@code per_declaration}: creates separate temporary directories for
+	 * each declaration site of the {@code @TempDir} annotation.
 	 * </ul>
 	 *
 	 * <p>If not specified, the default is {@code per_declaration}.
 	 */
+	@SuppressWarnings("DeprecatedIsStillUsed")
 	@Deprecated
 	@API(status = DEPRECATED, since = "5.8")
-	public static final String TEMP_DIR_BEHAVIOR_PROPERTY_NAME = JupiterConfiguration.TEMP_DIR_BEHAVIOR_PROPERTY_NAME;
+	public static final String TEMP_DIR_SCOPE_PROPERTY_NAME = JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 
 	private Constants() {
 		/* no-op */

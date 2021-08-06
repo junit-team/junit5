@@ -50,9 +50,6 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	private static final InstantiatingConfigurationParameterConverter<ClassOrderer> classOrdererConverter = //
 		new InstantiatingConfigurationParameterConverter<>(ClassOrderer.class, "class orderer");
 
-	private static final EnumConfigurationParameterConverter<TempDirBehavior> tempDirBehaviorConverter = //
-		new EnumConfigurationParameterConverter<>(TempDirBehavior.class, "@TempDir behavior");
-
 	private final ConfigurationParameters configurationParameters;
 
 	public DefaultJupiterConfiguration(ConfigurationParameters configurationParameters) {
@@ -120,9 +117,4 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 		return classOrdererConverter.get(configurationParameters, DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME);
 	}
 
-	@Override
-	public TempDirBehavior getTempDirBehavior() {
-		return tempDirBehaviorConverter.get(configurationParameters, TEMP_DIR_BEHAVIOR_PROPERTY_NAME,
-			TempDirBehavior.PER_DECLARATION);
-	}
 }

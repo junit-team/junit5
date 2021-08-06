@@ -10,8 +10,13 @@
 
 package org.junit.jupiter.engine.config;
 
-import java.util.Optional;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.Locale;
+import java.util.Optional;
+import java.util.function.Function;
+
+import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
@@ -20,14 +25,15 @@ import org.junit.platform.engine.ConfigurationParameters;
 /**
  * @since 5.4
  */
-class EnumConfigurationParameterConverter<E extends Enum<E>> {
+@API(status = INTERNAL, since = "5.8")
+public class EnumConfigurationParameterConverter<E extends Enum<E>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(EnumConfigurationParameterConverter.class);
 
 	private final Class<E> enumType;
 	private final String enumDisplayName;
 
-	EnumConfigurationParameterConverter(Class<E> enumType, String enumDisplayName) {
+	public EnumConfigurationParameterConverter(Class<E> enumType, String enumDisplayName) {
 		this.enumType = enumType;
 		this.enumDisplayName = enumDisplayName;
 	}
@@ -35,15 +41,21 @@ class EnumConfigurationParameterConverter<E extends Enum<E>> {
 	E get(ConfigurationParameters configParams, String key, E defaultValue) {
 		Preconditions.notNull(configParams, "ConfigurationParameters must not be null");
 
-		Optional<String> optional = configParams.get(key);
-		String constantName = null;
-		if (optional.isPresent()) {
+		return get(key, configParams::get, defaultValue);
+	}
+
+	public E get(String key, Function<String, Optional<String>> lookup, E defaultValue) {
+
+		Optional<String> value = lookup.apply(key);
+
+		if (value.isPresent()) {
+			String constantName = null;
 			try {
-				constantName = optional.get().trim().toUpperCase();
-				E value = Enum.valueOf(enumType, constantName);
+				constantName = value.get().trim().toUpperCase(Locale.ROOT);
+				E result = Enum.valueOf(enumType, constantName);
 				logger.info(() -> String.format("Using %s '%s' set via the '%s' configuration parameter.",
-					enumDisplayName, value, key));
-				return value;
+					enumDisplayName, result, key));
+				return result;
 			}
 			catch (Exception ex) {
 				// local copy necessary for use in lambda expression
