@@ -21,8 +21,10 @@ Java's <<extensions-registration-automatic,`ServiceLoader`>> mechanism.
 
 Developers can register one or more extensions _declaratively_ by annotating a test
 interface, test class, test method, or custom _<<writing-tests-meta-annotations,composed
-annotation>>_ with `@ExtendWith(...)` and supplying class references for the extensions
-to register.
+annotation>>_ with `@ExtendWith(...)` and supplying class references for the extensions to
+register. As of JUnit Jupiter 5.8, `@ExtendWith` may also be declared on fields and on
+parameters in test class constructors, in test methods, and in `@BeforeAll`, `@AfterAll`,
+`@BeforeEach`, and `@AfterEach` lifecycle methods.
 
 For example, to register a custom `RandomParametersExtension` for a particular test
 method, you would annotate the test method as follows.
