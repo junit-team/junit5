@@ -80,6 +80,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* `@TempDir` can now be used to create multiple temporary directories. Instead of creating
+  a single temporary directory per context (i.e. test class or method) every declaration
+  of the `@TempDir` annotation on a field or method parameter now results in a separate
+  temporary directory.
 * New `named()` static factory method in the `Named` interface that serves as an _alias_
   for `Named.of()`. `named()` is intended to be used via `import static`.
 * New `class` URI scheme for dynamic test sources. This allows tests to be located using
