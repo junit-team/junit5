@@ -24,8 +24,12 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @ExtendWith} is a {@linkplain Repeatable repeatable} annotation
- * that is used to register {@linkplain Extension extensions} for the
- * annotated test class or test method.
+ * that is used to register {@linkplain Extension extensions} for the annotated
+ * test class, test interface, test method, field, or parameter.
+ *
+ * <p>Annotated parameters are supported in test class constructors, in test
+ * methods, and in {@code @BeforeAll}, {@code @AfterAll}, {@code @BeforeEach},
+ * and {@code @AfterEach} lifecycle methods.
  *
  * <h3>Supported Extension APIs</h3>
  * <ul>
@@ -49,7 +53,7 @@ import org.apiguardian.api.API;
  * @see RegisterExtension
  * @see Extension
  */
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited

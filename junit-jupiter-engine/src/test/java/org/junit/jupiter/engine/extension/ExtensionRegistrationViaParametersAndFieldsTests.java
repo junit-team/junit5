@@ -139,7 +139,8 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		assertOneTestSucceeded(AllInOneWithTestInstancePerMethodTestCase.class);
 		assertThat(getRegisteredLocalExtensions(listener))//
 				.containsExactly(//
-					"StaticField", // @ExtendWith on static field
+					"StaticField1", // @ExtendWith on static field
+					"StaticField2", // @ExtendWith on static field
 					"ClassLevelExtension1", // @RegisterExtension on static field
 					"ClassLevelExtension2", // @RegisterExtension on static field
 					"ConstructorParameter", // @ExtendWith on parameter in constructor
@@ -148,7 +149,8 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 					"AfterEachParameter", // @ExtendWith on parameter in @AfterEach method
 					"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
 					"TestParameter", // @ExtendWith on parameter in @Test method
-					"InstanceField", // @ExtendWith on instance field
+					"InstanceField1", // @ExtendWith on instance field
+					"InstanceField2", // @ExtendWith on instance field
 					"InstanceLevelExtension1", // @RegisterExtension on instance field
 					"InstanceLevelExtension2"// @RegisterExtension on instance field
 				);
@@ -157,7 +159,8 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		assertOneTestSucceeded(AllInOneWithTestInstancePerClassTestCase.class);
 		assertThat(getRegisteredLocalExtensions(listener))//
 				.containsExactly(//
-					"StaticField", // @ExtendWith on static field
+					"StaticField1", // @ExtendWith on static field
+					"StaticField2", // @ExtendWith on static field
 					"ClassLevelExtension1", // @RegisterExtension on static field
 					"ClassLevelExtension2", // @RegisterExtension on static field
 					"ConstructorParameter", // @ExtendWith on parameter in constructor
@@ -165,7 +168,8 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 					"BeforeEachParameter", // @ExtendWith on parameter in @BeforeEach method
 					"AfterEachParameter", // @ExtendWith on parameter in @AfterEach method
 					"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
-					"InstanceField", // @ExtendWith on instance field
+					"InstanceField1", // @ExtendWith on instance field
+					"InstanceField2", // @ExtendWith on instance field
 					"InstanceLevelExtension1", // @RegisterExtension on instance field
 					"InstanceLevelExtension2", // @RegisterExtension on instance field
 					"TestParameter" // @ExtendWith on parameter in @Test method
@@ -598,11 +602,19 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	@TestInstance(Lifecycle.PER_METHOD)
 	static class AllInOneWithTestInstancePerMethodTestCase {
 
-		@StaticField
-		static String staticField;
+		@StaticField1
+		static String staticField1;
 
-		@InstanceField
-		String instanceField;
+		@StaticField2
+		@ExtendWith(StaticField2.Extension.class)
+		static String staticField2;
+
+		@InstanceField1
+		String instanceField1;
+
+		@InstanceField2
+		@ExtendWith(InstanceField2.Extension.class)
+		String instanceField2;
 
 		@RegisterExtension
 		@Order(1)
@@ -625,36 +637,44 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		}
 
 		@BeforeAll
-		static void beforeAll(@BeforeAllParameter String text) {
+		static void beforeAll(@ExtendWith(BeforeAllParameter.Extension.class) @BeforeAllParameter String text) {
 			assertThat(text).isEqualTo("enigma");
-			assertThat(staticField).isEqualTo("beforeAll - staticField");
+			assertThat(staticField1).isEqualTo("beforeAll - staticField1");
+			assertThat(staticField2).isEqualTo("beforeAll - staticField2");
 		}
 
 		@BeforeEach
 		void beforeEach(@BeforeEachParameter String text) {
 			assertThat(text).isEqualTo("enigma");
-			assertThat(staticField).isEqualTo("beforeAll - staticField");
-			assertThat(instanceField).isEqualTo("beforeEach - instanceField");
+			assertThat(staticField1).isEqualTo("beforeAll - staticField1");
+			assertThat(staticField2).isEqualTo("beforeAll - staticField2");
+			assertThat(instanceField1).isEqualTo("beforeEach - instanceField1");
+			assertThat(instanceField2).isEqualTo("beforeEach - instanceField2");
 		}
 
 		@Test
 		void test(@TestParameter String text) {
 			assertThat(text).isEqualTo("enigma");
-			assertThat(staticField).isEqualTo("beforeAll - staticField");
-			assertThat(instanceField).isEqualTo("beforeEach - instanceField");
+			assertThat(staticField1).isEqualTo("beforeAll - staticField1");
+			assertThat(staticField2).isEqualTo("beforeAll - staticField2");
+			assertThat(instanceField1).isEqualTo("beforeEach - instanceField1");
+			assertThat(instanceField2).isEqualTo("beforeEach - instanceField2");
 		}
 
 		@AfterEach
 		void afterEach(@AfterEachParameter String text) {
 			assertThat(text).isEqualTo("enigma");
-			assertThat(staticField).isEqualTo("beforeAll - staticField");
-			assertThat(instanceField).isEqualTo("beforeEach - instanceField");
+			assertThat(staticField1).isEqualTo("beforeAll - staticField1");
+			assertThat(staticField2).isEqualTo("beforeAll - staticField2");
+			assertThat(instanceField1).isEqualTo("beforeEach - instanceField1");
+			assertThat(instanceField2).isEqualTo("beforeEach - instanceField2");
 		}
 
 		@AfterAll
 		static void afterAll(@AfterAllParameter String text) {
 			assertThat(text).isEqualTo("enigma");
-			assertThat(staticField).isEqualTo("beforeAll - staticField");
+			assertThat(staticField1).isEqualTo("beforeAll - staticField1");
+			assertThat(staticField2).isEqualTo("beforeAll - staticField2");
 		}
 
 	}
@@ -730,7 +750,8 @@ class BaseParameterExtension<T extends Annotation> implements ParameterResolver 
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(BeforeAllParameter.Extension.class)
+// Intentionally NOT annotated as follows
+// @ExtendWith(BeforeAllParameter.Extension.class)
 @interface BeforeAllParameter {
 	class Extension extends BaseParameterExtension<BeforeAllParameter> {
 	}
@@ -811,17 +832,35 @@ class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, Bef
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(InstanceField.Extension.class)
-@interface InstanceField {
-	class Extension extends BaseFieldExtension<InstanceField> {
+@ExtendWith(InstanceField1.Extension.class)
+@interface InstanceField1 {
+	class Extension extends BaseFieldExtension<InstanceField1> {
 	}
 }
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(StaticField.Extension.class)
-@interface StaticField {
-	class Extension extends BaseFieldExtension<StaticField> {
+// Intentionally NOT annotated as follows
+// @ExtendWith(InstanceField2.Extension.class)
+@interface InstanceField2 {
+	class Extension extends BaseFieldExtension<InstanceField2> {
+	}
+}
+
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(StaticField1.Extension.class)
+@interface StaticField1 {
+	class Extension extends BaseFieldExtension<StaticField1> {
+	}
+}
+
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+// Intentionally NOT annotated as follows
+// @ExtendWith(StaticField2.Extension.class)
+@interface StaticField2 {
+	class Extension extends BaseFieldExtension<StaticField2> {
 	}
 }
 
