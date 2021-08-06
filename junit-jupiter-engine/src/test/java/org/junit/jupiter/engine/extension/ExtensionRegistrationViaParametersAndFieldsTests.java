@@ -533,7 +533,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	static class StaticFieldTestCase {
 
 		@MagicField
-		static String staticField1;
+		private static String staticField1;
 
 		@MagicField
 		static String staticField2;
@@ -560,7 +560,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		String instanceField1;
 
 		@MagicField
-		String instanceField2;
+		private String instanceField2;
 
 		@Test
 		void test() {
@@ -606,7 +606,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 
 		@RegisterExtension
 		@Order(1)
-		static Extension classLevelExtension1 = new ClassLevelExtension1();
+		private static Extension classLevelExtension1 = new ClassLevelExtension1();
 
 		@RegisterExtension
 		@Order(2)
@@ -614,7 +614,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 
 		@RegisterExtension
 		@Order(1)
-		Extension instanceLevelExtension1 = new InstanceLevelExtension1();
+		private Extension instanceLevelExtension1 = new InstanceLevelExtension1();
 
 		@RegisterExtension
 		@Order(2)
