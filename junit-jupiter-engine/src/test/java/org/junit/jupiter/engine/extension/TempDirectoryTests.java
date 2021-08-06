@@ -58,7 +58,6 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  *
  * @since 5.4
  */
-@SuppressWarnings("ALL")
 @DisplayName("TempDirectory extension")
 class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
@@ -318,7 +317,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			// @formatter:off
 			TempDirectoryTests.assertSingleFailedTest(results,
 				instanceOf(ParameterResolutionException.class),
-				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+\\] in method \\[.+\\]: .+")),
+				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+] in method \\[.+]: .+")),
 				cause(
 					instanceOf(ExtensionConfigurationException.class),
 					message("Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String")));
@@ -499,6 +498,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	static class AnnotationOnPrivateInstanceFieldTestCase {
 
+		@SuppressWarnings("unused")
 		@TempDir
 		private Path tempDir;
 
@@ -510,6 +510,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	static class AnnotationOnPrivateStaticFieldTestCase {
 
+		@SuppressWarnings("unused")
 		@TempDir
 		private static Path tempDir;
 
@@ -521,6 +522,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	static class AnnotationOnStaticFieldWithUnsupportedTypeTestCase {
 
+		@SuppressWarnings("unused")
 		@TempDir
 		static String tempDir;
 
@@ -532,6 +534,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	static class AnnotationOnInstanceFieldWithUnsupportedTypeTestCase {
 
+		@SuppressWarnings("unused")
 		@TempDir
 		String tempDir;
 
@@ -576,7 +579,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	static class AnnotationOnConstructorParameterTestCase {
 
-		AnnotationOnConstructorParameterTestCase(@TempDir Path tempDir) {
+		AnnotationOnConstructorParameterTestCase(@SuppressWarnings("unused") @TempDir Path tempDir) {
 			// never called
 		}
 
@@ -842,6 +845,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2609
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	static class NonMintPermissionContentInTempDirectoryDoesNotCauseFailureTestCase {
 
 		@Test
@@ -920,6 +924,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2609
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	static class NonMintTempDirectoryPermissionsDoNotCauseFailureTestCase {
 
 		@Nested
