@@ -139,39 +139,39 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		assertOneTestSucceeded(AllInOneWithTestInstancePerMethodTestCase.class);
 		assertThat(getRegisteredLocalExtensions(listener))//
 				.containsExactly(//
-					"StaticField1", // @ExtendWith on static field
+					"ClassLevelExtension2", // @RegisterExtension on static field
 					"StaticField2", // @ExtendWith on static field
 					"ClassLevelExtension1", // @RegisterExtension on static field
-					"ClassLevelExtension2", // @RegisterExtension on static field
+					"StaticField1", // @ExtendWith on static field
 					"ConstructorParameter", // @ExtendWith on parameter in constructor
 					"BeforeAllParameter", // @ExtendWith on parameter in static @BeforeAll method
 					"BeforeEachParameter", // @ExtendWith on parameter in @BeforeEach method
 					"AfterEachParameter", // @ExtendWith on parameter in @AfterEach method
 					"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
 					"TestParameter", // @ExtendWith on parameter in @Test method
-					"InstanceField1", // @ExtendWith on instance field
-					"InstanceField2", // @ExtendWith on instance field
 					"InstanceLevelExtension1", // @RegisterExtension on instance field
-					"InstanceLevelExtension2"// @RegisterExtension on instance field
+					"InstanceField1", // @ExtendWith on instance field
+					"InstanceLevelExtension2", // @RegisterExtension on instance field
+					"InstanceField2" // @ExtendWith on instance field
 				);
 
 		listener.clear();
 		assertOneTestSucceeded(AllInOneWithTestInstancePerClassTestCase.class);
 		assertThat(getRegisteredLocalExtensions(listener))//
 				.containsExactly(//
-					"StaticField1", // @ExtendWith on static field
+					"ClassLevelExtension2", // @RegisterExtension on static field
 					"StaticField2", // @ExtendWith on static field
 					"ClassLevelExtension1", // @RegisterExtension on static field
-					"ClassLevelExtension2", // @RegisterExtension on static field
+					"StaticField1", // @ExtendWith on static field
 					"ConstructorParameter", // @ExtendWith on parameter in constructor
 					"BeforeAllParameter", // @ExtendWith on parameter in static @BeforeAll method
 					"BeforeEachParameter", // @ExtendWith on parameter in @BeforeEach method
 					"AfterEachParameter", // @ExtendWith on parameter in @AfterEach method
 					"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
-					"InstanceField1", // @ExtendWith on instance field
-					"InstanceField2", // @ExtendWith on instance field
 					"InstanceLevelExtension1", // @RegisterExtension on instance field
+					"InstanceField1", // @ExtendWith on instance field
 					"InstanceLevelExtension2", // @RegisterExtension on instance field
+					"InstanceField2", // @ExtendWith on instance field
 					"TestParameter" // @ExtendWith on parameter in @Test method
 				);
 	}
@@ -603,13 +603,23 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	static class AllInOneWithTestInstancePerMethodTestCase {
 
 		@StaticField1
+		@Order(Integer.MAX_VALUE)
 		static String staticField1;
 
 		@StaticField2
 		@ExtendWith(StaticField2.Extension.class)
+		@Order(3)
 		static String staticField2;
 
+		@RegisterExtension
+		private static Extension classLevelExtension1 = new ClassLevelExtension1();
+
+		@RegisterExtension
+		@Order(1)
+		static Extension classLevelExtension2 = new ClassLevelExtension2();
+
 		@InstanceField1
+		@Order(2)
 		String instanceField1;
 
 		@InstanceField2
@@ -618,18 +628,10 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 
 		@RegisterExtension
 		@Order(1)
-		private static Extension classLevelExtension1 = new ClassLevelExtension1();
-
-		@RegisterExtension
-		@Order(2)
-		static Extension classLevelExtension2 = new ClassLevelExtension2();
-
-		@RegisterExtension
-		@Order(1)
 		private Extension instanceLevelExtension1 = new InstanceLevelExtension1();
 
 		@RegisterExtension
-		@Order(2)
+		@Order(3)
 		Extension instanceLevelExtension2 = new InstanceLevelExtension2();
 
 		AllInOneWithTestInstancePerMethodTestCase(@ConstructorParameter String text) {
