@@ -2205,13 +2205,19 @@ You can inject multiple temporary directories by specifying multiple annotated p
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_multiple_directories]
 ----
 
-WARNING: `@TempDir` is not supported on constructor parameters. If you wish to retain a
-single reference to a temp directory across lifecycle methods and the current test method,
-please use field injection, by annotating a non-private instance field with `@TempDir`.
+WARNING: To revert to the old behavior of using a single temporary directory for the
+entire test class or method (depending on which level the annotation is used), you can set
+the `junit.jupiter.tempdir.scope` configuration parameter to `per_context`. However,
+please note that this option is deprecated and will be removed in a future release.
+
+`@TempDir` is not supported on constructor parameters. If you wish to retain a single
+reference to a temp directory across lifecycle methods and the current test method, please
+use field injection, by annotating a non-private instance field with `@TempDir`.
 
 The following example stores a _shared_ temporary directory in a `static` field. This
 allows the same `sharedTempDir` to be used in all lifecycle methods and test methods of
-the test class.
+the test class. For better isolation, you should use an instance field so that each test
+method uses a separate directory.
 
 [source,java,indent=0]
 .A test class that shares a temporary directory across test methods

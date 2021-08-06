@@ -12,6 +12,7 @@ package example;
 
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,6 +44,7 @@ class TempDirectoryDemo {
 
 		Path targetFile = Files.copy(sourceFile, target.resolve("test.txt"));
 
+		assertNotEquals(sourceFile, targetFile);
 		assertEquals(singletonList("a,b,c"), Files.readAllLines(targetFile));
 	}
 	// end::user_guide_multiple_directories[]
