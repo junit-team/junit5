@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
@@ -51,6 +53,8 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.Constants;
+import org.junit.jupiter.engine.config.TempDirBehavior;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -62,6 +66,16 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  */
 @DisplayName("TempDirectory extension (per context)")
 class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
+
+	@SuppressWarnings("deprecation")
+	@Override
+	protected EngineExecutionResults executeTestsForClass(Class<?> testClass) {
+		return executeTests(request() //
+				.selectors(selectClass(testClass)) //
+				.configurationParameter(Constants.TEMP_DIR_BEHAVIOR_PROPERTY_NAME,
+					TempDirBehavior.PER_CONTEXT.toString()) //
+				.build());
+	}
 
 	@BeforeEach
 	@AfterEach

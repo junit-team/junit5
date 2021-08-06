@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
@@ -442,7 +443,7 @@ public final class Constants {
 	 * <li>{@code disabled_on_debug}: disables timeouts while debugging
 	 * </ul>
 	 *
-	 * <p>If not specified, the default is {@code "enabled"}.
+	 * <p>If not specified, the default is {@code enabled}.
 	 *
 	 * @since 5.6
 	 */
@@ -473,6 +474,21 @@ public final class Constants {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8")
 	public static final String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the behavior for {@link org.junit.jupiter.api.io.TempDir}: {@value}
+	 *
+	 * <h3>Supported Values</h3>
+	 * <ul>
+	 * <li>{@code "per_context"}: enables timeouts
+	 * <li>{@code "per_declaration"}: disables timeouts
+	 * </ul>
+	 *
+	 * <p>If not specified, the default is {@code per_declaration}.
+	 */
+	@Deprecated
+	@API(status = DEPRECATED, since = "5.8")
+	public static final String TEMP_DIR_BEHAVIOR_PROPERTY_NAME = JupiterConfiguration.TEMP_DIR_BEHAVIOR_PROPERTY_NAME;
 
 	private Constants() {
 		/* no-op */

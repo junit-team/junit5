@@ -647,13 +647,13 @@ public interface ExtensionContext {
 		public static Namespace create(Object... parts) {
 			Preconditions.notEmpty(parts, "parts array must not be null or empty");
 			Preconditions.containsNoNullElements(parts, "individual parts must not be null");
-			return new Namespace(parts);
+			return new Namespace(new ArrayList<>(Arrays.asList(parts)));
 		}
 
-		private final List<?> parts;
+		private final List<Object> parts;
 
-		private Namespace(Object... parts) {
-			this.parts = new ArrayList<>(Arrays.asList(parts));
+		private Namespace(List<Object> parts) {
+			this.parts = parts;
 		}
 
 		@Override
@@ -673,6 +673,22 @@ public interface ExtensionContext {
 			return this.parts.hashCode();
 		}
 
+		/**
+		 * Create a new namespace by appending the supplied {@code parts} to the
+		 * existing sequence of parts in this namespace.
+		 *
+		 * @return new namespace; never {@code null}
+		 * @since 5.8
+		 */
+		@API(status = EXPERIMENTAL, since = "5.8")
+		public Namespace append(Object... parts) {
+			Preconditions.notEmpty(parts, "parts array must not be null or empty");
+			Preconditions.containsNoNullElements(parts, "individual parts must not be null");
+			ArrayList<Object> newParts = new ArrayList<>(this.parts.size() + parts.length);
+			newParts.addAll(this.parts);
+			Collections.addAll(newParts, parts);
+			return new Namespace(newParts);
+		}
 	}
 
 }

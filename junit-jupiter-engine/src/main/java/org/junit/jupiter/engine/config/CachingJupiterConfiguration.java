@@ -107,4 +107,10 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 			key -> delegate.getDefaultTestClassOrderer());
 	}
 
+	@Override
+	public TempDirBehavior getTempDirBehavior() {
+		return (TempDirBehavior) cache.computeIfAbsent(TEMP_DIR_BEHAVIOR_PROPERTY_NAME,
+			key -> delegate.getTempDirBehavior());
+	}
+
 }
