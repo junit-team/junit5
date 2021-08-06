@@ -22,7 +22,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -48,14 +47,13 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private static final Logger logger = LoggerFactory.getLogger(MutableExtensionRegistry.class);
 
-	private static final List<Function<JupiterConfiguration, Extension>> DEFAULT_EXTENSION_CREATORS = Collections.unmodifiableList(
-		Arrays.asList(//
-			__ -> new DisabledCondition(), //
-			configuration -> new TempDirectory(configuration.getTempDirBehavior()), //
-			__ -> new TimeoutExtension(), //
-			__ -> new RepeatedTestExtension(), //
-			__ -> new TestInfoParameterResolver(), //
-			__ -> new TestReporterParameterResolver()));
+	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
+		new DisabledCondition(), //
+		new TempDirectory(), //
+		new TimeoutExtension(), //
+		new RepeatedTestExtension(), //
+		new TestInfoParameterResolver(), //
+		new TestReporterParameterResolver()));
 
 	/**
 	 * Factory for creating and populating a new root registry with the default
@@ -73,9 +71,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	public static MutableExtensionRegistry createRegistryWithDefaultExtensions(JupiterConfiguration configuration) {
 		MutableExtensionRegistry extensionRegistry = new MutableExtensionRegistry(null);
 
-		DEFAULT_EXTENSION_CREATORS.stream() //
-				.map(creator -> creator.apply(configuration)) //
-				.forEach(extensionRegistry::registerDefaultExtension);
+		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
 		if (configuration.isExtensionAutoDetectionEnabled()) {
 			registerAutoDetectedExtensions(extensionRegistry);
