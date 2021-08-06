@@ -16,7 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
@@ -26,13 +29,24 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -42,6 +56,7 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.Constants;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -52,6 +67,59 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  */
 @DisplayName("TempDirectory extension (per declaration)")
 class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
+
+	@BeforeEach
+	@AfterEach
+	void resetStaticVariables() {
+		AllPossibleDeclarationLocationsTestCase.tempDirs.clear();
+	}
+
+	@TestFactory
+	@DisplayName("resolves separate temp dirs for each annotation declaration")
+	Stream<DynamicTest> resolvesSeparateTempDirsForEachAnnotationDeclaration() {
+		return Arrays.stream(TestInstance.Lifecycle.values()).map(
+			lifecycle -> dynamicTest("with " + lifecycle + " lifecycle", () -> {
+
+				var results = executeTests(request() //
+						.selectors(selectClass(AllPossibleDeclarationLocationsTestCase.class)) //
+						.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
+							lifecycle.toString()).build());
+
+				results.containerEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+				results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+
+				assertThat(AllPossibleDeclarationLocationsTestCase.tempDirs).hasSize(3);
+
+				var classTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("class");
+				assertThat(classTempDirs).containsOnlyKeys("staticField1", "staticField2", "beforeAll1", "beforeAll2",
+					"afterAll1", "afterAll2");
+				assertThat(classTempDirs.values()).hasSize(6).doesNotHaveDuplicates();
+
+				var testATempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testA");
+				assertThat(testATempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1",
+					"instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
+				assertThat(testATempDirs.values()).hasSize(10).doesNotHaveDuplicates();
+
+				var testBTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testB");
+				assertThat(testBTempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1",
+					"instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
+				assertThat(testBTempDirs.values()).hasSize(10).doesNotHaveDuplicates();
+
+				assertThat(testATempDirs.get("staticField1")).isEqualTo(classTempDirs.get("staticField1"));
+				assertThat(testBTempDirs.get("staticField1")).isEqualTo(classTempDirs.get("staticField1"));
+				assertThat(testATempDirs.get("staticField2")).isEqualTo(classTempDirs.get("staticField2"));
+				assertThat(testBTempDirs.get("staticField2")).isEqualTo(classTempDirs.get("staticField2"));
+
+				assertThat(testATempDirs.get("instanceField1")).isNotEqualTo(testBTempDirs.get("instanceField1"));
+				assertThat(testATempDirs.get("instanceField2")).isNotEqualTo(testBTempDirs.get("instanceField2"));
+				assertThat(testATempDirs.get("beforeEach1")).isNotEqualTo(testBTempDirs.get("beforeEach1"));
+				assertThat(testATempDirs.get("beforeEach2")).isNotEqualTo(testBTempDirs.get("beforeEach2"));
+				assertThat(testATempDirs.get("test1")).isNotEqualTo(testBTempDirs.get("test1"));
+				assertThat(testATempDirs.get("test2")).isNotEqualTo(testBTempDirs.get("test2"));
+				assertThat(testATempDirs.get("afterEach1")).isNotEqualTo(testBTempDirs.get("afterEach1"));
+				assertThat(testATempDirs.get("afterEach2")).isNotEqualTo(testBTempDirs.get("afterEach2"));
+			}));
+	}
 
 	@Test
 	@DisplayName("does not prevent constructor parameter resolution")
@@ -830,6 +898,84 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				assertTrue(tempDir.exists());
 				assertSame(initialTempDir, tempDir);
 			}
+		}
+	}
+
+	@DisplayName("class")
+	static class AllPossibleDeclarationLocationsTestCase {
+
+		static final Map<String, Map<String, Path>> tempDirs = new HashMap<>();
+
+		@TempDir
+		static Path staticField1;
+
+		@TempDir
+		static Path staticField2;
+
+		@TempDir
+		Path instanceField1;
+
+		@TempDir
+		Path instanceField2;
+
+		@BeforeAll
+		static void beforeAll(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"staticField1", staticField1, //
+				"staticField2", staticField2, //
+				"beforeAll1", param1, //
+				"beforeAll2", param2 //
+			));
+		}
+
+		@BeforeEach
+		void beforeEach(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"staticField1", staticField1, //
+				"staticField2", staticField2, //
+				"instanceField1", instanceField1, //
+				"instanceField2", instanceField2, //
+				"beforeEach1", param1, //
+				"beforeEach2", param2 //
+			));
+		}
+
+		@Test
+		@DisplayName("testA")
+		void testA(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"test1", param1, //
+				"test2", param2 //
+			));
+		}
+
+		@Test
+		@DisplayName("testB")
+		void testB(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"test1", param1, //
+				"test2", param2 //
+			));
+		}
+
+		@AfterEach
+		void afterEach(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"afterEach1", param1, //
+				"afterEach2", param2 //
+			));
+		}
+
+		@AfterAll
+		static void afterAll(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"afterAll1", param1, //
+				"afterAll2", param2 //
+			));
+		}
+
+		private static Map<String, Path> getTempDirs(TestInfo testInfo) {
+			return tempDirs.computeIfAbsent(testInfo.getDisplayName(), __ -> new LinkedHashMap<>());
 		}
 	}
 }
