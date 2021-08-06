@@ -113,11 +113,6 @@ allprojects {
 				snapshotsOnly()
 			}
 		}
-		maven(url = "https://jitpack.io") {
-			mavenContent {
-				includeModule("com.github.gunnarmorling", "jfrunit")
-			}
-		}
 	}
 }
 

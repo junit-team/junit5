@@ -10,20 +10,19 @@
 
 package org.junit.platform.jfr;
 
-import static dev.morling.jfrunit.ExpectedEvent.event;
-import static dev.morling.jfrunit.JfrEventsAssert.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-
-import dev.morling.jfrunit.EnableEvent;
-import dev.morling.jfrunit.JfrEventTest;
-import dev.morling.jfrunit.JfrEvents;
+import static org.moditect.jfrunit.ExpectedEvent.event;
+import static org.moditect.jfrunit.JfrEventsAssert.assertThat;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly;
+import org.moditect.jfrunit.EnableEvent;
+import org.moditect.jfrunit.JfrEventTest;
+import org.moditect.jfrunit.JfrEvents;
 
 @JfrEventTest
 public class FlightRecordingExecutionListenerIntegrationTests {
