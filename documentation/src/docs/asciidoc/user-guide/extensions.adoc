@@ -125,8 +125,8 @@ registered last and _after_ callback extensions to be registered first, relative
 programmatically registered extensions.
 ====
 
-NOTE: `@RegisterExtension` fields must not be `private` or `null` (at evaluation time) but
-may be either `static` or non-static.
+NOTE: `@RegisterExtension` fields must not be `null` (at evaluation time) but may be
+either `static` or non-static.
 
 [[extensions-registration-programmatic-static-fields]]
 ===== Static Fields
@@ -159,9 +159,9 @@ include::{testDir}/example/registration/WebServerDemo.java[tags=user_guide]
 
 The Kotlin programming language does not have the concept of a `static` field. However,
 the compiler can be instructed to generate static fields using annotations. Since, as
-stated earlier, `@RegisterExtension` fields must not be `private` nor `null`, one
-**cannot** use the `@JvmStatic` annotation in Kotlin as it generates `private` fields.
-Rather, the `@JvmField` annotation must be used.
+stated earlier, `@RegisterExtension` fields must not be `null`, one **cannot** use the
+`@JvmStatic` annotation in Kotlin as it generates `private` fields. Rather, the
+`@JvmField` annotation must be used.
 
 The following example is a version of the `WebServerDemo` from the previous section that
 has been ported to Kotlin.

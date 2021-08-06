@@ -16,7 +16,6 @@ import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.util.ReflectionUtils.findFields;
 import static org.junit.platform.commons.util.ReflectionUtils.getDeclaredConstructor;
-import static org.junit.platform.commons.util.ReflectionUtils.isNotPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
 
 import java.lang.reflect.AnnotatedElement;
@@ -108,9 +107,6 @@ final class ExtensionUtils {
 		fields.stream()
 			.filter(field -> isAnnotated(field, RegisterExtension.class))
 			.forEach(field -> {
-				Preconditions.condition(isNotPrivate(field), () -> String.format(
-					"Failed to register extension via @RegisterExtension field [%s]: field must not be private.",
-					field));
 				tryToReadFieldValue(field, instance).ifSuccess(value -> {
 					Preconditions.condition(value instanceof Extension, () -> String.format(
 						"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",

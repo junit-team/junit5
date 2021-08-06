@@ -30,8 +30,8 @@ import org.apiguardian.api.API;
  * to pass arguments to the extension's constructor, {@code static} factory
  * method, or builder API.
  *
- * <p>{@code @RegisterExtension} fields must not be {@code private} or
- * {@code null} (when evaluated) but may be either {@code static} or non-static.
+ * <p>{@code @RegisterExtension} fields must not be {@code null} (when evaluated)
+ * but may be either {@code static} or non-static.
  *
  * <h3>Static Fields</h3>
  *
