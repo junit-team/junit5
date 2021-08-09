@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
@@ -95,17 +96,29 @@ final class ExtensionUtils {
 		findFields(clazz, predicate, TOP_DOWN).stream()//
 				.sorted(orderComparator)//
 				.forEach(field -> {
-					List<ExtendWith> extendWithAnnotations = findRepeatableAnnotations(field, ExtendWith.class);
-					boolean isExtendWithPresent = !extendWithAnnotations.isEmpty();
+					List<Class<? extends Extension>> extensionTypes = streamExtensionTypes(field).collect(toList());
+					boolean isExtendWithPresent = !extensionTypes.isEmpty();
 					boolean isRegisterExtensionPresent = isAnnotated(field, RegisterExtension.class);
 					if (isExtendWithPresent) {
-						streamExtensionTypes(extendWithAnnotations).forEach(registrar::registerExtension);
+						extensionTypes.forEach(registrar::registerExtension);
 					}
 					if (isRegisterExtensionPresent) {
 						tryToReadFieldValue(field, instance).ifSuccess(value -> {
 							Preconditions.condition(value instanceof Extension, () -> String.format(
 								"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",
 								field, (value != null ? value.getClass().getName() : null), Extension.class.getName()));
+
+							if (isExtendWithPresent) {
+								Class<?> valueType = value.getClass();
+								extensionTypes.forEach(extensionType -> {
+									Preconditions.condition(!extensionType.equals(valueType),
+										() -> String.format("Failed to register extension via field [%s]. "
+												+ "The field registers an extension of type [%s] via @RegisterExtension and @ExtendWith, "
+												+ "but only one registration of a given extension type is permitted.",
+											field, valueType.getName()));
+								});
+							}
+
 							registrar.registerExtension((Extension) value, field);
 						});
 					}

@@ -16,6 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -61,13 +64,14 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.injection.sample.LongParameterResolver;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Integration tests that verify support for extension registration via
- * {@link ExtendWith @ExtendWith} on annotations on parameters and fields.
+ * {@link ExtendWith @ExtendWith} on parameters and fields.
  *
  * @since 5.8
  */
@@ -131,6 +135,26 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	@Test
 	void fieldsWithTestInstancePerClass() {
 		assertOneTestSucceeded(TestInstancePerClassFieldTestCase.class);
+	}
+
+	@Test
+	@TrackLogRecords
+	void multipleRegistrationsViaField(LogRecordListener listener) {
+		assertOneTestSucceeded(MultipleRegistrationsViaFieldTestCase.class);
+		assertThat(getRegisteredLocalExtensions(listener)).containsExactly("LongParameterResolver", "DummyExtension");
+	}
+
+	@Test
+	void duplicateRegistrationViaField() {
+		Class<?> testClass = DuplicateRegistrationViaFieldTestCase.class;
+		String expectedMessage = "Failed to register extension via field "
+				+ "[org.junit.jupiter.api.extension.Extension "
+				+ "org.junit.jupiter.engine.extension.ExtensionRegistrationViaParametersAndFieldsTests$DuplicateRegistrationViaFieldTestCase.dummy]. "
+				+ "The field registers an extension of type [org.junit.jupiter.engine.extension.DummyExtension] "
+				+ "via @RegisterExtension and @ExtendWith, but only one registration of a given extension type is permitted.";
+
+		executeTestsForClass(testClass).testEvents().assertThatEvents().haveExactly(1,
+			finishedWithFailure(instanceOf(PreconditionViolationException.class), message(expectedMessage)));
 	}
 
 	@Test
@@ -531,6 +555,28 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		}
 	}
 
+	static class MultipleRegistrationsViaFieldTestCase {
+
+		@ExtendWith(LongParameterResolver.class)
+		@RegisterExtension
+		Extension dummy = new DummyExtension();
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class DuplicateRegistrationViaFieldTestCase {
+
+		@ExtendWith(DummyExtension.class)
+		@RegisterExtension
+		Extension dummy = new DummyExtension();
+
+		@Test
+		void test() {
+		}
+	}
+
 	/**
 	 * The {@link MagicField.Extension} is registered via a static field.
 	 */
@@ -789,6 +835,9 @@ class BaseParameterExtension<T extends Annotation> implements ParameterResolver 
 @interface TestParameter {
 	class Extension extends BaseParameterExtension<TestParameter> {
 	}
+}
+
+class DummyExtension implements Extension {
 }
 
 class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, BeforeEachCallback {
