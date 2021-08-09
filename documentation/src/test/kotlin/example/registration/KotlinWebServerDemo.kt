@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.RegisterExtension
 class KotlinWebServerDemo {
 
     companion object {
-        @JvmField
+        @JvmStatic
         @RegisterExtension
         val server = WebServerExtension.builder()
                 .enableSecurity(false)

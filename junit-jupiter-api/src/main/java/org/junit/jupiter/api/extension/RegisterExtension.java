@@ -81,7 +81,9 @@ import org.apiguardian.api.API;
  * {@code @RegisterExtension} fields with {@link org.junit.jupiter.api.Order @Order}.
  * Any {@code @RegisterExtension} field not annotated with {@code @Order} will be
  * ordered using the {@link org.junit.jupiter.api.Order#DEFAULT default} order
- * value.
+ * value. Note that {@code @ExtendWith} fields can also be ordered with
+ * {@code @Order}, relative to {@code @RegisterExtension} fields and other
+ * {@code @ExtendWith} fields.
  *
  * <h3>Example Usage</h3>
  *

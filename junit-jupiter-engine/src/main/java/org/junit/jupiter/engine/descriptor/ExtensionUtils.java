@@ -76,8 +76,8 @@ final class ExtensionUtils {
 
 	/**
 	 * Register extensions using the supplied registrar from fields in the supplied
-	 * class that are meta-annotated with {@link ExtendWith @ExtendWith} or
-	 * annotated with {@link RegisterExtension @RegisterExtension}.
+	 * class that are annotated with {@link ExtendWith @ExtendWith} or
+	 * {@link RegisterExtension @RegisterExtension}.
 	 *
 	 * <p>The extensions will be sorted according to {@link Order @Order} semantics
 	 * prior to registration.
@@ -141,7 +141,7 @@ final class ExtensionUtils {
 	/**
 	 * Register extensions using the supplied registrar from parameters in the
 	 * supplied {@link Executable} (i.e., a {@link java.lang.reflect.Constructor}
-	 * or {@link java.lang.reflect.Method}) that are meta-annotated with
+	 * or {@link java.lang.reflect.Method}) that are annotated with
 	 * {@link ExtendWith @ExtendWith}.
 	 *
 	 * @param registrar the registrar with which to register the extensions; never {@code null}
