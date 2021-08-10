@@ -21,8 +21,8 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 /**
- * {@code @SelectDirectories} specifies the directories to
- * <em>select</em> when running a test suite on the JUnit Platform.
+ * {@code @SelectDirectories} specifies the directories to <em>select</em> when
+ * running a test suite on the JUnit Platform.
  *
  * @since 1.8
  * @see Suite

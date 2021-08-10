@@ -27,6 +27,9 @@ import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UriSelector;
 
+/**
+ * @since 1.8
+ */
 class AdditionalDiscoverySelectors {
 
 	static List<UriSelector> selectUris(String... uris) {

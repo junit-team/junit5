@@ -39,7 +39,8 @@ import org.apiguardian.api.API.Status;
 public @interface SelectClasspathResources {
 
 	/**
-	 * An array of one or more {@link SelectClasspathResource SelectClasspathResources}.
+	 * An array of one or more {@link SelectClasspathResource @SelectClasspathResource}
+	 * declarations.
 	 */
 	SelectClasspathResource[] value();
 

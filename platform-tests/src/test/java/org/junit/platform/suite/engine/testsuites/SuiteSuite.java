@@ -14,9 +14,11 @@ import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
+/**
+ * @since 1.8
+ */
 @Suite
 @IncludeClassNamePatterns(".*")
 @SelectClasses(SelectClassesSuite.class)
 public class SuiteSuite {
-
 }

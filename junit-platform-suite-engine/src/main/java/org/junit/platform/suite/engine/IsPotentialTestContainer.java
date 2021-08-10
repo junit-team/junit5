@@ -16,6 +16,9 @@ import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 
 import java.util.function.Predicate;
 
+/**
+ * @since 1.8
+ */
 final class IsPotentialTestContainer implements Predicate<Class<?>> {
 
 	@Override

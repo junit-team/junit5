@@ -24,6 +24,9 @@ import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
+/**
+ * @since 1.8
+ */
 final class ClassSelectorResolver implements SelectorResolver {
 
 	private static final IsSuiteClass isSuiteClass = new IsSuiteClass();

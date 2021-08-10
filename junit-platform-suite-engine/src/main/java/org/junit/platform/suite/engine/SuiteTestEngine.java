@@ -26,9 +26,9 @@ import org.junit.platform.engine.UniqueId;
 /**
  * The JUnit Platform Suite {@link org.junit.platform.engine.TestEngine TestEngine}.
  *
- * @since 5.8
+ * @since 1.8
  */
-@API(status = INTERNAL, since = "5.8")
+@API(status = INTERNAL, since = "1.8")
 public final class SuiteTestEngine implements TestEngine {
 
 	@Override

@@ -22,7 +22,8 @@ import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.annotation.Testable;
 
 /**
- * {@code @Suite} marks class as a test suite on the JUnit Platform.
+ * {@code @Suite} marks a class as a test suite on the JUnit Platform.
+ *
  * <p>Selector and filter annotations are used to control the contents of the
  * suite. Additionally configuration can be passed to the suite via the
  * configuration annotations.

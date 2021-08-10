@@ -39,7 +39,7 @@ import org.apiguardian.api.API.Status;
 public @interface SelectFiles {
 
 	/**
-	 * An array of one or more {@link SelectFile SelectFiles}.
+	 * An array of one or more {@link SelectFile @SelectFile} declarations.
 	 */
 	SelectFile[] value();
 

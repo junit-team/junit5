@@ -53,6 +53,9 @@ import org.junit.platform.suite.api.SelectModules;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
 
+/**
+ * @since 1.8
+ */
 @API(status = Status.INTERNAL, since = "1.8", consumers = { "org.junit.platform.suite.engine",
 		"org.junit.platform.runner" })
 public final class SuiteLauncherDiscoveryRequestBuilder {

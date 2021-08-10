@@ -26,6 +26,9 @@ import org.junit.platform.launcher.core.EngineExecutionOrchestrator;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry;
 
+/**
+ * @since 1.8
+ */
 class SuiteLauncher {
 
 	private final EngineExecutionOrchestrator executionOrchestrator = new EngineExecutionOrchestrator();

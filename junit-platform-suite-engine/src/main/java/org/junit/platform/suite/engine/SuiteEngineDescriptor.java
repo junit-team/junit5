@@ -13,6 +13,9 @@ package org.junit.platform.suite.engine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
+/**
+ * @since 1.8
+ */
 final class SuiteEngineDescriptor extends EngineDescriptor {
 
 	static final String ENGINE_ID = "junit-platform-suite";

@@ -34,7 +34,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder;
 
 /**
- * {@link TestDescriptor} for tests based on the JUnit Platform Launcher API.
+ * {@link TestDescriptor} for tests based on the JUnit Platform Suite API.
  *
  * <h3>Default Display Names</h3>
  *

@@ -30,6 +30,9 @@ import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 import org.junit.platform.suite.engine.testsuites.CyclicSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
 
+/**
+ * @since 1.8
+ */
 class SuiteTestDescriptorTests {
 
 	UniqueId engineId = UniqueId.forEngine(SuiteEngineDescriptor.ENGINE_ID);

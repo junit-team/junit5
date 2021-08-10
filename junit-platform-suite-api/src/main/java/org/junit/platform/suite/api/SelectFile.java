@@ -22,13 +22,14 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 /**
- * {@code @SelectFiles} specifies the files to
- * <em>select</em> when running a test suite on the JUnit Platform.
+ * {@code @SelectFile} is a {@linkplain Repeatable repeatable} annotation that
+ * specifies a file to <em>select</em> when running a test suite on the JUnit
+ * Platform.
  *
+ * @since 1.8
  * @see Suite
  * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectFile(String, org.junit.platform.engine.discovery.FilePosition)
- * @since 1.8
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -39,18 +40,18 @@ import org.apiguardian.api.API.Status;
 public @interface SelectFile {
 
 	/**
-	 * A file to select.
+	 * The file to select.
 	 */
 	String value();
 
 	/**
-	 * The line number; ignored if not greater than zero.
+	 * The line number within the file; ignored if not greater than zero.
 	 */
 	int line() default 0;
 
 	/**
-	 * The column number; ignored if the line number is ignored; ignored if not
-	 * greater than zero.
+	 * The column number within the file; ignored if the line number is ignored
+	 * or if not greater than zero.
 	 */
 	int column() default 0;
 

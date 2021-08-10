@@ -15,6 +15,9 @@ import java.util.function.Predicate;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.suite.api.Suite;
 
+/**
+ * @since 1.8
+ */
 final class IsSuiteClass implements Predicate<Class<?>> {
 
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();

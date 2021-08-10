@@ -22,8 +22,9 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 /**
- * {@code @Configuration} specifies the configuration {@linkplain #key key} and
- * {@linkplain #value value} pairs to be added to the discovery request when running
+ * {@code @ConfigurationParameter} is a {@linkplain Repeatable repeatable}
+ * annotation that specifies a configuration {@link #key key} and
+ * {@link #value value} pair to be added to the discovery request when running
  * a test suite on the JUnit Platform.
  *
  * @since 1.8
@@ -40,13 +41,13 @@ import org.apiguardian.api.API.Status;
 public @interface ConfigurationParameter {
 
 	/**
-	 * The configuration parameter key under which to add the
-	 * value to the discovery request; never {@code null} or blank.
+	 * The configuration parameter key under which to add the {@link #value() value}
+	 * to the discovery request; never {@code null} or blank.
 	 */
 	String key();
 
 	/**
-	 * The value to add to the discovery request.
+	 * The value to add to the discovery request for the specified {@link #key() key}.
 	 */
 	String value();
 

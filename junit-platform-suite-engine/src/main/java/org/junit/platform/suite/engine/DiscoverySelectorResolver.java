@@ -14,6 +14,9 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver;
 
+/**
+ * @since 1.8
+ */
 final class DiscoverySelectorResolver {
 
 	// @formatter:off

@@ -21,8 +21,8 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 /**
- * {@code @SelectUris} specifies the uris to
- * <em>select</em> when running a test suite on the JUnit Platform.
+ * {@code @SelectUris} specifies the URIs to <em>select</em> when running a test
+ * suite on the JUnit Platform.
  *
  * @since 1.8
  * @see Suite
@@ -37,7 +37,7 @@ import org.apiguardian.api.API.Status;
 public @interface SelectUris {
 
 	/**
-	 * One or more uris to select.
+	 * One or more URIs to select.
 	 */
 	String[] value();
 
