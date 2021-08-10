@@ -60,6 +60,8 @@ on GitHub.
 * The `IndicativeSentences` `DisplayNameGenerator` no longer includes the display name of
   the enclosing class when generating an _indicative sentence_ if the enclosing class is
   not configured to use the `IndicativeSentences` display name generator as well.
+* The `TypedArgumentConverter` base class now supports the conversion of a `null` source
+  value in parameterized tests.
 
 ==== Deprecations and Breaking Changes
 

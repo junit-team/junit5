@@ -40,6 +40,9 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 
 	@Override
 	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+		if (source == null) {
+			return convert(null);
+		}
 		if (!this.sourceType.isAssignableFrom(source.getClass())) {
 			throw new ArgumentConversionException("Can only convert objects of type " + this.sourceType.getName());
 		}

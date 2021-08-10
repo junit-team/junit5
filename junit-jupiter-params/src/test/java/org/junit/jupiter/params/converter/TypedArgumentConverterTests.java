@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -42,13 +44,23 @@ class TypedArgumentConverterTests {
 	void convertsSourceToTarget() {
 		assertAll(//
 			() -> assertConverts("abcd", 4), //
-			() -> assertConverts("", 0) //
+			() -> assertConverts("", 0), //
+			() -> assertConverts(null, 0)//
 		);
 	}
 
 	private void assertConverts(String input, int expected) {
 		int length = new StringLengthArgumentConverter().convert(input);
 		assertThat(length).isEqualTo(expected);
+	}
+
+	/**
+	 * @since 5.8
+	 */
+	@ParameterizedTest
+	@NullSource
+	void nullSourceIntegrationTest(@ConvertWith(StringLengthArgumentConverter.class) int length) {
+		assertThat(length).isEqualTo(0);
 	}
 
 	private static class StringLengthArgumentConverter extends TypedArgumentConverter<String, Integer> {
@@ -63,7 +75,7 @@ class TypedArgumentConverterTests {
 
 		@Override
 		protected Integer convert(String source) throws ArgumentConversionException {
-			return source.length();
+			return (source != null ? source.length() : 0);
 		}
 	}
 
