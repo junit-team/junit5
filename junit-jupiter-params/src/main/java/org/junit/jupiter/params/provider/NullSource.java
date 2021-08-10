@@ -25,7 +25,8 @@ import org.apiguardian.api.API;
  * {@code null} argument to the annotated {@code @ParameterizedTest} method.
  *
  * <p>Note that {@code @NullSource} cannot be used for an argument that has
- * a primitive type.
+ * a primitive type, unless the argument is converted to a corresponding wrapper
+ * type with an {@link org.junit.jupiter.params.converter.ArgumentConverter}.
  *
  * @since 5.4
  * @see org.junit.jupiter.params.provider.ArgumentsSource
