@@ -283,13 +283,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectClasspathResource.html#column()">column()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectClasspathResource.html" title="annotation in org.junit.platform.suite.api">SelectClasspathResource</a></dt>
 <dd>
-<div class="block">The column number; ignored if the line number is ignored; ignored if not
- greater than zero.</div>
+<div class="block">The column number within the classpath resource; ignored if the line number
+ is ignored or if not greater than zero.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectFile.html#column()">column()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectFile.html" title="annotation in org.junit.platform.suite.api">SelectFile</a></dt>
 <dd>
-<div class="block">The column number; ignored if the line number is ignored; ignored if not
- greater than zero.</div>
+<div class="block">The column number within the file; ignored if the line number is ignored
+ or if not greater than zero.</div>
 </dd>
 <dt><a href="../org.junit.platform.console/org/junit/platform/console/options/CommandLineOptions.html" title="class in org.junit.platform.console.options"><span class="type-name-link">CommandLineOptions</span></a> - Class in <a href="../org.junit.platform.console/org/junit/platform/console/options/package-summary.html">org.junit.platform.console.options</a></dt>
 <dd>&nbsp;</dd>
@@ -388,8 +388,9 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><span class="type-name-link">ConfigurationParameter</span></a> - Annotation Interface in <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/package-summary.html">org.junit.platform.suite.api</a></dt>
 <dd>
-<div class="block"><code>@Configuration</code> specifies the configuration <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html#key()">key</a> and
- <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html#value()">value</a> pairs to be added to the discovery request when running
+<div class="block"><code>@ConfigurationParameter</code> is a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link">repeatable</a>
+ annotation that specifies a configuration <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html#key()"><code>key</code></a> and
+ <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html#value()"><code>value</code></a> pair to be added to the discovery request when running
  a test suite on the JUnit Platform.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html#configurationParameters(java.util.Map)">configurationParameters(Map&lt;String, String&gt;)</a></span> - Method in class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryRequestBuilder</a></dt>
@@ -409,8 +410,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameters.html" title="annotation in org.junit.platform.suite.api"><span class="type-name-link">ConfigurationParameters</span></a> - Annotation Interface in <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/package-summary.html">org.junit.platform.suite.api</a></dt>
 <dd>
-<div class="block"><code>@Configurations</code> is a container for one or more
- <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>@Configuration</code></a> declarations.</div>
+<div class="block"><code>@ConfigurationParameters</code> is a container for one or more
+ <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>@ConfigurationParameter</code></a> declarations.</div>
 </dd>
 <dt><a href="../org.junit.platform.console/org/junit/platform/console/ConsoleLauncher.html" title="class in org.junit.platform.console"><span class="type-name-link">ConsoleLauncher</span></a> - Class in <a href="../org.junit.platform.console/org/junit/platform/console/package-summary.html">org.junit.platform.console</a></dt>
 <dd>

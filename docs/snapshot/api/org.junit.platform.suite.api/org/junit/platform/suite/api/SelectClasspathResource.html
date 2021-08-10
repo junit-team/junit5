@@ -83,8 +83,9 @@ loadScripts(document, 'script');</script>
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link">@Repeatable</a>(<a href="SelectClasspathResources.html" title="annotation in org.junit.platform.suite.api">SelectClasspathResources.class</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">SelectClasspathResource</span></div>
-<div class="block"><code>@SelectClasspathResource</code> specifies the classpath resource to
- <em>select</em> when running a test suite on the JUnit Platform.</div>
+<div class="block"><code>@SelectClasspathResource</code> is a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link">repeatable</a>
+ annotation that specifies a classpath resource to <em>select</em> when running
+ a test suite on the JUnit Platform.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.8</dd>
@@ -108,7 +109,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#value()">value</a></span></code></div>
 <div class="col-last even-row-color">
-<div class="block">A classpath resource name to select.</div>
+<div class="block">The name of the classpath resource to select.</div>
 </div>
 </div>
 </section>
@@ -125,13 +126,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>int</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#column()">column</a></span></code></div>
 <div class="col-last even-row-color">
-<div class="block">The column number; ignored if the line number is ignored; ignored if not
- greater than zero.</div>
+<div class="block">The column number within the classpath resource; ignored if the line number
+ is ignored or if not greater than zero.</div>
 </div>
 <div class="col-first odd-row-color"><code>int</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#line()">line</a></span></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The line number; ignored if not greater than zero.</div>
+<div class="block">The line number within the classpath resource; ignored if not greater than
+ zero.</div>
 </div>
 </div>
 </section>
@@ -149,7 +151,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="value()">
 <h3>value</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">value</span></div>
-<div class="block">A classpath resource name to select.</div>
+<div class="block">The name of the classpath resource to select.</div>
 </section>
 </li>
 </ul>
@@ -163,7 +165,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="line()">
 <h3>line</h3>
 <div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">line</span></div>
-<div class="block">The line number; ignored if not greater than zero.</div>
+<div class="block">The line number within the classpath resource; ignored if not greater than
+ zero.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>0</dd>
@@ -174,8 +177,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="column()">
 <h3>column</h3>
 <div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">column</span></div>
-<div class="block">The column number; ignored if the line number is ignored; ignored if not
- greater than zero.</div>
+<div class="block">The column number within the classpath resource; ignored if the line number
+ is ignored or if not greater than zero.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>0</dd>

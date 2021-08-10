@@ -212,11 +212,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api">ConfigurationParameter</a></dt>
 <dd>
-<div class="block">The value to add to the discovery request.</div>
+<div class="block">The value to add to the discovery request for the specified <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html#key()"><code>key</code></a>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameters.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameters.html" title="annotation in org.junit.platform.suite.api">ConfigurationParameters</a></dt>
 <dd>
-<div class="block">An array of one or more <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>Configurations</code></a>.</div>
+<div class="block">An array of one or more <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>@ConfigurationParameter</code></a>
+ declarations.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ExcludeClassNamePatterns.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/ExcludeClassNamePatterns.html" title="annotation in org.junit.platform.suite.api">ExcludeClassNamePatterns</a></dt>
 <dd>
@@ -256,11 +257,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectClasspathResource.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectClasspathResource.html" title="annotation in org.junit.platform.suite.api">SelectClasspathResource</a></dt>
 <dd>
-<div class="block">A classpath resource name to select.</div>
+<div class="block">The name of the classpath resource to select.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectClasspathResources.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectClasspathResources.html" title="annotation in org.junit.platform.suite.api">SelectClasspathResources</a></dt>
 <dd>
-<div class="block">An array of one or more <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectClasspathResource.html" title="annotation in org.junit.platform.suite.api"><code>SelectClasspathResources</code></a>.</div>
+<div class="block">An array of one or more <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectClasspathResource.html" title="annotation in org.junit.platform.suite.api"><code>@SelectClasspathResource</code></a>
+ declarations.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectDirectories.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectDirectories.html" title="annotation in org.junit.platform.suite.api">SelectDirectories</a></dt>
 <dd>
@@ -268,11 +270,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectFile.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectFile.html" title="annotation in org.junit.platform.suite.api">SelectFile</a></dt>
 <dd>
-<div class="block">A file to select.</div>
+<div class="block">The file to select.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectFiles.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectFiles.html" title="annotation in org.junit.platform.suite.api">SelectFiles</a></dt>
 <dd>
-<div class="block">An array of one or more <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectFile.html" title="annotation in org.junit.platform.suite.api"><code>SelectFiles</code></a>.</div>
+<div class="block">An array of one or more <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectFile.html" title="annotation in org.junit.platform.suite.api"><code>@SelectFile</code></a> declarations.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectModules.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectModules.html" title="annotation in org.junit.platform.suite.api">SelectModules</a></dt>
 <dd>
@@ -284,7 +286,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectUris.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectUris.html" title="annotation in org.junit.platform.suite.api">SelectUris</a></dt>
 <dd>
-<div class="block">One or more uris to select.</div>
+<div class="block">One or more URIs to select.</div>
 </dd>
 <dt><span class="member-name-link"><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SuiteDisplayName.html#value()">value()</a></span> - Element in annotation interface org.junit.platform.suite.api.<a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SuiteDisplayName.html" title="annotation in org.junit.platform.suite.api">SuiteDisplayName</a></dt>
 <dd>

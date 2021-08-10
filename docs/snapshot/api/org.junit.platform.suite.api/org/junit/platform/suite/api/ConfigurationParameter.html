@@ -83,8 +83,9 @@ loadScripts(document, 'script');</script>
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link">@Repeatable</a>(<a href="ConfigurationParameters.html" title="annotation in org.junit.platform.suite.api">ConfigurationParameters.class</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">ConfigurationParameter</span></div>
-<div class="block"><code>@Configuration</code> specifies the configuration <a href="#key()">key</a> and
- <a href="#value()">value</a> pairs to be added to the discovery request when running
+<div class="block"><code>@ConfigurationParameter</code> is a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link">repeatable</a>
+ annotation that specifies a configuration <a href="#key()"><code>key</code></a> and
+ <a href="#value()"><code>value</code></a> pair to be added to the discovery request when running
  a test suite on the JUnit Platform.</div>
 <dl class="notes">
 <dt>Since:</dt>
@@ -109,13 +110,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#key()">key</a></span></code></div>
 <div class="col-last even-row-color">
-<div class="block">The configuration parameter key under which to add the
- value to the discovery request; never <code>null</code> or blank.</div>
+<div class="block">The configuration parameter key under which to add the <a href="#value()"><code>value</code></a>
+ to the discovery request; never <code>null</code> or blank.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#value()">value</a></span></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The value to add to the discovery request.</div>
+<div class="block">The value to add to the discovery request for the specified <a href="#key()"><code>key</code></a>.</div>
 </div>
 </div>
 </section>
@@ -133,15 +134,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="key()">
 <h3>key</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">key</span></div>
-<div class="block">The configuration parameter key under which to add the
- value to the discovery request; never <code>null</code> or blank.</div>
+<div class="block">The configuration parameter key under which to add the <a href="#value()"><code>value</code></a>
+ to the discovery request; never <code>null</code> or blank.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="value()">
 <h3>value</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">value</span></div>
-<div class="block">The value to add to the discovery request.</div>
+<div class="block">The value to add to the discovery request for the specified <a href="#key()"><code>key</code></a>.</div>
 </section>
 </li>
 </ul>
