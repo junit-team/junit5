@@ -29,12 +29,6 @@ dependencies {
 	testImplementation(libs.jfrunit)
 	testImplementation(libs.joox)
 
-	// --- Test compile-only dependencies ---------------------------------------------
-
-	testCompileOnly(libs.spock2) {
-		because("JfrUnit's @JfrEventTest is annotated with @org.spockframework.runtime.extension.ExtensionAnnotation")
-	}
-
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(projects.junitVintageEngine)
 	testRuntimeOnly(libs.groovy3) {
