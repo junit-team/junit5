@@ -40,13 +40,13 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 
 	@Override
 	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
-		if (!sourceType.isAssignableFrom(source.getClass())) {
-			throw new ArgumentConversionException("Can only convert objects of type " + sourceType);
+		if (!this.sourceType.isAssignableFrom(source.getClass())) {
+			throw new ArgumentConversionException("Can only convert objects of type " + this.sourceType.getName());
 		}
-		if (!targetType.isAssignableFrom(context.getParameter().getType())) {
-			throw new ArgumentConversionException("Can only convert to type " + targetType);
+		if (!this.targetType.isAssignableFrom(context.getParameter().getType())) {
+			throw new ArgumentConversionException("Can only convert to type " + this.targetType.getName());
 		}
-		return convert(sourceType.cast(source));
+		return convert(this.sourceType.cast(source));
 	}
 
 	/**
