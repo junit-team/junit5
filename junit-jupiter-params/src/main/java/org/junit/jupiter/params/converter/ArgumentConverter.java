@@ -24,20 +24,26 @@ import org.junit.jupiter.api.extension.ParameterContext;
  * method with the help of a
  * {@link org.junit.jupiter.params.converter.ConvertWith @ConvertWith} annotation.
  *
- * <p>See {@link SimpleArgumentConverter} in case your implementation only needs
- * to know about the target type instead of the complete
- * {@link ParameterContext}.
- *
  * <p>Implementations must provide a no-args constructor and should not make any
  * assumptions regarding when they are instantiated or how often they are called.
  * Since instances may potentially be cached and called from different threads,
  * they should be thread-safe and designed to be used as singletons.
+ *
+ * <p>Extend {@link SimpleArgumentConverter} if your implementation only needs
+ * to know the target type and does not need access to the {@link ParameterContext}
+ * to perform the conversion.
+ *
+ * <p>Extend {@link TypedArgumentConverter} if your implementation always converts
+ * from a given source type into a given target type and does not need access to
+ * the {@link ParameterContext} to perform the conversion.
  *
  * @since 5.0
  * @see SimpleArgumentConverter
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.converter.ConvertWith
  * @see org.junit.jupiter.params.support.AnnotationConsumer
+ * @see SimpleArgumentConverter
+ * @see TypedArgumentConverter
  */
 @API(status = STABLE, since = "5.7")
 public interface ArgumentConverter {

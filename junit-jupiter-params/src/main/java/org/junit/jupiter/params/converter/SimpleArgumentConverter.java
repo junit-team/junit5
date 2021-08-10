@@ -16,11 +16,14 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 
 /**
- * {@code SimpleArgumentConverter} is an abstract base class for {@link ArgumentConverter}
- * implementations.
+ * {@code SimpleArgumentConverter} is an abstract base class for
+ * {@link ArgumentConverter} implementations that only need to know the target
+ * type and do not need access to the {@link ParameterContext} to perform the
+ * conversion.
  *
  * @since 5.0
  * @see ArgumentConverter
+ * @see TypedArgumentConverter
  */
 @API(status = STABLE, since = "5.7")
 public abstract class SimpleArgumentConverter implements ArgumentConverter {

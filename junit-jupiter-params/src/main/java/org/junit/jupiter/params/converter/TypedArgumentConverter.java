@@ -17,13 +17,15 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@code TypedArgumentConverter} is an {@code ArgumentConverter} that always
- * converts objects of a given source type into a given target type.
+ * {@code TypedArgumentConverter} is an abstract base class for
+ * {@link ArgumentConverter} implementations that always convert objects of a
+ * given source type into a given target type.
  *
  * @param <S> the type of the source argument to convert
  * @param <T> the type of the target object to create from the source
  * @since 5.7
  * @see ArgumentConverter
+ * @see SimpleArgumentConverter
  */
 @API(status = EXPERIMENTAL, since = "5.7")
 public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter {
@@ -62,8 +64,9 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 	 * of type {@code T}.
 	 *
 	 * @param source the source object to convert; may be {@code null}
-	 * @return the converted object
-	 * @throws ArgumentConversionException in case an error occurs during the
+	 * @return the converted object; may be {@code null} but only if the target
+	 * type is a reference type
+	 * @throws ArgumentConversionException if an error occurs during the
 	 * conversion
 	 */
 	protected abstract T convert(S source) throws ArgumentConversionException;
