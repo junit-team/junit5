@@ -17,11 +17,11 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@code TypedArgumentConverter} is an {@code ArgumentConverter} that
- * always converts a given type to another.
+ * {@code TypedArgumentConverter} is an {@code ArgumentConverter} that always
+ * converts objects of a given source type into a given target type.
  *
- * @param <S> the type of the argument to convert
- * @param <T> the type of the target
+ * @param <S> the type of the source argument to convert
+ * @param <T> the type of the target object to create from the source
  * @since 5.7
  * @see ArgumentConverter
  */
@@ -31,11 +31,16 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 	private final Class<S> sourceType;
 	private final Class<T> targetType;
 
+	/**
+	 * Create a new {@codeTypedArgumentConverter}.
+	 *
+	 * @param sourceType the type of the argument to convert; never {@code null}
+	 * @param targetType the type of the target object to create from the source;
+	 * never {@code null}
+	 */
 	protected TypedArgumentConverter(Class<S> sourceType, Class<T> targetType) {
-		Preconditions.notNull(sourceType, "sourceType must not be null");
-		Preconditions.notNull(targetType, "targetType must not be null");
-		this.sourceType = sourceType;
-		this.targetType = targetType;
+		this.sourceType = Preconditions.notNull(sourceType, "sourceType must not be null");
+		this.targetType = Preconditions.notNull(targetType, "targetType must not be null");
 	}
 
 	@Override
