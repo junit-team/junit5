@@ -86,7 +86,8 @@ loadScripts(document, 'script');</script>
  <code>null</code> argument to the annotated <code>@ParameterizedTest</code> method.
 
  <p>Note that <code>@NullSource</code> cannot be used for an argument that has
- a primitive type.</div>
+ a primitive type, unless the argument is converted to a corresponding wrapper
+ type with an <a href="../converter/ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.4</dd>
