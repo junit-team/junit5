@@ -209,8 +209,8 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromInheritedMethod() throws Exception {
-		Method testMethod = ConcreteTest.class.getMethod("theTest");
-		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ConcreteTest.class, testMethod,
+		Method testMethod = ConcreteTestCase.class.getMethod("theTest");
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ConcreteTestCase.class, testMethod,
 			configuration);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
@@ -219,7 +219,7 @@ class JupiterTestDescriptorTests {
 		assertThat(sourceOptional).containsInstanceOf(MethodSource.class);
 
 		MethodSource methodSource = (MethodSource) sourceOptional.orElseThrow();
-		assertEquals(ConcreteTest.class.getName(), methodSource.getClassName());
+		assertEquals(ConcreteTestCase.class.getName(), methodSource.getClassName());
 		assertEquals("theTest", methodSource.getMethodName());
 	}
 
@@ -400,7 +400,7 @@ class JupiterTestDescriptorTests {
 		}
 	}
 
-	private static class ConcreteTest extends AbstractTestBase {
+	private static class ConcreteTestCase extends AbstractTestBase {
 	}
 
 }

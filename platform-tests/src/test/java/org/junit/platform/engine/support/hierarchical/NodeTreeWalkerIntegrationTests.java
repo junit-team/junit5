@@ -90,7 +90,7 @@ class NodeTreeWalkerIntegrationTests {
 
 	@Test
 	void setsForceExecutionModeForChildrenWithReadLocksOnClassAndWriteLockOnTest() {
-		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndWriteClockOnTest.class);
+		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCase.class);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -106,7 +106,7 @@ class NodeTreeWalkerIntegrationTests {
 
 	@Test
 	void doesntSetForceExecutionModeForChildrenWithReadLocksOnClassAndReadLockOnTest() {
-		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndReadClockOnTest.class);
+		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndReadClockOnTestCase.class);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -240,7 +240,7 @@ class NodeTreeWalkerIntegrationTests {
 	}
 
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
-	static class TestCaseWithResourceReadLockOnClassAndWriteClockOnTest {
+	static class TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCase {
 		@Test
 		@ResourceLock("a")
 		void test() {
@@ -248,7 +248,7 @@ class NodeTreeWalkerIntegrationTests {
 	}
 
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
-	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTest {
+	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTestCase {
 		@Test
 		@ResourceLock(value = "b", mode = ResourceAccessMode.READ)
 		void test() {

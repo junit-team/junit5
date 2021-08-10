@@ -12,10 +12,16 @@ package org.junit.platform.suite.engine.testcases;
 
 import org.junit.jupiter.api.Test;
 
-public class SimpleTest {
+/**
+ * @since 1.8
+ */
+public class MultipleTestsTestCase {
 
 	@Test
 	void test() {
+	}
 
+	@Test
+	void test2() {
 	}
 }

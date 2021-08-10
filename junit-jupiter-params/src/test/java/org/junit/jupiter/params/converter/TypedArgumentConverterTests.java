@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
  *
  * @since 5.7
  */
-public class TypedArgumentConverterTest {
+class TypedArgumentConverterTests {
 
 	@Test
 	void convertsSourceToTarget() {

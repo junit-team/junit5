@@ -12,21 +12,22 @@ package org.junit.platform.suite.engine.testsuites;
 
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.MultipleTest;
-import org.junit.platform.suite.engine.testcases.SimpleTest;
+import org.junit.platform.suite.engine.testcases.MultipleTestsTestCase;
+import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 
+/**
+ * @since 1.8
+ */
 public class NestedSuite {
 
 	@Suite
-	@SelectClasses(SimpleTest.class)
-	static public class Jupiter {
-
+	@SelectClasses(SingleTestTestCase.class)
+	static class Jupiter {
 	}
 
 	@Suite
-	@SelectClasses(MultipleTest.class)
-	static public class Tagged {
-
+	@SelectClasses(MultipleTestsTestCase.class)
+	static class Tagged {
 	}
 
 }

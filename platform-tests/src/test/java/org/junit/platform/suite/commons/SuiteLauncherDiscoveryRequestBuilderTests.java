@@ -60,7 +60,7 @@ import org.junit.platform.suite.api.SelectModules;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
 
-class SuiteLauncherDiscoveryRequestBuilderTest {
+class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	SuiteLauncherDiscoveryRequestBuilder builder = SuiteLauncherDiscoveryRequestBuilder.request();
 

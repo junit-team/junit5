@@ -26,16 +26,16 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.suite.engine.testcases.SimpleTest;
+import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 import org.junit.platform.suite.engine.testsuites.CyclicSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
 
-class SuiteTestDescriptorTest {
+class SuiteTestDescriptorTests {
 
 	UniqueId engineId = UniqueId.forEngine(SuiteEngineDescriptor.ENGINE_ID);
 	UniqueId suiteId = engineId.append(SuiteTestDescriptor.SEGMENT_TYPE, "test");
 	UniqueId jupiterEngineId = suiteId.append("engine", JupiterEngineDescriptor.ENGINE_ID);
-	UniqueId testClassId = jupiterEngineId.append(ClassTestDescriptor.SEGMENT_TYPE, SimpleTest.class.getName());
+	UniqueId testClassId = jupiterEngineId.append(ClassTestDescriptor.SEGMENT_TYPE, SingleTestTestCase.class.getName());
 	UniqueId methodId = testClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
 	SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, Object.class);

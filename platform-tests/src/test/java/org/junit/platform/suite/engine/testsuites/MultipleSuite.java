@@ -10,12 +10,16 @@
 
 package org.junit.platform.suite.engine.testsuites;
 
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.MultipleTest;
+import org.junit.platform.suite.engine.testcases.MultipleTestsTestCase;
 
+/**
+ * @since 1.8
+ */
 @Suite
-@SelectClasses(MultipleTest.class)
+@IncludeClassNamePatterns(".*TestCase$")
+@SelectClasses(MultipleTestsTestCase.class)
 public class MultipleSuite {
-
 }

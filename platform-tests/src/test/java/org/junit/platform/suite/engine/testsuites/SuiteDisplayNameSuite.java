@@ -10,14 +10,18 @@
 
 package org.junit.platform.suite.engine.testsuites;
 
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
-import org.junit.platform.suite.engine.testcases.SimpleTest;
+import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 
+/**
+ * @since 1.8
+ */
 @Suite
-@SelectClasses(SimpleTest.class)
+@IncludeClassNamePatterns(".*TestCase$")
+@SelectClasses(SingleTestTestCase.class)
 @SuiteDisplayName("Suite Display Name")
 public class SuiteDisplayNameSuite {
-
 }

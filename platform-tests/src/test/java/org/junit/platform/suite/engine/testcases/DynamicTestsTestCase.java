@@ -11,20 +11,24 @@
 package org.junit.platform.suite.engine.testcases;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
-public class DynamicTest {
+/**
+ * @since 1.8
+ */
+public class DynamicTestsTestCase {
 
 	@TestFactory
-	Collection<org.junit.jupiter.api.DynamicTest> dynamicTestsWithCollection() {
-		return Arrays.asList(
-			org.junit.jupiter.api.DynamicTest.dynamicTest("Add test", () -> assertEquals(2, Math.addExact(1, 1))),
-			org.junit.jupiter.api.DynamicTest.dynamicTest("Multiply Test",
-				() -> assertEquals(4, Math.multiplyExact(2, 2))));
+	Stream<DynamicTest> dynamicTests() {
+		return Stream.of(//
+			dynamicTest("Add test", () -> assertEquals(2, Math.addExact(1, 1))),
+			dynamicTest("Multiply Test", () -> assertEquals(4, Math.multiplyExact(2, 2)))//
+		);
 	}
 
 }
