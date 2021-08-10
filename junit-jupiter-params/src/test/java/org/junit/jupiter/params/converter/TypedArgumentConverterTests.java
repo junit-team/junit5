@@ -12,50 +12,59 @@ package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
- * Unit tests for {@link TypedArgumentConverter}.
+ * Tests for {@link TypedArgumentConverter}.
  *
  * @since 5.7
  */
 class TypedArgumentConverterTests {
 
+	/**
+	 * @since 5.8
+	 */
 	@Test
 	void preconditions() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> new PassThroughConstructorConverter(null, String.class))//
+				.isThrownBy(() -> new StringLengthArgumentConverter(null, Integer.class))//
 				.withMessage("sourceType must not be null");
 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> new PassThroughConstructorConverter(String.class, null))//
+				.isThrownBy(() -> new StringLengthArgumentConverter(String.class, null))//
 				.withMessage("targetType must not be null");
 	}
 
 	@Test
 	void convertsSourceToTarget() {
-		assertConverts("abcd", 4);
-		assertConverts("", 0);
+		assertAll(//
+			() -> assertConverts("abcd", 4), //
+			() -> assertConverts("", 0) //
+		);
 	}
 
-	private void assertConverts(String input, Integer expectedOutput) {
-		var result = new StringLengthArgumentConverter().convert(input);
-		assertThat(result).isEqualTo(expectedOutput);
+	private void assertConverts(String input, int expected) {
+		int length = new StringLengthArgumentConverter().convert(input);
+		assertThat(length).isEqualTo(expected);
 	}
 
 	private static class StringLengthArgumentConverter extends TypedArgumentConverter<String, Integer> {
 
-		protected StringLengthArgumentConverter() {
-			super(String.class, Integer.class);
+		StringLengthArgumentConverter() {
+			this(String.class, Integer.class);
+		}
+
+		StringLengthArgumentConverter(Class<String> sourceType, Class<Integer> targetType) {
+			super(sourceType, targetType);
 		}
 
 		@Override
 		protected Integer convert(String source) throws ArgumentConversionException {
 			return source.length();
 		}
-
 	}
 
 }
