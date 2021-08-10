@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code TypedArgumentConverter} is an {@code ArgumentConverter} that
@@ -31,6 +32,8 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 	private final Class<T> targetType;
 
 	protected TypedArgumentConverter(Class<S> sourceType, Class<T> targetType) {
+		Preconditions.notNull(sourceType, "sourceType must not be null");
+		Preconditions.notNull(targetType, "targetType must not be null");
 		this.sourceType = sourceType;
 		this.targetType = targetType;
 	}
@@ -47,8 +50,8 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 	}
 
 	/**
-	 * Convert the supplied {@code source} object of type S into an object
-	 * of type T.
+	 * Convert the supplied {@code source} object of type {@code S} into an object
+	 * of type {@code T}.
 	 *
 	 * @param source the source object to convert; may be {@code null}
 	 * @return the converted object

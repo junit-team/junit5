@@ -11,8 +11,10 @@
 package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link TypedArgumentConverter}.
@@ -20,6 +22,17 @@ import org.junit.jupiter.api.Test;
  * @since 5.7
  */
 class TypedArgumentConverterTests {
+
+	@Test
+	void preconditions() {
+		assertThatExceptionOfType(PreconditionViolationException.class)//
+				.isThrownBy(() -> new PassThroughConstructorConverter(null, String.class))//
+				.withMessage("sourceType must not be null");
+
+		assertThatExceptionOfType(PreconditionViolationException.class)//
+				.isThrownBy(() -> new PassThroughConstructorConverter(String.class, null))//
+				.withMessage("targetType must not be null");
+	}
 
 	@Test
 	void convertsSourceToTarget() {
