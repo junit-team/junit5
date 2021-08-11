@@ -4349,7 +4349,7 @@ declared as either a top-level class or as a <code>static</code> nested class.</
 
     <span class="nd">@Override</span>
     <span class="kd">protected</span> <span class="nc">Integer</span> <span class="nf">convert</span><span class="o">(</span><span class="nc">String</span> <span class="n">source</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">source</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">source</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">source</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">:</span> <span class="mi">0</span><span class="o">);</span>
     <span class="o">}</span>
 
 <span class="o">}</span></code></pre>
@@ -10499,7 +10499,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-11 11:23:10 UTC
+Last updated 2021-08-11 11:32:48 UTC
 </div>
 </div>
 <style>
