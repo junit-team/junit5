@@ -22,7 +22,9 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Classes explicitly selected via `@SelectClasses` are now always included in the test
+  suite. This applies to `@Suite` classes running via the `SuiteTestEngine` and suite
+  classes running via the `JUnitPlatform` `Runner`.
 
 ==== Deprecations and Breaking Changes
 
