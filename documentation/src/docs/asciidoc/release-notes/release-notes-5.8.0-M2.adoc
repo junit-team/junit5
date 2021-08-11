@@ -62,6 +62,9 @@ on GitHub.
   not configured to use the `IndicativeSentences` display name generator as well.
 * The `TypedArgumentConverter` base class now supports the conversion of a `null` source
   value in parameterized tests.
+* The `TypedArgumentConverter` base class now supports conversion to a primitive type if
+  the configured target type is a wrapper for the target primitive type, including
+  primitive widening support -- for example, from `Integer` to `int` or `long`.
 
 ==== Deprecations and Breaking Changes
 
