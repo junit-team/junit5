@@ -172,13 +172,13 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private boolean isSuite() {
 		// @formatter:off
 		return IMPLICIT_SUITE_ANNOTATIONS.stream()
-				.anyMatch(annotation -> isAnnotated(testClass, annotation));
+				.anyMatch(annotation -> isAnnotated(this.testClass, annotation));
 		// @formatter:on
 	}
 
 	@Override
 	public void filter(Filter filter) throws NoTestsRemainException {
-		Set<TestIdentifier> filteredIdentifiers = testTree.getFilteredLeaves(filter);
+		Set<TestIdentifier> filteredIdentifiers = this.testTree.getFilteredLeaves(filter);
 		if (filteredIdentifiers.isEmpty()) {
 			throw new NoTestsRemainException();
 		}

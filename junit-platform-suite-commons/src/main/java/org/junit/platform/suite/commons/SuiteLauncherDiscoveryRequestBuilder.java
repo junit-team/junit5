@@ -10,8 +10,8 @@
 
 package org.junit.platform.suite.commons;
 
-import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
-import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 import static org.junit.platform.suite.commons.AdditionalDiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.suite.commons.AdditionalDiscoverySelectors.selectFile;
