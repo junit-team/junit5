@@ -96,14 +96,18 @@ loadScripts(document, 'script');</script>
  method with the help of a
  <a href="ConvertWith.html" title="annotation in org.junit.jupiter.params.converter"><code>@ConvertWith</code></a> annotation.
 
- <p>See <a href="SimpleArgumentConverter.html" title="class in org.junit.jupiter.params.converter"><code>SimpleArgumentConverter</code></a> in case your implementation only needs
- to know about the target type instead of the complete
- <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a>.
-
  <p>Implementations must provide a no-args constructor and should not make any
  assumptions regarding when they are instantiated or how often they are called.
  Since instances may potentially be cached and called from different threads,
- they should be thread-safe and designed to be used as singletons.</div>
+ they should be thread-safe and designed to be used as singletons.
+
+ <p>Extend <a href="SimpleArgumentConverter.html" title="class in org.junit.jupiter.params.converter"><code>SimpleArgumentConverter</code></a> if your implementation only needs
+ to know the target type and does not need access to the <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a>
+ to perform the conversion.
+
+ <p>Extend <a href="TypedArgumentConverter.html" title="class in org.junit.jupiter.params.converter"><code>TypedArgumentConverter</code></a> if your implementation always converts
+ from a given source type into a given target type and does not need access to
+ the <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a> to perform the conversion.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.0</dd>
@@ -111,7 +115,9 @@ loadScripts(document, 'script');</script>
 <dd><a href="SimpleArgumentConverter.html" title="class in org.junit.jupiter.params.converter"><code>SimpleArgumentConverter</code></a>, 
 <a href="../ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>ParameterizedTest</code></a>, 
 <a href="ConvertWith.html" title="annotation in org.junit.jupiter.params.converter"><code>ConvertWith</code></a>, 
-<a href="../support/AnnotationConsumer.html" title="interface in org.junit.jupiter.params.support"><code>AnnotationConsumer</code></a></dd>
+<a href="../support/AnnotationConsumer.html" title="interface in org.junit.jupiter.params.support"><code>AnnotationConsumer</code></a>, 
+<a href="SimpleArgumentConverter.html" title="class in org.junit.jupiter.params.converter"><code>SimpleArgumentConverter</code></a>, 
+<a href="TypedArgumentConverter.html" title="class in org.junit.jupiter.params.converter"><code>TypedArgumentConverter</code></a></dd>
 </dl>
 </section>
 <section class="summary">

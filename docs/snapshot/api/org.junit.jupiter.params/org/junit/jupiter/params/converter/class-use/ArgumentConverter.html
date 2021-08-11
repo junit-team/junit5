@@ -87,14 +87,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="../SimpleArgumentConverter.html" title="class in org.junit.jupiter.params.converter">SimpleArgumentConverter</a></span></code></div>
 <div class="col-last odd-row-color">
-<div class="block"><code>SimpleArgumentConverter</code> is an abstract base class for <a href="../ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a>
- implementations.</div>
+<div class="block"><code>SimpleArgumentConverter</code> is an abstract base class for
+ <a href="../ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a> implementations that only need to know the target
+ type and do not need access to the <a href="../../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a> to perform the
+ conversion.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="../TypedArgumentConverter.html" title="class in org.junit.jupiter.params.converter">TypedArgumentConverter</a>&lt;S,&#8203;T&gt;</span></code></div>
 <div class="col-last even-row-color">
-<div class="block"><code>TypedArgumentConverter</code> is an <code>ArgumentConverter</code> that
- always converts a given type to another.</div>
+<div class="block"><code>TypedArgumentConverter</code> is an abstract base class for
+ <a href="../ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a> implementations that always convert objects of a
+ given source type into a given target type.</div>
 </div>
 </div>
 </section>

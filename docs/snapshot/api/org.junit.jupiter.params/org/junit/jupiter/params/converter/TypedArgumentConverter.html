@@ -85,8 +85,8 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>Type Parameters:</dt>
-<dd><code>S</code> - the type of the argument to convert</dd>
-<dd><code>T</code> - the type of the target</dd>
+<dd><code>S</code> - the type of the source argument to convert</dd>
+<dd><code>T</code> - the type of the target object to create from the source</dd>
 </dl>
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
@@ -98,13 +98,15 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public abstract class </span><span class="element-name type-name-label">TypedArgumentConverter&lt;S,&#8203;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter">ArgumentConverter</a></span></div>
-<div class="block"><code>TypedArgumentConverter</code> is an <code>ArgumentConverter</code> that
- always converts a given type to another.</div>
+<div class="block"><code>TypedArgumentConverter</code> is an abstract base class for
+ <a href="ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a> implementations that always convert objects of a
+ given source type into a given target type.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.7</dd>
 <dt>See Also:</dt>
-<dd><a href="ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a></dd>
+<dd><a href="ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a>, 
+<a href="SimpleArgumentConverter.html" title="class in org.junit.jupiter.params.converter"><code>SimpleArgumentConverter</code></a></dd>
 </dl>
 </section>
 <section class="summary">
@@ -121,7 +123,9 @@ implements <a href="ArgumentConverter.html" title="interface in org.junit.jupite
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.Class,java.lang.Class)">TypedArgumentConverter</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="TypedArgumentConverter.html" title="type parameter in TypedArgumentConverter">S</a>&gt;&nbsp;sourceType,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="TypedArgumentConverter.html" title="type parameter in TypedArgumentConverter">T</a>&gt;&nbsp;targetType)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Create a new <code>TypedArgumentConverter</code>.</div>
+</div>
 </div>
 </section>
 </li>
@@ -171,6 +175,13 @@ implements <a href="ArgumentConverter.html" title="interface in org.junit.jupite
 <h3>TypedArgumentConverter</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">TypedArgumentConverter</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="TypedArgumentConverter.html" title="type parameter in TypedArgumentConverter">S</a>&gt;&nbsp;sourceType,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="TypedArgumentConverter.html" title="type parameter in TypedArgumentConverter">T</a>&gt;&nbsp;targetType)</span></div>
+<div class="block">Create a new <code>TypedArgumentConverter</code>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>sourceType</code> - the type of the argument to convert; never <code>null</code></dd>
+<dd><code>targetType</code> - the type of the target object to create from the source;
+ never <code>null</code></dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -217,9 +228,10 @@ implements <a href="ArgumentConverter.html" title="interface in org.junit.jupite
 <dt>Parameters:</dt>
 <dd><code>source</code> - the source object to convert; may be <code>null</code></dd>
 <dt>Returns:</dt>
-<dd>the converted object</dd>
+<dd>the converted object; may be <code>null</code> but only if the target
+ type is a reference type</dd>
 <dt>Throws:</dt>
-<dd><code><a href="ArgumentConversionException.html" title="class in org.junit.jupiter.params.converter">ArgumentConversionException</a></code> - in case an error occurs during the
+<dd><code><a href="ArgumentConversionException.html" title="class in org.junit.jupiter.params.converter">ArgumentConversionException</a></code> - if an error occurs during the
  conversion</dd>
 </dl>
 </section>
