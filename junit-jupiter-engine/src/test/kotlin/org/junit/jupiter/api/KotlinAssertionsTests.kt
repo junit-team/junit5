@@ -96,10 +96,8 @@ class KotlinAssertionsTests {
         dynamicContainer("fails when an exception is thrown", Stream.of(
             dynamicTest("for no arguments variant") {
                 val exception = assertThrows<AssertionError> {
-                    assertDoesNotThrow {
+                    assertDoesNotThrow<Unit> {
                         fail("fail")
-                        @Suppress("UNREACHABLE_CODE")
-                        ""
                     }
                 }
                 assertMessageEquals(exception,
@@ -107,10 +105,8 @@ class KotlinAssertionsTests {
             },
             dynamicTest("for message variant") {
                 val exception = assertThrows<AssertionError> {
-                    assertDoesNotThrow("Does not throw") {
+                    assertDoesNotThrow<Unit>("Does not throw") {
                         fail("fail")
-                        @Suppress("UNREACHABLE_CODE")
-                        ""
                     }
                 }
                 assertMessageEquals(exception,
@@ -118,10 +114,8 @@ class KotlinAssertionsTests {
             },
             dynamicTest("for message supplier variant") {
                 val exception = assertThrows<AssertionError> {
-                    assertDoesNotThrow({ "Does not throw" }) {
+                    assertDoesNotThrow<Unit>({ "Does not throw" }) {
                         fail("fail")
-                        @Suppress("UNREACHABLE_CODE")
-                        ""
                     }
                 }
                 assertMessageEquals(exception,
