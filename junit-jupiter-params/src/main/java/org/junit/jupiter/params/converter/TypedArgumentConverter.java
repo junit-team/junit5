@@ -34,7 +34,7 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 	private final Class<T> targetType;
 
 	/**
-	 * Create a new {@codeTypedArgumentConverter}.
+	 * Create a new {@code TypedArgumentConverter}.
 	 *
 	 * @param sourceType the type of the argument to convert; never {@code null}
 	 * @param targetType the type of the target object to create from the source;
