@@ -65,7 +65,6 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	private boolean filterStandardClassNamePatterns = false;
 
 	private SuiteLauncherDiscoveryRequestBuilder() {
-
 	}
 
 	public static SuiteLauncherDiscoveryRequestBuilder request() {
@@ -121,9 +120,9 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		findAnnotationValues(suite, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::includeClassNamePatterns)
-				.ifPresent(filters ->{
+				.ifPresent(filters -> {
 					includeClassNamePatternsUsed = true;
-					this.filters(filters);
+					filters(filters);
 				});
 		findAnnotationValues(suite, IncludeEngines.class, IncludeEngines::value)
 				.map(EngineFilter::includeEngines)
