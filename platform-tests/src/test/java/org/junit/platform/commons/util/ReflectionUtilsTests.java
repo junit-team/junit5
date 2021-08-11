@@ -46,6 +46,7 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.api.io.TempDir;
@@ -279,47 +280,136 @@ class ReflectionUtilsTests {
 		assertThrows(PreconditionViolationException.class, () -> tryToReadFieldValue(field, null).get());
 	}
 
-	@Test
-	void isAssignableToForNullClass() {
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isAssignableTo(new Object(), null));
+	@Nested
+	class IsClassAssignableToClassTests {
+
+		@Test
+		void isAssignableToForNullSourceType() {
+			assertThatExceptionOfType(PreconditionViolationException.class)//
+					.isThrownBy(() -> ReflectionUtils.isAssignableTo(null, getClass()))//
+					.withMessage("source type must not be null");
+		}
+
+		@Test
+		void isAssignableToForPrimitiveSourceType() {
+			assertThatExceptionOfType(PreconditionViolationException.class)//
+					.isThrownBy(() -> ReflectionUtils.isAssignableTo(int.class, Integer.class))//
+					.withMessage("source type must not be a primitive type");
+		}
+
+		@Test
+		void isAssignableToForNullTargetType() {
+			assertThatExceptionOfType(PreconditionViolationException.class)//
+					.isThrownBy(() -> ReflectionUtils.isAssignableTo(getClass(), null))//
+					.withMessage("target type must not be null");
+		}
+
+		@Test
+		void isAssignableTo() {
+			// Reference Types
+			assertTrue(ReflectionUtils.isAssignableTo(String.class, Object.class));
+			assertTrue(ReflectionUtils.isAssignableTo(String.class, CharSequence.class));
+			assertTrue(ReflectionUtils.isAssignableTo(String.class, String.class));
+			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, Number.class));
+			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, Integer.class));
+
+			assertFalse(ReflectionUtils.isAssignableTo(Object.class, String.class));
+			assertFalse(ReflectionUtils.isAssignableTo(CharSequence.class, String.class));
+			assertFalse(ReflectionUtils.isAssignableTo(Number.class, Integer.class));
+
+			// Arrays
+			assertTrue(ReflectionUtils.isAssignableTo(int[].class, int[].class));
+			assertTrue(ReflectionUtils.isAssignableTo(double[].class, double[].class));
+			assertTrue(ReflectionUtils.isAssignableTo(double[].class, Object.class));
+			assertTrue(ReflectionUtils.isAssignableTo(String[].class, Object.class));
+			assertTrue(ReflectionUtils.isAssignableTo(String[].class, Object[].class));
+			assertTrue(ReflectionUtils.isAssignableTo(String[].class, String[].class));
+
+			// Wrappers to Primitives
+			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, int.class));
+			assertTrue(ReflectionUtils.isAssignableTo(Boolean.class, boolean.class));
+
+			// Widening Conversions from Wrappers to Primitives
+			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, long.class));
+			assertTrue(ReflectionUtils.isAssignableTo(Float.class, double.class));
+			assertTrue(ReflectionUtils.isAssignableTo(Byte.class, double.class));
+
+			// Widening Conversions from Wrappers to Wrappers (not supported by Java)
+			assertFalse(ReflectionUtils.isAssignableTo(Integer.class, Long.class));
+			assertFalse(ReflectionUtils.isAssignableTo(Float.class, Double.class));
+			assertFalse(ReflectionUtils.isAssignableTo(Byte.class, Double.class));
+
+			// Narrowing Conversions
+			assertFalse(ReflectionUtils.isAssignableTo(Integer.class, char.class));
+			assertFalse(ReflectionUtils.isAssignableTo(Long.class, byte.class));
+			assertFalse(ReflectionUtils.isAssignableTo(Long.class, int.class));
+		}
+
 	}
 
-	@Test
-	void isAssignableTo() {
-		// Reference Types
-		assertTrue(ReflectionUtils.isAssignableTo("string", String.class));
-		assertTrue(ReflectionUtils.isAssignableTo("string", CharSequence.class));
-		assertTrue(ReflectionUtils.isAssignableTo("string", Object.class));
+	@Nested
+	class IsObjectAssignableToClassTests {
 
-		assertFalse(ReflectionUtils.isAssignableTo(new Object(), String.class));
-		assertFalse(ReflectionUtils.isAssignableTo(Integer.valueOf("1"), StringBuilder.class));
-		assertFalse(ReflectionUtils.isAssignableTo(new StringBuilder(), String.class));
+		@Test
+		void isAssignableToForNullClass() {
+			assertThrows(PreconditionViolationException.class,
+				() -> ReflectionUtils.isAssignableTo(new Object(), null));
+		}
 
-		// Arrays
-		assertTrue(ReflectionUtils.isAssignableTo(new int[0], int[].class));
-		assertTrue(ReflectionUtils.isAssignableTo(new double[0], Object.class));
-		assertTrue(ReflectionUtils.isAssignableTo(new String[0], String[].class));
-		assertTrue(ReflectionUtils.isAssignableTo(new String[0], Object.class));
+		@Test
+		void isAssignableTo() {
+			// Reference Types
+			assertTrue(ReflectionUtils.isAssignableTo("string", String.class));
+			assertTrue(ReflectionUtils.isAssignableTo("string", CharSequence.class));
+			assertTrue(ReflectionUtils.isAssignableTo("string", Object.class));
 
-		// Primitive Types
-		assertTrue(ReflectionUtils.isAssignableTo(1, int.class));
-		assertTrue(ReflectionUtils.isAssignableTo(Long.valueOf("1"), long.class));
-		assertTrue(ReflectionUtils.isAssignableTo(Boolean.TRUE, boolean.class));
+			assertFalse(ReflectionUtils.isAssignableTo(new Object(), String.class));
+			assertFalse(ReflectionUtils.isAssignableTo(Integer.valueOf("1"), StringBuilder.class));
+			assertFalse(ReflectionUtils.isAssignableTo(new StringBuilder(), String.class));
 
-		// Widening Conversions to Primitives
-		assertTrue(ReflectionUtils.isAssignableTo(1, long.class));
-		assertTrue(ReflectionUtils.isAssignableTo(1f, double.class));
-		assertTrue(ReflectionUtils.isAssignableTo((byte) 1, double.class));
+			// Arrays
+			assertTrue(ReflectionUtils.isAssignableTo(new int[0], int[].class));
+			assertTrue(ReflectionUtils.isAssignableTo(new double[0], Object.class));
+			assertTrue(ReflectionUtils.isAssignableTo(new String[0], String[].class));
+			assertTrue(ReflectionUtils.isAssignableTo(new String[0], Object.class));
 
-		// Widening Conversions to Wrappers (not supported by Java)
-		assertFalse(ReflectionUtils.isAssignableTo(1, Long.class));
-		assertFalse(ReflectionUtils.isAssignableTo(1f, Double.class));
-		assertFalse(ReflectionUtils.isAssignableTo((byte) 1, Double.class));
+			// Primitive Types
+			assertTrue(ReflectionUtils.isAssignableTo(1, int.class));
+			assertTrue(ReflectionUtils.isAssignableTo(Long.valueOf("1"), long.class));
+			assertTrue(ReflectionUtils.isAssignableTo(Boolean.TRUE, boolean.class));
 
-		// Narrowing Conversions
-		assertFalse(ReflectionUtils.isAssignableTo(1, char.class));
-		assertFalse(ReflectionUtils.isAssignableTo(1L, byte.class));
-		assertFalse(ReflectionUtils.isAssignableTo(1L, int.class));
+			// Widening Conversions to Primitives
+			assertTrue(ReflectionUtils.isAssignableTo(1, long.class));
+			assertTrue(ReflectionUtils.isAssignableTo(1f, double.class));
+			assertTrue(ReflectionUtils.isAssignableTo((byte) 1, double.class));
+
+			// Widening Conversions to Wrappers (not supported by Java)
+			assertFalse(ReflectionUtils.isAssignableTo(1, Long.class));
+			assertFalse(ReflectionUtils.isAssignableTo(1f, Double.class));
+			assertFalse(ReflectionUtils.isAssignableTo((byte) 1, Double.class));
+
+			// Narrowing Conversions
+			assertFalse(ReflectionUtils.isAssignableTo(1, char.class));
+			assertFalse(ReflectionUtils.isAssignableTo(1L, byte.class));
+			assertFalse(ReflectionUtils.isAssignableTo(1L, int.class));
+		}
+
+		@Test
+		void isAssignableToForNullObject() {
+			assertTrue(ReflectionUtils.isAssignableTo((Object) null, Object.class));
+			assertTrue(ReflectionUtils.isAssignableTo((Object) null, String.class));
+			assertTrue(ReflectionUtils.isAssignableTo((Object) null, Long.class));
+			assertTrue(ReflectionUtils.isAssignableTo((Object) null, Character[].class));
+		}
+
+		@Test
+		void isAssignableToForNullObjectAndPrimitive() {
+			assertFalse(ReflectionUtils.isAssignableTo((Object) null, byte.class));
+			assertFalse(ReflectionUtils.isAssignableTo((Object) null, int.class));
+			assertFalse(ReflectionUtils.isAssignableTo((Object) null, long.class));
+			assertFalse(ReflectionUtils.isAssignableTo((Object) null, boolean.class));
+		}
+
 	}
 
 	@Test
@@ -387,22 +477,6 @@ class ReflectionUtilsTests {
 		assertFalse(ReflectionUtils.isWideningConversion(float.class, int.class)); // narrowing
 		assertFalse(ReflectionUtils.isWideningConversion(int.class, int.class)); // direct match
 		assertFalse(ReflectionUtils.isWideningConversion(String.class, int.class)); // neither a primitive nor a wrapper
-	}
-
-	@Test
-	void isAssignableToForNullObject() {
-		assertTrue(ReflectionUtils.isAssignableTo(null, Object.class));
-		assertTrue(ReflectionUtils.isAssignableTo(null, String.class));
-		assertTrue(ReflectionUtils.isAssignableTo(null, Long.class));
-		assertTrue(ReflectionUtils.isAssignableTo(null, Character[].class));
-	}
-
-	@Test
-	void isAssignableToForNullObjectAndPrimitive() {
-		assertFalse(ReflectionUtils.isAssignableTo(null, byte.class));
-		assertFalse(ReflectionUtils.isAssignableTo(null, int.class));
-		assertFalse(ReflectionUtils.isAssignableTo(null, long.class));
-		assertFalse(ReflectionUtils.isAssignableTo(null, boolean.class));
 	}
 
 	@Test
