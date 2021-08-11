@@ -62,10 +62,19 @@ class KotlinAssertionsTests {
     }
 
     @Test
-    fun `expected context exception testing`() = runBlocking<Unit> {
+    fun `assertThrows with coroutines`() = runBlocking<Unit> {
         assertThrows<AssertionError>("Should fail async") {
             suspend { fail("Should fail async") }()
         }
+    }
+
+    @Test
+    fun `assertDoesNotThrow with coroutines`() = runBlocking {
+        val result = assertDoesNotThrow {
+            suspend { "Result" }()
+        }
+
+        assertEquals("Result", result)
     }
 
     @TestFactory
@@ -89,6 +98,8 @@ class KotlinAssertionsTests {
                 val exception = assertThrows<AssertionError> {
                     assertDoesNotThrow {
                         fail("fail")
+                        @Suppress("UNREACHABLE_CODE")
+                        ""
                     }
                 }
                 assertMessageEquals(exception,
@@ -98,6 +109,8 @@ class KotlinAssertionsTests {
                 val exception = assertThrows<AssertionError> {
                     assertDoesNotThrow("Does not throw") {
                         fail("fail")
+                        @Suppress("UNREACHABLE_CODE")
+                        ""
                     }
                 }
                 assertMessageEquals(exception,
@@ -107,6 +120,8 @@ class KotlinAssertionsTests {
                 val exception = assertThrows<AssertionError> {
                     assertDoesNotThrow({ "Does not throw" }) {
                         fail("fail")
+                        @Suppress("UNREACHABLE_CODE")
+                        ""
                     }
                 }
                 assertMessageEquals(exception,

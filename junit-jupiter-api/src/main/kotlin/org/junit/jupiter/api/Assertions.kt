@@ -158,8 +158,12 @@ inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, 
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertDoesNotThrow(executable: () -> R): R =
-    Assertions.assertDoesNotThrow(ThrowingSupplier(executable))
+inline fun <reified R> assertDoesNotThrow(executable: () -> R): R = try {
+    val result = executable()
+    Assertions.assertDoesNotThrow(ThrowingSupplier { result })
+} catch (throwable: Throwable) {
+    Assertions.assertDoesNotThrow(ThrowingSupplier { throw throwable })
+}
 
 /**
  * Example usage:
@@ -172,7 +176,7 @@ fun <R> assertDoesNotThrow(executable: () -> R): R =
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
+inline fun <reified R> assertDoesNotThrow(message: String, executable: () -> R): R =
     assertDoesNotThrow({ message }, executable)
 
 /**
@@ -186,8 +190,18 @@ fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertDoesNotThrow(message: () -> String, executable: () -> R): R =
-    Assertions.assertDoesNotThrow(ThrowingSupplier(executable), Supplier(message))
+inline fun <reified R> assertDoesNotThrow(noinline message: () -> String, executable: () -> R): R = try {
+    val result = executable()
+    Assertions.assertDoesNotThrow(
+        ThrowingSupplier { result },
+        Supplier(message)
+    )
+} catch (throwable: Throwable) {
+    Assertions.assertDoesNotThrow(
+        ThrowingSupplier { throw throwable },
+        Supplier(message)
+    )
+}
 
 /**
  * Example usage:
