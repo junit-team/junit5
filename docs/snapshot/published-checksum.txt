@@ -111,6 +111,7 @@
 299252428f1aed28711e1b094eda1e98  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertSame.java
 29a93b5ac77fd920071077adc11a2626  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.java
 29fc0f66ce094447da5262f597704425  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/MethodBasedCondition.java
+2a1489b94cf834359327a6474dea2950  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
 2a98fd032d65cadf4967ed9bdfaaf614  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.java
 2acdbe767aaf4dec69d06011910f43e6  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
 2b1023d28b683323875a4532f6d5ce19  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultClassDescriptor.java
@@ -161,6 +162,7 @@
 37725239b2f5f7dcf21565077d139433  documentation/src/docs/asciidoc/resources/fonts/Symbola.ttf
 38712453e07a4d8f7c492a5561e3f7a2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/InvocationInterceptor.java
 38941b97e85a0a3959947bcb975af55c  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoveryFilter.java
+38a76dfd69c75f296c1bd85d911bb653  junit-platform-commons/src/main/java/org/junit/platform/commons/support/SearchOption.java
 38f5296042e4a225b669de0652449674  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
 390c1d45e8e1344a9dab25b7ed23172a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineDiscoveryResult.java
 3930a0234e1bfc69e0c5a50cdcb2d9c1  documentation/src/test/java/org/junit/api/tools/ApiReportGenerator.java
@@ -278,7 +280,6 @@
 658cd8d434d0cf9431e00e80fa02c371  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineFilter.java
 65d849663a861fdd87b48f70e3f04fc8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/package-info.java
 65e0fdd1d53aecc0bc0e0673aae450fc  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineExecutionOrchestrator.java
-6663ce1ec972e295264c69983c869205  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
 666c4da9b6e1c053b558485211d12fc3  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAggregator.java
 667983da6c6a6c88523ff02e6de99d05  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeConversionPattern.java
 667f0c53eb28f8f3e3cf3d501fd62d8d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/InvocationInterceptorChain.java
@@ -514,7 +515,6 @@ b3f9596b19add74b8dfadff04707186a  junit-platform-console/src/main/java/org/junit
 b40c37c5054497f233d6d3984ae0fa04  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/MethodInvocation.java
 b40de603f3c3a315c96cd35df0b6e5f8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicExtensionContext.java
 b5023d7e3d5fbd527ffee074f6eb5db4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
-b55bbd060ae6ced19b1697bdbe2d35d7  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 b5a5cbe3ff5ef421664a74f0438554ed  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassNamePatternFilterUtils.java
 b5deaa459a2b76cf6897c8ba6a2d902c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/NamespaceAwareStore.java
 b605687b16ddc6bc8dd36662d1cb3fee  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/package-info.java
@@ -545,6 +545,7 @@ bc5298199f09eb42c95b16b04faaf29f  junit-platform-commons/src/main/java/org/junit
 bc5a387a0359c39d3e3527dc26852149  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ResourceLock.java
 bcf80bafcac190f6cc859e24640b13cb  documentation/src/test/java/example/callbacks/AbstractDatabaseTests.java
 bd81536135ea9abe1514b3ef01e3d5a5  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/FilePosition.java
+bdc23d0b794cccdf047d1d99e01a5d82  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 bf274f436aa7af664d6cbed84387df2d  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/SimpleArgumentConverter.java
 bf49a1a0b5099b3a1c812144f6f0843c  documentation/src/test/kotlin/example/KotlinAssertionsDemo.kt
 bf8d76cf67ea68f9d620a5fb5e2f9ab3  documentation/src/docs/asciidoc/tocbot-3.0.2/styles.css

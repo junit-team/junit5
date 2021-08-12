@@ -573,6 +573,14 @@ classes running via the <code>JUnitPlatform</code> <code>Runner</code>.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>New <code>findAnnotation(Class,Class,SearchOption)</code> method in <code>AnnotationSupport</code> that
+performs the same search algorithm as <code>findAnnotation(AnnotatedElement,Class)</code> but also
+searches the enclosing class hierarchy for inner classes if the
+<code>INCLUDE_ENCLOSING_CLASSES</code> <code>SearchOption</code> is specified. This new method can be used by
+extension authors to find annotations on enclosing classes for JUnit Jupiter <code>@Nested</code>
+test classes.</p>
+</li>
+<li>
 <p>New <code>ClassSource.from(URI)</code> static factory method for creating a <code>ClassSource</code> from a
 URI using the <code>class</code> scheme and optional query parameters specifying the line number
 and column number. This is analogous to the existing <code>ClasspathResourceSource.from(URI)</code>
@@ -1114,7 +1122,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-11 14:26:54 UTC
+Last updated 2021-08-12 13:45:31 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
