@@ -57,7 +57,7 @@ class AnnotationSupportTests {
 	}
 
 	@Test
-	void findAnnotationPreconditions() {
+	void findAnnotationOnElementPreconditions() {
 		var optional = Optional.of(Probe.class);
 		assertPreconditionViolationException("annotationType", () -> AnnotationSupport.findAnnotation(optional, null));
 		assertPreconditionViolationException("annotationType",
@@ -65,7 +65,7 @@ class AnnotationSupportTests {
 	}
 
 	@Test
-	void findAnnotationDelegates() {
+	void findAnnotationOnElementDelegates() {
 		var element = Probe.class;
 		var optional = Optional.of(element);
 
@@ -78,6 +78,37 @@ class AnnotationSupportTests {
 			AnnotationSupport.findAnnotation(element, Tag.class));
 		assertEquals(AnnotationUtils.findAnnotation(element, Override.class),
 			AnnotationSupport.findAnnotation(element, Override.class));
+	}
+
+	@Test
+	void findAnnotationOnClassPreconditions() {
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findAnnotation(Probe.class, null, SearchOption.INCLUDE_ENCLOSING_CLASSES));
+		assertPreconditionViolationException("SearchOption",
+			() -> AnnotationSupport.findAnnotation(Probe.class, Override.class, null));
+	}
+
+	@Test
+	void findAnnotationOnClassDelegates() {
+		Class<?> clazz = Probe.class;
+		assertEquals(AnnotationUtils.findAnnotation(clazz, Tag.class, false),
+			AnnotationSupport.findAnnotation(clazz, Tag.class, SearchOption.DEFAULT));
+		assertEquals(AnnotationUtils.findAnnotation(clazz, Tag.class, true),
+			AnnotationSupport.findAnnotation(clazz, Tag.class, SearchOption.INCLUDE_ENCLOSING_CLASSES));
+		assertEquals(AnnotationUtils.findAnnotation(clazz, Override.class, false),
+			AnnotationSupport.findAnnotation(clazz, Override.class, SearchOption.DEFAULT));
+		assertEquals(AnnotationUtils.findAnnotation(clazz, Override.class, true),
+			AnnotationSupport.findAnnotation(clazz, Override.class, SearchOption.INCLUDE_ENCLOSING_CLASSES));
+
+		clazz = Probe.InnerClass.class;
+		assertEquals(AnnotationUtils.findAnnotation(clazz, Tag.class, false),
+			AnnotationSupport.findAnnotation(clazz, Tag.class, SearchOption.DEFAULT));
+		assertEquals(AnnotationUtils.findAnnotation(clazz, Tag.class, true),
+			AnnotationSupport.findAnnotation(clazz, Tag.class, SearchOption.INCLUDE_ENCLOSING_CLASSES));
+		assertEquals(AnnotationUtils.findAnnotation(clazz, Override.class, false),
+			AnnotationSupport.findAnnotation(clazz, Override.class, SearchOption.DEFAULT));
+		assertEquals(AnnotationUtils.findAnnotation(clazz, Override.class, true),
+			AnnotationSupport.findAnnotation(clazz, Override.class, SearchOption.INCLUDE_ENCLOSING_CLASSES));
 	}
 
 	@Test
@@ -268,6 +299,9 @@ class AnnotationSupportTests {
 		@Tag("method-tag-1")
 		@Tag("method-tag-2")
 		void bMethod() {
+		}
+
+		class InnerClass {
 		}
 
 	}

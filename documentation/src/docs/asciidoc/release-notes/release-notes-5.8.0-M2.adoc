@@ -32,6 +32,12 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New `findAnnotation(Class,Class,SearchOption)` method in `AnnotationSupport` that
+  performs the same search algorithm as `findAnnotation(AnnotatedElement,Class)` but also
+  searches the enclosing class hierarchy for inner classes if the
+  `INCLUDE_ENCLOSING_CLASSES` `SearchOption` is specified. This new method can be used by
+  extension authors to find annotations on enclosing classes for JUnit Jupiter `@Nested`
+  test classes.
 * New `ClassSource.from(URI)` static factory method for creating a `ClassSource` from a
   URI using the `class` scheme and optional query parameters specifying the line number
   and column number. This is analogous to the existing `ClasspathResourceSource.from(URI)`
