@@ -144,6 +144,32 @@ class AnnotationUtilsTests {
 	}
 
 	@Test
+	void findAnnotationDirectlyPresentOnEnclosingClass() throws Exception {
+		Class<?> clazz = Annotation1Class.InnerClass.class;
+		assertThat(findAnnotation(clazz, Annotation1.class, false)).isNotPresent();
+		assertThat(findAnnotation(clazz, Annotation1.class, true)).isPresent();
+
+		clazz = Annotation1Class.InnerClass.InnerInnerClass.class;
+		assertThat(findAnnotation(clazz, Annotation1.class, false)).isNotPresent();
+		assertThat(findAnnotation(clazz, Annotation1.class, true)).isPresent();
+
+		clazz = Annotation1Class.NestedClass.class;
+		assertThat(findAnnotation(clazz, Annotation1.class, false)).isNotPresent();
+		assertThat(findAnnotation(clazz, Annotation1.class, true)).isNotPresent();
+	}
+
+	@Test
+	void findAnnotationMetaPresentOnEnclosingClass() throws Exception {
+		Class<?> clazz = ComposedAnnotationClass.InnerClass.class;
+		assertThat(findAnnotation(clazz, Annotation1.class, false)).isNotPresent();
+		assertThat(findAnnotation(clazz, Annotation1.class, true)).isPresent();
+
+		clazz = ComposedAnnotationClass.InnerClass.InnerInnerClass.class;
+		assertThat(findAnnotation(clazz, Annotation1.class, false)).isNotPresent();
+		assertThat(findAnnotation(clazz, Annotation1.class, true)).isPresent();
+	}
+
+	@Test
 	void isAnnotatedForClassWithoutAnnotation() {
 		assertFalse(isAnnotated(Annotation1Class.class, Annotation2.class));
 	}
@@ -655,6 +681,12 @@ class AnnotationUtilsTests {
 
 	@Annotation1
 	static class Annotation1Class {
+		class InnerClass {
+			class InnerInnerClass {
+			}
+		}
+		static class NestedClass {
+		}
 	}
 
 	@Annotation2
@@ -677,6 +709,11 @@ class AnnotationUtilsTests {
 
 		@ComposedAnnotation
 		void method() {
+		}
+
+		class InnerClass {
+			class InnerInnerClass {
+			}
 		}
 	}
 
