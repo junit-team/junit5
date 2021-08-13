@@ -147,14 +147,6 @@ inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, 
     }, Supplier(message))
 }
 
-@PublishedApi
-internal inline fun <R> getThrowingSupplier(executable: () -> R): ThrowingSupplier<R> = try {
-    val result = executable()
-    ThrowingSupplier { result }
-} catch (throwable: Throwable) {
-    ThrowingSupplier { throw throwable }
-}
-
 /**
  * Example usage:
  * ```kotlin
@@ -199,6 +191,14 @@ inline fun <R> assertDoesNotThrow(noinline message: () -> String, executable: ()
         getThrowingSupplier(executable),
         Supplier(message)
     )
+
+@PublishedApi
+internal inline fun <R> getThrowingSupplier(executable: () -> R): ThrowingSupplier<R> = try {
+    val result = executable()
+    ThrowingSupplier { result }
+} catch (throwable: Throwable) {
+    ThrowingSupplier { throw throwable }
+}
 
 /**
  * Example usage:
