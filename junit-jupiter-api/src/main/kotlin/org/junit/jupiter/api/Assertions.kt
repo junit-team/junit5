@@ -148,7 +148,7 @@ inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, 
 }
 
 @PublishedApi
-internal inline fun <reified R> getThrowingSupplier(executable: () -> R): ThrowingSupplier<R> = try {
+internal inline fun <R> getThrowingSupplier(executable: () -> R): ThrowingSupplier<R> = try {
     val result = executable()
     ThrowingSupplier { result }
 } catch (throwable: Throwable) {
@@ -166,12 +166,8 @@ internal inline fun <reified R> getThrowingSupplier(executable: () -> R): Throwi
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-inline fun <reified R> assertDoesNotThrow(executable: () -> R): R =
+inline fun <R> assertDoesNotThrow(executable: () -> R): R =
     Assertions.assertDoesNotThrow(getThrowingSupplier(executable))
-
-@API(status = EXPERIMENTAL, since = "5.5")
-inline fun assertDoesNotThrow(executable: () -> Nothing): Unit =
-    Assertions.assertDoesNotThrow(getThrowingSupplier<Unit>(executable))
 
 /**
  * Example usage:
@@ -184,11 +180,7 @@ inline fun assertDoesNotThrow(executable: () -> Nothing): Unit =
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-inline fun <reified R> assertDoesNotThrow(message: String, executable: () -> R): R =
-    assertDoesNotThrow({ message }, executable)
-
-@API(status = EXPERIMENTAL, since = "5.5")
-inline fun assertDoesNotThrow(message: String, executable: () -> Nothing): Unit =
+inline fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
     assertDoesNotThrow({ message }, executable)
 
 /**
@@ -202,16 +194,9 @@ inline fun assertDoesNotThrow(message: String, executable: () -> Nothing): Unit 
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-inline fun <reified R> assertDoesNotThrow(noinline message: () -> String, executable: () -> R): R =
+inline fun <R> assertDoesNotThrow(noinline message: () -> String, executable: () -> R): R =
     Assertions.assertDoesNotThrow(
         getThrowingSupplier(executable),
-        Supplier(message)
-    )
-
-@API(status = EXPERIMENTAL, since = "5.5")
-inline fun assertDoesNotThrow(noinline message: () -> String, executable: () -> Nothing): Unit =
-    Assertions.assertDoesNotThrow(
-        getThrowingSupplier<Unit>(executable),
         Supplier(message)
     )
 
