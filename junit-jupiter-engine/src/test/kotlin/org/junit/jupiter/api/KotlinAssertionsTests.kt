@@ -62,19 +62,10 @@ class KotlinAssertionsTests {
     }
 
     @Test
-    fun `assertThrows with coroutines`() = runBlocking<Unit> {
+    fun `expected context exception testing`() = runBlocking<Unit> {
         assertThrows<AssertionError>("Should fail async") {
             suspend { fail("Should fail async") }()
         }
-    }
-
-    @Test
-    fun `assertDoesNotThrow with coroutines`() = runBlocking {
-        val result = assertDoesNotThrow {
-            suspend { "Result" }()
-        }
-
-        assertEquals("Result", result)
     }
 
     @TestFactory
@@ -84,13 +75,31 @@ class KotlinAssertionsTests {
                 val actual = assertDoesNotThrow { 1 }
                 assertEquals(1, actual)
             },
+            dynamicTest("for no arguments variant (suspended)") {
+                runBlocking {
+                    val actual = assertDoesNotThrow { suspend { 1 }() }
+                    assertEquals(1, actual)
+                }
+            },
             dynamicTest("for message variant") {
                 val actual = assertDoesNotThrow("message") { 2 }
                 assertEquals(2, actual)
             },
+            dynamicTest("for message variant (suspended)") {
+                runBlocking {
+                    val actual = assertDoesNotThrow("message") { suspend { 2 }() }
+                    assertEquals(2, actual)
+                }
+            },
             dynamicTest("for message supplier variant") {
                 val actual = assertDoesNotThrow({ "message" }) { 3 }
                 assertEquals(3, actual)
+            },
+            dynamicTest("for message supplier variant (suspended)") {
+                runBlocking {
+                    val actual = assertDoesNotThrow({ "message" }) { suspend { 3 }() }
+                    assertEquals(3, actual)
+                }
             }
         )),
         dynamicContainer("fails when an exception is thrown", Stream.of(
@@ -103,6 +112,19 @@ class KotlinAssertionsTests {
                 assertMessageEquals(exception,
                     "Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail")
             },
+            dynamicTest("for no arguments variant (suspended)") {
+                runBlocking {
+                    val exception = assertThrows<AssertionError> {
+                        assertDoesNotThrow {
+                            suspend { fail("fail") }()
+                        }
+                    }
+                    assertMessageEquals(
+                        exception,
+                        "Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail"
+                    )
+                }
+            },
             dynamicTest("for message variant") {
                 val exception = assertThrows<AssertionError> {
                     assertDoesNotThrow("Does not throw") {
@@ -112,6 +134,19 @@ class KotlinAssertionsTests {
                 assertMessageEquals(exception,
                     "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail")
             },
+            dynamicTest("for message variant (suspended)") {
+                runBlocking {
+                    val exception = assertThrows<AssertionError> {
+                        assertDoesNotThrow("Does not throw") {
+                            suspend { fail("fail") }()
+                        }
+                    }
+                    assertMessageEquals(
+                        exception,
+                        "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail"
+                    )
+                }
+            },
             dynamicTest("for message supplier variant") {
                 val exception = assertThrows<AssertionError> {
                     assertDoesNotThrow({ "Does not throw" }) {
@@ -120,6 +155,19 @@ class KotlinAssertionsTests {
                 }
                 assertMessageEquals(exception,
                     "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail")
+            },
+            dynamicTest("for message supplier variant (suspended)") {
+                runBlocking {
+                    val exception = assertThrows<AssertionError> {
+                        assertDoesNotThrow({ "Does not throw" }) {
+                            suspend { fail("fail") }()
+                        }
+                    }
+                    assertMessageEquals(
+                        exception,
+                        "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail"
+                    )
+                }
             }
         ))
     )
