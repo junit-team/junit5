@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code TypedArgumentConverter} is an abstract base class for
@@ -34,7 +35,7 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 	private final Class<T> targetType;
 
 	/**
-	 * Create a new {@codeTypedArgumentConverter}.
+	 * Create a new {@code TypedArgumentConverter}.
 	 *
 	 * @param sourceType the type of the argument to convert; never {@code null}
 	 * @param targetType the type of the target object to create from the source;
@@ -50,11 +51,16 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 		if (source == null) {
 			return convert(null);
 		}
-		if (!this.sourceType.isAssignableFrom(source.getClass())) {
-			throw new ArgumentConversionException("Can only convert objects of type " + this.sourceType.getName());
+		if (!this.sourceType.isInstance(source)) {
+			String message = String.format(
+				"%s cannot convert objects of type [%s]. Only source objects of type [%s] are supported.",
+				getClass().getSimpleName(), source.getClass().getName(), this.sourceType.getName());
+			throw new ArgumentConversionException(message);
 		}
-		if (!this.targetType.isAssignableFrom(context.getParameter().getType())) {
-			throw new ArgumentConversionException("Can only convert to type " + this.targetType.getName());
+		if (!ReflectionUtils.isAssignableTo(this.targetType, context.getParameter().getType())) {
+			String message = String.format("%s cannot convert to type [%s]. Only target type [%s] is supported.",
+				getClass().getSimpleName(), context.getParameter().getType().getName(), this.targetType.getName());
+			throw new ArgumentConversionException(message);
 		}
 		return convert(this.sourceType.cast(source));
 	}

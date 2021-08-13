@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.successful;
@@ -46,6 +45,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
@@ -126,6 +126,37 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
+		void updatesIncludeClassNameFilterWhenSelectClassesAnnotationIsPresent() {
+
+			@SelectClasses({ Short.class, Byte.class })
+			class TestCase {
+			}
+
+			var request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+
+			var filters = request.getFiltersByType(ClassNameFilter.class);
+			assertThat(filters).hasSize(1);
+
+			var filter = filters.get(0);
+
+			// Excluded by default
+			assertExcludes(filter, "example.MyClass");
+			assertExcludes(filter, "example.MyTestClass");
+			assertExcludes(filter, "example.Short");
+			assertExcludes(filter, "example.Byte");
+
+			// Included due to ClassNameFilter.STANDARD_INCLUDE_PATTERN
+			assertIncludes(filter, "TestClass");
+			assertIncludes(filter, "example.TestClass");
+			assertIncludes(filter, "example.MyTests");
+			assertIncludes(filter, "example.MyTest");
+
+			// Included due to @SelectClasses({ Short.class, Byte.class })
+			assertIncludes(filter, Short.class.getName());
+			assertIncludes(filter, Byte.class.getName());
+		}
+
+		@Test
 		void requestsPackageSelectorsWhenPackagesAnnotationIsPresent() {
 
 			@SelectPackages({ "foo", "bar" })
@@ -153,9 +184,9 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			var filter = filters.get(0);
-			assertTrue(filter.apply("includedpackage1.TestClass").included());
-			assertTrue(filter.apply("includedpackage2.TestClass").included());
-			assertTrue(filter.apply("excludedpackage1.TestClass").excluded());
+			assertIncludes(filter, "includedpackage1.TestClass");
+			assertIncludes(filter, "includedpackage2.TestClass");
+			assertExcludes(filter, "excludedpackage1.TestClass");
 		}
 
 		@Test
@@ -171,9 +202,9 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			var filter = filters.get(0);
-			assertTrue(filter.apply("includedpackage1.TestClass").included());
-			assertTrue(filter.apply("excludedpackage1.TestClass").excluded());
-			assertTrue(filter.apply("excludedpackage2.TestClass").excluded());
+			assertIncludes(filter, "includedpackage1.TestClass");
+			assertExcludes(filter, "excludedpackage1.TestClass");
+			assertExcludes(filter, "excludedpackage2.TestClass");
 		}
 
 		@Test
@@ -189,9 +220,9 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			var filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTags("foo")).included());
-			assertTrue(filter.apply(testDescriptorWithTags("bar")).included());
-			assertTrue(filter.apply(testDescriptorWithTags("baz")).excluded());
+			assertIncludes(filter, testDescriptorWithTags("foo"));
+			assertIncludes(filter, testDescriptorWithTags("bar"));
+			assertExcludes(filter, testDescriptorWithTags("baz"));
 		}
 
 		@Test
@@ -207,9 +238,9 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			var filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTags("foo")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTags("bar")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTags("baz")).included());
+			assertExcludes(filter, testDescriptorWithTags("foo"));
+			assertExcludes(filter, testDescriptorWithTags("bar"));
+			assertIncludes(filter, testDescriptorWithTags("baz"));
 		}
 
 		@Test
@@ -225,11 +256,11 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			var filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTags("foo")).included());
-			assertTrue(filter.apply(testDescriptorWithTags("foo", "any_other_tag")).included());
-			assertTrue(filter.apply(testDescriptorWithTags("foo", "bar")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTags("bar")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTags("bar", "any_other_tag")).excluded());
+			assertIncludes(filter, testDescriptorWithTags("foo"));
+			assertIncludes(filter, testDescriptorWithTags("foo", "any_other_tag"));
+			assertExcludes(filter, testDescriptorWithTags("foo", "bar"));
+			assertExcludes(filter, testDescriptorWithTags("bar"));
+			assertExcludes(filter, testDescriptorWithTags("bar", "any_other_tag"));
 		}
 
 		@Test
@@ -245,11 +276,11 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(1);
 
 			var filter = filters.get(0);
-			assertTrue(filter.apply(testDescriptorWithTags("foo")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTags("foo", "any_other_tag")).excluded());
-			assertTrue(filter.apply(testDescriptorWithTags("foo", "bar")).included());
-			assertTrue(filter.apply(testDescriptorWithTags("bar")).included());
-			assertTrue(filter.apply(testDescriptorWithTags("bar", "any_other_tag")).included());
+			assertExcludes(filter, testDescriptorWithTags("foo"));
+			assertExcludes(filter, testDescriptorWithTags("foo", "any_other_tag"));
+			assertIncludes(filter, testDescriptorWithTags("foo", "bar"));
+			assertIncludes(filter, testDescriptorWithTags("bar"));
+			assertIncludes(filter, testDescriptorWithTags("bar", "any_other_tag"));
 		}
 
 		@Test
@@ -271,16 +302,16 @@ class JUnitPlatformRunnerTests {
 			assertThat(filters).hasSize(2);
 
 			var includeFilter = filters.get(1);
-			assertTrue(includeFilter.apply(fooEngine).included());
-			assertTrue(includeFilter.apply(barEngine).included());
-			assertTrue(includeFilter.apply(bazEngine).included());
-			assertTrue(includeFilter.apply(quuxEngine).excluded());
+			assertIncludes(includeFilter, fooEngine);
+			assertIncludes(includeFilter, barEngine);
+			assertIncludes(includeFilter, bazEngine);
+			assertExcludes(includeFilter, quuxEngine);
 
 			var excludeFilter = filters.get(0);
-			assertTrue(excludeFilter.apply(fooEngine).included());
-			assertTrue(excludeFilter.apply(barEngine).excluded());
-			assertTrue(excludeFilter.apply(bazEngine).included());
-			assertTrue(excludeFilter.apply(quuxEngine).excluded());
+			assertIncludes(excludeFilter, fooEngine);
+			assertExcludes(excludeFilter, barEngine);
+			assertIncludes(excludeFilter, bazEngine);
+			assertExcludes(excludeFilter, quuxEngine);
 		}
 
 		@Test
@@ -455,6 +486,14 @@ class JUnitPlatformRunnerTests {
 			assertThat(testDescriptions).hasSize(2);
 			assertEquals(testDescription("[root:test2a]"), testDescriptions.get(0));
 			assertEquals(testDescription("[root:test2b]"), testDescriptions.get(1));
+		}
+
+		private static <T> void assertIncludes(Filter<T> filter, T included) {
+			assertThat(filter.apply(included).included()).isTrue();
+		}
+
+		private static <T> void assertExcludes(Filter<T> filter, T excluded) {
+			assertThat(filter.apply(excluded).excluded()).isTrue();
 		}
 
 	}

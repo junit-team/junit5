@@ -22,7 +22,9 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Classes explicitly selected via `@SelectClasses` are now always included in the test
+  suite. This applies to `@Suite` classes running via the `SuiteTestEngine` and suite
+  classes running via the `JUnitPlatform` `Runner`.
 
 ==== Deprecations and Breaking Changes
 
@@ -30,6 +32,12 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New `findAnnotation(Class,Class,SearchOption)` method in `AnnotationSupport` that
+  performs the same search algorithm as `findAnnotation(AnnotatedElement,Class)` but also
+  searches the enclosing class hierarchy for inner classes if the
+  `INCLUDE_ENCLOSING_CLASSES` `SearchOption` is specified. This new method can be used by
+  extension authors to find annotations on enclosing classes for JUnit Jupiter `@Nested`
+  test classes.
 * New `ClassSource.from(URI)` static factory method for creating a `ClassSource` from a
   URI using the `class` scheme and optional query parameters specifying the line number
   and column number. This is analogous to the existing `ClasspathResourceSource.from(URI)`
@@ -62,6 +70,9 @@ on GitHub.
   not configured to use the `IndicativeSentences` display name generator as well.
 * The `TypedArgumentConverter` base class now supports the conversion of a `null` source
   value in parameterized tests.
+* The `TypedArgumentConverter` base class now supports conversion to a primitive type if
+  the configured target type is a wrapper for the target primitive type, including
+  primitive widening support -- for example, from `Integer` to `int` or `long`.
 
 ==== Deprecations and Breaking Changes
 

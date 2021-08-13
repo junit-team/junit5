@@ -347,7 +347,7 @@ class ParameterizedTestDemo {
 
 		@Override
 		protected Integer convert(String source) {
-			return source.length();
+			return (source != null ? source.length() : 0);
 		}
 
 	}

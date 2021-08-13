@@ -365,6 +365,42 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Determine if an object of the supplied source type can be assigned to the
+	 * supplied target type for the purpose of reflective method invocations.
+	 *
+	 * <p>In contrast to {@link Class#isAssignableFrom(Class)}, this method
+	 * returns {@code true} if the target type represents a primitive type whose
+	 * wrapper matches the supplied source type. In addition, this method
+	 * also supports
+	 * <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2">
+	 * widening conversions</a> for primitive target types.
+	 *
+	 * @param sourceType the non-primitive target type; never {@code null}
+	 * @param targetType the target type; never {@code null}
+	 * @return {@code true} if an object of the source type is assignment compatible
+	 * with the target type
+	 * @since 1.8
+	 * @see Class#isInstance(Object)
+	 * @see Class#isAssignableFrom(Class)
+	 * @see #isAssignableTo(Object, Class)
+	 */
+	public static boolean isAssignableTo(Class<?> sourceType, Class<?> targetType) {
+		Preconditions.notNull(sourceType, "source type must not be null");
+		Preconditions.condition(!sourceType.isPrimitive(), "source type must not be a primitive type");
+		Preconditions.notNull(targetType, "target type must not be null");
+
+		if (targetType.isAssignableFrom(sourceType)) {
+			return true;
+		}
+
+		if (targetType.isPrimitive()) {
+			return sourceType == primitiveToWrapperMap.get(targetType) || isWideningConversion(sourceType, targetType);
+		}
+
+		return false;
+	}
+
+	/**
 	 * Determine if the supplied object can be assigned to the supplied target
 	 * type for the purpose of reflective method invocations.
 	 *
@@ -384,6 +420,7 @@ public final class ReflectionUtils {
 	 * @return {@code true} if the object is assignment compatible
 	 * @see Class#isInstance(Object)
 	 * @see Class#isAssignableFrom(Class)
+	 * @see #isAssignableTo(Class, Class)
 	 */
 	public static boolean isAssignableTo(Object obj, Class<?> targetType) {
 		Preconditions.notNull(targetType, "target type must not be null");
