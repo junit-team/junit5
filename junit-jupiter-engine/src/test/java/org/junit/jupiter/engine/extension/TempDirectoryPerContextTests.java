@@ -293,24 +293,6 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	class Failures {
 
 		@Test
-		@DisplayName("when @TempDir is used on private static field")
-		@Order(10)
-		void onlySupportsNonPrivateInstanceFields() {
-			var results = executeTestsForClass(AnnotationOnPrivateStaticFieldTestCase.class);
-
-			assertSingleFailedContainer(results, ExtensionConfigurationException.class, "must not be private");
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on private instance field")
-		@Order(11)
-		void onlySupportsNonPrivateStaticFields() {
-			var results = executeTestsForClass(AnnotationOnPrivateInstanceFieldTestCase.class);
-
-			assertSingleFailedTest(results, ExtensionConfigurationException.class, "must not be private");
-		}
-
-		@Test
 		@DisplayName("when @TempDir is used on static field of an unsupported type")
 		@Order(20)
 		void onlySupportsStaticFieldsOfTypePathAndFile() {
@@ -364,6 +346,29 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 
 			assertSingleFailedContainer(results, ParameterResolutionException.class,
 				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
+		}
+
+	}
+
+	@Nested
+	@DisplayName("supports @TempDir")
+	@TestMethodOrder(OrderAnnotation.class)
+	class PrivateFields {
+
+		@Test
+		@DisplayName("on private static field")
+		@Order(10)
+		void supportsPrivateInstanceFields() {
+			executeTestsForClass(AnnotationOnPrivateStaticFieldTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("on private instance field")
+		@Order(11)
+		void supportsPrivateStaticFields() {
+			executeTestsForClass(AnnotationOnPrivateInstanceFieldTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
 	}
@@ -526,6 +531,7 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void test() {
+			assertTrue(Files.exists(tempDir));
 		}
 
 	}
@@ -538,6 +544,7 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void test() {
+			assertTrue(Files.exists(tempDir));
 		}
 
 	}

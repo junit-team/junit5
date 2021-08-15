@@ -14,7 +14,6 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
-import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
@@ -99,7 +98,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			Predicate<Field> predicate) {
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
-			assertValidFieldCandidate(field);
+			assertSupportedType("field", field.getType());
 			try {
 				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), context));
 			}
@@ -107,13 +106,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				ExceptionUtils.throwAsUncheckedException(t);
 			}
 		});
-	}
-
-	private void assertValidFieldCandidate(Field field) {
-		assertSupportedType("field", field.getType());
-		if (isPrivate(field)) {
-			throw new ExtensionConfigurationException("@TempDir field [" + field + "] must not be private.");
-		}
 	}
 
 	/**

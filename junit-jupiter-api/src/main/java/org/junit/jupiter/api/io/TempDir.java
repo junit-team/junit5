@@ -26,13 +26,13 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 
 /**
- * {@code @TempDir} can be used to annotate a non-private field in a test class
- * or a parameter in a lifecycle method or test method of type {@link Path} or
+ * {@code @TempDir} can be used to annotate a field in a test class or a
+ * parameter in a lifecycle method or test method of type {@link Path} or
  * {@link File} that should be resolved into a temporary directory.
  *
  * <p>Please note that {@code @TempDir} is not supported on constructor
- * parameters. Please use field injection instead, by annotating a non-private
- * instance field with {@code @TempDir}.
+ * parameters. Please use field injection instead by annotating an instance
+ * field with {@code @TempDir}.
  *
  * <h3>Creation</h3>
  *
