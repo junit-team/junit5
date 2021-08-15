@@ -10,17 +10,18 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
+import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.reportEntry;
+import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
 import java.util.Map;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.testkit.engine.EventType;
-import org.junit.platform.testkit.engine.Events;
 
 public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngineTests {
 
@@ -37,7 +38,7 @@ public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngine
 	static class TestCase {
 		@Test
 		void closesCloseableResourcesInExtensionContext(ExtensionContext extensionContext) {
-			ExtensionContext.Store store = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL);
+			ExtensionContext.Store store = extensionContext.getStore(GLOBAL);
 			store.put("foo", reportEntryOnClose(extensionContext, "1"));
 			store.put("bar", reportEntryOnClose(extensionContext, "2"));
 			store.put("baz", reportEntryOnClose(extensionContext, "3"));
@@ -49,45 +50,31 @@ public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-
 	@Test
-	void testExceptionInOnCloseableResource() {
-		executeTestsForClass(ExceptionInCloseableResourceTestCase.class).testEvents()
-				.assertThatEvents()
-				.anySatisfy(e -> {
-					assertThat(e.getType()).isEqualTo(EventType.FINISHED);
-					TestExecutionResult result = e.getPayload(TestExecutionResult.class).get();
-					assertThat(result.getStatus()).isEqualTo(TestExecutionResult.Status.FAILED);
-					assertThat(result.getThrowable()).isPresent()
-							.hasValueSatisfying(t -> assertThat(t)
-									.hasMessageContaining("Exception in Test.")
-									.isInstanceOf(RuntimeException.class)
-							);
-					assertThat(result.getThrowable().get().getSuppressed())
-							.hasSize(1)
-							.anySatisfy(t -> assertThat(t).hasMessageContaining("Exception in onClose"));
-				});
+	void exceptionsDuringCloseAreReportedAsSuppressed() {
+		executeTestsForClass(ExceptionInCloseableResourceTestCase.class).testEvents() //
+				.assertEventsMatchLoosely(event( //
+					test(), //
+					finishedWithFailure( //
+						message("Exception in test"), //
+						suppressed(0, message("Exception in onClose")))));
 	}
-
 
 	@ExtendWith(ThrowingOnCloseExtension.class)
 	static class ExceptionInCloseableResourceTestCase {
 
 		@Test
 		void test() {
-			throw new RuntimeException("Exception in Test.");
+			throw new RuntimeException("Exception in test");
 		}
 
 	}
 
-
 	static class ThrowingOnCloseExtension implements BeforeEachCallback {
-
-		private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ThrowingOnCloseExtension.class);
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
-			context.getStore(NAMESPACE).put("throwingResource", (ExtensionContext.Store.CloseableResource) () -> {
+			context.getStore(GLOBAL).put("throwingResource", (ExtensionContext.Store.CloseableResource) () -> {
 				throw new RuntimeException("Exception in onClose");
 			});
 		}
