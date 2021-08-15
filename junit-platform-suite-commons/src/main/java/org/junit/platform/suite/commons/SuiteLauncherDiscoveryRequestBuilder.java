@@ -122,11 +122,6 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
-	public SuiteLauncherDiscoveryRequestBuilder enableParentConfigurationParameters(boolean enabled) {
-		this.enableParentConfigurationParameters = enabled;
-		return this;
-	}
-
 	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
 
@@ -135,8 +130,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
 				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
 		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
-				.map(disableParentConfigurationParameters -> false)
-				.ifPresent(this::enableParentConfigurationParameters);
+				.ifPresent(__ -> enableParentConfigurationParameters = false);
 		findAnnotationValues(suiteClass, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::excludeClassNamePatterns)
