@@ -81,13 +81,13 @@ loadScripts(document, 'script');</script>
 <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.4")
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">TempDir</span></div>
-<div class="block"><code>@TempDir</code> can be used to annotate a non-private field in a test class
- or a parameter in a lifecycle method or test method of type <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a> or
+<div class="block"><code>@TempDir</code> can be used to annotate a field in a test class or a
+ parameter in a lifecycle method or test method of type <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a> or
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link"><code>File</code></a> that should be resolved into a temporary directory.
 
  <p>Please note that <code>@TempDir</code> is not supported on constructor
- parameters. Please use field injection instead, by annotating a non-private
- instance field with <code>@TempDir</code>.
+ parameters. Please use field injection instead by annotating an instance
+ field with <code>@TempDir</code>.
 
  <h3>Creation</h3>
 

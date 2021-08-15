@@ -5523,9 +5523,9 @@ can improve and eventually <a href="#api-evolution">promote</a> this feature.
 <div class="paragraph">
 <p>The built-in <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a></code> extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
-default. To use it, annotate a non-private field of type <code>java.nio.file.Path</code> or
-<code>java.io.File</code> with <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or add a parameter of type <code>java.nio.file.Path</code> or
-<code>java.io.File</code> annotated with <code>@TempDir</code> to a lifecycle method or test method.</p>
+default. To use it, annotate a field of type <code>java.nio.file.Path</code> or <code>java.io.File</code> with
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or add a parameter of type <code>java.nio.file.Path</code> or <code>java.io.File</code> annotated
+with <code>@TempDir</code> to a lifecycle method or test method.</p>
 </div>
 <div class="paragraph">
 <p>For example, the following test declares a parameter annotated with <code>@TempDir</code> for a
@@ -5581,7 +5581,7 @@ please note that this option is deprecated and will be removed in a future relea
 <div class="paragraph">
 <p><code>@TempDir</code> is not supported on constructor parameters. If you wish to retain a single
 reference to a temp directory across lifecycle methods and the current test method, please
-use field injection, by annotating a non-private instance field with <code>@TempDir</code>.</p>
+use field injection by annotating an instance field with <code>@TempDir</code>.</p>
 </div>
 <div class="paragraph">
 <p>The following example stores a <em>shared</em> temporary directory in a <code>static</code> field. This
@@ -10511,7 +10511,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-15 08:48:09 UTC
+Last updated 2021-08-15 10:16:23 UTC
 </div>
 </div>
 <style>
