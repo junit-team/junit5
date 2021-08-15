@@ -633,6 +633,10 @@ value in parameterized tests.</p>
 the configured target type is a wrapper for the target primitive type, including
 primitive widening support&#8201;&#8212;&#8201;for example, from <code>Integer</code> to <code>int</code> or <code>long</code>.</p>
 </li>
+<li>
+<p>Exceptions thrown from instances of <code>CloseableResource</code> no longer hide test failures but
+are instead reported as suppressed exceptions.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1126,7 +1130,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-15 08:25:23 UTC
+Last updated 2021-08-15 08:48:09 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
