@@ -716,7 +716,9 @@ arguments at the end of the test. This attribute defaults to true.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Suites executed by the <code>junit-platform-suite</code> module will now inherit the
+configuration parameters from the parent discovery request. This behaviour can
+be disabled via the <code>@DisableParentConfigurationParameters</code> annotation.</p>
 </li>
 </ul>
 </div>
@@ -1133,7 +1135,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-15 10:16:23 UTC
+Last updated 2021-08-15 15:22:50 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

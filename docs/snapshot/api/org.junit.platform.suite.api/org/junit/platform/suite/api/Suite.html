@@ -92,7 +92,15 @@ loadScripts(document, 'script');</script>
  <p>When the <a href="IncludeClassNamePatterns.html" title="annotation in org.junit.platform.suite.api"><code>@IncludeClassNamePatterns</code></a>
  annotation is not present, the default include pattern
  <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/discovery/ClassNameFilter.html#STANDARD_INCLUDE_PATTERN">"^(Test.*|.+[.$]Test.*|.*Tests?)$"</a>
- will be used in order to avoid loading classes unnecessarily (see <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/discovery/ClassNameFilter.html#STANDARD_INCLUDE_PATTERN"><code>ClassNameFilter#STANDARD_INCLUDE_PATTERN</code></a>).</div>
+ will be used in order to avoid loading classes unnecessarily (see <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/discovery/ClassNameFilter.html#STANDARD_INCLUDE_PATTERN"><code>ClassNameFilter#STANDARD_INCLUDE_PATTERN</code></a>).
+
+ <p>By default a suite discovers tests using the configuration parameters
+ explicitly configured by <a href="ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>@ConfigurationParameter</code></a>
+ and the configuration parameters from the discovery request that discovered
+ the suite. Annotating a suite with
+ <a href="DisableParentConfigurationParameters.html" title="annotation in org.junit.platform.suite.api"><code>@DisableParentConfigurationParameters</code></a>
+ annotation disables the latter as a source of parameters so that only explicit
+ configuration parameters are taken into account.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.8</dd>
@@ -114,7 +122,9 @@ loadScripts(document, 'script');</script>
 <a href="ExcludeTags.html" title="annotation in org.junit.platform.suite.api"><code>ExcludeTags</code></a>, 
 <a href="SuiteDisplayName.html" title="annotation in org.junit.platform.suite.api"><code>SuiteDisplayName</code></a>, 
 <a href="ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>ConfigurationParameter</code></a>, 
+<a href="DisableParentConfigurationParameters.html" title="annotation in org.junit.platform.suite.api"><code>DisableParentConfigurationParameters</code></a>, 
 <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryRequest</code></a>, 
+<code>org.junit.platform.launcher.LauncherDiscoveryRequestBuilder</code>, 
 <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a></dd>
 </dl>
 </section>
