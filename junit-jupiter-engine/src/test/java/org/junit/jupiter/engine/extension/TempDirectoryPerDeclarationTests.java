@@ -400,12 +400,16 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	// https://github.com/junit-team/junit5/issues/1748
 	static class TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase {
 
+		@TempDir
+		Path tempDir;
+
 		TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase(TestInfo testInfo) {
 			assertNotNull(testInfo);
 		}
 
 		@Test
 		void test() {
+			assertNotNull(tempDir);
 		}
 
 	}
