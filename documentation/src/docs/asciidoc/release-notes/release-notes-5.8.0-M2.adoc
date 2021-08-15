@@ -73,6 +73,8 @@ on GitHub.
 * The `TypedArgumentConverter` base class now supports conversion to a primitive type if
   the configured target type is a wrapper for the target primitive type, including
   primitive widening support -- for example, from `Integer` to `int` or `long`.
+* Exceptions thrown from instances of `CloseableResource` no longer hide test failures but
+  are instead reported as suppressed exceptions.
 
 ==== Deprecations and Breaking Changes
 
