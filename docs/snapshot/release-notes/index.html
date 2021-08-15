@@ -651,8 +651,12 @@ primitive widening support&#8201;&#8212;&#8201;for example, from <code>Integer</
 <div class="ulist">
 <ul>
 <li>
-<p><code>@TempDir</code> now supports creating multiple temporary directories via an identifier
-specified on the annotation (e.g. <code>@TempDir("a")</code> and <code>@TempDir("b")</code>).</p>
+<p><code>@TempDir</code> can now be used to create multiple temporary directories. Instead of creating
+a single temporary directory per context (i.e. test class or method) every declaration
+of the <code>@TempDir</code> annotation on a field or method parameter now results in a separate
+temporary directory. To revert to the old behavior of using a single temporary directory
+for the entire test class or method (depending on which level the annotation is used),
+you can set the <code>junit.jupiter.tempdir.scope</code> configuration parameter to <code>per_context</code>.</p>
 </li>
 <li>
 <p>New <code>named()</code> static factory method in the <code>Named</code> interface that serves as an <em>alias</em>
@@ -1122,7 +1126,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-12 13:45:31 UTC
+Last updated 2021-08-15 08:25:23 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

@@ -258,8 +258,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Property name used to enable parallel test execution: "junit.jupiter.execution.parallel.enabled"</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#TIMEOUT_MODE_PROPERTY_NAME">TIMEOUT_MODE_PROPERTY_NAME</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#TEMP_DIR_SCOPE_PROPERTY_NAME">TEMP_DIR_SCOPE_PROPERTY_NAME</a></span></code></div>
 <div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#TIMEOUT_MODE_PROPERTY_NAME">TIMEOUT_MODE_PROPERTY_NAME</a></span></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Property used to determine if timeouts are applied to tests: "junit.jupiter.execution.timeout.mode".</div>
 </div>
 </div>
@@ -822,7 +827,7 @@ loadScripts(document, 'script');</script>
  <li><code>disabled_on_debug</code>: disables timeouts while debugging
  </ul>
 
- <p>If not specified, the default is <code>"enabled"</code>.</div>
+ <p>If not specified, the default is <code>enabled</code>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.6</dd>
@@ -845,7 +850,7 @@ loadScripts(document, 'script');</script>
  implement <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>.
 
  <p>If not specified, test methods will be ordered using an algorithm that
- is deterministic but intentionally nonobvious.</div>
+ is deterministic but intentionally non-obvious.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME">Constant Field Values</a></dd>
@@ -867,6 +872,32 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="TEMP_DIR_SCOPE_PROPERTY_NAME">
+<h3>TEMP_DIR_SCOPE_PROPERTY_NAME</h3>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#DEPRECATED" title="class or interface in org.apiguardian.api" class="external-link">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8")
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">TEMP_DIR_SCOPE_PROPERTY_NAME</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Property name used to set the scope of temporary directories created via
+ <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html" title="annotation in org.junit.jupiter.api.io"><code>@TempDir</code></a> annotation: "junit.jupiter.tempdir.scope"
+
+ <h3>Supported Values</h3>
+ <ul>
+ <li><code>per_context</code>: creates a single temporary directory for the
+ entire test class or method, depending on where it's first declared
+ <li><code>per_declaration</code>: creates separate temporary directories for
+ each declaration site of the <code>@TempDir</code> annotation.
+ </ul>
+
+ <p>If not specified, the default is <code>per_declaration</code>.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="../../../../../constant-values.html#org.junit.jupiter.engine.Constants.TEMP_DIR_SCOPE_PROPERTY_NAME">Constant Field Values</a></dd>
 </dl>
 </section>
 </li>

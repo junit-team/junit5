@@ -47,12 +47,12 @@ loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Required&nbsp;|&nbsp;</li>
-<li><a href="#annotation.interface.optional.element.summary">Optional</a></li>
+<li>Optional</li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.interface.element.detail">Element</a></li>
+<li>Element</li>
 </ul>
 </div>
 <div class="nav-list-search"><label for="search">SEARCH:</label>
@@ -85,99 +85,55 @@ loadScripts(document, 'script');</script>
  or a parameter in a lifecycle method or test method of type <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a> or
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link"><code>File</code></a> that should be resolved into a temporary directory.
 
- <p>Multiple temporary directories can be created by supplying different
- <a href="#value()">identifiers</a> on the annotation.
-
  <p>Please note that <code>@TempDir</code> is not supported on constructor
  parameters. Please use field injection instead, by annotating a non-private
  instance field with <code>@TempDir</code>.
 
- <h3>Temporary Directory Creation</h3>
+ <h3>Creation</h3>
 
- <p>The temporary directory with the supplied <a href="#value()">identifier</a>
- is only created if a field in a test class or a parameter in a lifecycle
- method or test method is annotated with <code>@TempDir</code>. If the field type
- or parameter type is neither <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a> nor <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link"><code>File</code></a> or if the
- temporary directory cannot be created, an
+ <p>The temporary directory is only created if a field in a test class or a
+ parameter in a lifecycle method or test method is annotated with
+ <code>@TempDir</code>. If the field type or parameter type is neither <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a>
+ nor <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link"><code>File</code></a> or if the temporary directory cannot be created, an
  <a href="../extension/ExtensionConfigurationException.html" title="class in org.junit.jupiter.api.extension"><code>ExtensionConfigurationException</code></a> or a
  <a href="../extension/ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension"><code>ParameterResolutionException</code></a> will be thrown as appropriate. In
  addition, a <code>ParameterResolutionException</code> will be thrown for a
  constructor parameter annotated with <code>@TempDir</code>.
 
- <h3>Temporary Directory Scope</h3>
+ <h3>Scope</h3>
 
- <p>The scope of the temporary directory depends on where the first
- <code>@TempDir</code> annotation with the supplied <a href="#value()">identifier</a>
- is encountered when executing a test class. The temporary directory with that
- identifier will be shared by all tests in a class when the annotation is
- present with the same identifier on a <code>static</code> field or on a parameter
- of a <a href="../BeforeAll.html" title="annotation in org.junit.jupiter.api"><code>@BeforeAll</code></a> method. Otherwise –
- for example, when <code>@TempDir</code> is only used on instance fields or on
- parameters in test, <a href="../BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a>, or
- <a href="../AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods – each test will
- use its own temporary directory.
+ <p>By default, a separate temporary directory is created for every
+ declaration of the <code>@TempDir</code> annotation. If you want to share a
+ temporary directory across all tests in a test class, you should declare the
+ annotation on a <code>static</code> field or on a parameter of a
+ <a href="../BeforeAll.html" title="annotation in org.junit.jupiter.api"><code>@BeforeAll</code></a> method.
 
- <h3>Temporary Directory Deletion</h3>
+ <h4>Old behavior</h4>
+ <p>You can revert to the old behavior of using a single temporary directory
+ by setting the <code>junit.jupiter.tempdir.scope</code> configuration parameter to
+ <code>per_context</code>. In that case, the scope of the temporary directory
+ depends on where the first <code>@TempDir</code> annotation is encountered when
+ executing a test class. The temporary directory will be shared by all tests
+ in a class when the annotation is present on a <code>static</code> field or on a
+ parameter of a <a href="../BeforeAll.html" title="annotation in org.junit.jupiter.api"><code>@BeforeAll</code></a> method.
+ Otherwise &mdash; for example, when <code>@TempDir</code> is only used on instance
+ fields or on parameters in test,
+ <a href="../BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a>, or
+ <a href="../AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods &mdash; each test
+ will use its own temporary directory.
 
- <p>When the end of the scope of a temporary directory with a certain
- <a href="#value()">identifier</a> is reached, i.e. when the test method or class
- has finished execution, JUnit will attempt to recursively delete all files
- and directories in the temporary directory and, finally, the temporary
- directory itself. In case deletion of a file or directory fails, an
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a> will be thrown that will cause the test or test class to
- fail.</div>
+ <h3>Deletion</h3>
+
+ <p>When the end of the scope of a temporary directory is reached, i.e. when
+ the test method or class has finished execution, JUnit will attempt to
+ recursively delete all files and directories in the temporary directory
+ and, finally, the temporary directory itself. In case deletion of a file or
+ directory fails, an <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a> will be thrown that will cause the
+ test or test class to fail.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.4</dd>
 </dl>
-</section>
-<section class="summary">
-<ul class="summary-list">
-<!-- =========== ANNOTATION INTERFACE OPTIONAL MEMBER SUMMARY =========== -->
-<li>
-<section class="member-summary" id="annotation.interface.optional.element.summary">
-<h2>Optional Element Summary</h2>
-<div class="caption"><span>Optional Elements</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Optional Element</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#value()">value</a></span></code></div>
-<div class="col-last even-row-color">
-<div class="block">The identifier of the temporary directory.</div>
-</div>
-</div>
-</section>
-</li>
-</ul>
-</section>
-<section class="details" id="annotation.interface.element.detail">
-<ul class="details-list">
-<!-- ============ ANNOTATION INTERFACE MEMBER DETAIL =========== -->
-<li>
-<section class="member-details">
-<h2>Element Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="value()">
-<h3>value</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">value</span></div>
-<div class="block">The identifier of the temporary directory.</div>
-<dl class="notes">
-<dt>Since:</dt>
-<dd>5.8</dd>
-</dl>
-<dl class="notes">
-<dt>Default:</dt>
-<dd>""</dd>
-</dl>
-</section>
-</li>
-</ul>
-</section>
-</li>
-</ul>
 </section>
 <!-- ========= END OF CLASS DATA ========= -->
 </main>

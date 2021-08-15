@@ -5546,19 +5546,19 @@ its content.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>You can inject multiple temporary directories by specifying explicit identifiers via the
-annotation parameter.</p>
+<p>You can inject multiple temporary directories by specifying multiple annotated parameters.</p>
 </div>
 <div class="listingblock">
 <div class="title">A test method that requires multiple temporary directories</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="nd">@Test</span>
-<span class="kt">void</span> <span class="nf">copyFileFromSourceToTarget</span><span class="o">(</span><span class="nd">@TempDir</span><span class="o">(</span><span class="s">"from"</span><span class="o">)</span> <span class="nc">Path</span> <span class="n">source</span><span class="o">,</span> <span class="nd">@TempDir</span><span class="o">(</span><span class="s">"to"</span><span class="o">)</span> <span class="nc">Path</span> <span class="n">target</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+<span class="kt">void</span> <span class="nf">copyFileFromSourceToTarget</span><span class="o">(</span><span class="nd">@TempDir</span> <span class="nc">Path</span> <span class="n">source</span><span class="o">,</span> <span class="nd">@TempDir</span> <span class="nc">Path</span> <span class="n">target</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
     <span class="nc">Path</span> <span class="n">sourceFile</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">"test.txt"</span><span class="o">);</span>
-
     <span class="k">new</span> <span class="nf">ListWriter</span><span class="o">(</span><span class="n">sourceFile</span><span class="o">).</span><span class="na">write</span><span class="o">(</span><span class="s">"a"</span><span class="o">,</span> <span class="s">"b"</span><span class="o">,</span> <span class="s">"c"</span><span class="o">);</span>
+
     <span class="nc">Path</span> <span class="n">targetFile</span> <span class="o">=</span> <span class="nc">Files</span><span class="o">.</span><span class="na">copy</span><span class="o">(</span><span class="n">sourceFile</span><span class="o">,</span> <span class="n">target</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">"test.txt"</span><span class="o">));</span>
 
+    <span class="n">assertNotEquals</span><span class="o">(</span><span class="n">sourceFile</span><span class="o">,</span> <span class="n">targetFile</span><span class="o">);</span>
     <span class="n">assertEquals</span><span class="o">(</span><span class="n">singletonList</span><span class="o">(</span><span class="s">"a,b,c"</span><span class="o">),</span> <span class="nc">Files</span><span class="o">.</span><span class="na">readAllLines</span><span class="o">(</span><span class="n">targetFile</span><span class="o">));</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -5570,17 +5570,24 @@ annotation parameter.</p>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-<code>@TempDir</code> is not supported on constructor parameters. If you wish to retain a
-single reference to a temp directory across lifecycle methods and the current test method,
-please use field injection, by annotating a non-private instance field with <code>@TempDir</code>.
+To revert to the old behavior of using a single temporary directory for the
+entire test class or method (depending on which level the annotation is used), you can set
+the <code>junit.jupiter.tempdir.scope</code> configuration parameter to <code>per_context</code>. However,
+please note that this option is deprecated and will be removed in a future release.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
+<p><code>@TempDir</code> is not supported on constructor parameters. If you wish to retain a single
+reference to a temp directory across lifecycle methods and the current test method, please
+use field injection, by annotating a non-private instance field with <code>@TempDir</code>.</p>
+</div>
+<div class="paragraph">
 <p>The following example stores a <em>shared</em> temporary directory in a <code>static</code> field. This
 allows the same <code>sharedTempDir</code> to be used in all lifecycle methods and test methods of
-the test class.</p>
+the test class. For better isolation, you should use an instance field so that each test
+method uses a separate directory.</p>
 </div>
 <div class="listingblock">
 <div class="title">A test class that shares a temporary directory across test methods</div>
@@ -10504,7 +10511,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-12 13:45:31 UTC
+Last updated 2021-08-15 08:25:23 UTC
 </div>
 </div>
 <style>
