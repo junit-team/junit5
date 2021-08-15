@@ -141,7 +141,8 @@ test {
 }
 ----
 
-Filtering by tags or engines is also supported:
+Filtering by <<running-tests-tags, tags>>,
+<<running-tests-tag-expressions, tag expressions>>, or engines is also supported:
 
 [source,groovy,indent=0]
 [subs=attributes+]
@@ -378,8 +379,9 @@ documentation for Maven Surefire for details.
 [[running-tests-build-maven-filter-tags]]
 ===== Filtering by Tags
 
-You can filter tests by tags or <<running-tests-tag-expressions, tag expressions>> using
-the following configuration properties.
+You can filter tests by <<running-tests-tags, tags>> or
+<<running-tests-tag-expressions, tag expressions>> using the following configuration
+properties.
 
 - to include _tags_ or _tag expressions_, use `groups`.
 - to exclude _tags_ or _tag expressions_, use `excludedGroups`.
@@ -763,8 +765,39 @@ Examples:
 - `org.example.MyCustomImpl, org.example.TheirCustomImpl`: matches candidate classes whose
   FQCN is exactly `org.example.MyCustomImpl` or `org.example.TheirCustomImpl`.
 
+[[running-tests-tags]]
+=== Tags
+
+Tags are a JUnit Platform concept for marking and filtering tests. The programming model
+for adding tags to containers and tests is defined by the testing framework. For example,
+in JUnit Jupiter based tests, the `@Tag` annotation (see
+<<writing-tests-tagging-and-filtering>>) should be used. For JUnit 4 based tests, the
+Vintage engine maps `@Category` annotations to tags (see
+<<migrating-from-junit4-categories-support>>). Other testing frameworks may define their
+own annotation or other means for users to specify tags.
+
+[[running-tests-tag-syntax-rules]]
+==== Syntax Rules for Tags
+
+Regardless how a tag is specified, the JUnit Platform enforces the following rules:
+
+* A tag must not be `null` or _blank_.
+* A _trimmed_ tag must not contain whitespace.
+* A _trimmed_ tag must not contain ISO control characters.
+* A _trimmed_ tag must not contain any of the following _reserved characters_.
+- `,`: _comma_
+- `(`: _left parenthesis_
+- `)`: _right parenthesis_
+- `&`: _ampersand_
+- `|`: _vertical bar_
+- `!`: _exclamation point_
+
+NOTE: In the above context, "trimmed" means that leading and trailing whitespace
+characters have been removed.
+
 [[running-tests-tag-expressions]]
-=== Tag Expressions
+==== Tag Expressions
+
 Tag expressions are boolean expressions with the operators `!`, `&` and `|`. In addition,
 `(` and `)` can be used to adjust for operator precedence.
 

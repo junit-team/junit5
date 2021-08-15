@@ -30,8 +30,8 @@ find out how this is done with Gradle and Maven.
 ==== Categories Support
 
 For test classes or methods that are annotated with `@Category`, the _JUnit Vintage test
-engine_ exposes the category's fully qualified class name as a tag of the corresponding
-test identifier. For example, if a test method is annotated with
+engine_ exposes the category's fully qualified class name as a <<running-tests-tags, tag>>
+of the corresponding test identifier. For example, if a test method is annotated with
 `@Category(Example.class)`, it will be tagged with `"com.acme.Example"`. Similar to the
 `Categories` runner in JUnit 4, this information can be used to filter the discovered
 tests before executing them (see <<running-tests>> for details).

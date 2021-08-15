@@ -501,25 +501,9 @@ must always be `static`. Condition methods located in external classes must also
 === Tagging and Filtering
 
 Test classes and methods can be tagged via the `@Tag` annotation. Those tags can later be
-used to filter <<running-tests,test discovery and execution>>.
-
-TIP: See also: <<running-tests-tag-expressions>>
-
-==== Syntax Rules for Tags
-
-* A tag must not be `null` or _blank_.
-* A _trimmed_ tag must not contain whitespace.
-* A _trimmed_ tag must not contain ISO control characters.
-* A _trimmed_ tag must not contain any of the following _reserved characters_.
-  - `,`: _comma_
-  - `(`: _left parenthesis_
-  - `)`: _right parenthesis_
-  - `&`: _ampersand_
-  - `|`: _vertical bar_
-  - `!`: _exclamation point_
-
-NOTE: In the above context, "trimmed" means that leading and trailing whitespace
-characters have been removed.
+used to filter <<running-tests, test discovery and execution>>. Please refer to the
+<<running-tests-tags>> section for more information about tag support in the JUnit
+Platform.
 
 [source,java,indent=0]
 ----
