@@ -80,6 +80,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* `assertDoesNotThrow` now supports calling suspending functions.
 * `@TempDir` now supports creating multiple temporary directories via an identifier
   specified on the annotation (e.g. `@TempDir("a")` and `@TempDir("b")`).
 * New `named()` static factory method in the `Named` interface that serves as an _alias_
