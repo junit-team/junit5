@@ -37,6 +37,7 @@ class LauncherConfigurationParametersTests {
 
 	private static final String CONFIG_FILE_NAME = "test-junit-platform.properties";
 	private static final String KEY = LauncherConfigurationParametersTests.class.getName();
+	private static final String INHERITED_PARAM = "parent config param";
 	private static final String CONFIG_PARAM = "explicit config param";
 	private static final String CONFIG_FILE = "from config file";
 	private static final String SYSTEM_PROPERTY = "system property";
@@ -94,6 +95,15 @@ class LauncherConfigurationParametersTests {
 	}
 
 	@Test
+	void inherited() {
+		ConfigurationParameters configParams = fromMapAndParent( //
+			Map.of(), //
+			Map.of(KEY, INHERITED_PARAM));
+		assertThat(configParams.get(KEY)).contains(INHERITED_PARAM);
+		assertThat(configParams.toString()).contains(KEY);
+	}
+
+	@Test
 	void explicitConfigParamOverridesSystemProperty() {
 		System.setProperty(KEY, SYSTEM_PROPERTY);
 		ConfigurationParameters configParams = fromMap(Map.of(KEY, CONFIG_PARAM));
@@ -109,11 +119,29 @@ class LauncherConfigurationParametersTests {
 	}
 
 	@Test
+	void explicitConfigParamOverridesInheritedProperty() {
+		System.setProperty(KEY, SYSTEM_PROPERTY);
+		ConfigurationParameters configParams = fromMapAndParent( //
+			Map.of(KEY, CONFIG_PARAM), //
+			Map.of(KEY, INHERITED_PARAM));
+		assertThat(configParams.get(KEY)).contains(CONFIG_PARAM);
+		assertThat(configParams.toString()).contains(CONFIG_PARAM);
+	}
+
+	@Test
 	void systemPropertyOverridesConfigFile() {
 		System.setProperty(KEY, SYSTEM_PROPERTY);
 		ConfigurationParameters configParams = fromMapAndFile(Map.of(), CONFIG_FILE_NAME);
 		assertThat(configParams.get(KEY)).contains(SYSTEM_PROPERTY);
 		assertThat(configParams.toString()).contains(CONFIG_FILE);
+	}
+
+	@Test
+	void inheritedPropertyOverridesSystemProperty() {
+		System.setProperty(KEY, SYSTEM_PROPERTY);
+		ConfigurationParameters configParams = fromMapAndParent(Map.of(), Map.of(KEY, INHERITED_PARAM));
+		assertThat(configParams.get(KEY)).contains(INHERITED_PARAM);
+		assertThat(configParams.toString()).contains(KEY);
 	}
 
 	@Test
@@ -159,6 +187,18 @@ class LauncherConfigurationParametersTests {
 		return LauncherConfigurationParameters.builder() //
 				.explicitParameters(map) //
 				.configFileName(configFileName) //
+				.build();
+	}
+
+	private static LauncherConfigurationParameters fromMapAndParent(Map<String, String> map,
+			Map<String, String> inherited) {
+		var parameters = LauncherConfigurationParameters.builder() //
+				.explicitParameters(inherited) //
+				.build();
+
+		return LauncherConfigurationParameters.builder() //
+				.explicitParameters(map) //
+				.parentConfigurationParameters(parameters) //
 				.build();
 	}
 

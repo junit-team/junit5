@@ -501,25 +501,9 @@ must always be `static`. Condition methods located in external classes must also
 === Tagging and Filtering
 
 Test classes and methods can be tagged via the `@Tag` annotation. Those tags can later be
-used to filter <<running-tests,test discovery and execution>>.
-
-TIP: See also: <<running-tests-tag-expressions>>
-
-==== Syntax Rules for Tags
-
-* A tag must not be `null` or _blank_.
-* A _trimmed_ tag must not contain whitespace.
-* A _trimmed_ tag must not contain ISO control characters.
-* A _trimmed_ tag must not contain any of the following _reserved characters_.
-  - `,`: _comma_
-  - `(`: _left parenthesis_
-  - `)`: _right parenthesis_
-  - `&`: _ampersand_
-  - `|`: _vertical bar_
-  - `!`: _exclamation point_
-
-NOTE: In the above context, "trimmed" means that leading and trailing whitespace
-characters have been removed.
+used to filter <<running-tests, test discovery and execution>>. Please refer to the
+<<running-tests-tags>> section for more information about tag support in the JUnit
+Platform.
 
 [source,java,indent=0]
 ----
@@ -2183,9 +2167,9 @@ can improve and eventually <<api-evolution, promote>> this feature.
 
 The built-in `{TempDirectory}` extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
-default. To use it, annotate a non-private field of type `java.nio.file.Path` or
-`java.io.File` with `{TempDir}` or add a parameter of type `java.nio.file.Path` or
-`java.io.File` annotated with `@TempDir` to a lifecycle method or test method.
+default. To use it, annotate a field of type `java.nio.file.Path` or `java.io.File` with
+`{TempDir}` or add a parameter of type `java.nio.file.Path` or `java.io.File` annotated
+with `@TempDir` to a lifecycle method or test method.
 
 For example, the following test declares a parameter annotated with `@TempDir` for a
 single test method, creates and writes to a file in the temporary directory, and checks
@@ -2197,8 +2181,7 @@ its content.
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_parameter_injection]
 ----
 
-You can inject multiple temporary directories by specifying explicit identifiers via the
-annotation parameter.
+You can inject multiple temporary directories by specifying multiple annotated parameters.
 
 [source,java,indent=0]
 .A test method that requires multiple temporary directories
@@ -2206,13 +2189,19 @@ annotation parameter.
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_multiple_directories]
 ----
 
-WARNING: `@TempDir` is not supported on constructor parameters. If you wish to retain a
-single reference to a temp directory across lifecycle methods and the current test method,
-please use field injection, by annotating a non-private instance field with `@TempDir`.
+WARNING: To revert to the old behavior of using a single temporary directory for the
+entire test class or method (depending on which level the annotation is used), you can set
+the `junit.jupiter.tempdir.scope` configuration parameter to `per_context`. However,
+please note that this option is deprecated and will be removed in a future release.
+
+`@TempDir` is not supported on constructor parameters. If you wish to retain a single
+reference to a temp directory across lifecycle methods and the current test method, please
+use field injection by annotating an instance field with `@TempDir`.
 
 The following example stores a _shared_ temporary directory in a `static` field. This
 allows the same `sharedTempDir` to be used in all lifecycle methods and test methods of
-the test class.
+the test class. For better isolation, you should use an instance field so that each test
+method uses a separate directory.
 
 [source,java,indent=0]
 .A test class that shares a temporary directory across test methods

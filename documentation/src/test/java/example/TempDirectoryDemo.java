@@ -12,6 +12,7 @@ package example;
 
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,12 +38,13 @@ class TempDirectoryDemo {
 
 	// tag::user_guide_multiple_directories[]
 	@Test
-	void copyFileFromSourceToTarget(@TempDir("from") Path source, @TempDir("to") Path target) throws IOException {
+	void copyFileFromSourceToTarget(@TempDir Path source, @TempDir Path target) throws IOException {
 		Path sourceFile = source.resolve("test.txt");
-
 		new ListWriter(sourceFile).write("a", "b", "c");
+
 		Path targetFile = Files.copy(sourceFile, target.resolve("test.txt"));
 
+		assertNotEquals(sourceFile, targetFile);
 		assertEquals(singletonList("a,b,c"), Files.readAllLines(targetFile));
 	}
 	// end::user_guide_multiple_directories[]

@@ -10,16 +10,16 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
@@ -29,9 +29,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.function.Supplier;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
@@ -39,10 +41,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -52,30 +56,69 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.Constants;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
- * Integration tests for the {@link TempDirectory} extension.
+ * Integration tests for the new behavior of the {@link TempDirectory} extension
+ * to create separate temp directories for each {@link TempDir} declaration.
  *
- * @since 5.4
+ * @since 5.8
  */
-@SuppressWarnings("ALL")
-@DisplayName("TempDirectory extension")
-class TempDirectoryTests extends AbstractJupiterTestEngineTests {
+@DisplayName("TempDirectory extension (per declaration)")
+class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	@BeforeEach
 	@AfterEach
 	void resetStaticVariables() {
-		BaseSharedTempDirFieldInjectionTestCase.staticTempDir = null;
-		BaseSharedTempDirParameterInjectionTestCase.tempDir = null;
-		BaseSeparateTempDirsFieldInjectionTestCase.tempDirs.clear();
-		BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.clear();
+		AllPossibleDeclarationLocationsTestCase.tempDirs.clear();
 	}
 
-	@Test
-	void supportsMultipleTempDirs() {
-		executeTestsForClass(MultipleTempDirsTestCase.class).allEvents()//
-				.assertStatistics(stats -> stats.started(3).succeeded(3));
+	@TestFactory
+	@DisplayName("resolves separate temp dirs for each annotation declaration")
+	Stream<DynamicTest> resolvesSeparateTempDirsForEachAnnotationDeclaration() {
+		return Arrays.stream(TestInstance.Lifecycle.values()).map(
+			lifecycle -> dynamicTest("with " + lifecycle + " lifecycle", () -> {
+
+				var results = executeTests(request() //
+						.selectors(selectClass(AllPossibleDeclarationLocationsTestCase.class)) //
+						.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
+							lifecycle.toString()).build());
+
+				results.containerEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+				results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+
+				assertThat(AllPossibleDeclarationLocationsTestCase.tempDirs).hasSize(3);
+
+				var classTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("class");
+				assertThat(classTempDirs).containsOnlyKeys("staticField1", "staticField2", "beforeAll1", "beforeAll2",
+					"afterAll1", "afterAll2");
+				assertThat(classTempDirs.values()).hasSize(6).doesNotHaveDuplicates();
+
+				var testATempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testA");
+				assertThat(testATempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1",
+					"instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
+				assertThat(testATempDirs.values()).hasSize(10).doesNotHaveDuplicates();
+
+				var testBTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testB");
+				assertThat(testBTempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1",
+					"instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
+				assertThat(testBTempDirs.values()).hasSize(10).doesNotHaveDuplicates();
+
+				assertThat(testATempDirs.get("staticField1")).isEqualTo(classTempDirs.get("staticField1"));
+				assertThat(testBTempDirs.get("staticField1")).isEqualTo(classTempDirs.get("staticField1"));
+				assertThat(testATempDirs.get("staticField2")).isEqualTo(classTempDirs.get("staticField2"));
+				assertThat(testBTempDirs.get("staticField2")).isEqualTo(classTempDirs.get("staticField2"));
+
+				assertThat(testATempDirs.get("instanceField1")).isNotEqualTo(testBTempDirs.get("instanceField1"));
+				assertThat(testATempDirs.get("instanceField2")).isNotEqualTo(testBTempDirs.get("instanceField2"));
+				assertThat(testATempDirs.get("beforeEach1")).isNotEqualTo(testBTempDirs.get("beforeEach1"));
+				assertThat(testATempDirs.get("beforeEach2")).isNotEqualTo(testBTempDirs.get("beforeEach2"));
+				assertThat(testATempDirs.get("test1")).isNotEqualTo(testBTempDirs.get("test1"));
+				assertThat(testATempDirs.get("test2")).isNotEqualTo(testBTempDirs.get("test2"));
+				assertThat(testATempDirs.get("afterEach1")).isNotEqualTo(testBTempDirs.get("afterEach1"));
+				assertThat(testATempDirs.get("afterEach2")).isNotEqualTo(testBTempDirs.get("afterEach2"));
+			}));
 	}
 
 	@Test
@@ -144,157 +187,9 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Nested
-	@DisplayName("resolves shared temp dir")
-	@TestMethodOrder(OrderAnnotation.class)
-	class SharedTempDir {
-
-		@Test
-		@DisplayName("when @TempDir is used on static field")
-		@Order(10)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnStaticField() {
-			assertSharedTempDirForFieldInjection(AnnotationOnStaticFieldTestCase.class);
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on static field and @BeforeAll method parameter")
-		@Order(11)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnStaticFieldAndBeforeAllMethodParameter() {
-			assertSharedTempDirForFieldInjection(AnnotationOnStaticFieldAndBeforeAllMethodParameterTestCase.class);
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on instance field and @BeforeAll method parameter")
-		@Order(14)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnInstanceFieldAndBeforeAllMethodParameter() {
-			assertSharedTempDirForFieldInjection(AnnotationOnInstanceFieldAndBeforeAllMethodParameterTestCase.class);
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on instance field and @BeforeAll method parameter with @TestInstance(PER_CLASS)")
-		@Order(15)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnInstanceFieldAndBeforeAllMethodParameterWithTestInstancePerClass() {
-			assertSharedTempDirForFieldInjection(
-				AnnotationOnInstanceFieldAndBeforeAllMethodParameterWithTestInstancePerClassTestCase.class);
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on @BeforeAll method parameter")
-		@Order(23)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnBeforeAllMethodParameter() {
-			assertSharedTempDirForParameterInjection(AnnotationOnBeforeAllMethodParameterTestCase.class);
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on @BeforeAll method parameter with @TestInstance(PER_CLASS)")
-		@Order(24)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnBeforeAllMethodParameterWithTestInstancePerClass() {
-			assertSharedTempDirForParameterInjection(
-				AnnotationOnBeforeAllMethodParameterWithTestInstancePerClassTestCase.class);
-		}
-
-		private void assertSharedTempDirForFieldInjection(
-				Class<? extends BaseSharedTempDirFieldInjectionTestCase> testClass) {
-
-			assertSharedTempDirForParameterInjection(testClass,
-				() -> BaseSharedTempDirFieldInjectionTestCase.staticTempDir);
-		}
-
-		private void assertSharedTempDirForParameterInjection(
-				Class<? extends BaseSharedTempDirParameterInjectionTestCase> testClass) {
-
-			assertSharedTempDirForParameterInjection(testClass,
-				() -> BaseSharedTempDirParameterInjectionTestCase.tempDir);
-		}
-
-		private void assertSharedTempDirForParameterInjection(Class<?> testClass, Supplier<Path> staticTempDir) {
-			var results = executeTestsForClass(testClass);
-
-			results.testEvents().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
-			assertThat(staticTempDir.get()).isNotNull().doesNotExist();
-		}
-
-	}
-
-	@Nested
-	@DisplayName("resolves separate temp dirs")
-	@TestMethodOrder(OrderAnnotation.class)
-	class SeparateTempDirs {
-
-		@Test
-		@DisplayName("when @TempDir is used on instance field")
-		@Order(11)
-		void resolvesSeparateTempDirWhenAnnotationIsUsedOnInstanceField() {
-			assertSeparateTempDirsForFieldInjection(
-				SeparateTempDirsWhenUsedOnForEachLifecycleMethodsFieldInjectionTestCase.class);
-			assertThat(BaseSeparateTempDirsFieldInjectionTestCase.tempDirs.getFirst()).doesNotExist();
-			assertThat(BaseSeparateTempDirsFieldInjectionTestCase.tempDirs.getLast()).doesNotExist();
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on instance field with @TestInstance(PER_CLASS)")
-		@Order(12)
-		void resolvesSeparateTempDirWhenAnnotationIsUsedOnInstanceFieldWithTestInstancePerClass() {
-			assertSeparateTempDirsForFieldInjection(
-				SeparateTempDirsWhenUsedOnForEachLifecycleMethodsWithTestInstancePerClassFieldInjectionTestCase.class);
-			assertThat(BaseSeparateTempDirsFieldInjectionTestCase.tempDirs.getFirst()).doesNotExist();
-			assertThat(BaseSeparateTempDirsFieldInjectionTestCase.tempDirs.getLast()).doesNotExist();
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on @BeforeEach/@AfterEach method parameters")
-		@Order(21)
-		void resolvesSeparateTempDirsWhenUsedOnForEachLifecycleMethods() {
-			assertSeparateTempDirsForParameterInjection(
-				SeparateTempDirsWhenUsedOnForEachLifecycleMethodsParameterInjectionTestCase.class);
-			assertThat(BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.getFirst()).doesNotExist();
-			assertThat(BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.getLast()).doesNotExist();
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on @BeforeEach/@AfterEach method parameters with @TestInstance(PER_CLASS)")
-		@Order(22)
-		void resolvesSeparateTempDirsWhenUsedOnForEachLifecycleMethodsWithTestInstancePerClass() {
-			assertSeparateTempDirsForParameterInjection(
-				SeparateTempDirsWhenUsedOnForEachLifecycleMethodsWithTestInstancePerClassParameterInjectionTestCase.class);
-			assertThat(BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.getFirst()).doesNotExist();
-			assertThat(BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.getLast()).doesNotExist();
-		}
-
-		@Test
-		@DisplayName("for @AfterAll method parameter when @TempDir is not used on constructor or @BeforeAll method parameter")
-		@Order(31)
-		void resolvesSeparateTempDirWhenAnnotationIsUsedOnAfterAllMethodParameterOnly() {
-			var results = executeTestsForClass(AnnotationOnAfterAllMethodParameterTestCase.class);
-
-			results.testEvents().assertStatistics(stats -> stats.started(1).failed(0).succeeded(1));
-			assertThat(AnnotationOnAfterAllMethodParameterTestCase.firstTempDir).isNotNull().doesNotExist();
-			assertThat(AnnotationOnAfterAllMethodParameterTestCase.secondTempDir).isNotNull().doesNotExist();
-		}
-
-	}
-
-	@Nested
 	@DisplayName("reports failure")
 	@TestMethodOrder(OrderAnnotation.class)
 	class Failures {
-
-		@Test
-		@DisplayName("when @TempDir is used on private static field")
-		@Order(10)
-		void onlySupportsNonPrivateInstanceFields() {
-			var results = executeTestsForClass(AnnotationOnPrivateStaticFieldTestCase.class);
-
-			assertSingleFailedContainer(results, ExtensionConfigurationException.class, "must not be private");
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on private instance field")
-		@Order(11)
-		void onlySupportsNonPrivateStaticFields() {
-			var results = executeTestsForClass(AnnotationOnPrivateInstanceFieldTestCase.class);
-
-			assertSingleFailedTest(results, ExtensionConfigurationException.class, "must not be private");
-		}
 
 		@Test
 		@DisplayName("when @TempDir is used on static field of an unsupported type")
@@ -323,9 +218,9 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			var results = executeTestsForClass(InvalidTestCase.class);
 
 			// @formatter:off
-			TempDirectoryTests.assertSingleFailedTest(results,
+			TempDirectoryPerDeclarationTests.assertSingleFailedTest(results,
 				instanceOf(ParameterResolutionException.class),
-				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+\\] in method \\[.+\\]: .+")),
+				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+] in method \\[.+]: .+")),
 				cause(
 					instanceOf(ExtensionConfigurationException.class),
 					message("Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String")));
@@ -350,6 +245,29 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 			assertSingleFailedContainer(results, ParameterResolutionException.class,
 				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
+		}
+
+	}
+
+	@Nested
+	@DisplayName("supports @TempDir")
+	@TestMethodOrder(OrderAnnotation.class)
+	class PrivateFields {
+
+		@Test
+		@DisplayName("on private static field")
+		@Order(10)
+		void supportsPrivateInstanceFields() {
+			executeTestsForClass(AnnotationOnPrivateStaticFieldTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("on private instance field")
+		@Order(11)
+		void supportsPrivateStaticFields() {
+			executeTestsForClass(AnnotationOnPrivateInstanceFieldTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
 	}
@@ -383,151 +301,37 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		results.testEvents().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
 	}
 
-	private void assertSeparateTempDirsForFieldInjection(
-			Class<? extends BaseSeparateTempDirsFieldInjectionTestCase> testClass) {
-
-		assertResolvesSeparateTempDirs(testClass, BaseSeparateTempDirsFieldInjectionTestCase.tempDirs);
-	}
-
-	private void assertSeparateTempDirsForParameterInjection(
-			Class<? extends BaseSeparateTempDirsParameterInjectionTestCase> testClass) {
-
-		assertResolvesSeparateTempDirs(testClass, BaseSeparateTempDirsParameterInjectionTestCase.tempDirs);
-	}
-
-	private void assertResolvesSeparateTempDirs(Class<?> testClass, Deque<Path> tempDirs) {
-		var results = executeTestsForClass(testClass);
-
-		results.testEvents().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
-		assertThat(tempDirs).hasSize(2);
-	}
-
 	// -------------------------------------------------------------------------
-
-	static class BaseSharedTempDirFieldInjectionTestCase {
-
-		static Path staticTempDir;
-
-		@TempDir
-		Path tempDir;
-
-		@BeforeEach
-		void beforeEach(@TempDir Path tempDir) {
-			if (BaseSharedTempDirFieldInjectionTestCase.staticTempDir != null) {
-				assertSame(BaseSharedTempDirFieldInjectionTestCase.staticTempDir, tempDir);
-			}
-			else {
-				BaseSharedTempDirFieldInjectionTestCase.staticTempDir = tempDir;
-			}
-			check(tempDir);
-		}
-
-		@Test
-		void test1(@TempDir Path tempDir, TestInfo testInfo) throws Exception {
-			check(tempDir);
-			writeFile(tempDir, testInfo);
-		}
-
-		@Test
-		void test2(TestInfo testInfo, @TempDir Path tempDir) throws Exception {
-			check(tempDir);
-			writeFile(tempDir, testInfo);
-		}
-
-		@AfterEach
-		void afterEach(@TempDir Path tempDir) {
-			check(tempDir);
-		}
-
-		void check(Path tempDir) {
-			assertThat(BaseSharedTempDirFieldInjectionTestCase.staticTempDir)//
-					.isNotNull()//
-					.isSameAs(tempDir)//
-					.isSameAs(this.tempDir);
-			assertTrue(Files.exists(tempDir));
-		}
-
-	}
-
-	static class AnnotationOnStaticFieldTestCase extends BaseSharedTempDirFieldInjectionTestCase {
-
-		@TempDir
-		static Path staticTempPath;
-
-		@TempDir
-		static File staticTempFile;
-
-		@Override
-		void check(Path tempDir) {
-			assertThat(BaseSharedTempDirFieldInjectionTestCase.staticTempDir)//
-					.isNotNull()//
-					.isSameAs(AnnotationOnStaticFieldTestCase.staticTempPath)//
-					.isSameAs(tempDir)//
-					.isSameAs(this.tempDir);
-			assertTrue(Files.exists(tempDir));
-		}
-
-	}
-
-	static class AnnotationOnStaticFieldAndBeforeAllMethodParameterTestCase extends AnnotationOnStaticFieldTestCase {
-
-		@BeforeAll
-		static void beforeAll(@TempDir Path tempDir) {
-			assertThat(BaseSharedTempDirFieldInjectionTestCase.staticTempDir).isNull();
-			BaseSharedTempDirFieldInjectionTestCase.staticTempDir = tempDir;
-			assertThat(AnnotationOnStaticFieldTestCase.staticTempFile).isNotNull();
-			assertThat(AnnotationOnStaticFieldTestCase.staticTempPath)//
-					.isNotNull()//
-					.isSameAs(tempDir);
-			assertThat(AnnotationOnStaticFieldTestCase.staticTempFile.toPath().toAbsolutePath())//
-					.isEqualTo(AnnotationOnStaticFieldTestCase.staticTempPath.toAbsolutePath());
-			assertTrue(Files.exists(tempDir));
-		}
-
-	}
-
-	static class AnnotationOnInstanceFieldAndBeforeAllMethodParameterTestCase
-			extends BaseSharedTempDirFieldInjectionTestCase {
-
-		@BeforeAll
-		static void beforeAll(@TempDir Path tempDir) {
-			assertThat(BaseSharedTempDirFieldInjectionTestCase.staticTempDir).isNull();
-			BaseSharedTempDirFieldInjectionTestCase.staticTempDir = tempDir;
-			assertTrue(Files.exists(tempDir));
-		}
-
-	}
-
-	@TestInstance(PER_CLASS)
-	static class AnnotationOnInstanceFieldAndBeforeAllMethodParameterWithTestInstancePerClassTestCase
-			extends AnnotationOnInstanceFieldAndBeforeAllMethodParameterTestCase {
-
-	}
 
 	static class AnnotationOnPrivateInstanceFieldTestCase {
 
+		@SuppressWarnings("unused")
 		@TempDir
 		private Path tempDir;
 
 		@Test
 		void test() {
+			assertTrue(Files.exists(tempDir));
 		}
 
 	}
 
 	static class AnnotationOnPrivateStaticFieldTestCase {
 
+		@SuppressWarnings("unused")
 		@TempDir
 		private static Path tempDir;
 
 		@Test
 		void test() {
+			assertTrue(Files.exists(tempDir));
 		}
 
 	}
 
 	static class AnnotationOnStaticFieldWithUnsupportedTypeTestCase {
 
+		@SuppressWarnings("unused")
 		@TempDir
 		static String tempDir;
 
@@ -539,6 +343,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	static class AnnotationOnInstanceFieldWithUnsupportedTypeTestCase {
 
+		@SuppressWarnings("unused")
 		@TempDir
 		String tempDir;
 
@@ -548,42 +353,9 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class BaseSharedTempDirParameterInjectionTestCase {
-
-		static Path tempDir;
-
-		@BeforeEach
-		void beforeEach(@TempDir Path tempDir) {
-			check(tempDir);
-		}
-
-		@Test
-		void test1(@TempDir Path tempDir, TestInfo testInfo) throws Exception {
-			check(tempDir);
-			writeFile(tempDir, testInfo);
-		}
-
-		@Test
-		void test2(TestInfo testInfo, @TempDir Path tempDir) throws Exception {
-			check(tempDir);
-			writeFile(tempDir, testInfo);
-		}
-
-		@AfterEach
-		void afterEach(@TempDir Path tempDir) {
-			check(tempDir);
-		}
-
-		static void check(Path tempDir) {
-			assertThat(BaseSharedTempDirParameterInjectionTestCase.tempDir).isNotNull().isSameAs(tempDir);
-			assertTrue(Files.exists(tempDir));
-		}
-
-	}
-
 	static class AnnotationOnConstructorParameterTestCase {
 
-		AnnotationOnConstructorParameterTestCase(@TempDir Path tempDir) {
+		AnnotationOnConstructorParameterTestCase(@SuppressWarnings("unused") @TempDir Path tempDir) {
 			// never called
 		}
 
@@ -601,147 +373,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		AnnotationOnConstructorParameterWithTestInstancePerClassTestCase(@TempDir Path tempDir) {
 			super(tempDir);
 		}
-	}
-
-	static class AnnotationOnBeforeAllMethodParameterTestCase extends BaseSharedTempDirParameterInjectionTestCase {
-
-		@BeforeAll
-		static void beforeAll(@TempDir Path tempDir) {
-			assertThat(BaseSharedTempDirParameterInjectionTestCase.tempDir).isNull();
-			BaseSharedTempDirParameterInjectionTestCase.tempDir = tempDir;
-			check(tempDir);
-		}
-	}
-
-	@TestInstance(PER_CLASS)
-	static class AnnotationOnBeforeAllMethodParameterWithTestInstancePerClassTestCase
-			extends BaseSharedTempDirParameterInjectionTestCase {
-
-		@BeforeAll
-		void beforeAll(@TempDir Path tempDir) {
-			assertThat(BaseSharedTempDirParameterInjectionTestCase.tempDir).isNull();
-			BaseSharedTempDirParameterInjectionTestCase.tempDir = tempDir;
-			check(tempDir);
-		}
-	}
-
-	static class AnnotationOnAfterAllMethodParameterTestCase {
-
-		static Path firstTempDir = null;
-		static Path secondTempDir = null;
-
-		@Test
-		void test(@TempDir Path tempDir, TestInfo testInfo) throws Exception {
-			assertThat(firstTempDir).isNull();
-			firstTempDir = tempDir;
-			writeFile(tempDir, testInfo);
-		}
-
-		@AfterAll
-		static void afterAll(@TempDir Path tempDir) {
-			assertThat(firstTempDir).isNotNull();
-			assertNotEquals(firstTempDir, tempDir);
-			secondTempDir = tempDir;
-		}
-	}
-
-	static class BaseSeparateTempDirsFieldInjectionTestCase {
-
-		static final Deque<Path> tempDirs = new LinkedList<>();
-
-		@TempDir
-		Path tempDir;
-
-		@BeforeEach
-		void beforeEach(@TempDir Path tempDir) {
-			for (Path dir : tempDirs) {
-				assertThat(dir).doesNotExist();
-			}
-			assertThat(tempDirs).doesNotContain(tempDir);
-			tempDirs.add(tempDir);
-			check(tempDir);
-		}
-
-		@Test
-		void test1(@TempDir Path tempDir, TestInfo testInfo) throws Exception {
-			check(tempDir);
-			writeFile(tempDir, testInfo);
-		}
-
-		@Test
-		void test2(TestInfo testInfo, @TempDir Path tempDir) throws Exception {
-			check(tempDir);
-			writeFile(tempDir, testInfo);
-		}
-
-		@AfterEach
-		void afterEach(@TempDir Path tempDir) {
-			check(tempDir);
-		}
-
-		void check(Path tempDir) {
-			assertThat(tempDirs.getLast())//
-					.isNotNull()//
-					.isSameAs(tempDir)//
-					.isSameAs(this.tempDir);
-			assertTrue(Files.exists(tempDir));
-		}
-
-	}
-
-	static class SeparateTempDirsWhenUsedOnForEachLifecycleMethodsFieldInjectionTestCase
-			extends BaseSeparateTempDirsFieldInjectionTestCase {
-	}
-
-	@TestInstance(PER_CLASS)
-	static class SeparateTempDirsWhenUsedOnForEachLifecycleMethodsWithTestInstancePerClassFieldInjectionTestCase
-			extends SeparateTempDirsWhenUsedOnForEachLifecycleMethodsFieldInjectionTestCase {
-	}
-
-	static class BaseSeparateTempDirsParameterInjectionTestCase {
-
-		static final Deque<Path> tempDirs = new LinkedList<>();
-
-		@BeforeEach
-		void beforeEach(@TempDir Path tempDir) {
-			for (Path dir : tempDirs) {
-				assertThat(dir).doesNotExist();
-			}
-			assertThat(tempDirs).doesNotContain(tempDir);
-			tempDirs.add(tempDir);
-			check(tempDir);
-		}
-
-		@Test
-		void test1(@TempDir Path tempDir, TestInfo testInfo) throws Exception {
-			check(tempDir);
-			writeFile(tempDir, testInfo);
-		}
-
-		@Test
-		void test2(TestInfo testInfo, @TempDir Path tempDir) throws Exception {
-			check(tempDir);
-			writeFile(tempDir, testInfo);
-		}
-
-		@AfterEach
-		void afterEach(@TempDir Path tempDir) {
-			check(tempDir);
-		}
-
-		void check(Path tempDir) {
-			assertSame(tempDirs.getLast(), tempDir);
-			assertTrue(Files.exists(tempDir));
-		}
-	}
-
-	static class SeparateTempDirsWhenUsedOnForEachLifecycleMethodsParameterInjectionTestCase
-			extends BaseSeparateTempDirsParameterInjectionTestCase {
-	}
-
-	@TestInstance(PER_CLASS)
-	static class SeparateTempDirsWhenUsedOnForEachLifecycleMethodsWithTestInstancePerClassParameterInjectionTestCase
-			extends SeparateTempDirsWhenUsedOnForEachLifecycleMethodsParameterInjectionTestCase {
 	}
 
 	static class InvalidTestCase {
@@ -765,25 +396,19 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("and injected File and Path reference the same temp directory")
 		void checkFile(@TempDir File tempDir, @TempDir Path ref) {
-			assertFileAndPathAreEqual(tempDir, ref);
-			assertFileAndPathAreEqual(this.fileTempDir, this.pathTempDir);
+			assertNotNull(tempDir);
+			assertNotNull(ref);
+			assertNotNull(this.fileTempDir);
+			assertNotNull(this.pathTempDir);
 		}
 
-		private void assertFileAndPathAreEqual(File tempDir, Path ref) {
-			Path path = tempDir.toPath();
-			assertEquals(ref.toAbsolutePath(), path.toAbsolutePath());
-			assertTrue(Files.exists(path));
-		}
-
-	}
-
-	private static void writeFile(Path tempDir, TestInfo testInfo) throws IOException {
-		Path file = tempDir.resolve(testInfo.getTestMethod().orElseThrow().getName() + ".txt");
-		Files.write(file, testInfo.getDisplayName().getBytes());
 	}
 
 	// https://github.com/junit-team/junit5/issues/1748
 	static class TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase {
+
+		@TempDir
+		Path tempDir;
 
 		TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase(TestInfo testInfo) {
 			assertNotNull(testInfo);
@@ -791,6 +416,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void test() {
+			assertNotNull(tempDir);
 		}
 
 	}
@@ -849,6 +475,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2609
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	static class NonMintPermissionContentInTempDirectoryDoesNotCauseFailureTestCase {
 
 		@Test
@@ -927,6 +554,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2609
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	static class NonMintTempDirectoryPermissionsDoNotCauseFailureTestCase {
 
 		@Nested
@@ -1284,95 +912,81 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class MultipleTempDirsTestCase {
+	@DisplayName("class")
+	static class AllPossibleDeclarationLocationsTestCase {
 
-		@TempDir("a")
-		static Path A;
-		static Path B;
+		static final Map<String, Map<String, Path>> tempDirs = new HashMap<>();
+
+		@TempDir
+		static Path staticField1;
+
+		@TempDir
+		static Path staticField2;
+
+		@TempDir
+		Path instanceField1;
+
+		@TempDir
+		Path instanceField2;
 
 		@BeforeAll
-		static void beforeAll(@TempDir("a") Path dir1, @TempDir("b") Path dir2) {
-			assertEquals(A, requireNonNull(dir1));
-			B = requireNonNull(dir2);
-			assertNotEquals(A, B);
-			assertTrue(Files.exists(A));
-			assertTrue(Files.exists(B));
+		static void beforeAll(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"staticField1", staticField1, //
+				"staticField2", staticField2, //
+				"beforeAll1", param1, //
+				"beforeAll2", param2 //
+			));
 		}
 
-		@TempDir("c")
-		Path c;
-		static Path C, D, E;
-
 		@BeforeEach
-		void beforeEach(@TempDir("d") Path dir1, @TempDir("b") Path dir2, @TempDir("c") Path dir3,
-				@TempDir("a") Path dir4) {
-			assertEquals(A, dir4);
-			assertEquals(B, dir2);
-			assertEquals(c, dir3);
-
-			C = requireNonNull(dir3);
-			assertNotEquals(A, C);
-			assertNotEquals(B, C);
-
-			D = requireNonNull(dir1);
-			assertNotEquals(A, D);
-			assertNotEquals(B, D);
-			assertNotEquals(C, D);
-
-			assertTrue(Files.exists(A));
-			assertTrue(Files.exists(B));
-			assertTrue(Files.exists(C));
-			assertTrue(Files.exists(D));
+		void beforeEach(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"staticField1", staticField1, //
+				"staticField2", staticField2, //
+				"instanceField1", instanceField1, //
+				"instanceField2", instanceField2, //
+				"beforeEach1", param1, //
+				"beforeEach2", param2 //
+			));
 		}
 
 		@Test
-		void test(@TempDir("c") Path dir1, @TempDir("e") Path dir2, @TempDir("a") Path dir3, @TempDir("d") Path dir4,
-				@TempDir("b") Path dir5) {
-			assertEquals(A, dir3);
-			assertEquals(B, dir5);
-			assertEquals(C, dir1);
-			assertEquals(D, dir4);
+		@DisplayName("testA")
+		void testA(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"test1", param1, //
+				"test2", param2 //
+			));
+		}
 
-			E = requireNonNull(dir2);
-			assertNotEquals(A, E);
-			assertNotEquals(B, E);
-			assertNotEquals(C, E);
-			assertNotEquals(D, E);
-
-			assertTrue(Files.exists(A));
-			assertTrue(Files.exists(B));
-			assertTrue(Files.exists(C));
-			assertTrue(Files.exists(D));
-			assertTrue(Files.exists(E));
+		@Test
+		@DisplayName("testB")
+		void testB(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"test1", param1, //
+				"test2", param2 //
+			));
 		}
 
 		@AfterEach
-		void afterEach(@TempDir("b") Path dir1, @TempDir("a") Path dir2, @TempDir("c") Path dir3,
-				@TempDir("e") Path dir4, @TempDir("d") Path dir5) {
-			assertEquals(A, dir2);
-			assertEquals(B, dir1);
-			assertEquals(C, dir3);
-			assertEquals(D, dir5);
-			assertEquals(E, dir4);
-
-			assertTrue(Files.exists(A));
-			assertTrue(Files.exists(B));
-			assertTrue(Files.exists(C));
-			assertTrue(Files.exists(D));
-			assertTrue(Files.exists(E));
+		void afterEach(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"afterEach1", param1, //
+				"afterEach2", param2 //
+			));
 		}
 
 		@AfterAll
-		static void afterAll(@TempDir("b") Path dir1, @TempDir("a") Path dir2) {
-			assertEquals(A, dir2);
-			assertEquals(B, dir1);
+		static void afterAll(@TempDir Path param1, @TempDir Path param2, TestInfo testInfo) {
+			getTempDirs(testInfo).putAll(Map.of( //
+				"afterAll1", param1, //
+				"afterAll2", param2 //
+			));
+		}
 
-			assertTrue(Files.exists(A));
-			assertTrue(Files.exists(B));
-
-			assertTrue(Files.notExists(C));
-			assertTrue(Files.notExists(D));
-			assertTrue(Files.notExists(E));
+		private static Map<String, Path> getTempDirs(TestInfo testInfo) {
+			return tempDirs.computeIfAbsent(testInfo.getDisplayName(), __ -> new LinkedHashMap<>());
 		}
 	}
 }

@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.core.LauncherConfigurationParameters.Builder;
 import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 
 /**
@@ -101,6 +103,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	private final Map<String, String> configurationParameters = new HashMap<>();
 	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
 	private boolean implicitConfigurationParametersEnabled = true;
+	private ConfigurationParameters parentConfigurationParameters;
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
@@ -108,19 +111,15 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @return a new builder
 	 */
 	public static LauncherDiscoveryRequestBuilder request() {
-		return new LauncherDiscoveryRequestBuilder(null);
+		return new LauncherDiscoveryRequestBuilder();
 	}
 
 	/**
 	 * @deprecated Use {@link #request()}
 	 */
-	@API(status = DEPRECATED, since = "5.8")
+	@API(status = DEPRECATED, since = "1.8")
 	@Deprecated
 	public LauncherDiscoveryRequestBuilder() {
-		this(null);
-	}
-
-	private LauncherDiscoveryRequestBuilder(@SuppressWarnings("unused") Object ignored) {
 	}
 
 	/**
@@ -199,6 +198,29 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	/**
+	 * Set the parent configuration parameters to use for the request.
+	 *
+	 * <p>Any explicit configuration parameters configured via
+	 * {@link #configurationParameter(String, String)} or
+	 * {@link #configurationParameters(Map)} takes precedence over the supplied
+	 * configuration parameters.
+	 *
+	 * @param configurationParameters the parent instance to be used for looking
+	 * up configuration parameters that have not been explicitly configured;
+	 * never {@code null}
+	 * @see #configurationParameter(String, String)
+	 * @see #configurationParameters(Map)
+	 * @since 1.8
+	 */
+	@API(status = EXPERIMENTAL, since = "1.8")
+	public LauncherDiscoveryRequestBuilder parentConfigurationParameters(
+			ConfigurationParameters configurationParameters) {
+		Preconditions.notNull(configurationParameters, "parent configuration parameters must not be null");
+		this.parentConfigurationParameters = configurationParameters;
+		return this;
+	}
+
+	/**
 	 * Add all of the supplied discovery listeners to the request.
 	 *
 	 * <p>In addition to the {@linkplain LauncherDiscoveryListener listeners}
@@ -213,8 +235,9 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @see LauncherDiscoveryListener
 	 * @see LauncherDiscoveryListeners
 	 * @see LauncherDiscoveryRequestBuilder#DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME
+	 * @since 1.6
 	 */
-	@API(status = API.Status.EXPERIMENTAL, since = "1.6")
+	@API(status = EXPERIMENTAL, since = "1.6")
 	public LauncherDiscoveryRequestBuilder listeners(LauncherDiscoveryListener... listeners) {
 		Preconditions.notNull(listeners, "discovery listener array must not be null");
 		Preconditions.containsNoNullElements(listeners, "individual discovery listeners must not be null");
@@ -233,8 +256,9 @@ public final class LauncherDiscoveryRequestBuilder {
 	 *
 	 * @see #configurationParameter(String, String)
 	 * @see #configurationParameters(Map)
+	 * @since 1.7
 	 */
-	@API(status = API.Status.EXPERIMENTAL, since = "1.7")
+	@API(status = EXPERIMENTAL, since = "1.7")
 	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
 		this.implicitConfigurationParametersEnabled = enabled;
 		return this;
@@ -269,10 +293,15 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {
-		return LauncherConfigurationParameters.builder() //
+		Builder builder = LauncherConfigurationParameters.builder() //
 				.explicitParameters(this.configurationParameters) //
-				.enableImplicitProviders(this.implicitConfigurationParametersEnabled) //
-				.build();
+				.enableImplicitProviders(this.implicitConfigurationParametersEnabled);
+
+		if (parentConfigurationParameters != null) {
+			builder.parentConfigurationParameters(this.parentConfigurationParameters);
+		}
+
+		return builder.build();
 	}
 
 	private LauncherDiscoveryListener getLauncherDiscoveryListener(ConfigurationParameters configurationParameters) {

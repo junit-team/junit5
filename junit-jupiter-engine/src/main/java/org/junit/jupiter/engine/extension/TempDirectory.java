@@ -12,13 +12,13 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
+import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -44,6 +44,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -61,6 +62,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
 	private static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
+	private static final String KEY = "temp.dir";
 	private static final String TEMP_DIR_PREFIX = "junit";
 
 	/**
@@ -96,22 +98,14 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			Predicate<Field> predicate) {
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
-			assertValidFieldCandidate(field);
-			String id = findAnnotation(field, TempDir.class).map(TempDir::value).orElse("");
+			assertSupportedType("field", field.getType());
 			try {
-				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), context, id));
+				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), context));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
 			}
 		});
-	}
-
-	private void assertValidFieldCandidate(Field field) {
-		assertSupportedType("field", field.getType());
-		if (isPrivate(field)) {
-			throw new ExtensionConfigurationException("@TempDir field [" + field + "] must not be private.");
-		}
 	}
 
 	/**
@@ -136,8 +130,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
-		String id = parameterContext.findAnnotation(TempDir.class).map(TempDir::value).orElse("");
-		return getPathOrFile(parameterType, extensionContext, id);
+		return getPathOrFile(parameterContext.getParameter(), parameterType, extensionContext);
 	}
 
 	private void assertSupportedType(String target, Class<?> type) {
@@ -147,12 +140,24 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private Object getPathOrFile(Class<?> type, ExtensionContext extensionContext, String id) {
-		Path path = extensionContext.getStore(NAMESPACE) //
-				.getOrComputeIfAbsent(id, __ -> createTempDir(), CloseablePath.class) //
+	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, ExtensionContext extensionContext) {
+		Namespace namespace = getScope(extensionContext) == Scope.PER_DECLARATION //
+				? NAMESPACE.append(sourceElement) //
+				: NAMESPACE;
+		Path path = extensionContext.getStore(namespace) //
+				.getOrComputeIfAbsent(KEY, __ -> createTempDir(), CloseablePath.class) //
 				.get();
 
 		return (type == Path.class) ? path : path.toFile();
+	}
+
+	private Scope getScope(ExtensionContext context) {
+		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent( //
+			Scope.class, //
+			__ -> new EnumConfigurationParameterConverter<>(Scope.class, "@TempDir scope") //
+					.get(TEMP_DIR_SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
+			Scope.class //
+		);
 	}
 
 	private static CloseablePath createTempDir() {
@@ -295,6 +300,14 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				return path;
 			}
 		}
+	}
+
+	enum Scope {
+
+		PER_CONTEXT,
+
+		PER_DECLARATION
+
 	}
 
 }
