@@ -159,7 +159,7 @@ inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, 
  */
 @API(status = EXPERIMENTAL, since = "5.5")
 inline fun <R> assertDoesNotThrow(executable: () -> R): R =
-    Assertions.assertDoesNotThrow(getThrowingSupplier(executable))
+    Assertions.assertDoesNotThrow(evaluateAndWrap(executable))
 
 /**
  * Example usage:
@@ -188,12 +188,12 @@ inline fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
 @API(status = EXPERIMENTAL, since = "5.5")
 inline fun <R> assertDoesNotThrow(noinline message: () -> String, executable: () -> R): R =
     Assertions.assertDoesNotThrow(
-        getThrowingSupplier(executable),
+        evaluateAndWrap(executable),
         Supplier(message)
     )
 
 @PublishedApi
-internal inline fun <R> getThrowingSupplier(executable: () -> R): ThrowingSupplier<R> = try {
+internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R> = try {
     val result = executable()
     ThrowingSupplier { result }
 } catch (throwable: Throwable) {
