@@ -253,7 +253,7 @@ public interface MethodOrderer {
 
 		static {
 			DEFAULT_SEED = System.nanoTime();
-			logger.info(() -> "MethodOrderer.Random default seed: " + DEFAULT_SEED);
+			logger.config(() -> "MethodOrderer.Random default seed: " + DEFAULT_SEED);
 		}
 
 		/**

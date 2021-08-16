@@ -46,7 +46,7 @@ class InstantiatingConfigurationParameterConverterTests {
 		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY).orElseThrow();
 
 		assertThat(displayNameGenerator).isInstanceOf(CustomDisplayNameGenerator.class);
-		assertExpectedLogMessage(listener, Level.INFO,
+		assertExpectedLogMessage(listener, Level.CONFIG,
 			"Using default display name generator "
 					+ "'org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator' set via the "
 					+ "'junit.jupiter.displayname.generator.default' configuration parameter.");
@@ -87,7 +87,7 @@ class InstantiatingConfigurationParameterConverterTests {
 		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY).orElseThrow();
 
 		assertThat(displayNameGenerator).isInstanceOf(CustomDisplayNameGenerator.class);
-		assertExpectedLogMessage(listener, Level.INFO,
+		assertExpectedLogMessage(listener, Level.CONFIG,
 			"Using default display name generator "
 					+ "'org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator' set via the "
 					+ "'junit.jupiter.displayname.generator.default' configuration parameter.");

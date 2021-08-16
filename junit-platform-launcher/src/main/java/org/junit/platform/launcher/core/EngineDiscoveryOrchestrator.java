@@ -195,7 +195,7 @@ public class EngineDiscoveryOrchestrator {
 			String displayNames = testDescriptors.stream().map(TestDescriptor::getDisplayName).collect(joining(", "));
 			long containerCount = testDescriptors.stream().filter(TestDescriptor::isContainer).count();
 			long methodCount = testDescriptors.stream().filter(TestDescriptor::isTest).count();
-			logger.info(() -> String.format("%d containers and %d tests were %s", containerCount, methodCount,
+			logger.config(() -> String.format("%d containers and %d tests were %s", containerCount, methodCount,
 				exclusionReason));
 			logger.debug(
 				() -> String.format("The following containers and tests were %s: %s", exclusionReason, displayNames));

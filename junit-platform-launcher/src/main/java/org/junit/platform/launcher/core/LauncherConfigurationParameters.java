@@ -236,7 +236,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				}
 
 				URL configFileUrl = resources.iterator().next(); // same as List#get(0)
-				logger.info(() -> String.format(
+				logger.config(() -> String.format(
 					"Loading JUnit Platform configuration parameters from classpath resource [%s].", configFileUrl));
 				URLConnection urlConnection = configFileUrl.openConnection();
 				urlConnection.setUseCaches(false);
