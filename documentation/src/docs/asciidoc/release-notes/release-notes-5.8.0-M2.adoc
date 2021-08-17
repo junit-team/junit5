@@ -58,6 +58,9 @@ on GitHub.
 * Generating Java Flight Recorder events via module `org.junit.platform.jfr` is now also
   supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
   <<../user-guide/index.adoc#running-tests, Flight Recorder Support>> for details.
+* Suites executed by the `junit-platform-suite` module will now inherit the configuration
+  parameters from the parent discovery request. This behavior can be disabled via the
+  `@DisableParentConfigurationParameters` annotation.
 
 
 [[release-notes-5.8.0-M2-junit-jupiter]]
@@ -84,7 +87,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* `assertDoesNotThrow` now supports suspending functions when called from Kotlin.
+* New `assertThrowsExactly()` method in `Assertions` which is a more strict version of
+  `assertThrows()` that allows you to assert that the exception thrown is of the exact
+  type specified.
+* `assertDoesNotThrow()` in `Assertions` now supports suspending functions when called
+  from Kotlin.
 * `@TempDir` can now be used to create multiple temporary directories. Instead of creating
   a single temporary directory per context (i.e. test class or method) every declaration
   of the `@TempDir` annotation on a field or method parameter now results in a separate
@@ -93,13 +100,15 @@ on GitHub.
   you can set the `junit.jupiter.tempdir.scope` configuration parameter to `per_context`.
 * `@TempDir` cleanup resets readable and executable permissions of the root temporary
   directory and any contained directories instead of failing to delete them.
-* `@TempDir` fields may now be private.
+* `@TempDir` fields may now be `private`.
+* `@ExtendWith` may now be used to register extensions declaratively via fields or
+  parameters in test class constructors, test methods, and lifecycle methods. See
+  <<../user-guide/index.adoc#extensions-registration-declarative, Declarative Extension
+  Registration>> for details.
 * New `named()` static factory method in the `Named` interface that serves as an _alias_
   for `Named.of()`. `named()` is intended to be used via `import static`.
 * New `class` URI scheme for dynamic test sources. This allows tests to be located using
   the information available in a `StackTraceElement`.
-* New `assertThrowsExactly` method which is a more strict version of `assertThrows`
-  that allows you to assert that the thrown exception has the exact specified class.
 * New `autoCloseArguments` attribute in `@ParameterizedTest` to close `AutoCloseable`
   arguments at the end of the test. This attribute defaults to true.
 
@@ -117,6 +126,4 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Suites executed by the `junit-platform-suite` module will now inherit the
-  configuration parameters from the parent discovery request. This behaviour can
-  be disabled via the `@DisableParentConfigurationParameters` annotation.
+* ❓

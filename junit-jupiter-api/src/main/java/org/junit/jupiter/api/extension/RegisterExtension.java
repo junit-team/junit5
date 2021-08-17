@@ -30,8 +30,8 @@ import org.apiguardian.api.API;
  * to pass arguments to the extension's constructor, {@code static} factory
  * method, or builder API.
  *
- * <p>{@code @RegisterExtension} fields must not be {@code private} or
- * {@code null} (when evaluated) but may be either {@code static} or non-static.
+ * <p>{@code @RegisterExtension} fields must not be {@code null} (when evaluated)
+ * but may be either {@code static} or non-static.
  *
  * <h3>Static Fields</h3>
  *
@@ -81,7 +81,9 @@ import org.apiguardian.api.API;
  * {@code @RegisterExtension} fields with {@link org.junit.jupiter.api.Order @Order}.
  * Any {@code @RegisterExtension} field not annotated with {@code @Order} will be
  * ordered using the {@link org.junit.jupiter.api.Order#DEFAULT default} order
- * value.
+ * value. Note that {@code @ExtendWith} fields can also be ordered with
+ * {@code @Order}, relative to {@code @RegisterExtension} fields and other
+ * {@code @ExtendWith} fields.
  *
  * <h3>Example Usage</h3>
  *

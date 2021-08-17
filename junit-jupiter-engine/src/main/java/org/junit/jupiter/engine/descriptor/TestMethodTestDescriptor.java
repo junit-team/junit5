@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromExecutableParameters;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 
 import java.lang.reflect.Method;
@@ -113,7 +114,10 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	protected MutableExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
-		return populateNewExtensionRegistryFromExtendWithAnnotation(context.getExtensionRegistry(), getTestMethod());
+		MutableExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
+			context.getExtensionRegistry(), getTestMethod());
+		registerExtensionsFromExecutableParameters(registry, getTestMethod());
+		return registry;
 	}
 
 	@Override

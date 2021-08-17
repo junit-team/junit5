@@ -13,6 +13,8 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromConstructorParameters;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromExecutableParameters;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromFields;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
@@ -152,15 +154,26 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		// one factory registered per class).
 		this.testInstanceFactory = resolveTestInstanceFactory(registry);
 
+		if (this.testInstanceFactory == null) {
+			registerExtensionsFromConstructorParameters(registry, this.testClass);
+		}
+
+		this.beforeAllMethods = findBeforeAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
+		this.afterAllMethods = findAfterAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
+
+		this.beforeAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
+		// Since registerBeforeEachMethodAdapters() and registerAfterEachMethodAdapters() also
+		// invoke registerExtensionsFromExecutableParameters(), we invoke those methods before
+		// invoking registerExtensionsFromExecutableParameters() for @AfterAll methods,
+		// thereby ensuring proper registration order for extensions registered via @ExtendWith
+		// on parameters in lifecycle methods.
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
+		this.afterAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, this.lifecycle, context.getConfiguration(), throwableCollector);
-
-		this.beforeAllMethods = findBeforeAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
-		this.afterAllMethods = findAfterAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
 
 		// @formatter:off
 		return context.extend()
@@ -468,7 +481,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	private void registerMethodsAsExtensions(List<Method> methods, ExtensionRegistrar registrar,
 			Function<Method, Extension> extensionSynthesizer) {
 
-		methods.forEach(method -> registrar.registerSyntheticExtension(extensionSynthesizer.apply(method), method));
+		methods.forEach(method -> {
+			registerExtensionsFromExecutableParameters(registrar, method);
+			registrar.registerSyntheticExtension(extensionSynthesizer.apply(method), method);
+		});
 	}
 
 	private BeforeEachMethodAdapter synthesizeBeforeEachMethodAdapter(Method method) {

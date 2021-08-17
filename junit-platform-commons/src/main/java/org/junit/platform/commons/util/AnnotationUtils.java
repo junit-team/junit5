@@ -19,8 +19,11 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -79,6 +82,14 @@ public final class AnnotationUtils {
 	}
 
 	/**
+	 * @since 1.8
+	 * @see #findAnnotation(Parameter, int, Class)
+	 */
+	public static boolean isAnnotated(Parameter parameter, int index, Class<? extends Annotation> annotationType) {
+		return findAnnotation(parameter, index, annotationType).isPresent();
+	}
+
+	/**
 	 * Determine if an annotation of {@code annotationType} is either
 	 * <em>present</em> or <em>meta-present</em> on the supplied
 	 * {@code element}.
@@ -105,6 +116,16 @@ public final class AnnotationUtils {
 		}
 
 		return findAnnotation(element.get(), annotationType);
+	}
+
+	/**
+	 * @since 1.8
+	 * @see #findAnnotation(AnnotatedElement, Class)
+	 */
+	public static <A extends Annotation> Optional<A> findAnnotation(Parameter parameter, int index,
+			Class<A> annotationType) {
+
+		return findAnnotation(getEffectiveAnnotatedParameter(parameter, index), annotationType);
 	}
 
 	/**
@@ -238,6 +259,16 @@ public final class AnnotationUtils {
 	}
 
 	/**
+	 * @since 1.8
+	 * @see #findRepeatableAnnotations(AnnotatedElement, Class)
+	 */
+	public static <A extends Annotation> List<A> findRepeatableAnnotations(Parameter parameter, int index,
+			Class<A> annotationType) {
+
+		return findRepeatableAnnotations(getEffectiveAnnotatedParameter(parameter, index), annotationType);
+	}
+
+	/**
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findRepeatableAnnotations(AnnotatedElement, Class)
 	 */
 	public static <A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element,
@@ -355,6 +386,52 @@ public final class AnnotationUtils {
 
 			return repeatable != null && candidate.equals(repeatable.value());
 		});
+	}
+
+	/**
+	 * Due to a bug in {@code javac} on JDK versions prior to JDK 9, looking up
+	 * annotations directly on a {@link Parameter} will fail for inner class
+	 * constructors.
+	 *
+	 * <h4>Bug in {@code javac} on JDK versions prior to JDK 9</h4>
+	 *
+	 * <p>The parameter annotations array in the compiled byte code for the user's
+	 * class excludes an entry for the implicit <em>enclosing instance</em>
+	 * parameter for an inner class constructor.
+	 *
+	 * <h4>Workaround</h4>
+	 *
+	 * <p>This method provides a workaround for this off-by-one error by helping
+	 * JUnit maintainers and extension authors to access annotations on the preceding
+	 * {@link Parameter} object (i.e., {@code index - 1}). The {@code index} must
+	 * never be zero in such situations since this method should never attempt to
+	 * resolve an effective parameter for the implicit <em>enclosing instance</em>
+	 * parameter.
+	 *
+	 * <h4>WARNING</h4>
+	 *
+	 * <p>The {@code AnnotatedElement} returned by this method should never be cast and
+	 * treated as a {@code Parameter} since the metadata (e.g., {@link Parameter#getName()},
+	 * {@link Parameter#getType()}, etc.) will not match those for the declared parameter
+	 * at the given index in an inner class constructor.
+	 *
+	 * @return the supplied {@code Parameter}, or the <em>effective</em> {@code Parameter}
+	 * if the aforementioned bug is detected
+	 * @since 1.8
+	 */
+	private static AnnotatedElement getEffectiveAnnotatedParameter(Parameter parameter, int index) {
+		Preconditions.notNull(parameter, "Parameter must not be null");
+		Executable executable = parameter.getDeclaringExecutable();
+
+		if (executable instanceof Constructor && isInnerClass(executable.getDeclaringClass())
+				&& executable.getParameterAnnotations().length == executable.getParameterCount() - 1) {
+
+			Preconditions.condition(index != 0, "Parameter index must not be 0 for an inner class constructor");
+
+			return executable.getParameters()[index - 1];
+		}
+
+		return parameter;
 	}
 
 	/**
