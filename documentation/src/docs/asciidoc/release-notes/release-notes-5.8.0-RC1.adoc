@@ -5,6 +5,14 @@
 
 *Scope:* ❓
 
+* Improvements to the `SuiteTestEngine`
+* New `UniqueIdTrackingListener`
+* Java Flight Recorder support on Java 8 Update 262 or higher
+* `@TempDir` can be used to create multiple temporary directories
+* Extension registration via `@ExtendWith` on fields and parameters
+* Auto-close support for arguments in `@ParameterizedTest` methods
+* Numerous bug fixes
+
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/55?closed=1+[5.8 RC1] milestone page in the JUnit repository
 on GitHub.
