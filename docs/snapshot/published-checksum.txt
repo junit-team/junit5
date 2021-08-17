@@ -1,4 +1,3 @@
-0028714d22298aa760c453668c7c4cf9  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-RC1.adoc
 003b37d3b3d3b9454d23979a72ea0c22  junit-platform-jfr/src/main/java/org/junit/platform/jfr/FlightRecordingExecutionListener.java
 009a77eccf222e0634cb7dd09fc5dad6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/package-info.java
 00b07c58edac69988bff25685733569d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutConfiguration.java
@@ -428,6 +427,7 @@
 95fd646c722d3bb695c1bb9a43141370  documentation/src/test/java/example/TestingAStackDemo.java
 960af4283a63a8570bbb37c9bb48c24c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnJre.java
 96233d7888a2134bce2d771e63929b9e  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.png
+967a7d1c70065da2fc69597dd20a3e22  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-RC1.adoc
 973527ec5c1ae7dbc95320c1ab751b42  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/CachingJupiterConfiguration.java
 9740a014ab94807ef0875b99c19d98a5  documentation/src/test/java/example/UsingTheLauncherDemo.java
 977c1459bb9ea6c102a45436151852ff  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/package-info.java
