@@ -1,3 +1,4 @@
+0028714d22298aa760c453668c7c4cf9  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-RC1.adoc
 003b37d3b3d3b9454d23979a72ea0c22  junit-platform-jfr/src/main/java/org/junit/platform/jfr/FlightRecordingExecutionListener.java
 009a77eccf222e0634cb7dd09fc5dad6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/package-info.java
 00b07c58edac69988bff25685733569d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutConfiguration.java
@@ -182,7 +183,6 @@
 3e325b1fac0cb1a637cbdc7e46270d20  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ArgumentsSources.java
 3e651bf9e76016d3e37d18e3bd65455e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultMethodDescriptor.java
 3e6c470db5307b73eafaae905a291cc0  junit-platform-launcher/src/main/java/org/junit/platform/launcher/PostDiscoveryFilter.java
-3e8426bfadfc0aab8a79d555e583b3c4  documentation/src/docs/asciidoc/release-notes/index.adoc
 3ef92cf0c2800186c4574405c6d1815e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TagExpression.java
 3f6bed88840df9b729b3862627e09c94  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0.adoc
 3f78aa2e7b5b7c962293f3f35bc1acbc  documentation/src/test/java/example/callbacks/Logger.java
@@ -299,7 +299,6 @@
 6c7f1a078cdfc29b8a42e6aa1f08cc5b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderRegistry.java
 6d83a8afa57a411cb62864f08f82686b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/OS.java
 6da2dd0e5d201b0dde5d6398a57c7bfb  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultDiscoveryRequest.java
-6e47d93fcd7d20b22d00f06479b49ad1  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 6fb116f6847cd91d4180fc4e1a6dd09c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/CompositeLock.java
 6fd347e6d12b0a96c8ac399a3110d75b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/package-info.java
 7046ed9dcea5cf3f3f7a75ea5c8ed2b2  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/AfterEachMethodAdapter.java
@@ -704,6 +703,7 @@ ef1442a6ddd4c4d238642a674d48b643  documentation/src/docs/asciidoc/user-guide/ove
 ef234116cd6d01f8faf64f2179675123  documentation/src/test/java/example/DisplayNameDemo.java
 ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/package-info.java
 ef66ce6fd67e79a19394f6c5e7a2f592  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventStatistics.java
+efba4593475a596c2966483fecb5a8f0  documentation/src/docs/asciidoc/release-notes/index.adoc
 eff79e8d5f2c2ae6ca26dedffdc6294b  documentation/src/test/java/org/junit/api/tools/HtmlApiReportWriter.java
 eff90a7cb1dfa7206dca42ea0e986f7c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
 efffece4ba2f06affd56932ca732ad0b  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ModuleUtils.java
