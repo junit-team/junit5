@@ -1,16 +1,16 @@
-[[release-notes-5.8.0-M2]]
-== 5.8.0-M2
+[[release-notes-5.8.0-RC1]]
+== 5.8.0-RC1
 
 *Date of Release:* ❓
 
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/55?closed=1+[5.8 M2] milestone page in the JUnit repository
+link:{junit5-repo}+/milestone/55?closed=1+[5.8 RC1] milestone page in the JUnit repository
 on GitHub.
 
 
-[[release-notes-5.8.0-M2-general-improvements]]
+[[release-notes-5.8.0-RC1-general-improvements]]
 === General improvements
 
 * The API Guardian dependency is now exported as a compile-only dependency for consuming
@@ -19,7 +19,7 @@ on GitHub.
   noise" on the console when Java's Util Logging is used in its default configuration.
 
 
-[[release-notes-5.8.0-M2-junit-platform]]
+[[release-notes-5.8.0-RC1-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
@@ -27,10 +27,6 @@ on GitHub.
 * Classes explicitly selected via `@SelectClasses` are now always included in the test
   suite. This applies to `@Suite` classes running via the `SuiteTestEngine` and suite
   classes running via the `JUnitPlatform` `Runner`.
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
@@ -63,7 +59,7 @@ on GitHub.
   `@DisableParentConfigurationParameters` annotation.
 
 
-[[release-notes-5.8.0-M2-junit-jupiter]]
+[[release-notes-5.8.0-RC1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
@@ -80,10 +76,6 @@ on GitHub.
   primitive widening support -- for example, from `Integer` to `int` or `long`.
 * Exceptions thrown from instances of `CloseableResource` no longer hide test failures but
   are instead reported as suppressed exceptions.
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
@@ -113,17 +105,7 @@ on GitHub.
   arguments at the end of the test. This attribute defaults to true.
 
 
-[[release-notes-5.8.0-M2-junit-vintage]]
+[[release-notes-5.8.0-RC1-junit-vintage]]
 === JUnit Vintage
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes
