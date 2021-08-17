@@ -237,6 +237,7 @@
 51bb1af5ebbb24042390210c8ca5c12f  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/CompositeTestExecutionListener.java
 524ac7ee69ca473bc447cd2fb158e321  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.java
 528be010351842bcd3d9b8e3d7534d20  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoverySelector.java
+52fcf39119bdc0840cd1c70dff4ca9ab  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 5375cb0b67ee3eeaaba83e84d44cc81b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ThrowableCollector.java
 537cb22a29cc0e3a33871b3d45a47f4d  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/IncludePackageNameFilter.java
 5394034678b700000f14cc6105657580  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.1.adoc
@@ -494,7 +495,6 @@ ab976499bd5837d4c8290578683d203c  junit-platform-engine/src/main/java/org/junit/
 ab99c1ee13eb1bba5735530e4b38ff1e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepeatedTest.java
 abb1ecd2c51fb603fba4a7047ee94725  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 abd6612eabf5518bf42bcce619a5c0bf  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodSource.java
-ac6940f4fa018c0135b432d973fffbb8  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 ad22df48611967802fd2b881b48ce0fc  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.java
 ad3a0f11b3ca13ecaecbda5797a3ffcb  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariableCondition.java
 ada28a11789d985c7650e36908c876dd  documentation/src/test/java/example/DisabledTestsDemo.java
