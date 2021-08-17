@@ -81,6 +81,7 @@
 1ee2d1f0142b8e8a7c191428e9cb16a4  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
 1f18cb3f6d849a3c959231765b262887  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumSource.java
 1f5853efbeeb44b15078429f820ea59f  documentation/src/test/java/example/SuiteDemo.java
+1f7ad15c2ef8bc8b90bdc50ca4442ac6  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-RC1.adoc
 1fc151ca54a482b8bfd1f483513df674  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
 1fe06feafbb182aad7abc51611861da6  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
 20021b9ddc49b2b1006ec3cedc2ab014  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java
@@ -427,7 +428,6 @@
 95fd646c722d3bb695c1bb9a43141370  documentation/src/test/java/example/TestingAStackDemo.java
 960af4283a63a8570bbb37c9bb48c24c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnJre.java
 96233d7888a2134bce2d771e63929b9e  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.png
-967a7d1c70065da2fc69597dd20a3e22  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-RC1.adoc
 973527ec5c1ae7dbc95320c1ab751b42  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/CachingJupiterConfiguration.java
 9740a014ab94807ef0875b99c19d98a5  documentation/src/test/java/example/UsingTheLauncherDemo.java
 977c1459bb9ea6c102a45436151852ff  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/package-info.java
