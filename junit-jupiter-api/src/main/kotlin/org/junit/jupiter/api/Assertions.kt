@@ -158,8 +158,8 @@ inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, 
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertDoesNotThrow(executable: () -> R): R =
-    Assertions.assertDoesNotThrow(ThrowingSupplier(executable))
+inline fun <R> assertDoesNotThrow(executable: () -> R): R =
+    Assertions.assertDoesNotThrow(evaluateAndWrap(executable))
 
 /**
  * Example usage:
@@ -172,7 +172,7 @@ fun <R> assertDoesNotThrow(executable: () -> R): R =
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
+inline fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
     assertDoesNotThrow({ message }, executable)
 
 /**
@@ -186,8 +186,19 @@ fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertDoesNotThrow(message: () -> String, executable: () -> R): R =
-    Assertions.assertDoesNotThrow(ThrowingSupplier(executable), Supplier(message))
+inline fun <R> assertDoesNotThrow(noinline message: () -> String, executable: () -> R): R =
+    Assertions.assertDoesNotThrow(
+        evaluateAndWrap(executable),
+        Supplier(message)
+    )
+
+@PublishedApi
+internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R> = try {
+    val result = executable()
+    ThrowingSupplier { result }
+} catch (throwable: Throwable) {
+    ThrowingSupplier { throw throwable }
+}
 
 /**
  * Example usage:

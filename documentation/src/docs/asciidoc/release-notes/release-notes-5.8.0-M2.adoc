@@ -84,6 +84,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* `assertDoesNotThrow` now supports suspending functions when called from Kotlin.
 * `@TempDir` can now be used to create multiple temporary directories. Instead of creating
   a single temporary directory per context (i.e. test class or method) every declaration
   of the `@TempDir` annotation on a field or method parameter now results in a separate
