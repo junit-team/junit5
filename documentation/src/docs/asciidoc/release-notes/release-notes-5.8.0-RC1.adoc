@@ -1,9 +1,9 @@
 [[release-notes-5.8.0-RC1]]
 == 5.8.0-RC1
 
-*Date of Release:* ❓
+*Date of Release:* August 17, 2021
 
-*Scope:* ❓
+*Scope:*
 
 * Improvements to the `SuiteTestEngine`
 * New `UniqueIdTrackingListener`
