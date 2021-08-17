@@ -494,6 +494,7 @@ ab976499bd5837d4c8290578683d203c  junit-platform-engine/src/main/java/org/junit/
 ab99c1ee13eb1bba5735530e4b38ff1e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepeatedTest.java
 abb1ecd2c51fb603fba4a7047ee94725  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 abd6612eabf5518bf42bcce619a5c0bf  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodSource.java
+ac6940f4fa018c0135b432d973fffbb8  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 ad22df48611967802fd2b881b48ce0fc  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.java
 ad3a0f11b3ca13ecaecbda5797a3ffcb  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariableCondition.java
 ada28a11789d985c7650e36908c876dd  documentation/src/test/java/example/DisabledTestsDemo.java
@@ -686,7 +687,6 @@ e7564541af4d79689d153fd6515bdede  junit-jupiter-api/src/main/java/org/junit/jupi
 e82c52957e5f90e1c56e45cf89f5ac97  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodOrderingVisitor.java
 e861e44b7f953168cd534c65e3bf9cd7  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineDiscoveryOrchestrator.java
 ea0031f0f1e254c65ca59ec3ff5dbdcc  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineIdValidator.java
-ea18e094c2a8d30ac43d6b04db8e3fca  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0-M2.adoc
 ea253702a64ee9614c2a5342ac23fb2a  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.css
 ea4740424fca288c5a249ba8739ffdfa  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java
 eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit/platform/console/tasks/package-info.java
