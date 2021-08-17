@@ -108,16 +108,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)">registerExtension</a></span>&#8203;(<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&nbsp;extension,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;source)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerExtension(java.lang.Class)">registerExtension</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;&nbsp;extensionType)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">
+<div class="block">Instantiate an extension of the given type using its default constructor
+ and register it in the registry.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)">registerExtension</a></span>&#8203;(<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&nbsp;extension,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;source)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">
 <div class="block">Register the supplied <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a>, without checking if an extension
  of that type has already been registered.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerSyntheticExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)">registerSyntheticExtension</a></span>&#8203;(<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&nbsp;extension,
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerSyntheticExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)">registerSyntheticExtension</a></span>&#8203;(<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&nbsp;extension,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;source)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">
 <div class="block">Register the supplied <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> as a <em>synthetic</em> extension,
  without checking if an extension of that type has already been registered.</div>
 </div>
@@ -135,6 +141,23 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="registerExtension(java.lang.Class)">
+<h3>registerExtension</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">registerExtension</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;&nbsp;extensionType)</span></div>
+<div class="block">Instantiate an extension of the given type using its default constructor
+ and register it in the registry.
+
+ <p>A new <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> should not be registered if an extension of the
+ given type already exists in the registry or a parent registry.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>extensionType</code> - the type of extension to register</dd>
+<dt>Since:</dt>
+<dd>5.8</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)">
 <h3>registerExtension</h3>

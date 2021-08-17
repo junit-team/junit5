@@ -692,7 +692,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#extensions-registration-programmatic">5.2.2. Programmatic Extension Registration</a>
 <ul class="sectlevel4">
 <li><a href="#extensions-registration-programmatic-static-fields">Static Fields</a></li>
-<li><a href="#extensions-registration-programmatic-static-fields-kotlin">Static Fields in Kotlin</a></li>
 <li><a href="#extensions-registration-programmatic-instance-fields">Instance Fields</a></li>
 </ul>
 </li>
@@ -7220,29 +7219,34 @@ Java&#8217;s <a href="#extensions-registration-automatic"><code>ServiceLoader</c
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>declaratively</em> by annotating a test
 interface, test class, test method, or custom <em><a href="#writing-tests-meta-annotations">composed
-annotation</a></em> with <code>@ExtendWith(&#8230;&#8203;)</code> and supplying class references for the extensions
-to register.</p>
+annotation</a></em> with <code>@ExtendWith(&#8230;&#8203;)</code> and supplying class references for the extensions to
+register. As of JUnit Jupiter 5.8, <code>@ExtendWith</code> may also be declared on fields or on
+parameters in test class constructors, in test methods, and in <code>@BeforeAll</code>, <code>@AfterAll</code>,
+<code>@BeforeEach</code>, and <code>@AfterEach</code> lifecycle methods.</p>
 </div>
 <div class="paragraph">
-<p>For example, to register a custom <code>RandomParametersExtension</code> for a particular test
-method, you would annotate the test method as follows.</p>
+<p>For example, to register a <code>WebServerExtension</code> for a particular test method, you would
+annotate the test method as follows. We assume the <code>WebServerExtension</code> starts a local web
+server and injects the server&#8217;s URL into parameters annotated with <code>@WebServerUrl</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="nd">@ExtendWith</span><span class="o">(</span><span class="nc">RandomParametersExtension</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-<span class="nd">@Test</span>
-<span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">// ...</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@Test</span>
+<span class="nd">@ExtendWith</span><span class="o">(</span><span class="nc">WebServerExtension</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">getProductList</span><span class="o">(</span><span class="nd">@WebServerUrl</span> <span class="nc">String</span> <span class="n">serverUrl</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">WebClient</span> <span class="n">webClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">WebClient</span><span class="o">();</span>
+    <span class="c1">// Use WebClient to connect to web server using serverUrl and verify response</span>
+    <span class="n">assertEquals</span><span class="o">(</span><span class="mi">200</span><span class="o">,</span> <span class="n">webClient</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">serverUrl</span> <span class="o">+</span> <span class="s">"/products"</span><span class="o">).</span><span class="na">getResponseStatus</span><span class="o">());</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To register a custom <code>RandomParametersExtension</code> for all tests in a particular class and
-its subclasses, you would annotate the test class as follows.</p>
+<p>To register the <code>WebServerExtension</code> for all tests in a particular class and its
+subclasses, you would annotate the test class as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="nd">@ExtendWith</span><span class="o">(</span><span class="nc">RandomParametersExtension</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@ExtendWith</span><span class="o">(</span><span class="nc">WebServerExtension</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 <span class="kd">class</span> <span class="nc">MyTests</span> <span class="o">{</span>
     <span class="c1">// ...</span>
 <span class="o">}</span></code></pre>
@@ -7280,10 +7284,10 @@ its subclasses, you would annotate the test class as follows.</p>
 <td class="content">
 <div class="title">Extension Registration Order</div>
 <div class="paragraph">
-<p>Extensions registered declaratively via <code>@ExtendWith</code> will be executed in the order in
-which they are declared in the source code. For example, the execution of tests in both
-<code>MyFirstTests</code> and <code>MySecondTests</code> will be extended by the <code>DatabaseExtension</code> and
-<code>WebServerExtension</code>, <strong>in exactly that order</strong>.</p>
+<p>Extensions registered declaratively via <code>@ExtendWith</code> at the class level, method level, or
+parameter level will be executed in the order in which they are declared in the source
+code. For example, the execution of tests in both <code>MyFirstTests</code> and <code>MySecondTests</code> will
+be extended by the <code>DatabaseExtension</code> and <code>WebServerExtension</code>, <strong>in exactly that order</strong>.</p>
 </div>
 </td>
 </tr>
@@ -7292,7 +7296,8 @@ which they are declared in the source code. For example, the execution of tests 
 <div class="paragraph">
 <p>If you wish to combine multiple extensions in a reusable way, you can define a custom
 <em><a href="#writing-tests-meta-annotations">composed annotation</a></em> and use <code>@ExtendWith</code> as a
-<em>meta-annotation</em>:</p>
+<em>meta-annotation</em> as in the following code listing. Then <code>@DatabaseAndWebServerExtension</code>
+can be used in place of <code>@ExtendWith({ DatabaseExtension.class, WebServerExtension.class })</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7302,6 +7307,83 @@ which they are declared in the source code. For example, the execution of tests 
 <span class="kd">public</span> <span class="nd">@interface</span> <span class="nc">DatabaseAndWebServerExtension</span> <span class="o">{</span>
 <span class="o">}</span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The above examples demonstrate how <code>@ExtendWith</code> can be applied at the class level or at
+the method level; however, for certain use cases it makes sense for an extension to be
+registered declaratively at the field or parameter level. Consider a
+<code>RandomNumberExtension</code> that generates random numbers that can be injected into a field or
+via a parameter in a constructor, test method, or lifecycle method. If the extension
+provides a <code>@Random</code> annotation that is meta-annotated with
+<code>@ExtendWith(RandomNumberExtension.class)</code> (see listing below), the extension can be used
+transparently as in the following <code>RandomNumberTests</code> example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@Target</span><span class="o">({</span> <span class="nc">ElementType</span><span class="o">.</span><span class="na">FIELD</span><span class="o">,</span> <span class="nc">ElementType</span><span class="o">.</span><span class="na">PARAMETER</span> <span class="o">})</span>
+<span class="nd">@Retention</span><span class="o">(</span><span class="nc">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+<span class="nd">@ExtendWith</span><span class="o">(</span><span class="nc">RandomNumberExtension</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nd">@interface</span> <span class="nc">Random</span> <span class="o">{</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">RandomNumberTests</span> <span class="o">{</span>
+
+    <span class="c1">// use random number field in test methods and @BeforeEach</span>
+    <span class="c1">// or @AfterEach lifecycle methods</span>
+    <span class="nd">@Random</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">randomNumber1</span><span class="o">;</span>
+
+    <span class="nc">RandomNumberTests</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber2</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// use random number in constructor</span>
+    <span class="o">}</span>
+
+    <span class="nd">@BeforeEach</span>
+    <span class="kt">void</span> <span class="nf">beforeEach</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber3</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// use random number in @BeforeEach method</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber4</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// use random number in test method</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Extension Registration Order for <code>@ExtendWith</code> on Fields</div>
+<div class="paragraph">
+<p>Extensions registered declaratively via <code>@ExtendWith</code> on fields will be ordered relative
+to <code>@RegisterExtension</code> fields and other <code>@ExtendWith</code> fields using an algorithm that is
+deterministic but intentionally nonobvious. However, <code>@ExtendWith</code> fields can be ordered
+using the <code>@Order</code> annotation. See the <a href="#extensions-registration-programmatic-order">Extension Registration Order</a> tip for <code>@RegisterExtension</code> fields for details.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>@ExtendWith</code> fields may be either <code>static</code> or non-static. The documentation on
+<a href="#extensions-registration-programmatic-static-fields">Static Fields</a> and
+<a href="#extensions-registration-programmatic-instance-fields">Instance Fields</a> for
+<code>@RegisterExtension</code> fields also applies to <code>@ExtendWith</code> fields.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -7326,24 +7408,24 @@ extension&#8217;s constructor, a static factory method, or a builder API.</p>
 <td class="content">
 <div class="title">Extension Registration Order</div>
 <div class="paragraph">
-<p>By default, extensions registered programmatically via <code>@RegisterExtension</code> will be
-ordered using an algorithm that is deterministic but intentionally nonobvious. This
-ensures that subsequent runs of a test suite execute extensions in the same order, thereby
-allowing for repeatable builds. However, there are times when extensions need to be
-registered in an explicit order. To achieve that, annotate <code>@RegisterExtension</code> fields
-with <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a></code>.</p>
+<p>By default, extensions registered programmatically via <code>@RegisterExtension</code> or
+declaratively via <code>@ExtendWith</code> on fields will be ordered using an algorithm that is
+deterministic but intentionally nonobvious. This ensures that subsequent runs of a test
+suite execute extensions in the same order, thereby allowing for repeatable builds.
+However, there are times when extensions need to be registered in an explicit order. To
+achieve that, annotate <code>@RegisterExtension</code> fields or <code>@ExtendWith</code> fields with <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a></code>.</p>
 </div>
 <div class="paragraph">
-<p>Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will be ordered using the
-<em>default</em> order which has a value of <code>Integer.MAX_VALUE / 2</code>. This allows <code>@Order</code>
-annotated extension fields to be explicitly ordered before or after non-annotated
-extension fields. Extensions with an explicit order value less than the default order
-value will be registered before non-annotated extensions. Similarly, extensions with an
-explicit order value greater than the default order value will be registered after
-non-annotated extensions. For example, assigning an extension an explicit order value that
-is greater than the default order value allows <em>before</em> callback extensions to be
-registered last and <em>after</em> callback extensions to be registered first, relative to other
-programmatically registered extensions.</p>
+<p>Any <code>@RegisterExtension</code> field or <code>@ExtendWith</code> field not annotated with <code>@Order</code> will be
+ordered using the <em>default</em> order which has a value of <code>Integer.MAX_VALUE / 2</code>. This
+allows <code>@Order</code> annotated extension fields to be explicitly ordered before or after
+non-annotated extension fields. Extensions with an explicit order value less than the
+default order value will be registered before non-annotated extensions. Similarly,
+extensions with an explicit order value greater than the default order value will be
+registered after non-annotated extensions. For example, assigning an extension an explicit
+order value that is greater than the default order value allows <em>before</em> callback
+extensions to be registered last and <em>after</em> callback extensions to be registered first,
+relative to other programmatically registered extensions.</p>
 </div>
 </td>
 </tr>
@@ -7356,8 +7438,8 @@ programmatically registered extensions.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<code>@RegisterExtension</code> fields must not be <code>private</code> or <code>null</code> (at evaluation time) but
-may be either <code>static</code> or non-static.
+<code>@RegisterExtension</code> fields must not be <code>null</code> (at evaluation time) but may be
+either <code>static</code> or non-static.
 </td>
 </tr>
 </table>
@@ -7384,7 +7466,7 @@ lifecycle methods annotated with <code>@BeforeAll</code> or <code>@AfterAll</cod
 <code>server</code> field if necessary.</p>
 </div>
 <div class="listingblock">
-<div class="title">An extension registered via a static field</div>
+<div class="title">Registering an extension via a static field in Java</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">WebServerDemo</span> <span class="o">{</span>
 
@@ -7404,15 +7486,13 @@ lifecycle methods annotated with <code>@BeforeAll</code> or <code>@AfterAll</cod
 <span class="o">}</span></code></pre>
 </div>
 </div>
-</div>
-<div class="sect4">
-<h5 id="extensions-registration-programmatic-static-fields-kotlin"><a class="anchor" href="#extensions-registration-programmatic-static-fields-kotlin"></a>Static Fields in Kotlin</h5>
+<div class="sect5">
+<h6 id="extensions-registration-programmatic-static-fields-kotlin"><a class="anchor" href="#extensions-registration-programmatic-static-fields-kotlin"></a>Static Fields in Kotlin</h6>
 <div class="paragraph">
 <p>The Kotlin programming language does not have the concept of a <code>static</code> field. However,
-the compiler can be instructed to generate static fields using annotations. Since, as
-stated earlier, <code>@RegisterExtension</code> fields must not be <code>private</code> nor <code>null</code>, one
-<strong>cannot</strong> use the <code>@JvmStatic</code> annotation in Kotlin as it generates <code>private</code> fields.
-Rather, the <code>@JvmField</code> annotation must be used.</p>
+the compiler can be instructed to generate a <code>private static</code> field using the <code>@JvmStatic</code>
+annotation in Kotlin. If you want the Kotlin compiler to generate a <code>public static</code> field,
+you can use the <code>@JvmField</code> annotation instead.</p>
 </div>
 <div class="paragraph">
 <p>The following example is a version of the <code>WebServerDemo</code> from the previous section that
@@ -7424,7 +7504,7 @@ has been ported to Kotlin.</p>
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="kd">class</span> <span class="nc">KotlinWebServerDemo</span> <span class="p">{</span>
 
     <span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
-        <span class="nd">@JvmField</span>
+        <span class="nd">@JvmStatic</span>
         <span class="nd">@RegisterExtension</span>
         <span class="kd">val</span> <span class="py">server</span> <span class="p">=</span> <span class="nc">WebServerExtension</span><span class="p">.</span><span class="nf">builder</span><span class="p">()</span>
                 <span class="p">.</span><span class="nf">enableSecurity</span><span class="p">(</span><span class="k">false</span><span class="p">)</span>
@@ -7439,6 +7519,7 @@ has been ported to Kotlin.</p>
         <span class="nf">assertEquals</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">webClient</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="s">"$serverUrl/products"</span><span class="p">).</span><span class="n">responseStatus</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span></code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -10524,7 +10605,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-17 08:40:30 UTC
+Last updated 2021-08-17 09:08:27 UTC
 </div>
 </div>
 <style>

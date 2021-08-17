@@ -90,8 +90,8 @@ loadScripts(document, 'script');</script>
  to pass arguments to the extension's constructor, <code>static</code> factory
  method, or builder API.
 
- <p><code>@RegisterExtension</code> fields must not be <code>private</code> or
- <code>null</code> (when evaluated) but may be either <code>static</code> or non-static.
+ <p><code>@RegisterExtension</code> fields must not be <code>null</code> (when evaluated)
+ but may be either <code>static</code> or non-static.
 
  <h3>Static Fields</h3>
 
@@ -140,7 +140,9 @@ loadScripts(document, 'script');</script>
  <code>@RegisterExtension</code> fields with <a href="../Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a>.
  Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will be
  ordered using the <a href="../Order.html#DEFAULT"><code>default</code></a> order
- value.
+ value. Note that <code>@ExtendWith</code> fields can also be ordered with
+ <code>@Order</code>, relative to <code>@RegisterExtension</code> fields and other
+ <code>@ExtendWith</code> fields.
 
  <h3>Example Usage</h3>
 

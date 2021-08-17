@@ -75,7 +75,7 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="description">
 <hr>
-<div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#TYPE" title="class or interface in java.lang.annotation" class="external-link">TYPE</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>})
+<div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#TYPE" title="class or interface in java.lang.annotation" class="external-link">TYPE</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#FIELD" title="class or interface in java.lang.annotation" class="external-link">FIELD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#PARAMETER" title="class or interface in java.lang.annotation" class="external-link">PARAMETER</a>})
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#RUNTIME" title="class or interface in java.lang.annotation" class="external-link">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Documented.html" title="class or interface in java.lang.annotation" class="external-link">@Documented</a>
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Inherited.html" title="class or interface in java.lang.annotation" class="external-link">@Inherited</a>
@@ -84,10 +84,47 @@ loadScripts(document, 'script');</script>
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.0")
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">ExtendWith</span></div>
 <div class="block"><code>@ExtendWith</code> is a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link">repeatable</a> annotation
- that is used to register <a href="Extension.html" title="interface in org.junit.jupiter.api.extension">extensions</a> for the
- annotated test class or test method.
+ that is used to register <a href="Extension.html" title="interface in org.junit.jupiter.api.extension">extensions</a> for the annotated
+ test class, test interface, test method, parameter, or field.
+
+ <p>Annotated parameters are supported in test class constructors, in test
+ methods, and in <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>,
+ and <code>@AfterEach</code> lifecycle methods.
+
+ <p><code>@ExtendWith</code> fields may be either <code>static</code> or non-static.
+
+ <h3>Inheritance</h3>
+
+ <p><code>@ExtendWith</code> fields are inherited from superclasses as long as they
+ are not <em>hidden</em> or <em>overridden</em>. Furthermore, <code>@ExtendWith</code>
+ fields from superclasses will be registered before <code>@ExtendWith</code> fields
+ in subclasses.
+
+ <h3>Registration Order</h3>
+
+ <p>When <code>@ExtendWith</code> is present on a test class, test interface, or
+ test method or on a parameter in a test method or lifecycle method, the
+ corresponding extensions will be registered in the order in which the
+ <code>@ExtendWith</code> annotations are discovered. For example, if a test class
+ is annotated with <code>@ExtendWith(A.class)</code> and then with
+ <code>@ExtendWith(B.class)</code>, extension <code>A</code> will be registered before
+ extension <code>B</code>.
+
+ <p>By default, if multiple extensions are registered on fields via
+ <code>@ExtendWith</code>, they will be ordered using an algorithm that is
+ deterministic but intentionally nonobvious. This ensures that subsequent runs
+ of a test suite execute extensions in the same order, thereby allowing for
+ repeatable builds. However, there are times when extensions need to be
+ registered in an explicit order. To achieve that, you can annotate
+ <code>@ExtendWith</code> fields with <a href="../Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a>.
+ Any <code>@ExtendWith</code> field not annotated with <code>@Order</code> will be
+ ordered using the <a href="../Order.html#DEFAULT"><code>default</code></a> order
+ value. Note that <code>@RegisterExtension</code> fields can also be ordered with
+ <code>@Order</code>, relative to <code>@ExtendWith</code> fields and other
+ <code>@RegisterExtension</code> fields.
 
  <h3>Supported Extension APIs</h3>
+
  <ul>
  <li><a href="ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a></li>
  <li><a href="InvocationInterceptor.html" title="interface in org.junit.jupiter.api.extension"><code>InvocationInterceptor</code></a></li>

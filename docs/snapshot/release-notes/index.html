@@ -609,6 +609,11 @@ details.</p>
 supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
 <a href="../user-guide/index.html#running-tests">Flight Recorder Support</a> for details.</p>
 </li>
+<li>
+<p>Suites executed by the <code>junit-platform-suite</code> module will now inherit the configuration
+parameters from the parent discovery request. This behavior can be disabled via the
+<code>@DisableParentConfigurationParameters</code> annotation.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -659,7 +664,13 @@ are instead reported as suppressed exceptions.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>assertDoesNotThrow</code> now supports suspending functions when called from Kotlin.</p>
+<p>New <code>assertThrowsExactly()</code> method in <code>Assertions</code> which is a more strict version of
+<code>assertThrows()</code> that allows you to assert that the exception thrown is of the exact
+type specified.</p>
+</li>
+<li>
+<p><code>assertDoesNotThrow()</code> in <code>Assertions</code> now supports suspending functions when called
+from Kotlin.</p>
 </li>
 <li>
 <p><code>@TempDir</code> can now be used to create multiple temporary directories. Instead of creating
@@ -674,7 +685,13 @@ you can set the <code>junit.jupiter.tempdir.scope</code> configuration parameter
 directory and any contained directories instead of failing to delete them.</p>
 </li>
 <li>
-<p><code>@TempDir</code> fields may now be private.</p>
+<p><code>@TempDir</code> fields may now be <code>private</code>.</p>
+</li>
+<li>
+<p><code>@ExtendWith</code> may now be used to register extensions declaratively via fields or
+parameters in test class constructors, test methods, and lifecycle methods. See
+<a href="../user-guide/index.html#extensions-registration-declarative">Declarative Extension
+Registration</a> for details.</p>
 </li>
 <li>
 <p>New <code>named()</code> static factory method in the <code>Named</code> interface that serves as an <em>alias</em>
@@ -683,10 +700,6 @@ for <code>Named.of()</code>. <code>named()</code> is intended to be used via <co
 <li>
 <p>New <code>class</code> URI scheme for dynamic test sources. This allows tests to be located using
 the information available in a <code>StackTraceElement</code>.</p>
-</li>
-<li>
-<p>New <code>assertThrowsExactly</code> method which is a more strict version of <code>assertThrows</code>
-that allows you to assert that the thrown exception has the exact specified class.</p>
 </li>
 <li>
 <p>New <code>autoCloseArguments</code> attribute in <code>@ParameterizedTest</code> to close <code>AutoCloseable</code>
@@ -723,9 +736,7 @@ arguments at the end of the test. This attribute defaults to true.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Suites executed by the <code>junit-platform-suite</code> module will now inherit the
-configuration parameters from the parent discovery request. This behaviour can
-be disabled via the <code>@DisableParentConfigurationParameters</code> annotation.</p>
+<p>❓</p>
 </li>
 </ul>
 </div>
@@ -1142,7 +1153,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-17 08:40:30 UTC
+Last updated 2021-08-17 09:08:27 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
