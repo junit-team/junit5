@@ -1,0 +1,66 @@
+[[release-notes-5.8.0]]
+== 5.8.0
+
+*Date of Release:* September ❓, 2021
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/51?closed=1+[5.8 M1],
+link:{junit5-repo}+/milestone/55?closed=1+[5.8 RC1], and
+link:{junit5-repo}+/milestone/57?closed=1+[5.8 GA] milestone pages in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.8.0-overall-improvements]]
+=== Overall Improvements
+
+* ❓
+
+
+[[release-notes-5.8.0-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.8.0-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.8.0-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
