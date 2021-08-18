@@ -132,6 +132,7 @@ on GitHub.
   parameters in test class constructors, test methods, and lifecycle methods. See
   <<../user-guide/index.adoc#extensions-registration-declarative, Declarative Extension
   Registration>> for details.
+* `@RegisterExtension` fields may now be `private`.
 * New `assertThrowsExactly()` method in `Assertions` which is a more strict version of
   `assertThrows()` that allows you to assert that the exception thrown is of the exact
   type specified.
