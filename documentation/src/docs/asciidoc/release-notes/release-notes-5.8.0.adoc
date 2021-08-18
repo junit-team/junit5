@@ -55,7 +55,12 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* If multiple exceptions are registered as failures for a JUnit 4 based test -- for
+  example, if the `ErrorCollector` rule throws an
+  `org.junit.runners.model.MultipleFailureException` -- all of those failures are now
+  added as _suppressed exceptions_ in the `org.opentest4j.MultipleFailuresError` created
+  by the `VintageTestEngine`. This allows users to analyze the stack trace of each failure
+  when such a test fails.
 
 ==== Deprecations and Breaking Changes
 

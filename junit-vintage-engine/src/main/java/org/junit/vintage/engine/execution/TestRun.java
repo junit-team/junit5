@@ -193,7 +193,9 @@ class TestRun {
 				.map(Optional::get)
 				.collect(toList());
 		// @formatter:on
-		return failed(new MultipleFailuresError("", failures));
+		MultipleFailuresError multipleFailuresError = new MultipleFailuresError("", failures);
+		failures.forEach(multipleFailuresError::addSuppressed);
+		return failed(multipleFailuresError);
 	}
 
 	private static class VintageDescriptors {

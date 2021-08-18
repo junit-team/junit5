@@ -632,9 +632,13 @@ class VintageTestEngineExecutionTests {
 			event(container(testClass), started()), //
 			event(test("example"), started()), //
 			event(test("example"), //
-				finishedWithFailure(instanceOf(MultipleFailuresError.class), //
+				finishedWithFailure(//
+					instanceOf(MultipleFailuresError.class), //
 					new Condition<>(throwable -> ((MultipleFailuresError) throwable).getFailures().size() == 3,
-						"Must contain multiple errors (3)"))), //
+						"MultipleFailuresError must contain 3 failures"), //
+					new Condition<>(throwable -> ((MultipleFailuresError) throwable).getSuppressed().length == 3,
+						"MultipleFailuresError must contain 3 suppressed exceptions")//
+				)), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
