@@ -5,6 +5,18 @@
 
 *Scope:* ❓
 
+* Declarative test suites via `@Suite` classes
+* `LauncherSession` and accompanying listener
+* New `UniqueIdTrackingListener`
+* More fine-grained Java Flight Recorder events
+* Java Flight Recorder support on Java 8 Update 262 or higher
+* Test class ordering
+* `@TempDir` can be used to create multiple temporary directories
+* Extension registration via `@ExtendWith` on fields and parameters
+* Auto-close support for arguments in `@ParameterizedTest` methods
+* Memory and performance optimizations
+* Numerous bug fixes and minor improvements
+
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/51?closed=1+[5.8 M1],
 link:{junit5-repo}+/milestone/55?closed=1+[5.8 RC1], and
