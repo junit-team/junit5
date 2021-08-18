@@ -392,7 +392,6 @@
 8b831a71f0e0098ec34aae5840f4da0a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/ClassContainerSelectorResolver.java
 8bae0e95006995400115cb4e3ecc8721  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ShuntingYard.java
 8bb09058311b65f34699943ed4897f1f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/ClassOrderingVisitor.java
-8bb76909438379e657b1a5320ae51424  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0.adoc
 8bcdd91be0c317f30aebf62be1213da8  documentation/src/test/java/example/SharedResourcesDemo.java
 8c3334aa5902bb522b02eaa12c3eda80  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAccessor.java
 8c3a2001c69a41a166004b01bfa4bd1c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIf.java
@@ -602,6 +601,7 @@ cc4cbbaf05adf883a9353b72d9526313  junit-platform-engine/src/main/java/org/junit/
 cc4e162c0516bb5abe07db4296c34f7b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/FilterableIgnoringRunnerDecorator.java
 cc60a8b996a01f716eb2bcae9b686015  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/package-info.java
 ccb7d02f480e1eaf328ce327e581d990  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrintingListener.java
+cd00b52b38d1063c3678a4a6d13691f4  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0.adoc
 cd1376ea9daa615eadf12c3880aee3dc  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java
 cd5af5dada46c3507e38b154a66bd019  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IsPotentialJUnit4TestMethod.java
 cebd215efe9113126b5f20109b7ff51a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.java
