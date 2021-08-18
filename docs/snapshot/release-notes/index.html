@@ -480,21 +480,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#release-notes-5.8.0-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#release-notes-5.8.0-RC1">5.8.0-RC1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.8.0-RC1-general-improvements">General improvements</a></li>
-<li><a href="#release-notes-5.8.0-RC1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.8.0-RC1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.8.0-RC1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.8.0-M1">5.8.0-M1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.8.0-M1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.8.0-M1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.8.0-M1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
 <li><a href="#release-notes-5.7.2">5.7.2</a>
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.7.2-junit-platform">JUnit Platform</a></li>
@@ -536,148 +521,25 @@ authors as well as build tool and IDE vendors.</p>
 <div class="paragraph">
 <p><strong>Scope:</strong> ❓</p>
 </div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/51?closed=1">5.8 M1</a>,
-<a href="https://github.com/junit-team/junit5/milestone/55?closed=1">5.8 RC1</a>, and
-<a href="https://github.com/junit-team/junit5/milestone/57?closed=1">5.8 GA</a> milestone pages in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.0-overall-improvements"><a class="anchor" href="#release-notes-5.8.0-overall-improvements"></a>Overall Improvements</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Declarative test suites via <code>@Suite</code> classes</p>
 </li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.0-junit-platform"><a class="anchor" href="#release-notes-5.8.0-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
 <li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.0-junit-jupiter"><a class="anchor" href="#release-notes-5.8.0-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.0-junit-vintage"><a class="anchor" href="#release-notes-5.8.0-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>If multiple exceptions are registered as failures for a JUnit 4 based test&#8201;&#8212;&#8201;for
-example, if the <code>ErrorCollector</code> rule throws an
-<code>org.junit.runners.model.MultipleFailureException</code>&#8201;&#8212;&#8201;all of those failures are now
-added as <em>suppressed exceptions</em> in the <code>org.opentest4j.MultipleFailuresError</code> created
-by the <code>VintageTestEngine</code>. This allows users to analyze the stack trace of each failure
-when such a test fails.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.8.0-RC1"><a class="anchor" href="#release-notes-5.8.0-RC1"></a>5.8.0-RC1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> August 17, 2021</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Improvements to the <code>SuiteTestEngine</code></p>
+<p><code>LauncherSession</code> and accompanying listener</p>
 </li>
 <li>
 <p>New <code>UniqueIdTrackingListener</code></p>
 </li>
 <li>
+<p>More fine-grained Java Flight Recorder events</p>
+</li>
+<li>
 <p>Java Flight Recorder support on Java 8 Update 262 or higher</p>
+</li>
+<li>
+<p>Test class ordering</p>
 </li>
 <li>
 <p><code>@TempDir</code> can be used to create multiple temporary directories</p>
@@ -689,17 +551,22 @@ when such a test fails.</p>
 <p>Auto-close support for arguments in <code>@ParameterizedTest</code> methods</p>
 </li>
 <li>
-<p>Numerous bug fixes</p>
+<p>Memory and performance optimizations</p>
+</li>
+<li>
+<p>Numerous bug fixes and minor improvements</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/55?closed=1">5.8 RC1</a> milestone page in the JUnit repository
+<a href="https://github.com/junit-team/junit5/milestone/51?closed=1">5.8 M1</a>,
+<a href="https://github.com/junit-team/junit5/milestone/55?closed=1">5.8 RC1</a>, and
+<a href="https://github.com/junit-team/junit5/milestone/57?closed=1">5.8 GA</a> milestone pages in the JUnit repository
 on GitHub.</p>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.8.0-RC1-general-improvements"><a class="anchor" href="#release-notes-5.8.0-RC1-general-improvements"></a>General improvements</h3>
+<h3 id="release-notes-5.8.0-overall-improvements"><a class="anchor" href="#release-notes-5.8.0-overall-improvements"></a>Overall Improvements</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -714,9 +581,9 @@ noise" on the console when Java&#8217;s Util Logging is used in its default conf
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.8.0-RC1-junit-platform"><a class="anchor" href="#release-notes-5.8.0-RC1-junit-platform"></a>JUnit Platform</h3>
+<h3 id="release-notes-5.8.0-junit-platform"><a class="anchor" href="#release-notes-5.8.0-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -724,13 +591,41 @@ noise" on the console when Java&#8217;s Util Logging is used in its default conf
 suite. This applies to <code>@Suite</code> classes running via the <code>SuiteTestEngine</code> and suite
 classes running via the <code>JUnitPlatform</code> <code>Runner</code>.</p>
 </li>
+<li>
+<p><code>SummaryGeneratingListener</code> is now thread-safe and can handle concurrently failing tests.</p>
+</li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>For consistency with the rest of the JUnit Platform, the experimental
+<code>LauncherDiscoveryListener</code> is now an interface instead of an abstract class.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>New <code>junit-platform-suite-engine</code> module to execute declarative test suites on the JUnit
+Platform.</p>
+</li>
+<li>
+<p>Additional selectors in the suite API in the <code>junit-platform-suite-api</code> module.</p>
+</li>
+<li>
+<p>New <code>UniqueIdTrackingListener</code> which is a <code>TestExecutionListener</code> that tracks the unique
+IDs of all tests that were skipped or executed during the <code>TestPlan</code> and generates a
+file containing the unique IDs. The generated file can be used to rerun those tests&#8201;&#8212;&#8201;for example, in order to run the same set of tests executed on the JVM subsequently
+within a GraalVM native image. See the Javadoc for <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code> for
+details.</p>
+</li>
 <li>
 <p>New <code>findAnnotation(Class,Class,SearchOption)</code> method in <code>AnnotationSupport</code> that
 performs the same search algorithm as <code>findAnnotation(AnnotatedElement,Class)</code> but also
@@ -738,6 +633,26 @@ searches the enclosing class hierarchy for inner classes if the
 <code>INCLUDE_ENCLOSING_CLASSES</code> <code>SearchOption</code> is specified. This new method can be used by
 extension authors to find annotations on enclosing classes for JUnit Jupiter <code>@Nested</code>
 test classes.</p>
+</li>
+<li>
+<p>New <code>test(Condition&lt;Event&gt;)</code> and <code>nestedContainer(Class&lt;?&gt;, Condition&lt;Event&gt;)</code> methods
+in <code>EventConditions</code> that allow you to provide conditions for matching against test and
+nested container events when using the <code>EngineTestKit</code>. For example,
+<code>test(displayName("my test"))</code> can be used to match against a test whose display name is
+<code>my test</code>.</p>
+</li>
+<li>
+<p>Generating Java Flight Recorder events via the <code>junit-platform-jfr</code> module is now also
+supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
+<a href="../user-guide/index.html#running-tests">Flight Recorder Support</a> for details.</p>
+</li>
+<li>
+<p>The <code>junit-platform-jfr</code> module now reports execution events for containers&#8201;&#8212;&#8201;for
+example, test classes.</p>
+</li>
+<li>
+<p>The <code>junit-platform-jfr</code> module now reports test discovery events for the launcher and
+registered test engines.</p>
 </li>
 <li>
 <p>New <code>ClassSource.from(URI)</code> static factory method for creating a <code>ClassSource</code> from a
@@ -753,30 +668,30 @@ factory method.</p>
 Listener</a> for details.</p>
 </li>
 <li>
-<p>New <code>UniqueIdTrackingListener</code> which is a <code>TestExecutionListener</code> that tracks the unique
-IDs of all tests that were skipped or executed during the <code>TestPlan</code> and generates a
-file containing the unique IDs. The generated file can be used to rerun those tests&#8201;&#8212;&#8201;for example, in order to run the same set of tests executed on the JVM subsequently
-within a GraalVM native image. See the Javadoc for <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code> for
-details.</p>
+<p>Custom <code>LauncherDiscoveryListener</code> implementations can now be registered via Java’s
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
 </li>
 <li>
-<p>Generating Java Flight Recorder events via module <code>org.junit.platform.jfr</code> is now also
-supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
-<a href="../user-guide/index.html#running-tests">Flight Recorder Support</a> for details.</p>
+<p>Documented constant value of <code>ExclusiveResource.GLOBAL_KEY</code>.</p>
 </li>
 <li>
-<p>Suites executed by the <code>junit-platform-suite</code> module will now inherit the configuration
-parameters from the parent discovery request. This behavior can be disabled via the
-<code>@DisableParentConfigurationParameters</code> annotation.</p>
+<p>Instances of <code>TestIdentifier</code> and <code>UniqueId</code> now retain less memory because they no
+longer store <code>String</code> representations of unique IDs.</p>
+</li>
+<li>
+<p>Tools that make multiple calls to the <code>Launcher</code> API should now create a
+<code>LauncherSession</code> in order to allow for executing global setup and teardown code exactly
+once via the new <code>LauncherSessionListener</code> interface that can be registered via Java’s
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.8.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.8.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
+<h3 id="release-notes-5.8.0-junit-jupiter"><a class="anchor" href="#release-notes-5.8.0-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -805,9 +720,37 @@ are instead reported as suppressed exceptions.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
+<li>
+<p><code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt;, ExtensionContext)</code> has
+been deprecated in favor of
+<code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt;, DynamicTestInvocationContext, ExtensionContext)</code>
+that provides access to the dynamic test executable via
+<code>DynamicTestInvocationContext.getExecutable()</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Top-level test classes can now be ordered by passing the fully-qualified name of a class
+implementing <code>ClassOrderer</code> as the value of the new
+<code>junit.jupiter.testclass.order.default</code> configuration parameter.</p>
+</li>
+<li>
+<p><code>@ExtendWith</code> may now be used to register extensions declaratively via fields or
+parameters in test class constructors, test methods, and lifecycle methods. See
+<a href="../user-guide/index.html#extensions-registration-declarative">Declarative Extension
+Registration</a> for details.</p>
+</li>
+<li>
+<p><code>@RegisterExtension</code> fields may now be <code>private</code>.</p>
+</li>
 <li>
 <p>New <code>assertThrowsExactly()</code> method in <code>Assertions</code> which is a more strict version of
 <code>assertThrows()</code> that allows you to assert that the exception thrown is of the exact
@@ -816,6 +759,16 @@ type specified.</p>
 <li>
 <p><code>assertDoesNotThrow()</code> in <code>Assertions</code> now supports suspending functions when called
 from Kotlin.</p>
+</li>
+<li>
+<p>New <code>assertInstanceOf()</code> methods which produce better error messages comparable to those
+produced by <code>assertThrows</code>. These new methods serve as a replacement for
+<code>assertTrue(obj instanceof X)</code>.</p>
+</li>
+<li>
+<p><code>assertNull()</code> failure messages now include the actual object&#8217;s type if the <code>toString()</code>
+implementation for the actual object returns <code>null</code> or <code>"null"</code>. This avoids the
+generation of confusing failure messages such as <code>expected &lt;null&gt; but was &lt;null&gt;</code>.</p>
 </li>
 <li>
 <p><code>@TempDir</code> can now be used to create multiple temporary directories. Instead of creating
@@ -833,172 +786,21 @@ directory and any contained directories instead of failing to delete them.</p>
 <p><code>@TempDir</code> fields may now be <code>private</code>.</p>
 </li>
 <li>
-<p><code>@ExtendWith</code> may now be used to register extensions declaratively via fields or
-parameters in test class constructors, test methods, and lifecycle methods. See
-<a href="../user-guide/index.html#extensions-registration-declarative">Declarative Extension
-Registration</a> for details.</p>
-</li>
-<li>
-<p>New <code>named()</code> static factory method in the <code>Named</code> interface that serves as an <em>alias</em>
-for <code>Named.of()</code>. <code>named()</code> is intended to be used via <code>import static</code>.</p>
+<p><code>DynamicTests.stream()</code> can now consume <code>Named</code> input and will use each name-value pair
+as the display name and value for each generated dynamic test (see
+<a href="../user-guide/index.html#writing-tests-dynamic-tests-examples">User Guide</a> for details).</p>
 </li>
 <li>
 <p>New <code>class</code> URI scheme for dynamic test sources. This allows tests to be located using
 the information available in a <code>StackTraceElement</code>.</p>
 </li>
 <li>
+<p>Dynamic tests now require less memory thanks to a number of improvements to internal
+data structures.</p>
+</li>
+<li>
 <p>New <code>autoCloseArguments</code> attribute in <code>@ParameterizedTest</code> to close <code>AutoCloseable</code>
 arguments at the end of the test. This attribute defaults to true.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.8.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.8.0-M1"><a class="anchor" href="#release-notes-5.8.0-M1"></a>5.8.0-M1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> February 11, 2021</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Declarative test suites</p>
-</li>
-<li>
-<p>Test class ordering</p>
-</li>
-<li>
-<p><code>LauncherSession</code> and accompanying listener</p>
-</li>
-<li>
-<p>More fine-grained JFR events</p>
-</li>
-<li>
-<p>Memory and performance optimizations</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/51?closed=1">5.8 M1</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.8.0-M1-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>SummaryGeneratingListener</code> is now thread-safe and can handle concurrently failing tests.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>For consistency with the rest of the JUnit Platform, the experimental
-<code>LauncherDiscoveryListener</code> is now an interface instead of an abstract class.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>New <code>test(Condition&lt;Event&gt;)</code> and <code>nestedContainer(Class&lt;?&gt;, Condition&lt;Event&gt;)</code> methods
-in <code>EventConditions</code> that allow you to provide conditions for matching against test and
-nested container events when using the <code>EngineTestKit</code>. For example,
-<code>test(displayName("my test"))</code> can be used to match against a test whose display name is
-<code>my test</code>.</p>
-</li>
-<li>
-<p>The <code>junit-platform-jfr</code> module now reports execution events for containers&#8201;&#8212;&#8201;for
-example, test classes.</p>
-</li>
-<li>
-<p>The <code>junit-platform-jfr</code> module now reports test discovery events for the launcher and
-registered test engines.</p>
-</li>
-<li>
-<p>Custom <code>LauncherDiscoveryListener</code> implementations can now be registered via Java’s
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
-</li>
-<li>
-<p>Documented constant value of <code>ExclusiveResource.GLOBAL_KEY</code>.</p>
-</li>
-<li>
-<p>Instances of <code>TestIdentifier</code> and <code>UniqueId</code> now retain less memory because they no
-longer store <code>String</code> representations of unique IDs.</p>
-</li>
-<li>
-<p>Tools that make multiple calls to the <code>Launcher</code> API should now create a
-<code>LauncherSession</code> in order to allow for executing global setup and teardown code exactly
-once via the new <code>LauncherSessionListener</code> interface that can be registered via Java’s
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
-</li>
-<li>
-<p>New <code>junit-platform-suite-engine</code> to execute declarative test suites using the JUnit
-Platform Launcher.</p>
-</li>
-<li>
-<p>Additional selectors in the suite API in the <code>junit-platform-suite-api</code> module.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.8.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt;, ExtensionContext)</code> has
-been deprecated in favor of
-<code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt;, DynamicTestInvocationContext, ExtensionContext)</code>
-that provides access to the dynamic test executable via
-<code>DynamicTestInvocationContext.getExecutable()</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Top-level test classes can now be ordered by passing the fully-qualified name of a class
-implementing <code>ClassOrderer</code> as the value of the new
-<code>junit.jupiter.testclass.order.default</code> configuration parameter.</p>
-</li>
-<li>
-<p>New <code>assertInstanceOf()</code> methods which produce better error messages comparable to those
-produced by <code>assertThrows</code>. These new methods serve as a replacement for
-<code>assertTrue(obj instanceof X)</code>.</p>
-</li>
-<li>
-<p><code>assertNull()</code> failure messages now include the actual object&#8217;s type if the <code>toString()</code>
-implementation for the actual object returns <code>null</code> or <code>"null"</code>. This avoids the
-generation of confusing failure messages such as <code>expected &lt;null&gt; but was &lt;null&gt;</code>.</p>
 </li>
 <li>
 <p>Numeric literals used with <code>@CsvSource</code> or <code>CsvFileSource</code> can now be expressed using
@@ -1013,30 +815,36 @@ underscores as in some JVM languages, to improve readability of long numbers lik
 (set to <code>true</code> by default) to control whether or not to trim whitespace.</p>
 </li>
 <li>
-<p>Dynamic tests now require less memory thanks to a number of improvements to internal
-data structures.</p>
+<p>In parameterized tests using <code>@MethodSource</code> or <code>@ArgumentSource</code>, arguments can now have
+optional names (supplied via the new <code>Named</code> API). When the argument is included in the
+display name of an invocation, this name will be used instead of the value.</p>
 </li>
 <li>
 <p>Documented constant values in <code>org.junit.jupiter.api.parallel.Resources</code>.</p>
-</li>
-<li>
-<p>In parameterized tests with <code>@MethodSource</code> or <code>@ArgumentSource</code>, arguments can now have
-optional names (supplied via the new <code>Named</code> API). When the argument is included in the
-display name of an iteration, this name will be used instead of the value.</p>
-</li>
-<li>
-<p><code>DynamicTests.stream()</code> can now consume <code>Named</code> input and will use each name-value pair
-as the display name and value for each generated dynamic test (see
-<a href="../user-guide/index.html#writing-tests-dynamic-tests-examples">User Guide</a> for details).</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.8.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.8.0-M1-junit-vintage"></a>JUnit Vintage</h3>
+<h3 id="release-notes-5.8.0-junit-vintage"><a class="anchor" href="#release-notes-5.8.0-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>If multiple exceptions are registered as failures for a JUnit 4 based test&#8201;&#8212;&#8201;for
+example, if the <code>ErrorCollector</code> rule throws an
+<code>org.junit.runners.model.MultipleFailureException</code>&#8201;&#8212;&#8201;all of those failures are now
+added as <em>suppressed exceptions</em> in the <code>org.opentest4j.MultipleFailuresError</code> created
+by the <code>VintageTestEngine</code>. This allows users to analyze the stack trace of each failure
+when such a test fails.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1066,7 +874,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.2-junit-platform"><a class="anchor" href="#release-notes-5.7.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1085,7 +893,7 @@ when they require other exclusive resources.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.2-junit-jupiter"><a class="anchor" href="#release-notes-5.7.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1096,7 +904,7 @@ ones.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1111,7 +919,7 @@ concurrently.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.2-junit-vintage"><a class="anchor" href="#release-notes-5.7.2-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1151,7 +959,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.1-junit-platform"><a class="anchor" href="#release-notes-5.7.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1174,7 +982,7 @@ of class names when the package name is equal to the name of a module on the mod
 <div class="sect2">
 <h3 id="release-notes-5.7.1-junit-jupiter"><a class="anchor" href="#release-notes-5.7.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-11"><a class="anchor" href="#bug-fixes-11"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1191,7 +999,7 @@ called once even if they throw an exception.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-10"><a class="anchor" href="#new-features-and-improvements-10"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1211,7 +1019,7 @@ instances are processed when used in conjunction with <code>@Nested</code> tests
 <div class="sect2">
 <h3 id="release-notes-5.7.1-junit-vintage"><a class="anchor" href="#release-notes-5.7.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-12"><a class="anchor" href="#bug-fixes-12"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1271,7 +1079,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-18 14:13:26 UTC
+Last updated 2021-08-18 14:45:17 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
