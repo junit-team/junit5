@@ -15,7 +15,7 @@
  * @uses org.junit.platform.engine.TestEngine
  */
 module org.junit.platform.testkit {
-	requires transitive org.apiguardian.api;
+	requires static transitive org.apiguardian.api;
 	requires transitive org.assertj.core;
 	requires org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;

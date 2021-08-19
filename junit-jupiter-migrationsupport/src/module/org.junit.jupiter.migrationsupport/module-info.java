@@ -15,7 +15,7 @@
  */
 module org.junit.jupiter.migrationsupport {
 	requires transitive junit; // 4
-	requires transitive org.apiguardian.api;
+	requires static transitive org.apiguardian.api;
 	requires transitive org.junit.jupiter.api;
 	requires org.junit.platform.commons;
 

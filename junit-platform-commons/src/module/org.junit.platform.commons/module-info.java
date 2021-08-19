@@ -16,7 +16,7 @@
 module org.junit.platform.commons {
 	requires java.logging;
 	requires java.management; // needed by RuntimeUtils to determine input arguments
-	requires transitive org.apiguardian.api;
+	requires static transitive org.apiguardian.api;
 
 	exports org.junit.platform.commons;
 	exports org.junit.platform.commons.annotation;
