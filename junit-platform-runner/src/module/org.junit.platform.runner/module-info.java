@@ -16,7 +16,7 @@
  */
 module org.junit.platform.runner {
 	requires transitive junit; // 4
-	requires transitive org.apiguardian.api;
+	requires static transitive org.apiguardian.api;
 	requires transitive org.junit.platform.launcher;
 	requires transitive org.junit.platform.suite.api;
 	requires org.junit.platform.suite.commons;

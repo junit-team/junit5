@@ -16,7 +16,7 @@
  * @provides org.junit.platform.engine.TestEngine
  */
 module org.junit.platform.suite.engine {
-	requires org.apiguardian.api;
+	requires static org.apiguardian.api;
 	requires org.junit.platform.suite.api;
 	requires org.junit.platform.suite.commons;
 	requires org.junit.platform.commons;

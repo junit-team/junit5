@@ -1,7 +1,7 @@
 org.junit.platform.jfr@${platformVersion} jar:file:.+/junit-platform-jfr-\d.+\.jar..module-info\.class
 requires java.base mandated
 requires jdk.jfr
-requires org.apiguardian.api
+requires org.apiguardian.api static
 requires org.junit.platform.engine
 requires org.junit.platform.launcher
 provides org.junit.platform.launcher.LauncherDiscoveryListener with org.junit.platform.jfr.FlightRecordingDiscoveryListener

@@ -21,7 +21,7 @@
  */
 module org.junit.platform.jfr {
 	requires jdk.jfr;
-	requires org.apiguardian.api;
+	requires static org.apiguardian.api;
 	requires org.junit.platform.engine;
 	requires org.junit.platform.launcher;
 
