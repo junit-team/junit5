@@ -3,7 +3,7 @@
 ---
 
 function fillEventList(eventList, events, speakers) {
-  var template = _.template('<dt><%= event.date %></dt><dd><strong><%= event.title %></strong> at <strong><a href="<%= event.link %>"><%= event.event %></a></strong> in <%= event.location %><br><em><%= speakers %></em></dd>');
+  var template = _.template('<dt><%= event.date %></dt><dd><strong><%= event.title %></strong> at <strong><a href="<%= event.link %>"><%= event.event %></a></strong> &mdash; <%= event.location %><br><em><%= speakers %></em></dd>');
   _.chain(events)
     .sortBy('date')
     .forEach(function(event) {
