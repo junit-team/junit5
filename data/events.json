@@ -671,7 +671,7 @@
       "sbrannen"
     ]
   },
-    {
+  {
     "title": "JUnit5: From @Test Up to Your Own TestEngine",
     "event": "J-Fall 2019",
     "date": "2019-10-30",
@@ -745,6 +745,16 @@
       "bjhargrave",
       "rotty3000",
       "kriegfrj"
+    ]
+  },
+  {
+    "title": "Testing with JUnit 5 and Spring",
+    "event": "SpringOne 2021",
+    "date": "2021-09-02",
+    "location": "online",
+    "link": "https://springone.io/2021/sessions/testing-with-junit-5-spring-and-native-images",
+    "speakers": [
+      "sbrannen"
     ]
   }
 ]
