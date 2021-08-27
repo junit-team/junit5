@@ -62,8 +62,8 @@ class AssertAll {
 		Preconditions.notNull(executables, "executables stream must not be null");
 
 		List<Throwable> failures = executables //
-				.peek(executable -> Preconditions.notNull(executable, "individual executables must not be null"))//
 				.map(executable -> {
+					Preconditions.notNull(executable, "individual executables must not be null");
 					try {
 						executable.execute();
 						return null;

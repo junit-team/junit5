@@ -58,8 +58,10 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 		AtomicInteger index = new AtomicInteger(1);
 		try (Stream<? extends DynamicNode> children = dynamicContainer.getChildren()) {
 			// @formatter:off
-			children.peek(child -> Preconditions.notNull(child, "individual dynamic node must not be null"))
-					.map(child -> toDynamicDescriptor(index.getAndIncrement(), child))
+			children.map(child -> {
+						Preconditions.notNull(child, "individual dynamic node must not be null");
+						return toDynamicDescriptor(index.getAndIncrement(), child);
+					})
 					.filter(Optional::isPresent)
 					.map(Optional::get)
 					.forEachOrdered(dynamicTestExecutor::execute);

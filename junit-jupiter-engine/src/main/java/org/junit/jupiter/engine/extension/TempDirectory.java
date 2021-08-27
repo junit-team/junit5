@@ -272,7 +272,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private IOException createIOExceptionWithAttachedFailures(SortedMap<Path, IOException> failures) {
 			// @formatter:off
 			String joinedPaths = failures.keySet().stream()
-					.peek(this::tryToDeleteOnExit)
+					.map(this::tryToDeleteOnExit)
 					.map(this::relativizeSafely)
 					.map(String::valueOf)
 					.collect(joining(", "));
@@ -284,12 +284,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			return exception;
 		}
 
-		private void tryToDeleteOnExit(Path path) {
+		private Path tryToDeleteOnExit(Path path) {
 			try {
 				path.toFile().deleteOnExit();
 			}
 			catch (UnsupportedOperationException ignore) {
 			}
+			return path;
 		}
 
 		private Path relativizeSafely(Path path) {
