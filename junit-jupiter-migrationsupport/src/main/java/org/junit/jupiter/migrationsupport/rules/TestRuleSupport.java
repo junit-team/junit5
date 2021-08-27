@@ -18,13 +18,11 @@ import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -44,9 +42,6 @@ import org.junit.rules.TestRule;
  * @since 5.0
  */
 class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandler, AfterEachCallback {
-
-	private static final Consumer<List<TestRuleAnnotatedMember>> NO_OP = members -> {
-	};
 
 	private final Class<? extends TestRule> ruleType;
 	private final Function<TestRuleAnnotatedMember, AbstractTestRuleAdapter> adapterGenerator;
@@ -95,21 +90,13 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 
 	@Override
 	public void beforeEach(ExtensionContext context) {
-		invokeAppropriateMethodOnRuleAnnotatedMembers(context, NO_OP, GenericBeforeAndAfterAdvice::before);
+		invokeAppropriateMethodOnRuleAnnotatedMembers(context, false, GenericBeforeAndAfterAdvice::before);
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	@Override
 	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-		long numRuleAnnotatedMembers = invokeAppropriateMethodOnRuleAnnotatedMembers(context, Collections::reverse,
-			advice -> {
-				try {
-					advice.handleTestExecutionException(throwable);
-				}
-				catch (Throwable t) {
-					throw ExceptionUtils.throwAsUncheckedException(t);
-				}
-			});
+		int numRuleAnnotatedMembers = invokeAppropriateMethodOnRuleAnnotatedMembers(context, true,
+			advice -> advice.handleTestExecutionException(throwable));
 
 		// If no appropriate @Rule annotated members were discovered, we then
 		// have to rethrow the exception in order not to silently swallow it.
@@ -121,35 +108,61 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 
 	@Override
 	public void afterEach(ExtensionContext context) {
-		invokeAppropriateMethodOnRuleAnnotatedMembers(context, Collections::reverse,
-			GenericBeforeAndAfterAdvice::after);
+		invokeAppropriateMethodOnRuleAnnotatedMembers(context, true, GenericBeforeAndAfterAdvice::after);
 	}
 
 	/**
 	 * @return the number of appropriate rule-annotated members that were discovered
 	 */
-	private long invokeAppropriateMethodOnRuleAnnotatedMembers(ExtensionContext context,
-			Consumer<List<TestRuleAnnotatedMember>> ordering, Consumer<GenericBeforeAndAfterAdvice> methodCaller) {
+	private int invokeAppropriateMethodOnRuleAnnotatedMembers(ExtensionContext context, boolean reverseOrder,
+			AdviceInvoker adviceInvoker) {
+
+		List<TestRuleAnnotatedMember> ruleAnnotatedMembers = getRuleAnnotatedMembers(context);
+		if (reverseOrder) {
+			Collections.reverse(ruleAnnotatedMembers);
+		}
+
+		AtomicInteger counter = new AtomicInteger();
+
 		// @formatter:off
-		return Stream.of(getRuleAnnotatedMembers(context))
-				.map(ArrayList::new)
-				.peek(ordering)
-				.flatMap(Collection::stream)
+		ruleAnnotatedMembers.stream()
 				.filter(annotatedMember -> this.ruleType.isInstance(annotatedMember.getTestRule()))
 				.map(this.adapterGenerator)
-				.peek(methodCaller)
-				.count();
+				.forEach(advice -> {
+					adviceInvoker.invokeAndMaskCheckedExceptions(advice);
+					counter.incrementAndGet();
+				});
 		// @formatter:on
+
+		return counter.get();
 	}
 
+	/**
+	 * @return a modifiable copy of the list of rule-annotated members
+	 */
 	@SuppressWarnings("unchecked")
 	private List<TestRuleAnnotatedMember> getRuleAnnotatedMembers(ExtensionContext context) {
 		Object testInstance = context.getRequiredTestInstance();
 		Namespace namespace = Namespace.create(TestRuleSupport.class, context.getRequiredTestClass());
 		// @formatter:off
-		return context.getStore(namespace)
-				.getOrComputeIfAbsent("rule-annotated-members", key -> findRuleAnnotatedMembers(testInstance), List.class);
+		return new ArrayList<>(context.getStore(namespace)
+				.getOrComputeIfAbsent("rule-annotated-members", key -> findRuleAnnotatedMembers(testInstance), List.class));
 		// @formatter:on
+	}
+
+	@FunctionalInterface
+	private interface AdviceInvoker {
+
+		default void invokeAndMaskCheckedExceptions(GenericBeforeAndAfterAdvice advice) {
+			try {
+				invoke(advice);
+			}
+			catch (Throwable t) {
+				throw ExceptionUtils.throwAsUncheckedException(t);
+			}
+		}
+
+		void invoke(GenericBeforeAndAfterAdvice advice) throws Throwable;
 	}
 
 }
