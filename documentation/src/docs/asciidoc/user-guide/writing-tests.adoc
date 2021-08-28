@@ -590,9 +590,9 @@ order.
 
 For example:
 
-* previously failed tests and faster tests first: fail fast
-* with parallelism enabled, longer tests first: shortest test execution duration
-* etc.
+* Previously failed tests and faster tests first: fail fast
+* With parallelism enabled, longer tests first: shortest test execution duration
+* Other use cases
 
 You can use the `junit.jupiter.testclass.order.default` <<running-tests-config-params,
 configuration parameter>> to specify the fully qualified class name of the
@@ -622,6 +622,13 @@ parameter with the corresponding fully qualified class name (e.g., in
 junit.jupiter.testclass.order.default = \
     org.junit.jupiter.api.ClassOrderer$OrderAnnotation
 ----
+
+The configured `ClassOrderer` will be applied to all top-level test classes (including
+`static` nested test classes) and `@Nested` test classes.
+
+NOTE: Top-level test classes will be ordered relative to each other; whereas, `@Nested`
+test classes will be ordered relative to other `@Nested` test classes sharing the same
+_enclosing class_.
 
 [[writing-tests-test-instance-lifecycle]]
 === Test Instance Lifecycle
