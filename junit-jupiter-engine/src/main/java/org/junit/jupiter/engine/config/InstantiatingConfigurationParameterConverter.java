@@ -37,15 +37,15 @@ class InstantiatingConfigurationParameterConverter<T> {
 		return configurationParameters.get(key)
 				.map(String::trim)
 				.filter(className -> !className.isEmpty())
-				.flatMap(className -> instantiateGenerator(className, key));
+				.flatMap(className -> newInstance(className, key));
 		// @formatter:on
 	}
 
-	private Optional<T> instantiateGenerator(String className, String key) {
+	private Optional<T> newInstance(String className, String key) {
 		// @formatter:off
 		return ReflectionUtils.tryToLoadClass(className)
 				.andThenTry(ReflectionUtils::newInstance)
-				.andThenTry(clazz::cast)
+				.andThenTry(this.clazz::cast)
 				.ifSuccess(generator -> logSuccessMessage(className, key))
 				.ifFailure(cause -> logFailureMessage(className, key, cause))
 				.toOptional();
@@ -56,11 +56,11 @@ class InstantiatingConfigurationParameterConverter<T> {
 		logger.warn(cause,
 			() -> String.format("Failed to load default %s class '%s' set via the '%s' configuration parameter."
 					+ " Falling back to default behavior.",
-				name, className, key));
+				this.name, className, key));
 	}
 
 	private void logSuccessMessage(String className, String key) {
-		logger.config(() -> String.format("Using default %s '%s' set via the '%s' configuration parameter.", name,
+		logger.config(() -> String.format("Using default %s '%s' set via the '%s' configuration parameter.", this.name,
 			className, key));
 	}
 
