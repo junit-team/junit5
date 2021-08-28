@@ -125,7 +125,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Top-level test classes can now be ordered by passing the fully-qualified name of a class
+* Test classes can now be ordered by passing the fully-qualified name of a class
   implementing `ClassOrderer` as the value of the new
   `junit.jupiter.testclass.order.default` configuration parameter.
 * `@ExtendWith` may now be used to register extensions declaratively via fields or

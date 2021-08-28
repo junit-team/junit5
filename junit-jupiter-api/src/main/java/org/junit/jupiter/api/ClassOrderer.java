@@ -22,13 +22,17 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
 /**
- * {@code ClassOrderer} defines the API for ordering the <em>top-level test
- * classes</em>, without considering nested test classes.
+ * {@code ClassOrderer} defines the API for ordering top-level test classes and
+ * {@link Nested @Nested} test classes.
  *
  * <p>In this context, the term "test class" refers to any class containing methods
  * annotated with {@code @Test}, {@code @RepeatedTest}, {@code @ParameterizedTest},
- * {@code @TestFactory}, or {@code @TestTemplate}. {@link Nested @Nested} test
- * classes cannot be ordered by a {@code ClassOrderer}.
+ * {@code @TestFactory}, or {@code @TestTemplate}.
+ *
+ * <p>Top-level test classes will be ordered relative to each other; whereas,
+ * {@code @Nested} test classes will be ordered relative to other {@code @Nested}
+ * test classes sharing the same {@linkplain Class#getEnclosingClass() enclosing
+ * class}.
  *
  * <h4>Built-in Implementations</h4>
  *
@@ -45,6 +49,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * @since 5.8
  * @see ClassOrdererContext
  * @see #orderClasses(ClassOrdererContext)
+ * @see MethodOrderer
  */
 @API(status = EXPERIMENTAL, since = "5.8")
 public interface ClassOrderer {

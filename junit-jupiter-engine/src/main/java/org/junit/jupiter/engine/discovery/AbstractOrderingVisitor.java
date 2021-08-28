@@ -93,6 +93,12 @@ class AbstractOrderingVisitor {
 				.forEach(parentTestDescriptor::removeChild);
 		Stream.concat(sortedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
 				.forEach(parentTestDescriptor::addChild);
+
+		// Recurse through the children in order to support ordering for @Nested test classes.
+		matchingDescriptorWrappers.forEach(annotatedElementDescriptor -> {
+			orderChildrenTestDescriptors(annotatedElementDescriptor.getTestDescriptor(), matchingChildrenType,
+				descriptorWrapperBuilder, orderingAction, descriptorsAddedLogger, descriptorsRemovedLogger);
+		});
 	}
 
 }

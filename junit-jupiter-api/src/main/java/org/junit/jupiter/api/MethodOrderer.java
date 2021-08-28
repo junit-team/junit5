@@ -49,6 +49,7 @@ import org.junit.platform.commons.util.ClassUtils;
  * @see TestMethodOrder
  * @see MethodOrdererContext
  * @see #orderMethods(MethodOrdererContext)
+ * @see ClassOrderer
  */
 @API(status = STABLE, since = "5.7")
 public interface MethodOrderer {

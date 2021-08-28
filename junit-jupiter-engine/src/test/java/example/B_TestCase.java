@@ -10,7 +10,7 @@
 
 package example;
 
-import java.util.Set;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.TestInfo;
  */
 public class B_TestCase {
 
-	public static Set<String> callSequence;
+	public static List<String> callSequence;
 
 	@BeforeEach
 	void trackInvocations(TestInfo testInfo) {
