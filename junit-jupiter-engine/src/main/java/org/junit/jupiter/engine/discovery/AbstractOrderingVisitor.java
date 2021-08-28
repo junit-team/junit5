@@ -54,15 +54,20 @@ class AbstractOrderingVisitor {
 
 		Set<? extends TestDescriptor> children = parentTestDescriptor.getChildren();
 
-		List<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
-				.filter(childTestDescriptor -> !(matchingChildrenType.isAssignableFrom(childTestDescriptor.getClass())))//
-				.collect(Collectors.toList());
-
 		List<D> matchingDescriptorWrappers = children.stream()//
 				.filter(matchingChildrenType::isInstance)//
 				.map(matchingChildrenType::cast)//
 				.map(descriptorWrapperBuilder)//
 				.collect(toCollection(ArrayList::new));
+
+		// If there are no children to order, abort early.
+		if (matchingDescriptorWrappers.isEmpty()) {
+			return;
+		}
+
+		List<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
+				.filter(childTestDescriptor -> !(matchingChildrenType.isAssignableFrom(childTestDescriptor.getClass())))//
+				.collect(Collectors.toList());
 
 		// Make a local copy for later validation
 		Set<D> originalDescriptors = new LinkedHashSet<>(matchingDescriptorWrappers);
