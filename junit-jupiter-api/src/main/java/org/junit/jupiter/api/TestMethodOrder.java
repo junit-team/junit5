@@ -60,6 +60,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.4
  * @see MethodOrderer
+ * @see TestClassOrder
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

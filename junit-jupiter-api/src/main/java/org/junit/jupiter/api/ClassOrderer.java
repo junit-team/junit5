@@ -34,6 +34,12 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * test classes sharing the same {@linkplain Class#getEnclosingClass() enclosing
  * class}.
  *
+ * <p>A {@link ClassOrderer} can be configured <em>globally</em> for the entire
+ * test suite via the {@code junit.jupiter.testclass.order.default} configuration
+ * parameter (see the User Guide for details) or <em>locally</em> for
+ * {@link Nested @Nested} test classes via the {@link TestClassOrder @TestClassOrder}
+ * annotation.
+ *
  * <h4>Built-in Implementations</h4>
  *
  * <p>JUnit Jupiter provides the following built-in {@code ClassOrderer}
@@ -47,6 +53,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * </ul>
  *
  * @since 5.8
+ * @see TestClassOrder
  * @see ClassOrdererContext
  * @see #orderClasses(ClassOrdererContext)
  * @see MethodOrderer

@@ -10,42 +10,79 @@
 
 package org.junit.jupiter.engine.discovery;
 
+import java.lang.reflect.AnnotatedElement;
+import java.util.List;
+import java.util.function.Consumer;
+
 import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
+import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
  * @since 5.8
  */
-class ClassOrderingVisitor extends AbstractOrderingVisitor implements TestDescriptor.Visitor {
+class ClassOrderingVisitor
+		extends AbstractOrderingVisitor<JupiterEngineDescriptor, ClassBasedTestDescriptor, DefaultClassDescriptor>
+		implements TestDescriptor.Visitor {
 
 	private final JupiterConfiguration configuration;
 
-	public ClassOrderingVisitor(JupiterConfiguration configuration) {
+	ClassOrderingVisitor(JupiterConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
 	@Override
 	public void visit(TestDescriptor testDescriptor) {
-		this.configuration.getDefaultTestClassOrderer().ifPresent(testClassOrderer -> {
-			doWithMatchingDescriptor(JupiterEngineDescriptor.class, testDescriptor,
-				descriptor -> orderContainedClasses(descriptor, testClassOrderer),
-				descriptor -> "Failed to order classes");
-		});
+		ClassOrderer globalClassOrderer = this.configuration.getDefaultTestClassOrderer().orElse(null);
+		doWithMatchingDescriptor(JupiterEngineDescriptor.class, testDescriptor,
+			descriptor -> orderContainedClasses(descriptor, globalClassOrderer),
+			descriptor -> "Failed to order classes");
 	}
 
 	private void orderContainedClasses(JupiterEngineDescriptor jupiterEngineDescriptor, ClassOrderer classOrderer) {
-		orderChildrenTestDescriptors(jupiterEngineDescriptor, ClassBasedTestDescriptor.class,
-			DefaultClassDescriptor::new,
-			descriptorWrappers -> classOrderer.orderClasses(
-				new DefaultClassOrdererContext(descriptorWrappers, this.configuration)),
-			difference -> String.format("ClassOrderer [%s] added %s ClassDescriptor(s) which will be ignored.",
-				classOrderer.getClass().getName(), difference),
-			difference -> String.format(
-				"ClassOrderer [%s] removed %s ClassDescriptor(s) which will be retained with arbitrary ordering.",
-				classOrderer.getClass().getName(), -difference));
+		orderChildrenTestDescriptors(//
+			jupiterEngineDescriptor, //
+			ClassBasedTestDescriptor.class, //
+			DefaultClassDescriptor::new, //
+			createElementDescriptorOrderer(classOrderer));
+	}
+
+	@Override
+	protected ElementDescriptorOrderer getElementDescriptorOrderer(
+			ElementDescriptorOrderer inheritedElementDescriptorOrderer,
+			AbstractAnnotatedElementDescriptor<?> annotatedElementDescriptor) {
+
+		AnnotatedElement annotatedElement = annotatedElementDescriptor.getAnnotatedElement();
+		return AnnotationUtils.findAnnotation(annotatedElement, TestClassOrder.class)//
+				.map(TestClassOrder::value)//
+				.<ClassOrderer> map(ReflectionUtils::newInstance)//
+				.map(this::createElementDescriptorOrderer)//
+				.orElse(inheritedElementDescriptorOrderer);
+	}
+
+	private ElementDescriptorOrderer createElementDescriptorOrderer(ClassOrderer classOrderer) {
+		Consumer<List<DefaultClassDescriptor>> orderingAction = classOrderer == null ? null : //
+				classDescriptors -> classOrderer.orderClasses(
+					new DefaultClassOrdererContext(classDescriptors, this.configuration));
+
+		MessageGenerator descriptorsAddedMessageGenerator = number -> String.format(
+			"ClassOrderer [%s] added %s ClassDescriptor(s) which will be ignored.", nullSafeToString(classOrderer),
+			number);
+		MessageGenerator descriptorsRemovedMessageGenerator = number -> String.format(
+			"ClassOrderer [%s] removed %s ClassDescriptor(s) which will be retained with arbitrary ordering.",
+			nullSafeToString(classOrderer), number);
+
+		return new ElementDescriptorOrderer(orderingAction, descriptorsAddedMessageGenerator,
+			descriptorsRemovedMessageGenerator);
+	}
+
+	private static String nullSafeToString(ClassOrderer classOrderer) {
+		return (classOrderer != null ? classOrderer.getClass().getName() : "<unknown>");
 	}
 
 }
