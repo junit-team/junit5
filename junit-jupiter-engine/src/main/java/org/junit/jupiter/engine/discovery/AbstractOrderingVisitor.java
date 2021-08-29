@@ -18,87 +18,160 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 
-class AbstractOrderingVisitor {
+abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD extends TestDescriptor, ELEMENT extends AbstractAnnotatedElementDescriptor<?>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractOrderingVisitor.class);
 
-	@SuppressWarnings({ "unchecked" })
-	protected <T extends TestDescriptor> void doWithMatchingDescriptor(Class<T> descriptorSubType,
-			TestDescriptor testDescriptor, Consumer<T> action, Function<T, String> errorMessageBuilder) {
+	@SuppressWarnings("unchecked")
+	protected void doWithMatchingDescriptor(Class<PARENT> parentTestDescriptorType, TestDescriptor testDescriptor,
+			Consumer<PARENT> action, Function<PARENT, String> errorMessageBuilder) {
 
-		if (descriptorSubType.isAssignableFrom(testDescriptor.getClass())) {
-			T specificTestDescriptor = (T) testDescriptor;
+		if (parentTestDescriptorType.isInstance(testDescriptor)) {
+			PARENT parentTestDescriptor = (PARENT) testDescriptor;
 			try {
-				action.accept(specificTestDescriptor);
+				action.accept(parentTestDescriptor);
 			}
 			catch (Throwable t) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
-				logger.error(t, () -> errorMessageBuilder.apply(specificTestDescriptor));
+				logger.error(t, () -> errorMessageBuilder.apply(parentTestDescriptor));
 			}
 		}
 	}
 
-	protected <T extends TestDescriptor, D extends AbstractAnnotatedElementDescriptor<?>> void orderChildrenTestDescriptors(
-			TestDescriptor parentTestDescriptor, Class<T> matchingChildrenType, Function<T, D> descriptorWrapperBuilder,
-			Consumer<List<D>> orderingAction, IntFunction<String> descriptorsAddedLogger,
-			IntFunction<String> descriptorsRemovedLogger) {
+	protected void orderChildrenTestDescriptors(TestDescriptor parentTestDescriptor, Class<CHILD> matchingChildrenType,
+			Function<CHILD, ELEMENT> elementDescriptorFactory, ElementDescriptorOrderer elementDescriptorOrderer) {
 
 		Set<? extends TestDescriptor> children = parentTestDescriptor.getChildren();
 
-		List<D> matchingDescriptorWrappers = children.stream()//
+		List<ELEMENT> matchingElementDescriptors = children.stream()//
 				.filter(matchingChildrenType::isInstance)//
 				.map(matchingChildrenType::cast)//
-				.map(descriptorWrapperBuilder)//
+				.map(elementDescriptorFactory)//
 				.collect(toCollection(ArrayList::new));
 
 		// If there are no children to order, abort early.
-		if (matchingDescriptorWrappers.isEmpty()) {
+		if (matchingElementDescriptors.isEmpty()) {
 			return;
 		}
 
-		List<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
-				.filter(childTestDescriptor -> !(matchingChildrenType.isAssignableFrom(childTestDescriptor.getClass())))//
-				.collect(Collectors.toList());
+		if (elementDescriptorOrderer.canOrderDescriptors()) {
+			List<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
+					.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor))//
+					.collect(Collectors.toList());
 
-		// Make a local copy for later validation
-		Set<D> originalDescriptors = new LinkedHashSet<>(matchingDescriptorWrappers);
+			// Make a local copy for later validation
+			Set<ELEMENT> originalDescriptors = new LinkedHashSet<>(matchingElementDescriptors);
 
-		orderingAction.accept(matchingDescriptorWrappers);
+			elementDescriptorOrderer.orderDescriptors(matchingElementDescriptors);
 
-		int difference = matchingDescriptorWrappers.size() - originalDescriptors.size();
+			int difference = matchingElementDescriptors.size() - originalDescriptors.size();
+			if (difference > 0) {
+				elementDescriptorOrderer.logDescriptorsAddedWarning(difference);
+			}
+			else if (difference < 0) {
+				elementDescriptorOrderer.logDescriptorsRemovedWarning(difference);
+			}
 
-		if (difference > 0) {
-			logger.warn(() -> descriptorsAddedLogger.apply(difference));
+			Set<TestDescriptor> sortedTestDescriptors = matchingElementDescriptors.stream()//
+					.filter(originalDescriptors::contains)//
+					.map(AbstractAnnotatedElementDescriptor::getTestDescriptor)//
+					.collect(toCollection(LinkedHashSet::new));
+
+			// There is currently no way to removeAll or addAll children at once, so we
+			// first remove them all and then add them all back.
+			Stream.concat(sortedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
+					.forEach(parentTestDescriptor::removeChild);
+
+			// If we are sorting children of type ClassBasedTestDescriptor, that means we
+			// are sorting @Nested test classes. In that case, the nonMatchingTestDescriptors
+			// are local test methods which must be executed before tests in @Nested test
+			// classes. So we add the test methods before adding the @Nested test classes.
+			if (matchingChildrenType == ClassBasedTestDescriptor.class) {
+				Stream.concat(nonMatchingTestDescriptors.stream(), sortedTestDescriptors.stream())//
+						.forEach(parentTestDescriptor::addChild);
+			}
+			// Otherwise, we add the sorted descriptors before the non-matching descriptors,
+			// which is the case when we are sorting test methods. In other words, local
+			// test methods always get added before @Nested test classes.
+			else {
+				Stream.concat(sortedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
+						.forEach(parentTestDescriptor::addChild);
+			}
 		}
-		else if (difference < 0) {
-			logger.warn(() -> descriptorsRemovedLogger.apply(difference));
-		}
-
-		Set<TestDescriptor> sortedTestDescriptors = matchingDescriptorWrappers.stream()//
-				.filter(originalDescriptors::contains)//
-				.map(AbstractAnnotatedElementDescriptor::getTestDescriptor)//
-				.collect(toCollection(LinkedHashSet::new));
-
-		// Currently no way to removeAll or addAll children at once.
-		Stream.concat(sortedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
-				.forEach(parentTestDescriptor::removeChild);
-		Stream.concat(sortedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
-				.forEach(parentTestDescriptor::addChild);
 
 		// Recurse through the children in order to support ordering for @Nested test classes.
-		matchingDescriptorWrappers.forEach(annotatedElementDescriptor -> {
-			orderChildrenTestDescriptors(annotatedElementDescriptor.getTestDescriptor(), matchingChildrenType,
-				descriptorWrapperBuilder, orderingAction, descriptorsAddedLogger, descriptorsRemovedLogger);
+		matchingElementDescriptors.forEach(annotatedElementDescriptor -> {
+			TestDescriptor newParentTestDescriptor = annotatedElementDescriptor.getTestDescriptor();
+			ElementDescriptorOrderer newElementDescriptorOrderer = getElementDescriptorOrderer(elementDescriptorOrderer,
+				annotatedElementDescriptor);
+
+			orderChildrenTestDescriptors(newParentTestDescriptor, matchingChildrenType, elementDescriptorFactory,
+				newElementDescriptorOrderer);
 		});
+	}
+
+	/**
+	 * Get the {@link ElementDescriptorOrderer} for the supplied {@link AbstractAnnotatedElementDescriptor}.
+	 *
+	 * <p>The default implementation returns the supplied {@code ElementDescriptorOrderer}.
+	 *
+	 * @return a new {@code ElementDescriptorOrderer} or the one supplied as an argument
+	 */
+	protected ElementDescriptorOrderer getElementDescriptorOrderer(
+			ElementDescriptorOrderer inheritedElementDescriptorOrderer,
+			AbstractAnnotatedElementDescriptor<?> annotatedElementDescriptor) {
+
+		return inheritedElementDescriptorOrderer;
+	}
+
+	protected class ElementDescriptorOrderer {
+
+		private final Consumer<List<ELEMENT>> orderingAction;
+
+		private final MessageGenerator descriptorsAddedMessageGenerator;
+
+		private final MessageGenerator descriptorsRemovedMessageGenerator;
+
+		ElementDescriptorOrderer(Consumer<List<ELEMENT>> orderingAction,
+				MessageGenerator descriptorsAddedMessageGenerator,
+				MessageGenerator descriptorsRemovedMessageGenerator) {
+
+			this.orderingAction = orderingAction;
+			this.descriptorsAddedMessageGenerator = descriptorsAddedMessageGenerator;
+			this.descriptorsRemovedMessageGenerator = descriptorsRemovedMessageGenerator;
+		}
+
+		private boolean canOrderDescriptors() {
+			return this.orderingAction != null;
+		}
+
+		private void orderDescriptors(List<ELEMENT> elements) {
+			this.orderingAction.accept(elements);
+		}
+
+		private void logDescriptorsAddedWarning(int number) {
+			logger.warn(() -> this.descriptorsAddedMessageGenerator.generateMessage(number));
+		}
+
+		private void logDescriptorsRemovedWarning(int number) {
+			logger.warn(() -> this.descriptorsRemovedMessageGenerator.generateMessage(Math.abs(number)));
+		}
+
+	}
+
+	@FunctionalInterface
+	protected interface MessageGenerator {
+
+		String generateMessage(int number);
 	}
 
 }

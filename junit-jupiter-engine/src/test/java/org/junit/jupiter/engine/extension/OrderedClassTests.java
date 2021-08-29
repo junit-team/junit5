@@ -11,12 +11,15 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +28,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
@@ -91,12 +97,30 @@ class OrderedClassTests {
 	}
 
 	@Test
-	void orderAnnotationOnNestedTestClasses() {
-		executeTests(ClassOrderer.OrderAnnotation.class, selectClass(Outer.class))//
+	void orderAnnotationOnNestedTestClassesWithGlobalConfig() {
+		executeTests(ClassOrderer.OrderAnnotation.class, selectClass(OuterWithGlobalConfig.class))//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 		assertThat(callSequence)//
 				.containsExactly("Inner2", "Inner1", "Inner0", "Inner3");
+	}
+
+	@Test
+	@TrackLogRecords
+	void orderAnnotationOnNestedTestClassesWithLocalConfig(LogRecordListener listener) {
+		executeTests(ClassOrderer.class, selectClass(OuterWithLocalConfig.class))//
+				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		// Ensure that supplying the ClassOrderer interface instead of an implementation
+		// class results in a WARNING log message. This also lets us know the local
+		// config is used.
+		assertTrue(listener.stream(Level.WARNING)//
+				.map(LogRecord::getMessage)//
+				.anyMatch(m -> m.startsWith(
+					"Failed to load default class orderer class 'org.junit.jupiter.api.ClassOrderer'")));
+
+		assertThat(callSequence)//
+				.containsExactly("Inner2", "Inner1", "Inner1Inner1", "Inner1Inner0", "Inner0", "Inner3");
 	}
 
 	@Test
@@ -147,7 +171,7 @@ class OrderedClassTests {
 	static class C_TestCase extends BaseTestCase {
 	}
 
-	static class Outer {
+	static class OuterWithGlobalConfig {
 
 		@Nested
 		class Inner0 {
@@ -163,6 +187,64 @@ class OrderedClassTests {
 			@Test
 			void test() {
 				callSequence.add(getClass().getSimpleName());
+			}
+		}
+
+		@Nested
+		@Order(1)
+		class Inner2 {
+			@Test
+			void test() {
+				callSequence.add(getClass().getSimpleName());
+			}
+		}
+
+		@Nested
+		@Order(Integer.MAX_VALUE)
+		class Inner3 {
+			@Test
+			void test() {
+				callSequence.add(getClass().getSimpleName());
+			}
+		}
+	}
+
+	@TestClassOrder(ClassOrderer.OrderAnnotation.class)
+	static class OuterWithLocalConfig {
+
+		@Nested
+		class Inner0 {
+			@Test
+			void test() {
+				callSequence.add(getClass().getSimpleName());
+			}
+		}
+
+		@Nested
+		@Order(2)
+		class Inner1 {
+
+			@Test
+			void test() {
+				callSequence.add(getClass().getSimpleName());
+			}
+
+			@Nested
+			@Order(2)
+			class Inner1Inner0 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
+			}
+
+			@Nested
+			@Order(1)
+			class Inner1Inner1 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
 			}
 		}
 

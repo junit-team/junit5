@@ -28,6 +28,9 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * enclosing class}. The enclosing class may be a top-level test class or
  * another {@code @Nested} test class, and nesting can be arbitrarily deep.
  *
+ * <p>{@code @Nested} test classes may be ordered via
+ * {@link TestClassOrder @TestClassOrder} or a global {@link ClassOrderer}.
+ *
  * <h3>Test Instance Lifecycle</h3>
  *
  * <ul>
@@ -41,6 +44,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * @since 5.0
  * @see Test
  * @see TestInstance
+ * @see TestClassOrder
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

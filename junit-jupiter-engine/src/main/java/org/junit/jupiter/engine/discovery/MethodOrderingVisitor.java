@@ -12,7 +12,9 @@ package org.junit.jupiter.engine.discovery;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -26,7 +28,9 @@ import org.junit.platform.engine.TestDescriptor;
 /**
  * @since 5.5
  */
-class MethodOrderingVisitor extends AbstractOrderingVisitor implements TestDescriptor.Visitor {
+class MethodOrderingVisitor
+		extends AbstractOrderingVisitor<ClassBasedTestDescriptor, MethodBasedTestDescriptor, DefaultMethodDescriptor>
+		implements TestDescriptor.Visitor {
 
 	private final JupiterConfiguration configuration;
 
@@ -51,16 +55,24 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor implements TestDescr
 				.map(Optional::of)//
 				.orElseGet(configuration::getDefaultTestMethodOrderer)//
 				.ifPresent(methodOrderer -> {
-					orderChildrenTestDescriptors(classBasedTestDescriptor, MethodBasedTestDescriptor.class,
-						DefaultMethodDescriptor::new,
-						descriptorWrappers -> methodOrderer.orderMethods(
-							new DefaultMethodOrdererContext(descriptorWrappers, testClass, this.configuration)),
-						difference -> String.format(
-							"MethodOrderer [%s] added %s MethodDescriptor(s) for test class [%s] which will be ignored.",
-							methodOrderer.getClass().getName(), difference, testClass.getName()),
-						difference -> String.format(
-							"MethodOrderer [%s] removed %s MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.",
-							methodOrderer.getClass().getName(), -difference, testClass.getName()));
+
+					Consumer<List<DefaultMethodDescriptor>> orderingAction = methodDescriptors -> methodOrderer.orderMethods(
+						new DefaultMethodOrdererContext(methodDescriptors, testClass, this.configuration));
+
+					MessageGenerator descriptorsAddedMessageGenerator = number -> String.format(
+						"MethodOrderer [%s] added %s MethodDescriptor(s) for test class [%s] which will be ignored.",
+						methodOrderer.getClass().getName(), number, testClass.getName());
+					MessageGenerator descriptorsRemovedMessageGenerator = number -> String.format(
+						"MethodOrderer [%s] removed %s MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.",
+						methodOrderer.getClass().getName(), number, testClass.getName());
+
+					ElementDescriptorOrderer elementDescriptorOrderer = new ElementDescriptorOrderer(orderingAction,
+						descriptorsAddedMessageGenerator, descriptorsRemovedMessageGenerator);
+
+					orderChildrenTestDescriptors(classBasedTestDescriptor, //
+						MethodBasedTestDescriptor.class, //
+						DefaultMethodDescriptor::new, //
+						elementDescriptorOrderer);
 
 					// Note: MethodOrderer#getDefaultExecutionMode() is guaranteed
 					// to be invoked after MethodOrderer#orderMethods().
