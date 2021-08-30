@@ -158,7 +158,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#disabledReason()">disabledReason</a></span></code></div>
 <div class="col-last even-row-color">
-<div class="block">Reason to provide if the test of container ends up being disabled.</div>
+<div class="block">Custom reason to provide if the test or container is disabled.</div>
 </div>
 </div>
 </section>
@@ -198,7 +198,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="disabledReason()">
 <h3>disabledReason</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">disabledReason</span></div>
-<div class="block">Reason to provide if the test of container ends up being disabled.</div>
+<div class="block">Custom reason to provide if the test or container is disabled.
+
+ <p>If a custom reason is supplied, it will be combined with the default
+ reason for this annotation. If a custom reason is not supplied, the default
+ reason will be used.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>""</dd>

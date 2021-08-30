@@ -141,7 +141,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#disabledReason()">disabledReason</a></span></code></div>
 <div class="col-last even-row-color">
-<div class="block">Reason to provide if the test of container ends up being disabled.</div>
+<div class="block">Custom reason to provide if the test or container is disabled.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="JRE.html" title="enum class in org.junit.jupiter.api.condition">JRE</a></code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#max()">max</a></span></code></div>
@@ -212,8 +212,18 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="disabledReason()">
 <h3>disabledReason</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">disabledReason</span></div>
-<div class="block">Reason to provide if the test of container ends up being disabled.</div>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.7")
+</span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">disabledReason</span></div>
+<div class="block">Custom reason to provide if the test or container is disabled.
+
+ <p>If a custom reason is supplied, it will be combined with the default
+ reason for this annotation. If a custom reason is not supplied, the default
+ reason will be used.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.7</dd>
+</dl>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>""</dd>
