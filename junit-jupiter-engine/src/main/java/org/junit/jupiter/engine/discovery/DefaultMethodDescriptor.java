@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 5.4
  */
-class DefaultMethodDescriptor extends AbstractAnnotatedElementDescriptor<Method> implements MethodDescriptor {
+class DefaultMethodDescriptor extends AbstractAnnotatedDescriptorWrapper<Method> implements MethodDescriptor {
 
 	DefaultMethodDescriptor(MethodBasedTestDescriptor testDescriptor) {
 		super(testDescriptor, testDescriptor.getTestMethod());

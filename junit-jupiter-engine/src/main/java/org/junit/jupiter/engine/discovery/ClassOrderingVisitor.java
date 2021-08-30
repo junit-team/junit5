@@ -27,8 +27,7 @@ import org.junit.platform.engine.TestDescriptor;
  * @since 5.8
  */
 class ClassOrderingVisitor
-		extends AbstractOrderingVisitor<JupiterEngineDescriptor, ClassBasedTestDescriptor, DefaultClassDescriptor>
-		implements TestDescriptor.Visitor {
+		extends AbstractOrderingVisitor<JupiterEngineDescriptor, ClassBasedTestDescriptor, DefaultClassDescriptor> {
 
 	private final JupiterConfiguration configuration;
 
@@ -49,23 +48,23 @@ class ClassOrderingVisitor
 			jupiterEngineDescriptor, //
 			ClassBasedTestDescriptor.class, //
 			DefaultClassDescriptor::new, //
-			createElementDescriptorOrderer(classOrderer));
+			createDescriptorWrapperOrderer(classOrderer));
 	}
 
 	@Override
-	protected ElementDescriptorOrderer getElementDescriptorOrderer(
-			ElementDescriptorOrderer inheritedElementDescriptorOrderer,
-			AbstractAnnotatedElementDescriptor<?> annotatedElementDescriptor) {
+	protected DescriptorWrapperOrderer getDescriptorWrapperOrderer(
+			DescriptorWrapperOrderer inheritedDescriptorWrapperOrderer,
+			AbstractAnnotatedDescriptorWrapper<?> descriptorWrapper) {
 
-		AnnotatedElement annotatedElement = annotatedElementDescriptor.getAnnotatedElement();
+		AnnotatedElement annotatedElement = descriptorWrapper.getAnnotatedElement();
 		return AnnotationUtils.findAnnotation(annotatedElement, TestClassOrder.class)//
 				.map(TestClassOrder::value)//
 				.<ClassOrderer> map(ReflectionUtils::newInstance)//
-				.map(this::createElementDescriptorOrderer)//
-				.orElse(inheritedElementDescriptorOrderer);
+				.map(this::createDescriptorWrapperOrderer)//
+				.orElse(inheritedDescriptorWrapperOrderer);
 	}
 
-	private ElementDescriptorOrderer createElementDescriptorOrderer(ClassOrderer classOrderer) {
+	private DescriptorWrapperOrderer createDescriptorWrapperOrderer(ClassOrderer classOrderer) {
 		Consumer<List<DefaultClassDescriptor>> orderingAction = classOrderer == null ? null : //
 				classDescriptors -> classOrderer.orderClasses(
 					new DefaultClassOrdererContext(classDescriptors, this.configuration));
@@ -77,7 +76,7 @@ class ClassOrderingVisitor
 			"ClassOrderer [%s] removed %s ClassDescriptor(s) which will be retained with arbitrary ordering.",
 			nullSafeToString(classOrderer), number);
 
-		return new ElementDescriptorOrderer(orderingAction, descriptorsAddedMessageGenerator,
+		return new DescriptorWrapperOrderer(orderingAction, descriptorsAddedMessageGenerator,
 			descriptorsRemovedMessageGenerator);
 	}
 

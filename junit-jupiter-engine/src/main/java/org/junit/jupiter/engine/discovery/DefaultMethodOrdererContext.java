@@ -29,11 +29,11 @@ class DefaultMethodOrdererContext implements MethodOrdererContext {
 	private final List<? extends MethodDescriptor> methodDescriptors;
 	private final JupiterConfiguration configuration;
 
-	DefaultMethodOrdererContext(List<? extends MethodDescriptor> methodDescriptors, Class<?> testClass,
+	DefaultMethodOrdererContext(Class<?> testClass, List<? extends MethodDescriptor> methodDescriptors,
 			JupiterConfiguration configuration) {
 
-		this.methodDescriptors = methodDescriptors;
 		this.testClass = testClass;
+		this.methodDescriptors = methodDescriptors;
 		this.configuration = configuration;
 	}
 

@@ -29,8 +29,7 @@ import org.junit.platform.engine.TestDescriptor;
  * @since 5.5
  */
 class MethodOrderingVisitor
-		extends AbstractOrderingVisitor<ClassBasedTestDescriptor, MethodBasedTestDescriptor, DefaultMethodDescriptor>
-		implements TestDescriptor.Visitor {
+		extends AbstractOrderingVisitor<ClassBasedTestDescriptor, MethodBasedTestDescriptor, DefaultMethodDescriptor> {
 
 	private final JupiterConfiguration configuration;
 
@@ -57,7 +56,7 @@ class MethodOrderingVisitor
 				.ifPresent(methodOrderer -> {
 
 					Consumer<List<DefaultMethodDescriptor>> orderingAction = methodDescriptors -> methodOrderer.orderMethods(
-						new DefaultMethodOrdererContext(methodDescriptors, testClass, this.configuration));
+						new DefaultMethodOrdererContext(testClass, methodDescriptors, this.configuration));
 
 					MessageGenerator descriptorsAddedMessageGenerator = number -> String.format(
 						"MethodOrderer [%s] added %s MethodDescriptor(s) for test class [%s] which will be ignored.",
@@ -66,13 +65,13 @@ class MethodOrderingVisitor
 						"MethodOrderer [%s] removed %s MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.",
 						methodOrderer.getClass().getName(), number, testClass.getName());
 
-					ElementDescriptorOrderer elementDescriptorOrderer = new ElementDescriptorOrderer(orderingAction,
+					DescriptorWrapperOrderer descriptorWrapperOrderer = new DescriptorWrapperOrderer(orderingAction,
 						descriptorsAddedMessageGenerator, descriptorsRemovedMessageGenerator);
 
 					orderChildrenTestDescriptors(classBasedTestDescriptor, //
 						MethodBasedTestDescriptor.class, //
 						DefaultMethodDescriptor::new, //
-						elementDescriptorOrderer);
+						descriptorWrapperOrderer);
 
 					// Note: MethodOrderer#getDefaultExecutionMode() is guaranteed
 					// to be invoked after MethodOrderer#orderMethods().
