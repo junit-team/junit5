@@ -86,6 +86,9 @@ loadScripts(document, 'script');</script>
  setup and state with an instance of its <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html#getEnclosingClass()" title="class or interface in java.lang" class="external-link">enclosing class</a>. The enclosing class may be a top-level test class or
  another <code>@Nested</code> test class, and nesting can be arbitrarily deep.
 
+ <p><code>@Nested</code> test classes may be ordered via
+ <a href="TestClassOrder.html" title="annotation in org.junit.jupiter.api"><code>@TestClassOrder</code></a> or a global <a href="ClassOrderer.html" title="interface in org.junit.jupiter.api"><code>ClassOrderer</code></a>.
+
  <h3>Test Instance Lifecycle</h3>
 
  <ul>
@@ -100,7 +103,8 @@ loadScripts(document, 'script');</script>
 <dd>5.0</dd>
 <dt>See Also:</dt>
 <dd><a href="Test.html" title="annotation in org.junit.jupiter.api"><code>Test</code></a>, 
-<a href="TestInstance.html" title="annotation in org.junit.jupiter.api"><code>TestInstance</code></a></dd>
+<a href="TestInstance.html" title="annotation in org.junit.jupiter.api"><code>TestInstance</code></a>, 
+<a href="TestClassOrder.html" title="annotation in org.junit.jupiter.api"><code>TestClassOrder</code></a></dd>
 </dl>
 </section>
 <!-- ========= END OF CLASS DATA ========= -->

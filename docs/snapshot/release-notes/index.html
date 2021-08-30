@@ -738,9 +738,13 @@ that provides access to the dynamic test executable via
 <div class="ulist">
 <ul>
 <li>
-<p>Top-level test classes can now be ordered by passing the fully-qualified name of a class
-implementing <code>ClassOrderer</code> as the value of the new
+<p>Test classes can now be ordered <em>globally</em> by supplying the fully-qualified name of a
+class implementing the <code>ClassOrderer</code> API as the value of the new
 <code>junit.jupiter.testclass.order.default</code> configuration parameter.</p>
+</li>
+<li>
+<p><code>@Nested</code> test classes can be ordered <em>locally</em> via the new <code>@TestClassOrder</code> annotation
+in which a <code>ClassOrderer</code> can be specified.</p>
 </li>
 <li>
 <p><code>@ExtendWith</code> may now be used to register extensions declaratively via fields or
@@ -1079,7 +1083,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-08-27 15:05:28 UTC
+Last updated 2021-08-30 15:07:35 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

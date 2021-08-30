@@ -88,13 +88,23 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8")
 </span><span class="modifiers">public interface </span><span class="element-name type-name-label">ClassOrderer</span></div>
-<div class="block"><code>ClassOrderer</code> defines the API for ordering the <em>top-level test
- classes</em>, without considering nested test classes.
+<div class="block"><code>ClassOrderer</code> defines the API for ordering top-level test classes and
+ <a href="Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> test classes.
 
  <p>In this context, the term "test class" refers to any class containing methods
  annotated with <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>,
- <code>@TestFactory</code>, or <code>@TestTemplate</code>. <a href="Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> test
- classes cannot be ordered by a <code>ClassOrderer</code>.
+ <code>@TestFactory</code>, or <code>@TestTemplate</code>.
+
+ <p>Top-level test classes will be ordered relative to each other; whereas,
+ <code>@Nested</code> test classes will be ordered relative to other <code>@Nested</code>
+ test classes sharing the same <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html#getEnclosingClass()" title="class or interface in java.lang" class="external-link">enclosing
+ class</a>.
+
+ <p>A <a href="ClassOrderer.html" title="interface in org.junit.jupiter.api"><code>ClassOrderer</code></a> can be configured <em>globally</em> for the entire
+ test suite via the <code>junit.jupiter.testclass.order.default</code> configuration
+ parameter (see the User Guide for details) or <em>locally</em> for
+ <a href="Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> test classes via the <a href="TestClassOrder.html" title="annotation in org.junit.jupiter.api"><code>@TestClassOrder</code></a>
+ annotation.
 
  <h4>Built-in Implementations</h4>
 
@@ -111,8 +121,10 @@ loadScripts(document, 'script');</script>
 <dt>Since:</dt>
 <dd>5.8</dd>
 <dt>See Also:</dt>
-<dd><a href="ClassOrdererContext.html" title="interface in org.junit.jupiter.api"><code>ClassOrdererContext</code></a>, 
-<a href="#orderClasses(org.junit.jupiter.api.ClassOrdererContext)"><code>orderClasses(ClassOrdererContext)</code></a></dd>
+<dd><a href="TestClassOrder.html" title="annotation in org.junit.jupiter.api"><code>TestClassOrder</code></a>, 
+<a href="ClassOrdererContext.html" title="interface in org.junit.jupiter.api"><code>ClassOrdererContext</code></a>, 
+<a href="#orderClasses(org.junit.jupiter.api.ClassOrdererContext)"><code>orderClasses(ClassOrdererContext)</code></a>, 
+<a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a></dd>
 </dl>
 </section>
 <section class="summary">

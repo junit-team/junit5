@@ -76,8 +76,8 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color"><a href="ClassOrderer.html" title="interface in org.junit.jupiter.api">ClassOrderer</a></div>
 <div class="col-last odd-row-color">
-<div class="block"><code>ClassOrderer</code> defines the API for ordering the <em>top-level test
- classes</em>, without considering nested test classes.</div>
+<div class="block"><code>ClassOrderer</code> defines the API for ordering top-level test classes and
+ <a href="Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> test classes.</div>
 </div>
 <div class="col-first even-row-color"><a href="ClassOrdererContext.html" title="interface in org.junit.jupiter.api">ClassOrdererContext</a></div>
 <div class="col-last even-row-color">
@@ -314,30 +314,36 @@ loadScripts(document, 'script');</script>
 <div class="block"><code>@Test</code> is used to signal that the annotated method is a
  <em>test</em> method.</div>
 </div>
-<div class="col-first even-row-color"><a href="TestFactory.html" title="annotation in org.junit.jupiter.api">TestFactory</a></div>
+<div class="col-first even-row-color"><a href="TestClassOrder.html" title="annotation in org.junit.jupiter.api">TestClassOrder</a></div>
 <div class="col-last even-row-color">
+<div class="block"><code>@TestClassOrder</code> is a type-level annotation that is used to configure
+ a <a href="TestClassOrder.html#value()"><code>ClassOrderer</code></a> for the <a href="Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> test classes of
+ the annotated test class.</div>
+</div>
+<div class="col-first odd-row-color"><a href="TestFactory.html" title="annotation in org.junit.jupiter.api">TestFactory</a></div>
+<div class="col-last odd-row-color">
 <div class="block"><code>@TestFactory</code> is used to signal that the annotated method is a
  <em>test factory</em> method.</div>
 </div>
-<div class="col-first odd-row-color"><a href="TestInstance.html" title="annotation in org.junit.jupiter.api">TestInstance</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="TestInstance.html" title="annotation in org.junit.jupiter.api">TestInstance</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>@TestInstance</code> is a type-level annotation that is used to configure
  the <a href="TestInstance.Lifecycle.html" title="enum class in org.junit.jupiter.api">lifecycle</a> of test instances for the annotated
  test class or test interface.</div>
 </div>
-<div class="col-first even-row-color"><a href="TestMethodOrder.html" title="annotation in org.junit.jupiter.api">TestMethodOrder</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="TestMethodOrder.html" title="annotation in org.junit.jupiter.api">TestMethodOrder</a></div>
+<div class="col-last odd-row-color">
 <div class="block"><code>@TestMethodOrder</code> is a type-level annotation that is used to configure
  a <a href="TestMethodOrder.html#value()"><code>MethodOrderer</code></a> for the <em>test methods</em> of the annotated
  test class or test interface.</div>
 </div>
-<div class="col-first odd-row-color"><a href="TestTemplate.html" title="annotation in org.junit.jupiter.api">TestTemplate</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="TestTemplate.html" title="annotation in org.junit.jupiter.api">TestTemplate</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>@TestTemplate</code> is used to signal that the annotated method is a
  <em>test template</em> method.</div>
 </div>
-<div class="col-first even-row-color"><a href="Timeout.html" title="annotation in org.junit.jupiter.api">Timeout</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="Timeout.html" title="annotation in org.junit.jupiter.api">Timeout</a></div>
+<div class="col-last odd-row-color">
 <div class="block"><code>@Timeout</code> is used to define a timeout for a method or all testable
  methods within one class and its <a href="Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> classes.</div>
 </div>
