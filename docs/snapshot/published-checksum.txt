@@ -14,7 +14,6 @@
 05e2076aafd2d8c40d2eeb6caa5d3f70  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ExcludeClassNameFilter.java
 05e487207a03c5d18610ea061a8f8a1e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultClassDescriptor.java
 07513531d27ab8c14d82f5e736fe5d8d  documentation/src/test/java/example/defaultmethods/ComparableContract.java
-075dfa98c8a496b9f01d91b9019d0881  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/DisableParentConfigurationParameters.java
 07cda11803843808633365b852f91c20  documentation/src/test/java/example/TaggingDemo.java
 082d327cdd5db176712ef3fbd9b0ab74  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ExecutionListenerAdapter.java
 0866f42a08fa044256e10aeb6dedb75c  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/SuiteLauncher.java
@@ -70,6 +69,7 @@
 1886cf09f9e1dea488dc706cbd385d61  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsInnerClass.java
 18acc1ffa1f60e6691f9ddeb4d98224b  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTest.java
 19a29c8ae1d07faf23f3dd2dc2259d57  junit-platform-engine/src/main/java/org/junit/platform/engine/ExecutionRequest.java
+1a5311bb8d0beb4edef78bd6a5efcd99  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/DisableParentConfigurationParameters.java
 1aa5af0e2cc846a69b79a378f1e4dc34  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExtensionValuesStore.java
 1ab4a3064caf16f97e50e6a954781c40  documentation/src/test/java/example/JUnitPlatformSuiteDemo.java
 1b05f9274f938175da79b176de58a836  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java

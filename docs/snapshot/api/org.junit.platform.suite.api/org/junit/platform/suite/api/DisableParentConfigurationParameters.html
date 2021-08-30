@@ -85,13 +85,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Disable parent configuration parameters.
 
  <p>By default a suite discovers tests using the configuration parameters
- explicitly configured by <a href="ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>@ConfigurationParameter</code></a>
- and the configuration parameters from the discovery request that discovered
- the suite.
+ explicitly configured via <a href="ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>@ConfigurationParameter</code></a>
+ and the configuration parameters from the discovery request that was used to
+ discover the suite.
 
  <p>Annotating a suite with this annotation disables the latter source so
  that only explicit configuration parameters are taken into account.</div>
 <dl class="notes">
+<dt>Since:</dt>
+<dd>1.8</dd>
 <dt>See Also:</dt>
 <dd><a href="ConfigurationParameter.html" title="annotation in org.junit.platform.suite.api"><code>ConfigurationParameter</code></a>, 
 <a href="Suite.html" title="annotation in org.junit.platform.suite.api"><code>Suite</code></a></dd>
