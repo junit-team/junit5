@@ -125,9 +125,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Test classes can now be ordered by passing the fully-qualified name of a class
-  implementing `ClassOrderer` as the value of the new
+* Test classes can now be ordered _globally_ by supplying the fully-qualified name of a
+  class implementing the `ClassOrderer` API as the value of the new
   `junit.jupiter.testclass.order.default` configuration parameter.
+* `@Nested` test classes can be ordered _locally_ via the new `@TestClassOrder` annotation
+  in which a `ClassOrderer` can be specified.
 * `@ExtendWith` may now be used to register extensions declaratively via fields or
   parameters in test class constructors, test methods, and lifecycle methods. See
   <<../user-guide/index.adoc#extensions-registration-declarative, Declarative Extension
