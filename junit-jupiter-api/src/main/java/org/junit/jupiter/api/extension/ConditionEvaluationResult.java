@@ -19,7 +19,7 @@ import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
- * The result of evaluating an {@linkplain ExecutionCondition}.
+ * The result of evaluating an {@link ExecutionCondition}.
  *
  * @since 5.0
  */
@@ -53,7 +53,9 @@ public class ConditionEvaluationResult {
 	 * @param reason the default reason why the container or test should be disabled
 	 * @param customReason the custom reason why the container or test should be disabled
 	 * @return a disabled {@code ConditionEvaluationResult} with the given reasons
+	 * @since 5.7
 	 */
+	@API(status = STABLE, since = "5.7")
 	public static ConditionEvaluationResult disabled(String reason, String customReason) {
 		if (StringUtils.isBlank(customReason)) {
 			return disabled(reason);

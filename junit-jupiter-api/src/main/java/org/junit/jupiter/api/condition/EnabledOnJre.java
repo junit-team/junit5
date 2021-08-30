@@ -80,7 +80,14 @@ public @interface EnabledOnJre {
 	JRE[] value();
 
 	/**
-	 * Reason to provide if the test of container ends up being disabled.
+	 * Custom reason to provide if the test or container is disabled.
+	 *
+	 * <p>If a custom reason is supplied, it will be combined with the default
+	 * reason for this annotation. If a custom reason is not supplied, the default
+	 * reason will be used.
+	 *
+	 * @since 5.7
 	 */
+	@API(status = STABLE, since = "5.7")
 	String disabledReason() default "";
 }
