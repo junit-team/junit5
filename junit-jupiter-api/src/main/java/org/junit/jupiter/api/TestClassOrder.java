@@ -48,13 +48,13 @@ import org.apiguardian.api.API;
  *
  *     {@literal @}Nested
  *     {@literal @}Order(1)
- *     class PrimaryTests() {
+ *     class PrimaryTests {
  *         // {@literal @}Test methods ...
  *     }
  *
  *     {@literal @}Nested
  *     {@literal @}Order(2)
- *     class SecondaryTests() {
+ *     class SecondaryTests {
  *         // {@literal @}Test methods ...
  *     }
  * }
@@ -75,7 +75,7 @@ public @interface TestClassOrder {
 	 * The {@link ClassOrderer} to use.
 	 *
 	 * @see ClassOrderer
-	 * @see ClassOrderer.MethodName
+	 * @see ClassOrderer.ClassName
 	 * @see ClassOrderer.DisplayName
 	 * @see ClassOrderer.OrderAnnotation
 	 * @see ClassOrderer.Random

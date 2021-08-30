@@ -20,7 +20,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 5.8
  */
-class DefaultClassDescriptor extends AbstractAnnotatedElementDescriptor<Class<?>> implements ClassDescriptor {
+class DefaultClassDescriptor extends AbstractAnnotatedDescriptorWrapper<Class<?>> implements ClassDescriptor {
 
 	DefaultClassDescriptor(ClassBasedTestDescriptor testDescriptor) {
 		super(testDescriptor, testDescriptor.getTestClass());
