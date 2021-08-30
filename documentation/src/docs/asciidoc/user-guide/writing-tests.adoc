@@ -29,7 +29,8 @@ in the `junit-jupiter-api` module.
 | `@RepeatedTest`          | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>. Such methods are _inherited_ unless they are _overridden_.
 | `@TestFactory`           | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>. Such methods are _inherited_ unless they are _overridden_.
 | `@TestTemplate`          | Denotes that a method is a <<writing-tests-test-templates, template for test cases>> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <<extensions-test-templates, providers>>. Such methods are _inherited_ unless they are _overridden_.
-| `@TestMethodOrder`       | Used to configure the <<writing-tests-test-execution-order, test method execution order>> for the annotated test class; similar to JUnit 4's `@FixMethodOrder`. Such annotations are _inherited_.
+| `@TestClassOrder`        | Used to configure the <<writing-tests-test-execution-order-classes, test class execution order>> for `@Nested` test classes in the annotated test class. Such annotations are _inherited_.
+| `@TestMethodOrder`       | Used to configure the <<writing-tests-test-execution-order-methods, test method execution order>> for the annotated test class; similar to JUnit 4's `@FixMethodOrder`. Such annotations are _inherited_.
 | `@TestInstance`          | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class. Such annotations are _inherited_.
 | `@DisplayName`           | Declares a custom <<writing-tests-display-names,display name>> for the test class or test method. Such annotations are not _inherited_.
 | `@DisplayNameGeneration` | Declares a custom <<writing-tests-display-name-generator,display name generator>> for the test class. Such annotations are _inherited_.
@@ -524,6 +525,7 @@ repeatable builds.
 NOTE: See <<writing-tests-classes-and-methods>> for a definition of _test method_ and
 _test class_.
 
+[[writing-tests-test-execution-order-methods]]
 ==== Method Order
 
 Although true _unit tests_ typically should not rely on the order in which they are
@@ -560,7 +562,7 @@ order specified via the `@Order` annotation.
 include::{testDir}/example/OrderedTestsDemo.java[tags=user_guide]
 ----
 
-[[writing-tests-test-execution-order-default]]
+[[writing-tests-test-execution-order-methods-default]]
 ===== Setting the Default Method Orderer
 
 You can use the `junit.jupiter.testmethod.order.default` <<running-tests-config-params,
@@ -583,30 +585,33 @@ junit.jupiter.testmethod.order.default = \
 Similarly, you can specify the fully qualified name of any custom class that implements
 `MethodOrderer`.
 
+[[writing-tests-test-execution-order-classes]]
 ==== Class Order
 
-For build optimization purposes, it can be helpful to run _test classes_ in a specific
-order.
+Although test classes typically should not rely on the order in which they are executed,
+there are times when it is desirable to enforce a specific test class execution order. You
+may wish to execute test classes in a random order to ensure there are no accidental
+dependencies between test classes, or you may wish to order test classes to optimize build
+time as outlined in the following scenarios.
 
-For example:
+* Run previously failing tests and faster tests first: "fail fast" mode
+* With parallel execution enabled, run longer tests first: "shortest test plan execution
+  duration" mode
+* Various other use cases
 
-* Previously failed tests and faster tests first: fail fast
-* With parallelism enabled, longer tests first: shortest test execution duration
-* Other use cases
-
-You can use the `junit.jupiter.testclass.order.default` <<running-tests-config-params,
-configuration parameter>> to specify the fully qualified class name of the
-`{ClassOrderer}` you would like to use. The supplied class must implement the
-`ClassOrderer` interface.
+To configure test class execution order _globally_ for the entire test suite, use the
+`junit.jupiter.testclass.order.default` <<running-tests-config-params, configuration
+parameter>> to specify the fully qualified class name of the `{ClassOrderer}` you would
+like to use. The supplied class must implement the `ClassOrderer` interface.
 
 You can implement your own custom `ClassOrderer` or use one of the following built-in
 `ClassOrderer` implementations.
 
+* `{ClassOrderer_ClassName}`: sorts test classes _alphanumerically_ based on their fully
+  qualified class names
 * `{ClassOrderer_DisplayName}`: sorts test classes _alphanumerically_ based on their
   display names (see <<writing-tests-display-name-generator-precedence-rules, display name
   generation precedence rules>>)
-* `{ClassOrderer_ClassName}`: sorts test classes _alphanumerically_ based on their fully
-  qualified class names
 * `{ClassOrderer_OrderAnnotation}`: sorts test classes _numerically_ based on values
   specified via the `{Order}` annotation
 * `{ClassOrderer_Random}`: orders test classes _pseudo-randomly_ and supports
@@ -629,6 +634,23 @@ The configured `ClassOrderer` will be applied to all top-level test classes (inc
 NOTE: Top-level test classes will be ordered relative to each other; whereas, `@Nested`
 test classes will be ordered relative to other `@Nested` test classes sharing the same
 _enclosing class_.
+
+To configure test class execution order _locally_ for `@Nested` test classes, declare the
+`{TestClassOrder}` annotation on the enclosing class for the `@Nested` test classes you
+want to order, and supply a class reference to the `ClassOrderer` implementation you would
+like to use directly in the `@TestClassOrder` annotation. The configured `ClassOrderer`
+will be applied recursively to `@Nested` test classes and their `@Nested` test classes.
+Note that a local `@TestClassOrder` declaration always overrides an inherited
+`@TestClassOrder` declaration or a `ClassOrderer` configured globally via the
+`junit.jupiter.testclass.order.default` configuration parameter.
+
+The following example demonstrates how to guarantee that `@Nested` test classes are
+executed in the order specified via the `@Order` annotation.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/OrderedNestedTestClassesDemo.java[tags=user_guide]
+----
 
 [[writing-tests-test-instance-lifecycle]]
 === Test Instance Lifecycle
