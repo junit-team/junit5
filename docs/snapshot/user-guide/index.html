@@ -7384,7 +7384,7 @@ registered declaratively at the field or parameter level. Consider a
 via a parameter in a constructor, test method, or lifecycle method. If the extension
 provides a <code>@Random</code> annotation that is meta-annotated with
 <code>@ExtendWith(RandomNumberExtension.class)</code> (see listing below), the extension can be used
-transparently as in the following <code>RandomNumberTests</code> example.</p>
+transparently as in the following <code>RandomNumberDemo</code> example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7397,14 +7397,14 @@ transparently as in the following <code>RandomNumberTests</code> example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">RandomNumberTests</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">RandomNumberDemo</span> <span class="o">{</span>
 
     <span class="c1">// use random number field in test methods and @BeforeEach</span>
     <span class="c1">// or @AfterEach lifecycle methods</span>
     <span class="nd">@Random</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">randomNumber1</span><span class="o">;</span>
 
-    <span class="nc">RandomNumberTests</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber2</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">RandomNumberDemo</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber2</span><span class="o">)</span> <span class="o">{</span>
         <span class="c1">// use random number in constructor</span>
     <span class="o">}</span>
 
@@ -7417,6 +7417,7 @@ transparently as in the following <code>RandomNumberTests</code> example.</p>
     <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber4</span><span class="o">)</span> <span class="o">{</span>
         <span class="c1">// use random number in test method</span>
     <span class="o">}</span>
+
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -10678,7 +10679,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-09-02 12:03:20 UTC
+Last updated 2021-09-02 13:43:22 UTC
 </div>
 </div>
 <style>
