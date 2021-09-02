@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.api.Named.named;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -156,17 +157,15 @@ class DynamicTestsDemo {
 	Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodWithNames() {
 		// Stream of palindromes to check
 		Stream<Named<String>> inputStream = Stream.of(
-				Named.of("racecar is a palindrome", "racecar"),
-				Named.of("radar is also a palindrome", "radar"),
-				Named.of("mom also seems to be a palindrome", "mom"),
-				Named.of("dad is yet another palindrome", "dad")
-		);
-
-		// Executes tests based on the current input value.
-		ThrowingConsumer<String> testExecutor = text -> assertTrue(isPalindrome(text));
+				named("racecar is a palindrome", "racecar"),
+				named("radar is also a palindrome", "radar"),
+				named("mom also seems to be a palindrome", "mom"),
+				named("dad is yet another palindrome", "dad")
+			);
 
 		// Returns a stream of dynamic tests.
-		return DynamicTest.stream(inputStream, testExecutor);
+		return DynamicTest.stream(inputStream,
+			text -> assertTrue(isPalindrome(text)));
 	}
 
 	@TestFactory
