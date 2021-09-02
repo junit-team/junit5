@@ -403,20 +403,21 @@ public final class AnnotationUtils {
 	 *
 	 * <p>This method provides a workaround for this off-by-one error by helping
 	 * JUnit maintainers and extension authors to access annotations on the preceding
-	 * {@link Parameter} object (i.e., {@code index - 1}). The {@code index} must
-	 * never be zero in such situations since this method should never attempt to
-	 * resolve an effective parameter for the implicit <em>enclosing instance</em>
-	 * parameter.
+	 * {@link Parameter} object (i.e., {@code index - 1}). If the supplied
+	 * {@code index} is zero in such situations this method will return {@code null}
+	 * since the parameter for the implicit <em>enclosing instance</em> will never
+	 * be annotated.
 	 *
 	 * <h4>WARNING</h4>
 	 *
 	 * <p>The {@code AnnotatedElement} returned by this method should never be cast and
 	 * treated as a {@code Parameter} since the metadata (e.g., {@link Parameter#getName()},
 	 * {@link Parameter#getType()}, etc.) will not match those for the declared parameter
-	 * at the given index in an inner class constructor.
+	 * at the given index in an inner class constructor for code compiled with JDK 8.
 	 *
 	 * @return the supplied {@code Parameter}, or the <em>effective</em> {@code Parameter}
-	 * if the aforementioned bug is detected
+	 * if the aforementioned bug is detected, or {@code null} if the bug is detected and
+	 * the supplied {@code index} is {@code 0}
 	 * @since 1.8
 	 */
 	private static AnnotatedElement getEffectiveAnnotatedParameter(Parameter parameter, int index) {
@@ -426,7 +427,9 @@ public final class AnnotationUtils {
 		if (executable instanceof Constructor && isInnerClass(executable.getDeclaringClass())
 				&& executable.getParameterAnnotations().length == executable.getParameterCount() - 1) {
 
-			Preconditions.condition(index != 0, "Parameter index must not be 0 for an inner class constructor");
+			if (index == 0) {
+				return null;
+			}
 
 			return executable.getParameters()[index - 1];
 		}
