@@ -103,40 +103,16 @@ registered declaratively at the field or parameter level. Consider a
 via a parameter in a constructor, test method, or lifecycle method. If the extension
 provides a `@Random` annotation that is meta-annotated with
 `@ExtendWith(RandomNumberExtension.class)` (see listing below), the extension can be used
-transparently as in the following `RandomNumberTests` example.
+transparently as in the following `RandomNumberDemo` example.
 
 [source,java,indent=0]
 ----
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
-@Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(RandomNumberExtension.class)
-public @interface Random {
-}
+include::{testDir}/example/extensions/Random.java[tags=user_guide]
 ----
 
 [source,java,indent=0]
 ----
-class RandomNumberTests {
-
-	// use random number field in test methods and @BeforeEach
-	// or @AfterEach lifecycle methods
-	@Random
-	private int randomNumber1;
-
-	RandomNumberTests(@Random int randomNumber2) {
-		// use random number in constructor
-	}
-
-	@BeforeEach
-	void beforeEach(@Random int randomNumber3) {
-		// use random number in @BeforeEach method
-	}
-
-	@Test
-	void test(@Random int randomNumber4) {
-		// use random number in test method
-	}
-}
+include::{testDir}/example/extensions/RandomNumberDemo.java[tags=user_guide]
 ----
 
 [TIP]
