@@ -26,6 +26,7 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
@@ -382,6 +383,17 @@ public interface ExtensionContext {
 	 * @see Namespace#GLOBAL
 	 */
 	Store getStore(Namespace namespace);
+
+	/**
+	 * Get the {@link ExecutionMode} associated with the current test or container.
+	 *
+	 * @return the {@code ExecutionMode} of the test; never {@code null}
+	 *
+	 * @see org.junit.jupiter.api.parallel.ExecutionMode {@code @ExecutionMode}
+	 * @since 5.8
+	 */
+	@API(status = STABLE, since = "5.8")
+	ExecutionMode getExecutionMode();
 
 	/**
 	 * {@code Store} provides methods for extensions to save and retrieve data.
