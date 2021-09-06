@@ -195,7 +195,7 @@ public interface ClassOrderer {
 
 		static {
 			DEFAULT_SEED = System.nanoTime();
-			logger.config(() -> "ClassOrderer.Random default seed: " + DEFAULT_SEED);
+			logger.info(() -> "ClassOrderer.Random default seed: " + DEFAULT_SEED);
 		}
 
 		/**
