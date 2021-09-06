@@ -158,7 +158,6 @@
 36cd768f6142fec88b233b555d3bd0c1  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptingTestExecutionListener.java
 36d1001d1eb3f97e6764ccfa9111d519  junit-platform-commons/src/main/java/org/junit/platform/commons/support/HierarchyTraversalMode.java
 371ffc5c06d665ec307b161de83a29b5  documentation/src/test/java/example/extensions/Random.java
-3756ecd3bcd3da6ba058671e92070f3c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 37725239b2f5f7dcf21565077d139433  documentation/src/docs/asciidoc/resources/fonts/Symbola.ttf
 38712453e07a4d8f7c492a5561e3f7a2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/InvocationInterceptor.java
 38941b97e85a0a3959947bcb975af55c  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoveryFilter.java
@@ -167,6 +166,7 @@
 390c1d45e8e1344a9dab25b7ed23172a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineDiscoveryResult.java
 3930a0234e1bfc69e0c5a50cdcb2d9c1  documentation/src/test/java/org/junit/api/tools/ApiReportGenerator.java
 393835471d2bc0ec13e3966a4645ab5f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestMethodContext.java
+39796de1120c6b160f100907cd5b358c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 39a4123154769213bd2f4dcccdc2660d  junit-platform-console/src/main/java/org/junit/platform/console/options/Theme.java
 3a247fc49f3678f0ce658e5b8e71db47  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnOsCondition.java
 3a52ed503e0dc9cc8345a054794d9996  documentation/src/test/java/org/junit/api/tools/ApiReport.java
@@ -253,6 +253,7 @@
 55887f664d9a43a226996a5b161553a7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java
 55f90ca686cf4a9ac3e3aa229c232e10  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/package-info.java
 56be840bb1f6653487f04b32e69033dd  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryRequest.java
+5731e9b10d2d03573a853916a9a9ca4e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrderer.java
 58399d2be3e9c3ffdd4a7a44001a4ea6  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/IncludeClassNameFilter.java
 5889bd93985cbb525c7b3daa29ebf419  junit-platform-engine/src/main/java/org/junit/platform/engine/SelectorResolutionResult.java
 58bbc59a0939da235f24a0dbed7fb66c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/ClasspathScanningSupport.java
@@ -383,7 +384,6 @@
 859e3281da617d211fbd8a50a1bc8249  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java
 86067c4676134fdb8934d40ac58bb493  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/UseTechnicalNames.java
 861447092afe63c995ca4ed2a11b6ae9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfCondition.java
-8616bfb0340473a4a2eeb8ddf28d2b1b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrderer.java
 864e908ff3b6031055636c4001658eef  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullAndEmptySource.java
 86bbd3191ba51edca888d12709510653  junit-platform-engine/src/main/java/org/junit/platform/engine/FilterResult.java
 892148d1f1b31624c93a0adab2956a4a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullEnum.java

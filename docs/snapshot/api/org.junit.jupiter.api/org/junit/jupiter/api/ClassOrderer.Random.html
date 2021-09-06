@@ -102,7 +102,7 @@ implements <a href="ClassOrderer.html" title="interface in org.junit.jupiter.api
  <p>By default, the random <em>seed</em> used for ordering classes is the
  value returned by <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html#nanoTime()" title="class or interface in java.lang" class="external-link"><code>System.nanoTime()</code></a> during static initialization
  of this class. In order to support repeatable builds, the value of the
- default random seed is logged at <code>INFO</code> level. In addition, a
+ default random seed is logged at <code>CONFIG</code> level. In addition, a
  custom seed (potentially the default seed from the previous test plan
  execution) may be specified via the <a href="#RANDOM_SEED_PROPERTY_NAME"><code>junit.jupiter.execution.class.order.random.seed</code></a> <em>configuration parameter</em>
  which can be supplied via the <code>Launcher</code> API, build tools (e.g.,
