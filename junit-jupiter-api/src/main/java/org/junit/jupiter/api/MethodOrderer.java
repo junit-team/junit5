@@ -230,7 +230,7 @@ public interface MethodOrderer {
 	 * <p>By default, the random <em>seed</em> used for ordering methods is the
 	 * value returned by {@link System#nanoTime()} during static initialization
 	 * of this class. In order to support repeatable builds, the value of the
-	 * default random seed is logged at {@code INFO} level. In addition, a
+	 * default random seed is logged at {@code CONFIG} level. In addition, a
 	 * custom seed (potentially the default seed from the previous test plan
 	 * execution) may be specified via the {@link Random#RANDOM_SEED_PROPERTY_NAME
 	 * junit.jupiter.execution.order.random.seed} <em>configuration parameter</em>
