@@ -22,6 +22,8 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -64,6 +66,12 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * {@link File}, {@link BigDecimal}, {@link BigInteger}, {@link Currency},
  * {@link Locale}, {@link URI}, {@link URL}, {@link UUID}, etc.
  *
+ * <p>The {@code DefaultArgumentConverter} can also convert from primitive
+ * integral types (byte, short, int and long) and their corresponding wrapper
+ * types to a byte array, having {@link ByteOrder#BIG_ENDIAN BIG_ENDIAN} byte
+ * order and size equals to the number of bytes used to represent the integral
+ * value in two's complement binary form.
+ *
  * <p>If the source and target types are identical the source object will not
  * be modified.
  *
@@ -83,6 +91,8 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		new StringToCommonJavaTypesConverter(), //
 		new FallbackStringToObjectConverter() //
 	));
+
+	private static final IntegralTypesToByteArrayConverter integralTypesToByteArrayConverter = new IntegralTypesToByteArrayConverter();
 
 	private DefaultArgumentConverter() {
 		// nothing to initialize
@@ -123,6 +133,9 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 						"Failed to convert String \"" + source + "\" to type " + targetType.getName(), ex);
 				}
 			}
+		}
+		if (targetType == byte[].class && integralTypesToByteArrayConverter.canConvert(source.getClass())) {
+			return integralTypesToByteArrayConverter.convert(source);
 		}
 		throw new ArgumentConversionException("No implicit conversion to convert object of type "
 				+ source.getClass().getName() + " to type " + targetType.getName());
@@ -295,6 +308,31 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 				throw new ArgumentConversionException(
 					"Failed to convert String \"" + url + "\" to type " + URL.class.getName(), ex);
 			}
+		}
+
+	}
+
+	private static class IntegralTypesToByteArrayConverter {
+
+		private boolean canConvert(Class<?> sourceType) {
+			return sourceType == Byte.class || sourceType == Short.class || sourceType == Integer.class
+					|| sourceType == Long.class;
+		}
+
+		private byte[] convert(Object source) {
+			if (source instanceof Byte) {
+				return ByteBuffer.allocate(Byte.BYTES).put((Byte) source).array();
+			}
+			if (source instanceof Short) {
+				return ByteBuffer.allocate(Short.BYTES).putShort((Short) source).array();
+			}
+			if (source instanceof Integer) {
+				return ByteBuffer.allocate(Integer.BYTES).putInt((Integer) source).array();
+			}
+			if (source instanceof Long) {
+				return ByteBuffer.allocate(Long.BYTES).putLong((Long) source).array();
+			}
+			throw new ArgumentConversionException("Cannot convert object of type " + source.getClass().getName());
 		}
 
 	}

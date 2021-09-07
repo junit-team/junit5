@@ -231,6 +231,18 @@ class DefaultArgumentConverterTests {
 
 	// -------------------------------------------------------------------------
 
+	/**
+	 * @since FIXME
+	 */
+	@Test
+	void convertsIntegralTypesToByteArray() {
+		assertConverts((byte) 0x7F, byte[].class, new byte[] { 0x7F });
+		assertConverts((short) 0x7E7F, byte[].class, new byte[] { 0x7E, 0x7F });
+		assertConverts(0x7C7D7E7F, byte[].class, new byte[] { 0x7C, 0x7D, 0x7E, 0x7F });
+		assertConverts(0x78797A7B7C7D7E7FL, byte[].class,
+			new byte[] { 0x78, 0x79, 0x7A, 0x7B, 0x7C, 0x7D, 0x7E, 0x7F });
+	}
+
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
 		var result = DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
 
