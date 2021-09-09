@@ -90,11 +90,16 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Describable.html" title="class or interface in org.junit.runner" class="external-link">Describable</a></code>, <code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/manipulation/Filterable.html" title="class or interface in org.junit.runner.manipulation" class="external-link">Filterable</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
-     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.0")
+<div class="type-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#DEPRECATED" title="class or interface in org.apiguardian.api" class="external-link">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.8")
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">JUnitPlatform</span>
 <span class="extends-implements">extends <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Runner.html" title="class or interface in org.junit.runner" class="external-link">Runner</a>
 implements <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/manipulation/Filterable.html" title="class or interface in org.junit.runner.manipulation" class="external-link">Filterable</a></span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">since 1.8, in favor of the <a href="../../../../../org.junit.platform.suite.api/org/junit/platform/suite/api/Suite.html" title="annotation in org.junit.platform.suite.api"><code>@Suite</code></a> support provided by
+ the <code>junit-platform-suite-engine</code> module; to be removed in JUnit Platform 2.0</div>
+</div>
 <div class="block">JUnit 4 based <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Runner.html" title="class or interface in org.junit.runner" class="external-link"><code>Runner</code></a> which runs tests on the JUnit Platform in a
  JUnit 4 environment.
 
@@ -157,7 +162,9 @@ implements <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/man
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.Class)">JUnitPlatform</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;testClass)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</div>
 </div>
 </section>
 </li>
@@ -166,21 +173,27 @@ implements <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/man
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#filter(org.junit.runner.manipulation.Filter)">filter</a></span>&#8203;(<a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/manipulation/Filter.html" title="class or interface in org.junit.runner.manipulation" class="external-link">Filter</a>&nbsp;filter)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Description.html" title="class or interface in org.junit.runner" class="external-link">Description</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getDescription()">getDescription</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#run(org.junit.runner.notification.RunNotifier)">run</a></span>&#8203;(<a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/notification/RunNotifier.html" title="class or interface in org.junit.runner.notification" class="external-link">RunNotifier</a>&nbsp;notifier)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#filter(org.junit.runner.manipulation.Filter)">filter</a></span>&#8203;(<a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/manipulation/Filter.html" title="class or interface in org.junit.runner.manipulation" class="external-link">Filter</a>&nbsp;filter)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table"><code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Description.html" title="class or interface in org.junit.runner" class="external-link">Description</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getDescription()">getDescription</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#run(org.junit.runner.notification.RunNotifier)">run</a></span>&#8203;(<a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/notification/RunNotifier.html" title="class or interface in org.junit.runner.notification" class="external-link">RunNotifier</a>&nbsp;notifier)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</div>
 </div>
 </div>
 </div>
@@ -205,6 +218,7 @@ implements <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/man
 <section class="detail" id="&lt;init&gt;(java.lang.Class)">
 <h3>JUnitPlatform</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JUnitPlatform</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;testClass)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 </section>
 </li>
 </ul>
@@ -219,6 +233,7 @@ implements <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/man
 <section class="detail" id="getDescription()">
 <h3>getDescription</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Description.html" title="class or interface in org.junit.runner" class="external-link">Description</a></span>&nbsp;<span class="element-name">getDescription</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Describable.html#getDescription()" title="class or interface in org.junit.runner" class="external-link">getDescription</a></code>&nbsp;in interface&nbsp;<code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Describable.html" title="class or interface in org.junit.runner" class="external-link">Describable</a></code></dd>
@@ -231,6 +246,7 @@ implements <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/man
 <section class="detail" id="run(org.junit.runner.notification.RunNotifier)">
 <h3>run</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">run</span>&#8203;<span class="parameters">(<a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/notification/RunNotifier.html" title="class or interface in org.junit.runner.notification" class="external-link">RunNotifier</a>&nbsp;notifier)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Runner.html#run(org.junit.runner.notification.RunNotifier)" title="class or interface in org.junit.runner" class="external-link">run</a></code>&nbsp;in class&nbsp;<code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Runner.html" title="class or interface in org.junit.runner" class="external-link">Runner</a></code></dd>
@@ -242,6 +258,7 @@ implements <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/man
 <h3>filter</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">filter</span>&#8203;<span class="parameters">(<a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/manipulation/Filter.html" title="class or interface in org.junit.runner.manipulation" class="external-link">Filter</a>&nbsp;filter)</span>
             throws <span class="exceptions"><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/manipulation/NoTestsRemainException.html" title="class or interface in org.junit.runner.manipulation" class="external-link">NoTestsRemainException</a></span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/manipulation/Filterable.html#filter(org.junit.runner.manipulation.Filter)" title="class or interface in org.junit.runner.manipulation" class="external-link">filter</a></code>&nbsp;in interface&nbsp;<code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/manipulation/Filterable.html" title="class or interface in org.junit.runner.manipulation" class="external-link">Filterable</a></code></dd>

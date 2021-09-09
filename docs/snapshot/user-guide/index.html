@@ -6599,6 +6599,38 @@ subject to expansion.</p>
 </div>
 <div class="sect2">
 <h3 id="running-tests-junit-platform-runner"><a class="anchor" href="#running-tests-junit-platform-runner"></a>4.4. Using JUnit 4 to run the JUnit Platform</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">The <code>JUnitPlatform</code> runner has been deprecated</div>
+<div class="paragraph">
+<p>The <code>JUnitPlatform</code> runner was developed by the JUnit team as an interim solution for
+running test suites and tests on the JUnit Platform in a JUnit 4 environment.</p>
+</div>
+<div class="paragraph">
+<p>In recent years, all mainstream build tools and IDEs provide built-in support for running
+tests directly on the JUnit Platform.</p>
+</div>
+<div class="paragraph">
+<p>In addition, the introduction of <code>@Suite</code> support provided by the
+<code>junit-platform-suite-engine</code> module makes the <code>JUnitPlatform</code> runner obsolete. See
+<a href="#junit-platform-suite-engine">JUnit Platform Suite Engine</a> for details.</p>
+</div>
+<div class="paragraph">
+<p>The <code>JUnitPlatform</code> runner has therefore been deprecated in JUnit Platform 1.8 and will be
+removed in JUnit Platform 2.0.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the <code>JUnitPlatform</code> runner, please migrate to the <code>@Suite</code> support.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>The <code>JUnitPlatform</code> runner is a JUnit 4 based <code>Runner</code> which enables you to run any test
 whose programming model is supported on the JUnit Platform in a JUnit 4 environment&#8201;&#8212;&#8201;for example, a JUnit Jupiter test class.</p>
@@ -6616,8 +6648,7 @@ build systems that support JUnit 4 but do not yet support the JUnit Platform dir
 <td class="content">
 Since the JUnit Platform has features that JUnit 4 does not have, the runner is
 only able to support a subset of the JUnit Platform functionality, especially with regard
-to reporting (see <a href="#running-tests-junit-platform-runner-technical-names">Display Names vs. Technical Names</a>). But for the
-time being the <code>JUnitPlatform</code> runner is an easy way to get started.
+to reporting (see <a href="#running-tests-junit-platform-runner-technical-names">Display Names vs. Technical Names</a>).
 </td>
 </tr>
 </table>
@@ -6709,10 +6740,9 @@ otherwise, some IDEs and build tools might not recognize it as a JUnit 4 test cl
 <pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">fail</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.runner.JUnitPlatform</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;</span>
 
-<span class="nd">@RunWith</span><span class="o">(</span><span class="nc">JUnitPlatform</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="nd">@RunWith</span><span class="o">(</span><span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">runner</span><span class="o">.</span><span class="na">JUnitPlatform</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">JUnitPlatformClassDemo</span> <span class="o">{</span>
 
     <span class="nd">@Test</span>
@@ -6737,12 +6767,11 @@ following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.platform.runner.JUnitPlatform</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.SelectPackages</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.SelectPackages</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.SuiteDisplayName</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;</span>
 
-<span class="nd">@RunWith</span><span class="o">(</span><span class="nc">JUnitPlatform</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="nd">@RunWith</span><span class="o">(</span><span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">runner</span><span class="o">.</span><span class="na">JUnitPlatform</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 <span class="nd">@SuiteDisplayName</span><span class="o">(</span><span class="s">"JUnit Platform Suite Demo"</span><span class="o">)</span>
 <span class="nd">@SelectPackages</span><span class="o">(</span><span class="s">"example"</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">JUnitPlatformSuiteDemo</span> <span class="o">{</span>
@@ -10397,6 +10426,11 @@ since such APIs will likely be removed in an upcoming release.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LegacyReportingUtils</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.runner</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JUnitPlatform</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -10679,7 +10713,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-09-02 13:43:22 UTC
+Last updated 2021-09-09 13:39:40 UTC
 </div>
 </div>
 <style>

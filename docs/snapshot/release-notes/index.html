@@ -519,7 +519,7 @@ authors as well as build tool and IDE vendors.</p>
 <p><strong>Date of Release:</strong> September ❓, 2021</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong></p>
 </div>
 <div class="ulist">
 <ul>
@@ -601,6 +601,11 @@ classes running via the <code>JUnitPlatform</code> <code>Runner</code>.</p>
 <h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>The <code>JUnitPlatform</code> runner has been deprecated in favor of the new <code>@Suite</code> support. See
+the warning in <a href="../user-guide/index.html#running-tests-junit-platform-runner">Using
+JUnit 4 to run the JUnit Platform</a> for details.</p>
+</li>
 <li>
 <p>For consistency with the rest of the JUnit Platform, the experimental
 <code>LauncherDiscoveryListener</code> is now an interface instead of an abstract class.</p>
@@ -1083,7 +1088,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-09-02 13:43:22 UTC
+Last updated 2021-09-09 13:39:40 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
