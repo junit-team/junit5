@@ -103,4 +103,5 @@ public class LauncherSessionTests {
 		assertThrows(PreconditionViolationException.class, () -> launcher.execute(testPlan));
 		assertThrows(PreconditionViolationException.class, () -> launcher.execute(request));
 	}
+
 }

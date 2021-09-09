@@ -32,7 +32,7 @@ public interface LauncherSession extends AutoCloseable {
 	 * Get the {@link Launcher} associated with this session.
 	 *
 	 * <p>Any call to the launcher returned by this method after the session has
-	 * been closed, will throw an exception.
+	 * been closed will throw an exception.
 	 */
 	Launcher getLauncher();
 
@@ -46,4 +46,5 @@ public interface LauncherSession extends AutoCloseable {
 	 */
 	@Override
 	void close();
+
 }

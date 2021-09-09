@@ -34,7 +34,7 @@ import org.apiguardian.api.API;
  *
  * <h4>JUnit 5 Suite Support</h4>
  * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
- * the {@code junit-platform-suite} engine.
+ * the {@code junit-platform-suite-engine} module.
  *
  * @since 1.1
  * @see Suite
