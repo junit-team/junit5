@@ -1,5 +1,5 @@
 /**
- * Common APIs and support utilities for the JUnit Platform Suite.
+ * Common support utilities for executing test suites on the JUnit Platform.
  *
  * <h3>DISCLAIMER</h3>
  *
