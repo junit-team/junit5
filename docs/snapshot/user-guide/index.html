@@ -10467,7 +10467,8 @@ declarations.</p>
 <div class="sect2">
 <h3 id="reproducible-builds"><a class="anchor" href="#reproducible-builds"></a>10.1. Reproducible Builds</h3>
 <div class="paragraph">
-<p>Starting with version 5.7, JUnit 5 aims for its non-javadoc JARs to be <a href="https://reproducible-builds.org/">reproducible</a></p>
+<p>Starting with version 5.7, JUnit 5 aims for its non-javadoc JARs to be
+<a href="https://reproducible-builds.org/">reproducible</a>.</p>
 </div>
 <div class="paragraph">
 <p>Under identical build conditions, such as Java version, repeated builds should provide the
@@ -10544,19 +10545,23 @@ environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to
 </dd>
 <dt class="hdlist1"><code>junit-platform-suite</code></dt>
 <dd>
-<p>JUnit Platform Suite artifact that transitively pulls in dependencies on
-<code>junit-platform-suite-api</code>, <code>junit-platform-suite-engine</code> for simplified
-dependency management in build tools such as Gradle and Maven.</p>
+<p>   JUnit Platform Suite artifact that transitively pulls in dependencies on
+   <code>junit-platform-suite-api</code> and <code>junit-platform-suite-engine</code> for simplified dependency
+management in build tools such as Gradle and Maven.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-suite-api</code></dt>
 <dd>
 <p>Annotations for configuring test suites on the JUnit Platform. Supported by the
-<a href="#junit-platform-suite-engine">JUnit Platform Suite Engine</a> and
+<a href="#junit-platform-suite-engine">JUnit Platform Suite Engine</a> and the
 <a href="#running-tests-junit-platform-runner">JUnitPlatform runner</a>.</p>
+</dd>
+<dt class="hdlist1"><code>junit-platform-suite-commons</code></dt>
+<dd>
+<p>Common support utilities for executing test suites on the JUnit Platform.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-suite-engine</code></dt>
 <dd>
-<p>Engine to execute suites on the JUnit Platform. See
+<p>Engine that executes test suites on the JUnit Platform; only required at runtime. See
 <a href="#junit-platform-suite-engine">JUnit Platform Suite Engine</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-testkit</code></dt>
@@ -10713,7 +10718,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-09-09 13:39:40 UTC
+Last updated 2021-09-09 14:52:47 UTC
 </div>
 </div>
 <style>

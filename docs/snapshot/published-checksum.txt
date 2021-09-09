@@ -411,6 +411,7 @@
 8e2931047dd84723f5d129169e96d4af  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/AggregateWith.java
 8f20779129922c4cd7774ab0a3fdfb16  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TagExpressions.java
 8f4c804375ca2b2b570c06c00a9ff4ce  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeEngines.java
+8f608ef8bdf76acc6063823342799ff5  junit-platform-suite-commons/src/main/java/org/junit/platform/suite/commons/package-info.java
 90249960642070f55aac96cbab03b9c9  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueId.java
 90c5299996636037d3af427245166e99  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
 90e82516754cc71bab03de8e2f1ccfc4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionConfigurationException.java
@@ -612,7 +613,6 @@ cf1d7e03f3f38e42ce026249e0fac6a1  junit-jupiter-params/src/main/java/org/junit/j
 cf325c76f92ac552f14b9200cc73d17d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DisplayNameUtils.java
 cffeb98387679be2b8dd748cd18cac8f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemProperties.java
 d001d1e2587384fc091ea72cb5cc0435  documentation/src/test/java/example/OrderedNestedTestClassesDemo.java
-d01fca8f5e7bc87e5e3c16b031b4fa31  junit-platform-suite-commons/src/main/java/org/junit/platform/suite/commons/package-info.java
 d04146c15b2fbdc9c5ebf63ea503902b  documentation/src/test/java/example/AssertionsDemo.java
 d07c9ba77609a613f3ea6cf61e410177  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
 d132e55d690eff931e81c65074c8579c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventType.java
@@ -621,7 +621,6 @@ d1b105ef31f86da790a46afa801fada0  junit-jupiter-engine/src/main/java/org/junit/j
 d1d8b062ea2323c2a3fc59a0a3ce6b26  junit-platform-engine/src/main/java/org/junit/platform/engine/CompositeFilter.java
 d32fbca3363f5393a7dcfef9fa746e72  junit-platform-console/src/main/java9/org/junit/platform/console/ConsoleLauncherToolProvider.java
 d3752a81bf1647dc41a622b26f7c2064  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
-d3ca3365a44880344c30f8cdbb4c0f5a  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 d3f7008fd1acc964c382f8634ef64ef3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGeneration.java
 d41d8cd98f00b204e9800998ecf8427e  -
 d41d8cd98f00b204e9800998ecf8427e  -
@@ -723,6 +722,7 @@ f17df6eb5351f35e57405a675b75cd64  junit-platform-engine/src/main/java/org/junit/
 f18c1a6df391be12bc6d002c34bb6576  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/TestInstancesProvider.java
 f1adf3e57b678271524a3efcb3f25187  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerRequest.java
 f1c6c4f69fedd8195fcb82e9f00fadc8  documentation/src/test/java/example/exception/RecordStateOnErrorExtension.java
+f2147866c47efb5b41a43d51493c2036  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 f22f5c6b65c14f4edcf6cb65ca265be2  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/EventType.java
 f293f4375806353533f8b60e08fc67fc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestExtension.java
 f2c309d3f86c13f1bb1c55bb9d8ff6cf  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.java
