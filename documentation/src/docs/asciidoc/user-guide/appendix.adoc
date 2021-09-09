@@ -149,7 +149,6 @@ package org.junit.jupiter {
 
 package org.junit.vintage {
     [junit-vintage-engine] as vintage_engine
-    [junit:junit] as junit4
 }
 
 package org.junit.platform {
@@ -165,6 +164,10 @@ package org.junit.platform {
     [junit-platform-suite-commons] as suite_commons
     [junit-platform-suite-engine] as suite_engine
     [junit-platform-testkit] as testkit
+}
+
+package "JUnit 4" {
+    [junit:junit] as junit4
 }
 
 package org.opentest4j {
