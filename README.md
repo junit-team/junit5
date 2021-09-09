@@ -28,7 +28,7 @@ label are specifically targeted for community contributions.
 
 ## Getting Help
 
-Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the community on [Gitter].
+Ask JUnit 5 related questions on [StackOverflow] or chat with the community on [Gitter].
 
 ## Continuous Integration Builds
 
