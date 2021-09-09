@@ -17,10 +17,11 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 
 	testImplementation(projects.junitPlatformLauncher)
-	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformSuiteEngine)
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(testFixtures(projects.junitPlatformCommons))
 	testImplementation(kotlin("stdlib"))
+	testImplementation(libs.junit4)
 	testImplementation(libs.kotlinx.coroutines)
 	testImplementation(libs.groovy3)
 }

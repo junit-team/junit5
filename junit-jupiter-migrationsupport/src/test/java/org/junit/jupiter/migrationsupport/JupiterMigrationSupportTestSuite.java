@@ -10,11 +10,10 @@
 
 package org.junit.jupiter.migrationsupport;
 
-import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.SelectPackages;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * Test suite for JUnit Jupiter migration support.
@@ -31,9 +30,9 @@ import org.junit.runner.RunWith;
  *
  * @since 5.0
  */
-@RunWith(JUnitPlatform.class)
+@Suite
 @SelectPackages("org.junit.jupiter.migrationsupport")
 @IncludeClassNamePatterns(".*Tests?")
 @IncludeEngines("junit-jupiter")
-public class JupiterMigrationSupportTestSuite {
+class JupiterMigrationSupportTestSuite {
 }

@@ -17,7 +17,7 @@ dependencies {
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(projects.junitJupiterEngine)
 	testImplementation(projects.junitPlatformLauncher)
-	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformSuiteEngine)
 
 	compileOnly(kotlin("stdlib"))
 	testImplementation(kotlin("stdlib"))

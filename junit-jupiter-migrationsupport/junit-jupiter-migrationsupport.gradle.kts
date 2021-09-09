@@ -17,7 +17,7 @@ dependencies {
 
 	testImplementation(projects.junitJupiterEngine)
 	testImplementation(projects.junitPlatformLauncher)
-	testImplementation(projects.junitPlatformRunner)
+	testImplementation(projects.junitPlatformSuiteEngine)
 	testImplementation(projects.junitPlatformTestkit)
 }
 

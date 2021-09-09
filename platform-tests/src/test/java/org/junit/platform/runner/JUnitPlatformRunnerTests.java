@@ -91,6 +91,7 @@ import org.mockito.ArgumentCaptor;
  * @since 1.0
  */
 @Tag("junit4")
+@SuppressWarnings("deprecation")
 class JUnitPlatformRunnerTests {
 
 	@Nested

@@ -11,7 +11,7 @@
 package org.junit.platform.runner;
 
 import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
@@ -45,6 +45,7 @@ import org.junit.platform.suite.api.SelectFile;
 import org.junit.platform.suite.api.SelectModules;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
+import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder;
@@ -105,8 +106,11 @@ import org.junit.runner.notification.RunNotifier;
  * @see SuiteDisplayName
  * @see UseTechnicalNames
  * @see ConfigurationParameter
+ * @deprecated since 1.8, in favor of the {@link Suite @Suite} support provided by
+ * the {@code junit-platform-suite-engine} module; to be removed in JUnit Platform 2.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = DEPRECATED, since = "1.8")
+@Deprecated
 public class JUnitPlatform extends Runner implements Filterable {
 
 	// @formatter:off
