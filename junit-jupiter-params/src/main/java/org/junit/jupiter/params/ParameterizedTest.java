@@ -223,7 +223,6 @@ public @interface ParameterizedTest {
 	 *
 	 * @since 5.8
 	 * @see java.lang.AutoCloseable
-	 * @see ParameterizedTestParameterResolver
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8")
 	boolean autoCloseArguments() default true;
