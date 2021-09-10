@@ -86,11 +86,11 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 		Store store = context.getStore(NAMESPACE);
 		AtomicInteger argumentIndex = new AtomicInteger();
 
-		Arrays.stream(arguments) //
+		Arrays.stream(this.arguments) //
 				.filter(AutoCloseable.class::isInstance) //
 				.map(AutoCloseable.class::cast) //
 				.map(CloseableArgument::new) //
-				.forEach(closeable -> store.put("closeableArgument" + argumentIndex.getAndIncrement(), closeable));
+				.forEach(closeable -> store.put("closeableArgument#" + argumentIndex.incrementAndGet(), closeable));
 	}
 
 	private static class CloseableArgument implements Store.CloseableResource {
@@ -103,17 +103,16 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 
 		@Override
 		public void close() throws Throwable {
-			autoCloseable.close();
+			this.autoCloseable.close();
 		}
 
 	}
 
-	@SuppressWarnings("unchecked")
 	private Object[] extractPayloads(Object[] arguments) {
 		return Arrays.stream(arguments) //
 				.map(argument -> {
 					if (argument instanceof Named) {
-						return ((Named<Object>) argument).getPayload();
+						return ((Named<?>) argument).getPayload();
 					}
 					return argument;
 				}) //
