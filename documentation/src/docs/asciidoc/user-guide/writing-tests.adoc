@@ -1118,9 +1118,20 @@ parameterized method at the same index in the method's formal parameter list. An
 _aggregator_ is any parameter of type `ArgumentsAccessor` or any parameter annotated with
 `@AggregateWith`.
 
-NOTE: Arguments of type `AutoCloseable` will be closed once `@AfterEach` methods and
-`AfterEachCallback` implementations have been called. To prevent this from happening, set
-the `autoCloseArguments` attribute in `@ParameterizedTest` to `false`.
+[NOTE]
+.AutoCloseable arguments
+====
+Arguments that implement `java.lang.AutoCloseable` (or `java.io.Closeable` which extends
+`java.lang.AutoCloseable`) will be automatically closed after `@AfterEach` methods and
+`AfterEachCallback` extensions have been called for the current parameterized test
+invocation.
+
+To prevent this from happening, set the `autoCloseArguments` attribute in
+`@ParameterizedTest` to `false`. Specifically, if an argument that implements
+`AutoCloseable` is reused for multiple invocations of the same parameterized test method,
+you must annotate the method with `@ParameterizedTest(autoCloseArguments = false)` to
+ensure that the argument is not closed between invocations.
+====
 
 [[writing-tests-parameterized-tests-sources]]
 ==== Sources of Arguments

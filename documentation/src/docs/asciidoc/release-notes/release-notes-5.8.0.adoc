@@ -120,6 +120,12 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
+* The new `autoCloseArguments` feature in `@ParameterizedTest` may potentially be a
+  breaking change for existing parameterized test methods if an argument that implements
+  `java.lang.AutoCloseable` is reused for multiple invocations of the same parameterized
+  test method. If your parameterized test methods start to fail when you upgrade to JUnit
+  Jupiter 5.8, you can disable this feature by declaring
+  `@ParameterizedTest(autoCloseArguments = false)`.
 * `InvocationInterceptor.interceptDynamicTest(Invocation<Void>, ExtensionContext)` has
   been deprecated in favor of
   `InvocationInterceptor.interceptDynamicTest(Invocation<Void>, DynamicTestInvocationContext, ExtensionContext)`
@@ -165,8 +171,9 @@ on GitHub.
   the information available in a `StackTraceElement`.
 * Dynamic tests now require less memory thanks to a number of improvements to internal
   data structures.
-* New `autoCloseArguments` attribute in `@ParameterizedTest` to close `AutoCloseable`
-  arguments at the end of the test. This attribute defaults to true.
+* New `autoCloseArguments` attribute in `@ParameterizedTest` to close
+  `java.lang.AutoCloseable` arguments after each invocation of the parameterized test
+  method. This attribute defaults to `true`.
 * Numeric literals used with `@CsvSource` or `CsvFileSource` can now be expressed using
   underscores as in some JVM languages, to improve readability of long numbers like
   `700_000_000`.
