@@ -193,9 +193,10 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>boolean</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#autoCloseArguments()">autoCloseArguments</a></span></code></div>
 <div class="col-last even-row-color">
-<div class="block">If true, all arguments of the parameterized test implementing <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link"><code>AutoCloseable</code></a>
- will be closed after <code>@AfterEach</code> methods and <code>AfterEachCallbacks</code>
- have been called.</div>
+<div class="block">Configure whether all arguments of the parameterized test that implement <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link"><code>AutoCloseable</code></a>
+ will be closed after <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods
+ and <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterEachCallback</code></a>
+ extensions have been called for the current parameterized test invocation.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#name()">name</a></span></code></div>
@@ -392,9 +393,17 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8")
 </span><span class="return-type">boolean</span>&nbsp;<span class="element-name">autoCloseArguments</span></div>
-<div class="block">If true, all arguments of the parameterized test implementing <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link"><code>AutoCloseable</code></a>
- will be closed after <code>@AfterEach</code> methods and <code>AfterEachCallbacks</code>
- have been called.</div>
+<div class="block">Configure whether all arguments of the parameterized test that implement <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link"><code>AutoCloseable</code></a>
+ will be closed after <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods
+ and <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterEachCallback</code></a>
+ extensions have been called for the current parameterized test invocation.
+
+ <p>Defaults to <code>true</code>.
+
+ <p><strong>WARNING</strong>: if an argument that implements <code>AutoCloseable</code>
+ is reused for multiple invocations of the same parameterized test method,
+ you must set <code>autoCloseArguments</code> to <code>false</code> to ensure that
+ the argument is not closed between invocations.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.8</dd>

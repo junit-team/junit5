@@ -729,6 +729,14 @@ are instead reported as suppressed exceptions.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>The new <code>autoCloseArguments</code> feature in <code>@ParameterizedTest</code> may potentially be a
+breaking change for existing parameterized test methods if an argument that implements
+<code>java.lang.AutoCloseable</code> is reused for multiple invocations of the same parameterized
+test method. If your parameterized test methods start to fail when you upgrade to JUnit
+Jupiter 5.8, you can disable this feature by declaring
+<code>@ParameterizedTest(autoCloseArguments = false)</code>.</p>
+</li>
+<li>
 <p><code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt;, ExtensionContext)</code> has
 been deprecated in favor of
 <code>InvocationInterceptor.interceptDynamicTest(Invocation&lt;Void&gt;, DynamicTestInvocationContext, ExtensionContext)</code>
@@ -808,8 +816,9 @@ the information available in a <code>StackTraceElement</code>.</p>
 data structures.</p>
 </li>
 <li>
-<p>New <code>autoCloseArguments</code> attribute in <code>@ParameterizedTest</code> to close <code>AutoCloseable</code>
-arguments at the end of the test. This attribute defaults to true.</p>
+<p>New <code>autoCloseArguments</code> attribute in <code>@ParameterizedTest</code> to close
+<code>java.lang.AutoCloseable</code> arguments after each invocation of the parameterized test
+method. This attribute defaults to <code>true</code>.</p>
 </li>
 <li>
 <p>Numeric literals used with <code>@CsvSource</code> or <code>CsvFileSource</code> can now be expressed using
@@ -1088,7 +1097,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-09-09 14:58:14 UTC
+Last updated 2021-09-10 13:20:37 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

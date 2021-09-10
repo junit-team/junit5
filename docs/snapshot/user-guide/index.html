@@ -3458,9 +3458,20 @@ parameterized method at the same index in the method&#8217;s formal parameter li
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Arguments of type <code>AutoCloseable</code> will be closed once <code>@AfterEach</code> methods and
-<code>AfterEachCallback</code> implementations have been called. To prevent this from happening, set
-the <code>autoCloseArguments</code> attribute in <code>@ParameterizedTest</code> to <code>false</code>.
+<div class="title">AutoCloseable arguments</div>
+<div class="paragraph">
+<p>Arguments that implement <code>java.lang.AutoCloseable</code> (or <code>java.io.Closeable</code> which extends
+<code>java.lang.AutoCloseable</code>) will be automatically closed after <code>@AfterEach</code> methods and
+<code>AfterEachCallback</code> extensions have been called for the current parameterized test
+invocation.</p>
+</div>
+<div class="paragraph">
+<p>To prevent this from happening, set the <code>autoCloseArguments</code> attribute in
+<code>@ParameterizedTest</code> to <code>false</code>. Specifically, if an argument that implements
+<code>AutoCloseable</code> is reused for multiple invocations of the same parameterized test method,
+you must annotate the method with <code>@ParameterizedTest(autoCloseArguments = false)</code> to
+ensure that the argument is not closed between invocations.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -10718,7 +10729,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-09-09 14:58:15 UTC
+Last updated 2021-09-10 13:20:37 UTC
 </div>
 </div>
 <style>
