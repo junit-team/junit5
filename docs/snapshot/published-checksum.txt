@@ -286,6 +286,7 @@
 667f0c53eb28f8f3e3cf3d501fd62d8d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/InvocationInterceptorChain.java
 66b5e4f26baf01b7965751649a6de416  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ExceptionUtils.java
 670403474aa4ed49430e953b2af6e6c5  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Executions.java
+684f3f46d236f2a4b9f0e0e3f96afb3b  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0.adoc
 685933593243461d6d975095ad9db045  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
 689546b5b30829999b1f8a5a383f1284  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
 691422b491ee238ccd92ee4dc1cf1782  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
@@ -500,7 +501,6 @@ abb1ecd2c51fb603fba4a7047ee94725  junit-jupiter-api/src/main/java/org/junit/jupi
 abd6612eabf5518bf42bcce619a5c0bf  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodSource.java
 ad22df48611967802fd2b881b48ce0fc  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.java
 ad3a0f11b3ca13ecaecbda5797a3ffcb  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariableCondition.java
-ad5758587fb7febba181de9ff13835e0  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0.adoc
 ada28a11789d985c7650e36908c876dd  documentation/src/test/java/example/DisabledTestsDemo.java
 ae2170224706b523799195071ec78793  documentation/src/test/kotlin/example/FibonacciCalculator.kt
 ae3ad87fb1bf944fe0b32847c59b0839  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle_source.docx

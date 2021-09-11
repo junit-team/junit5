@@ -567,17 +567,41 @@ on GitHub.</p>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.8.0-overall-improvements"><a class="anchor" href="#release-notes-5.8.0-overall-improvements"></a>Overall Improvements</h3>
+<div class="sect3">
+<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Since the API Guardian dependency is no longer exported as a runtime but as a
+compile-only dependency to consuming Gradle projects, Gradle builds that define their own
+<a href="https://docs.gradle.org/current/userguide/declaring_dependencies.html#sec:what-are-dependency-configurations">dependency configurations</a>
+may be affected. For example, if the custom configuration is used to manipulate a source
+set&#8217;s classpath directly, dependency attributes needed for Gradle&#8217;s variant-aware
+dependency management are dropped and API Guardian is missing from the compile
+classpath. In that case, the Java compiler emits warnings which&#8201;&#8212;&#8201;depending on your
+configured options&#8201;&#8212;&#8201;may cause the build to fail. The solution is to avoid manipulating
+a source set&#8217;s classpath directly. Instead, its dependency configurations should extend
+from your custom configuration. An example of such a change can be seen in
+<a href="https://github.com/spring-projects/spring-framework/commit/d23afea168b8360d08bf296ac2189239ab9db7fc">this commit</a>
+to the Spring Framework repository.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
 <p>The API Guardian dependency is now exported as a compile-only dependency for consuming
-Gradle projects.</p>
+Gradle projects and no longer required at runtime when running on the module path.</p>
 </li>
 <li>
 <p>Logging messages are no longer issued at <code>INFO</code> level in order to lower the "textual
 noise" on the console when Java&#8217;s Util Logging is used in its default configuration.</p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -598,7 +622,7 @@ classes running via the <code>JUnitPlatform</code> <code>Runner</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -614,7 +638,7 @@ JUnit 4 to run the JUnit Platform</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -725,7 +749,7 @@ are instead reported as suppressed exceptions.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -747,7 +771,7 @@ that provides access to the dynamic test executable via
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -862,7 +886,7 @@ when such a test fails.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -922,7 +946,7 @@ ones.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1017,7 +1041,7 @@ called once even if they throw an exception.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1097,7 +1121,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-09-10 13:20:37 UTC
+Last updated 2021-09-11 09:02:04 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
