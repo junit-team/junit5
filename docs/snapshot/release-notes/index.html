@@ -572,12 +572,12 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Since the API Guardian dependency is no longer exported as a runtime but as a
+<p>Since the API Guardian dependency is no longer exported as a runtime but rather as a
 compile-only dependency to consuming Gradle projects, Gradle builds that define their own
 <a href="https://docs.gradle.org/current/userguide/declaring_dependencies.html#sec:what-are-dependency-configurations">dependency configurations</a>
 may be affected. For example, if the custom configuration is used to manipulate a source
 set&#8217;s classpath directly, dependency attributes needed for Gradle&#8217;s variant-aware
-dependency management are dropped and API Guardian is missing from the compile
+dependency management are dropped, and API Guardian is missing from the compile
 classpath. In that case, the Java compiler emits warnings which&#8201;&#8212;&#8201;depending on your
 configured options&#8201;&#8212;&#8201;may cause the build to fail. The solution is to avoid manipulating
 a source set&#8217;s classpath directly. Instead, its dependency configurations should extend
@@ -643,10 +643,13 @@ JUnit 4 to run the JUnit Platform</a> for details.</p>
 <ul>
 <li>
 <p>New <code>junit-platform-suite-engine</code> module to execute declarative test suites on the JUnit
-Platform.</p>
+Platform. See <a href="../user-guide/index.html#junit-platform-suite-engine">JUnit Platform
+Suite Engine</a> for details.</p>
 </li>
 <li>
-<p>Additional selectors in the suite API in the <code>junit-platform-suite-api</code> module.</p>
+<p>Additional selectors in the suite API in the <code>junit-platform-suite-api</code> module. See the
+Javadoc of the <code><a href="../api/org.junit.platform.suite.api/org/junit/platform/suite/api/package-summary.html">org.junit.platform.suite.api</a></code> package for a full list of supported annotations
+and further details.</p>
 </li>
 <li>
 <p>New <code>UniqueIdTrackingListener</code> which is a <code>TestExecutionListener</code> that tracks the unique
@@ -671,16 +674,17 @@ nested container events when using the <code>EngineTestKit</code>. For example,
 <code>my test</code>.</p>
 </li>
 <li>
-<p>Generating Java Flight Recorder events via the <code>junit-platform-jfr</code> module is now also
-supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
-<a href="../user-guide/index.html#running-tests">Flight Recorder Support</a> for details.</p>
+<p>Generating Java Flight Recorder (JFR) events via the <code>junit-platform-jfr</code> module is now
+also supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
+<a href="../user-guide/index.html#running-tests-listeners-flight-recorder">Flight Recorder
+Support</a> for details.</p>
 </li>
 <li>
-<p>The <code>junit-platform-jfr</code> module now reports execution events for containers&#8201;&#8212;&#8201;for
+<p>The <code>junit-platform-jfr</code> module now publishes execution events for containers&#8201;&#8212;&#8201;for
 example, test classes.</p>
 </li>
 <li>
-<p>The <code>junit-platform-jfr</code> module now reports test discovery events for the launcher and
+<p>The <code>junit-platform-jfr</code> module now publishes test discovery events for the launcher and
 registered test engines.</p>
 </li>
 <li>
@@ -777,7 +781,9 @@ that provides access to the dynamic test executable via
 <li>
 <p>Test classes can now be ordered <em>globally</em> by supplying the fully-qualified name of a
 class implementing the <code>ClassOrderer</code> API as the value of the new
-<code>junit.jupiter.testclass.order.default</code> configuration parameter.</p>
+<code>junit.jupiter.testclass.order.default</code> configuration parameter. See
+<a href="../user-guide/index.html#writing-tests-test-execution-order-classes">Class Order</a> for
+details.</p>
 </li>
 <li>
 <p><code>@Nested</code> test classes can be ordered <em>locally</em> via the new <code>@TestClassOrder</code> annotation
@@ -1121,7 +1127,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-09-11 09:02:04 UTC
+Last updated 2021-09-11 13:27:43 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

@@ -655,8 +655,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel3">
 <li><a href="#running-tests-junit-platform-runner-setup">4.4.1. Setup</a>
 <ul class="sectlevel4">
-<li><a href="#explicit-dependencies">Explicit Dependencies</a></li>
-<li><a href="#transitive-dependencies">Transitive Dependencies</a></li>
+<li><a href="#running-tests-junit-platform-runner-setup-explicit-dependencies">Explicit Dependencies</a></li>
+<li><a href="#running-tests-junit-platform-runner-setup-transitive-dependencies">Transitive Dependencies</a></li>
 </ul>
 </li>
 <li><a href="#running-tests-junit-platform-runner-technical-names">4.4.2. Display Names vs. Technical Names</a></li>
@@ -765,13 +765,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#junit-platform-reporting">6.2. JUnit Platform Reporting</a></li>
 <li><a href="#junit-platform-suite-engine">6.3. JUnit Platform Suite Engine</a>
 <ul class="sectlevel3">
-<li><a href="#setup">6.3.1. Setup</a>
+<li><a href="#junit-platform-suite-engine-setup">6.3.1. Setup</a>
 <ul class="sectlevel4">
-<li><a href="#explicit-dependencies-2">Explicit Dependencies</a></li>
-<li><a href="#transitive-dependencies-2">Transitive Dependencies</a></li>
+<li><a href="#junit-platform-suite-engine-setup-required-dependencies">Required Dependencies</a></li>
+<li><a href="#junit-platform-suite-engine-setup-transitive-dependencies">Transitive Dependencies</a></li>
 </ul>
 </li>
-<li><a href="#test-suite">6.3.2. Test Suite</a></li>
+<li><a href="#junit-platform-suite-engine-example">6.3.2. @Suite Example</a></li>
 </ul>
 </li>
 <li><a href="#testkit">6.4. JUnit Platform Test Kit</a>
@@ -6671,7 +6671,7 @@ to reporting (see <a href="#running-tests-junit-platform-runner-technical-names"
 <a href="#dependency-metadata">Dependency Metadata</a> for details regarding group IDs, artifact IDs, and versions.</p>
 </div>
 <div class="sect4">
-<h5 id="explicit-dependencies"><a class="anchor" href="#explicit-dependencies"></a>Explicit Dependencies</h5>
+<h5 id="running-tests-junit-platform-runner-setup-explicit-dependencies"><a class="anchor" href="#running-tests-junit-platform-runner-setup-explicit-dependencies"></a>Explicit Dependencies</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -6692,7 +6692,7 @@ for JUnit Jupiter</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="transitive-dependencies"><a class="anchor" href="#transitive-dependencies"></a>Transitive Dependencies</h5>
+<h5 id="running-tests-junit-platform-runner-setup-transitive-dependencies"><a class="anchor" href="#running-tests-junit-platform-runner-setup-transitive-dependencies"></a>Transitive Dependencies</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -9375,27 +9375,27 @@ for details.
 <div class="sect2">
 <h3 id="junit-platform-suite-engine"><a class="anchor" href="#junit-platform-suite-engine"></a>6.3. JUnit Platform Suite Engine</h3>
 <div class="paragraph">
-<p>The JUnit Platform supports declarative definition and execution of suites of tests from
-<em>any</em> test engine using the Junit Platform.</p>
+<p>The JUnit Platform supports the declarative definition and execution of suites of tests
+from <em>any</em> test engine using the JUnit Platform.</p>
 </div>
 <div class="sect3">
-<h4 id="setup"><a class="anchor" href="#setup"></a>6.3.1. Setup</h4>
+<h4 id="junit-platform-suite-engine-setup"><a class="anchor" href="#junit-platform-suite-engine-setup"></a>6.3.1. Setup</h4>
 <div class="paragraph">
-<p>In addition to <em>at least one</em> other test engine, you need the following artifacts and
-their dependencies on the classpath. See <a href="#dependency-metadata">Dependency Metadata</a> for details regarding
-group IDs, artifact IDs, and versions.</p>
+<p>In addition to the <code>junit-platform-suite-api</code> and <code>junit-platform-suite-engine</code> artifacts,
+you need <em>at least one</em> other test engine and its dependencies on the classpath. See
+<a href="#dependency-metadata">Dependency Metadata</a> for details regarding group IDs, artifact IDs, and versions.</p>
 </div>
 <div class="sect4">
-<h5 id="explicit-dependencies-2"><a class="anchor" href="#explicit-dependencies-2"></a>Explicit Dependencies</h5>
+<h5 id="junit-platform-suite-engine-setup-required-dependencies"><a class="anchor" href="#junit-platform-suite-engine-setup-required-dependencies"></a>Required Dependencies</h5>
 <div class="ulist">
 <ul>
 <li>
-<p><code>junit-platform-suite-api</code> in <em>test</em> scope</p>
+<p><code>junit-platform-suite-api</code> in <em>test</em> scope: artifact containing annotations needed to
+configure a test suite</p>
 </li>
 <li>
 <p><code>junit-platform-suite-engine</code> in <em>test runtime</em> scope: implementation of the
-<code>TestEngine</code> API for the declarative Junit Platform
-Suites</p>
+<code>TestEngine</code> API for declarative test suites</p>
 </li>
 </ul>
 </div>
@@ -9406,15 +9406,16 @@ Suites</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Both dependencies are aggregated in <code>junit-platform-suite</code> which can be used in
-<em>test</em> scope.
+Both of the required dependencies are aggregated in the <code>junit-platform-suite</code>
+artifact which can be declard in <em>test</em> scope instead of declaring explicit dependencies
+on <code>junit-platform-suite-api</code> and <code>junit-platform-suite-engine</code>.
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect4">
-<h5 id="transitive-dependencies-2"><a class="anchor" href="#transitive-dependencies-2"></a>Transitive Dependencies</h5>
+<h5 id="junit-platform-suite-engine-setup-transitive-dependencies"><a class="anchor" href="#junit-platform-suite-engine-setup-transitive-dependencies"></a>Transitive Dependencies</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -9437,7 +9438,7 @@ Both dependencies are aggregated in <code>junit-platform-suite</code> which can 
 </div>
 </div>
 <div class="sect3">
-<h4 id="test-suite"><a class="anchor" href="#test-suite"></a>6.3.2. Test Suite</h4>
+<h4 id="junit-platform-suite-engine-example"><a class="anchor" href="#junit-platform-suite-engine-example"></a>6.3.2. @Suite Example</h4>
 <div class="paragraph">
 <p>By annotating a class with <code>@Suite</code> it is marked as a test suite on the JUnit Platform.
 As seen in the following example, selector and filter annotations can then be used to
@@ -9445,14 +9446,16 @@ control the contents of the suite.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.SelectPackages</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.IncludeClassNamePatterns</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.SelectPackages</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.Suite</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.suite.api.SuiteDisplayName</span><span class="o">;</span>
 
 <span class="nd">@Suite</span>
 <span class="nd">@SuiteDisplayName</span><span class="o">(</span><span class="s">"JUnit Platform Suite Demo"</span><span class="o">)</span>
 <span class="nd">@SelectPackages</span><span class="o">(</span><span class="s">"example"</span><span class="o">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SuiteDemo</span> <span class="o">{</span>
+<span class="nd">@IncludeClassNamePatterns</span><span class="o">(</span><span class="s">".*Tests"</span><span class="o">)</span>
+<span class="kd">class</span> <span class="nc">SuiteDemo</span> <span class="o">{</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -9464,9 +9467,9 @@ control the contents of the suite.</p>
 </td>
 <td class="content">
 <div class="title">Additional Configuration Options</div>
-There are more configuration options for discovering and filtering tests than just
-<code>@SelectPackages</code>. Please consult the Javadoc of the <code><a href="../api/org.junit.platform.suite.api/org/junit/platform/suite/api/package-summary.html">org.junit.platform.suite.api</a></code> package for
-further details.
+There are numerous configuration options for discovering and filtering tests in a
+test suite. Please consult the Javadoc of the <code><a href="../api/org.junit.platform.suite.api/org/junit/platform/suite/api/package-summary.html">org.junit.platform.suite.api</a></code> package for a full
+list of supported annotations and further details.
 </td>
 </tr>
 </table>
@@ -10729,7 +10732,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.8.0-SNAPSHOT<br>
-Last updated 2021-09-11 09:02:04 UTC
+Last updated 2021-09-11 13:27:43 UTC
 </div>
 </div>
 <style>
