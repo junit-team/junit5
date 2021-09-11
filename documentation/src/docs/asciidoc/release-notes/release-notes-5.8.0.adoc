@@ -27,8 +27,25 @@ on GitHub.
 [[release-notes-5.8.0-overall-improvements]]
 === Overall Improvements
 
+==== Deprecations and Breaking Changes
+
+* Since the API Guardian dependency is no longer exported as a runtime but as a
+  compile-only dependency to consuming Gradle projects, Gradle builds that define their own
+  https://docs.gradle.org/current/userguide/declaring_dependencies.html#sec:what-are-dependency-configurations[dependency configurations]
+  may be affected. For example, if the custom configuration is used to manipulate a source
+  set's classpath directly, dependency attributes needed for Gradle's variant-aware
+  dependency management are dropped and API Guardian is missing from the compile
+  classpath. In that case, the Java compiler emits warnings which -- depending on your
+  configured options -- may cause the build to fail. The solution is to avoid manipulating
+  a source set's classpath directly. Instead, its dependency configurations should extend
+  from your custom configuration. An example of such a change can be seen in
+  https://github.com/spring-projects/spring-framework/commit/d23afea168b8360d08bf296ac2189239ab9db7fc[this commit]
+  to the Spring Framework repository.
+
+==== New Features and Improvements
+
 * The API Guardian dependency is now exported as a compile-only dependency for consuming
-  Gradle projects.
+  Gradle projects and no longer required at runtime when running on the module path.
 * Logging messages are no longer issued at `INFO` level in order to lower the "textual
   noise" on the console when Java's Util Logging is used in its default configuration.
 
