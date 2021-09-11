@@ -29,12 +29,12 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* Since the API Guardian dependency is no longer exported as a runtime but as a
+* Since the API Guardian dependency is no longer exported as a runtime but rather as a
   compile-only dependency to consuming Gradle projects, Gradle builds that define their own
   https://docs.gradle.org/current/userguide/declaring_dependencies.html#sec:what-are-dependency-configurations[dependency configurations]
   may be affected. For example, if the custom configuration is used to manipulate a source
   set's classpath directly, dependency attributes needed for Gradle's variant-aware
-  dependency management are dropped and API Guardian is missing from the compile
+  dependency management are dropped, and API Guardian is missing from the compile
   classpath. In that case, the Java compiler emits warnings which -- depending on your
   configured options -- may cause the build to fail. The solution is to avoid manipulating
   a source set's classpath directly. Instead, its dependency configurations should extend
@@ -71,8 +71,11 @@ on GitHub.
 ==== New Features and Improvements
 
 * New `junit-platform-suite-engine` module to execute declarative test suites on the JUnit
-  Platform.
-* Additional selectors in the suite API in the `junit-platform-suite-api` module.
+  Platform. See <<../user-guide/index.adoc#junit-platform-suite-engine, JUnit Platform
+  Suite Engine>> for details.
+* Additional selectors in the suite API in the `junit-platform-suite-api` module. See the
+  Javadoc of the `{suite-api-package}` package for a full list of supported annotations
+  and further details.
 * New `UniqueIdTrackingListener` which is a `TestExecutionListener` that tracks the unique
   IDs of all tests that were skipped or executed during the `TestPlan` and generates a
   file containing the unique IDs. The generated file can be used to rerun those tests --
@@ -90,12 +93,13 @@ on GitHub.
   nested container events when using the `EngineTestKit`. For example,
   `test(displayName("my test"))` can be used to match against a test whose display name is
   `my test`.
-* Generating Java Flight Recorder events via the `junit-platform-jfr` module is now also
-  supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
-  <<../user-guide/index.adoc#running-tests, Flight Recorder Support>> for details.
-* The `junit-platform-jfr` module now reports execution events for containers -- for
+* Generating Java Flight Recorder (JFR) events via the `junit-platform-jfr` module is now
+  also supported on Java 8 Update 262 or higher, in addition to Java 11 or later. See
+  <<../user-guide/index.adoc#running-tests-listeners-flight-recorder, Flight Recorder
+  Support>> for details.
+* The `junit-platform-jfr` module now publishes execution events for containers -- for
   example, test classes.
-* The `junit-platform-jfr` module now reports test discovery events for the launcher and
+* The `junit-platform-jfr` module now publishes test discovery events for the launcher and
   registered test engines.
 * New `ClassSource.from(URI)` static factory method for creating a `ClassSource` from a
   URI using the `class` scheme and optional query parameters specifying the line number
@@ -153,7 +157,9 @@ on GitHub.
 
 * Test classes can now be ordered _globally_ by supplying the fully-qualified name of a
   class implementing the `ClassOrderer` API as the value of the new
-  `junit.jupiter.testclass.order.default` configuration parameter.
+  `junit.jupiter.testclass.order.default` configuration parameter. See
+  <<../user-guide/index.adoc#writing-tests-test-execution-order-classes, Class Order>> for
+  details.
 * `@Nested` test classes can be ordered _locally_ via the new `@TestClassOrder` annotation
   in which a `ClassOrderer` can be specified.
 * `@ExtendWith` may now be used to register extensions declaratively via fields or

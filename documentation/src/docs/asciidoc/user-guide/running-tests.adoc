@@ -640,6 +640,7 @@ to reporting (see <<running-tests-junit-platform-runner-technical-names>>).
 You need the following artifacts and their dependencies on the classpath. See
 <<dependency-metadata>> for details regarding group IDs, artifact IDs, and versions.
 
+[[running-tests-junit-platform-runner-setup-explicit-dependencies]]
 ===== Explicit Dependencies
 
 * `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
@@ -649,6 +650,7 @@ You need the following artifacts and their dependencies on the classpath. See
 * `junit-jupiter-engine` in _test runtime_ scope: implementation of the `TestEngine` API
   for JUnit Jupiter
 
+[[running-tests-junit-platform-runner-setup-transitive-dependencies]]
 ===== Transitive Dependencies
 
 * `junit-platform-suite-api` in _test_ scope

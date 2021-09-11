@@ -11,6 +11,7 @@
 package example;
 
 //tag::user_guide[]
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
@@ -18,9 +19,10 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @Suite
 @SuiteDisplayName("JUnit Platform Suite Demo")
 @SelectPackages("example")
+@IncludeClassNamePatterns(".*Tests")
 //end::user_guide[]
 @org.junit.platform.suite.api.ExcludeTags("exclude")
 //tag::user_guide[]
-public class SuiteDemo {
+class SuiteDemo {
 }
 //end::user_guide[]
