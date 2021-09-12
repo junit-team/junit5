@@ -37,33 +37,32 @@ import platform.tooling.support.ThirdPartyJars;
  */
 class ModularUserGuideTests {
 
-	private static final List<String> DOCUMENTATION_MODULE_DESCRIPTOR = List.of( //
-		"open module documentation {", //
-		"  exports example.testkit;", // just here to ensure documentation example sources are compiled
-		//
-		"  requires org.junit.jupiter.api;", //
-		"  requires org.junit.jupiter.migrationsupport;", //
-		"  requires org.junit.jupiter.params;", //
-		//
-		"  requires org.junit.platform.engine;", //
-		"  requires org.junit.platform.reporting;", //
-		"  requires org.junit.platform.runner;", //
-		"  requires org.junit.platform.testkit;", //
-		//
-		"  requires java.desktop;", //
-		"  requires java.logging;", //
-		"  requires java.scripting;", //
-		"  requires jdk.httpserver;", //
-		//
-		"  provides org.junit.platform.launcher.LauncherSessionListener", //
-		"    with example.session.GlobalSetupTeardownListener;", //
-		"}", //
-		"" //
-	);
+	private static final String DOCUMENTATION_MODULE_DESCRIPTOR = """
+			open module documentation {
+			  exports example.testkit; // just here to ensure documentation example sources are compiled
+
+			  requires org.junit.jupiter.api;
+			  requires org.junit.jupiter.migrationsupport;
+			  requires org.junit.jupiter.params;
+
+			  requires org.junit.platform.engine;
+			  requires org.junit.platform.reporting;
+			  requires org.junit.platform.runner;
+			  requires org.junit.platform.testkit;
+
+			  requires java.desktop;
+			  requires java.logging;
+			  requires java.scripting;
+			  requires jdk.httpserver;
+
+			  provides org.junit.platform.launcher.LauncherSessionListener
+			    with example.session.GlobalSetupTeardownListener;
+			}
+			""";
 
 	private static List<String> compile(Path temp, Writer out, Writer err) throws Exception {
 		var documentation = Files.createDirectories(temp.resolve("src/documentation"));
-		Files.write(documentation.resolve("module-info.java"), DOCUMENTATION_MODULE_DESCRIPTOR);
+		Files.writeString(documentation.resolve("module-info.java"), DOCUMENTATION_MODULE_DESCRIPTOR);
 
 		var args = new ArrayList<String>();
 		args.add("-Xlint"); // enable all default warnings
