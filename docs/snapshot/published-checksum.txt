@@ -104,6 +104,7 @@
 2899da7e3434bd88a77e4418bb98f7ba  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/BeforeEachMethodAdapter.java
 295446abdd851f0c2aa0d6a89259b7f3  documentation/src/test/java/example/testkit/EngineTestKitSkippedMethodDemo.java
 299252428f1aed28711e1b094eda1e98  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertSame.java
+29a5cb04846d89d7b3c42a7ede57c8cf  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0.adoc
 29a93b5ac77fd920071077adc11a2626  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.java
 29fc0f66ce094447da5262f597704425  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/MethodBasedCondition.java
 2a1489b94cf834359327a6474dea2950  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
@@ -267,7 +268,6 @@
 5ccfa71d252374591268217a2f5d30b9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.java
 5dd0d925c165679434bf6eb7236326a7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/Constants.java
 5e788d9eb737a341e17750c0c2b8108b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistrar.java
-601440afa5f5ab3798fd28d8c2bf7b36  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.0.adoc
 60a65aa5fde98c35b2b0fb5b415f92fe  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherSessionListener.java
 60f8d942a3ab69dffbac3d7b09a9767b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodDescriptor.java
 60fb44f64ebb6273b2450083b3ed7e74  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.java
