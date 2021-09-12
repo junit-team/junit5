@@ -54,6 +54,9 @@ class ModularUserGuideTests {
 		"  requires java.logging;", //
 		"  requires java.scripting;", //
 		"  requires jdk.httpserver;", //
+		//
+		"  provides org.junit.platform.launcher.LauncherSessionListener", //
+		"    with example.session.GlobalSetupTeardownListener;", //
 		"}", //
 		"" //
 	);
