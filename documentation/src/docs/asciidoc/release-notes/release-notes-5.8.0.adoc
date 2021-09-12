@@ -1,7 +1,7 @@
 [[release-notes-5.8.0]]
 == 5.8.0
 
-*Date of Release:* September ❓, 2021
+*Date of Release:* September 12, 2021
 
 *Scope:*
 
