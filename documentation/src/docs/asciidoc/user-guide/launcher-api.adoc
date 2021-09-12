@@ -130,10 +130,48 @@ programmatically via the `{LauncherConfig}` that is passed to the `{LauncherFact
 they can be discovered at runtime via Java's `{ServiceLoader}` mechanism and automatically
 registered with `LauncherSession` (unless automatic registration is disabled.)
 
-For example, an `example.CustomLauncherSessionListener` class implementing
-`LauncherSessionListener` and declared within the
-`/META-INF/services/org.junit.platform.launcher.LauncherSessionListener` file is loaded
-and registered automatically.
+A `{LauncherSessionListener}` is well suited for implementing once-per-JVM setup/teardown
+behavior since it's called before the first and after the last test in a launcher session,
+respectively. The scope of a launcher session depends on the used IDE or build tool but
+usually corresponds to the lifecycle of the test JVM. A custom listener that starts an
+HTTP server before executing the first test and stops it after the last test has been
+executed, could look like this:
+
+[source,java]
+.src/test/java/example/session/GlobalSetupTeardownListener.java
+----
+package example.session;
+
+include::{testDir}/example/session/GlobalSetupTeardownListener.java[tags=user_guide]
+----
+<1> Start the HTTP server
+<2> Export its dynamic port as a system property for consumption by tests
+<3> Stop the HTTP server
+
+This sample uses the HTTP server implementation from the jdk.httpserver module that comes
+with the JDK but would work similarly with any other server or resource. In order for the
+listener to be picked up by JUnit Platform, you need to register it as a service by adding
+a resource file with the following name and contents to your test runtime classpath (e.g.
+by adding the file to `src/test/resources`):
+
+[source]
+.src/test/resources/META-INF/services/org.junit.platform.launcher.LauncherSessionListener
+----
+include::{testResourcesDir}/META-INF/services/org.junit.platform.launcher.LauncherSessionListener[]
+----
+
+You can now use the resource from your test:
+
+[source,java]
+.src/test/java/example/session/HttpTests.java
+----
+package example.session;
+
+include::{testDir}/example/session/HttpTests.java[tags=user_guide]
+----
+<1> Read the port of the server from the system property set by the listener
+<2> Send a request to the server
+<3> Check the status code of the response
 
 [[launcher-api-launcher-discovery-listeners-custom]]
 ==== Registering a LauncherDiscoveryListener
