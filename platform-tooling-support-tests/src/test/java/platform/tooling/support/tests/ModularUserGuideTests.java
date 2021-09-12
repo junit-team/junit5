@@ -53,6 +53,7 @@ class ModularUserGuideTests {
 		"  requires java.desktop;", //
 		"  requires java.logging;", //
 		"  requires java.scripting;", //
+		"  requires jdk.httpserver;", //
 		"}", //
 		"" //
 	);
@@ -166,7 +167,7 @@ class ModularUserGuideTests {
 		var args = compile(temp, out, err);
 		// args.forEach(System.out::println);
 
-		assertTrue(err.toString().isBlank(), () -> err.toString() + "\n\n" + String.join("\n", args));
+		assertTrue(err.toString().isBlank(), () -> err + "\n\n" + String.join("\n", args));
 		var listing = Helper.treeWalk(temp);
 		assertLinesMatch(List.of( //
 			"destination", //
