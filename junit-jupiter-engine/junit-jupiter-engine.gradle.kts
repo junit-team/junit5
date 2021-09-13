@@ -23,7 +23,7 @@ dependencies {
 	testImplementation(kotlin("stdlib"))
 	testImplementation(libs.junit4)
 	testImplementation(libs.kotlinx.coroutines)
-	testImplementation(libs.groovy3)
+	testImplementation(libs.groovy4)
 }
 
 tasks {
