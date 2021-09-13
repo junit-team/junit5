@@ -31,7 +31,7 @@ dependencies {
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(projects.junitVintageEngine)
-	testRuntimeOnly(libs.groovy3) {
+	testRuntimeOnly(libs.groovy4) {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
 
