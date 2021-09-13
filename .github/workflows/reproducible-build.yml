@@ -20,15 +20,6 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Cache Gradle wrapper and dependencies
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.gradle/caches/
-          ~/.gradle/wrapper/dists
-        key: assemble-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/gradle.properties', 'gradle/**', 'buildSrc/src/main/**') }}
-        restore-keys: |
-          assemble-${{ runner.os }}-gradle-
     - name: Set up JDK 16
       uses: actions/setup-java@v2
       with:
@@ -42,6 +33,7 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '11'
+        cache: 'gradle'
     - name: Build and compare checksums
       shell: bash
       run: |
