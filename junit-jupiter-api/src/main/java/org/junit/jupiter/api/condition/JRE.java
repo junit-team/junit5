@@ -115,10 +115,18 @@ public enum JRE {
 	JAVA_17,
 
 	/**
+	 * Java 18.
+	 *
+	 * @since 5.8.1
+	 */
+	@API(status = STABLE, since = "5.8.1")
+	JAVA_18,
+
+	/**
 	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
 	 * {@link #JAVA_10}, {@link #JAVA_11}, {@link #JAVA_12},
 	 * {@link #JAVA_13}, {@link #JAVA_14}, {@link #JAVA_15},
-	 * {@link #JAVA_16}, or {@link #JAVA_17}.
+	 * {@link #JAVA_16}, {@link #JAVA_17}, or {@link #JAVA_18}.
 	 */
 	OTHER;
 
@@ -166,6 +174,8 @@ public enum JRE {
 					return JAVA_16;
 				case 17:
 					return JAVA_17;
+				case 18:
+					return JAVA_18;
 				default:
 					return OTHER;
 			}
