@@ -26,7 +26,7 @@ dependencies {
 	testImplementation(libs.apiguardian) {
 		because("we validate that public classes are annotated")
 	}
-	testImplementation(libs.groovy3) {
+	testImplementation(libs.groovy4) {
 		because("it provides convenience methods to handle process output")
 	}
 	testImplementation(libs.bnd) {
