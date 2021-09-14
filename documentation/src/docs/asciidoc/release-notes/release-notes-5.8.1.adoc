@@ -39,7 +39,7 @@ GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The current test or container's `ExecutionMode` is now accessible from `ExtensionContext`.
 
 
 [[release-notes-5.8.1-junit-vintage]]
