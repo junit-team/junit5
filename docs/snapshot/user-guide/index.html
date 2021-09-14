@@ -10018,7 +10018,8 @@ respectively.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">discovery</span><span class="o">.</span><span class="na">DiscoverySelectors</span><span class="o">.</span><span class="na">selectClass</span><span class="o">;</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">condition</span><span class="o">.</span><span class="na">JRE</span><span class="o">.</span><span class="na">JAVA_18</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">discovery</span><span class="o">.</span><span class="na">DiscoverySelectors</span><span class="o">.</span><span class="na">selectClass</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">testkit</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">EventConditions</span><span class="o">.</span><span class="na">abortedWithReason</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">testkit</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">EventConditions</span><span class="o">.</span><span class="na">container</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">testkit</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">EventConditions</span><span class="o">.</span><span class="na">engine</span><span class="o">;</span>
@@ -10037,12 +10038,14 @@ respectively.</p>
 <span class="kn">import</span> <span class="nn">example.ExampleTestCase</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.condition.DisabledOnJre</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.testkit.engine.EngineTestKit</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.opentest4j.TestAbortedException</span><span class="o">;</span>
 
 <span class="kd">class</span> <span class="nc">EngineTestKitAllEventsDemo</span> <span class="o">{</span>
 
     <span class="nd">@Test</span>
+    <span class="nd">@DisabledOnJre</span><span class="o">(</span><span class="no">JAVA_18</span><span class="o">)</span> <span class="c1">// https://github.com/assertj/assertj-core/issues/2340</span>
     <span class="kt">void</span> <span class="nf">verifyAllJupiterEvents</span><span class="o">()</span> <span class="o">{</span>
         <span class="nc">Writer</span> <span class="n">writer</span> <span class="o">=</span> <span class="c1">// create a java.io.Writer for debug output</span>
 
@@ -10886,7 +10889,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-09-13 15:16:48 UTC
+Last updated 2021-09-14 10:35:08 UTC
 </div>
 </div>
 <style>
