@@ -18,6 +18,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
  * @since 5.0
@@ -63,6 +64,11 @@ final class JupiterEngineExtensionContext extends AbstractExtensionContext<Jupit
 	@Override
 	public Optional<Throwable> getExecutionException() {
 		return Optional.empty();
+	}
+
+	@Override
+	protected Node.ExecutionMode getPlatformExecutionMode() {
+		return getTestDescriptor().getExecutionMode();
 	}
 
 }

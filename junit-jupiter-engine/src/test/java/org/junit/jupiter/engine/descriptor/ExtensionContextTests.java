@@ -64,6 +64,7 @@ public class ExtensionContextTests {
 	void setUp() {
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 		when(configuration.getDefaultExecutionMode()).thenReturn(ExecutionMode.SAME_THREAD);
+		when(configuration.getDefaultClassesExecutionMode()).thenReturn(ExecutionMode.SAME_THREAD);
 	}
 
 	@Test
@@ -85,7 +86,8 @@ public class ExtensionContextTests {
 			() -> assertThrows(PreconditionViolationException.class, () -> engineContext.getRequiredTestMethod()),
 			() -> assertThat(engineContext.getDisplayName()).isEqualTo(engineTestDescriptor.getDisplayName()),
 			() -> assertThat(engineContext.getParent()).isEmpty(),
-			() -> assertThat(engineContext.getRoot()).isSameAs(engineContext)
+			() -> assertThat(engineContext.getRoot()).isSameAs(engineContext),
+			() -> assertThat(engineContext.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD)
 		);
 		// @formatter:on
 	}
@@ -109,7 +111,8 @@ public class ExtensionContextTests {
 			() -> assertThrows(PreconditionViolationException.class, () -> outerExtensionContext.getRequiredTestInstance()),
 			() -> assertThrows(PreconditionViolationException.class, () -> outerExtensionContext.getRequiredTestMethod()),
 			() -> assertThat(outerExtensionContext.getDisplayName()).isEqualTo(outerClassDescriptor.getDisplayName()),
-			() -> assertThat(outerExtensionContext.getParent()).isEmpty()
+			() -> assertThat(outerExtensionContext.getParent()).isEmpty(),
+			() -> assertThat(outerExtensionContext.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD)
 		);
 		// @formatter:on
 
@@ -175,7 +178,8 @@ public class ExtensionContextTests {
 			() -> assertThat(methodExtensionContext.getRequiredTestMethod()).isEqualTo(testMethod),
 			() -> assertThat(methodExtensionContext.getDisplayName()).isEqualTo(methodTestDescriptor.getDisplayName()),
 			() -> assertThat(methodExtensionContext.getParent()).contains(classExtensionContext),
-			() -> assertThat(methodExtensionContext.getRoot()).isSameAs(engineExtensionContext)
+			() -> assertThat(methodExtensionContext.getRoot()).isSameAs(engineExtensionContext),
+			() -> assertThat(methodExtensionContext.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD)
 		);
 		// @formatter:on
 	}

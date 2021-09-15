@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
@@ -265,6 +266,11 @@ class ParameterizedTestExtensionTests {
 			@Override
 			public Store getStore(Namespace namespace) {
 				return new NamespaceAwareStore(store, namespace);
+			}
+
+			@Override
+			public ExecutionMode getExecutionMode() {
+				return ExecutionMode.SAME_THREAD;
 			}
 		};
 	}

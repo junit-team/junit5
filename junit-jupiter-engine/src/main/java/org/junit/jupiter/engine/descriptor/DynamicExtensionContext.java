@@ -19,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.support.hierarchical.Node;
 
 class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDescriptor> {
 
@@ -61,4 +62,10 @@ class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDe
 	public Optional<Throwable> getExecutionException() {
 		return Optional.empty();
 	}
+
+	@Override
+	protected Node.ExecutionMode getPlatformExecutionMode() {
+		return getTestDescriptor().getExecutionMode();
+	}
+
 }
