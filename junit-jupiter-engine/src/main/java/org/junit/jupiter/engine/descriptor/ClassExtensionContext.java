@@ -19,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -91,6 +92,11 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 	@Override
 	public Optional<Throwable> getExecutionException() {
 		return Optional.ofNullable(this.throwableCollector.getThrowable());
+	}
+
+	@Override
+	protected Node.ExecutionMode getPlatformExecutionMode() {
+		return getTestDescriptor().getExecutionMode();
 	}
 
 }
