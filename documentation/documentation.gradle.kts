@@ -117,7 +117,7 @@ tasks {
 			val output = ByteArrayOutputStream()
 			val result = javaexec {
 				classpath = runtimeClasspath
-				main = "org.junit.platform.console.ConsoleLauncher"
+				mainClass.set("org.junit.platform.console.ConsoleLauncher")
 				args("--scan-classpath")
 				args("--include-classname", ".*Tests")
 				args("--include-classname", ".*Demo")
