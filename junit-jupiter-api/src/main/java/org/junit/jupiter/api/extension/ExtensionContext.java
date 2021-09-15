@@ -390,9 +390,9 @@ public interface ExtensionContext {
 	 * @return the {@code ExecutionMode} of the test; never {@code null}
 	 *
 	 * @see org.junit.jupiter.api.parallel.ExecutionMode {@code @ExecutionMode}
-	 * @since 5.8
+	 * @since 5.8.1
 	 */
-	@API(status = STABLE, since = "5.8")
+	@API(status = STABLE, since = "5.8.1")
 	ExecutionMode getExecutionMode();
 
 	/**
