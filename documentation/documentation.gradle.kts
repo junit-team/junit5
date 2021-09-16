@@ -143,14 +143,14 @@ tasks {
 
 	val generateConsoleLauncherOptions by registering(JavaExec::class) {
 		classpath = sourceSets["test"].runtimeClasspath
-		main = "org.junit.platform.console.ConsoleLauncher"
+		mainClass.set("org.junit.platform.console.ConsoleLauncher")
 		args("--help", "--disable-banner")
 		redirectOutput(consoleLauncherOptionsFile)
 	}
 
 	val generateExperimentalApisTable by registering(JavaExec::class) {
 		classpath = sourceSets["test"].runtimeClasspath
-		main = "org.junit.api.tools.ApiReportGenerator"
+		mainClass.set("org.junit.api.tools.ApiReportGenerator")
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
 		args("EXPERIMENTAL")
 		redirectOutput(experimentalApisTableFile)
@@ -158,7 +158,7 @@ tasks {
 
 	val generateDeprecatedApisTable by registering(JavaExec::class) {
 		classpath = sourceSets["test"].runtimeClasspath
-		main = "org.junit.api.tools.ApiReportGenerator"
+		mainClass.set("org.junit.api.tools.ApiReportGenerator")
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
 		args("DEPRECATED")
 		redirectOutput(deprecatedApisTableFile)
