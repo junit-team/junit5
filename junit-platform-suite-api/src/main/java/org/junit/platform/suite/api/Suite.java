@@ -63,7 +63,7 @@ import org.junit.platform.commons.annotation.Testable;
  * @see ConfigurationParameter
  * @see DisableParentConfigurationParameters
  * @see org.junit.platform.launcher.LauncherDiscoveryRequest
- * @see org.junit.platform.launcher.LauncherDiscoveryRequestBuilder
+ * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder
  * @see org.junit.platform.launcher.Launcher
  */
 @Retention(RetentionPolicy.RUNTIME)
