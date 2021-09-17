@@ -41,6 +41,10 @@ GitHub.
 ==== New Features and Improvements
 
 * `JAVA_18` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* CSV content in `@CsvSource` can now be supplied as a _text block_ instead of an array of
+  strings. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-CsvSource, User
+  Guide>> for details and an example.
 * The `ExecutionMode` for the current test or container is now accessible via the
   `ExtensionContext`.
 
