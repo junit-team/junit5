@@ -120,6 +120,7 @@
 2e27595cade8faae925b78ead40b456a  documentation/src/test/java/example/TestReporterDemo.java
 2e437db8db2ef66c03420e8836ef6ef7  documentation/src/main/java/example/registration/WebClient.java
 2e885b9e57c20abde1bfdbd580d7aafd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tag.java
+2e88aca113371fae9b831a4c8f05d596  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 2ebb3f1de33cb5c9218829560fb0a14f  junit-platform-console/src/main/java/org/junit/platform/console/tasks/VerboseTreePrintingListener.java
 2ee3b4136dbdbdb379010aa499d17ea3  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeEngines.java
 2f113fbb7e8dd0517dfc52a852c52916  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueIdFormat.java
@@ -509,7 +510,6 @@ ae47ed7f7b8cb85fc6dbbfb2211088f3  documentation/src/test/java/org/junit/api/tool
 af2cb3c5369011ff79d86ed6269360c1  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/LifecycleMethodUtils.java
 afb8aba3e5cb0e8e47e933a6f4852ec4  junit-platform-commons/src/main/java/org/junit/platform/commons/util/LruCache.java
 afd09613b01128a443b96fa2f0d72996  documentation/src/test/java/example/DynamicTestsDemo.java
-b00e3234ca3e99ae7dab018014da4721  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 b03fa418049415af06f04893ca28f033  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvParsingException.java
 b121be70a963c543792d820e3fa0ee21  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IsPotentialJUnit4TestClass.java
 b1915b429f2dfa18b068c0894a817c92  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClassNameFilter.java
