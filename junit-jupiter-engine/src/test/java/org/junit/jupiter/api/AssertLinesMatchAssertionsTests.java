@@ -165,6 +165,19 @@ class AssertLinesMatchAssertionsTests {
 	}
 
 	@Test
+	void assertLinesMatchUsingFastForwardMarkerWithTooHighLimitAndFollowingLineFails() {
+		/*
+		 * It is important here that the line counts are expected <= actual, that the
+		 * fast-forward exceeds the available actual lines and that it is not a
+		 * terminal fast-forward.
+		 */
+		var expected = List.of("first line", ">> 3 >>", "not present");
+		var actual = List.of("first line", "first skipped", "second skipped");
+		var error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
+		assertError(error, "fast-forward(3) error: not enough actual lines remaining (2)", expected, actual);
+	}
+
+	@Test
 	void assertLinesMatchUsingFastForwardMarkerWithoutMatchingNextLineFails() {
 		var expected = List.of("first line", ">> fails, because next line is >>", "not present");
 		var actual = List.of("first line", "skipped", "last line");
