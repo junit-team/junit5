@@ -48,7 +48,8 @@ GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Relaxed version constraint in published Gradle Module Metadata to allow downgrading the
+  `junit:junit` dependency from 4.13.2.
 
 ==== Deprecations and Breaking Changes
 
