@@ -187,7 +187,8 @@ class AssertLinesMatchAssertionsTests {
 			() -> assertTrue(isFastForwardLine(">> stacktrace >>")),
 			() -> assertTrue(isFastForwardLine(">> single line, non Integer.parse()-able comment >>")),
 			() -> assertTrue(isFastForwardLine(">>9>>")), () -> assertTrue(isFastForwardLine(">> 9 >>")),
-			() -> assertTrue(isFastForwardLine(">> -9 >>")));
+			() -> assertTrue(isFastForwardLine(">> -9 >>")), () -> assertTrue(isFastForwardLine(" >> 9 >> ")),
+			() -> assertTrue(isFastForwardLine("  >> 9 >>  ")));
 	}
 
 	@Test
@@ -198,7 +199,9 @@ class AssertLinesMatchAssertionsTests {
 			() -> assertEquals(Integer.MAX_VALUE, parseFastForwardLimit(">> stacktrace >>")),
 			() -> assertEquals(Integer.MAX_VALUE, parseFastForwardLimit(">> non Integer.parse()-able comment >>")),
 			() -> assertEquals(9, parseFastForwardLimit(">>9>>")),
-			() -> assertEquals(9, parseFastForwardLimit(">> 9 >>")));
+			() -> assertEquals(9, parseFastForwardLimit(">> 9 >>")),
+			() -> assertEquals(9, parseFastForwardLimit(" >> 9 >> ")),
+			() -> assertEquals(9, parseFastForwardLimit("  >> 9 >>  ")));
 		Throwable error = assertThrows(PreconditionViolationException.class, () -> parseFastForwardLimit(">>0>>"));
 		assertMessageEquals(error, "fast-forward(0) limit must be greater than zero");
 		error = assertThrows(PreconditionViolationException.class, () -> parseFastForwardLimit(">>-1>>"));
