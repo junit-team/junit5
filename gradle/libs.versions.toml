@@ -28,7 +28,7 @@ jfrunit = { module = "org.moditect.jfrunit:jfrunit", version = "1.0.0.Alpha1" }
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 joox = { module = "org.jooq:joox", version = "1.6.2" }
-junit4 = { module = "junit:junit", version = { strictly = "[4.12,)", prefer = "4.13.2" } }
+junit4 = { module = "junit:junit", version = { require = "[4.12,)", prefer = "4.13.2" } }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.4.3" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4j" }
