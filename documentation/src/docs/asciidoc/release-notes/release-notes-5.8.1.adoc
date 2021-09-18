@@ -41,7 +41,8 @@ GitHub.
 ==== New Features and Improvements
 
 * `JAVA_18` has been added to the `JRE` enum for use with JRE-based execution conditions.
-* The current test or container's `ExecutionMode` is now accessible from `ExtensionContext`.
+* The `ExecutionMode` for the current test or container is now accessible via the
+  `ExtensionContext`.
 
 
 [[release-notes-5.8.1-junit-vintage]]
