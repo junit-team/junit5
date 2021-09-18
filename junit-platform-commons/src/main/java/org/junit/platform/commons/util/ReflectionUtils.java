@@ -41,13 +41,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -130,7 +130,7 @@ public final class ReflectionUtils {
 	 * @since 1.6
 	 * @see #detectInnerClassCycle(Class)
 	 */
-	private static final Set<String> noCyclesDetectedCache = new HashSet<>();
+	private static final Set<String> noCyclesDetectedCache = ConcurrentHashMap.newKeySet();
 
 	/**
 	 * Internal cache of common class names mapped to their types.
