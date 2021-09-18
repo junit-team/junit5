@@ -23,7 +23,8 @@ GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* `ReflectionSupport.findNestedClasses(..)` is now thread-safe with regard to cycle
+  detection.
 
 
 [[release-notes-5.8.1-junit-jupiter]]

@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -787,11 +788,14 @@ class ReflectionUtilsTests {
 	 */
 	@Test
 	void findNestedClassesWithRecursiveHierarchies() {
-		assertNestedCycle(OuterClass.class, InnerClass.class, OuterClass.class);
-		assertNestedCycle(StaticNestedClass.class, InnerClass.class, OuterClass.class);
-		assertNestedCycle(RecursiveInnerClass.class, OuterClass.class);
-		assertNestedCycle(RecursiveInnerInnerClass.class, OuterClass.class);
-		assertNestedCycle(InnerClass.class, RecursiveInnerInnerClass.class, OuterClass.class);
+		Runnable runnable1 = () -> assertNestedCycle(OuterClass.class, InnerClass.class, OuterClass.class);
+		Runnable runnable2 = () -> assertNestedCycle(StaticNestedClass.class, InnerClass.class, OuterClass.class);
+		Runnable runnable3 = () -> assertNestedCycle(RecursiveInnerClass.class, OuterClass.class);
+		Runnable runnable4 = () -> assertNestedCycle(RecursiveInnerInnerClass.class, OuterClass.class);
+		Runnable runnable5 = () -> assertNestedCycle(InnerClass.class, RecursiveInnerInnerClass.class,
+			OuterClass.class);
+		Stream.of(runnable1, runnable1, runnable1, runnable2, runnable2, runnable2, runnable3, runnable3, runnable3,
+			runnable4, runnable4, runnable4, runnable5, runnable5, runnable5).parallel().forEach(Runnable::run);
 	}
 
 	private static List<Class<?>> findNestedClasses(Class<?> clazz) {
