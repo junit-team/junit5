@@ -173,7 +173,6 @@
 3bb96e588213d3dbf952b597acb777b6  documentation/src/test/java/example/ParameterizedTestDemo.java
 3c75ba41ba7c7dbf9767a5d22bb45bac  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
 3c7934fdfe96102346e9ad7049063904  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java
-3c9cb2d2474f901b5a4db8fc9309acbd  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 3ca1dbe934d8a3e75af2fbff74d08773  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/package-info.java
 3d18078a5704bbed124364bcce27b8ea  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/MethodSource.java
 3d600eb06bc1b2908b757e21388af4d1  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineDiscoveryRequest.java
@@ -661,6 +660,7 @@ db570ec1abefa4c0cc3043c26940eb2d  junit-platform-launcher/src/main/java/org/juni
 db6ef792cb942fdc5226da2459926481  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumer.java
 dc5058d6405dfbbce70dfbfd278c6df6  documentation/src/main/java/example/util/Calculator.java
 dca6da471ddade4325725706788f060b  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/package-info.java
+dd831b58b68f3e891d31b04872d4b9c4  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 de13d12a45a170889bd687beb07b6373  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/package-info.java
 de2587ad8eccce2329ecef37c94b23f2  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
 de261b0881ac9618ee7d5bc80498f6fa  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
