@@ -30,7 +30,6 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.suite.api.SuiteDisplayName;
-import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
@@ -54,8 +53,9 @@ class JUnitPlatformTestTree {
 		return testPlan;
 	}
 
+	@SuppressWarnings("deprecation")
 	private static boolean useTechnicalNames(Class<?> testClass) {
-		return testClass.isAnnotationPresent(UseTechnicalNames.class);
+		return testClass.isAnnotationPresent(org.junit.platform.suite.api.UseTechnicalNames.class);
 	}
 
 	Description getSuiteDescription() {

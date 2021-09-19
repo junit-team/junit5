@@ -19,7 +19,10 @@ GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `@UseTechnicalNames` has been deprecated in favor of the new `@Suite` support which does
+  not require the use of technical names. See the warning in
+  <<../user-guide/index.adoc#running-tests-junit-platform-runner, Using JUnit 4 to run the
+  JUnit Platform>> for details.
 
 ==== New Features and Improvements
 

@@ -47,7 +47,6 @@ import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
-import org.junit.platform.suite.api.UseTechnicalNames;
 import org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -104,7 +103,7 @@ import org.junit.runner.notification.RunNotifier;
  * @see IncludeTags
  * @see ExcludeTags
  * @see SuiteDisplayName
- * @see UseTechnicalNames
+ * @see org.junit.platform.suite.api.UseTechnicalNames UseTechnicalNames
  * @see ConfigurationParameter
  * @deprecated since 1.8, in favor of the {@link Suite @Suite} support provided by
  * the {@code junit-platform-suite-engine} module; to be removed in JUnit Platform 2.0
