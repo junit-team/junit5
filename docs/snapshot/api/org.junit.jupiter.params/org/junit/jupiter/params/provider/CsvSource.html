@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.interface.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
 <li><a href="#annotation.interface.optional.element.summary">Optional</a></li>
 </ul>
 <ul class="sub-nav-list">
@@ -82,9 +82,9 @@ loadScripts(document, 'script');</script>
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.7")
 <a href="ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider">@ArgumentsSource</a>(org.junit.jupiter.params.provider.CsvArgumentsProvider.class)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">CsvSource</span></div>
-<div class="block"><code>@CsvSource</code> is an <a href="ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a> which reads
- comma-separated values (CSV) from one or more supplied
- <a href="#value()">CSV lines</a>.
+<div class="block"><code>@CsvSource</code> is an <a href="ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a> which reads comma-separated
+ values (CSV) from one or more CSV lines supplied via the <a href="#value()"><code>value()</code></a>
+ attribute or <a href="#textBlock()"><code>textBlock()</code></a> attribute.
 
  <p>The column delimiter (defaults to comma) can be customized with either
  <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
@@ -102,23 +102,6 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== ANNOTATION INTERFACE REQUIRED MEMBER SUMMARY =========== -->
-<li>
-<section class="member-summary" id="annotation.interface.required.element.summary">
-<h2>Required Element Summary</h2>
-<div class="caption"><span>Required Elements</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Required Element</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#value()">value</a></span></code></div>
-<div class="col-last even-row-color">
-<div class="block">The CSV lines to use as the source of arguments; must not be empty.</div>
-</div>
-</div>
-</section>
-</li>
 <!-- =========== ANNOTATION INTERFACE OPTIONAL MEMBER SUMMARY =========== -->
 <li>
 <section class="member-summary" id="annotation.interface.optional.element.summary">
@@ -159,6 +142,17 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">A list of strings that should be interpreted as <code>null</code> references.</div>
 </div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#textBlock()">textBlock</a></span></code></div>
+<div class="col-last even-row-color">
+<div class="block">The CSV lines to use as the source of arguments, supplied as a single
+ <em>text block</em>; must not be empty.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#value()">value</a></span></code></div>
+<div class="col-last odd-row-color">
+<div class="block">The CSV lines to use as the source of arguments; must not be empty.</div>
+</div>
 </div>
 </section>
 </li>
@@ -180,16 +174,82 @@ loadScripts(document, 'script');</script>
  <p>Each value corresponds to a line in a CSV file and will be split using
  the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>. Any line
  beginning with a <code>#</code> symbol will be interpreted as a comment and will
- be ignored.</div>
+ be ignored.
+
+ <p>Defaults to an empty array. You therefore must supply CSV content
+ via this attribute or the <a href="#textBlock()"><code>textBlock()</code></a> attribute.
+
+ <p>If <em>text block</em> syntax is supported by your programming language,
+ you may find it more convenient to declare your CSV content via the
+ <a href="#textBlock()"><code>textBlock()</code></a> attribute.
+
+ <h4>Example</h4>
+ <pre class="code">
+ @ParameterizedTest
+ @CsvSource({
+     "apple,         1",
+     "banana,        2",
+     "'lemon, lime', 0xF1",
+     "strawberry,    700_000",
+ })
+ void test(String fruit, int rank) {
+     // ...
+ }</pre></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd><a href="#textBlock()"><code>textBlock()</code></a></dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
 </section>
 </li>
-</ul>
-</section>
-</li>
-<!-- ============ ANNOTATION INTERFACE MEMBER DETAIL =========== -->
 <li>
-<section class="member-details">
-<ul class="member-list">
+<section class="detail" id="textBlock()">
+<h3>textBlock</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8.1")
+</span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">textBlock</span></div>
+<div class="block">The CSV lines to use as the source of arguments, supplied as a single
+ <em>text block</em>; must not be empty.
+
+ <p>Each line in the text block corresponds to a line in a CSV file and will
+ be split using the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
+ Any line beginning with a <code>#</code> symbol will be interpreted as a comment
+ and will be ignored.
+
+ <p>Defaults to an empty string. You therefore must supply CSV content
+ via this attribute or the <a href="#value()"><code>value()</code></a> attribute.
+
+ <p>Text block syntax is supported by various languages on the JVM
+ including Java SE 15 or higher. If text blocks are not supported, you
+ should declare your CSV content via the <a href="#value()"><code>value()</code></a> attribute.
+
+ <h4>Example</h4>
+ <pre class="code">
+ @ParameterizedTest
+ @CsvSource(textBlock = """
+     apple,         1
+     banana,        2
+     'lemon, lime', 0xF1
+     strawberry,    700_000
+ """)
+ void test(String fruit, int rank) {
+     // ...
+ }</pre></div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.8.1</dd>
+<dt>See Also:</dt>
+<dd><a href="#value()"><code>value()</code></a></dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="delimiter()">
 <h3>delimiter</h3>
