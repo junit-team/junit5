@@ -17,6 +17,7 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
@@ -31,6 +32,8 @@ import org.junit.platform.commons.util.UnrecoverableExceptions;
  * @since 5.0
  */
 class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvSource> {
+
+	private static final Pattern NEW_LINE_REGEX = Pattern.compile("\\n");
 
 	private static final String LINE_SEPARATOR = "\n";
 
@@ -47,9 +50,20 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		Preconditions.condition(this.annotation.value().length > 0 ^ !this.annotation.textBlock().isEmpty(),
+			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
+
+		String[] lines;
+		if (!this.annotation.textBlock().isEmpty()) {
+			lines = NEW_LINE_REGEX.split(this.annotation.textBlock(), 0);
+		}
+		else {
+			lines = this.annotation.value();
+		}
+
 		AtomicLong index = new AtomicLong(0);
 		// @formatter:off
-		return Arrays.stream(this.annotation.value())
+		return Arrays.stream(lines)
 				.map(line -> parseLine(index.getAndIncrement(), line))
 				.map(Arguments::of);
 		// @formatter:on

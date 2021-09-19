@@ -83,6 +83,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 	static class MockCsvSourceBuilder extends MockCsvAnnotationBuilder<CsvSource, MockCsvSourceBuilder> {
 
 		private String[] lines = new String[0];
+		private String textBlock = "";
 
 		@Override
 		protected MockCsvSourceBuilder getSelf() {
@@ -91,6 +92,11 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 		MockCsvSourceBuilder lines(String... lines) {
 			this.lines = lines;
+			return this;
+		}
+
+		MockCsvSourceBuilder textBlock(String textBlock) {
+			this.textBlock = textBlock;
 			return this;
 		}
 
@@ -108,6 +114,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 			// @CsvSource
 			when(annotation.value()).thenReturn(this.lines);
+			when(annotation.textBlock()).thenReturn(this.textBlock);
 
 			return annotation;
 		}
