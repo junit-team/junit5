@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @CsvSource} is an {@link ArgumentsSource} which reads
- * comma-separated values (CSV) from one or more supplied
- * {@linkplain #value CSV lines}.
+ * {@code @CsvSource} is an {@link ArgumentsSource} which reads comma-separated
+ * values (CSV) from one or more CSV lines supplied via the {@link #value}
+ * attribute or {@link #textBlock} attribute.
  *
  * <p>The column delimiter (defaults to comma) can be customized with either
  * {@link #delimiter()} or {@link #delimiterString()}.
@@ -51,8 +51,65 @@ public @interface CsvSource {
 	 * the specified {@link #delimiter} or {@link #delimiterString}. Any line
 	 * beginning with a {@code #} symbol will be interpreted as a comment and will
 	 * be ignored.
+	 *
+	 * <p>Defaults to an empty array. You therefore must supply CSV content
+	 * via this attribute or the {@link #textBlock} attribute.
+	 *
+	 * <p>If <em>text block</em> syntax is supported by your programming language,
+	 * you may find it more convenient to declare your CSV content via the
+	 * {@link #textBlock} attribute.
+	 *
+	 * <h4>Example</h4>
+	 * <pre class="code">
+	 * {@literal @}ParameterizedTest
+	 * {@literal @}CsvSource({
+	 *     "apple,         1",
+	 *     "banana,        2",
+	 *     "'lemon, lime', 0xF1",
+	 *     "strawberry,    700_000",
+	 * })
+	 * void test(String fruit, int rank) {
+	 *     // ...
+	 * }</pre>
+	 *
+	 * @see #textBlock
 	 */
-	String[] value();
+	String[] value() default {};
+
+	/**
+	 * The CSV lines to use as the source of arguments, supplied as a single
+	 * <em>text block</em>; must not be empty.
+	 *
+	 * <p>Each line in the text block corresponds to a line in a CSV file and will
+	 * be split using the specified {@link #delimiter} or {@link #delimiterString}.
+	 * Any line beginning with a {@code #} symbol will be interpreted as a comment
+	 * and will be ignored.
+	 *
+	 * <p>Defaults to an empty string. You therefore must supply CSV content
+	 * via this attribute or the {@link #value} attribute.
+	 *
+	 * <p>Text block syntax is supported by various languages on the JVM
+	 * including Java SE 15 or higher. If text blocks are not supported, you
+	 * should declare your CSV content via the {@link #value} attribute.
+	 *
+	 * <h4>Example</h4>
+	 * <pre class="code">
+	 * {@literal @}ParameterizedTest
+	 * {@literal @}CsvSource(textBlock = """
+	 *     apple,         1
+	 *     banana,        2
+	 *     'lemon, lime', 0xF1
+	 *     strawberry,    700_000
+	 * """)
+	 * void test(String fruit, int rank) {
+	 *     // ...
+	 * }</pre>
+	 *
+	 * @since 5.8.1
+	 * @see #value
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8.1")
+	String textBlock() default "";
 
 	/**
 	 * The column delimiter character to use when reading the {@linkplain #value lines}.
@@ -128,4 +185,5 @@ public @interface CsvSource {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8")
 	boolean ignoreLeadingAndTrailingWhitespace() default true;
+
 }
