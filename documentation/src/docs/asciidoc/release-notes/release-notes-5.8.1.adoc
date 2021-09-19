@@ -5,8 +5,8 @@
 
 *Scope:*
 
-* JDK 17 support for _text blocks_ in `@CsvSource`
-* JDK 18 support in the `JRE` enum
+* Support for _text blocks_ in `@CsvSource`
+* Java 18 support in the `JRE` enum
 * Access to the `ExecutionMode` in the `ExtensionContext`
 * Minor bug fixes and enhancements since 5.8.0
 
