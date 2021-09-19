@@ -1,9 +1,14 @@
 [[release-notes-5.8.1]]
 == 5.8.1
 
-*Date of Release:* ❓
+*Date of Release:* September ❓, 2021
 
-*Scope:* Bug fixes since 5.8.0
+*Scope:*
+
+* JDK 17 support for _text blocks_ in `@CsvSource`
+* JDK 18 support in the `JRE` enum
+* Access to the `ExecutionMode` in the `ExtensionContext`
+* Minor bug fixes and enhancements since 5.8.0
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/59?closed=1+[5.8.1] milestone page in the JUnit repository on
@@ -12,10 +17,6 @@ GitHub.
 
 [[release-notes-5.8.1-junit-platform]]
 === JUnit Platform
-
-==== Bug Fixes
-
-* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -32,14 +33,6 @@ GitHub.
 
 [[release-notes-5.8.1-junit-jupiter]]
 === JUnit Jupiter
-
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
@@ -59,11 +52,3 @@ GitHub.
 
 * Relaxed version constraint in published Gradle Module Metadata to allow downgrading the
   `junit:junit` dependency from 4.13.2.
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
