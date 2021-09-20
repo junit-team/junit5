@@ -617,8 +617,8 @@ In addition, the introduction of `@Suite` support provided by the
 `junit-platform-suite-engine` module makes the `JUnitPlatform` runner obsolete. See
 <<junit-platform-suite-engine>> for details.
 
-The `JUnitPlatform` runner has therefore been deprecated in JUnit Platform 1.8 and will be
-removed in JUnit Platform 2.0.
+The `JUnitPlatform` runner and `@UseTechnicalNames` annotation have therefore been
+deprecated in JUnit Platform 1.8 and will be removed in JUnit Platform 2.0.
 
 If you are using the `JUnitPlatform` runner, please migrate to the `@Suite` support.
 ====

@@ -1,9 +1,14 @@
 [[release-notes-5.8.1]]
 == 5.8.1
 
-*Date of Release:* ❓
+*Date of Release:* September ❓, 2021
 
-*Scope:* Bug fixes since 5.8.0
+*Scope:*
+
+* Support for _text blocks_ in `@CsvSource`
+* Java 18 support in the `JRE` enum
+* Access to the `ExecutionMode` in the `ExtensionContext`
+* Minor bug fixes and enhancements since 5.8.0
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/59?closed=1+[5.8.1] milestone page in the JUnit repository on
@@ -13,34 +18,31 @@ GitHub.
 [[release-notes-5.8.1-junit-platform]]
 === JUnit Platform
 
-==== Bug Fixes
-
-* ❓
-
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `@UseTechnicalNames` has been deprecated in favor of the new `@Suite` support which does
+  not require the use of technical names. See the warning in
+  <<../user-guide/index.adoc#running-tests-junit-platform-runner, Using JUnit 4 to run the
+  JUnit Platform>> for details.
 
 ==== New Features and Improvements
 
-* ❓
+* `ReflectionSupport.findNestedClasses(..)` is now thread-safe with regard to cycle
+  detection.
 
 
 [[release-notes-5.8.1-junit-jupiter]]
 === JUnit Jupiter
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
 ==== New Features and Improvements
 
 * `JAVA_18` has been added to the `JRE` enum for use with JRE-based execution conditions.
-* The current test or container's `ExecutionMode` is now accessible from `ExtensionContext`.
+* CSV content in `@CsvSource` can now be supplied as a _text block_ instead of an array of
+  strings. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-CsvSource, User
+  Guide>> for details and an example.
+* The `ExecutionMode` for the current test or container is now accessible via the
+  `ExtensionContext`.
 
 
 [[release-notes-5.8.1-junit-vintage]]
@@ -48,12 +50,5 @@ GitHub.
 
 ==== Bug Fixes
 
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+* Relaxed version constraint in published Gradle Module Metadata to allow downgrading the
+  `junit:junit` dependency from 4.13.2.

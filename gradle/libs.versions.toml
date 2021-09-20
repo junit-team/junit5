@@ -1,7 +1,7 @@
 [versions]
 apiguardian = "1.1.2"
 asciidoctor-pdf = "1.5.3"
-assertj = "3.20.2"
+assertj = "3.21.0"
 checkstyle = "8.36.2"
 jacoco = "0.8.7"
 jmh = "1.32"

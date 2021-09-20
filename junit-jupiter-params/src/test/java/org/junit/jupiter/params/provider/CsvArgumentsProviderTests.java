@@ -26,12 +26,33 @@ import org.junit.platform.commons.PreconditionViolationException;
 class CsvArgumentsProviderTests {
 
 	@Test
-	void throwsExceptionOnInvalidCsv() {
+	void throwsExceptionForInvalidCsv() {
 		var annotation = csvSource("foo", "bar", "");
 
 		assertThatExceptionOfType(JUnitException.class)//
 				.isThrownBy(() -> provideArguments(annotation).toArray())//
 				.withMessage("Line at index 2 contains invalid CSV: \"\"");
+	}
+
+	@Test
+	void throwsExceptionIfNeitherValueNorTextBlockIsDeclared() {
+		var annotation = csvSource().build();
+
+		assertThatExceptionOfType(PreconditionViolationException.class)//
+				.isThrownBy(() -> provideArguments(annotation))//
+				.withMessage("@CsvSource must be declared with either `value` or `textBlock` but not both");
+	}
+
+	@Test
+	void throwsExceptionIfValueAndTextBlockAreDeclared() {
+		var annotation = csvSource().lines("foo").textBlock("""
+				bar
+				baz
+				""").build();
+
+		assertThatExceptionOfType(PreconditionViolationException.class)//
+				.isThrownBy(() -> provideArguments(annotation))//
+				.withMessage("@CsvSource must be declared with either `value` or `textBlock` but not both");
 	}
 
 	@Test
@@ -44,8 +65,29 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
+	void providesSingleArgumentFromTextBlock() {
+		var annotation = csvSource().textBlock("foo").build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("foo"));
+	}
+
+	@Test
 	void providesMultipleArguments() {
 		var annotation = csvSource("foo", "bar");
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("foo"), array("bar"));
+	}
+
+	@Test
+	void providesMultipleArgumentsFromTextBlock() {
+		var annotation = csvSource().textBlock("""
+				foo
+				bar
+				""").build();
 
 		var arguments = provideArguments(annotation);
 
