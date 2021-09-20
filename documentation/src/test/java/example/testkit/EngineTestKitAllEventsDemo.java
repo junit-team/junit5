@@ -13,7 +13,6 @@ package example.testkit;
 // @formatter:off
 // tag::user_guide[]
 
-import static org.junit.jupiter.api.condition.JRE.JAVA_18;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
@@ -33,14 +32,12 @@ import java.io.Writer;
 import example.ExampleTestCase;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnJre;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.opentest4j.TestAbortedException;
 
 class EngineTestKitAllEventsDemo {
 
 	@Test
-	@DisabledOnJre(JAVA_18) // https://github.com/assertj/assertj-core/issues/2340
 	void verifyAllJupiterEvents() {
 		Writer writer = // create a java.io.Writer for debug output
 		// end::user_guide[]
