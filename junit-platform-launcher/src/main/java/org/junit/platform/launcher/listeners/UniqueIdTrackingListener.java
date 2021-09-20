@@ -134,6 +134,10 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 
 	private boolean enabled;
 
+	public UniqueIdTrackingListener() {
+		// to avoid missing-explicit-ctor warning
+	}
+
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
 		this.enabled = testPlan.getConfigurationParameters().getBoolean(LISTENER_ENABLED_PROPERTY_NAME).orElse(false);
