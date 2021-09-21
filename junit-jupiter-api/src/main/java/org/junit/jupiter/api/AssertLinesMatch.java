@@ -136,10 +136,10 @@ class AssertLinesMatch {
 				// fast-forward marker found in expected line: fast-forward actual line...
 				if (isFastForwardLine(expectedLine)) {
 					int fastForwardLimit = parseFastForwardLimit(expectedLine);
+					int actualRemaining = actualDeque.size();
 
 					// trivial case: fast-forward marker was in last expected line
 					if (expectedDeque.isEmpty()) {
-						int actualRemaining = actualDeque.size();
 						// no limit given or perfect match? we're done.
 						if (fastForwardLimit == Integer.MAX_VALUE || fastForwardLimit == actualRemaining) {
 							return;
@@ -150,6 +150,10 @@ class AssertLinesMatch {
 
 					// fast-forward limit was given: use it
 					if (fastForwardLimit != Integer.MAX_VALUE) {
+						if (actualRemaining < fastForwardLimit) {
+							fail("fast-forward(%d) error: not enough actual lines remaining (%s)", fastForwardLimit,
+								actualRemaining);
+						}
 						// fast-forward now: actualDeque.pop(fastForwardLimit)
 						for (int i = 0; i < fastForwardLimit; i++) {
 							actualDeque.pop();
@@ -202,7 +206,8 @@ class AssertLinesMatch {
 	}
 
 	static int parseFastForwardLimit(String fastForwardLine) {
-		String text = fastForwardLine.trim().substring(2, fastForwardLine.length() - 2).trim();
+		fastForwardLine = fastForwardLine.trim();
+		String text = fastForwardLine.substring(2, fastForwardLine.length() - 2).trim();
 		try {
 			int limit = Integer.parseInt(text);
 			condition(limit > 0, () -> format("fast-forward(%d) limit must be greater than zero", limit));
