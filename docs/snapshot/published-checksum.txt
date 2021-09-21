@@ -39,7 +39,6 @@
 0e0a34eab84a3a9690c7d224685cf66b  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludePackages.java
 0fc00a26aa1100ee5d82a4ebdd99dd32  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeArgumentConverter.java
 0fc06f835b571d11f418d8a7f5bab3a3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Named.java
-10eb90e45c402dd03a66844209c256a6  documentation/src/docs/asciidoc/release-notes/index.adoc
 11454846144f95ba3662c3b7ce1b7172  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Isolated.java
 1169f867db0a1119dfcacae235048205  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultDynamicTestInvocationContext.java
 12ac22d7c11eeb5033b9dd0f5daa3d01  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
@@ -172,6 +171,7 @@
 3af639c71ca9e630064cf2e6080397b5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/session/CompositeLauncherSessionListener.java
 3bb40fb1ac7ff7a5b6efab34003f90ba  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java
 3bb96e588213d3dbf952b597acb777b6  documentation/src/test/java/example/ParameterizedTestDemo.java
+3c06d9a1de0bfeae4ebe3fc40c8e700c  documentation/src/docs/asciidoc/release-notes/index.adoc
 3c75ba41ba7c7dbf9767a5d22bb45bac  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
 3c7934fdfe96102346e9ad7049063904  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java
 3ca1dbe934d8a3e75af2fbff74d08773  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/package-info.java
@@ -230,6 +230,7 @@
 4ecaa350f198e2ee45069ee9452af764  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/Suite.java
 4fb663d395925758d84074552de6f3eb  junit-jupiter-api/src/main/java/org/junit/jupiter/api/IndicativeSentencesGeneration.java
 50886c283faa859c1e1a69535c469a15  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAggregationException.java
+50896f8b9755665744d5721aebb2b4f8  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 508b49645e2a2a20592290bebfa3b808  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestPlan.java
 50e82b28440738cca3c6b3d6e3e07f42  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariables.java
 50f9b5133ea391cca1ad02b3a4b7a9ce  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventConditions.java
