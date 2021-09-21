@@ -34,6 +34,14 @@ GitHub.
 [[release-notes-5.8.1-junit-jupiter]]
 === JUnit Jupiter
 
+==== Bug Fixes
+
+* `assertLinesMatch()` in `Assertions` no longer fails with a `NoSuchElementException` if
+  a limited fast-forward followed by at least one more expected line exceeds the remaining
+  actual lines.
+* `assertLinesMatch()` in `Assertions` now handles fast-forwards with leading and trailing
+  spaces correctly and no longer throws an `IndexOutOfBoundsException`.
+
 ==== New Features and Improvements
 
 * `JAVA_18` has been added to the `JRE` enum for use with JRE-based execution conditions.

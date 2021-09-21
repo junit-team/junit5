@@ -165,6 +165,19 @@ class AssertLinesMatchAssertionsTests {
 	}
 
 	@Test
+	void assertLinesMatchUsingFastForwardMarkerWithTooHighLimitAndFollowingLineFails() {
+		/*
+		 * It is important here that the line counts are expected <= actual, that the
+		 * fast-forward exceeds the available actual lines and that it is not a
+		 * terminal fast-forward.
+		 */
+		var expected = List.of("first line", ">> 3 >>", "not present");
+		var actual = List.of("first line", "first skipped", "second skipped");
+		var error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
+		assertError(error, "fast-forward(3) error: not enough actual lines remaining (2)", expected, actual);
+	}
+
+	@Test
 	void assertLinesMatchUsingFastForwardMarkerWithoutMatchingNextLineFails() {
 		var expected = List.of("first line", ">> fails, because next line is >>", "not present");
 		var actual = List.of("first line", "skipped", "last line");
@@ -187,7 +200,8 @@ class AssertLinesMatchAssertionsTests {
 			() -> assertTrue(isFastForwardLine(">> stacktrace >>")),
 			() -> assertTrue(isFastForwardLine(">> single line, non Integer.parse()-able comment >>")),
 			() -> assertTrue(isFastForwardLine(">>9>>")), () -> assertTrue(isFastForwardLine(">> 9 >>")),
-			() -> assertTrue(isFastForwardLine(">> -9 >>")));
+			() -> assertTrue(isFastForwardLine(">> -9 >>")), () -> assertTrue(isFastForwardLine(" >> 9 >> ")),
+			() -> assertTrue(isFastForwardLine("  >> 9 >>  ")));
 	}
 
 	@Test
@@ -198,7 +212,9 @@ class AssertLinesMatchAssertionsTests {
 			() -> assertEquals(Integer.MAX_VALUE, parseFastForwardLimit(">> stacktrace >>")),
 			() -> assertEquals(Integer.MAX_VALUE, parseFastForwardLimit(">> non Integer.parse()-able comment >>")),
 			() -> assertEquals(9, parseFastForwardLimit(">>9>>")),
-			() -> assertEquals(9, parseFastForwardLimit(">> 9 >>")));
+			() -> assertEquals(9, parseFastForwardLimit(">> 9 >>")),
+			() -> assertEquals(9, parseFastForwardLimit(" >> 9 >> ")),
+			() -> assertEquals(9, parseFastForwardLimit("  >> 9 >>  ")));
 		Throwable error = assertThrows(PreconditionViolationException.class, () -> parseFastForwardLimit(">>0>>"));
 		assertMessageEquals(error, "fast-forward(0) limit must be greater than zero");
 		error = assertThrows(PreconditionViolationException.class, () -> parseFastForwardLimit(">>-1>>"));
