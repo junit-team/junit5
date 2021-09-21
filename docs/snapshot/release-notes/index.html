@@ -579,6 +579,22 @@ detection.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.1-junit-jupiter"><a class="anchor" href="#release-notes-5.8.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
+<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>assertLinesMatch()</code> in <code>Assertions</code> no longer fails with a <code>NoSuchElementException</code> if
+a limited fast-forward followed by at least one more expected line exceeds the remaining
+actual lines.</p>
+</li>
+<li>
+<p><code>assertLinesMatch()</code> in <code>Assertions</code> now handles fast-forwards with leading and trailing
+spaces correctly and no longer throws an <code>IndexOutOfBoundsException</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
 <h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
@@ -602,7 +618,7 @@ Guide</a> for details and an example.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.1-junit-vintage"><a class="anchor" href="#release-notes-5.8.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -710,7 +726,7 @@ noise" on the console when Java&#8217;s Util Logging is used in its default conf
 <div class="sect2">
 <h3 id="release-notes-5.8.0-junit-platform"><a class="anchor" href="#release-notes-5.8.0-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -827,7 +843,7 @@ once via the new <code>LauncherSessionListener</code> interface that can be regi
 <div class="sect2">
 <h3 id="release-notes-5.8.0-junit-jupiter"><a class="anchor" href="#release-notes-5.8.0-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -980,7 +996,7 @@ display name of an invocation, this name will be used instead of the value.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.0-junit-vintage"><a class="anchor" href="#release-notes-5.8.0-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1025,7 +1041,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.2-junit-platform"><a class="anchor" href="#release-notes-5.7.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1044,7 +1060,7 @@ when they require other exclusive resources.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.2-junit-jupiter"><a class="anchor" href="#release-notes-5.7.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1070,7 +1086,7 @@ concurrently.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.2-junit-vintage"><a class="anchor" href="#release-notes-5.7.2-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1110,7 +1126,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.7.1-junit-platform"><a class="anchor" href="#release-notes-5.7.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1133,7 +1149,7 @@ of class names when the package name is equal to the name of a module on the mod
 <div class="sect2">
 <h3 id="release-notes-5.7.1-junit-jupiter"><a class="anchor" href="#release-notes-5.7.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1170,7 +1186,7 @@ instances are processed when used in conjunction with <code>@Nested</code> tests
 <div class="sect2">
 <h3 id="release-notes-5.7.1-junit-vintage"><a class="anchor" href="#release-notes-5.7.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-11"><a class="anchor" href="#bug-fixes-11"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1230,7 +1246,7 @@ class name. Previously, a textual description was returned for JUnit 3 suites.</
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-09-20 11:20:13 UTC
+Last updated 2021-09-21 11:00:51 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
