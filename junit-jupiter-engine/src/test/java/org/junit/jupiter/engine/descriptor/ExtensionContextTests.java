@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -329,8 +330,15 @@ public class ExtensionContextTests {
 		}
 
 		@Override
+		@SuppressWarnings("deprecation")
 		public int size() {
 			throw new UnsupportedOperationException("size() should not be called");
+		}
+
+		@Override
+		public Set<String> keySet() {
+			throw new UnsupportedOperationException("keySet() should not be called");
+
 		}
 	}
 

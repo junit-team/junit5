@@ -77,6 +77,7 @@ class PrefixedConfigurationParametersTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void delegatesSizeCalls() {
 		when(delegate.size()).thenReturn(42);
 		var parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");

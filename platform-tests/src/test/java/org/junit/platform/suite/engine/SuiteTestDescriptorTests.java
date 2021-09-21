@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -111,8 +112,14 @@ class SuiteTestDescriptorTests {
 		}
 
 		@Override
+		@SuppressWarnings("deprecation")
 		public int size() {
 			return 0;
+		}
+
+		@Override
+		public Set<String> keySet() {
+			return Collections.emptySet();
 		}
 
 	}

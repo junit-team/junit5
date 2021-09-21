@@ -19,11 +19,12 @@ GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `ConfigurationParameters.size()` has been deprecated.
 
 ==== New Features and Improvements
 
-* ❓
+* `ConfigurationParameters` has now a `keySet()` method allowing to retrieve
+  all configuration parameter keys.
 
 
 [[release-notes-5.9.0-M1️-junit-jupiter]]
