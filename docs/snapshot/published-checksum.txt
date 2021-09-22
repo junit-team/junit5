@@ -389,7 +389,6 @@
 89702a39f5df287ea6c5fbba1ad441da  junit-platform-commons/src/main/java/org/junit/platform/commons/util/Preconditions.java
 89718e551cfe40a123823f221bebaa67  documentation/src/docs/asciidoc/resources/themes/junit-pdf-theme.yml
 89d63286d15864e6bc4d42d2d964b60d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectClasspathResources.java
-8af68a24c063a9ab476699e5b240a45c  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 8b2ec00e1a83f83774569cc966ded6eb  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 8b7776a2fdc090a4eb9d1dfed28eff69  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 8b831a71f0e0098ec34aae5840f4da0a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/ClassContainerSelectorResolver.java
@@ -669,6 +668,7 @@ de60c7728f2434c34f185df285fe4f11  documentation/src/test/java/example/DisplayNam
 dea34ca33ccbc91e986907fccae7757c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FilePosition.java
 def676d8d2cca7d6b8b1d153d014f535  junit-platform-commons/src/main/java/org/junit/platform/commons/function/Try.java
 df29b5b913895848399910cf0dd67862  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceLock.java
+df3754af7250b81b04ed969594e5761f  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 df73a988aed9f8db17357bcbf1068ca5  documentation/src/test/java/example/interceptor/SwingEdtInterceptor.java
 df7f8811558f05993db309383ca31089  junit-platform-console/src/main/java/org/junit/platform/console/options/AvailableOptions.java
 dfa1dbd55f68be77ea8d610b970c5e4b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IgnoringRunnerDecorator.java
