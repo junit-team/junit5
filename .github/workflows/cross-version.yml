@@ -18,7 +18,7 @@ jobs:
   openjdk:
     strategy:
       matrix:
-        jdk: [17, 18]
+        jdk: [18]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     steps:
