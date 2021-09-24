@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 val javaToolchainVersion: String? by project
-val defaultLanguageVersion = JavaLanguageVersion.of(16)
+val defaultLanguageVersion = JavaLanguageVersion.of(17)
 val javaLanguageVersion = javaToolchainVersion?.let { JavaLanguageVersion.of(it) } ?: defaultLanguageVersion
 
 project.pluginManager.withPlugin("java") {
