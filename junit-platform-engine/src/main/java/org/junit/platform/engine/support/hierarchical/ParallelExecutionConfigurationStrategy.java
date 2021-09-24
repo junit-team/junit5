@@ -18,8 +18,8 @@ import org.junit.platform.engine.ConfigurationParameters;
 /**
  * A strategy to use for configuring parallel test execution.
  *
- * @see DefaultParallelExecutionConfigurationStrategy
  * @since 1.3
+ * @see DefaultParallelExecutionConfigurationStrategy
  */
 @API(status = EXPERIMENTAL, since = "1.3")
 public interface ParallelExecutionConfigurationStrategy {

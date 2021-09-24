@@ -19,8 +19,8 @@ import org.junit.platform.engine.reporting.ReportEntry;
 /**
  * Collection of constants related to {@link Launcher}.
  *
- * @see org.junit.platform.engine.ConfigurationParameters
  * @since 1.3
+ * @see org.junit.platform.engine.ConfigurationParameters
  */
 @API(status = STABLE, since = "1.7")
 public class LauncherConstants {

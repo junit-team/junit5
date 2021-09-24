@@ -585,9 +585,9 @@ public final class ReflectionUtils {
 	 * @param fieldName the name of the field; never {@code null} or empty
 	 * @param instance the instance from where the value is to be read; may
 	 * be {@code null} for a static field
+	 * @since 1.4
 	 * @see #tryToReadFieldValue(Field)
 	 * @see #tryToReadFieldValue(Field, Object)
-	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
 	public static <T> Try<Object> tryToReadFieldValue(Class<T> clazz, String fieldName, T instance) {
@@ -626,9 +626,9 @@ public final class ReflectionUtils {
 	 * is returned that contains the corresponding exception.
 	 *
 	 * @param field the field to read; never {@code null}
+	 * @since 1.4
 	 * @see #tryToReadFieldValue(Field, Object)
 	 * @see #tryToReadFieldValue(Class, String, Object)
-	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Object> tryToReadFieldValue(Field field) {
@@ -658,9 +658,9 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.4
 	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToReadFieldValue(Field, Object)
 	 * @see #tryToReadFieldValue(Class, String, Object)
-	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Object> tryToReadFieldValue(Field field, Object instance) {
@@ -740,8 +740,8 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadClass(String)
 	 * @since 1.4
+	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadClass(String)
 	 */
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Class<?>> tryToLoadClass(String name) {
@@ -776,8 +776,8 @@ public final class ReflectionUtils {
 	 *
 	 * @param name the name of the class to load; never {@code null} or blank
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
-	 * @see #tryToLoadClass(String)
 	 * @since 1.4
+	 * @see #tryToLoadClass(String)
 	 */
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Class<?>> tryToLoadClass(String name, ClassLoader classLoader) {

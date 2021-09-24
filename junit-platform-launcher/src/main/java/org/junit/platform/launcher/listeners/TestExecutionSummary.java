@@ -147,9 +147,9 @@ public interface TestExecutionSummary {
 	 * @param writer the {@code PrintWriter} to which to print; never {@code null}
 	 * @param maxStackTraceLines the maximum number of lines to print for exception
 	 * stack traces; must be a positive value
+	 * @since 1.6
 	 * @see #printTo(PrintWriter)
 	 * @see #printFailuresTo(PrintWriter)
-	 * @since 1.6
 	 */
 	@API(status = MAINTAINED, since = "1.6")
 	default void printFailuresTo(PrintWriter writer, int maxStackTraceLines) {

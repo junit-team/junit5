@@ -45,10 +45,10 @@ import org.junit.platform.launcher.TestExecutionListener;
  * launcher.execute(discoveryRequest);
  * </pre>
  *
+ * @since 1.3
  * @see #builder()
  * @see Launcher
  * @see LauncherFactory
- * @since 1.3
  */
 @API(status = STABLE, since = "1.7")
 public interface LauncherConfig {

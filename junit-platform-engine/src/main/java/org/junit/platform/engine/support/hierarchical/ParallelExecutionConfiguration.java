@@ -24,11 +24,10 @@ import org.apiguardian.api.API;
  * implementations may use all of the properties in this class or
  * only a subset.
  *
+ * @since 1.3
  * @see ForkJoinPoolHierarchicalTestExecutorService
  * @see ParallelExecutionConfigurationStrategy
  * @see DefaultParallelExecutionConfigurationStrategy
- *
- * @since 1.3
  */
 @API(status = EXPERIMENTAL, since = "1.3")
 public interface ParallelExecutionConfiguration {

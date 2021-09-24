@@ -331,8 +331,8 @@ public interface SelectorResolver {
 	 * adding a filter and returning a {@linkplain Match#partial(TestDescriptor)
 	 * partial match}).
 	 *
-	 * @see SelectorResolver
 	 * @since 1.5
+	 * @see SelectorResolver
 	 */
 	@API(status = EXPERIMENTAL, since = "1.5")
 	interface Context {
@@ -422,8 +422,8 @@ public interface SelectorResolver {
 	 * {@linkplain #match match} or multiple {@linkplain #matches}, or a set of
 	 * {@linkplain #selectors selectors}.
 	 *
-	 * @see SelectorResolver
 	 * @since 1.5
+	 * @see SelectorResolver
 	 */
 	@API(status = EXPERIMENTAL, since = "1.5")
 	class Resolution {
@@ -540,10 +540,10 @@ public interface SelectorResolver {
 	 * TestDescriptor} with the same {@linkplain TestDescriptor#getUniqueId()
 	 * unique ID}.
 	 *
+	 * @since 1.5
 	 * @see SelectorResolver
 	 * @see Resolution#match(Match)
 	 * @see Resolution#matches(Set)
-	 * @since 1.5
 	 */
 	@API(status = EXPERIMENTAL, since = "1.5")
 	class Match {

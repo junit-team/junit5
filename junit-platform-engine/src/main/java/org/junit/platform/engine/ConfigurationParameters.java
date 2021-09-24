@@ -30,10 +30,10 @@ import org.junit.platform.commons.util.Preconditions;
  * implementations of the {@link org.junit.platform.launcher.TestExecutionListener}
  * API via the {@link org.junit.platform.launcher.TestPlan}.
  *
+ * @since 1.0
  * @see TestEngine
  * @see EngineDiscoveryRequest
  * @see ExecutionRequest
- * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public interface ConfigurationParameters {
@@ -109,10 +109,10 @@ public interface ConfigurationParameters {
 	 * @return an {@code Optional} containing the value; never {@code null}
 	 * but potentially empty
 	 *
+	 * @since 1.3
 	 * @see #getBoolean(String)
 	 * @see System#getProperty(String)
 	 * @see #CONFIG_FILE_NAME
-	 * @since 1.3
 	 */
 	@API(status = STABLE, since = "1.3")
 	default <T> Optional<T> get(String key, Function<String, T> transformer) {

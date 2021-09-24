@@ -68,9 +68,9 @@ public interface TestReporter {
 	 * argument as the value.
 	 *
 	 * @param value the value to be published; never {@code null} or blank
+	 * @since 5.3
 	 * @see #publishEntry(Map)
 	 * @see #publishEntry(String, String)
-	 * @since 5.3
 	 */
 	@API(status = STABLE, since = "5.3")
 	default void publishEntry(String value) {

@@ -287,11 +287,11 @@ public final class Events {
 	 * </pre>
 	 *
 	 * @param conditions the conditions to match against; never {@code null}
+	 * @since 1.7
 	 * @see #assertEventsMatchExactly(Condition...)
 	 * @see #assertEventsMatchLooselyInOrder(Condition...)
 	 * @see EventConditions
 	 * @see TestExecutionResultConditions
-	 * @since 1.7
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
@@ -322,11 +322,11 @@ public final class Events {
 	 * </pre>
 	 *
 	 * @param conditions the conditions to match against; never {@code null}
+	 * @since 1.7
 	 * @see #assertEventsMatchExactly(Condition...)
 	 * @see #assertEventsMatchLoosely(Condition...)
 	 * @see EventConditions
 	 * @see TestExecutionResultConditions
-	 * @since 1.7
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")

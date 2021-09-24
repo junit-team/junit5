@@ -22,10 +22,10 @@ import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 /**
  * A closeable service that executes {@linkplain TestTask test tasks}.
  *
+ * @since 1.3
  * @see HierarchicalTestEngine#createExecutorService(ExecutionRequest)
  * @see SameThreadHierarchicalTestExecutorService
  * @see ForkJoinPoolHierarchicalTestExecutorService
- * @since 1.3
  */
 @API(status = EXPERIMENTAL, since = "1.3")
 public interface HierarchicalTestExecutorService extends AutoCloseable {

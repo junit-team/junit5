@@ -71,9 +71,9 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 * {@link SameThreadHierarchicalTestExecutorService}.
 	 *
 	 * @param request the request about to be executed
+	 * @since 1.3
 	 * @see ForkJoinPoolHierarchicalTestExecutorService
 	 * @see SameThreadHierarchicalTestExecutorService
-	 * @since 1.3
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3")
 	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
@@ -94,9 +94,9 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 * {@link OpenTest4JAwareThrowableCollector}.
 	 *
 	 * @param request the request about to be executed
+	 * @since 1.3
 	 * @see OpenTest4JAwareThrowableCollector
 	 * @see ThrowableCollector
-	 * @since 1.3
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3")
 	protected ThrowableCollector.Factory createThrowableCollectorFactory(ExecutionRequest request) {

@@ -203,9 +203,9 @@ public class UniqueId implements Cloneable, Serializable {
 	 *
 	 * <p>This {@code UniqueId} will not be modified.
 	 *
+	 * @return a new {@code UniqueId}; never {@code null}
 	 * @throws org.junit.platform.commons.PreconditionViolationException
 	 * if this {@code UniqueId} contains a single segment
-	 * @return a new {@code UniqueId}; never {@code null}
 	 * @since 1.5
 	 */
 	@API(status = STABLE, since = "1.5")

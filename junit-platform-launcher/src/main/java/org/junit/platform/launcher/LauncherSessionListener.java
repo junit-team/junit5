@@ -34,10 +34,10 @@ import org.junit.platform.launcher.core.LauncherFactory;
  * <p>The methods declared in this interface are called by the {@link Launcher}
  * or {@link LauncherSession} created via the {@link LauncherFactory}.
  *
+ * @since 1.8
  * @see LauncherSession
  * @see LauncherConfig.Builder#addLauncherSessionListeners
  * @see LauncherFactory
- * @since 1.8
  */
 @API(status = EXPERIMENTAL, since = "1.8")
 public interface LauncherSessionListener {

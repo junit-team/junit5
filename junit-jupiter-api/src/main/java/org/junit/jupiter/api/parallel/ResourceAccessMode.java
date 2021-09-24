@@ -17,8 +17,8 @@ import org.apiguardian.api.API;
 /**
  * The access mode required by a test class or method for a given resource.
  *
- * @see ResourceLock
  * @since 5.3
+ * @see ResourceLock
  */
 @API(status = EXPERIMENTAL, since = "5.3")
 public enum ResourceAccessMode {

@@ -24,8 +24,8 @@ import org.junit.platform.commons.util.Preconditions;
  * Mutable descriptor for a test or container that has been discovered by a
  * {@link TestEngine}.
  *
- * @see TestEngine
  * @since 1.0
+ * @see TestEngine
  */
 @API(status = STABLE, since = "1.0")
 public interface TestDescriptor {

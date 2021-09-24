@@ -149,8 +149,8 @@ public interface ExtensionContext {
 	 *
 	 * @return an {@code Optional} containing the test instance {@code Lifecycle};
 	 * never {@code null} but potentially empty
-	 * @see org.junit.jupiter.api.TestInstance {@code @TestInstance}
 	 * @since 5.1
+	 * @see org.junit.jupiter.api.TestInstance {@code @TestInstance}
 	 */
 	@API(status = STABLE, since = "5.1")
 	Optional<Lifecycle> getTestInstanceLifecycle();
@@ -193,9 +193,8 @@ public interface ExtensionContext {
 	 *
 	 * @return an {@code Optional} containing the test instances; never
 	 * {@code null} but potentially empty
-	 * @see #getRequiredTestInstances()
-	 *
 	 * @since 5.4
+	 * @see #getRequiredTestInstances()
 	 */
 	@API(status = STABLE, since = "5.7")
 	Optional<TestInstances> getTestInstances();
@@ -210,7 +209,6 @@ public interface ExtensionContext {
 	 * @return the test instances; never {@code null}
 	 * @throws PreconditionViolationException if the test instances are not present
 	 * in this {@code ExtensionContext}
-	 *
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.7")
@@ -286,9 +284,9 @@ public interface ExtensionContext {
 	 * @return an {@code Optional} containing the value; never {@code null}
 	 * but potentially empty
 	 *
+	 * @since 5.1
 	 * @see System#getProperty(String)
 	 * @see org.junit.platform.engine.ConfigurationParameters
-	 * @since 5.1
 	 */
 	@API(status = STABLE, since = "5.1")
 	Optional<String> getConfigurationParameter(String key);
@@ -311,9 +309,9 @@ public interface ExtensionContext {
 	 * @return an {@code Optional} containing the value; never {@code null}
 	 * but potentially empty
 	 *
+	 * @since 5.7
 	 * @see System#getProperty(String)
 	 * @see org.junit.platform.engine.ConfigurationParameters
-	 * @since 5.7
 	 */
 	@API(status = EXPERIMENTAL, since = "5.7")
 	<T> Optional<T> getConfigurationParameter(String key, Function<String, T> transformer);
@@ -357,10 +355,10 @@ public interface ExtensionContext {
 	 * argument as the value.
 	 *
 	 * @param value the value to be published; never {@code null} or blank
+	 * @since 5.3
 	 * @see #publishReportEntry(Map)
 	 * @see #publishReportEntry(String, String)
 	 * @see org.junit.platform.engine.EngineExecutionListener#reportingEntryPublished
-	 * @since 5.3
 	 */
 	@API(status = STABLE, since = "5.3")
 	default void publishReportEntry(String value) {
@@ -389,8 +387,8 @@ public interface ExtensionContext {
 	 *
 	 * @return the {@code ExecutionMode} of the test; never {@code null}
 	 *
-	 * @see org.junit.jupiter.api.parallel.ExecutionMode {@code @ExecutionMode}
 	 * @since 5.8.1
+	 * @see org.junit.jupiter.api.parallel.ExecutionMode {@code @ExecutionMode}
 	 */
 	@API(status = STABLE, since = "5.8.1")
 	ExecutionMode getExecutionMode();
@@ -477,8 +475,8 @@ public interface ExtensionContext {
 		 * @param defaultValue the default value
 		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
-		 * @see #get(Object, Class)
 		 * @since 5.5
+		 * @see #get(Object, Class)
 		 */
 		@API(status = STABLE, since = "5.5")
 		default <V> V getOrDefault(Object key, Class<V> requiredType, V defaultValue) {
@@ -511,10 +509,10 @@ public interface ExtensionContext {
 		 * @param type the type of object to retrieve; never {@code null}
 		 * @param <V> the key and value type
 		 * @return the object; never {@code null}
+		 * @since 5.1
 		 * @see #getOrComputeIfAbsent(Object, Function)
 		 * @see #getOrComputeIfAbsent(Object, Function, Class)
 		 * @see CloseableResource
-		 * @since 5.1
 		 */
 		@API(status = STABLE, since = "5.1")
 		default <V> V getOrComputeIfAbsent(Class<V> type) {

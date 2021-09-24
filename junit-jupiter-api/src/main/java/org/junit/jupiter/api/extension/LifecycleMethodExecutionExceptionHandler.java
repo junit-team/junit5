@@ -50,8 +50,8 @@ import org.apiguardian.api.API;
  * {@code LifecycleMethodExecutionExceptionHandler} (if there is one) will be
  * invoked with any {@link Throwable} thrown by the previous handler.
  *
- * @see TestExecutionExceptionHandler
  * @since 5.5
+ * @see TestExecutionExceptionHandler
  */
 @API(status = EXPERIMENTAL, since = "5.5")
 public interface LifecycleMethodExecutionExceptionHandler extends Extension {

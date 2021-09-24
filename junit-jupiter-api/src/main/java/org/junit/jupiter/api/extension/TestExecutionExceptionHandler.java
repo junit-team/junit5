@@ -30,8 +30,8 @@ import org.apiguardian.api.API;
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.
  *
- * @see LifecycleMethodExecutionExceptionHandler
  * @since 5.0
+ * @see LifecycleMethodExecutionExceptionHandler
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")

@@ -32,8 +32,8 @@ import org.apiguardian.api.API;
  * explicitly throw a {@code Throwable}. In order to support such specialized
  * use cases, {@link #get} is declared to throw {@code Throwable}.
  *
- * @since 5.0
  * @param <T> the type of argument supplied
+ * @since 5.0
  * @see java.util.function.Supplier
  * @see org.junit.jupiter.api.Assertions#assertTimeout(java.time.Duration, ThrowingSupplier)
  * @see org.junit.jupiter.api.Assertions#assertTimeoutPreemptively(java.time.Duration, ThrowingSupplier)

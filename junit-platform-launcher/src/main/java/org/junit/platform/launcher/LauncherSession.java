@@ -20,10 +20,10 @@ import org.junit.platform.launcher.core.LauncherFactory;
  * wishes to repeatedly <em>discover</em> and <em>execute</em> tests using one
  * or more {@linkplain org.junit.platform.engine.TestEngine test engines}.
  *
+ * @since 1.8
  * @see Launcher
  * @see LauncherSessionListener
  * @see LauncherFactory
- * @since 1.8
  */
 @API(status = EXPERIMENTAL, since = "1.8")
 public interface LauncherSession extends AutoCloseable {

@@ -32,8 +32,8 @@ import org.apiguardian.api.API;
  * explicitly throw a {@code Throwable}. In order to support such specialized
  * use cases, {@link #accept} is declared to throw {@code Throwable}.
  *
- * @since 5.0
  * @param <T> the type of argument consumed
+ * @since 5.0
  * @see java.util.function.Consumer
  * @see org.junit.jupiter.api.DynamicTest#stream
  * @see Executable
