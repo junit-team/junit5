@@ -12,7 +12,6 @@ dependencies {
 }
 
 javaLibrary {
-	mainJavaVersion = JavaVersion.VERSION_1_8
 	configureRelease = false
 }
 
