@@ -98,15 +98,18 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		injectFields(context, instance, instance.getClass(), ReflectionUtils::isNotStatic);
 	}
 
-	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass, Predicate<Field> predicate) {
+	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
+			Predicate<Field> predicate) {
 
 		final TempDirStrategy.CleanupMode cleanupMode;
-		Optional<TempDirStrategy> optionalTempDirStrategyCleanupStrategy = findAnnotation(testClass, TempDirStrategy.class, true);
+		Optional<TempDirStrategy> optionalTempDirStrategyCleanupStrategy = findAnnotation(testClass,
+			TempDirStrategy.class, true);
 		if (optionalTempDirStrategyCleanupStrategy.isPresent()) {
 			cleanupMode = optionalTempDirStrategyCleanupStrategy.get().mode();
-		} else {
+		}
+		else {
 			Optional<TempDirStrategy.CleanupMode> optionalMode = context.getConfigurationParameter(
-					DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME, TempDirStrategy.CleanupMode::valueOf);
+				DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME, TempDirStrategy.CleanupMode::valueOf);
 			cleanupMode = optionalMode.orElse(TempDirStrategy.CleanupMode.ALWAYS);
 		}
 
@@ -153,7 +156,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, TempDirStrategy.CleanupMode cleanupMode, ExtensionContext extensionContext) {
+	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, TempDirStrategy.CleanupMode cleanupMode,
+			ExtensionContext extensionContext) {
 		Namespace namespace = getScope(extensionContext) == Scope.PER_DECLARATION //
 				? NAMESPACE.append(sourceElement) //
 				: NAMESPACE;
@@ -200,7 +204,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		public void close() throws IOException {
 			if (cleanupMode == TempDirStrategy.CleanupMode.NEVER) {
 				return;
-			} else if (cleanupMode == TempDirStrategy.CleanupMode.ON_SUCCESS) {
+			}
+			else if (cleanupMode == TempDirStrategy.CleanupMode.ON_SUCCESS) {
 				// todo
 			}
 
