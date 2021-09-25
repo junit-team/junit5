@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirStrategy;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration tests for cleanup of the {@link TempDirectory}
@@ -31,7 +31,8 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		assertTrue(path.get().toFile().exists());
 		try {
 			path.close();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			fail(e);
 		}
 		assertFalse(path.get().toFile().exists());
@@ -43,7 +44,8 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		assertTrue(path.get().toFile().exists());
 		try {
 			path.close();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			fail(e);
 		}
 		assertTrue(path.get().toFile().exists());
