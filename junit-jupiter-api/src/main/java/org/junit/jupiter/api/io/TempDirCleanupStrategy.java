@@ -95,6 +95,6 @@ public @interface TempDirCleanupStrategy {
 	/**
 	 * The test directory cleanup <em>mode</em> to use.
 	 */
-	Mode mode();
+	Mode mode() default Mode.ALWAYS;
 
 }
