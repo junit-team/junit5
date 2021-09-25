@@ -52,7 +52,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 		new InstantiatingConfigurationParameterConverter<>(ClassOrderer.class, "class orderer");
 
 	private static final EnumConfigurationParameterConverter<TempDirCleanupStrategy.Mode> tempDirCleanupModeConverter = //
-			new EnumConfigurationParameterConverter<>(TempDirCleanupStrategy.Mode.class, "temp dir cleanup mode");
+		new EnumConfigurationParameterConverter<>(TempDirCleanupStrategy.Mode.class, "temp dir cleanup mode");
 
 	private final ConfigurationParameters configurationParameters;
 
@@ -124,7 +124,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public TempDirCleanupStrategy.Mode getDefaultTempDirCleanupMode() {
 		return tempDirCleanupModeConverter.get(configurationParameters, DEFAULT_TEMP_DIR_CLEANUP_MODE_PROPERTY_NAME,
-				TempDirCleanupStrategy.Mode.ALWAYS);
+			TempDirCleanupStrategy.Mode.ALWAYS);
 	}
 
 }
