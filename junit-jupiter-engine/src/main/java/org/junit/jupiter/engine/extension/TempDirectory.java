@@ -105,7 +105,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		if (optionalTempDirStrategyCleanupStrategy.isPresent()) {
 			cleanupMode = optionalTempDirStrategyCleanupStrategy.get().mode();
 		} else {
-			Optional<TempDirStrategy.CleanupMode> optionalMode = context.getConfigurationParameter(DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME, TempDirStrategy.CleanupMode::valueOf);
+			Optional<TempDirStrategy.CleanupMode> optionalMode = context.getConfigurationParameter(
+					DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME, TempDirStrategy.CleanupMode::valueOf);
 			cleanupMode = optionalMode.orElse(TempDirStrategy.CleanupMode.ALWAYS);
 		}
 
