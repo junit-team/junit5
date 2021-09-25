@@ -234,7 +234,6 @@
 4ecaa350f198e2ee45069ee9452af764  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/Suite.java
 4fb663d395925758d84074552de6f3eb  junit-jupiter-api/src/main/java/org/junit/jupiter/api/IndicativeSentencesGeneration.java
 50886c283faa859c1e1a69535c469a15  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAggregationException.java
-50896f8b9755665744d5721aebb2b4f8  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 508b49645e2a2a20592290bebfa3b808  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestPlan.java
 50e82b28440738cca3c6b3d6e3e07f42  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariables.java
 50f9b5133ea391cca1ad02b3a4b7a9ce  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventConditions.java
@@ -365,6 +364,7 @@
 813378cdfd436a0d6da62655dddbf61e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestFactory.java
 818fbfbf5da6fe7811251bc88edf8610  documentation/src/test/java/example/IgnoredTestsDemo.java
 81a0521bb50a7f3e0ba00e6f381d2d9e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java
+81ce72135c266cc478ee35efacdb2cbe  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 81e2cb2a7591e92b1304fe4bb980a10e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultLauncherConfig.java
 824d42444d917cbde67931d0e8fffd3f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/ClassSelectorResolver.java
 82e998e608efbc7c431136ade1e73c12  junit-platform-suite-commons/src/main/java/org/junit/platform/suite/commons/SuiteLauncherDiscoveryRequestBuilder.java
