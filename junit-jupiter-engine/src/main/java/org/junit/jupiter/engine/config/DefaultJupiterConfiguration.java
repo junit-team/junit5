@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.io.TempDirCleanupStrategy;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -49,6 +50,9 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	private static final InstantiatingConfigurationParameterConverter<ClassOrderer> classOrdererConverter = //
 		new InstantiatingConfigurationParameterConverter<>(ClassOrderer.class, "class orderer");
+
+	private static final EnumConfigurationParameterConverter<TempDirCleanupStrategy.Mode> tempDirCleanupModeConverter = //
+			new EnumConfigurationParameterConverter<>(TempDirCleanupStrategy.Mode.class, "temp dir cleanup mode");
 
 	private final ConfigurationParameters configurationParameters;
 
@@ -115,6 +119,12 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public Optional<ClassOrderer> getDefaultTestClassOrderer() {
 		return classOrdererConverter.get(configurationParameters, DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME);
+	}
+
+	@Override
+	public TempDirCleanupStrategy.Mode getDefaultTempDirCleanupMode() {
+		return tempDirCleanupModeConverter.get(configurationParameters, DEFAULT_TEMP_DIR_CLEANUP_MODE_PROPERTY_NAME,
+				TempDirCleanupStrategy.Mode.ALWAYS);
 	}
 
 }
