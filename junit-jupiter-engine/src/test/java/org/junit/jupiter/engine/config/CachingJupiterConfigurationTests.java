@@ -25,7 +25,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.io.TempDirCleanupStrategy;
+import org.junit.jupiter.api.io.TempDirStrategy;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 
@@ -113,14 +113,14 @@ class CachingJupiterConfigurationTests {
 	}
 
 	@Test
-	void cachesDefaultTempDirCleanupMode() {
-		when(delegate.getDefaultTempDirCleanupMode()).thenReturn(TempDirCleanupStrategy.Mode.ON_SUCCESS);
+	void cachesDefaultTempDirStrategyCleanupMode() {
+		when(delegate.getDefaultTempDirStrategyCleanupMode()).thenReturn(TempDirStrategy.CleanupMode.ON_SUCCESS);
 
-		// call `cache.getDefaultTempDirCleanupMode()` twice to verify the delegate method is called only once.
-		assertThat(cache.getDefaultTempDirCleanupMode()).isSameAs(TempDirCleanupStrategy.Mode.ON_SUCCESS);
-		assertThat(cache.getDefaultTempDirCleanupMode()).isSameAs(TempDirCleanupStrategy.Mode.ON_SUCCESS);
+		// call `cache.getDefaultTempStrategyDirCleanupMode()` twice to verify the delegate method is called only once.
+		assertThat(cache.getDefaultTempDirStrategyCleanupMode()).isSameAs(TempDirStrategy.CleanupMode.ON_SUCCESS);
+		assertThat(cache.getDefaultTempDirStrategyCleanupMode()).isSameAs(TempDirStrategy.CleanupMode.ON_SUCCESS);
 
-		verify(delegate, only()).getDefaultTempDirCleanupMode();
+		verify(delegate, only()).getDefaultTempDirStrategyCleanupMode();
 	}
 
 	@Test

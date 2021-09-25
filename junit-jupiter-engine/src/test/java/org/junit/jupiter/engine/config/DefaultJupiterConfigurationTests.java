@@ -25,7 +25,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.jupiter.api.io.TempDirCleanupStrategy;
+import org.junit.jupiter.api.io.TempDirStrategy;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -50,10 +50,10 @@ class DefaultJupiterConfigurationTests {
 	}
 
 	@Test
-	void getDefaultTempDirCleanupModeWithNoConfigParamSet() {
+	void getDefaultTempDirStrategyCleanupModeWithNoConfigParamSet() {
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock(ConfigurationParameters.class));
-		TempDirCleanupStrategy.Mode mode = configuration.getDefaultTempDirCleanupMode();
-		assertThat(mode).isEqualTo(TempDirCleanupStrategy.Mode.ALWAYS);
+		TempDirStrategy.CleanupMode cleanupMode = configuration.getDefaultTempDirStrategyCleanupMode();
+		assertThat(cleanupMode).isEqualTo(TempDirStrategy.CleanupMode.ALWAYS);
 	}
 
 	@Test
