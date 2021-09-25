@@ -99,7 +99,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
-			Predicate<Field> predicate) {
+		Predicate<Field> predicate) {
 
 		final TempDirStrategy.CleanupMode cleanupMode;
 		Optional<TempDirStrategy> optionalTempDirStrategyCleanupStrategy = findAnnotation(testClass, TempDirStrategy.class, true);
