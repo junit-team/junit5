@@ -105,15 +105,6 @@ allprojects {
 			toolVersion = rootProject.libs.versions.jacoco.get()
 		}
 	}
-
-	repositories {
-		mavenCentral()
-		maven(url = "https://oss.sonatype.org/content/repositories/snapshots") {
-			mavenContent {
-				snapshotsOnly()
-			}
-		}
-	}
 }
 
 val clearTempRepoDir by tasks.registering {

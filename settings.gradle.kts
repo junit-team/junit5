@@ -28,6 +28,17 @@ plugins {
 	id("com.gradle.common-custom-user-data-gradle-plugin")
 }
 
+dependencyResolutionManagement {
+	repositories {
+		mavenCentral()
+		maven(url = "https://oss.sonatype.org/content/repositories/snapshots") {
+			mavenContent {
+				snapshotsOnly()
+			}
+		}
+	}
+}
+
 val gradleEnterpriseServer = "https://ge.junit.org"
 val isCiServer = System.getenv("CI") != null
 val junitBuildCacheUsername: String? by extra
