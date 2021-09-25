@@ -101,17 +101,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
 			Predicate<Field> predicate) {
 
-		final TempDirStrategy.CleanupMode cleanupMode;
-		Optional<TempDirStrategy> optionalTempDirStrategyCleanupStrategy = findAnnotation(testClass,
-			TempDirStrategy.class, true);
-		if (optionalTempDirStrategyCleanupStrategy.isPresent()) {
-			cleanupMode = optionalTempDirStrategyCleanupStrategy.get().mode();
-		}
-		else {
-			Optional<TempDirStrategy.CleanupMode> optionalMode = context.getConfigurationParameter(
-				DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME, TempDirStrategy.CleanupMode::valueOf);
-			cleanupMode = optionalMode.orElse(TempDirStrategy.CleanupMode.ALWAYS);
-		}
+		final TempDirStrategy.CleanupMode cleanupMode = getCleanupMode(context, testClass);
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
 			assertSupportedType("field", field.getType());
@@ -122,6 +112,20 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				ExceptionUtils.throwAsUncheckedException(t);
 			}
 		});
+	}
+
+	private TempDirStrategy.CleanupMode getCleanupMode(ExtensionContext context, Class<?> clazz) {
+		Optional<TempDirStrategy> optionalStrategy = findAnnotation(clazz, TempDirStrategy.class, true);
+		final TempDirStrategy.CleanupMode cleanupMode;
+		if (optionalStrategy.isPresent()) {
+			cleanupMode = optionalStrategy.get().cleanupMode();
+		}
+		else {
+			Optional<TempDirStrategy.CleanupMode> optionalMode = context.getConfigurationParameter(
+				DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME, TempDirStrategy.CleanupMode::valueOf);
+			cleanupMode = optionalMode.orElse(TempDirStrategy.CleanupMode.ALWAYS);
+		}
+		return cleanupMode;
 	}
 
 	/**
@@ -146,7 +150,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
-		return getPathOrFile(parameterContext.getParameter(), parameterType, null, extensionContext);
+		Class<?> requiredTestClass = extensionContext.getRequiredTestClass();
+		final TempDirStrategy.CleanupMode cleanupMode = getCleanupMode(extensionContext, requiredTestClass);
+		return getPathOrFile(parameterContext.getParameter(), parameterType, cleanupMode, extensionContext);
 	}
 
 	private void assertSupportedType(String target, Class<?> type) {
@@ -177,7 +183,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		);
 	}
 
-	private static CloseablePath createTempDir(TempDirStrategy.CleanupMode cleanupMode) {
+	static CloseablePath createTempDir(TempDirStrategy.CleanupMode cleanupMode) {
 		try {
 			return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX), cleanupMode);
 		}
@@ -186,7 +192,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private static class CloseablePath implements CloseableResource {
+	static class CloseablePath implements CloseableResource {
 
 		private final Path dir;
 		private final TempDirStrategy.CleanupMode cleanupMode;

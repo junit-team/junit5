@@ -25,7 +25,7 @@ import java.util.function.Function;
 /**
  * @since 1.0
  */
-final class CloseablePath implements Closeable {
+public final class CloseablePath implements Closeable {
 
 	private static final String FILE_URI_SCHEME = "file";
 	private static final String JAR_URI_SCHEME = "jar";
