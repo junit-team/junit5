@@ -111,7 +111,7 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public TempDirCleanupStrategy.Mode getDefaultTempDirCleanupMode() {
 		return (TempDirCleanupStrategy.Mode) cache.computeIfAbsent(DEFAULT_TEMP_DIR_CLEANUP_MODE_PROPERTY_NAME,
-				key -> delegate.getDefaultTempDirCleanupMode());
+			key -> delegate.getDefaultTempDirCleanupMode());
 	}
 
 }
