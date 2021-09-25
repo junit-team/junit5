@@ -12,7 +12,8 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.*;
+import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME;
+import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
