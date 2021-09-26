@@ -5,6 +5,7 @@ plugins {
 	`build-metadata`
 	`dependency-update-check`
 	`jacoco-conventions`
+	`temp-maven-repo`
 }
 
 val platformProjects by extra(listOf(
@@ -44,9 +45,6 @@ val license by extra(License(
 		headerFile = file("src/spotless/eclipse-public-license-2.0.java")
 ))
 
-val tempRepoName by extra("temp")
-val tempRepoDir by extra(file("$buildDir/repo"))
-
 val jacocoTestProjects = listOf(
 		projects.junitJupiterEngine,
 		projects.junitJupiterMigrationsupport,
@@ -61,12 +59,6 @@ nexusPublishing {
 	packageGroup.set("org.junit")
 	repositories {
 		sonatype()
-	}
-}
-
-val clearTempRepoDir by tasks.registering {
-	doFirst {
-		tempRepoDir.deleteRecursively()
 	}
 }
 
@@ -91,24 +83,6 @@ subprojects {
 		isReproducibleFileOrder = true
 		dirMode = Integer.parseInt("0755", 8)
 		fileMode = Integer.parseInt("0644", 8)
-	}
-
-	pluginManager.withPlugin("maven-publish") {
-		configure<PublishingExtension> {
-			repositories {
-				repositories {
-					maven {
-						name = tempRepoName
-						url = uri(tempRepoDir)
-					}
-				}
-			}
-		}
-		tasks.withType<PublishToMavenRepository>().configureEach {
-			if (name.endsWith("To${tempRepoName.capitalize()}Repository")) {
-				dependsOn(clearTempRepoDir)
-			}
-		}
 	}
 }
 
