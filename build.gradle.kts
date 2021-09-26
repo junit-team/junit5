@@ -79,7 +79,6 @@ val jacocoTestProjects = listOf(
 		projects.junitJupiterEngine,
 		projects.junitJupiterMigrationsupport,
 		projects.junitJupiterParams,
-		projects.junitPlatformRunner,
 		projects.junitVintageEngine,
 		projects.platformTests
 ).map { it.dependencyProject }
@@ -98,12 +97,10 @@ allprojects {
 	apply(plugin = "eclipse")
 	apply(plugin = "idea")
 	apply(plugin = "com.diffplug.spotless")
+	apply(plugin = "jacoco")
 
-	if (enableJaCoCo) {
-		apply(plugin = "jacoco")
-		configure<JacocoPluginExtension> {
-			toolVersion = rootProject.libs.versions.jacoco.get()
-		}
+	configure<JacocoPluginExtension> {
+		toolVersion = rootProject.libs.versions.jacoco.get()
 	}
 }
 
@@ -165,41 +162,43 @@ subprojects {
 		}
 
 		afterEvaluate {
-			if (enableJaCoCo) {
-				if (project in jacocoCoveredProjects) {
-					val jarTask = (tasks.findByName("shadowJar") ?: tasks["jar"]) as Jar
-					val extractJar by tasks.registering(Copy::class) {
-						from(zipTree(jarTask.archiveFile))
-						into(jacocoClassesDir)
-						include("**/*.class")
-						// don't report coverage for shadowed classes
-						exclude("**/shadow/**")
-						// don't version-specific classes of MR JARs
-						exclude("META-INF/versions/**")
-						includeEmptyDirs = false
-						onlyIf { jarTask.enabled }
-					}
-					jarTask.finalizedBy(extractJar)
+			if (project in jacocoCoveredProjects) {
+				val jarTask = (tasks.findByName("shadowJar") ?: tasks["jar"]) as Jar
+				val extractJar by tasks.registering(Copy::class) {
+					from(zipTree(jarTask.archiveFile))
+					into(jacocoClassesDir)
+					include("**/*.class")
+					// don't report coverage for shadowed classes
+					exclude("**/shadow/**")
+					// don't version-specific classes of MR JARs
+					exclude("META-INF/versions/**")
+					includeEmptyDirs = false
+					onlyIf { jarTask.enabled }
 				}
-				if (project in jacocoTestProjects) {
-					tasks.named<Test>("test") {
-						finalizedBy("jacocoTestReport")
+				jarTask.finalizedBy(extractJar)
+			}
+			if (project in jacocoTestProjects) {
+				tasks.named<Test>("test") {
+					configure<JacocoTaskExtension> {
+						enabled = enableJaCoCo
 					}
-					tasks.named<JacocoReport>("jacocoTestReport").configure {
-						dependsOn("test")
-						reports {
-							html.isEnabled = true
-							xml.isEnabled = true
-							csv.isEnabled = false
-						}
-						jacocoCoveredProjects.forEach {
-							dependsOn(it.tasks.named("extractJar"))
-							it.pluginManager.withPlugin("java") {
-								sourceDirectories.setFrom(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
-							}
-						}
-						classDirectories.setFrom(files(jacocoClassesDir))
+					finalizedBy("jacocoTestReport")
+				}
+				tasks.named<JacocoReport>("jacocoTestReport") {
+					enabled = enableJaCoCo
+					dependsOn("test")
+					reports {
+						html.required.set(true)
+						xml.required.set(true)
+						csv.required.set(false)
 					}
+					jacocoCoveredProjects.forEach {
+						dependsOn(it.tasks.named("extractJar"))
+						it.pluginManager.withPlugin("java") {
+							sourceDirectories.setFrom(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
+						}
+					}
+					classDirectories.setFrom(files(jacocoClassesDir))
 				}
 			}
 		}
@@ -254,8 +253,8 @@ rootProject.apply {
 				componentSelection {
 					all {
 						val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea")
-								.map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-+]*") }
-								.any { it.matches(candidate.version) }
+							.map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-+]*") }
+							.any { it.matches(candidate.version) }
 						if (rejected) {
 							reject("Release candidate")
 						}
@@ -265,30 +264,27 @@ rootProject.apply {
 		}
 	}
 
-	if (enableJaCoCo) {
-		tasks {
-			val jacocoMerge by registering(JacocoMerge::class) {
-				subprojects.filter { it in jacocoTestProjects }
-						.forEach { subproj ->
-							executionData(fileTree("dir" to "${subproj.buildDir}/jacoco", "include" to "*.exec"))
-							dependsOn(subproj.tasks.withType<Test>())
-						}
+	val jacocoRootReport by tasks.registering(JacocoReport::class) {
+		enabled = enableJaCoCo
+		jacocoCoveredProjects.forEach {
+			dependsOn(it.tasks.named("extractJar"))
+			it.pluginManager.withPlugin("java") {
+				sourceDirectories.from(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
 			}
-			register<JacocoReport>("jacocoRootReport") {
-				dependsOn(jacocoMerge)
-				jacocoCoveredProjects.forEach {
-					dependsOn(it.tasks.named("extractJar"))
-					it.pluginManager.withPlugin("java") {
-						sourceDirectories.from(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
-					}
-				}
-				classDirectories.from(files(jacocoClassesDir))
-				executionData(jacocoMerge.get().destinationFile)
-				reports {
-					html.isEnabled = true
-					xml.isEnabled = true
-					csv.isEnabled = false
-				}
+		}
+		classDirectories.from(files(jacocoClassesDir))
+		reports {
+			html.required.set(true)
+			xml.required.set(true)
+			csv.required.set(false)
+		}
+	}
+
+	afterEvaluate {
+		jacocoRootReport {
+			jacocoTestProjects.forEach {
+				executionData(it.tasks.withType<Test>().map { task -> task.the<JacocoTaskExtension>().destinationFile })
+				dependsOn(it.tasks.withType<Test>())
 			}
 		}
 	}
