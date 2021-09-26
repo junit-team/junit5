@@ -10,6 +10,8 @@
 
 package example;
 
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.NEVER;
+
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -17,8 +19,6 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirStrategy;
 
 // tag::user_guide_temp_dir_strategy[]
-import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.NEVER;
-
 @TempDirStrategy(cleanupMode = NEVER)
 class TempDirStrategyDemo {
 
