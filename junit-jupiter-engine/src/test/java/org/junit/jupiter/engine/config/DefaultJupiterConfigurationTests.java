@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.ALWAYS;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -53,7 +54,7 @@ class DefaultJupiterConfigurationTests {
 	void getDefaultTempDirStrategyCleanupModeWithNoConfigParamSet() {
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock(ConfigurationParameters.class));
 		TempDirStrategy.CleanupMode cleanupMode = configuration.getDefaultTempDirStrategyCleanupMode();
-		assertThat(cleanupMode).isEqualTo(TempDirStrategy.CleanupMode.ALWAYS);
+		assertThat(cleanupMode).isEqualTo(ALWAYS);
 	}
 
 	@Test

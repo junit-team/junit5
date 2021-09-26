@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.config;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.ALWAYS;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -124,7 +125,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public TempDirStrategy.CleanupMode getDefaultTempDirStrategyCleanupMode() {
 		return cleanupModeConverter.get(configurationParameters, DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME,
-			TempDirStrategy.CleanupMode.ALWAYS);
+			ALWAYS);
 	}
 
 }

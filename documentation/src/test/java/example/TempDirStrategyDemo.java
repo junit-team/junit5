@@ -17,7 +17,9 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirStrategy;
 
 // tag::user_guide_temp_dir_strategy[]
-@TempDirStrategy(cleanupMode = TempDirStrategy.CleanupMode.NEVER)
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.NEVER;
+
+@TempDirStrategy(cleanupMode = NEVER)
 class TempDirStrategyDemo {
 
 	@Test

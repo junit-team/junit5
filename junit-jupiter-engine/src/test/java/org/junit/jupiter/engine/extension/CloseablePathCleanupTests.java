@@ -13,6 +13,8 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.ALWAYS;
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.NEVER;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -36,7 +38,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 */
 	@Test
 	void testAlways() {
-		TempDirectory.CloseablePath path = TempDirectory.createTempDir(TempDirStrategy.CleanupMode.ALWAYS);
+		TempDirectory.CloseablePath path = TempDirectory.createTempDir(ALWAYS);
 		assertTrue(path.get().toFile().exists());
 		try {
 			path.close();
@@ -52,7 +54,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 */
 	@Test
 	void testNever() {
-		TempDirectory.CloseablePath path = TempDirectory.createTempDir(TempDirStrategy.CleanupMode.NEVER);
+		TempDirectory.CloseablePath path = TempDirectory.createTempDir(NEVER);
 		assertTrue(path.get().toFile().exists());
 		try {
 			path.close();

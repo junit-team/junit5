@@ -12,6 +12,8 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.ALWAYS;
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.NEVER;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
@@ -123,7 +125,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		else {
 			Optional<TempDirStrategy.CleanupMode> optionalMode = context.getConfigurationParameter(
 				DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME, TempDirStrategy.CleanupMode::valueOf);
-			cleanupMode = optionalMode.orElse(TempDirStrategy.CleanupMode.ALWAYS);
+			cleanupMode = optionalMode.orElse(ALWAYS);
 		}
 		return cleanupMode;
 	}
@@ -208,7 +210,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		@Override
 		public void close() throws IOException {
-			if (cleanupMode == TempDirStrategy.CleanupMode.NEVER) {
+			if (cleanupMode == NEVER) {
 				return;
 			}
 

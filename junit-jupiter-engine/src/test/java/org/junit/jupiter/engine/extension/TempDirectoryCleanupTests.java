@@ -12,6 +12,8 @@ package org.junit.jupiter.engine.extension;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.ALWAYS;
+import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.NEVER;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -115,7 +117,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@TempDirStrategy(cleanupMode = TempDirStrategy.CleanupMode.NEVER)
+	@TempDirStrategy(cleanupMode = NEVER)
 	static class NeverCase {
 
 		@TempDir
@@ -127,7 +129,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@TempDirStrategy(cleanupMode = TempDirStrategy.CleanupMode.ALWAYS)
+	@TempDirStrategy(cleanupMode = ALWAYS)
 	static class AlwaysCase {
 
 		@TempDir
@@ -139,14 +141,14 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@TempDirStrategy(cleanupMode = TempDirStrategy.CleanupMode.NEVER)
+	@TempDirStrategy(cleanupMode = NEVER)
 	static class NestedCase {
 
 		@TempDir
 		File nestedOuterDir;
 
 		@Nested
-		@TempDirStrategy(cleanupMode = TempDirStrategy.CleanupMode.ALWAYS)
+		@TempDirStrategy(cleanupMode = ALWAYS)
 		class NestedTests1 {
 
 			@TempDir
