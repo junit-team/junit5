@@ -17,6 +17,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.io.File;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirStrategy;
@@ -38,7 +39,13 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	private static File defaultDir;
 	private static File neverDir;
 	private static File alwaysDir;
+	private static File nestedInnerDir1;
+	private static File nestedInnerDir2;
+	private static File nestedOuterDir;
 
+	/**
+	 * Ensure the default cleanup modes is ALWAYS.
+	 */
 	@Test
 	void testCleanupModeDefault() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(DefaultCase.class, "testDefault")).build();
@@ -47,6 +54,9 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		assertFalse(defaultDir.exists());
 	}
 
+	/**
+	 * Ensure that NEVER cleanup modes are obeyed.
+	 */
 	@Test
 	void testCleanupModeNever() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(NeverCase.class, "testNever")).build();
@@ -55,12 +65,41 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		assertTrue(neverDir.exists());
 	}
 
+	/**
+	 * Ensure that ALWAYS cleanup modes are obeyed.
+	 */
 	@Test
 	void testCleanupModeAlways() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(AlwaysCase.class, "testAlways")).build();
 		executeTests(request);
 
 		assertFalse(alwaysDir.exists());
+	}
+
+	/**
+	 * Ensure a nested and parent class cleanup modes are separate.
+	 */
+	@Test
+	void testCleanupModeNested1() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(NestedCase.NestedTests1.class, "testNested1")).build();
+		executeTests(request);
+
+		assertTrue(nestedOuterDir.exists());
+		assertFalse(nestedInnerDir1.exists());
+	}
+
+	/**
+	 * Ensure a nested class inherits its cleanup mode from its parent, if none defined at the nested level.
+	 */
+	@Test
+	void testCleanupModeNested2() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(NestedCase.NestedTests2.class, "testNested2")).build();
+		executeTests(request);
+
+		assertTrue(nestedOuterDir.exists());
+		assertTrue(nestedInnerDir2.exists());
 	}
 
 	// -------------------------------------------------------------------
@@ -97,6 +136,40 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void testAlways() {
 			TempDirectoryCleanupTests.alwaysDir = alwaysDir;
+		}
+	}
+
+	@TempDirStrategy(cleanupMode = TempDirStrategy.CleanupMode.NEVER)
+	static class NestedCase {
+
+		@TempDir
+		File nestedOuterDir;
+
+		@Nested
+		@TempDirStrategy(cleanupMode = TempDirStrategy.CleanupMode.ALWAYS)
+		class NestedTests1 {
+
+			@TempDir
+			File nestedInnerDir1;
+
+			@Test
+			void testNested1() {
+				TempDirectoryCleanupTests.nestedOuterDir = nestedOuterDir;
+				TempDirectoryCleanupTests.nestedInnerDir1 = nestedInnerDir1;
+			}
+		}
+
+		@Nested
+		class NestedTests2 {
+
+			@TempDir
+			File nestedInnerDir2;
+
+			@Test
+			void testNested2() {
+				TempDirectoryCleanupTests.nestedOuterDir = nestedOuterDir;
+				TempDirectoryCleanupTests.nestedInnerDir2 = nestedInnerDir2;
+			}
 		}
 	}
 

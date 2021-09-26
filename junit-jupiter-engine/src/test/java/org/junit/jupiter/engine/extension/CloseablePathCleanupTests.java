@@ -31,6 +31,9 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
  */
 class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 
+	/**
+	 * Ensure a closeable path is cleaned up for a cleanup mode of ALWAYS.
+	 */
 	@Test
 	void testAlways() {
 		TempDirectory.CloseablePath path = TempDirectory.createTempDir(TempDirStrategy.CleanupMode.ALWAYS);
@@ -44,6 +47,9 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 		assertFalse(path.get().toFile().exists());
 	}
 
+	/**
+	 * Ensure a closeable path is not cleaned up for a cleanup mode of NEVER.
+	 */
 	@Test
 	void testNever() {
 		TempDirectory.CloseablePath path = TempDirectory.createTempDir(TempDirStrategy.CleanupMode.NEVER);
