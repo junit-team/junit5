@@ -114,11 +114,11 @@ class CachingJupiterConfigurationTests {
 
 	@Test
 	void cachesDefaultTempDirStrategyCleanupMode() {
-		when(delegate.getDefaultTempDirStrategyCleanupMode()).thenReturn(TempDirStrategy.CleanupMode.ON_SUCCESS);
+		when(delegate.getDefaultTempDirStrategyCleanupMode()).thenReturn(TempDirStrategy.CleanupMode.NEVER);
 
 		// call `cache.getDefaultTempStrategyDirCleanupMode()` twice to verify the delegate method is called only once.
-		assertThat(cache.getDefaultTempDirStrategyCleanupMode()).isSameAs(TempDirStrategy.CleanupMode.ON_SUCCESS);
-		assertThat(cache.getDefaultTempDirStrategyCleanupMode()).isSameAs(TempDirStrategy.CleanupMode.ON_SUCCESS);
+		assertThat(cache.getDefaultTempDirStrategyCleanupMode()).isSameAs(TempDirStrategy.CleanupMode.NEVER);
+		assertThat(cache.getDefaultTempDirStrategyCleanupMode()).isSameAs(TempDirStrategy.CleanupMode.NEVER);
 
 		verify(delegate, only()).getDefaultTempDirStrategyCleanupMode();
 	}

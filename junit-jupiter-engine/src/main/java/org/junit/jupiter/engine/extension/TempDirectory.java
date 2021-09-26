@@ -211,9 +211,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			if (cleanupMode == TempDirStrategy.CleanupMode.NEVER) {
 				return;
 			}
-			else if (cleanupMode == TempDirStrategy.CleanupMode.ON_SUCCESS) {
-				// todo
-			}
 
 			SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories();
 			if (!failures.isEmpty()) {

@@ -41,8 +41,6 @@ import org.apiguardian.api.API;
  * <p>Setting the test instance cleanup mode to {@link CleanupMode#ALWAYS} will ensure that
  * temporary directories are always deleted after a test instance completes.
  * This is the default cleanup mode.
- * <p>Setting the test instance cleanup mode to {@link CleanupMode#ON_SUCCESS} will cause
- * temporary directories to be deleted only if all of a test instance's test complete successfully.
  * <p>Setting the test instance cleanup mode to {@link CleanupMode#NEVER} will ensure that
  * temporary directories are not deleted after a test instance completes.
  *
@@ -61,7 +59,6 @@ public @interface TempDirStrategy {
 	 * Enumeration of test instance <em>cleanup modes</em>.
 	 *
 	 * @see #ALWAYS
-	 * @see #ON_SUCCESS
 	 * @see #NEVER
 	 */
 	enum CleanupMode {
@@ -69,24 +66,14 @@ public @interface TempDirStrategy {
 		/**
 		 * When using this mode, a test directory will always be deleted when the class's tests complete.
 		 *
-		 * @see #ON_SUCCESS
 		 * @see #NEVER
 		 */
 		ALWAYS,
 
 		/**
-		 * When using this mode, a test directory will only be deleted when all the class's tests complete successfully.
-		 *
-		 * @see #ALWAYS
-		 * @see #NEVER
-		 */
-		ON_SUCCESS,
-
-		/**
 		 * When using this mode, a test directory will not be deleted when the class's tests complete.
 		 *
 		 * @see #ALWAYS
-		 * @see #ON_SUCCESS
 		 */
 		NEVER
 
