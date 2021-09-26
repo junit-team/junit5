@@ -2274,8 +2274,12 @@ include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_field_injectio
 A test class can be annotated with the TempDirStrategy annotation, which controls how a
 class's temporary directories are managed. TempDirStrategy has a parameter, CleanupMode,
 which can be set as either NEVER or ALWAYS. If the cleanup mode is set to NEVER,
-temporary directories are not deleted after a test completes. The default cleanup mode is
-ALWAYS. TempDirStrategy annotations may be applied to nested test classes.
+temporary directories are not deleted after a test completes. TempDirStrategy annotations
+may be applied separately to nested test classes.
+
+The default cleanup mode for TempDirStrategy is ALWAYS. You can use the
+`junit.jupiter.temp.dir.strategy.cleanup.mode.default` configuration parameter to
+override this default.
 
 [source,java,indent=0]
 .A test class with a temporary directory that doesn't get cleaned up
