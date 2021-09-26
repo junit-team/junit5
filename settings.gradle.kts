@@ -9,7 +9,6 @@ pluginManagement {
 		id("com.gradle.enterprise.test-distribution") version "2.2"
 		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.4.2"
 		id("com.github.ben-manes.versions") version "0.39.0"
-		id("com.diffplug.spotless") version "5.15.1"
 		id("org.ajoberstar.git-publish") version "3.0.0"
 		kotlin("jvm") version "1.5.0"
 		// Check if workaround in documentation.gradle.kts can be removed when upgrading

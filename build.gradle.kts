@@ -1,8 +1,8 @@
 plugins {
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
-	id("com.diffplug.spotless")
 	id("io.spring.nohttp")
 	id("io.github.gradle-nexus.publish-plugin")
+	`base-conventions`
 	`build-metadata`
 	`jacoco-conventions`
 }
@@ -64,12 +64,6 @@ nexusPublishing {
 	}
 }
 
-allprojects {
-	apply(plugin = "eclipse")
-	apply(plugin = "idea")
-	apply(plugin = "com.diffplug.spotless")
-}
-
 val clearTempRepoDir by tasks.registering {
 	doFirst {
 		tempRepoDir.deleteRecursively()
@@ -99,35 +93,6 @@ subprojects {
 		fileMode = Integer.parseInt("0644", 8)
 	}
 
-	pluginManager.withPlugin("java") {
-
-		spotless {
-			val headerFile = license.headerFile
-			val importOrderConfigFile = rootProject.file("src/eclipse/junit-eclipse.importorder")
-			val javaFormatterConfigFile = rootProject.file("src/eclipse/junit-eclipse-formatter-settings.xml")
-
-			java {
-				licenseHeaderFile(headerFile, "(package|import|open|module) ")
-				importOrderFile(importOrderConfigFile)
-				eclipse().configFile(javaFormatterConfigFile)
-				if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {
-					// Doesn't work with Java 15 text blocks, see https://github.com/diffplug/spotless/issues/713
-					removeUnusedImports()
-				}
-				trimTrailingWhitespace()
-				endWithNewline()
-			}
-
-			kotlin {
-				targetExclude("**/src/test/resources/**")
-				ktlint(libs.versions.ktlint.get())
-				licenseHeaderFile(headerFile)
-				trimTrailingWhitespace()
-				endWithNewline()
-			}
-		}
-	}
-
 	pluginManager.withPlugin("maven-publish") {
 		configure<PublishingExtension> {
 			repositories {
@@ -149,21 +114,6 @@ subprojects {
 
 rootProject.apply {
 	description = "JUnit 5"
-
-	spotless {
-		format("misc") {
-			target("**/*.gradle", "**/*.gradle.kts", "**/*.gitignore")
-			targetExclude("**/build/**")
-			indentWithTabs()
-			trimTrailingWhitespace()
-			endWithNewline()
-		}
-		format("documentation") {
-			target("**/*.adoc", "**/*.md")
-			trimTrailingWhitespace()
-			endWithNewline()
-		}
-	}
 
 	nohttp {
 		// Must cast, since `source` is only exposed as a FileTree

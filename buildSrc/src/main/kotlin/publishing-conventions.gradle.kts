@@ -1,6 +1,7 @@
 plugins {
 	`maven-publish`
 	signing
+	id("base-conventions")
 }
 
 val isSnapshot = project.version.toString().contains("SNAPSHOT")

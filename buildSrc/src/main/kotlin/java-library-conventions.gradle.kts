@@ -6,8 +6,7 @@ plugins {
 	eclipse
 	idea
 	checkstyle
-	id("java-toolchain-conventions")
-	id("jacoco-conventions")
+	id("base-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
