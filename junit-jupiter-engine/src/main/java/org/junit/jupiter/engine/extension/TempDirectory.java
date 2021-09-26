@@ -16,7 +16,6 @@ import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TEMP_
 import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
@@ -50,7 +49,6 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirStrategy;
 import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -120,9 +118,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		Optional<TempDirStrategy> optionalStrategy = findAnnotation(clazz, TempDirStrategy.class, true);
 		final TempDirStrategy.CleanupMode cleanupMode;
 		if (optionalStrategy.isPresent()) {
-			if (isInnerClass(clazz) && findAnnotation(clazz, TempDirStrategy.class, false).isPresent()) {
-				throw new JUnitException("TempDirStrategy annotations should only be declared on top-level classes.");
-			}
 			cleanupMode = optionalStrategy.get().cleanupMode();
 		}
 		else {
