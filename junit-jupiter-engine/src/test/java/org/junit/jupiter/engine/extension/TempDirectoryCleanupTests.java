@@ -23,7 +23,7 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
  * Integration tests for cleanup of the {@link TempDirectory}
  * when {@link TempDir} is set to {@link TempDirStrategy.CleanupMode#ALWAYS}.
  *
- * @since 5.8
+ * @since 5.9
  */
 class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 

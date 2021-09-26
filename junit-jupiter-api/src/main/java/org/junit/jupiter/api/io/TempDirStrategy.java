@@ -46,7 +46,7 @@ import org.apiguardian.api.API;
  * <p>Setting the test instance cleanup mode to {@link CleanupMode#NEVER} will ensure that
  * temporary directories are not deleted after a test instance completes.
  *
- * @since 5.8
+ * @since 5.9
  *
  * @see TempDir {@link TempDir}
  */
@@ -54,7 +54,7 @@ import org.apiguardian.api.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@API(status = STABLE, since = "5.8")
+@API(status = STABLE, since = "5.9")
 public @interface TempDirStrategy {
 
 	/**
