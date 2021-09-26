@@ -1,9 +1,9 @@
 plugins {
-	id("com.github.ben-manes.versions") // gradle dependencyUpdates
 	id("io.spring.nohttp")
 	id("io.github.gradle-nexus.publish-plugin")
 	`base-conventions`
 	`build-metadata`
+	`dependency-update-check`
 	`jacoco-conventions`
 }
 
@@ -118,24 +118,6 @@ rootProject.apply {
 	nohttp {
 		// Must cast, since `source` is only exposed as a FileTree
 		(source as ConfigurableFileTree).exclude("buildSrc/build/generated-sources/**")
-	}
-
-	tasks {
-		dependencyUpdates {
-			checkConstraints = true
-			resolutionStrategy {
-				componentSelection {
-					all {
-						val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea")
-							.map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-+]*") }
-							.any { it.matches(candidate.version) }
-						if (rejected) {
-							reject("Release candidate")
-						}
-					}
-				}
-			}
-		}
 	}
 
 	val jacocoRootReport by tasks.registering(JacocoReport::class) {
