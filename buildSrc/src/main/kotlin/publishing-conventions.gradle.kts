@@ -8,6 +8,24 @@ val isSnapshot = project.version.toString().contains("SNAPSHOT")
 val isContinuousIntegrationEnvironment = System.getenv("CI")?.toBoolean() ?: false
 val isJitPackEnvironment = System.getenv("JITPACK")?.toBoolean() ?: false
 
+val jupiterProjects: List<Project> by rootProject
+val platformProjects: List<Project> by rootProject
+val vintageProjects: List<Project> by rootProject
+
+when (project) {
+	in jupiterProjects -> {
+		group = property("jupiterGroup")!!
+	}
+	in platformProjects -> {
+		group = property("platformGroup")!!
+		version = property("platformVersion")!!
+	}
+	in vintageProjects -> {
+		group = property("vintageGroup")!!
+		version = property("vintageVersion")!!
+	}
+}
+
 // ensure project is built successfully before publishing it
 tasks.withType<PublishToMavenRepository>().configureEach {
 	dependsOn(provider {

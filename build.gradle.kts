@@ -8,6 +8,14 @@ plugins {
 	`temp-maven-repo`
 }
 
+description = "JUnit 5"
+
+val license by extra(License(
+	name = "Eclipse Public License v2.0",
+	url = uri("https://www.eclipse.org/legal/epl-v20.html"),
+	headerFile = file("src/spotless/eclipse-public-license-2.0.java")
+))
+
 val platformProjects by extra(listOf(
 		projects.junitPlatformCommons,
 		projects.junitPlatformConsole,
@@ -39,22 +47,6 @@ val vintageProjects by extra(listOf(
 val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProjects)
 val modularProjects by extra(mavenizedProjects - listOf(projects.junitPlatformConsoleStandalone.dependencyProject))
 
-val license by extra(License(
-		name = "Eclipse Public License v2.0",
-		url = uri("https://www.eclipse.org/legal/epl-v20.html"),
-		headerFile = file("src/spotless/eclipse-public-license-2.0.java")
-))
-
-val jacocoTestProjects = listOf(
-		projects.junitJupiterEngine,
-		projects.junitJupiterMigrationsupport,
-		projects.junitJupiterParams,
-		projects.junitVintageEngine,
-		projects.platformTests
-).map { it.dependencyProject }
-val jacocoCoveredProjects = modularProjects
-val jacocoClassesDir by extra(file("$buildDir/jacoco/classes"))
-
 nexusPublishing {
 	packageGroup.set("org.junit")
 	repositories {
@@ -62,59 +54,39 @@ nexusPublishing {
 	}
 }
 
-subprojects {
+nohttp {
+	source.exclude("buildSrc/build/generated-sources/**")
+}
 
-	when (project) {
-		in jupiterProjects -> {
-			group = property("jupiterGroup")!!
-		}
-		in platformProjects -> {
-			group = property("platformGroup")!!
-			version = property("platformVersion")!!
-		}
-		in vintageProjects -> {
-			group = property("vintageGroup")!!
-			version = property("vintageVersion")!!
+val jacocoTestProjects = listOf(
+	projects.junitJupiterEngine,
+	projects.junitJupiterMigrationsupport,
+	projects.junitJupiterParams,
+	projects.junitVintageEngine,
+	projects.platformTests
+).map { it.dependencyProject }
+val jacocoClassesDir by extra(file("$buildDir/jacoco/classes"))
+
+val jacocoRootReport by tasks.registering(JacocoReport::class) {
+	modularProjects.forEach {
+		dependsOn(it.tasks.named("extractJar"))
+		it.pluginManager.withPlugin("java") {
+			sourceDirectories.from(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
 		}
 	}
-
-	tasks.withType<AbstractArchiveTask>().configureEach {
-		isPreserveFileTimestamps = false
-		isReproducibleFileOrder = true
-		dirMode = Integer.parseInt("0755", 8)
-		fileMode = Integer.parseInt("0644", 8)
+	classDirectories.from(files(jacocoClassesDir))
+	reports {
+		html.required.set(true)
+		xml.required.set(true)
+		csv.required.set(false)
 	}
 }
 
-rootProject.apply {
-	description = "JUnit 5"
-
-	nohttp {
-		// Must cast, since `source` is only exposed as a FileTree
-		(source as ConfigurableFileTree).exclude("buildSrc/build/generated-sources/**")
-	}
-
-	val jacocoRootReport by tasks.registering(JacocoReport::class) {
-		jacocoCoveredProjects.forEach {
-			dependsOn(it.tasks.named("extractJar"))
-			it.pluginManager.withPlugin("java") {
-				sourceDirectories.from(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
-			}
-		}
-		classDirectories.from(files(jacocoClassesDir))
-		reports {
-			html.required.set(true)
-			xml.required.set(true)
-			csv.required.set(false)
-		}
-	}
-
-	afterEvaluate {
-		jacocoRootReport {
-			jacocoTestProjects.forEach {
-				executionData(it.tasks.withType<Test>().map { task -> task.the<JacocoTaskExtension>().destinationFile })
-				dependsOn(it.tasks.withType<Test>())
-			}
+afterEvaluate {
+	jacocoRootReport {
+		jacocoTestProjects.forEach {
+			executionData(it.tasks.withType<Test>().map { task -> task.the<JacocoTaskExtension>().destinationFile })
+			dependsOn(it.tasks.withType<Test>())
 		}
 	}
 }
