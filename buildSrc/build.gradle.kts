@@ -16,7 +16,7 @@ dependencies {
     implementation("gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0")
     implementation("gradle.plugin.net.nemerosa:versioning:2.15.0")
 	implementation("org.gradle:test-retry-gradle-plugin:1.2.1")
-	compileOnly("com.gradle.enterprise:test-distribution-gradle-plugin:2.1.1")
+	compileOnly("com.gradle.enterprise:test-distribution-gradle-plugin:2.2") // keep in sync with root settings.gradle.kts
 }
 
 tasks.withType<KotlinCompile>().configureEach {
