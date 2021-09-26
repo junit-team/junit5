@@ -2278,8 +2278,8 @@ temporary directories are not deleted after a test completes. TempDirStrategy an
 may be applied separately to nested test classes.
 
 The default cleanup mode for TempDirStrategy is ALWAYS. You can use the
-`junit.jupiter.temp.dir.strategy.cleanup.mode.default` configuration parameter to
-override this default.
+`junit.jupiter.temp.dir.strategy.cleanup.mode.default`
+<<running-tests-config-params, configuration parameter>> to override this default.
 
 [source,java,indent=0]
 .A test class with a temporary directory that doesn't get cleaned up
