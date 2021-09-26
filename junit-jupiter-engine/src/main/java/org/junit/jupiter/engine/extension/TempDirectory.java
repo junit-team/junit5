@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
-import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.NEVER;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME;
@@ -40,7 +39,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 
-import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
@@ -196,8 +194,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	@API(status = STABLE, since = "5.9")
-	public static class CloseablePath implements CloseableResource {
+	static class CloseablePath implements CloseableResource {
 
 		private final Path dir;
 		private final TempDirStrategy.CleanupMode cleanupMode;
