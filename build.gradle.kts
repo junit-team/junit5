@@ -9,7 +9,7 @@ plugins {
 	id("com.diffplug.spotless")
 	id("io.spring.nohttp")
 	id("io.github.gradle-nexus.publish-plugin")
-	`jacoco-base-conventions`
+	`jacoco-conventions`
 }
 
 val buildTimeAndDate: OffsetDateTime by extra {

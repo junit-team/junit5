@@ -7,7 +7,7 @@ plugins {
 	idea
 	checkstyle
 	id("java-toolchain-conventions")
-	id("jacoco-java-conventions")
+	id("jacoco-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
