@@ -9,6 +9,7 @@ plugins {
 	id("com.diffplug.spotless")
 	id("io.spring.nohttp")
 	id("io.github.gradle-nexus.publish-plugin")
+	`jacoco-base-conventions`
 }
 
 val buildTimeAndDate: OffsetDateTime by extra {
@@ -74,7 +75,6 @@ val license by extra(License(
 val tempRepoName by extra("temp")
 val tempRepoDir by extra(file("$buildDir/repo"))
 
-val enableJaCoCo = project.hasProperty("enableJaCoCo")
 val jacocoTestProjects = listOf(
 		projects.junitJupiterEngine,
 		projects.junitJupiterMigrationsupport,
@@ -83,7 +83,7 @@ val jacocoTestProjects = listOf(
 		projects.platformTests
 ).map { it.dependencyProject }
 val jacocoCoveredProjects = modularProjects
-val jacocoClassesDir = file("$buildDir/jacoco/classes")
+val jacocoClassesDir by extra(file("$buildDir/jacoco/classes"))
 
 nexusPublishing {
 	packageGroup.set("org.junit")
@@ -93,15 +93,9 @@ nexusPublishing {
 }
 
 allprojects {
-
 	apply(plugin = "eclipse")
 	apply(plugin = "idea")
 	apply(plugin = "com.diffplug.spotless")
-	apply(plugin = "jacoco")
-
-	configure<JacocoPluginExtension> {
-		toolVersion = rootProject.libs.versions.jacoco.get()
-	}
 }
 
 val clearTempRepoDir by tasks.registering {
@@ -158,48 +152,6 @@ subprojects {
 				licenseHeaderFile(headerFile)
 				trimTrailingWhitespace()
 				endWithNewline()
-			}
-		}
-
-		afterEvaluate {
-			if (project in jacocoCoveredProjects) {
-				val jarTask = (tasks.findByName("shadowJar") ?: tasks["jar"]) as Jar
-				val extractJar by tasks.registering(Copy::class) {
-					from(zipTree(jarTask.archiveFile))
-					into(jacocoClassesDir)
-					include("**/*.class")
-					// don't report coverage for shadowed classes
-					exclude("**/shadow/**")
-					// don't version-specific classes of MR JARs
-					exclude("META-INF/versions/**")
-					includeEmptyDirs = false
-					onlyIf { jarTask.enabled }
-				}
-				jarTask.finalizedBy(extractJar)
-			}
-			if (project in jacocoTestProjects) {
-				tasks.named<Test>("test") {
-					configure<JacocoTaskExtension> {
-						enabled = enableJaCoCo
-					}
-					finalizedBy("jacocoTestReport")
-				}
-				tasks.named<JacocoReport>("jacocoTestReport") {
-					enabled = enableJaCoCo
-					dependsOn("test")
-					reports {
-						html.required.set(true)
-						xml.required.set(true)
-						csv.required.set(false)
-					}
-					jacocoCoveredProjects.forEach {
-						dependsOn(it.tasks.named("extractJar"))
-						it.pluginManager.withPlugin("java") {
-							sourceDirectories.setFrom(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
-						}
-					}
-					classDirectories.setFrom(files(jacocoClassesDir))
-				}
 			}
 		}
 	}
@@ -265,7 +217,6 @@ rootProject.apply {
 	}
 
 	val jacocoRootReport by tasks.registering(JacocoReport::class) {
-		enabled = enableJaCoCo
 		jacocoCoveredProjects.forEach {
 			dependsOn(it.tasks.named("extractJar"))
 			it.pluginManager.withPlugin("java") {
