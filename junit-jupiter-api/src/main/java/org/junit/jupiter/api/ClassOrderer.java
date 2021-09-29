@@ -174,7 +174,7 @@ public interface ClassOrderer {
 	 * default random seed is logged at {@code CONFIG} level. In addition, a
 	 * custom seed (potentially the default seed from the previous test plan
 	 * execution) may be specified via the {@link Random#RANDOM_SEED_PROPERTY_NAME
-	 * junit.jupiter.execution.class.order.random.seed} <em>configuration parameter</em>
+	 * junit.jupiter.execution.order.random.seed} <em>configuration parameter</em>
 	 * which can be supplied via the {@code Launcher} API, build tools (e.g.,
 	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
 	 * file (i.e., a file named {@code junit-platform.properties} in the root of
