@@ -106,6 +106,7 @@
 2899da7e3434bd88a77e4418bb98f7ba  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/BeforeEachMethodAdapter.java
 295446abdd851f0c2aa0d6a89259b7f3  documentation/src/test/java/example/testkit/EngineTestKitSkippedMethodDemo.java
 299252428f1aed28711e1b094eda1e98  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertSame.java
+2997072a013c8b0fc7187aadfbf1d2b0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrderer.java
 29a93b5ac77fd920071077adc11a2626  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.java
 29fc0f66ce094447da5262f597704425  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/MethodBasedCondition.java
 2a1489b94cf834359327a6474dea2950  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
@@ -249,7 +250,6 @@
 55f90ca686cf4a9ac3e3aa229c232e10  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/package-info.java
 56b32e989f09238eb7a2f203fd7feb2e  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SuiteDisplayName.java
 56be840bb1f6653487f04b32e69033dd  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryRequest.java
-5731e9b10d2d03573a853916a9a9ca4e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrderer.java
 58399d2be3e9c3ffdd4a7a44001a4ea6  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/IncludeClassNameFilter.java
 583b6e7809a9549a81d15223c62fff9b  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
 5889bd93985cbb525c7b3daa29ebf419  junit-platform-engine/src/main/java/org/junit/platform/engine/SelectorResolutionResult.java
