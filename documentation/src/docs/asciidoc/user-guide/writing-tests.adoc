@@ -1363,13 +1363,14 @@ The default delimiter is a comma (`,`), but you can use another character by set
 `String` delimiter instead of a single character. However, both delimiter attributes
 cannot be set simultaneously.
 
-`@CsvSource` uses a single quote `'` as its quote character. See the `'lemon, lime'` value
-in the example above and in the table below. An empty, quoted value `''` results in an
-empty `String` unless the `emptyValue` attribute is set; whereas, an entirely _empty_
-value is interpreted as a `null` reference. By specifying one or more `nullValues`, a
-custom value can be interpreted as a `null` reference (see the `NIL` example in the table
-below). An `ArgumentConversionException` is thrown if the target type of a `null`
-reference is a primitive type.
+By default, `@CsvSource` uses a single quote `'` as its quote character, but this can be
+changed via the `quoteCharacter` attribute. See the `'lemon, lime'` value in the example
+above and in the table below. An empty, quoted value `''` results in an empty `String`
+unless the `emptyValue` attribute is set; whereas, an entirely _empty_ value is
+interpreted as a `null` reference. By specifying one or more `nullValues`, a custom value
+can be interpreted as a `null` reference (see the `NIL` example in the table below). An
+`ArgumentConversionException` is thrown if the target type of a `null` reference is a
+primitive type.
 
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
