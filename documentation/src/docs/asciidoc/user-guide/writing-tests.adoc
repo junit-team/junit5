@@ -1374,8 +1374,8 @@ reference is a primitive type.
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
 
-Unless it starts with a quote character, leading and trailing whitespace in a CSV column
-is trimmed by default. This behavior can be changed by setting the
+Except within a quoted string, leading and trailing whitespace in a CSV column is trimmed
+by default. This behavior can be changed by setting the
 `ignoreLeadingAndTrailingWhitespace` attribute to `true`.
 
 [cols="50,50"]
@@ -1428,8 +1428,8 @@ reference is a primitive type.
 NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
 of any custom values configured via the `nullValues` attribute.
 
-Unless it starts with a quote character, leading and trailing whitespace in a CSV column
-is trimmed by default. This behavior can be changed by setting the
+Except within a quoted string, leading and trailing whitespace in a CSV column is trimmed
+by default. This behavior can be changed by setting the
 `ignoreLeadingAndTrailingWhitespace` attribute to `true`.
 
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
