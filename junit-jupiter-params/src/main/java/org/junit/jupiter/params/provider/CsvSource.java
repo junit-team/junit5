@@ -48,9 +48,7 @@ public @interface CsvSource {
 	 * The CSV lines to use as the source of arguments; must not be empty.
 	 *
 	 * <p>Each value corresponds to a line in a CSV file and will be split using
-	 * the specified {@link #delimiter} or {@link #delimiterString}. Any line
-	 * beginning with a {@code #} symbol will be interpreted as a comment and will
-	 * be ignored.
+	 * the specified {@link #delimiter} or {@link #delimiterString}.
 	 *
 	 * <p>Defaults to an empty array. You therefore must supply CSV content
 	 * via this attribute or the {@link #textBlock} attribute.
@@ -82,8 +80,6 @@ public @interface CsvSource {
 	 *
 	 * <p>Each line in the text block corresponds to a line in a CSV file and will
 	 * be split using the specified {@link #delimiter} or {@link #delimiterString}.
-	 * Any line beginning with a {@code #} symbol will be interpreted as a comment
-	 * and will be ignored.
 	 *
 	 * <p>Defaults to an empty string. You therefore must supply CSV content
 	 * via this attribute or the {@link #value} attribute.
