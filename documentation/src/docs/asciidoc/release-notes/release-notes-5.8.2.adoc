@@ -39,7 +39,9 @@ GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The quote character for _quoted strings_ in `@CsvSource` is now configurable via the new
+  `quoteCharacter` attribute, which defaults to a single quote (`'`) for backward
+  compatibility.
 
 
 [[release-notes-5.8.2-junit-vintage]]

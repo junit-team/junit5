@@ -115,6 +115,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			// @CsvSource
 			when(annotation.value()).thenReturn(this.lines);
 			when(annotation.textBlock()).thenReturn(this.textBlock);
+			when(annotation.quoteCharacter()).thenReturn('\'');
 
 			return annotation;
 		}

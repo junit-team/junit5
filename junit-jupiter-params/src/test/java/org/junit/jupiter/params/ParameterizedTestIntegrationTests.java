@@ -91,10 +91,10 @@ import org.opentest4j.TestAbortedException;
 class ParameterizedTestIntegrationTests {
 
 	@ParameterizedTest
-	@CsvSource(textBlock = """
+	@CsvSource(quoteCharacter = '"', textBlock = """
 				apple,         1
 				banana,        2
-				'lemon, lime', 0xF1
+				"lemon, lime", 0xF1
 				strawberry,    700_000
 			""")
 	void executesLinesFromTextBlock(String fruit, int rank) {

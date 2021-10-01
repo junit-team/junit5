@@ -32,8 +32,9 @@ import org.apiguardian.api.API;
  * <p>The column delimiter (defaults to comma) can be customized with either
  * {@link #delimiter} or {@link #delimiterString}.
  *
- * <p>{@code @CsvSource} uses a single quote ({@code '}) as its quote character.
- * See the {@code 'lemon, lime'} examples in the documentation for the {@link #value}
+ * <p>By default, {@code @CsvSource} uses a single quote ({@code '}) as its quote
+ * character, but this can be changed via {@link #quoteCharacter}. See the
+ * {@code 'lemon, lime'} examples in the documentation for the {@link #value}
  * and {@link #textBlock} attributes. An empty, quoted value ({@code ''}) results
  * in an empty {@link String} unless the {@link #emptyValue} attribute is set;
  * whereas, an entirely <em>empty</em> value is interpreted as a {@code null} reference.
@@ -125,6 +126,21 @@ public @interface CsvSource {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8.1")
 	String textBlock() default "";
+
+	/**
+	 * The quote character to use for <em>quoted strings</em>.
+	 *
+	 * <p>Defaults to a single quote ({@code '}).
+	 *
+	 * <p>You may change the quote character to anything that makes sense for
+	 * your use case; however, the primary use case is to allow you to use double
+	 * quotes in {@link #textBlock}.
+	 *
+	 * @since 5.8.2
+	 * @see #textBlock
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8.2")
+	char quoteCharacter() default '\'';
 
 	/**
 	 * The column delimiter character to use when reading the {@linkplain #value lines}.
