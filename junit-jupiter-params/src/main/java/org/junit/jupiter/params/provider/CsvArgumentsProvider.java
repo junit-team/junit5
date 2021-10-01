@@ -13,11 +13,13 @@ package org.junit.jupiter.params.provider;
 import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
 import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
+import java.io.StringReader;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
@@ -26,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 
 /**
@@ -33,9 +36,21 @@ import org.junit.platform.commons.util.UnrecoverableExceptions;
  */
 class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvSource> {
 
-	private static final Pattern NEW_LINE_REGEX = Pattern.compile("\\n");
-
 	private static final String LINE_SEPARATOR = "\n";
+
+	private static final Method stripIndentMethod;
+
+	static {
+		Method method = null;
+		try {
+			// java.lang.String#stripIndent() is available on Java 15+
+			method = String.class.getMethod("stripIndent");
+		}
+		catch (Exception ex) {
+			// ignore, assuming stripIndent() is not available in the current JRE
+		}
+		stripIndentMethod = method;
+	}
 
 	private CsvSource annotation;
 	private Set<String> nullValues;
@@ -54,20 +69,33 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		Preconditions.condition(this.annotation.value().length > 0 ^ textBlockDeclared,
 			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
-		String[] lines;
 		if (textBlockDeclared) {
-			lines = NEW_LINE_REGEX.split(this.annotation.textBlock(), 0);
-		}
-		else {
-			lines = this.annotation.value();
+			return parseTextBlock(this.annotation.textBlock()).stream().map(Arguments::of);
 		}
 
-		AtomicInteger index = new AtomicInteger(1);
+		AtomicInteger index = new AtomicInteger(0);
 		// @formatter:off
-		return Arrays.stream(lines)
-				.map(line -> parseLine(line, index.getAndIncrement()))
+		return Arrays.stream(this.annotation.value())
+				.map(line -> parseLine(line, index.incrementAndGet()))
 				.map(Arguments::of);
 		// @formatter:on
+	}
+
+	private List<String[]> parseTextBlock(String textBlock) {
+		try {
+			AtomicInteger index = new AtomicInteger(0);
+			List<String[]> csvRecords = this.csvParser.parseAll(new StringReader(stripIndent(textBlock)));
+			for (String[] csvRecord : csvRecords) {
+				index.incrementAndGet();
+				Preconditions.notNull(csvRecord,
+					() -> "Line at index " + index.get() + " contains invalid CSV: \"\"\"" + textBlock + "\"\"\"");
+				processNullValues(csvRecord, this.nullValues);
+			}
+			return csvRecords;
+		}
+		catch (Throwable throwable) {
+			throw handleCsvException(throwable, this.annotation);
+		}
 	}
 
 	private String[] parseLine(String line, int index) {
@@ -104,6 +132,13 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 			throw (PreconditionViolationException) throwable;
 		}
 		throw new CsvParsingException("Failed to parse CSV input configured via " + annotation, throwable);
+	}
+
+	private static String stripIndent(String textBlock) {
+		if (stripIndentMethod != null) {
+			return (String) ReflectionUtils.invokeMethod(stripIndentMethod, textBlock);
+		}
+		return textBlock;
 	}
 
 }

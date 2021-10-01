@@ -1352,7 +1352,7 @@ parameterized test. Using a text block, the previous example can be implemented 
 	banana,        2
 	'lemon, lime', 0xF1
 	strawberry,    700_000
-""")
+	""")
 void testWithCsvSource(String fruit, int rank) {
 	// ...
 }
