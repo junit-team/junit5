@@ -26,9 +26,33 @@ import org.apiguardian.api.API;
  * comma-separated value (CSV) files from one or more classpath {@link #resources
  * resources} or {@link #files}.
  *
- * <p>The lines of these CSV files will be provided as arguments to the
- * annotated {@code @ParameterizedTest} method. Any line beginning with a
- * {@code #} symbol will be interpreted as a comment and will be ignored.
+ * <p>The lines of these CSV files will be provided as arguments to the annotated
+ * {@code @ParameterizedTest} method.
+ *
+ * <p>Any line beginning with a {@code #} symbol will be interpreted as a comment
+ * and will be ignored.
+ *
+ * <p>The column delimiter (defaults to comma) can be customized with either
+ * {@link #delimiter} or {@link #delimiterString}.
+ *
+ * <p>In contrast to the syntax used in {@code @CsvSource}, {@code @CsvFileSource}
+ * uses a double quote ({@code "}) as its quote character (see the User Guide for
+ * examples). An empty, quoted value ({@code ""}) results in an empty {@link String}
+ * unless the {@link #emptyValue} attribute is set; whereas, an entirely <em>empty</em>
+ * value is interpreted as a {@code null} reference. By specifying one or more
+ * {@link #nullValues} a custom value can be interpreted as a {@code null} reference
+ * (see the User Guide for an example). An
+ * {@link org.junit.jupiter.params.converter.ArgumentConversionException
+ * ArgumentConversionException} is thrown if the target type of a {@code null}
+ * reference is a primitive type.
+ *
+ * <p>NOTE: An <em>unquoted</em> empty value will always be converted to a
+ * {@code null} reference regardless of any custom values configured via the
+ * {@link #nullValues} attribute.
+ *
+ * <p>Except within a quoted string, leading and trailing whitespace in a CSV
+ * column is trimmed by default. This behavior can be changed by setting the
+ * {@link #ignoreLeadingAndTrailingWhitespace} attribute to {@code true}.
  *
  * @since 5.0
  * @see CsvSource
