@@ -92,10 +92,21 @@ class ParameterizedTestIntegrationTests {
 
 	@ParameterizedTest
 	@CsvSource(quoteCharacter = '"', textBlock = """
-				apple,         1
-				banana,        2
-				"lemon, lime", 0xF1
-				strawberry,    700_000
+
+
+			# This is a comment preceded by multiple opening blank lines.
+			apple,         1
+			banana,        2
+			# This is a comment pointing out that the next line contains multiple explicit newlines in quoted text.
+			"lemon  \s
+
+
+			\s  lime",         0xF1
+			# The next line is a blank line in the middle of the CSV rows.
+
+			strawberry,    700_000
+			# This is a comment followed by 2 closing blank line.
+
 			""")
 	void executesLinesFromTextBlock(String fruit, int rank) {
 		switch (fruit) {
@@ -105,7 +116,40 @@ class ParameterizedTestIntegrationTests {
 			case "banana":
 				assertThat(rank).isEqualTo(2);
 				break;
-			case "lemon, lime":
+			case "lemon   \n\n\n   lime":
+				assertThat(rank).isEqualTo(241);
+				break;
+			case "strawberry":
+				assertThat(rank).isEqualTo(700_000);
+				break;
+			default:
+				fail("Unexpected fruit : " + fruit);
+		}
+	}
+
+	@ParameterizedTest
+	@CsvSource(delimiter = '|', quoteCharacter = '"', textBlock = """
+			#-----------------------------
+			#    FRUIT     |     RANK
+			#-----------------------------
+			     apple     |      1
+			#-----------------------------
+			     banana    |      2
+			#-----------------------------
+			  "lemon lime" |     0xF1
+			#-----------------------------
+			   strawberry  |    700_000
+			#-----------------------------
+			""")
+	void executesLinesFromTextBlockUsingPseudoTableFormat(String fruit, int rank) {
+		switch (fruit) {
+			case "apple":
+				assertThat(rank).isEqualTo(1);
+				break;
+			case "banana":
+				assertThat(rank).isEqualTo(2);
+				break;
+			case "lemon lime":
 				assertThat(rank).isEqualTo(241);
 				break;
 			case "strawberry":
