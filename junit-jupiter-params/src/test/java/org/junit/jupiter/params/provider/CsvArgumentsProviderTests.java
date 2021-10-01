@@ -324,17 +324,16 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
-	// TODO Update expectations once https://github.com/junit-team/junit5/issues/2734 has been implemented.
-	void ignoresCommentCharacterWhenUsingTextBlockAttribute() {
+	void honorsCommentCharacterWhenUsingTextBlockAttribute() {
 		var annotation = csvSource().textBlock("""
-					#foo
-					bar, #baz
-					'#bar', baz
+				#foo
+				bar, #baz
+				'#bar', baz
 				""").build();
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("#foo"), array("bar", "#baz"), array("#bar", "baz"));
+		assertThat(arguments).containsExactly(array("bar", "#baz"), array("#bar", "baz"));
 	}
 
 	private Stream<Object[]> provideArguments(CsvSource annotation) {

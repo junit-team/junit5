@@ -3,7 +3,10 @@
 
 *Date of Release:* ❓
 
-*Scope:* ❓
+*Scope:*
+
+* Text blocks in `@CsvSource` are treated as CSV files
+* Custom quote character support in `@CsvSource`
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/60?closed=1+[5.8.2] milestone page in the JUnit repository on
@@ -39,6 +42,11 @@ GitHub.
 
 ==== New Features and Improvements
 
+* Text blocks in `@CsvSource` are now treated as complete CSV files, including support for
+  comments beginning with a `+++#+++` symbol as well as support for new lines within
+  quoted strings. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-CsvSource, User
+  Guide>> for details and examples.
 * The quote character for _quoted strings_ in `@CsvSource` is now configurable via the new
   `quoteCharacter` attribute, which defaults to a single quote (`'`) for backward
   compatibility.
