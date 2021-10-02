@@ -3883,13 +3883,14 @@ parameterized test. Using a text block, the previous example can be implemented 
 cannot be set simultaneously.</p>
 </div>
 <div class="paragraph">
-<p><code>@CsvSource</code> uses a single quote <code>'</code> as its quote character. See the <code>'lemon, lime'</code> value
-in the example above and in the table below. An empty, quoted value <code>''</code> results in an
-empty <code>String</code> unless the <code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em>
-value is interpreted as a <code>null</code> reference. By specifying one or more <code>nullValues</code>, a
-custom value can be interpreted as a <code>null</code> reference (see the <code>NIL</code> example in the table
-below). An <code>ArgumentConversionException</code> is thrown if the target type of a <code>null</code>
-reference is a primitive type.</p>
+<p>By default, <code>@CsvSource</code> uses a single quote <code>'</code> as its quote character, but this can be
+changed via the <code>quoteCharacter</code> attribute. See the <code>'lemon, lime'</code> value in the example
+above and in the table below. An empty, quoted value <code>''</code> results in an empty <code>String</code>
+unless the <code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em> value is
+interpreted as a <code>null</code> reference. By specifying one or more <code>nullValues</code>, a custom value
+can be interpreted as a <code>null</code> reference (see the <code>NIL</code> example in the table below). An
+<code>ArgumentConversionException</code> is thrown if the target type of a <code>null</code> reference is a
+primitive type.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3905,8 +3906,8 @@ of any custom values configured via the <code>nullValues</code> attribute.
 </table>
 </div>
 <div class="paragraph">
-<p>Unless it starts with a quote character, leading and trailing whitespace in a CSV column
-is trimmed by default. This behavior can be changed by setting the
+<p>Except within a quoted string, leading and trailing whitespace in a CSV column is trimmed
+by default. This behavior can be changed by setting the
 <code>ignoreLeadingAndTrailingWhitespace</code> attribute to <code>true</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -4025,8 +4026,8 @@ of any custom values configured via the <code>nullValues</code> attribute.
 </table>
 </div>
 <div class="paragraph">
-<p>Unless it starts with a quote character, leading and trailing whitespace in a CSV column
-is trimmed by default. This behavior can be changed by setting the
+<p>Except within a quoted string, leading and trailing whitespace in a CSV column is trimmed
+by default. This behavior can be changed by setting the
 <code>ignoreLeadingAndTrailingWhitespace</code> attribute to <code>true</code>.</p>
 </div>
 </div>
@@ -10913,7 +10914,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-09-29 08:20:17 UTC
+Last updated 2021-10-02 15:16:28 UTC
 </div>
 </div>
 <style>
