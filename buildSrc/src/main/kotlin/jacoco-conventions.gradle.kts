@@ -14,7 +14,7 @@ jacoco {
 tasks {
 	withType<Test>().configureEach {
 		configure<JacocoTaskExtension> {
-			enabled = enableJaCoCo
+			isEnabled = enableJaCoCo
 		}
 	}
 	withType<JacocoReport>().configureEach {
