@@ -7,7 +7,8 @@ plugins {
 	idea
 	checkstyle
 	id("base-conventions")
-	id("jacoco-conventions")
+	// Disable Jacoco until GitHub #2736 issue is resolved.
+	// id("jacoco-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
