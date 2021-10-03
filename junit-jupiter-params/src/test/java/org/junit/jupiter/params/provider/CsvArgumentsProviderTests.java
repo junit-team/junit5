@@ -142,12 +142,52 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
+	void understandsQuotesInTextBlock() {
+		var annotation = csvSource().textBlock("""
+				'foo, bar'
+				""").build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("foo, bar"));
+	}
+
+	@Test
+	void understandsCustomQuotes() {
+		var annotation = csvSource().quoteCharacter('~').lines("~foo, bar~").build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("foo, bar"));
+	}
+
+	@Test
+	void understandsCustomQuotesInTextBlock() {
+		var annotation = csvSource().quoteCharacter('"').textBlock("""
+					"foo, bar"
+				""").build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("foo, bar"));
+	}
+
+	@Test
 	void understandsEscapeCharacters() {
 		var annotation = csvSource("'foo or ''bar''', baz");
 
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("foo or 'bar'", "baz"));
+	}
+
+	@Test
+	void understandsEscapeCharactersWithCutomQuoteCharacter() {
+		var annotation = csvSource().quoteCharacter('~').lines("~foo or ~~bar~~~, baz").build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("foo or ~bar~", "baz"));
 	}
 
 	@Test
@@ -275,12 +315,26 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
-	void doesNotMindSoCalledCommentCharacters() {
+	void ignoresCommentCharacterWhenUsingValueAttribute() {
 		var annotation = csvSource("#foo", "#bar,baz", "baz,#quux");
 
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("#foo"), array("#bar", "baz"), array("baz", "#quux"));
+	}
+
+	@Test
+	// TODO Update expectations once https://github.com/junit-team/junit5/issues/2734 has been implemented.
+	void ignoresCommentCharacterWhenUsingTextBlockAttribute() {
+		var annotation = csvSource().textBlock("""
+					#foo
+					bar, #baz
+					'#bar', baz
+				""").build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("#foo"), array("bar", "#baz"), array("#bar", "baz"));
 	}
 
 	private Stream<Object[]> provideArguments(CsvSource annotation) {
