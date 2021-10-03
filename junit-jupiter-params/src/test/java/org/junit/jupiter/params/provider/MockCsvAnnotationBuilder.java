@@ -84,6 +84,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 		private String[] lines = new String[0];
 		private String textBlock = "";
+		private char quoteCharacter = '\'';
 
 		@Override
 		protected MockCsvSourceBuilder getSelf() {
@@ -97,6 +98,11 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 		MockCsvSourceBuilder textBlock(String textBlock) {
 			this.textBlock = textBlock;
+			return this;
+		}
+
+		MockCsvSourceBuilder quoteCharacter(char quoteCharacter) {
+			this.quoteCharacter = quoteCharacter;
 			return this;
 		}
 
@@ -115,7 +121,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			// @CsvSource
 			when(annotation.value()).thenReturn(this.lines);
 			when(annotation.textBlock()).thenReturn(this.textBlock);
-			when(annotation.quoteCharacter()).thenReturn('\'');
+			when(annotation.quoteCharacter()).thenReturn(this.quoteCharacter);
 
 			return annotation;
 		}
