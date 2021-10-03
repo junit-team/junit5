@@ -31,7 +31,7 @@ class CsvArgumentsProviderTests {
 
 		assertThatExceptionOfType(JUnitException.class)//
 				.isThrownBy(() -> provideArguments(annotation).toArray())//
-				.withMessage("Line at index 2 contains invalid CSV: \"\"");
+				.withMessage("Line at index 3 contains invalid CSV: \"\"");
 	}
 
 	@Test

@@ -16,7 +16,7 @@ import static org.junit.platform.commons.util.CollectionUtils.toSet;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -62,10 +62,10 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 			lines = this.annotation.value();
 		}
 
-		AtomicLong index = new AtomicLong(0);
+		AtomicInteger index = new AtomicInteger();
 		// @formatter:off
 		return Arrays.stream(lines)
-				.map(line -> parseLine(index.getAndIncrement(), line))
+				.map(line -> parseLine(index.incrementAndGet(), line))
 				.map(Arguments::of);
 		// @formatter:on
 	}
