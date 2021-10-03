@@ -50,11 +50,12 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		Preconditions.condition(this.annotation.value().length > 0 ^ !this.annotation.textBlock().isEmpty(),
+		final boolean textBlockDeclared = !this.annotation.textBlock().isEmpty();
+		Preconditions.condition(this.annotation.value().length > 0 ^ textBlockDeclared,
 			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
 		String[] lines;
-		if (!this.annotation.textBlock().isEmpty()) {
+		if (textBlockDeclared) {
 			lines = NEW_LINE_REGEX.split(this.annotation.textBlock(), 0);
 		}
 		else {
