@@ -11,11 +11,11 @@
 package org.junit.jupiter.params.provider;
 
 import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
+import static org.junit.jupiter.params.provider.TextBlockUtils.stripIndent;
 import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.io.StringReader;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +28,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 
 /**
@@ -37,20 +36,6 @@ import org.junit.platform.commons.util.UnrecoverableExceptions;
 class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvSource> {
 
 	private static final String LINE_SEPARATOR = "\n";
-
-	private static final Method stripIndentMethod;
-
-	static {
-		Method method = null;
-		try {
-			// java.lang.String#stripIndent() is available on Java 15+
-			method = String.class.getMethod("stripIndent");
-		}
-		catch (Exception ex) {
-			// ignore, assuming stripIndent() is not available in the current JRE
-		}
-		stripIndentMethod = method;
-	}
 
 	private CsvSource annotation;
 	private Set<String> nullValues;
@@ -132,13 +117,6 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 			throw (PreconditionViolationException) throwable;
 		}
 		throw new CsvParsingException("Failed to parse CSV input configured via " + annotation, throwable);
-	}
-
-	private static String stripIndent(String textBlock) {
-		if (stripIndentMethod != null) {
-			return (String) ReflectionUtils.invokeMethod(stripIndentMethod, textBlock);
-		}
-		return textBlock;
 	}
 
 }
