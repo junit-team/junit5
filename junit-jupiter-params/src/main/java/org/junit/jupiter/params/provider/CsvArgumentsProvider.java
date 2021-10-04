@@ -72,11 +72,11 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 
 	private String[] parseLine(String line, int index) {
 		try {
-			String[] parsedLine = this.csvParser.parseLine(line + LINE_SEPARATOR);
-			Preconditions.notNull(parsedLine,
+			String[] csvRecord = this.csvParser.parseLine(line + LINE_SEPARATOR);
+			Preconditions.notNull(csvRecord,
 				() -> "Line at index " + index + " contains invalid CSV: \"" + line + "\"");
-			processNullValues(parsedLine, this.nullValues);
-			return parsedLine;
+			processNullValues(csvRecord, this.nullValues);
+			return csvRecord;
 		}
 		catch (Throwable throwable) {
 			throw handleCsvException(throwable, this.annotation);
