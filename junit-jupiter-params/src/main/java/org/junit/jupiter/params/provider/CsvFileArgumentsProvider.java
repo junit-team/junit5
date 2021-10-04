@@ -15,6 +15,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.CsvArgumentsProvider.handleCsvException;
+import static org.junit.jupiter.params.provider.CsvArgumentsProvider.processNullValues;
 import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
 import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
@@ -141,26 +142,23 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		}
 
 		private void advance() {
-			String[] parsedLine = null;
+			String[] csvRecord = null;
 			try {
-				parsedLine = this.csvParser.parseNext();
-				if (parsedLine != null && !this.nullValues.isEmpty()) {
-					for (int i = 0; i < parsedLine.length; i++) {
-						if (this.nullValues.contains(parsedLine[i])) {
-							parsedLine[i] = null;
-						}
-					}
+				csvRecord = this.csvParser.parseNext();
+				if (csvRecord != null) {
+					processNullValues(csvRecord, this.nullValues);
 				}
 			}
 			catch (Throwable throwable) {
 				handleCsvException(throwable, this.annotation);
 			}
 
-			this.nextCsvRecord = parsedLine;
+			this.nextCsvRecord = csvRecord;
 		}
 
 	}
 
+	@FunctionalInterface
 	private interface Source {
 
 		InputStream open(ExtensionContext context);
