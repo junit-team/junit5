@@ -11,7 +11,6 @@
 package org.junit.jupiter.params.provider;
 
 import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
-import static org.junit.jupiter.params.provider.TextBlockUtils.stripIndent;
 import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.io.StringReader;
@@ -69,11 +68,11 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	private List<String[]> parseTextBlock(String textBlock) {
 		try {
 			AtomicInteger index = new AtomicInteger(0);
-			List<String[]> csvRecords = this.csvParser.parseAll(new StringReader(stripIndent(textBlock)));
+			List<String[]> csvRecords = this.csvParser.parseAll(new StringReader(textBlock));
 			for (String[] csvRecord : csvRecords) {
 				index.incrementAndGet();
 				Preconditions.notNull(csvRecord,
-					() -> "Line at index " + index.get() + " contains invalid CSV: \"\"\"" + textBlock + "\"\"\"");
+					() -> "Line at index " + index.get() + " contains invalid CSV: \"\"\"\n" + textBlock + "\n\"\"\"");
 				processNullValues(csvRecord, this.nullValues);
 			}
 			return csvRecords;

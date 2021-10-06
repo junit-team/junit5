@@ -98,10 +98,10 @@ class ParameterizedTestIntegrationTests {
 			apple,         1
 			banana,        2
 			# This is a comment pointing out that the next line contains multiple explicit newlines in quoted text.
-			"lemon
+			"lemon  \s
 
 
-			\slime",         0xF1
+			\s  lime",         0xF1
 			# The next line is a blank line in the middle of the CSV rows.
 
 			strawberry,    700_000
@@ -116,7 +116,7 @@ class ParameterizedTestIntegrationTests {
 			case "banana":
 				assertThat(rank).isEqualTo(2);
 				break;
-			case "lemon\n\n\n lime":
+			case "lemon   \n\n\n   lime":
 				assertThat(rank).isEqualTo(241);
 				break;
 			case "strawberry":
