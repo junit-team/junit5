@@ -696,4 +696,11 @@ public final class DiscoverySelectors {
 		return new UniqueIdSelector(UniqueId.parse(uniqueId));
 	}
 
+	@API(status = EXPERIMENTAL, since = "1.9")
+	public static IterationSelector selectIteration(DiscoverySelector parentSelector, int... iterationIndices) {
+		Preconditions.notNull(parentSelector, "Parent selector must not be null");
+		Preconditions.notEmpty(iterationIndices, "iteration indices must not be empty");
+		return new IterationSelector(parentSelector, iterationIndices);
+	}
+
 }

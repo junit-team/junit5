@@ -29,6 +29,7 @@ import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.FileSelector;
+import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.NestedClassSelector;
@@ -295,6 +296,11 @@ public interface SelectorResolver {
 	 * @see #resolve(DiscoverySelector, Context)
 	 */
 	default Resolution resolve(UriSelector selector, Context context) {
+		return resolve((DiscoverySelector) selector, context);
+	}
+
+	@API(status = EXPERIMENTAL, since = "1.9")
+	default Resolution resolve(IterationSelector selector, Context context) {
 		return resolve((DiscoverySelector) selector, context);
 	}
 

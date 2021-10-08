@@ -27,4 +27,6 @@ public interface Filterable {
 
 	DynamicDescendantFilter getDynamicDescendantFilter();
 
+	IterationFilter getIterationFilter();
+
 }

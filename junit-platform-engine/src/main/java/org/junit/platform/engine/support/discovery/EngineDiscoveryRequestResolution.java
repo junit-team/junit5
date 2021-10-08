@@ -40,6 +40,7 @@ import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.FileSelector;
+import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.NestedClassSelector;
@@ -132,6 +133,9 @@ class EngineDiscoveryRequestResolution {
 			}
 			if (selector instanceof ClassSelector) {
 				return resolver.resolve((ClassSelector) selector, context);
+			}
+			if (selector instanceof IterationSelector) {
+				return resolver.resolve((IterationSelector) selector, context);
 			}
 			if (selector instanceof NestedClassSelector) {
 				return resolver.resolve((NestedClassSelector) selector, context);
