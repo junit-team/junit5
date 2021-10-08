@@ -61,7 +61,6 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
-	private final IterationFilter iterationFilter = new IterationFilter();
 
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
@@ -73,11 +72,6 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	@Override
 	public DynamicDescendantFilter getDynamicDescendantFilter() {
 		return dynamicDescendantFilter;
-	}
-
-	@Override
-	public IterationFilter getIterationFilter() {
-		return iterationFilter;
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -109,11 +103,9 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
-					if (getIterationFilter().test(index - 1)) {
-						Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index,
-							defaultTestSource, getDynamicDescendantFilter(), configuration);
-						descriptor.ifPresent(dynamicTestExecutor::execute);
-					}
+					Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index,
+						defaultTestSource, getDynamicDescendantFilter(), configuration);
+					descriptor.ifPresent(dynamicTestExecutor::execute);
 					index++;
 				}
 			}
@@ -162,9 +154,9 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			DynamicContainer container = (DynamicContainer) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
 			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, source,
-				dynamicDescendantFilter, configuration);
+				dynamicDescendantFilter.withoutIndexFiltering(), configuration);
 		}
-		if (dynamicDescendantFilter.test(uniqueId)) {
+		if (dynamicDescendantFilter.test(uniqueId, index - 1)) {
 			JupiterTestDescriptor descriptor = descriptorCreator.get();
 			descriptor.setParent(parent);
 			return Optional.of(descriptor);
