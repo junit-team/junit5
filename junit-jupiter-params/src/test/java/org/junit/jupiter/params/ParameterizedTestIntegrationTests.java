@@ -16,9 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Named.named;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendTestTemplateInvocationSegment;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -780,6 +784,18 @@ class ParameterizedTestIntegrationTests {
 		assertTrue(AutoCloseableArgument.isClosed);
 	}
 
+	@Test
+	void executesTwoIterationsBasedOnIterationAndUniqueIdSelector() {
+		var methodId = uniqueIdForTestTemplateMethod(TestCase.class, "testWithThreeIterations(int)");
+		var results = execute(selectUniqueId(appendTestTemplateInvocationSegment(methodId, 3)),
+			selectIteration(selectMethod(TestCase.class, "testWithThreeIterations", "int"), 1));
+
+		results.allEvents().assertThatEvents() //
+				.haveExactly(2, event(test(), finishedWithFailure())) //
+				.haveExactly(1, event(test(), displayName("[2] argument=3"), finishedWithFailure())) //
+				.haveExactly(1, event(test(), displayName("[3] argument=5"), finishedWithFailure()));
+	}
+
 	// -------------------------------------------------------------------------
 
 	static class TestCase {
@@ -868,6 +884,11 @@ class ParameterizedTestIntegrationTests {
 			assertFalse(AutoCloseableArgument.isClosed);
 		}
 
+		@ParameterizedTest
+		@ValueSource(ints = { 2, 3, 5 })
+		void testWithThreeIterations(int argument) {
+			fail("argument: " + argument);
+		}
 	}
 
 	static class NullSourceTestCase {
