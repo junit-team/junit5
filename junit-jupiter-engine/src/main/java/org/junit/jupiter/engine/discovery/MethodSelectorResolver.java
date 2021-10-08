@@ -125,7 +125,7 @@ class MethodSelectorResolver implements SelectorResolver {
 							filterable.getDynamicDescendantFilter().allowAll();
 						}
 						else {
-							filterable.getDynamicDescendantFilter().allow(uniqueId);
+							filterable.getDynamicDescendantFilter().allowUniqueIdPrefix(uniqueId);
 						}
 					}
 					return Resolution.match(exactMatch ? Match.exact(testDescriptor) : Match.partial(testDescriptor, expansionCallback(testDescriptor)));
@@ -143,7 +143,7 @@ class MethodSelectorResolver implements SelectorResolver {
 				(testDescriptor, childSelectorsSupplier) -> {
 					if (testDescriptor instanceof Filterable) {
 						Filterable filterable = (Filterable) testDescriptor;
-						filterable.getIterationFilter().allow(selector.getIterationIndices());
+						filterable.getDynamicDescendantFilter().allowIndex(selector.getIterationIndices());
 					}
 					return Match.partial(testDescriptor, childSelectorsSupplier);
 				});
@@ -156,7 +156,6 @@ class MethodSelectorResolver implements SelectorResolver {
 			if (testDescriptor instanceof Filterable) {
 				Filterable filterable = (Filterable) testDescriptor;
 				filterable.getDynamicDescendantFilter().allowAll();
-				filterable.getIterationFilter().allowAll();
 			}
 			return emptySet();
 		};

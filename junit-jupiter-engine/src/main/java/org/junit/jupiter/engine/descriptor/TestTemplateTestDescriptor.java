@@ -44,7 +44,6 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 
 	public static final String SEGMENT_TYPE = "test-template";
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
-	private final IterationFilter iterationFilter = new IterationFilter();
 
 	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
 			JupiterConfiguration configuration) {
@@ -56,11 +55,6 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	@Override
 	public DynamicDescendantFilter getDynamicDescendantFilter() {
 		return dynamicDescendantFilter;
-	}
-
-	@Override
-	public IterationFilter getIterationFilter() {
-		return iterationFilter;
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -133,7 +127,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	private Optional<TestDescriptor> createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext,
 			int index) {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
-		if (getDynamicDescendantFilter().test(uniqueId)) {
+		if (getDynamicDescendantFilter().test(uniqueId, index - 1)) {
 			return Optional.of(new TestTemplateInvocationTestDescriptor(uniqueId, getTestClass(), getTestMethod(),
 				invocationContext, index, configuration));
 		}
