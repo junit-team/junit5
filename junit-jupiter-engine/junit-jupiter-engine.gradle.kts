@@ -4,6 +4,7 @@ plugins {
 	`kotlin-library-conventions`
 	`testing-conventions`
 	groovy
+	`java-test-fixtures`
 }
 
 description = "JUnit Jupiter Engine"
