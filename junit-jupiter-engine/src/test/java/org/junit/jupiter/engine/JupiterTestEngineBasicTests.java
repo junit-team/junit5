@@ -12,7 +12,6 @@ package org.junit.jupiter.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -41,9 +40,8 @@ class JupiterTestEngineBasicTests {
 	}
 
 	@Test
-	@Disabled("started failing after introducing java-test-fixtures")
 	void version() {
-		assertEquals("DEVELOPMENT", jupiter.getVersion().get());
+		assertEquals(System.getProperty("developmentVersion"), jupiter.getVersion().get());
 	}
 
 }
