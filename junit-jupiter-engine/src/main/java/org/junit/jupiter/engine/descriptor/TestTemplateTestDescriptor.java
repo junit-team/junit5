@@ -44,6 +44,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 
 	public static final String SEGMENT_TYPE = "test-template";
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
+	private final IterationFilter iterationFilter = new IterationFilter();
 
 	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
 			JupiterConfiguration configuration) {
@@ -55,6 +56,11 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	@Override
 	public DynamicDescendantFilter getDynamicDescendantFilter() {
 		return dynamicDescendantFilter;
+	}
+
+	@Override
+	public IterationFilter getIterationFilter() {
+		return iterationFilter;
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
