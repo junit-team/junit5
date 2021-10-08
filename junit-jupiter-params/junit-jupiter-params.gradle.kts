@@ -18,6 +18,7 @@ dependencies {
 	testImplementation(projects.junitJupiterEngine)
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteEngine)
+	testImplementation(testFixtures(projects.junitJupiterEngine))
 
 	compileOnly(kotlin("stdlib"))
 	testImplementation(kotlin("stdlib"))
