@@ -70,7 +70,7 @@ tasks.withType<Jar>().matching {
 // task writes out the properties necessary for it to verify the OSGi
 // metadata.
 val osgiProperties by tasks.registering(WriteProperties::class) {
-	setOutputFile(layout.getBuildDirectory().file("verifyOSGiProperties.bndrun"))
+	setOutputFile(layout.buildDirectory.file("verifyOSGiProperties.bndrun"))
 	property("-standalone", true)
 	project.extensions.getByType(JavaLibraryExtension::class.java).let { javaLibrary ->
 		property("-runee", "JavaSE-${javaLibrary.mainJavaVersion}")
