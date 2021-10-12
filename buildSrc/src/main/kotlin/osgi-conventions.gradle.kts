@@ -90,9 +90,9 @@ val osgiVerification by configurations.creating {
 // that its metadata is valid. If the metadata is invalid this task will
 // fail.
 val verifyOSGi by tasks.registering(Resolve::class) {
-	getBndrun().fileProvider(osgiProperties.map{ it.getOutputFile() })
-	getOutputBndrun().set(layout.getBuildDirectory().file("resolvedOSGiProperties.bndrun"))
-	setReportOptional(false)
+	bndrun.fileProvider(osgiProperties.map{ it.outputFile })
+	outputBndrun.set(layout.buildDirectory.file("resolvedOSGiProperties.bndrun"))
+	isReportOptional = false
 	// By default bnd will use jars found in:
 	// 1. project.sourceSets.main.runtimeClasspath
 	// 2. project.configurations.archives.artifacts.files
