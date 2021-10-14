@@ -96,8 +96,8 @@ buildCache {
 }
 
 val javaVersion = JavaVersion.current()
-require(java.util.EnumSet.range(JavaVersion.VERSION_11, JavaVersion.VERSION_15).contains(javaVersion)) {
-	"The JUnit 5 build requires a JRE in the range of Java 11 to Java 15. Currently executing with Java ${javaVersion.majorVersion}."
+require(javaVersion == JavaVersion.VERSION_17) {
+	"The JUnit 5 build must be executed with Java 17. Currently executing with Java ${javaVersion.majorVersion}."
 }
 
 rootProject.name = "junit5"
