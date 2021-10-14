@@ -31,10 +31,7 @@ spotless {
             licenseHeaderFile(license.headerFile, "(package|import|open|module) ")
             importOrderFile(importOrderConfigFile)
             eclipse().configFile(javaFormatterConfigFile)
-            if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {
-                // Doesn't work with Java 15 text blocks, see https://github.com/diffplug/spotless/issues/713
-                removeUnusedImports()
-            }
+            removeUnusedImports()
             trimTrailingWhitespace()
             endWithNewline()
         }
