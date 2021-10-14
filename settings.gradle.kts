@@ -9,7 +9,7 @@ pluginManagement {
 		id("com.gradle.enterprise.test-distribution") version "2.2" // keep in sync with buildSrc/buiild.gradle.kts
 		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.4.2"
 		id("org.ajoberstar.git-publish") version "3.0.0"
-		kotlin("jvm") version "1.5.0"
+		kotlin("jvm") version "1.5.31"
 		// Check if workaround in documentation.gradle.kts can be removed when upgrading
 		id("org.asciidoctor.jvm.convert") version "3.3.2"
 		id("org.asciidoctor.jvm.pdf") version "3.3.2"
