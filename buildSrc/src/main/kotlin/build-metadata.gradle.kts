@@ -9,6 +9,10 @@ plugins {
 	id("net.nemerosa.versioning")
 }
 
+versioning {
+	noWarningOnDirty = true
+}
+
 val buildTimeAndDate: OffsetDateTime by extra {
 
 	// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against
