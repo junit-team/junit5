@@ -19,8 +19,14 @@ dependencies {
 	compileOnly("com.gradle.enterprise:test-distribution-gradle-plugin:2.2") // keep in sync with root settings.gradle.kts
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-	kotlinOptions {
-		allWarningsAsErrors = true
+tasks {
+	withType<JavaCompile>().configureEach {
+		options.release.set(8)
+	}
+	withType<KotlinCompile>().configureEach {
+		kotlinOptions {
+			jvmTarget = "1.8"
+			allWarningsAsErrors = true
+		}
 	}
 }
