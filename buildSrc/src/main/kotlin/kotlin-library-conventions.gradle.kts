@@ -20,7 +20,8 @@ afterEvaluate {
 			kotlinOptions.jvmTarget = extension.mainJavaVersion.toString()
 		}
 		named<KotlinCompile>("compileTestKotlin") {
-			kotlinOptions.jvmTarget = extension.testJavaVersion.toString()
+			// The Kotlin compiler does not yet support JDK 17 and later (see https://kotlinlang.org/docs/compiler-reference.html#jvm-target-version)
+			kotlinOptions.jvmTarget = minOf(JavaVersion.VERSION_16, extension.testJavaVersion).toString()
 		}
 	}
 }
