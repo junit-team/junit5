@@ -58,7 +58,7 @@ so that local builds can reuse task outputs from previous CI builds.
 
 ## Building from Source
 
-You need [JDK 11] to build JUnit 5. [Gradle toolchains] are used to detect and
+You need [JDK 17] to build JUnit 5. [Gradle toolchains] are used to detect and
 potentially download additional JDKs for compilation and test execution.
 
 All modules can be _built_ with the [Gradle Wrapper] using the following command.
