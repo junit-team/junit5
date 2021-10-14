@@ -43,8 +43,7 @@ spotless {
     pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
         kotlin {
             targetExclude("**/src/test/resources/**")
-            val libs = project.extensions["libs"] as VersionCatalog
-            ktlint(libs.findVersion("ktlint").get().requiredVersion)
+            ktlint(requiredVersionFromLibs("ktlint"))
             licenseHeaderFile(license.headerFile)
             trimTrailingWhitespace()
             endWithNewline()

@@ -7,8 +7,7 @@ plugins {
 val enableJaCoCo = project.hasProperty("enableJaCoCo")
 
 jacoco {
-	val libs = project.extensions["libs"] as VersionCatalog
-	toolVersion = libs.findVersion("jacoco").get().requiredVersion
+	toolVersion = requiredVersionFromLibs("jacoco")
 }
 
 tasks {
