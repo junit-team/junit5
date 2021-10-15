@@ -536,7 +536,6 @@ bab36b4db649fecc5afa63e4e4ba8ac0  junit-platform-engine/src/main/java/org/junit/
 bad9a33a05d7ed8808f3902a3ceaad3a  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdReader.java
 bb2e63bb2c5cad615fd2956f0472a650  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/MutableExtensionRegistry.java
 bb416ad222a61115472459842b0572d2  documentation/src/main/java/example/domain/Person.java
-bb99c1957be8fc6b2b388c50346f7826  documentation/documentation.gradle.kts
 bbb5d85083bc8d996fd5bcbc8a0a8222  documentation/src/test/java/example/registration/WebServerDemo.java
 bc1cba5da6cfc7cfb107a540bc335f2d  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassUtils.java
 bc5298199f09eb42c95b16b04faaf29f  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ToStringBuilder.java
@@ -725,6 +724,7 @@ f18c1a6df391be12bc6d002c34bb6576  junit-jupiter-engine/src/main/java/org/junit/j
 f1adf3e57b678271524a3efcb3f25187  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerRequest.java
 f1c6c4f69fedd8195fcb82e9f00fadc8  documentation/src/test/java/example/exception/RecordStateOnErrorExtension.java
 f1f5cc8843f089ec358d72ee1cd68722  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
+f1f9e80d4b06651960fcbc4dc5e7c888  documentation/documentation.gradle.kts
 f22f5c6b65c14f4edcf6cb65ca265be2  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/EventType.java
 f293f4375806353533f8b60e08fc67fc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestExtension.java
 f2c309d3f86c13f1bb1c55bb9d8ff6cf  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.java
