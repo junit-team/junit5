@@ -96,7 +96,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK 11]: https://adoptopenjdk.net/archive.html?variant=openjdk11&jvmVariant=hotspot
+[JDK 17]: https://adoptium.net/archive.html?variant=openjdk17&jvmVariant=hotspot
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [Samples]: https://github.com/junit-team/junit5-samples
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
