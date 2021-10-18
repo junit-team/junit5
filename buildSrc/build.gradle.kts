@@ -10,7 +10,7 @@ repositories {
 
 dependencies {
 	implementation(kotlin("gradle-plugin"))
-	implementation("biz.aQute.bnd:biz.aQute.bnd.gradle:5.3.0")
+	implementation("biz.aQute.bnd:biz.aQute.bnd.gradle:6.0.0")
     implementation("com.diffplug.spotless:spotless-plugin-gradle:5.15.2")
     implementation("com.github.ben-manes:gradle-versions-plugin:0.39.0")
     implementation("gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0")
