@@ -84,7 +84,7 @@ public @interface CsvSource {
 	 *     "apple,         1",
 	 *     "banana,        2",
 	 *     "'lemon, lime', 0xF1",
-	 *     "strawberry,    700_000",
+	 *     "strawberry,    700_000"
 	 * })
 	 * void test(String fruit, int rank) {
 	 *     // ...
@@ -116,7 +116,7 @@ public @interface CsvSource {
 	 *     banana,        2
 	 *     'lemon, lime', 0xF1
 	 *     strawberry,    700_000
-	 * """)
+	 *     """)
 	 * void test(String fruit, int rank) {
 	 *     // ...
 	 * }</pre>
