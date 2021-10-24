@@ -31,7 +31,6 @@ spotless {
             licenseHeaderFile(license.headerFile, "(package|import|open|module) ")
             importOrderFile(importOrderConfigFile)
             eclipse().configFile(javaFormatterConfigFile)
-            removeUnusedImports()
             trimTrailingWhitespace()
             endWithNewline()
         }
