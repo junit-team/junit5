@@ -10,6 +10,7 @@ on:
       - '*'
 
 env:
+  ORG_GRADLE_PROJECT_enableTestDistribution: true
   ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
   ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
@@ -36,14 +37,17 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-        cache: 'gradle'
     - name: Test and coverage
-      env:
-        ORG_GRADLE_PROJECT_enableTestDistribution: true
-      run: |
-        ./gradlew --version
-        ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -PenableJaCoCo -Porg.gradle.java.installations.auto-download=false build jacocoRootReport
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: |
+          -Porg.gradle.java.installations.auto-download=false
+          -PenableJaCoCo
+          -Dplatform.tooling.support.tests.enabled=true
+          -Dscan.tag.Linux
+          javaToolchains
+          build
+          jacocoRootReport
     - name: Upload Test Distribution trace files
       uses: actions/upload-artifact@v2
       with:
@@ -72,14 +76,15 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-        cache: 'gradle'
     - name: Test
-      shell: bash
-      run: |
-        ./gradlew --version
-        ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.auto-download=false build
-        ./gradlew --stop
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: |
+          -Porg.gradle.java.installations.auto-download=false
+          -Dplatform.tooling.support.tests.enabled=true
+          -Dscan.tag.Windows
+          javaToolchains
+          build
 
   mac:
     name: Mac OS
@@ -101,12 +106,15 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-        cache: 'gradle'
-    - name: 'Test'
-      run: |
-        ./gradlew --version
-        ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
-        ./gradlew --no-parallel --stacktrace -Dplatform.tooling.support.tests.enabled=true -Porg.gradle.java.installations.auto-download=false build
+    - name: Test
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: |
+          -Porg.gradle.java.installations.auto-download=false
+          -Dplatform.tooling.support.tests.enabled=true
+          -Dscan.tag.macOS
+          javaToolchains
+          build
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
@@ -122,14 +130,18 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-        cache: 'gradle'
     - name: Publish
+      uses: gradle/gradle-build-action@v2
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
-      run: |
-        ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
-        ./gradlew publish -x check -Porg.gradle.java.installations.auto-download=false
+      with:
+        arguments: |
+          -Porg.gradle.java.installations.auto-download=false
+          -Dscan.tag.Snapshots
+          javaToolchains
+          publish
+          -x check
 
   update_documentation:
     name: Update Snapshot Documentation
@@ -145,13 +157,17 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-        cache: 'gradle'
     - name: Install Graphviz
       run: |
         sudo apt-get update
         sudo apt-get install graphviz
+    - name: Restore Gradle cache and display toolchains
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: |
+          -Porg.gradle.java.installations.auto-download=false
+          javaToolchains
     - name: Upload Documentation
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
-        GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
       run: ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
