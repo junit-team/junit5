@@ -29,5 +29,6 @@ gradle-app.setting
 *.graphml
 coverage.db*
 .metadata
+/.sdkmanrc
 
 checksums*
