@@ -28,15 +28,19 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-        cache: 'gradle'
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
     - name: Build
-      run: |
-        ./gradlew --version
-        ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
-        ./gradlew --no-build-cache allMainClasses -PjavaToolchainVersion=11 -Porg.gradle.java.installations.auto-download=false
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: |
+          --no-build-cache
+          -Porg.gradle.java.installations.auto-download=false
+          -PjavaToolchainVersion=11
+          -Dscan.tag.CodeQL
+          javaToolchains
+          allMainClasses
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

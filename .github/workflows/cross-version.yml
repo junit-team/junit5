@@ -10,6 +10,7 @@ on:
       - '*'
 
 env:
+  ORG_GRADLE_PROJECT_enableTestDistribution: true
   ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
   ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
@@ -52,14 +53,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
       - name: Test
-        env:
-          ORG_GRADLE_PROJECT_enableTestDistribution: true
-        run: |
-          ./gradlew --version
-          ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
-          ./gradlew --no-parallel -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} -Porg.gradle.java.installations.auto-download=false build "-Dscan.tag.JDK_${{ matrix.jdk }}"
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Porg.gradle.java.installations.auto-download=false
+            -PjavaToolchainVersion=${{ matrix.jdk }}
+            -Dplatform.tooling.support.tests.enabled=true
+            -Dscan.tag.JDK_${{ matrix.jdk }}
+            javaToolchains
+            build
       - name: Upload Test Distribution trace files
         uses: actions/upload-artifact@v2
         with:

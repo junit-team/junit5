@@ -58,5 +58,5 @@ else
   echo "Creating and publishing documentation..."
   echo
   cp --force "${current}" "${published}"
-  ./gradlew javaToolchains gitPublishPush -Porg.gradle.java.installations.auto-download=false
+  ./gradlew gitPublishPush -Porg.gradle.java.installations.auto-download=false -Dscan.tag.Documentation
 fi
