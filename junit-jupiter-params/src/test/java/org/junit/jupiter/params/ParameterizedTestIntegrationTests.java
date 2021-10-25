@@ -127,6 +127,39 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
+	@ParameterizedTest
+	@CsvSource(quoteCharacter = '"', delimiter = '|', textBlock = """
+			#-----------------------------
+			#    FRUIT     |     RANK
+			#-----------------------------
+			     apple     |      1
+			#-----------------------------
+			     banana    |      2
+			#-----------------------------
+			  "lemon lime" |     0xF1
+			#-----------------------------
+			   strawberry  |    700_000
+			#-----------------------------
+			""")
+	void executesLinesFromTextBlockUsingPseudoTableFormat(String fruit, int rank) {
+		switch (fruit) {
+			case "apple":
+				assertThat(rank).isEqualTo(1);
+				break;
+			case "banana":
+				assertThat(rank).isEqualTo(2);
+				break;
+			case "lemon lime":
+				assertThat(rank).isEqualTo(241);
+				break;
+			case "strawberry":
+				assertThat(rank).isEqualTo(700_000);
+				break;
+			default:
+				fail("Unexpected fruit : " + fruit);
+		}
+	}
+
 	@Test
 	void executesWithSingleArgumentsProviderWithMultipleInvocations() {
 		var results = execute("testWithTwoSingleStringArgumentsProvider", String.class);
