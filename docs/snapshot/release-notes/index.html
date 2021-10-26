@@ -632,7 +632,17 @@ on GitHub.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Text blocks in <code>@CsvSource</code> are treated as CSV files</p>
+</li>
+<li>
+<p>Custom quote character support in <code>@CsvSource</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -698,6 +708,13 @@ GitHub.</p>
 <h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>Text blocks in <code>@CsvSource</code> are now treated as complete CSV files, including support for
+comments beginning with a <code>#</code> symbol as well as support for new lines within
+quoted strings. See the
+<a href="../user-guide/index.html#writing-tests-parameterized-tests-sources-CsvSource">User
+Guide</a> for details and examples.</p>
+</li>
 <li>
 <p>The quote character for <em>quoted strings</em> in <code>@CsvSource</code> is now configurable via the new
 <code>quoteCharacter</code> attribute, which defaults to a single quote (<code>'</code>) for backward
@@ -910,7 +927,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-10-23 18:01:39 UTC
+Last updated 2021-10-26 11:19:09 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

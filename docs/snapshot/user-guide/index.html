@@ -3839,7 +3839,7 @@ qualified method name</em> as demonstrated in the following example.</p>
 <div class="paragraph">
 <p><code>@CsvSource</code> allows you to express argument lists as comma-separated values (i.e., CSV
 <code>String</code> literals). Each string provided via the <code>value</code> attribute in <code>@CsvSource</code>
-represents a CSV line and results in one invocation of the parameterized test.</p>
+represents a CSV record and results in one invocation of the parameterized test.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3853,26 +3853,6 @@ represents a CSV line and results in one invocation of the parameterized test.</
 <span class="kt">void</span> <span class="nf">testWithCsvSource</span><span class="o">(</span><span class="nc">String</span> <span class="n">fruit</span><span class="o">,</span> <span class="kt">int</span> <span class="n">rank</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">assertNotNull</span><span class="o">(</span><span class="n">fruit</span><span class="o">);</span>
     <span class="n">assertNotEquals</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">rank</span><span class="o">);</span>
-<span class="o">}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If the programming language you are using supports <em>text blocks</em>&#8201;&#8212;&#8201;for example, Java SE
-15 or higher&#8201;&#8212;&#8201;you can alternatively use the <code>textBlock</code> attribute of <code>@CsvSource</code>. Each
-line within a text block represents a CSV line and results in one invocation of the
-parameterized test. Using a text block, the previous example can be implemented as follows.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="nd">@ParameterizedTest</span>
-<span class="nd">@CsvSource</span><span class="o">(</span><span class="n">textBlock</span> <span class="o">=</span> <span class="s">"""
-    apple,         1
-    banana,        2
-    'lemon, lime', 0xF1
-    strawberry,    700_000
-"""</span><span class="o">)</span>
-<span class="kt">void</span> <span class="nf">testWithCsvSource</span><span class="o">(</span><span class="nc">String</span> <span class="n">fruit</span><span class="o">,</span> <span class="kt">int</span> <span class="n">rank</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">// ...</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -3948,12 +3928,81 @@ by default. This behavior can be changed by setting the
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>If the programming language you are using supports <em>text blocks</em>&#8201;&#8212;&#8201;for example, Java SE
+15 or higher&#8201;&#8212;&#8201;you can alternatively use the <code>textBlock</code> attribute of <code>@CsvSource</code>. Each
+record within a text block represents a CSV record and results in one invocation of the
+parameterized test. Using a text block, the previous example can be implemented as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@ParameterizedTest</span>
+<span class="nd">@CsvSource</span><span class="o">(</span><span class="n">textBlock</span> <span class="o">=</span> <span class="s">"""
+    apple,         1
+    banana,        2
+    'lemon, lime', 0xF1
+    strawberry,    700_000
+    """</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">testWithCsvSource</span><span class="o">(</span><span class="nc">String</span> <span class="n">fruit</span><span class="o">,</span> <span class="kt">int</span> <span class="n">rank</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In contrast to CSV records supplied via the <code>value</code> attribute, a text block can contain
+comments. Any line beginning with a <code>#</code> symbol will be treated as a comment and
+ignored. Note, however, that the <code>#</code> symbol must be the first character on the line
+without any leading whitespace. It is therefore recommended that the closing text block
+delimiter <code>"""</code> be placed either at the end of the last line of input or on the following
+line, left aligned with the rest of the input (as can be seen in the example below which
+demonstrates formatting similar to a table).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@ParameterizedTest</span>
+<span class="nd">@CsvSource</span><span class="o">(</span><span class="n">delimiter</span> <span class="o">=</span> <span class="sc">'|'</span><span class="o">,</span> <span class="n">quoteCharacter</span> <span class="o">=</span> <span class="sc">'"'</span><span class="o">,</span> <span class="n">textBlock</span> <span class="o">=</span> <span class="s">"""
+    #-----------------------------
+    #    FRUIT     |     RANK
+    #-----------------------------
+         apple     |      1
+    #-----------------------------
+         banana    |      2
+    #-----------------------------
+      "</span><span class="n">lemon</span> <span class="n">lime</span><span class="s">" |     0xF1
+    #-----------------------------
+       strawberry  |    700_000
+    #-----------------------------
+    """</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">testWithCsvSource</span><span class="o">(</span><span class="nc">String</span> <span class="n">fruit</span><span class="o">,</span> <span class="kt">int</span> <span class="n">rank</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Java&#8217;s <a href="https://docs.oracle.com/en/java/javase/15/text-blocks/index.html">text block</a>
+feature automatically removes <em>incidental whitespace</em> when the code is compiled.
+However other JVM languages such as Groovy and Kotlin do not. Thus, if you are using a
+programming language other than Java and your text block contains comments or new lines
+within quoted strings, you will need to ensure that there is no leading whitespace within
+your text block.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-CsvFileSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-CsvFileSource"></a>@CsvFileSource</h5>
 <div class="paragraph">
 <p><code>@CsvFileSource</code> lets you use comma-separated value (CSV) files from the classpath or the
-local file system. Each line from a CSV file results in one invocation of the
+local file system. Each record from a CSV file results in one invocation of the
 parameterized test.</p>
 </div>
 <div class="paragraph">
@@ -3970,8 +4019,8 @@ cannot be set simultaneously.</p>
 </td>
 <td class="content">
 <div class="title">Comments in CSV files</div>
-Any line beginning with a <code>#</code> symbol will be interpreted as a comment and will be
-ignored.
+Any line beginning with a <code>#</code> symbol will be interpreted as a comment and will
+be ignored.
 </td>
 </tr>
 </table>
@@ -4004,13 +4053,13 @@ France, 700_000</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In contrast to the syntax used in <code>@CsvSource</code>, <code>@CsvFileSource</code> uses a double quote <code>"</code>
-as the quote character. See the <code>"United States of America"</code> value in the example above.
-An empty, quoted value <code>""</code> results in an empty <code>String</code> unless the <code>emptyValue</code> attribute
-is set; whereas, an entirely <em>empty</em> value is interpreted as a <code>null</code> reference. By
-specifying one or more <code>nullValues</code>, a custom value can be interpreted as a <code>null</code>
-reference. An <code>ArgumentConversionException</code> is thrown if the target type of a <code>null</code>
-reference is a primitive type.</p>
+<p>In contrast to the default syntax used in <code>@CsvSource</code>, <code>@CsvFileSource</code> uses a double
+quote <code>"</code> as the quote character. See the <code>"United States of America"</code> value in the
+example above. An empty, quoted value <code>""</code> results in an empty <code>String</code> unless the
+<code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em> value is interpreted as a
+<code>null</code> reference. By specifying one or more <code>nullValues</code>, a custom value can be
+interpreted as a <code>null</code> reference. An <code>ArgumentConversionException</code> is thrown if the
+target type of a <code>null</code> reference is a primitive type.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -10914,7 +10963,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-10-23 18:01:39 UTC
+Last updated 2021-10-26 11:19:09 UTC
 </div>
 </div>
 <style>

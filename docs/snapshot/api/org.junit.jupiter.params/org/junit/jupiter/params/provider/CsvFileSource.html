@@ -80,18 +80,19 @@ loadScripts(document, 'script');</script>
 <a href="ArgumentsSource.html" title="annotation interface in org.junit.jupiter.params.provider">@ArgumentsSource</a>(org.junit.jupiter.params.provider.CsvFileArgumentsProvider.class)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">CsvFileSource</span></div>
 <div class="block"><code>@CsvFileSource</code> is an <a href="ArgumentsSource.html" title="annotation interface in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a> which is used to load
- comma-separated value (CSV) files from one or more classpath <a href="#resources()"><code>resources</code></a> or <a href="#files()"><code>files()</code></a>.
+ comma-separated value (CSV) files from one or more classpath <a href="#resources()"><code>resources()</code></a>
+ or <a href="#files()"><code>files()</code></a>.
 
- <p>The lines of these CSV files will be provided as arguments to the annotated
- <code>@ParameterizedTest</code> method.
+ <p>The CSV records parsed from these resources and files will be provided as
+ arguments to the annotated <code>@ParameterizedTest</code> method.
 
  <p>Any line beginning with a <code>#</code> symbol will be interpreted as a comment
  and will be ignored.
 
- <p>The column delimiter (defaults to comma) can be customized with either
- <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
+ <p>The column delimiter (which defaults to a comma (<code>,</code>)) can be customized
+ via either <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
 
- <p>In contrast to the syntax used in <code>@CsvSource</code>, <code>@CsvFileSource</code>
+ <p>In contrast to the default syntax used in <code>@CsvSource</code>, <code>@CsvFileSource</code>
  uses a double quote (<code>"</code>) as its quote character (see the User Guide for
  examples). An empty, quoted value (<code>""</code>) results in an empty <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>
  unless the <a href="#emptyValue()"><code>emptyValue()</code></a> attribute is set; whereas, an entirely <em>empty</em>
@@ -161,19 +162,19 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>boolean</code></div>
 <div class="col-second odd-row-color"><code><a href="#ignoreLeadingAndTrailingWhitespace()" class="member-name-link">ignoreLeadingAndTrailingWhitespace</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Identifies whether leading and trailing whitespace characters of
- unquoted CSV columns should be ignored.</div>
+<div class="block">Controls whether leading and trailing whitespace characters of unquoted
+ CSV columns should be ignored.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#lineSeparator()" class="member-name-link">lineSeparator</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">The line separator to use when reading the CSV files; must consist of 1
- or 2 characters.</div>
+ or 2 characters, typically <code>"\r"</code>, <code>"\n"</code>, or <code>"\r\n"</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>int</code></div>
 <div class="col-second odd-row-color"><code><a href="#maxCharsPerColumn()" class="member-name-link">maxCharsPerColumn</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The maximum characters of per CSV column allowed.</div>
+<div class="block">The maximum number of characters allowed per CSV column.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
 <div class="col-second even-row-color"><code><a href="#nullValues()" class="member-name-link">nullValues</a></code></div>
@@ -253,7 +254,7 @@ loadScripts(document, 'script');</script>
 <h3>lineSeparator</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">lineSeparator</span></div>
 <div class="block">The line separator to use when reading the CSV files; must consist of 1
- or 2 characters.
+ or 2 characters, typically <code>"\r"</code>, <code>"\n"</code>, or <code>"\r\n"</code>.
 
  <p>Defaults to <code>"\n"</code>.</div>
 <dl class="notes">
@@ -369,7 +370,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.7")
 </span><span class="return-type">int</span>&nbsp;<span class="element-name">maxCharsPerColumn</span></div>
-<div class="block">The maximum characters of per CSV column allowed.
+<div class="block">The maximum number of characters allowed per CSV column.
 
  <p>Must be a positive number.
 
@@ -390,8 +391,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8")
 </span><span class="return-type">boolean</span>&nbsp;<span class="element-name">ignoreLeadingAndTrailingWhitespace</span></div>
-<div class="block">Identifies whether leading and trailing whitespace characters of
- unquoted CSV columns should be ignored.
+<div class="block">Controls whether leading and trailing whitespace characters of unquoted
+ CSV columns should be ignored.
 
  <p>Defaults to <code>true</code>.</div>
 <dl class="notes">

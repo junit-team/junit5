@@ -80,14 +80,14 @@ loadScripts(document, 'script');</script>
 <a href="ArgumentsSource.html" title="annotation interface in org.junit.jupiter.params.provider">@ArgumentsSource</a>(org.junit.jupiter.params.provider.CsvArgumentsProvider.class)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">CsvSource</span></div>
 <div class="block"><code>@CsvSource</code> is an <a href="ArgumentsSource.html" title="annotation interface in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a> which reads comma-separated
- values (CSV) from one or more CSV lines supplied via the <a href="#value()"><code>value()</code></a>
+ values (CSV) from one or more CSV records supplied via the <a href="#value()"><code>value()</code></a>
  attribute or <a href="#textBlock()"><code>textBlock()</code></a> attribute.
 
  <p>The supplied values will be provided as arguments to the annotated
  <code>@ParameterizedTest</code> method.
 
- <p>The column delimiter (defaults to comma) can be customized with either
- <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
+ <p>The column delimiter (which defaults to a comma (<code>,</code>)) can be customized
+ via either <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
 
  <p>By default, <code>@CsvSource</code> uses a single quote (<code>'</code>) as its quote
  character, but this can be changed via <a href="#quoteCharacter()"><code>quoteCharacter()</code></a>. See the
@@ -106,7 +106,13 @@ loadScripts(document, 'script');</script>
 
  <p>Except within a quoted string, leading and trailing whitespace in a CSV
  column is trimmed by default. This behavior can be changed by setting the
- <a href="#ignoreLeadingAndTrailingWhitespace()"><code>ignoreLeadingAndTrailingWhitespace()</code></a> attribute to <code>true</code>.</div>
+ <a href="#ignoreLeadingAndTrailingWhitespace()"><code>ignoreLeadingAndTrailingWhitespace()</code></a> attribute to <code>true</code>.
+
+ <p>In general, CSV records should not contain explicit newlines (<code>\n</code>)
+ unless they are placed within quoted strings. Note that CSV records supplied
+ via <a href="#textBlock()"><code>textBlock()</code></a> will implicitly contain newlines at the end of each
+ physical line within the text block. Thus, if a CSV column wraps across a
+ new line in a text block, the column must be a quoted string.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.0</dd>
@@ -134,28 +140,28 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>char</code></div>
 <div class="col-second even-row-color"><code><a href="#delimiter()" class="member-name-link">delimiter</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The column delimiter character to use when reading the <a href="#value()">lines</a>.</div>
+<div class="block">The column delimiter character to use when reading the <a href="#value()">records</a>.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#delimiterString()" class="member-name-link">delimiterString</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The column delimiter string to use when reading the <a href="#value()">lines</a>.</div>
+<div class="block">The column delimiter string to use when reading the <a href="#value()">records</a>.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#emptyValue()" class="member-name-link">emptyValue</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The empty value to use when reading the <a href="#value()">lines</a>.</div>
+<div class="block">The empty value to use when reading the <a href="#value()">records</a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>boolean</code></div>
 <div class="col-second odd-row-color"><code><a href="#ignoreLeadingAndTrailingWhitespace()" class="member-name-link">ignoreLeadingAndTrailingWhitespace</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Identifies whether leading and trailing whitespace characters of
- unquoted CSV columns should be ignored.</div>
+<div class="block">Controls whether leading and trailing whitespace characters of unquoted
+ CSV columns should be ignored.</div>
 </div>
 <div class="col-first even-row-color"><code>int</code></div>
 <div class="col-second even-row-color"><code><a href="#maxCharsPerColumn()" class="member-name-link">maxCharsPerColumn</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The maximum characters of per CSV column allowed.</div>
+<div class="block">The maximum number of characters allowed per CSV column.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
 <div class="col-second odd-row-color"><code><a href="#nullValues()" class="member-name-link">nullValues</a></code></div>
@@ -170,13 +176,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#textBlock()" class="member-name-link">textBlock</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The CSV lines to use as the source of arguments, supplied as a single
+<div class="block">The CSV records to use as the source of arguments, supplied as a single
  <em>text block</em>; must not be empty.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
 <div class="col-second even-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The CSV lines to use as the source of arguments; must not be empty.</div>
+<div class="block">The CSV records to use as the source of arguments; must not be empty.</div>
 </div>
 </div>
 </section>
@@ -194,13 +200,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="value()">
 <h3>value</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">value</span></div>
-<div class="block">The CSV lines to use as the source of arguments; must not be empty.
-
- <p>Each value corresponds to a line in a CSV file and will be split using
- the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
+<div class="block">The CSV records to use as the source of arguments; must not be empty.
 
  <p>Defaults to an empty array. You therefore must supply CSV content
  via this attribute or the <a href="#textBlock()"><code>textBlock()</code></a> attribute.
+
+ <p>Each value corresponds to a record in a CSV file and will be split using
+ the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
 
  <p>If <em>text block</em> syntax is supported by your programming language,
  you may find it more convenient to declare your CSV content via the
@@ -238,11 +244,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8.1")
 </span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">textBlock</span></div>
-<div class="block">The CSV lines to use as the source of arguments, supplied as a single
+<div class="block">The CSV records to use as the source of arguments, supplied as a single
  <em>text block</em>; must not be empty.
-
- <p>Each line in the text block corresponds to a line in a CSV file and will
- be split using the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
 
  <p>Defaults to an empty string. You therefore must supply CSV content
  via this attribute or the <a href="#value()"><code>value()</code></a> attribute.
@@ -251,13 +254,33 @@ loadScripts(document, 'script');</script>
  including Java SE 15 or higher. If text blocks are not supported, you
  should declare your CSV content via the <a href="#value()"><code>value()</code></a> attribute.
 
+ <p>Each record in the text block corresponds to a record in a CSV file and will
+ be split using the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
+
+ <p>In contrast to CSV records supplied via <a href="#value()"><code>value()</code></a>, a text block
+ can contain comments. Any line beginning with a hash tag (<code>#</code>) will
+ be treated as a comment and ignored. Note, however, that the <code>#</code>
+ symbol must be the first character on the line without any leading
+ whitespace. It is therefore recommended that the closing text block
+ delimiter <code>"""</code> be placed either at the end of the last line of
+ input or on the following line, vertically aligned with the rest of the
+ input (as can be seen in the example below).
+
+ <p>Java's <a href="https://docs.oracle.com/en/java/javase/15/text-blocks/index.html">text block</a>
+ feature automatically removes <em>incidental whitespace</em> when the code
+ is compiled. However other JVM languages such as Groovy and Kotlin do not.
+ Thus, if you are using a programming language other than Java and your text
+ block contains comments or new lines within quoted strings, you will need
+ to ensure that there is no leading whitespace within your text block.
+
  <h4>Example</h4>
  <pre class="code">
  @ParameterizedTest
- @CsvSource(textBlock = """
+ @CsvSource(quoteCharacter = '"', textBlock = """
+     # FRUIT,       RANK
      apple,         1
      banana,        2
-     'lemon, lime', 0xF1
+     "lemon, lime", 0xF1
      strawberry,    700_000
      """)
  void test(String fruit, int rank) {
@@ -270,6 +293,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <ul class="see-list">
 <li><a href="#value()"><code>value()</code></a></li>
+<li><a href="#quoteCharacter()"><code>quoteCharacter()</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -312,7 +336,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="delimiter()">
 <h3>delimiter</h3>
 <div class="member-signature"><span class="return-type">char</span>&nbsp;<span class="element-name">delimiter</span></div>
-<div class="block">The column delimiter character to use when reading the <a href="#value()">lines</a>.
+<div class="block">The column delimiter character to use when reading the <a href="#value()">records</a>.
 
  <p>This is an alternative to <a href="#delimiterString()"><code>delimiterString()</code></a> and cannot be
  used in conjunction with <a href="#delimiterString()"><code>delimiterString()</code></a>.
@@ -329,7 +353,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="delimiterString()">
 <h3>delimiterString</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">delimiterString</span></div>
-<div class="block">The column delimiter string to use when reading the <a href="#value()">lines</a>.
+<div class="block">The column delimiter string to use when reading the <a href="#value()">records</a>.
 
  <p>This is an alternative to <a href="#delimiter()"><code>delimiter()</code></a> and cannot be used in
  conjunction with <a href="#delimiter()"><code>delimiter()</code></a>.
@@ -350,7 +374,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="emptyValue()">
 <h3>emptyValue</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">emptyValue</span></div>
-<div class="block">The empty value to use when reading the <a href="#value()">lines</a>.
+<div class="block">The empty value to use when reading the <a href="#value()">records</a>.
 
  <p>This value replaces quoted empty strings read from the input.
 
@@ -396,7 +420,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.7")
 </span><span class="return-type">int</span>&nbsp;<span class="element-name">maxCharsPerColumn</span></div>
-<div class="block">The maximum characters of per CSV column allowed.
+<div class="block">The maximum number of characters allowed per CSV column.
 
  <p>Must be a positive number.
 
@@ -417,8 +441,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8")
 </span><span class="return-type">boolean</span>&nbsp;<span class="element-name">ignoreLeadingAndTrailingWhitespace</span></div>
-<div class="block">Identifies whether leading and trailing whitespace characters of
- unquoted CSV columns should be ignored.
+<div class="block">Controls whether leading and trailing whitespace characters of unquoted
+ CSV columns should be ignored.
 
  <p>Defaults to <code>true</code>.</div>
 <dl class="notes">
