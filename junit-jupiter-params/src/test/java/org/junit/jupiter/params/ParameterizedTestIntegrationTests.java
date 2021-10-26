@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -136,12 +137,23 @@ class ParameterizedTestIntegrationTests {
 			#-----------------------------
 			     banana    |      2
 			#-----------------------------
-			  "lemon lime" |     0xF1
+			     cherry    | 3.1415926535\
+			8979323846\
+			2643383279\
+			5028841971\
+			6939937510\
+			5820974944\
+			5923078164\
+			0628620899\
+			8628034825\
+			3421170679
+			#-----------------------------
+			  "lemon lime" |     99
 			#-----------------------------
 			   strawberry  |    700_000
 			#-----------------------------
 			""")
-	void executesLinesFromTextBlockUsingPseudoTableFormat(String fruit, int rank) {
+	void executesLinesFromTextBlockUsingPseudoTableFormat(String fruit, double rank) {
 		switch (fruit) {
 			case "apple":
 				assertThat(rank).isEqualTo(1);
@@ -149,8 +161,11 @@ class ParameterizedTestIntegrationTests {
 			case "banana":
 				assertThat(rank).isEqualTo(2);
 				break;
+			case "cherry":
+				assertThat(rank).isCloseTo(Math.PI, within(0.0));
+				break;
 			case "lemon lime":
-				assertThat(rank).isEqualTo(241);
+				assertThat(rank).isEqualTo(99);
 				break;
 			case "strawberry":
 				assertThat(rank).isEqualTo(700_000);
