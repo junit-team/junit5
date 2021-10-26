@@ -288,7 +288,6 @@
 6991fd42e0256bd4428209dc4f78fb38  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutInvocation.java
 69b7279ecc9f73b08cf8eff1ce6bb5e5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/session/package-info.java
 6acfc080b52751fdd5e275e8ea0f9156  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGenerator.java
-6adb10b4f2d6e2d9d52415d5a7c6eefb  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.2.adoc
 6b4d1475a57604c0a377a803aed52379  documentation/src/test/java/example/callbacks/Extension1.java
 6b6347d765a8a1dfd8bb34d9c190dd44  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodFinder.java
 6ba0964f4936cce12a375fd193b4bacf  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TokenWith.java
@@ -507,6 +506,7 @@ b38baa557564a9dda28062dadabc4005  junit-platform-engine/src/main/java/org/junit/
 b3a4b7274ad16a9f66ce6d36c68aeb56  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.java
 b3f9596b19add74b8dfadff04707186a  junit-platform-console/src/main/java/org/junit/platform/console/tasks/CustomContextClassLoaderExecutor.java
 b40c37c5054497f233d6d3984ae0fa04  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/MethodInvocation.java
+b57d4736ffe5fd2adf2952d919e53862  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.2.adoc
 b5a5cbe3ff5ef421664a74f0438554ed  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassNamePatternFilterUtils.java
 b5db6f2c685cb39a5879c390822e8376  junit-platform-jfr/src/main/java/org/junit/platform/jfr/FlightRecordingDiscoveryListener.java
 b5deaa459a2b76cf6897c8ba6a2d902c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/NamespaceAwareStore.java
