@@ -1,7 +1,7 @@
 [[release-notes-5.8.2]]
 == 5.8.2
 
-*Date of Release:* ❓
+*Date of Release:* October ❓, 2021
 
 *Scope:*
 
@@ -16,29 +16,11 @@ GitHub.
 [[release-notes-5.8.2-junit-platform]]
 === JUnit Platform
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes.
 
 
 [[release-notes-5.8.2-junit-jupiter]]
 === JUnit Jupiter
-
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
@@ -55,14 +37,4 @@ GitHub.
 [[release-notes-5.8.2-junit-vintage]]
 === JUnit Vintage
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes.
