@@ -73,11 +73,11 @@ public @interface CsvSource {
 	/**
 	 * The CSV records to use as the source of arguments; must not be empty.
 	 *
-	 * <p>Each value corresponds to a record in a CSV file and will be split using
-	 * the specified {@link #delimiter} or {@link #delimiterString}.
-	 *
 	 * <p>Defaults to an empty array. You therefore must supply CSV content
 	 * via this attribute or the {@link #textBlock} attribute.
+	 *
+	 * <p>Each value corresponds to a record in a CSV file and will be split using
+	 * the specified {@link #delimiter} or {@link #delimiterString}.
 	 *
 	 * <p>If <em>text block</em> syntax is supported by your programming language,
 	 * you may find it more convenient to declare your CSV content via the
@@ -104,6 +104,13 @@ public @interface CsvSource {
 	 * The CSV records to use as the source of arguments, supplied as a single
 	 * <em>text block</em>; must not be empty.
 	 *
+	 * <p>Defaults to an empty string. You therefore must supply CSV content
+	 * via this attribute or the {@link #value} attribute.
+	 *
+	 * <p>Text block syntax is supported by various languages on the JVM
+	 * including Java SE 15 or higher. If text blocks are not supported, you
+	 * should declare your CSV content via the {@link #value} attribute.
+	 *
 	 * <p>Each record in the text block corresponds to a record in a CSV file and will
 	 * be split using the specified {@link #delimiter} or {@link #delimiterString}.
 	 *
@@ -116,12 +123,12 @@ public @interface CsvSource {
 	 * input or on the following line, vertically aligned with the rest of the
 	 * input (as can be seen in the example below).
 	 *
-	 * <p>Defaults to an empty string. You therefore must supply CSV content
-	 * via this attribute or the {@link #value} attribute.
-	 *
-	 * <p>Text block syntax is supported by various languages on the JVM
-	 * including Java SE 15 or higher. If text blocks are not supported, you
-	 * should declare your CSV content via the {@link #value} attribute.
+	 * <p>Java's <a href="https://docs.oracle.com/en/java/javase/15/text-blocks/index.html">text block</a>
+	 * feature automatically removes <em>incidental whitespace</em> when the code
+	 * is compiled. However other JVM languages such as Groovy and Kotlin do not.
+	 * Thus, if you are using a programming language other than Java and your text
+	 * block contains comments or new lines within quoted strings, you will need
+	 * to ensure that there is no leading whitespace within your text block.
 	 *
 	 * <h4>Example</h4>
 	 * <pre class="code">

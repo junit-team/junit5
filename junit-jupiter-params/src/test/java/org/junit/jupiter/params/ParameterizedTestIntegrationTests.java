@@ -128,7 +128,7 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@ParameterizedTest
-	@CsvSource(quoteCharacter = '"', delimiter = '|', textBlock = """
+	@CsvSource(delimiter = '|', quoteCharacter = '"', textBlock = """
 			#-----------------------------
 			#    FRUIT     |     RANK
 			#-----------------------------
