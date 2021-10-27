@@ -6,6 +6,7 @@
 *Scope:*
 
 * Text blocks in `@CsvSource` are treated like CSV files
+* CSV headers in display names for `@CsvSource` and `@CsvFileSource`
 * Custom quote character support in `@CsvSource` and `@CsvFileSource`
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
@@ -29,8 +30,13 @@ No changes.
   quoted strings. See the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-CsvSource, User
   Guide>> for details and examples.
+* CSV headers can now be used in display names in parameterized tests. See
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-CsvSource,
+  `@CsvSource`>> and
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-CsvFileSource,
+  `@CsvFileSource`>> in the User Guide for details and examples.
 * The quote character for _quoted strings_ in `@CsvSource` and `@CsvFileSource` is now
-  configurable via new `quoteCharacter` attributes in each annotation.
+  configurable via a new `quoteCharacter` attribute in each annotation.
 
 
 [[release-notes-5.8.2-junit-vintage]]

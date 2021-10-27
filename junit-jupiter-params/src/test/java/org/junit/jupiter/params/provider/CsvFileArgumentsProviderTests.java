@@ -276,6 +276,21 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
+	void supportsCsvHeadersInDisplayNames() {
+		var annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.resources("/single-column.csv")//
+				.useHeadersInDisplayName(true)//
+				.build();
+
+		var arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+		Stream<String[]> argumentsAsStrings = arguments.map(array -> new String[] { String.valueOf(array[0]) });
+
+		assertThat(argumentsAsStrings).containsExactly(array("foo = bar"), array("foo = baz"), array("foo = qux"),
+			array("foo = "));
+	}
+
+	@Test
 	void throwsExceptionForMissingClasspathResource() {
 		var annotation = csvFileSource()//
 				.resources("/does-not-exist.csv")//

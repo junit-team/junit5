@@ -1332,7 +1332,9 @@ include::{testDir}/example/ExternalMethodSourceDemo.java[tags=external_MethodSou
 
 `@CsvSource` allows you to express argument lists as comma-separated values (i.e., CSV
 `String` literals). Each string provided via the `value` attribute in `@CsvSource`
-represents a CSV record and results in one invocation of the parameterized test.
+represents a CSV record and results in one invocation of the parameterized test. The first
+record may optionally be used to supply CSV headers (see the Javadoc for the
+`useHeadersInDisplayName` attribute for details and an example).
 
 [source,java,indent=0]
 ----
@@ -1375,12 +1377,16 @@ by default. This behavior can be changed by setting the
 If the programming language you are using supports _text blocks_ -- for example, Java SE
 15 or higher -- you can alternatively use the `textBlock` attribute of `@CsvSource`. Each
 record within a text block represents a CSV record and results in one invocation of the
-parameterized test. Using a text block, the previous example can be implemented as follows.
+parameterized test. The first record may optionally be used to supply CSV headers by
+setting the `useHeadersInDisplayName` attribute to `true` as in the example below.
+
+Using a text block, the previous example can be implemented as follows.
 
 [source,java,indent=0]
 ----
-@ParameterizedTest
-@CsvSource(textBlock = """
+@ParameterizedTest(name = "[{index}] {arguments}")
+@CsvSource(useHeadersInDisplayName = true, textBlock = """
+	FRUIT,         RANK
 	apple,         1
 	banana,        2
 	'lemon, lime', 0xF1
@@ -1389,6 +1395,15 @@ parameterized test. Using a text block, the previous example can be implemented 
 void testWithCsvSource(String fruit, int rank) {
 	// ...
 }
+----
+
+The generated display names for the previous example include the CSV header names.
+
+----
+[1] FRUIT = apple, RANK = 1
+[2] FRUIT = banana, RANK = 2
+[3] FRUIT = lemon, lime, RANK = 0xF1
+[4] FRUIT = strawberry, RANK = 700_000
 ----
 
 In contrast to CSV records supplied via the `value` attribute, a text block can contain
@@ -1435,7 +1450,11 @@ your text block.
 
 `@CsvFileSource` lets you use comma-separated value (CSV) files from the classpath or the
 local file system. Each record from a CSV file results in one invocation of the
-parameterized test.
+parameterized test. The first record may optionally be used to supply CSV headers. You can
+instruct JUnit to ignore the headers via the `numLinesToSkip` attribute. If you would like
+for the headers to be used in the display names, you can set the `useHeadersInDisplayName`
+attribute to `true`. The examples below demonstrate the use of `numLinesToSkip` and
+`useHeadersInDisplayName`.
 
 The default delimiter is a comma (`,`), but you can use another character by setting the
 `delimiter` attribute. Alternatively, the `delimiterString` attribute allows you to use a
@@ -1455,6 +1474,26 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example
 .two-column.csv
 ----
 include::{testResourcesDir}/two-column.csv[]
+----
+
+The following listing shows the generated display names for the first two parameterized
+test methods above.
+
+----
+[1] country=Sweden, reference=1
+[2] country=Poland, reference=2
+[3] country=United States of America, reference=3
+[4] country=France, reference=700_000
+----
+
+The following listing shows the generated display names for the last parameterized test
+method above that uses CSV header names.
+
+----
+[1] COUNTRY = Sweden, REFERENCE = 1
+[2] COUNTRY = Poland, REFERENCE = 2
+[3] COUNTRY = United States of America, REFERENCE = 3
+[4] COUNTRY = France, REFERENCE = 700_000
 ----
 
 In contrast to the default syntax used in `@CsvSource`, `@CsvFileSource` uses a double
