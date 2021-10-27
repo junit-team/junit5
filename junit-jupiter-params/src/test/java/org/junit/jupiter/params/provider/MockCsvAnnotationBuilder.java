@@ -111,6 +111,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			var annotation = mock(CsvSource.class);
 
 			// Common
+			when(annotation.useHeadersInDisplayName()).thenReturn(false);
 			when(annotation.delimiter()).thenReturn(super.delimiter);
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
@@ -171,6 +172,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			var annotation = mock(CsvFileSource.class);
 
 			// Common
+			when(annotation.useHeadersInDisplayName()).thenReturn(false);
 			when(annotation.delimiter()).thenReturn(super.delimiter);
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);

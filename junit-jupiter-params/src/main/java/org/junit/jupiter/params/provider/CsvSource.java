@@ -152,6 +152,21 @@ public @interface CsvSource {
 	String textBlock() default "";
 
 	/**
+	 * Configures whether the first CSV record should be treated as header names
+	 * for columns.
+	 *
+	 * <p>When set to {@code true}, the header names will be used in the
+	 * generated display name for each {@code @ParameterizedTest} method
+	 * invocation.
+	 *
+	 * <p>Defaults to {@code false}.
+	 *
+	 * @since 5.8.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8.3")
+	boolean useHeadersInDisplayName() default false;
+
+	/**
 	 * The quote character to use for <em>quoted strings</em>.
 	 *
 	 * <p>Defaults to a single quote ({@code '}).

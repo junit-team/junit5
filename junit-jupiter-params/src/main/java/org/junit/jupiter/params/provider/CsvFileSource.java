@@ -96,6 +96,21 @@ public @interface CsvFileSource {
 	String lineSeparator() default "\n";
 
 	/**
+	 * Configures whether the first CSV record should be treated as header names
+	 * for columns.
+	 *
+	 * <p>When set to {@code true}, the header names will be used in the
+	 * generated display name for each {@code @ParameterizedTest} method
+	 * invocation.
+	 *
+	 * <p>Defaults to {@code false}.
+	 *
+	 * @since 5.8.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8.3")
+	boolean useHeadersInDisplayName() default false;
+
+	/**
 	 * The column delimiter character to use when reading the CSV files.
 	 *
 	 * <p>This is an alternative to {@link #delimiterString} and cannot be

@@ -119,38 +119,56 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
-	@ParameterizedTest
-	@CsvSource(delimiter = '|', quoteCharacter = '"', textBlock = """
-			#-----------------------------
-			#    FRUIT     |     RANK
-			#-----------------------------
-			     apple     |      1
-			#-----------------------------
-			     banana    |      2
-			#-----------------------------
-			     cherry    | 3.1415926535\
-			8979323846\
-			2643383279\
-			5028841971\
-			6939937510\
-			5820974944\
-			5923078164\
-			0628620899\
-			8628034825\
-			3421170679
-			#-----------------------------
-			  "lemon lime" |     99
-			#-----------------------------
-			   strawberry  |    700_000
-			#-----------------------------
+	@ParameterizedTest(name = "[{index}] {arguments}")
+	@CsvSource(delimiter = '|', useHeadersInDisplayName = true, nullValues = "NIL", textBlock = """
+			#---------------------------------
+			  FRUIT  | RANK
+			#---------------------------------
+			  apple  | 1
+			#---------------------------------
+			  banana | 2
+			#---------------------------------
+			  cherry | 3.14159265358979323846
+			#---------------------------------
+			         | 0
+			#---------------------------------
+			  NIL    | 0
+			#---------------------------------
 			""")
-	void executesLinesFromTextBlockUsingPseudoTableFormat(String fruit, double rank) {
+	void executesLinesFromTextBlockUsingTableFormatAndHeadersAndNullValues(String fruit, double rank,
+			TestInfo testInfo) {
+		assertFruitTable(fruit, rank, testInfo);
+	}
+
+	@ParameterizedTest(name = "[{index}] {arguments}")
+	@CsvFileSource(resources = "two-column-with-headers.csv", delimiter = '|', useHeadersInDisplayName = true, nullValues = "NIL")
+	void executesLinesFromClasspathResourceUsingTableFormatAndHeadersAndNullValues(String fruit, double rank,
+			TestInfo testInfo) {
+		assertFruitTable(fruit, rank, testInfo);
+	}
+
+	private void assertFruitTable(String fruit, double rank, TestInfo testInfo) {
+		String displayName = testInfo.getDisplayName();
+
+		if (fruit == null) {
+			assertThat(rank).isEqualTo(0);
+			assertThat(displayName).matches("\\[(4|5)\\] FRUIT = null, RANK = 0");
+			return;
+		}
+
 		switch (fruit) {
-			case "apple" -> assertThat(rank).isEqualTo(1);
-			case "banana" -> assertThat(rank).isEqualTo(2);
-			case "cherry" -> assertThat(rank).isCloseTo(Math.PI, within(0.0));
-			case "lemon lime" -> assertThat(rank).isEqualTo(99);
-			case "strawberry" -> assertThat(rank).isEqualTo(700_000);
+			case "apple" -> {
+				assertThat(rank).isEqualTo(1);
+				assertThat(displayName).isEqualTo("[1] FRUIT = apple, RANK = 1");
+			}
+			case "banana" -> {
+				assertThat(rank).isEqualTo(2);
+				assertThat(displayName).isEqualTo("[2] FRUIT = banana, RANK = 2");
+			}
+			case "cherry" -> {
+				assertThat(rank).isCloseTo(Math.PI, within(0.0));
+				assertThat(displayName).isEqualTo("[3] FRUIT = cherry, RANK = 3.14159265358979323846");
+			}
 			default -> fail("Unexpected fruit : " + fruit);
 		}
 	}

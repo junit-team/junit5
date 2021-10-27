@@ -31,7 +31,7 @@ class CsvArgumentsProviderTests {
 
 		assertThatExceptionOfType(JUnitException.class)//
 				.isThrownBy(() -> provideArguments(annotation).toArray())//
-				.withMessage("Line at index 3 contains invalid CSV: \"\"");
+				.withMessage("Record at index 3 contains invalid CSV: \"\"");
 	}
 
 	@Test
@@ -267,10 +267,8 @@ class CsvArgumentsProviderTests {
 	void throwsExceptionIfSourceExceedsMaxCharsPerColumnConfig() {
 		var annotation = csvSource().lines("413").maxCharsPerColumn(2).build();
 
-		var arguments = provideArguments(annotation);
-
 		assertThatExceptionOfType(CsvParsingException.class)//
-				.isThrownBy(arguments::toArray)//
+				.isThrownBy(() -> provideArguments(annotation))//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
 				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
@@ -288,10 +286,8 @@ class CsvArgumentsProviderTests {
 	void throwsExceptionWhenSourceExceedsDefaultMaxCharsPerColumnConfig() {
 		var annotation = csvSource().lines("0".repeat(4097)).delimiter(';').build();
 
-		var arguments = provideArguments(annotation);
-
 		assertThatExceptionOfType(CsvParsingException.class)//
-				.isThrownBy(arguments::toArray)//
+				.isThrownBy(() -> provideArguments(annotation))//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
 				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}

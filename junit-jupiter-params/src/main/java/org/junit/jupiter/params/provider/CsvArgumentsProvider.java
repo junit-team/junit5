@@ -15,6 +15,7 @@ import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.io.StringReader;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -53,56 +55,87 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		Preconditions.condition(this.annotation.value().length > 0 ^ textBlockDeclared,
 			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
-		if (textBlockDeclared) {
-			return parseTextBlock(this.annotation.textBlock()).stream().map(Arguments::of);
-		}
-
-		AtomicInteger index = new AtomicInteger(0);
-		// @formatter:off
-		return Arrays.stream(this.annotation.value())
-				.map(line -> parseLine(line, index.incrementAndGet()))
-				.map(Arguments::of);
-		// @formatter:on
+		return textBlockDeclared ? parseTextBlock() : parseValueArray();
 	}
 
-	private List<String[]> parseTextBlock(String textBlock) {
+	private Stream<Arguments> parseTextBlock() {
+		String textBlock = this.annotation.textBlock();
+		boolean useHeadersInDisplayName = this.annotation.useHeadersInDisplayName();
+		List<Arguments> argumentsList = new ArrayList<>();
+
 		try {
-			AtomicInteger index = new AtomicInteger(0);
 			List<String[]> csvRecords = this.csvParser.parseAll(new StringReader(textBlock));
+			String[] headers = useHeadersInDisplayName ? getHeaders(this.csvParser) : null;
+
+			AtomicInteger index = new AtomicInteger(0);
 			for (String[] csvRecord : csvRecords) {
 				index.incrementAndGet();
 				Preconditions.notNull(csvRecord,
-					() -> "Line at index " + index.get() + " contains invalid CSV: \"\"\"\n" + textBlock + "\n\"\"\"");
-				processNullValues(csvRecord, this.nullValues);
+					() -> "Record at index " + index + " contains invalid CSV: \"\"\"\n" + textBlock + "\n\"\"\"");
+				argumentsList.add(processCsvRecord(csvRecord, this.nullValues, useHeadersInDisplayName, headers));
 			}
-			return csvRecords;
 		}
 		catch (Throwable throwable) {
 			throw handleCsvException(throwable, this.annotation);
 		}
+
+		return argumentsList.stream();
 	}
 
-	private String[] parseLine(String line, int index) {
+	private Stream<Arguments> parseValueArray() {
+		boolean useHeadersInDisplayName = this.annotation.useHeadersInDisplayName();
+		List<Arguments> argumentsList = new ArrayList<>();
+
 		try {
-			String[] csvRecord = this.csvParser.parseLine(line + LINE_SEPARATOR);
-			Preconditions.notNull(csvRecord,
-				() -> "Line at index " + index + " contains invalid CSV: \"" + line + "\"");
-			processNullValues(csvRecord, this.nullValues);
-			return csvRecord;
+			String[] headers = null;
+			AtomicInteger index = new AtomicInteger(0);
+			for (String input : this.annotation.value()) {
+				index.incrementAndGet();
+				String[] csvRecord = this.csvParser.parseLine(input + LINE_SEPARATOR);
+				// Lazily retrieve headers if necessary.
+				if (useHeadersInDisplayName && headers == null) {
+					headers = getHeaders(this.csvParser);
+				}
+				Preconditions.notNull(csvRecord,
+					() -> "Record at index " + index + " contains invalid CSV: \"" + input + "\"");
+				argumentsList.add(processCsvRecord(csvRecord, this.nullValues, useHeadersInDisplayName, headers));
+			}
 		}
 		catch (Throwable throwable) {
 			throw handleCsvException(throwable, this.annotation);
 		}
+
+		return argumentsList.stream();
 	}
 
-	static void processNullValues(String[] csvRecord, Set<String> nullValues) {
-		if (!nullValues.isEmpty()) {
-			for (int i = 0; i < csvRecord.length; i++) {
-				if (nullValues.contains(csvRecord[i])) {
-					csvRecord[i] = null;
-				}
+	// Cannot get parsed headers until after parsing has started.
+	static String[] getHeaders(CsvParser csvParser) {
+		return Arrays.stream(csvParser.getContext().parsedHeaders())//
+				.map(String::trim)//
+				.toArray(String[]::new);
+	}
+
+	/**
+	 * Processes custom null values, supports wrapping of column values in
+	 * {@link Named} if necessary (for CSV header support), and returns the
+	 * CSV record wrapped in an {@link Arguments} instance.
+	 */
+	static Arguments processCsvRecord(Object[] csvRecord, Set<String> nullValues, boolean useHeadersInDisplayName,
+			String[] headers) {
+
+		Object[] arguments = new Object[csvRecord.length];
+
+		for (int i = 0; i < csvRecord.length; i++) {
+			Object column = csvRecord[i];
+			if (nullValues.contains(column)) {
+				column = null;
 			}
+			if (useHeadersInDisplayName) {
+				column = Named.of(headers[i] + " = " + column, column);
+			}
+			arguments[i] = column;
 		}
+		return Arguments.of(arguments);
 	}
 
 	/**
