@@ -27,7 +27,9 @@ import org.apiguardian.api.API;
  * or {@link #files}.
  *
  * <p>The CSV records parsed from these resources and files will be provided as
- * arguments to the annotated {@code @ParameterizedTest} method.
+ * arguments to the annotated {@code @ParameterizedTest} method. Note that the
+ * first record may optionally be used to supply CSV headers (see
+ * {@link #useHeadersInDisplayName}).
  *
  * <p>Any line beginning with a {@code #} symbol will be interpreted as a comment
  * and will be ignored.
@@ -94,6 +96,34 @@ public @interface CsvFileSource {
 	 * <p>Defaults to {@code "\n"}.
 	 */
 	String lineSeparator() default "\n";
+
+	/**
+	 * Configures whether the first CSV record should be treated as header names
+	 * for columns.
+	 *
+	 * <p>When set to {@code true}, the header names will be used in the
+	 * generated display name for each {@code @ParameterizedTest} method
+	 * invocation. When using this feature, you must ensure that the display name
+	 * pattern for {@code @ParameterizedTest} includes
+	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_PLACEHOLDER} instead of
+	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
+	 * as demonstrated in the example below.
+	 *
+	 * <p>Defaults to {@code false}.
+	 *
+	 *
+	 * <h4>Example</h4>
+	 * <pre class="code">
+	 * {@literal @}ParameterizedTest(name = "[{index}] {arguments}")
+	 * {@literal @}CsvFileSource(resources = "fruits.csv", useHeadersInDisplayName = true)
+	 * void test(String fruit, int rank) {
+	 *     // ...
+	 * }</pre>
+	 *
+	 * @since 5.8.2
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8.2")
+	boolean useHeadersInDisplayName() default false;
 
 	/**
 	 * The quote character to use for <em>quoted strings</em>.

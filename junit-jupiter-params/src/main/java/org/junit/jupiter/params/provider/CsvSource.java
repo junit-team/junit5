@@ -77,7 +77,9 @@ public @interface CsvSource {
 	 * via this attribute or the {@link #textBlock} attribute.
 	 *
 	 * <p>Each value corresponds to a record in a CSV file and will be split using
-	 * the specified {@link #delimiter} or {@link #delimiterString}.
+	 * the specified {@link #delimiter} or {@link #delimiterString}. Note that
+	 * the first value may optionally be used to supply CSV headers (see
+	 * {@link #useHeadersInDisplayName}).
 	 *
 	 * <p>If <em>text block</em> syntax is supported by your programming language,
 	 * you may find it more convenient to declare your CSV content via the
@@ -113,6 +115,8 @@ public @interface CsvSource {
 	 *
 	 * <p>Each record in the text block corresponds to a record in a CSV file and will
 	 * be split using the specified {@link #delimiter} or {@link #delimiterString}.
+	 * Note that the first record may optionally be used to supply CSV headers (see
+	 * {@link #useHeadersInDisplayName}).
 	 *
 	 * <p>In contrast to CSV records supplied via {@link #value}, a text block
 	 * can contain comments. Any line beginning with a hash tag ({@code #}) will
@@ -150,6 +154,39 @@ public @interface CsvSource {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8.1")
 	String textBlock() default "";
+
+	/**
+	 * Configures whether the first CSV record should be treated as header names
+	 * for columns.
+	 *
+	 * <p>When set to {@code true}, the header names will be used in the
+	 * generated display name for each {@code @ParameterizedTest} method
+	 * invocation. When using this feature, you must ensure that the display name
+	 * pattern for {@code @ParameterizedTest} includes
+	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_PLACEHOLDER} instead of
+	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
+	 * as demonstrated in the example below.
+	 *
+	 * <p>Defaults to {@code false}.
+	 *
+	 * <h4>Example</h4>
+	 * <pre class="code">
+	 * {@literal @}ParameterizedTest(name = "[{index}] {arguments}")
+	 * {@literal @}CsvSource(useHeadersInDisplayName = true, textBlock = """
+	 *     FRUIT,         RANK
+	 *     apple,         1
+	 *     banana,        2
+	 *     'lemon, lime', 0xF1
+	 *     strawberry,    700_000
+	 *     """)
+	 * void test(String fruit, int rank) {
+	 *     // ...
+	 * }</pre>
+	 *
+	 * @since 5.8.2
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8.2")
+	boolean useHeadersInDisplayName() default false;
 
 	/**
 	 * The quote character to use for <em>quoted strings</em>.

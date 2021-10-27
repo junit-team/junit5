@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -127,36 +128,57 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
-	@ParameterizedTest
-	@CsvSource(delimiter = '|', quoteCharacter = '"', textBlock = """
-			#-----------------------------
-			#    FRUIT     |     RANK
-			#-----------------------------
-			     apple     |      1
-			#-----------------------------
-			     banana    |      2
-			#-----------------------------
-			  "lemon lime" |     0xF1
-			#-----------------------------
-			   strawberry  |    700_000
-			#-----------------------------
+	@ParameterizedTest(name = "[{index}] {arguments}")
+	@CsvSource(delimiter = '|', useHeadersInDisplayName = true, nullValues = "NIL", textBlock = """
+			#---------------------------------
+			  FRUIT  | RANK
+			#---------------------------------
+			  apple  | 1
+			#---------------------------------
+			  banana | 2
+			#---------------------------------
+			  cherry | 3.14159265358979323846
+			#---------------------------------
+			         | 0
+			#---------------------------------
+			  NIL    | 0
+			#---------------------------------
 			""")
-	void executesLinesFromTextBlockUsingPseudoTableFormat(String fruit, int rank) {
+	void executesLinesFromTextBlockUsingTableFormatAndHeadersAndNullValues(String fruit, double rank,
+			TestInfo testInfo) {
+		assertFruitTable(fruit, rank, testInfo);
+	}
+
+	@ParameterizedTest(name = "[{index}] {arguments}")
+	@CsvFileSource(resources = "two-column-with-headers.csv", delimiter = '|', useHeadersInDisplayName = true, nullValues = "NIL")
+	void executesLinesFromClasspathResourceUsingTableFormatAndHeadersAndNullValues(String fruit, double rank,
+			TestInfo testInfo) {
+		assertFruitTable(fruit, rank, testInfo);
+	}
+
+	private void assertFruitTable(String fruit, double rank, TestInfo testInfo) {
+		String displayName = testInfo.getDisplayName();
+
+		if (fruit == null) {
+			assertThat(rank).isEqualTo(0);
+			assertThat(displayName).matches("\\[(4|5)\\] FRUIT = null, RANK = 0");
+			return;
+		}
+
 		switch (fruit) {
-			case "apple":
+			case "apple" -> {
 				assertThat(rank).isEqualTo(1);
-				break;
-			case "banana":
+				assertThat(displayName).isEqualTo("[1] FRUIT = apple, RANK = 1");
+			}
+			case "banana" -> {
 				assertThat(rank).isEqualTo(2);
-				break;
-			case "lemon lime":
-				assertThat(rank).isEqualTo(241);
-				break;
-			case "strawberry":
-				assertThat(rank).isEqualTo(700_000);
-				break;
-			default:
-				fail("Unexpected fruit : " + fruit);
+				assertThat(displayName).isEqualTo("[2] FRUIT = banana, RANK = 2");
+			}
+			case "cherry" -> {
+				assertThat(rank).isCloseTo(Math.PI, within(0.0));
+				assertThat(displayName).isEqualTo("[3] FRUIT = cherry, RANK = 3.14159265358979323846");
+			}
+			default -> fail("Unexpected fruit : " + fruit);
 		}
 	}
 

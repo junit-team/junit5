@@ -34,6 +34,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 	// -------------------------------------------------------------------------
 
+	private boolean useHeadersInDisplayName = false;
 	private char quoteCharacter = '\0';
 	protected char delimiter = '\0';
 	protected String delimiterString = "";
@@ -46,6 +47,11 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 	}
 
 	protected abstract B getSelf();
+
+	B useHeadersInDisplayName(boolean useHeadersInDisplayName) {
+		this.useHeadersInDisplayName = useHeadersInDisplayName;
+		return getSelf();
+	}
 
 	B quoteCharacter(char quoteCharacter) {
 		this.quoteCharacter = quoteCharacter;
@@ -115,6 +121,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			var annotation = mock(CsvSource.class);
 
 			// Common
+			when(annotation.useHeadersInDisplayName()).thenReturn(super.useHeadersInDisplayName);
 			when(annotation.quoteCharacter()).thenReturn(super.quoteCharacter);
 			when(annotation.delimiter()).thenReturn(super.delimiter);
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);
@@ -179,6 +186,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			var annotation = mock(CsvFileSource.class);
 
 			// Common
+			when(annotation.useHeadersInDisplayName()).thenReturn(super.useHeadersInDisplayName);
 			when(annotation.quoteCharacter()).thenReturn(super.quoteCharacter);
 			when(annotation.delimiter()).thenReturn(super.delimiter);
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);

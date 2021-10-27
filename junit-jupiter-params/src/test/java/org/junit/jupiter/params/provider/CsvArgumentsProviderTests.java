@@ -31,7 +31,7 @@ class CsvArgumentsProviderTests {
 
 		assertThatExceptionOfType(JUnitException.class)//
 				.isThrownBy(() -> provideArguments(annotation).toArray())//
-				.withMessage("Line at index 3 contains invalid CSV: \"\"");
+				.withMessage("Record at index 3 contains invalid CSV: \"\"");
 	}
 
 	@Test
@@ -267,10 +267,8 @@ class CsvArgumentsProviderTests {
 	void throwsExceptionIfSourceExceedsMaxCharsPerColumnConfig() {
 		var annotation = csvSource().lines("413").maxCharsPerColumn(2).build();
 
-		var arguments = provideArguments(annotation);
-
 		assertThatExceptionOfType(CsvParsingException.class)//
-				.isThrownBy(arguments::toArray)//
+				.isThrownBy(() -> provideArguments(annotation))//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
 				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
@@ -288,10 +286,8 @@ class CsvArgumentsProviderTests {
 	void throwsExceptionWhenSourceExceedsDefaultMaxCharsPerColumnConfig() {
 		var annotation = csvSource().lines("0".repeat(4097)).delimiter(';').build();
 
-		var arguments = provideArguments(annotation);
-
 		assertThatExceptionOfType(CsvParsingException.class)//
-				.isThrownBy(arguments::toArray)//
+				.isThrownBy(() -> provideArguments(annotation))//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
 				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
@@ -334,6 +330,41 @@ class CsvArgumentsProviderTests {
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("bar", "#baz"), array("#bar", "baz"));
+	}
+
+	@Test
+	void supportsCsvHeadersWhenUsingTextBlockAttribute() {
+		var annotation = csvSource().useHeadersInDisplayName(true).textBlock("""
+				FRUIT, RANK
+				apple, 1
+				banana, 2
+				""").build();
+
+		var arguments = provideArguments(annotation);
+		Stream<String[]> argumentsAsStrings = arguments.map(array -> {
+			String[] strings = new String[array.length];
+			for (int i = 0; i < array.length; i++) {
+				strings[i] = String.valueOf(array[i]);
+			}
+			return strings;
+		});
+
+		assertThat(argumentsAsStrings).containsExactly(array("FRUIT = apple", "RANK = 1"),
+			array("FRUIT = banana", "RANK = 2"));
+	}
+
+	@Test
+	void throwsExceptionIfColumnCountExceedsHeaderCount() {
+		var annotation = csvSource().useHeadersInDisplayName(true).textBlock("""
+				FRUIT, RANK
+				apple, 1
+				banana, 2, BOOM!
+				""").build();
+
+		assertThatExceptionOfType(PreconditionViolationException.class)//
+				.isThrownBy(() -> provideArguments(annotation))//
+				.withMessage(
+					"The number of columns (3) exceeds the number of supplied headers (2) in CSV record: [banana, 2, BOOM!]");
 	}
 
 	private Stream<Object[]> provideArguments(CsvSource annotation) {

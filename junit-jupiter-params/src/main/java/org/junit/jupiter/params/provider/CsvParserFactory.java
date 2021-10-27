@@ -31,14 +31,15 @@ class CsvParserFactory {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
 		boolean commentProcessingEnabled = !annotation.textBlock().isEmpty();
 		return createParser(delimiter, LINE_SEPARATOR, annotation.quoteCharacter(), annotation.emptyValue(),
-			annotation.maxCharsPerColumn(), commentProcessingEnabled, annotation.ignoreLeadingAndTrailingWhitespace());
+			annotation.maxCharsPerColumn(), commentProcessingEnabled, annotation.useHeadersInDisplayName(),
+			annotation.ignoreLeadingAndTrailingWhitespace());
 	}
 
 	static CsvParser createParserFor(CsvFileSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
 		return createParser(delimiter, annotation.lineSeparator(), annotation.quoteCharacter(), annotation.emptyValue(),
 			annotation.maxCharsPerColumn(), COMMENT_PROCESSING_FOR_CSV_FILE_SOURCE,
-			annotation.ignoreLeadingAndTrailingWhitespace());
+			annotation.useHeadersInDisplayName(), annotation.ignoreLeadingAndTrailingWhitespace());
 	}
 
 	private static String selectDelimiter(Annotation annotation, char delimiter, String delimiterString) {
@@ -55,16 +56,18 @@ class CsvParserFactory {
 	}
 
 	private static CsvParser createParser(String delimiter, String lineSeparator, char quote, String emptyValue,
-			int maxCharsPerColumn, boolean commentProcessingEnabled, boolean ignoreLeadingAndTrailingWhitespace) {
+			int maxCharsPerColumn, boolean commentProcessingEnabled, boolean headerExtractionEnabled,
+			boolean ignoreLeadingAndTrailingWhitespace) {
 		return new CsvParser(createParserSettings(delimiter, lineSeparator, quote, emptyValue, maxCharsPerColumn,
-			commentProcessingEnabled, ignoreLeadingAndTrailingWhitespace));
+			commentProcessingEnabled, headerExtractionEnabled, ignoreLeadingAndTrailingWhitespace));
 	}
 
 	private static CsvParserSettings createParserSettings(String delimiter, String lineSeparator, char quote,
-			String emptyValue, int maxCharsPerColumn, boolean commentProcessingEnabled,
+			String emptyValue, int maxCharsPerColumn, boolean commentProcessingEnabled, boolean headerExtractionEnabled,
 			boolean ignoreLeadingAndTrailingWhitespace) {
 
 		CsvParserSettings settings = new CsvParserSettings();
+		settings.setHeaderExtractionEnabled(headerExtractionEnabled);
 		settings.getFormat().setDelimiter(delimiter);
 		settings.getFormat().setLineSeparator(lineSeparator);
 		settings.getFormat().setQuote(quote);

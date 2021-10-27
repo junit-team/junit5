@@ -13,9 +13,9 @@ package org.junit.jupiter.params.provider;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.jupiter.params.provider.CsvArgumentsProvider.getHeaders;
 import static org.junit.jupiter.params.provider.CsvArgumentsProvider.handleCsvException;
-import static org.junit.jupiter.params.provider.CsvArgumentsProvider.processNullValues;
+import static org.junit.jupiter.params.provider.CsvArgumentsProvider.processCsvRecord;
 import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
 import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
@@ -119,41 +119,49 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 		private final CsvParser csvParser;
 		private final CsvFileSource annotation;
+		private final boolean useHeadersInDisplayName;
 		private final Set<String> nullValues;
-		private Object[] nextCsvRecord;
+		private Arguments nextArguments;
+		private String[] headers;
 
 		CsvParserIterator(CsvParser csvParser, CsvFileSource annotation) {
 			this.csvParser = csvParser;
 			this.annotation = annotation;
+			this.useHeadersInDisplayName = annotation.useHeadersInDisplayName();
 			this.nullValues = toSet(annotation.nullValues());
 			advance();
 		}
 
 		@Override
 		public boolean hasNext() {
-			return this.nextCsvRecord != null;
+			return this.nextArguments != null;
 		}
 
 		@Override
 		public Arguments next() {
-			Arguments result = arguments(this.nextCsvRecord);
+			Arguments result = this.nextArguments;
 			advance();
 			return result;
 		}
 
 		private void advance() {
-			String[] csvRecord = null;
 			try {
-				csvRecord = this.csvParser.parseNext();
+				String[] csvRecord = this.csvParser.parseNext();
 				if (csvRecord != null) {
-					processNullValues(csvRecord, this.nullValues);
+					// Lazily retrieve headers if necessary.
+					if (this.useHeadersInDisplayName && this.headers == null) {
+						this.headers = getHeaders(this.csvParser);
+					}
+					this.nextArguments = processCsvRecord(csvRecord, this.nullValues, this.useHeadersInDisplayName,
+						this.headers);
+				}
+				else {
+					this.nextArguments = null;
 				}
 			}
 			catch (Throwable throwable) {
 				handleCsvException(throwable, this.annotation);
 			}
-
-			this.nextCsvRecord = csvRecord;
 		}
 
 	}
