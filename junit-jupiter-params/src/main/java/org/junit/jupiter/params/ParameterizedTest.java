@@ -158,6 +158,11 @@ public @interface ParameterizedTest {
 	 * of the current invocation of a {@code @ParameterizedTest} method:
 	 * <code>{argumentsWithNames}</code>
 	 *
+	 * <p>Argument names will be retrieved via the {@link java.lang.reflect.Parameter#getName()}
+	 * API if the byte code contains parameter names &mdash; for example, if
+	 * the code was compiled with the {@code -parameters} command line argument
+	 * for {@code javac}.
+	 *
 	 * @since 5.6
 	 * @see #name
 	 */
@@ -183,10 +188,19 @@ public @interface ParameterizedTest {
 	 * The display name to be used for individual invocations of the
 	 * parameterized test; never blank or consisting solely of whitespace.
 	 *
-	 * <p> If "{default_display_name}" is returned when invoking name(), we will:
+	 * <p>Defaults to <code>{default_display_name}</code>.
+	 *
+	 * <p>If the default display name flag (<code>{default_display_name}</code>)
+	 * is not overridden, JUnit will:
 	 * <ul>
-	 * <li>Look up the new config param from junit-platform.properties, and if it has been set, use it</li>
-	 * <li>otherwise, we will use the value of the {@link #DEFAULT_DISPLAY_NAME} constant.</li>
+	 * <li>Look up the {@code junit.jupiter.params.displayname.default}
+	 * <em>configuration parameter</em> and use it if available. The configuration
+	 * parameter can be supplied via the {@code Launcher} API, build tools (e.g.,
+	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
+	 * file (i.e., a file named {@code junit-platform.properties} in the root of
+	 * the class path). Consult the User Guide for further information.</li>
+	 * <li>Otherwise, the value of the {@link #DEFAULT_DISPLAY_NAME} constant will
+	 * be used.</li>
 	 * </ul>
 	 *
 	 * <h4>Supported placeholders</h4>
@@ -194,15 +208,17 @@ public @interface ParameterizedTest {
 	 * <li>{@link #DISPLAY_NAME_PLACEHOLDER}</li>
 	 * <li>{@link #INDEX_PLACEHOLDER}</li>
 	 * <li>{@link #ARGUMENTS_PLACEHOLDER}</li>
+	 * <li>{@link #ARGUMENTS_WITH_NAMES_PLACEHOLDER}</li>
 	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
 	 * </ul>
-	 *
-	 * <p>Note that "{default_display_name}" is a flag rather than a placeholder.
 	 *
 	 * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
 	 * to customize formatting. Please note that the original arguments are
 	 * passed when formatting, regardless of any implicit or explicit argument
 	 * conversions.
+	 *
+	 * <p>Note that <code>{default_display_name}</code> is a flag rather than a
+	 * placeholder.
 	 *
 	 * @see java.text.MessageFormat
 	 */
