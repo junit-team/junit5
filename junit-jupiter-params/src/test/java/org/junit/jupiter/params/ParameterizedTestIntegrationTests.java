@@ -111,20 +111,11 @@ class ParameterizedTestIntegrationTests {
 			""")
 	void executesLinesFromTextBlock(String fruit, int rank) {
 		switch (fruit) {
-			case "apple":
-				assertThat(rank).isEqualTo(1);
-				break;
-			case "banana":
-				assertThat(rank).isEqualTo(2);
-				break;
-			case "lemon   \n\n\n   lime":
-				assertThat(rank).isEqualTo(241);
-				break;
-			case "strawberry":
-				assertThat(rank).isEqualTo(700_000);
-				break;
-			default:
-				fail("Unexpected fruit : " + fruit);
+			case "apple" -> assertThat(rank).isEqualTo(1);
+			case "banana" -> assertThat(rank).isEqualTo(2);
+			case "lemon   \n\n\n   lime" -> assertThat(rank).isEqualTo(241);
+			case "strawberry" -> assertThat(rank).isEqualTo(700_000);
+			default -> fail("Unexpected fruit : " + fruit);
 		}
 	}
 
@@ -155,23 +146,12 @@ class ParameterizedTestIntegrationTests {
 			""")
 	void executesLinesFromTextBlockUsingPseudoTableFormat(String fruit, double rank) {
 		switch (fruit) {
-			case "apple":
-				assertThat(rank).isEqualTo(1);
-				break;
-			case "banana":
-				assertThat(rank).isEqualTo(2);
-				break;
-			case "cherry":
-				assertThat(rank).isCloseTo(Math.PI, within(0.0));
-				break;
-			case "lemon lime":
-				assertThat(rank).isEqualTo(99);
-				break;
-			case "strawberry":
-				assertThat(rank).isEqualTo(700_000);
-				break;
-			default:
-				fail("Unexpected fruit : " + fruit);
+			case "apple" -> assertThat(rank).isEqualTo(1);
+			case "banana" -> assertThat(rank).isEqualTo(2);
+			case "cherry" -> assertThat(rank).isCloseTo(Math.PI, within(0.0));
+			case "lemon lime" -> assertThat(rank).isEqualTo(99);
+			case "strawberry" -> assertThat(rank).isEqualTo(700_000);
+			default -> fail("Unexpected fruit : " + fruit);
 		}
 	}
 
