@@ -323,7 +323,12 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">ARGUMENTS_WITH_NAMES_PLACEHOLDER</span></div>
 <div class="block">Placeholder for the complete, comma-separated named arguments list
  of the current invocation of a <code>@ParameterizedTest</code> method:
- <code>{argumentsWithNames}</code></div>
+ <code>{argumentsWithNames}</code>
+
+ <p>Argument names will be retrieved via the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Parameter.html#getName()" title="class or interface in java.lang.reflect" class="external-link"><code>Parameter.getName()</code></a>
+ API if the byte code contains parameter names &mdash; for example, if
+ the code was compiled with the <code>-parameters</code> command line argument
+ for <code>javac</code>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.6</dd>
@@ -378,10 +383,19 @@ loadScripts(document, 'script');</script>
 <div class="block">The display name to be used for individual invocations of the
  parameterized test; never blank or consisting solely of whitespace.
 
- <p> If "{default_display_name}" is returned when invoking name(), we will:
+ <p>Defaults to <code>{default_display_name}</code>.
+
+ <p>If the default display name flag (<code>{default_display_name}</code>)
+ is not overridden, JUnit will:
  <ul>
- <li>Look up the new config param from junit-platform.properties, and if it has been set, use it</li>
- <li>otherwise, we will use the value of the <a href="#DEFAULT_DISPLAY_NAME"><code>DEFAULT_DISPLAY_NAME</code></a> constant.</li>
+ <li>Look up the <code>junit.jupiter.params.displayname.default</code>
+ <em>configuration parameter</em> and use it if available. The configuration
+ parameter can be supplied via the <code>Launcher</code> API, build tools (e.g.,
+ Gradle and Maven), a JVM system property, or the JUnit Platform configuration
+ file (i.e., a file named <code>junit-platform.properties</code> in the root of
+ the class path). Consult the User Guide for further information.</li>
+ <li>Otherwise, the value of the <a href="#DEFAULT_DISPLAY_NAME"><code>DEFAULT_DISPLAY_NAME</code></a> constant will
+ be used.</li>
  </ul>
 
  <h4>Supported placeholders</h4>
@@ -389,15 +403,17 @@ loadScripts(document, 'script');</script>
  <li><a href="#DISPLAY_NAME_PLACEHOLDER"><code>DISPLAY_NAME_PLACEHOLDER</code></a></li>
  <li><a href="#INDEX_PLACEHOLDER"><code>INDEX_PLACEHOLDER</code></a></li>
  <li><a href="#ARGUMENTS_PLACEHOLDER"><code>ARGUMENTS_PLACEHOLDER</code></a></li>
+ <li><a href="#ARGUMENTS_WITH_NAMES_PLACEHOLDER"><code>ARGUMENTS_WITH_NAMES_PLACEHOLDER</code></a></li>
  <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
  </ul>
-
- <p>Note that "{default_display_name}" is a flag rather than a placeholder.
 
  <p>For the latter, you may use <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/MessageFormat.html" title="class or interface in java.text" class="external-link"><code>MessageFormat</code></a> patterns
  to customize formatting. Please note that the original arguments are
  passed when formatting, regardless of any implicit or explicit argument
- conversions.</div>
+ conversions.
+
+ <p>Note that <code>{default_display_name}</code> is a flag rather than a
+ placeholder.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
