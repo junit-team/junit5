@@ -11,6 +11,7 @@
 package example.session;
 
 //tag::user_guide[]
+import static java.net.InetAddress.getLoopbackAddress;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.HttpURLConnection;
@@ -22,8 +23,10 @@ class HttpTests {
 
 	@Test
 	void respondsWith204() throws Exception {
+		String hostname = getLoopbackAddress().getHostAddress();
 		String port = System.getProperty("http.server.port"); // <1>
-		URL url = new URL("http://localhost:" + port + "/test");
+		URL url = new URL("http://" + hostname + ":" + port + "/test");
+		System.out.println("Connecting to HTTP server: " + url);
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("GET");
