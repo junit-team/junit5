@@ -15,6 +15,7 @@ runs:
         arguments: |
           -Porg.gradle.java.installations.auto-download=false
           -Dplatform.tooling.support.tests.enabled=true
+          "-Dscan.value.GitHub job=${{ github.job }}"
           javaToolchains
           ${{ inputs.arguments }}
     - uses: actions/upload-artifact@v2
