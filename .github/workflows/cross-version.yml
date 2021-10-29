@@ -23,10 +23,12 @@ jobs:
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out repository
+        uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      - uses: ./.github/actions/setup-test-jdk
+      - name: Set up Test JDK
+        uses: ./.github/actions/setup-test-jdk
       - name: 'Download JDK ${{ matrix.jdk }}'
         id: download-jdk
         uses: sormuras/download-jdk@v1
@@ -41,8 +43,9 @@ jobs:
       - name: 'Prepare JDK${{ matrix.jdk }} env var'
         shell: bash
         run: echo "JDK${{ matrix.jdk }}=$JAVA_HOME" >> $GITHUB_ENV
-      - uses: ./.github/actions/setup-gradle-jdk
-      - name: Test
+      - name: Set up Gradle JDK
+        uses: ./.github/actions/setup-gradle-jdk
+      - name: Build
         uses: gradle/gradle-build-action@v2
         with:
           arguments: |

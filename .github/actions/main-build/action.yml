@@ -17,3 +17,7 @@ runs:
           -Dplatform.tooling.support.tests.enabled=true
           javaToolchains
           ${{ inputs.arguments }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Test Distribution trace files
+        path: '**/build/test-results/*/trace.json'

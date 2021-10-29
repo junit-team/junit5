@@ -21,9 +21,10 @@ jobs:
       matrix:
         language: ['java', 'javascript']
     steps:
-    - name: Checkout repository
+    - name: Check out repository
       uses: actions/checkout@v2
-    - uses: ./.github/actions/setup-gradle-jdk
+    - name: Set up Gradle JDK
+      uses: ./.github/actions/setup-gradle-jdk
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:

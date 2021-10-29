@@ -20,21 +20,18 @@ jobs:
     name: Linux
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - uses: ./.github/actions/main-build
+    - name: Build
+      uses: ./.github/actions/main-build
       with:
         arguments: |
           -Dscan.tag.Linux
           -PenableJaCoCo
           build
           jacocoRootReport
-    - name: Upload Test Distribution trace files
-      uses: actions/upload-artifact@v2
-      with:
-        name: Test Distribution trace files
-        path: '**/build/test-results/*/trace.json'
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v2
 
@@ -42,10 +39,12 @@ jobs:
     name: Windows
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - uses: ./.github/actions/main-build
+    - name: Build
+      uses: ./.github/actions/main-build
       with:
         arguments: |
           -Dscan.tag.Windows
@@ -55,10 +54,12 @@ jobs:
     name: macOS
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - uses: ./.github/actions/main-build
+    - name: Build
+      uses: ./.github/actions/main-build
       with:
         arguments: |
           -Dscan.tag.macOS
@@ -70,7 +71,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
     - uses: ./.github/actions/setup-gradle-jdk
@@ -93,7 +95,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
     - uses: ./.github/actions/setup-gradle-jdk
