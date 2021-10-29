@@ -56,6 +56,9 @@ public class GlobalSetupTeardownListener implements LauncherSessionListener {
 		private ExecutorService executorService;
 
 		void setUp() {
+			//end::user_guide[]
+			System.out.println("Starting HTTP server...");
+			//tag::user_guide[]
 			try {
 				server = HttpServer.create(new InetSocketAddress(0), 0);
 			}
@@ -71,9 +74,15 @@ public class GlobalSetupTeardownListener implements LauncherSessionListener {
 			server.start(); // <1>
 			int port = server.getAddress().getPort();
 			System.setProperty("http.server.port", String.valueOf(port)); // <2>
+			//end::user_guide[]
+			System.out.println("Started HTTP server on port " + port);
+			//tag::user_guide[]
 		}
 
 		void tearDown() {
+			//end::user_guide[]
+			System.out.println("Stopping HTTP server...");
+			//tag::user_guide[]
 			server.stop(0); // <3>
 			executorService.shutdownNow();
 		}
