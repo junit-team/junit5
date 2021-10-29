@@ -124,6 +124,7 @@ tasks {
 				args("--exclude-tag", "exclude")
 				args("--reports-dir", reportsDir)
 				systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+				debug = findProperty("consoleLauncherTestDebug")?.toString()?.toBoolean() ?: false
 				standardOutput = output
 				errorOutput = output
 				isIgnoreExitValue = true
