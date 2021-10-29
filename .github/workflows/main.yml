@@ -22,30 +22,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        # Codecov needs fetch-depth > 1
-        fetch-depth: 2
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '8'
-    - name: Prepare JDK8 env var
-      shell: bash
-      run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    - name: Test and coverage
-      uses: gradle/gradle-build-action@v2
+        fetch-depth: 1
+    - uses: ./.github/actions/main-build
       with:
         arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          -PenableJaCoCo
-          -Dplatform.tooling.support.tests.enabled=true
           -Dscan.tag.Linux
-          javaToolchains
+          -PenableJaCoCo
           build
           jacocoRootReport
     - name: Upload Test Distribution trace files
@@ -63,27 +45,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '8'
-    - name: Prepare JDK8 env var
-      shell: bash
-      run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    - name: Test
-      uses: gradle/gradle-build-action@v2
+    - uses: ./.github/actions/main-build
       with:
         arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          -Dplatform.tooling.support.tests.enabled=true
           -Dscan.tag.Windows
-          javaToolchains
           build
 
   mac:
@@ -93,27 +58,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '8'
-    - name: Prepare JDK8 env var
-      shell: bash
-      run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    - name: Test
-      uses: gradle/gradle-build-action@v2
+    - uses: ./.github/actions/main-build
       with:
         arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          -Dplatform.tooling.support.tests.enabled=true
           -Dscan.tag.macOS
-          javaToolchains
           build
 
   publish_artifacts:
@@ -125,11 +73,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    - uses: ./.github/actions/setup-gradle-jdk
     - name: Publish
       uses: gradle/gradle-build-action@v2
       env:
@@ -152,11 +96,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    - uses: ./.github/actions/setup-gradle-jdk
     - name: Install Graphviz
       run: |
         sudo apt-get update

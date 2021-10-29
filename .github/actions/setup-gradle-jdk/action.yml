@@ -1,0 +1,8 @@
+name: Set up Gradle JDK
+description: Sets up the JDK required to run Gradle
+runs:
+  using: "composite"
+  steps:
+    - uses: ./.github/actions/setup-jdk
+      with:
+        version: 17

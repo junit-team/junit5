@@ -20,11 +20,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    - uses: ./.github/actions/setup-gradle-jdk
     - name: Restore Gradle cache and display toolchains
       uses: gradle/gradle-build-action@v2
       with:

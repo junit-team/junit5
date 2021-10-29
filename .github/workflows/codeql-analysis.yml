@@ -23,11 +23,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    - uses: ./.github/actions/setup-gradle-jdk
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:

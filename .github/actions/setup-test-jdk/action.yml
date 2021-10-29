@@ -1,0 +1,8 @@
+name: Set up Test JDK
+description: Sets up the JDK required to run platform-tooling-support-tests
+runs:
+  using: "composite"
+  steps:
+    - uses: ./.github/actions/setup-jdk
+      with:
+        version: 8
