@@ -21,14 +21,10 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up Gradle JDK
-      uses: ./.github/actions/setup-gradle-jdk
     - name: Restore Gradle cache and display toolchains
-      uses: gradle/gradle-build-action@v2
+      uses: ./.github/actions/run-gradle
       with:
-        arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          javaToolchains
+        arguments: --quiet
     - name: Build and compare checksums
       shell: bash
       run: |

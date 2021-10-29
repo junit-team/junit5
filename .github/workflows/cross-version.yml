@@ -43,17 +43,12 @@ jobs:
       - name: 'Prepare JDK${{ matrix.jdk }} env var'
         shell: bash
         run: echo "JDK${{ matrix.jdk }}=$JAVA_HOME" >> $GITHUB_ENV
-      - name: Set up Gradle JDK
-        uses: ./.github/actions/setup-gradle-jdk
       - name: Build
-        uses: gradle/gradle-build-action@v2
+        uses: ./.github/actions/run-gradle
         with:
           arguments: |
-            -Porg.gradle.java.installations.auto-download=false
             -PjavaToolchainVersion=${{ matrix.jdk }}
-            -Dplatform.tooling.support.tests.enabled=true
             -Dscan.tag.JDK_${{ matrix.jdk }}
-            javaToolchains
             build
       - name: Upload Test Distribution trace files
         uses: actions/upload-artifact@v2

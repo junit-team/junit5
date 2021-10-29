@@ -63,20 +63,13 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up Gradle JDK
-      uses: ./.github/actions/setup-gradle-jdk
     - name: Publish
-      uses: gradle/gradle-build-action@v2
+      uses: ./.github/actions/run-gradle
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       with:
-        arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          -Dscan.tag.Snapshots
-          javaToolchains
-          publish
-          -x check
+        arguments: publish -x check
 
   update_documentation:
     name: Update Snapshot Documentation
@@ -88,18 +81,14 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up Gradle JDK
-      uses: ./.github/actions/setup-gradle-jdk
     - name: Install Graphviz
       run: |
         sudo apt-get update
         sudo apt-get install graphviz
     - name: Restore Gradle cache and display toolchains
-      uses: gradle/gradle-build-action@v2
+      uses: ./.github/actions/run-gradle
       with:
-        arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          javaToolchains
+        arguments: --quiet
     - name: Upload Documentation
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
