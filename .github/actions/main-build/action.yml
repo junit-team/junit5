@@ -1,5 +1,5 @@
-name: Check out, set up JDKs, and run Gradle
-description: Sets up a JDK and env var
+name: Main build
+description: Sets up JDKs and runs Gradle
 inputs:
   arguments:
     required: true
