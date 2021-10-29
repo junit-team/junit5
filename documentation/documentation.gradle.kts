@@ -1,5 +1,6 @@
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.junit.gradle.exec.ClasspathSystemPropertyProvider
 import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
@@ -113,6 +114,7 @@ tasks {
 		val reportsDir = file("$buildDir/test-results")
 		outputs.dir(reportsDir)
 		outputs.cacheIf { true }
+		inputs.property("os", OperatingSystem.current().familyName) // ensure task is executed on all operating systems
 		doFirst {
 			val output = ByteArrayOutputStream()
 			val result = javaexec {
