@@ -38,7 +38,7 @@ class GradleStarterTests {
 				.setTool(new GradleWrapper(Paths.get(".."))) //
 				.setProject("gradle-starter") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
+				.addArguments("build", "--no-daemon", "--stacktrace") //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //

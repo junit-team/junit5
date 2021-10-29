@@ -36,7 +36,7 @@ class GradleKotlinExtensionsTests {
 				.setTool(new GradleWrapper(Request.PROJECTS.resolve("gradle-kotlin-extensions"))) //
 				.setProject("gradle-kotlin-extensions") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
+				.addArguments("build", "--no-daemon", "--stacktrace") //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //

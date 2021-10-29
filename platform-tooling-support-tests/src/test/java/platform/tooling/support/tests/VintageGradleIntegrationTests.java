@@ -60,7 +60,7 @@ class VintageGradleIntegrationTests {
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.setProject("vintage") //
 				.setWorkspace("vintage-gradle-" + version) //
-				.addArguments("clean", "test", "--stacktrace") //
+				.addArguments("build", "--no-daemon", "--stacktrace") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
 				.setTimeout(Duration.ofMinutes(2)) //
