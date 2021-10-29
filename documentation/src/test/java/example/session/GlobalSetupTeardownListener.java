@@ -11,6 +11,8 @@
 package example.session;
 
 //tag::user_guide[]
+import static java.net.InetAddress.getLoopbackAddress;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
@@ -57,7 +59,7 @@ public class GlobalSetupTeardownListener implements LauncherSessionListener {
 
 		void setUp() {
 			try {
-				server = HttpServer.create(new InetSocketAddress(0), 0);
+				server = HttpServer.create(new InetSocketAddress(getLoopbackAddress(), 0), 0);
 			}
 			catch (IOException e) {
 				throw new UncheckedIOException("Failed to start HTTP server", e);
@@ -70,11 +72,12 @@ public class GlobalSetupTeardownListener implements LauncherSessionListener {
 			server.setExecutor(executorService);
 			server.start(); // <1>
 			int port = server.getAddress().getPort();
-			System.setProperty("http.server.port", String.valueOf(port)); // <2>
+			System.setProperty("http.server.host", getLoopbackAddress().getHostAddress()); // <2>
+			System.setProperty("http.server.port", String.valueOf(port)); // <3>
 		}
 
 		void tearDown() {
-			server.stop(0); // <3>
+			server.stop(0); // <4>
 			executorService.shutdownNow();
 		}
 	}

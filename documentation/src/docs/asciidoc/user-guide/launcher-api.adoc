@@ -145,8 +145,9 @@ package example.session;
 include::{testDir}/example/session/GlobalSetupTeardownListener.java[tags=user_guide]
 ----
 <1> Start the HTTP server
-<2> Export its dynamic port as a system property for consumption by tests
-<3> Stop the HTTP server
+<2> Export its host address as a system property for consumption by tests
+<3> Export its port as a system property for consumption by tests
+<4> Stop the HTTP server
 
 This sample uses the HTTP server implementation from the jdk.httpserver module that comes
 with the JDK but would work similarly with any other server or resource. In order for the
@@ -169,9 +170,10 @@ package example.session;
 
 include::{testDir}/example/session/HttpTests.java[tags=user_guide]
 ----
-<1> Read the port of the server from the system property set by the listener
-<2> Send a request to the server
-<3> Check the status code of the response
+<1> Read the host address of the server from the system property set by the listener
+<2> Read the port of the server from the system property set by the listener
+<3> Send a request to the server
+<4> Check the status code of the response
 
 [[launcher-api-launcher-discovery-listeners-custom]]
 ==== Registering a LauncherDiscoveryListener
