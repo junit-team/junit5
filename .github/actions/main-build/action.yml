@@ -9,15 +9,9 @@ runs:
   using: "composite"
   steps:
     - uses: ./.github/actions/setup-test-jdk
-    - uses: ./.github/actions/setup-gradle-jdk
-    - uses: gradle/gradle-build-action@v2
+    - uses: ./.github/actions/run-gradle
       with:
-        arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          -Dplatform.tooling.support.tests.enabled=true
-          "-Dscan.value.GitHub job=${{ github.job }}"
-          javaToolchains
-          ${{ inputs.arguments }}
+        arguments: ${{ inputs.arguments }}
     - uses: actions/upload-artifact@v2
       with:
         name: Test Distribution trace files (${{ github.job }})

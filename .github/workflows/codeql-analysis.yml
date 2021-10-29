@@ -23,21 +23,17 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
-    - name: Set up Gradle JDK
-      uses: ./.github/actions/setup-gradle-jdk
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
     - name: Build
-      uses: gradle/gradle-build-action@v2
+      uses: ./.github/actions/run-gradle
       with:
         arguments: |
           --no-build-cache
-          -Porg.gradle.java.installations.auto-download=false
           -PjavaToolchainVersion=11
           -Dscan.tag.CodeQL
-          javaToolchains
           allMainClasses
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
