@@ -21,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +62,7 @@ class UniqueIdFormat implements Serializable {
 	private final char segmentDelimiter;
 	private final char typeValueSeparator;
 	private final Pattern segmentPattern;
-	private final Map<Character, String> encodedCharacterMap = new HashMap<>();
+	private final HashMap<Character, String> encodedCharacterMap = new HashMap<>();
 
 	UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
 		this.openSegment = openSegment;

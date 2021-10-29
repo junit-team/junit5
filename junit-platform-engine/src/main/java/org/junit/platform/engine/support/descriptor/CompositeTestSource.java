@@ -10,11 +10,11 @@
 
 package org.junit.platform.engine.support.descriptor;
 
+import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.apiguardian.api.API;
@@ -49,12 +49,13 @@ public class CompositeTestSource implements TestSource {
 		return new CompositeTestSource(sources);
 	}
 
+	@SuppressWarnings({ "serial", "RedundantSuppression" }) // always used with serializable implementation (unmodifiableList())
 	private final List<TestSource> sources;
 
 	private CompositeTestSource(Collection<? extends TestSource> sources) {
 		Preconditions.notEmpty(sources, "TestSource collection must not be null or empty");
 		Preconditions.containsNoNullElements(sources, "individual TestSources must not be null");
-		this.sources = Collections.unmodifiableList(new ArrayList<>(sources));
+		this.sources = unmodifiableList(new ArrayList<>(sources));
 	}
 
 	/**
