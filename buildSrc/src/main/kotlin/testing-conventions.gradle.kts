@@ -46,7 +46,7 @@ tasks.withType<Test>().configureEach {
 		)
 	}
 	// Track OS as input so that tests are executed on all configured operating systems on CI
-	inputs.property("os", OperatingSystem.current().familyName)
+	trackOperationSystemAsInput()
 }
 
 dependencies {

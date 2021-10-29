@@ -1,5 +1,6 @@
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.junit.gradle.exec.ClasspathSystemPropertyProvider
 import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
@@ -113,6 +114,10 @@ tasks {
 		val reportsDir = file("$buildDir/test-results")
 		outputs.dir(reportsDir)
 		outputs.cacheIf { true }
+
+		// Track OS as input so that tests are executed on all configured operating systems on CI
+		trackOperationSystemAsInput()
+
 		doFirst {
 			val debugging = findProperty("consoleLauncherTestDebug")?.toString()?.toBoolean() ?: false
 			val output = ByteArrayOutputStream()
