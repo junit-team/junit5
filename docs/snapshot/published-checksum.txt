@@ -413,6 +413,7 @@
 93a0a83624d1727553a6c7e9daf9af93  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNull.java
 93aaa96e021e7d04a54008051627e9e5  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/SelectorResolver.java
 93b77898bfaae095c09ea08af3dbceb5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolutionException.java
+944f63103cb0da6449725a9461a8a64a  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 947ff84d7edcc4504a089a6b5e5b8652  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.java
 951de5f1db3ad7633cecb37c18c14510  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/LockManager.java
 955eccdf85eb18a38ba78f004ba96ab7  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
@@ -525,7 +526,6 @@ b8ab4c847b5a0d343d1a1fbcf1a2f1de  junit-jupiter-engine/src/main/java/org/junit/j
 b8bd75d5b55826fefd2cd96d5940651b  junit-platform-engine/src/main/java/org/junit/platform/engine/ExecutionRequest.java
 b8e0798cde9929610645652c8d2e029f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FileSystemSource.java
 b941bea5a4adc798587e9623ac62d414  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ListenerRegistry.java
-b9f507ae2d8cd607a82cf71010e49fbd  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 ba9025621971898730c5593bbee89212  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Test.java
 bab36b4db649fecc5afa63e4e4ba8ac0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NopLock.java
