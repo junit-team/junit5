@@ -36,6 +36,12 @@ public class GlobalSetupTeardownListener implements LauncherSessionListener {
 		session.getLauncher().registerTestExecutionListeners(new TestExecutionListener() {
 			@Override
 			public void testPlanExecutionStarted(TestPlan testPlan) {
+				//end::user_guide[]
+				if (!testPlan.getConfigurationParameters().getBoolean("enableHttpServer").orElse(false)) {
+					// avoid starting multiple HTTP servers unnecessarily from UsingTheLauncherDemo
+					return;
+				}
+				//tag::user_guide[]
 				if (fixture == null) {
 					fixture = new Fixture();
 					fixture.setUp();
