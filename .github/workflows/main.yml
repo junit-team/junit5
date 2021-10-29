@@ -98,7 +98,7 @@ jobs:
         ./gradlew --stop
 
   mac:
-    name: Mac OS
+    name: macOS
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
