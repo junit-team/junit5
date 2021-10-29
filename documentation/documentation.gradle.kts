@@ -114,6 +114,7 @@ tasks {
 		outputs.dir(reportsDir)
 		outputs.cacheIf { true }
 		doFirst {
+			val debugging = findProperty("consoleLauncherTestDebug")?.toString()?.toBoolean() ?: false
 			val output = ByteArrayOutputStream()
 			val result = javaexec {
 				classpath = runtimeClasspath
@@ -124,11 +125,14 @@ tasks {
 				args("--exclude-tag", "exclude")
 				args("--reports-dir", reportsDir)
 				systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
-				standardOutput = output
-				errorOutput = output
+				debug = debugging
+				if (!debugging) {
+					standardOutput = output
+					errorOutput = output
+				}
 				isIgnoreExitValue = true
 			}
-			if (result.exitValue != 0) {
+			if (result.exitValue != 0 && !debugging) {
 				System.out.write(output.toByteArray())
 				System.out.flush()
 			}
