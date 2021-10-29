@@ -125,6 +125,7 @@ tasks {
 				classpath = runtimeClasspath
 				main = "org.junit.platform.console.ConsoleLauncher"
 				args("--scan-classpath")
+				args("--config", "enableHttpServer=true")
 				args("--include-classname", ".*Tests")
 				args("--include-classname", ".*Demo")
 				args("--exclude-tag", "exclude")
