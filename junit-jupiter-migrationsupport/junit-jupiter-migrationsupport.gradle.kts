@@ -17,6 +17,9 @@ dependencies {
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteEngine)
 	testImplementation(projects.junitPlatformTestkit)
+
+	osgiVerification(projects.junitJupiterEngine)
+	osgiVerification(projects.junitPlatformLauncher)
 }
 
 tasks.jar {
