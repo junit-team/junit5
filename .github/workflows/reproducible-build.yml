@@ -17,14 +17,12 @@ jobs:
     name: 'Check build reproducibility'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    - name: Set up Gradle JDK
+      uses: ./.github/actions/setup-gradle-jdk
     - name: Restore Gradle cache and display toolchains
       uses: gradle/gradle-build-action@v2
       with:

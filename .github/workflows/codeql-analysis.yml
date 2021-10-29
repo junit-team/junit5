@@ -21,13 +21,10 @@ jobs:
       matrix:
         language: ['java', 'javascript']
     steps:
-    - name: Checkout repository
+    - name: Check out repository
       uses: actions/checkout@v2
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    - name: Set up Gradle JDK
+      uses: ./.github/actions/setup-gradle-jdk
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:

@@ -20,39 +20,18 @@ jobs:
     name: Linux
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
-        # Codecov needs fetch-depth > 1
-        fetch-depth: 2
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '8'
-    - name: Prepare JDK8 env var
-      shell: bash
-      run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    - name: Test and coverage
-      uses: gradle/gradle-build-action@v2
+        fetch-depth: 1
+    - name: Build
+      uses: ./.github/actions/main-build
       with:
         arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          -PenableJaCoCo
-          -Dplatform.tooling.support.tests.enabled=true
           -Dscan.tag.Linux
-          javaToolchains
+          -PenableJaCoCo
           build
           jacocoRootReport
-    - name: Upload Test Distribution trace files
-      uses: actions/upload-artifact@v2
-      with:
-        name: Test Distribution trace files
-        path: '**/build/test-results/*/trace.json'
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v2
 
@@ -60,60 +39,30 @@ jobs:
     name: Windows
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '8'
-    - name: Prepare JDK8 env var
-      shell: bash
-      run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    - name: Test
-      uses: gradle/gradle-build-action@v2
+    - name: Build
+      uses: ./.github/actions/main-build
       with:
         arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          -Dplatform.tooling.support.tests.enabled=true
           -Dscan.tag.Windows
-          javaToolchains
           build
 
   mac:
     name: macOS
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '8'
-    - name: Prepare JDK8 env var
-      shell: bash
-      run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    - name: Test
-      uses: gradle/gradle-build-action@v2
+    - name: Build
+      uses: ./.github/actions/main-build
       with:
         arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          -Dplatform.tooling.support.tests.enabled=true
           -Dscan.tag.macOS
-          javaToolchains
           build
 
   publish_artifacts:
@@ -122,14 +71,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    - uses: ./.github/actions/setup-gradle-jdk
     - name: Publish
       uses: gradle/gradle-build-action@v2
       env:
@@ -149,14 +95,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    - uses: ./.github/actions/setup-gradle-jdk
     - name: Install Graphviz
       run: |
         sudo apt-get update
