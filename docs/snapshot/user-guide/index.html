@@ -9293,6 +9293,8 @@ executed, could look like this:</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">example.session</span><span class="o">;</span>
 
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">InetAddress</span><span class="o">.</span><span class="na">getLoopbackAddress</span><span class="o">;</span>
+
 <span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.UncheckedIOException</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.net.InetSocketAddress</span><span class="o">;</span>
@@ -9339,7 +9341,7 @@ executed, could look like this:</p>
 
         <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="o">{</span>
             <span class="k">try</span> <span class="o">{</span>
-                <span class="n">server</span> <span class="o">=</span> <span class="nc">HttpServer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="k">new</span> <span class="nc">InetSocketAddress</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="mi">0</span><span class="o">);</span>
+                <span class="n">server</span> <span class="o">=</span> <span class="nc">HttpServer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="k">new</span> <span class="nc">InetSocketAddress</span><span class="o">(</span><span class="n">getLoopbackAddress</span><span class="o">(),</span> <span class="mi">0</span><span class="o">),</span> <span class="mi">0</span><span class="o">);</span>
             <span class="o">}</span>
             <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
                 <span class="k">throw</span> <span class="k">new</span> <span class="nf">UncheckedIOException</span><span class="o">(</span><span class="s">"Failed to start HTTP server"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
@@ -9352,11 +9354,12 @@ executed, could look like this:</p>
             <span class="n">server</span><span class="o">.</span><span class="na">setExecutor</span><span class="o">(</span><span class="n">executorService</span><span class="o">);</span>
             <span class="n">server</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="1"></i><b>(1)</b>
             <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="na">getAddress</span><span class="o">().</span><span class="na">getPort</span><span class="o">();</span>
-            <span class="nc">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"http.server.port"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">port</span><span class="o">));</span> <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="nc">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"http.server.host"</span><span class="o">,</span> <span class="n">getLoopbackAddress</span><span class="o">().</span><span class="na">getHostAddress</span><span class="o">());</span> <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="nc">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"http.server.port"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">port</span><span class="o">));</span> <i class="conum" data-value="3"></i><b>(3)</b>
         <span class="o">}</span>
 
         <span class="kt">void</span> <span class="nf">tearDown</span><span class="o">()</span> <span class="o">{</span>
-            <span class="n">server</span><span class="o">.</span><span class="na">stop</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
+            <span class="n">server</span><span class="o">.</span><span class="na">stop</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <i class="conum" data-value="4"></i><b>(4)</b>
             <span class="n">executorService</span><span class="o">.</span><span class="na">shutdownNow</span><span class="o">();</span>
         <span class="o">}</span>
     <span class="o">}</span>
@@ -9372,10 +9375,14 @@ executed, could look like this:</p>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Export its dynamic port as a system property for consumption by tests</td>
+<td>Export its host address as a system property for consumption by tests</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Export its port as a system property for consumption by tests</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>Stop the HTTP server</td>
 </tr>
 </table>
@@ -9412,14 +9419,15 @@ by adding the file to <code>src/test/resources</code>):</p>
 
     <span class="nd">@Test</span>
     <span class="kt">void</span> <span class="nf">respondsWith204</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
-        <span class="nc">String</span> <span class="n">port</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"http.server.port"</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="no">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="no">URL</span><span class="o">(</span><span class="s">"http://localhost:"</span> <span class="o">+</span> <span class="n">port</span> <span class="o">+</span> <span class="s">"/test"</span><span class="o">);</span>
+        <span class="nc">String</span> <span class="n">host</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"http.server.host"</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="nc">String</span> <span class="n">port</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"http.server.port"</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="no">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="no">URL</span><span class="o">(</span><span class="s">"http://"</span> <span class="o">+</span> <span class="n">host</span> <span class="o">+</span> <span class="s">":"</span> <span class="o">+</span> <span class="n">port</span> <span class="o">+</span> <span class="s">"/test"</span><span class="o">);</span>
 
         <span class="nc">HttpURLConnection</span> <span class="n">connection</span> <span class="o">=</span> <span class="o">(</span><span class="nc">HttpURLConnection</span><span class="o">)</span> <span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
         <span class="n">connection</span><span class="o">.</span><span class="na">setRequestMethod</span><span class="o">(</span><span class="s">"GET"</span><span class="o">);</span>
-        <span class="kt">int</span> <span class="n">responseCode</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">getResponseCode</span><span class="o">();</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="kt">int</span> <span class="n">responseCode</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">getResponseCode</span><span class="o">();</span> <i class="conum" data-value="3"></i><b>(3)</b>
 
-        <span class="n">assertEquals</span><span class="o">(</span><span class="mi">204</span><span class="o">,</span> <span class="n">responseCode</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="n">assertEquals</span><span class="o">(</span><span class="mi">204</span><span class="o">,</span> <span class="n">responseCode</span><span class="o">);</span> <i class="conum" data-value="4"></i><b>(4)</b>
     <span class="o">}</span>
 <span class="o">}</span></code></pre>
 </div>
@@ -9428,14 +9436,18 @@ by adding the file to <code>src/test/resources</code>):</p>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Read the port of the server from the system property set by the listener</td>
+<td>Read the host address of the server from the system property set by the listener</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Send a request to the server</td>
+<td>Read the port of the server from the system property set by the listener</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Send a request to the server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>Check the status code of the response</td>
 </tr>
 </table>
@@ -10963,7 +10975,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-10-28 20:36:03 UTC
+Last updated 2021-10-29 13:20:45 UTC
 </div>
 </div>
 <style>
