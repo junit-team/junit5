@@ -27,7 +27,6 @@ jobs:
       uses: ./.github/actions/main-build
       with:
         arguments: |
-          -Dscan.tag.Linux
           -PenableJaCoCo
           build
           jacocoRootReport
@@ -43,10 +42,6 @@ jobs:
         fetch-depth: 1
     - name: Build
       uses: ./.github/actions/main-build
-      with:
-        arguments: |
-          -Dscan.tag.Windows
-          build
 
   macOS:
     runs-on: macos-latest
@@ -57,10 +52,6 @@ jobs:
         fetch-depth: 1
     - name: Build
       uses: ./.github/actions/main-build
-      with:
-        arguments: |
-          -Dscan.tag.macOS
-          build
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
