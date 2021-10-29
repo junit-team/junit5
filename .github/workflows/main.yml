@@ -16,8 +16,7 @@ env:
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:
-  linux:
-    name: Linux
+  Linux:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
@@ -35,8 +34,7 @@ jobs:
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v2
 
-  windows:
-    name: Windows
+  Windows:
     runs-on: windows-latest
     steps:
     - name: Check out repository
@@ -50,8 +48,7 @@ jobs:
           -Dscan.tag.Windows
           build
 
-  mac:
-    name: macOS
+  macOS:
     runs-on: macos-latest
     steps:
     - name: Check out repository
