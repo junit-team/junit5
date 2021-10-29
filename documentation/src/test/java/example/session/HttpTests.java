@@ -22,14 +22,15 @@ class HttpTests {
 
 	@Test
 	void respondsWith204() throws Exception {
-		String port = System.getProperty("http.server.port"); // <1>
-		URL url = new URL("http://localhost:" + port + "/test");
+		String host = System.getProperty("http.server.host"); // <1>
+		String port = System.getProperty("http.server.port"); // <2>
+		URL url = new URL("http://" + host + ":" + port + "/test");
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("GET");
-		int responseCode = connection.getResponseCode(); // <2>
+		int responseCode = connection.getResponseCode(); // <3>
 
-		assertEquals(204, responseCode); // <3>
+		assertEquals(204, responseCode); // <4>
 	}
 }
 //end::user_guide[]
