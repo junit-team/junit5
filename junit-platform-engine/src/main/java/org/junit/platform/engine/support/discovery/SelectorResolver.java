@@ -299,6 +299,21 @@ public interface SelectorResolver {
 		return resolve((DiscoverySelector) selector, context);
 	}
 
+	/**
+	 * Resolve the supplied {@link IterationSelector} using the supplied
+	 * {@link Context Context}.
+	 *
+	 * <p>The default implementation delegates to {@link
+	 * #resolve(DiscoverySelector, Context)}.
+	 *
+	 * @param selector the selector to be resolved; never {@code null}
+	 * @param context the context to be used for resolving the selector; never
+	 * {@code null}
+	 * @return a {@link Resolution Resolution} of {@link Resolution#unresolved()
+	 * unresolved()}, {@link Resolution#selectors(Set) selectors()}, or {@link
+	 * Resolution#matches(Set) matches()}; never {@code null}
+	 * @see #resolve(DiscoverySelector, Context)
+	 */
 	@API(status = EXPERIMENTAL, since = "1.9")
 	default Resolution resolve(IterationSelector selector, Context context) {
 		return resolve((DiscoverySelector) selector, context);
