@@ -24,6 +24,15 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
+/**
+ * A {@link IterationSelector} that selects the iterations of a parent
+ * {@link DiscoverySelector} via their index so that
+ * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
+ * a subset of the iterations of tests or containers.
+ *
+ * @since 1.9
+ * @see DiscoverySelectors#selectIteration(DiscoverySelector, int...)
+ */
 @API(status = EXPERIMENTAL, since = "1.9")
 public class IterationSelector implements DiscoverySelector {
 
@@ -41,10 +50,16 @@ public class IterationSelector implements DiscoverySelector {
 				.collect(collectingAndThen(toCollection(TreeSet::new), Collections::unmodifiableSortedSet));
 	}
 
+	/**
+	 * Get the selected parent {@link DiscoverySelector}.
+	 */
 	public DiscoverySelector getParentSelector() {
 		return parentSelector;
 	}
 
+	/**
+	 * Get the selected iteration indices.
+	 */
 	public SortedSet<Integer> getIterationIndices() {
 		return iterationIndices;
 	}
