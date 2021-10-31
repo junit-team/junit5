@@ -146,6 +146,21 @@ tasks {
 		}
 	}
 
+	register<JavaExec>("consoleLauncher") {
+		val reportsDir = file("$buildDir/console-launcher")
+		outputs.dir(reportsDir)
+		outputs.upToDateWhen { false }
+		classpath = sourceSets["test"].runtimeClasspath
+		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		args("--scan-classpath")
+		args("--config", "enableHttpServer=true")
+		args("--include-classname", ".*Tests")
+		args("--include-classname", ".*Demo")
+		args("--exclude-tag", "exclude")
+		args("--reports-dir", reportsDir)
+		systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+	}
+
 	test {
 		dependsOn(consoleLauncherTest)
 		exclude("**/*")
