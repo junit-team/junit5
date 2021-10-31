@@ -315,6 +315,7 @@ class AssertTimeoutAssertionsTests {
 
 	private void waitForInterrupt() {
 		try {
+			assertFalse(Thread.interrupted(), "Already interrupted");
 			new CountDownLatch(1).await();
 		}
 		catch (InterruptedException ignore) {
