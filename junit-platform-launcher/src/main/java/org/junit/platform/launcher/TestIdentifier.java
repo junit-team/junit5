@@ -301,6 +301,7 @@ public final class TestIdentifier implements Serializable {
 		private final String displayName;
 		private final String legacyReportingName;
 		private final TestSource source;
+		@SuppressWarnings({ "serial", "RedundantSuppression" }) // always used with serializable implementation (see TestIdentifier#copyOf())
 		private final Set<TestTag> tags;
 		private final Type type;
 
