@@ -23,6 +23,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New `IterationSelector` for selecting a subset of a test's or container's iterations.
 * JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at resolution time a fully running set of dependencies are calculated avoiding the need for these to be manually specified.
 
 
@@ -39,7 +40,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Add support for `IterationSelector` to select a subset of the invocations of
+  parameterized or dynamic tests.
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]
