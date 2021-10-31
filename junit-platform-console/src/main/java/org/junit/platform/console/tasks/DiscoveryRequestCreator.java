@@ -23,11 +23,10 @@ import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -37,8 +36,10 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.ClassNameFilter;
+import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.discovery.IterationSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
@@ -49,24 +50,26 @@ class DiscoveryRequestCreator {
 
 	LauncherDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
 		LauncherDiscoveryRequestBuilder requestBuilder = request();
-		requestBuilder.selectors(createDiscoverySelectors(options));
-		addFilters(requestBuilder, options);
+		List<? extends DiscoverySelector> selectors = createDiscoverySelectors(options);
+		requestBuilder.selectors(selectors);
+		addFilters(requestBuilder, options, selectors);
 		requestBuilder.configurationParameters(options.getConfigurationParameters());
 		return requestBuilder.build();
 	}
 
 	private List<? extends DiscoverySelector> createDiscoverySelectors(CommandLineOptions options) {
+		List<DiscoverySelector> explicitSelectors = options.getExplicitSelectors();
 		if (options.isScanClasspath()) {
-			Preconditions.condition(!options.hasExplicitSelectors(),
+			Preconditions.condition(explicitSelectors.isEmpty(),
 				"Scanning the classpath and using explicit selectors at the same time is not supported");
 			return createClasspathRootSelectors(options);
 		}
 		if (options.isScanModulepath()) {
-			Preconditions.condition(!options.hasExplicitSelectors(),
+			Preconditions.condition(explicitSelectors.isEmpty(),
 				"Scanning the module-path and using explicit selectors at the same time is not supported");
 			return selectModules(ModuleUtils.findAllNonSystemBootModuleNames());
 		}
-		return createExplicitDiscoverySelectors(options);
+		return Preconditions.notEmpty(explicitSelectors, "No arguments were supplied to the ConsoleLauncher");
 	}
 
 	private List<ClasspathRootSelector> createClasspathRootSelectors(CommandLineOptions options) {
@@ -83,23 +86,9 @@ class DiscoveryRequestCreator {
 		return new LinkedHashSet<>(options.getSelectedClasspathEntries());
 	}
 
-	private List<DiscoverySelector> createExplicitDiscoverySelectors(CommandLineOptions options) {
-		List<DiscoverySelector> selectors = new ArrayList<>();
-		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
-		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
-		options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);
-		options.getSelectedModules().stream().map(DiscoverySelectors::selectModule).forEach(selectors::add);
-		options.getSelectedPackages().stream().map(DiscoverySelectors::selectPackage).forEach(selectors::add);
-		options.getSelectedClasses().stream().map(DiscoverySelectors::selectClass).forEach(selectors::add);
-		options.getSelectedMethods().stream().map(DiscoverySelectors::selectMethod).forEach(selectors::add);
-		options.getSelectedClasspathResources().stream().map(DiscoverySelectors::selectClasspathResource).forEach(
-			selectors::add);
-		Preconditions.notEmpty(selectors, "No arguments were supplied to the ConsoleLauncher");
-		return selectors;
-	}
-
-	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
-		requestBuilder.filters(includedClassNamePatterns(options));
+	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options,
+			List<? extends DiscoverySelector> selectors) {
+		requestBuilder.filters(includedClassNamePatterns(options, selectors));
 
 		if (!options.getExcludedClassNamePatterns().isEmpty()) {
 			requestBuilder.filters(
@@ -131,17 +120,26 @@ class DiscoveryRequestCreator {
 		}
 	}
 
-	private ClassNameFilter includedClassNamePatterns(CommandLineOptions options) {
-		Stream<Stream<String>> patternStreams = Stream.of( //
+	private ClassNameFilter includedClassNamePatterns(CommandLineOptions options,
+			List<? extends DiscoverySelector> selectors) {
+		Stream<String> patternStreams = Stream.concat( //
 			options.getIncludedClassNamePatterns().stream(), //
-			options.getSelectedClasses().stream() //
-					.map(Pattern::quote), //
-			options.getSelectedMethods().stream() //
-					.map(name -> ReflectionUtils.parseFullyQualifiedMethodName(name)[0]) //
+			selectors.stream() //
+					.map(selector -> selector instanceof IterationSelector
+							? ((IterationSelector) selector).getParentSelector()
+							: selector) //
+					.map(selector -> {
+						if (selector instanceof ClassSelector) {
+							return ((ClassSelector) selector).getClassName();
+						}
+						if (selector instanceof MethodSelector) {
+							return ((MethodSelector) selector).getClassName();
+						}
+						return null;
+					}) //
+					.filter(Objects::nonNull) //
 					.map(Pattern::quote));
-		return includeClassNamePatterns(patternStreams //
-				.flatMap(Function.identity()) //
-				.toArray(String[]::new));
+		return includeClassNamePatterns(patternStreams.toArray(String[]::new));
 	}
 
 }
