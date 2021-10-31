@@ -30,6 +30,12 @@ jobs:
           -PenableJaCoCo
           build
           jacocoRootReport
+    - name: Archive Test Distribution trace files
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: Test Distribution trace files (${{ github.job }})
+        path: '**/build/test-results/*/trace.json'
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v2
 
@@ -42,6 +48,12 @@ jobs:
         fetch-depth: 1
     - name: Build
       uses: ./.github/actions/main-build
+    - name: Archive Test Distribution trace files
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: Test Distribution trace files (${{ github.job }})
+        path: '**/build/test-results/*/trace.json'
 
   macOS:
     runs-on: macos-latest
@@ -52,6 +64,12 @@ jobs:
         fetch-depth: 1
     - name: Build
       uses: ./.github/actions/main-build
+    - name: Archive Test Distribution trace files
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: Test Distribution trace files (${{ github.job }})
+        path: '**/build/test-results/*/trace.json'
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
