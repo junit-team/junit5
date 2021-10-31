@@ -9,4 +9,7 @@ project.pluginManager.withPlugin("java") {
 	tasks.withType<JavaExec>().configureEach {
 		javaLauncher.set(javaToolchainService.launcherFor(extension.toolchain))
 	}
+	tasks.withType<JavaCompile>().configureEach {
+		outputs.cacheIf { javaLanguageVersion == defaultLanguageVersion }
+	}
 }
