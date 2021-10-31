@@ -322,7 +322,6 @@
 767b4c92d0a61803508be4553d4fdb4e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java
 7680fa5910090f3253961f2f72d8519d  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/ExecutionRecorder.java
 76a415cf588d89b13a5efdd207f534f3  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/ClassOrderingVisitor.java
-76e0156925d80c38cf389e4f4883b7d5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestIdentifier.java
 7736882f31681723cbc72a235290a3af  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodSourceSupport.java
 77a4aacd081e65883608693ea690037c  documentation/src/test/java/example/timing/TimingExtension.java
 78256810122c8fab15681f490e1aa08e  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
@@ -557,6 +556,7 @@ c13f49924444f933d16f439e8b9ec9f9  junit-jupiter-api/src/main/java/org/junit/jupi
 c150d855ae6ebbeca10254b8535f956d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeEach.java
 c1867db986614fe878c2ee8d8ba42833  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/UriSelector.java
 c1afab14f83e8745059d7aa3b18c4a14  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/JupiterThrowableCollectorFactory.java
+c1c702cd5297a5100cdc8f74c1828a8e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestIdentifier.java
 c2528e9e778205987ce32bae0b18411b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/session/LauncherSessionListeners.java
 c263b7908d8530b8b51f0e4154c64ea4  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.java
 c27a6da6b2d65dfdaee1fd4d0f348869  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeUtils.java
