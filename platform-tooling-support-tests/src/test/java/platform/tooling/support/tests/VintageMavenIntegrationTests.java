@@ -59,7 +59,7 @@ class VintageMavenIntegrationTests {
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.setProject("vintage") //
 				.setWorkspace("vintage-maven-" + version) //
-				.addArguments("clean", "test", "--debug", "--batch-mode") //
+				.addArguments("clean", "test", "--update-snapshots", "--batch-mode") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
 				.setTimeout(TOOL_TIMEOUT) //

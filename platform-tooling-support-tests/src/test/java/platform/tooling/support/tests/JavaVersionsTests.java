@@ -54,7 +54,7 @@ class JavaVersionsTests {
 				.setProject("java-versions") //
 				.setWorkspace("java-versions-" + version) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("--debug", "--batch-mode", "verify") //
+				.addArguments("--update-snapshots", "--batch-mode", "verify") //
 				.setTimeout(TOOL_TIMEOUT) //
 				.setJavaHome(javaHome) //
 				.build().run();
