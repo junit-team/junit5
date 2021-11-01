@@ -12,8 +12,7 @@ package platform.tooling.support.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
-import java.time.Duration;
+import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 
 import de.sormuras.bartholdy.Result;
 
@@ -63,7 +62,7 @@ class VintageMavenIntegrationTests {
 				.addArguments("clean", "test", "--debug", "--batch-mode") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
-				.setTimeout(Duration.ofMinutes(2)) //
+				.setTimeout(TOOL_TIMEOUT) //
 				.build() //
 				.run();
 		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);

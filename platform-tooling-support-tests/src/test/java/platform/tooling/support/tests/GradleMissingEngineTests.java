@@ -13,9 +13,9 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 
 import java.nio.file.Paths;
-import java.time.Duration;
 import java.util.List;
 
 import de.sormuras.bartholdy.Tool;
@@ -47,7 +47,7 @@ class GradleMissingEngineTests {
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
-				.setTimeout(Duration.ofMinutes(2)).build() //
+				.setTimeout(TOOL_TIMEOUT).build() //
 				.run();
 
 		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);

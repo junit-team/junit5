@@ -14,8 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.Duration;
+import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 
 import org.junit.jupiter.api.Test;
 import org.opentest4j.TestAbortedException;
@@ -36,7 +35,7 @@ class MavenStarterTests {
 				.setProject("maven-starter") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--debug", "--batch-mode", "verify") //
-				.setTimeout(Duration.ofMinutes(2)) //
+				.setTimeout(TOOL_TIMEOUT) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //
 				.run();
