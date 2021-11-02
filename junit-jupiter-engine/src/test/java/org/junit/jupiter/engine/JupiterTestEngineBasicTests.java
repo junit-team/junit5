@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -31,17 +32,20 @@ class JupiterTestEngineBasicTests {
 
 	@Test
 	void groupId() {
-		assertEquals("org.junit.jupiter", jupiter.getGroupId().get());
+		assertEquals("org.junit.jupiter", jupiter.getGroupId().orElseThrow());
 	}
 
 	@Test
 	void artifactId() {
-		assertEquals("junit-jupiter-engine", jupiter.getArtifactId().get());
+		assertEquals("junit-jupiter-engine", jupiter.getArtifactId().orElseThrow());
 	}
 
 	@Test
 	void version() {
-		assertEquals(System.getProperty("developmentVersion"), jupiter.getVersion().get());
+		assertThat(jupiter.getVersion().orElseThrow()).isIn( //
+			System.getProperty("developmentVersion"), // with Test Distribution
+			"DEVELOPMENT" // without Test Distribution
+		);
 	}
 
 }
