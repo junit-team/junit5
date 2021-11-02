@@ -58,38 +58,56 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Package</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="#org.junit.platform.engine">org.junit.platform.engine</a></div>
+<div class="col-first even-row-color"><a href="#org.junit.platform.console.options">org.junit.platform.console.options</a></div>
 <div class="col-last even-row-color">
+<div class="block">Configuration options for JUnit's console launcher.</div>
+</div>
+<div class="col-first odd-row-color"><a href="#org.junit.platform.engine">org.junit.platform.engine</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Public API for test engines.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#org.junit.platform.engine.discovery">org.junit.platform.engine.discovery</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#org.junit.platform.engine.discovery">org.junit.platform.engine.discovery</a></div>
+<div class="col-last even-row-color">
 <div class="block">Concrete <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">selectors</a> and
  <a href="../DiscoveryFilter.html" title="interface in org.junit.platform.engine">filters</a> to be used in
  <a href="../EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">discovery requests</a>.</div>
 </div>
-<div class="col-first even-row-color"><a href="#org.junit.platform.engine.support.discovery">org.junit.platform.engine.support.discovery</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#org.junit.platform.engine.support.discovery">org.junit.platform.engine.support.discovery</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Configurable test discovery implementation that can be reused by different test engines.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#org.junit.platform.launcher.core">org.junit.platform.launcher.core</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#org.junit.platform.launcher.core">org.junit.platform.launcher.core</a></div>
+<div class="col-last even-row-color">
 <div class="block">Core support classes for the <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>
  including the <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core"><code>LauncherFactory</code></a>
  and the <a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><a href="#org.junit.platform.suite.commons">org.junit.platform.suite.commons</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#org.junit.platform.suite.commons">org.junit.platform.suite.commons</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Common support utilities for executing test suites on the JUnit Platform.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#org.junit.platform.testkit.engine">org.junit.platform.testkit.engine</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#org.junit.platform.testkit.engine">org.junit.platform.testkit.engine</a></div>
+<div class="col-last even-row-color">
 <div class="block">Test Kit for testing the execution of a <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>
  running on the JUnit Platform.</div>
 </div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
+<li>
+<section class="detail" id="org.junit.platform.console.options">
+<h2>Uses of <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a> in <a href="../../../../../../org.junit.platform.console/org/junit/platform/console/options/package-summary.html">org.junit.platform.console.options</a></h2>
+<div class="caption"><span>Methods in <a href="../../../../../../org.junit.platform.console/org/junit/platform/console/options/package-summary.html">org.junit.platform.console.options</a> that return types with arguments of type <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">CommandLineOptions.</span><code><a href="../../../../../../org.junit.platform.console/org/junit/platform/console/options/CommandLineOptions.html#getExplicitSelectors()" class="member-name-link">getExplicitSelectors</a>()</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="org.junit.platform.engine">
 <h2>Uses of <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a> in <a href="../package-summary.html">org.junit.platform.engine</a></h2>
@@ -169,57 +187,89 @@ loadScripts(document, 'script');</script>
  file system.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../discovery/MethodSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second odd-row-color"><code><a href="../discovery/IterationSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">IterationSelector</a></code></div>
 <div class="col-last odd-row-color">
+<div class="block">A <a href="../discovery/IterationSelector.html" title="class in org.junit.platform.engine.discovery"><code>IterationSelector</code></a> that selects the iterations of a parent
+ <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> via their index so that
+ <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
+ a subset of the iterations of tests or containers.</div>
+</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../discovery/MethodSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> or a combination of
  class name, method name, and parameter types so that
  <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover tests
  or containers based on methods.</div>
 </div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../discovery/ModuleSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">ModuleSelector</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../discovery/ModuleSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">ModuleSelector</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a module name so that
  <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
  tests or containers based on modules.</div>
 </div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../discovery/NestedClassSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../discovery/NestedClassSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a nested <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>
  or class name enclosed in other classes so that
  <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
  tests or containers based on classes.</div>
 </div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../discovery/NestedMethodSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../discovery/NestedMethodSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a nested <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a>
  or a combination of enclosing classes names, class name, method
  name, and parameter types so that
  <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
  tests or containers based on methods.</div>
 </div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../discovery/PackageSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">PackageSelector</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../discovery/PackageSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">PackageSelector</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a package name so that
  <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
  tests or containers based on packages.</div>
 </div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../discovery/UniqueIdSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../discovery/UniqueIdSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="../UniqueId.html" title="class in org.junit.platform.engine"><code>UniqueId</code></a> so that
  <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
  tests or containers based on unique IDs.</div>
 </div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../discovery/UriSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">UriSelector</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../discovery/UriSelector.html" class="type-name-link" title="class in org.junit.platform.engine.discovery">UriSelector</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link"><code>URI</code></a> so that
  <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
  can discover tests or containers based on URIs.</div>
+</div>
+</div>
+<div class="caption"><span>Methods in <a href="../discovery/package-summary.html">org.junit.platform.engine.discovery</a> that return <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">IterationSelector.</span><code><a href="../discovery/IterationSelector.html#getParentSelector()" class="member-name-link">getParentSelector</a>()</code></div>
+<div class="col-last even-row-color">
+<div class="block">Get the selected parent <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a>.</div>
+</div>
+</div>
+<div class="caption"><span>Methods in <a href="../discovery/package-summary.html">org.junit.platform.engine.discovery</a> with parameters of type <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static <a href="../discovery/IterationSelector.html" title="class in org.junit.platform.engine.discovery">IterationSelector</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../discovery/DiscoverySelectors.html#selectIteration(org.junit.platform.engine.DiscoverySelector,int...)" class="member-name-link">selectIteration</a><wbr>(<a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&nbsp;parentSelector,
+ int...&nbsp;iterationIndices)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Create an <code>IterationSelector</code> for the supplied parent selector and
+ iteration indices.</div>
 </div>
 </div>
 </section>

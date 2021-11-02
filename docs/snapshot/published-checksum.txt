@@ -19,6 +19,7 @@
 087011bcc4506dabe87512d11e369590  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatformTestTree.java
 089afc2b8a1c20e7b892cba53161e97f  junit-platform-console/src/main/java/org/junit/platform/console/options/PicocliCommandLineOptionsParser.java
 08b81e4203870b007330ee95fbb4cee9  junit-platform-reporting/src/main/java/org/junit/platform/reporting/package-info.java
+091038ea85fd859311cb5689626be683  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java
 09418daed6d5f309de6138eaafb98b0c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrdererContext.java
 09544a5615893e0cb711ac7f3371544d  documentation/src/test/java/example/testinterface/TestLifecycleLogger.java
 099c3e5da469276671301dc44669172a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsNestedTestClass.java
@@ -66,6 +67,7 @@
 17b3a6f7a5580f94b23741951f5309e6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.java
 17d4696b332da3c2c486bd7dfe3ef6d2  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateExtensionContext.java
 183fcd36b45a4e0fa39b2602e7ec8bd8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/package-info.java
+186bc57dd5740887c993cbd658c5a5c1  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/IterationSelector.java
 1886cf09f9e1dea488dc706cbd385d61  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsInnerClass.java
 1906dccf499b4a8899670d93a147550e  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 1a5311bb8d0beb4edef78bd6a5efcd99  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/DisableParentConfigurationParameters.java
@@ -84,6 +86,7 @@
 20021b9ddc49b2b1006ec3cedc2ab014  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java
 217138f2e47a071d5df7fe7952bec82f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertEquals.java
 2171f36c95f6694e71d5bf66f03c10c2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInfo.java
+2244f12360230aae363ea2f657176aab  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DiscoverySelectors.java
 226cf0bf1e5da7bd1b99ac74a79341cf  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Execution.java
 22d6c4ba6601bbd8c9b7ade25082177a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ConditionEvaluator.java
 23d98927ee7adbda52cd30396e368c98  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineExecutionResults.java
@@ -100,6 +103,7 @@
 26c01cf1dabacd6f93ece1c978d48652  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/AbstractTestRuleAnnotatedMember.java
 2723e4000ed42a41fbd628d9a631538d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectModules.java
 2748aa1f96c54f7b82076fdc88b9736f  documentation/src/docs/asciidoc/user-guide/advanced-topics.adoc
+27546fda8eb703f32a4be3099a1f9852  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolution.java
 2800ccc9f400d0809f27dd1cfcfe8a3a  documentation/src/test/java/example/defaultmethods/EqualsContract.java
 28384c5c26b56d96a5fc52578de0e1c2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/BooleanExecutionCondition.java
 2881cfa684aafe2a017fac212f482230  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LegacyReportingUtils.java
@@ -116,6 +120,7 @@
 2ba206e4ab4fc1429e9d6b05f85bc5ff  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/package-info.java
 2c9e1b584fcf2194284f012c001534f9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistry.java
 2caf6068b8b4905b8da7b61d57237a23  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClasspathResourceSource.java
+2d88d21616bbcb8a0adc8f7132dd09fc  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 2da4ce8d47c0fd80e934220348c97b47  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseStatus.java
 2de2ce45a88b74b8ce8b0944ab6497cf  documentation/src/test/java/example/TestTemplateDemo.java
 2de4b64a4814ed182d22f3788158d9d3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactoryContext.java
@@ -146,10 +151,10 @@
 35443a841632823126bc4ab45c90085d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.java
 35bbea673852d2c3aa9dd6eaf207766a  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.java
 35fce91a9ad24ec798cbbe34d63da7e0  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathRootSelector.java
-3624a29f8ce112b35cef073fe9379737  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.java
 36b0cab22e9e3307dbafb26e3efaa864  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.java
 36cd768f6142fec88b233b555d3bd0c1  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptingTestExecutionListener.java
 36d1001d1eb3f97e6764ccfa9111d519  junit-platform-commons/src/main/java/org/junit/platform/commons/support/HierarchyTraversalMode.java
+36f1673a159f4e0c17c78ee9b74010a6  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptions.java
 371ffc5c06d665ec307b161de83a29b5  documentation/src/test/java/example/extensions/Random.java
 37725239b2f5f7dcf21565077d139433  documentation/src/docs/asciidoc/resources/fonts/Symbola.ttf
 38712453e07a4d8f7c492a5561e3f7a2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/InvocationInterceptor.java
@@ -208,6 +213,7 @@
 470f64c9a4cce0eb7f810d27d3ece993  junit-platform-console/src/main/java/org/junit/platform/console/tasks/FlatPrintingListener.java
 4736ae4f17e88ade5a702f33fe2e85a1  documentation/src/docs/asciidoc/user-guide/images/writing-tests_execution_mode.svg
 474be475e18655bcef56e2076d4a88d0  documentation/src/test/java/example/defaultmethods/StringTests.java
+47602124e8e622a7fe317ab2084e3f3a  documentation/documentation.gradle.kts
 47f9d5994ba4a105723603a2bf10b611  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicTestTestDescriptor.java
 4820449af5ccf0d5fecc9a775766c3c8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultMethodDescriptor.java
 4873420d39f5bb05a382e2a129450208  documentation/src/test/java/example/JUnitPlatformClassDemo.java
@@ -271,9 +277,12 @@
 61dd67989942cb294171bf14169aea12  documentation/src/test/java/example/DocumentationTestSuite.java
 61ed84b0f0e5eefa3434e6d163dcf2f3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTrue.java
 61efd1d9a5d53f479376f994f5e1266f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicNodeTestDescriptor.java
+62186952e110e5acdce098508bd6ac1f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.java
 6252ab43535b8499a2c36f6d550b9653  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectDirectories.java
 6368d1d7cb1209e05b14803373ab6ae1  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
+64627e91e2fb6562e1e60cc8846021ec  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodSelectorResolver.java
 64fb1de78e237565f17892c2e8f3387c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePreDestroyCallback.java
+6567904b9014b7e4f89f904d72a0e819  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
 6589d81f62972497a49f8c9b36fd7a94  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstances.java
 65d849663a861fdd87b48f70e3f04fc8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/package-info.java
 65e0fdd1d53aecc0bc0e0673aae450fc  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineExecutionOrchestrator.java
@@ -283,6 +292,7 @@
 669232fc68b369e4869f92148ba98819  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodExtensionContext.java
 66b5e4f26baf01b7965751649a6de416  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ExceptionUtils.java
 670403474aa4ed49430e953b2af6e6c5  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Executions.java
+6729b898f0306450d9bdd6edef6815e4  junit-platform-console/src/main/java/org/junit/platform/console/options/AvailableOptions.java
 689546b5b30829999b1f8a5a383f1284  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
 691422b491ee238ccd92ee4dc1cf1782  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
 69851f66647aa76ef872b4894895c2dd  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle.png
@@ -329,7 +339,6 @@
 78e3da888f3b7f7543f2b8297f60ebb8  documentation/src/main/java/example/registration/package-info.java
 796db01b59a6000e715153a73904e961  documentation/src/test/java/extensions/ExpectToFail.java
 79787c80943b40d745cb06af1f3238ad  documentation/src/docs/asciidoc/user-guide/index.adoc
-798b113e8441267e4eaeac5bb3660344  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
 79bdc5bb6553997402c5166aaa9e40ac  junit-platform-commons/src/main/java/org/junit/platform/commons/PreconditionViolationException.java
 79c1265249b501ccf3ac5e2fa59ca105  documentation/src/test/java/example/ConditionalTestExecutionDemo.java
 79c9536ae862523dfeb869e41932ded9  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultLauncher.java
@@ -339,9 +348,9 @@
 7c45a350e04db267187d92bac1612a9f  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/package-info.java
 7c66cc124f4a2d1f258283bb7cbae488  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestInvocationContext.java
 7cb422a45d96a5bbea5875611d7d6573  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Assertions.java
+7d43c9f59af74c08ece496b094611531  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 7db5ecc9e345aa616d9684658468ad51  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestWatcher.java
 7e03d4c10f144c31a1b2aa1355d93849  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJre.java
-7e46f708e00c0b9667006ecc6e5d1ed5  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DiscoverySelectors.java
 7ee2db46b1dd3fe05dc8caab45cf68a8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicNode.java
 7f029462d937e0126f8497835a1bc1ec  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/package-info.java
 7f3d0a10e932f62b54aed3993222d889  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java
@@ -370,7 +379,6 @@
 86bbd3191ba51edca888d12709510653  junit-platform-engine/src/main/java/org/junit/platform/engine/FilterResult.java
 892148d1f1b31624c93a0adab2956a4a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullEnum.java
 8962f07b44b6632eb4736c94f57b7589  documentation/src/test/java/example/MyFirstJUnitJupiterTests.java
-89702a39f5df287ea6c5fbba1ad441da  junit-platform-commons/src/main/java/org/junit/platform/commons/util/Preconditions.java
 89718e551cfe40a123823f221bebaa67  documentation/src/docs/asciidoc/resources/themes/junit-pdf-theme.yml
 89d63286d15864e6bc4d42d2d964b60d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectClasspathResources.java
 8b2ec00e1a83f83774569cc966ded6eb  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
@@ -387,7 +395,6 @@
 8d1e61c3eeb704b147cb3f498f7f1354  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Disabled.java
 8d79e90936ed4def22fa025431277d75  documentation/src/test/java/example/callbacks/DatabaseTestsDemo.java
 8d904d8b264946a8ef51118bb6dd188c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/UriSource.java
-8dc2738e5ccca780f5b530a54544d28f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodSelectorResolver.java
 8debdc5302636574c4b64e5e3029db3b  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageNameFilter.java
 8df8d20c402caa7231e553d7a5002842  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludePackages.java
 8e2931047dd84723f5d129169e96d4af  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/AggregateWith.java
@@ -399,7 +406,6 @@
 90e82516754cc71bab03de8e2f1ccfc4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionConfigurationException.java
 90ec76b46101dde007532e2c341cd159  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ConditionEvaluationResult.java
 9147c809630ff876f6b92149f1e81234  documentation/src/test/java/example/DisabledClassDemo.java
-914d559e2bf4d3f7229a4a8cf76cfad5  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolution.java
 915e06d00d0435a1d8a914ef4be5b596  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherFactory.java
 9189c99f2d460df4d85ec027f05daff8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/AbstractRepeatableAnnotationCondition.java
 91922cbb930518e6333e8d5cf1d9150d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ConditionEvaluationException.java
@@ -410,9 +416,7 @@
 92f9d8afd2d3d0cfb054c1a351ef037b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseResult.java
 92fd7788f1c758fb278d4a252bd1070e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/JUnit4VersionCheck.java
 93a0a83624d1727553a6c7e9daf9af93  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNull.java
-93aaa96e021e7d04a54008051627e9e5  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/SelectorResolver.java
 93b77898bfaae095c09ea08af3dbceb5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolutionException.java
-944f63103cb0da6449725a9461a8a64a  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 947ff84d7edcc4504a089a6b5e5b8652  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.java
 951de5f1db3ad7633cecb37c18c14510  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/LockManager.java
 955eccdf85eb18a38ba78f004ba96ab7  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
@@ -441,6 +445,7 @@
 9ceda4f47f8e7b490c5b7de46537506e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/RunnerTestDescriptorPostProcessor.java
 9cf97f2ca731433f885cccae25c524a7  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
 9e4f7d89c04e3583b4b8865d6e947c7e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerDecorator.java
+9ed5e910ccf2f5e682bae37b8f656b82  junit-platform-commons/src/main/java/org/junit/platform/commons/util/Preconditions.java
 9edacf3f65feaa4cac0276a318cbe915  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportData.java
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a0293e1289d7d8a9db278c88356ad121  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ResourceUtils.java
@@ -452,7 +457,6 @@ a0ed60257babe889009503f1c92a59a8  junit-platform-engine/src/main/java/org/junit/
 a1d1251763cc312f1aad3468f33c167a  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeTags.java
 a1ea21eb6905311553d061647b2c98d0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/package-info.java
 a200e1b3a2bbfd666bed2463332d2b86  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContextException.java
-a2c9897258cf62c63a134160a15bd5ec  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 a2d5a21301467b5b8d1a9d31da980744  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreeNode.java
 a3077c6b3b213d1cf150e48d2c65f22e  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeClassNamePatterns.java
 a315fc394a47aed8f6244b9cb45d2b8a  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportWriter.java
@@ -466,6 +470,7 @@ a6a6e62bfa27db6ce15ee78736595c17  junit-platform-engine/src/main/java/org/junit/
 a6bf225450477d76172da217f13e5fc1  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/GenericBeforeAndAfterAdvice.java
 a763d3c544f44c1e3afeae5f7689b85e  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/DefaultArgumentConverter.java
 a7c5fe3f9b904d8ac34bbc363b6f497e  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptionsParser.java
+a7de35aefca0157f0ad87a0b7687ddac  junit-platform-console/src/main/java/org/junit/platform/console/options/SelectorConverter.java
 a7f5a9929e8999cd419a8dee01116561  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassTestDescriptor.java
 a817bf01229798e86cb9bc8af15b3088  documentation/src/test/java/example/defaultmethods/Testable.java
 a8217e917645f7161011c6c106667256  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeClassNamePatterns.java
@@ -519,7 +524,6 @@ b7d2932e4e5c229f759b1e298b6fc938  junit-platform-engine/src/main/java/org/junit/
 b81c8be322768efefcce20a5cd3b9cbb  documentation/src/test/java/example/JUnit4Tests.java
 b86267f4b3a0a1969a322f09e4da4edb  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java
 b878dc62356b34a1920b843e7ca50d5c  documentation/src/test/java/example/RepeatedTestsDemo.java
-b882f655b73c87235ea9888dfda727e8  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptions.java
 b8971226760404fcbc29a88ec1243f68  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestNameFormatter.java
 b8ab4c847b5a0d343d1a1fbcf1a2f1de  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java
 b8bd75d5b55826fefd2cd96d5940651b  junit-platform-engine/src/main/java/org/junit/platform/engine/ExecutionRequest.java
@@ -572,7 +576,6 @@ c56c22370c8567d0c16f8813f74d4b71  junit-platform-commons/src/main/java/org/junit
 c59db6b550fcaa6a4df6b5e712e226da  junit-platform-console/src/main/java/org/junit/platform/console/options/Details.java
 c5caf603ae9b511ac152b854cbc1bf5b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/VintageDiscoverer.java
 c665cbffd3af83710d24959605b66d5b  documentation/src/docs/asciidoc/docinfos/docinfo.html
-c6a9d23b8a4df24e3ba07d86d6303132  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java
 c7057e690e787bc3daac37713582b102  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ArgumentConverter.java
 c7150ec9ae3ed03a999ae60ba4d05a25  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
 c757c581ab848379cd0e2657a1034a0f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/DirectorySource.java
@@ -615,6 +618,7 @@ d1b105ef31f86da790a46afa801fada0  junit-jupiter-engine/src/main/java/org/junit/j
 d1d8b062ea2323c2a3fc59a0a3ce6b26  junit-platform-engine/src/main/java/org/junit/platform/engine/CompositeFilter.java
 d32fbca3363f5393a7dcfef9fa746e72  junit-platform-console/src/main/java9/org/junit/platform/console/ConsoleLauncherToolProvider.java
 d3752a81bf1647dc41a622b26f7c2064  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
+d387fc506a5772de120b3c76f644e3ba  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/SelectorResolver.java
 d3b3054d41812c34fc46b865eed4e79b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.java
 d3f7008fd1acc964c382f8634ef64ef3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGeneration.java
 d41d8cd98f00b204e9800998ecf8427e  -
@@ -662,7 +666,6 @@ def676d8d2cca7d6b8b1d153d014f535  junit-platform-commons/src/main/java/org/junit
 df29b5b913895848399910cf0dd67862  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceLock.java
 df3754af7250b81b04ed969594e5761f  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 df73a988aed9f8db17357bcbf1068ca5  documentation/src/test/java/example/interceptor/SwingEdtInterceptor.java
-df7f8811558f05993db309383ca31089  junit-platform-console/src/main/java/org/junit/platform/console/options/AvailableOptions.java
 dfa1dbd55f68be77ea8d610b970c5e4b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IgnoringRunnerDecorator.java
 dfb7d17b2fcbef615feda44c8fa291f7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepetitionInfo.java
 e01e635a073b3c8980c6a90a8a310a22  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/IsPotentialTestContainer.java
@@ -748,7 +751,6 @@ f8ff9545052f8b24e7ecf57c786fb820  junit-vintage-engine/src/main/java/org/junit/v
 f932641633effe7562a5efa11d979a6c  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ConfigurationParameters.java
 f97e8a04f150613f122a1e4aa9f696c2  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.java
 f9cebc3b1e61f67c4584abd8965e1d6c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/package-info.java
-f9fb94a253edc8ebfbdefdcff94f2042  documentation/documentation.gradle.kts
 faa875d46370adb004d32ff77799c55f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTask.java
 fadd54abd156dd54c99eff57d381ab42  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvSource.java
 fb9c2cd1660c5e365be94d54f8a6ca55  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodArgumentsProvider.java

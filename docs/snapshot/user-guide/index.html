@@ -6569,7 +6569,8 @@ is <code>0</code>.
                        PATH...]]]... [--details=MODE] [--details-theme=THEME]
                        [--reports-dir=DIR] [-c=CLASS]... [--config=KEY=VALUE]... [-cp=PATH
                        [;|:PATH...]]... [-d=DIR]... [-e=ID]... [-E=ID]...
-                       [--exclude-package=PKG]... [-f=FILE]... [--include-package=PKG]...
+                       [--exclude-package=PKG]... [-f=FILE]... [-i=TYPE:VALUE[INDEX(..
+                       INDEX)?(,INDEX(..INDEX)?)*]]... [--include-package=PKG]...
                        [-m=NAME]... [-n=PATTERN]... [-N=PATTERN]... [-o=NAME]...
                        [-p=PKG]... [-r=RESOURCE]... [-t=TAG]... [-T=TAG]... [-u=URI]...
 Launches the JUnit Platform from the console.
@@ -6614,6 +6615,9 @@ Launches the JUnit Platform from the console.
   -r, --select-resource=RESOURCE
                              Select a classpath resource for test discovery. This option
                                can be repeated.
+  -i, --select-iteration=TYPE:VALUE[INDEX(..INDEX)?(,INDEX(..INDEX)?)*]
+                             Select iterations for test discovery (e.g. method:com.acme.
+                               Foo#m()[1..2]). This option can be repeated.
   -n, --include-classname=PATTERN
                              Provide a regular expression to include only classes whose
                                fully qualified names match. To avoid loading classes
@@ -10440,6 +10444,11 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.discovery</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IterationSelector</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.9</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.config</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PrefixedConfigurationParameters</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
@@ -10975,7 +10984,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-01 09:00:15 UTC
+Last updated 2021-11-02 16:16:53 UTC
 </div>
 </div>
 <style>
