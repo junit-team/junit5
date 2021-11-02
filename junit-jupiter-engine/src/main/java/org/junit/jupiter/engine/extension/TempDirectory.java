@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
@@ -197,7 +196,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent( //
 			Scope.class, //
 			__ -> new EnumConfigurationParameterConverter<>(Scope.class, "@TempDir scope") //
-					.get(TEMP_DIR_SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
+					.get(TempDir.SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
 			Scope.class //
 		);
 	}

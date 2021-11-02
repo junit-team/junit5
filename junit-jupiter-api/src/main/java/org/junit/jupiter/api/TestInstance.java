@@ -31,7 +31,7 @@ import org.apiguardian.api.API;
  * implicitly default to {@link Lifecycle#PER_METHOD PER_METHOD}. Note, however,
  * that an explicit lifecycle mode is <em>inherited</em> within a test class
  * hierarchy. In addition, the <em>default</em> lifecycle mode may be overridden
- * via the {@code junit.jupiter.testinstance.lifecycle.default} <em>configuration
+ * via the {@value Lifecycle#DEFAULT_LIFECYCLE_PROPERTY_NAME} <em>configuration
  * parameter</em> which can be supplied via the {@code Launcher} API, build tools
  * (e.g., Gradle and Maven), a JVM system property, or the JUnit Platform
  * configuration file (i.e., a file named {@code junit-platform.properties} in
@@ -91,6 +91,8 @@ public @interface TestInstance {
 		 * @see #PER_CLASS
 		 */
 		PER_METHOD;
+
+		public static final String DEFAULT_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 
 	}
 

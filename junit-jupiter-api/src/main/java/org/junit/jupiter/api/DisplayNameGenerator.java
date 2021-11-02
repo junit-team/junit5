@@ -33,6 +33,12 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * <p>Concrete implementations must have a <em>default constructor</em>.
  *
+ * <p>A {@link DisplayNameGenerator} can be configured <em>globally</em> for the
+ * entire test suite via the {@value #DEFAULT_GENERATOR_PROPERTY_NAME}
+ * configuration parameter (see the User Guide for details) or <em>locally</em>
+ * for a test class via the {@link TestClassOrder @DisplayNameGeneration}
+ * annotation.
+ *
  * <h4>Built-in Implementations</h4>
  * <ul>
  * <li>{@link Standard}</li>
@@ -47,6 +53,8 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 @API(status = STABLE, since = "5.7")
 public interface DisplayNameGenerator {
+
+	String DEFAULT_GENERATOR_PROPERTY_NAME = "junit.jupiter.displayname.generator.default";
 
 	/**
 	 * Generate a display name for the given top-level or {@code static} nested test class.

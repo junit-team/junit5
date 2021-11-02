@@ -19,7 +19,10 @@ import static org.junit.platform.engine.support.hierarchical.DefaultParallelExec
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
 /**
@@ -91,7 +94,7 @@ public final class Constants {
 	 * @see #DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME
 	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
-	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = JupiterConfiguration.DEACTIVATE_ALL_CONDITIONS_PATTERN;
+	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = ClassNamePatternFilterUtils.DEACTIVATE_ALL_PATTERN;
 
 	/**
 	 * Property name used to set the default display name generator class name: {@value}
@@ -247,7 +250,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout for all testable methods.
@@ -266,7 +269,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout for all
@@ -287,7 +290,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout for all
@@ -308,7 +311,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout for all
@@ -329,7 +332,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout for all lifecycle methods.
@@ -348,7 +351,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout for all
@@ -368,7 +371,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout for all
@@ -388,7 +391,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout for all
@@ -408,7 +411,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout for all
@@ -428,7 +431,7 @@ public final class Constants {
 	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
-	public static final String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
+	public static final String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
 	 * Property used to determine if timeouts are applied to tests: {@value}.
@@ -448,7 +451,7 @@ public final class Constants {
 	 * @since 5.6
 	 */
 	@API(status = EXPERIMENTAL, since = "5.6")
-	public static final String TIMEOUT_MODE_PROPERTY_NAME = JupiterConfiguration.TIMEOUT_MODE_PROPERTY_NAME;
+	public static final String TIMEOUT_MODE_PROPERTY_NAME = Timeout.TIMEOUT_MODE_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default method orderer class name: {@value}
@@ -492,7 +495,7 @@ public final class Constants {
 	@SuppressWarnings("DeprecatedIsStillUsed")
 	@Deprecated
 	@API(status = DEPRECATED, since = "5.8")
-	public static final String TEMP_DIR_SCOPE_PROPERTY_NAME = JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
+	public static final String TEMP_DIR_SCOPE_PROPERTY_NAME = TempDir.SCOPE_PROPERTY_NAME;
 
 	private Constants() {
 		/* no-op */
