@@ -18,6 +18,7 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ANY;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_NONE;
 import static org.junit.jupiter.params.provider.EnumSourceTests.EnumWithThreeConstants.BAR;
 import static org.junit.jupiter.params.provider.EnumSourceTests.EnumWithThreeConstants.BAZ;
 import static org.junit.jupiter.params.provider.EnumSourceTests.EnumWithThreeConstants.FOO;
@@ -89,6 +90,20 @@ class EnumSourceTests {
 			() -> assertTrue(MATCH_ANY.select(FOO, Set.of("B..", "^F.*"))),
 			() -> assertTrue(MATCH_ANY.select(BAR, Set.of("B", "B.", "B.."))),
 			() -> assertTrue(MATCH_ANY.select(BAZ, Set.of("^.+[zZ]$"))));
+	}
+
+	@Test
+	void matchesNone() {
+		assertAll("matches none fails if any match", //
+			() -> assertFalse(MATCH_NONE.select(FOO, Set.of("F.."))),
+			() -> assertFalse(MATCH_NONE.select(FOO, Set.of("B..", "F.."))),
+			() -> assertFalse(MATCH_NONE.select(BAZ, Set.of("B.", "F.", "^.+[zZ]$"))));
+
+		assertAll("matches none", //
+			() -> assertTrue(MATCH_NONE.select(FOO, Set.of())), //
+			() -> assertTrue(MATCH_NONE.select(FOO, Set.of("F."))),
+			() -> assertTrue(MATCH_NONE.select(FOO, Set.of("B.."))),
+			() -> assertTrue(MATCH_NONE.select(BAZ, Set.of(".", "B.", "F."))));
 	}
 
 	enum EnumWithThreeConstants {

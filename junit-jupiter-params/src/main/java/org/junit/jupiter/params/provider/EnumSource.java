@@ -11,6 +11,7 @@
 package org.junit.jupiter.params.provider;
 
 import static java.util.stream.Collectors.toSet;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -42,7 +43,7 @@ import org.junit.platform.commons.util.Preconditions;
  * {@link #mode} attributes.
  *
  * @since 5.0
- * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see ArgumentsSource
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
@@ -121,7 +122,17 @@ public @interface EnumSource {
 		 *
 		 * @see java.util.stream.Stream#anyMatch(java.util.function.Predicate)
 		 */
-		MATCH_ANY(Mode::validatePatterns, (name, patterns) -> patterns.stream().anyMatch(name::matches));
+		MATCH_ANY(Mode::validatePatterns, (name, patterns) -> patterns.stream().anyMatch(name::matches)),
+
+		/**
+		 * Select only those enum constants whose names don't match any pattern supplied
+		 * via the {@link EnumSource#names} attribute.
+		 *
+		 * @since 5.9
+		 * @see java.util.stream.Stream#noneMatch(java.util.function.Predicate)
+		 */
+		@API(status = EXPERIMENTAL, since = "5.9")
+		MATCH_NONE(Mode::validatePatterns, (name, patterns) -> patterns.stream().noneMatch(name::matches));
 
 		private final Validator validator;
 		private final BiPredicate<String, Set<String>> selector;
