@@ -44,6 +44,7 @@ import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.jupiter.api.extension.TestInstancePreCreateCallback;
 import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestInstantiationException;
@@ -297,6 +298,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			ExtensionContext extensionContext) {
 
 		Optional<Object> outerInstance = outerInstances.map(TestInstances::getInnermostInstance);
+		// invokeTestInstancePreCreateCallbacks(registry, extensionContext);
 		Object instance = this.testInstanceFactory != null //
 				? invokeTestInstanceFactory(outerInstance, extensionContext) //
 				: invokeTestClassConstructor(outerInstance, registry, extensionContext);
@@ -355,7 +357,12 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		return executableInvoker.invoke(constructor, outerInstance, extensionContext, registry,
 			InvocationInterceptor::interceptTestClassConstructor);
 	}
-
+/*
+	private void invokeTestInstancePreCreateCallbacks(ExtensionRegistry registry, ExtensionContext context) {
+		registry.stream(TestInstancePreCreateCallback.class).forEach(
+			extension -> executeAndMaskThrowable(() -> extension.preCreateTestInstance(context)));
+	}
+*/
 	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
 			ExtensionContext context) {
 
