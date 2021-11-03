@@ -80,7 +80,6 @@
 1d6313658632405c6cd75cabdad30dd4  documentation/src/test/java/org/junit/api/tools/AbstractApiReportWriter.java
 1e43c36eae4ac0b80621dcd587a96f87  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterAllCallback.java
 1ec62ebec8ed9dc4ae8c5ba1ac7a1a81  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherSession.java
-1f18cb3f6d849a3c959231765b262887  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumSource.java
 1f327bcfb6605f04f604b544bbb03893  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIf.java
 1fe06feafbb182aad7abc51611861da6  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
 20021b9ddc49b2b1006ec3cedc2ab014  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java
@@ -120,7 +119,6 @@
 2ba206e4ab4fc1429e9d6b05f85bc5ff  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/package-info.java
 2c9e1b584fcf2194284f012c001534f9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistry.java
 2caf6068b8b4905b8da7b61d57237a23  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClasspathResourceSource.java
-2d88d21616bbcb8a0adc8f7132dd09fc  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 2da4ce8d47c0fd80e934220348c97b47  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseStatus.java
 2de2ce45a88b74b8ce8b0944ab6497cf  documentation/src/test/java/example/TestTemplateDemo.java
 2de4b64a4814ed182d22f3788158d9d3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactoryContext.java
@@ -280,7 +278,9 @@
 62186952e110e5acdce098508bd6ac1f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.java
 6252ab43535b8499a2c36f6d550b9653  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectDirectories.java
 6368d1d7cb1209e05b14803373ab6ae1  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
+639f9709ec13d86f2fed4ca59f316831  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 64627e91e2fb6562e1e60cc8846021ec  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodSelectorResolver.java
+64bc12ea2611596eabaa723358a7a320  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumSource.java
 64fb1de78e237565f17892c2e8f3387c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePreDestroyCallback.java
 6567904b9014b7e4f89f904d72a0e819  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
 6589d81f62972497a49f8c9b36fd7a94  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstances.java
