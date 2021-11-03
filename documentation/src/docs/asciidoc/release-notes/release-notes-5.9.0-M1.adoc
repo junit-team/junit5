@@ -42,8 +42,9 @@ on GitHub.
 
 * Add support for `IterationSelector` to select a subset of the invocations of
   parameterized or dynamic tests.
-* Add support for `MATCH_NONE` mode in `EnumSource` which selects only those enum constants
-  whose names don't match any of the pattern supplied.
+* Add support for `MATCH_NONE` mode in `EnumSource` that selects only those enum constants
+  whose names match none of the supplied patterns.
+
 
 [[release-notes-5.9.0-M1-junit-vintage]]
 === JUnit Vintage

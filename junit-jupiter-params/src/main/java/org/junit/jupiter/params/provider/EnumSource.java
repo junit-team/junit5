@@ -126,7 +126,7 @@ public @interface EnumSource {
 		MATCH_ANY(Mode::validatePatterns, (name, patterns) -> patterns.stream().anyMatch(name::matches)),
 
 		/**
-		 * Select only those enum constants whose names don't match any pattern supplied
+		 * Select only those enum constants whose names match none of the patterns supplied
 		 * via the {@link EnumSource#names} attribute.
 		 *
 		 * @since 5.9
