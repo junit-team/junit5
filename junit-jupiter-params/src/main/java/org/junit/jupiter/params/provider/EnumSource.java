@@ -43,7 +43,7 @@ import org.junit.platform.commons.util.Preconditions;
  * {@link #mode} attributes.
  *
  * @since 5.0
- * @see ArgumentsSource
+ * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
@@ -87,6 +87,7 @@ public @interface EnumSource {
 	 * @see Mode#EXCLUDE
 	 * @see Mode#MATCH_ALL
 	 * @see Mode#MATCH_ANY
+	 * @see Mode#MATCH_NONE
 	 * @see #names
 	 */
 	Mode mode() default Mode.INCLUDE;
