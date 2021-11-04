@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
  * {@code TestInstancePreCreateCallback} defines the API for {@link Extension
@@ -50,7 +50,9 @@ public interface TestInstancePreCreateCallback extends Extension {
 	/**
 	 * Callback invoked prior to when test instances are created.
 	 *
+	 * @param factoryContext the context for the test instance about to be instantiated;
+	 *                       never {@code null}.
 	 * @param context the current extension context; never {@code null}
 	 */
-	void preCreateTestInstance(ExtensionContext context) throws Exception;
+	void preCreateTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) throws Exception;
 }
