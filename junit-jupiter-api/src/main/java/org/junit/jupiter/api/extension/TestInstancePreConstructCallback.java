@@ -47,7 +47,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 public interface TestInstancePreConstructCallback extends Extension {
 
 	/**
-	 * Callback invoked prior to when test instances are created.
+	 * Callback invoked prior to when test instances are constructed.
 	 *
 	 * @param factoryContext the context for the test instance about to be instantiated;
 	 *                       never {@code null}.

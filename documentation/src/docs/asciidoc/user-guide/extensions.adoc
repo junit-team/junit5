@@ -359,11 +359,11 @@ initialization methods on the test instance, etc.
 For a concrete example, consult the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
 
-[[extensions-test-instance-pre-create-callback]]
-=== Test Instance Pre-create Callback
+[[extensions-test-instance-pre-construct-callback]]
+=== Test Instance Pre-construct Callback
 
 `{TestInstancePreConstructCallback}` defines the API for `Extensions` that wish to be invoked
-_prior_ to test instances being created (by a constructor call or via a factory).
+_prior_ to test instances being constructed (by a constructor call or via a factory).
 
 This extension provides a symmetric call to `{TestInstancePreDestroyCallback}` and is useful
 in combination with other extensions to prepare constructor parameters or keeping track of test

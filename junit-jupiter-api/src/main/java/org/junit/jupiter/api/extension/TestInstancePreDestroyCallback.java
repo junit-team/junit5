@@ -42,7 +42,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * test method for which it is registered.
  *
  * <p>A symmetric {@link TestInstancePreConstructCallback} extension defines a callback
- * hook that happens prior to any test class instances being created.
+ * hook that happens prior to any test class instances being constructed.
  *
  * <h3>Constructor Requirements</h3>
  *
