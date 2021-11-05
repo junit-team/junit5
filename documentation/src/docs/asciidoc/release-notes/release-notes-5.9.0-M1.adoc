@@ -43,6 +43,8 @@ on GitHub.
 * Add support for `IterationSelector` to select a subset of the invocations of
   parameterized or dynamic tests.
 
+* A new extension `TestInstancePreCreateCallback` called prior to a test instance being created
+  (symmetric extension to `TestInstancePreDestroyCallback`).
 
 [[release-notes-5.9.0-M1-junit-vintage]]
 === JUnit Vintage
