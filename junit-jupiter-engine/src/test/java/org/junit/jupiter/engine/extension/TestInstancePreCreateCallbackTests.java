@@ -34,7 +34,7 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 /**
  * Integration tests that verify support for {@link TestInstancePreCreateCallback}.
  *
- * @since 5.9.0
+ * @since 5.9
  */
 class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests {
 	private static final List<String> callSequence = new ArrayList<>();

@@ -38,13 +38,13 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * <p>Consult the documentation in {@link Extension} for details on constructor
  * requirements.
  *
- * @since 5.9.0
+ * @since 5.9
  * @see TestInstancePreDestroyCallback
  * @see TestInstanceFactory
  * @see ParameterResolver
  */
 @FunctionalInterface
-@API(status = EXPERIMENTAL, since = "5.7")
+@API(status = EXPERIMENTAL, since = "5.9")
 public interface TestInstancePreCreateCallback extends Extension {
 
 	/**
