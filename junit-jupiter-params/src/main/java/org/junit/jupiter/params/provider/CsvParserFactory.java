@@ -24,7 +24,6 @@ class CsvParserFactory {
 
 	private static final String DEFAULT_DELIMITER = ",";
 	private static final String LINE_SEPARATOR = "\n";
-	private static final char DOUBLE_QUOTE = '"';
 	private static final char EMPTY_CHAR = '\0';
 	private static final boolean COMMENT_PROCESSING_FOR_CSV_FILE_SOURCE = true;
 
@@ -37,7 +36,7 @@ class CsvParserFactory {
 
 	static CsvParser createParserFor(CsvFileSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
-		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue(),
+		return createParser(delimiter, annotation.lineSeparator(), annotation.quoteCharacter(), annotation.emptyValue(),
 			annotation.maxCharsPerColumn(), COMMENT_PROCESSING_FOR_CSV_FILE_SOURCE,
 			annotation.ignoreLeadingAndTrailingWhitespace());
 	}
