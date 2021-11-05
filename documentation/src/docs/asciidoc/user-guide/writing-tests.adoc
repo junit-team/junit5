@@ -1344,9 +1344,9 @@ The default delimiter is a comma (`,`), but you can use another character by set
 `String` delimiter instead of a single character. However, both delimiter attributes
 cannot be set simultaneously.
 
-By default, `@CsvSource` uses a single quote `'` as its quote character, but this can be
+By default, `@CsvSource` uses a single quote (`'`) as its quote character, but this can be
 changed via the `quoteCharacter` attribute. See the `'lemon, lime'` value in the example
-above and in the table below. An empty, quoted value `''` results in an empty `String`
+above and in the table below. An empty, quoted value (`''`) results in an empty `String`
 unless the `emptyValue` attribute is set; whereas, an entirely _empty_ value is
 interpreted as a `null` reference. By specifying one or more `nullValues`, a custom value
 can be interpreted as a `null` reference (see the `NIL` example in the table below). An
@@ -1395,9 +1395,9 @@ In contrast to CSV records supplied via the `value` attribute, a text block can 
 comments. Any line beginning with a `+++#+++` symbol will be treated as a comment and
 ignored. Note, however, that the `+++#+++` symbol must be the first character on the line
 without any leading whitespace. It is therefore recommended that the closing text block
-delimiter `"""` be placed either at the end of the last line of input or on the following
-line, left aligned with the rest of the input (as can be seen in the example below which
-demonstrates formatting similar to a table).
+delimiter (`"""`) be placed either at the end of the last line of input or on the
+following line, left aligned with the rest of the input (as can be seen in the example
+below which demonstrates formatting similar to a table).
 
 [source,java,indent=0]
 ----
@@ -1458,8 +1458,9 @@ include::{testResourcesDir}/two-column.csv[]
 ----
 
 In contrast to the default syntax used in `@CsvSource`, `@CsvFileSource` uses a double
-quote `"` as the quote character. See the `"United States of America"` value in the
-example above. An empty, quoted value `""` results in an empty `String` unless the
+quote (`+++"+++`) as the quote character by default, but this can be changed via the
+`quoteCharacter` attribute. See the `"United States of America"` value in the example
+above. An empty, quoted value (`+++""+++`) results in an empty `String` unless the
 `emptyValue` attribute is set; whereas, an entirely _empty_ value is interpreted as a
 `null` reference. By specifying one or more `nullValues`, a custom value can be
 interpreted as a `null` reference. An `ArgumentConversionException` is thrown if the

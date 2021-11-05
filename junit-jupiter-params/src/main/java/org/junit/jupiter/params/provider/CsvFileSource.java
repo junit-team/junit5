@@ -36,12 +36,12 @@ import org.apiguardian.api.API;
  * via either {@link #delimiter} or {@link #delimiterString}.
  *
  * <p>In contrast to the default syntax used in {@code @CsvSource}, {@code @CsvFileSource}
- * uses a double quote ({@code "}) as its quote character (see the User Guide for
- * examples). An empty, quoted value ({@code ""}) results in an empty {@link String}
- * unless the {@link #emptyValue} attribute is set; whereas, an entirely <em>empty</em>
- * value is interpreted as a {@code null} reference. By specifying one or more
- * {@link #nullValues} a custom value can be interpreted as a {@code null} reference
- * (see the User Guide for an example). An
+ * uses a double quote ({@code "}) as its quote character by default, but this can
+ * be changed via {@link #quoteCharacter}. An empty, quoted value ({@code ""})
+ * results in an empty {@link String} unless the {@link #emptyValue} attribute is
+ * set; whereas, an entirely <em>empty</em> value is interpreted as a {@code null}
+ * reference. By specifying one or more {@link #nullValues} a custom value can be
+ * interpreted as a {@code null} reference (see the User Guide for an example). An
  * {@link org.junit.jupiter.params.converter.ArgumentConversionException
  * ArgumentConversionException} is thrown if the target type of a {@code null}
  * reference is a primitive type.
@@ -94,6 +94,19 @@ public @interface CsvFileSource {
 	 * <p>Defaults to {@code "\n"}.
 	 */
 	String lineSeparator() default "\n";
+
+	/**
+	 * The quote character to use for <em>quoted strings</em>.
+	 *
+	 * <p>Defaults to a double quote ({@code "}).
+	 *
+	 * <p>You may change the quote character to anything that makes sense for
+	 * your use case.
+	 *
+	 * @since 5.8.2
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8.2")
+	char quoteCharacter() default '"';
 
 	/**
 	 * The column delimiter character to use when reading the CSV files.
