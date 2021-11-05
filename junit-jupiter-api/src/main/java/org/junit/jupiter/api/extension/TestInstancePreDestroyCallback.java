@@ -41,7 +41,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * {@code TestInstancePreDestroyCallback} extension will only be applied to the
  * test method for which it is registered.
  *
- * <p>A symmetric {@link TestInstancePreCreateCallback} extension defines a callback
+ * <p>A symmetric {@link TestInstancePreConstructCallback} extension defines a callback
  * hook that happens prior to any test class instances being created.
  *
  * <h3>Constructor Requirements</h3>
@@ -52,7 +52,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * @since 5.6
  * @see #preDestroyTestInstance(ExtensionContext)
  * @see TestInstancePostProcessor
- * @see TestInstancePreCreateCallback
+ * @see TestInstancePreConstructCallback
  * @see TestInstanceFactory
  * @see ParameterResolver
  */

@@ -28,15 +28,15 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
-import org.junit.jupiter.api.extension.TestInstancePreCreateCallback;
+import org.junit.jupiter.api.extension.TestInstancePreConstructCallback;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 
 /**
- * Integration tests that verify support for {@link TestInstancePreCreateCallback}.
+ * Integration tests that verify support for {@link TestInstancePreConstructCallback}.
  *
  * @since 5.9
  */
-class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests {
+class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTests {
 	private static final List<String> callSequence = new ArrayList<>();
 
 	@BeforeEach
@@ -50,9 +50,9 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 		}
 	}
 
-	@ExtendWith(InstancePreCreateCallbackRecordingFoo.class)
-	static class InstancePreCreate extends CallSequenceRecordingTest {
-		public InstancePreCreate() {
+	@ExtendWith(InstancePreConstructCallbackRecordingFoo.class)
+	static class InstancePreConstruct extends CallSequenceRecordingTest {
+		public InstancePreConstruct() {
 			record("constructor");
 		}
 
@@ -88,21 +88,21 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 	}
 
 	@Test
-	void instancePreCreate() {
-		executeTestsForClass(InstancePreCreate.class).testEvents().assertStatistics(
+	void instancePreConstruct() {
+		executeTestsForClass(InstancePreConstruct.class).testEvents().assertStatistics(
 			stats -> stats.started(2).succeeded(2));
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 				"beforeAll",
 
-				"PreCreateCallback: name=foo, testClass=InstancePreCreate, outerInstance: null",
+				"PreConstructCallback: name=foo, testClass=InstancePreConstruct, outerInstance: null",
 				"constructor",
 				"beforeEach",
 				"test1",
 				"afterEach",
 
-				"PreCreateCallback: name=foo, testClass=InstancePreCreate, outerInstance: null",
+				"PreConstructCallback: name=foo, testClass=InstancePreConstruct, outerInstance: null",
 				"constructor",
 				"beforeEach",
 				"test2",
@@ -113,15 +113,15 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 		// @formatter:on
 	}
 
-	@ExtendWith(InstancePreCreateCallbackRecordingFoo.class)
-	static class FactoryPreCreate extends CallSequenceRecordingTest {
+	@ExtendWith(InstancePreConstructCallbackRecordingFoo.class)
+	static class FactoryPreConstruct extends CallSequenceRecordingTest {
 		@RegisterExtension
 		static final TestInstanceFactory factory = (factoryContext, extensionContext) -> {
 			record("testInstanceFactory");
-			return new FactoryPreCreate();
+			return new FactoryPreConstruct();
 		};
 
-		public FactoryPreCreate() {
+		public FactoryPreConstruct() {
 			record("constructor");
 		}
 
@@ -157,22 +157,22 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 	}
 
 	@Test
-	void factoryPreCreate() {
-		executeTestsForClass(FactoryPreCreate.class).testEvents().assertStatistics(
+	void factoryPreConstruct() {
+		executeTestsForClass(FactoryPreConstruct.class).testEvents().assertStatistics(
 			stats -> stats.started(2).succeeded(2));
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 				"beforeAll",
 
-				"PreCreateCallback: name=foo, testClass=FactoryPreCreate, outerInstance: null",
+				"PreConstructCallback: name=foo, testClass=FactoryPreConstruct, outerInstance: null",
 				"testInstanceFactory",
 				"constructor",
 				"beforeEach",
 				"test1",
 				"afterEach",
 
-				"PreCreateCallback: name=foo, testClass=FactoryPreCreate, outerInstance: null",
+				"PreConstructCallback: name=foo, testClass=FactoryPreConstruct, outerInstance: null",
 				"testInstanceFactory",
 				"constructor",
 				"beforeEach",
@@ -184,12 +184,12 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 		// @formatter:on
 	}
 
-	@ExtendWith(InstancePreCreateCallbackRecordingFoo.class)
-	static class PreCreateInNested extends CallSequenceRecordingTest {
+	@ExtendWith(InstancePreConstructCallbackRecordingFoo.class)
+	static class PreConstructInNested extends CallSequenceRecordingTest {
 		static AtomicInteger instanceCounter = new AtomicInteger();
 		private final String instanceId;
 
-		public PreCreateInNested() {
+		public PreConstructInNested() {
 			record("constructor");
 			instanceId = "#" + instanceCounter.incrementAndGet();
 		}
@@ -230,12 +230,12 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 			return instanceId;
 		}
 
-		@ExtendWith(InstancePreCreateCallbackRecordingBar.class)
+		@ExtendWith(InstancePreConstructCallbackRecordingBar.class)
 		abstract class InnerParent extends CallSequenceRecordingTest {
 		}
 
 		@Nested
-		@ExtendWith(InstancePreCreateCallbackRecordingBaz.class)
+		@ExtendWith(InstancePreConstructCallbackRecordingBaz.class)
 		class Inner extends InnerParent {
 			Inner() {
 				record("constructorInner");
@@ -259,32 +259,32 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 	}
 
 	@Test
-	void preCreateInNested() {
-		executeTestsForClass(PreCreateInNested.class).testEvents().assertStatistics(
+	void preConstructInNested() {
+		executeTestsForClass(PreConstructInNested.class).testEvents().assertStatistics(
 			stats -> stats.started(3).succeeded(3));
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 				"beforeAll",
 
-				"PreCreateCallback: name=foo, testClass=PreCreateInNested, outerInstance: null",
+				"PreConstructCallback: name=foo, testClass=PreConstructInNested, outerInstance: null",
 				"constructor",
 				"beforeEach",
 				"outerTest1",
 				"afterEach",
 
-				"PreCreateCallback: name=foo, testClass=PreCreateInNested, outerInstance: null",
+				"PreConstructCallback: name=foo, testClass=PreConstructInNested, outerInstance: null",
 				"constructor",
 				"beforeEach",
 				"outerTest2",
 				"afterEach",
 
-				"PreCreateCallback: name=foo, testClass=PreCreateInNested, outerInstance: null",
+				"PreConstructCallback: name=foo, testClass=PreConstructInNested, outerInstance: null",
 				"constructor",
 
-				"PreCreateCallback: name=foo, testClass=Inner, outerInstance: #3",
-				"PreCreateCallback: name=bar, testClass=Inner, outerInstance: #3",
-				"PreCreateCallback: name=baz, testClass=Inner, outerInstance: #3",
+				"PreConstructCallback: name=foo, testClass=Inner, outerInstance: #3",
+				"PreConstructCallback: name=bar, testClass=Inner, outerInstance: #3",
+				"PreConstructCallback: name=baz, testClass=Inner, outerInstance: #3",
 				"constructorInner",
 				"beforeEach",
 				"beforeEachInner",
@@ -297,8 +297,8 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 		// @formatter:on
 	}
 
-	static class PreCreateOnMethod extends CallSequenceRecordingTest {
-		PreCreateOnMethod() {
+	static class PreConstructOnMethod extends CallSequenceRecordingTest {
+		PreConstructOnMethod() {
 			record("constructor");
 		}
 
@@ -307,7 +307,7 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 			record("beforeEach");
 		}
 
-		@ExtendWith(InstancePreCreateCallbackRecordingFoo.class)
+		@ExtendWith(InstancePreConstructCallbackRecordingFoo.class)
 		@Test
 		void test1() {
 			record("test1");
@@ -325,13 +325,13 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 	}
 
 	@Test
-	void preCreateOnMethod() {
-		executeTestsForClass(PreCreateOnMethod.class).testEvents().assertStatistics(
+	void preConstructOnMethod() {
+		executeTestsForClass(PreConstructOnMethod.class).testEvents().assertStatistics(
 			stats -> stats.started(2).succeeded(2));
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
-				"PreCreateCallback: name=foo, testClass=PreCreateOnMethod, outerInstance: null",
+				"PreConstructCallback: name=foo, testClass=PreConstructOnMethod, outerInstance: null",
 				"constructor",
 				"beforeEach",
 				"test1",
@@ -346,10 +346,10 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 	}
 
 	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-	@ExtendWith(InstancePreCreateCallbackRecordingFoo.class)
-	@ExtendWith(InstancePreCreateCallbackRecordingBar.class)
-	static class PreCreateWithClassLifecycle extends CallSequenceRecordingTest {
-		PreCreateWithClassLifecycle() {
+	@ExtendWith(InstancePreConstructCallbackRecordingFoo.class)
+	@ExtendWith(InstancePreConstructCallbackRecordingBar.class)
+	static class PreConstructWithClassLifecycle extends CallSequenceRecordingTest {
+		PreConstructWithClassLifecycle() {
 			record("constructor");
 		}
 
@@ -370,14 +370,14 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 	}
 
 	@Test
-	void preCreateWithClassLifecycle() {
-		executeTestsForClass(PreCreateWithClassLifecycle.class).testEvents().assertStatistics(
+	void preConstructWithClassLifecycle() {
+		executeTestsForClass(PreConstructWithClassLifecycle.class).testEvents().assertStatistics(
 			stats -> stats.started(2).succeeded(2));
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
-				"PreCreateCallback: name=foo, testClass=PreCreateWithClassLifecycle, outerInstance: null",
-				"PreCreateCallback: name=bar, testClass=PreCreateWithClassLifecycle, outerInstance: null",
+				"PreConstructCallback: name=foo, testClass=PreConstructWithClassLifecycle, outerInstance: null",
+				"PreConstructCallback: name=bar, testClass=PreConstructWithClassLifecycle, outerInstance: null",
 				"constructor",
 				"beforeEach",
 				"test1",
@@ -387,38 +387,38 @@ class TestInstancePreCreateCallbackTests extends AbstractJupiterTestEngineTests 
 		// @formatter:on
 	}
 
-	static abstract class AbstractTestInstancePreCreateCallback implements TestInstancePreCreateCallback {
+	static abstract class AbstractTestInstancePreConstructCallback implements TestInstancePreConstructCallback {
 		private final String name;
 
-		AbstractTestInstancePreCreateCallback(String name) {
+		AbstractTestInstancePreConstructCallback(String name) {
 			this.name = name;
 		}
 
 		@Override
-		public void preCreateTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) {
+		public void preConstructTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) {
 			assertThat(context.getTestInstance()).isNotPresent();
 			assertThat(context.getTestClass()).isPresent();
 			assertThat(factoryContext.getTestClass()).isSameAs(context.getTestClass().get());
 			callSequence.add(
-				"PreCreateCallback: name=" + name + ", testClass=" + factoryContext.getTestClass().getSimpleName()
+				"PreConstructCallback: name=" + name + ", testClass=" + factoryContext.getTestClass().getSimpleName()
 						+ ", outerInstance: " + factoryContext.getOuterInstance().orElse(null));
 		}
 	}
 
-	static class InstancePreCreateCallbackRecordingFoo extends AbstractTestInstancePreCreateCallback {
-		InstancePreCreateCallbackRecordingFoo() {
+	static class InstancePreConstructCallbackRecordingFoo extends AbstractTestInstancePreConstructCallback {
+		InstancePreConstructCallbackRecordingFoo() {
 			super("foo");
 		}
 	}
 
-	static class InstancePreCreateCallbackRecordingBar extends AbstractTestInstancePreCreateCallback {
-		InstancePreCreateCallbackRecordingBar() {
+	static class InstancePreConstructCallbackRecordingBar extends AbstractTestInstancePreConstructCallback {
+		InstancePreConstructCallbackRecordingBar() {
 			super("bar");
 		}
 	}
 
-	static class InstancePreCreateCallbackRecordingBaz extends AbstractTestInstancePreCreateCallback {
-		InstancePreCreateCallbackRecordingBaz() {
+	static class InstancePreConstructCallbackRecordingBaz extends AbstractTestInstancePreConstructCallback {
+		InstancePreConstructCallbackRecordingBaz() {
 			super("baz");
 		}
 	}

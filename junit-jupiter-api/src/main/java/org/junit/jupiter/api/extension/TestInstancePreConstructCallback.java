@@ -16,22 +16,21 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 /**
- * {@code TestInstancePreCreateCallback} defines the API for {@link Extension
+ * {@link TestInstancePreConstructCallback} defines the API for {@link Extension
  * Extensions} that wish to be invoked <em>prior</em> to creation of test instances.
  *
  * <p>This extension is a symmetric counterpart to {@link TestInstancePreDestroyCallback}.
  * The use cases for this extension may include preparing context-sensitive arguments
  * that are  injected into the instance's constructor parameters.
  *
- * <p>Extensions that implement {@code TestInstancePreCreateCallback} must be
+ * <p>Extensions that implement {@link TestInstancePreConstructCallback} must be
  * registered at the class level if the test class is configured with
  * {@link Lifecycle @TestInstance(Lifecycle.PER_CLASS)}
  * semantics. If the test class is configured with
  * {@link Lifecycle @TestInstance(Lifecycle.PER_METHOD)}
- * semantics, {@code TestInstancePreCreateCallback} extensions may be registered
+ * semantics, {@link TestInstancePreConstructCallback} extensions may be registered
  * at the class level or at the method level. In the latter case, the
- * {@code TestInstancePreCreateCallback} extension will only be applied to the
- * test method for which it is registered.
+ * extension will only be applied to the test method for which it is registered.
  *
  * <h3>Constructor Requirements</h3>
  *
@@ -45,7 +44,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  */
 @FunctionalInterface
 @API(status = EXPERIMENTAL, since = "5.9")
-public interface TestInstancePreCreateCallback extends Extension {
+public interface TestInstancePreConstructCallback extends Extension {
 
 	/**
 	 * Callback invoked prior to when test instances are created.
@@ -54,5 +53,5 @@ public interface TestInstancePreCreateCallback extends Extension {
 	 *                       never {@code null}.
 	 * @param context the current extension context; never {@code null}
 	 */
-	void preCreateTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) throws Exception;
+	void preConstructTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) throws Exception;
 }

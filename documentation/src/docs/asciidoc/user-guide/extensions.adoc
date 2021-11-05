@@ -362,7 +362,7 @@ For a concrete example, consult the source code for the `{MockitoExtension}` and
 [[extensions-test-instance-pre-create-callback]]
 === Test Instance Pre-create Callback
 
-`{TestInstancePreCreateCallback}` defines the API for `Extensions` that wish to be invoked
+`{TestInstancePreConstructCallback}` defines the API for `Extensions` that wish to be invoked
 _prior_ to test instances being created (by a constructor call or via a factory).
 
 This extension provides a symmetric call to `{TestInstancePreDestroyCallback}` and is useful

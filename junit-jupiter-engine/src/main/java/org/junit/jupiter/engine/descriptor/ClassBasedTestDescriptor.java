@@ -45,7 +45,7 @@ import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
-import org.junit.jupiter.api.extension.TestInstancePreCreateCallback;
+import org.junit.jupiter.api.extension.TestInstancePreConstructCallback;
 import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestInstantiationException;
@@ -299,7 +299,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			ExtensionContext extensionContext) {
 
 		Optional<Object> outerInstance = outerInstances.map(TestInstances::getInnermostInstance);
-		invokeTestInstancePreCreateCallbacks(new DefaultTestInstanceFactoryContext(this.testClass, outerInstance),
+		invokeTestInstancePreConstructCallbacks(new DefaultTestInstanceFactoryContext(this.testClass, outerInstance),
 			registry, extensionContext);
 		Object instance = this.testInstanceFactory != null //
 				? invokeTestInstanceFactory(outerInstance, extensionContext) //
@@ -360,10 +360,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			InvocationInterceptor::interceptTestClassConstructor);
 	}
 
-	private void invokeTestInstancePreCreateCallbacks(TestInstanceFactoryContext factoryContext,
-			ExtensionRegistry registry, ExtensionContext context) {
-		registry.stream(TestInstancePreCreateCallback.class).forEach(
-			extension -> executeAndMaskThrowable(() -> extension.preCreateTestInstance(factoryContext, context)));
+	private void invokeTestInstancePreConstructCallbacks(TestInstanceFactoryContext factoryContext,
+														 ExtensionRegistry registry, ExtensionContext context) {
+		registry.stream(TestInstancePreConstructCallback.class).forEach(
+			extension -> executeAndMaskThrowable(() -> extension.preConstructTestInstance(factoryContext, context)));
 	}
 
 	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
