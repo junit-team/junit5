@@ -756,5 +756,15 @@
     "speakers": [
       "sbrannen"
     ]
-  }
+  },
+  {
+    "title": "IntelliJ IDEA and JUnit: Writing, Finding, and Running Tests",
+    "event": "JetBrains Live Webinar",
+    "date": "2021-11-17",
+    "location": "online",
+    "link": "https://info.jetbrains.com/info.jetbrains.com/idea-webinar-november17-2021.html",
+    "speakers": [
+      "sormuras"
+    ]
+  },
 ]
