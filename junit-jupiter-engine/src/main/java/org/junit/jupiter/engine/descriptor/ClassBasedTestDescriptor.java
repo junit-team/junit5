@@ -361,7 +361,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeTestInstancePreConstructCallbacks(TestInstanceFactoryContext factoryContext,
-														 ExtensionRegistry registry, ExtensionContext context) {
+			ExtensionRegistry registry, ExtensionContext context) {
 		registry.stream(TestInstancePreConstructCallback.class).forEach(
 			extension -> executeAndMaskThrowable(() -> extension.preConstructTestInstance(factoryContext, context)));
 	}
