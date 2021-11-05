@@ -93,12 +93,12 @@ loadScripts(document, 'script');</script>
  via either <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
 
  <p>In contrast to the default syntax used in <code>@CsvSource</code>, <code>@CsvFileSource</code>
- uses a double quote (<code>"</code>) as its quote character (see the User Guide for
- examples). An empty, quoted value (<code>""</code>) results in an empty <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>
- unless the <a href="#emptyValue()"><code>emptyValue()</code></a> attribute is set; whereas, an entirely <em>empty</em>
- value is interpreted as a <code>null</code> reference. By specifying one or more
- <a href="#nullValues()"><code>nullValues()</code></a> a custom value can be interpreted as a <code>null</code> reference
- (see the User Guide for an example). An
+ uses a double quote (<code>"</code>) as its quote character by default, but this can
+ be changed via <a href="#quoteCharacter()"><code>quoteCharacter()</code></a>. An empty, quoted value (<code>""</code>)
+ results in an empty <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> unless the <a href="#emptyValue()"><code>emptyValue()</code></a> attribute is
+ set; whereas, an entirely <em>empty</em> value is interpreted as a <code>null</code>
+ reference. By specifying one or more <a href="#nullValues()"><code>nullValues()</code></a> a custom value can be
+ interpreted as a <code>null</code> reference (see the User Guide for an example). An
  <a href="../converter/ArgumentConversionException.html" title="class in org.junit.jupiter.params.converter"><code>ArgumentConversionException</code></a> is thrown if the target type of a <code>null</code>
  reference is a primitive type.
 
@@ -186,9 +186,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">The number of lines to skip when reading the CSV files.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second even-row-color"><code><a href="#resources()" class="member-name-link">resources</a></code></div>
+<div class="col-first even-row-color"><code>char</code></div>
+<div class="col-second even-row-color"><code><a href="#quoteCharacter()" class="member-name-link">quoteCharacter</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">The quote character to use for <em>quoted strings</em>.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#resources()" class="member-name-link">resources</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">The CSV classpath resources to use as the sources of arguments; must not
  be empty unless <a href="#files()"><code>files()</code></a> is non-empty.</div>
 </div>
@@ -260,6 +265,28 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>"\n"</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="quoteCharacter()">
+<h3>quoteCharacter</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8.2")
+</span><span class="return-type">char</span>&nbsp;<span class="element-name">quoteCharacter</span></div>
+<div class="block">The quote character to use for <em>quoted strings</em>.
+
+ <p>Defaults to a double quote (<code>"</code>).
+
+ <p>You may change the quote character to anything that makes sense for
+ your use case.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.8.2</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>'\"'</dd>
 </dl>
 </section>
 </li>

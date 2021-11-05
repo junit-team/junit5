@@ -3863,9 +3863,9 @@ represents a CSV record and results in one invocation of the parameterized test.
 cannot be set simultaneously.</p>
 </div>
 <div class="paragraph">
-<p>By default, <code>@CsvSource</code> uses a single quote <code>'</code> as its quote character, but this can be
+<p>By default, <code>@CsvSource</code> uses a single quote (<code>'</code>) as its quote character, but this can be
 changed via the <code>quoteCharacter</code> attribute. See the <code>'lemon, lime'</code> value in the example
-above and in the table below. An empty, quoted value <code>''</code> results in an empty <code>String</code>
+above and in the table below. An empty, quoted value (<code>''</code>) results in an empty <code>String</code>
 unless the <code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em> value is
 interpreted as a <code>null</code> reference. By specifying one or more <code>nullValues</code>, a custom value
 can be interpreted as a <code>null</code> reference (see the <code>NIL</code> example in the table below). An
@@ -3953,9 +3953,9 @@ parameterized test. Using a text block, the previous example can be implemented 
 comments. Any line beginning with a <code>#</code> symbol will be treated as a comment and
 ignored. Note, however, that the <code>#</code> symbol must be the first character on the line
 without any leading whitespace. It is therefore recommended that the closing text block
-delimiter <code>"""</code> be placed either at the end of the last line of input or on the following
-line, left aligned with the rest of the input (as can be seen in the example below which
-demonstrates formatting similar to a table).</p>
+delimiter (<code>"""</code>) be placed either at the end of the last line of input or on the
+following line, left aligned with the rest of the input (as can be seen in the example
+below which demonstrates formatting similar to a table).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4045,7 +4045,7 @@ be ignored.
 <div class="listingblock">
 <div class="title">two-column.csv</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="csv">Country, reference
+<pre class="rouge highlight"><code data-lang="csv">Country, Reference
 Sweden, 1
 Poland, 2
 "United States of America", 3
@@ -4054,8 +4054,9 @@ France, 700_000</code></pre>
 </div>
 <div class="paragraph">
 <p>In contrast to the default syntax used in <code>@CsvSource</code>, <code>@CsvFileSource</code> uses a double
-quote <code>"</code> as the quote character. See the <code>"United States of America"</code> value in the
-example above. An empty, quoted value <code>""</code> results in an empty <code>String</code> unless the
+quote (<code>"</code>) as the quote character by default, but this can be changed via the
+<code>quoteCharacter</code> attribute. See the <code>"United States of America"</code> value in the example
+above. An empty, quoted value (<code>""</code>) results in an empty <code>String</code> unless the
 <code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em> value is interpreted as a
 <code>null</code> reference. By specifying one or more <code>nullValues</code>, a custom value can be
 interpreted as a <code>null</code> reference. An <code>ArgumentConversionException</code> is thrown if the
@@ -10984,7 +10985,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-03 18:52:30 UTC
+Last updated 2021-11-05 10:45:40 UTC
 </div>
 </div>
 <style>
