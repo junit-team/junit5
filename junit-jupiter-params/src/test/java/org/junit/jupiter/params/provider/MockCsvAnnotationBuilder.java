@@ -34,6 +34,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 	// -------------------------------------------------------------------------
 
+	private char quoteCharacter = '\0';
 	protected char delimiter = '\0';
 	protected String delimiterString = "";
 	protected String emptyValue = "";
@@ -45,6 +46,11 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 	}
 
 	protected abstract B getSelf();
+
+	B quoteCharacter(char quoteCharacter) {
+		this.quoteCharacter = quoteCharacter;
+		return getSelf();
+	}
 
 	B delimiter(char delimiter) {
 		this.delimiter = delimiter;
@@ -84,7 +90,10 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 
 		private String[] lines = new String[0];
 		private String textBlock = "";
-		private char quoteCharacter = '\'';
+
+		private MockCsvSourceBuilder() {
+			super.quoteCharacter = '\'';
+		}
 
 		@Override
 		protected MockCsvSourceBuilder getSelf() {
@@ -101,16 +110,12 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			return this;
 		}
 
-		MockCsvSourceBuilder quoteCharacter(char quoteCharacter) {
-			this.quoteCharacter = quoteCharacter;
-			return this;
-		}
-
 		@Override
 		CsvSource build() {
 			var annotation = mock(CsvSource.class);
 
 			// Common
+			when(annotation.quoteCharacter()).thenReturn(super.quoteCharacter);
 			when(annotation.delimiter()).thenReturn(super.delimiter);
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
@@ -121,7 +126,6 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			// @CsvSource
 			when(annotation.value()).thenReturn(this.lines);
 			when(annotation.textBlock()).thenReturn(this.textBlock);
-			when(annotation.quoteCharacter()).thenReturn(this.quoteCharacter);
 
 			return annotation;
 		}
@@ -135,6 +139,10 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 		private String encoding = "UTF-8";
 		private String lineSeparator = "\n";
 		private int numLinesToSkip = 0;
+
+		private MockCsvFileSourceBuilder() {
+			super.quoteCharacter = '"';
+		}
 
 		@Override
 		protected MockCsvFileSourceBuilder getSelf() {
@@ -171,6 +179,7 @@ abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvA
 			var annotation = mock(CsvFileSource.class);
 
 			// Common
+			when(annotation.quoteCharacter()).thenReturn(super.quoteCharacter);
 			when(annotation.delimiter()).thenReturn(super.delimiter);
 			when(annotation.delimiterString()).thenReturn(super.delimiterString);
 			when(annotation.emptyValue()).thenReturn(super.emptyValue);
