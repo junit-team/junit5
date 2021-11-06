@@ -1,6 +1,5 @@
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.junit.gradle.exec.ClasspathSystemPropertyProvider
 import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
@@ -25,6 +24,7 @@ javaLibrary {
 }
 
 val apiReport by configurations.creating
+val standaloneConsoleLauncher by configurations.creating
 
 dependencies {
 	implementation(projects.junitJupiterApi) {
@@ -52,6 +52,8 @@ dependencies {
 	testImplementation(libs.classgraph) {
 		because("ApiReportGenerator needs it")
 	}
+
+	standaloneConsoleLauncher(projects.junitPlatformConsoleStandalone)
 }
 
 asciidoctorj {
@@ -90,10 +92,11 @@ gitPublish {
 	}
 }
 
-val generatedAsciiDocPath = file("$buildDir/generated/asciidoc")
-val consoleLauncherOptionsFile = File(generatedAsciiDocPath, "console-launcher-options.txt")
-val experimentalApisTableFile = File(generatedAsciiDocPath, "experimental-apis-table.txt")
-val deprecatedApisTableFile = File(generatedAsciiDocPath, "deprecated-apis-table.txt")
+val generatedAsciiDocPath = layout.buildDirectory.dir("generated/asciidoc")
+val consoleLauncherOptionsFile = generatedAsciiDocPath.map { it.file("console-launcher-options.txt") }
+val experimentalApisTableFile = generatedAsciiDocPath.map { it.file("experimental-apis-table.adoc") }
+val deprecatedApisTableFile = generatedAsciiDocPath.map { it.file("deprecated-apis-table.adoc") }
+val standaloneConsoleLauncherShadowedArtifactsFile = generatedAsciiDocPath.map { it.file("console-launcher-standalone-shadowed-artifacts.adoc") }
 
 val jdkJavadocBaseUrl = "https://docs.oracle.com/en/java/javase/11/docs/api"
 val elementListsDir = file("$buildDir/elementLists")
@@ -189,9 +192,20 @@ tasks {
 		redirectOutput(deprecatedApisTableFile)
 	}
 
+	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(Copy::class) {
+		from(zipTree(provider { standaloneConsoleLauncher.singleFile })) {
+			include("META-INF/shadowed-artifacts")
+			includeEmptyDirs = false
+			eachFile {
+				relativePath = RelativePath(true, standaloneConsoleLauncherShadowedArtifactsFile.get().asFile.name)
+			}
+			filter { line -> "- `${line}`" }
+		}
+		into(standaloneConsoleLauncherShadowedArtifactsFile.map { it.asFile.parentFile })
+	}
+
 	withType<AbstractAsciidoctorTask>().configureEach {
-		dependsOn(generateConsoleLauncherOptions, generateExperimentalApisTable, generateDeprecatedApisTable)
-		inputs.files(consoleLauncherOptionsFile, experimentalApisTableFile, deprecatedApisTableFile)
+		inputs.files(generateConsoleLauncherOptions, generateExperimentalApisTable, generateDeprecatedApisTable, generateStandaloneConsoleLauncherShadowedArtifactsFile)
 
 		resources {
 			from(sourceDir) {
@@ -218,6 +232,7 @@ tasks {
 				"consoleLauncherOptionsFile" to consoleLauncherOptionsFile,
 				"experimentalApisTableFile" to experimentalApisTableFile,
 				"deprecatedApisTableFile" to deprecatedApisTableFile,
+				"standaloneConsoleLauncherShadowedArtifactsFile" to standaloneConsoleLauncherShadowedArtifactsFile,
 				"outdir" to outputDir.absolutePath,
 				"source-highlighter" to "rouge",
 				"tabsize" to "4",
@@ -441,13 +456,15 @@ tasks {
 	}
 }
 
-fun JavaExec.redirectOutput(outputFile: File) {
+fun JavaExec.redirectOutput(outputFile: Provider<RegularFile>) {
 	outputs.file(outputFile)
 	val byteStream = ByteArrayOutputStream()
 	standardOutput = byteStream
 	doLast {
-		Files.createDirectories(outputFile.parentFile.toPath())
-		Files.write(outputFile.toPath(), byteStream.toByteArray())
+		outputFile.get().asFile.apply {
+			Files.createDirectories(parentFile.toPath())
+			Files.write(toPath(), byteStream.toByteArray())
+		}
 	}
 }
 
