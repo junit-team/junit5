@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.extension;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
-import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
@@ -32,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
@@ -50,6 +50,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.opentest4j.TestAbortedException;
 
 /**
  * {@code TempDirectory} is a JUnit Jupiter extension that creates and cleans
@@ -149,7 +150,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				? NAMESPACE.append(sourceElement) //
 				: NAMESPACE;
 		Path path = extensionContext.getStore(namespace) //
-				.getOrComputeIfAbsent(KEY, __ -> createTempDir(cleanupMode), CloseablePath.class) //
+				.getOrComputeIfAbsent(KEY, __ -> createTempDir(cleanupMode, extensionContext), CloseablePath.class) //
 				.get();
 
 		return (type == Path.class) ? path : path.toFile();
@@ -164,9 +165,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		);
 	}
 
-	static CloseablePath createTempDir(CleanupMode cleanupMode) {
+	static CloseablePath createTempDir(CleanupMode cleanupMode, ExtensionContext executionContext) {
 		try {
-			return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX), cleanupMode);
+			return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX), cleanupMode, executionContext);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
@@ -177,10 +178,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		private final Path dir;
 		private final CleanupMode cleanupMode;
+		private final ExtensionContext executionContext;
 
-		CloseablePath(Path dir, CleanupMode cleanupMode) {
+		CloseablePath(Path dir, CleanupMode cleanupMode, ExtensionContext executionContext) {
 			this.dir = dir;
 			this.cleanupMode = cleanupMode;
+			this.executionContext = executionContext;
 		}
 
 		Path get() {
@@ -189,8 +192,17 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		@Override
 		public void close() throws IOException {
-			if (cleanupMode == NEVER) {
-				return;
+			switch (cleanupMode) {
+				case NEVER:
+					return;
+				case ALWAYS:
+					break;
+				case ON_SUCCESS:
+					Optional<Throwable> optional = executionContext.getExecutionException();
+					if (optional.isPresent() && optional.get().getClass().equals(TestAbortedException.class)) {
+						return;
+					}
+					break;
 			}
 
 			SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories();
