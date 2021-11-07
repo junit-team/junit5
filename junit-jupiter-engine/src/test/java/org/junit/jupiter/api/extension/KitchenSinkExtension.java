@@ -44,7 +44,7 @@ public class KitchenSinkExtension implements
 	LifecycleMethodExecutionExceptionHandler,
 
 	// Dependency Injection
-    TestInstancePreConstructCallback,
+	TestInstancePreConstructCallback,
 	TestInstanceFactory,
 	TestInstancePostProcessor,
 	TestInstancePreDestroyCallback,
