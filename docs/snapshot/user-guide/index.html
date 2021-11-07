@@ -6507,18 +6507,60 @@ Jupiter tests and print test execution results to the console.</p>
 <p>An executable <code>junit-platform-console-standalone-1.9.0-SNAPSHOT.jar</code> with all
 dependencies included is published in the <a href="https://search.maven.org/">Maven Central</a> repository under the
 <a href="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone">junit-platform-console-standalone</a>
-directory. You can <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/run.html">run</a>
-the standalone <code>ConsoleLauncher</code> as shown below.</p>
+directory. It includes the following dependencies:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>junit:junit:4.13.2</code></p>
+</li>
+<li>
+<p><code>org.apiguardian:apiguardian-api:1.1.2</code></p>
+</li>
+<li>
+<p><code>org.hamcrest:hamcrest-core:1.3</code></p>
+</li>
+<li>
+<p><code>org.junit.jupiter:junit-jupiter-api:5.9.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><code>org.junit.jupiter:junit-jupiter-engine:5.9.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><code>org.junit.jupiter:junit-jupiter-params:5.9.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><code>org.junit.platform:junit-platform-commons:1.9.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><code>org.junit.platform:junit-platform-console:1.9.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><code>org.junit.platform:junit-platform-engine:1.9.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><code>org.junit.platform:junit-platform-launcher:1.9.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><code>org.junit.platform:junit-platform-reporting:1.9.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><code>org.junit.vintage:junit-vintage-engine:5.9.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><code>org.opentest4j:opentest4j:1.2.0</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p><code>java -jar junit-platform-console-standalone-1.9.0-SNAPSHOT.jar &lt;<a href="#running-tests-console-launcher-options">Options</a>&gt;</code></p>
+<p>You can <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/run.html">run</a> the
+standalone <code>ConsoleLauncher</code> as shown below.</p>
 </div>
-<div class="paragraph">
-<p>Here&#8217;s an example of its output:</p>
-</div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>├─ JUnit Vintage
+<pre class="rouge highlight"><code data-lang="console"><span class="gp">$</span><span class="w"> </span>java <span class="nt">-jar</span> junit-platform-console-standalone-1.9.0-SNAPSHOT.jar &lt;OPTIONS&gt;
+<span class="go">
+├─ JUnit Vintage
 │  └─ example.JUnit4Tests
 │     └─ standardJUnit4Test ✔
 └─ JUnit Jupiter
@@ -6542,7 +6584,7 @@ Test run finished after 64 ms
 [         5 tests started         ]
 [         0 tests aborted         ]
 [         5 tests successful      ]
-[         0 tests failed          ]</pre>
+[         0 tests failed          ]</span></code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -10975,7 +11017,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <h3 id="dependency-diagram"><a class="anchor" href="#dependency-diagram"></a>10.3. Dependency Diagram</h3>
 <div class="imageblock">
 <div class="content">
-<img src="images/component-diagram.svg" alt="component diagram" width="2143" height="870">
+<img src="images/component-diagram.svg" alt="component diagram" width="308" height="211">
 </div>
 </div>
 </div>
@@ -10985,7 +11027,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-05 10:45:40 UTC
+Last updated 2021-11-07 09:37:23 UTC
 </div>
 </div>
 <style>
