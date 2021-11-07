@@ -193,7 +193,7 @@ tasks {
 	}
 
 	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(Copy::class) {
-		from(zipTree(provider { standaloneConsoleLauncher.singleFile })) {
+		from(zipTree(standaloneConsoleLauncher.elements.map { it.single().asFile })) {
 			include("META-INF/shadowed-artifacts")
 			includeEmptyDirs = false
 			eachFile {
