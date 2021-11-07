@@ -47,6 +47,7 @@ on GitHub.
 * A new extension `TestInstancePreConstructCallback` called prior to a test instance construction
   (symmetric extension to `TestInstancePreDestroyCallback`).
 
+
 [[release-notes-5.9.0-M1-junit-vintage]]
 === JUnit Vintage
 
