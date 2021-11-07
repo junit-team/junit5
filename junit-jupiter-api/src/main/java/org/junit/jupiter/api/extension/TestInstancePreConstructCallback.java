@@ -21,7 +21,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  *
  * <p>This extension is a symmetric counterpart to {@link TestInstancePreDestroyCallback}.
  * The use cases for this extension may include preparing context-sensitive arguments
- * that are  injected into the instance's constructor parameters.
+ * that are injected into the instance's constructor parameters.
  *
  * <p>Extensions that implement {@link TestInstancePreConstructCallback} must be
  * registered at the class level if the test class is configured with
