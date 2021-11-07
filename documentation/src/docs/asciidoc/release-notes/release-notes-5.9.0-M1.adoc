@@ -42,7 +42,8 @@ on GitHub.
 
 * Add support for `IterationSelector` to select a subset of the invocations of
   parameterized or dynamic tests.
-
+* Add support for `MATCH_NONE` mode in `EnumSource` that selects only those enum constants
+  whose names match none of the supplied patterns.
 * A new extension `TestInstancePreConstructCallback` called prior to a test instance construction
   (symmetric extension to `TestInstancePreDestroyCallback`).
 
