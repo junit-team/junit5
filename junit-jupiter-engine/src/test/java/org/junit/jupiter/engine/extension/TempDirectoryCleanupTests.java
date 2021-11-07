@@ -26,7 +26,7 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
- * Test that {@link TempDir temporary directories} are not delted if set for
+ * Test that {@link TempDir temporary directories} are not deleted if set for
  * {@link CleanupMode#NEVER}, and deletes any {@link TempDir temporary directories} if set for
  * {@link CleanupMode#ALWAYS}. hghg
  *
