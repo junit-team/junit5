@@ -25,6 +25,22 @@ tasks {
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
 	}
+	val shadowedArtifactsFile by registering {
+		val configurations = shadowJar.get().configurations
+		inputs.files(configurations).withNormalizer(ClasspathNormalizer::class)
+		val outputFile = layout.buildDirectory.file("shadowed-artifacts")
+		outputs.file(outputFile)
+		doFirst {
+			outputFile.get().asFile.printWriter().use { out ->
+				configurations
+					.flatMap { it.resolvedConfiguration.resolvedArtifacts }
+					.map { it.moduleVersion.id }
+					.map { "${it.group}:${it.name}:${it.version}" }
+					.sorted()
+					.forEach(out::println)
+			}
+		}
+	}
 	shadowJar {
 		// https://github.com/junit-team/junit5/issues/2557
 		// exclude compiled module declarations from any source (e.g. /*, /META-INF/versions/N/*)
@@ -38,6 +54,9 @@ tasks {
 		}
 		from(project.projects.junitJupiterParams.dependencyProject.projectDir) {
 			include("LICENSE-univocity-parsers.md")
+			into("META-INF")
+		}
+		from(shadowedArtifactsFile) {
 			into("META-INF")
 		}
 
