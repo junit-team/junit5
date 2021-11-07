@@ -13,23 +13,23 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.ALWAYS;
-import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.NEVER;
+import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
+import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.io.TempDirStrategy;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 
 /**
  * Integration tests for cleanup of the {@link TempDirectory}
- * when {@link TempDir} is set to {@link TempDirStrategy.CleanupMode#ALWAYS} or
- * {@link TempDirStrategy.CleanupMode#NEVER}.
+ * when {@link TempDir} is set to {@link CleanupMode#ALWAYS} or
+ * {@link CleanupMode#NEVER}. hghg
  *
  * @since 5.9
  *
  * @see TempDir
- * @see TempDirStrategy
+ * @see CleanupMode
  */
 class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 

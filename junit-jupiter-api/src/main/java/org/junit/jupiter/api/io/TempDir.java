@@ -11,6 +11,7 @@
 package org.junit.jupiter.api.io;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,4 +84,10 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 @Documented
 @API(status = EXPERIMENTAL, since = "5.4")
 public @interface TempDir {
+
+	/**
+	 * How the directory gets cleaned up after the test completes.
+	 */
+	CleanupMode cleanup() default ALWAYS;
+
 }

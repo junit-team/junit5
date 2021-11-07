@@ -11,29 +11,28 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.ALWAYS;
-import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.NEVER;
+import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
+import static org.junit.jupiter.api.io.CleanupMode.NEVER;
+import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.io.File;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.io.TempDirStrategy;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
- * Test that {@link TempDirStrategy} does not delete {@link TempDir temporary directories} if set for
- * {@link TempDirStrategy.CleanupMode#NEVER}, and deletes any {@link TempDir temporary directories} if set for
- * {@link TempDirStrategy.CleanupMode#ALWAYS}.
+ * Test that {@link TempDir temporary directories} are not delted if set for
+ * {@link CleanupMode#NEVER}, and deletes any {@link TempDir temporary directories} if set for
+ * {@link CleanupMode#ALWAYS}. hghg
  *
  * @since 5.9
  *
- * @see TempDirStrategy
+ * @see CleanupMode
  * @see TempDir
  */
 class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
@@ -41,9 +40,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	private static File defaultDir;
 	private static File neverDir;
 	private static File alwaysDir;
-	private static File nestedInnerDir1;
-	private static File nestedInnerDir2;
-	private static File nestedOuterDir;
+	private static File onSuccessDir;
 
 	/**
 	 * Ensure the default cleanup modes is ALWAYS.
@@ -64,7 +61,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(NeverCase.class, "testNever")).build();
 		executeTests(request);
 
-		assertTrue(neverDir.exists());
+		assertFalse(neverDir.exists());
 	}
 
 	/**
@@ -79,29 +76,15 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	}
 
 	/**
-	 * Ensure a nested and parent class cleanup modes are separate.
+	 * Ensure that ON_SUCCESS cleanup modes are obeyed.
 	 */
 	@Test
-	void testCleanupModeNested1() {
+	void testCleanupModeOnSuccess() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(NestedCase.NestedTests1.class, "testNested1")).build();
+			selectMethod(OnSuccessCase.class, "testOnSuccess")).build();
 		executeTests(request);
 
-		assertTrue(nestedOuterDir.exists());
-		assertFalse(nestedInnerDir1.exists());
-	}
-
-	/**
-	 * Ensure a nested class inherits its cleanup mode from its parent, if none defined at the nested level.
-	 */
-	@Test
-	void testCleanupModeNested2() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(NestedCase.NestedTests2.class, "testNested2")).build();
-		executeTests(request);
-
-		assertTrue(nestedOuterDir.exists());
-		assertTrue(nestedInnerDir2.exists());
+		assertFalse(onSuccessDir.exists());
 	}
 
 	// -------------------------------------------------------------------
@@ -117,10 +100,9 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@TempDirStrategy(cleanupMode = NEVER)
 	static class NeverCase {
 
-		@TempDir
+		@TempDir(cleanup = NEVER)
 		File neverDir;
 
 		@Test
@@ -129,10 +111,9 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@TempDirStrategy(cleanupMode = ALWAYS)
 	static class AlwaysCase {
 
-		@TempDir
+		@TempDir(cleanup = ALWAYS)
 		File alwaysDir;
 
 		@Test
@@ -141,37 +122,14 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@TempDirStrategy(cleanupMode = NEVER)
-	static class NestedCase {
+	static class OnSuccessCase {
 
-		@TempDir
-		File nestedOuterDir;
+		@TempDir(cleanup = ON_SUCCESS)
+		File onSuccessDirDir;
 
-		@Nested
-		@TempDirStrategy(cleanupMode = ALWAYS)
-		class NestedTests1 {
-
-			@TempDir
-			File nestedInnerDir1;
-
-			@Test
-			void testNested1() {
-				TempDirectoryCleanupTests.nestedOuterDir = nestedOuterDir;
-				TempDirectoryCleanupTests.nestedInnerDir1 = nestedInnerDir1;
-			}
-		}
-
-		@Nested
-		class NestedTests2 {
-
-			@TempDir
-			File nestedInnerDir2;
-
-			@Test
-			void testNested2() {
-				TempDirectoryCleanupTests.nestedOuterDir = nestedOuterDir;
-				TempDirectoryCleanupTests.nestedInnerDir2 = nestedInnerDir2;
-			}
+		@Test
+		void testOnSuccess() {
+			TempDirectoryCleanupTests.onSuccessDir = onSuccessDirDir;
 		}
 	}
 

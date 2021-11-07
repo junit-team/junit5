@@ -22,7 +22,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.io.TempDirStrategy;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 
@@ -42,7 +42,7 @@ public interface JupiterConfiguration {
 	String DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME = "junit.jupiter.displayname.generator.default";
 	String DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME = "junit.jupiter.testmethod.order.default";
 	String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = "junit.jupiter.testclass.order.default";
-	String DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME = "junit.jupiter.temp.dir.strategy.cleanup.mode.default";
+	String DEFAULT_TEMP_DIR_CLEANUP_MODE_PROPERTY_NAME = "junit.jupiter.temp.dir.cleanup.mode.default";
 	String TEMP_DIR_SCOPE_PROPERTY_NAME = "junit.jupiter.tempdir.scope";
 
 	String DEFAULT_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.default";
@@ -79,6 +79,6 @@ public interface JupiterConfiguration {
 
 	Optional<ClassOrderer> getDefaultTestClassOrderer();
 
-	TempDirStrategy.CleanupMode getDefaultTempDirStrategyCleanupMode();
+	CleanupMode getDefaultTempDirCleanupMode();
 
 }

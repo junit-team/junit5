@@ -11,7 +11,7 @@
 package org.junit.jupiter.engine.config;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.jupiter.api.io.TempDirStrategy.CleanupMode.ALWAYS;
+import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.io.TempDirStrategy;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -52,8 +52,8 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	private static final InstantiatingConfigurationParameterConverter<ClassOrderer> classOrdererConverter = //
 		new InstantiatingConfigurationParameterConverter<>(ClassOrderer.class, "class orderer");
 
-	private static final EnumConfigurationParameterConverter<TempDirStrategy.CleanupMode> cleanupModeConverter = //
-		new EnumConfigurationParameterConverter<>(TempDirStrategy.CleanupMode.class, "cleanup mode");
+	private static final EnumConfigurationParameterConverter<CleanupMode> cleanupModeConverter = //
+		new EnumConfigurationParameterConverter<>(CleanupMode.class, "cleanup mode");
 
 	private final ConfigurationParameters configurationParameters;
 
@@ -123,9 +123,8 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public TempDirStrategy.CleanupMode getDefaultTempDirStrategyCleanupMode() {
-		return cleanupModeConverter.get(configurationParameters, DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME,
-			ALWAYS);
+	public CleanupMode getDefaultTempDirCleanupMode() {
+		return cleanupModeConverter.get(configurationParameters, DEFAULT_TEMP_DIR_CLEANUP_MODE_PROPERTY_NAME, ALWAYS);
 	}
 
 }

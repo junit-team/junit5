@@ -23,7 +23,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.io.TempDirStrategy;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
@@ -109,9 +109,9 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public TempDirStrategy.CleanupMode getDefaultTempDirStrategyCleanupMode() {
-		return (TempDirStrategy.CleanupMode) cache.computeIfAbsent(DEFAULT_TEMP_DIR_STRATEGY_CLEANUP_MODE_PROPERTY_NAME,
-			key -> delegate.getDefaultTempDirStrategyCleanupMode());
+	public CleanupMode getDefaultTempDirCleanupMode() {
+		return (CleanupMode) cache.computeIfAbsent(DEFAULT_TEMP_DIR_CLEANUP_MODE_PROPERTY_NAME,
+			key -> delegate.getDefaultTempDirCleanupMode());
 	}
 
 }
