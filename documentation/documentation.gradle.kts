@@ -205,7 +205,12 @@ tasks {
 	}
 
 	withType<AbstractAsciidoctorTask>().configureEach {
-		inputs.files(generateConsoleLauncherOptions, generateExperimentalApisTable, generateDeprecatedApisTable, generateStandaloneConsoleLauncherShadowedArtifactsFile)
+		inputs.files(
+			generateConsoleLauncherOptions,
+			generateExperimentalApisTable,
+			generateDeprecatedApisTable,
+			generateStandaloneConsoleLauncherShadowedArtifactsFile
+		)
 
 		resources {
 			from(sourceDir) {
