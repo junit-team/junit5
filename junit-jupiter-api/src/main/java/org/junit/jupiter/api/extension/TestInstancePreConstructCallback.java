@@ -50,7 +50,7 @@ public interface TestInstancePreConstructCallback extends Extension {
 	 * Callback invoked prior to test instances being constructed.
 	 *
 	 * @param factoryContext the context for the test instance about to be instantiated;
-	 *                       never {@code null}.
+	 * never {@code null}
 	 * @param context the current extension context; never {@code null}
 	 */
 	void preConstructTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) throws Exception;
