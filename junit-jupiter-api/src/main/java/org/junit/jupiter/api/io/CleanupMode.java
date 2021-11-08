@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.api.io;
 
-import org.apiguardian.api.API;
-
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 
 /**
  * Enumeration of cleanup modes for a {@code TempDir}.
