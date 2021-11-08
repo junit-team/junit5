@@ -46,7 +46,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	private static File onSuccessPassingDir;
 
 	/**
-	 * Ensure the default cleanup modes is ALWAYS.
+	 * Ensure the cleanup modes defaults to ALWAYS.
 	 * <p/>
 	 * Expect the TempDir to be cleaned up.
 	 */

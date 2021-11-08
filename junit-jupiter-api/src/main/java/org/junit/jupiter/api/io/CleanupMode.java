@@ -29,9 +29,20 @@ import org.apiguardian.api.API;
 public enum CleanupMode {
 
 	/**
+	 * Defer to the configured cleanup mode.
+	 *
+	 * @see TempDir
+	 * @see #ALWAYS
+	 * @see #ON_SUCCESS
+	 * @see #NEVER
+	 */
+	DEFAULT,
+
+	/**
 	 * Always clean up a temporary directory after the test has completed.
 	 *
 	 * @see TempDir
+	 * @see #DEFAULT
 	 * @see #ON_SUCCESS
 	 * @see #NEVER
 	 */
@@ -41,6 +52,7 @@ public enum CleanupMode {
 	 * Don't clean up a temporary directory after the test has completed.
 	 *
 	 * @see TempDir
+	 * @see #DEFAULT
 	 * @see #ALWAYS
 	 * @see #NEVER
 	 */
@@ -50,6 +62,7 @@ public enum CleanupMode {
 	 * Only clean up a temporary directory if the test completed successfully.
 	 *
 	 * @see TempDir
+	 * @see #DEFAULT
 	 * @see #ALWAYS
 	 * @see #ON_SUCCESS
 	 */
