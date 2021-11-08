@@ -103,8 +103,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			assertSupportedType("field", field.getType());
 
 			try {
-				CleanupMode cleanup = findCleanupModeForField(field);
-				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), cleanup, context));
+				CleanupMode mode = findCleanupModeForField(field);
+				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), mode, context));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
