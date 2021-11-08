@@ -31,7 +31,6 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
@@ -50,7 +49,6 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.opentest4j.TestAbortedException;
 
 /**
  * {@code TempDirectory} is a JUnit Jupiter extension that creates and cleans
@@ -103,8 +101,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
 			assertSupportedType("field", field.getType());
+
 			try {
-				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), ALWAYS, context));
+				CleanupMode cleanup = findCleanupModeForField(field);
+				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), cleanup, context));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
@@ -135,6 +135,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
 		return getPathOrFile(parameterContext.getParameter(), parameterType, ALWAYS, extensionContext);
+	}
+
+	private static CleanupMode findCleanupModeForField(Field field) {
+		TempDir annotation = field.getAnnotation(TempDir.class);
+		return annotation.cleanup();
 	}
 
 	private void assertSupportedType(String target, Class<?> type) {
@@ -198,8 +203,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				case ALWAYS:
 					break;
 				case ON_SUCCESS:
-					Optional<Throwable> optional = executionContext.getExecutionException();
-					if (optional.isPresent() && optional.get().getClass().equals(TestAbortedException.class)) {
+					if (executionContext.getExecutionException().isPresent()) {
 						return;
 					}
 					break;

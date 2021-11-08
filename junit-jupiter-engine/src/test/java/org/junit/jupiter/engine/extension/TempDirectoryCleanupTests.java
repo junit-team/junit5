@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
@@ -26,9 +28,9 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
- * Test that {@link TempDir temporary directories} are not deleted if set for
- * {@link CleanupMode#NEVER}, and deletes any {@link TempDir temporary directories} if set for
- * {@link CleanupMode#ALWAYS}. hghg
+ * Test that {@link TempDir temporary directories} are not deleted if set for {@link CleanupMode#NEVER},
+ * deletes any if set for {@link CleanupMode#ON_SUCCESS} only if the test passes,
+ * and deletes any if set for {@link CleanupMode#ALWAYS}.
  *
  * @since 5.9
  *
@@ -40,10 +42,13 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	private static File defaultDir;
 	private static File neverDir;
 	private static File alwaysDir;
-	private static File onSuccessDir;
+	private static File onSuccessFailingDir;
+	private static File onSuccessPassingDir;
 
 	/**
 	 * Ensure the default cleanup modes is ALWAYS.
+	 * <p/>
+	 * Expect the TempDir to be cleaned up.
 	 */
 	@Test
 	void testCleanupModeDefault() {
@@ -55,17 +60,21 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 	/**
 	 * Ensure that NEVER cleanup modes are obeyed.
+	 * <p/>
+	 * Expect the TempDir not to be cleaned up.
 	 */
 	@Test
 	void testCleanupModeNever() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(NeverCase.class, "testNever")).build();
 		executeTests(request);
 
-		assertFalse(neverDir.exists());
+		assertTrue(neverDir.exists());
 	}
 
 	/**
 	 * Ensure that ALWAYS cleanup modes are obeyed.
+	 * <p/>
+	 * Expect the TempDir to be cleaned up.
 	 */
 	@Test
 	void testCleanupModeAlways() {
@@ -76,15 +85,31 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	}
 
 	/**
-	 * Ensure that ON_SUCCESS cleanup modes are obeyed.
+	 * Ensure that ON_SUCCESS cleanup modes are obeyed for passing tests.
+	 * <p/>
+	 * Expect the TempDir to be cleaned up.
 	 */
 	@Test
-	void testCleanupModeOnSuccess() {
+	void testCleanupModeOnSuccessPassing() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(OnSuccessCase.class, "testOnSuccess")).build();
+			selectMethod(OnSuccessPassingCase.class, "testOnSuccessPassing")).build();
 		executeTests(request);
 
-		assertFalse(onSuccessDir.exists());
+		assertFalse(onSuccessPassingDir.exists());
+	}
+
+	/**
+	 * Ensure that ON_SUCCESS cleanup modes are obeyed for failing tests.
+	 * <p/>
+	 * Expect the TempDir not to be cleaned up.
+	 */
+	@Test
+	void testCleanupModeOnSuccessFailing() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(OnSuccessFailingCase.class, "testOnSuccessFailing")).build();
+		executeTests(request);
+
+		assertTrue(onSuccessFailingDir.exists());
 	}
 
 	// -------------------------------------------------------------------
@@ -122,14 +147,26 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class OnSuccessCase {
+	static class OnSuccessPassingCase {
 
 		@TempDir(cleanup = ON_SUCCESS)
-		File onSuccessDirDir;
+		File onSuccessPassingDir;
 
 		@Test
-		void testOnSuccess() {
-			TempDirectoryCleanupTests.onSuccessDir = onSuccessDirDir;
+		void testOnSuccessPassing() {
+			TempDirectoryCleanupTests.onSuccessPassingDir = onSuccessPassingDir;
+		}
+	}
+
+	static class OnSuccessFailingCase {
+
+		@TempDir(cleanup = ON_SUCCESS)
+		File onSuccessFailingDir;
+
+		@Test
+		void testOnSuccessFailing() {
+			TempDirectoryCleanupTests.onSuccessFailingDir = onSuccessFailingDir;
+			fail();
 		}
 	}
 
