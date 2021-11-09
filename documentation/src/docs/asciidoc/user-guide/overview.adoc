@@ -23,20 +23,20 @@ The **JUnit Platform** serves as a foundation for <<launcher-api,launching testi
 frameworks>> on the JVM. It also defines the `{TestEngine}` API for developing a testing
 framework that runs on the platform. Furthermore, the platform provides a
 <<running-tests-console-launcher,Console Launcher>> to launch the platform from the
-command line and a <<running-tests-junit-platform-runner,JUnit 4 based Runner>> for
-running any `TestEngine` on the platform in a JUnit 4 based environment. First-class
-support for the JUnit Platform also exists in popular IDEs (see
-<<running-tests-ide-intellij-idea>>, <<running-tests-ide-eclipse>>,
-<<running-tests-ide-netbeans>>, and <<running-tests-ide-vscode>>) and build tools (see
-<<running-tests-build-gradle>>, <<running-tests-build-maven>>, and
-<<running-tests-build-ant>>).
+command line and the <<junit-platform-suite-engine>> for running a custom test suite using
+one or more test engines on the platform. First-class support for the JUnit Platform also
+exists in popular IDEs (see <<running-tests-ide-intellij-idea>>,
+<<running-tests-ide-eclipse>>, <<running-tests-ide-netbeans>>, and
+<<running-tests-ide-vscode>>) and build tools (see <<running-tests-build-gradle>>,
+<<running-tests-build-maven>>, and <<running-tests-build-ant>>).
 
 **JUnit Jupiter** is the combination of the new <<writing-tests,programming model>> and
 <<extensions,extension model>> for writing tests and extensions in JUnit 5. The Jupiter
 sub-project provides a `TestEngine` for running Jupiter based tests on the platform.
 
 **JUnit Vintage** provides a `TestEngine` for running JUnit 3 and JUnit 4 based tests on
-the platform. It requires JUnit 4.12 or later to be present on the class/module path.
+the platform. It requires JUnit 4.12 or later to be present on the class path or module
+path.
 
 [[overview-java-versions]]
 === Supported Java Versions
@@ -47,7 +47,7 @@ has been compiled with previous versions of the JDK.
 [[overview-getting-help]]
 === Getting Help
 
-Ask JUnit 5 related questions on {StackOverflow} or chat with us on {Gitter}.
+Ask JUnit 5 related questions on {StackOverflow} or chat with the community on {Gitter}.
 
 [[overview-getting-started]]
 === Getting Started
