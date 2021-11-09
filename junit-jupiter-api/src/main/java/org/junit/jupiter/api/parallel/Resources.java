@@ -17,8 +17,8 @@ import org.apiguardian.api.API;
 /**
  * Common resource names for synchronizing test execution.
  *
- * @see ResourceLock
  * @since 5.3
+ * @see ResourceLock
  */
 @API(status = EXPERIMENTAL, since = "5.3")
 public class Resources {

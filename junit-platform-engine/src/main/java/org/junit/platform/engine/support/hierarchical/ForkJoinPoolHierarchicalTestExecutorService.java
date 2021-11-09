@@ -40,9 +40,9 @@ import org.junit.platform.engine.ConfigurationParameters;
  * {@linkplain HierarchicalTestExecutorService executor service} that executes
  * {@linkplain TestTask test tasks} with the configured parallelism.
  *
+ * @since 1.3
  * @see ForkJoinPool
  * @see DefaultParallelExecutionConfigurationStrategy
- * @since 1.3
  */
 @API(status = EXPERIMENTAL, since = "1.3")
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {

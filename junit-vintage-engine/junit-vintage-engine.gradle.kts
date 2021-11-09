@@ -1,5 +1,3 @@
-import aQute.bnd.gradle.BundleTaskConvention
-
 plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
@@ -24,17 +22,19 @@ dependencies {
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteEngine)
 	testImplementation(projects.junitPlatformTestkit)
+
+	osgiVerification(projects.junitPlatformLauncher)
 }
 
 tasks {
 	compileTestFixturesGroovy {
 		javaLauncher.set(project.the<JavaToolchainService>().launcherFor {
-			// Groovy 2.x (used for Spock tests) does not support JDK 16
-			languageVersion.set(JavaLanguageVersion.of(11))
+			// Groovy 2.x (used for Spock tests) does not support current JDKs
+			languageVersion.set(JavaLanguageVersion.of(8))
 		})
 	}
 	jar {
-		withConvention(BundleTaskConvention::class) {
+		bundle {
 			val junit4Min = libs.versions.junit4Min.get()
 			bnd("""
 				# Import JUnit4 packages with a version
@@ -53,6 +53,10 @@ tasks {
 					org.junit.platform.engine;\
 						org.junit.platform.engine='junit-vintage';\
 						version:Version="${'$'}{version_cleanup;${project.version}}"
+				Require-Capability:\
+					org.junit.platform.launcher;\
+						filter:='(&(org.junit.platform.launcher=junit-platform-launcher)(version>=${'$'}{version_cleanup;${rootProject.property("platformVersion")!!}})(!(version>=${'$'}{versionmask;+;${'$'}{version_cleanup;${rootProject.property("platformVersion")!!}}})))';\
+						effective:=active
 			""")
 		}
 	}

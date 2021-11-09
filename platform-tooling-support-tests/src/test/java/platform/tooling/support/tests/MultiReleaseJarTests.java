@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.List;
 
 import de.sormuras.bartholdy.Result;
@@ -84,8 +84,9 @@ class MultiReleaseJarTests {
 				.setTool(Request.maven()) //
 				.setProject("multi-release-jar") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("--show-version", "--errors", "--batch-mode", "--file", variant, "test") //
-				.setTimeout(Duration.ofMinutes(2)) //
+				.addArguments("--update-snapshots", "--show-version", "--errors", "--batch-mode", "--file", variant,
+					"test") //
+				.setTimeout(TOOL_TIMEOUT) //
 				.build() //
 				.run();
 

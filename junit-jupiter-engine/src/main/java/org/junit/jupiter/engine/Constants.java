@@ -43,8 +43,8 @@ import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigura
  * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
  * </table>
  *
- * @see org.junit.platform.engine.ConfigurationParameters
  * @since 5.0
+ * @see org.junit.platform.engine.ConfigurationParameters
  */
 @API(status = STABLE, since = "5.0")
 public final class Constants {
@@ -152,9 +152,9 @@ public final class Constants {
 	 * <p>If not specified, the default is "same_thread" which corresponds to
 	 * {@code @Execution(ExecutionMode.SAME_THREAD)}.
 	 *
+	 * @since 5.4
 	 * @see org.junit.jupiter.api.parallel.Execution
 	 * @see org.junit.jupiter.api.parallel.ExecutionMode
-	 * @since 5.4
 	 */
 	@API(status = EXPERIMENTAL, since = "5.4")
 	public static final String DEFAULT_PARALLEL_EXECUTION_MODE = JupiterConfiguration.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
@@ -173,9 +173,9 @@ public final class Constants {
 	 * <p>If not specified, it will be resolved into the same value as
 	 * {@link #DEFAULT_PARALLEL_EXECUTION_MODE}.
 	 *
+	 * @since 5.4
 	 * @see org.junit.jupiter.api.parallel.Execution
 	 * @see org.junit.jupiter.api.parallel.ExecutionMode
-	 * @since 5.4
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = JupiterConfiguration.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
@@ -243,8 +243,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TIMEOUT_PROPERTY_NAME;
@@ -262,8 +262,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -283,8 +283,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -304,8 +304,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -325,8 +325,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -344,8 +344,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -364,8 +364,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -384,8 +384,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -404,8 +404,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -424,8 +424,8 @@ public final class Constants {
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
 	 * description</a> for the definition of supported values.
 	 *
-	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
+	 * @see org.junit.jupiter.api.Timeout
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;

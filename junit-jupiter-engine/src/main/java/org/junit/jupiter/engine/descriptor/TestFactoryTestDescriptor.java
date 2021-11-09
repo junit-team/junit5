@@ -103,9 +103,10 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
-					Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index++,
+					Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index,
 						defaultTestSource, getDynamicDescendantFilter(), configuration);
 					descriptor.ifPresent(dynamicTestExecutor::execute);
+					index++;
 				}
 			}
 			catch (ClassCastException ex) {
@@ -153,9 +154,9 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			DynamicContainer container = (DynamicContainer) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
 			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, source,
-				dynamicDescendantFilter, configuration);
+				dynamicDescendantFilter.withoutIndexFiltering(), configuration);
 		}
-		if (dynamicDescendantFilter.test(uniqueId)) {
+		if (dynamicDescendantFilter.test(uniqueId, index - 1)) {
 			JupiterTestDescriptor descriptor = descriptorCreator.get();
 			descriptor.setParent(parent);
 			return Optional.of(descriptor);

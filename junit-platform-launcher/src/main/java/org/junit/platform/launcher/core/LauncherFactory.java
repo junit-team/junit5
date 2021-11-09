@@ -74,8 +74,8 @@ public class LauncherFactory {
 	 * {@linkplain LauncherConfig#DEFAULT default} {@link LauncherConfig}.
 	 *
 	 * @throws PreconditionViolationException if no test engines are detected
-	 * @see #openSession(LauncherConfig)
 	 * @since 1.8
+	 * @see #openSession(LauncherConfig)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.8")
 	public static LauncherSession openSession() throws PreconditionViolationException {
@@ -90,8 +90,8 @@ public class LauncherFactory {
 	 * {@code null}
 	 * @throws PreconditionViolationException if the supplied configuration is
 	 * {@code null}, or if no test engines are detected
-	 * @see #openSession()
 	 * @since 1.8
+	 * @see #openSession()
 	 */
 	@API(status = EXPERIMENTAL, since = "1.8")
 	public static LauncherSession openSession(LauncherConfig config) throws PreconditionViolationException {
@@ -117,8 +117,8 @@ public class LauncherFactory {
 	 * @throws PreconditionViolationException if the supplied configuration is
 	 * {@code null}, or if no test engines are detected
 	 * registered
-	 * @see #create()
 	 * @since 1.3
+	 * @see #create()
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3")
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {

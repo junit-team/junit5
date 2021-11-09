@@ -17,16 +17,25 @@ import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClasspathResourceSelector;
+import org.junit.platform.engine.discovery.DirectorySelector;
+import org.junit.platform.engine.discovery.FileSelector;
+import org.junit.platform.engine.discovery.IterationSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.ModuleSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UriSelector;
 
 /**
  * @since 1.0
@@ -49,15 +58,16 @@ public class CommandLineOptions {
 	private List<Path> selectedClasspathEntries = emptyList();
 
 	private boolean scanModulepath;
-	private List<String> selectedModules = emptyList();
 
-	private List<URI> selectedUris = emptyList();
-	private List<String> selectedFiles = emptyList();
-	private List<String> selectedDirectories = emptyList();
-	private List<String> selectedPackages = emptyList();
-	private List<String> selectedClasses = emptyList();
-	private List<String> selectedMethods = emptyList();
-	private List<String> selectedClasspathResources = emptyList();
+	private List<ModuleSelector> selectedModules = emptyList();
+	private List<UriSelector> selectedUris = emptyList();
+	private List<FileSelector> selectedFiles = emptyList();
+	private List<DirectorySelector> selectedDirectories = emptyList();
+	private List<PackageSelector> selectedPackages = emptyList();
+	private List<ClassSelector> selectedClasses = emptyList();
+	private List<MethodSelector> selectedMethods = emptyList();
+	private List<ClasspathResourceSelector> selectedClasspathResources = emptyList();
+	private List<IterationSelector> selectedIterations = emptyList();
 
 	private List<String> includedClassNamePatterns = singletonList(STANDARD_INCLUDE_PATTERN);
 	private List<String> excludedClassNamePatterns = emptyList();
@@ -156,73 +166,90 @@ public class CommandLineOptions {
 		this.selectedClasspathEntries = selectedClasspathEntries;
 	}
 
-	public List<URI> getSelectedUris() {
-		return this.selectedUris;
+	public List<UriSelector> getSelectedUris() {
+		return selectedUris;
 	}
 
-	public void setSelectedUris(List<URI> selectedUris) {
+	public void setSelectedUris(List<UriSelector> selectedUris) {
 		this.selectedUris = selectedUris;
 	}
 
-	public List<String> getSelectedFiles() {
-		return this.selectedFiles;
+	public List<FileSelector> getSelectedFiles() {
+		return selectedFiles;
 	}
 
-	public void setSelectedFiles(List<String> selectedFiles) {
+	public void setSelectedFiles(List<FileSelector> selectedFiles) {
 		this.selectedFiles = selectedFiles;
 	}
 
-	public List<String> getSelectedDirectories() {
-		return this.selectedDirectories;
+	public List<DirectorySelector> getSelectedDirectories() {
+		return selectedDirectories;
 	}
 
-	public void setSelectedDirectories(List<String> selectedDirectories) {
+	public void setSelectedDirectories(List<DirectorySelector> selectedDirectories) {
 		this.selectedDirectories = selectedDirectories;
 	}
 
-	public List<String> getSelectedModules() {
-		return this.selectedModules;
+	public List<ModuleSelector> getSelectedModules() {
+		return selectedModules;
 	}
 
-	public void setSelectedModules(List<String> selectedModules) {
+	public void setSelectedModules(List<ModuleSelector> selectedModules) {
 		this.selectedModules = selectedModules;
 	}
 
-	public List<String> getSelectedPackages() {
-		return this.selectedPackages;
+	public List<PackageSelector> getSelectedPackages() {
+		return selectedPackages;
 	}
 
-	public void setSelectedPackages(List<String> selectedPackages) {
+	public void setSelectedPackages(List<PackageSelector> selectedPackages) {
 		this.selectedPackages = selectedPackages;
 	}
 
-	public List<String> getSelectedClasses() {
-		return this.selectedClasses;
+	public List<ClassSelector> getSelectedClasses() {
+		return selectedClasses;
 	}
 
-	public void setSelectedClasses(List<String> selectedClasses) {
+	public void setSelectedClasses(List<ClassSelector> selectedClasses) {
 		this.selectedClasses = selectedClasses;
 	}
 
-	public List<String> getSelectedMethods() {
-		return this.selectedMethods;
+	public List<MethodSelector> getSelectedMethods() {
+		return selectedMethods;
 	}
 
-	public void setSelectedMethods(List<String> selectedMethods) {
+	public void setSelectedMethods(List<MethodSelector> selectedMethods) {
 		this.selectedMethods = selectedMethods;
 	}
 
-	public List<String> getSelectedClasspathResources() {
-		return this.selectedClasspathResources;
+	public List<ClasspathResourceSelector> getSelectedClasspathResources() {
+		return selectedClasspathResources;
 	}
 
-	public void setSelectedClasspathResources(List<String> selectedClasspathResources) {
+	public void setSelectedClasspathResources(List<ClasspathResourceSelector> selectedClasspathResources) {
 		this.selectedClasspathResources = selectedClasspathResources;
 	}
 
-	public boolean hasExplicitSelectors() {
-		return Stream.of(selectedUris, selectedFiles, selectedDirectories, selectedPackages, selectedClasses,
-			selectedMethods, selectedClasspathResources).anyMatch(selectors -> !selectors.isEmpty());
+	public List<IterationSelector> getSelectedIterations() {
+		return selectedIterations;
+	}
+
+	public void setSelectedIterations(List<IterationSelector> selectedIterations) {
+		this.selectedIterations = selectedIterations;
+	}
+
+	public List<DiscoverySelector> getExplicitSelectors() {
+		List<DiscoverySelector> selectors = new ArrayList<>();
+		selectors.addAll(getSelectedUris());
+		selectors.addAll(getSelectedFiles());
+		selectors.addAll(getSelectedDirectories());
+		selectors.addAll(getSelectedModules());
+		selectors.addAll(getSelectedPackages());
+		selectors.addAll(getSelectedClasses());
+		selectors.addAll(getSelectedMethods());
+		selectors.addAll(getSelectedClasspathResources());
+		selectors.addAll(getSelectedIterations());
+		return selectors;
 	}
 
 	public List<String> getIncludedClassNamePatterns() {

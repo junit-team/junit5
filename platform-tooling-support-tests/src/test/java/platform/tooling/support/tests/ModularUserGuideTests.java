@@ -138,6 +138,9 @@ class ModularUserGuideTests {
 
 		command.add("--scan-modules");
 
+		command.add("--config");
+		command.add("enableHttpServer=true");
+
 		command.add("--fail-if-no-tests");
 		command.add("--include-classname");
 		command.add(".*Tests");

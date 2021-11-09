@@ -127,7 +127,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	private Optional<TestDescriptor> createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext,
 			int index) {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
-		if (getDynamicDescendantFilter().test(uniqueId)) {
+		if (getDynamicDescendantFilter().test(uniqueId, index - 1)) {
 			return Optional.of(new TestTemplateInvocationTestDescriptor(uniqueId, getTestClass(), getTestMethod(),
 				invocationContext, index, configuration));
 		}

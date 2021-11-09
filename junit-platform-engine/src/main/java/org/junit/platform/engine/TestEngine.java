@@ -39,10 +39,10 @@ import org.junit.platform.commons.util.PackageUtils;
  * Jupiter are meta-annotated with {@code @Testable}. Consult the Javadoc for
  * {@code @Testable} for further details.
  *
+ * @since 1.0
  * @see org.junit.platform.engine.EngineDiscoveryRequest
  * @see org.junit.platform.engine.ExecutionRequest
  * @see org.junit.platform.commons.annotation.Testable
- * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public interface TestEngine {

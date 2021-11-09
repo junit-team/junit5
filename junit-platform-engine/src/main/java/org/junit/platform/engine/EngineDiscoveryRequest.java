@@ -30,12 +30,12 @@ import org.apiguardian.api.API;
  * <p>In addition, the supplied {@linkplain ConfigurationParameters
  * configuration parameters} can be used to influence the discovery process.
  *
+ * @since 1.0
  * @see TestEngine
  * @see TestDescriptor
  * @see DiscoverySelector
  * @see DiscoveryFilter
  * @see ConfigurationParameters
- * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public interface EngineDiscoveryRequest {

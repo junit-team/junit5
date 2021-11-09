@@ -6,7 +6,7 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.8.0](https://github.com/junit-team/junit5/releases/tag/r5.8.0) (September 12, 2021)
+- General Availability (GA): [JUnit 5.8.1](https://github.com/junit-team/junit5/releases/tag/r5.8.1) (September 22, 2021)
 - Preview (Milestone/Release Candidate): n/a
 
 ## Documentation
@@ -46,19 +46,23 @@ A code coverage report can also be generated locally via the [Gradle Wrapper] by
 executing `gradlew -PenableJaCoCo clean jacocoRootReport`. The results will be available
 in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
-## Gradle Build Scans and Build Caching
+## Gradle Enterprise
 
 [![Revved up by Gradle Enterprise](https://img.shields.io/badge/Revved%20up%20by-Gradle%20Enterprise-06A0CE?logo=Gradle&labelColor=02303A)](https://ge.junit.org/scans)
 
-JUnit 5 utilizes [Gradle Enterprise](https://gradle.com/) for _Build Scans_ and the
-_Remote Build Cache_. An example build scan for JUnit 5 can be viewed
-[here](https://ge.junit.org/s/2vwrn4rn67dky). Currently, only core team members can
-publish build scans. The remote build cache, however, is enabled by default for everyone
-so that local builds can reuse task outputs from previous CI builds.
+JUnit 5 utilizes [Gradle Enterprise](https://gradle.com/) for _Build Scans_, _Build Cache_, and _Test Distribution_.
+
+The latest Build Scans are available on [ge.junit.org](https://ge.junit.org/). Currently,
+only core team members can publish Build Scans and use Test Distribution on that server.
+You can, however, publish a Build Scan to [scans.gradle.com](https://scans.gradle.com/) by
+using the `--scan` parameter explicitly.
+
+The remote Build Cache is enabled by default for everyone so that local builds can reuse
+task outputs from previous CI builds.
 
 ## Building from Source
 
-You need [JDK 11] to build JUnit 5. [Gradle toolchains] are used to detect and
+You need [JDK 17] to build JUnit 5. [Gradle toolchains] are used to detect and
 potentially download additional JDKs for compilation and test execution.
 
 All modules can be _built_ with the [Gradle Wrapper] using the following command.
@@ -96,7 +100,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK 11]: https://adoptopenjdk.net/archive.html?variant=openjdk11&jvmVariant=hotspot
+[JDK 17]: https://adoptium.net/archive.html?variant=openjdk17&jvmVariant=hotspot
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [Samples]: https://github.com/junit-team/junit5-samples
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5

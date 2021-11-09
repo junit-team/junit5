@@ -23,12 +23,36 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @CsvFileSource} is an {@link ArgumentsSource} which is used to load
- * comma-separated value (CSV) files from one or more classpath {@link #resources
- * resources} or {@link #files}.
+ * comma-separated value (CSV) files from one or more classpath {@link #resources}
+ * or {@link #files}.
  *
- * <p>The lines of these CSV files will be provided as arguments to the
- * annotated {@code @ParameterizedTest} method. Any line beginning with a
- * {@code #} symbol will be interpreted as a comment and will be ignored.
+ * <p>The CSV records parsed from these resources and files will be provided as
+ * arguments to the annotated {@code @ParameterizedTest} method.
+ *
+ * <p>Any line beginning with a {@code #} symbol will be interpreted as a comment
+ * and will be ignored.
+ *
+ * <p>The column delimiter (which defaults to a comma ({@code ,})) can be customized
+ * via either {@link #delimiter} or {@link #delimiterString}.
+ *
+ * <p>In contrast to the default syntax used in {@code @CsvSource}, {@code @CsvFileSource}
+ * uses a double quote ({@code "}) as its quote character by default, but this can
+ * be changed via {@link #quoteCharacter}. An empty, quoted value ({@code ""})
+ * results in an empty {@link String} unless the {@link #emptyValue} attribute is
+ * set; whereas, an entirely <em>empty</em> value is interpreted as a {@code null}
+ * reference. By specifying one or more {@link #nullValues} a custom value can be
+ * interpreted as a {@code null} reference (see the User Guide for an example). An
+ * {@link org.junit.jupiter.params.converter.ArgumentConversionException
+ * ArgumentConversionException} is thrown if the target type of a {@code null}
+ * reference is a primitive type.
+ *
+ * <p>NOTE: An <em>unquoted</em> empty value will always be converted to a
+ * {@code null} reference regardless of any custom values configured via the
+ * {@link #nullValues} attribute.
+ *
+ * <p>Except within a quoted string, leading and trailing whitespace in a CSV
+ * column is trimmed by default. This behavior can be changed by setting the
+ * {@link #ignoreLeadingAndTrailingWhitespace} attribute to {@code true}.
  *
  * @since 5.0
  * @see CsvSource
@@ -65,11 +89,24 @@ public @interface CsvFileSource {
 
 	/**
 	 * The line separator to use when reading the CSV files; must consist of 1
-	 * or 2 characters.
+	 * or 2 characters, typically {@code "\r"}, {@code "\n"}, or {@code "\r\n"}.
 	 *
 	 * <p>Defaults to {@code "\n"}.
 	 */
 	String lineSeparator() default "\n";
+
+	/**
+	 * The quote character to use for <em>quoted strings</em>.
+	 *
+	 * <p>Defaults to a double quote ({@code "}).
+	 *
+	 * <p>You may change the quote character to anything that makes sense for
+	 * your use case.
+	 *
+	 * @since 5.8.2
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8.2")
+	char quoteCharacter() default '"';
 
 	/**
 	 * The column delimiter character to use when reading the CSV files.
@@ -135,7 +172,7 @@ public @interface CsvFileSource {
 	String[] nullValues() default {};
 
 	/**
-	 * The maximum characters of per CSV column allowed.
+	 * The maximum number of characters allowed per CSV column.
 	 *
 	 * <p>Must be a positive number.
 	 *
@@ -147,8 +184,8 @@ public @interface CsvFileSource {
 	int maxCharsPerColumn() default 4096;
 
 	/**
-	 * Identifies whether leading and trailing whitespace characters of
-	 * unquoted CSV columns should be ignored.
+	 * Controls whether leading and trailing whitespace characters of unquoted
+	 * CSV columns should be ignored.
 	 *
 	 * <p>Defaults to {@code true}.
 	 *
@@ -156,4 +193,5 @@ public @interface CsvFileSource {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8")
 	boolean ignoreLeadingAndTrailingWhitespace() default true;
+
 }

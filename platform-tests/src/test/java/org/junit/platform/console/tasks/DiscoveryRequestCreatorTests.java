@@ -15,6 +15,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
 import java.io.File;
 import java.net.URI;
@@ -34,6 +42,7 @@ import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.FileSelector;
+import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.discovery.PackageSelector;
@@ -92,7 +101,7 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void doesNotSupportScanClasspathAndExplicitSelectors() {
 		options.setScanClasspath(true);
-		options.setSelectedClasses(List.of("SomeTest"));
+		options.setSelectedClasses(List.of(selectClass("SomeTest")));
 
 		Throwable cause = assertThrows(PreconditionViolationException.class, this::convert);
 
@@ -125,8 +134,9 @@ class DiscoveryRequestCreatorTests {
 
 	@Test
 	void includeSelectedClassesAndMethodsRegardlessOfClassNamePatterns() {
-		options.setSelectedClasses(List.of("SomeTest"));
-		options.setSelectedMethods(List.of("com.acme.Foo#m()"));
+		options.setSelectedClasses(List.of(selectClass("SomeTest")));
+		options.setSelectedMethods(List.of(selectMethod("com.acme.Foo#m()")));
+		options.setSelectedIterations(List.of(selectIteration(selectMethod("com.acme.Bar#n()"), 0)));
 		options.setIncludedClassNamePatterns(List.of("Foo.*Bar"));
 
 		var request = convert();
@@ -135,6 +145,7 @@ class DiscoveryRequestCreatorTests {
 		assertThat(filters).hasSize(1);
 		assertIncludes(filters.get(0), "SomeTest");
 		assertIncludes(filters.get(0), "com.acme.Foo");
+		assertIncludes(filters.get(0), "com.acme.Bar");
 		assertIncludes(filters.get(0), "Foo.*Bar");
 	}
 
@@ -196,8 +207,8 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	void convertsUriSelectors() {
-		options.setSelectedUris(List.of(URI.create("a"), URI.create("b")));
+	void propagatesUriSelectors() {
+		options.setSelectedUris(List.of(selectUri("a"), selectUri("b")));
 
 		var request = convert();
 		var uriSelectors = request.getSelectorsByType(UriSelector.class);
@@ -206,8 +217,8 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	void convertsFileSelectors() {
-		options.setSelectedFiles(List.of("foo.txt", "bar.csv"));
+	void propagatesFileSelectors() {
+		options.setSelectedFiles(List.of(selectFile("foo.txt"), selectFile("bar.csv")));
 
 		var request = convert();
 		var fileSelectors = request.getSelectorsByType(FileSelector.class);
@@ -216,8 +227,8 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	void convertsDirectorySelectors() {
-		options.setSelectedDirectories(List.of("foo/bar", "bar/qux"));
+	void propagatesDirectorySelectors() {
+		options.setSelectedDirectories(List.of(selectDirectory("foo/bar"), selectDirectory("bar/qux")));
 
 		var request = convert();
 		var directorySelectors = request.getSelectorsByType(DirectorySelector.class);
@@ -226,8 +237,8 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	void convertsPackageSelectors() {
-		options.setSelectedPackages(List.of("com.acme.foo", "com.example.bar"));
+	void propagatesPackageSelectors() {
+		options.setSelectedPackages(List.of(selectPackage("com.acme.foo"), selectPackage("com.example.bar")));
 
 		var request = convert();
 		var packageSelectors = request.getSelectorsByType(PackageSelector.class);
@@ -237,8 +248,8 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	void convertsClassSelectors() {
-		options.setSelectedClasses(List.of("com.acme.Foo", "com.example.Bar"));
+	void propagatesClassSelectors() {
+		options.setSelectedClasses(List.of(selectClass("com.acme.Foo"), selectClass("com.example.Bar")));
 
 		var request = convert();
 		var classSelectors = request.getSelectorsByType(ClassSelector.class);
@@ -248,8 +259,9 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	void convertsMethodSelectors() {
-		options.setSelectedMethods(List.of("com.acme.Foo#m()", "com.example.Bar#method(java.lang.Object)"));
+	void propagatesMethodSelectors() {
+		options.setSelectedMethods(
+			List.of(selectMethod("com.acme.Foo#m()"), selectMethod("com.example.Bar#method(java.lang.Object)")));
 
 		var request = convert();
 		var methodSelectors = request.getSelectorsByType(MethodSelector.class);
@@ -264,14 +276,31 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	void convertsClasspathResourceSelectors() {
-		options.setSelectedClasspathResources(List.of("foo.csv", "com/example/bar.json"));
+	void propagatesClasspathResourceSelectors() {
+		options.setSelectedClasspathResources(
+			List.of(selectClasspathResource("foo.csv"), selectClasspathResource("com/example/bar.json")));
 
 		var request = convert();
 		var classpathResourceSelectors = request.getSelectorsByType(ClasspathResourceSelector.class);
 
 		assertThat(classpathResourceSelectors).extracting(
 			ClasspathResourceSelector::getClasspathResourceName).containsExactly("foo.csv", "com/example/bar.json");
+	}
+
+	@Test
+	void propagatesIterationSelectors() {
+		var methodSelector = selectMethod("com.acme.Foo#m()");
+		var classSelector = selectClass("com.example.Bar");
+		options.setSelectedIterations(List.of(selectIteration(methodSelector, 1), selectIteration(classSelector, 2)));
+
+		var request = convert();
+		var iterationSelectors = request.getSelectorsByType(IterationSelector.class);
+
+		assertThat(iterationSelectors).hasSize(2);
+		assertThat(iterationSelectors.get(0).getParentSelector()).isEqualTo(methodSelector);
+		assertThat(iterationSelectors.get(0).getIterationIndices()).containsExactly(1);
+		assertThat(iterationSelectors.get(1).getParentSelector()).isEqualTo(classSelector);
+		assertThat(iterationSelectors.get(1).getIterationIndices()).containsExactly(2);
 	}
 
 	@Test

@@ -1,10 +1,10 @@
-import aQute.bnd.gradle.BundleTaskConvention
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 
 plugins {
 	`kotlin-library-conventions`
 	`testing-conventions`
 	groovy
+	`java-test-fixtures`
 }
 
 description = "JUnit Jupiter Engine"
@@ -24,22 +24,29 @@ dependencies {
 	testImplementation(libs.junit4)
 	testImplementation(libs.kotlinx.coroutines)
 	testImplementation(libs.groovy4)
+
+	osgiVerification(projects.junitPlatformLauncher)
 }
 
 tasks {
 	test {
 		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
+		systemProperty("developmentVersion", version)
 	}
 }
 
 tasks {
 	jar {
-		withConvention(BundleTaskConvention::class) {
+		bundle {
 			bnd("""
 				Provide-Capability:\
 					org.junit.platform.engine;\
 						org.junit.platform.engine='junit-jupiter';\
 						version:Version="${'$'}{version_cleanup;${project.version}}"
+				Require-Capability:\
+					org.junit.platform.launcher;\
+						filter:='(&(org.junit.platform.launcher=junit-platform-launcher)(version>=${'$'}{version_cleanup;${rootProject.property("platformVersion")!!}})(!(version>=${'$'}{versionmask;+;${'$'}{version_cleanup;${rootProject.property("platformVersion")!!}}})))';\
+						effective:=active
 			""")
 		}
 	}

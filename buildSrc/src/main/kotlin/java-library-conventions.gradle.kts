@@ -6,7 +6,8 @@ plugins {
 	eclipse
 	idea
 	checkstyle
-	id("java-toolchain-conventions")
+	id("base-conventions")
+	id("jacoco-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
@@ -57,11 +58,6 @@ if (project in mavenizedProjects) {
 			(this as StandardJavadocDocletOptions).apply {
 				addBooleanOption("Xdoclint:html,syntax", true)
 				addBooleanOption("html5", true)
-				// Javadoc 13 removed support for `--no-module-directories`
-				// https://bugs.openjdk.java.net/browse/JDK-8215580
-				if (javaVersion.isJava12 && executable == null) {
-					addBooleanOption("-no-module-directories", true)
-				}
 				addMultilineStringsOption("tag").value = listOf(
 						"apiNote:a:API Note:",
 						"implNote:a:Implementation Note:"
@@ -117,6 +113,13 @@ if (project in mavenizedProjects) {
 			enabled = false
 		}
 	}
+}
+
+tasks.withType<AbstractArchiveTask>().configureEach {
+	isPreserveFileTimestamps = false
+	isReproducibleFileOrder = true
+	dirMode = Integer.parseInt("0755", 8)
+	fileMode = Integer.parseInt("0644", 8)
 }
 
 normalization {
@@ -298,8 +301,7 @@ afterEvaluate {
 }
 
 checkstyle {
-	val libs = project.extensions["libs"] as VersionCatalog
-	toolVersion = libs.findVersion("checkstyle").get().requiredVersion
+	toolVersion = requiredVersionFromLibs("checkstyle")
 	configDirectory.set(rootProject.file("src/checkstyle"))
 }
 

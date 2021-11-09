@@ -10,5 +10,6 @@ dependencies {
 
 	compileOnlyApi(libs.apiguardian)
 
-	osgiVerification(projects.junitPlatformCommons)
+	osgiVerification(projects.junitJupiterEngine)
+	osgiVerification(projects.junitPlatformLauncher)
 }

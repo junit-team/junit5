@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.condition;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Locale;
@@ -77,6 +78,16 @@ public enum OS {
 	private static final Logger logger = LoggerFactory.getLogger(OS.class);
 
 	private static final OS CURRENT_OS = determineCurrentOs();
+
+	/**
+	 * Get the current operating system.
+	 *
+	 * @since 5.9
+	 */
+	@API(status = EXPERIMENTAL, since = "5.9")
+	public static OS current() {
+		return CURRENT_OS;
+	}
 
 	private static OS determineCurrentOs() {
 		return parse(System.getProperty("os.name"));

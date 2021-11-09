@@ -32,6 +32,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
@@ -273,6 +274,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 			DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME, "afterEach()", //
 			DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME, "afterAll()" //
 		).entrySet().stream().map(entry -> dynamicTest("uses " + entry.getKey() + " config param", () -> {
+			PlainTestCase.slowMethod = entry.getValue();
 			EngineExecutionResults results = executeTests(request() //
 					.selectors(selectClass(PlainTestCase.class)) //
 					.configurationParameter(entry.getKey(), "1ns") //
@@ -437,40 +439,49 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	static class PlainTestCase {
+
+		public static String slowMethod;
+
 		@BeforeAll
 		static void beforeAll() throws Exception {
-			Thread.sleep(10);
+			waitForInterrupt("beforeAll()");
 		}
 
 		@BeforeEach
 		void beforeEach() throws Exception {
-			Thread.sleep(10);
+			waitForInterrupt("beforeEach()");
 		}
 
 		@Test
 		void test() throws Exception {
-			Thread.sleep(10);
+			waitForInterrupt("test()");
 		}
 
 		@RepeatedTest(2)
 		void testTemplate() throws Exception {
-			Thread.sleep(10);
+			waitForInterrupt("testTemplate()");
 		}
 
 		@TestFactory
 		Stream<DynamicTest> testFactory() throws Exception {
-			Thread.sleep(10);
+			waitForInterrupt("testFactory()");
 			return Stream.empty();
 		}
 
 		@AfterEach
 		void afterEach() throws Exception {
-			Thread.sleep(10);
+			waitForInterrupt("afterEach()");
 		}
 
 		@AfterAll
 		static void afterAll() throws Exception {
-			Thread.sleep(10);
+			waitForInterrupt("afterAll()");
+		}
+
+		private static void waitForInterrupt(String methodName) throws InterruptedException {
+			if (methodName.equals(slowMethod)) {
+				new CountDownLatch(1).await();
+			}
 		}
 	}
 

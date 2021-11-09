@@ -21,7 +21,6 @@ platformVersion=$platformVersion
 repositories {
 	maven { url = uri(file(System.getProperty("maven.repo"))) }
 	mavenCentral()
-	maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 dependencies {

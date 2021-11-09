@@ -17,9 +17,8 @@ import org.apiguardian.api.API;
 /**
  * A lock for a one or more resources.
  *
- * @see HierarchicalTestExecutorService.TestTask#getResourceLock()
- *
  * @since 1.3
+ * @see HierarchicalTestExecutorService.TestTask#getResourceLock()
  */
 @API(status = EXPERIMENTAL, since = "1.3")
 public interface ResourceLock extends AutoCloseable {

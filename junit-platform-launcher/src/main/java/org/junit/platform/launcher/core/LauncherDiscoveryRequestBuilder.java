@@ -208,9 +208,9 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @param configurationParameters the parent instance to be used for looking
 	 * up configuration parameters that have not been explicitly configured;
 	 * never {@code null}
+	 * @since 1.8
 	 * @see #configurationParameter(String, String)
 	 * @see #configurationParameters(Map)
-	 * @since 1.8
 	 */
 	@API(status = EXPERIMENTAL, since = "1.8")
 	public LauncherDiscoveryRequestBuilder parentConfigurationParameters(
@@ -232,10 +232,10 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @param listeners the {@code LauncherDiscoveryListeners} to add; never
 	 * {@code null}
 	 * @return this builder for method chaining
+	 * @since 1.6
 	 * @see LauncherDiscoveryListener
 	 * @see LauncherDiscoveryListeners
 	 * @see LauncherDiscoveryRequestBuilder#DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME
-	 * @since 1.6
 	 */
 	@API(status = EXPERIMENTAL, since = "1.6")
 	public LauncherDiscoveryRequestBuilder listeners(LauncherDiscoveryListener... listeners) {
@@ -254,9 +254,9 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * Passing {@code false} to this method, disables the latter two sources so
 	 * that only explicit configuration parameters are taken into account.
 	 *
+	 * @since 1.7
 	 * @see #configurationParameter(String, String)
 	 * @see #configurationParameters(Map)
-	 * @since 1.7
 	 */
 	@API(status = EXPERIMENTAL, since = "1.7")
 	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {

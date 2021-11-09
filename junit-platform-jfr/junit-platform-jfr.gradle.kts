@@ -9,10 +9,12 @@ dependencies {
 	api(projects.junitPlatformLauncher)
 
 	compileOnlyApi(libs.apiguardian)
+
+	osgiVerification(projects.junitJupiterEngine)
+	osgiVerification(projects.junitPlatformLauncher)
 }
 
 javaLibrary {
-	mainJavaVersion = JavaVersion.VERSION_1_8
 	configureRelease = false
 }
 

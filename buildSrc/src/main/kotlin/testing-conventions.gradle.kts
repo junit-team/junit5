@@ -46,13 +46,12 @@ tasks.withType<Test>().configureEach {
 		)
 	}
 	// Track OS as input so that tests are executed on all configured operating systems on CI
-	inputs.property("os", OperatingSystem.current().familyName)
+	trackOperationSystemAsInput()
 }
 
 dependencies {
-	val libs = project.extensions["libs"] as VersionCatalog
-	"testImplementation"(libs.findDependency("assertj").get())
-	"testImplementation"(libs.findDependency("mockito").get())
+	"testImplementation"(dependencyFromLibs("assertj"))
+	"testImplementation"(dependencyFromLibs("mockito"))
 
 	if (!project.name.startsWith("junit-jupiter")) {
 		"testImplementation"(project(":junit-jupiter"))
@@ -62,5 +61,5 @@ dependencies {
 	"testRuntimeOnly"(project(":junit-platform-engine"))
 	"testRuntimeOnly"(project(":junit-platform-jfr"))
 
-	"testRuntimeOnly"(libs.findBundle("log4j").get())
+	"testRuntimeOnly"(bundleFromLibs("log4j"))
 }

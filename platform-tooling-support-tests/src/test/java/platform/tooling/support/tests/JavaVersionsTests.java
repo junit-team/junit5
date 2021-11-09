@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.List;
 
 import de.sormuras.bartholdy.tool.Java;
@@ -54,8 +54,8 @@ class JavaVersionsTests {
 				.setProject("java-versions") //
 				.setWorkspace("java-versions-" + version) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("--debug", "--batch-mode", "verify") //
-				.setTimeout(Duration.ofMinutes(2)) //
+				.addArguments("--update-snapshots", "--batch-mode", "verify") //
+				.setTimeout(TOOL_TIMEOUT) //
 				.setJavaHome(javaHome) //
 				.build().run();
 		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);

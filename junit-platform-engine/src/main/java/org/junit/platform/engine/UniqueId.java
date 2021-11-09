@@ -83,9 +83,13 @@ public class UniqueId implements Cloneable, Serializable {
 	}
 
 	private final UniqueIdFormat uniqueIdFormat;
+
+	@SuppressWarnings({ "serial", "RedundantSuppression" }) // always used with serializable implementation (singletonList() or ArrayList)
 	private final List<Segment> segments;
+
 	// lazily computed
 	private transient int hashCode;
+
 	// lazily computed
 	private transient SoftReference<String> toString;
 
@@ -203,9 +207,9 @@ public class UniqueId implements Cloneable, Serializable {
 	 *
 	 * <p>This {@code UniqueId} will not be modified.
 	 *
+	 * @return a new {@code UniqueId}; never {@code null}
 	 * @throws org.junit.platform.commons.PreconditionViolationException
 	 * if this {@code UniqueId} contains a single segment
-	 * @return a new {@code UniqueId}; never {@code null}
 	 * @since 1.5
 	 */
 	@API(status = STABLE, since = "1.5")

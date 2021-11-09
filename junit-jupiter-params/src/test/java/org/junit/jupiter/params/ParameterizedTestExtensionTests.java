@@ -103,8 +103,9 @@ class ParameterizedTestExtensionTests {
 				invocations.incrementAndGet();
 				return Optional.of("");
 			}
-			else
+			else {
 				return Optional.empty();
+			}
 		};
 		var extensionContext = getExtensionContextReturningSingleMethod(new DefaultDisplayNameProviderTestCase(),
 			configurationSupplier);

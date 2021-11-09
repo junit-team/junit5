@@ -696,4 +696,22 @@ public final class DiscoverySelectors {
 		return new UniqueIdSelector(UniqueId.parse(uniqueId));
 	}
 
+	/**
+	 * Create an {@code IterationSelector} for the supplied parent selector and
+	 * iteration indices.
+	 *
+	 * @param parentSelector the parent selector to select iterations for; never
+	 * {@code null}
+	 * @param iterationIndices the iteration indices to select; never
+	 * {@code null} or empty
+	 * @since 1.9
+	 * @see IterationSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.9")
+	public static IterationSelector selectIteration(DiscoverySelector parentSelector, int... iterationIndices) {
+		Preconditions.notNull(parentSelector, "Parent selector must not be null");
+		Preconditions.notEmpty(iterationIndices, "iteration indices must not be empty");
+		return new IterationSelector(parentSelector, iterationIndices);
+	}
+
 }

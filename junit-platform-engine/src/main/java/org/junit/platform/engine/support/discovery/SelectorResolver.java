@@ -29,6 +29,7 @@ import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.FileSelector;
+import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.NestedClassSelector;
@@ -299,6 +300,26 @@ public interface SelectorResolver {
 	}
 
 	/**
+	 * Resolve the supplied {@link IterationSelector} using the supplied
+	 * {@link Context Context}.
+	 *
+	 * <p>The default implementation delegates to {@link
+	 * #resolve(DiscoverySelector, Context)}.
+	 *
+	 * @param selector the selector to be resolved; never {@code null}
+	 * @param context the context to be used for resolving the selector; never
+	 * {@code null}
+	 * @return a {@link Resolution Resolution} of {@link Resolution#unresolved()
+	 * unresolved()}, {@link Resolution#selectors(Set) selectors()}, or {@link
+	 * Resolution#matches(Set) matches()}; never {@code null}
+	 * @see #resolve(DiscoverySelector, Context)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.9")
+	default Resolution resolve(IterationSelector selector, Context context) {
+		return resolve((DiscoverySelector) selector, context);
+	}
+
+	/**
 	 * Resolve the supplied {@link DiscoverySelector} using the supplied
 	 * {@link Context Context}.
 	 *
@@ -331,8 +352,8 @@ public interface SelectorResolver {
 	 * adding a filter and returning a {@linkplain Match#partial(TestDescriptor)
 	 * partial match}).
 	 *
-	 * @see SelectorResolver
 	 * @since 1.5
+	 * @see SelectorResolver
 	 */
 	@API(status = EXPERIMENTAL, since = "1.5")
 	interface Context {
@@ -422,8 +443,8 @@ public interface SelectorResolver {
 	 * {@linkplain #match match} or multiple {@linkplain #matches}, or a set of
 	 * {@linkplain #selectors selectors}.
 	 *
-	 * @see SelectorResolver
 	 * @since 1.5
+	 * @see SelectorResolver
 	 */
 	@API(status = EXPERIMENTAL, since = "1.5")
 	class Resolution {
@@ -540,10 +561,10 @@ public interface SelectorResolver {
 	 * TestDescriptor} with the same {@linkplain TestDescriptor#getUniqueId()
 	 * unique ID}.
 	 *
+	 * @since 1.5
 	 * @see SelectorResolver
 	 * @see Resolution#match(Match)
 	 * @see Resolution#matches(Set)
-	 * @since 1.5
 	 */
 	@API(status = EXPERIMENTAL, since = "1.5")
 	class Match {

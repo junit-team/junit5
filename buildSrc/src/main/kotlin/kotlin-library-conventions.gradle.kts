@@ -7,9 +7,21 @@ plugins {
 
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
-		jvmTarget = "1.8"
 		apiVersion = "1.3"
 		languageVersion = "1.3"
 		allWarningsAsErrors = false
+	}
+}
+
+afterEvaluate {
+	val extension = project.the<JavaLibraryExtension>()
+	tasks {
+		withType<KotlinCompile>().configureEach {
+			kotlinOptions.jvmTarget = extension.mainJavaVersion.toString()
+		}
+		named<KotlinCompile>("compileTestKotlin") {
+			// The Kotlin compiler does not yet support JDK 17 and later (see https://kotlinlang.org/docs/compiler-reference.html#jvm-target-version)
+			kotlinOptions.jvmTarget = minOf(JavaVersion.VERSION_16, extension.testJavaVersion).toString()
+		}
 	}
 }

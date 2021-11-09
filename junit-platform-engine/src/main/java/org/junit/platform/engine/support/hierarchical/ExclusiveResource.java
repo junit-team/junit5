@@ -24,8 +24,8 @@ import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
  * An exclusive resource identified by a key with a lock mode that is used to
  * synchronize access to shared resources when executing nodes in parallel.
  *
- * @see Node#getExecutionMode()
  * @since 1.3
+ * @see Node#getExecutionMode()
  */
 @API(status = EXPERIMENTAL, since = "1.3")
 public class ExclusiveResource {

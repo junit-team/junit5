@@ -44,9 +44,9 @@ import org.junit.platform.engine.support.discovery.SelectorResolver.Resolution;
  * {@link org.junit.platform.engine.DiscoverySelector DiscoverySelectors}.
  *
  * @param <T> the type of the engine's descriptor
+ * @since 1.5
  * @see #builder()
  * @see #resolve(EngineDiscoveryRequest, TestDescriptor)
- * @since 1.5
  */
 @API(status = EXPERIMENTAL, since = "1.5")
 public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {

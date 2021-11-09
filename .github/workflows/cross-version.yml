@@ -10,6 +10,7 @@ on:
       - '*'
 
 env:
+  ORG_GRADLE_PROJECT_enableTestDistribution: true
   ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
   ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
@@ -18,21 +19,16 @@ jobs:
   openjdk:
     strategy:
       matrix:
-        jdk: [17, 18]
+        jdk: [18]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out repository
+        uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      - name: Set up JDK 8
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '8'
-      - name: Prepare JDK8 env var
-        shell: bash
-        run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
+      - name: Set up Test JDK
+        uses: ./.github/actions/setup-test-jdk
       - name: 'Download JDK ${{ matrix.jdk }}'
         id: download-jdk
         uses: sormuras/download-jdk@v1
@@ -47,19 +43,13 @@ jobs:
       - name: 'Prepare JDK${{ matrix.jdk }} env var'
         shell: bash
         run: echo "JDK${{ matrix.jdk }}=$JAVA_HOME" >> $GITHUB_ENV
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
+      - name: Build
+        uses: ./.github/actions/run-gradle
         with:
-          distribution: 'temurin'
-          java-version: '11'
-          cache: 'gradle'
-      - name: Test
-        env:
-          ORG_GRADLE_PROJECT_enableTestDistribution: true
-        run: |
-          ./gradlew --version
-          ./gradlew javaToolchains -Porg.gradle.java.installations.auto-download=false
-          ./gradlew --no-parallel -Dplatform.tooling.support.tests.enabled=true -PjavaToolchainVersion=${{ matrix.jdk }} -Porg.gradle.java.installations.auto-download=false build "-Dscan.tag.JDK_${{ matrix.jdk }}"
+          arguments: |
+            -PjavaToolchainVersion=${{ matrix.jdk }}
+            -Dscan.tag.JDK_${{ matrix.jdk }}
+            build
       - name: Upload Test Distribution trace files
         uses: actions/upload-artifact@v2
         with:

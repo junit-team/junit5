@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_CONTAINER_SEGMENT_TYPE;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -67,7 +68,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(12);
+		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(13);
 	}
 
 	@Test
@@ -161,6 +162,49 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 			event(test("dynamic-test:#2", "failingTest"), started()), //
 			event(test("dynamic-test:#2", "failingTest"), finishedWithFailure(message("failing"))), //
 			event(container("dynamicStream"), finishedSuccessfully()), //
+			event(container(MyDynamicTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void singleDynamicTestIsExecutedWhenDiscoveredByIterationIndex() {
+		var methodSelector = selectMethod(MyDynamicTestCase.class, "dynamicStream");
+
+		EngineExecutionResults executionResults = executeTests(selectIteration(methodSelector, 1));
+
+		executionResults.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(MyDynamicTestCase.class), started()), //
+			event(container("dynamicStream"), started()), //
+			event(dynamicTestRegistered("dynamic-test:#2")), //
+			event(test("dynamic-test:#2", "failingTest"), started()), //
+			event(test("dynamic-test:#2", "failingTest"), finishedWithFailure(message("failing"))), //
+			event(container("dynamicStream"), finishedSuccessfully()), //
+			event(container(MyDynamicTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void multipleDynamicTestsAreExecutedWhenDiscoveredByIterationIndexAndUniqueId() {
+		UniqueId uniqueId = discoverUniqueId(MyDynamicTestCase.class, "threeTests") //
+				.append(DYNAMIC_TEST_SEGMENT_TYPE, "#3");
+
+		var methodSelector = selectMethod(MyDynamicTestCase.class, "threeTests");
+
+		EngineExecutionResults executionResults = executeTests(selectIteration(methodSelector, 1),
+			selectUniqueId(uniqueId));
+
+		executionResults.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(MyDynamicTestCase.class), started()), //
+			event(container("threeTests"), started()), //
+			event(dynamicTestRegistered("dynamic-test:#2")), //
+			event(test("dynamic-test:#2", "two"), started()), //
+			event(test("dynamic-test:#2", "two"), finishedSuccessfully()), //
+			event(dynamicTestRegistered("dynamic-test:#3")), //
+			event(test("dynamic-test:#3", "three"), started()), //
+			event(test("dynamic-test:#3", "three"), finishedSuccessfully()), //
+			event(container("threeTests"), finishedSuccessfully()), //
 			event(container(MyDynamicTestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -473,6 +517,15 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 		@TestFactory
 		DynamicNode singleTest() {
 			return dynamicTest("succeedingTest", () -> assertTrue(true));
+		}
+
+		@TestFactory
+		Stream<DynamicNode> threeTests() {
+			return Stream.of( //
+				dynamicTest("one", () -> assertTrue(true)), //
+				dynamicTest("two", () -> assertTrue(true)), //
+				dynamicTest("three", () -> assertTrue(true)) //
+			);
 		}
 
 	}

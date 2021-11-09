@@ -33,8 +33,8 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * A {@link LauncherDiscoveryListener} that generates Java Flight Recorder
  * events.
  *
- * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
  * @since 1.8
+ * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
  */
 @API(status = EXPERIMENTAL, since = "1.8")
 public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {

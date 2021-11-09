@@ -66,6 +66,19 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
+	void providesArgumentsWithCustomQuoteCharacter() {
+		var annotation = csvFileSource()//
+				.resources("test.csv")//
+				.quoteCharacter('\'')//
+				.build();
+
+		var arguments = provideArguments(annotation, "foo, 'bar \"and\" baz', qux \n 'lemon lime', banana, apple");
+
+		assertThat(arguments).containsExactly(array("foo", "bar \"and\" baz", "qux"),
+			array("lemon lime", "banana", "apple"));
+	}
+
+	@Test
 	void providesArgumentsWithStringDelimiter() {
 		var annotation = csvFileSource()//
 				.resources("test.csv")//

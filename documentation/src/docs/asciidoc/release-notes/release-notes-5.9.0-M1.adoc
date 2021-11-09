@@ -1,16 +1,16 @@
-[[release-notes-5.9.0-M1️]]
-== 5.9.0-M1️
+[[release-notes-5.9.0-M1]]
+== 5.9.0-M1
 
 *Date of Release:* ❓
 
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/5.9.0-M1️?closed=1+[5.9 M1️] milestone page in the JUnit repository on
-GitHub.
+link:{junit5-repo}+/milestone/58?closed=1+[5.9 M1] milestone page in the JUnit repository
+on GitHub.
 
 
-[[release-notes-5.9.0-M1️-junit-platform]]
+[[release-notes-5.9.0-M1-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
@@ -25,9 +25,11 @@ GitHub.
 
 * `ConfigurationParameters` has now a `keySet()` method allowing to retrieve
   all configuration parameter keys.
+* New `IterationSelector` for selecting a subset of a test's or container's iterations.
+* JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at resolution time a fully running set of dependencies are calculated avoiding the need for these to be manually specified.
 
 
-[[release-notes-5.9.0-M1️-junit-jupiter]]
+[[release-notes-5.9.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
@@ -40,10 +42,13 @@ GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Add support for `IterationSelector` to select a subset of the invocations of
+  parameterized or dynamic tests.
+* Add support for `MATCH_NONE` mode in `EnumSource` that selects only those enum constants
+  whose names match none of the supplied patterns.
 
 
-[[release-notes-5.9.0-M1️-junit-vintage]]
+[[release-notes-5.9.0-M1-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes

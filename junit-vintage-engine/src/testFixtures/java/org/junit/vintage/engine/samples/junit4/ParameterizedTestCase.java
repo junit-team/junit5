@@ -27,7 +27,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class ParameterizedTestCase {
 
 	@Parameters(name = "{0}")
-	public static Iterable<String> primes() {
+	public static Iterable<String> parameters() {
 		return List.of("foo", "bar");
 	}
 

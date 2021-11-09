@@ -33,10 +33,10 @@ import org.junit.platform.engine.UniqueId;
  * created via the {@link org.junit.platform.launcher.core.LauncherFactory}
  * during test discovery.
  *
+ * @since 1.6
  * @see org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners
  * @see LauncherDiscoveryRequest#getDiscoveryListener()
  * @see org.junit.platform.launcher.core.LauncherConfig.Builder#addLauncherDiscoveryListeners
- * @since 1.6
  */
 @API(status = EXPERIMENTAL, since = "1.6")
 public interface LauncherDiscoveryListener extends EngineDiscoveryListener {

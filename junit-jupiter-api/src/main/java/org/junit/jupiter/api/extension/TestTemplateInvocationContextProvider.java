@@ -46,9 +46,9 @@ import org.apiguardian.api.API;
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.
  *
+ * @since 5.0
  * @see org.junit.jupiter.api.TestTemplate
  * @see TestTemplateInvocationContext
- * @since 5.0
  */
 @API(status = STABLE, since = "5.0")
 public interface TestTemplateInvocationContextProvider extends Extension {

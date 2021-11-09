@@ -24,22 +24,19 @@ class CsvParserFactory {
 
 	private static final String DEFAULT_DELIMITER = ",";
 	private static final String LINE_SEPARATOR = "\n";
-	private static final char SINGLE_QUOTE = '\'';
-	private static final char DOUBLE_QUOTE = '"';
 	private static final char EMPTY_CHAR = '\0';
-	private static final boolean COMMENT_PROCESSING_FOR_CSV_SOURCE = false;
 	private static final boolean COMMENT_PROCESSING_FOR_CSV_FILE_SOURCE = true;
 
 	static CsvParser createParserFor(CsvSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
-		return createParser(delimiter, LINE_SEPARATOR, SINGLE_QUOTE, annotation.emptyValue(),
-			annotation.maxCharsPerColumn(), COMMENT_PROCESSING_FOR_CSV_SOURCE,
-			annotation.ignoreLeadingAndTrailingWhitespace());
+		boolean commentProcessingEnabled = !annotation.textBlock().isEmpty();
+		return createParser(delimiter, LINE_SEPARATOR, annotation.quoteCharacter(), annotation.emptyValue(),
+			annotation.maxCharsPerColumn(), commentProcessingEnabled, annotation.ignoreLeadingAndTrailingWhitespace());
 	}
 
 	static CsvParser createParserFor(CsvFileSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
-		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue(),
+		return createParser(delimiter, annotation.lineSeparator(), annotation.quoteCharacter(), annotation.emptyValue(),
 			annotation.maxCharsPerColumn(), COMMENT_PROCESSING_FOR_CSV_FILE_SOURCE,
 			annotation.ignoreLeadingAndTrailingWhitespace());
 	}

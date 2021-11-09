@@ -26,8 +26,8 @@ import org.apiguardian.api.API;
  * each {@link TestEngine} during test discovery. However, since this interface
  * was only added in 1.6, older engines might not yet do so.
  *
- * @see EngineDiscoveryRequest#getDiscoveryListener()
  * @since 1.6
+ * @see EngineDiscoveryRequest#getDiscoveryListener()
  */
 @API(status = EXPERIMENTAL, since = "1.6")
 public interface EngineDiscoveryListener {

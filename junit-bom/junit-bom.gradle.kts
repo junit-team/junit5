@@ -1,6 +1,5 @@
 plugins {
 	`java-platform`
-	`java-toolchain-conventions`
 	`publishing-conventions`
 }
 

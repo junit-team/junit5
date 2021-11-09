@@ -13,8 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.Duration;
+import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
@@ -36,8 +35,8 @@ class GradleKotlinExtensionsTests {
 				.setTool(new GradleWrapper(Request.PROJECTS.resolve("gradle-kotlin-extensions"))) //
 				.setProject("gradle-kotlin-extensions") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
-				.setTimeout(Duration.ofMinutes(2)) //
+				.addArguments("build", "--no-daemon", "--stacktrace") //
+				.setTimeout(TOOL_TIMEOUT) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //
 				.run();

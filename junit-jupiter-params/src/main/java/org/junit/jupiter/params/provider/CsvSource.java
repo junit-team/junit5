@@ -23,14 +23,40 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @CsvSource} is an {@link ArgumentsSource} which reads comma-separated
- * values (CSV) from one or more CSV lines supplied via the {@link #value}
+ * values (CSV) from one or more CSV records supplied via the {@link #value}
  * attribute or {@link #textBlock} attribute.
  *
- * <p>The column delimiter (defaults to comma) can be customized with either
- * {@link #delimiter()} or {@link #delimiterString()}.
+ * <p>The supplied values will be provided as arguments to the annotated
+ * {@code @ParameterizedTest} method.
  *
- * <p>The supplied values will be provided as arguments to the
- * annotated {@code @ParameterizedTest} method.
+ * <p>The column delimiter (which defaults to a comma ({@code ,})) can be customized
+ * via either {@link #delimiter} or {@link #delimiterString}.
+ *
+ * <p>By default, {@code @CsvSource} uses a single quote ({@code '}) as its quote
+ * character, but this can be changed via {@link #quoteCharacter}. See the
+ * {@code 'lemon, lime'} examples in the documentation for the {@link #value}
+ * and {@link #textBlock} attributes. An empty, quoted value ({@code ''}) results
+ * in an empty {@link String} unless the {@link #emptyValue} attribute is set;
+ * whereas, an entirely <em>empty</em> value is interpreted as a {@code null} reference.
+ * By specifying one or more {@link #nullValues} a custom value can be interpreted
+ * as a {@code null} reference (see the User Guide for an example). An
+ * {@link org.junit.jupiter.params.converter.ArgumentConversionException
+ * ArgumentConversionException} is thrown if the target type of a {@code null}
+ * reference is a primitive type.
+ *
+ * <p>NOTE: An <em>unquoted</em> empty value will always be converted to a
+ * {@code null} reference regardless of any custom values configured via the
+ * {@link #nullValues} attribute.
+ *
+ * <p>Except within a quoted string, leading and trailing whitespace in a CSV
+ * column is trimmed by default. This behavior can be changed by setting the
+ * {@link #ignoreLeadingAndTrailingWhitespace} attribute to {@code true}.
+ *
+ * <p>In general, CSV records should not contain explicit newlines ({@code \n})
+ * unless they are placed within quoted strings. Note that CSV records supplied
+ * via {@link #textBlock} will implicitly contain newlines at the end of each
+ * physical line within the text block. Thus, if a CSV column wraps across a
+ * new line in a text block, the column must be a quoted string.
  *
  * @since 5.0
  * @see CsvFileSource
@@ -45,15 +71,13 @@ import org.apiguardian.api.API;
 public @interface CsvSource {
 
 	/**
-	 * The CSV lines to use as the source of arguments; must not be empty.
-	 *
-	 * <p>Each value corresponds to a line in a CSV file and will be split using
-	 * the specified {@link #delimiter} or {@link #delimiterString}. Any line
-	 * beginning with a {@code #} symbol will be interpreted as a comment and will
-	 * be ignored.
+	 * The CSV records to use as the source of arguments; must not be empty.
 	 *
 	 * <p>Defaults to an empty array. You therefore must supply CSV content
 	 * via this attribute or the {@link #textBlock} attribute.
+	 *
+	 * <p>Each value corresponds to a record in a CSV file and will be split using
+	 * the specified {@link #delimiter} or {@link #delimiterString}.
 	 *
 	 * <p>If <em>text block</em> syntax is supported by your programming language,
 	 * you may find it more convenient to declare your CSV content via the
@@ -66,7 +90,7 @@ public @interface CsvSource {
 	 *     "apple,         1",
 	 *     "banana,        2",
 	 *     "'lemon, lime', 0xF1",
-	 *     "strawberry,    700_000",
+	 *     "strawberry,    700_000"
 	 * })
 	 * void test(String fruit, int rank) {
 	 *     // ...
@@ -77,13 +101,8 @@ public @interface CsvSource {
 	String[] value() default {};
 
 	/**
-	 * The CSV lines to use as the source of arguments, supplied as a single
+	 * The CSV records to use as the source of arguments, supplied as a single
 	 * <em>text block</em>; must not be empty.
-	 *
-	 * <p>Each line in the text block corresponds to a line in a CSV file and will
-	 * be split using the specified {@link #delimiter} or {@link #delimiterString}.
-	 * Any line beginning with a {@code #} symbol will be interpreted as a comment
-	 * and will be ignored.
 	 *
 	 * <p>Defaults to an empty string. You therefore must supply CSV content
 	 * via this attribute or the {@link #value} attribute.
@@ -92,27 +111,63 @@ public @interface CsvSource {
 	 * including Java SE 15 or higher. If text blocks are not supported, you
 	 * should declare your CSV content via the {@link #value} attribute.
 	 *
+	 * <p>Each record in the text block corresponds to a record in a CSV file and will
+	 * be split using the specified {@link #delimiter} or {@link #delimiterString}.
+	 *
+	 * <p>In contrast to CSV records supplied via {@link #value}, a text block
+	 * can contain comments. Any line beginning with a hash tag ({@code #}) will
+	 * be treated as a comment and ignored. Note, however, that the {@code #}
+	 * symbol must be the first character on the line without any leading
+	 * whitespace. It is therefore recommended that the closing text block
+	 * delimiter {@code """} be placed either at the end of the last line of
+	 * input or on the following line, vertically aligned with the rest of the
+	 * input (as can be seen in the example below).
+	 *
+	 * <p>Java's <a href="https://docs.oracle.com/en/java/javase/15/text-blocks/index.html">text block</a>
+	 * feature automatically removes <em>incidental whitespace</em> when the code
+	 * is compiled. However other JVM languages such as Groovy and Kotlin do not.
+	 * Thus, if you are using a programming language other than Java and your text
+	 * block contains comments or new lines within quoted strings, you will need
+	 * to ensure that there is no leading whitespace within your text block.
+	 *
 	 * <h4>Example</h4>
 	 * <pre class="code">
 	 * {@literal @}ParameterizedTest
-	 * {@literal @}CsvSource(textBlock = """
+	 * {@literal @}CsvSource(quoteCharacter = '"', textBlock = """
+	 *     # FRUIT,       RANK
 	 *     apple,         1
 	 *     banana,        2
-	 *     'lemon, lime', 0xF1
+	 *     "lemon, lime", 0xF1
 	 *     strawberry,    700_000
-	 * """)
+	 *     """)
 	 * void test(String fruit, int rank) {
 	 *     // ...
 	 * }</pre>
 	 *
 	 * @since 5.8.1
 	 * @see #value
+	 * @see #quoteCharacter
 	 */
 	@API(status = EXPERIMENTAL, since = "5.8.1")
 	String textBlock() default "";
 
 	/**
-	 * The column delimiter character to use when reading the {@linkplain #value lines}.
+	 * The quote character to use for <em>quoted strings</em>.
+	 *
+	 * <p>Defaults to a single quote ({@code '}).
+	 *
+	 * <p>You may change the quote character to anything that makes sense for
+	 * your use case; however, the primary use case is to allow you to use double
+	 * quotes in {@link #textBlock}.
+	 *
+	 * @since 5.8.2
+	 * @see #textBlock
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8.2")
+	char quoteCharacter() default '\'';
+
+	/**
+	 * The column delimiter character to use when reading the {@linkplain #value records}.
 	 *
 	 * <p>This is an alternative to {@link #delimiterString} and cannot be
 	 * used in conjunction with {@link #delimiterString}.
@@ -123,7 +178,7 @@ public @interface CsvSource {
 	char delimiter() default '\0';
 
 	/**
-	 * The column delimiter string to use when reading the {@linkplain #value lines}.
+	 * The column delimiter string to use when reading the {@linkplain #value records}.
 	 *
 	 * <p>This is an alternative to {@link #delimiter} and cannot be used in
 	 * conjunction with {@link #delimiter}.
@@ -136,7 +191,7 @@ public @interface CsvSource {
 	String delimiterString() default "";
 
 	/**
-	 * The empty value to use when reading the {@linkplain #value lines}.
+	 * The empty value to use when reading the {@linkplain #value records}.
 	 *
 	 * <p>This value replaces quoted empty strings read from the input.
 	 *
@@ -164,7 +219,7 @@ public @interface CsvSource {
 	String[] nullValues() default {};
 
 	/**
-	 * The maximum characters of per CSV column allowed.
+	 * The maximum number of characters allowed per CSV column.
 	 *
 	 * <p>Must be a positive number.
 	 *
@@ -176,8 +231,8 @@ public @interface CsvSource {
 	int maxCharsPerColumn() default 4096;
 
 	/**
-	 * Identifies whether leading and trailing whitespace characters of
-	 * unquoted CSV columns should be ignored.
+	 * Controls whether leading and trailing whitespace characters of unquoted
+	 * CSV columns should be ignored.
 	 *
 	 * <p>Defaults to {@code true}.
 	 *

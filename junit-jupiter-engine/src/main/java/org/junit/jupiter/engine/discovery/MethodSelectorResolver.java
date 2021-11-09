@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -47,6 +48,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.NestedMethodSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -70,16 +72,18 @@ class MethodSelectorResolver implements SelectorResolver {
 
 	@Override
 	public Resolution resolve(MethodSelector selector, Context context) {
-		return resolve(context, emptyList(), selector.getJavaClass(), selector::getJavaMethod);
+		return resolve(context, emptyList(), selector.getJavaClass(), selector::getJavaMethod, Match::exact);
 	}
 
 	@Override
 	public Resolution resolve(NestedMethodSelector selector, Context context) {
-		return resolve(context, selector.getEnclosingClasses(), selector.getNestedClass(), selector::getMethod);
+		return resolve(context, selector.getEnclosingClasses(), selector.getNestedClass(), selector::getMethod,
+			Match::exact);
 	}
 
 	private Resolution resolve(Context context, List<Class<?>> enclosingClasses, Class<?> testClass,
-			Supplier<Method> methodSupplier) {
+			Supplier<Method> methodSupplier,
+			BiFunction<TestDescriptor, Supplier<Set<? extends DiscoverySelector>>, Match> matchFactory) {
 		if (!testClassPredicate.test(testClass)) {
 			return unresolved();
 		}
@@ -89,7 +93,7 @@ class MethodSelectorResolver implements SelectorResolver {
 				.map(methodType -> methodType.resolve(enclosingClasses, testClass, method, context, configuration))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.map(testDescriptor -> Match.exact(testDescriptor, expansionCallback(testDescriptor)))
+				.map(testDescriptor -> matchFactory.apply(testDescriptor, expansionCallback(testDescriptor)))
 				.collect(toSet());
 		// @formatter:on
 		if (matches.size() > 1) {
@@ -121,7 +125,7 @@ class MethodSelectorResolver implements SelectorResolver {
 							filterable.getDynamicDescendantFilter().allowAll();
 						}
 						else {
-							filterable.getDynamicDescendantFilter().allow(uniqueId);
+							filterable.getDynamicDescendantFilter().allowUniqueIdPrefix(uniqueId);
 						}
 					}
 					return Resolution.match(exactMatch ? Match.exact(testDescriptor) : Match.partial(testDescriptor, expansionCallback(testDescriptor)));
@@ -131,10 +135,27 @@ class MethodSelectorResolver implements SelectorResolver {
 		// @formatter:on
 	}
 
+	@Override
+	public Resolution resolve(IterationSelector selector, Context context) {
+		if (selector.getParentSelector() instanceof MethodSelector) {
+			MethodSelector methodSelector = (MethodSelector) selector.getParentSelector();
+			return resolve(context, emptyList(), methodSelector.getJavaClass(), methodSelector::getJavaMethod,
+				(testDescriptor, childSelectorsSupplier) -> {
+					if (testDescriptor instanceof Filterable) {
+						Filterable filterable = (Filterable) testDescriptor;
+						filterable.getDynamicDescendantFilter().allowIndex(selector.getIterationIndices());
+					}
+					return Match.partial(testDescriptor, childSelectorsSupplier);
+				});
+		}
+		return unresolved();
+	}
+
 	private Supplier<Set<? extends DiscoverySelector>> expansionCallback(TestDescriptor testDescriptor) {
 		return () -> {
 			if (testDescriptor instanceof Filterable) {
-				((Filterable) testDescriptor).getDynamicDescendantFilter().allowAll();
+				Filterable filterable = (Filterable) testDescriptor;
+				filterable.getDynamicDescendantFilter().allowAll();
 			}
 			return emptySet();
 		};

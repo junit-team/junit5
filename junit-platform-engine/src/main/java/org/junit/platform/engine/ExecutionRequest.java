@@ -24,8 +24,8 @@ import org.apiguardian.api.API;
  * {@link ConfigurationParameters} that the engine may use to influence test
  * execution.
  *
- * @see TestEngine
  * @since 1.0
+ * @see TestEngine
  */
 @API(status = STABLE, since = "1.0")
 public class ExecutionRequest {

@@ -15,6 +15,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +33,8 @@ import java.util.stream.Stream;
  * @since 1.3
  */
 public class Helper {
+
+	public static final Duration TOOL_TIMEOUT = Duration.ofMinutes(3);
 
 	private static final Path ROOT = Paths.get("..");
 	private static final Path GRADLE_PROPERTIES = ROOT.resolve("gradle.properties");

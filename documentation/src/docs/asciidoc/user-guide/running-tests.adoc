@@ -524,14 +524,17 @@ Jupiter tests and print test execution results to the console.
 An executable `junit-platform-console-standalone-{platform-version}.jar` with all
 dependencies included is published in the {Maven_Central} repository under the
 https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
-directory. You can https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run]
-the standalone `ConsoleLauncher` as shown below.
+directory. It includes the following dependencies:
 
-`java -jar junit-platform-console-standalone-{platform-version}.jar <<<running-tests-console-launcher-options>>>`
+include::{standaloneConsoleLauncherShadowedArtifactsFile}[]
 
-Here's an example of its output:
+You can https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run] the
+standalone `ConsoleLauncher` as shown below.
 
-....
+[source,console,subs=attributes+]
+----
+$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS>
+
 ├─ JUnit Vintage
 │  └─ example.JUnit4Tests
 │     └─ standardJUnit4Test ✔
@@ -557,7 +560,7 @@ Test run finished after 64 ms
 [         0 tests aborted         ]
 [         5 tests successful      ]
 [         0 tests failed          ]
-....
+----
 
 .Exit Code
 NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
