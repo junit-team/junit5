@@ -443,8 +443,14 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Override
+		@SuppressWarnings("deprecation")
 		public int size() {
 			return map.size();
+		}
+
+		@Override
+		public Set<String> keySet() {
+			return null;
 		}
 
 	}

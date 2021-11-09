@@ -304,6 +304,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void convertsConfigurationParameters() {
 		options.setScanClasspath(true);
 		options.setConfigurationParameters(mapOf(entry("foo", "bar"), entry("baz", "true")));

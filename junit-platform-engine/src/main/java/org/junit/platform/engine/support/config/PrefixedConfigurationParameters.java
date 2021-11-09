@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.config;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
@@ -65,8 +66,14 @@ public class PrefixedConfigurationParameters implements ConfigurationParameters 
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public int size() {
 		return delegate.size();
+	}
+
+	@Override
+	public Set<String> keySet() {
+		return delegate.keySet();
 	}
 
 }

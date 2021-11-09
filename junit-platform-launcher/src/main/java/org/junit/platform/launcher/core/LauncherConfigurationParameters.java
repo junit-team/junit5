@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -23,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -59,10 +61,17 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public int size() {
 		return providers.stream() //
 				.mapToInt(ParameterProvider::size) //
 				.sum();
+	}
+
+	@Override
+	public Set<String> keySet() {
+		return providers.stream().map(ParameterProvider::keySet).flatMap(Collection::stream).collect(
+			Collectors.toSet());
 	}
 
 	private String getProperty(String key) {
@@ -140,6 +149,8 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			return 0;
 		}
 
+		Set<String> keySet();
+
 		static ParameterProvider explicit(Map<String, String> configParams) {
 			return new ParameterProvider() {
 				@Override
@@ -150,6 +161,11 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				@Override
 				public int size() {
 					return configParams.size();
+				}
+
+				@Override
+				public Set<String> keySet() {
+					return configParams.keySet();
 				}
 
 				@Override
@@ -174,6 +190,11 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				}
 
 				@Override
+				public Set<String> keySet() {
+					return System.getProperties().stringPropertyNames();
+				}
+
+				@Override
 				public String toString() {
 					return "systemProperties [...]";
 				}
@@ -187,6 +208,11 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				@Override
 				public String getValue(String key) {
 					return properties.getProperty(key);
+				}
+
+				@Override
+				public Set<String> keySet() {
+					return properties.stringPropertyNames();
 				}
 
 				@Override
@@ -206,8 +232,14 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				}
 
 				@Override
+				@SuppressWarnings("deprecation")
 				public int size() {
 					return configParams.size();
+				}
+
+				@Override
+				public Set<String> keySet() {
+					return configParams.keySet();
 				}
 
 				@Override

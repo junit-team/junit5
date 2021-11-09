@@ -19,10 +19,12 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `ConfigurationParameters.size()` has been deprecated.
 
 ==== New Features and Improvements
 
+* `ConfigurationParameters` has now a `keySet()` method allowing to retrieve
+  all configuration parameter keys.
 * New `IterationSelector` for selecting a subset of a test's or container's iterations.
 * JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at resolution time a fully running set of dependencies are calculated avoiding the need for these to be manually specified.
 

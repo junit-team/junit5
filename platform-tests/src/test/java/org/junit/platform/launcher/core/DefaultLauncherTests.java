@@ -505,6 +505,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void withoutConfigurationParameters_LauncherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
 		var engine = new TestEngineSpy();
 
@@ -517,6 +518,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void withConfigurationParameters_LauncherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
 		var engine = new TestEngineSpy();
 
@@ -530,6 +532,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void withoutConfigurationParameters_LookupFallsBackToSystemProperty() {
 		System.setProperty(FOO, BAR);
 
