@@ -668,6 +668,7 @@ def676d8d2cca7d6b8b1d153d014f535  junit-platform-commons/src/main/java/org/junit
 df29b5b913895848399910cf0dd67862  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceLock.java
 df3754af7250b81b04ed969594e5761f  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 df73a988aed9f8db17357bcbf1068ca5  documentation/src/test/java/example/interceptor/SwingEdtInterceptor.java
+df953e8100dcb0a7c0b43f71c3bb9368  documentation/src/docs/asciidoc/user-guide/overview.adoc
 dfa1dbd55f68be77ea8d610b970c5e4b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IgnoringRunnerDecorator.java
 dfb7d17b2fcbef615feda44c8fa291f7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepetitionInfo.java
 e01e635a073b3c8980c6a90a8a310a22  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/IsPotentialTestContainer.java
@@ -707,7 +708,6 @@ ed8394139c05c16d002981004170cdff  documentation/src/docs/asciidoc/tocbot-3.0.2/t
 ee7ff61f276ebc8b2de94c9f1ca1825e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AfterAll.java
 ee8dddff4b378265c84e1c116463b791  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.java
 eef2fa992071c6dc3bc408b0e7e3f896  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicExtensionContext.java
-ef1442a6ddd4c4d238642a674d48b643  documentation/src/docs/asciidoc/user-guide/overview.adoc
 ef234116cd6d01f8faf64f2179675123  documentation/src/test/java/example/DisplayNameDemo.java
 ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/package-info.java
 ef66ce6fd67e79a19394f6c5e7a2f592  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventStatistics.java

@@ -834,13 +834,12 @@ three different sub-projects.</p>
 frameworks</a> on the JVM. It also defines the <code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> API for developing a testing
 framework that runs on the platform. Furthermore, the platform provides a
 <a href="#running-tests-console-launcher">Console Launcher</a> to launch the platform from the
-command line and a <a href="#running-tests-junit-platform-runner">JUnit 4 based Runner</a> for
-running any <code>TestEngine</code> on the platform in a JUnit 4 based environment. First-class
-support for the JUnit Platform also exists in popular IDEs (see
-<a href="#running-tests-ide-intellij-idea">IntelliJ IDEA</a>, <a href="#running-tests-ide-eclipse">Eclipse</a>,
-<a href="#running-tests-ide-netbeans">NetBeans</a>, and <a href="#running-tests-ide-vscode">Visual Studio Code</a>) and build tools (see
-<a href="#running-tests-build-gradle">Gradle</a>, <a href="#running-tests-build-maven">Maven</a>, and
-<a href="#running-tests-build-ant">Ant</a>).</p>
+command line and the <a href="#junit-platform-suite-engine">JUnit Platform Suite Engine</a> for running a custom test suite using
+one or more test engines on the platform. First-class support for the JUnit Platform also
+exists in popular IDEs (see <a href="#running-tests-ide-intellij-idea">IntelliJ IDEA</a>,
+<a href="#running-tests-ide-eclipse">Eclipse</a>, <a href="#running-tests-ide-netbeans">NetBeans</a>, and
+<a href="#running-tests-ide-vscode">Visual Studio Code</a>) and build tools (see <a href="#running-tests-build-gradle">Gradle</a>,
+<a href="#running-tests-build-maven">Maven</a>, and <a href="#running-tests-build-ant">Ant</a>).</p>
 </div>
 <div class="paragraph">
 <p><strong>JUnit Jupiter</strong> is the combination of the new <a href="#writing-tests">programming model</a> and
@@ -849,7 +848,8 @@ sub-project provides a <code>TestEngine</code> for running Jupiter based tests o
 </div>
 <div class="paragraph">
 <p><strong>JUnit Vintage</strong> provides a <code>TestEngine</code> for running JUnit 3 and JUnit 4 based tests on
-the platform. It requires JUnit 4.12 or later to be present on the class/module path.</p>
+the platform. It requires JUnit 4.12 or later to be present on the class path or module
+path.</p>
 </div>
 </div>
 <div class="sect2">
@@ -862,7 +862,7 @@ has been compiled with previous versions of the JDK.</p>
 <div class="sect2">
 <h3 id="overview-getting-help"><a class="anchor" href="#overview-getting-help"></a>1.3. Getting Help</h3>
 <div class="paragraph">
-<p>Ask JUnit 5 related questions on <a href="https://stackoverflow.com/questions/tagged/junit5">Stack Overflow</a> or chat with us on <a href="https://gitter.im/junit-team/junit5">Gitter</a>.</p>
+<p>Ask JUnit 5 related questions on <a href="https://stackoverflow.com/questions/tagged/junit5">Stack Overflow</a> or chat with the community on <a href="https://gitter.im/junit-team/junit5">Gitter</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -11027,7 +11027,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-07 09:37:23 UTC
+Last updated 2021-11-09 09:29:45 UTC
 </div>
 </div>
 <style>
