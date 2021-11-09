@@ -134,6 +134,7 @@ public interface ConfigurationParameters {
 	/**
 	 * Get the number of configuration parameters stored directly in this
 	 * {@code ConfigurationParameters}.
+	 * @deprecated Use {@link #keySet()}.
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.9")
