@@ -154,9 +154,15 @@ implements <a href="../../ConfigurationParameters.html" title="interface in org.
 <div class="block">Get the boolean configuration parameter stored under the specified
  <code>key</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#size()" class="member-name-link">size</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keySet()" class="member-name-link">keySet</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the keys of all configuration parameters stored in this
+ <code>ConfigurationParameters</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#size()" class="member-name-link">size</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the number of configuration parameters stored directly in this
  <code>ConfigurationParameters</code>.</div>
 </div>
@@ -313,6 +319,21 @@ implements <a href="../../ConfigurationParameters.html" title="interface in org.
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../ConfigurationParameters.html#size()">size</a></code>&nbsp;in interface&nbsp;<code><a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="keySet()">
+<h3>keySet</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">keySet</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../ConfigurationParameters.html#keySet()">ConfigurationParameters</a></code></span></div>
+<div class="block">Get the keys of all configuration parameters stored in this
+ <code>ConfigurationParameters</code>.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../ConfigurationParameters.html#keySet()">keySet</a></code>&nbsp;in interface&nbsp;<code><a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
+<dt>Returns:</dt>
+<dd>a set of keys contained in <code>ConfigurationParameters</code></dd>
 </dl>
 </section>
 </li>
