@@ -14,7 +14,8 @@
  *
  * @since 5.0
  * @uses org.junit.jupiter.api.extension.Extension
- * @provides org.junit.platform.engine.TestEngine
+ * @provides org.junit.platform.engine.TestEngine The {@code JupiterTestEngine}
+ *   runs Jupiter based tests on the platform.
  */
 module org.junit.jupiter.engine {
 	requires static org.apiguardian.api;
