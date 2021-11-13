@@ -142,14 +142,27 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
-		return getPathOrFile(parameterContext.getParameter(), parameterType, ALWAYS, extensionContext);
+		CleanupMode cleanupMode = findCleanupModeForParameter(parameterContext);
+		return getPathOrFile(parameterContext.getParameter(), parameterType, cleanupMode, extensionContext);
+	}
+
+	private CleanupMode findCleanupModeForParameter(ParameterContext parameterContext) {
+		CleanupMode cleanupMode = null;
+		Optional<TempDir> optional = parameterContext.findAnnotation(TempDir.class);
+		if (optional.isPresent()) {
+			cleanupMode = optional.get().cleanup();
+		}
+		if (cleanupMode == null || cleanupMode == DEFAULT) {
+			cleanupMode = ALWAYS;
+		}
+		return cleanupMode;
 	}
 
 	private static CleanupMode findCleanupModeForField(Field field, ExtensionContext context) {
 		CleanupMode cleanupMode = null;
-		Optional<TempDir> annotation = AnnotationSupport.findAnnotation(field, TempDir.class);
-		if (annotation.isPresent()) {
-			cleanupMode = annotation.get().cleanup();
+		Optional<TempDir> optional = AnnotationSupport.findAnnotation(field, TempDir.class);
+		if (optional.isPresent()) {
+			cleanupMode = optional.get().cleanup();
 		}
 		if (cleanupMode == null || cleanupMode == DEFAULT) {
 			Optional<CleanupMode> optionalMode = context.getConfigurationParameter(

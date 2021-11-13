@@ -31,7 +31,7 @@ import org.opentest4j.TestAbortedException;
 /**
  * Integration tests for cleanup of the {@link TempDirectory}
  * when {@link TempDir} is set to {@link CleanupMode#ALWAYS} or
- * {@link CleanupMode#NEVER}. hghg
+ * {@link CleanupMode#NEVER}.
  *
  * @since 5.9
  *
