@@ -54,6 +54,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -145,8 +146,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private static CleanupMode findCleanupModeForField(Field field, ExtensionContext context) {
-		TempDir annotation = field.getAnnotation(TempDir.class);
-		CleanupMode cleanupMode = annotation.cleanup();
+		CleanupMode cleanupMode = null;
+		Optional<TempDir> annotation = AnnotationSupport.findAnnotation(field, TempDir.class);
+		if (annotation.isPresent()) {
+			cleanupMode = annotation.get().cleanup();
+		}
 		if (cleanupMode == null || cleanupMode == DEFAULT) {
 			Optional<CleanupMode> optionalMode = context.getConfigurationParameter(
 				DEFAULT_TEMP_DIR_CLEANUP_MODE_PROPERTY_NAME, CleanupMode::valueOf);
