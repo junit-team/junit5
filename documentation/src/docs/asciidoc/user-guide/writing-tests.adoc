@@ -45,7 +45,7 @@ in the `junit-jupiter-api` module.
 | `@ExtendWith`            | Used to <<extensions-registration-declarative,register extensions declaratively>>. Such annotations are _inherited_.
 | `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are _inherited_ unless they are _shadowed_.
 | `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.
-| `@CleanupMode`           | Used to control how temporary directories are managed. Cleanup modes of ALWAYS and NEVER can be configured to determine whether a temporary directory is cleaned up or not after a test completes.
+| `@CleanupMode`           | Used to control how temporary directories are managed. Cleanup modes of ALWAYS, ON_SUCCESS and NEVER can be configured to determine whether a temporary directory is cleaned up or not after a test completes.
 |===
 
 WARNING: Some annotations may currently be _experimental_. Consult the table in
