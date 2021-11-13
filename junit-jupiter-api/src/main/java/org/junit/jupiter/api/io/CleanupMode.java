@@ -30,41 +30,21 @@ public enum CleanupMode {
 
 	/**
 	 * Defer to the configured cleanup mode.
-	 *
-	 * @see TempDir
-	 * @see #ALWAYS
-	 * @see #ON_SUCCESS
-	 * @see #NEVER
 	 */
 	DEFAULT,
 
 	/**
 	 * Always clean up a temporary directory after the test has completed.
-	 *
-	 * @see TempDir
-	 * @see #DEFAULT
-	 * @see #ON_SUCCESS
-	 * @see #NEVER
 	 */
 	ALWAYS,
 
 	/**
 	 * Don't clean up a temporary directory after the test has completed.
-	 *
-	 * @see TempDir
-	 * @see #DEFAULT
-	 * @see #ALWAYS
-	 * @see #NEVER
 	 */
 	NEVER,
 
 	/**
 	 * Only clean up a temporary directory if the test completed successfully.
-	 *
-	 * @see TempDir
-	 * @see #DEFAULT
-	 * @see #ALWAYS
-	 * @see #ON_SUCCESS
 	 */
 	ON_SUCCESS
 }

@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-// tag::user_guide_temp_dir_cleanup_mode[]
+// tag::user_guide[]
 class TempDirCleanupModeDemo {
 
 	@Test
@@ -25,4 +25,4 @@ class TempDirCleanupModeDemo {
 		// perform test
 	}
 }
-// end::user_guide_temp_dir_cleanup_mode[]
+// end::user_guide[]

@@ -45,7 +45,6 @@ in the `junit-jupiter-api` module.
 | `@ExtendWith`            | Used to <<extensions-registration-declarative,register extensions declaratively>>. Such annotations are _inherited_.
 | `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are _inherited_ unless they are _shadowed_.
 | `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.
-| `@CleanupMode`           | Used to control how temporary directories are managed. Cleanup modes of ALWAYS, ON_SUCCESS and NEVER can be configured to determine whether a temporary directory is cleaned up or not after a test completes.
 |===
 
 WARNING: Some annotations may currently be _experimental_. Consult the table in
@@ -2271,17 +2270,17 @@ method uses a separate directory.
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_field_injection]
 ----
 
-TempDir has a parameter, cleanup,
-which can be set as either NEVER, ON_SUCCESS or ALWAYS. If the cleanup mode is set to NEVER,
-temporary directories are not deleted after a test completes. If the cleanup mode is
-set to ON_SUCCESS, temporary directories are deleted only after a test completes successfully.
+The `@TempDir` annotation has an optional `cleanup` attribute that can be set to either
+`NEVER`, `ON_SUCCESS` or `ALWAYS`. If the cleanup mode is set to `NEVER`, temporary
+directories are not deleted after a test completes. If it is set to `ON_SUCCESS`,
+temporary directories are deleted only after a test completes successfully.
 
-The default cleanup mode for TempDir is ALWAYS. You can use the
+The default cleanup mode is `ALWAYS`. You can use the
 `junit.jupiter.temp.dir.cleanup.mode.default`
 <<running-tests-config-params, configuration parameter>> to override this default.
 
 [source,java,indent=0]
 .A test class with a temporary directory that doesn't get cleaned up
 ----
-include::{testDir}/example/TempDirCleanupModeDemo.java[tags=user_guide_temp_dir_cleanup_mode]
+include::{testDir}/example/TempDirCleanupModeDemo.java[tags=user_guide]
 ----

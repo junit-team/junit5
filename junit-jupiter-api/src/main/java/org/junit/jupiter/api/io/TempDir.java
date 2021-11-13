@@ -77,7 +77,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * test or test class to fail.
  *
  * <p>The {@code @TempDir} annotation has a {@link CleanupMode} parameter that
- * can override this action. If the cleanup mode is set to
+ * allows overriding the default behavior. If the cleanup mode is set to
  * {@link CleanupMode#NEVER}, then the temporary directory will not be deleted
  * after the test completes. If the cleanup mode is set to
  * {@link CleanupMode#ON_SUCCESS}, then the temporary directory will only be

@@ -55,4 +55,4 @@ GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* `TempDir` now includes a cleanup mode parameter.

@@ -14,6 +14,8 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
+import static org.junit.jupiter.api.io.CleanupMode.NEVER;
+import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TEMP_DIR_CLEANUP_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
@@ -50,6 +52,8 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -146,7 +150,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		if (cleanupMode == null || cleanupMode == DEFAULT) {
 			Optional<CleanupMode> optionalMode = context.getConfigurationParameter(
 				DEFAULT_TEMP_DIR_CLEANUP_MODE_PROPERTY_NAME, CleanupMode::valueOf);
-			cleanupMode = optionalMode.orElse(CleanupMode.ALWAYS);
+			cleanupMode = optionalMode.orElse(ALWAYS);
 		}
 		return cleanupMode;
 	}
@@ -190,6 +194,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	static class CloseablePath implements CloseableResource {
 
+		private static final Logger logger = LoggerFactory.getLogger(CloseablePath.class);
+
 		private final Path dir;
 		private final CleanupMode cleanupMode;
 		private final ExtensionContext executionContext;
@@ -206,17 +212,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		@Override
 		public void close() throws IOException {
-			switch (cleanupMode) {
-				case DEFAULT:
-				case ALWAYS:
-					break;
-				case NEVER:
-					return;
-				case ON_SUCCESS:
-					if (executionContext.getExecutionException().isPresent()) {
-						return;
-					}
-					break;
+			if (cleanupMode == NEVER
+					|| (cleanupMode == ON_SUCCESS && executionContext.getExecutionException().isPresent())) {
+				logger.info(() -> "Skipping cleanup of temp dir " + dir + " due to cleanup mode configuration.");
+				return;
 			}
 
 			SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories();
