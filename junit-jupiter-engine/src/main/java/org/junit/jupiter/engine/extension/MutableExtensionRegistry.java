@@ -71,6 +71,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	public static MutableExtensionRegistry createRegistryWithDefaultExtensions(JupiterConfiguration configuration) {
 		MutableExtensionRegistry extensionRegistry = new MutableExtensionRegistry(null);
 
+		TempDirectory.setConfiguration(configuration);
+
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
 		if (configuration.isExtensionAutoDetectionEnabled()) {
