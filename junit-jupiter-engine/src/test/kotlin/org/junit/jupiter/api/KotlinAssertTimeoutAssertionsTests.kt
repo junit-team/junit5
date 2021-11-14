@@ -9,9 +9,6 @@
  */
 package org.junit.jupiter.api
 
-import java.time.Duration.ofMillis
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.atomic.AtomicBoolean
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,6 +16,9 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.platform.commons.util.ExceptionUtils
 import org.opentest4j.AssertionFailedError
+import java.time.Duration.ofMillis
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Unit tests for JUnit Jupiter [Assertions].

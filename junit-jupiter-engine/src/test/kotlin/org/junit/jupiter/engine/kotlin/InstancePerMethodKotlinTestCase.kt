@@ -35,7 +35,7 @@ class InstancePerMethodKotlinTestCase {
 
         private fun increment(instance: Any, name: String) {
             TEST_INSTANCES.computeIfAbsent(instance, { _ -> LinkedHashMap() })
-                    .compute(name, { _, oldValue -> (oldValue ?: 0) + 1 })
+                .compute(name, { _, oldValue -> (oldValue ?: 0) + 1 })
         }
     }
 

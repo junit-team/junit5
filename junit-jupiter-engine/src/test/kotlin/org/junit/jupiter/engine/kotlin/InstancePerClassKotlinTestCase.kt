@@ -57,6 +57,6 @@ class InstancePerClassKotlinTestCase {
 
     private fun increment(name: String) {
         TEST_INSTANCES.computeIfAbsent(this, { _ -> HashMap() })
-                .compute(name, { _, oldValue -> (oldValue ?: 0) + 1 })
+            .compute(name, { _, oldValue -> (oldValue ?: 0) + 1 })
     }
 }

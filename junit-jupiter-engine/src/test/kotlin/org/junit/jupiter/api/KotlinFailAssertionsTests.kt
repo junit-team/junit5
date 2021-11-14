@@ -9,12 +9,12 @@
  */
 package org.junit.jupiter.api
 
-import java.util.stream.Stream
 import org.junit.jupiter.api.AssertEquals.assertEquals
 import org.junit.jupiter.api.AssertionTestUtils.assertEmptyMessage
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageContains
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
 import org.opentest4j.AssertionFailedError
+import java.util.stream.Stream
 
 class KotlinFailAssertionsTests {
 

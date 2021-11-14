@@ -13,7 +13,6 @@ package example
 
 import example.domain.Person
 import example.util.Calculator
-import java.time.Duration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -22,6 +21,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.assertTimeout
 import org.junit.jupiter.api.assertTimeoutPreemptively
+import java.time.Duration
 
 class KotlinAssertionsDemo {
 
@@ -48,7 +48,8 @@ class KotlinAssertionsDemo {
 
     @Test
     fun `grouped assertions`() {
-        assertAll("Person properties",
+        assertAll(
+            "Person properties",
             { assertEquals("Jane", person.firstName) },
             { assertEquals("Doe", person.lastName) }
         )
@@ -56,7 +57,8 @@ class KotlinAssertionsDemo {
 
     @Test
     fun `grouped assertions from a stream`() {
-        assertAll("People with first name starting with J",
+        assertAll(
+            "People with first name starting with J",
             people
                 .stream()
                 .map {
@@ -68,7 +70,8 @@ class KotlinAssertionsDemo {
 
     @Test
     fun `grouped assertions from a collection`() {
-        assertAll("People with last name of Doe",
+        assertAll(
+            "People with last name of Doe",
             people.map { { assertEquals("Doe", it.lastName) } }
         )
     }

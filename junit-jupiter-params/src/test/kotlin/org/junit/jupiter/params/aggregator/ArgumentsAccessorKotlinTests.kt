@@ -32,7 +32,8 @@ class ArgumentsAccessorKotlinTests {
         }
 
         assertThat(exception).hasMessage(
-                "Argument at index [0] with value [1] and type [java.lang.Integer] could not be converted or cast to type [java.lang.Character].")
+            "Argument at index [0] with value [1] and type [java.lang.Integer] could not be converted or cast to type [java.lang.Character]."
+        )
     }
 
     @Test

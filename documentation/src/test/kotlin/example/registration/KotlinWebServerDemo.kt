@@ -20,8 +20,8 @@ class KotlinWebServerDemo {
         @JvmStatic
         @RegisterExtension
         val server = WebServerExtension.builder()
-                .enableSecurity(false)
-                .build()
+            .enableSecurity(false)
+            .build()
     }
 
     @Test
