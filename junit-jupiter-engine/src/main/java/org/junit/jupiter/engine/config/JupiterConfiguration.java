@@ -43,7 +43,6 @@ public interface JupiterConfiguration {
 	String DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME = "junit.jupiter.testmethod.order.default";
 	String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = "junit.jupiter.testclass.order.default";
 	String TEMP_DIR_SCOPE_PROPERTY_NAME = "junit.jupiter.tempdir.scope";
-
 	String DEFAULT_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.default";
 	String DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.testable.method.default";
 	String DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.test.method.default";
