@@ -43,7 +43,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
+import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.jupiter.api.extension.TestInstancePreConstructCallback;
 import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestInstantiationException;
@@ -297,6 +299,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			ExtensionContext extensionContext) {
 
 		Optional<Object> outerInstance = outerInstances.map(TestInstances::getInnermostInstance);
+		invokeTestInstancePreConstructCallbacks(new DefaultTestInstanceFactoryContext(this.testClass, outerInstance),
+			registry, extensionContext);
 		Object instance = this.testInstanceFactory != null //
 				? invokeTestInstanceFactory(outerInstance, extensionContext) //
 				: invokeTestClassConstructor(outerInstance, registry, extensionContext);
@@ -354,6 +358,12 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
 		return executableInvoker.invoke(constructor, outerInstance, extensionContext, registry,
 			InvocationInterceptor::interceptTestClassConstructor);
+	}
+
+	private void invokeTestInstancePreConstructCallbacks(TestInstanceFactoryContext factoryContext,
+			ExtensionRegistry registry, ExtensionContext context) {
+		registry.stream(TestInstancePreConstructCallback.class).forEach(
+			extension -> executeAndMaskThrowable(() -> extension.preConstructTestInstance(factoryContext, context)));
 	}
 
 	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,

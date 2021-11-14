@@ -46,6 +46,8 @@ on GitHub.
   parameterized or dynamic tests.
 * Add support for `MATCH_NONE` mode in `EnumSource` that selects only those enum constants
   whose names match none of the supplied patterns.
+* A new extension `TestInstancePreConstructCallback` called prior to a test instance construction
+  (symmetric extension to `TestInstancePreDestroyCallback`).
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]

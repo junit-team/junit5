@@ -44,6 +44,7 @@ public class KitchenSinkExtension implements
 	LifecycleMethodExecutionExceptionHandler,
 
 	// Dependency Injection
+	TestInstancePreConstructCallback,
 	TestInstanceFactory,
 	TestInstancePostProcessor,
 	TestInstancePreDestroyCallback,
@@ -111,6 +112,10 @@ public class KitchenSinkExtension implements
 	}
 
 	// --- Dependency Injection ------------------------------------------------
+
+	@Override
+	public void preConstructTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) {
+	}
 
 	@Override
 	public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {

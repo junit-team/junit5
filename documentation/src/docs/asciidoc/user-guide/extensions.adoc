@@ -321,6 +321,17 @@ following system property.
 
 Refer to <<running-tests-config-params-deactivation-pattern>> for details.
 
+[[extensions-test-instance-pre-construct-callback]]
+=== Test Instance Pre-construct Callback
+
+`{TestInstancePreConstructCallback}` defines the API for `Extensions` that wish to be invoked
+_prior_ to test instances being constructed (by a constructor call or via
+`{TestInstanceFactory}`).
+
+This extension provides a symmetric call to `{TestInstancePreDestroyCallback}` and is useful
+in combination with other extensions to prepare constructor parameters or keeping track of test
+instances and their lifecycle.
+
 [[extensions-test-instance-factories]]
 === Test Instance Factories
 
