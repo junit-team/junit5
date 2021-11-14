@@ -107,6 +107,9 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
  <code>TestInstancePreDestroyCallback</code> extension will only be applied to the
  test method for which it is registered.
 
+ <p>A symmetric <a href="TestInstancePreConstructCallback.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePreConstructCallback</code></a> extension defines a callback
+ hook that is invoked prior to any test class instances being constructed.
+
  <h3>Constructor Requirements</h3>
 
  <p>Consult the documentation in <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> for details on constructor
@@ -119,6 +122,7 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <ul class="see-list-long">
 <li><a href="#preDestroyTestInstance(org.junit.jupiter.api.extension.ExtensionContext)"><code>preDestroyTestInstance(ExtensionContext)</code></a></li>
 <li><a href="TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePostProcessor</code></a></li>
+<li><a href="TestInstancePreConstructCallback.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePreConstructCallback</code></a></li>
 <li><a href="TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a></li>
 <li><a href="ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolver</code></a></li>
 </ul>

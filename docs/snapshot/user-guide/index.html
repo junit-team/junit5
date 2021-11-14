@@ -712,32 +712,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </li>
-<li><a href="#extensions-test-instance-factories">5.4. Test Instance Factories</a></li>
-<li><a href="#extensions-test-instance-post-processing">5.5. Test Instance Post-processing</a></li>
-<li><a href="#extensions-test-instance-pre-destroy-callback">5.6. Test Instance Pre-destroy Callback</a></li>
-<li><a href="#extensions-parameter-resolution">5.7. Parameter Resolution</a></li>
-<li><a href="#extensions-test-result-processing">5.8. Test Result Processing</a></li>
-<li><a href="#extensions-lifecycle-callbacks">5.9. Test Lifecycle Callbacks</a>
+<li><a href="#extensions-test-instance-pre-construct-callback">5.4. Test Instance Pre-construct Callback</a></li>
+<li><a href="#extensions-test-instance-factories">5.5. Test Instance Factories</a></li>
+<li><a href="#extensions-test-instance-post-processing">5.6. Test Instance Post-processing</a></li>
+<li><a href="#extensions-test-instance-pre-destroy-callback">5.7. Test Instance Pre-destroy Callback</a></li>
+<li><a href="#extensions-parameter-resolution">5.8. Parameter Resolution</a></li>
+<li><a href="#extensions-test-result-processing">5.9. Test Result Processing</a></li>
+<li><a href="#extensions-lifecycle-callbacks">5.10. Test Lifecycle Callbacks</a>
 <ul class="sectlevel3">
-<li><a href="#extensions-lifecycle-callbacks-before-after-execution">5.9.1. Before and After Test Execution Callbacks</a></li>
+<li><a href="#extensions-lifecycle-callbacks-before-after-execution">5.10.1. Before and After Test Execution Callbacks</a></li>
 </ul>
 </li>
-<li><a href="#extensions-exception-handling">5.10. Exception Handling</a></li>
-<li><a href="#extensions-intercepting-invocations">5.11. Intercepting Invocations</a></li>
-<li><a href="#extensions-test-templates">5.12. Providing Invocation Contexts for Test Templates</a></li>
-<li><a href="#extensions-keeping-state">5.13. Keeping State in Extensions</a></li>
-<li><a href="#extensions-supported-utilities">5.14. Supported Utilities in Extensions</a>
+<li><a href="#extensions-exception-handling">5.11. Exception Handling</a></li>
+<li><a href="#extensions-intercepting-invocations">5.12. Intercepting Invocations</a></li>
+<li><a href="#extensions-test-templates">5.13. Providing Invocation Contexts for Test Templates</a></li>
+<li><a href="#extensions-keeping-state">5.14. Keeping State in Extensions</a></li>
+<li><a href="#extensions-supported-utilities">5.15. Supported Utilities in Extensions</a>
 <ul class="sectlevel3">
-<li><a href="#extensions-supported-utilities-annotations">5.14.1. Annotation Support</a></li>
-<li><a href="#extensions-supported-utilities-classes">5.14.2. Class Support</a></li>
-<li><a href="#extensions-supported-utilities-reflection">5.14.3. Reflection Support</a></li>
-<li><a href="#extensions-supported-utilities-modifier">5.14.4. Modifier Support</a></li>
+<li><a href="#extensions-supported-utilities-annotations">5.15.1. Annotation Support</a></li>
+<li><a href="#extensions-supported-utilities-classes">5.15.2. Class Support</a></li>
+<li><a href="#extensions-supported-utilities-reflection">5.15.3. Reflection Support</a></li>
+<li><a href="#extensions-supported-utilities-modifier">5.15.4. Modifier Support</a></li>
 </ul>
 </li>
-<li><a href="#extensions-execution-order">5.15. Relative Execution Order of User Code and Extensions</a>
+<li><a href="#extensions-execution-order">5.16. Relative Execution Order of User Code and Extensions</a>
 <ul class="sectlevel3">
-<li><a href="#extensions-execution-order-overview">5.15.1. User and Extension Code</a></li>
-<li><a href="#extensions-execution-order-wrapping-behavior">5.15.2. Wrapping Behavior of Callbacks</a></li>
+<li><a href="#extensions-execution-order-overview">5.16.1. User and Extension Code</a></li>
+<li><a href="#extensions-execution-order-wrapping-behavior">5.16.2. Wrapping Behavior of Callbacks</a></li>
 </ul>
 </li>
 </ul>
@@ -7894,7 +7895,20 @@ following system property.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-instance-factories"><a class="anchor" href="#extensions-test-instance-factories"></a>5.4. Test Instance Factories</h3>
+<h3 id="extensions-test-instance-pre-construct-callback"><a class="anchor" href="#extensions-test-instance-pre-construct-callback"></a>5.4. Test Instance Pre-construct Callback</h3>
+<div class="paragraph">
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstancePreConstructCallback.html">TestInstancePreConstructCallback</a></code> defines the API for <code>Extensions</code> that wish to be invoked
+<em>prior</em> to test instances being constructed (by a constructor call or via
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstanceFactory.html">TestInstanceFactory</a></code>).</p>
+</div>
+<div class="paragraph">
+<p>This extension provides a symmetric call to <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstancePreDestroyCallback.html">TestInstancePreDestroyCallback</a></code> and is useful
+in combination with other extensions to prepare constructor parameters or keeping track of test
+instances and their lifecycle.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="extensions-test-instance-factories"><a class="anchor" href="#extensions-test-instance-factories"></a>5.5. Test Instance Factories</h3>
 <div class="paragraph">
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstanceFactory.html">TestInstanceFactory</a></code> defines the API for <code>Extensions</code> that wish to <em>create</em> test class
 instances.</p>
@@ -7933,7 +7947,7 @@ registered for any specific test class.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-instance-post-processing"><a class="anchor" href="#extensions-test-instance-post-processing"></a>5.5. Test Instance Post-processing</h3>
+<h3 id="extensions-test-instance-post-processing"><a class="anchor" href="#extensions-test-instance-post-processing"></a>5.6. Test Instance Post-processing</h3>
 <div class="paragraph">
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstancePostProcessor.html">TestInstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
 process</em> test instances.</p>
@@ -7948,7 +7962,7 @@ initialization methods on the test instance, etc.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-instance-pre-destroy-callback"><a class="anchor" href="#extensions-test-instance-pre-destroy-callback"></a>5.6. Test Instance Pre-destroy Callback</h3>
+<h3 id="extensions-test-instance-pre-destroy-callback"><a class="anchor" href="#extensions-test-instance-pre-destroy-callback"></a>5.7. Test Instance Pre-destroy Callback</h3>
 <div class="paragraph">
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestInstancePreDestroyCallback.html">TestInstancePreDestroyCallback</a></code> defines the API for <code>Extensions</code> that wish to process
 test instances <em>after</em> they have been used in tests and <em>before</em> they are destroyed.</p>
@@ -7959,7 +7973,7 @@ test instance, invoking custom de-initialization methods on the test instance, e
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-parameter-resolution"><a class="anchor" href="#extensions-parameter-resolution"></a>5.7. Parameter Resolution</h3>
+<h3 id="extensions-parameter-resolution"><a class="anchor" href="#extensions-parameter-resolution"></a>5.8. Parameter Resolution</h3>
 <div class="paragraph">
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving parameters at
 runtime.</p>
@@ -8019,7 +8033,7 @@ those provided in <code>java.lang.reflect.Parameter</code> in order to avoid thi
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-result-processing"><a class="anchor" href="#extensions-test-result-processing"></a>5.8. Test Result Processing</h3>
+<h3 id="extensions-test-result-processing"><a class="anchor" href="#extensions-test-result-processing"></a>5.9. Test Result Processing</h3>
 <div class="paragraph">
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestWatcher.html">TestWatcher</a></code> defines the API for extensions that wish to process the results of <em>test
 method</em> executions. Specifically, a <code>TestWatcher</code> will be invoked with contextual
@@ -8080,7 +8094,7 @@ resources.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-lifecycle-callbacks"><a class="anchor" href="#extensions-lifecycle-callbacks"></a>5.9. Test Lifecycle Callbacks</h3>
+<h3 id="extensions-lifecycle-callbacks"><a class="anchor" href="#extensions-lifecycle-callbacks"></a>5.10. Test Lifecycle Callbacks</h3>
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the following sections for examples and the Javadoc for
@@ -8132,7 +8146,7 @@ concrete example.
 </table>
 </div>
 <div class="sect3">
-<h4 id="extensions-lifecycle-callbacks-before-after-execution"><a class="anchor" href="#extensions-lifecycle-callbacks-before-after-execution"></a>5.9.1. Before and After Test Execution Callbacks</h4>
+<h4 id="extensions-lifecycle-callbacks-before-after-execution"><a class="anchor" href="#extensions-lifecycle-callbacks-before-after-execution"></a>5.10.1. Before and After Test Execution Callbacks</h4>
 <div class="paragraph">
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html">BeforeTestExecutionCallback</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html">AfterTestExecutionCallback</a></code> define the APIs for
 <code>Extensions</code> that wish to add behavior that will be executed <em>immediately before</em> and
@@ -8221,7 +8235,7 @@ INFO: Method [sleep50ms] took 53 ms.</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-exception-handling"><a class="anchor" href="#extensions-exception-handling"></a>5.10. Exception Handling</h3>
+<h3 id="extensions-exception-handling"><a class="anchor" href="#extensions-exception-handling"></a>5.11. Exception Handling</h3>
 <div class="paragraph">
 <p>Exceptions thrown during the test execution may be intercepted and handled accordingly
 before propagating further, so that certain actions like error logging or resource releasing
@@ -8325,7 +8339,7 @@ test methods.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-intercepting-invocations"><a class="anchor" href="#extensions-intercepting-invocations"></a>5.11. Intercepting Invocations</h3>
+<h3 id="extensions-intercepting-invocations"><a class="anchor" href="#extensions-intercepting-invocations"></a>5.12. Intercepting Invocations</h3>
 <div class="paragraph">
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/InvocationInterceptor.html">InvocationInterceptor</a></code> defines the API for <code>Extensions</code> that wish to intercept calls to
 test code.</p>
@@ -8364,7 +8378,7 @@ Dispatch Thread.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>5.12. Providing Invocation Contexts for Test Templates</h3>
+<h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>5.13. Providing Invocation Contexts for Test Templates</h3>
 <div class="paragraph">
 <p>A <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method can only be executed when at least one
 <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> is registered. Each such provider is responsible
@@ -8454,7 +8468,7 @@ functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.13. Keeping State in Extensions</h3>
+<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.14. Keeping State in Extensions</h3>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
@@ -8485,7 +8499,7 @@ method in the inverse order they were added in.
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.14. Supported Utilities in Extensions</h3>
+<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.15. Supported Utilities in Extensions</h3>
 <div class="paragraph">
 <p>The <code>junit-platform-commons</code> artifact exposes a package named
 <code><a href="../api/org.junit.platform.commons/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that contains <em>maintained</em> utility methods for working
@@ -8494,7 +8508,7 @@ with annotations, classes, reflection, and classpath scanning tasks. <code>TestE
 the behavior of the JUnit Platform.</p>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>5.14.1. Annotation Support</h4>
+<h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>5.15.1. Annotation Support</h4>
 <div class="paragraph">
 <p><code>AnnotationSupport</code> provides static utility methods that operate on annotated elements
 (e.g., packages, annotations, classes, interfaces, constructors, methods, and fields).
@@ -8506,14 +8520,14 @@ interfaces and within class hierarchies to find annotations. Consult the Javadoc
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>5.14.2. Class Support</h4>
+<h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>5.15.2. Class Support</h4>
 <div class="paragraph">
 <p><code>ClassSupport</code> provides static utility methods for working with classes (i.e., instances
 of <code>java.lang.Class</code>). Consult the Javadoc for <code><a href="../api/org.junit.platform.commons/org/junit/platform/commons/support/ClassSupport.html">ClassSupport</a></code> for further details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-reflection"><a class="anchor" href="#extensions-supported-utilities-reflection"></a>5.14.3. Reflection Support</h4>
+<h4 id="extensions-supported-utilities-reflection"><a class="anchor" href="#extensions-supported-utilities-reflection"></a>5.15.3. Reflection Support</h4>
 <div class="paragraph">
 <p><code>ReflectionSupport</code> provides static utility methods that augment the standard JDK
 reflection and class-loading mechanisms. These include methods to scan the classpath in
@@ -8524,7 +8538,7 @@ details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-modifier"><a class="anchor" href="#extensions-supported-utilities-modifier"></a>5.14.4. Modifier Support</h4>
+<h4 id="extensions-supported-utilities-modifier"><a class="anchor" href="#extensions-supported-utilities-modifier"></a>5.15.4. Modifier Support</h4>
 <div class="paragraph">
 <p><code>ModifierSupport</code> provides static utility methods for working with member and class
 modifiers&#8201;&#8212;&#8201;for example, to determine if a member is declared as <code>public</code>, <code>private</code>,
@@ -8534,7 +8548,7 @@ details.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.15. Relative Execution Order of User Code and Extensions</h3>
+<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.16. Relative Execution Order of User Code and Extensions</h3>
 <div class="paragraph">
 <p>When executing a test class that contains one or more test methods, a number of extension
 callbacks are called in addition to the user-supplied test and lifecycle methods.</p>
@@ -8552,7 +8566,7 @@ See also: <a href="#writing-tests-test-execution-order">Test Execution Order</a>
 </table>
 </div>
 <div class="sect3">
-<h4 id="extensions-execution-order-overview"><a class="anchor" href="#extensions-execution-order-overview"></a>5.15.1. User and Extension Code</h4>
+<h4 id="extensions-execution-order-overview"><a class="anchor" href="#extensions-execution-order-overview"></a>5.16.1. User and Extension Code</h4>
 <div class="paragraph">
 <p>The following diagram illustrates the relative order of user-supplied code and extension
 code. User-supplied test and lifecycle methods are shown in orange, with callback code
@@ -8681,7 +8695,7 @@ by implementing <a href="#extensions-intercepting-invocations"><code>InvocationI
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-execution-order-wrapping-behavior"><a class="anchor" href="#extensions-execution-order-wrapping-behavior"></a>5.15.2. Wrapping Behavior of Callbacks</h4>
+<h4 id="extensions-execution-order-wrapping-behavior"><a class="anchor" href="#extensions-execution-order-wrapping-behavior"></a>5.16.2. Wrapping Behavior of Callbacks</h4>
 <div class="paragraph">
 <p>JUnit Jupiter always guarantees <em>wrapping</em> behavior for multiple registered extensions
 that implement lifecycle callbacks such as <code>BeforeAllCallback</code>, <code>AfterAllCallback</code>,
@@ -10413,6 +10427,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestInstancePreConstructCallback</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.9</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestInstantiationException</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
 </tr>
@@ -11027,7 +11046,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-10 08:00:52 UTC
+Last updated 2021-11-14 12:38:20 UTC
 </div>
 </div>
 <style>
