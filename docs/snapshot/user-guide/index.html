@@ -1658,7 +1658,6 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="k">import</span> <span class="nn">example.domain.Person</span>
 <span class="k">import</span> <span class="nn">example.util.Calculator</span>
-<span class="k">import</span> <span class="nn">java.time.Duration</span>
 <span class="k">import</span> <span class="nn">org.junit.jupiter.api.Assertions.assertEquals</span>
 <span class="k">import</span> <span class="nn">org.junit.jupiter.api.Assertions.assertTrue</span>
 <span class="k">import</span> <span class="nn">org.junit.jupiter.api.Test</span>
@@ -1667,6 +1666,7 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 <span class="k">import</span> <span class="nn">org.junit.jupiter.api.assertThrows</span>
 <span class="k">import</span> <span class="nn">org.junit.jupiter.api.assertTimeout</span>
 <span class="k">import</span> <span class="nn">org.junit.jupiter.api.assertTimeoutPreemptively</span>
+<span class="k">import</span> <span class="nn">java.time.Duration</span>
 
 <span class="kd">class</span> <span class="nc">KotlinAssertionsDemo</span> <span class="p">{</span>
 
@@ -1693,7 +1693,8 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 
     <span class="nd">@Test</span>
     <span class="k">fun</span> <span class="nf">`grouped</span> <span class="nf">assertions`</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nf">assertAll</span><span class="p">(</span><span class="s">"Person properties"</span><span class="p">,</span>
+        <span class="nf">assertAll</span><span class="p">(</span>
+            <span class="s">"Person properties"</span><span class="p">,</span>
             <span class="p">{</span> <span class="nf">assertEquals</span><span class="p">(</span><span class="s">"Jane"</span><span class="p">,</span> <span class="n">person</span><span class="p">.</span><span class="n">firstName</span><span class="p">)</span> <span class="p">},</span>
             <span class="p">{</span> <span class="nf">assertEquals</span><span class="p">(</span><span class="s">"Doe"</span><span class="p">,</span> <span class="n">person</span><span class="p">.</span><span class="n">lastName</span><span class="p">)</span> <span class="p">}</span>
         <span class="p">)</span>
@@ -1701,7 +1702,8 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 
     <span class="nd">@Test</span>
     <span class="k">fun</span> <span class="nf">`grouped</span> <span class="n">assertions</span> <span class="n">from</span> <span class="n">a</span> <span class="nf">stream`</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nf">assertAll</span><span class="p">(</span><span class="s">"People with first name starting with J"</span><span class="p">,</span>
+        <span class="nf">assertAll</span><span class="p">(</span>
+            <span class="s">"People with first name starting with J"</span><span class="p">,</span>
             <span class="n">people</span>
                 <span class="p">.</span><span class="nf">stream</span><span class="p">()</span>
                 <span class="p">.</span><span class="nf">map</span> <span class="p">{</span>
@@ -1713,7 +1715,8 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 
     <span class="nd">@Test</span>
     <span class="k">fun</span> <span class="nf">`grouped</span> <span class="n">assertions</span> <span class="n">from</span> <span class="n">a</span> <span class="nf">collection`</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nf">assertAll</span><span class="p">(</span><span class="s">"People with last name of Doe"</span><span class="p">,</span>
+        <span class="nf">assertAll</span><span class="p">(</span>
+            <span class="s">"People with last name of Doe"</span><span class="p">,</span>
             <span class="n">people</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="p">{</span> <span class="nf">assertEquals</span><span class="p">(</span><span class="s">"Doe"</span><span class="p">,</span> <span class="n">it</span><span class="p">.</span><span class="n">lastName</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">)</span>
     <span class="p">}</span>
@@ -7736,8 +7739,8 @@ has been ported to Kotlin.</p>
         <span class="nd">@JvmStatic</span>
         <span class="nd">@RegisterExtension</span>
         <span class="kd">val</span> <span class="py">server</span> <span class="p">=</span> <span class="nc">WebServerExtension</span><span class="p">.</span><span class="nf">builder</span><span class="p">()</span>
-                <span class="p">.</span><span class="nf">enableSecurity</span><span class="p">(</span><span class="k">false</span><span class="p">)</span>
-                <span class="p">.</span><span class="nf">build</span><span class="p">()</span>
+            <span class="p">.</span><span class="nf">enableSecurity</span><span class="p">(</span><span class="k">false</span><span class="p">)</span>
+            <span class="p">.</span><span class="nf">build</span><span class="p">()</span>
     <span class="p">}</span>
 
     <span class="nd">@Test</span>
@@ -11046,7 +11049,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-14 12:38:20 UTC
+Last updated 2021-11-14 15:20:42 UTC
 </div>
 </div>
 <style>
