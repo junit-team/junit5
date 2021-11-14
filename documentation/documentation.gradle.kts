@@ -452,10 +452,6 @@ tasks {
 		}
 	}
 
-	check {
-		dependsOn(prepareDocsForUploadToGhPages)
-	}
-
 	gitPublishCopy {
 		dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder)
 	}

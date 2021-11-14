@@ -30,6 +30,7 @@ jobs:
           -PenableJaCoCo
           build
           jacocoRootReport
+          prepareDocsForUploadToGhPages
     - name: Archive Test Distribution trace files
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
