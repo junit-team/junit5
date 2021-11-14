@@ -82,7 +82,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * after the test completes. If the cleanup mode is set to
  * {@link CleanupMode#ON_SUCCESS}, then the temporary directory will only be
  * deleted if the test completes successfully. The default behavior can be
- * altered by setting the {@code junit.jupiter.temp.dir.cleanup.mode.default}
+ * altered by setting the {@value #DEFAULT_CLEANUP_MODE_PROPERTY_NAME}
  * configuration parameter.
  *
  * @since 5.4
@@ -92,6 +92,8 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 @Documented
 @API(status = EXPERIMENTAL, since = "5.4")
 public @interface TempDir {
+
+	String DEFAULT_CLEANUP_MODE_PROPERTY_NAME = "junit.jupiter.cleanup.mode.default";
 
 	/**
 	 * How the temporary directory gets cleaned up after the test completes.
