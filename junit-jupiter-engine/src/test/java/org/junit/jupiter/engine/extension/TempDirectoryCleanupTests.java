@@ -21,6 +21,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.io.File;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
@@ -110,6 +111,25 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		executeTests(request);
 
 		assertTrue(onSuccessFailingDir.exists());
+	}
+
+	@AfterAll
+	static void afterAll() {
+		if (defaultDir.exists()) {
+			defaultDir.delete();
+		}
+		if (neverDir.exists()) {
+			neverDir.delete();
+		}
+		if (alwaysDir.exists()) {
+			alwaysDir.delete();
+		}
+		if (onSuccessFailingDir.exists()) {
+			onSuccessFailingDir.delete();
+		}
+		if (onSuccessFailingDir.exists()) {
+			onSuccessFailingDir.delete();
+		}
 	}
 
 	// -------------------------------------------------------------------
