@@ -55,4 +55,6 @@ GitHub.
 
 ==== New Features and Improvements
 
-* `TempDir` now includes a cleanup mode parameter.
+* `TempDir` now includes a cleanup mode attribute for preventing a temporary directory
+from being deleted after a test. The default cleanup mode can be configured via a
+configuration parameter.
