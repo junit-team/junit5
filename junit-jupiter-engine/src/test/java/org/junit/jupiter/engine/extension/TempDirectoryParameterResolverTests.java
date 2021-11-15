@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -33,7 +34,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 class TempDirectoryParameterResolverTests {
 
-	TempDirectory resolver = new TempDirectory();
+	TempDirectory resolver = new TempDirectory(mock(JupiterConfiguration.class));
 
 	@Test
 	void supports() {

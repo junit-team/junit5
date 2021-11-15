@@ -47,9 +47,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private static final Logger logger = LoggerFactory.getLogger(MutableExtensionRegistry.class);
 
-	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
+	private static final List<Extension> DEFAULT_STATELESS_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
 		new DisabledCondition(), //
-		new TempDirectory(), //
 		new TimeoutExtension(), //
 		new RepeatedTestExtension(), //
 		new TestInfoParameterResolver(), //
@@ -71,9 +70,9 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	public static MutableExtensionRegistry createRegistryWithDefaultExtensions(JupiterConfiguration configuration) {
 		MutableExtensionRegistry extensionRegistry = new MutableExtensionRegistry(null);
 
-		TempDirectory.setConfiguration(configuration);
+		DEFAULT_STATELESS_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
-		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
+		extensionRegistry.registerDefaultExtension(new TempDirectory(configuration));
 
 		if (configuration.isExtensionAutoDetectionEnabled()) {
 			registerAutoDetectedExtensions(extensionRegistry);

@@ -74,10 +74,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	private static final String KEY = "temp.dir";
 	private static final String TEMP_DIR_PREFIX = "junit";
-	private static JupiterConfiguration configuration;
 
-	public static void setConfiguration(JupiterConfiguration configuration) {
-		TempDirectory.configuration = configuration;
+	private final JupiterConfiguration configuration;
+
+	public TempDirectory(JupiterConfiguration configuration) {
+		this.configuration = configuration;
 	}
 
 	/**
@@ -163,7 +164,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return cleanupMode;
 	}
 
-	private static CleanupMode findCleanupModeForField(Field field) {
+	private CleanupMode findCleanupModeForField(Field field) {
 		CleanupMode cleanupMode = null;
 		Optional<TempDir> optional = AnnotationSupport.findAnnotation(field, TempDir.class);
 		if (optional.isPresent()) {
