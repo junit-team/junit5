@@ -22,6 +22,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.io.File;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
@@ -33,161 +34,311 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * deletes any if set for {@link CleanupMode#ON_SUCCESS} only if the test passes,
  * and deletes any if set for {@link CleanupMode#ALWAYS}.
  *
- * @since 5.9
- *
  * @see CleanupMode
  * @see TempDir
+ * @since 5.9
  */
 class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
-	private static File defaultDir;
-	private static File neverDir;
-	private static File alwaysDir;
-	private static File onSuccessFailingDir;
-	private static File onSuccessPassingDir;
+	@Nested
+	class TempDirFieldTests {
 
-	/**
-	 * Ensure the cleanup modes defaults to ALWAYS.
-	 * <p/>
-	 * Expect the TempDir to be cleaned up.
-	 */
-	@Test
-	void testCleanupModeDefault() {
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(DefaultCase.class, "testDefault")).build();
-		executeTests(request);
+		private static File defaultFieldDir;
+		private static File neverFieldDir;
+		private static File alwaysFieldDir;
+		private static File onSuccessFailingFieldDir;
+		private static File onSuccessPassingFieldDir;
 
-		assertFalse(defaultDir.exists());
-	}
-
-	/**
-	 * Ensure that NEVER cleanup modes are obeyed.
-	 * <p/>
-	 * Expect the TempDir not to be cleaned up.
-	 */
-	@Test
-	void testCleanupModeNever() {
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(NeverCase.class, "testNever")).build();
-		executeTests(request);
-
-		assertTrue(neverDir.exists());
-	}
-
-	/**
-	 * Ensure that ALWAYS cleanup modes are obeyed.
-	 * <p/>
-	 * Expect the TempDir to be cleaned up.
-	 */
-	@Test
-	void testCleanupModeAlways() {
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(AlwaysCase.class, "testAlways")).build();
-		executeTests(request);
-
-		assertFalse(alwaysDir.exists());
-	}
-
-	/**
-	 * Ensure that ON_SUCCESS cleanup modes are obeyed for passing tests.
-	 * <p/>
-	 * Expect the TempDir to be cleaned up.
-	 */
-	@Test
-	void testCleanupModeOnSuccessPassing() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(OnSuccessPassingCase.class, "testOnSuccessPassing")).build();
-		executeTests(request);
-
-		assertFalse(onSuccessPassingDir.exists());
-	}
-
-	/**
-	 * Ensure that ON_SUCCESS cleanup modes are obeyed for failing tests.
-	 * <p/>
-	 * Expect the TempDir not to be cleaned up.
-	 */
-	@Test
-	void testCleanupModeOnSuccessFailing() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(OnSuccessFailingCase.class, "testOnSuccessFailing")).build();
-		executeTests(request);
-
-		assertTrue(onSuccessFailingDir.exists());
-	}
-
-	@AfterAll
-	static void afterAll() {
-		if (defaultDir.exists()) {
-			defaultDir.delete();
-		}
-		if (neverDir.exists()) {
-			neverDir.delete();
-		}
-		if (alwaysDir.exists()) {
-			alwaysDir.delete();
-		}
-		if (onSuccessFailingDir.exists()) {
-			onSuccessFailingDir.delete();
-		}
-		if (onSuccessFailingDir.exists()) {
-			onSuccessFailingDir.delete();
-		}
-	}
-
-	// -------------------------------------------------------------------
-
-	static class DefaultCase {
-
-		@TempDir
-		File defaultDir;
-
+		/**
+		 * Ensure the cleanup modes defaults to ALWAYS for fields.
+		 * <p/>
+		 * Expect the TempDir to be cleaned up.
+		 */
 		@Test
-		void testDefault() {
-			TempDirectoryCleanupTests.defaultDir = defaultDir;
+		void testCleanupModeDefaultField() {
+			LauncherDiscoveryRequest request = request().selectors(
+				selectMethod(DefaultFieldCase.class, "testDefaultField")).build();
+			executeTests(request);
+
+			assertFalse(defaultFieldDir.exists());
 		}
+
+		/**
+		 * Ensure that NEVER cleanup modes are obeyed for fields.
+		 * <p/>
+		 * Expect the TempDir not to be cleaned up.
+		 */
+		@Test
+		void testCleanupModeNeverField() {
+			LauncherDiscoveryRequest request = request().selectors(
+				selectMethod(NeverFieldCase.class, "testNeverField")).build();
+			executeTests(request);
+
+			assertTrue(neverFieldDir.exists());
+		}
+
+		/**
+		 * Ensure that ALWAYS cleanup modes are obeyed for fields.
+		 * <p/>
+		 * Expect the TempDir to be cleaned up.
+		 */
+		@Test
+		void testCleanupModeAlwaysField() {
+			LauncherDiscoveryRequest request = request().selectors(
+				selectMethod(AlwaysFieldCase.class, "testAlwaysField")).build();
+			executeTests(request);
+
+			assertFalse(alwaysFieldDir.exists());
+		}
+
+		/**
+		 * Ensure that ON_SUCCESS cleanup modes are obeyed for passing field tests.
+		 * <p/>
+		 * Expect the TempDir to be cleaned up.
+		 */
+		@Test
+		void testCleanupModeOnSuccessPassingField() {
+			LauncherDiscoveryRequest request = request().selectors(
+				selectMethod(OnSuccessPassingFieldCase.class, "testOnSuccessPassingField")).build();
+			executeTests(request);
+
+			assertFalse(onSuccessPassingFieldDir.exists());
+		}
+
+		/**
+		 * Ensure that ON_SUCCESS cleanup modes are obeyed for failing field tests.
+		 * <p/>
+		 * Expect the TempDir not to be cleaned up.
+		 */
+		@Test
+		void testCleanupModeOnSuccessFailingField() {
+			LauncherDiscoveryRequest request = request().selectors(
+				selectMethod(OnSuccessFailingFieldCase.class, "testOnSuccessFailingField")).build();
+			executeTests(request);
+
+			assertTrue(onSuccessFailingFieldDir.exists());
+		}
+
+		@AfterAll
+		static void afterAll() {
+			if (defaultFieldDir != null && defaultFieldDir.exists()) {
+				defaultFieldDir.delete();
+			}
+			if (neverFieldDir != null && neverFieldDir.exists()) {
+				neverFieldDir.delete();
+			}
+			if (alwaysFieldDir != null && alwaysFieldDir.exists()) {
+				alwaysFieldDir.delete();
+			}
+			if (onSuccessFailingFieldDir != null && onSuccessFailingFieldDir.exists()) {
+				onSuccessFailingFieldDir.delete();
+			}
+			if (onSuccessPassingFieldDir != null && onSuccessPassingFieldDir.exists()) {
+				onSuccessPassingFieldDir.delete();
+			}
+		}
+
+		// -------------------------------------------------------------------
+
+		static class DefaultFieldCase {
+
+			@TempDir
+			File defaultFieldDir;
+
+			@Test
+			void testDefaultField() {
+				TempDirFieldTests.defaultFieldDir = defaultFieldDir;
+			}
+		}
+
+		static class NeverFieldCase {
+
+			@TempDir(cleanup = NEVER)
+			File neverFieldDir;
+
+			@Test
+			void testNeverField() {
+				TempDirFieldTests.neverFieldDir = neverFieldDir;
+			}
+		}
+
+		static class AlwaysFieldCase {
+
+			@TempDir(cleanup = ALWAYS)
+			File alwaysFieldDir;
+
+			@Test
+			void testAlwaysField() {
+				TempDirFieldTests.alwaysFieldDir = alwaysFieldDir;
+			}
+		}
+
+		static class OnSuccessPassingFieldCase {
+
+			@TempDir(cleanup = ON_SUCCESS)
+			File onSuccessPassingFieldDir;
+
+			@Test
+			void testOnSuccessPassingField() {
+				TempDirFieldTests.onSuccessPassingFieldDir = onSuccessPassingFieldDir;
+			}
+		}
+
+		static class OnSuccessFailingFieldCase {
+
+			@TempDir(cleanup = ON_SUCCESS)
+			File onSuccessFailingFieldDir;
+
+			@Test
+			void testOnSuccessFailingField() {
+				TempDirFieldTests.onSuccessFailingFieldDir = onSuccessFailingFieldDir;
+				fail();
+			}
+		}
+
 	}
 
-	static class NeverCase {
+	@Nested
+	class TempDirParameterTests {
 
-		@TempDir(cleanup = NEVER)
-		File neverDir;
+		private static File defaultParameterDir;
+		private static File neverParameterDir;
+		private static File alwaysParameterDir;
+		private static File onSuccessFailingParameterDir;
+		private static File onSuccessPassingParameterDir;
 
+		/**
+		 * Ensure the cleanup modes defaults to ALWAYS for parameters.
+		 * <p/>
+		 * Expect the TempDir to be cleaned up.
+		 */
 		@Test
-		void testNever() {
-			TempDirectoryCleanupTests.neverDir = neverDir;
+		void testCleanupModeDefaultParameter() {
+			LauncherDiscoveryRequest request = request().selectors(
+				selectMethod(DefaultParameterCase.class, "testDefaultParameter", "java.io.File")).build();
+			executeTests(request);
+
+			assertFalse(defaultParameterDir.exists());
 		}
-	}
 
-	static class AlwaysCase {
-
-		@TempDir(cleanup = ALWAYS)
-		File alwaysDir;
-
+		/**
+		 * Ensure that NEVER cleanup modes are obeyed for parameters.
+		 * <p/>
+		 * Expect the TempDir not to be cleaned up.
+		 */
 		@Test
-		void testAlways() {
-			TempDirectoryCleanupTests.alwaysDir = alwaysDir;
+		void testCleanupModeNeverParameter() {
+			LauncherDiscoveryRequest request = request().selectors(
+				selectMethod(NeverParameterCase.class, "testNeverParameter", "java.io.File")).build();
+			executeTests(request);
+
+			assertTrue(neverParameterDir.exists());
 		}
-	}
 
-	static class OnSuccessPassingCase {
-
-		@TempDir(cleanup = ON_SUCCESS)
-		File onSuccessPassingDir;
-
+		/**
+		 * Ensure that ALWAYS cleanup modes are obeyed for parameters.
+		 * <p/>
+		 * Expect the TempDir to be cleaned up.
+		 */
 		@Test
-		void testOnSuccessPassing() {
-			TempDirectoryCleanupTests.onSuccessPassingDir = onSuccessPassingDir;
+		void testCleanupModeAlwaysParameter() {
+			LauncherDiscoveryRequest request = request().selectors(
+				selectMethod(AlwaysParameterCase.class, "testAlwaysParameter", "java.io.File")).build();
+			executeTests(request);
+
+			assertFalse(alwaysParameterDir.exists());
 		}
-	}
 
-	static class OnSuccessFailingCase {
-
-		@TempDir(cleanup = ON_SUCCESS)
-		File onSuccessFailingDir;
-
+		/**
+		 * Ensure that ON_SUCCESS cleanup modes are obeyed for passing parameter tests.
+		 * <p/>
+		 * Expect the TempDir to be cleaned up.
+		 */
 		@Test
-		void testOnSuccessFailing() {
-			TempDirectoryCleanupTests.onSuccessFailingDir = onSuccessFailingDir;
-			fail();
+		void testCleanupModeOnSuccessPassingParameter() {
+			LauncherDiscoveryRequest request = request().selectors(selectMethod(OnSuccessPassingParameterCase.class,
+				"testOnSuccessPassingParameter", "java.io.File")).build();
+			executeTests(request);
+
+			assertFalse(onSuccessPassingParameterDir.exists());
 		}
+
+		/**
+		 * Ensure that ON_SUCCESS cleanup modes are obeyed for failing parameter tests.
+		 * <p/>
+		 * Expect the TempDir not to be cleaned up.
+		 */
+		@Test
+		void testCleanupModeOnSuccessFailingParameter() {
+			LauncherDiscoveryRequest request = request().selectors(selectMethod(OnSuccessFailingParameterCase.class,
+				"testOnSuccessFailingParameter", "java.io.File")).build();
+			executeTests(request);
+
+			assertTrue(onSuccessFailingParameterDir.exists());
+		}
+
+		@AfterAll
+		static void afterAll() {
+			if (defaultParameterDir != null && defaultParameterDir.exists()) {
+				defaultParameterDir.delete();
+			}
+			if (neverParameterDir != null && neverParameterDir.exists()) {
+				neverParameterDir.delete();
+			}
+			if (alwaysParameterDir != null && alwaysParameterDir.exists()) {
+				alwaysParameterDir.delete();
+			}
+			if (onSuccessFailingParameterDir != null && onSuccessFailingParameterDir.exists()) {
+				onSuccessFailingParameterDir.delete();
+			}
+			if (onSuccessPassingParameterDir != null && onSuccessPassingParameterDir.exists()) {
+				onSuccessPassingParameterDir.delete();
+			}
+		}
+
+		// -------------------------------------------------------------------
+
+		static class DefaultParameterCase {
+
+			@Test
+			void testDefaultParameter(@TempDir File defaultParameterDir) {
+				TempDirParameterTests.defaultParameterDir = defaultParameterDir;
+			}
+		}
+
+		static class NeverParameterCase {
+
+			@Test
+			void testNeverParameter(@TempDir(cleanup = NEVER) File neverParameterDir) {
+				TempDirParameterTests.neverParameterDir = neverParameterDir;
+			}
+		}
+
+		static class AlwaysParameterCase {
+
+			@Test
+			void testAlwaysParameter(@TempDir(cleanup = ALWAYS) File alwaysParameterDir) {
+				TempDirParameterTests.alwaysParameterDir = alwaysParameterDir;
+			}
+		}
+
+		static class OnSuccessPassingParameterCase {
+
+			@Test
+			void testOnSuccessPassingParameter(@TempDir(cleanup = ON_SUCCESS) File onSuccessPassingParameterDir) {
+				TempDirParameterTests.onSuccessPassingParameterDir = onSuccessPassingParameterDir;
+			}
+		}
+
+		static class OnSuccessFailingParameterCase {
+
+			@Test
+			void testOnSuccessFailingParameter(@TempDir(cleanup = ON_SUCCESS) File onSuccessFailingParameterDir) {
+				TempDirParameterTests.onSuccessFailingParameterDir = onSuccessFailingParameterDir;
+				fail();
+			}
+		}
+
 	}
 
 }
