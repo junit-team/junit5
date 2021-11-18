@@ -53,6 +53,7 @@ class TempDirectoryParameterResolverTests extends AbstractJupiterTestEngineTests
 		@Test
 		void testBadTempDirType(@TempDir String badTempDir) {
 		}
+
 	}
 
 }
