@@ -10,89 +10,49 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.io.File;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
+import org.junit.platform.testkit.engine.Events;
 
 /**
  * @since 5.9
  */
-class TempDirectoryParameterResolverTests {
-
-	TempDirectory resolver = new TempDirectory(mock(JupiterConfiguration.class));
+class TempDirectoryParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void supports() {
-		Parameter parameter1 = findParameterOfMethod("methodWithTempDirectoryParameter", File.class);
-		assertTrue(this.resolver.supportsParameter(parameterContext(parameter1), null));
-
-		Parameter parameter2 = findParameterOfMethod("methodWithoutTempDirectoryParameter", File.class);
-		assertFalse(this.resolver.supportsParameter(parameterContext(parameter2), null));
+	void testTempDirType() {
+		EngineExecutionResults executionResults = executeTestsForClass(ATestCase.class);
+		Events tests = executionResults.testEvents();
+		tests.assertStatistics(stats -> stats.started(2).failed(1).succeeded(1));
+		tests.succeeded().assertEventsMatchExactly(event(test("testGoodTempDirType"), finishedSuccessfully()));
+		tests.failed().assertEventsMatchExactly(event(test("testBadTempDirType"),
+			finishedWithFailure(instanceOf(ParameterResolutionException.class), message(
+				"Failed to resolve parameter [java.lang.String badTempDir] in method [void org.junit.jupiter.engine.extension.TempDirectoryParameterResolverTests$ATestCase.testBadTempDirType(java.lang.String)]: Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String"))));
 	}
 
-	@Test
-	void resolve() {
-		Parameter parameter = findParameterOfMethod("methodWithTempDirectoryParameter", File.class);
-		assertNotNull(parameter);
-		ExtensionContext extensionContext = extensionContext();
-		Object file = this.resolver.resolveParameter(parameterContext(parameter), extensionContext);
-		assertNotNull(file);
-	}
+	// -------------------------------------------------------------------
 
-	private Parameter findParameterOfMethod(String methodName, Class<?>... parameterTypes) {
-		Method method = ReflectionUtils.findMethod(Sample.class, methodName, parameterTypes).get();
-		return method.getParameters()[0];
-	}
+	static class ATestCase {
 
-	private static ExtensionContext extensionContext() {
-
-		Path path = mock(Path.class);
-		when(path.toFile()).thenReturn(new File(""));
-
-		TempDirectory.CloseablePath closeablePath = mock(TempDirectory.CloseablePath.class);
-		when(closeablePath.get()).thenReturn(path);
-
-		ExtensionContext.Store store = mock(ExtensionContext.Store.class);
-		when(store.getOrComputeIfAbsent(any(String.class), any(), any())).thenReturn(closeablePath);
-
-		ExtensionContext extensionContext = mock(ExtensionContext.class);
-		when(extensionContext.getRoot()).thenReturn(extensionContext);
-		when(extensionContext.getStore(any())).thenReturn(store);
-
-		return extensionContext;
-	}
-
-	private static ParameterContext parameterContext(Parameter parameter) {
-		ParameterContext parameterContext = mock(ParameterContext.class);
-		when(parameterContext.getParameter()).thenReturn(parameter);
-		when(parameterContext.isAnnotated(TempDir.class)).thenReturn(parameter.getAnnotation(TempDir.class) != null);
-		return parameterContext;
-	}
-
-	static class Sample {
-
-		void methodWithTempDirectoryParameter(@TempDir File tempDirectory) {
-
+		@Test
+		void testGoodTempDirType(@TempDir File goodTempDir) {
 		}
 
-		void methodWithoutTempDirectoryParameter(File normalDirectory) {
-
+		@Test
+		void testBadTempDirType(@TempDir String badTempDir) {
 		}
-
 	}
+
 }
