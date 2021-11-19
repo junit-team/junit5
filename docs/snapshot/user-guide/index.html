@@ -3843,7 +3843,9 @@ qualified method name</em> as demonstrated in the following example.</p>
 <div class="paragraph">
 <p><code>@CsvSource</code> allows you to express argument lists as comma-separated values (i.e., CSV
 <code>String</code> literals). Each string provided via the <code>value</code> attribute in <code>@CsvSource</code>
-represents a CSV record and results in one invocation of the parameterized test.</p>
+represents a CSV record and results in one invocation of the parameterized test. The first
+record may optionally be used to supply CSV headers (see the Javadoc for the
+<code>useHeadersInDisplayName</code> attribute for details and an example).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3936,12 +3938,17 @@ by default. This behavior can be changed by setting the
 <p>If the programming language you are using supports <em>text blocks</em>&#8201;&#8212;&#8201;for example, Java SE
 15 or higher&#8201;&#8212;&#8201;you can alternatively use the <code>textBlock</code> attribute of <code>@CsvSource</code>. Each
 record within a text block represents a CSV record and results in one invocation of the
-parameterized test. Using a text block, the previous example can be implemented as follows.</p>
+parameterized test. The first record may optionally be used to supply CSV headers by
+setting the <code>useHeadersInDisplayName</code> attribute to <code>true</code> as in the example below.</p>
+</div>
+<div class="paragraph">
+<p>Using a text block, the previous example can be implemented as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="nd">@ParameterizedTest</span>
-<span class="nd">@CsvSource</span><span class="o">(</span><span class="n">textBlock</span> <span class="o">=</span> <span class="s">"""
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@ParameterizedTest</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"[{index}] {arguments}"</span><span class="o">)</span>
+<span class="nd">@CsvSource</span><span class="o">(</span><span class="n">useHeadersInDisplayName</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">textBlock</span> <span class="o">=</span> <span class="s">"""
+    FRUIT,         RANK
     apple,         1
     banana,        2
     'lemon, lime', 0xF1
@@ -3950,6 +3957,17 @@ parameterized test. Using a text block, the previous example can be implemented 
 <span class="kt">void</span> <span class="nf">testWithCsvSource</span><span class="o">(</span><span class="nc">String</span> <span class="n">fruit</span><span class="o">,</span> <span class="kt">int</span> <span class="n">rank</span><span class="o">)</span> <span class="o">{</span>
     <span class="c1">// ...</span>
 <span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated display names for the previous example include the CSV header names.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[1] FRUIT = apple, RANK = 1
+[2] FRUIT = banana, RANK = 2
+[3] FRUIT = lemon, lime, RANK = 0xF1
+[4] FRUIT = strawberry, RANK = 700_000</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4007,7 +4025,11 @@ your text block.</p>
 <div class="paragraph">
 <p><code>@CsvFileSource</code> lets you use comma-separated value (CSV) files from the classpath or the
 local file system. Each record from a CSV file results in one invocation of the
-parameterized test.</p>
+parameterized test. The first record may optionally be used to supply CSV headers. You can
+instruct JUnit to ignore the headers via the <code>numLinesToSkip</code> attribute. If you would like
+for the headers to be used in the display names, you can set the <code>useHeadersInDisplayName</code>
+attribute to <code>true</code>. The examples below demonstrate the use of <code>numLinesToSkip</code> and
+<code>useHeadersInDisplayName</code>.</p>
 </div>
 <div class="paragraph">
 <p>The default delimiter is a comma (<code>,</code>), but you can use another character by setting the
@@ -4043,17 +4065,48 @@ be ignored.
 <span class="kt">void</span> <span class="nf">testWithCsvFileSourceFromFile</span><span class="o">(</span><span class="nc">String</span> <span class="n">country</span><span class="o">,</span> <span class="kt">int</span> <span class="n">reference</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">assertNotNull</span><span class="o">(</span><span class="n">country</span><span class="o">);</span>
     <span class="n">assertNotEquals</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">reference</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="nd">@ParameterizedTest</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"[{index}] {arguments}"</span><span class="o">)</span>
+<span class="nd">@CsvFileSource</span><span class="o">(</span><span class="n">resources</span> <span class="o">=</span> <span class="s">"/two-column.csv"</span><span class="o">,</span> <span class="n">useHeadersInDisplayName</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">testWithCsvFileSourceAndHeaders</span><span class="o">(</span><span class="nc">String</span> <span class="n">country</span><span class="o">,</span> <span class="kt">int</span> <span class="n">reference</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">assertNotNull</span><span class="o">(</span><span class="n">country</span><span class="o">);</span>
+    <span class="n">assertNotEquals</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">reference</span><span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">two-column.csv</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="csv">Country, Reference
+<pre class="rouge highlight"><code data-lang="csv">COUNTRY, REFERENCE
 Sweden, 1
 Poland, 2
 "United States of America", 3
 France, 700_000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following listing shows the generated display names for the first two parameterized
+test methods above.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[1] country=Sweden, reference=1
+[2] country=Poland, reference=2
+[3] country=United States of America, reference=3
+[4] country=France, reference=700_000</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following listing shows the generated display names for the last parameterized test
+method above that uses CSV header names.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[1] COUNTRY = Sweden, REFERENCE = 1
+[2] COUNTRY = Poland, REFERENCE = 2
+[3] COUNTRY = United States of America, REFERENCE = 3
+[4] COUNTRY = France, REFERENCE = 700_000</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -11049,7 +11102,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-19 12:23:52 UTC
+Last updated 2021-11-19 14:53:13 UTC
 </div>
 </div>
 <style>

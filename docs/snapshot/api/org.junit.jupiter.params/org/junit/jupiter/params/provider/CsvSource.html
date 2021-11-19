@@ -179,9 +179,15 @@ loadScripts(document, 'script');</script>
 <div class="block">The CSV records to use as the source of arguments, supplied as a single
  <em>text block</em>; must not be empty.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second even-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#useHeadersInDisplayName()" class="member-name-link">useHeadersInDisplayName</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Configures whether the first CSV record should be treated as header names
+ for columns.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">The CSV records to use as the source of arguments; must not be empty.</div>
 </div>
 </div>
@@ -206,7 +212,9 @@ loadScripts(document, 'script');</script>
  via this attribute or the <a href="#textBlock()"><code>textBlock()</code></a> attribute.
 
  <p>Each value corresponds to a record in a CSV file and will be split using
- the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
+ the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>. Note that
+ the first value may optionally be used to supply CSV headers (see
+ <a href="#useHeadersInDisplayName()"><code>useHeadersInDisplayName()</code></a>).
 
  <p>If <em>text block</em> syntax is supported by your programming language,
  you may find it more convenient to declare your CSV content via the
@@ -256,6 +264,8 @@ loadScripts(document, 'script');</script>
 
  <p>Each record in the text block corresponds to a record in a CSV file and will
  be split using the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>.
+ Note that the first record may optionally be used to supply CSV headers (see
+ <a href="#useHeadersInDisplayName()"><code>useHeadersInDisplayName()</code></a>).
 
  <p>In contrast to CSV records supplied via <a href="#value()"><code>value()</code></a>, a text block
  can contain comments. Any line beginning with a hash tag (<code>#</code>) will
@@ -300,6 +310,48 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>""</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="useHeadersInDisplayName()">
+<h3>useHeadersInDisplayName</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.8.2")
+</span><span class="return-type">boolean</span>&nbsp;<span class="element-name">useHeadersInDisplayName</span></div>
+<div class="block">Configures whether the first CSV record should be treated as header names
+ for columns.
+
+ <p>When set to <code>true</code>, the header names will be used in the
+ generated display name for each <code>@ParameterizedTest</code> method
+ invocation. When using this feature, you must ensure that the display name
+ pattern for <code>@ParameterizedTest</code> includes
+ <a href="../ParameterizedTest.html#ARGUMENTS_PLACEHOLDER">"{arguments}"</a> instead of
+ <a href="../ParameterizedTest.html#ARGUMENTS_WITH_NAMES_PLACEHOLDER">"{argumentsWithNames}"</a>
+ as demonstrated in the example below.
+
+ <p>Defaults to <code>false</code>.
+
+ <h4>Example</h4>
+ <pre class="code">
+ @ParameterizedTest(name = "[{index}] {arguments}")
+ @CsvSource(useHeadersInDisplayName = true, textBlock = """
+     FRUIT,         RANK
+     apple,         1
+     banana,        2
+     'lemon, lime', 0xF1
+     strawberry,    700_000
+     """)
+ void test(String fruit, int rank) {
+     // ...
+ }</pre></div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.8.2</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>false</dd>
 </dl>
 </section>
 </li>

@@ -656,6 +656,9 @@ whose names match none of the supplied patterns.</p>
 <p>Text blocks in <code>@CsvSource</code> are treated like CSV files</p>
 </li>
 <li>
+<p>CSV headers in display names for <code>@CsvSource</code> and <code>@CsvFileSource</code></p>
+</li>
+<li>
 <p>Custom quote character support in <code>@CsvSource</code> and <code>@CsvFileSource</code></p>
 </li>
 </ul>
@@ -685,8 +688,13 @@ quoted strings. See the
 Guide</a> for details and examples.</p>
 </li>
 <li>
+<p>CSV headers can now be used in display names in parameterized tests. See
+<a href="../user-guide/index.html#writing-tests-parameterized-tests-sources-CsvSource"><code>@CsvSource</code></a> and
+<a href="../user-guide/index.html#writing-tests-parameterized-tests-sources-CsvFileSource"><code>@CsvFileSource</code></a> in the User Guide for details and examples.</p>
+</li>
+<li>
 <p>The quote character for <em>quoted strings</em> in <code>@CsvSource</code> and <code>@CsvFileSource</code> is now
-configurable via new <code>quoteCharacter</code> attributes in each annotation.</p>
+configurable via a new <code>quoteCharacter</code> attribute in each annotation.</p>
 </li>
 </ul>
 </div>
@@ -868,7 +876,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-19 12:23:52 UTC
+Last updated 2021-11-19 14:53:13 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
