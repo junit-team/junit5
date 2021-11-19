@@ -199,7 +199,8 @@ loadScripts(document, 'script');</script>
  <p>Factory methods in external classes must be referenced by <em>fully
  qualified method name</em> &mdash; for example,
  <code>com.example.StringsProviders#blankStrings</code> or
- <code>com.example.OuterClass$InnerClass#classMethod</code>.
+ <code>com.example.TopLevelClass$NestedClass#classMethod</code> for a factory
+ method in a static nested class.
 
  <p>If no factory method names are declared, a method within the test class
  that has the same name as the test method will be used as the factory
