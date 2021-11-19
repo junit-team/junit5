@@ -110,7 +110,8 @@ public @interface MethodSource {
 	 * <p>Factory methods in external classes must be referenced by <em>fully
 	 * qualified method name</em> &mdash; for example,
 	 * {@code com.example.StringsProviders#blankStrings} or
-	 * {@code com.example.OuterClass$InnerClass#classMethod}.
+	 * {@code com.example.TopLevelClass$NestedClass#classMethod} for a factory
+	 * method in a static nested class.
 	 *
 	 * <p>If no factory method names are declared, a method within the test class
 	 * that has the same name as the test method will be used as the factory
