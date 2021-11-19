@@ -19,6 +19,7 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.me
 
 import java.io.File;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
@@ -32,6 +33,7 @@ import org.junit.platform.testkit.engine.Events;
 class TempDirectoryParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
+	@DisplayName("Test good and bad @TempDir parameters")
 	void testTempDirType() {
 		EngineExecutionResults executionResults = executeTestsForClass(ATestCase.class);
 		Events tests = executionResults.testEvents();
