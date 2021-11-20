@@ -29,8 +29,9 @@ include the corresponding versions of the `junit-platform-launcher`,
 [subs=attributes+]
 ----
 testImplementation(platform("org.junit:junit-bom:{bom-version}"))
-// Only needed to run tests in a version of IntelliJ IDEA that bundles older versions
-testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+testRuntimeOnly("org.junit.platform:junit-platform-launcher") {
+  because("Only needed to run tests in a version of IntelliJ IDEA that bundles older versions")
+}
 testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 ----
