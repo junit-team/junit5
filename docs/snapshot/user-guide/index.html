@@ -6005,8 +6005,9 @@ include the corresponding versions of the <code>junit-platform-launcher</code>,
 <div class="title">Additional Gradle Dependencies</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">testImplementation</span><span class="o">(</span><span class="n">platform</span><span class="o">(</span><span class="s2">"org.junit:junit-bom:5.9.0-SNAPSHOT"</span><span class="o">))</span>
-<span class="c1">// Only needed to run tests in a version of IntelliJ IDEA that bundles older versions</span>
-<span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.platform:junit-platform-launcher"</span><span class="o">)</span>
+<span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.platform:junit-platform-launcher"</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">because</span><span class="o">(</span><span class="s2">"Only needed to run tests in a version of IntelliJ IDEA that bundles older versions"</span><span class="o">)</span>
+<span class="o">}</span>
 <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.jupiter:junit-jupiter-engine"</span><span class="o">)</span>
 <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.vintage:junit-vintage-engine"</span><span class="o">)</span></code></pre>
 </div>
@@ -11102,7 +11103,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-19 14:53:13 UTC
+Last updated 2021-11-20 13:52:21 UTC
 </div>
 </div>
 <style>
