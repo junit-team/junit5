@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.nio.file.Files.deleteIfExists;
+import static java.nio.file.Files.exists;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -19,7 +21,9 @@ import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Nested;
@@ -43,11 +47,11 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	@Nested
 	class TempDirFieldTests {
 
-		private static File defaultFieldDir;
-		private static File neverFieldDir;
-		private static File alwaysFieldDir;
-		private static File onSuccessFailingFieldDir;
-		private static File onSuccessPassingFieldDir;
+		private static Path defaultFieldDir;
+		private static Path neverFieldDir;
+		private static Path alwaysFieldDir;
+		private static Path onSuccessFailingFieldDir;
+		private static Path onSuccessPassingFieldDir;
 
 		/**
 		 * Ensure the cleanup modes defaults to ALWAYS for fields.
@@ -60,7 +64,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 				selectMethod(DefaultFieldCase.class, "testDefaultField")).build();
 			executeTests(request);
 
-			assertFalse(defaultFieldDir.exists());
+			assertFalse(exists(defaultFieldDir));
 		}
 
 		/**
@@ -74,7 +78,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 				selectMethod(NeverFieldCase.class, "testNeverField")).build();
 			executeTests(request);
 
-			assertTrue(neverFieldDir.exists());
+			assertTrue(exists(neverFieldDir));
 		}
 
 		/**
@@ -88,7 +92,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 				selectMethod(AlwaysFieldCase.class, "testAlwaysField")).build();
 			executeTests(request);
 
-			assertFalse(alwaysFieldDir.exists());
+			assertFalse(exists(alwaysFieldDir));
 		}
 
 		/**
@@ -102,7 +106,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 				selectMethod(OnSuccessPassingFieldCase.class, "testOnSuccessPassingField")).build();
 			executeTests(request);
 
-			assertFalse(onSuccessPassingFieldDir.exists());
+			assertFalse(exists(onSuccessPassingFieldDir));
 		}
 
 		/**
@@ -116,25 +120,20 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 				selectMethod(OnSuccessFailingFieldCase.class, "testOnSuccessFailingField")).build();
 			executeTests(request);
 
-			assertTrue(onSuccessFailingFieldDir.exists());
+			assertTrue(exists(onSuccessFailingFieldDir));
 		}
 
 		@AfterAll
 		static void afterAll() {
-			if (defaultFieldDir != null && defaultFieldDir.exists()) {
-				defaultFieldDir.delete();
+			try {
+				deleteIfExists(defaultFieldDir);
+				deleteIfExists(neverFieldDir);
+				deleteIfExists(alwaysFieldDir);
+				deleteIfExists(onSuccessFailingFieldDir);
+				deleteIfExists(onSuccessPassingFieldDir);
 			}
-			if (neverFieldDir != null && neverFieldDir.exists()) {
-				neverFieldDir.delete();
-			}
-			if (alwaysFieldDir != null && alwaysFieldDir.exists()) {
-				alwaysFieldDir.delete();
-			}
-			if (onSuccessFailingFieldDir != null && onSuccessFailingFieldDir.exists()) {
-				onSuccessFailingFieldDir.delete();
-			}
-			if (onSuccessPassingFieldDir != null && onSuccessPassingFieldDir.exists()) {
-				onSuccessPassingFieldDir.delete();
+			catch (IOException e) {
+				throw new UncheckedIOException(e);
 			}
 		}
 
@@ -143,7 +142,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class DefaultFieldCase {
 
 			@TempDir
-			File defaultFieldDir;
+			Path defaultFieldDir;
 
 			@Test
 			void testDefaultField() {
@@ -154,7 +153,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class NeverFieldCase {
 
 			@TempDir(cleanup = NEVER)
-			File neverFieldDir;
+			Path neverFieldDir;
 
 			@Test
 			void testNeverField() {
@@ -165,7 +164,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class AlwaysFieldCase {
 
 			@TempDir(cleanup = ALWAYS)
-			File alwaysFieldDir;
+			Path alwaysFieldDir;
 
 			@Test
 			void testAlwaysField() {
@@ -176,7 +175,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class OnSuccessPassingFieldCase {
 
 			@TempDir(cleanup = ON_SUCCESS)
-			File onSuccessPassingFieldDir;
+			Path onSuccessPassingFieldDir;
 
 			@Test
 			void testOnSuccessPassingField() {
@@ -187,7 +186,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class OnSuccessFailingFieldCase {
 
 			@TempDir(cleanup = ON_SUCCESS)
-			File onSuccessFailingFieldDir;
+			Path onSuccessFailingFieldDir;
 
 			@Test
 			void testOnSuccessFailingField() {
@@ -201,11 +200,11 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	@Nested
 	class TempDirParameterTests {
 
-		private static File defaultParameterDir;
-		private static File neverParameterDir;
-		private static File alwaysParameterDir;
-		private static File onSuccessFailingParameterDir;
-		private static File onSuccessPassingParameterDir;
+		private static Path defaultParameterDir;
+		private static Path neverParameterDir;
+		private static Path alwaysParameterDir;
+		private static Path onSuccessFailingParameterDir;
+		private static Path onSuccessPassingParameterDir;
 
 		/**
 		 * Ensure the cleanup modes defaults to ALWAYS for parameters.
@@ -215,10 +214,10 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void testCleanupModeDefaultParameter() {
 			LauncherDiscoveryRequest request = request().selectors(
-				selectMethod(DefaultParameterCase.class, "testDefaultParameter", "java.io.File")).build();
+				selectMethod(DefaultParameterCase.class, "testDefaultParameter", "java.nio.file.Path")).build();
 			executeTests(request);
 
-			assertFalse(defaultParameterDir.exists());
+			assertFalse(exists(defaultParameterDir));
 		}
 
 		/**
@@ -229,10 +228,10 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void testCleanupModeNeverParameter() {
 			LauncherDiscoveryRequest request = request().selectors(
-				selectMethod(NeverParameterCase.class, "testNeverParameter", "java.io.File")).build();
+				selectMethod(NeverParameterCase.class, "testNeverParameter", "java.nio.file.Path")).build();
 			executeTests(request);
 
-			assertTrue(neverParameterDir.exists());
+			assertTrue(exists(neverParameterDir));
 		}
 
 		/**
@@ -243,10 +242,10 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void testCleanupModeAlwaysParameter() {
 			LauncherDiscoveryRequest request = request().selectors(
-				selectMethod(AlwaysParameterCase.class, "testAlwaysParameter", "java.io.File")).build();
+				selectMethod(AlwaysParameterCase.class, "testAlwaysParameter", "java.nio.file.Path")).build();
 			executeTests(request);
 
-			assertFalse(alwaysParameterDir.exists());
+			assertFalse(exists(alwaysParameterDir));
 		}
 
 		/**
@@ -257,10 +256,10 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void testCleanupModeOnSuccessPassingParameter() {
 			LauncherDiscoveryRequest request = request().selectors(selectMethod(OnSuccessPassingParameterCase.class,
-				"testOnSuccessPassingParameter", "java.io.File")).build();
+				"testOnSuccessPassingParameter", "java.nio.file.Path")).build();
 			executeTests(request);
 
-			assertFalse(onSuccessPassingParameterDir.exists());
+			assertFalse(exists(onSuccessPassingParameterDir));
 		}
 
 		/**
@@ -271,28 +270,23 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void testCleanupModeOnSuccessFailingParameter() {
 			LauncherDiscoveryRequest request = request().selectors(selectMethod(OnSuccessFailingParameterCase.class,
-				"testOnSuccessFailingParameter", "java.io.File")).build();
+				"testOnSuccessFailingParameter", "java.nio.file.Path")).build();
 			executeTests(request);
 
-			assertTrue(onSuccessFailingParameterDir.exists());
+			assertTrue(exists(onSuccessFailingParameterDir));
 		}
 
 		@AfterAll
 		static void afterAll() {
-			if (defaultParameterDir != null && defaultParameterDir.exists()) {
-				defaultParameterDir.delete();
+			try {
+				deleteIfExists(defaultParameterDir);
+				deleteIfExists(neverParameterDir);
+				deleteIfExists(alwaysParameterDir);
+				deleteIfExists(onSuccessFailingParameterDir);
+				deleteIfExists(onSuccessPassingParameterDir);
 			}
-			if (neverParameterDir != null && neverParameterDir.exists()) {
-				neverParameterDir.delete();
-			}
-			if (alwaysParameterDir != null && alwaysParameterDir.exists()) {
-				alwaysParameterDir.delete();
-			}
-			if (onSuccessFailingParameterDir != null && onSuccessFailingParameterDir.exists()) {
-				onSuccessFailingParameterDir.delete();
-			}
-			if (onSuccessPassingParameterDir != null && onSuccessPassingParameterDir.exists()) {
-				onSuccessPassingParameterDir.delete();
+			catch (IOException e) {
+				throw new UncheckedIOException(e);
 			}
 		}
 
@@ -301,7 +295,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class DefaultParameterCase {
 
 			@Test
-			void testDefaultParameter(@TempDir File defaultParameterDir) {
+			void testDefaultParameter(@TempDir Path defaultParameterDir) {
 				TempDirParameterTests.defaultParameterDir = defaultParameterDir;
 			}
 		}
@@ -309,7 +303,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class NeverParameterCase {
 
 			@Test
-			void testNeverParameter(@TempDir(cleanup = NEVER) File neverParameterDir) {
+			void testNeverParameter(@TempDir(cleanup = NEVER) Path neverParameterDir) {
 				TempDirParameterTests.neverParameterDir = neverParameterDir;
 			}
 		}
@@ -317,7 +311,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class AlwaysParameterCase {
 
 			@Test
-			void testAlwaysParameter(@TempDir(cleanup = ALWAYS) File alwaysParameterDir) {
+			void testAlwaysParameter(@TempDir(cleanup = ALWAYS) Path alwaysParameterDir) {
 				TempDirParameterTests.alwaysParameterDir = alwaysParameterDir;
 			}
 		}
@@ -325,7 +319,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class OnSuccessPassingParameterCase {
 
 			@Test
-			void testOnSuccessPassingParameter(@TempDir(cleanup = ON_SUCCESS) File onSuccessPassingParameterDir) {
+			void testOnSuccessPassingParameter(@TempDir(cleanup = ON_SUCCESS) Path onSuccessPassingParameterDir) {
 				TempDirParameterTests.onSuccessPassingParameterDir = onSuccessPassingParameterDir;
 			}
 		}
@@ -333,7 +327,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		static class OnSuccessFailingParameterCase {
 
 			@Test
-			void testOnSuccessFailingParameter(@TempDir(cleanup = ON_SUCCESS) File onSuccessFailingParameterDir) {
+			void testOnSuccessFailingParameter(@TempDir(cleanup = ON_SUCCESS) Path onSuccessFailingParameterDir) {
 				TempDirParameterTests.onSuccessFailingParameterDir = onSuccessFailingParameterDir;
 				fail();
 			}
