@@ -351,6 +351,11 @@ public final class AnnotationUtils {
 				}
 				// Nested container annotation?
 				else if (isRepeatableAnnotationContainer(candidateAnnotationType)) {
+					
+					// Find annotations that are directly present or meta-present on directly present annotations.
+					findRepeatableAnnotations(candidateAnnotationType.getDeclaredAnnotations(), annotationType, containerType, inherited, found,
+						visited);
+					
 					Method method = ReflectionUtils.tryToGetMethod(candidateAnnotationType, "value").toOptional().get();
 					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
 
