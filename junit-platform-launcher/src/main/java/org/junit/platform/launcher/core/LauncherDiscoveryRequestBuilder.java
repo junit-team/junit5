@@ -92,9 +92,11 @@ public final class LauncherDiscoveryRequestBuilder {
 	 *
 	 * <p>Supported values are {@code "logging"} and {@code "abortOnFailure"}.
 	 *
-	 * <p>If not specified, the default is {@code "logging"}.
+	 * <p>If not specified, the default is {@value #DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_VALUE}.
 	 */
 	public static final String DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME = "junit.platform.discovery.listener.default";
+
+	private static final String DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_VALUE = "abortOnFailure";
 
 	private final List<DiscoverySelector> selectors = new ArrayList<>();
 	private final List<EngineFilter> engineFilters = new ArrayList<>();
@@ -305,11 +307,8 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	private LauncherDiscoveryListener getLauncherDiscoveryListener(ConfigurationParameters configurationParameters) {
-		LauncherDiscoveryListener defaultDiscoveryListener = configurationParameters.get(
-			DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME) //
-				.map(value -> LauncherDiscoveryListeners.fromConfigurationParameter(
-					DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, value)) //
-				.orElseGet(LauncherDiscoveryListeners::abortOnFailure);
+		LauncherDiscoveryListener defaultDiscoveryListener = getDefaultLauncherDiscoveryListener(
+			configurationParameters);
 		if (discoveryListeners.isEmpty()) {
 			return defaultDiscoveryListener;
 		}
@@ -320,6 +319,14 @@ public final class LauncherDiscoveryRequestBuilder {
 		allDiscoveryListeners.addAll(discoveryListeners);
 		allDiscoveryListeners.add(defaultDiscoveryListener);
 		return LauncherDiscoveryListeners.composite(allDiscoveryListeners);
+	}
+
+	private LauncherDiscoveryListener getDefaultLauncherDiscoveryListener(
+			ConfigurationParameters configurationParameters) {
+		String value = configurationParameters.get(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME) //
+				.orElse(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_VALUE);
+		return LauncherDiscoveryListeners.fromConfigurationParameter(
+			DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, value);
 	}
 
 }
