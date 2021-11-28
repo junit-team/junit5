@@ -79,6 +79,7 @@
 1ce7ed2013269ca568d121f0c5697582  junit-platform-engine/src/main/java/org/junit/platform/engine/TestExecutionResult.java
 1d1c1edf9cb504fd159fc1a23299adc3  junit-platform-suite-commons/src/main/java/org/junit/platform/suite/commons/AdditionalDiscoverySelectors.java
 1d6313658632405c6cd75cabdad30dd4  documentation/src/test/java/org/junit/api/tools/AbstractApiReportWriter.java
+1d73c5abc65406b27df25d162e14c745  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.java
 1e43c36eae4ac0b80621dcd587a96f87  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterAllCallback.java
 1ec62ebec8ed9dc4ae8c5ba1ac7a1a81  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherSession.java
 1f327bcfb6605f04f604b544bbb03893  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIf.java
@@ -581,7 +582,6 @@ c665cbffd3af83710d24959605b66d5b  documentation/src/docs/asciidoc/docinfos/docin
 c7057e690e787bc3daac37713582b102  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ArgumentConverter.java
 c757c581ab848379cd0e2657a1034a0f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/DirectorySource.java
 c77f25d530f08066bf21f2e0eae29e7a  documentation/src/docs/asciidoc/docinfos/docinfo-footer.html
-c7cad21ebdfda3f7062faa646831573c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.java
 c7ee5e791898018ac65b101bcae93b63  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/FileSelector.java
 c886cf2abc1d4bb3048b94490093d98b  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ArgumentConversionException.java
 c8c0a0f8fc39fbbad960af2ff1016e23  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/package-info.java
