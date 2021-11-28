@@ -120,6 +120,7 @@
 2a98fd032d65cadf4967ed9bdfaaf614  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.java
 2acdbe767aaf4dec69d06011910f43e6  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
 2ae00a86c6d812bbf84b2d8fe80949f6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePreDestroyCallback.java
+2b67bfea71a3f23ddc370139342313a0  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.2.adoc
 2b963925ddef935fe62c2a1fead699be  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/package-info.java
 2ba206e4ab4fc1429e9d6b05f85bc5ff  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/package-info.java
 2c9e1b584fcf2194284f012c001534f9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistry.java
@@ -629,7 +630,6 @@ d4ce47495afb2233161e3f4241bc9f98  junit-jupiter-api/src/main/java/org/junit/jupi
 d4f1ea7cb993d39a541c2f998bc80d19  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/DefensiveAllDefaultPossibilitiesBuilder.java
 d4fe811c167b6bbaf3f427b4a26faa0b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/package-info.java
 d594a948855b00dab1f8418e1a3540b6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariables.java
-d5a099d42732560824acaa0de8310ddf  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.2.adoc
 d5faf51f203d8e60ddc3f69aa5476f90  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertArrayEquals.java
 d662b8c353004e73350e2c16c891e268  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
 d67601c515227a5c83a01bd8262e2297  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdStringifier.java
