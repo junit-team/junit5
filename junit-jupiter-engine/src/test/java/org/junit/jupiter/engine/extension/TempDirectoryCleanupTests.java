@@ -22,7 +22,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMetho
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterAll;
@@ -272,17 +271,12 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@AfterAll
-		static void afterAll() {
-			try {
-				deleteIfExists(defaultParameterDir);
-				deleteIfExists(neverParameterDir);
-				deleteIfExists(alwaysParameterDir);
-				deleteIfExists(onSuccessFailingParameterDir);
-				deleteIfExists(onSuccessPassingParameterDir);
-			}
-			catch (IOException e) {
-				throw new UncheckedIOException(e);
-			}
+		static void afterAll() throws IOException {
+			deleteIfExists(defaultParameterDir);
+			deleteIfExists(neverParameterDir);
+			deleteIfExists(alwaysParameterDir);
+			deleteIfExists(onSuccessFailingParameterDir);
+			deleteIfExists(onSuccessPassingParameterDir);
 		}
 
 		// -------------------------------------------------------------------
