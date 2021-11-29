@@ -2271,7 +2271,7 @@ include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_field_injectio
 ----
 
 The `@TempDir` annotation has an optional `cleanup` attribute that can be set to either
-`NEVER`, `ON_SUCCESS` or `ALWAYS`. If the cleanup mode is set to `NEVER`, temporary
+`NEVER`, `ON_SUCCESS`, or `ALWAYS`. If the cleanup mode is set to `NEVER`, temporary
 directories are not deleted after a test completes. If it is set to `ON_SUCCESS`,
 temporary directories are deleted only after a test completed successfully.
 
