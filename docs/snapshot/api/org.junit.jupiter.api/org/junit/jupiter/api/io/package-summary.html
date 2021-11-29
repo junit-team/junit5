@@ -16,7 +16,11 @@
 <script type="text/javascript" src="../../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="package-declaration-page">
-<script type="text/javascript">var pathtoroot = "../../../../../../";
+<script type="text/javascript">var evenRowColor = "even-row-color";
+var oddRowColor = "odd-row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "../../../../../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -101,15 +105,21 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="caption"><span>Annotation Interfaces</span></div>
-<div class="summary-table two-column-summary">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab3" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab3', 2)" class="table-tab">Enum Classes</button><button id="class-summary-tab7" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab7', 2)" class="table-tab">Annotation Interfaces</button></div>
+<div id="class-summary.tabpanel" role="tabpanel">
+<div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab7"><a href="TempDir.html" title="annotation interface in org.junit.jupiter.api.io">TempDir</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab7">
+<div class="col-first even-row-color class-summary class-summary-tab3"><a href="CleanupMode.html" title="enum class in org.junit.jupiter.api.io">CleanupMode</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab3">
+<div class="block">Enumeration of cleanup modes for a <code>TempDir</code>.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="TempDir.html" title="annotation interface in org.junit.jupiter.api.io">TempDir</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab7">
 <div class="block"><code>@TempDir</code> can be used to annotate a field in a test class or a
  parameter in a lifecycle method or test method of type <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a> or
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link"><code>File</code></a> that should be resolved into a temporary directory.</div>
+</div>
 </div>
 </div>
 </div>

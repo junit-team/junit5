@@ -5759,6 +5759,29 @@ method uses a separate directory.</p>
 <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The <code>@TempDir</code> annotation has an optional <code>cleanup</code> attribute that can be set to either
+<code>NEVER</code>, <code>ON_SUCCESS</code>, or <code>ALWAYS</code>. If the cleanup mode is set to <code>NEVER</code>, temporary
+directories are not deleted after a test completes. If it is set to <code>ON_SUCCESS</code>,
+temporary directories are deleted only after a test completed successfully.</p>
+</div>
+<div class="paragraph">
+<p>The default cleanup mode is <code>ALWAYS</code>. You can use the
+<code>junit.jupiter.temp.dir.cleanup.mode.default</code>
+<a href="#running-tests-config-params">configuration parameter</a> to override this default.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test class with a temporary directory that doesn&#8217;t get cleaned up</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">TempDirCleanupModeDemo</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">fileTest</span><span class="o">(</span><span class="nd">@TempDir</span><span class="o">(</span><span class="n">cleanup</span> <span class="o">=</span> <span class="no">ON_SUCCESS</span><span class="o">)</span> <span class="nc">Path</span> <span class="n">tempDir</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// perform test</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -10499,6 +10522,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.io</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CleanupMode</code> <em>(enum)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.io</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TempDir</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
 </tr>
@@ -11103,7 +11131,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2021-11-28 16:03:18 UTC
+Last updated 2021-11-29 12:12:29 UTC
 </div>
 </div>
 <style>
