@@ -12,13 +12,13 @@ package org.junit.jupiter.engine.extension;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -44,16 +44,12 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 * Ensure a closeable path is cleaned up for a cleanup mode of ALWAYS.
 	 */
 	@Test
-	void testAlways() {
+	void testAlways() throws IOException {
 		ExtensionContext extensionContext = mock(ExtensionContext.class);
 		TempDirectory.CloseablePath path = TempDirectory.createTempDir(ALWAYS, extensionContext);
 		assertTrue(path.get().toFile().exists());
-		try {
-			path.close();
-		}
-		catch (Exception e) {
-			fail(e);
-		}
+
+		path.close();
 		assertFalse(path.get().toFile().exists());
 	}
 
@@ -61,16 +57,12 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 * Ensure a closeable path is not cleaned up for a cleanup mode of NEVER.
 	 */
 	@Test
-	void testNever() {
+	void testNever() throws IOException {
 		ExtensionContext extensionContext = mock(ExtensionContext.class);
 		TempDirectory.CloseablePath path = TempDirectory.createTempDir(NEVER, extensionContext);
 		assertTrue(path.get().toFile().exists());
-		try {
-			path.close();
-		}
-		catch (Exception e) {
-			fail(e);
-		}
+
+		path.close();
 		assertTrue(path.get().toFile().exists());
 	}
 
@@ -78,18 +70,14 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 * Ensure a closeable path is not cleaned up for a cleanup mode of ON_SUCCESS if there is a TestAbortedException.
 	 */
 	@Test
-	void testOnSuccessWithTestAbortedException() {
+	void testOnSuccessWithTestAbortedException() throws IOException {
 		ExtensionContext extensionContext = mock(ExtensionContext.class);
 		when(extensionContext.getExecutionException()).thenReturn(Optional.of(new TestAbortedException()));
 
 		TempDirectory.CloseablePath path = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
 		assertTrue(path.get().toFile().exists());
-		try {
-			path.close();
-		}
-		catch (Exception e) {
-			fail(e);
-		}
+
+		path.close();
 		assertTrue(path.get().toFile().exists());
 	}
 
@@ -97,18 +85,13 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 * Ensure a closeable path is cleaned up for a cleanup mode of ON_SUCCESS if there is no exception.
 	 */
 	@Test
-	void testOnSuccessWithNoTestAbortedException() {
+	void testOnSuccessWithNoTestAbortedException() throws IOException {
 		ExtensionContext extensionContext = mock(ExtensionContext.class);
 		when(extensionContext.getExecutionException()).thenReturn(Optional.empty());
 
 		TempDirectory.CloseablePath path = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
 		assertTrue(path.get().toFile().exists());
-		try {
-			path.close();
-		}
-		catch (Exception e) {
-			fail(e);
-		}
+		path.close();
 		assertFalse(path.get().toFile().exists());
 	}
 
