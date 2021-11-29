@@ -124,17 +124,12 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@AfterAll
-		static void afterAll() {
-			try {
-				deleteIfExists(defaultFieldDir);
-				deleteIfExists(neverFieldDir);
-				deleteIfExists(alwaysFieldDir);
-				deleteIfExists(onSuccessFailingFieldDir);
-				deleteIfExists(onSuccessPassingFieldDir);
-			}
-			catch (IOException e) {
-				throw new UncheckedIOException(e);
-			}
+		static void afterAll() throws IOException {
+			deleteIfExists(defaultFieldDir);
+			deleteIfExists(neverFieldDir);
+			deleteIfExists(alwaysFieldDir);
+			deleteIfExists(onSuccessFailingFieldDir);
+			deleteIfExists(onSuccessPassingFieldDir);
 		}
 
 		// -------------------------------------------------------------------
