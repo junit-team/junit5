@@ -2349,3 +2349,18 @@ method uses a separate directory.
 ----
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_field_injection]
 ----
+
+The `@TempDir` annotation has an optional `cleanup` attribute that can be set to either
+`NEVER`, `ON_SUCCESS`, or `ALWAYS`. If the cleanup mode is set to `NEVER`, temporary
+directories are not deleted after a test completes. If it is set to `ON_SUCCESS`,
+temporary directories are deleted only after a test completed successfully.
+
+The default cleanup mode is `ALWAYS`. You can use the
+`junit.jupiter.temp.dir.cleanup.mode.default`
+<<running-tests-config-params, configuration parameter>> to override this default.
+
+[source,java,indent=0]
+.A test class with a temporary directory that doesn't get cleaned up
+----
+include::{testDir}/example/TempDirCleanupModeDemo.java[tags=user_guide]
+----

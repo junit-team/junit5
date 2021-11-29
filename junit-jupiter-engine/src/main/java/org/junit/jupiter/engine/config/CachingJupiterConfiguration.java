@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.config;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.api.io.TempDir.DEFAULT_CLEANUP_MODE_PROPERTY_NAME;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +24,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
@@ -105,6 +107,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	public Optional<ClassOrderer> getDefaultTestClassOrderer() {
 		return (Optional<ClassOrderer>) cache.computeIfAbsent(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME,
 			key -> delegate.getDefaultTestClassOrderer());
+	}
+
+	@Override
+	public CleanupMode getDefaultTempDirCleanupMode() {
+		return (CleanupMode) cache.computeIfAbsent(DEFAULT_CLEANUP_MODE_PROPERTY_NAME,
+			key -> delegate.getDefaultTempDirCleanupMode());
 	}
 
 }

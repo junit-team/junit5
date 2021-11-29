@@ -69,12 +69,21 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  *
  * <h3>Deletion</h3>
  *
- * <p>When the end of the scope of a temporary directory is reached, i.e. when
- * the test method or class has finished execution, JUnit will attempt to
- * recursively delete all files and directories in the temporary directory
+ * <p>By default, when the end of the scope of a temporary directory is reached,
+ * i.e. when the test method or class has finished execution, JUnit will attempt
+ * to recursively delete all files and directories in the temporary directory
  * and, finally, the temporary directory itself. In case deletion of a file or
  * directory fails, an {@link IOException} will be thrown that will cause the
  * test or test class to fail.
+ *
+ * <p>The {@code @TempDir} annotation has a {@link CleanupMode} parameter that
+ * allows overriding the default behavior. If the cleanup mode is set to
+ * {@link CleanupMode#NEVER}, then the temporary directory will not be deleted
+ * after the test completes. If the cleanup mode is set to
+ * {@link CleanupMode#ON_SUCCESS}, then the temporary directory will only be
+ * deleted if the test completes successfully. The default behavior can be
+ * altered by setting the {@value #DEFAULT_CLEANUP_MODE_PROPERTY_NAME}
+ * configuration parameter.
  *
  * @since 5.4
  */
@@ -83,4 +92,12 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 @Documented
 @API(status = EXPERIMENTAL, since = "5.4")
 public @interface TempDir {
+
+	String DEFAULT_CLEANUP_MODE_PROPERTY_NAME = "junit.jupiter.cleanup.mode.default";
+
+	/**
+	 * How the temporary directory gets cleaned up after the test completes.
+	 */
+	CleanupMode cleanup() default CleanupMode.DEFAULT;
+
 }

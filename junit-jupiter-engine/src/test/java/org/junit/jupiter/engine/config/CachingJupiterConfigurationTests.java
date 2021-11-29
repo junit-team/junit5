@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
@@ -109,6 +110,17 @@ class CachingJupiterConfigurationTests {
 		assertThat(cache.getDefaultTestMethodOrderer()).isSameAs(methodOrderer);
 
 		verify(delegate, only()).getDefaultTestMethodOrderer();
+	}
+
+	@Test
+	void cachesDefaultTempDirCleanupMode() {
+		when(delegate.getDefaultTempDirCleanupMode()).thenReturn(NEVER);
+
+		// call `cache.getDefaultTempStrategyDirCleanupMode()` twice to verify the delegate method is called only once.
+		assertThat(cache.getDefaultTempDirCleanupMode()).isSameAs(NEVER);
+		assertThat(cache.getDefaultTempDirCleanupMode()).isSameAs(NEVER);
+
+		verify(delegate, only()).getDefaultTempDirCleanupMode();
 	}
 
 	@Test

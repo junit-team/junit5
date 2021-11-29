@@ -12,6 +12,10 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
+import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
+import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
+import static org.junit.jupiter.api.io.CleanupMode.NEVER;
+import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
@@ -30,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
@@ -43,8 +48,13 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -64,6 +74,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	private static final String KEY = "temp.dir";
 	private static final String TEMP_DIR_PREFIX = "junit";
+
+	private final JupiterConfiguration configuration;
+
+	public TempDirectory(JupiterConfiguration configuration) {
+		this.configuration = configuration;
+	}
 
 	/**
 	 * Perform field injection for non-private, {@code static} fields (i.e.,
@@ -99,8 +115,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
 			assertSupportedType("field", field.getType());
+
 			try {
-				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), context));
+				CleanupMode mode = findCleanupModeForField(field);
+				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), mode, context));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
@@ -130,7 +148,32 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
-		return getPathOrFile(parameterContext.getParameter(), parameterType, extensionContext);
+		CleanupMode cleanupMode = findCleanupModeForParameter(parameterContext);
+		return getPathOrFile(parameterContext.getParameter(), parameterType, cleanupMode, extensionContext);
+	}
+
+	private CleanupMode findCleanupModeForParameter(ParameterContext parameterContext) {
+		CleanupMode cleanupMode = null;
+		Optional<TempDir> optional = parameterContext.findAnnotation(TempDir.class);
+		if (optional.isPresent()) {
+			cleanupMode = optional.get().cleanup();
+		}
+		if (cleanupMode == null || cleanupMode == DEFAULT) {
+			cleanupMode = ALWAYS;
+		}
+		return cleanupMode;
+	}
+
+	private CleanupMode findCleanupModeForField(Field field) {
+		CleanupMode cleanupMode = null;
+		Optional<TempDir> optional = AnnotationSupport.findAnnotation(field, TempDir.class);
+		if (optional.isPresent()) {
+			cleanupMode = optional.get().cleanup();
+		}
+		if (cleanupMode == null || cleanupMode == DEFAULT) {
+			cleanupMode = configuration.getDefaultTempDirCleanupMode();
+		}
+		return cleanupMode;
 	}
 
 	private void assertSupportedType(String target, Class<?> type) {
@@ -140,12 +183,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, ExtensionContext extensionContext) {
+	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, CleanupMode cleanupMode,
+			ExtensionContext extensionContext) {
 		Namespace namespace = getScope(extensionContext) == Scope.PER_DECLARATION //
 				? NAMESPACE.append(sourceElement) //
 				: NAMESPACE;
 		Path path = extensionContext.getStore(namespace) //
-				.getOrComputeIfAbsent(KEY, __ -> createTempDir(), CloseablePath.class) //
+				.getOrComputeIfAbsent(KEY, __ -> createTempDir(cleanupMode, extensionContext), CloseablePath.class) //
 				.get();
 
 		return (type == Path.class) ? path : path.toFile();
@@ -160,21 +204,27 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		);
 	}
 
-	private static CloseablePath createTempDir() {
+	static CloseablePath createTempDir(CleanupMode cleanupMode, ExtensionContext executionContext) {
 		try {
-			return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX));
+			return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX), cleanupMode, executionContext);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
 		}
 	}
 
-	private static class CloseablePath implements CloseableResource {
+	static class CloseablePath implements CloseableResource {
+
+		private static final Logger logger = LoggerFactory.getLogger(CloseablePath.class);
 
 		private final Path dir;
+		private final CleanupMode cleanupMode;
+		private final ExtensionContext executionContext;
 
-		CloseablePath(Path dir) {
+		CloseablePath(Path dir, CleanupMode cleanupMode, ExtensionContext executionContext) {
 			this.dir = dir;
+			this.cleanupMode = cleanupMode;
+			this.executionContext = executionContext;
 		}
 
 		Path get() {
@@ -183,6 +233,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		@Override
 		public void close() throws IOException {
+			if (cleanupMode == NEVER
+					|| (cleanupMode == ON_SUCCESS && executionContext.getExecutionException().isPresent())) {
+				logger.info(() -> "Skipping cleanup of temp dir " + dir + " due to cleanup mode configuration.");
+				return;
+			}
+
 			SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories();
 			if (!failures.isEmpty()) {
 				throw createIOExceptionWithAttachedFailures(failures);
