@@ -76,7 +76,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	}
 
 	/**
-	 * Ensure a closeable path is not cleaned up for a cleanup mode of ON_SUCCESS if there is a TestAbortedException.
+	 * Ensure a closeable path is not cleaned up for a cleanup mode of ON_SUCCESS, if there is a TestAbortedException.
 	 */
 	@Test
 	void testOnSuccessWithTestAbortedException() throws IOException {
@@ -91,7 +91,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	}
 
 	/**
-	 * Ensure a closeable path is cleaned up for a cleanup mode of ON_SUCCESS if there is no exception.
+	 * Ensure a closeable path is cleaned up for a cleanup mode of ON_SUCCESS, if there is no exception.
 	 */
 	@Test
 	void testOnSuccessWithNoTestAbortedException() throws IOException {
