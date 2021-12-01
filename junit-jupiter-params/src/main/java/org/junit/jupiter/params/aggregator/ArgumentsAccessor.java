@@ -46,6 +46,14 @@ import org.apiguardian.api.API;
 public interface ArgumentsAccessor {
 
 	/**
+	 * Get the zero-based invocation index of the ParameterizedTest arguments source.
+	 *
+	 * @return the invocation index of the arguments source.
+	 * @since 5.9
+	 */
+	long getInvocationIndex();
+
+	/**
 	 * Get the value of the argument at the given index as an {@link Object}.
 	 *
 	 * @param index the index of the argument to get; must be greater than or

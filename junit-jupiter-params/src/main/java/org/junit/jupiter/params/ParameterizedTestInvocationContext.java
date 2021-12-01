@@ -24,12 +24,14 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	private final ParameterizedTestNameFormatter formatter;
 	private final ParameterizedTestMethodContext methodContext;
+	private final long invocationIndex;
 	private final Object[] arguments;
 
 	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments) {
+			ParameterizedTestMethodContext methodContext, long invocationIndex, Object[] arguments) {
 		this.formatter = formatter;
 		this.methodContext = methodContext;
+		this.invocationIndex = invocationIndex;
 		this.arguments = arguments;
 	}
 
@@ -40,7 +42,8 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return singletonList(new ParameterizedTestParameterResolver(this.methodContext, this.arguments));
+		return singletonList(
+			new ParameterizedTestParameterResolver(this.methodContext, this.invocationIndex, this.arguments));
 	}
 
 }

@@ -35,11 +35,18 @@ import org.junit.platform.commons.util.Preconditions;
 @API(status = INTERNAL, since = "5.2")
 public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
+	private final long invocationIndex;
 	private final Object[] arguments;
 
-	public DefaultArgumentsAccessor(Object... arguments) {
+	public DefaultArgumentsAccessor(long invocationIndex, Object... arguments) {
 		Preconditions.notNull(arguments, "Arguments array must not be null");
+		this.invocationIndex = invocationIndex;
 		this.arguments = arguments;
+	}
+
+	@Override
+	public long getInvocationIndex() {
+		return invocationIndex;
 	}
 
 	@Override

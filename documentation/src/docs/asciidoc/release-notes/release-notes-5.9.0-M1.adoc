@@ -48,7 +48,11 @@ on GitHub.
   whose names match none of the supplied patterns.
 * A new extension `TestInstancePreConstructCallback` called prior to a test instance construction
   (symmetric extension to `TestInstancePreDestroyCallback`).
-
+* `@TempDir` now includes a cleanup mode attribute for preventing a temporary directory
+  from being deleted after a test. The default cleanup mode can be configured via a
+  configuration parameter.
+* Add a `getInvocationIndex` method to `ArgumentsAccessor`, which returns the index
+  of the argument source currently being invoked.
 
 [[release-notes-5.9.0-M1-junit-vintage]]
 === JUnit Vintage
@@ -63,6 +67,4 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* `@TempDir` now includes a cleanup mode attribute for preventing a temporary directory
-  from being deleted after a test. The default cleanup mode can be configured via a
-  configuration parameter.
+* ❓

@@ -90,10 +90,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.flatMap(provider -> arguments(provider, extensionContext))
 				.map(Arguments::get)
 				.map(arguments -> consumedArguments(arguments, methodContext))
-				.map(arguments -> {
-					invocationCount.incrementAndGet();
-					return createInvocationContext(formatter, methodContext, arguments);
-				})
+				.map(arguments -> createInvocationContext(formatter, methodContext, invocationCount.getAndIncrement(), arguments))
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0,
 								"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"));
@@ -122,8 +119,8 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments) {
-		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments);
+			ParameterizedTestMethodContext methodContext, long invocationIndex, Object[] arguments) {
+		return new ParameterizedTestInvocationContext(formatter, methodContext, invocationIndex, arguments);
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(ExtensionContext extensionContext, Method templateMethod,

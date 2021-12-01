@@ -124,6 +124,20 @@ public class AggregatorIntegrationTests {
 		assertEquals(55, IntStream.range(0, arguments.size()).map(arguments::getInteger).sum());
 	}
 
+	@ParameterizedTest
+	@CsvSource({ "cat", "mouse", "bird" })
+	void getInvocationIndex(ArgumentsAccessor arguments) {
+		if (arguments.get(0) == "cat") {
+			assertEquals(0, arguments.getInvocationIndex());
+		}
+		else if (arguments.get(0) == "mouse") {
+			assertEquals(1, arguments.getInvocationIndex());
+		}
+		else if (arguments.get(0) == "bird") {
+			assertEquals(2, arguments.getInvocationIndex());
+		}
+	}
+
 	@ParameterizedTest(name = "2 ArgumentsAccessors: {arguments}")
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
 	void argumentsAccessors(ArgumentsAccessor arguments1, ArgumentsAccessor arguments2) {
