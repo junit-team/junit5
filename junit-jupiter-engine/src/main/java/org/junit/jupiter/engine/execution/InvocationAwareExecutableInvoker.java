@@ -35,7 +35,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class ExecutableInvoker {
+public class InvocationAwareExecutableInvoker {
 
 	private static final InvocationInterceptorChain interceptorChain = new InvocationInterceptorChain();
 

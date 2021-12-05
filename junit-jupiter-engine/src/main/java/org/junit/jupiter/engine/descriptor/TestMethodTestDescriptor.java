@@ -34,8 +34,8 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
-import org.junit.jupiter.engine.execution.ExecutableInvoker;
-import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
+import org.junit.jupiter.engine.execution.InvocationAwareExecutableInvoker;
+import org.junit.jupiter.engine.execution.InvocationAwareExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
@@ -67,7 +67,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	public static final String SEGMENT_TYPE = "method";
-	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
+	private static final InvocationAwareExecutableInvoker executableInvoker = new InvocationAwareExecutableInvoker();
 	private static final ReflectiveInterceptorCall<Method, Void> defaultInterceptorCall = ReflectiveInterceptorCall.ofVoidMethod(
 		InvocationInterceptor::interceptTestMethod);
 
