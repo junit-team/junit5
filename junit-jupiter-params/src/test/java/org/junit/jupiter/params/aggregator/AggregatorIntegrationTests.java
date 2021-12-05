@@ -15,7 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -124,20 +127,6 @@ public class AggregatorIntegrationTests {
 		assertEquals(55, IntStream.range(0, arguments.size()).map(arguments::getInteger).sum());
 	}
 
-	@ParameterizedTest
-	@CsvSource({ "cat", "mouse", "bird" })
-	void getInvocationIndex(ArgumentsAccessor arguments) {
-		if (arguments.get(0) == "cat") {
-			assertEquals(0, arguments.getInvocationIndex());
-		}
-		else if (arguments.get(0) == "mouse") {
-			assertEquals(1, arguments.getInvocationIndex());
-		}
-		else if (arguments.get(0) == "bird") {
-			assertEquals(2, arguments.getInvocationIndex());
-		}
-	}
-
 	@ParameterizedTest(name = "2 ArgumentsAccessors: {arguments}")
 	@CsvSource({ "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" })
 	void argumentsAccessors(ArgumentsAccessor arguments1, ArgumentsAccessor arguments2) {
@@ -196,6 +185,81 @@ public class AggregatorIntegrationTests {
 		results.testEvents().assertThatEvents()//
 				.haveExactly(1, event(test(), finishedWithFailure(instanceOf(ParameterResolutionException.class), //
 					message("Error aggregating arguments for parameter at index 0: something went horribly wrong"))));
+	}
+
+	@Nested
+	class InvocationIndexTests {
+
+		@ParameterizedTest
+		@CsvSource({ "cat", "mouse", "bird" })
+		void getInvocationIndex(ArgumentsAccessor arguments) {
+			if (arguments.get(0) == "cat") {
+				assertEquals(0, arguments.getInvocationIndex());
+			}
+
+			if (arguments.getInvocationIndex() == 2) {
+				assertEquals("bird", arguments.get(0));
+			}
+		}
+
+		@ParameterizedTest
+		@CsvSource({ "cat, true", "dog, true", "mouse, false" })
+		void testArgumentsAggregator(@CsvToIndexedAnimal IndexedAnimal invocation) {
+			if (invocation.getIndex() == 0) {
+				assertEquals("cat", invocation.getName());
+				assertTrue(invocation.isDomestic());
+			}
+			else if (invocation.getIndex() == 1) {
+				assertEquals("dog", invocation.getName());
+				assertTrue(invocation.isDomestic());
+			}
+			else if (invocation.getIndex() == 2) {
+				assertEquals("mouse", invocation.getName());
+				assertFalse(invocation.isDomestic());
+			}
+		}
+
+		static class IndexedAnimal {
+
+			private final long index;
+			private final String name;
+			private final boolean domestic;
+
+			public IndexedAnimal(long index, String name, boolean domestic) {
+				this.index = index;
+				this.name = name;
+				this.domestic = domestic;
+			}
+
+			public long getIndex() {
+				return index;
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public boolean isDomestic() {
+				return domestic;
+			}
+
+		}
+
+		static class IndexedAnimalAggregator implements ArgumentsAggregator {
+			@Override
+			public IndexedAnimal aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
+				return new IndexedAnimal(arguments.getInvocationIndex(), arguments.getString(0),
+					arguments.getBoolean(1));
+			}
+
+		}
+
+		@Retention(RetentionPolicy.RUNTIME)
+		@Target(ElementType.PARAMETER)
+		@AggregateWith(IndexedAnimalAggregator.class)
+		public @interface CsvToIndexedAnimal {
+		}
+
 	}
 
 	private void testPersonAggregator(Person person) {
