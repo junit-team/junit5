@@ -38,6 +38,10 @@ public class SimpleExecutableInvoker implements ExecutableInvoker {
 		this.extensionRegistry = extensionRegistry;
 	}
 
+	public SimpleExecutableInvoker(JupiterEngineExecutionContext context) {
+		this(context.getExtensionContext(), context.getExtensionRegistry());
+	}
+
 	@Override
 	public Object invoke(Executable executable, Object target) {
 		if (executable instanceof Constructor) {

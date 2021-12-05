@@ -37,6 +37,7 @@ import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.InvocationAwareExecutableInvoker;
 import org.junit.jupiter.engine.execution.InvocationAwareExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.execution.SimpleExecutableInvoker;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
@@ -96,8 +97,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = populateNewExtensionRegistry(context);
 		ThrowableCollector throwableCollector = createThrowableCollector();
+		SimpleExecutableInvoker executableInvoker = new SimpleExecutableInvoker(context);
 		MethodExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector);
+			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector, executableInvoker);
 		throwableCollector.execute(() -> {
 			TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(registry,
 				throwableCollector);

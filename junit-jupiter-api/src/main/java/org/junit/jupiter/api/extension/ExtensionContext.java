@@ -393,6 +393,9 @@ public interface ExtensionContext {
 	@API(status = STABLE, since = "5.8.1")
 	ExecutionMode getExecutionMode();
 
+	@API(status = EXPERIMENTAL, since = "5.9")
+	ExecutableInvoker getExecutableInvoker();
+
 	/**
 	 * {@code Store} provides methods for extensions to save and retrieve data.
 	 */

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.SimpleExecutableInvoker;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -33,9 +34,9 @@ final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTe
 
 	MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestMethodTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ThrowableCollector throwableCollector) {
+			ThrowableCollector throwableCollector, SimpleExecutableInvoker executableInvoker) {
 
-		super(parent, engineExecutionListener, testDescriptor, configuration);
+		super(parent, engineExecutionListener, testDescriptor, configuration, executableInvoker);
 
 		this.throwableCollector = throwableCollector;
 	}

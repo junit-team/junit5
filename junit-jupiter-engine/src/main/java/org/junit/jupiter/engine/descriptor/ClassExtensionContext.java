@@ -18,6 +18,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.SimpleExecutableInvoker;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -36,20 +37,22 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 	/**
 	 * Create a new {@code ClassExtensionContext} with {@link Lifecycle#PER_METHOD}.
 	 *
-	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassBasedTestDescriptor, Lifecycle, JupiterConfiguration, ThrowableCollector)
+	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassBasedTestDescriptor,
+	 * Lifecycle, JupiterConfiguration, ThrowableCollector, SimpleExecutableInvoker)
 	 */
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ThrowableCollector throwableCollector) {
+			ThrowableCollector throwableCollector, SimpleExecutableInvoker executableInvoker) {
 
-		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configuration, throwableCollector);
+		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configuration, throwableCollector,
+			executableInvoker);
 	}
 
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
-			ThrowableCollector throwableCollector) {
+			ThrowableCollector throwableCollector, SimpleExecutableInvoker executableInvoker) {
 
-		super(parent, engineExecutionListener, testDescriptor, configuration);
+		super(parent, engineExecutionListener, testDescriptor, configuration, executableInvoker);
 
 		this.lifecycle = lifecycle;
 		this.throwableCollector = throwableCollector;

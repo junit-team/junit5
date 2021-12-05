@@ -18,6 +18,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.SimpleExecutableInvoker;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.Node;
 
@@ -29,10 +30,10 @@ final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTe
 	private final TestInstances testInstances;
 
 	TestTemplateExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			TestTemplateTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			TestInstances testInstances) {
+			TestTemplateTestDescriptor testDescriptor, JupiterConfiguration configuration, TestInstances testInstances,
+			SimpleExecutableInvoker executableInvoker) {
 
-		super(parent, engineExecutionListener, testDescriptor, configuration);
+		super(parent, engineExecutionListener, testDescriptor, configuration, executableInvoker);
 		this.testInstances = testInstances;
 	}
 
