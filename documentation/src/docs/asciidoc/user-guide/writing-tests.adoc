@@ -1688,8 +1688,9 @@ this API, you can access the provided arguments through a single argument passed
 test method. In addition, type conversion is supported as discussed in
 <<writing-tests-parameterized-tests-argument-conversion-implicit>>.
 
-Additionally, `{ArgumentsAccessor}` makes the current index of the argument sources
-available for use within the test method.
+Additionally, when multiple argument sources are provided to a `@ParameterizedTest`,
+`{ArgumentsAccessor}` makes the test iteration number available to the test using
+the `{getInvocationIndex()}` method.
 
 [source,java,indent=0]
 ----
