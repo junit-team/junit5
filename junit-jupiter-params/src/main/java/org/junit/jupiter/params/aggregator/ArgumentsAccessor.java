@@ -51,6 +51,7 @@ public interface ArgumentsAccessor {
 	 * @return the invocation index of the arguments source.
 	 * @since 5.9
 	 */
+	@API(status = EXPERIMENTAL, since = "5.9")
 	long getInvocationIndex();
 
 	/**
