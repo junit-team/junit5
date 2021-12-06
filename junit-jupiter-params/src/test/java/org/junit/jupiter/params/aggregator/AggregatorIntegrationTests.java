@@ -194,10 +194,10 @@ public class AggregatorIntegrationTests {
 		@CsvSource({ "cat", "mouse", "bird" })
 		void getInvocationIndex(ArgumentsAccessor arguments) {
 			if (arguments.get(0) == "cat") {
-				assertEquals(0, arguments.getInvocationIndex());
+				assertEquals(1, arguments.getInvocationIndex());
 			}
 
-			if (arguments.getInvocationIndex() == 2) {
+			if (arguments.getInvocationIndex() == 3) {
 				assertEquals("bird", arguments.get(0));
 			}
 		}
@@ -205,15 +205,15 @@ public class AggregatorIntegrationTests {
 		@ParameterizedTest
 		@CsvSource({ "cat, true", "dog, true", "mouse, false" })
 		void testArgumentsAggregator(@CsvToIndexedAnimal IndexedAnimal invocation) {
-			if (invocation.getIndex() == 0) {
+			if (invocation.getIndex() == 1) {
 				assertEquals("cat", invocation.getName());
 				assertTrue(invocation.isDomestic());
 			}
-			else if (invocation.getIndex() == 1) {
+			else if (invocation.getIndex() == 2) {
 				assertEquals("dog", invocation.getName());
 				assertTrue(invocation.isDomestic());
 			}
-			else if (invocation.getIndex() == 2) {
+			else if (invocation.getIndex() == 3) {
 				assertEquals("mouse", invocation.getName());
 				assertFalse(invocation.isDomestic());
 			}

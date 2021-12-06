@@ -384,11 +384,11 @@ class ParameterizedTestDemo {
                                    arguments.get(2, Gender.class),
                                    arguments.get(3, LocalDate.class));
 
-        if (arguments.getInvocationIndex() == 0) {
+        if (arguments.getInvocationIndex() == 1) {
             assertEquals("Jane", person.getFirstName());
             assertEquals(Gender.F, person.getGender());
         }
-        else if (arguments.getInvocationIndex() == 1) {
+        else if (arguments.getInvocationIndex() == 2) {
             assertEquals("John", person.getFirstName());
             assertEquals(Gender.M, person.getGender());
         }

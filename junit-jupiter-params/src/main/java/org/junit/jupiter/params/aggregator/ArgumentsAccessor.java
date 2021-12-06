@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -46,7 +47,7 @@ import org.apiguardian.api.API;
 public interface ArgumentsAccessor {
 
 	/**
-	 * Get the zero-based invocation index of the ParameterizedTest arguments source.
+	 * Get the invocation index of the ParameterizedTest arguments source.
 	 *
 	 * @return the invocation index of the arguments source.
 	 * @since 5.9
