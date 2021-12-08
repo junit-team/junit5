@@ -564,6 +564,19 @@ Test run finished after 64 ms
 ----
 
 .Exit Code
+
+You can also https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run] the
+standalone `ConsoleLauncher` as shown below
+(for example, to include all jars in directory):
+
+[source,console,subs=attributes+]
+----
+$ java -cp classes:testlib/* org.junit.platform.console.ConsoleLauncher <OPTIONS>
+----
+
+.Exit Code
+
+
 NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
 failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
 supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise the exit code
