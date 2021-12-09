@@ -563,8 +563,6 @@ Test run finished after 64 ms
 [         0 tests failed          ]
 ----
 
-.Exit Code
-
 You can also https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run] the
 standalone `ConsoleLauncher` as shown below
 (for example, to include all jars in directory):
