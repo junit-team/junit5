@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.concurrent.ForkJoinPool;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 
@@ -59,5 +60,17 @@ public interface ParallelExecutionConfiguration {
 	 * before terminating them and shrinking the thread pool.
 	 */
 	int getKeepAliveSeconds();
+
+	/**
+	 * Get the predicate called when there the ForkJoinPool is saturated.
+	 * This occurs when the ForkJoinPool has reached MaxPoolSize
+	 * and there are no threads available. The predicate
+	 * should return true if the blocking thread should try again.
+	 * If the predicate is null or returns false a RejectedExcecutionException
+	 * is thrown.
+	 * @return a Predicate accepting a ForkJoinPool as the parameter or null.
+	 * @since 5.9
+	 */
+	Predicate<? super ForkJoinPool> getSaturatePredicate();
 
 }

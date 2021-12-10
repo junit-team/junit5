@@ -10,6 +10,9 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Predicate;
+
 /**
  * @since 1.3
  */
@@ -20,14 +23,21 @@ class DefaultParallelExecutionConfiguration implements ParallelExecutionConfigur
 	private final int maxPoolSize;
 	private final int corePoolSize;
 	private final int keepAliveSeconds;
+	private final Predicate<? super ForkJoinPool> saturatePredicate;
 
 	DefaultParallelExecutionConfiguration(int parallelism, int minimumRunnable, int maxPoolSize, int corePoolSize,
 			int keepAliveSeconds) {
+		this(parallelism, minimumRunnable, maxPoolSize, corePoolSize, keepAliveSeconds, null);
+	}
+
+	DefaultParallelExecutionConfiguration(int parallelism, int minimumRunnable, int maxPoolSize, int corePoolSize,
+			int keepAliveSeconds, Predicate<? super ForkJoinPool> saturatePredicate) {
 		this.parallelism = parallelism;
 		this.minimumRunnable = minimumRunnable;
 		this.maxPoolSize = maxPoolSize;
 		this.corePoolSize = corePoolSize;
 		this.keepAliveSeconds = keepAliveSeconds;
+		this.saturatePredicate = saturatePredicate;
 	}
 
 	@Override
@@ -53,6 +63,11 @@ class DefaultParallelExecutionConfiguration implements ParallelExecutionConfigur
 	@Override
 	public int getKeepAliveSeconds() {
 		return keepAliveSeconds;
+	}
+
+	@Override
+	public Predicate<? super ForkJoinPool> getSaturatePredicate() {
+		return saturatePredicate;
 	}
 
 }

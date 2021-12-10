@@ -49,6 +49,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(42);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + 42);
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
+		assertThat(configuration.getSaturatePredicate()).isNull();
 	}
 
 	@Test
@@ -64,6 +65,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors * 2);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + (availableProcessors * 2));
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
+		assertThat(configuration.getSaturatePredicate()).isNull();
 	}
 
 	@Test
@@ -79,6 +81,8 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(2);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(3);
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(5);
+		assertThat(configuration.getSaturatePredicate()).isNotNull();
+		assertThat(configuration.getSaturatePredicate().test(null)).isTrue();
 	}
 
 	@ParameterizedTest
@@ -177,7 +181,9 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 	static class CustomParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
-			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5);
+			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5, (p) -> {
+				return true;
+			});
 		}
 	}
 
