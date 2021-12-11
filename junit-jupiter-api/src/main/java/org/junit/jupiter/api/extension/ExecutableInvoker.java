@@ -13,15 +13,57 @@ package org.junit.jupiter.api.extension;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
+import java.lang.reflect.Method;
 
 import org.apiguardian.api.API;
 
+/**
+ * {@code ExecutableInvoker} allows invoking methods and constructors
+ * with support for dynamic resolution of parameters via
+ * {@link ParameterResolver ParameterResolvers}.
+ *
+ * @since 5.9
+ */
 @API(status = EXPERIMENTAL, since = "5.9")
 public interface ExecutableInvoker {
 
-	Object invoke(Executable executable, Object target);
+	/**
+	 * Invoke the supplied {@code static} method with dynamic parameter resolution.
+	 *
+	 * @param method the method to invoke and resolve parameters for
+	 * @see #invoke(Method, Object)
+	 */
+	default Object invoke(Method method) {
+		return invoke(method, null);
+	}
 
+	/**
+	 * Invoke the supplied method with dynamic parameter resolution.
+	 *
+	 * @param method the method to invoke and resolve parameters for
+	 * @param target the target on which the executable will be invoked;
+	 * can be {@code null} of {@code Optional}
+	 */
+	Object invoke(Method method, Object target);
+
+	/**
+	 * Invoke the supplied top-level constructor with dynamic parameter resolution.
+	 *
+	 * @param constructor the constructor to invoke and resolve parameters for
+	 * @see #invoke(Constructor, Object)
+	 */
+	default <T> T invoke(Constructor<T> constructor) {
+		return invoke(constructor, null);
+	}
+
+	/**
+	 * Invoke the supplied constructor with the supplied outer instance and
+	 * dynamic parameter resolution.
+	 *
+	 * @param constructor the constructor to invoke and resolve parameters for
+	 * @param outerInstance the outer instance to supply as the first argument
+	 * to the constructor; {@code null}, for top-level classes
+	 */
 	<T> T invoke(Constructor<T> constructor, Object outerInstance);
 
 }

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 
 /**
- * {@code ExecutableInvoker} encapsulates the invocation of a
+ * {@code InvocationAwareExecutableInvoker} encapsulates the invocation of a
  * {@link java.lang.reflect.Executable} (i.e., method or constructor),
  * including support for dynamic resolution of method parameters via
  * {@link ParameterResolver ParameterResolvers}.

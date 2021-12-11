@@ -14,7 +14,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.execution.ParameterResolutionUtils.resolveParameters;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
@@ -43,21 +42,14 @@ public class SimpleExecutableInvoker implements ExecutableInvoker {
 	}
 
 	@Override
-	public Object invoke(Executable executable, Object target) {
-		if (executable instanceof Constructor) {
-			return invoke((Constructor<?>) executable, null);
-		}
-		return invoke((Method) executable, target);
-	}
-
-	@Override
 	public <T> T invoke(Constructor<T> constructor, Object outerInstance) {
 		Object[] arguments = resolveParameters(constructor, Optional.empty(), wrapWithOptional(outerInstance),
 			extensionContext, extensionRegistry);
 		return ReflectionUtils.newInstance(constructor, arguments);
 	}
 
-	private Object invoke(Method method, Object target) {
+	@Override
+	public Object invoke(Method method, Object target) {
 		Object[] arguments = resolveParameters(method, wrapWithOptional(target), extensionContext, extensionRegistry);
 		return ReflectionUtils.invokeMethod(method, target, arguments);
 	}

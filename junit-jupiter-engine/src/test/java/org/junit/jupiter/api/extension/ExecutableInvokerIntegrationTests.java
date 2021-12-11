@@ -84,7 +84,7 @@ public class ExecutableInvokerIntegrationTests extends AbstractJupiterTestEngine
 		@Override
 		public void beforeAll(ExtensionContext context) throws Exception {
 			context.getExecutableInvoker() //
-					.invoke(context.getRequiredTestClass().getConstructor(TestInfo.class), null);
+					.invoke(context.getRequiredTestClass().getConstructor(TestInfo.class));
 		}
 
 	}
