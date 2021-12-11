@@ -9,7 +9,7 @@ junit4 = "4.13.2"
 junit4Osgi = "4.13.2_1"
 junit4Min = "4.12"
 ktlint = "0.43.0"
-log4j = "2.14.1"
+log4j = "2.15.0"
 opentest4j = "1.2.0"
 surefire = "2.22.2"
 
