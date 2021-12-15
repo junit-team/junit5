@@ -15,6 +15,8 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.ServiceLoader;
+import java.util.StringJoiner;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -22,6 +24,7 @@ import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.CommandLineOptionsParser;
 import org.junit.platform.console.options.PicocliCommandLineOptionsParser;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
+import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
@@ -70,6 +73,13 @@ public class ConsoleLauncher {
 				commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
 				return ConsoleLauncherExecutionResult.success();
 			}
+			if (options.isListEngines()) {
+				ServiceLoader<TestEngine> loader = ServiceLoader.load(TestEngine.class);
+				for (TestEngine testEngine : loader) {
+					out.println(describeEngine(testEngine));
+				}
+				return ConsoleLauncherExecutionResult.success();
+			}
 			return executeTests(options, out);
 		}
 		catch (JUnitException ex) {
@@ -82,6 +92,19 @@ public class ConsoleLauncher {
 			out.flush();
 			err.flush();
 		}
+	}
+
+	private String describeEngine(TestEngine te) {
+		StringJoiner sj = new StringJoiner("\n");
+		sj.add(te.getId());
+		te.getArtifactId().ifPresent(value -> sj.add(describeAttribute("artifact_id", value)));
+		te.getGroupId().ifPresent(value -> sj.add(describeAttribute("group_id", value)));
+		te.getVersion().ifPresent(value -> sj.add(describeAttribute("version", value)));
+		return sj.toString();
+	}
+
+	private String describeAttribute(String name, String value) {
+		return "  " + name + "=" + value;
 	}
 
 	void displayBanner(PrintWriter out) {
