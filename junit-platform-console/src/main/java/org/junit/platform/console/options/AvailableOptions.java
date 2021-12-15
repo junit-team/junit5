@@ -52,6 +52,9 @@ class AvailableOptions {
 	@Option(names = { "--h", "-help" }, help = true, hidden = true)
 	private boolean helpRequested2;
 
+	@Option(names = { "--list-engines" }, description = "List all observable test engines.")
+	private boolean listEnginesRequested;
+
 	@Option(names = "--disable-ansi-colors", description = "Disable ANSI colors in output (not supported by all terminals).")
 	private boolean disableAnsiColors;
 
@@ -310,6 +313,7 @@ class AvailableOptions {
 
 		// General Purpose
 		result.setDisplayHelp(this.helpRequested || this.helpRequested2);
+		result.setListEngines(this.listEnginesRequested);
 		result.setAnsiColorOutputDisabled(this.disableAnsiColors || this.disableAnsiColors2);
 		result.setBannerDisabled(this.disableBanner || this.disableBanner2);
 		result.setDetails(choose(this.details, this.details2, CommandLineOptions.DEFAULT_DETAILS));
