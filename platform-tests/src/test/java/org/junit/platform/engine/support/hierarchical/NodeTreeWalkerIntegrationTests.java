@@ -20,12 +20,16 @@ import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.L
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExclusiveResourceProvider;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.JupiterTestEngine;
@@ -170,6 +174,35 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
 	}
 
+	@Test
+	void addsLocksIfExtendedWithCustomExclusiveResourceProvider() {
+		var engineDescriptor = discover(CustomExclusiveResourceProviderTestCase.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getLock(GLOBAL_READ_WRITE)));
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).contains(SAME_THREAD);
+
+		assertThat(testClassDescriptor.getChildren()).hasSize(2);
+		var children = testClassDescriptor.getChildren().iterator();
+		var testMethodDescriptor = children.next();
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getLock(GLOBAL_READ)));
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
+
+		var nestedTestClassDescriptor = children.next();
+		assertThat(advisor.getResourceLock(nestedTestClassDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getLock(GLOBAL_READ)));
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
+
+		var nestedTestMethodDescriptor = getOnlyElement(nestedTestClassDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(nestedTestMethodDescriptor)).extracting(allLocks()) //
+				.isEqualTo(List.of(getLock(GLOBAL_READ_WRITE)));
+		assertThat(advisor.getForcedExecutionMode(nestedTestMethodDescriptor)).contains(SAME_THREAD);
+	}
+
 	private static Function<org.junit.platform.engine.support.hierarchical.ResourceLock, List<Lock>> allLocks() {
 		return ResourceLockSupport::getLocks;
 	}
@@ -253,5 +286,109 @@ class NodeTreeWalkerIntegrationTests {
 		@ResourceLock(value = "b", mode = ResourceAccessMode.READ)
 		void test() {
 		}
+	}
+
+	//	@ExtendWith(EmptyExclusiveResourceProvider.class)
+	//	static class EmptyExclusiveResourceProviderTestCase {
+	//		@Test
+	//		@ExtendWith(EmptyExclusiveResourceProvider.class)
+	//		void test() {
+	//		}
+	//
+	//		@Nested
+	//		@ExtendWith(EmptyExclusiveResourceProvider.class)
+	//		class NestedTestCaseWithResourceLock {
+	//			@Test
+	//			@ExtendWith(EmptyExclusiveResourceProvider.class)
+	//			void test() {
+	//			}
+	//		}
+	//	}
+
+	@ExtendWith(ExclusiveResourceProviderA.class)
+	static class CustomExclusiveResourceProviderTestCase {
+		@Test
+		@ExtendWith(ExclusiveResourceProviderB.class)
+		void test() {
+		}
+
+		@Nested
+		@ExtendWith(ExclusiveResourceProviderC.class)
+		class NestedTestCaseWithResourceLock {
+			@Test
+			@ExtendWith(ExclusiveResourceProviderD.class)
+			void test() {
+			}
+		}
+	}
+
+	static class ExclusiveResourceProviderA implements ExclusiveResourceProvider {
+		@Override
+		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForClass(Class<?> testClass, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
+			if (testClass.equals(CustomExclusiveResourceProviderTestCase.class)) {
+				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
+						"a",
+						ResourceAccessMode.READ_WRITE
+				));
+			}
+			return Set.of();
+		}
+	}
+
+	static class ExclusiveResourceProviderB implements ExclusiveResourceProvider {
+		@Override
+		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForMethod(Class<?> testClass, Method testMethod, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
+			if (testClass.equals(CustomExclusiveResourceProviderTestCase.class)) {
+				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
+						"b",
+						ResourceAccessMode.READ
+				));
+			}
+		}
+	}
+
+	static class CustomExclusiveResourceProvider implements ExclusiveResourceProvider {
+		@Override
+		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForClass(Class<?> testClass, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
+			if (testClass.equals(CustomExclusiveResourceProviderTestCase.class)) {
+				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
+						"a",
+						ResourceAccessMode.READ_WRITE
+				));
+			}
+			return Set.of();
+		}
+
+		@Override
+		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForNestedClass(Class<?> nestedClass, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
+			if (nestedClass.equals(CustomExclusiveResourceProviderTestCase.NestedTestCaseWithResourceLock.class)) {
+				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
+						"c",
+						ResourceAccessMode.READ
+				));
+			}
+			return Set.of();
+		}
+
+		@Override
+		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForMethod(Class<?> testClass, Method testMethod, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
+			if (testClass.equals(CustomExclusiveResourceProviderTestCase.class)) {
+				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
+						"b",
+						ResourceAccessMode.READ
+				));
+			}
+			if (testClass.equals(CustomExclusiveResourceProviderTestCase.NestedTestCaseWithResourceLock.class)) {
+				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
+						"c",
+						ResourceAccessMode.READ_WRITE
+				));
+			}
+			return Set.of();
+		}
+	}
+
+	static class DefaultExclusiveResourceProvider implements ExclusiveResourceProvider {
+		// TODO: TDD and implement the default methods in ExclusiveResourceProvider
 	}
 }
