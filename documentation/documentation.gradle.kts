@@ -116,12 +116,16 @@ tasks {
 		inputs.files(runtimeClasspath).withNormalizer(ClasspathNormalizer::class)
 		val reportsDir = file("$buildDir/test-results")
 		outputs.dir(reportsDir)
-		outputs.cacheIf { project.findProperty("debug") != "true" }
+
+		val debugging = providers.gradleProperty("consoleLauncherTestDebug")
+			.map { it != "false" }
+			.orElse(false)
+		outputs.cacheIf { !debugging.get() }
+		outputs.upToDateWhen { !debugging.get() }
 
 		// Track OS as input so that tests are executed on all configured operating systems on CI
 		trackOperationSystemAsInput()
 		doFirst {
-			val debugging = findProperty("consoleLauncherTestDebug")?.toString()?.toBoolean() ?: false
 			val output = ByteArrayOutputStream()
 			val result = javaexec {
 				debug = project.findProperty("debug") == "true"
@@ -136,14 +140,14 @@ tasks {
 				systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 				systemProperty("junit.platform.reporting.output.dir", reportsDir)
 				systemProperty("junit.platform.reporting.open.xml.enabled", "true")
-				debug = debugging
-				if (!debugging) {
+				debug = debugging.get()
+				if (!debugging.get()) {
 					standardOutput = output
 					errorOutput = output
 				}
 				isIgnoreExitValue = true
 			}
-			if (result.exitValue != 0 && !debugging) {
+			if (result.exitValue != 0 && !debugging.get()) {
 				System.out.write(output.toByteArray())
 				System.out.flush()
 			}
