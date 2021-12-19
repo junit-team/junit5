@@ -393,6 +393,12 @@ public interface ExtensionContext {
 	@API(status = STABLE, since = "5.8.1")
 	ExecutionMode getExecutionMode();
 
+	/**
+	 * Get an {@link ExecutableInvoker} to invoke executables
+	 * with support for dynamic resolution of parameters.
+	 *
+	 * @since 5.9
+	 */
 	@API(status = EXPERIMENTAL, since = "5.9")
 	ExecutableInvoker getExecutableInvoker();
 
