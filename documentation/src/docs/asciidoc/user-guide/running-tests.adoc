@@ -563,6 +563,14 @@ Test run finished after 64 ms
 [         0 tests failed          ]
 ----
 
+You can also run the standalone `ConsoleLauncher` as shown below (for example, to include
+all jars in a directory):
+
+[source,console,subs=attributes+]
+----
+$ java -cp classes:testlib/* org.junit.platform.console.ConsoleLauncher <OPTIONS>
+----
+
 .Exit Code
 NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
 failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
