@@ -153,6 +153,7 @@
 34395a82f088e8975ac322493b56615a  documentation/src/test/java/example/OrderedTestsDemo.java
 348d7eb33f2d2a53e19d051993fad8a0  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/discovery/LauncherDiscoveryListeners.java
 34e3d727956df94abf7a60a857827c35  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnJre.java
+359ebdf40a94380da27ed448c1814f14  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 35bbea673852d2c3aa9dd6eaf207766a  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.java
 35fce91a9ad24ec798cbbe34d63da7e0  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathRootSelector.java
 36b0cab22e9e3307dbafb26e3efaa864  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.java
@@ -600,7 +601,6 @@ cbe7593a2def8bbd8a28e5caac988417  junit-platform-suite-api/src/main/java/org/jun
 cc2a6c7be2bb26b6dfac3cdea1149ba8  documentation/src/test/java/example/AssumptionsDemo.java
 cc4cbbaf05adf883a9353b72d9526313  junit-platform-engine/src/main/java/org/junit/platform/engine/support/config/package-info.java
 cc4e162c0516bb5abe07db4296c34f7b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/FilterableIgnoringRunnerDecorator.java
-cc56a660fe236bf625f7dd9ca06c7863  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 cc60a8b996a01f716eb2bcae9b686015  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/package-info.java
 ccb7d02f480e1eaf328ce327e581d990  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrintingListener.java
 cd03ffb460e1a92529b9be27f7330e30  documentation/src/test/resources/META-INF/services/org.junit.platform.launcher.LauncherSessionListener
