@@ -416,6 +416,12 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 * `List<A> findRepeatableAnnotations(Class<A> annotationType)`
 ====
 
+[NOTE]
+====
+Other extensions can also leverage registered `ParameterResolvers` for method and
+constructor invocations, using `ExecutableInvoker` available in the `ExtensionContext`.
+====
+
 [[extensions-test-result-processing]]
 === Test Result Processing
 
