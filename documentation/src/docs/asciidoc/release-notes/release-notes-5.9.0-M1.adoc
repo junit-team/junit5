@@ -26,7 +26,9 @@ on GitHub.
 * `ConfigurationParameters` has now a `keySet()` method allowing to retrieve
   all configuration parameter keys.
 * New `IterationSelector` for selecting a subset of a test's or container's iterations.
-* JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at resolution time a fully running set of dependencies are calculated avoiding the need for these to be manually specified.
+* JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
+  resolution time a fully running set of dependencies are calculated avoiding the need
+  for these to be manually specified.
 
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
@@ -46,8 +48,10 @@ on GitHub.
   parameterized or dynamic tests.
 * Add support for `MATCH_NONE` mode in `EnumSource` that selects only those enum constants
   whose names match none of the supplied patterns.
-* A new extension `TestInstancePreConstructCallback` called prior to a test instance construction
-  (symmetric extension to `TestInstancePreDestroyCallback`).
+* A new extension `TestInstancePreConstructCallback` called prior to a test instance
+  construction (symmetric extension to `TestInstancePreDestroyCallback`).
+* Allow extensions to leverage registered `ParameterResolvers` for method and constructor
+  invocations, via the new `ExecutableInvoker` available in the `ExtensionContext`.
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]
