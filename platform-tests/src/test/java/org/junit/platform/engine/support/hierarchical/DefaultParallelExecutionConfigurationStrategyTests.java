@@ -181,9 +181,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 	static class CustomParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
-			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5, (p) -> {
-				return true;
-			});
+			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5, __ -> true);
 		}
 	}
 

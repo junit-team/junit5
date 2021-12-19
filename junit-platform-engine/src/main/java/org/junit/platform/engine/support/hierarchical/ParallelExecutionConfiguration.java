@@ -62,16 +62,15 @@ public interface ParallelExecutionConfiguration {
 	int getKeepAliveSeconds();
 
 	/**
-	 * Get the predicate called when the {@code ForkJoinPool} is saturated.
-	 * This occurs when the ForkJoinPool has reached MaxPoolSize
-	 * and there are no worker threads available. The predicate
-	 * should return true if the calling thread should block.
-	 * If the predicate is null or returns false a RejectedExcecutionException
-	 * is thrown.
-	 * @return a Predicate accepting a ForkJoinPool as the parameter or null.
+	 * Get the saturate predicate to be used for the execution's {@link ForkJoinPool}.
+	 * @return the saturate predicate to be passed to the ForkJoinPool constructor; may be {@code null}
 	 * @since 1.9
-	 * @API(since = "1.9")
+	 * @see ForkJoinPool#ForkJoinPool(int, ForkJoinPool.ForkJoinWorkerThreadFactory, Thread.UncaughtExceptionHandler,
+	 * boolean, int, int, int, Predicate, long, TimeUnit)
 	 */
-	Predicate<? super ForkJoinPool> getSaturatePredicate();
+	@API(status = EXPERIMENTAL, since = "1.9")
+	default Predicate<? super ForkJoinPool> getSaturatePredicate() {
+		return null;
+	}
 
 }
