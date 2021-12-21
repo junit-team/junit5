@@ -10,8 +10,7 @@
 
 package org.junit.platform.launcher.listeners;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.StringUtils;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -22,7 +21,8 @@ import java.security.SecureRandom;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.StringUtils;
 
 @API(status = INTERNAL, since = "1.8")
 public class OutputDir {

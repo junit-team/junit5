@@ -121,7 +121,7 @@ include("junit-bom")
 
 includeBuild("../open-test-reporting") {
 	dependencySubstitution {
-		substitute(module("org.opentest4j.reporting:lib")).using(project(":"))
+		substitute(module("org.opentest4j.reporting:open-test-reporting-events")).using(project(":events"))
 	}
 }
 
