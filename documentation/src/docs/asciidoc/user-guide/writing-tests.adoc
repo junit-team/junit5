@@ -363,6 +363,11 @@ traceability, etc.
 [[writing-tests-conditional-execution]]
 === Conditional Test Execution
 
+TIP: Before going further, let's define the concept of `Container` in the context of JUnit5.
+First of all, a `Container`, in Java, is an object created to hold other object named _children_ that are accessible with the class methods of this object.
+In the context of JUnit, it's the same thing but more focused on `TestClasses` and specifically test classes and nested test classes that have _children_. -- for example, you can have classes and nested classes as containers and test methods as tests. If there is a test method, which creates a lot of tests, then it's considered as a container.
+But, if a container have children that are not themselves tests, it will be pruned and not run.
+
 The <<extensions-conditions, `ExecutionCondition`>> extension API in JUnit Jupiter allows
 developers to either _enable_ or _disable_ a container or test based on certain
 conditions _programmatically_. The simplest example of such a condition is the built-in
