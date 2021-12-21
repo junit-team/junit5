@@ -16,7 +16,7 @@ import org.opentest4j.reporting.events.api.Namespace;
 
 class JUnitFactory {
 
-	public static Namespace NAMESPACE = Namespace.of("https://schemas.opentest4j.org/reporting/junit/1.0");
+	public static Namespace NAMESPACE = Namespace.of("https://schemas.junit.org/open-test-reporting");
 
 	private JUnitFactory() {
 	}
