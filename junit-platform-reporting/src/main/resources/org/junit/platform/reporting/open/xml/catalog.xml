@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri name="https://schemas.junit.org/open-test-reporting" uri="junit.xsd"/>
+</catalog>
