@@ -12,7 +12,7 @@ package org.junit.platform.reporting.open.xml;
 
 import org.junit.platform.engine.TestDescriptor;
 import org.opentest4j.reporting.events.api.Factory;
-import org.opentest4j.reporting.events.api.Namespace;
+import org.opentest4j.reporting.schema.Namespace;
 
 class JUnitFactory {
 
