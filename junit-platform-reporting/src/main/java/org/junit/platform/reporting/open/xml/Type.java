@@ -13,8 +13,8 @@ package org.junit.platform.reporting.open.xml;
 import org.junit.platform.engine.TestDescriptor;
 import org.opentest4j.reporting.events.api.ChildElement;
 import org.opentest4j.reporting.events.api.Context;
-import org.opentest4j.reporting.events.api.QualifiedName;
 import org.opentest4j.reporting.events.core.Metadata;
+import org.opentest4j.reporting.schema.QualifiedName;
 
 class Type extends ChildElement<Metadata, Type> {
 
