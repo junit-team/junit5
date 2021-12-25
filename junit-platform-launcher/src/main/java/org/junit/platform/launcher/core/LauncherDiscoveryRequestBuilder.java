@@ -88,7 +88,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	/**
 	 * Property name used to set the default discovery listener that is added to all : {@value}
 	 *
-	 * <h3>Supported Values</h3>
+	 * <h4>Supported Values</h4>
 	 *
 	 * <p>Supported values are {@code "logging"} and {@code "abortOnFailure"}.
 	 *

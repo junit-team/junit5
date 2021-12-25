@@ -52,7 +52,7 @@ public final class Constants {
 	/**
 	 * Property name used to provide patterns for deactivating conditions: {@value}
 	 *
-	 * <h3>Pattern Matching Syntax</h3>
+	 * <h4>Pattern Matching Syntax</h4>
 	 *
 	 * <p>If the property value consists solely of an asterisk ({@code *}), all
 	 * conditions will be deactivated. Otherwise, the property value will be treated
@@ -63,7 +63,7 @@ public final class Constants {
 	 * against one or more characters in a FQCN. All other characters in a pattern
 	 * will be matched one-to-one against a FQCN.
 	 *
-	 * <h3>Examples</h3>
+	 * <h4>Examples</h4>
 	 *
 	 * <ul>
 	 * <li>{@code *}: deactivates all conditions.
@@ -96,7 +96,7 @@ public final class Constants {
 	/**
 	 * Property name used to set the default display name generator class name: {@value}
 	 *
-	 * <h3>Supported Values</h3>
+	 * <h4>Supported Values</h4>
 	 *
 	 * <p>Supported values include fully qualified class names for types that implement
 	 * {@link org.junit.jupiter.api.DisplayNameGenerator}.
@@ -117,7 +117,7 @@ public final class Constants {
 	/**
 	 * Property name used to set the default test instance lifecycle mode: {@value}
 	 *
-	 * <h3>Supported Values</h3>
+	 * <h4>Supported Values</h4>
 	 *
 	 * <p>Supported values include names of enum constants defined in
 	 * {@link org.junit.jupiter.api.TestInstance.Lifecycle}, ignoring case.
@@ -144,7 +144,7 @@ public final class Constants {
 	 *
 	 * <p>This setting is only effective if parallel execution is enabled.
 	 *
-	 * <h3>Supported Values</h3>
+	 * <h4>Supported Values</h4>
 	 *
 	 * <p>Supported values include names of enum constants defined in
 	 * {@link org.junit.jupiter.api.parallel.ExecutionMode}, ignoring case.
@@ -165,7 +165,7 @@ public final class Constants {
 	 *
 	 * <p>This setting is only effective if parallel execution is enabled.
 	 *
-	 * <h3>Supported Values</h3>
+	 * <h4>Supported Values</h4>
 	 *
 	 * <p>Supported values include names of enum constants defined in
 	 * {@link org.junit.jupiter.api.parallel.ExecutionMode}, ignoring case.
@@ -436,7 +436,7 @@ public final class Constants {
 	 * <p>The value of this property will be used to toggle whether
 	 * {@link org.junit.jupiter.api.Timeout @Timeout} is applied to tests.</p>
 	 *
-	 * <h3>Supported timeout mode values:</h3>
+	 * <h4>Supported timeout mode values:</h4>
 	 * <ul>
 	 * <li>{@code enabled}: enables timeouts
 	 * <li>{@code disabled}: disables timeouts
@@ -453,7 +453,7 @@ public final class Constants {
 	/**
 	 * Property name used to set the default method orderer class name: {@value}
 	 *
-	 * <h3>Supported Values</h3>
+	 * <h4>Supported Values</h4>
 	 *
 	 * <p>Supported values include fully qualified class names for types that
 	 * implement {@link org.junit.jupiter.api.MethodOrderer}.
@@ -467,7 +467,7 @@ public final class Constants {
 	/**
 	 * Property name used to set the default class orderer class name: {@value}
 	 *
-	 * <h3>Supported Values</h3>
+	 * <h4>Supported Values</h4>
 	 *
 	 * <p>Supported values include fully qualified class names for types that
 	 * implement {@link org.junit.jupiter.api.ClassOrderer}.
@@ -479,7 +479,7 @@ public final class Constants {
 	 * Property name used to set the scope of temporary directories created via
 	 * {@link org.junit.jupiter.api.io.TempDir @TempDir} annotation: {@value}
 	 *
-	 * <h3>Supported Values</h3>
+	 * <h4>Supported Values</h4>
 	 * <ul>
 	 * <li>{@code per_context}: creates a single temporary directory for the
 	 * entire test class or method, depending on where it's first declared

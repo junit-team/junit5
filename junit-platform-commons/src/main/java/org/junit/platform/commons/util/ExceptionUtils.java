@@ -45,7 +45,7 @@ public final class ExceptionUtils {
 	 * the Java compiler into believing that the thrown exception is an
 	 * unchecked exception even if it is a checked exception.
 	 *
-	 * <h3>Warning</h3>
+	 * <h4>Warning</h4>
 	 *
 	 * <p>This method should be used sparingly.
 	 *

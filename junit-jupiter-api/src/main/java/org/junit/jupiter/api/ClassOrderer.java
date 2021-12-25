@@ -205,7 +205,7 @@ public interface ClassOrderer {
 		 * <p>The same property is used by {@link MethodOrderer.Random} for
 		 * consistency between the two random orderers.
 		 *
-		 * <h3>Supported Values</h3>
+		 * <h4>Supported Values</h4>
 		 *
 		 * <p>Supported values include any string that can be converted to a
 		 * {@link Long} via {@link Long#valueOf(String)}.

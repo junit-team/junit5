@@ -94,7 +94,7 @@ public class LauncherConstants {
 	 * Property name used to provide patterns for deactivating listeners registered
 	 * via the {@link java.util.ServiceLoader ServiceLoader} mechanism: {@value}
 	 *
-	 * <h3>Pattern Matching Syntax</h3>
+	 * <h4>Pattern Matching Syntax</h4>
 	 *
 	 * <p>If the property value consists solely of an asterisk ({@code *}), all
 	 * listeners will be deactivated. Otherwise, the property value will be treated
@@ -105,7 +105,7 @@ public class LauncherConstants {
 	 * against one or more characters in a FQCN. All other characters in a pattern
 	 * will be matched one-to-one against a FQCN.
 	 *
-	 * <h3>Examples</h3>
+	 * <h4>Examples</h4>
 	 *
 	 * <ul>
 	 * <li>{@code *}: deactivates all listeners.
