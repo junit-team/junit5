@@ -48,17 +48,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.MethodName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -75,7 +66,7 @@ import org.junit.platform.testkit.engine.Event;
 /**
  * @since 1.3
  */
-@Disabled
+//@Disabled
 class ParallelExecutionIntegrationTests {
 
 	@Test
@@ -91,7 +82,7 @@ class ParallelExecutionIntegrationTests {
 		assertThat(finishedTimestamps).hasSize(3);
 		assertThat(startedTimestamps).allMatch(startTimestamp -> finishedTimestamps.stream().noneMatch(
 			finishedTimestamp -> finishedTimestamp.isBefore(startTimestamp)));
-		//		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
 	}
 
 	@Test
@@ -105,7 +96,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(3, SuccessfulWithMethodLockTestCase.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		//		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
 	}
 
 	@Test
@@ -113,7 +104,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(3, SuccessfulWithClassLockTestCase.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		//		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
 	}
 
 	@Test
@@ -121,7 +112,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(3, TestCaseWithTestFactory.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		//		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
 	}
 
 	@Test
@@ -134,7 +125,7 @@ class ParallelExecutionIntegrationTests {
 			var events = executeConcurrently(3, SuccessfulWithMethodLockTestCase.class);
 
 			assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-			//			assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+			assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
 			assertThat(ThreadReporter.getLoaderNames(events)).containsExactly("(-:");
 		}
 		finally {
@@ -147,7 +138,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(4, TestCaseWithSortedLocks.class, TestCaseWithUnsortedLocks.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
-		//		assertThat(ThreadReporter.getThreadNames(events).count()).isLessThanOrEqualTo(2);
+		assertThat(ThreadReporter.getThreadNames(events).count()).isLessThanOrEqualTo(2);
 	}
 
 	@RepeatedTest(10)
@@ -155,7 +146,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(3, TestCaseWithNestedLocks.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
-		//		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
 	}
 
 	@Test
@@ -232,6 +223,7 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@Test
+	@Disabled("todo - currently broken")
 	void canRunTestsIsolatedFromEachOtherWithNestedCases() {
 		var events = executeConcurrently(4, NestedIsolatedTestCase.class);
 

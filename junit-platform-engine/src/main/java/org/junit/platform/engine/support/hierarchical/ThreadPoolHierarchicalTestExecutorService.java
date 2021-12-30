@@ -23,7 +23,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -49,8 +48,6 @@ public class ThreadPoolHierarchicalTestExecutorService implements HierarchicalTe
 	private final ExecutorService executorService;
 	private final int parallelism;
 
-	private static Logger logger = LoggerFactory.getLogger(ThreadPoolHierarchicalTestExecutorService.class);
-
 	/**
 	 * Create a new {@code ForkJoinPoolHierarchicalTestExecutorService} based on
 	 * the supplied {@link ConfigurationParameters}.
@@ -69,7 +66,8 @@ public class ThreadPoolHierarchicalTestExecutorService implements HierarchicalTe
 	 */
 	@API(status = EXPERIMENTAL, since = "1.7")
 	public ThreadPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
-		executorService = Executors.newFixedThreadPool(configuration.getParallelism());
+		executorService = Executors.newFixedThreadPool(
+			configuration.getParallelism() + 1 /*, new WorkerThreadFactory()*/); // TODO: Plus one for the root JUnit-task? Do we have this one in all use-cases?
 		parallelism = configuration.getParallelism();
 		LoggerFactory.getLogger(getClass()).config(() -> "Using ThreadPoolExecutor with parallelism of " + parallelism);
 	}
@@ -163,20 +161,20 @@ public class ThreadPoolHierarchicalTestExecutorService implements HierarchicalTe
 		}
 	}
 
-	//	static class WorkerThreadFactory implements ForkJoinWorkerThreadFactory {
+	//	static class WorkerThreadFactory implements ThreadFactory {
 	//
 	//		private final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 	//
 	//		@Override
-	//		public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
-	//			return new WorkerThread(pool, contextClassLoader);
+	//		public Thread newThread(Runnable runnable) {
+	//			return new WorkerThread(runnable, contextClassLoader);
 	//		}
 	//	}
 	//
-	//	static class WorkerThread extends ForkJoinWorkerThread {
+	//	static class WorkerThread extends Thread {
 	//
-	//		WorkerThread(ForkJoinPool pool, ClassLoader contextClassLoader) {
-	//			super(pool);
+	//		WorkerThread(Runnable runnable, ClassLoader contextClassLoader) {
+	//			super(runnable);
 	//			setContextClassLoader(contextClassLoader);
 	//		}
 	//	}
