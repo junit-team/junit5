@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
@@ -54,7 +55,6 @@ import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -166,12 +166,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	private CleanupMode findCleanupModeForField(Field field) {
 		CleanupMode cleanupMode = null;
-		Optional<TempDir> optional = AnnotationSupport.findAnnotation(field, TempDir.class);
+		Optional<TempDir> optional = findAnnotation(field, TempDir.class);
 		if (optional.isPresent()) {
 			cleanupMode = optional.get().cleanup();
 		}
 		if (cleanupMode == null || cleanupMode == DEFAULT) {
-			cleanupMode = configuration.getDefaultTempDirCleanupMode();
+			cleanupMode = this.configuration.getDefaultTempDirCleanupMode();
 		}
 		return cleanupMode;
 	}

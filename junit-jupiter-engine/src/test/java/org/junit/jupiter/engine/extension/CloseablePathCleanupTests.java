@@ -27,7 +27,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.opentest4j.TestAbortedException;
 
 /**
  * Integration tests for cleanup of the {@link TempDirectory} when the {@link CleanupMode} is
@@ -77,8 +76,8 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 * Ensure a closeable path is not cleaned up for a cleanup mode of ON_SUCCESS, if there is a TestAbortedException.
 	 */
 	@Test
-	void onSuccessWithTestAbortedException() throws IOException {
-		when(extensionContext.getExecutionException()).thenReturn(Optional.of(new TestAbortedException()));
+	void onSuccessWithException() throws IOException {
+		when(extensionContext.getExecutionException()).thenReturn(Optional.of(new Exception()));
 
 		closeablePath = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
 		assertThat(closeablePath.get()).exists();
@@ -91,7 +90,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 * Ensure a closeable path is cleaned up for a cleanup mode of ON_SUCCESS, if there is no exception.
 	 */
 	@Test
-	void onSuccessWithNoTestAbortedException() throws IOException {
+	void onSuccessWithNoException() throws IOException {
 		when(extensionContext.getExecutionException()).thenReturn(Optional.empty());
 
 		closeablePath = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
