@@ -32,7 +32,7 @@ import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
-class DefaultExecutionCleanupModeTests extends AbstractJupiterTestEngineTests {
+class DefaultExecutionModeTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void defaultExecutionModeIsReadFromConfigurationParameter() {
