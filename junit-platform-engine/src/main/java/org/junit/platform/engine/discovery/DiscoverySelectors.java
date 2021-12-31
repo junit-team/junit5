@@ -414,7 +414,7 @@ public final class DiscoverySelectors {
 	 * <em>source code syntax</em> (e.g., {@code int[][]}, {@code java.lang.String[]},
 	 * etc.).
 	 *
-	 * <h3>Examples</h3>
+	 * <h4>Examples</h4>
 	 *
 	 * <table class="plain">
 	 * <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>

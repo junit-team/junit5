@@ -48,7 +48,7 @@ public interface TestInfo {
 	 * <p>The display name is either a default name or a custom name configured
 	 * via {@link DisplayName @DisplayName}.
 	 *
-	 * <h3>Default Display Names</h3>
+	 * <h4>Default Display Names</h4>
 	 *
 	 * <p>If the context in which {@code TestInfo} is used is at the container
 	 * level, the default display name is generated based on the name of the

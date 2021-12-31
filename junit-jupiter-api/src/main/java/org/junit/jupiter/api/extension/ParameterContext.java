@@ -41,7 +41,7 @@ public interface ParameterContext {
 	/**
 	 * Get the {@link Parameter} for this context.
 	 *
-	 * <h3>WARNING</h3>
+	 * <h4>WARNING</h4>
 	 * <p>When searching for annotations on the parameter in this context,
 	 * favor {@link #isAnnotated(Class)}, {@link #findAnnotation(Class)}, and
 	 * {@link #findRepeatableAnnotations(Class)} over methods in the
@@ -93,7 +93,7 @@ public interface ParameterContext {
 	 * <em>present</em> or <em>meta-present</em> on the {@link Parameter} for
 	 * this context.
 	 *
-	 * <h3>WARNING</h3>
+	 * <h4>WARNING</h4>
 	 * <p>Favor the use of this method over directly invoking
 	 * {@link Parameter#isAnnotationPresent(Class)} due to a bug in {@code javac}
 	 * on JDK versions prior to JDK 9.
@@ -111,7 +111,7 @@ public interface ParameterContext {
 	 * <em>present</em> or <em>meta-present</em> on the {@link Parameter} for
 	 * this context.
 	 *
-	 * <h3>WARNING</h3>
+	 * <h4>WARNING</h4>
 	 * <p>Favor the use of this method over directly invoking annotation lookup
 	 * methods in the {@link Parameter} API due to a bug in {@code javac} on JDK
 	 * versions prior to JDK 9.
@@ -131,7 +131,7 @@ public interface ParameterContext {
 	 * {@code annotationType} that are either <em>present</em> or
 	 * <em>meta-present</em> on the {@link Parameter} for this context.
 	 *
-	 * <h3>WARNING</h3>
+	 * <h4>WARNING</h4>
 	 * <p>Favor the use of this method over directly invoking annotation lookup
 	 * methods in the {@link Parameter} API due to a bug in {@code javac} on JDK
 	 * versions prior to JDK 9.

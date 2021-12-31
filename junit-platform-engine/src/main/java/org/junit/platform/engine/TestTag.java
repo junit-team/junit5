@@ -58,7 +58,7 @@ public final class TestTag implements Serializable {
 	 * Determine if the supplied tag name is valid with regard to the supported
 	 * syntax for tags.
 	 *
-	 * <h3>Syntax Rules for Tags</h3>
+	 * <h4>Syntax Rules for Tags</h4>
 	 * <ul>
 	 * <li>A tag must not be {@code null}.</li>
 	 * <li>A tag must not be blank.</li>

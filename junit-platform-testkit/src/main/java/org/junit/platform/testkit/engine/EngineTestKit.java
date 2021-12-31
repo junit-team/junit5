@@ -73,7 +73,7 @@ public final class EngineTestKit {
 	 * mechanism, analogous to the manner in which test engines are loaded in
 	 * the JUnit Platform Launcher API.
 	 *
-	 * <h3>Example Usage</h3>
+	 * <h4>Example Usage</h4>
 	 *
 	 * <pre class="code">
 	 * EngineTestKit
@@ -102,7 +102,7 @@ public final class EngineTestKit {
 	/**
 	 * Create an execution {@link Builder} for the supplied {@link TestEngine}.
 	 *
-	 * <h3>Example Usage</h3>
+	 * <h4>Example Usage</h4>
 	 *
 	 * <pre class="code">
 	 * EngineTestKit
