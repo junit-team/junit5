@@ -66,6 +66,22 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 
 		/**
+		 * Ensure that a custom, global cleanup mode is used for fields.
+		 * <p/>
+		 * Expect the TempDir NOT to be cleaned up if set to NEVER.
+		 */
+		@Test
+		void cleanupModeCustomDefaultField() {
+			LauncherDiscoveryRequest request = request()//
+					.configurationParameter(TempDir.DEFAULT_CLEANUP_MODE_PROPERTY_NAME, "never")//
+					.selectors(selectMethod(DefaultFieldCase.class, "testDefaultField"))//
+					.build();
+			executeTests(request);
+
+			assertThat(defaultFieldDir).exists();
+		}
+
+		/**
 		 * Ensure that NEVER cleanup modes are obeyed for fields.
 		 * <p/>
 		 * Expect the TempDir not to be cleaned up.
@@ -216,6 +232,22 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			executeTests(request);
 
 			assertThat(defaultParameterDir).doesNotExist();
+		}
+
+		/**
+		 * Ensure that a custom, global cleanup mode is used for parameters.
+		 * <p/>
+		 * Expect the TempDir NOT to be cleaned up if set to NEVER.
+		 */
+		@Test
+		void cleanupModeCustomDefaultParameter() {
+			LauncherDiscoveryRequest request = request()//
+					.configurationParameter(TempDir.DEFAULT_CLEANUP_MODE_PROPERTY_NAME, "never")//
+					.selectors(selectMethod(DefaultParameterCase.class, "testDefaultParameter", "java.nio.file.Path"))//
+					.build();
+			executeTests(request);
+
+			assertThat(defaultParameterDir).exists();
 		}
 
 		/**

@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
-import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
@@ -35,7 +34,6 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
@@ -117,8 +115,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			assertSupportedType("field", field.getType());
 
 			try {
-				CleanupMode mode = findCleanupModeForField(field);
-				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), mode, context));
+				CleanupMode cleanupMode = determineCleanupModeForField(field);
+				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), cleanupMode, context));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
@@ -148,35 +146,29 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
-		CleanupMode cleanupMode = findCleanupModeForParameter(parameterContext);
+		CleanupMode cleanupMode = determineCleanupModeForParameter(parameterContext);
 		return getPathOrFile(parameterContext.getParameter(), parameterType, cleanupMode, extensionContext);
 	}
 
-	private CleanupMode findCleanupModeForParameter(ParameterContext parameterContext) {
-		CleanupMode cleanupMode = null;
-		Optional<TempDir> optional = parameterContext.findAnnotation(TempDir.class);
-		if (optional.isPresent()) {
-			cleanupMode = optional.get().cleanup();
-		}
-		if (cleanupMode == null || cleanupMode == DEFAULT) {
-			cleanupMode = ALWAYS;
-		}
-		return cleanupMode;
+	private CleanupMode determineCleanupModeForField(Field field) {
+		TempDir tempDir = findAnnotation(field, TempDir.class).orElseThrow(
+			() -> new IllegalStateException("Field " + field + " must be annotated with @TempDir"));
+		return determineCleanupMode(tempDir);
 	}
 
-	private CleanupMode findCleanupModeForField(Field field) {
-		CleanupMode cleanupMode = null;
-		Optional<TempDir> optional = findAnnotation(field, TempDir.class);
-		if (optional.isPresent()) {
-			cleanupMode = optional.get().cleanup();
-		}
-		if (cleanupMode == null || cleanupMode == DEFAULT) {
-			cleanupMode = this.configuration.getDefaultTempDirCleanupMode();
-		}
-		return cleanupMode;
+	private CleanupMode determineCleanupModeForParameter(ParameterContext parameterContext) {
+		TempDir tempDir = parameterContext.findAnnotation(TempDir.class).orElseThrow(() -> new IllegalStateException(
+			"Parameter " + parameterContext.getParameter() + " must be annotated with @TempDir"));
+		return determineCleanupMode(tempDir);
+	}
+
+	private CleanupMode determineCleanupMode(TempDir tempDir) {
+		CleanupMode cleanupMode = tempDir.cleanup();
+		return cleanupMode == DEFAULT ? this.configuration.getDefaultTempDirCleanupMode() : cleanupMode;
 	}
 
 	private void assertSupportedType(String target, Class<?> type) {
+
 		if (type != Path.class && type != File.class) {
 			throw new ExtensionConfigurationException("Can only resolve @TempDir " + target + " of type "
 					+ Path.class.getName() + " or " + File.class.getName() + " but was: " + type.getName());
