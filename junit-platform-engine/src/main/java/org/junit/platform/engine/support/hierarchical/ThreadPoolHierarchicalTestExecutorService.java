@@ -27,16 +27,13 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 
-// https://github.com/junit-team/junit5/issues/1858
-// https://www.baeldung.com/java-executor-service-tutorial
-// https://www.baeldung.com/thread-pool-java-and-guava
-// https://www.baeldung.com/java-concurrency
-// https://stackoverflow.com/questions/9276807/whats-the-advantage-of-a-java-5-threadpoolexecutor-over-a-java-7-forkjoinpool
-
 /**
  * A {@link ThreadPoolExecutor}-based
  * {@linkplain HierarchicalTestExecutorService executor service} that executes
  * {@linkplain TestTask test tasks} with the configured parallelism.
+ *
+ * <p>This is an alternative to {@link ForkJoinPoolHierarchicalTestExecutorService} for usecases where using {@link java.util.concurrent.ForkJoinPool}
+ * causes issues within your tests. (e.g. together with Selenium 4, see https://github.com/SeleniumHQ/selenium/issues/9359)</p>
  *
  * @since 1.9
  * @see ThreadPoolExecutor
@@ -66,6 +63,11 @@ public class ThreadPoolHierarchicalTestExecutorService implements HierarchicalTe
 	 */
 	@API(status = EXPERIMENTAL, since = "1.7")
 	public ThreadPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
+		/*
+		 * Reaching the exact defined parallelism with ThreadPoolExecutor is - as far as we currently know - tricky.
+		 * This is because parent´s within the test-hierarchy may also consume threads from the thread-pool.
+		 * Additional work is required to improve on this.
+		 */
 		executorService = Executors.newFixedThreadPool(
 			configuration.getParallelism() + 1 /*, new WorkerThreadFactory()*/); // TODO: Plus one for the root JUnit-task? Do we have this one in all use-cases?
 		parallelism = configuration.getParallelism();
