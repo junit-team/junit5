@@ -88,18 +88,18 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
-     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.4")
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.9")
 </span><span class="modifiers">public enum </span><span class="element-name type-name-label">CleanupMode</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="CleanupMode.html" title="enum class in org.junit.jupiter.api.io">CleanupMode</a>&gt;</span></div>
 <div class="block">Enumeration of cleanup modes for a <code>TempDir</code>.
 
  <p>When a test with a temporary directory completes, it might be useful in
- some cases to be able to view the contents of the directory resulting from
- the test. <code>CleanupMode</code> allows control of how a <code>TempDir</code>
+ some cases to be able to view the contents of the temporary directory used by
+ the test. <code>CleanupMode</code> allows you to control how a <code>TempDir</code>
  is cleaned up.</div>
 <dl class="notes">
 <dt>Since:</dt>
-<dd>5.4</dd>
+<dd>5.9</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
@@ -133,11 +133,11 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color"><code><a href="#DEFAULT" class="member-name-link">DEFAULT</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Defer to the configured cleanup mode.</div>
+<div class="block">Use the default cleanup mode.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="#NEVER" class="member-name-link">NEVER</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Don't clean up a temporary directory after the test has completed.</div>
+<div class="block">Never clean up a temporary directory after the test has completed.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="#ON_SUCCESS" class="member-name-link">ON_SUCCESS</a></code></div>
 <div class="col-last odd-row-color">
@@ -192,7 +192,15 @@ the order they are declared.</div>
 <section class="detail" id="DEFAULT">
 <h3>DEFAULT</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="CleanupMode.html" title="enum class in org.junit.jupiter.api.io">CleanupMode</a></span>&nbsp;<span class="element-name">DEFAULT</span></div>
-<div class="block">Defer to the configured cleanup mode.</div>
+<div class="block">Use the default cleanup mode.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="TempDir.html#DEFAULT_CLEANUP_MODE_PROPERTY_NAME"><code>TempDir.DEFAULT_CLEANUP_MODE_PROPERTY_NAME</code></a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -203,17 +211,17 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="NEVER">
-<h3>NEVER</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="CleanupMode.html" title="enum class in org.junit.jupiter.api.io">CleanupMode</a></span>&nbsp;<span class="element-name">NEVER</span></div>
-<div class="block">Don't clean up a temporary directory after the test has completed.</div>
-</section>
-</li>
-<li>
 <section class="detail" id="ON_SUCCESS">
 <h3>ON_SUCCESS</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="CleanupMode.html" title="enum class in org.junit.jupiter.api.io">CleanupMode</a></span>&nbsp;<span class="element-name">ON_SUCCESS</span></div>
 <div class="block">Only clean up a temporary directory if the test completed successfully.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="NEVER">
+<h3>NEVER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="CleanupMode.html" title="enum class in org.junit.jupiter.api.io">CleanupMode</a></span>&nbsp;<span class="element-name">NEVER</span></div>
+<div class="block">Never clean up a temporary directory after the test has completed.</div>
 </section>
 </li>
 </ul>
