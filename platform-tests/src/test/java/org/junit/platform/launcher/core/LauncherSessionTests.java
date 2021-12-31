@@ -24,7 +24,7 @@ import org.junit.platform.launcher.LauncherSession;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.mockito.ArgumentCaptor;
 
-public class LauncherSessionTests {
+class LauncherSessionTests {
 
 	LauncherSessionListener firstSessionListener = mock(LauncherSessionListener.class);
 	LauncherSessionListener secondSessionListener = mock(LauncherSessionListener.class);
@@ -64,6 +64,7 @@ public class LauncherSessionTests {
 
 	@Test
 	void callsRegisteredListenersWhenLauncherIsUsedViaSession() {
+		@SuppressWarnings("resource")
 		var session = LauncherFactory.openSession(launcherConfig);
 		var launcher = session.getLauncher();
 
@@ -93,6 +94,7 @@ public class LauncherSessionTests {
 
 	@Test
 	void closedSessionCannotBeUsed() {
+		@SuppressWarnings("resource")
 		var session = LauncherFactory.openSession(launcherConfig);
 		var launcher = session.getLauncher();
 		var testPlan = launcher.discover(request);
