@@ -295,7 +295,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME</span></div>
 <div class="block">Property name used to provide patterns for deactivating conditions: "junit.jupiter.conditions.deactivate"
 
- <h3>Pattern Matching Syntax</h3>
+ <h4>Pattern Matching Syntax</h4>
 
  <p>If the property value consists solely of an asterisk (<code>*</code>), all
  conditions will be deactivated. Otherwise, the property value will be treated
@@ -306,7 +306,7 @@ loadScripts(document, 'script');</script>
  against one or more characters in a FQCN. All other characters in a pattern
  will be matched one-to-one against a FQCN.
 
- <h3>Examples</h3>
+ <h4>Examples</h4>
 
  <ul>
  <li><code>*</code>: deactivates all conditions.
@@ -357,7 +357,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME</span></div>
 <div class="block">Property name used to set the default display name generator class name: "junit.jupiter.displayname.generator.default"
 
- <h3>Supported Values</h3>
+ <h4>Supported Values</h4>
 
  <p>Supported values include fully qualified class names for types that implement
  <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.html" title="interface in org.junit.jupiter.api"><code>DisplayNameGenerator</code></a>.
@@ -398,7 +398,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME</span></div>
 <div class="block">Property name used to set the default test instance lifecycle mode: "junit.jupiter.testinstance.lifecycle.default"
 
- <h3>Supported Values</h3>
+ <h4>Supported Values</h4>
 
  <p>Supported values include names of enum constants defined in
  <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/TestInstance.Lifecycle.html" title="enum class in org.junit.jupiter.api"><code>TestInstance.Lifecycle</code></a>, ignoring case.
@@ -447,7 +447,7 @@ loadScripts(document, 'script');</script>
 
  <p>This setting is only effective if parallel execution is enabled.
 
- <h3>Supported Values</h3>
+ <h4>Supported Values</h4>
 
  <p>Supported values include names of enum constants defined in
  <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/parallel/ExecutionMode.html" title="enum class in org.junit.jupiter.api.parallel"><code>ExecutionMode</code></a>, ignoring case.
@@ -479,7 +479,7 @@ loadScripts(document, 'script');</script>
 
  <p>This setting is only effective if parallel execution is enabled.
 
- <h3>Supported Values</h3>
+ <h4>Supported Values</h4>
 
  <p>Supported values include names of enum constants defined in
  <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/parallel/ExecutionMode.html" title="enum class in org.junit.jupiter.api.parallel"><code>ExecutionMode</code></a>, ignoring case.
@@ -909,7 +909,7 @@ loadScripts(document, 'script');</script>
  <p>The value of this property will be used to toggle whether
  <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/Timeout.html" title="annotation interface in org.junit.jupiter.api"><code>@Timeout</code></a> is applied to tests.</p>
 
- <h3>Supported timeout mode values:</h3>
+ <h4>Supported timeout mode values:</h4>
  <ul>
  <li><code>enabled</code>: enables timeouts
  <li><code>disabled</code>: disables timeouts
@@ -937,7 +937,7 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME</span></div>
 <div class="block">Property name used to set the default method orderer class name: "junit.jupiter.testmethod.order.default"
 
- <h3>Supported Values</h3>
+ <h4>Supported Values</h4>
 
  <p>Supported values include fully qualified class names for types that
  implement <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>.
@@ -962,7 +962,7 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME</span></div>
 <div class="block">Property name used to set the default class orderer class name: "junit.jupiter.testclass.order.default"
 
- <h3>Supported Values</h3>
+ <h4>Supported Values</h4>
 
  <p>Supported values include fully qualified class names for types that
  implement <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.html" title="interface in org.junit.jupiter.api"><code>ClassOrderer</code></a>.</div>
@@ -987,7 +987,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Property name used to set the scope of temporary directories created via
  <a href="../../../../../org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html" title="annotation interface in org.junit.jupiter.api.io"><code>@TempDir</code></a> annotation: "junit.jupiter.tempdir.scope"
 
- <h3>Supported Values</h3>
+ <h4>Supported Values</h4>
  <ul>
  <li><code>per_context</code>: creates a single temporary directory for the
  entire test class or method, depending on where it's first declared
