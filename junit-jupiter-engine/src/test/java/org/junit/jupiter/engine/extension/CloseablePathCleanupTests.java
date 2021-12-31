@@ -11,8 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.Files.deleteIfExists;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
@@ -31,9 +30,8 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.opentest4j.TestAbortedException;
 
 /**
- * Integration tests for cleanup of the {@link TempDirectory}
- * when {@link TempDir} is set to {@link CleanupMode#ALWAYS} or
- * {@link CleanupMode#NEVER}.
+ * Integration tests for cleanup of the {@link TempDirectory} when the {@link CleanupMode} is
+ * set to {@link CleanupMode#ALWAYS}, {@link CleanupMode#NEVER}, or {@link CleanupMode#ON_SUCCESS}.
  *
  * @since 5.9
  *
@@ -42,67 +40,65 @@ import org.opentest4j.TestAbortedException;
  */
 class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 
-	private TempDirectory.CloseablePath path;
+	private final ExtensionContext extensionContext = mock(ExtensionContext.class);
+
+	private TempDirectory.CloseablePath closeablePath;
 
 	@AfterEach
 	void cleanupTempDirectory() throws IOException {
-		deleteIfExists(path.get());
+		deleteIfExists(closeablePath.get());
 	}
 
 	/**
 	 * Ensure a closeable path is cleaned up for a cleanup mode of ALWAYS.
 	 */
 	@Test
-	void testAlways() throws IOException {
-		ExtensionContext extensionContext = mock(ExtensionContext.class);
-		path = TempDirectory.createTempDir(ALWAYS, extensionContext);
-		assertTrue(path.get().toFile().exists());
+	void always() throws IOException {
+		closeablePath = TempDirectory.createTempDir(ALWAYS, extensionContext);
+		assertThat(closeablePath.get()).exists();
 
-		path.close();
-		assertFalse(path.get().toFile().exists());
+		closeablePath.close();
+		assertThat(closeablePath.get()).doesNotExist();
 	}
 
 	/**
 	 * Ensure a closeable path is not cleaned up for a cleanup mode of NEVER.
 	 */
 	@Test
-	void testNever() throws IOException {
-		ExtensionContext extensionContext = mock(ExtensionContext.class);
-		path = TempDirectory.createTempDir(NEVER, extensionContext);
-		assertTrue(path.get().toFile().exists());
+	void never() throws IOException {
+		closeablePath = TempDirectory.createTempDir(NEVER, extensionContext);
+		assertThat(closeablePath.get()).exists();
 
-		path.close();
-		assertTrue(path.get().toFile().exists());
+		closeablePath.close();
+		assertThat(closeablePath.get()).exists();
 	}
 
 	/**
 	 * Ensure a closeable path is not cleaned up for a cleanup mode of ON_SUCCESS, if there is a TestAbortedException.
 	 */
 	@Test
-	void testOnSuccessWithTestAbortedException() throws IOException {
-		ExtensionContext extensionContext = mock(ExtensionContext.class);
+	void onSuccessWithTestAbortedException() throws IOException {
 		when(extensionContext.getExecutionException()).thenReturn(Optional.of(new TestAbortedException()));
 
-		path = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
-		assertTrue(path.get().toFile().exists());
+		closeablePath = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
+		assertThat(closeablePath.get()).exists();
 
-		path.close();
-		assertTrue(path.get().toFile().exists());
+		closeablePath.close();
+		assertThat(closeablePath.get()).exists();
 	}
 
 	/**
 	 * Ensure a closeable path is cleaned up for a cleanup mode of ON_SUCCESS, if there is no exception.
 	 */
 	@Test
-	void testOnSuccessWithNoTestAbortedException() throws IOException {
-		ExtensionContext extensionContext = mock(ExtensionContext.class);
+	void onSuccessWithNoTestAbortedException() throws IOException {
 		when(extensionContext.getExecutionException()).thenReturn(Optional.empty());
 
-		path = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
-		assertTrue(path.get().toFile().exists());
+		closeablePath = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
+		assertThat(closeablePath.get()).exists();
 
-		path.close();
-		assertFalse(path.get().toFile().exists());
+		closeablePath.close();
+		assertThat(closeablePath.get()).doesNotExist();
 	}
 
 }
