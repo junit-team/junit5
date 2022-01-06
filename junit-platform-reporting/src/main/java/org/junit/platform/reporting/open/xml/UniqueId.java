@@ -19,8 +19,8 @@ class UniqueId extends ChildElement<Metadata, UniqueId> {
 
 	static final QualifiedName ELEMENT = QualifiedName.of(JUnitFactory.NAMESPACE, "uniqueId");
 
-	UniqueId(Context context, org.junit.platform.engine.UniqueId value) {
+	UniqueId(Context context, String value) {
 		super(context, ELEMENT);
-		withContent(value.toString());
+		withContent(value);
 	}
 }

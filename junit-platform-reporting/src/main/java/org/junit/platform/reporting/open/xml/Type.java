@@ -18,7 +18,7 @@ import org.opentest4j.reporting.schema.QualifiedName;
 
 class Type extends ChildElement<Metadata, Type> {
 
-	public static final QualifiedName ELEMENT = QualifiedName.of(JUnitFactory.NAMESPACE, "type");
+	static final QualifiedName ELEMENT = QualifiedName.of(JUnitFactory.NAMESPACE, "type");
 
 	Type(Context context, TestDescriptor.Type type) {
 		super(context, ELEMENT);

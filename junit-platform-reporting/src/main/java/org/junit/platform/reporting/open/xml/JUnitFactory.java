@@ -16,12 +16,12 @@ import org.opentest4j.reporting.schema.Namespace;
 
 class JUnitFactory {
 
-	public static Namespace NAMESPACE = Namespace.of("https://schemas.junit.org/open-test-reporting");
+	static Namespace NAMESPACE = Namespace.of("https://schemas.junit.org/open-test-reporting");
 
 	private JUnitFactory() {
 	}
 
-	static Factory<UniqueId> uniqueId(org.junit.platform.engine.UniqueId uniqueId) {
+	static Factory<UniqueId> uniqueId(String uniqueId) {
 		return context -> new UniqueId(context, uniqueId);
 	}
 
