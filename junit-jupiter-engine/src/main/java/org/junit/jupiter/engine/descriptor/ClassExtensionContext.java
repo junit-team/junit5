@@ -18,7 +18,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.execution.SimpleExecutableInvoker;
+import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -38,11 +38,11 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 	 * Create a new {@code ClassExtensionContext} with {@link Lifecycle#PER_METHOD}.
 	 *
 	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassBasedTestDescriptor,
-	 * Lifecycle, JupiterConfiguration, ThrowableCollector, SimpleExecutableInvoker)
+	 * Lifecycle, JupiterConfiguration, ThrowableCollector, DefaultExecutableInvoker)
 	 */
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ThrowableCollector throwableCollector, SimpleExecutableInvoker executableInvoker) {
+			ThrowableCollector throwableCollector, DefaultExecutableInvoker executableInvoker) {
 
 		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configuration, throwableCollector,
 			executableInvoker);
@@ -50,7 +50,7 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
-			ThrowableCollector throwableCollector, SimpleExecutableInvoker executableInvoker) {
+			ThrowableCollector throwableCollector, DefaultExecutableInvoker executableInvoker) {
 
 		super(parent, engineExecutionListener, testDescriptor, configuration, executableInvoker);
 

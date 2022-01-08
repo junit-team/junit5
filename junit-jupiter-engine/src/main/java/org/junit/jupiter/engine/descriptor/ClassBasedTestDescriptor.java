@@ -53,12 +53,12 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
+import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.DefaultTestInstances;
 import org.junit.jupiter.engine.execution.InvocationAwareExecutableInvoker;
 import org.junit.jupiter.engine.execution.InvocationAwareExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.InvocationAwareExecutableInvoker.ReflectiveInterceptorCall.VoidMethodInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.execution.SimpleExecutableInvoker;
 import org.junit.jupiter.engine.execution.TestInstancesProvider;
 import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -175,7 +175,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		this.afterAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
-		SimpleExecutableInvoker executableInvoker = new SimpleExecutableInvoker(context);
+		DefaultExecutableInvoker executableInvoker = new DefaultExecutableInvoker(context);
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, this.lifecycle, context.getConfiguration(), throwableCollector,
 			executableInvoker);

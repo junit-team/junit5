@@ -17,7 +17,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.execution.SimpleExecutableInvoker;
+import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.Node;
 
@@ -28,7 +28,7 @@ final class JupiterEngineExtensionContext extends AbstractExtensionContext<Jupit
 
 	JupiterEngineExtensionContext(EngineExecutionListener engineExecutionListener,
 			JupiterEngineDescriptor testDescriptor, JupiterConfiguration configuration,
-			SimpleExecutableInvoker executableInvoker) {
+			DefaultExecutableInvoker executableInvoker) {
 
 		super(null, engineExecutionListener, testDescriptor, configuration, executableInvoker);
 	}

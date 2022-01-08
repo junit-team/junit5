@@ -24,9 +24,9 @@ import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
-import org.junit.jupiter.engine.execution.SimpleExecutableInvoker;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -46,10 +46,10 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final Set<String> tags;
 	private final JupiterConfiguration configuration;
 	private final ExtensionValuesStore valuesStore;
-	private final SimpleExecutableInvoker executableInvoker;
+	private final DefaultExecutableInvoker executableInvoker;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
-			JupiterConfiguration configuration, SimpleExecutableInvoker executableInvoker) {
+			JupiterConfiguration configuration, DefaultExecutableInvoker executableInvoker) {
 		this.executableInvoker = executableInvoker;
 
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");

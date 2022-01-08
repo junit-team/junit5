@@ -14,11 +14,11 @@ import java.lang.reflect.Constructor;
 import java.util.Optional;
 
 /**
- * Unit tests for {@link SimpleExecutableInvoker}.
+ * Unit tests for {@link DefaultExecutableInvoker}.
  *
  * @since 5.9
  */
-class SimpleExecutableInvokerTest extends AbstractExecutableInvokerTest {
+class DefaultExecutableInvokerTest extends AbstractExecutableInvokerTest {
 
 	@Override
 	void invokeMethod() {
@@ -30,8 +30,8 @@ class SimpleExecutableInvokerTest extends AbstractExecutableInvokerTest {
 		return newInvoker().invoke(constructor, outerInstance);
 	}
 
-	private SimpleExecutableInvoker newInvoker() {
-		return new SimpleExecutableInvoker(this.extensionContext, this.extensionRegistry);
+	private DefaultExecutableInvoker newInvoker() {
+		return new DefaultExecutableInvoker(this.extensionContext, this.extensionRegistry);
 	}
 
 }

@@ -27,17 +27,17 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @since 5.9
  */
 @API(status = INTERNAL, since = "5.9")
-public class SimpleExecutableInvoker implements ExecutableInvoker {
+public class DefaultExecutableInvoker implements ExecutableInvoker {
 
 	private final ExtensionContext extensionContext;
 	private final ExtensionRegistry extensionRegistry;
 
-	public SimpleExecutableInvoker(ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+	public DefaultExecutableInvoker(ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
 		this.extensionContext = extensionContext;
 		this.extensionRegistry = extensionRegistry;
 	}
 
-	public SimpleExecutableInvoker(JupiterEngineExecutionContext context) {
+	public DefaultExecutableInvoker(JupiterEngineExecutionContext context) {
 		this(context.getExtensionContext(), context.getExtensionRegistry());
 	}
 
