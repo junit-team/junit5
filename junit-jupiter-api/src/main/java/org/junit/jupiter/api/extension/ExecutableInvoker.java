@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -42,7 +42,7 @@ public interface ExecutableInvoker {
 	 *
 	 * @param method the method to invoke and resolve parameters for
 	 * @param target the target on which the executable will be invoked;
-	 * can be {@code null} of {@code Optional}
+	 * can be {@code null} for {@code static} methods
 	 */
 	Object invoke(Method method, Object target);
 
@@ -59,6 +59,8 @@ public interface ExecutableInvoker {
 	/**
 	 * Invoke the supplied constructor with the supplied outer instance and
 	 * dynamic parameter resolution.
+	 *
+	 * <p>Use this method when invoking the constructor for an <em>inner</em> class.
 	 *
 	 * @param constructor the constructor to invoke and resolve parameters for
 	 * @param outerInstance the outer instance to supply as the first argument

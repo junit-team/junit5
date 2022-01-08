@@ -394,7 +394,7 @@ public interface ExtensionContext {
 	ExecutionMode getExecutionMode();
 
 	/**
-	 * Get an {@link ExecutableInvoker} to invoke executables
+	 * Get an {@link ExecutableInvoker} to invoke methods and constructors
 	 * with support for dynamic resolution of parameters.
 	 *
 	 * @since 5.9

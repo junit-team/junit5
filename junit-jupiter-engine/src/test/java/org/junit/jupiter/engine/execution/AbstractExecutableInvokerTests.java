@@ -12,11 +12,11 @@ package org.junit.jupiter.engine.execution;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTest.ConfigurableParameterResolver;
-import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTest.ConstructorInjectionTestCase;
-import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTest.MethodSource;
-import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTest.NumberParameterResolver;
-import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTest.StringParameterResolver;
+import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTests.ConfigurableParameterResolver;
+import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTests.ConstructorInjectionTestCase;
+import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTests.MethodSource;
+import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTests.NumberParameterResolver;
+import static org.junit.jupiter.engine.execution.ParameterResolutionUtilsTests.StringParameterResolver;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -34,7 +34,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 /**
  * @since 5.9
  */
-abstract class AbstractExecutableInvokerTest {
+abstract class AbstractExecutableInvokerTests {
 
 	private static final String ENIGMA = "enigma";
 
