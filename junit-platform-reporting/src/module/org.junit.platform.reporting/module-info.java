@@ -19,7 +19,6 @@ module org.junit.platform.reporting {
 	requires org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
 	requires transitive org.junit.platform.launcher;
-	requires org.opentest4j.reporting.events;
 
 	// exports org.junit.platform.reporting; empty package
 	exports org.junit.platform.reporting.legacy;
