@@ -22,6 +22,12 @@ dependencies {
 }
 
 tasks {
+	compileModule {
+		options.compilerArgs.addAll(listOf(
+			"--add-modules", "org.opentest4j.reporting.events",
+			"--add-reads", "org.junit.platform.reporting=org.opentest4j.reporting.events"
+		))
+	}
 	shadowJar {
 		val release17ClassesDir = sourceSets.mainRelease17.get().output.classesDirs.singleFile
 		inputs.dir(release17ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
