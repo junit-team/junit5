@@ -419,7 +419,8 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 [NOTE]
 ====
 Other extensions can also leverage registered `ParameterResolvers` for method and
-constructor invocations, using `ExecutableInvoker` available in the `ExtensionContext`.
+constructor invocations, using the `ExecutableInvoker` available via the
+`getExecutableInvoker()` method in the `ExtensionContext`.
 ====
 
 [[extensions-test-result-processing]]

@@ -60,7 +60,7 @@ class ParameterResolutionUtilsTests {
 		Class<ConstructorInjectionTestCase> topLevelClass = ConstructorInjectionTestCase.class;
 		Object[] arguments = resolveConstructorParameters(topLevelClass, null);
 
-		assertThat(arguments).hasSize(1).containsExactly(ENIGMA);
+		assertThat(arguments).containsExactly(ENIGMA);
 	}
 
 	@Test
@@ -73,7 +73,7 @@ class ParameterResolutionUtilsTests {
 		Class<ConstructorInjectionTestCase.NestedTestCase> innerClass = ConstructorInjectionTestCase.NestedTestCase.class;
 		Object[] arguments = resolveConstructorParameters(innerClass, outer);
 
-		assertThat(arguments).hasSize(2).containsExactly(outer, 42);
+		assertThat(arguments).containsExactly(outer, 42);
 	}
 
 	@Test
@@ -98,7 +98,7 @@ class ParameterResolutionUtilsTests {
 
 		Object[] arguments = resolveMethodParameters();
 
-		assertThat(arguments).hasSize(0);
+		assertThat(arguments).isEmpty();
 	}
 
 	@Test
@@ -108,7 +108,7 @@ class ParameterResolutionUtilsTests {
 
 		Object[] arguments = resolveMethodParameters();
 
-		assertThat(arguments).hasSize(1).containsExactly("argument");
+		assertThat(arguments).containsExactly("argument");
 	}
 
 	@Test
@@ -127,7 +127,7 @@ class ParameterResolutionUtilsTests {
 
 		Object[] arguments = resolveMethodParameters();
 
-		assertThat(arguments).hasSize(3).containsExactly("0", 1, 2.0);
+		assertThat(arguments).containsExactly("0", 1, 2.0);
 	}
 
 	@Test
@@ -138,7 +138,7 @@ class ParameterResolutionUtilsTests {
 
 		Object[] arguments = resolveMethodParameters();
 
-		assertThat(arguments).hasSize(1).containsExactly("something");
+		assertThat(arguments).containsExactly("something");
 	}
 
 	@Test
@@ -166,7 +166,7 @@ class ParameterResolutionUtilsTests {
 
 		Object[] arguments = resolveMethodParameters();
 
-		assertThat(arguments).hasSize(1).containsExactly(42);
+		assertThat(arguments).containsExactly(42);
 	}
 
 	@Test

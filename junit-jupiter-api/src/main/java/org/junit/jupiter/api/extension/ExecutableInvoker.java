@@ -64,7 +64,8 @@ public interface ExecutableInvoker {
 	 *
 	 * @param constructor the constructor to invoke and resolve parameters for
 	 * @param outerInstance the outer instance to supply as the first argument
-	 * to the constructor; {@code null}, for top-level classes
+	 * to the constructor; must be {@code null} for top-level classes
+	 * or {@code static} nested classes
 	 */
 	<T> T invoke(Constructor<T> constructor, Object outerInstance);
 

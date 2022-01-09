@@ -43,9 +43,6 @@ public class InvocationAwareExecutableInvoker {
 	 * Invoke the supplied constructor with the supplied outer instance and
 	 * dynamic parameter resolution.
 	 *
-	 * <p>This method should only be used to invoke the constructor for
-	 * an inner class.
-	 *
 	 * @param constructor the constructor to invoke and resolve parameters for
 	 * @param outerInstance the outer instance to supply as the first argument
 	 * to the constructor; empty, for top-level classes
@@ -66,11 +63,12 @@ public class InvocationAwareExecutableInvoker {
 	}
 
 	/**
-	 * Invoke the supplied {@code static} method with dynamic parameter resolution.
+	 * Invoke the supplied method with dynamic parameter resolution.
 	 *
 	 * @param method the method to invoke and resolve parameters for
-	 * @param target the target on which the executable will be invoked;
-	 * can be {@code null} of {@code Optional}
+	 * @param target the target on which the executable will be invoked,
+	 * potentially wrapped in an {@link Optional}; can be {@code null} or an
+	 * empty {@code Optional} for a {@code static} method
 	 * @param extensionContext the current {@code ExtensionContext}
 	 * @param extensionRegistry the {@code ExtensionRegistry} to retrieve
 	 * {@code ParameterResolvers} from
