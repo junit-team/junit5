@@ -13,7 +13,7 @@ dependencies {
 
 	compileOnlyApi(libs.apiguardian)
 
-	compileOnly(libs.openTestReporting)
+	compileOnly(libs.openTestReporting.events)
 
 	shadowed(libs.picocli)
 

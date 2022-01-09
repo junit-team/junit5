@@ -28,6 +28,8 @@ dependencies {
 	testImplementation(libs.apiguardian)
 	testImplementation(libs.jfrunit)
 	testImplementation(libs.joox)
+	testImplementation(libs.openTestReporting.tooling)
+	testImplementation(libs.bundles.xmlunit)
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(projects.junitVintageEngine)
