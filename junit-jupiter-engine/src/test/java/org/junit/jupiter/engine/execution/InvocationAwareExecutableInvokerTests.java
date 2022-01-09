@@ -30,8 +30,8 @@ class InvocationAwareExecutableInvokerTests extends AbstractExecutableInvokerTes
 	}
 
 	@Override
-	<T> T invokeConstructor(Constructor<T> constructor, Optional<Object> outerInstance) {
-		return newInvoker().invoke(constructor, outerInstance, extensionContext, extensionRegistry,
+	<T> T invokeConstructor(Constructor<T> constructor, Object outerInstance) {
+		return newInvoker().invoke(constructor, Optional.ofNullable(outerInstance), extensionContext, extensionRegistry,
 			passthroughInterceptor());
 	}
 

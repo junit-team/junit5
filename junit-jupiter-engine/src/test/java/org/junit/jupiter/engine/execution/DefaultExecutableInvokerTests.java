@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.execution;
 
 import java.lang.reflect.Constructor;
-import java.util.Optional;
 
 /**
  * Unit tests for {@link DefaultExecutableInvoker}.
@@ -26,7 +25,7 @@ class DefaultExecutableInvokerTests extends AbstractExecutableInvokerTests {
 	}
 
 	@Override
-	<T> T invokeConstructor(Constructor<T> constructor, Optional<Object> outerInstance) {
+	<T> T invokeConstructor(Constructor<T> constructor, Object outerInstance) {
 		return newInvoker().invoke(constructor, outerInstance);
 	}
 

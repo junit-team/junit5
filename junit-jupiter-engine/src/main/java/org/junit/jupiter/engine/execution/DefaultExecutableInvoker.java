@@ -43,20 +43,16 @@ public class DefaultExecutableInvoker implements ExecutableInvoker {
 
 	@Override
 	public <T> T invoke(Constructor<T> constructor, Object outerInstance) {
-		Object[] arguments = resolveParameters(constructor, Optional.empty(), wrapWithOptional(outerInstance),
+		Object[] arguments = resolveParameters(constructor, Optional.empty(), Optional.ofNullable(outerInstance),
 			extensionContext, extensionRegistry);
 		return ReflectionUtils.newInstance(constructor, arguments);
 	}
 
 	@Override
 	public Object invoke(Method method, Object target) {
-		Object[] arguments = resolveParameters(method, wrapWithOptional(target), extensionContext, extensionRegistry);
+		Object[] arguments = resolveParameters(method, Optional.ofNullable(target), extensionContext,
+			extensionRegistry);
 		return ReflectionUtils.invokeMethod(method, target, arguments);
-	}
-
-	@SuppressWarnings("unchecked")
-	private Optional<Object> wrapWithOptional(Object object) {
-		return (object instanceof Optional ? (Optional<Object>) object : Optional.ofNullable(object));
 	}
 
 }

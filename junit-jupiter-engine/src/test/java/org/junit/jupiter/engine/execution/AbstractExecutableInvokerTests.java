@@ -22,7 +22,6 @@ import static org.mockito.Mockito.verify;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -54,7 +53,7 @@ abstract class AbstractExecutableInvokerTests {
 
 		Class<ConstructorInjectionTestCase> outerClass = ConstructorInjectionTestCase.class;
 		Constructor<ConstructorInjectionTestCase> constructor = ReflectionUtils.getDeclaredConstructor(outerClass);
-		ConstructorInjectionTestCase outer = invokeConstructor(constructor, Optional.empty());
+		ConstructorInjectionTestCase outer = invokeConstructor(constructor, null);
 
 		assertNotNull(outer);
 		assertEquals(ENIGMA, outer.str);
@@ -62,7 +61,7 @@ abstract class AbstractExecutableInvokerTests {
 		Class<ConstructorInjectionTestCase.NestedTestCase> innerClass = ConstructorInjectionTestCase.NestedTestCase.class;
 		Constructor<ConstructorInjectionTestCase.NestedTestCase> innerConstructor = ReflectionUtils.getDeclaredConstructor(
 			innerClass);
-		ConstructorInjectionTestCase.NestedTestCase inner = invokeConstructor(innerConstructor, Optional.of(outer));
+		ConstructorInjectionTestCase.NestedTestCase inner = invokeConstructor(innerConstructor, outer);
 
 		assertNotNull(inner);
 		assertEquals(42, inner.num);
@@ -94,6 +93,6 @@ abstract class AbstractExecutableInvokerTests {
 
 	abstract void invokeMethod();
 
-	abstract <T> T invokeConstructor(Constructor<T> constructor, Optional<Object> outerInstance);
+	abstract <T> T invokeConstructor(Constructor<T> constructor, Object outerInstance);
 
 }
