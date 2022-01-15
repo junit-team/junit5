@@ -116,6 +116,11 @@ automatically registers the `IgnoreCondition` along with
 `{ExecutionCondition}` that disables test classes or test methods that are annotated with
 `@Ignore`.
 
+[source,java,indent=0]
+----
+include::{testDir}/example/IgnoredTestsDemo.java[tags=user_guide]
+----
+
 
 [[migrating-from-junit4-message-parameter]]
 === New message parameter position
@@ -140,8 +145,3 @@ The methods affected by this change are the following:
 - Assumptions
   * `assumeTrue`
   * `assumeFalse`
-
-[source,java,indent=0]
-----
-include::{testDir}/example/IgnoredTestsDemo.java[tags=user_guide]
-----
