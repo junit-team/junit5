@@ -63,6 +63,8 @@ tests to JUnit Jupiter.
 * `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith` and
   `@RegisterExtension`
   - See also <<migrating-from-junit4-rule-support>>.
+* Many assertions and assumptions now accept the message as their last parameter instead of the first one
+  - See also <<migrating-from-junit4-message-parameter, New message parameter position>>.
 
 
 [[migrating-from-junit4-rule-support]]
@@ -113,6 +115,31 @@ automatically registers the `IgnoreCondition` along with
 <<migrating-from-junit4-rule-support>>). The `IgnoreCondition` is an
 `{ExecutionCondition}` that disables test classes or test methods that are annotated with
 `@Ignore`.
+
+
+[[migrating-from-junit4-message-parameter]]
+=== New message parameter position
+
+The introduction of the classes `Assumptions` and `Assertions` brought a new parameters' order for existing methods. While on JUnit 4 assertion and assumption methods would accept the message parameter as their first one, JUnit 5 implements them with the message as the last parameter.
+
+For instance, the method `assertEquals` in JUnit 4 is `assertEquals(String message, Object expected, Object actual)` and in JUnit 5 `assertEquals(Object expected, Object actual, String message)`.
+
+The methods affected by this change are the following:
+
+- Assertions
+  * `assertTrue`
+  * `assertFalse`
+  * `assertNull`
+  * `assertNotNull`
+  * `assertEquals`
+  * `assertNotEquals`
+  * `assertArrayEquals`
+  * `assertSame`
+  * `assertNotSame`
+  * `assertThrows`
+- Assumptions
+  * `assumeTrue`
+  * `assumeFalse`
 
 [source,java,indent=0]
 ----
