@@ -124,7 +124,6 @@ Your donations will help to make that a reality!
 
 - Stefan Gwihs
 - linux_china
-- Danny Preussler
 - Zerocode
 - Simon Schrottner
 - Zoran Regvart
