@@ -14,14 +14,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.util.Optional;
 
-import org.junit.jupiter.engine.execution.InvocationAwareExecutableInvoker.ReflectiveInterceptorCall;
+import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
 
 /**
- * Unit tests for {@link InvocationAwareExecutableInvoker}.
+ * Unit tests for {@link InterceptingExecutableInvoker}.
  *
  * @since 5.0
  */
-class InvocationAwareExecutableInvokerTests extends AbstractExecutableInvokerTests {
+class InterceptingExecutableInvokerTests extends AbstractExecutableInvokerTests {
 
 	@Override
 	void invokeMethod() {
@@ -35,8 +35,8 @@ class InvocationAwareExecutableInvokerTests extends AbstractExecutableInvokerTes
 			passthroughInterceptor());
 	}
 
-	private InvocationAwareExecutableInvoker newInvoker() {
-		return new InvocationAwareExecutableInvoker();
+	private InterceptingExecutableInvoker newInvoker() {
+		return new InterceptingExecutableInvoker();
 	}
 
 	private static <E extends Executable, T> ReflectiveInterceptorCall<E, T> passthroughInterceptor() {

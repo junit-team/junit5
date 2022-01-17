@@ -27,7 +27,7 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 
 /**
- * {@code InvocationAwareExecutableInvoker} encapsulates the invocation of a
+ * {@code InterceptingExecutableInvoker} encapsulates the invocation of a
  * {@link java.lang.reflect.Executable} (i.e., method or constructor),
  * including support for dynamic resolution of method parameters via
  * {@link ParameterResolver ParameterResolvers}.
@@ -35,7 +35,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class InvocationAwareExecutableInvoker {
+public class InterceptingExecutableInvoker {
 
 	private static final InvocationInterceptorChain interceptorChain = new InvocationInterceptorChain();
 
