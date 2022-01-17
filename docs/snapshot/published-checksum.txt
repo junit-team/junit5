@@ -272,6 +272,7 @@
 5d5cc07298affe8f4134b33372828278  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassUtils.java
 5dfa560767e0c975197666a47cb2393c  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/VerifierSupport.java
 5e244031417d1c89871e468a29dc01cc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRange.java
+5f063f41039b97c9a479fbb3ed9ddd11  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 5f118bbaba78572ea5d0f1def7d8987e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/BooleanExecutionCondition.java
 6131f2b422159403016d82ad413ab634  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeAllCallback.java
 61a07a2ca45c50e76ed4c1fc513fd680  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
@@ -728,7 +729,6 @@ ee38815b576419fda0c768f488f2a962  junit-platform-launcher/src/main/java/org/juni
 ef151ed5988d074ba6f288df3778dd14  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/AbstractTestRuleAnnotatedMember.java
 ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/package-info.java
 eff90a7cb1dfa7206dca42ea0e986f7c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
-f00a32aaa336b54e5da939b46c327abc  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 f02b067dd26ff65062706c42c2aff2c6  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/package-info.java
 f03cff43e4baae1c2a8c52bc3382941d  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueIdFormat.java
 f0a8724cdddcff0637d9108d34ab5625  documentation/src/test/java/org/junit/api/tools/MarkdownApiReportWriter.java
