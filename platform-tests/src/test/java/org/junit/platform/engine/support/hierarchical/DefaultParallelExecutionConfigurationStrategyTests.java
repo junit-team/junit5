@@ -17,6 +17,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -181,7 +183,39 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 	static class CustomParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
-			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5, __ -> true);
+			return new ParallelExecutionConfiguration() {
+
+				@Override
+				public int getParallelism() {
+					return 1;
+				}
+
+				@Override
+				public int getMinimumRunnable() {
+					return 2;
+				}
+
+				@Override
+				public int getMaxPoolSize() {
+					return 3;
+				}
+
+				@Override
+				public int getCorePoolSize() {
+					return 4;
+				}
+
+				@Override
+				public int getKeepAliveSeconds() {
+					return 5;
+				}
+
+				@Override
+				public Predicate<? super ForkJoinPool> getSaturatePredicate() {
+					return __ -> true;
+				}
+
+			};
 		}
 	}
 
