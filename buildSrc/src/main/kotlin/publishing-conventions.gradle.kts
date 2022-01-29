@@ -41,6 +41,7 @@ tasks.withType<PublishToMavenLocal>().configureEach {
 }
 
 signing {
+	useGpgCmd()
 	sign(publishing.publications)
 	isRequired = !(isSnapshot || isContinuousIntegrationEnvironment)
 }
