@@ -21,11 +21,13 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
@@ -79,8 +81,9 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		// The test instance should be properly maintained by the enclosing class's ExtensionContext.
 		TestInstances testInstances = context.getExtensionContext().getTestInstances().orElse(null);
 
+		ExecutableInvoker executableInvoker = new DefaultExecutableInvoker(context);
 		ExtensionContext extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), testInstances);
+			context.getExecutionListener(), this, context.getConfiguration(), testInstances, executableInvoker);
 
 		// @formatter:off
 		return context.extend()

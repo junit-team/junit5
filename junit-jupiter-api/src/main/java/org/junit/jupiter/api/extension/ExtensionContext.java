@@ -394,6 +394,15 @@ public interface ExtensionContext {
 	ExecutionMode getExecutionMode();
 
 	/**
+	 * Get an {@link ExecutableInvoker} to invoke methods and constructors
+	 * with support for dynamic resolution of parameters.
+	 *
+	 * @since 5.9
+	 */
+	@API(status = EXPERIMENTAL, since = "5.9")
+	ExecutableInvoker getExecutableInvoker();
+
+	/**
 	 * {@code Store} provides methods for extensions to save and retrieve data.
 	 */
 	interface Store {

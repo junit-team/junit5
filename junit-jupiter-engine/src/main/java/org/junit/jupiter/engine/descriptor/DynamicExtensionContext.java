@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -24,8 +25,9 @@ import org.junit.platform.engine.support.hierarchical.Node;
 class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDescriptor> {
 
 	DynamicExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			DynamicNodeTestDescriptor testDescriptor, JupiterConfiguration configuration) {
-		super(parent, engineExecutionListener, testDescriptor, configuration);
+			DynamicNodeTestDescriptor testDescriptor, JupiterConfiguration configuration,
+			ExecutableInvoker executableInvoker) {
+		super(parent, engineExecutionListener, testDescriptor, configuration, executableInvoker);
 	}
 
 	@Override

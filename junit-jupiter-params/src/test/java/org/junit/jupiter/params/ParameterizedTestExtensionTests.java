@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -272,6 +273,11 @@ class ParameterizedTestExtensionTests {
 			@Override
 			public ExecutionMode getExecutionMode() {
 				return ExecutionMode.SAME_THREAD;
+			}
+
+			@Override
+			public ExecutableInvoker getExecutableInvoker() {
+				return null;
 			}
 		};
 	}

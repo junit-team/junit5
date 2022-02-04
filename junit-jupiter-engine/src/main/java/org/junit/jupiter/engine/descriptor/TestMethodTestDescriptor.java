@@ -23,6 +23,7 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
@@ -34,8 +35,9 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
-import org.junit.jupiter.engine.execution.ExecutableInvoker;
-import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
+import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
+import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker;
+import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
@@ -67,7 +69,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	public static final String SEGMENT_TYPE = "method";
-	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
+	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 	private static final ReflectiveInterceptorCall<Method, Void> defaultInterceptorCall = ReflectiveInterceptorCall.ofVoidMethod(
 		InvocationInterceptor::interceptTestMethod);
 
@@ -96,8 +98,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = populateNewExtensionRegistry(context);
 		ThrowableCollector throwableCollector = createThrowableCollector();
+		ExecutableInvoker executableInvoker = new DefaultExecutableInvoker(context);
 		MethodExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector);
+			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector, executableInvoker);
 		throwableCollector.execute(() -> {
 			TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(registry,
 				throwableCollector);
