@@ -8205,6 +8205,22 @@ those provided in <code>java.lang.reflect.Parameter</code> in order to avoid thi
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Other extensions can also leverage registered <code>ParameterResolvers</code> for method and
+constructor invocations, using the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/extension/ExecutableInvoker.html">ExecutableInvoker</a></code> available via the
+<code>getExecutableInvoker()</code> method in the <code>ExtensionContext</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="extensions-test-result-processing"><a class="anchor" href="#extensions-test-result-processing"></a>5.9. Test Result Processing</h3>
@@ -10581,6 +10597,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExecutableInvoker</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.9</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>InvocationInterceptor</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
 </tr>
@@ -11225,7 +11246,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-01-17 09:25:09 UTC
+Last updated 2022-02-04 10:14:46 UTC
 </div>
 </div>
 <style>

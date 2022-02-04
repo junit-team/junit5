@@ -156,61 +156,67 @@ loadScripts(document, 'script');</script>
 <div class="block"><code>DynamicTestInvocationContext</code> represents the <em>context</em> of a
  single invocation of a <a href="../DynamicTest.html" title="class in org.junit.jupiter.api">dynamic test</a>.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/Extension.html#org.junit.jupiter.api.extension">Extension</a></div>
+<div class="col-first even-row-color"><a href="class-use/ExecutableInvoker.html#org.junit.jupiter.api.extension">ExecutableInvoker</a></div>
 <div class="col-last even-row-color">
+<div class="block"><code>ExecutableInvoker</code> allows invoking methods and constructors
+ with support for dynamic resolution of parameters via
+ <a href="ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolvers</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><a href="class-use/Extension.html#org.junit.jupiter.api.extension">Extension</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Marker interface for all extensions.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/ExtensionContext.html#org.junit.jupiter.api.extension">ExtensionContext</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/ExtensionContext.html#org.junit.jupiter.api.extension">ExtensionContext</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>ExtensionContext</code> encapsulates the <em>context</em> in which the
  current test or container is being executed.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/ExtensionContext.Namespace.html#org.junit.jupiter.api.extension">ExtensionContext.Namespace</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/ExtensionContext.Namespace.html#org.junit.jupiter.api.extension">ExtensionContext.Namespace</a></div>
+<div class="col-last odd-row-color">
 <div class="block">A <code>Namespace</code> is used to provide a <em>scope</em> for data saved by
  extensions within a <a href="ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/ExtensionContext.Store.html#org.junit.jupiter.api.extension">ExtensionContext.Store</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/ExtensionContext.Store.html#org.junit.jupiter.api.extension">ExtensionContext.Store</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>Store</code> provides methods for extensions to save and retrieve data.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/InvocationInterceptor.Invocation.html#org.junit.jupiter.api.extension">InvocationInterceptor.Invocation</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/InvocationInterceptor.Invocation.html#org.junit.jupiter.api.extension">InvocationInterceptor.Invocation</a></div>
+<div class="col-last odd-row-color">
 <div class="block">An invocation that returns a result and may throw a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link"><code>Throwable</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/ParameterContext.html#org.junit.jupiter.api.extension">ParameterContext</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/ParameterContext.html#org.junit.jupiter.api.extension">ParameterContext</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>ParameterContext</code> encapsulates the <em>context</em> in which an
  <a href="ParameterContext.html#getDeclaringExecutable()"><code>Executable</code></a> will be invoked for a given
  <a href="ParameterContext.html#getParameter()"><code>Parameter</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/ParameterResolutionException.html#org.junit.jupiter.api.extension">ParameterResolutionException</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/ParameterResolutionException.html#org.junit.jupiter.api.extension">ParameterResolutionException</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Thrown if an error is encountered in the configuration or execution of a
  <a href="ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolver</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/ReflectiveInvocationContext.html#org.junit.jupiter.api.extension">ReflectiveInvocationContext</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/ReflectiveInvocationContext.html#org.junit.jupiter.api.extension">ReflectiveInvocationContext</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>ReflectiveInvocationContext</code> encapsulates the <em>context</em> of
  a reflective invocation of an executable (method or constructor).</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/TestInstanceFactoryContext.html#org.junit.jupiter.api.extension">TestInstanceFactoryContext</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/TestInstanceFactoryContext.html#org.junit.jupiter.api.extension">TestInstanceFactoryContext</a></div>
+<div class="col-last odd-row-color">
 <div class="block"><code>TestInstanceFactoryContext</code> encapsulates the <em>context</em> in which
  a <a href="TestInstanceFactoryContext.html#getTestClass()">test class</a> is to be instantiated by a
  <a href="TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/TestInstances.html#org.junit.jupiter.api.extension">TestInstances</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/TestInstances.html#org.junit.jupiter.api.extension">TestInstances</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>TestInstances</code> encapsulates the <em>test instances</em> of a test.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/TestInstantiationException.html#org.junit.jupiter.api.extension">TestInstantiationException</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/TestInstantiationException.html#org.junit.jupiter.api.extension">TestInstantiationException</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Thrown if an error is encountered during the execution of
  a <a href="TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/TestTemplateInvocationContext.html#org.junit.jupiter.api.extension">TestTemplateInvocationContext</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/TestTemplateInvocationContext.html#org.junit.jupiter.api.extension">TestTemplateInvocationContext</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>TestTemplateInvocationContext</code> represents the <em>context</em> of a
  single invocation of a <a href="../TestTemplate.html" title="annotation interface in org.junit.jupiter.api">test
  template</a>.</div>
@@ -300,39 +306,45 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">The result of evaluating an <a href="ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/Extension.html#org.junit.jupiter.engine.execution">Extension</a></div>
+<div class="col-first odd-row-color"><a href="class-use/ExecutableInvoker.html#org.junit.jupiter.engine.execution">ExecutableInvoker</a></div>
 <div class="col-last odd-row-color">
+<div class="block"><code>ExecutableInvoker</code> allows invoking methods and constructors
+ with support for dynamic resolution of parameters via
+ <a href="ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolvers</code></a>.</div>
+</div>
+<div class="col-first even-row-color"><a href="class-use/Extension.html#org.junit.jupiter.engine.execution">Extension</a></div>
+<div class="col-last even-row-color">
 <div class="block">Marker interface for all extensions.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/ExtensionContext.html#org.junit.jupiter.engine.execution">ExtensionContext</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/ExtensionContext.html#org.junit.jupiter.engine.execution">ExtensionContext</a></div>
+<div class="col-last odd-row-color">
 <div class="block"><code>ExtensionContext</code> encapsulates the <em>context</em> in which the
  current test or container is being executed.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/ExtensionContext.Namespace.html#org.junit.jupiter.engine.execution">ExtensionContext.Namespace</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/ExtensionContext.Namespace.html#org.junit.jupiter.engine.execution">ExtensionContext.Namespace</a></div>
+<div class="col-last even-row-color">
 <div class="block">A <code>Namespace</code> is used to provide a <em>scope</em> for data saved by
  extensions within a <a href="ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/ExtensionContext.Store.html#org.junit.jupiter.engine.execution">ExtensionContext.Store</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/ExtensionContext.Store.html#org.junit.jupiter.engine.execution">ExtensionContext.Store</a></div>
+<div class="col-last odd-row-color">
 <div class="block"><code>Store</code> provides methods for extensions to save and retrieve data.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/InvocationInterceptor.html#org.junit.jupiter.engine.execution">InvocationInterceptor</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/InvocationInterceptor.html#org.junit.jupiter.engine.execution">InvocationInterceptor</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>InvocationInterceptor</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to intercept calls to test code.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/InvocationInterceptor.Invocation.html#org.junit.jupiter.engine.execution">InvocationInterceptor.Invocation</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/InvocationInterceptor.Invocation.html#org.junit.jupiter.engine.execution">InvocationInterceptor.Invocation</a></div>
+<div class="col-last odd-row-color">
 <div class="block">An invocation that returns a result and may throw a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link"><code>Throwable</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/ReflectiveInvocationContext.html#org.junit.jupiter.engine.execution">ReflectiveInvocationContext</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/ReflectiveInvocationContext.html#org.junit.jupiter.engine.execution">ReflectiveInvocationContext</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>ReflectiveInvocationContext</code> encapsulates the <em>context</em> of
  a reflective invocation of an executable (method or constructor).</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/TestInstances.html#org.junit.jupiter.engine.execution">TestInstances</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/TestInstances.html#org.junit.jupiter.engine.execution">TestInstances</a></div>
+<div class="col-last odd-row-color">
 <div class="block"><code>TestInstances</code> encapsulates the <em>test instances</em> of a test.</div>
 </div>
 </div>
