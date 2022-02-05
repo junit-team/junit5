@@ -153,7 +153,7 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	void other() {
 		evaluateCondition();
 		assertEnabledOnCurrentOsIf(
-			!(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd || onSolaris() || onWindows()));
+			!(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd() || onSolaris() || onWindows()));
 		assertCustomDisabledReasonIs("Disabled on almost every OS");
 	}
 

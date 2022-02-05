@@ -106,7 +106,7 @@ class EnabledOnOsIntegrationTests {
 	@Test
 	@EnabledOnOs(value = OTHER, disabledReason = "Disabled on almost every OS")
 	void other() {
-		assertFalse(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd || onSolaris() || onWindows());
+		assertFalse(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd() || onSolaris() || onWindows());
 	}
 
 	static boolean onAix() {
