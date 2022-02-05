@@ -12,8 +12,11 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.condition.OS.AIX;
+import static org.junit.jupiter.api.condition.OS.FREEBSD;
 import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.junit.jupiter.api.condition.OS.MAC;
+import static org.junit.jupiter.api.condition.OS.OPENBSD;
 import static org.junit.jupiter.api.condition.OS.OTHER;
 import static org.junit.jupiter.api.condition.OS.SOLARIS;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
@@ -48,8 +51,20 @@ class EnabledOnOsIntegrationTests {
 	}
 
 	@Test
-	@EnabledOnOs({ LINUX, MAC, WINDOWS, SOLARIS, OTHER })
+	@EnabledOnOs({ AIX, FREEBSD, LINUX, MAC, OPENBSD, WINDOWS, SOLARIS, OTHER })
 	void enabledOnEveryOs() {
+	}
+
+	@Test
+	@EnabledOnOs(AIX)
+	void aix() {
+		assertTrue(onAix());
+	}
+
+	@Test
+	@EnabledOnOs(FREEBSD)
+	void freebsd() {
+		assertTrue(onFreebsd());
 	}
 
 	@Test
@@ -71,6 +86,12 @@ class EnabledOnOsIntegrationTests {
 	}
 
 	@Test
+	@EnabledOnOs(OPENBSD)
+	void openbsd() {
+		assertTrue(onOpenbsd());
+	}
+
+	@Test
 	@EnabledOnOs(WINDOWS)
 	void windows() {
 		assertTrue(onWindows());
@@ -85,7 +106,15 @@ class EnabledOnOsIntegrationTests {
 	@Test
 	@EnabledOnOs(value = OTHER, disabledReason = "Disabled on almost every OS")
 	void other() {
-		assertFalse(onLinux() || onMac() || onSolaris() || onWindows());
+		assertFalse(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd || onSolaris() || onWindows());
+	}
+
+	static boolean onAix() {
+		return OS_NAME.contains("aix");
+	}
+
+	static boolean onFreebsd() {
+		return OS_NAME.contains("freebsd");
 	}
 
 	static boolean onLinux() {
@@ -94,6 +123,10 @@ class EnabledOnOsIntegrationTests {
 
 	static boolean onMac() {
 		return OS_NAME.contains("mac");
+	}
+
+	static boolean onOpenbsd() {
+		return OS_NAME.contains("openbsd");
 	}
 
 	static boolean onSolaris() {

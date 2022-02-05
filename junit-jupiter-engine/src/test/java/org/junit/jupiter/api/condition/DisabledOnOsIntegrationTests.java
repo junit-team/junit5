@@ -13,12 +13,18 @@ package org.junit.jupiter.api.condition;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onAix;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onFreebsd;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onLinux;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onMac;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onOpenbsd;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onSolaris;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onWindows;
+import static org.junit.jupiter.api.condition.OS.AIX;
+import static org.junit.jupiter.api.condition.OS.FREEBSD;
 import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.junit.jupiter.api.condition.OS.MAC;
+import static org.junit.jupiter.api.condition.OS.OPENBSD;
 import static org.junit.jupiter.api.condition.OS.OTHER;
 import static org.junit.jupiter.api.condition.OS.SOLARIS;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
@@ -50,9 +56,22 @@ class DisabledOnOsIntegrationTests {
 	}
 
 	@Test
-	@DisabledOnOs(value = { LINUX, MAC, WINDOWS, SOLARIS, OTHER }, disabledReason = "Disabled on every OS")
+	@DisabledOnOs(value = { AIX, FREEBSD, LINUX, MAC, OPENBSD, WINDOWS, SOLARIS,
+			OTHER }, disabledReason = "Disabled on every OS")
 	void disabledOnEveryOs() {
 		fail("should be disabled");
+	}
+
+	@Test
+	@DisabledOnOs(AIX)
+	void aix() {
+		assertFalse(onAix());
+	}
+
+	@Test
+	@DisabledOnOs(FREEBSD)
+	void freebsd() {
+		assertFalse(onFreebsd());
 	}
 
 	@Test
@@ -74,6 +93,12 @@ class DisabledOnOsIntegrationTests {
 	}
 
 	@Test
+	@DisabledOnOs(OPENBSD)
+	void openbsd() {
+		assertFalse(onOpenbsd());
+	}
+
+	@Test
 	@DisabledOnOs(WINDOWS)
 	void windows() {
 		assertFalse(onWindows());
@@ -88,7 +113,7 @@ class DisabledOnOsIntegrationTests {
 	@Test
 	@DisabledOnOs(OTHER)
 	void other() {
-		assertTrue(onLinux() || onMac() || onSolaris() || onWindows());
+		assertTrue(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd() || onSolaris() || onWindows());
 	}
 
 	// -------------------------------------------------------------------------
