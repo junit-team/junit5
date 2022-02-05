@@ -12,8 +12,11 @@ package org.junit.jupiter.api.condition;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onAix;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onFreebsd;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onLinux;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onMac;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onOpenbsd;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onSolaris;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onWindows;
 
@@ -73,6 +76,24 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
+	 * @see DisabledOnOsIntegrationTests#aix()
+	 */
+	@Test
+	void aix() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onAix());
+	}
+
+	/**
+	 * @see DisabledOnOsIntegrationTests#freebsd()
+	 */
+	@Test
+	void freebsd() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onFreebsd());
+	}
+
+	/**
 	 * @see DisabledOnOsIntegrationTests#linux()
 	 */
 	@Test
@@ -100,6 +121,15 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
+	 * @see DisabledOnOsIntegrationTests#openbsd()
+	 */
+	@Test
+	void openbsd() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onOpenbsd());
+	}
+
+	/**
 	 * @see DisabledOnOsIntegrationTests#windows()
 	 */
 	@Test
@@ -123,7 +153,8 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void other() {
 		evaluateCondition();
-		assertDisabledOnCurrentOsIf(!(onLinux() || onMac() || onSolaris() || onWindows()));
+		assertDisabledOnCurrentOsIf(
+			!(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd() || onSolaris() || onWindows()));
 	}
 
 	private void assertDisabledOnCurrentOsIf(boolean condition) {
