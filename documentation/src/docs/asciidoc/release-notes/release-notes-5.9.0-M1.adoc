@@ -30,7 +30,8 @@ on GitHub.
 * JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
   resolution time a fully running set of dependencies is calculated, avoiding the need for
   these to be manually specified.
-
+* New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if
+  no tests were discovered.
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
 === JUnit Jupiter
