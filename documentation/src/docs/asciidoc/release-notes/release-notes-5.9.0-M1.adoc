@@ -19,17 +19,17 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* `ConfigurationParameters.size()` has been deprecated.
+* `ConfigurationParameters.size()` has been deprecated in favor of the new `keySet()`
+  method.
 
 ==== New Features and Improvements
 
-* `ConfigurationParameters` has now a `keySet()` method allowing to retrieve
-  all configuration parameter keys.
+* `ConfigurationParameters` has a new `keySet()` method which allows you to retrieve all
+  configuration parameter keys.
 * New `IterationSelector` for selecting a subset of a test's or container's iterations.
 * JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
-  resolution time a fully running set of dependencies are calculated avoiding the need
-  for these to be manually specified.
-* New support for FreeBSD and OpenBSD operating systems in `@EnabledOnOs` and `@DisabledOnOs`.
+  resolution time a fully running set of dependencies is calculated, avoiding the need for
+  these to be manually specified.
 
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
@@ -45,14 +45,19 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Add support for `IterationSelector` to select a subset of the invocations of
-  parameterized or dynamic tests.
-* Add support for `MATCH_NONE` mode in `EnumSource` that selects only those enum constants
-  whose names match none of the supplied patterns.
-* A new extension `TestInstancePreConstructCallback` called prior to a test instance
-  construction (symmetric extension to `TestInstancePreDestroyCallback`).
-* Allow extensions to leverage registered `ParameterResolvers` for method and constructor
-  invocations, via the new `ExecutableInvoker` available in the `ExtensionContext`.
+* `@TempDir` now includes a cleanup mode attribute for preventing a temporary directory
+  from being deleted after a test. The default cleanup mode can be configured via a
+  configuration parameter.
+* Support for FreeBSD and OpenBSD operating systems in `@EnabledOnOs` and `@DisabledOnOs`.
+* New `MATCH_NONE` mode for `@EnumSource` that selects only those enum constants whose
+  names match none of the supplied patterns.
+* New `TestInstancePreConstructCallback` extension API that is called prior to test
+  instance construction – symmetric to the existing `TestInstancePreDestroyCallback`
+  extension API.
+* Extensions can now leverage registered `ParameterResolvers` when invoking methods and
+  constructors via the new `ExecutableInvoker` available in the `ExtensionContext`.
+* A subset of the invocations of parameterized or dynamic tests can now be selected via
+  the new `IterationSelector` discovery selector when launching the JUnit Platform.
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]
@@ -68,6 +73,4 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* `@TempDir` now includes a cleanup mode attribute for preventing a temporary directory
-  from being deleted after a test. The default cleanup mode can be configured via a
-  configuration parameter.
+* ❓
