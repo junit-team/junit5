@@ -25,8 +25,8 @@ import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
- * A {@link IterationSelector} that selects the iterations of a parent
- * {@link DiscoverySelector} via their index so that
+ * A {@link DiscoverySelector} that selects the iterations of a parent
+ * {@code DiscoverySelector} via their indices so that
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * a subset of the iterations of tests or containers.
  *
