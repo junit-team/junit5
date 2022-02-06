@@ -541,7 +541,8 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>ConfigurationParameters.size()</code> has been deprecated.</p>
+<p><code>ConfigurationParameters.size()</code> has been deprecated in favor of the new <code>keySet()</code>
+method.</p>
 </li>
 </ul>
 </div>
@@ -551,16 +552,16 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>ConfigurationParameters</code> has now a <code>keySet()</code> method allowing to retrieve
-all configuration parameter keys.</p>
+<p><code>ConfigurationParameters</code> has a new <code>keySet()</code> method which allows you to retrieve all
+configuration parameter keys.</p>
 </li>
 <li>
 <p>New <code>IterationSelector</code> for selecting a subset of a test&#8217;s or container&#8217;s iterations.</p>
 </li>
 <li>
 <p>JUnit OSGi bundles now contain <code>engine</code> and <code>launcher</code> requirements ensuring that at
-resolution time a fully running set of dependencies are calculated avoiding the need
-for these to be manually specified.</p>
+resolution time a fully running set of dependencies is calculated, avoiding the need for
+these to be manually specified.</p>
 </li>
 </ul>
 </div>
@@ -593,20 +594,29 @@ for these to be manually specified.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Add support for <code>IterationSelector</code> to select a subset of the invocations of
-parameterized or dynamic tests.</p>
+<p><code>@TempDir</code> now includes a cleanup mode attribute for preventing a temporary directory
+from being deleted after a test. The default cleanup mode can be configured via a
+configuration parameter.</p>
 </li>
 <li>
-<p>Add support for <code>MATCH_NONE</code> mode in <code>EnumSource</code> that selects only those enum constants
-whose names match none of the supplied patterns.</p>
+<p>Support for FreeBSD and OpenBSD operating systems in <code>@EnabledOnOs</code> and <code>@DisabledOnOs</code>.</p>
 </li>
 <li>
-<p>A new extension <code>TestInstancePreConstructCallback</code> called prior to a test instance
-construction (symmetric extension to <code>TestInstancePreDestroyCallback</code>).</p>
+<p>New <code>MATCH_NONE</code> mode for <code>@EnumSource</code> that selects only those enum constants whose
+names match none of the supplied patterns.</p>
 </li>
 <li>
-<p>Allow extensions to leverage registered <code>ParameterResolvers</code> for method and constructor
-invocations, via the new <code>ExecutableInvoker</code> available in the <code>ExtensionContext</code>.</p>
+<p>New <code>TestInstancePreConstructCallback</code> extension API that is called prior to test
+instance construction – symmetric to the existing <code>TestInstancePreDestroyCallback</code>
+extension API.</p>
+</li>
+<li>
+<p>Extensions can now leverage registered <code>ParameterResolvers</code> when invoking methods and
+constructors via the new <code>ExecutableInvoker</code> available in the <code>ExtensionContext</code>.</p>
+</li>
+<li>
+<p>A subset of the invocations of parameterized or dynamic tests can now be selected via
+the new <code>IterationSelector</code> discovery selector when launching the JUnit Platform.</p>
 </li>
 </ul>
 </div>
@@ -639,9 +649,7 @@ invocations, via the new <code>ExecutableInvoker</code> available in the <code>E
 <div class="ulist">
 <ul>
 <li>
-<p><code>@TempDir</code> now includes a cleanup mode attribute for preventing a temporary directory
-from being deleted after a test. The default cleanup mode can be configured via a
-configuration parameter.</p>
+<p>❓</p>
 </li>
 </ul>
 </div>
@@ -884,7 +892,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-02-04 10:14:46 UTC
+Last updated 2022-02-06 15:13:34 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

@@ -104,8 +104,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <ul class="see-list">
 <li><a href="#AIX"><code>AIX</code></a></li>
+<li><a href="#FREEBSD"><code>FREEBSD</code></a></li>
 <li><a href="#LINUX"><code>LINUX</code></a></li>
 <li><a href="#MAC"><code>MAC</code></a></li>
+<li><a href="#OPENBSD"><code>OPENBSD</code></a></li>
 <li><a href="#SOLARIS"><code>SOLARIS</code></a></li>
 <li><a href="#WINDOWS"><code>WINDOWS</code></a></li>
 <li><a href="#OTHER"><code>OTHER</code></a></li>
@@ -138,18 +140,26 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">IBM AIX operating system.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="#LINUX" class="member-name-link">LINUX</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#FREEBSD" class="member-name-link">FREEBSD</a></code></div>
 <div class="col-last odd-row-color">
+<div class="block">FreeBSD operating system.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="#LINUX" class="member-name-link">LINUX</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Linux-based operating system.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="#MAC" class="member-name-link">MAC</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code><a href="#MAC" class="member-name-link">MAC</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Apple Macintosh operating system (e.g., macOS).</div>
+</div>
+<div class="col-first even-row-color"><code><a href="#OPENBSD" class="member-name-link">OPENBSD</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">OpenBSD operating system.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="#OTHER" class="member-name-link">OTHER</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">An operating system other than <a href="#AIX"><code>AIX</code></a>, <a href="#LINUX"><code>LINUX</code></a>, <a href="#MAC"><code>MAC</code></a>,
- <a href="#SOLARIS"><code>SOLARIS</code></a>, or <a href="#WINDOWS"><code>WINDOWS</code></a>.</div>
+<div class="block">An operating system other than <a href="#AIX"><code>AIX</code></a>, <a href="#FREEBSD"><code>FREEBSD</code></a>, <a href="#LINUX"><code>LINUX</code></a>,
+ <a href="#MAC"><code>MAC</code></a>, <a href="#OPENBSD"><code>OPENBSD</code></a>, <a href="#SOLARIS"><code>SOLARIS</code></a>, or <a href="#WINDOWS"><code>WINDOWS</code></a>.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="#SOLARIS" class="member-name-link">SOLARIS</a></code></div>
 <div class="col-last even-row-color">
@@ -226,6 +236,19 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="FREEBSD">
+<h3>FREEBSD</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.9")
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="OS.html" title="enum class in org.junit.jupiter.api.condition">OS</a></span>&nbsp;<span class="element-name">FREEBSD</span></div>
+<div class="block">FreeBSD operating system.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.9</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="LINUX">
 <h3>LINUX</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="OS.html" title="enum class in org.junit.jupiter.api.condition">OS</a></span>&nbsp;<span class="element-name">LINUX</span></div>
@@ -237,6 +260,19 @@ the order they are declared.</div>
 <h3>MAC</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="OS.html" title="enum class in org.junit.jupiter.api.condition">OS</a></span>&nbsp;<span class="element-name">MAC</span></div>
 <div class="block">Apple Macintosh operating system (e.g., macOS).</div>
+</section>
+</li>
+<li>
+<section class="detail" id="OPENBSD">
+<h3>OPENBSD</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.9")
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="OS.html" title="enum class in org.junit.jupiter.api.condition">OS</a></span>&nbsp;<span class="element-name">OPENBSD</span></div>
+<div class="block">OpenBSD operating system.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.9</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -257,8 +293,8 @@ the order they are declared.</div>
 <section class="detail" id="OTHER">
 <h3>OTHER</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="OS.html" title="enum class in org.junit.jupiter.api.condition">OS</a></span>&nbsp;<span class="element-name">OTHER</span></div>
-<div class="block">An operating system other than <a href="#AIX"><code>AIX</code></a>, <a href="#LINUX"><code>LINUX</code></a>, <a href="#MAC"><code>MAC</code></a>,
- <a href="#SOLARIS"><code>SOLARIS</code></a>, or <a href="#WINDOWS"><code>WINDOWS</code></a>.</div>
+<div class="block">An operating system other than <a href="#AIX"><code>AIX</code></a>, <a href="#FREEBSD"><code>FREEBSD</code></a>, <a href="#LINUX"><code>LINUX</code></a>,
+ <a href="#MAC"><code>MAC</code></a>, <a href="#OPENBSD"><code>OPENBSD</code></a>, <a href="#SOLARIS"><code>SOLARIS</code></a>, or <a href="#WINDOWS"><code>WINDOWS</code></a>.</div>
 </section>
 </li>
 </ul>
