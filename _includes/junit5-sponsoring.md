@@ -103,6 +103,8 @@ Your donations will help to make that a reality!
         </div>
       </a>
     </li>
+  </ul>
+  <ul class="list-inline">
     <li>
       <a class="cardbronze" href="https://codefortynine.com/">
         <div class="cardbronze-image">
@@ -114,6 +116,20 @@ Your donations will help to make that a reality!
         <div class="cardbronze-bottom">
           <h4>Bronze Sponsor</h4>
           <p>Since July 2021</p>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="cardbronze" href="https://ubie.life/en">
+        <div class="cardbronze-image">
+          <img style="height:100%" src="assets/img/sponsor-logo-ubie.png" alt="ubie">
+        </div>
+        <div class="cardbronze-center">
+          <h4>Ubie</h4>
+        </div>
+        <div class="cardbronze-bottom">
+          <h4>Bronze Sponsor</h4>
+          <p>Since February 2022</p>
         </div>
       </a>
     </li>
