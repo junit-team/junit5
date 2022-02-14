@@ -29,17 +29,12 @@ jobs:
           fetch-depth: 1
       - name: Set up Test JDK
         uses: ./.github/actions/setup-test-jdk
-      - name: 'Download JDK ${{ matrix.jdk }}'
-        id: download-jdk
-        uses: sormuras/download-jdk@v1
-        with:
-          feature: '${{ matrix.jdk }}'
       - name: 'Set up JDK ${{ matrix.jdk }}'
-        uses: actions/setup-java@v2
+        uses: oracle-actions/setup-java@v1
         with:
-          distribution: 'jdkfile'
-          java-version: '${{ steps.download-jdk.outputs.version }}'
-          jdkFile: '${{ steps.download-jdk.outputs.file }}'
+          website: jdk.java.net
+          release: ${{ matrix.jdk }}
+          version: latest
       - name: 'Prepare JDK${{ matrix.jdk }} env var'
         shell: bash
         run: echo "JDK${{ matrix.jdk }}=$JAVA_HOME" >> $GITHUB_ENV
