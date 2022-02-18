@@ -463,6 +463,7 @@ public final class Events {
 				.findFirst();
 		// @formatter:on
 
+		//noinspection SimplifyOptionalCallChains
 		if (!matchedEvent.isPresent()) {
 			softly.fail("Condition did not match any event: " + condition);
 		}
