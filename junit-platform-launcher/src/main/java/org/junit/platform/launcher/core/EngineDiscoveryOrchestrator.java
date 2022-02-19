@@ -116,6 +116,8 @@ public class EngineDiscoveryOrchestrator {
 			LauncherDiscoveryListener listener, Function<String, UniqueId> uniqueIdCreator) {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 
+		boolean allEnginesExcluded = this.testEngines.iterator().hasNext();
+
 		for (TestEngine testEngine : this.testEngines) {
 			boolean engineIsExcluded = request.getEngineFilters().stream() //
 					.map(engineFilter -> engineFilter.apply(testEngine)) //
@@ -127,12 +129,20 @@ public class EngineDiscoveryOrchestrator {
 					testEngine.getId(), phase));
 				continue;
 			}
+			else {
+				allEnginesExcluded = false;
+			}
 
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
 			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, listener, uniqueIdCreator);
 			testEngineDescriptors.put(testEngine, rootDescriptor);
+		}
+
+		if (allEnginesExcluded) {
+			logger.warn(() -> String.format(
+				"Test discovery for all engines was skipped due to EngineFilters in %s phase.", phase));
 		}
 
 		List<PostDiscoveryFilter> filters = new LinkedList<>(postDiscoveryFilters);
