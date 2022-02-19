@@ -27,6 +27,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestPlan;
 
 /**
  * Orchestrates test execution using the configured test engines.
@@ -76,13 +77,18 @@ public class EngineExecutionOrchestrator {
 			TestExecutionListener testExecutionListener) {
 		internalTestPlan.markStarted();
 
+		// Do not directly pass the internal test plan to test execution listeners.
+		// Hyrum's Law indicates that someone will eventually come to depend on it.
+		TestPlan testPlan = internalTestPlan.getDelegate();
+		LauncherDiscoveryResult discoveryResult = internalTestPlan.getDiscoveryResult();
+
 		ListenerRegistry<EngineExecutionListener> engineExecutionListenerRegistry = forEngineExecutionListeners();
-		engineExecutionListenerRegistry.add(new ExecutionListenerAdapter(internalTestPlan, testExecutionListener));
+		engineExecutionListenerRegistry.add(new ExecutionListenerAdapter(testPlan, testExecutionListener));
 		engineExecutionListenerRegistry.add(parentEngineExecutionListener);
 
-		testExecutionListener.testPlanExecutionStarted(internalTestPlan);
-		execute(internalTestPlan.getDiscoveryResult(), engineExecutionListenerRegistry.getCompositeListener());
-		testExecutionListener.testPlanExecutionFinished(internalTestPlan);
+		testExecutionListener.testPlanExecutionStarted(testPlan);
+		execute(discoveryResult, engineExecutionListenerRegistry.getCompositeListener());
+		testExecutionListener.testPlanExecutionFinished(testPlan);
 	}
 
 	private void withInterceptedStreams(ConfigurationParameters configurationParameters,
