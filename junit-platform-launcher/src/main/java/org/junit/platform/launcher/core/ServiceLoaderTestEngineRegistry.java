@@ -41,7 +41,13 @@ public final class ServiceLoaderTestEngineRegistry {
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ClassLoaderUtils.getDefaultClassLoader());
-		logger.config(() -> createDiscoveredTestEnginesMessage(testEngines));
+
+		if (testEngines.iterator().hasNext()) {
+			logger.config(() -> createDiscoveredTestEnginesMessage(testEngines));
+		}
+		else {
+			logger.warn(() -> "No TestEngine implementation discovered.");
+		}
 		return testEngines;
 	}
 
@@ -51,10 +57,8 @@ public final class ServiceLoaderTestEngineRegistry {
 		List<String> details = ((Stream<TestEngine>) CollectionUtils.toStream(testEngines))
 				.map(engine -> String.format("%s (%s)", engine.getId(), join(", ", computeAttributes(engine))))
 				.collect(toList());
-		return details.isEmpty()
-				? "No TestEngine implementation discovered."
-				: "Discovered TestEngines with IDs: [" + join(", ", details) + "]";
 		// @formatter:on
+		return "Discovered TestEngines with IDs: [" + join(", ", details) + "]";
 	}
 
 	private List<String> computeAttributes(TestEngine engine) {
