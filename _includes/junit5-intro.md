@@ -1,3 +1,14 @@
+## JUnit team's statement on the war in Ukraine
+
+As human beings, we stand with Ukraine and condemn the Russian government's war against the Ukrainian people, including our own colleagues and their families.
+
+<a class="btn btn-danger btn-lg" href="https://crisisrelief.un.org/t/ukraine" role="button">
+      <i class="fas fa-heart"></i>&nbsp;
+      Donate to UN's Ukraine Humanitarian Fund
+</a>
+
+---
+
 ## About
 
 *JUnit 5* is the next generation of JUnit.
