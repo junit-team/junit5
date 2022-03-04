@@ -5669,9 +5669,9 @@ can improve and eventually <a href="#api-evolution">promote</a> this feature.
 <div class="paragraph">
 <p>The built-in <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a></code> extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
-default. To use it, annotate a field of type <code>java.nio.file.Path</code> or <code>java.io.File</code> with
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or add a parameter of type <code>java.nio.file.Path</code> or <code>java.io.File</code> annotated
-with <code>@TempDir</code> to a lifecycle method or test method.</p>
+default. To use it, annotate a non-final, unassigned field of type <code>java.nio.file.Path</code> or
+<code>java.io.File</code> with <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or add a parameter of type <code>java.nio.file.Path</code> or
+<code>java.io.File</code> annotated with <code>@TempDir</code> to a lifecycle method or test method.</p>
 </div>
 <div class="paragraph">
 <p>For example, the following test declares a parameter annotated with <code>@TempDir</code> for a
@@ -5768,7 +5768,7 @@ temporary directories are deleted only after a test completed successfully.</p>
 </div>
 <div class="paragraph">
 <p>The default cleanup mode is <code>ALWAYS</code>. You can use the
-<code>junit.jupiter.temp.dir.cleanup.mode.default</code>
+<code>junit.jupiter.tempdir.cleanup.mode.default</code>
 <a href="#running-tests-config-params">configuration parameter</a> to override this default.</p>
 </div>
 <div class="listingblock">
@@ -11246,7 +11246,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-02-06 15:13:34 UTC
+Last updated 2022-03-04 12:29:37 UTC
 </div>
 </div>
 <style>

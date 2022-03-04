@@ -584,7 +584,15 @@ these to be manually specified.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>@TempDir</code> fields are no longer allowed to be declared as <code>final</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This improves diagnostics for failures resulting from a user-declared <code>static final</code>
+<code>@TempDir</code> field by throwing an exception with an informative error message.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -892,7 +900,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-02-06 15:13:34 UTC
+Last updated 2022-03-04 12:29:37 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

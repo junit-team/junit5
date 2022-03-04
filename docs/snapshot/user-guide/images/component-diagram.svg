@@ -30,7 +30,7 @@
       java -jar plantuml.jar -testdot
     </text>
     <text fill='#33FF02' font-family='sans-serif' font-size='14' font-weight='bold' lengthAdjust='spacingAndGlyphs' textLength='0' x='10' y='198.2656'/>
-    <!--MD5=[efdecb6045a961c7c8fb09cdd7fd1cc7]
+    <!--MD5=[ee0ae3bbb5893516bb05caad3732fdc3]
 @startuml
 skinparam {
     defaultFontName Open Sans
@@ -132,7 +132,7 @@ PlantUML version 1.2020.06(Sun Apr 05 12:38:32 UTC 2020)
 (APACHE source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 17.0.1+12
+Java Version: 17.0.2+8
 Operating System: Linux
 Default Encoding: UTF-8
 Language: en

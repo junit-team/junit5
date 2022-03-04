@@ -91,8 +91,8 @@ loadScripts(document, 'script');</script>
  <p>The temporary directory is only created if a field in a test class or a
  parameter in a lifecycle method or test method is annotated with
  <code>@TempDir</code>. If the field type or parameter type is neither <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a>
- nor <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link"><code>File</code></a> or if the temporary directory cannot be created, an
- <a href="../extension/ExtensionConfigurationException.html" title="class in org.junit.jupiter.api.extension"><code>ExtensionConfigurationException</code></a> or a
+ nor <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link"><code>File</code></a>, if a field is declared as <code>final</code>, or if the temporary
+ directory cannot be created, an <a href="../extension/ExtensionConfigurationException.html" title="class in org.junit.jupiter.api.extension"><code>ExtensionConfigurationException</code></a> or a
  <a href="../extension/ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension"><code>ParameterResolutionException</code></a> will be thrown as appropriate. In
  addition, a <code>ParameterResolutionException</code> will be thrown for a
  constructor parameter annotated with <code>@TempDir</code>.
@@ -106,6 +106,7 @@ loadScripts(document, 'script');</script>
  <a href="../BeforeAll.html" title="annotation interface in org.junit.jupiter.api"><code>@BeforeAll</code></a> method.
 
  <h4>Old behavior</h4>
+
  <p>You can revert to the old behavior of using a single temporary directory
  by setting the <code>junit.jupiter.tempdir.scope</code> configuration parameter to
  <code>per_context</code>. In that case, the scope of the temporary directory
