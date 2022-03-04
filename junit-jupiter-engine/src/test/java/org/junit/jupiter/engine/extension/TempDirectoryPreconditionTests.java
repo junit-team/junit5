@@ -18,6 +18,7 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.in
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,32 +29,35 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 
 /**
+ * Integration tests for preconditions and assertions in the {@link TempDirectory}
+ * extension.
+ *
  * @since 5.9
  */
-class TempDirectoryParameterResolverTests extends AbstractJupiterTestEngineTests {
+class TempDirectoryPreconditionTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	@DisplayName("Test good and bad @TempDir parameters")
-	void testTempDirType() {
-		EngineExecutionResults executionResults = executeTestsForClass(ATestCase.class);
+	@DisplayName("Valid and invalid @TempDir parameter types")
+	void parameterTypes() {
+		EngineExecutionResults executionResults = executeTestsForClass(ParameterTypeTestCase.class);
 		Events tests = executionResults.testEvents();
 		tests.assertStatistics(stats -> stats.started(2).failed(1).succeeded(1));
-		tests.succeeded().assertEventsMatchExactly(event(test("testGoodTempDirType"), finishedSuccessfully()));
-		tests.failed().assertEventsMatchExactly(event(test("testBadTempDirType"),
+		tests.succeeded().assertEventsMatchExactly(event(test("validTempDirType"), finishedSuccessfully()));
+		tests.failed().assertEventsMatchExactly(event(test("invalidTempDirType"),
 			finishedWithFailure(instanceOf(ParameterResolutionException.class), message(
-				"Failed to resolve parameter [java.lang.String badTempDir] in method [void org.junit.jupiter.engine.extension.TempDirectoryParameterResolverTests$ATestCase.testBadTempDirType(java.lang.String)]: Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String"))));
+				"Failed to resolve parameter [java.lang.String text] in method [void org.junit.jupiter.engine.extension.TempDirectoryPreconditionTests$ParameterTypeTestCase.invalidTempDirType(java.lang.String)]: Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String"))));
 	}
 
 	// -------------------------------------------------------------------
 
-	static class ATestCase {
+	static class ParameterTypeTestCase {
 
 		@Test
-		void testGoodTempDirType(@TempDir File goodTempDir) {
+		void validTempDirType(@TempDir File file, @TempDir Path path) {
 		}
 
 		@Test
-		void testBadTempDirType(@TempDir String badTempDir) {
+		void invalidTempDirType(@TempDir String text) {
 		}
 
 	}

@@ -54,6 +54,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method.
  *
  * <h4>Old behavior</h4>
+ *
  * <p>You can revert to the old behavior of using a single temporary directory
  * by setting the {@code junit.jupiter.tempdir.scope} configuration parameter to
  * {@code per_context}. In that case, the scope of the temporary directory

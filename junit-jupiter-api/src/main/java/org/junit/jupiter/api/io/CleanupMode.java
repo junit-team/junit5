@@ -15,7 +15,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 /**
- * Enumeration of cleanup modes for a {@code TempDir}.
+ * Enumeration of cleanup modes for {@link TempDir @TempDir}.
  *
  * <p>When a test with a temporary directory completes, it might be useful in
  * some cases to be able to view the contents of the temporary directory used by
