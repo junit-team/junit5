@@ -2356,7 +2356,7 @@ directories are not deleted after a test completes. If it is set to `ON_SUCCESS`
 temporary directories are deleted only after a test completed successfully.
 
 The default cleanup mode is `ALWAYS`. You can use the
-`junit.jupiter.temp.dir.cleanup.mode.default`
+`junit.jupiter.tempdir.cleanup.mode.default`
 <<running-tests-config-params, configuration parameter>> to override this default.
 
 [source,java,indent=0]
