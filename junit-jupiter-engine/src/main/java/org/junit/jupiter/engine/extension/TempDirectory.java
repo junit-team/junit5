@@ -112,6 +112,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			Predicate<Field> predicate) {
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
+			assertNonFinalField(field);
 			assertSupportedType("field", field.getType());
 
 			try {
@@ -167,8 +168,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return cleanupMode == DEFAULT ? this.configuration.getDefaultTempDirCleanupMode() : cleanupMode;
 	}
 
-	private void assertSupportedType(String target, Class<?> type) {
+	private void assertNonFinalField(Field field) {
+		if (ReflectionUtils.isFinal(field)) {
+			throw new ExtensionConfigurationException("@TempDir field [" + field + "] must not be declared as final.");
+		}
+	}
 
+	private void assertSupportedType(String target, Class<?> type) {
 		if (type != Path.class && type != File.class) {
 			throw new ExtensionConfigurationException("Can only resolve @TempDir " + target + " of type "
 					+ Path.class.getName() + " or " + File.class.getName() + " but was: " + type.getName());

@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -19,9 +20,11 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.me
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -43,9 +46,43 @@ class TempDirectoryPreconditionTests extends AbstractJupiterTestEngineTests {
 		Events tests = executionResults.testEvents();
 		tests.assertStatistics(stats -> stats.started(2).failed(1).succeeded(1));
 		tests.succeeded().assertEventsMatchExactly(event(test("validTempDirType"), finishedSuccessfully()));
+		// @formatter:off
 		tests.failed().assertEventsMatchExactly(event(test("invalidTempDirType"),
-			finishedWithFailure(instanceOf(ParameterResolutionException.class), message(
-				"Failed to resolve parameter [java.lang.String text] in method [void org.junit.jupiter.engine.extension.TempDirectoryPreconditionTests$ParameterTypeTestCase.invalidTempDirType(java.lang.String)]: Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String"))));
+			finishedWithFailure(instanceOf(ParameterResolutionException.class), message("""
+					Failed to resolve parameter [java.lang.String text] in method \
+					[void org.junit.jupiter.engine.extension.TempDirectoryPreconditionTests$ParameterTypeTestCase.invalidTempDirType(java.lang.String)]: \
+					Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String\
+					"""))));
+		// @formatter:on
+	}
+
+	@Test
+	@DisplayName("final static @TempDir fields are not supported")
+	void finalStaticFieldIsNotSupported() {
+		EngineExecutionResults executionResults = executeTestsForClass(FinalStaticFieldTestCase.class);
+		Events containers = executionResults.containerEvents();
+		containers.assertStatistics(stats -> stats.started(2).failed(1).succeeded(1));
+		containers.succeeded().assertEventsMatchExactly(event(container("junit-jupiter"), finishedSuccessfully()));
+		containers.failed().assertEventsMatchExactly(event(container("FinalStaticFieldTestCase"),
+			finishedWithFailure(instanceOf(ExtensionConfigurationException.class), message("""
+					@TempDir field [static final java.nio.file.Path \
+					org.junit.jupiter.engine.extension.TempDirectoryPreconditionTests$FinalStaticFieldTestCase.path] \
+					must not be declared as final.\
+					"""))));
+	}
+
+	@Test
+	@DisplayName("final instance @TempDir fields are not supported")
+	void finalInstanceFieldIsNotSupported() {
+		EngineExecutionResults executionResults = executeTestsForClass(FinalInstanceFieldTestCase.class);
+		Events tests = executionResults.testEvents();
+		tests.assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
+		tests.failed().assertEventsMatchExactly(
+			event(test("test()"), finishedWithFailure(instanceOf(ExtensionConfigurationException.class), message("""
+					@TempDir field [final java.nio.file.Path \
+					org.junit.jupiter.engine.extension.TempDirectoryPreconditionTests$FinalInstanceFieldTestCase.path] \
+					must not be declared as final.\
+					"""))));
 	}
 
 	// -------------------------------------------------------------------
@@ -59,7 +96,24 @@ class TempDirectoryPreconditionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void invalidTempDirType(@TempDir String text) {
 		}
+	}
 
+	static class FinalStaticFieldTestCase {
+
+		static final @TempDir Path path = Paths.get(".");
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class FinalInstanceFieldTestCase {
+
+		final @TempDir Path path = Paths.get(".");
+
+		@Test
+		void test() {
+		}
 	}
 
 }

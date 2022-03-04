@@ -41,7 +41,9 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `@TempDir` fields are no longer allowed to be declared as `final`.
+  - This improves diagnostics for failures resulting from a user-declared `static final`
+    `@TempDir` field by throwing an exception with an informative error message.
 
 ==== New Features and Improvements
 
