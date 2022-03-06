@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static java.util.Comparator.comparingInt;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,6 +62,20 @@ import org.junit.platform.commons.logging.LoggerFactory;
 @API(status = EXPERIMENTAL, since = "5.8")
 public interface ClassOrderer {
 
+	/**
+	 * Property name used to set the default class orderer class name: {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include fully qualified class names for types that
+	 * implement {@link org.junit.jupiter.api.ClassOrderer}.
+	 *
+	 * <p>If not specified, test classes are not ordered unless test classes are
+	 * annotated with {@link TestClassOrder @TestClassOrder}.
+	 *
+	 * @since 5.8
+	 */
+	@API(status = STABLE, since = "5.9")
 	String DEFAULT_ORDER_PROPERTY_NAME = "junit.jupiter.testclass.order.default";
 
 	/**

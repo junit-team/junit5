@@ -192,6 +192,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return (type == Path.class) ? path : path.toFile();
 	}
 
+	@SuppressWarnings("deprecation")
 	private Scope getScope(ExtensionContext context) {
 		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent( //
 			Scope.class, //

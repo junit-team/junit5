@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.io;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.io.File;
@@ -94,8 +95,26 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 @API(status = EXPERIMENTAL, since = "5.4")
 public @interface TempDir {
 
+	/**
+	 * Property name used to set the scope of temporary directories created via
+	 * {@link org.junit.jupiter.api.io.TempDir @TempDir} annotation: {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 * <ul>
+	 * <li>{@code per_context}: creates a single temporary directory for the
+	 * entire test class or method, depending on where it's first declared
+	 * <li>{@code per_declaration}: creates separate temporary directories for
+	 * each declaration site of the {@code @TempDir} annotation.
+	 * </ul>
+	 *
+	 * <p>If not specified, the default is {@code per_declaration}.
+	 *
+	 * @since 5.8
+	 */
+	@SuppressWarnings("DeprecatedIsStillUsed")
+	@Deprecated
+	@API(status = DEPRECATED, since = "5.9")
 	String SCOPE_PROPERTY_NAME = "junit.jupiter.tempdir.scope";
-
 
 	/**
 	 * The name of the configuration parameter that is used to configure the

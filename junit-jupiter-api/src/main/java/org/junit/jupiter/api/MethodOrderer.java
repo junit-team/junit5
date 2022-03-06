@@ -37,7 +37,7 @@ import org.junit.platform.commons.util.ClassUtils;
  * <p>A {@link MethodOrderer} can be configured <em>globally</em> for the entire
  * test suite via the {@value #DEFAULT_ORDER_PROPERTY_NAME} configuration
  * parameter (see the User Guide for details) or <em>locally</em> for a test
- * class via the {@link TestClassOrder @TestMethodOrder} annotation.
+ * class via the {@link TestMethodOrder @TestMethodOrder} annotation.
  *
  * <h4>Built-in Implementations</h4>
  *
@@ -59,6 +59,20 @@ import org.junit.platform.commons.util.ClassUtils;
 @API(status = STABLE, since = "5.7")
 public interface MethodOrderer {
 
+	/**
+	 * Property name used to set the default method orderer class name: {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include fully qualified class names for types that
+	 * implement {@link org.junit.jupiter.api.MethodOrderer}.
+	 *
+	 * <p>If not specified, test methods will be ordered using an algorithm that
+	 * is deterministic but intentionally non-obvious.
+	 *
+	 * @since 5.7
+	 */
+	@API(status = STABLE, since = "5.9")
 	String DEFAULT_ORDER_PROPERTY_NAME = "junit.jupiter.testmethod.order.default";
 
 	/**

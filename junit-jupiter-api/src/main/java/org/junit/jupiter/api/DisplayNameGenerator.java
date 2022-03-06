@@ -54,6 +54,21 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = STABLE, since = "5.7")
 public interface DisplayNameGenerator {
 
+	/**
+	 * Property name used to set the default display name generator class name:
+	 * {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include fully qualified class names for types that
+	 * implement {@link DisplayNameGenerator}.
+	 *
+	 * <p>If not specified, the default is
+	 * {@link DisplayNameGenerator.Standard}.
+	 *
+	 * @since 5.5
+	 */
+	@API(status = STABLE, since = "5.9")
 	String DEFAULT_GENERATOR_PROPERTY_NAME = "junit.jupiter.displayname.generator.default";
 
 	/**

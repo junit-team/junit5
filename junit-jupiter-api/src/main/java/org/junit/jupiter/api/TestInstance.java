@@ -76,22 +76,40 @@ public @interface TestInstance {
 	enum Lifecycle {
 
 		/**
-		 * When using this mode, a new test instance will be created once per test class.
+		 * When using this mode, a new test instance will be created once per
+		 * test class.
 		 *
 		 * @see #PER_METHOD
 		 */
 		PER_CLASS,
 
 		/**
-		 * When using this mode, a new test instance will be created for each test method,
-		 * test factory method, or test template method.
+		 * When using this mode, a new test instance will be created for each
+		 * test method, test factory method, or test template method.
 		 *
-		 * <p>This mode is analogous to the behavior found in JUnit versions 1 through 4.
+		 * <p>This mode is analogous to the behavior found in JUnit versions 1
+		 * through 4.
 		 *
 		 * @see #PER_CLASS
 		 */
 		PER_METHOD;
 
+		/**
+		 * Property name used to set the default test instance lifecycle mode:
+		 * {@value}
+		 *
+		 * <h4>Supported Values</h4>
+		 *
+		 * <p>Supported values include names of enum constants defined in
+		 * {@link org.junit.jupiter.api.TestInstance.Lifecycle}, ignoring case.
+		 *
+		 * <p>If not specified, the default is "per_method" which corresponds to
+		 * {@code @TestInstance(Lifecycle.PER_METHOD)}.
+		 *
+		 * @since 5.0
+		 * @see org.junit.jupiter.api.TestInstance
+		 */
+		@API(status = STABLE, since = "5.9")
 		public static final String DEFAULT_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 
 	}
