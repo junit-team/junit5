@@ -21,8 +21,8 @@ JUnit provides three `TestEngine` implementations.
 [[test-engines-custom]]
 ==== Custom Test Engines
 
-Third parties may contribute their own custom `{TestEngine}` by implementing the interfaces
-in the {junit-platform-engine} module and _registering_ their engine.
+You can contribute your own custom `{TestEngine}` by implementing the interfaces in the
+{junit-platform-engine} module and _registering_ your engine.
 
 Every `TestEngine` must provide its own _unique ID_, _discover_ tests from an
 `EngineDiscoveryRequest`, and _execute_ those tests according to an `ExecutionRequest`.
@@ -52,10 +52,10 @@ https://github.com/junit-team/junit5/wiki/Third-party-Extensions#junit-platform-
 You will also find various tutorials and blogs on the Internet that demonstrate how to
 write a custom `TestEngine`.
 
-NOTE: `{HierarchicalTestEngine}` is a convenient abstract base implementation (used by the
-`{junit-jupiter-engine}`) that only requires implementors to provide the logic for test
-discovery. It implements execution of `TestDescriptors` that implement the `Node`
-interface, including support for parallel execution.
+NOTE: `{HierarchicalTestEngine}` is a convenient abstract base implementation of the
+`TestEngine` SPI (used by the `{junit-jupiter-engine}`) that only requires implementors to
+provide the logic for test discovery. It implements execution of `TestDescriptors` that
+implement the `Node` interface, including support for parallel execution.
 
 [[test-engines-registration]]
 ==== Registering a TestEngine
