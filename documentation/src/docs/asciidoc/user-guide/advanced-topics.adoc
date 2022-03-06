@@ -9,6 +9,4 @@ include::junit-platform-suite-engine.adoc[]
 
 include::testkit.adoc[]
 
-////
 include::engines.adoc[]
-////
