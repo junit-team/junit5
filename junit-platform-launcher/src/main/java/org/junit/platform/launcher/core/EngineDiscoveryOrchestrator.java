@@ -115,11 +115,10 @@ public class EngineDiscoveryOrchestrator {
 	private Map<TestEngine, TestDescriptor> discoverSafely(LauncherDiscoveryRequest request, Phase phase,
 			LauncherDiscoveryListener listener, Function<String, UniqueId> uniqueIdCreator) {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
+		EngineFilterer engineFilterer = new EngineFilterer(request.getEngineFilters());
 
 		for (TestEngine testEngine : this.testEngines) {
-			boolean engineIsExcluded = request.getEngineFilters().stream() //
-					.map(engineFilter -> engineFilter.apply(testEngine)) //
-					.anyMatch(FilterResult::excluded);
+			boolean engineIsExcluded = engineFilterer.isExcluded(testEngine);
 
 			if (engineIsExcluded) {
 				logger.debug(() -> String.format(
@@ -134,6 +133,8 @@ public class EngineDiscoveryOrchestrator {
 			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, listener, uniqueIdCreator);
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
+
+		engineFilterer.checkNoUnmatchedIncludeFilter();
 
 		List<PostDiscoveryFilter> filters = new LinkedList<>(postDiscoveryFilters);
 		filters.addAll(request.getPostDiscoveryFilters());

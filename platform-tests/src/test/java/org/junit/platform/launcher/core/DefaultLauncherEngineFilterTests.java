@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
@@ -18,9 +19,11 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * @since 1.0
@@ -141,4 +144,21 @@ class DefaultLauncherEngineFilterTests {
 		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
 	}
 
+	@Test
+	void launcherThrowsExceptionWhenNoEngineMatchesIncludeEngineFilter() {
+		var engine = new DemoHierarchicalTestEngine("first");
+		TestDescriptor test1 = engine.addTest("test1", noOp);
+		LauncherDiscoveryRequest request = request() //
+				.selectors(selectUniqueId(test1.getUniqueId())) //
+				.filters(includeEngines("second")) //
+				.build();
+
+		var launcher = createLauncher(engine);
+		var exception = assertThrows(JUnitException.class, () -> launcher.discover(request));
+
+		assertThat(exception.getMessage()) //
+				.startsWith("No TestEngine ID matched the following include EngineFilters: [second].") //
+				.contains("Please fix or remove the filter.") //
+				.contains("Registered TestEngines:\n- first (");
+	}
 }

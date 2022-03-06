@@ -10,20 +10,14 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.lang.String.join;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ServiceLoader;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
-import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.engine.TestEngine;
 
 /**
@@ -40,29 +34,8 @@ public final class ServiceLoaderTestEngineRegistry {
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ClassLoaderUtils.getDefaultClassLoader());
-		logger.config(() -> createDiscoveredTestEnginesMessage(testEngines));
+		logger.config(() -> TestEngineFormatter.format("Discovered TestEngines", testEngines));
 		return testEngines;
-	}
-
-	@SuppressWarnings("unchecked")
-	private String createDiscoveredTestEnginesMessage(Iterable<TestEngine> testEngines) {
-		// @formatter:off
-		List<String> details = ((Stream<TestEngine>) CollectionUtils.toStream(testEngines))
-				.map(engine -> String.format("%s (%s)", engine.getId(), join(", ", computeAttributes(engine))))
-				.collect(toList());
-		return details.isEmpty()
-				? "No TestEngine implementation discovered."
-				: "Discovered TestEngines with IDs: [" + join(", ", details) + "]";
-		// @formatter:on
-	}
-
-	private List<String> computeAttributes(TestEngine engine) {
-		List<String> attributes = new ArrayList<>(4);
-		engine.getGroupId().ifPresent(groupId -> attributes.add("group ID: " + groupId));
-		engine.getArtifactId().ifPresent(artifactId -> attributes.add("artifact ID: " + artifactId));
-		engine.getVersion().ifPresent(version -> attributes.add("version: " + version));
-		ClassLoaderUtils.getLocation(engine).ifPresent(location -> attributes.add("location: " + location));
-		return attributes;
 	}
 
 }

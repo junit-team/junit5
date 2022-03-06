@@ -1,5 +1,7 @@
 .+ org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
-.+ Discovered TestEngines with IDs. .junit-jupiter .+ junit-vintage .+
+.+ Discovered TestEngines:
+- junit-jupiter .+
+- junit-vintage .+
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
 .+ Loaded PostDiscoveryFilter instances: ..
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
