@@ -783,6 +783,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#testkit-engine-events">6.4.3. Asserting Events</a></li>
 </ul>
 </li>
+<li><a href="#test-engines">6.5. Test Engines</a>
+<ul class="sectlevel3">
+<li><a href="#test-engines-junit">6.5.1. JUnit Test Engines</a></li>
+<li><a href="#test-engines-custom">6.5.2. Custom Test Engines</a></li>
+<li><a href="#test-engines-registration">6.5.3. Registering a TestEngine</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#api-evolution">7. API Evolution</a>
@@ -9301,7 +9308,7 @@ configuration that&#8217;s necessary from the outside.</p>
 <p>JUnit 5 introduces the concept of a <code>Launcher</code> that can be used to discover, filter, and
 execute tests. Moreover, third party test libraries – like Spock, Cucumber, and FitNesse
 – can plug into the JUnit Platform&#8217;s launching infrastructure by providing a custom
-<code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/TestEngine.html">TestEngine</a></code>.</p>
+<a href="#test-engines">TestEngine</a>.</p>
 </div>
 <div class="paragraph">
 <p>The launcher API is in the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module.</p>
@@ -9437,74 +9444,8 @@ following example.</p>
 <div class="sect3">
 <h4 id="launcher-api-engines-custom"><a class="anchor" href="#launcher-api-engines-custom"></a>6.1.3. Registering a TestEngine</h4>
 <div class="paragraph">
-<p>JUnit provides three <code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> implementations.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code><a href="../api/org.junit.jupiter.engine/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a></code>: The core of JUnit Jupiter.</p>
-</li>
-<li>
-<p><code><a href="../api/org.junit.vintage.engine/org/junit/vintage/engine/package-summary.html">junit-vintage-engine</a></code>: A thin layer on top of JUnit 4 to allow running <em>vintage</em>
-tests with the launcher infrastructure.</p>
-</li>
-<li>
-<p><code><a href="../api/org.junit.platform.suite.engine/org/junit/platform/suite/engine/package-summary.html">junit-platform-suite-engine</a></code>: To execute declarative suites of tests with the
-launcher infrastructure.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Third parties may also contribute their own <code>TestEngine</code> by implementing the interfaces in
-the <a href="../api/org.junit.platform.engine/org/junit/platform/engine/package-summary.html">junit-platform-engine</a> module and <em>registering</em> their engine. Engine registration is
-supported via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism. For example, the <code>junit-jupiter-engine</code>
-module registers its <code>org.junit.jupiter.engine.JupiterTestEngine</code> in a file named
-<code>org.junit.platform.engine.TestEngine</code> within the <code>/META-INF/services</code> folder in the
-<code>junit-jupiter-engine</code> JAR.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html">HierarchicalTestEngine</a></code> is a convenient abstract base implementation (used by
-the <code><a href="../api/org.junit.jupiter.engine/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a></code>) that only requires implementors to provide the logic for
-test discovery. It implements execution of <code>TestDescriptors</code> that implement the <code>Node</code>
-interface, including support for parallel execution.
-</td>
-</tr>
-</table>
-</div>
-<div id="launcher-api-engines-custom-ids" class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="title">The <code>junit-</code> prefix is reserved for TestEngines from the JUnit Team</div>
-<div class="paragraph">
-<p>The JUnit Platform <code>Launcher</code> enforces that only <code>TestEngine</code> implementations published
-by the JUnit Team may use the <code>junit-</code> prefix for their <code>TestEngine</code> IDs.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>If any third-party <code>TestEngine</code> claims to be <code>junit-jupiter</code> or <code>junit-vintage</code>, an
-exception will be thrown, immediately halting execution of the JUnit Platform.</p>
-</li>
-<li>
-<p>If any third-party <code>TestEngine</code> uses the <code>junit-</code> prefix for its ID, a warning message
-will be logged. Later releases of the JUnit Platform will throw an exception for such
-violations.</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
+<p>See the dedicated section on <a href="#test-engines-registration">TestEngine registration</a> for
+details.</p>
 </div>
 </div>
 <div class="sect3">
@@ -10457,6 +10398,132 @@ following.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="test-engines"><a class="anchor" href="#test-engines"></a>6.5. Test Engines</h3>
+<div class="paragraph">
+<p>A <code>TestEngine</code> facilitates <em>discovery</em> and <em>execution</em> of tests for a particular
+programming model.</p>
+</div>
+<div class="paragraph">
+<p>For example, JUnit provides a <code>TestEngine</code> that discovers and executes tests written using
+the JUnit Jupiter programming model (see <a href="#writing-tests">Writing Tests</a> and <a href="#extensions">Extension Model</a>).</p>
+</div>
+<div class="sect3">
+<h4 id="test-engines-junit"><a class="anchor" href="#test-engines-junit"></a>6.5.1. JUnit Test Engines</h4>
+<div class="paragraph">
+<p>JUnit provides three <code>TestEngine</code> implementations.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="../api/org.junit.jupiter.engine/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a></code>: The core of JUnit Jupiter.</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.vintage.engine/org/junit/vintage/engine/package-summary.html">junit-vintage-engine</a></code>: A thin layer on top of JUnit 4 to allow running <em>vintage</em>
+tests (based on JUnit 3.8 and JUnit 4) with the JUnit Platform launcher infrastructure.</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.platform.suite.engine/org/junit/platform/suite/engine/package-summary.html">junit-platform-suite-engine</a></code>: Executes declarative suites of tests with the JUnit
+Platform launcher infrastructure.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="test-engines-custom"><a class="anchor" href="#test-engines-custom"></a>6.5.2. Custom Test Engines</h4>
+<div class="paragraph">
+<p>You can contribute your own custom <code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> by implementing the interfaces in the
+<a href="../api/org.junit.platform.engine/org/junit/platform/engine/package-summary.html">junit-platform-engine</a> module and <em>registering</em> your engine.</p>
+</div>
+<div class="paragraph">
+<p>Every <code>TestEngine</code> must provide its own <em>unique ID</em>, <em>discover</em> tests from an
+<code>EngineDiscoveryRequest</code>, and <em>execute</em> those tests according to an <code>ExecutionRequest</code>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">The <code>junit-</code> unique ID prefix is reserved for TestEngines from the JUnit Team</div>
+<div class="paragraph">
+<p>The JUnit Platform <code>Launcher</code> enforces that only <code>TestEngine</code> implementations published
+by the JUnit Team may use the <code>junit-</code> prefix for their <code>TestEngine</code> IDs.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If any third-party <code>TestEngine</code> claims to be <code>junit-jupiter</code> or <code>junit-vintage</code>, an
+exception will be thrown, immediately halting execution of the JUnit Platform.</p>
+</li>
+<li>
+<p>If any third-party <code>TestEngine</code> uses the <code>junit-</code> prefix for its ID, a warning message
+will be logged. Later releases of the JUnit Platform will throw an exception for such
+violations.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In order to facilitate test discovery within IDEs and tools prior to launching the JUnit
+Platform, <code>TestEngine</code> implementations are encouraged to make use of the <code>@Testable</code>
+annotation. For example, the <code>@Test</code> and <code>@TestFactory</code> annotations in JUnit Jupiter are
+meta-annotated with <code>@Testable</code>. Consult the Javadoc for <code><a href="../api/org.junit.platform.commons/org/junit/platform/commons/annotation/Testable.html">@Testable</a></code> for further details.</p>
+</div>
+<div class="paragraph">
+<p>If your custom <code>TestEngine</code> needs to be configured, consider allowing users to supply
+configuration via <a href="#running-tests-config-params">configuration parameters</a>. Please note,
+however, that you are strongly encouraged to use a unique prefix for all configuration
+parameters supported by your test engine. Doing so will ensure that there are no conflicts
+between the names of your configuration parameters and those from other test engines. In
+addition, since configuration parameters may be supplied as JVM system properties, it is
+wise to avoid conflicts with the names of other system properties. For example, JUnit
+Jupiter uses <code>junit.jupiter.</code> as a prefix of all of its supported configuration
+parameters. Furthermore, as with the warning above regarding the <code>junit-</code> prefix for
+<code>TestEngine</code> IDs, you should not use <code>junit.</code> as a prefix for the names of your own
+configuration parameters.</p>
+</div>
+<div class="paragraph">
+<p>Although there is currently no official guide on how to implement a custom <code>TestEngine</code>,
+you can consult the implementation of <a href="#test-engines-junit">JUnit Test Engines</a> or the implementation of
+third-party test engines listed in the
+<a href="https://github.com/junit-team/junit5/wiki/Third-party-Extensions#junit-platform-test-engines">JUnit 5 wiki</a>.
+You will also find various tutorials and blogs on the Internet that demonstrate how to
+write a custom <code>TestEngine</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html">HierarchicalTestEngine</a></code> is a convenient abstract base implementation of the
+<code>TestEngine</code> SPI (used by the <code><a href="../api/org.junit.jupiter.engine/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a></code>) that only requires implementors to
+provide the logic for test discovery. It implements execution of <code>TestDescriptors</code> that
+implement the <code>Node</code> interface, including support for parallel execution.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="test-engines-registration"><a class="anchor" href="#test-engines-registration"></a>6.5.3. Registering a TestEngine</h4>
+<div class="paragraph">
+<p><code>TestEngine</code> registration is supported via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
+</div>
+<div class="paragraph">
+<p>For example, the <code>junit-jupiter-engine</code> module registers its
+<code>org.junit.jupiter.engine.JupiterTestEngine</code> in a file named
+<code>org.junit.platform.engine.TestEngine</code> within the <code>/META-INF/services</code> folder in the
+<code>junit-jupiter-engine</code> JAR.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -11246,7 +11313,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-03-04 12:29:37 UTC
+Last updated 2022-03-06 14:36:56 UTC
 </div>
 </div>
 <style>
