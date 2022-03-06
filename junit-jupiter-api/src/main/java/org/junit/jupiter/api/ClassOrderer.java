@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static java.util.Comparator.comparingInt;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,7 +36,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * class}.
  *
  * <p>A {@link ClassOrderer} can be configured <em>globally</em> for the entire
- * test suite via the {@code junit.jupiter.testclass.order.default} configuration
+ * test suite via the {@value #DEFAULT_ORDER_PROPERTY_NAME} configuration
  * parameter (see the User Guide for details) or <em>locally</em> for
  * {@link Nested @Nested} test classes via the {@link TestClassOrder @TestClassOrder}
  * annotation.
@@ -60,6 +61,22 @@ import org.junit.platform.commons.logging.LoggerFactory;
  */
 @API(status = EXPERIMENTAL, since = "5.8")
 public interface ClassOrderer {
+
+	/**
+	 * Property name used to set the default class orderer class name: {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include fully qualified class names for types that
+	 * implement {@link org.junit.jupiter.api.ClassOrderer}.
+	 *
+	 * <p>If not specified, test classes are not ordered unless test classes are
+	 * annotated with {@link TestClassOrder @TestClassOrder}.
+	 *
+	 * @since 5.8
+	 */
+	@API(status = STABLE, since = "5.9")
+	String DEFAULT_ORDER_PROPERTY_NAME = "junit.jupiter.testclass.order.default";
 
 	/**
 	 * Order the classes encapsulated in the supplied {@link ClassOrdererContext}.
@@ -173,12 +190,11 @@ public interface ClassOrderer {
 	 * of this class. In order to support repeatable builds, the value of the
 	 * default random seed is logged at {@code CONFIG} level. In addition, a
 	 * custom seed (potentially the default seed from the previous test plan
-	 * execution) may be specified via the {@link Random#RANDOM_SEED_PROPERTY_NAME
-	 * junit.jupiter.execution.order.random.seed} <em>configuration parameter</em>
-	 * which can be supplied via the {@code Launcher} API, build tools (e.g.,
-	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
-	 * file (i.e., a file named {@code junit-platform.properties} in the root of
-	 * the class path). Consult the User Guide for further information.
+	 * execution) may be specified via the {@value Random#RANDOM_SEED_PROPERTY_NAME}
+	 * <em>configuration parameter</em> which can be supplied via the {@code Launcher}
+	 * API, build tools (e.g., Gradle and Maven), a JVM system property, or the JUnit
+	 * Platform configuration file (i.e., a file named {@code junit-platform.properties}
+	 * in the root of the class path). Consult the User Guide for further information.
 	 *
 	 * @see Random#RANDOM_SEED_PROPERTY_NAME
 	 * @see java.util.Random

@@ -33,7 +33,7 @@ import org.apiguardian.api.API;
  *
  * <p>As an alternative to {@code @TestClassOrder}, a global {@link ClassOrderer}
  * can be configured for the entire test suite via the
- * {@code junit.jupiter.testclass.order.default} configuration parameter. See
+ * {@value ClassOrderer#DEFAULT_ORDER_PROPERTY_NAME} configuration parameter. See
  * the User Guide for details. Note, however, that a {@code @TestClassOrder}
  * declaration always overrides a global {@code ClassOrderer}.
  *

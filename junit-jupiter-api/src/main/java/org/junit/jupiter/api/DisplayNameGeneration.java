@@ -29,6 +29,12 @@ import org.apiguardian.api.API;
  * interfaces. It is also inherited from {@linkplain Class#getEnclosingClass()
  * enclosing classes} for {@link Nested @Nested} test classes.
  *
+ * <p>As an alternative to {@code @DisplayNameGeneration}, a global
+ * {@link DisplayNameGenerator} can be configured for the entire test suite via
+ * the {@value DisplayNameGenerator#DEFAULT_GENERATOR_PROPERTY_NAME} configuration parameter. See
+ * the User Guide for details. Note, however, that a {@code @DisplayNameGeneration}
+ * declaration always overrides a global {@code DisplayNameGenerator}.
+ *
  * @since 5.4
  * @see DisplayName
  * @see DisplayNameGenerator

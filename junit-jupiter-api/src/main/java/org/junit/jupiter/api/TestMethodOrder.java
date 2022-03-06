@@ -35,6 +35,12 @@ import org.apiguardian.api.API;
  * a test class, test methods will be ordered using a default algorithm that is
  * deterministic but intentionally nonobvious.
  *
+ * <p>As an alternative to {@code @TestMethodOrder}, a global {@link MethodOrderer}
+ * can be configured for the entire test suite via the
+ * {@value MethodOrderer#DEFAULT_ORDER_PROPERTY_NAME} configuration parameter. See
+ * the User Guide for details. Note, however, that a {@code @TestClassOrder}
+ * declaration always overrides a global {@code ClassOrderer}.
+ *
  * <h4>Example Usage</h4>
  *
  * <p>The following demonstrates how to guarantee that test methods are executed

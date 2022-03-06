@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.jupiter.engine.config.JupiterConfiguration.TIMEOUT_MODE_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.TIMEOUT_MODE_PROPERTY_NAME;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;

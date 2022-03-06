@@ -193,7 +193,7 @@ public @interface ParameterizedTest {
 	 * <p>If the default display name flag (<code>{default_display_name}</code>)
 	 * is not overridden, JUnit will:
 	 * <ul>
-	 * <li>Look up the {@code junit.jupiter.params.displayname.default}
+	 * <li>Look up the {@value ParameterizedTestExtension#DISPLAY_NAME_PATTERN_KEY}
 	 * <em>configuration parameter</em> and use it if available. The configuration
 	 * parameter can be supplied via the {@code Launcher} API, build tools (e.g.,
 	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration

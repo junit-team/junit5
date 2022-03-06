@@ -10,16 +10,16 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.DEFAULT_TIMEOUT_PROPERTY_NAME;
 
 import java.util.Map;
 import java.util.Optional;
