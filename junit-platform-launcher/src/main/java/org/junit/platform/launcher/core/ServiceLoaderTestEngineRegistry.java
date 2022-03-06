@@ -33,7 +33,6 @@ import org.junit.platform.engine.TestEngine;
 public final class ServiceLoaderTestEngineRegistry {
 
 	public ServiceLoaderTestEngineRegistry() {
-
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(ServiceLoaderTestEngineRegistry.class);
