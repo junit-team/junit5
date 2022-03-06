@@ -45,6 +45,18 @@ Platform, `TestEngine` implementations are encouraged to make use of the `@Testa
 annotation. For example, the `@Test` and `@TestFactory` annotations in JUnit Jupiter are
 meta-annotated with `@Testable`. Consult the Javadoc for `{Testable}` for further details.
 
+If your custom `TestEngine` needs to be configured, consider allowing users to supply
+configuration via <<running-tests-config-params,configuration parameters>>. Please note,
+however, that you are strongly encouraged to use a unique prefix for all configuration
+parameters supported by your test engine. Doing so will ensure that there are no conflicts
+between the names of your configuration parameters and those from other test engines. In
+addition, since configuration parameters may be supplied as JVM system properties, it is
+wise to avoid conflicts with the names of other system properties. For example, JUnit
+Jupiter uses `junit.jupiter.` as a prefix of all of its supported configuration
+parameters. Furthermore, as with the warning above regarding the `junit-` prefix for
+`TestEngine` IDs, you should not use `junit.` as a prefix for the names of your own
+configuration parameters.
+
 Although there is currently no official guide on how to implement a custom `TestEngine`,
 you can consult the implementation of <<test-engines-junit>> or the implementation of
 third-party test engines listed in the
