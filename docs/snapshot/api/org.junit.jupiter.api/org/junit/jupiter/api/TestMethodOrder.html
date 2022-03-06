@@ -92,6 +92,12 @@ loadScripts(document, 'script');</script>
  a test class, test methods will be ordered using a default algorithm that is
  deterministic but intentionally nonobvious.
 
+ <p>As an alternative to <code>@TestMethodOrder</code>, a global <a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>
+ can be configured for the entire test suite via the
+ <a href="MethodOrderer.html#DEFAULT_ORDER_PROPERTY_NAME">"junit.jupiter.testmethod.order.default"</a> configuration parameter. See
+ the User Guide for details. Note, however, that a <code>@TestClassOrder</code>
+ declaration always overrides a global <code>ClassOrderer</code>.
+
  <h4>Example Usage</h4>
 
  <p>The following demonstrates how to guarantee that test methods are executed

@@ -108,7 +108,7 @@ loadScripts(document, 'script');</script>
  <h4>Old behavior</h4>
 
  <p>You can revert to the old behavior of using a single temporary directory
- by setting the <code>junit.jupiter.tempdir.scope</code> configuration parameter to
+ by setting the <a href="#SCOPE_PROPERTY_NAME">"junit.jupiter.tempdir.scope"</a> configuration parameter to
  <code>per_context</code>. In that case, the scope of the temporary directory
  depends on where the first <code>@TempDir</code> annotation is encountered when
  executing a test class. The temporary directory will be shared by all tests
@@ -176,6 +176,11 @@ loadScripts(document, 'script');</script>
 <div class="block">The name of the configuration parameter that is used to configure the
  default <a href="CleanupMode.html" title="enum class in org.junit.jupiter.api.io"><code>CleanupMode</code></a>.</div>
 </div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#SCOPE_PROPERTY_NAME" class="member-name-link">SCOPE_PROPERTY_NAME</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+</div>
 </div>
 </section>
 </li>
@@ -188,6 +193,38 @@ loadScripts(document, 'script');</script>
 <section class="field-details" id="field-detail">
 <h2>Field Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="SCOPE_PROPERTY_NAME">
+<h3>SCOPE_PROPERTY_NAME</h3>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#DEPRECATED" title="class or interface in org.apiguardian.api" class="external-link">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.9")
+</span><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SCOPE_PROPERTY_NAME</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Property name used to set the scope of temporary directories created via
+ <a href="TempDir.html" title="annotation interface in org.junit.jupiter.api.io"><code>@TempDir</code></a> annotation: "junit.jupiter.tempdir.scope"
+
+ <h4>Supported Values</h4>
+ <ul>
+ <li><code>per_context</code>: creates a single temporary directory for the
+ entire test class or method, depending on where it's first declared
+ <li><code>per_declaration</code>: creates separate temporary directories for
+ each declaration site of the <code>@TempDir</code> annotation.
+ </ul>
+
+ <p>If not specified, the default is <code>per_declaration</code>.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.8</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../../../constant-values.html#org.junit.jupiter.api.io.TempDir.SCOPE_PROPERTY_NAME">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="DEFAULT_CLEANUP_MODE_PROPERTY_NAME">
 <h3>DEFAULT_CLEANUP_MODE_PROPERTY_NAME</h3>

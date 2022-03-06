@@ -83,7 +83,13 @@ loadScripts(document, 'script');</script>
  generator for the annotated test class.
 
  <p>This annotation is <em>inherited</em> from superclasses and implemented
- interfaces. It is also inherited from <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html#getEnclosingClass()" title="class or interface in java.lang" class="external-link">enclosing classes</a> for <a href="Nested.html" title="annotation interface in org.junit.jupiter.api"><code>@Nested</code></a> test classes.</div>
+ interfaces. It is also inherited from <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html#getEnclosingClass()" title="class or interface in java.lang" class="external-link">enclosing classes</a> for <a href="Nested.html" title="annotation interface in org.junit.jupiter.api"><code>@Nested</code></a> test classes.
+
+ <p>As an alternative to <code>@DisplayNameGeneration</code>, a global
+ <a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api"><code>DisplayNameGenerator</code></a> can be configured for the entire test suite via
+ the <a href="DisplayNameGenerator.html#DEFAULT_GENERATOR_PROPERTY_NAME">"junit.jupiter.displayname.generator.default"</a> configuration parameter. See
+ the User Guide for details. Note, however, that a <code>@DisplayNameGeneration</code>
+ declaration always overrides a global <code>DisplayNameGenerator</code>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.4</dd>
