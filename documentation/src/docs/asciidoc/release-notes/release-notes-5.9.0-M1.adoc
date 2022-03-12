@@ -30,6 +30,8 @@ on GitHub.
 * JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
   resolution time a fully running set of dependencies is calculated, avoiding the need for
   these to be manually specified.
+* Configuring include `EngineFilters` that do not match any registered `TestEngine`
+  results in an error to avoid misconfiguration, e.g. due to typos.
 
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
