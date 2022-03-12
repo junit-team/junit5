@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.logging.Level.WARNING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
@@ -19,7 +20,9 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
@@ -145,7 +148,8 @@ class DefaultLauncherEngineFilterTests {
 	}
 
 	@Test
-	void launcherThrowsExceptionWhenNoEngineMatchesIncludeEngineFilter() {
+	@TrackLogRecords
+	void launcherThrowsExceptionWhenNoEngineMatchesIncludeEngineFilter(LogRecordListener log) {
 		var engine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = engine.addTest("test1", noOp);
 		LauncherDiscoveryRequest request = request() //
@@ -158,7 +162,33 @@ class DefaultLauncherEngineFilterTests {
 
 		assertThat(exception.getMessage()) //
 				.startsWith("No TestEngine ID matched the following include EngineFilters: [second].") //
-				.contains("Please fix or remove the filter.") //
-				.contains("Registered TestEngines:\n- first (");
+				.contains("Please fix/remove the filter or add the engine.") //
+				.contains("Registered TestEngines:\n- first (") //
+				.endsWith("Registered EngineFilters:\n- EngineFilter that includes engines with IDs [second]");
+		assertThat(log.stream(WARNING)).isEmpty();
+	}
+
+	@Test
+	@TrackLogRecords
+	void launcherWillLogWarningWhenAllEnginesWereExcluded(LogRecordListener log) {
+		var engine = new DemoHierarchicalTestEngine("first");
+		TestDescriptor test = engine.addTest("test1", noOp);
+
+		var launcher = createLauncher(engine);
+
+		// @formatter:off
+		var testPlan = launcher.discover(
+				request()
+						.selectors(selectUniqueId(test.getUniqueId()))
+						.filters(excludeEngines("first"))
+						.build());
+		// @formatter:on
+
+		assertThat(testPlan.getRoots()).isEmpty();
+		assertThat(log.stream(WARNING)).hasSize(1);
+		assertThat(log.stream(WARNING).findAny().orElseThrow().getMessage()) //
+				.startsWith("All TestEngines were excluded by EngineFilters.") //
+				.contains("Registered TestEngines:\n- first (") //
+				.endsWith("Registered EngineFilters:\n- EngineFilter that excludes engines with IDs [first]");
 	}
 }

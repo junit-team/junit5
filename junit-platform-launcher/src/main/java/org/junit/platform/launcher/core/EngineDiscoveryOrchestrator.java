@@ -134,7 +134,7 @@ public class EngineDiscoveryOrchestrator {
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
 
-		engineFilterer.checkNoUnmatchedIncludeFilter();
+		engineFilterer.performSanityChecks();
 
 		List<PostDiscoveryFilter> filters = new LinkedList<>(postDiscoveryFilters);
 		filters.addAll(request.getPostDiscoveryFilters());
