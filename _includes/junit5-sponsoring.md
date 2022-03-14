@@ -120,7 +120,7 @@ Your donations will help to make that a reality!
       </a>
     </li>
     <li>
-      <a class="cardbronze" href="https://ubie.life/en">
+      <a class="cardbronze" href="https://ubiehealth.com/">
         <div class="cardbronze-image">
           <img style="height:100%" src="assets/img/sponsor-logo-ubie.png" alt="ubie">
         </div>
