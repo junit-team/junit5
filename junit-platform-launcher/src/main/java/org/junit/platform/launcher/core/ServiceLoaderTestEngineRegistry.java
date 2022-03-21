@@ -57,18 +57,6 @@ public final class ServiceLoaderTestEngineRegistry {
 		// @formatter:on
 	}
 
-	private String createDiscoveredTestEnginesListing(Iterable<TestEngine> testEngines) {
-		// @formatter:off
-		
-		List<String> details = ((Stream<TestEngine>) CollectionUtils.toStream(testEngines))
-				.map(engine -> String.format("%s (%s)", engine.getId(), join(", ", computeAttributes(engine))))
-				.collect(toList());
-		return details.isEmpty()
-				? "No TestEngine implementation discovered."
-				: "Discovered TestEngines with IDs: [" + join(", ", details) + "]";
-		// @formatter:on
-	}
-
 	private List<String> computeAttributes(TestEngine engine) {
 		List<String> attributes = new ArrayList<>(4);
 		engine.getGroupId().ifPresent(groupId -> attributes.add("group ID: " + groupId));

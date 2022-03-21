@@ -15,6 +15,9 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Comparator;
+import java.util.StringJoiner;
+import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -65,18 +68,15 @@ public class ConsoleLauncher {
 	ConsoleLauncherExecutionResult execute(String... args) {
 		try {
 			CommandLineOptions options = commandLineOptionsParser.parse(args);
+			if (options.isListEngines()) {
+				displayEngines(out);
+				return ConsoleLauncherExecutionResult.success();
+			}
 			if (!options.isBannerDisabled()) {
 				displayBanner(out);
 			}
 			if (options.isDisplayHelp()) {
 				commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
-				return ConsoleLauncherExecutionResult.success();
-			}
-			if (options.isListEngines()) {
-				ServiceLoaderTestEngineRegistry registry = new ServiceLoaderTestEngineRegistry();
-				Iterable<TestEngine> engines = registry.loadTestEngines();
-				out.println(registry.createDiscoveredTestEnginesMessage(engines));
-
 				return ConsoleLauncherExecutionResult.success();
 			}
 			return executeTests(options, out);
@@ -97,6 +97,22 @@ public class ConsoleLauncher {
 		out.println();
 		out.println("Thanks for using JUnit! Support its development at https://junit.org/sponsoring");
 		out.println();
+	}
+
+	void displayEngines(PrintWriter out) {
+		ServiceLoaderTestEngineRegistry registry = new ServiceLoaderTestEngineRegistry();
+		Iterable<TestEngine> engines = registry.loadTestEngines();
+		StreamSupport.stream(engines.spliterator(), false) //
+				.sorted(Comparator.comparing(TestEngine::getId)) //
+				.forEach(engine -> displayEngine(out, engine));
+	}
+
+	private void displayEngine(PrintWriter out, TestEngine engine) {
+		StringJoiner details = new StringJoiner(":", " (", ")");
+		engine.getGroupId().ifPresent(details::add);
+		engine.getArtifactId().ifPresent(details::add);
+		engine.getVersion().ifPresent(details::add);
+		out.println(engine.getId() + details);
 	}
 
 	private ConsoleLauncherExecutionResult executeTests(CommandLineOptions options, PrintWriter out) {
