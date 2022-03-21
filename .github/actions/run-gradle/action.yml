@@ -8,14 +8,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-java@v2
-      id: setup-gradle-jdk
-      with:
-        distribution: temurin
-        java-version: 17
+    - uses: oracle-actions/setup-java@v1
     - uses: gradle/gradle-build-action@v2
-      env:
-        JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
       with:
         arguments: |
           -Porg.gradle.java.installations.auto-download=false
