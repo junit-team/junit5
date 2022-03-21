@@ -7,15 +7,12 @@ plugins {
 }
 
 javaLibrary {
-	mainJavaVersion = JavaVersion.VERSION_11
+	mainJavaVersion = JavaVersion.VERSION_17
 }
 
 val thirdPartyJars by configurations.creating
 
 dependencies {
-	implementation(libs.bartholdy) {
-		because("manage external tool installations")
-	}
 	implementation(libs.commons.io) {
 		because("moving/deleting directory trees")
 	}

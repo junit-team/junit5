@@ -17,7 +17,6 @@ surefire = "2.22.2"
 apiguardian = { module = "org.apiguardian:apiguardian-api", version.ref = "apiguardian" }
 archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "0.23.0" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
-bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 bnd = { module = "biz.aQute.bnd:biz.aQute.bndlib", version = "6.2.0" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.132" }
 commons-io = { module = "commons-io:commons-io", version = "2.11.0" }
