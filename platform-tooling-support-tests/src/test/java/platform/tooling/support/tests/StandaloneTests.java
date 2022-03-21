@@ -69,10 +69,11 @@ class StandaloneTests {
 				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments(workspace.resolve("src/standalone/JupiterIntegration.java")) //
 				.addArguments(workspace.resolve("src/standalone/JupiterParamsIntegration.java")) //
+				.addArguments(workspace.resolve("src/standalone/SuiteIntegration.java")) //
 				.addArguments(workspace.resolve("src/standalone/VintageIntegration.java")).build() //
 				.run();
 
-		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(0, result.getExitCode(), result.getOutput("out") + result.getOutput("err"));
 		assertTrue(result.getOutput("out").isEmpty());
 		assertTrue(result.getOutput("err").isEmpty());
 
@@ -109,8 +110,8 @@ class StandaloneTests {
 		var workspace = Request.WORKSPACE.resolve("standalone");
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
-		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
-		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
+		assertLinesMatch(expectedOutLines, result.getOutputLines("out"), result.getOutput("out"));
+		assertLinesMatch(expectedErrLines, result.getOutputLines("err"), result.getOutput("err"));
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var vintageVersion = Helper.version("junit-vintage-engine");
