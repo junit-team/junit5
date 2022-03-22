@@ -12,6 +12,7 @@ javaLibrary {
 
 val thirdPartyJars by configurations.creating
 val antJars by configurations.creating
+val mavenDistribution by configurations.creating
 
 dependencies {
 	implementation(libs.bartholdy) {
@@ -49,6 +50,19 @@ dependencies {
 	antJars(platform(projects.junitBom))
 	antJars(libs.bundles.ant)
 	antJars(projects.junitPlatformConsoleStandalone)
+
+	mavenDistribution(libs.maven) {
+		artifact {
+			classifier = "bin"
+			type = "zip"
+			isTransitive = false
+		}
+	}
+}
+
+val unzipMavenDistribution by tasks.registering(Copy::class) {
+	from(zipTree(mavenDistribution.elements.map { it.single() }))
+	into(layout.buildDirectory.dir("maven-distribution"))
 }
 
 tasks.test {
@@ -72,6 +86,7 @@ tasks.test {
 	jvmArgumentProviders += MavenRepo(tempRepoDir)
 	jvmArgumentProviders += JarPath(thirdPartyJars)
 	jvmArgumentProviders += JarPath(antJars)
+	jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution)
 
 	(options as JUnitPlatformOptions).apply {
 		includeEngines("archunit")
@@ -128,4 +143,13 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 
 class JarPath(@Classpath val configuration: Configuration, @Input val key: String = configuration.name) : CommandLineArgumentProvider {
 	override fun asArguments() = listOf("-D${key}=${configuration.asPath}")
+}
+
+class MavenDistribution(project: Project, sourceTask: TaskProvider<*>) : CommandLineArgumentProvider {
+	@InputDirectory
+	@PathSensitive(RELATIVE)
+	val mavenDistribution: DirectoryProperty = project.objects.directoryProperty()
+		.value(project.layout.dir(sourceTask.map { it.outputs.files.singleFile.listFiles()!!.single() }))
+
+	override fun asArguments() = listOf("-DmavenDistribution=${mavenDistribution.get().asFile.absolutePath}")
 }
