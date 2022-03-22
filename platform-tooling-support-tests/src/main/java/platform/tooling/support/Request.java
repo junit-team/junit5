@@ -49,33 +49,26 @@ public class Request {
 
 	public static Ant ant() {
 		// Locate pre-installed And before downloading and installing it
-		var antHome = System.getenv("ANT_HOME");
-		if (antHome != null)
-			return new Ant(Path.of(antHome));
 		var findAnt = findDirectoryWithFile("ant");
-		if (findAnt.isPresent())
-			return new Ant(findAnt.get());
-		return Ant.install(ANT_VERSION, TOOLS);
+		return findAnt.map(Ant::new).orElseGet(() -> Ant.install(ANT_VERSION, TOOLS));
 	}
 
 	public static Maven maven() {
 		// Locate pre-installed Maven before downloading and installing it
-		var mavenHome = System.getenv("MAVEN_HOME");
-		if (mavenHome != null)
-			return new Maven(Path.of(mavenHome));
 		var findMaven = findDirectoryWithFile("mvn");
-		if (findMaven.isPresent())
-			return new Maven(findMaven.get());
-		return Maven.install(MAVEN_VERSION, TOOLS);
+		return findMaven.map(Maven::new).orElseGet(() -> Maven.install(MAVEN_VERSION, TOOLS));
 	}
 
 	private static Optional<Path> findDirectoryWithFile(String file) {
-		for (var element : System.getProperty("java.library.path", ".").split(File.pathSeparator)) {
+		var path = System.getenv("PATH");
+		if (path == null)
+			return Optional.empty();
+		for (var element : path.split(File.pathSeparator)) {
 			var directory = Path.of(element);
 			if (!Files.isDirectory(directory))
 				continue;
-			var mvn = directory.resolve(file);
-			if (Files.isRegularFile(mvn))
+			var candidate = directory.resolve(file);
+			if (Files.isRegularFile(candidate))
 				return Optional.of(directory.toAbsolutePath().getParent());
 		}
 		return Optional.empty();
