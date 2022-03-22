@@ -15,10 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 
-import java.nio.file.Paths;
 import java.util.List;
-
-import de.sormuras.bartholdy.tool.Ant;
 
 import org.junit.jupiter.api.Test;
 import org.opentest4j.TestAbortedException;
@@ -33,10 +30,10 @@ import platform.tooling.support.Request;
 class AntStarterTests {
 
 	@Test
-	void ant_1_10_6() {
+	void ant() {
 		var standalone = MavenRepo.jar("junit-platform-console-standalone").getParent();
 		var result = Request.builder() //
-				.setTool(Ant.install("1.10.6", Paths.get("build", "test-tools"))) //
+				.setTool(Request.ant()) //
 				.setProject("ant-starter") //
 				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
@@ -49,15 +46,6 @@ class AntStarterTests {
 		assertEquals("", result.getOutput("err"), "error log isn't empty");
 		assertThat(result.getOutput("out")).contains("Using Java version: 1.8");
 		assertLinesMatch(List.of(">> HEAD >>", //
-			"test.junit.launcher:", //
-			">>>>", //
-			"\\[junitlauncher\\] Test run finished after [\\d]+ ms", //
-			">>>>", //
-			"\\[junitlauncher\\] \\[         5 tests successful      \\]", //
-			"\\[junitlauncher\\] \\[         0 tests failed          \\]", //
-			">>>>", //
-			"test.console.launcher:", //
-			">>>>", //
 			"     \\[java\\] Test run finished after [\\d]+ ms", //
 			">>>>", //
 			"     \\[java\\] \\[         5 tests successful      \\]", //

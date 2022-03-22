@@ -10,6 +10,7 @@
 
 package platform.tooling.support;
 
+import java.io.File;
 import java.io.FileFilter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,11 +20,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import de.sormuras.bartholdy.Configuration;
 import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.Tool;
+import de.sormuras.bartholdy.tool.Ant;
 import de.sormuras.bartholdy.tool.Maven;
 
 import org.apache.commons.io.FileUtils;
@@ -37,14 +40,45 @@ public class Request {
 	private static final Path TOOLS = Paths.get("build", "test-tools");
 	public static final Path WORKSPACE = Paths.get("build", "test-workspace");
 
-	private static final String MAVEN_VERSION = "3.6.1";
+	private static final String ANT_VERSION = "1.10.12";
+	private static final String MAVEN_VERSION = "3.8.5";
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
+	public static Ant ant() {
+		// Locate pre-installed And before downloading and installing it
+		var antHome = System.getenv("ANT_HOME");
+		if (antHome != null)
+			return new Ant(Path.of(antHome));
+		var findAnt = findDirectoryWithFile("ant");
+		if (findAnt.isPresent())
+			return new Ant(findAnt.get());
+		return Ant.install(ANT_VERSION, TOOLS);
+	}
+
 	public static Maven maven() {
+		// Locate pre-installed Maven before downloading and installing it
+		var mavenHome = System.getenv("MAVEN_HOME");
+		if (mavenHome != null)
+			return new Maven(Path.of(mavenHome));
+		var findMaven = findDirectoryWithFile("mvn");
+		if (findMaven.isPresent())
+			return new Maven(findMaven.get());
 		return Maven.install(MAVEN_VERSION, TOOLS);
+	}
+
+	private static Optional<Path> findDirectoryWithFile(String file) {
+		for (var element : System.getProperty("java.library.path", ".").split(File.pathSeparator)) {
+			var directory = Path.of(element);
+			if (!Files.isDirectory(directory))
+				continue;
+			var mvn = directory.resolve(file);
+			if (Files.isRegularFile(mvn))
+				return Optional.of(directory.toAbsolutePath().getParent());
+		}
+		return Optional.empty();
 	}
 
 	private Tool tool;
