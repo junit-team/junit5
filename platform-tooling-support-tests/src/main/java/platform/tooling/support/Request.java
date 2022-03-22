@@ -12,6 +12,7 @@ package platform.tooling.support;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import de.sormuras.bartholdy.Bartholdy;
 import de.sormuras.bartholdy.Configuration;
 import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.Tool;
@@ -56,7 +58,12 @@ public class Request {
 	public static Maven maven() {
 		// Locate pre-installed Maven before downloading and installing it
 		var findMaven = findDirectoryWithFile("mvn.cmd");
-		return findMaven.map(Maven::new).orElseGet(() -> Maven.install(MAVEN_VERSION, TOOLS));
+		return findMaven.map(Maven::new).orElseGet(() -> {
+			var host = "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/" + MAVEN_VERSION;
+			var uri = String.format("%s/apache-maven-%s-bin.zip", host, MAVEN_VERSION);
+			var home = Bartholdy.install(URI.create(uri), TOOLS);
+			return new Maven(home);
+		});
 	}
 
 	private static Optional<Path> findDirectoryWithFile(String file) {
