@@ -11,6 +11,7 @@ javaLibrary {
 }
 
 val thirdPartyJars by configurations.creating
+val antJars by configurations.creating
 
 dependencies {
 	implementation(libs.bartholdy) {
@@ -35,12 +36,19 @@ dependencies {
 	testRuntimeOnly(libs.slf4j.julBinding) {
 		because("provide appropriate SLF4J binding")
 	}
+	testImplementation(libs.ant) {
+		because("we reference Ant's main class")
+	}
 
 	thirdPartyJars(libs.junit4)
 	thirdPartyJars(libs.assertj)
 	thirdPartyJars(libs.apiguardian)
 	thirdPartyJars(libs.hamcrest)
 	thirdPartyJars(libs.opentest4j)
+
+	antJars(platform(projects.junitBom))
+	antJars(libs.bundles.ant)
+	antJars(projects.junitPlatformConsoleStandalone)
 }
 
 tasks.test {
@@ -62,7 +70,8 @@ tasks.test {
 
 	val tempRepoDir: File by rootProject
 	jvmArgumentProviders += MavenRepo(tempRepoDir)
-	jvmArgumentProviders += ThirdPartyJars(thirdPartyJars)
+	jvmArgumentProviders += JarPath(thirdPartyJars)
+	jvmArgumentProviders += JarPath(antJars)
 
 	(options as JUnitPlatformOptions).apply {
 		includeEngines("archunit")
@@ -117,6 +126,6 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 	}
 }
 
-class ThirdPartyJars(@Classpath val configuration: Configuration) : CommandLineArgumentProvider {
-	override fun asArguments() = listOf("-DthirdPartyJars=${configuration.asPath}")
+class JarPath(@Classpath val configuration: Configuration, @Input val key: String = configuration.name) : CommandLineArgumentProvider {
+	override fun asArguments() = listOf("-D${key}=${configuration.asPath}")
 }
