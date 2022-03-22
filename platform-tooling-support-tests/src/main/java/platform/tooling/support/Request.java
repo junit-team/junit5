@@ -49,13 +49,13 @@ public class Request {
 
 	public static Ant ant() {
 		// Locate pre-installed And before downloading and installing it
-		var findAnt = findDirectoryWithFile("ant");
+		var findAnt = findDirectoryWithFile("ant.cmd");
 		return findAnt.map(Ant::new).orElseGet(() -> Ant.install(ANT_VERSION, TOOLS));
 	}
 
 	public static Maven maven() {
 		// Locate pre-installed Maven before downloading and installing it
-		var findMaven = findDirectoryWithFile("mvn");
+		var findMaven = findDirectoryWithFile("mvn.cmd");
 		return findMaven.map(Maven::new).orElseGet(() -> Maven.install(MAVEN_VERSION, TOOLS));
 	}
 
