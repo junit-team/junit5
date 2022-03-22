@@ -14,11 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 
-import java.nio.file.Path;
 import java.util.List;
 
-import de.sormuras.bartholdy.Tool;
-import de.sormuras.bartholdy.tool.AbstractTool;
 import de.sormuras.bartholdy.tool.Java;
 
 import org.apache.tools.ant.Main;
@@ -33,8 +30,9 @@ class AntStarterTests {
 	@Test
 	void ant_starter() {
 		var result = Request.builder() //
-				.setTool(ant()) //
+				.setTool(new Java()) //
 				.setProject("ant-starter") //
+				.addArguments("-cp", System.getProperty("antJars"), Main.class.getName()) //
 				.addArguments("-verbose") //
 				.build() //
 				.run();
@@ -57,35 +55,4 @@ class AntStarterTests {
 			">> TAIL >>"), //
 			result.getOutputLines("out"));
 	}
-
-	private static Tool ant() {
-		Java java = new Java();
-		return new AbstractTool() {
-			@Override
-			public Path getHome() {
-				return java.getHome();
-			}
-
-			@Override
-			public String getProgram() {
-				return java.getProgram();
-			}
-
-			@Override
-			protected List<String> getToolArguments() {
-				return List.of("-cp", System.getProperty("antJars"), Main.class.getName());
-			}
-
-			@Override
-			public String getName() {
-				return "embedded-ant";
-			}
-
-			@Override
-			public String getVersion() {
-				return Main.getAntVersion();
-			}
-		};
-	}
-
 }
