@@ -11,7 +11,7 @@ runs:
     - uses: actions/setup-java@v2
       id: setup-gradle-jdk
       with:
-        distribution: temurin
+        distribution: microsoft
         java-version: 17
     - uses: gradle/gradle-build-action@v2
       env:
