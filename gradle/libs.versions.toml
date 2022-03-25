@@ -12,7 +12,7 @@ junit4Min = "4.12"
 ktlint = "0.43.0"
 log4j = "2.17.1"
 opentest4j = "1.2.0"
-openTestReporting = "0.1.0-SNAPSHOT"
+openTestReporting = "0.1.0-M1"
 surefire = "2.22.2"
 xmlunit = "2.8.4"
 
