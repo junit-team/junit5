@@ -1062,7 +1062,7 @@ in the <code>junit-jupiter-api</code> module.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Nested</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a non-static <a href="#writing-tests-nested">nested test class</a>. <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used directly in a <code>@Nested</code> test class unless the "per-class" <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> is used. Such annotations are not <em>inherited</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a non-static <a href="#writing-tests-nested">nested test class</a>. On Java 8 through Java 15, <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used directly in a <code>@Nested</code> test class unless the "per-class" <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> is used. Beginning with Java 16, <code>@BeforeAll</code> and <code>@AfterAll</code> methods can be declared as <code>static</code> in a <code>@Nested</code> test class with either test instance lifecycle mode. Such annotations are not <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tag</code></p></td>
@@ -2599,6 +2599,19 @@ Specifically, with the "per-class" mode it becomes possible to declare <code>@Be
 "per-class" mode therefore also makes it possible to use <code>@BeforeAll</code> and <code>@AfterAll</code>
 methods in <code>@Nested</code> test classes.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Beginning with Java 16, <code>@BeforeAll</code> and <code>@AfterAll</code> methods can be declared as
+<code>static</code> in <code>@Nested</code> test classes.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>If you are authoring tests using the Kotlin programming language, you may also find it
 easier to implement <code>@BeforeAll</code> and <code>@AfterAll</code> methods by switching to the "per-class"
@@ -2784,10 +2797,13 @@ running the outer tests, because the setup code from the outer tests is always e
 <td class="content">
 <em>Only non-static nested classes</em> (i.e. <em>inner classes</em>) can serve as <code>@Nested</code> test
 classes. Nesting can be arbitrarily deep, and those inner classes are subject to full
-lifecycle support with one exception: <code>@BeforeAll</code> and <code>@AfterAll</code> methods do not work
-<em>by default</em>. The reason is that Java does not allow <code>static</code> members in inner classes.
-However, this restriction can be circumvented by annotating a <code>@Nested</code> test class with
-<code>@TestInstance(Lifecycle.PER_CLASS)</code> (see <a href="#writing-tests-test-instance-lifecycle">Test Instance Lifecycle</a>).
+lifecycle support with one exception: <code>@BeforeAll</code> and <code>@AfterAll</code> methods do not work <em>by
+default</em>. The reason is that Java does not allow <code>static</code> members in inner classes prior
+to Java 16. However, this restriction can be circumvented by annotating a <code>@Nested</code> test
+class with <code>@TestInstance(Lifecycle.PER_CLASS)</code> (see
+<a href="#writing-tests-test-instance-lifecycle">Test Instance Lifecycle</a>). If you are using Java 16 or higher,
+<code>@BeforeAll</code> and <code>@AfterAll</code> methods can be declared as <code>static</code> in <code>@Nested</code> test
+classes, and this restriction no longer applies.
 </td>
 </tr>
 </table>
@@ -11313,7 +11329,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-03-06 17:25:45 UTC
+Last updated 2022-03-25 12:58:58 UTC
 </div>
 </div>
 <style>
