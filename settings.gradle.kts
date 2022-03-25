@@ -119,13 +119,6 @@ include("platform-tests")
 include("platform-tooling-support-tests")
 include("junit-bom")
 
-includeBuild("../open-test-reporting") {
-	dependencySubstitution {
-		substitute(module("org.opentest4j.reporting:open-test-reporting-events")).using(project(":events"))
-		substitute(module("org.opentest4j.reporting:open-test-reporting-tooling")).using(project(":tooling"))
-	}
-}
-
 // check that every subproject has a custom build file
 // based on the project name
 rootProject.children.forEach { project ->
