@@ -38,7 +38,7 @@ in the `junit-jupiter-api` module.
 | `@AfterEach`             | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_ unless they are _overridden_.
 | `@BeforeAll`             | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
 | `@AfterAll`              | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
-| `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Such annotations are not _inherited_.
+| `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. On Java 8 through Java 15, `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as `static` in a `@Nested` test class with either test instance lifecycle mode. Such annotations are not _inherited_.
 | `@Tag`                   | Used to declare <<writing-tests-tagging-and-filtering,tags for filtering tests>>, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are _inherited_ at the class level but not at the method level.
 | `@Disabled`              | Used to <<writing-tests-disabling,disable>> a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not _inherited_.
 | `@Timeout`               | Used to fail a test, test factory, test template, or lifecycle method if its execution exceeds a given duration. Such annotations are _inherited_.
@@ -677,6 +677,9 @@ Specifically, with the "per-class" mode it becomes possible to declare `@BeforeA
 "per-class" mode therefore also makes it possible to use `@BeforeAll` and `@AfterAll`
 methods in `@Nested` test classes.
 
+NOTE: Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as
+`static` in `@Nested` test classes.
+
 If you are authoring tests using the Kotlin programming language, you may also find it
 easier to implement `@BeforeAll` and `@AfterAll` methods by switching to the "per-class"
 test instance lifecycle mode.
@@ -747,10 +750,13 @@ running the outer tests, because the setup code from the outer tests is always e
 
 NOTE: _Only non-static nested classes_ (i.e. _inner classes_) can serve as `@Nested` test
 classes. Nesting can be arbitrarily deep, and those inner classes are subject to full
-lifecycle support with one exception: `@BeforeAll` and `@AfterAll` methods do not work
-_by default_. The reason is that Java does not allow `static` members in inner classes.
-However, this restriction can be circumvented by annotating a `@Nested` test class with
-`@TestInstance(Lifecycle.PER_CLASS)` (see <<writing-tests-test-instance-lifecycle>>).
+lifecycle support with one exception: `@BeforeAll` and `@AfterAll` methods do not work _by
+default_. The reason is that Java does not allow `static` members in inner classes prior
+to Java 16. However, this restriction can be circumvented by annotating a `@Nested` test
+class with `@TestInstance(Lifecycle.PER_CLASS)` (see
+<<writing-tests-test-instance-lifecycle>>). If you are using Java 16 or higher,
+`@BeforeAll` and `@AfterAll` methods can be declared as `static` in `@Nested` test
+classes, and this restriction no longer applies.
 
 [[writing-tests-dependency-injection]]
 === Dependency Injection for Constructors and Methods
