@@ -75,6 +75,10 @@ public class ConsoleLauncher {
 			if (!options.isBannerDisabled()) {
 				displayBanner(out);
 			}
+			if (options.isListTests()) {
+				listTests(options, out);
+				return ConsoleLauncherExecutionResult.success();
+			}
 			if (options.isDisplayHelp()) {
 				commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
 				return ConsoleLauncherExecutionResult.success();
@@ -113,6 +117,21 @@ public class ConsoleLauncher {
 		engine.getArtifactId().ifPresent(details::add);
 		engine.getVersion().ifPresent(details::add);
 		out.println(engine.getId() + details);
+	}
+
+	private void listTests(CommandLineOptions options, PrintWriter out) {
+		try {
+			// Should tests always be printed like a tree?
+			// options.setDetails(Details.TREE);
+			// scan all directories
+			options.setScanClasspath(true);
+			new ConsoleTestExecutor(options).list(out);
+		}
+		catch (Exception exception) {
+			exception.printStackTrace(err);
+			err.println();
+			commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
+		}
 	}
 
 	private ConsoleLauncherExecutionResult executeTests(CommandLineOptions options, PrintWriter out) {

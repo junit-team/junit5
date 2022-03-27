@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,8 @@ import org.junit.platform.console.options.Theme;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -54,8 +57,32 @@ public class ConsoleTestExecutor {
 		this.launcherSupplier = launcherSupplier;
 	}
 
+	public void list(PrintWriter out) throws Exception {
+		new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> listTests(out));
+	}
+
 	public TestExecutionSummary execute(PrintWriter out) throws Exception {
 		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> executeTests(out));
+	}
+
+	private Void listTests(PrintWriter out) {
+		Launcher launcher = launcherSupplier.get();
+		TestExecutionListener testExecutionListener = createDetailsPrintingListener(out).get();
+		launcher.registerTestExecutionListeners(testExecutionListener);
+
+		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
+		TestPlan testPlan = launcher.discover(discoveryRequest);
+
+		testExecutionListener.testPlanExecutionStarted(testPlan);
+		skipTests(testPlan.getAllIdentifiers().values(), testExecutionListener);
+		testExecutionListener.testPlanExecutionFinished(testPlan);
+		return null;
+	}
+
+	private void skipTests(Collection<TestIdentifier> tests, TestExecutionListener testExecutionListener) {
+		for (TestIdentifier testIdentifier : tests) {
+			testExecutionListener.executionSkipped(testIdentifier, "");
+		}
 	}
 
 	private TestExecutionSummary executeTests(PrintWriter out) {
