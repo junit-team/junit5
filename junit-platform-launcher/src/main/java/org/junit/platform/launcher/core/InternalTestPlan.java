@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -111,6 +112,11 @@ class InternalTestPlan extends TestPlan {
 	@Override
 	public Set<TestIdentifier> getDescendants(TestIdentifier parent) {
 		return delegate.getDescendants(parent);
+	}
+
+	@Override
+	public Map<UniqueId, TestIdentifier> getAllIdentifiers() {
+		return delegate.getAllIdentifiers();
 	}
 
 	@Override
