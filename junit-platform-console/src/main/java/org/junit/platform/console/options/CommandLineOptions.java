@@ -47,6 +47,7 @@ public class CommandLineOptions {
 	static final Theme DEFAULT_THEME = Theme.valueOf(Charset.defaultCharset());
 
 	private boolean displayHelp;
+	private boolean listTests;
 	private boolean ansiColorOutputDisabled;
 	private boolean bannerDisabled;
 	private Details details = DEFAULT_DETAILS;
@@ -88,6 +89,14 @@ public class CommandLineOptions {
 
 	public void setDisplayHelp(boolean displayHelp) {
 		this.displayHelp = displayHelp;
+	}
+
+	public boolean isListTests() {
+		return listTests;
+	}
+
+	public void setListTests(boolean listTests) {
+		this.listTests = listTests;
 	}
 
 	public boolean isAnsiColorOutputDisabled() {
