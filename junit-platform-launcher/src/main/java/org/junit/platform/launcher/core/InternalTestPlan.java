@@ -10,12 +10,14 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -94,6 +96,11 @@ class InternalTestPlan extends TestPlan {
 	@Override
 	public Set<TestIdentifier> getDescendants(TestIdentifier parent) {
 		return delegate.getDescendants(parent);
+	}
+
+	@Override
+	public Map<UniqueId, TestIdentifier> getAllIdentifiers() {
+		return delegate.getAllIdentifiers();
 	}
 
 	@Override
