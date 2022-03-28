@@ -18,14 +18,13 @@ import java.util.regex.Pattern;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
  */
-class FlatPrintingListener implements TestExecutionListener {
+class FlatPrintingListener implements DetailsPrintingListener {
 
 	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
 
@@ -118,4 +117,10 @@ class FlatPrintingListener implements TestExecutionListener {
 		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();
 	}
 
+	@Override
+	public void listTests(TestPlan testPlan) {
+		for (TestIdentifier testIdentifier : testPlan.getAllIdentifiers().values()) {
+			println(Color.SUCCESSFUL, "%s (%s)", testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
+		}
+	}
 }
