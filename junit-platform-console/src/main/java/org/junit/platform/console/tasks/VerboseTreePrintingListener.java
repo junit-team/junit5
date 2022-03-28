@@ -20,14 +20,13 @@ import java.util.Deque;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
  */
-class VerboseTreePrintingListener implements TestExecutionListener {
+class VerboseTreePrintingListener implements DetailsPrintingListener {
 
 	private final PrintWriter out;
 	private final Theme theme;
@@ -186,4 +185,12 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 		printf(NONE, "%n");
 	}
 
+	@Override
+	public void listTests(TestPlan testPlan) {
+		for (TestIdentifier testIdentifier : testPlan.getAllIdentifiers().values()) {
+			printVerticals(theme.entry());
+			printf(Style.valueOf(testIdentifier), " %s%n", testIdentifier.getDisplayName());
+			printDetails(testIdentifier);
+		}
+	}
 }

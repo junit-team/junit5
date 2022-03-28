@@ -19,14 +19,13 @@ import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
  */
-class TreePrintingListener implements TestExecutionListener {
+class TreePrintingListener implements DetailsPrintingListener {
 
 	private final Map<UniqueId, TreeNode> nodesByUniqueId = new ConcurrentHashMap<>();
 	private TreeNode root;
@@ -76,4 +75,16 @@ class TreePrintingListener implements TestExecutionListener {
 		getNode(testIdentifier).addReportEntry(entry);
 	}
 
+	@Override
+	public void listTests(TestPlan testPlan) {
+		root = new TreeNode(testPlan.toString());
+		listTests(testPlan.getAllIdentifiers());
+		treePrinter.print(root);
+	}
+
+	private void listTests(Map<UniqueId, TestIdentifier> testIdentifiers) {
+		for (TestIdentifier testIdentifier : testIdentifiers.values()) {
+			addNode(testIdentifier, () -> new TreeNode(testIdentifier));
+		}
+	}
 }
