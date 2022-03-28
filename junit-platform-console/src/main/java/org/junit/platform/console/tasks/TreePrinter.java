@@ -73,6 +73,10 @@ class TreePrinter {
 		String caption = colorCaption(node);
 		String duration = color(CONTAINER, node.duration + " ms");
 		String icon = color(SKIPPED, theme.skipped());
+		boolean nodeIsBeingListed = node.duration == 0 && !node.result().isPresent() && !node.reason().isPresent();
+		if (nodeIsBeingListed) {
+			icon = color(SKIPPED, theme.blank());
+		}
 		if (node.result().isPresent()) {
 			TestExecutionResult result = node.result().get();
 			Color resultColor = Color.valueOf(result);
