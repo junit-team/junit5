@@ -15,6 +15,6 @@ import org.junit.platform.launcher.TestPlan;
 
 public interface DetailsPrintingListener extends TestExecutionListener {
 
-    void listTests(TestPlan testPlan);
+	void listTests(TestPlan testPlan);
 
 }
