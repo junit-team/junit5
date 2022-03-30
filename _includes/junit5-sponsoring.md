@@ -69,6 +69,20 @@ Your donations will help to make that a reality!
         </div>
       </a>
     </li>
+    <li>
+      <a class="cardsilver" href="https://quo-digital.jp">
+        <div class="cardsilver-image">
+          <img style="height:70%" src="assets/img/sponsor-logo-QuoCard.svg" alt="QUO CARD">
+        </div>
+        <div class="cardsilver-center">
+          <h4>QUO CARD</h4>
+        </div>
+        <div class="cardsilver-bottom">
+          <h4>Silver Sponsor</h4>
+          <p>Since March 2022</p>
+        </div>
+      </a>
+    </li>
   </ul>
 </div>
 
