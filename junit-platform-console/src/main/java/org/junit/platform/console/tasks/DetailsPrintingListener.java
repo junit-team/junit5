@@ -10,9 +10,16 @@
 
 package org.junit.platform.console.tasks;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 
+/**
+ * @since 1.9
+ */
+@API(status = EXPERIMENTAL, since = "1.9")
 public interface DetailsPrintingListener extends TestExecutionListener {
 
 	void listTests(TestPlan testPlan);
