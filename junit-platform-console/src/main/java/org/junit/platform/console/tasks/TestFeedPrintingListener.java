@@ -33,7 +33,7 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 		if (testIdentifier.isContainer())
 			return;
 		String msg = printTestIdenfifier(testIdentifier);
-		println(Color.DYNAMIC, "%s SKIPPED\n %s", msg, reason);
+		println(Color.SKIPPED, "%s SKIPPED\n %s", msg, reason);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 		if (testIdentifier.isContainer())
 			return;
 		String msg = printTestIdenfifier(testIdentifier);
-		println(Color.DYNAMIC, "%s > STARTED", msg);
+		println(Color.valueOf(testIdentifier), "%s > STARTED", msg);
 	}
 
 	@Override
@@ -51,11 +51,11 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 		TestExecutionResult.Status status = testExecutionResult.getStatus();
 		String msg = printTestIdenfifier(testIdentifier);
 		if (testExecutionResult.getThrowable().isPresent()) {
-			println(Color.DYNAMIC, "%s > %s \n %s", msg, status.toString(),
+			println(Color.valueOf(testIdentifier), "%s > %s \n %s", msg, status.toString(),
 				testExecutionResult.getThrowable().get().getMessage());
 		}
 		else {
-			println(Color.DYNAMIC, "%s > %s", msg, status.toString());
+			println(Color.valueOf(testIdentifier), "%s > %s", msg, status.toString());
 		}
 	}
 
@@ -106,7 +106,6 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 	}
 
 	private String parseMessage(String className, String prefix) {
-		String parsedClassName = className.replaceAll("\\[", "").replaceAll("]", "").replaceAll(prefix, "");
-		return parsedClassName;
+		return className.replaceAll("\\[", "").replaceAll("]", "").replaceAll(prefix, "");
 	}
 }
