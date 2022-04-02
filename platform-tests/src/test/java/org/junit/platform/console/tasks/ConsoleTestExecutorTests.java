@@ -61,7 +61,7 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void printsDetailsIfTheyAreNotHidden() throws Exception {
-		options.setDetails(Collections.singletonList(Details.FLAT));
+		options.setDetails(Details.FLAT);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
@@ -73,7 +73,7 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void printsNoDetailsIfTheyAreHidden() throws Exception {
-		options.setDetails(Collections.singletonList(Details.FLAT));
+		options.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
@@ -85,7 +85,7 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void printsFailuresEvenIfDetailsAreHidden() throws Exception {
-		options.setDetails(Collections.singletonList(Details.FLAT));
+		options.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);

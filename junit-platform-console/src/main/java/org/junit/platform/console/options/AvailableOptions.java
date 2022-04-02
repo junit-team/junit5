@@ -56,12 +56,13 @@ class AvailableOptions {
 	@Option(names = "-disable-banner", hidden = true)
 	private boolean disableBanner2;
 
-	@Option(names = "--details", split = ",", paramLabel = "MODE", description = "Comma separated values for  " +
-			"details. Can be none, summary, flat, tree, verbose or testfeed")
-	private List<Details> details = new ArrayList<>();
+	@Option(names = "--details", paramLabel = "MODE", description = "Select an output details mode for when tests are executed. " //
+			+ "Use one of: ${COMPLETION-CANDIDATES}. If 'none' is selected, " //
+			+ "then only the summary and test failures are shown. Default: ${DEFAULT-VALUE}.")
+	private Details details = CommandLineOptions.DEFAULT_DETAILS;
 
-	@Option(names = "-details", split = ",", hidden = true)
-	private List<Details> details2 = new ArrayList<>();
+	@Option(names = "-details", hidden = true)
+	private Details details2 = CommandLineOptions.DEFAULT_DETAILS;
 
 	@Option(names = "--details-theme", paramLabel = "THEME", description = "Select an output details tree theme for when tests are executed. "
 			+ "Use one of: ${COMPLETION-CANDIDATES}. Default: ${DEFAULT-VALUE}.")
@@ -292,7 +293,7 @@ class AvailableOptions {
 		result.setDisplayHelp(this.helpRequested || this.helpRequested2);
 		result.setAnsiColorOutputDisabled(this.disableAnsiColors || this.disableAnsiColors2);
 		result.setBannerDisabled(this.disableBanner || this.disableBanner2);
-		result.setDetails(merge(this.details, this.details2));
+		result.setDetails(choose(this.details, this.details2, CommandLineOptions.DEFAULT_DETAILS));
 		result.setTheme(choose(this.theme, this.theme2, CommandLineOptions.DEFAULT_THEME));
 		result.setAdditionalClasspathEntries(merge(this.additionalClasspathEntries, this.additionalClasspathEntries2));
 		result.setFailIfNoTests(this.failIfNoTests);
