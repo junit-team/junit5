@@ -59,7 +59,7 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 		if (testExecutionResult.getThrowable().isPresent()) {
 			Throwable throwable = testExecutionResult.getThrowable().get();
 			println(Color.valueOf(testIdentifier), "%s > %s\n\t%s", msg, status.toString(),
-					indented(ExceptionUtils.readStackTrace(throwable)));
+				indented(ExceptionUtils.readStackTrace(throwable)));
 		}
 		else {
 			println(Color.valueOf(testIdentifier), "%s > %s", msg, status.toString());
