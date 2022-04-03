@@ -22,7 +22,6 @@ import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposes
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Paths;
-import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.ConsoleLauncherExecutionResult;
