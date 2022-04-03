@@ -10,7 +10,7 @@ val license: License by rootProject.extra
 spotless {
 
     format("misc") {
-        target("*.gradle", "*.gradle.kts", "*.gitignore")
+        target("*.gradle.kts", "buildSrc/**/*.gradle.kts", "*.gitignore")
         indentWithTabs()
         trimTrailingWhitespace()
         endWithNewline()
@@ -46,4 +46,3 @@ spotless {
         }
     }
 }
-
