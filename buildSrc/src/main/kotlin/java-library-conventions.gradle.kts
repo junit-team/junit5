@@ -218,11 +218,11 @@ inner class ModulePathArgumentProvider : CommandLineArgumentProvider, Named {
 	@get:CompileClasspath
 	val modulePath: Provider<Configuration> = configurations.compileClasspath
 	override fun asArguments() = listOf(
-                                    "--module-path",
-                                    modulePath.get().asPath,
-                                    "--module-source-path",
-                                    files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
-                                  )
+									"--module-path",
+									modulePath.get().asPath,
+									"--module-source-path",
+									files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
+								)
 	@Internal
 	override fun getName() = "module-path"
 }
