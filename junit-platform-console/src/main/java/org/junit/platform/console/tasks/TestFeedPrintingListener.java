@@ -13,12 +13,18 @@ package org.junit.platform.console.tasks;
 import static org.junit.platform.console.tasks.Color.NONE;
 
 import java.io.PrintWriter;
+import java.util.regex.Pattern;
 
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 
 public class TestFeedPrintingListener implements TestExecutionListener {
+
+	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
+
+	static final String INDENTATION = "\t";
 
 	private final PrintWriter out;
 	private final boolean disableAnsiColors;
@@ -33,7 +39,7 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 		if (testIdentifier.isContainer())
 			return;
 		String msg = printTestIdenfifier(testIdentifier);
-		println(Color.SKIPPED, "%s SKIPPED\n %s", msg, reason);
+		println(Color.SKIPPED, "%s SKIPPED\n\tReason: %s", msg, reason);
 	}
 
 	@Override
@@ -51,8 +57,9 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 		TestExecutionResult.Status status = testExecutionResult.getStatus();
 		String msg = printTestIdenfifier(testIdentifier);
 		if (testExecutionResult.getThrowable().isPresent()) {
-			println(Color.valueOf(testIdentifier), "%s > %s \n %s", msg, status.toString(),
-				testExecutionResult.getThrowable().get().getMessage());
+			Throwable throwable = testExecutionResult.getThrowable().get();
+			println(Color.valueOf(testIdentifier), "%s > %s\n\t%s", msg, status.toString(),
+					indented(ExceptionUtils.readStackTrace(throwable)));
 		}
 		else {
 			println(Color.valueOf(testIdentifier), "%s > %s", msg, status.toString());
@@ -80,6 +87,7 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 	}
 
 	private String generateMessageFromUniqueId(String uniqueId) {
+		System.out.println(uniqueId);
 		String[] messages = uniqueId.split("/");
 		String engine = parseEngine(messages[0]);
 		String output = engine + "";
@@ -107,5 +115,9 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 
 	private String parseMessage(String className, String prefix) {
 		return className.replaceAll("\\[", "").replaceAll("]", "").replaceAll(prefix, "");
+	}
+
+	private static String indented(String message) {
+		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();
 	}
 }
