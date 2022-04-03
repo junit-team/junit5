@@ -117,6 +117,8 @@ public class ConsoleTestExecutor {
 				return Optional.of(new TreePrintingListener(out, disableAnsiColors, theme));
 			case VERBOSE:
 				return Optional.of(new VerboseTreePrintingListener(out, disableAnsiColors, 16, theme));
+			case TESTFEED:
+				return Optional.of(new TestFeedPrintingListener(out, disableAnsiColors));
 			default:
 				return Optional.empty();
 		}
