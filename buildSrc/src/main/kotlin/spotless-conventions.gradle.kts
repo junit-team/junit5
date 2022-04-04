@@ -11,6 +11,7 @@ spotless {
 
 	format("misc") {
 		target("*.gradle.kts", "buildSrc/**/*.gradle.kts", "*.gitignore")
+		targetExclude("buildSrc/build/**")
 		indentWithTabs()
 		trimTrailingWhitespace()
 		endWithNewline()
