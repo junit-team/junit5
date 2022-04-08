@@ -120,9 +120,18 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#execute(org.junit.platform.launcher.core.LauncherDiscoveryResult,org.junit.platform.engine.EngineExecutionListener)" class="member-name-link">execute</a><wbr>(<a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryResult</a>&nbsp;discoveryResult,
- <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;listener)</code></div>
+ <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;engineExecutionListener)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Executes tests for the supplied <a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">discovery results</a> and notifies the supplied <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">listener</a> of execution events.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#execute(org.junit.platform.launcher.core.LauncherDiscoveryResult,org.junit.platform.engine.EngineExecutionListener,org.junit.platform.launcher.TestExecutionListener)" class="member-name-link">execute</a><wbr>(<a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryResult</a>&nbsp;discoveryResult,
+ <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;engineExecutionListener,
+ <a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>&nbsp;testExecutionListener)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Executes tests for the supplied <a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">discoveryResult</a> and notifies the supplied <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">engineExecutionListener</a> and
+ <a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher">testExecutionListener</a> of execution
+ events.</div>
 </div>
 </div>
 </div>
@@ -156,10 +165,27 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="execute(org.junit.platform.launcher.core.LauncherDiscoveryResult,org.junit.platform.engine.EngineExecutionListener,org.junit.platform.launcher.TestExecutionListener)">
+<h3>execute</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#INTERNAL" title="class or interface in org.apiguardian.api" class="external-link">INTERNAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.9",
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#consumers()" title="class or interface in org.apiguardian.api" class="external-link">consumers</a>="org.junit.platform.suite.engine")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">execute</span><wbr><span class="parameters">(<a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryResult</a>&nbsp;discoveryResult,
+ <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;engineExecutionListener,
+ <a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>&nbsp;testExecutionListener)</span></div>
+<div class="block">Executes tests for the supplied <a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">discoveryResult</a> and notifies the supplied <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">engineExecutionListener</a> and
+ <a href="../TestExecutionListener.html" title="interface in org.junit.platform.launcher">testExecutionListener</a> of execution
+ events.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="execute(org.junit.platform.launcher.core.LauncherDiscoveryResult,org.junit.platform.engine.EngineExecutionListener)">
 <h3>execute</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">execute</span><wbr><span class="parameters">(<a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryResult</a>&nbsp;discoveryResult,
- <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;listener)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#INTERNAL" title="class or interface in org.apiguardian.api" class="external-link">INTERNAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.7",
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#consumers()" title="class or interface in org.apiguardian.api" class="external-link">consumers</a>="org.junit.platform.testkit")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">execute</span><wbr><span class="parameters">(<a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryResult</a>&nbsp;discoveryResult,
+ <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;engineExecutionListener)</span></div>
 <div class="block">Executes tests for the supplied <a href="LauncherDiscoveryResult.html" title="class in org.junit.platform.launcher.core">discovery results</a> and notifies the supplied <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">listener</a> of execution events.</div>
 </section>
 </li>
