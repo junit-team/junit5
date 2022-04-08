@@ -81,7 +81,7 @@ class VerboseTreeListenerTests {
 	}
 
 	private VerboseTreePrintingListener listener(StringWriter stringWriter) {
-		return new VerboseTreePrintingListener(new PrintWriter(stringWriter), true, 16, Theme.ASCII);
+		return new VerboseTreePrintingListener(new PrintWriter(stringWriter), ColorPalette.NONE, 16, Theme.ASCII);
 	}
 
 	private static TestIdentifier newTestIdentifier() {

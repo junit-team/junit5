@@ -73,4 +73,13 @@ import org.junit.platform.commons.annotation.Testable;
 @API(status = Status.EXPERIMENTAL, since = "1.8")
 @Testable
 public @interface Suite {
+
+	/**
+	 * Fail suite if no tests were discovered.
+	 *
+	 * @since 1.9
+	 */
+	@API(status = Status.EXPERIMENTAL, since = "1.9")
+	boolean failIfNoTests() default true;
+
 }

@@ -1,0 +1,81 @@
+/*
+ * Copyright 2015-2022 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.platform.launcher.core;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.ReportEntry;
+
+class CompositeEngineExecutionListener implements EngineExecutionListener {
+
+	private static final Logger logger = LoggerFactory.getLogger(CompositeEngineExecutionListener.class);
+
+	private final List<EngineExecutionListener> engineExecutionListeners;
+
+	CompositeEngineExecutionListener(List<EngineExecutionListener> engineExecutionListeners) {
+		this.engineExecutionListeners = new ArrayList<>(engineExecutionListeners);
+	}
+
+	@Override
+	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
+		notifyEach(engineExecutionListeners, listener -> listener.dynamicTestRegistered(testDescriptor),
+			() -> "dynamicTestRegistered(" + testDescriptor + ")");
+	}
+
+	@Override
+	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
+		notifyEach(engineExecutionListeners, listener -> listener.executionSkipped(testDescriptor, reason),
+			() -> "executionSkipped(" + testDescriptor + ", " + reason + ")");
+	}
+
+	@Override
+	public void executionStarted(TestDescriptor testDescriptor) {
+		notifyEach(engineExecutionListeners, listener -> listener.executionStarted(testDescriptor),
+			() -> "executionStarted(" + testDescriptor + ")");
+	}
+
+	@Override
+	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+		notifyEach(engineExecutionListeners,
+			listener -> listener.executionFinished(testDescriptor, testExecutionResult),
+			() -> "executionFinished(" + testDescriptor + ", " + testExecutionResult + ")");
+	}
+
+	@Override
+	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
+		notifyEach(engineExecutionListeners, listener -> listener.reportingEntryPublished(testDescriptor, entry),
+			() -> "reportingEntryPublished(" + testDescriptor + ", " + entry + ")");
+	}
+
+	private static <T extends EngineExecutionListener> void notifyEach(List<T> listeners, Consumer<T> consumer,
+			Supplier<String> description) {
+		listeners.forEach(listener -> {
+			try {
+				consumer.accept(listener);
+			}
+			catch (Throwable throwable) {
+				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
+				logger.warn(throwable,
+					() -> String.format("EngineExecutionListener [%s] threw exception for method: %s",
+						listener.getClass().getName(), description.get()));
+			}
+		});
+	}
+}
