@@ -110,6 +110,7 @@
 26def4b7e374f835ddd65cdd54cbee0f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ResourceLock.java
 2760f20033285c5a8d8f15e6b6121c36  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.java
 27fe622b5fcfc5ad113ffc163d37b828  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicContainerTestDescriptor.java
+2864f3ca271460a4f0e5c90c19d1d5d8  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 28e52b98a5706484559a6fc4f6176e35  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineExecutionOrchestrator.java
 29706f6076e8ef5b6bd4214c87fb38de  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestableMethod.java
 297ceb67a3c45b8fc8b89f98c2012b51  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeEngines.java
@@ -570,7 +571,6 @@ c0e72ba7ab852bb008860ad10bf1a3d9  junit-platform-launcher/src/main/java/org/juni
 c125fc47090f46a9332199deac757daf  documentation/src/test/java/example/AssumptionsDemo.java
 c14c5a79917b4a45f09bcf8e0e062124  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
 c17248c65564fe294a1551fa7bf66901  documentation/src/test/java/example/registration/DocumentationDemo.java
-c19476b635b4148d9c35224adaa8f0b4  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 c1b69bb75c1e079b26ff99080045de66  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.java
 c21a72026923730d39fc113dbb1d93a6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicContainer.java
 c2d21d434c34fc40859447b6b54975b3  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/MethodSelectorResolver.java
