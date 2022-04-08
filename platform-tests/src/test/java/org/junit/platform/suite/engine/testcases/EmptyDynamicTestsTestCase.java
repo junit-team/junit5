@@ -8,16 +8,21 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.suite.engine.testsuites;
+package org.junit.platform.suite.engine.testcases;
 
-import org.junit.platform.suite.api.SelectClasses;
-import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.DynamicTestsTestCase;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 
 /**
- * @since 1.8
+ * @since 1.9
  */
-@Suite
-@SelectClasses(DynamicTestsTestCase.class)
-public class DynamicSuite {
+public class EmptyDynamicTestsTestCase {
+
+	@TestFactory
+	Stream<DynamicTest> dynamicTests() {
+		return Stream.empty();
+	}
+
 }

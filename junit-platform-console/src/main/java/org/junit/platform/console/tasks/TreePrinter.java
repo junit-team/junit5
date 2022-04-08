@@ -11,12 +11,6 @@
 package org.junit.platform.console.tasks;
 
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.platform.console.tasks.Color.CONTAINER;
-import static org.junit.platform.console.tasks.Color.FAILED;
-import static org.junit.platform.console.tasks.Color.GREEN;
-import static org.junit.platform.console.tasks.Color.NONE;
-import static org.junit.platform.console.tasks.Color.SKIPPED;
-import static org.junit.platform.console.tasks.Color.YELLOW;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -36,16 +30,16 @@ class TreePrinter {
 
 	private final PrintWriter out;
 	private final Theme theme;
-	private final boolean disableAnsiColors;
+	private final ColorPalette colorPalette;
 
-	TreePrinter(PrintWriter out, Theme theme, boolean disableAnsiColors) {
+	TreePrinter(PrintWriter out, Theme theme, ColorPalette colorPalette) {
 		this.out = out;
 		this.theme = theme;
-		this.disableAnsiColors = disableAnsiColors;
+		this.colorPalette = colorPalette;
 	}
 
 	void print(TreeNode node) {
-		out.println(color(CONTAINER, theme.root()));
+		out.println(color(Style.CONTAINER, theme.root()));
 		print(node, "", true);
 		out.flush();
 	}
@@ -68,19 +62,19 @@ class TreePrinter {
 
 	private void printVisible(TreeNode node, String indent, boolean continuous) {
 		String bullet = continuous ? theme.entry() : theme.end();
-		String prefix = color(CONTAINER, indent + bullet);
-		String tabbed = color(CONTAINER, indent + tab(node, continuous));
+		String prefix = color(Style.CONTAINER, indent + bullet);
+		String tabbed = color(Style.CONTAINER, indent + tab(node, continuous));
 		String caption = colorCaption(node);
-		String duration = color(CONTAINER, node.duration + " ms");
-		String icon = color(SKIPPED, theme.skipped());
+		String duration = color(Style.CONTAINER, node.duration + " ms");
+		String icon = color(Style.SKIPPED, theme.skipped());
 		boolean nodeIsBeingListed = node.duration == 0 && !node.result().isPresent() && !node.reason().isPresent();
 		if (nodeIsBeingListed) {
-			icon = color(SKIPPED, theme.blank());
+			icon = color(Style.SKIPPED, theme.blank());
 		}
 		if (node.result().isPresent()) {
 			TestExecutionResult result = node.result().get();
-			Color resultColor = Color.valueOf(result);
-			icon = color(resultColor, theme.status(result));
+			Style resultStyle = Style.valueOf(result);
+			icon = color(resultStyle, theme.status(result));
 		}
 		out.print(prefix);
 		out.print(" ");
@@ -92,7 +86,7 @@ class TreePrinter {
 		out.print(" ");
 		out.print(icon);
 		node.result().ifPresent(result -> printThrowable(tabbed, result));
-		node.reason().ifPresent(reason -> printMessage(SKIPPED, tabbed, reason));
+		node.reason().ifPresent(reason -> printMessage(Style.SKIPPED, tabbed, reason));
 		node.reports.forEach(e -> printReportEntry(tabbed, e));
 		out.println();
 	}
@@ -112,16 +106,16 @@ class TreePrinter {
 		String caption = node.caption();
 		if (node.result().isPresent()) {
 			TestExecutionResult result = node.result().get();
-			Color resultColor = Color.valueOf(result);
+			Style resultStyle = Style.valueOf(result);
 			if (result.getStatus() != Status.SUCCESSFUL) {
-				return color(resultColor, caption);
+				return color(resultStyle, caption);
 			}
 		}
 		if (node.reason().isPresent()) {
-			return color(SKIPPED, caption);
+			return color(Style.SKIPPED, caption);
 		}
-		Color color = node.identifier().map(Color::valueOf).orElse(Color.NONE);
-		return color(color, caption);
+		Style style = node.identifier().map(Style::valueOf).orElse(Style.NONE);
+		return color(style, caption);
 	}
 
 	private void printThrowable(String indent, TestExecutionResult result) {
@@ -133,7 +127,7 @@ class TreePrinter {
 		if (StringUtils.isBlank(message)) {
 			message = throwable.toString();
 		}
-		printMessage(FAILED, indent, message);
+		printMessage(Style.FAILED, indent, message);
 	}
 
 	private void printReportEntry(String indent, ReportEntry reportEntry) {
@@ -153,33 +147,30 @@ class TreePrinter {
 
 	private void printReportEntry(String indent, Map.Entry<String, String> mapEntry) {
 		out.print(indent);
-		out.print(color(YELLOW, mapEntry.getKey()));
+		out.print(color(Style.ABORTED, mapEntry.getKey()));
 		out.print(" = `");
-		out.print(color(GREEN, mapEntry.getValue()));
+		out.print(color(Style.SUCCESSFUL, mapEntry.getValue()));
 		out.print("`");
 	}
 
-	private void printMessage(Color color, String indent, String message) {
+	private void printMessage(Style style, String indent, String message) {
 		String[] lines = message.split("\\R");
 		out.print(" ");
-		out.print(color(color, lines[0]));
+		out.print(color(style, lines[0]));
 		if (lines.length > 1) {
 			for (int i = 1; i < lines.length; i++) {
 				out.println();
 				out.print(indent);
 				if (StringUtils.isNotBlank(lines[i])) {
 					String extra = theme.blank();
-					out.print(color(color, extra + lines[i]));
+					out.print(color(style, extra + lines[i]));
 				}
 			}
 		}
 	}
 
-	private String color(Color color, String text) {
-		if (disableAnsiColors || color == NONE) {
-			return text;
-		}
-		return color.toString() + text + NONE.toString();
+	private String color(Style style, String text) {
+		return colorPalette.paint(style, text);
 	}
 
 }

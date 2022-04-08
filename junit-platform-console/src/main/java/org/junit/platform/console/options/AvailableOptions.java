@@ -61,6 +61,16 @@ class AvailableOptions {
 	@Option(names = "-disable-ansi-colors", hidden = true)
 	private boolean disableAnsiColors2;
 
+	@Option(names = "--color-palette", description = "Specify a path to a properties file to customize ANSI style of output (not supported by all terminals).")
+	private Path colorPalette;
+	@Option(names = "-color-palette", hidden = true)
+	private Path colorPalette2;
+
+	@Option(names = "--single-color", description = "Style test output using only text attributes, no color (not supported by all terminals).")
+	private boolean singleColorPalette;
+	@Option(names = "-single-color", hidden = true)
+	private boolean singleColorPalette2;
+
 	@Option(names = "--disable-banner", description = "Disable print out of the welcome message.")
 	private boolean disableBanner;
 
@@ -315,6 +325,8 @@ class AvailableOptions {
 		result.setDisplayHelp(this.helpRequested || this.helpRequested2);
 		result.setListTests(this.listTestsRequested);
 		result.setAnsiColorOutputDisabled(this.disableAnsiColors || this.disableAnsiColors2);
+		result.setColorPalettePath(choose(this.colorPalette, this.colorPalette2, null));
+		result.setSingleColorPalette(this.singleColorPalette || this.singleColorPalette2);
 		result.setBannerDisabled(this.disableBanner || this.disableBanner2);
 		result.setDetails(choose(this.details, this.details2, CommandLineOptions.DEFAULT_DETAILS));
 		result.setTheme(choose(this.theme, this.theme2, CommandLineOptions.DEFAULT_THEME));

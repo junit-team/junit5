@@ -26,10 +26,10 @@ import org.junit.platform.launcher.TestPlan;
  */
 class ExecutionListenerAdapter implements EngineExecutionListener {
 
-	private final InternalTestPlan testPlan;
+	private final TestPlan testPlan;
 	private final TestExecutionListener testExecutionListener;
 
-	ExecutionListenerAdapter(InternalTestPlan testPlan, TestExecutionListener testExecutionListener) {
+	ExecutionListenerAdapter(TestPlan testPlan, TestExecutionListener testExecutionListener) {
 		this.testPlan = testPlan;
 		this.testExecutionListener = testExecutionListener;
 	}
