@@ -570,6 +570,26 @@ these to be manually specified.</p>
 <p>New <code>failIfNoTests</code> attribute added to <code>@Suite</code>. This will fail the suite if
 no tests were discovered.</p>
 </li>
+<li>
+<p>Console output color can now be customized. The option <code>--single-color</code> will apply a
+built-in monochrome style, while <code>--color-palette</code> will accept a properties file to
+override the ANSI SGR color styling.
+The properties file below demonstrates the default style:</p>
+<div class="literalblock">
+<div class="content">
+<pre>....
+SUCCESSFUL = 32
+ABORTED = 33
+FAILED = 31
+SKIPPED = 35
+CONTAINER = 35
+TEST = 34
+DYNAMIC = 35
+REPORTED = 37
+....</pre>
+</div>
+</div>
+</li>
 </ul>
 </div>
 </div>
@@ -907,7 +927,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-04-08 10:35:33 UTC
+Last updated 2022-04-08 11:11:43 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

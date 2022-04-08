@@ -6818,18 +6818,25 @@ is <code>0</code>.
 <div class="listingblock">
 <div class="content">
 <pre>Usage: ConsoleLauncher [-h] [--disable-ansi-colors] [--disable-banner]
-                       [--fail-if-no-tests] [--scan-modules] [--scan-classpath[=PATH[;|:
-                       PATH...]]]... [--details=MODE] [--details-theme=THEME]
-                       [--reports-dir=DIR] [-c=CLASS]... [--config=KEY=VALUE]... [-cp=PATH
-                       [;|:PATH...]]... [-d=DIR]... [-e=ID]... [-E=ID]...
-                       [--exclude-package=PKG]... [-f=FILE]... [-i=TYPE:VALUE[INDEX(..
-                       INDEX)?(,INDEX(..INDEX)?)*]]... [--include-package=PKG]...
-                       [-m=NAME]... [-n=PATTERN]... [-N=PATTERN]... [-o=NAME]...
-                       [-p=PKG]... [-r=RESOURCE]... [-t=TAG]... [-T=TAG]... [-u=URI]...
+                       [--fail-if-no-tests] [--scan-modules] [--single-color]
+                       [--scan-classpath[=PATH[;|:PATH...]]]...
+                       [--color-palette=&lt;colorPalette&gt;] [--details=MODE]
+                       [--details-theme=THEME] [--reports-dir=DIR] [-c=CLASS]...
+                       [--config=KEY=VALUE]... [-cp=PATH[;|:PATH...]]... [-d=DIR]...
+                       [-e=ID]... [-E=ID]... [--exclude-package=PKG]... [-f=FILE]...
+                       [-i=TYPE:VALUE[INDEX(..INDEX)?(,INDEX(..INDEX)?)*]]...
+                       [--include-package=PKG]... [-m=NAME]... [-n=PATTERN]...
+                       [-N=PATTERN]... [-o=NAME]... [-p=PKG]... [-r=RESOURCE]...
+                       [-t=TAG]... [-T=TAG]... [-u=URI]...
 Launches the JUnit Platform from the console.
   -h, --help                 Display help information.
       --disable-ansi-colors  Disable ANSI colors in output (not supported by all
                                terminals).
+      --color-palette=&lt;colorPalette&gt;
+                             Specify a path to a properties file to customize ANSI style
+                               of output (not supported by all terminals).
+      --single-color         Style test output using only text attributes, no color (not
+                               supported by all terminals).
       --disable-banner       Disable print out of the welcome message.
       --details=MODE         Select an output details mode for when tests are executed.
                                Use one of: none, summary, flat, tree, verbose. If 'none'
@@ -11341,7 +11348,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-04-08 10:35:33 UTC
+Last updated 2022-04-08 11:11:43 UTC
 </div>
 </div>
 <style>
