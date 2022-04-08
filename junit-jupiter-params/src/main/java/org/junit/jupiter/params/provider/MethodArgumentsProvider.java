@@ -15,6 +15,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -43,23 +44,21 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		// @formatter:off
 		return Arrays.stream(this.methodNames)
 				.map(factoryMethodName -> getMethod(context, factoryMethodName))
-				.map(method -> ReflectionUtils.invokeMethod(method, testInstance))
+				.map(method -> context.getExecutableInvoker().invoke(method, testInstance))
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
 		// @formatter:on
 	}
 
 	private Method getMethod(ExtensionContext context, String factoryMethodName) {
-		if (StringUtils.isNotBlank(factoryMethodName)) {
-			if (factoryMethodName.contains(".") || factoryMethodName.contains("#")) {
-				return getMethodByFullyQualifiedName(factoryMethodName);
-			}
-			else {
-				return ReflectionUtils.getRequiredMethod(context.getRequiredTestClass(), factoryMethodName);
-			}
+		if (StringUtils.isBlank(factoryMethodName)) {
+			return ReflectionUtils.getRequiredMethod(context.getRequiredTestClass(),
+				context.getRequiredTestMethod().getName());
 		}
-		return ReflectionUtils.getRequiredMethod(context.getRequiredTestClass(),
-			context.getRequiredTestMethod().getName());
+		if (factoryMethodName.contains(".") || factoryMethodName.contains("#")) {
+			return getMethodByFullyQualifiedName(factoryMethodName);
+		}
+		return getMethodByShortName(context.getRequiredTestClass(), factoryMethodName);
 	}
 
 	private Method getMethodByFullyQualifiedName(String fullyQualifiedMethodName) {
@@ -68,10 +67,18 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		String methodName = methodParts[1];
 		String methodParameters = methodParts[2];
 
-		Preconditions.condition(StringUtils.isBlank(methodParameters),
-			() -> format("factory method [%s] must not declare formal parameters", fullyQualifiedMethodName));
+		return ReflectionUtils.findMethod(loadRequiredClass(className), methodName, methodParameters).orElseThrow(
+			() -> new JUnitException(format("Could not find method [%s] in class [%s]", methodName, className)));
+	}
 
-		return ReflectionUtils.getRequiredMethod(loadRequiredClass(className), methodName);
+	private Method getMethodByShortName(Class<?> testClass, String methodName) {
+		List<Method> methods = ReflectionUtils.findMethods(testClass, method -> method.getName().equals(methodName));
+		Preconditions.condition(methods.size() > 0,
+			() -> format("Could not find method [%s] in class [%s]", methodName, testClass.getName()));
+		Preconditions.condition(methods.size() <= 1,
+			() -> format("Several factory method named [%s] were found in class [%s]", methodName,
+				testClass.getName()));
+		return methods.get(0);
 	}
 
 	private Class<?> loadRequiredClass(String className) {

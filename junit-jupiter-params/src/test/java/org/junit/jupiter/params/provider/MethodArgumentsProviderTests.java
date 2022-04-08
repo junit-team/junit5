@@ -12,6 +12,7 @@ package org.junit.jupiter.params.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryWithDefaultExtensions;
 import static org.junit.jupiter.params.provider.MethodArgumentsProviderTests.DefaultFactoryMethodNameTestCase.TEST_METHOD;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -28,9 +29,16 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -39,6 +47,8 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @since 5.0
  */
 class MethodArgumentsProviderTests {
+
+	private MutableExtensionRegistry extensionRegistry;
 
 	@Test
 	void throwsExceptionForIllegalReturnType() {
@@ -233,15 +243,6 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void throwsExceptionWhenExternalFactoryMethodDeclaresParameters() {
-		var exception = assertThrows(PreconditionViolationException.class, () -> provideArguments(
-			ExternalFactoryMethods.class.getName() + "#methodWithParams(String, String)").toArray());
-
-		assertThat(exception.getMessage()).isEqualTo("factory method [" + ExternalFactoryMethods.class.getName()
-				+ "#methodWithParams(String, String)] must not declare formal parameters");
-	}
-
-	@Test
 	void throwsExceptionWhenClassForExternalFactoryMethodCannotBeLoaded() {
 		var exception = assertThrows(JUnitException.class,
 			() -> provideArguments("com.example.NonExistentExternalFactoryMethods#stringsProvider").toArray());
@@ -357,6 +358,58 @@ class MethodArgumentsProviderTests {
 
 	}
 
+	@Nested
+	class ParameterResolution {
+
+		@BeforeEach
+		void registerParameterResolver() {
+			JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+			extensionRegistry = createRegistryWithDefaultExtensions(configuration);
+			extensionRegistry.registerExtension(StringResolver.class);
+		}
+
+		@Test
+		void providesArgumentsUsingFactoryMethodWithParameter() {
+			var arguments = provideArguments("stringStreamProviderWithParameter");
+
+			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
+		}
+
+		@Test
+		void providesArgumentsUsingFullyQualifiedNameWithParameter() {
+			var arguments = provideArguments(
+				TestCase.class.getName() + "#stringStreamProviderWithParameter(java.lang.String)");
+
+			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
+		}
+
+		@Test
+		void throwExceptionWhenSeveralFactoryMethodsWithSameNameAreAvailable() {
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments("stringStreamProviderWithOrWithoutParameter").toArray());
+
+			assertThat(exception.getMessage()).isEqualTo(
+				"Several factory method named [stringStreamProviderWithOrWithoutParameter] were found in class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]");
+		}
+
+		@Test
+		void providesArgumentsUsingFactoryMethodSelectedViaFullyQualifiedNameWithParameter() {
+			var arguments = provideArguments(
+				TestCase.class.getName() + "#stringStreamProviderWithOrWithoutParameter(java.lang.String)");
+
+			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
+		}
+
+		@Test
+		void providesArgumentsUsingFactoryMethodSelectedViaFullyQualifiedNameWithoutParameter() {
+			var arguments = provideArguments(
+				TestCase.class.getName() + "#stringStreamProviderWithOrWithoutParameter()");
+
+			assertThat(arguments).containsExactly(array("foo"), array("bar"));
+		}
+
+	}
+
 	// -------------------------------------------------------------------------
 
 	private static Object[] array(Object... objects) {
@@ -377,6 +430,8 @@ class MethodArgumentsProviderTests {
 		var extensionContext = mock(ExtensionContext.class);
 		when(extensionContext.getTestClass()).thenReturn(Optional.ofNullable(testClass));
 		when(extensionContext.getTestMethod()).thenReturn(Optional.ofNullable(testMethod));
+		when(extensionContext.getExecutableInvoker()).thenReturn(
+			new DefaultExecutableInvoker(extensionContext, extensionRegistry));
 
 		doCallRealMethod().when(extensionContext).getRequiredTestMethod();
 		doCallRealMethod().when(extensionContext).getRequiredTestClass();
@@ -447,6 +502,18 @@ class MethodArgumentsProviderTests {
 
 		static Stream<Arguments> argumentsStreamProvider() {
 			return objectArrayStreamProvider().map(Arguments::of);
+		}
+
+		static Stream<String> stringStreamProviderWithParameter(String parameter) {
+			return Stream.of("foo" + parameter, "bar" + parameter);
+		}
+
+		static Stream<String> stringStreamProviderWithOrWithoutParameter() {
+			return stringStreamProvider();
+		}
+
+		static Stream<String> stringStreamProviderWithOrWithoutParameter(String parameter) {
+			return stringStreamProviderWithParameter(parameter);
 		}
 
 		// --- Iterable / Collection -------------------------------------------
@@ -546,6 +613,21 @@ class MethodArgumentsProviderTests {
 			static Stream<String> stringsProvider() {
 				return Stream.of("nested string1", "nested string2");
 			}
+		}
+	}
+
+	static class StringResolver implements ParameterResolver {
+
+		@Override
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return parameterContext.getParameter().getType() == String.class;
+		}
+
+		@Override
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return "!";
 		}
 	}
 
