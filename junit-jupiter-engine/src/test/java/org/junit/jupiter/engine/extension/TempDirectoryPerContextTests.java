@@ -53,7 +53,6 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.jupiter.engine.Constants;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -71,8 +70,7 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	protected EngineExecutionResults executeTestsForClass(Class<?> testClass) {
 		return executeTests(request() //
 				.selectors(selectClass(testClass)) //
-				.configurationParameter(Constants.TEMP_DIR_SCOPE_PROPERTY_NAME,
-					TempDirectory.Scope.PER_CONTEXT.toString()) //
+				.configurationParameter(TempDir.SCOPE_PROPERTY_NAME, TempDirectory.Scope.PER_CONTEXT.toString()) //
 				.build());
 	}
 

@@ -27,6 +27,23 @@ import org.apiguardian.api.API;
  * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
  * within class hierarchies.
  *
+ * <h3>Default Execution Mode</h3>
+ *
+ * <p>If this annotation is not present, {@link ExecutionMode#SAME_THREAD} is
+ * used unless a default execution mode is defined via one of the following
+ * configuration parameters:
+ *
+ * <dl>
+ *     <dt>{@value #DEFAULT_EXECUTION_MODE_PROPERTY_NAME}</dt>
+ *     <dd>Default execution mode for all classes and tests</dd>
+ *     <dt>{@value #DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME}</dt>
+ *     <dd>Default execution mode for top-level classes</dd>
+ * </dl>
+ *
+ * <p>{@value #DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME}
+ * overrides {@value #DEFAULT_EXECUTION_MODE_PROPERTY_NAME} for top-level
+ * classes
+ *
  * @see Isolated
  * @see ResourceLock
  * @since 5.3
@@ -36,6 +53,43 @@ import org.apiguardian.api.API;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Inherited
 public @interface Execution {
+
+	/**
+	 * Property name used to set the default test execution mode: {@value}
+	 *
+	 * <p>This setting is only effective if parallel execution is enabled.
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include names of enum constants defined in
+	 * {@link ExecutionMode}, ignoring case.
+	 *
+	 * <p>If not specified, the default is "same_thread" which corresponds to
+	 * {@code @Execution(ExecutionMode.SAME_THREAD)}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = EXPERIMENTAL, since = "5.9")
+	String DEFAULT_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.default";
+
+	/**
+	 * Property name used to set the default test execution mode for top-level
+	 * classes: {@value}
+	 *
+	 * <p>This setting is only effective if parallel execution is enabled.
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include names of enum constants defined in
+	 * {@link ExecutionMode}, ignoring case.
+	 *
+	 * <p>If not specified, it will be resolved into the same value as
+	 * {@link #DEFAULT_EXECUTION_MODE_PROPERTY_NAME}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = EXPERIMENTAL, since = "5.9")
+	String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.classes.default";
 
 	/**
 	 * The required/preferred execution mode.

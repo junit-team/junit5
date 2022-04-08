@@ -9,7 +9,7 @@ configuration that's necessary from the outside.
 JUnit 5 introduces the concept of a `Launcher` that can be used to discover, filter, and
 execute tests. Moreover, third party test libraries – like Spock, Cucumber, and FitNesse
 – can plug into the JUnit Platform's launching infrastructure by providing a custom
-`{TestEngine}`.
+<<test-engines,TestEngine>>.
 
 The launcher API is in the `{junit-platform-launcher}` module.
 
@@ -74,39 +74,8 @@ There is no return value for the `execute()` method, but you can use a
 [[launcher-api-engines-custom]]
 ==== Registering a TestEngine
 
-JUnit provides three `{TestEngine}` implementations.
-
-* `{junit-jupiter-engine}`: The core of JUnit Jupiter.
-* `{junit-vintage-engine}`: A thin layer on top of JUnit 4 to allow running _vintage_
-  tests with the launcher infrastructure.
-* `{junit-platform-suite-engine}`: To execute declarative suites of tests with the
-  launcher infrastructure.
-
-Third parties may also contribute their own `TestEngine` by implementing the interfaces in
-the {junit-platform-engine} module and _registering_ their engine. Engine registration is
-supported via Java's `{ServiceLoader}` mechanism. For example, the `junit-jupiter-engine`
-module registers its `org.junit.jupiter.engine.JupiterTestEngine` in a file named
-`org.junit.platform.engine.TestEngine` within the `/META-INF/services` folder in the
-`junit-jupiter-engine` JAR.
-
-NOTE: `{HierarchicalTestEngine}` is a convenient abstract base implementation (used by
-the `{junit-jupiter-engine}`) that only requires implementors to provide the logic for
-test discovery. It implements execution of `TestDescriptors` that implement the `Node`
-interface, including support for parallel execution.
-
-[[launcher-api-engines-custom-ids]]
-[WARNING]
-.The `junit-` prefix is reserved for TestEngines from the JUnit Team
-====
-The JUnit Platform `Launcher` enforces that only `TestEngine` implementations published
-by the JUnit Team may use the `junit-` prefix for their `TestEngine` IDs.
-
-* If any third-party `TestEngine` claims to be `junit-jupiter` or `junit-vintage`, an
-  exception will be thrown, immediately halting execution of the JUnit Platform.
-* If any third-party `TestEngine` uses the `junit-` prefix for its ID, a warning message
-  will be logged. Later releases of the JUnit Platform will throw an exception for such
-  violations.
-====
+See the dedicated section on <<test-engines-registration, TestEngine registration>> for
+details.
 
 [[launcher-api-post-discovery-filters-custom]]
 ==== Registering a PostDiscoveryFilter

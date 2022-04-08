@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
-import static org.junit.jupiter.engine.config.JupiterConfiguration.TEMP_DIR_SCOPE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
@@ -112,6 +111,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			Predicate<Field> predicate) {
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
+			assertNonFinalField(field);
 			assertSupportedType("field", field.getType());
 
 			try {
@@ -167,8 +167,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return cleanupMode == DEFAULT ? this.configuration.getDefaultTempDirCleanupMode() : cleanupMode;
 	}
 
-	private void assertSupportedType(String target, Class<?> type) {
+	private void assertNonFinalField(Field field) {
+		if (ReflectionUtils.isFinal(field)) {
+			throw new ExtensionConfigurationException("@TempDir field [" + field + "] must not be declared as final.");
+		}
+	}
 
+	private void assertSupportedType(String target, Class<?> type) {
 		if (type != Path.class && type != File.class) {
 			throw new ExtensionConfigurationException("Can only resolve @TempDir " + target + " of type "
 					+ Path.class.getName() + " or " + File.class.getName() + " but was: " + type.getName());
@@ -187,11 +192,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return (type == Path.class) ? path : path.toFile();
 	}
 
+	@SuppressWarnings("deprecation")
 	private Scope getScope(ExtensionContext context) {
 		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent( //
 			Scope.class, //
 			__ -> new EnumConfigurationParameterConverter<>(Scope.class, "@TempDir scope") //
-					.get(TEMP_DIR_SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
+					.get(TempDir.SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
 			Scope.class //
 		);
 	}
