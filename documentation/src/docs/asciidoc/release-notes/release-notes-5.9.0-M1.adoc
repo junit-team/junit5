@@ -30,7 +30,7 @@ on GitHub.
 * JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
   resolution time a fully running set of dependencies is calculated, avoiding the need for
   these to be manually specified.
-* JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.  
+* JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.
 * New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if
   no tests were discovered.
 
