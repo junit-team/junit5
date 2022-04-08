@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -38,6 +39,10 @@ class ListenerRegistry<T> {
 
 	static ListenerRegistry<TestExecutionListener> forTestExecutionListeners() {
 		return create(CompositeTestExecutionListener::new);
+	}
+
+	static ListenerRegistry<EngineExecutionListener> forEngineExecutionListeners() {
+		return create(CompositeEngineExecutionListener::new);
 	}
 
 	static <T> ListenerRegistry<T> create(Function<List<T>, T> compositeListenerFactory) {

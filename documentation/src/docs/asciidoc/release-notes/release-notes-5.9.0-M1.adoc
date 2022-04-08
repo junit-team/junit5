@@ -30,20 +30,22 @@ on GitHub.
 * JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
   resolution time a fully running set of dependencies is calculated, avoiding the need for
   these to be manually specified.
+* JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.
+* New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if
+  no tests were discovered.  
 * Console output color can now be customized. The option `--single-color` will apply a built-in
   monochrome style, while `--color-palette` will accept a properties file to override the
   ANSI SGR color styling. The properties file below demonstrates the default style:
-
-....
-SUCCESSFUL = 32
-ABORTED = 33
-FAILED = 31
-SKIPPED = 35
-CONTAINER = 35
-TEST = 34
-DYNAMIC = 35
-REPORTED = 37
-....
+  ....
+  SUCCESSFUL = 32
+  ABORTED = 33
+  FAILED = 31
+  SKIPPED = 35
+  CONTAINER = 35
+  TEST = 34
+  DYNAMIC = 35
+  REPORTED = 37
+  ....
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
 === JUnit Jupiter

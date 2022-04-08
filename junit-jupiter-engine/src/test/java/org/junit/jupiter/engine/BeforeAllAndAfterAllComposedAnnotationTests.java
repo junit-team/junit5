@@ -10,8 +10,7 @@
 
 package org.junit.jupiter.engine;
 
-import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,7 +36,7 @@ class BeforeAllAndAfterAllComposedAnnotationTests extends AbstractJupiterTestEng
 	void beforeAllAndAfterAllAsMetaAnnotations() {
 		executeTestsForClass(TestCase.class).testEvents().assertStatistics(stats -> stats.started(1).succeeded(1));
 
-		assertEquals(asList("beforeAll", "test", "afterAll"), methodsInvoked);
+		assertThat(methodsInvoked).containsExactly("beforeAll", "test", "afterAll");
 	}
 
 	static class TestCase {
