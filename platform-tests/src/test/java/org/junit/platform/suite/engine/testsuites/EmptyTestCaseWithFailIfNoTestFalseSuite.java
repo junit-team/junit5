@@ -12,12 +12,12 @@ package org.junit.platform.suite.engine.testsuites;
 
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.DynamicTestsTestCase;
+import org.junit.platform.suite.engine.testcases.EmptyTestTestCase;
 
 /**
- * @since 1.8
+ * @since 1.9
  */
-@Suite
-@SelectClasses(DynamicTestsTestCase.class)
-public class DynamicSuite {
+@Suite(failIfNoTests = false)
+@SelectClasses(EmptyTestTestCase.class)
+public class EmptyTestCaseWithFailIfNoTestFalseSuite {
 }

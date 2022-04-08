@@ -8,16 +8,11 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.suite.engine.testsuites;
-
-import org.junit.platform.suite.api.SelectClasses;
-import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.DynamicTestsTestCase;
+package org.junit.platform.suite.engine.testcases;
 
 /**
- * @since 1.8
+ * @since 1.9
  */
-@Suite
-@SelectClasses(DynamicTestsTestCase.class)
-public class DynamicSuite {
+public class EmptyTestTestCase {
+
 }
