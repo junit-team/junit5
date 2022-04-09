@@ -372,6 +372,7 @@ tasks {
 			addStringOption("-add-modules", "info.picocli")
 			addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
 					"org.junit.platform.console" to "info.picocli",
+					"org.junit.platform.reporting" to "org.opentest4j.reporting.events",
 					"org.junit.jupiter.params" to "univocity.parsers"
 			)))
 		}
