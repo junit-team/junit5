@@ -650,6 +650,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel3">
 <li><a href="#running-tests-console-launcher-options">4.3.1. Options</a></li>
 <li><a href="#running-tests-console-launcher-argument-files">4.3.2. Argument Files (@-files)</a></li>
+<li><a href="#running-tests-console-launcher-color-customization">4.3.3. Color customization</a></li>
 </ul>
 </li>
 <li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to run the JUnit Platform</a>
@@ -6943,6 +6944,28 @@ additional <code>@</code> symbol. For example, <code>@@somearg</code> will becom
 subject to expansion.</p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="running-tests-console-launcher-color-customization"><a class="anchor" href="#running-tests-console-launcher-color-customization"></a>4.3.3. Color customization</h4>
+<div class="paragraph">
+<p>The colors used in the output of the <code><a href="../api/org.junit.platform.console/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> can be customized.
+The option <code>--single-color</code> will apply a built-in monochrome style, while
+<code>--color-palette</code> will accept a properties file to override the
+<a href="https://en.wikipedia.org/wiki/ANSI_escape_code#Colors">ANSI SGR</a> color styling.
+The properties file below demonstrates the default style:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="properties"><span class="py">SUCCESSFUL</span> <span class="p">=</span> <span class="s">32</span>
+<span class="py">ABORTED</span> <span class="p">=</span> <span class="s">33</span>
+<span class="py">FAILED</span> <span class="p">=</span> <span class="s">31</span>
+<span class="py">SKIPPED</span> <span class="p">=</span> <span class="s">35</span>
+<span class="py">CONTAINER</span> <span class="p">=</span> <span class="s">35</span>
+<span class="py">TEST</span> <span class="p">=</span> <span class="s">34</span>
+<span class="py">DYNAMIC</span> <span class="p">=</span> <span class="s">35</span>
+<span class="py">REPORTED</span> <span class="p">=</span> <span class="s">37</span></code></pre>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="running-tests-junit-platform-runner"><a class="anchor" href="#running-tests-junit-platform-runner"></a>4.4. Using JUnit 4 to run the JUnit Platform</h3>
@@ -11348,7 +11371,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-04-08 11:11:43 UTC
+Last updated 2022-04-09 11:56:09 UTC
 </div>
 </div>
 <style>
