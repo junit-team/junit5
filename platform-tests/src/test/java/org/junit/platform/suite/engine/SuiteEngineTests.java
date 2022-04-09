@@ -291,7 +291,7 @@ class SuiteEngineTests {
 				.execute()
 				.containerEvents()
 				.assertThatEvents()
-				.haveExactly(1, event(container(EmptyTestCaseSuite.class), finishedWithFailure(instanceOf(SuiteDidNotDiscoverAnyTests.class))));
+				.haveExactly(1, event(container(EmptyTestCaseSuite.class), finishedWithFailure(instanceOf(NoTestsDiscoveredException.class))));
 		// @formatter:on
 	}
 
@@ -315,7 +315,7 @@ class SuiteEngineTests {
 				.execute()
 				.containerEvents()
 				.assertThatEvents()
-				.haveExactly(1, event(container(EmptyDynamicTestSuite.class), finishedWithFailure(instanceOf(SuiteDidNotDiscoverAnyTests.class))));
+				.haveExactly(1, event(container(EmptyDynamicTestSuite.class), finishedWithFailure(instanceOf(NoTestsDiscoveredException.class))));
 		// @formatter:on
 	}
 

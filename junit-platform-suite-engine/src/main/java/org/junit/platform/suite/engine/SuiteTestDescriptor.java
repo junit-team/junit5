@@ -149,7 +149,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	private TestExecutionResult computeTestExecutionResult(TestExecutionSummary summary) {
 		if (failIfNoTests && summary.getTestsFoundCount() == 0) {
-			return TestExecutionResult.failed(new SuiteDidNotDiscoverAnyTests(suiteClass));
+			return TestExecutionResult.failed(new NoTestsDiscoveredException(suiteClass));
 		}
 		return TestExecutionResult.successful();
 	}
