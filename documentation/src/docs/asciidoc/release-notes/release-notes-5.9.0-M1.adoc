@@ -34,20 +34,9 @@ on GitHub.
 * New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if
   no tests were discovered.
 * Console output color can now be customized. The option `--single-color` will apply a
-  built-in monochrome style, while `--color-palette` will accept a properties file to
-  override the ANSI SGR color styling.
-  The properties file below demonstrates the default style:
-
-  ....
-  SUCCESSFUL = 32
-  ABORTED = 33
-  FAILED = 31
-  SKIPPED = 35
-  CONTAINER = 35
-  TEST = 34
-  DYNAMIC = 35
-  REPORTED = 37
-  ....
+  built-in monochrome style, while `--color-palette` will accept a properties file. See
+  the <<../user-guide/index.adoc#running-tests-console-launcher-color-customization, User
+  Guide>> for details.
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
 === JUnit Jupiter
