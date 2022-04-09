@@ -16,6 +16,8 @@ dependencies {
 tasks.jar {
 	val release9ClassesDir = sourceSets.mainRelease9.get().output.classesDirs.singleFile
 	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
+	val release17ClassesDir = sourceSets.mainRelease17.get().output.classesDirs.singleFile
+	inputs.dir(release17ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
 	doLast {
 		exec {
 			executable = project.the<JavaToolchainService>().launcherFor(java.toolchain).get()
@@ -24,7 +26,9 @@ tasks.jar {
 				"--update",
 				"--file", archiveFile.get().asFile.absolutePath,
 				"--release", "9",
-				"-C", release9ClassesDir.absolutePath, "."
+				"-C", release9ClassesDir.absolutePath, ".",
+				"--release", "17",
+				"-C", release17ClassesDir.absolutePath, "."
 			)
 		}
 	}

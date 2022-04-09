@@ -17,7 +17,6 @@ import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ConsoleUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
@@ -46,7 +46,7 @@ public class CommandLineOptions {
 
 	static final String DEFAULT_DETAILS_NAME = "tree";
 	static final Details DEFAULT_DETAILS = Details.valueOf(DEFAULT_DETAILS_NAME.toUpperCase(Locale.ROOT));
-	static final Theme DEFAULT_THEME = Theme.valueOf(Charset.defaultCharset());
+	static final Theme DEFAULT_THEME = Theme.valueOf(ConsoleUtils.charset());
 
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
