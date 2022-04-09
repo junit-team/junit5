@@ -37,5 +37,6 @@ tasks.jar {
 eclipse {
 	classpath {
 		sourceSets -= project.sourceSets.mainRelease9.get()
+		sourceSets -= project.sourceSets.mainRelease17.get()
 	}
 }
