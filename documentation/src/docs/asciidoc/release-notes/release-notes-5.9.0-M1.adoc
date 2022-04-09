@@ -66,6 +66,7 @@ on GitHub.
   constructors via the new `ExecutableInvoker` available in the `ExtensionContext`.
 * A subset of the invocations of parameterized or dynamic tests can now be selected via
   the new `IterationSelector` discovery selector when launching the JUnit Platform.
+* `JAVA_19` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]
