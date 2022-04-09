@@ -133,7 +133,7 @@ class ToolProviderTests {
 		var code = junit.run(new PrintWriter(out), new PrintWriter(err), "--help");
 		assertAll(() -> assertLinesMatch(List.of( //
 			">> USAGE >>", //
-			"Launches the JUnit Platform from the console.", //
+			"Launches the JUnit Platform for test discovery and execution.", //
 			">> OPTIONS >>"), //
 			out.toString().lines().collect(Collectors.toList())), //
 			() -> assertEquals("", err.toString()), //
