@@ -25,11 +25,9 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava19;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
-import static org.junit.jupiter.api.condition.JRE.JAVA_10;
-import static org.junit.jupiter.api.condition.JRE.JAVA_11;
-import static org.junit.jupiter.api.condition.JRE.JAVA_12;
-import static org.junit.jupiter.api.condition.JRE.JAVA_8;
-import static org.junit.jupiter.api.condition.JRE.JAVA_9;
+import static org.junit.jupiter.api.condition.JRE.JAVA_17;
+import static org.junit.jupiter.api.condition.JRE.JAVA_18;
+import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
 
 import org.junit.jupiter.api.Disabled;
@@ -55,38 +53,31 @@ class EnabledForJreRangeIntegrationTests {
 	}
 
 	@Test
-	@EnabledForJreRange(min = JAVA_8, max = JAVA_8)
-	void java8() {
-		assertTrue(onJava8());
+	@EnabledForJreRange(min = JAVA_17, max = JAVA_17)
+	void java17() {
+		assertTrue(onJava17());
 	}
 
 	@Test
-	@EnabledForJreRange(min = JAVA_8, max = JAVA_11, disabledReason = "Disabled on some JRE")
-	void java8to11() {
-		assertTrue(onJava8() || onJava9() || onJava10() || onJava11());
-		assertFalse(onJava12());
+	@EnabledForJreRange(min = JAVA_18, max = JAVA_19)
+	void java18to19() {
+		assertTrue(onJava18() || onJava19());
+		assertFalse(onJava17());
 	}
 
 	@Test
-	@EnabledForJreRange(min = JAVA_9, max = JAVA_12)
-	void java9to12() {
-		assertTrue(onJava9() || onJava10() || onJava11() || onJava12());
-		assertFalse(onJava8() || onJava13());
+	@EnabledForJreRange(max = JAVA_18)
+	void javaMax18() {
+		assertTrue(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
+				|| onJava15() || onJava16() || onJava17() || onJava18());
+		assertFalse(onJava19());
 	}
 
 	@Test
-	@EnabledForJreRange(max = JAVA_12)
-	void javaMax12() {
-		assertTrue(onJava8() || onJava9() || onJava10() || onJava11() || onJava12());
-		assertFalse(onJava13());
-	}
-
-	@Test
-	@EnabledForJreRange(min = JAVA_10)
-	void javaMin10() {
-		assertTrue(onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15() || onJava16()
-				|| onJava17() || onJava18() || onJava19());
-		assertFalse(onJava9());
+	@EnabledForJreRange(min = JAVA_18)
+	void javaMin18() {
+		assertTrue(onJava18() || onJava19());
+		assertFalse(onJava17());
 	}
 
 	@Test
