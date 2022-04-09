@@ -6818,95 +6818,100 @@ is <code>0</code>.
 <h4 id="running-tests-console-launcher-options"><a class="anchor" href="#running-tests-console-launcher-options"></a>4.3.1. Options</h4>
 <div class="listingblock">
 <div class="content">
-<pre>Usage: ConsoleLauncher [-h] [--disable-ansi-colors] [--disable-banner]
-                       [--fail-if-no-tests] [--scan-modules] [--single-color]
-                       [--scan-classpath[=PATH[;|:PATH...]]]...
-                       [--color-palette=&lt;colorPalette&gt;] [--details=MODE]
-                       [--details-theme=THEME] [--reports-dir=DIR] [-c=CLASS]...
-                       [--config=KEY=VALUE]... [-cp=PATH[;|:PATH...]]... [-d=DIR]...
-                       [-e=ID]... [-E=ID]... [--exclude-package=PKG]... [-f=FILE]...
-                       [-i=TYPE:VALUE[INDEX(..INDEX)?(,INDEX(..INDEX)?)*]]...
-                       [--include-package=PKG]... [-m=NAME]... [-n=PATTERN]...
-                       [-N=PATTERN]... [-o=NAME]... [-p=PKG]... [-r=RESOURCE]...
-                       [-t=TAG]... [-T=TAG]... [-u=URI]...
-Launches the JUnit Platform from the console.
+<pre>Usage: ConsoleLauncher [OPTIONS]
+Launches the JUnit Platform for test discovery and execution.
+      [@&lt;filename&gt;...]       One or more argument files containing options.
+
+COMMANDS
+
   -h, --help                 Display help information.
-      --disable-ansi-colors  Disable ANSI colors in output (not supported by all
-                               terminals).
-      --color-palette=&lt;colorPalette&gt;
-                             Specify a path to a properties file to customize ANSI style
-                               of output (not supported by all terminals).
-      --single-color         Style test output using only text attributes, no color (not
-                               supported by all terminals).
-      --disable-banner       Disable print out of the welcome message.
-      --details=MODE         Select an output details mode for when tests are executed.
-                               Use one of: none, summary, flat, tree, verbose. If 'none'
-                               is selected, then only the summary and test failures are
-                               shown. Default: tree.
-      --details-theme=THEME  Select an output details tree theme for when tests are
-                               executed. Use one of: ascii, unicode. Default: unicode.
-      -cp, --classpath, --class-path=PATH[;|:PATH...]
-                             Provide additional classpath entries -- for example, for
-                               adding engines and their dependencies. This option can be
-                               repeated.
-      --fail-if-no-tests     Fail and return exit status code 2 if no tests are found.
-      --reports-dir=DIR      Enable report output into a specified local directory (will
-                               be created if it does not exist).
-      --scan-modules         EXPERIMENTAL: Scan all resolved modules for test discovery.
-  -o, --select-module=NAME   EXPERIMENTAL: Select single module for test discovery. This
-                               option can be repeated.
+
+SELECTORS
+
       --scan-classpath, --scan-class-path[=PATH[;|:PATH...]]
                              Scan all directories on the classpath or explicit classpath
                                roots. Without arguments, only directories on the system
-                               classpath as well as additional classpath entries supplied
-                               via -cp (directories and JAR files) are scanned. Explicit
-                               classpath roots that are not on the classpath will be
-                               silently ignored. This option can be repeated.
+                               classpath as well as additional classpath entries supplied via
+                               -cp (directories and JAR files) are scanned. Explicit classpath
+                               roots that are not on the classpath will be silently ignored.
+                               This option can be repeated.
+      --scan-modules         EXPERIMENTAL: Scan all resolved modules for test discovery.
   -u, --select-uri=URI       Select a URI for test discovery. This option can be repeated.
-  -f, --select-file=FILE     Select a file for test discovery. This option can be
-                               repeated.
+  -f, --select-file=FILE     Select a file for test discovery. This option can be repeated.
   -d, --select-directory=DIR Select a directory for test discovery. This option can be
                                repeated.
-  -p, --select-package=PKG   Select a package for test discovery. This option can be
-                               repeated.
-  -c, --select-class=CLASS   Select a class for test discovery. This option can be
-                               repeated.
-  -m, --select-method=NAME   Select a method for test discovery. This option can be
-                               repeated.
+  -o, --select-module=NAME   EXPERIMENTAL: Select single module for test discovery. This
+                               option can be repeated.
+  -p, --select-package=PKG   Select a package for test discovery. This option can be repeated.
+  -c, --select-class=CLASS   Select a class for test discovery. This option can be repeated.
+  -m, --select-method=NAME   Select a method for test discovery. This option can be repeated.
   -r, --select-resource=RESOURCE
-                             Select a classpath resource for test discovery. This option
-                               can be repeated.
+                             Select a classpath resource for test discovery. This option can
+                               be repeated.
   -i, --select-iteration=TYPE:VALUE[INDEX(..INDEX)?(,INDEX(..INDEX)?)*]
-                             Select iterations for test discovery (e.g. method:com.acme.
-                               Foo#m()[1..2]). This option can be repeated.
+                             Select iterations for test discovery (e.g. method:com.acme.Foo#m()
+                               [1..2]). This option can be repeated.
+
+FILTERS
+
   -n, --include-classname=PATTERN
-                             Provide a regular expression to include only classes whose
-                               fully qualified names match. To avoid loading classes
-                               unnecessarily, the default pattern only includes class
-                               names that begin with "Test" or end with "Test" or
-                               "Tests". When this option is repeated, all patterns will
-                               be combined using OR semantics. Default: [^(Test.*|.+[.$]
-                               Test.*|.*Tests?)$]
+                             Provide a regular expression to include only classes whose fully
+                               qualified names match. To avoid loading classes unnecessarily,
+                               the default pattern only includes class names that begin with
+                               "Test" or end with "Test" or "Tests". When this option is
+                               repeated, all patterns will be combined using OR semantics.
+                               Default: ^(Test.*|.+[.$]Test.*|.*Tests?)$
   -N, --exclude-classname=PATTERN
-                             Provide a regular expression to exclude those classes whose
-                               fully qualified names match. When this option is repeated,
-                               all patterns will be combined using OR semantics.
-      --include-package=PKG  Provide a package to be included in the test run. This
+                             Provide a regular expression to exclude those classes whose fully
+                               qualified names match. When this option is repeated, all
+                               patterns will be combined using OR semantics.
+      --include-package=PKG  Provide a package to be included in the test run. This option can
+                               be repeated.
+      --exclude-package=PKG  Provide a package to be excluded from the test run. This option
+                               can be repeated.
+  -t, --include-tag=TAG      Provide a tag or tag expression to include only tests whose tags
+                               match. When this option is repeated, all patterns will be
+                               combined using OR semantics.
+  -T, --exclude-tag=TAG      Provide a tag or tag expression to exclude those tests whose tags
+                               match. When this option is repeated, all patterns will be
+                               combined using OR semantics.
+  -e, --include-engine=ID    Provide the ID of an engine to be included in the test run. This
                                option can be repeated.
-      --exclude-package=PKG  Provide a package to be excluded from the test run. This
-                               option can be repeated.
-  -t, --include-tag=TAG      Provide a tag or tag expression to include only tests whose
-                               tags match. When this option is repeated, all patterns
-                               will be combined using OR semantics.
-  -T, --exclude-tag=TAG      Provide a tag or tag expression to exclude those tests whose
-                               tags match. When this option is repeated, all patterns
-                               will be combined using OR semantics.
-  -e, --include-engine=ID    Provide the ID of an engine to be included in the test run.
+  -E, --exclude-engine=ID    Provide the ID of an engine to be excluded from the test run.
                                This option can be repeated.
-  -E, --exclude-engine=ID    Provide the ID of an engine to be excluded from the test
-                               run. This option can be repeated.
-      --config=KEY=VALUE     Set a configuration parameter for test discovery and
-                               execution. This option can be repeated.</pre>
+
+RUNTIME CONFIGURATION
+
+      -cp, --classpath, --class-path=PATH[;|:PATH...]
+                             Provide additional classpath entries -- for example, for adding
+                               engines and their dependencies. This option can be repeated.
+      --config=KEY=VALUE     Set a configuration parameter for test discovery and execution.
+                               This option can be repeated.
+
+REPORTING
+
+      --fail-if-no-tests     Fail and return exit status code 2 if no tests are found.
+      --reports-dir=DIR      Enable report output into a specified local directory (will be
+                               created if it does not exist).
+
+CONSOLE OUTPUT
+
+      --disable-ansi-colors  Disable ANSI colors in output (not supported by all terminals).
+      --color-palette=FILE   Specify a path to a properties file to customize ANSI style of
+                               output (not supported by all terminals).
+      --single-color         Style test output using only text attributes, no color (not
+                               supported by all terminals).
+      --disable-banner       Disable print out of the welcome message.
+      --details=MODE         Select an output details mode for when tests are executed. Use
+                               one of: none, summary, flat, tree, verbose. If 'none' is
+                               selected, then only the summary and test failures are shown.
+                               Default: tree.
+      --details-theme=THEME  Select an output details tree theme for when tests are executed.
+                               Use one of: ascii, unicode. Default is detected based on
+                               default character encoding.
+
+For more information, please refer to the JUnit User Guide at
+https://junit.org/junit5/docs/current/user-guide/</pre>
 </div>
 </div>
 </div>
@@ -11371,7 +11376,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-04-09 11:56:09 UTC
+Last updated 2022-04-09 13:44:00 UTC
 </div>
 </div>
 <style>
