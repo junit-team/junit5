@@ -50,6 +50,7 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -152,12 +153,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	private CleanupMode determineCleanupModeForField(Field field) {
 		TempDir tempDir = findAnnotation(field, TempDir.class).orElseThrow(
-			() -> new IllegalStateException("Field " + field + " must be annotated with @TempDir"));
+			() -> new JUnitException("Field " + field + " must be annotated with @TempDir"));
 		return determineCleanupMode(tempDir);
 	}
 
 	private CleanupMode determineCleanupModeForParameter(ParameterContext parameterContext) {
-		TempDir tempDir = parameterContext.findAnnotation(TempDir.class).orElseThrow(() -> new IllegalStateException(
+		TempDir tempDir = parameterContext.findAnnotation(TempDir.class).orElseThrow(() -> new JUnitException(
 			"Parameter " + parameterContext.getParameter() + " must be annotated with @TempDir"));
 		return determineCleanupMode(tempDir);
 	}

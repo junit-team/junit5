@@ -18,6 +18,7 @@ import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuil
 
 import java.util.function.Supplier;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -85,7 +86,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		// @formatter:off
 		return findAnnotation(suiteClass, Suite.class)
 				.map(Suite::failIfNoTests)
-				.orElseThrow(() -> new IllegalStateException(String.format("Suite [%s] was not annotated with @Suite", suiteClass.getName())));
+				.orElseThrow(() -> new JUnitException(String.format("Suite [%s] was not annotated with @Suite", suiteClass.getName())));
 		// @formatter:on
 	}
 
