@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava16;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava17;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava18;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava19;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 import static org.junit.jupiter.api.condition.JRE.JAVA_10;
@@ -79,7 +80,8 @@ class DisabledForJreRangeIntegrationTests {
 	@Test
 	@DisabledForJreRange(min = JAVA_10)
 	void javaMin10() {
-		assertFalse(onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
+		assertFalse(onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15() || onJava16()
+				|| onJava17() || onJava18() || onJava19());
 		assertTrue(onJava8() || onJava9());
 	}
 
@@ -87,7 +89,7 @@ class DisabledForJreRangeIntegrationTests {
 	@DisabledForJreRange(min = OTHER, max = OTHER)
 	void other() {
 		assertTrue(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
-				|| onJava15() || onJava16() || onJava17() || onJava18());
+				|| onJava15() || onJava16() || onJava17() || onJava18() || onJava19());
 	}
 
 }
