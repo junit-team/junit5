@@ -74,7 +74,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* JUnit Jupiter can now participate in builds using a Gradle
+[source dependency](https://blog.gradle.org/introducing-source-dependencies).
 
 ==== Deprecations and Breaking Changes
 
