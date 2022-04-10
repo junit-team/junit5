@@ -221,6 +221,7 @@
 4e674e4a5b7ec0d9599487745d684c4e  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeClassNamePatterns.java
 4e6fc0dcdd360bbb476a92e8e3991637  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClassSelector.java
 4ea10087e0d16108ab74aa370de323cf  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
+4f298a2095b8b7877af25507cb893262  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 4f7d5b456aef5ed5183dc31ef1f83ea1  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestInvocationContext.java
 50b2683cc08b422ae859a0e704938dac  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportWriter.java
 50b30aeda40519586d04bf430c858380  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
@@ -417,6 +418,7 @@
 90859051a9321ba58e7873a090078ac5  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
 90a3178b8ebe683016078f90737e3004  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/DirectorySource.java
 9112bb376da38582fa54d215797a2f60  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/InvocationInterceptorChain.java
+91d3c14017874d1617d41561ddc2a8a5  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java
 91e6782c41f3553be200d4da99a2e38a  junit-platform-engine/src/main/java/org/junit/platform/engine/CompositeFilter.java
 91f06abae6eb690ca11104aa733ea89a  junit-platform-commons/src/main/java/org/junit/platform/commons/util/package-info.java
 92d50eb1d6102a2bf30b19ac01510c45  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/UseTechnicalNames.java
@@ -516,7 +518,6 @@ b35f68e6c8296e3838bed3e490012a4f  junit-jupiter-engine/src/main/java/org/junit/j
 b3607ff86724691d23afe199e00a4a39  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeArgumentConverter.java
 b3d029fa51a04863acc22399dde93b74  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CloseablePath.java
 b3ee0d5b9fc97e3fd4e9bdeeb14e9236  documentation/src/test/java/example/SlowTests.java
-b4268546181667c2cef463cda74d76d9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java
 b433c9d56ee5c75aa738df70bca36e3e  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
 b4bbb8e0ea9ad1c7526568e7cce5c3a3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Test.java
 b583d37a0804253351a9f2bf51b8a0a6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.java
@@ -673,7 +674,6 @@ ddf32108cbe56bd6c80ff219d87e754f  junit-platform-testkit/src/main/java/org/junit
 de0560e795106df4ad2ebf3ed5591e5a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvParsingException.java
 de13d12a45a170889bd687beb07b6373  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/package-info.java
 de1aab8e79f3c52c9138e12c08ea303a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.java
-debf7f1e5347e83cbfb9069eac33a3b1  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 deeb3bf88801a94ff2eaf8f684a7aff7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultMethodDescriptor.java
 df3754af7250b81b04ed969594e5761f  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 df5f5e7132955f5317e1735977e89b81  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestClassOrder.java
