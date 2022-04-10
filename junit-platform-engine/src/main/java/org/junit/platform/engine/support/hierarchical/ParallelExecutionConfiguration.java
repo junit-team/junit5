@@ -63,7 +63,7 @@ public interface ParallelExecutionConfiguration {
 
 	/**
 	 * Get the saturate predicate to be used for the execution's {@link ForkJoinPool}.
-	 * @return the saturate predicate to be passed to the ForkJoinPool constructor; may be {@code null}
+	 * @return the saturate predicate to be passed to the {@code ForkJoinPool} constructor; may be {@code null}
 	 * @since 1.9
 	 * @see ForkJoinPool#ForkJoinPool(int, ForkJoinPool.ForkJoinWorkerThreadFactory, Thread.UncaughtExceptionHandler,
 	 * boolean, int, int, int, Predicate, long, TimeUnit)
