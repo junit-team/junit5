@@ -8,7 +8,6 @@ plugins {
 description = "JUnit Platform Console"
 
 dependencies {
-	api(platform(projects.junitBom))
 	api(projects.junitPlatformReporting)
 
 	compileOnlyApi(libs.apiguardian)

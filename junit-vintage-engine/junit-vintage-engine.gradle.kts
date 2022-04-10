@@ -9,7 +9,6 @@ plugins {
 description = "JUnit Vintage Engine"
 
 dependencies {
-	api(platform(projects.junitBom))
 	api(projects.junitPlatformEngine)
 	api(libs.junit4)
 

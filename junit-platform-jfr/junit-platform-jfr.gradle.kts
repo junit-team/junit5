@@ -5,7 +5,6 @@ plugins {
 description = "JUnit Platform Flight Recorder Support"
 
 dependencies {
-	api(platform(projects.junitBom))
 	api(projects.junitPlatformLauncher)
 
 	compileOnlyApi(libs.apiguardian)

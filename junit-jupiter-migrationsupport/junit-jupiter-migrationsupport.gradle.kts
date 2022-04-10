@@ -7,7 +7,6 @@ plugins {
 description = "JUnit Jupiter Migration Support"
 
 dependencies {
-	api(platform(projects.junitBom))
 	api(libs.junit4)
 	api(projects.junitJupiterApi)
 

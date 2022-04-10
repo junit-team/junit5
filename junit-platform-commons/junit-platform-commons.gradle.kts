@@ -8,8 +8,6 @@ plugins {
 description = "JUnit Platform Commons"
 
 dependencies {
-	api(platform(projects.junitBom))
-
 	compileOnlyApi(libs.apiguardian)
 }
 

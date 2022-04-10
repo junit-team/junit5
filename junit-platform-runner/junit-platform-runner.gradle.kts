@@ -6,7 +6,6 @@ plugins {
 description = "JUnit Platform Runner"
 
 dependencies {
-	api(platform(projects.junitBom))
 	api(libs.junit4)
 	api(projects.junitPlatformLauncher)
 	api(projects.junitPlatformSuiteApi)

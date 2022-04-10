@@ -7,7 +7,6 @@ plugins {
 description = "JUnit Jupiter Params"
 
 dependencies {
-	api(platform(projects.junitBom))
 	api(projects.junitJupiterApi)
 
 	compileOnlyApi(libs.apiguardian)

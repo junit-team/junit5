@@ -10,7 +10,6 @@ plugins {
 description = "JUnit Jupiter Engine"
 
 dependencies {
-	api(platform(projects.junitBom))
 	api(projects.junitPlatformEngine)
 	api(projects.junitJupiterApi)
 
