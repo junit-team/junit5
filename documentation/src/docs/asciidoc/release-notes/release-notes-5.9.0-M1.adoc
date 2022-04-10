@@ -43,7 +43,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Only retry deleting directories when cleaning up `@TempDir` once.
 
 ==== Deprecations and Breaking Changes
 
