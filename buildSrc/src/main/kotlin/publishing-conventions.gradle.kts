@@ -6,7 +6,6 @@ plugins {
 
 val isSnapshot = project.version.toString().contains("SNAPSHOT")
 val isContinuousIntegrationEnvironment = System.getenv("CI")?.toBoolean() ?: false
-val isJitPackEnvironment = System.getenv("JITPACK")?.toBoolean() ?: false
 
 val jupiterProjects: List<Project> by rootProject
 val platformProjects: List<Project> by rootProject
@@ -42,8 +41,9 @@ tasks.withType<PublishToMavenLocal>().configureEach {
 }
 
 signing {
+	useGpgCmd()
 	sign(publishing.publications)
-	isRequired = !(isSnapshot || isContinuousIntegrationEnvironment || isJitPackEnvironment)
+	isRequired = !(isSnapshot || isContinuousIntegrationEnvironment)
 }
 
 tasks.withType<Sign>().configureEach {

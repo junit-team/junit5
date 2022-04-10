@@ -15,6 +15,7 @@ dependencies {
 }
 
 javaLibrary {
+	// --release 8 does not support jdk.jfr even though it was backported
 	configureRelease = false
 }
 

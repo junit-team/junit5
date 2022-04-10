@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -58,7 +58,7 @@ public final class TestTag implements Serializable {
 	 * Determine if the supplied tag name is valid with regard to the supported
 	 * syntax for tags.
 	 *
-	 * <h3>Syntax Rules for Tags</h3>
+	 * <h4>Syntax Rules for Tags</h4>
 	 * <ul>
 	 * <li>A tag must not be {@code null}.</li>
 	 * <li>A tag must not be blank.</li>

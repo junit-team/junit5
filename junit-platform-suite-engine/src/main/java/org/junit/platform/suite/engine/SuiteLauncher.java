@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -25,6 +25,8 @@ import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase;
 import org.junit.platform.launcher.core.EngineExecutionOrchestrator;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry;
+import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
  * @since 1.8
@@ -55,8 +57,11 @@ class SuiteLauncher {
 		return discoveryOrchestrator.discover(discoveryRequest, Phase.DISCOVERY, parentId);
 	}
 
-	void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener listener) {
-		executionOrchestrator.execute(discoveryResult, listener);
+	TestExecutionSummary execute(LauncherDiscoveryResult discoveryResult,
+			EngineExecutionListener parentEngineExecutionListener) {
+		SummaryGeneratingListener listener = new SummaryGeneratingListener();
+		executionOrchestrator.execute(discoveryResult, parentEngineExecutionListener, listener);
+		return listener.getSummary();
 	}
 
 }

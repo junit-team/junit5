@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,8 +14,10 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.JupiterTestDescriptor.toExecutionMode;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -51,8 +53,9 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 		MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
 			context.getConfiguration());
 		EngineExecutionListener executionListener = context.getExecutionListener();
+		ExecutableInvoker executableInvoker = new DefaultExecutableInvoker(context);
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionListener, this,
-			context.getConfiguration());
+			context.getConfiguration(), executableInvoker);
 
 		// @formatter:off
 		return context.extend()

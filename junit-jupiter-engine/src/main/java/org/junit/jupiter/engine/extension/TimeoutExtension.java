@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.jupiter.engine.config.JupiterConfiguration.TIMEOUT_MODE_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.TIMEOUT_MODE_PROPERTY_NAME;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;

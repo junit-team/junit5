@@ -10,7 +10,7 @@ fun Project.requiredVersionFromLibs(name: String) =
     libsVersionCatalog.findVersion(name).get().requiredVersion
 
 fun Project.dependencyFromLibs(name: String) =
-    libsVersionCatalog.findDependency(name).get()
+    libsVersionCatalog.findLibrary(name).get()
 
 fun Project.bundleFromLibs(name: String) =
     libsVersionCatalog.findBundle(name).get()

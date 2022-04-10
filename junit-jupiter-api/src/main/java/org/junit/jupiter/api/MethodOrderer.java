@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -34,6 +34,11 @@ import org.junit.platform.commons.util.ClassUtils;
  * {@code @Test}, {@code @RepeatedTest}, {@code @ParameterizedTest},
  * {@code @TestFactory}, or {@code @TestTemplate}.
  *
+ * <p>A {@link MethodOrderer} can be configured <em>globally</em> for the entire
+ * test suite via the {@value #DEFAULT_ORDER_PROPERTY_NAME} configuration
+ * parameter (see the User Guide for details) or <em>locally</em> for a test
+ * class via the {@link TestMethodOrder @TestMethodOrder} annotation.
+ *
  * <h4>Built-in Implementations</h4>
  *
  * <p>JUnit Jupiter provides the following built-in {@code MethodOrderer}
@@ -53,6 +58,22 @@ import org.junit.platform.commons.util.ClassUtils;
  */
 @API(status = STABLE, since = "5.7")
 public interface MethodOrderer {
+
+	/**
+	 * Property name used to set the default method orderer class name: {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include fully qualified class names for types that
+	 * implement {@link org.junit.jupiter.api.MethodOrderer}.
+	 *
+	 * <p>If not specified, test methods will be ordered using an algorithm that
+	 * is deterministic but intentionally non-obvious.
+	 *
+	 * @since 5.7
+	 */
+	@API(status = STABLE, since = "5.9")
+	String DEFAULT_ORDER_PROPERTY_NAME = "junit.jupiter.testmethod.order.default";
 
 	/**
 	 * Order the methods encapsulated in the supplied {@link MethodOrdererContext}.
@@ -232,12 +253,11 @@ public interface MethodOrderer {
 	 * of this class. In order to support repeatable builds, the value of the
 	 * default random seed is logged at {@code CONFIG} level. In addition, a
 	 * custom seed (potentially the default seed from the previous test plan
-	 * execution) may be specified via the {@link Random#RANDOM_SEED_PROPERTY_NAME
-	 * junit.jupiter.execution.order.random.seed} <em>configuration parameter</em>
-	 * which can be supplied via the {@code Launcher} API, build tools (e.g.,
-	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
-	 * file (i.e., a file named {@code junit-platform.properties} in the root of
-	 * the class path). Consult the User Guide for further information.
+	 * execution) may be specified via the {@value ClassOrderer.Random#RANDOM_SEED_PROPERTY_NAME}
+	 * <em>configuration parameter</em> which can be supplied via the {@code Launcher}
+	 * API, build tools (e.g., Gradle and Maven), a JVM system property, or the JUnit
+	 * Platform configuration file (i.e., a file named {@code junit-platform.properties}
+	 * in the root of the class path). Consult the User Guide for further information.
 	 *
 	 * @see Random#RANDOM_SEED_PROPERTY_NAME
 	 * @see java.util.Random
@@ -264,7 +284,7 @@ public interface MethodOrderer {
 		 * <p>The same property is used by {@link ClassOrderer.Random} for
 		 * consistency between the two random orderers.
 		 *
-		 * <h3>Supported Values</h3>
+		 * <h4>Supported Values</h4>
 		 *
 		 * <p>Supported values include any string that can be converted to a
 		 * {@link Long} via {@link Long#valueOf(String)}.

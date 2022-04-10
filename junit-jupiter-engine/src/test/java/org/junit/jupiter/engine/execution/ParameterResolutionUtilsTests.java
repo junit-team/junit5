@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,14 +12,12 @@ package org.junit.jupiter.engine.execution;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -33,16 +31,15 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * Unit tests for {@link ExecutableInvoker}.
+ * Unit tests for {@link ParameterResolutionUtils}.
  *
- * @since 5.0
+ * @since 5.9
  */
-class ExecutableInvokerTests {
+class ParameterResolutionUtilsTests {
 
 	private static final String ENIGMA = "enigma";
 
@@ -53,38 +50,40 @@ class ExecutableInvokerTests {
 
 	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
-	private MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
+	private final MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
 		configuration);
 
 	@Test
-	void constructorInjection() {
-		register(new StringParameterResolver(), new NumberParameterResolver());
+	void resolveConstructorArguments() {
+		register(new StringParameterResolver());
 
-		Class<ConstructorInjectionTestCase> outerClass = ConstructorInjectionTestCase.class;
-		Constructor<ConstructorInjectionTestCase> constructor = ReflectionUtils.getDeclaredConstructor(outerClass);
-		ConstructorInjectionTestCase outer = newInvoker().invoke(constructor, Optional.empty(), extensionContext,
-			extensionRegistry, passthroughInterceptor());
+		Class<ConstructorInjectionTestCase> topLevelClass = ConstructorInjectionTestCase.class;
+		Object[] arguments = resolveConstructorParameters(topLevelClass, null);
 
-		assertNotNull(outer);
-		assertEquals(ENIGMA, outer.str);
-
-		Class<ConstructorInjectionTestCase.NestedTestCase> innerClass = ConstructorInjectionTestCase.NestedTestCase.class;
-		Constructor<ConstructorInjectionTestCase.NestedTestCase> innerConstructor = ReflectionUtils.getDeclaredConstructor(
-			innerClass);
-		ConstructorInjectionTestCase.NestedTestCase inner = newInvoker().invoke(innerConstructor, Optional.of(outer),
-			extensionContext, extensionRegistry, passthroughInterceptor());
-
-		assertNotNull(inner);
-		assertEquals(42, inner.num);
+		assertThat(arguments).containsExactly(ENIGMA);
 	}
 
 	@Test
-	void constructorInjectionWithMissingResolver() {
+	void resolveNestedConstructorArguments() {
+		register(new NumberParameterResolver());
+
+		Class<ConstructorInjectionTestCase> outerClass = ConstructorInjectionTestCase.class;
+		ConstructorInjectionTestCase outer = ReflectionUtils.newInstance(outerClass, "str");
+
+		Class<ConstructorInjectionTestCase.NestedTestCase> innerClass = ConstructorInjectionTestCase.NestedTestCase.class;
+		Object[] arguments = resolveConstructorParameters(innerClass, outer);
+
+		assertThat(arguments).containsExactly(outer, 42);
+	}
+
+	@Test
+	void resolveConstructorArgumentsWithMissingResolver() {
 		Constructor<ConstructorInjectionTestCase> constructor = ReflectionUtils.getDeclaredConstructor(
 			ConstructorInjectionTestCase.class);
 
-		Exception exception = assertThrows(ParameterResolutionException.class, () -> newInvoker().invoke(constructor,
-			Optional.empty(), extensionContext, extensionRegistry, passthroughInterceptor()));
+		Exception exception = assertThrows(ParameterResolutionException.class,
+			() -> ParameterResolutionUtils.resolveParameters(constructor, Optional.empty(), Optional.empty(),
+				extensionContext, extensionRegistry));
 
 		assertThat(exception.getMessage())//
 				.contains("No ParameterResolver registered for parameter [java.lang.String")//
@@ -93,13 +92,13 @@ class ExecutableInvokerTests {
 	}
 
 	@Test
-	void invokingMethodsWithoutParameterDoesNotDependOnParameterResolvers() {
+	void resolvingArgumentsForMethodsWithoutParameterDoesNotDependOnParameterResolvers() {
 		testMethodWithNoParameters();
 		throwDuringParameterResolution(new RuntimeException("boom!"));
 
-		invokeMethod();
+		Object[] arguments = resolveMethodParameters();
 
-		verify(instance).noParameter();
+		assertThat(arguments).isEmpty();
 	}
 
 	@Test
@@ -107,9 +106,9 @@ class ExecutableInvokerTests {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo("argument");
 
-		invokeMethod();
+		Object[] arguments = resolveMethodParameters();
 
-		verify(instance).singleStringParameter("argument");
+		assertThat(arguments).containsExactly("argument");
 	}
 
 	@Test
@@ -126,9 +125,9 @@ class ExecutableInvokerTests {
 			}
 		}));
 
-		invokeMethod();
+		Object[] arguments = resolveMethodParameters();
 
-		verify(instance).multipleParameters("0", 1, 2.0);
+		assertThat(arguments).containsExactly("0", 1, 2.0);
 	}
 
 	@Test
@@ -137,9 +136,9 @@ class ExecutableInvokerTests {
 		thereIsAParameterResolverThatDoesNotSupportThisParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo("something");
 
-		invokeMethod();
+		Object[] arguments = resolveMethodParameters();
 
-		verify(instance).singleStringParameter("something");
+		assertThat(arguments).containsExactly("something");
 	}
 
 	@Test
@@ -148,7 +147,7 @@ class ExecutableInvokerTests {
 		ArgumentRecordingParameterResolver extension = new ArgumentRecordingParameterResolver();
 		register(extension);
 
-		invokeMethod();
+		resolveMethodParameters();
 
 		assertSame(extensionContext, extension.supportsArguments.extensionContext);
 		assertEquals(0, extension.supportsArguments.parameterContext.getIndex());
@@ -161,13 +160,13 @@ class ExecutableInvokerTests {
 	}
 
 	@Test
-	void invocationOfMethodsWithPrimitiveTypesIsSupported() {
+	void resolvingArgumentsForMethodsWithPrimitiveTypesIsSupported() {
 		testMethodWithASinglePrimitiveIntParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo(42);
 
-		invokeMethod();
+		Object[] arguments = resolveMethodParameters();
 
-		verify(instance).primitiveParameterInt(42);
+		assertThat(arguments).containsExactly(42);
 	}
 
 	@Test
@@ -175,9 +174,10 @@ class ExecutableInvokerTests {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo(null);
 
-		invokeMethod();
+		Object[] arguments = resolveMethodParameters();
 
-		verify(instance).singleStringParameter(null);
+		assertThat(arguments).hasSize(1);
+		assertNull(arguments[0]);
 	}
 
 	@Test
@@ -185,7 +185,8 @@ class ExecutableInvokerTests {
 		testMethodWithASinglePrimitiveIntParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo(null);
 
-		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class,
+			this::resolveMethodParameters);
 
 		// @formatter:off
 		assertThat(caught.getMessage())
@@ -199,7 +200,8 @@ class ExecutableInvokerTests {
 	void reportIfThereIsNoParameterResolverThatSupportsTheParameter() {
 		testMethodWithASingleStringParameter();
 
-		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class,
+			this::resolveMethodParameters);
 
 		assertThat(caught.getMessage()).contains("parameter [java.lang.String").contains("in method");
 	}
@@ -210,7 +212,8 @@ class ExecutableInvokerTests {
 		thereIsAParameterResolverThatResolvesTheParameterTo("one");
 		thereIsAParameterResolverThatResolvesTheParameterTo("two");
 
-		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class,
+			this::resolveMethodParameters);
 
 		String className = Pattern.quote(ConfigurableParameterResolver.class.getName());
 
@@ -226,7 +229,8 @@ class ExecutableInvokerTests {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo(BigDecimal.ONE);
 
-		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class,
+			this::resolveMethodParameters);
 
 		// @formatter:off
 		assertThat(caught.getMessage())
@@ -242,7 +246,8 @@ class ExecutableInvokerTests {
 		IllegalArgumentException cause = anyExceptionButParameterResolutionException();
 		throwDuringParameterResolution(cause);
 
-		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class,
+			this::resolveMethodParameters);
 
 		assertSame(cause, caught.getCause(), () -> "cause should be present");
 		assertThat(caught.getMessage())//
@@ -250,12 +255,13 @@ class ExecutableInvokerTests {
 	}
 
 	@Test
-	void exceptionMessageContainsMessageFromEexceptionThrownDuringParameterResolution() {
+	void exceptionMessageContainsMessageFromExceptionThrownDuringParameterResolution() {
 		anyTestMethodWithAtLeastOneParameter();
 		RuntimeException cause = new RuntimeException("boom!");
 		throwDuringParameterResolution(cause);
 
-		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class,
+			this::resolveMethodParameters);
 
 		assertSame(cause, caught.getCause(), () -> "cause should be present");
 		assertThat(caught.getMessage())//
@@ -268,7 +274,8 @@ class ExecutableInvokerTests {
 		ParameterResolutionException cause = new ParameterResolutionException("custom message");
 		throwDuringParameterResolution(cause);
 
-		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class,
+			this::resolveMethodParameters);
 
 		assertSame(cause, caught);
 	}
@@ -315,25 +322,23 @@ class ExecutableInvokerTests {
 		}
 	}
 
-	private ExecutableInvoker newInvoker() {
-		return new ExecutableInvoker();
+	private <T> Object[] resolveConstructorParameters(Class<T> clazz, Object outerInstance) {
+		Constructor<T> constructor = ReflectionUtils.getDeclaredConstructor(clazz);
+		return ParameterResolutionUtils.resolveParameters(constructor, Optional.empty(),
+			Optional.ofNullable(outerInstance), extensionContext, extensionRegistry);
 	}
 
-	private void invokeMethod() {
-		newInvoker().invoke(this.method, this.instance, this.extensionContext, this.extensionRegistry,
-			passthroughInterceptor());
-	}
-
-	static <E extends Executable, T> ReflectiveInterceptorCall<E, T> passthroughInterceptor() {
-		return (interceptor, invocation, invocationContext, extensionContext) -> invocation.proceed();
+	private Object[] resolveMethodParameters() {
+		return ParameterResolutionUtils.resolveParameters(this.method, Optional.of(this.instance),
+			this.extensionContext, this.extensionRegistry);
 	}
 
 	// -------------------------------------------------------------------------
 
 	static class ArgumentRecordingParameterResolver implements ParameterResolver {
 
-		Arguments supportsArguments;
-		Arguments resolveArguments;
+		ArgumentRecordingParameterResolver.Arguments supportsArguments;
+		ArgumentRecordingParameterResolver.Arguments resolveArguments;
 
 		static class Arguments {
 
@@ -348,13 +353,13 @@ class ExecutableInvokerTests {
 
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			supportsArguments = new Arguments(parameterContext, extensionContext);
+			supportsArguments = new ArgumentRecordingParameterResolver.Arguments(parameterContext, extensionContext);
 			return true;
 		}
 
 		@Override
 		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			resolveArguments = new Arguments(parameterContext, extensionContext);
+			resolveArguments = new ArgumentRecordingParameterResolver.Arguments(parameterContext, extensionContext);
 			return null;
 		}
 	}
@@ -399,6 +404,7 @@ class ExecutableInvokerTests {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	interface MethodSource {
 
 		void noParameter();
@@ -410,7 +416,7 @@ class ExecutableInvokerTests {
 		void multipleParameters(String first, Integer second, Double third);
 	}
 
-	private static class StringParameterResolver implements ParameterResolver {
+	static class StringParameterResolver implements ParameterResolver {
 
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
@@ -423,7 +429,7 @@ class ExecutableInvokerTests {
 		}
 	}
 
-	private static class NumberParameterResolver implements ParameterResolver {
+	static class NumberParameterResolver implements ParameterResolver {
 
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
@@ -436,7 +442,7 @@ class ExecutableInvokerTests {
 		}
 	}
 
-	private static class ConstructorInjectionTestCase {
+	static class ConstructorInjectionTestCase {
 
 		final String str;
 

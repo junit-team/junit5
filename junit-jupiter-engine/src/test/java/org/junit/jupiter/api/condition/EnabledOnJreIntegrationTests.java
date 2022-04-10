@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_15;
 import static org.junit.jupiter.api.condition.JRE.JAVA_16;
 import static org.junit.jupiter.api.condition.JRE.JAVA_17;
 import static org.junit.jupiter.api.condition.JRE.JAVA_18;
+import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
@@ -50,7 +51,7 @@ class EnabledOnJreIntegrationTests {
 
 	@Test
 	@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15, JAVA_16, JAVA_17, JAVA_18,
-			OTHER })
+			JAVA_19, OTHER })
 	void enabledOnAllJavaVersions() {
 	}
 
@@ -121,10 +122,16 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
+	@EnabledOnJre(JAVA_19)
+	void java19() {
+		assertTrue(onJava19());
+	}
+
+	@Test
 	@EnabledOnJre(value = OTHER, disabledReason = "Disabled on almost every JRE")
 	void other() {
 		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
-				|| onJava15() || onJava16() || onJava17() || onJava18());
+				|| onJava15() || onJava16() || onJava17() || onJava18() || onJava19());
 	}
 
 	static boolean onJava8() {
@@ -169,6 +176,10 @@ class EnabledOnJreIntegrationTests {
 
 	static boolean onJava18() {
 		return JAVA_VERSION.startsWith("18");
+	}
+
+	static boolean onJava19() {
+		return JAVA_VERSION.startsWith("19");
 	}
 
 }

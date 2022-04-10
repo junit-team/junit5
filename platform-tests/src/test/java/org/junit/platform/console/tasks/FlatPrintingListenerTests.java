@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -19,6 +19,8 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.assertj.core.util.Maps;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -69,8 +71,91 @@ class FlatPrintingListenerTests {
 			() -> assertEquals(INDENTATION + "=> Exception: java.lang.AssertionError: Boom!", lines[1]));
 	}
 
+	@Nested
+	class Color {
+		@Nested
+		class Default {
+			@Test
+			void executionSkipped() {
+				var stringWriter = new StringWriter();
+				new FlatPrintingListener(new PrintWriter(stringWriter), ColorPalette.DEFAULT).executionSkipped(
+					newTestIdentifier(), "Test" + EOL + "disabled");
+				var lines = lines(stringWriter);
+
+				assertEquals(3, lines.length);
+				assertAll("lines in the output", //
+					() -> assertEquals("\u001B[35mSkipped:     demo-test ([engine:demo-engine])\u001B[0m", lines[0]), //
+					() -> assertEquals("\u001B[35m" + INDENTATION + "=> Reason: Test", lines[1]), //
+					() -> assertEquals(INDENTATION + "disabled\u001B[0m", lines[2]));
+			}
+
+			@Test
+			void reportingEntryPublished() {
+				var stringWriter = new StringWriter();
+				new FlatPrintingListener(new PrintWriter(stringWriter), ColorPalette.DEFAULT).reportingEntryPublished(
+					newTestIdentifier(), ReportEntry.from("foo", "bar"));
+				var lines = lines(stringWriter);
+
+				assertEquals(2, lines.length);
+				assertAll("lines in the output", //
+					() -> assertEquals("\u001B[37mReported:    demo-test ([engine:demo-engine])\u001B[0m", lines[0]), //
+					() -> assertTrue(lines[1].startsWith(
+						"\u001B[37m" + INDENTATION + "=> Reported values: ReportEntry [timestamp =")), //
+					() -> assertTrue(lines[1].endsWith(", foo = 'bar']\u001B[0m")));
+			}
+
+			@Test
+			void executionFinishedWithFailure() {
+				var stringWriter = new StringWriter();
+				new FlatPrintingListener(new PrintWriter(stringWriter), ColorPalette.DEFAULT).executionFinished(
+					newTestIdentifier(), failed(new AssertionError("Boom!")));
+				var lines = lines(stringWriter);
+
+				assertAll("lines in the output", //
+					() -> assertEquals("\u001B[31mFinished:    demo-test ([engine:demo-engine])\u001B[0m", lines[0]), //
+					() -> assertEquals("\u001B[31m" + INDENTATION + "=> Exception: java.lang.AssertionError: Boom!",
+						lines[1]),
+					() -> assertTrue(lines[lines.length - 1].endsWith("\u001B[0m")));
+			}
+		}
+
+		@Nested
+		class Overrides {
+			@Test
+			void overridingSkipped() {
+				var stringWriter = new StringWriter();
+				ColorPalette colorPalette = new ColorPalette(Maps.newHashMap(Style.SKIPPED, "36;7"));
+				new FlatPrintingListener(new PrintWriter(stringWriter), colorPalette).executionSkipped(
+					newTestIdentifier(), "Test" + EOL + "disabled");
+				var lines = lines(stringWriter);
+
+				assertEquals(3, lines.length);
+				assertAll("lines in the output", //
+					() -> assertEquals("\u001B[36;7mSkipped:     demo-test ([engine:demo-engine])\u001B[0m", lines[0]), //
+					() -> assertEquals("\u001B[36;7m" + INDENTATION + "=> Reason: Test", lines[1]), //
+					() -> assertEquals(INDENTATION + "disabled\u001B[0m", lines[2]));
+			}
+
+			@Test
+			void overridingUnusedStyle() {
+				var stringWriter = new StringWriter();
+				ColorPalette colorPalette = new ColorPalette(Maps.newHashMap(Style.FAILED, "36;7"));
+				new FlatPrintingListener(new PrintWriter(stringWriter), colorPalette).executionSkipped(
+					newTestIdentifier(), "Test" + EOL + "disabled");
+				var lines = lines(stringWriter);
+
+				assertEquals(3, lines.length);
+				assertAll("lines in the output", //
+					() -> assertEquals("\u001B[35mSkipped:     demo-test ([engine:demo-engine])\u001B[0m", lines[0]), //
+					() -> assertEquals("\u001B[35m" + INDENTATION + "=> Reason: Test", lines[1]), //
+					() -> assertEquals(INDENTATION + "disabled\u001B[0m", lines[2]));
+			}
+		}
+
+	}
+
 	private FlatPrintingListener listener(StringWriter stringWriter) {
-		return new FlatPrintingListener(new PrintWriter(stringWriter), true);
+		return new FlatPrintingListener(new PrintWriter(stringWriter), ColorPalette.NONE);
 	}
 
 	private static TestIdentifier newTestIdentifier() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -24,7 +24,7 @@ import org.junit.platform.launcher.LauncherSession;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.mockito.ArgumentCaptor;
 
-public class LauncherSessionTests {
+class LauncherSessionTests {
 
 	LauncherSessionListener firstSessionListener = mock(LauncherSessionListener.class);
 	LauncherSessionListener secondSessionListener = mock(LauncherSessionListener.class);
@@ -64,6 +64,7 @@ public class LauncherSessionTests {
 
 	@Test
 	void callsRegisteredListenersWhenLauncherIsUsedViaSession() {
+		@SuppressWarnings("resource")
 		var session = LauncherFactory.openSession(launcherConfig);
 		var launcher = session.getLauncher();
 
@@ -93,6 +94,7 @@ public class LauncherSessionTests {
 
 	@Test
 	void closedSessionCannotBeUsed() {
+		@SuppressWarnings("resource")
 		var session = LauncherFactory.openSession(launcherConfig);
 		var launcher = session.getLauncher();
 		var testPlan = launcher.discover(request);

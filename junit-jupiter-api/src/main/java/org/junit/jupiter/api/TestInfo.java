@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -48,7 +48,7 @@ public interface TestInfo {
 	 * <p>The display name is either a default name or a custom name configured
 	 * via {@link DisplayName @DisplayName}.
 	 *
-	 * <h3>Default Display Names</h3>
+	 * <h4>Default Display Names</h4>
 	 *
 	 * <p>If the context in which {@code TestInfo} is used is at the container
 	 * level, the default display name is generated based on the name of the

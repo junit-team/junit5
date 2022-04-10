@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -133,7 +133,7 @@ class ToolProviderTests {
 		var code = junit.run(new PrintWriter(out), new PrintWriter(err), "--help");
 		assertAll(() -> assertLinesMatch(List.of( //
 			">> USAGE >>", //
-			"Launches the JUnit Platform from the console.", //
+			"Launches the JUnit Platform for test discovery and execution.", //
 			">> OPTIONS >>"), //
 			out.toString().lines().collect(Collectors.toList())), //
 			() -> assertEquals("", err.toString()), //

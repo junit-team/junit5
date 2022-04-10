@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -29,8 +29,8 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.execution.ExecutableInvoker;
-import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
+import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker;
+import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -58,7 +58,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";
 
 	private static final ReflectiveInterceptorCall<Method, Object> interceptorCall = InvocationInterceptor::interceptTestFactoryMethod;
-	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
+	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
 

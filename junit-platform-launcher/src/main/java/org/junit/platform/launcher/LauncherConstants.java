@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -94,7 +94,7 @@ public class LauncherConstants {
 	 * Property name used to provide patterns for deactivating listeners registered
 	 * via the {@link java.util.ServiceLoader ServiceLoader} mechanism: {@value}
 	 *
-	 * <h3>Pattern Matching Syntax</h3>
+	 * <h4>Pattern Matching Syntax</h4>
 	 *
 	 * <p>If the property value consists solely of an asterisk ({@code *}), all
 	 * listeners will be deactivated. Otherwise, the property value will be treated
@@ -105,7 +105,7 @@ public class LauncherConstants {
 	 * against one or more characters in a FQCN. All other characters in a pattern
 	 * will be matched one-to-one against a FQCN.
 	 *
-	 * <h3>Examples</h3>
+	 * <h4>Examples</h4>
 	 *
 	 * <ul>
 	 * <li>{@code *}: deactivates all listeners.

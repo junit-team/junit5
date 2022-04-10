@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,6 +33,12 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * <p>Concrete implementations must have a <em>default constructor</em>.
  *
+ * <p>A {@link DisplayNameGenerator} can be configured <em>globally</em> for the
+ * entire test suite via the {@value #DEFAULT_GENERATOR_PROPERTY_NAME}
+ * configuration parameter (see the User Guide for details) or <em>locally</em>
+ * for a test class via the {@link TestClassOrder @DisplayNameGeneration}
+ * annotation.
+ *
  * <h4>Built-in Implementations</h4>
  * <ul>
  * <li>{@link Standard}</li>
@@ -47,6 +53,23 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 @API(status = STABLE, since = "5.7")
 public interface DisplayNameGenerator {
+
+	/**
+	 * Property name used to set the default display name generator class name:
+	 * {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include fully qualified class names for types that
+	 * implement {@link DisplayNameGenerator}.
+	 *
+	 * <p>If not specified, the default is
+	 * {@link DisplayNameGenerator.Standard}.
+	 *
+	 * @since 5.5
+	 */
+	@API(status = STABLE, since = "5.9")
+	String DEFAULT_GENERATOR_PROPERTY_NAME = "junit.jupiter.displayname.generator.default";
 
 	/**
 	 * Generate a display name for the given top-level or {@code static} nested test class.

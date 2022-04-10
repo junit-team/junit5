@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,8 +10,7 @@
 
 package org.junit.jupiter.engine;
 
-import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,7 +36,7 @@ class BeforeAllAndAfterAllComposedAnnotationTests extends AbstractJupiterTestEng
 	void beforeAllAndAfterAllAsMetaAnnotations() {
 		executeTestsForClass(TestCase.class).testEvents().assertStatistics(stats -> stats.started(1).succeeded(1));
 
-		assertEquals(asList("beforeAll", "test", "afterAll"), methodsInvoked);
+		assertThat(methodsInvoked).containsExactly("beforeAll", "test", "afterAll");
 	}
 
 	static class TestCase {

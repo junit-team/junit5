@@ -8,6 +8,7 @@ description = "JUnit Platform Console Standalone"
 dependencies {
 	shadowed(projects.junitPlatformReporting)
 	shadowed(projects.junitPlatformConsole)
+	shadowed(projects.junitPlatformSuite)
 	shadowed(projects.junitJupiterEngine)
 	shadowed(projects.junitJupiterParams)
 	shadowed(projects.junitVintageEngine)
@@ -26,14 +27,12 @@ tasks {
 		}
 	}
 	val shadowedArtifactsFile by registering {
-		val configurations = shadowJar.get().configurations
-		inputs.files(configurations).withNormalizer(ClasspathNormalizer::class)
+		inputs.files(configurations.shadowed).withNormalizer(ClasspathNormalizer::class)
 		val outputFile = layout.buildDirectory.file("shadowed-artifacts")
 		outputs.file(outputFile)
 		doFirst {
 			outputFile.get().asFile.printWriter().use { out ->
-				configurations
-					.flatMap { it.resolvedConfiguration.resolvedArtifacts }
+				configurations.shadowed.get().resolvedConfiguration.resolvedArtifacts
 					.map { it.moduleVersion.id }
 					.map { "${it.group}:${it.name}:${it.version}" }
 					.sorted()

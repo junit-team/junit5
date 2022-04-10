@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -38,6 +39,10 @@ class ListenerRegistry<T> {
 
 	static ListenerRegistry<TestExecutionListener> forTestExecutionListeners() {
 		return create(CompositeTestExecutionListener::new);
+	}
+
+	static ListenerRegistry<EngineExecutionListener> forEngineExecutionListeners() {
+		return create(CompositeEngineExecutionListener::new);
 	}
 
 	static <T> ListenerRegistry<T> create(Function<List<T>, T> compositeListenerFactory) {

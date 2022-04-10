@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -3122,7 +3122,7 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code executable} does
 	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
 	 *
-	 * <h3>Usage Note</h3>
+	 * <h4>Usage Note</h4>
 	 * <p>Although any exception thrown from a test method will cause the test
 	 * to <em>fail</em>, there are certain use cases where it can be beneficial
 	 * to explicitly assert that an exception is not thrown for a given code
@@ -3139,7 +3139,7 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code executable} does
 	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
 	 *
-	 * <h3>Usage Note</h3>
+	 * <h4>Usage Note</h4>
 	 * <p>Although any exception thrown from a test method will cause the test
 	 * to <em>fail</em>, there are certain use cases where it can be beneficial
 	 * to explicitly assert that an exception is not thrown for a given code
@@ -3158,7 +3158,7 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code executable} does
 	 * <em>not</em> throw any kind of {@linkplain Throwable exception}.
 	 *
-	 * <h3>Usage Note</h3>
+	 * <h4>Usage Note</h4>
 	 * <p>Although any exception thrown from a test method will cause the test
 	 * to <em>fail</em>, there are certain use cases where it can be beneficial
 	 * to explicitly assert that an exception is not thrown for a given code
@@ -3182,7 +3182,7 @@ public class Assertions {
 	 *
 	 * <p>If the assertion passes, the {@code supplier}'s result will be returned.
 	 *
-	 * <h3>Usage Note</h3>
+	 * <h4>Usage Note</h4>
 	 * <p>Although any exception thrown from a test method will cause the test
 	 * to <em>fail</em>, there are certain use cases where it can be beneficial
 	 * to explicitly assert that an exception is not thrown for a given code
@@ -3203,7 +3203,7 @@ public class Assertions {
 	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
-	 * <h3>Usage Note</h3>
+	 * <h4>Usage Note</h4>
 	 * <p>Although any exception thrown from a test method will cause the test
 	 * to <em>fail</em>, there are certain use cases where it can be beneficial
 	 * to explicitly assert that an exception is not thrown for a given code
@@ -3225,7 +3225,7 @@ public class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the
 	 * supplied {@code messageSupplier}.
 	 *
-	 * <h3>Usage Note</h3>
+	 * <h4>Usage Note</h4>
 	 * <p>Although any exception thrown from a test method will cause the test
 	 * to <em>fail</em>, there are certain use cases where it can be beneficial
 	 * to explicitly assert that an exception is not thrown for a given code

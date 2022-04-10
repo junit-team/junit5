@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -37,14 +37,12 @@ public class Request {
 	private static final Path TOOLS = Paths.get("build", "test-tools");
 	public static final Path WORKSPACE = Paths.get("build", "test-workspace");
 
-	private static final String MAVEN_VERSION = "3.6.1";
-
 	public static Builder builder() {
 		return new Builder();
 	}
 
 	public static Maven maven() {
-		return Maven.install(MAVEN_VERSION, TOOLS);
+		return new Maven(Path.of(System.getProperty("mavenDistribution")));
 	}
 
 	private Tool tool;

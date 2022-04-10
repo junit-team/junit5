@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -34,6 +34,12 @@ import org.apiguardian.api.API;
  * inherited from a parent class, or declared on a test interface implemented by
  * a test class, test methods will be ordered using a default algorithm that is
  * deterministic but intentionally nonobvious.
+ *
+ * <p>As an alternative to {@code @TestMethodOrder}, a global {@link MethodOrderer}
+ * can be configured for the entire test suite via the
+ * {@value MethodOrderer#DEFAULT_ORDER_PROPERTY_NAME} configuration parameter. See
+ * the User Guide for details. Note, however, that a {@code @TestClassOrder}
+ * declaration always overrides a global {@code ClassOrderer}.
  *
  * <h4>Example Usage</h4>
  *

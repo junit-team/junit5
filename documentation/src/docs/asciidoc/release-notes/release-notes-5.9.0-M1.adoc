@@ -19,37 +19,56 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* `ConfigurationParameters.size()` has been deprecated.
+* `ConfigurationParameters.size()` has been deprecated in favor of the new `keySet()`
+  method.
 
 ==== New Features and Improvements
 
-* `ConfigurationParameters` has now a `keySet()` method allowing to retrieve
-  all configuration parameter keys.
+* `ConfigurationParameters` has a new `keySet()` method which allows you to retrieve all
+  configuration parameter keys.
 * New `IterationSelector` for selecting a subset of a test's or container's iterations.
 * `ParallelExecutionConfiguration` allows configuring the "saturate" predicate of the
   `ForkJoinPool` used for parallel test execution.
-* JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at resolution time a fully running set of dependencies are calculated avoiding the need for these to be manually specified.
-
+* JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
+  resolution time a fully running set of dependencies is calculated, avoiding the need for
+  these to be manually specified.
+* JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.
+* New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if
+  no tests were discovered.
+* Console output color can now be customized. The option `--single-color` will apply a
+  built-in monochrome style, while `--color-palette` will accept a properties file. See
+  the <<../user-guide/index.adoc#running-tests-console-launcher-color-customization, User
+  Guide>> for details.
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
 
-* ❓
+* Only retry deleting directories when cleaning up `@TempDir` once.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `@TempDir` fields are no longer allowed to be declared as `final`.
+  - This improves diagnostics for failures resulting from a user-declared `static final`
+    `@TempDir` field by throwing an exception with an informative error message.
 
 ==== New Features and Improvements
 
-* Add support for `IterationSelector` to select a subset of the invocations of
-  parameterized or dynamic tests.
-* Add support for `MATCH_NONE` mode in `EnumSource` that selects only those enum constants
-  whose names match none of the supplied patterns.
-* A new extension `TestInstancePreConstructCallback` called prior to a test instance construction
-  (symmetric extension to `TestInstancePreDestroyCallback`).
+* `@TempDir` now includes a cleanup mode attribute for preventing a temporary directory
+  from being deleted after a test. The default cleanup mode can be configured via a
+  configuration parameter.
+* Support for FreeBSD and OpenBSD operating systems in `@EnabledOnOs` and `@DisabledOnOs`.
+* New `MATCH_NONE` mode for `@EnumSource` that selects only those enum constants whose
+  names match none of the supplied patterns.
+* New `TestInstancePreConstructCallback` extension API that is called prior to test
+  instance construction – symmetric to the existing `TestInstancePreDestroyCallback`
+  extension API.
+* Extensions can now leverage registered `ParameterResolvers` when invoking methods and
+  constructors via the new `ExecutableInvoker` available in the `ExtensionContext`.
+* A subset of the invocations of parameterized or dynamic tests can now be selected via
+  the new `IterationSelector` discovery selector when launching the JUnit Platform.
+* `JAVA_19` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]
@@ -65,6 +84,4 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* `@TempDir` now includes a cleanup mode attribute for preventing a temporary directory
-  from being deleted after a test. The default cleanup mode can be configured via a
-  configuration parameter.
+* ❓

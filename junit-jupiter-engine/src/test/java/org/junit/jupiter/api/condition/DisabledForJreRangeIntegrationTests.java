@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -22,13 +22,12 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava16;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava17;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava18;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava19;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
-import static org.junit.jupiter.api.condition.JRE.JAVA_10;
-import static org.junit.jupiter.api.condition.JRE.JAVA_11;
-import static org.junit.jupiter.api.condition.JRE.JAVA_12;
-import static org.junit.jupiter.api.condition.JRE.JAVA_8;
-import static org.junit.jupiter.api.condition.JRE.JAVA_9;
+import static org.junit.jupiter.api.condition.JRE.JAVA_17;
+import static org.junit.jupiter.api.condition.JRE.JAVA_18;
+import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
 
 import org.junit.jupiter.api.Disabled;
@@ -53,41 +52,36 @@ class DisabledForJreRangeIntegrationTests {
 	}
 
 	@Test
-	@DisabledForJreRange(min = JAVA_8, max = JAVA_8)
-	void java8() {
-		assertFalse(onJava8());
+	@DisabledForJreRange(min = JAVA_17, max = JAVA_17)
+	void java17() {
+		assertFalse(onJava17());
 	}
 
 	@Test
-	@DisabledForJreRange(min = JAVA_8, max = JAVA_11, disabledReason = "Disabled on some JRE")
-	void java8to11() {
-		assertFalse(onJava8() || onJava9() || onJava10() || onJava11());
+	@DisabledForJreRange(min = JAVA_18, max = JAVA_19, disabledReason = "Disabled on some JRE")
+	void java18to19() {
+		assertFalse(onJava18() || onJava19());
 	}
 
 	@Test
-	@DisabledForJreRange(min = JAVA_9, max = JAVA_12)
-	void java9to12() {
-		assertFalse(onJava9() || onJava10() || onJava11() || onJava12());
+	@DisabledForJreRange(max = JAVA_18)
+	void javaMax18() {
+		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
+				|| onJava15() || onJava16() || onJava17() || onJava18());
 	}
 
 	@Test
-	@DisabledForJreRange(max = JAVA_12)
-	void javaMax12() {
-		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12());
-	}
-
-	@Test
-	@DisabledForJreRange(min = JAVA_10)
-	void javaMin10() {
-		assertFalse(onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
-		assertTrue(onJava8() || onJava9());
+	@DisabledForJreRange(min = JAVA_18)
+	void javaMin18() {
+		assertFalse(onJava18() || onJava19());
+		assertTrue(onJava17());
 	}
 
 	@Test
 	@DisabledForJreRange(min = OTHER, max = OTHER)
 	void other() {
 		assertTrue(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
-				|| onJava15() || onJava16() || onJava17() || onJava18());
+				|| onJava15() || onJava16() || onJava17() || onJava18() || onJava19());
 	}
 
 }

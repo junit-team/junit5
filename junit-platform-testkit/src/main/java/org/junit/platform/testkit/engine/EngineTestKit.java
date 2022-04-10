@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -73,7 +73,7 @@ public final class EngineTestKit {
 	 * mechanism, analogous to the manner in which test engines are loaded in
 	 * the JUnit Platform Launcher API.
 	 *
-	 * <h3>Example Usage</h3>
+	 * <h4>Example Usage</h4>
 	 *
 	 * <pre class="code">
 	 * EngineTestKit
@@ -102,7 +102,7 @@ public final class EngineTestKit {
 	/**
 	 * Create an execution {@link Builder} for the supplied {@link TestEngine}.
 	 *
-	 * <h3>Example Usage</h3>
+	 * <h4>Example Usage</h4>
 	 *
 	 * <pre class="code">
 	 * EngineTestKit

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -29,12 +29,14 @@ import org.apiguardian.api.API;
  *
  * <h3>Method Signatures</h3>
  *
- * <p>{@code @BeforeAll} methods must have a {@code void} return type,
- * must not be {@code private}, and must be {@code static} by default.
- * Consequently, {@code @BeforeAll} methods are not
- * supported in {@link Nested @Nested} test classes or as <em>interface default
- * methods</em> unless the test class is annotated with
- * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}. {@code @BeforeAll}
+ * <p>{@code @BeforeAll} methods must have a {@code void} return type, must not
+ * be {@code private}, and must be {@code static} by default. Consequently,
+ * {@code @BeforeAll} methods are not supported in {@link Nested @Nested} test
+ * classes or as <em>interface default methods</em> unless the test class is
+ * annotated with {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
+ * However, beginning with Java 16 {@code @BeforeAll} methods may be declared as
+ * {@code static} in {@link Nested @Nested} test classes, and the
+ * {@code Lifecycle.PER_CLASS} restriction no longer applies. {@code @BeforeAll}
  * methods may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *

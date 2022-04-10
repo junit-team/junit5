@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,9 +15,12 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqu
 import static org.junit.platform.suite.engine.SuiteEngineDescriptor.ENGINE_ID;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
+import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
@@ -34,6 +37,10 @@ import org.junit.platform.suite.engine.testcases.MultipleTestsTestCase;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 import org.junit.platform.suite.engine.testsuites.AbstractSuite;
 import org.junit.platform.suite.engine.testsuites.DynamicSuite;
+import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestSuite;
+import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestWithFailIfNoTestFalseSuite;
+import org.junit.platform.suite.engine.testsuites.EmptyTestCaseSuite;
+import org.junit.platform.suite.engine.testsuites.EmptyTestCaseWithFailIfNoTestFalseSuite;
 import org.junit.platform.suite.engine.testsuites.MultipleSuite;
 import org.junit.platform.suite.engine.testsuites.NestedSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
@@ -273,6 +280,54 @@ class SuiteEngineTests {
 				.testEvents()
 				.assertThatEvents()
 				.isEmpty();
+		// @formatter:on
+	}
+
+	@Test
+	void emptySuiteFails() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(EmptyTestCaseSuite.class))
+				.execute()
+				.containerEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(container(EmptyTestCaseSuite.class), finishedWithFailure(instanceOf(NoTestsDiscoveredException.class))));
+		// @formatter:on
+	}
+
+	@Test
+	void emptySuitePassesWhenFailIfNoTestIsFalse() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(EmptyTestCaseWithFailIfNoTestFalseSuite.class))
+				.execute()
+				.containerEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(engine(), finishedSuccessfully()));
+		// @formatter:on
+	}
+
+	@Test
+	void emptyDynamicSuiteFails() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(EmptyDynamicTestSuite.class))
+				.execute()
+				.containerEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(container(EmptyDynamicTestSuite.class), finishedWithFailure(instanceOf(NoTestsDiscoveredException.class))));
+		// @formatter:on
+	}
+
+	@Test
+	void emptyDynamicSuitePassesWhenFailIfNoTestIsFalse() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(EmptyDynamicTestWithFailIfNoTestFalseSuite.class))
+				.execute()
+				.allEvents()
+				.assertThatEvents()
+				.haveAtLeastOne(event(container(EmptyDynamicTestWithFailIfNoTestFalseSuite.class), finishedSuccessfully()));
 		// @formatter:on
 	}
 

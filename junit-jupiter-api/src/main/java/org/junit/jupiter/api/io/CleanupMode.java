@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,21 +15,23 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 /**
- * Enumeration of cleanup modes for a {@code TempDir}.
+ * Enumeration of cleanup modes for {@link TempDir @TempDir}.
  *
  * <p>When a test with a temporary directory completes, it might be useful in
- * some cases to be able to view the contents of the directory resulting from
- * the test. {@code CleanupMode} allows control of how a {@code TempDir}
+ * some cases to be able to view the contents of the temporary directory used by
+ * the test. {@code CleanupMode} allows you to control how a {@code TempDir}
  * is cleaned up.
  *
- * @since 5.4
+ * @since 5.9
  * @see TempDir
  */
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = EXPERIMENTAL, since = "5.9")
 public enum CleanupMode {
 
 	/**
-	 * Defer to the configured cleanup mode.
+	 * Use the default cleanup mode.
+	 *
+	 * @see TempDir#DEFAULT_CLEANUP_MODE_PROPERTY_NAME
 	 */
 	DEFAULT,
 
@@ -39,12 +41,13 @@ public enum CleanupMode {
 	ALWAYS,
 
 	/**
-	 * Don't clean up a temporary directory after the test has completed.
-	 */
-	NEVER,
-
-	/**
 	 * Only clean up a temporary directory if the test completed successfully.
 	 */
-	ON_SUCCESS
+	ON_SUCCESS,
+
+	/**
+	 * Never clean up a temporary directory after the test has completed.
+	 */
+	NEVER;
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -28,6 +28,12 @@ import org.apiguardian.api.API;
  * <p>This annotation is <em>inherited</em> from superclasses and implemented
  * interfaces. It is also inherited from {@linkplain Class#getEnclosingClass()
  * enclosing classes} for {@link Nested @Nested} test classes.
+ *
+ * <p>As an alternative to {@code @DisplayNameGeneration}, a global
+ * {@link DisplayNameGenerator} can be configured for the entire test suite via
+ * the {@value DisplayNameGenerator#DEFAULT_GENERATOR_PROPERTY_NAME} configuration parameter. See
+ * the User Guide for details. Note, however, that a {@code @DisplayNameGeneration}
+ * declaration always overrides a global {@code DisplayNameGenerator}.
  *
  * @since 5.4
  * @see DisplayName

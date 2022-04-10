@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -134,7 +134,7 @@ public interface ConfigurationParameters {
 	/**
 	 * Get the number of configuration parameters stored directly in this
 	 * {@code ConfigurationParameters}.
-	 * @deprecated Use {@link #keySet()}.
+	 * @deprecated as of JUnit Platform 1.9 in favor of {@link #keySet()}
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.9")
@@ -144,7 +144,7 @@ public interface ConfigurationParameters {
 	 * Get the keys of all configuration parameters stored in this
 	 * {@code ConfigurationParameters}.
 	 *
-	 * @return a set of keys contained in {@code ConfigurationParameters}
+	 * @return the set of keys contained in this {@code ConfigurationParameters}
 	 */
 	@API(status = STABLE, since = "1.9")
 	Set<String> keySet();

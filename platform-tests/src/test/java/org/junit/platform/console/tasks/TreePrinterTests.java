@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -50,7 +50,7 @@ class TreePrinterTests {
 
 	@Test
 	void emptyTree() {
-		new TreePrinter(out, Theme.UNICODE, true).print(new TreeNode("<root>"));
+		new TreePrinter(out, Theme.UNICODE, ColorPalette.NONE).print(new TreeNode("<root>"));
 		assertIterableEquals(List.of("╷"), actual());
 	}
 
@@ -61,7 +61,7 @@ class TreePrinterTests {
 		root.addChild(new TreeNode(identifier("e-1", "engine one")).setResult(successful()));
 		root.addChild(new TreeNode(identifier("e-2", "engine two")).setResult(failed(null)));
 		root.addChild(new TreeNode(identifier("e-3", "engine three")).setResult(aborted(null)));
-		new TreePrinter(out, Theme.UNICODE, true).print(root);
+		new TreePrinter(out, Theme.UNICODE, ColorPalette.NONE).print(root);
 		assertIterableEquals( //
 			List.of( //
 				"╷", //
@@ -77,7 +77,7 @@ class TreePrinterTests {
 	void printNodeHandlesNullMessageThrowableGracefully() {
 		var result = TestExecutionResult.failed(new NullPointerException());
 		var node = new TreeNode(identifier("NPE", "test()")).setResult(result);
-		new TreePrinter(out, Theme.ASCII, true).print(node);
+		new TreePrinter(out, Theme.ASCII, ColorPalette.NONE).print(node);
 		assertLinesMatch(List.of(".", "+-- test() [X] java.lang.NullPointerException"), actual());
 	}
 
@@ -101,7 +101,7 @@ class TreePrinterTests {
 		m2.addReportEntry(ReportEntry.from("key", "m-2"));
 		c1.addChild(m2);
 
-		new TreePrinter(out, Theme.UNICODE, true).print(root);
+		new TreePrinter(out, Theme.UNICODE, ColorPalette.NONE).print(root);
 		assertLinesMatch(List.of( //
 			"╷", //
 			"└─ engine one ✔", //

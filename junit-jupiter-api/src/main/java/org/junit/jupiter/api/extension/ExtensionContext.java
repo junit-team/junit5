@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2022 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -392,6 +392,15 @@ public interface ExtensionContext {
 	 */
 	@API(status = STABLE, since = "5.8.1")
 	ExecutionMode getExecutionMode();
+
+	/**
+	 * Get an {@link ExecutableInvoker} to invoke methods and constructors
+	 * with support for dynamic resolution of parameters.
+	 *
+	 * @since 5.9
+	 */
+	@API(status = EXPERIMENTAL, since = "5.9")
+	ExecutableInvoker getExecutableInvoker();
 
 	/**
 	 * {@code Store} provides methods for extensions to save and retrieve data.
