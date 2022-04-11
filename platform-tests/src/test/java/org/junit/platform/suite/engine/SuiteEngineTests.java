@@ -10,9 +10,9 @@
 
 package org.junit.platform.suite.engine;
 
-import static org.junit.platform.engine.FilterResult.includedIf;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.suite.engine.SuiteEngineDescriptor.ENGINE_ID;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -28,7 +28,6 @@ import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.engine.FilterResult;
-import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -341,7 +340,7 @@ class SuiteEngineTests {
 		// @formatter:off
 		EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectClass(MultiEngineSuite.class))
-				.filters((PostDiscoveryFilter) object -> includedIf(!object.getTags().contains(TestTag.create("excluded"))))
+				.filters(excludeTags("excluded"))
 				.execute()
 				.allEvents()
 				.debug()
