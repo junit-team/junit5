@@ -35,10 +35,12 @@ on GitHub.
 * JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.
 * New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if
   no tests were discovered.
-* Console output color can now be customized. The option `--single-color` will apply a
-  built-in monochrome style, while `--color-palette` will accept a properties file. See
-  the <<../user-guide/index.adoc#running-tests-console-launcher-color-customization, User
-  Guide>> for details.
+* `ConsoleLauncher`'s output color can now be customized. The option `--single-color` will
+  apply a built-in monochrome style, while `--color-palette` will accept a properties file.
+  See the <<../user-guide/index.adoc#running-tests-console-launcher-color-customization,
+  User Guide>> for details.
+* `ConsoleLauncher`'s default theme is now determined by the charset reported by the system
+  console on Java 17 and later.
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
 === JUnit Jupiter
