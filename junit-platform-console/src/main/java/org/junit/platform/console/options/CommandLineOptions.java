@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ConsoleUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;

@@ -8,11 +8,10 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.util;
+package org.junit.platform.console.options;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.io.Console;
 import java.nio.charset.Charset;
 
 import org.apiguardian.api.API;
@@ -36,7 +35,6 @@ public class ConsoleUtils {
 	 * {@return the charset of the console}
 	 */
 	public static Charset charset() {
-		Console console = System.console();
-		return console != null ? console.charset() : Charset.defaultCharset();
+		return Charset.defaultCharset();
 	}
 }
