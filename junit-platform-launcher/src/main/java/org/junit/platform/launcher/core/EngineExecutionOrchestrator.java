@@ -69,10 +69,7 @@ public class EngineExecutionOrchestrator {
 		Preconditions.notNull(engineExecutionListener, "engineExecutionListener must not be null");
 		Preconditions.notNull(testExecutionListener, "testExecutionListener must not be null");
 
-		// #2838: The discovery result from a suite may have been filtered by
-		// post discovery filters from the launcher. The discovery result should
-		// be pruned accordingly
-		InternalTestPlan internalTestPlan = InternalTestPlan.from(discoveryResult.withPrunedEngines());
+		InternalTestPlan internalTestPlan = InternalTestPlan.from(discoveryResult);
 		execute(internalTestPlan, engineExecutionListener, testExecutionListener);
 	}
 

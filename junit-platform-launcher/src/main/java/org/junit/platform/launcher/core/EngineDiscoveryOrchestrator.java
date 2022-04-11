@@ -96,7 +96,7 @@ public class EngineDiscoveryOrchestrator {
 	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase, UniqueId parentId) {
 		Map<TestEngine, TestDescriptor> testEngines = discover(request, phase, parentId::appendEngine);
 		LauncherDiscoveryResult result = new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters());
-		return result.withPrunedEngines();
+		return result.withRetainedEngines(TestDescriptor::containsTests);
 	}
 
 	private Map<TestEngine, TestDescriptor> discover(LauncherDiscoveryRequest request, Phase phase,
