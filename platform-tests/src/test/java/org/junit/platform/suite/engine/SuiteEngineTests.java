@@ -347,7 +347,8 @@ class SuiteEngineTests {
 				.debug()
 				.assertThatEvents()
 				.haveExactly(1, event(test(JUnit4TestsTestCase.class.getName()), finishedSuccessfully()))
-				.doNotHave(event(test(TaggedTestTestCase.class.getName())));
+				.doNotHave(test(TaggedTestTestCase.class.getName()))
+				.doNotHave(container("junit-jupiter"));
 		// @formatter:on
 	}
 
