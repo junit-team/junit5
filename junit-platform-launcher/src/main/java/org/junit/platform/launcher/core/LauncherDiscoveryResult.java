@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.Collections.unmodifiableMap;
+import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Collection;
@@ -54,6 +55,23 @@ public class LauncherDiscoveryResult {
 
 	Collection<TestDescriptor> getEngineTestDescriptors() {
 		return this.testEngineDescriptors.values();
+	}
+
+	public LauncherDiscoveryResult withPrunedEngines() {
+		Map<TestEngine, TestDescriptor> prunedTestEngineDescriptors = pruneEngines();
+		if (prunedTestEngineDescriptors.size() < testEngineDescriptors.size()) {
+			return new LauncherDiscoveryResult(prunedTestEngineDescriptors, configurationParameters);
+		}
+		return this;
+	}
+
+	private Map<TestEngine, TestDescriptor> pruneEngines() {
+		// @formatter:off
+		return testEngineDescriptors.entrySet()
+				.stream()
+				.filter(entry -> TestDescriptor.containsTests(entry.getValue()))
+				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+		// @formatter:on
 	}
 
 }

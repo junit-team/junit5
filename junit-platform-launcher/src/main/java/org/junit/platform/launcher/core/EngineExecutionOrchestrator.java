@@ -10,12 +10,9 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.launcher.core.ListenerRegistry.forEngineExecutionListeners;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -75,17 +72,8 @@ public class EngineExecutionOrchestrator {
 		// #2838: The discovery result from a suite may have been filtered by
 		// post discovery filters from the launcher. The discovery result should
 		// be pruned accordingly
-		InternalTestPlan internalTestPlan = InternalTestPlan.from(pruneEngines(discoveryResult));
+		InternalTestPlan internalTestPlan = InternalTestPlan.from(discoveryResult.withPrunedEngines());
 		execute(internalTestPlan, engineExecutionListener, testExecutionListener);
-	}
-
-	private LauncherDiscoveryResult pruneEngines(LauncherDiscoveryResult discoveryResult) {
-		// @formatter:off
-		Map<TestEngine, TestDescriptor> testEngineDescriptors = discoveryResult.getTestEngines().stream()
-				.filter(engine -> TestDescriptor.containsTests(discoveryResult.getEngineTestDescriptor(engine)))
-				.collect(toMap(identity(), discoveryResult::getEngineTestDescriptor));
-		// @formatter:on
-		return new LauncherDiscoveryResult(testEngineDescriptors, discoveryResult.getConfigurationParameters());
 	}
 
 	private void execute(InternalTestPlan internalTestPlan, EngineExecutionListener parentEngineExecutionListener,

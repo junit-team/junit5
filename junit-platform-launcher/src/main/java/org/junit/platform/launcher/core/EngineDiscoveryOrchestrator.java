@@ -11,7 +11,6 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
 
@@ -21,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -96,8 +94,9 @@ public class EngineDiscoveryOrchestrator {
 	 * will not emit start or emit events for engines without tests.
 	 */
 	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase, UniqueId parentId) {
-		Map<TestEngine, TestDescriptor> result = discover(request, phase, parentId::appendEngine);
-		return new LauncherDiscoveryResult(pruneEngines(result), request.getConfigurationParameters());
+		Map<TestEngine, TestDescriptor> testEngines = discover(request, phase, parentId::appendEngine);
+		LauncherDiscoveryResult result = new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters());
+		return result.withPrunedEngines();
 	}
 
 	private Map<TestEngine, TestDescriptor> discover(LauncherDiscoveryRequest request, Phase phase,
@@ -200,15 +199,6 @@ public class EngineDiscoveryOrchestrator {
 			logger.debug(
 				() -> String.format("The following containers and tests were %s: %s", exclusionReason, displayNames));
 		});
-	}
-
-	private Map<TestEngine, TestDescriptor> pruneEngines(Map<TestEngine, TestDescriptor> result) {
-		// @formatter:off
-		return result.entrySet()
-				.stream()
-				.filter(entry -> TestDescriptor.containsTests(entry.getValue()))
-				.collect(toMap(Entry::getKey, Entry::getValue));
-		// @formatter:on
 	}
 
 	/**
