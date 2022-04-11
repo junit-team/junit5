@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 class ConsoleUtilsTests {
 
 	@Test
-	void consolesCharsetIsEither() {
+	void consoleCharsetReportedByConsoleUtilsIsEitherNativeCharsetOrDefaultCharset() {
 		var console = System.console();
 		var expected = console != null ? console.charset() : Charset.defaultCharset();
 		assertEquals(expected, ConsoleUtils.charset());
