@@ -37,6 +37,8 @@ on GitHub.
   built-in monochrome style, while `--color-palette` will accept a properties file. See
   the <<../user-guide/index.adoc#running-tests-console-launcher-color-customization, User
   Guide>> for details.
+* Console's default theme is now determined by the charset reported by the system console
+  on Java 17 and later.
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
 === JUnit Jupiter
