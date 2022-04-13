@@ -13,7 +13,7 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.math.BigDecimal;
-
+import java.util.Locale;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
