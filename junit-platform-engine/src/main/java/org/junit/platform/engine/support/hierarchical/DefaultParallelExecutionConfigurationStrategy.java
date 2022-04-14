@@ -135,7 +135,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	static ParallelExecutionConfigurationStrategy getStrategy(ConfigurationParameters configurationParameters) {
 		return valueOf(
-			configurationParameters.get(CONFIG_STRATEGY_PROPERTY_NAME).orElse("dynamic").toUpperCase(Locale.ENGLISH));
+			configurationParameters.get(CONFIG_STRATEGY_PROPERTY_NAME).orElse("dynamic").toUpperCase(Locale.ROOT));
 	}
 
 }
