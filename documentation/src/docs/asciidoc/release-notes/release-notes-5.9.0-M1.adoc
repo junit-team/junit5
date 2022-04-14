@@ -17,7 +17,7 @@ on GitHub.
 
 * Since Turkish language has special characters as 'ı' and 'İ', the uppercase conversion on
   `DefaultParallelExecutionConfigurationStrategy#getStrategy` was causing all test to finish
-  with exit code -1. That has been fixed by using English locale instead of default one.
+  with exit code -1. That has been fixed by using Root locale instead of default one.
 
 ==== Deprecations and Breaking Changes
 
