@@ -259,6 +259,17 @@ class MethodArgumentsProviderTests {
 			"Could not find method [nonExistentMethod] in class [" + ExternalFactoryMethods.class.getName() + "]");
 	}
 
+	@Test
+	void throwsExceptionWhenFullyQualifiedMethodNameIsInvalid() {
+		var exception = assertThrows(JUnitException.class,
+			() -> provideArguments(ExternalFactoryMethods.class.getName() + ".wrongSyntax").toArray());
+
+		assertThat(exception.getMessage()).isEqualTo(
+			"[" + ExternalFactoryMethods.class.getName() + ".wrongSyntax] is not a valid fully qualified method name: "
+					+ "it must start with a fully qualified class name followed by a '#' and then the method name, "
+					+ "optionally followed by a parameter list enclosed in parentheses.");
+	}
+
 	@Nested
 	class PrimitiveArrays {
 
