@@ -1273,7 +1273,7 @@ or external classes.
 
 Factory methods within the test class must be `static` unless the test class is annotated
 with `@TestInstance(Lifecycle.PER_CLASS)`; whereas, factory methods in external classes
-must always be `static`. In addition, such factory methods must not accept any arguments.
+must always be `static`.
 
 Each factory method must generate a _stream_ of _arguments_, and each set of arguments
 within the stream will be provided as the physical arguments for individual invocations
@@ -1332,6 +1332,18 @@ package example;
 
 include::{testDir}/example/ExternalMethodSourceDemo.java[tags=external_MethodSource_example]
 ----
+
+Factory methods can declare parameters, which will be provided by registered implementations
+of `ParameterResolver`. In the following example, the factory method is referenced by its
+name since there's only one such method in the test class. If there are several methods with
+the same name, the factory method needs to be referenced by its fully qualified method name
+(e.g., `@MethodSource("example.MyTests#factoryMethodWithArguments(java.lang.String)")`).
+
+[source,java,indent=0]
+----
+include::{testDir}/example/MethodSourceParameterResolutionTestDemo.java[tags=parameter_resolution_MethodSource_example]
+----
+
 
 [[writing-tests-parameterized-tests-sources-CsvSource]]
 ===== @CsvSource

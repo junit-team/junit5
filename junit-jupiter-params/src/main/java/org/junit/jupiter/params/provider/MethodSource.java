@@ -87,8 +87,10 @@ import org.junit.jupiter.params.ParameterizedTest;
  * <p>Factory methods within the test class must be {@code static} unless the
  * {@link org.junit.jupiter.api.TestInstance.Lifecycle#PER_CLASS PER_CLASS}
  * test instance lifecycle mode is used; whereas, factory methods in external
- * classes must always be {@code static}. In any case, factory methods must not
- * declare any parameters.
+ * classes must always be {@code static}.
+ *
+ * <p>Factory methods can declare parameters,which will be provided by registered
+ * implementations of {@link org.junit.jupiter.api.extension.ParameterResolver}.
  *
  * @since 5.0
  * @see Arguments
