@@ -343,7 +343,6 @@ class SuiteEngineTests {
 				.filters(excludeTags("excluded"))
 				.execute()
 				.allEvents()
-				.debug()
 				.assertThatEvents()
 				.haveExactly(1, event(test(JUnit4TestsTestCase.class.getName()), finishedSuccessfully()))
 				.doNotHave(test(TaggedTestTestCase.class.getName()))
