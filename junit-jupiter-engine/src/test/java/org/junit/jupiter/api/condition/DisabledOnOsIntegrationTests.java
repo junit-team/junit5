@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onAix;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onArchitecture;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onFreebsd;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onLinux;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onMac;
@@ -116,6 +117,17 @@ class DisabledOnOsIntegrationTests {
 		assertTrue(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd() || onSolaris() || onWindows());
 	}
 
+	@Test
+	@DisabledOnOs(architectures = "x86_64")
+	void architectureX86_64() {
+		assertFalse(onArchitecture("x_86_64"));
+	}
+
+	@Test
+	@DisabledOnOs(architectures = "aarch64")
+	void architectureAarch64() {
+		assertFalse(onArchitecture("aarch64"));
+	}
 	// -------------------------------------------------------------------------
 
 	@Target(ElementType.METHOD)

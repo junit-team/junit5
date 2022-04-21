@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.condition.EnabledOnOsCondition.ENABLED_ON_CU
 import java.util.Arrays;
 
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@link ExecutionCondition} for {@link DisabledOnOs @DisabledOnOs}.
@@ -32,9 +31,21 @@ class DisabledOnOsCondition extends BooleanExecutionCondition<DisabledOnOs> {
 
 	@Override
 	boolean isEnabled(DisabledOnOs annotation) {
+		return isEnabledBasedOnOs(annotation) && isEnabledBasedOnArchitecture(annotation);
+	}
+
+	private boolean isEnabledBasedOnArchitecture(DisabledOnOs annotation) {
+		String arch = getArchitecture();
+		return Arrays.stream(annotation.architectures()).noneMatch(arch::equalsIgnoreCase);
+	}
+
+	private boolean isEnabledBasedOnOs(DisabledOnOs annotation) {
 		OS[] operatingSystems = annotation.value();
-		Preconditions.condition(operatingSystems.length > 0, "You must declare at least one OS in @DisabledOnOs");
 		return Arrays.stream(operatingSystems).noneMatch(OS::isCurrentOs);
+	}
+
+	protected String getArchitecture() {
+		return System.getProperty("os.arch");
 	}
 
 }

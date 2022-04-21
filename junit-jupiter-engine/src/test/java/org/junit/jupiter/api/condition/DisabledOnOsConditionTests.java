@@ -10,9 +10,8 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onAix;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onArchitecture;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onFreebsd;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onLinux;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onMac;
@@ -22,7 +21,6 @@ import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onWind
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link DisabledOnOsCondition}.
@@ -35,6 +33,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 
 	private static final String OS_NAME = System.getProperty("os.name");
+	private static final String ARCH = System.getProperty("os.arch");
 
 	@Override
 	protected ExecutionCondition getExecutionCondition() {
@@ -61,8 +60,8 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	 */
 	@Test
 	void missingOsDeclaration() {
-		Exception exception = assertThrows(PreconditionViolationException.class, this::evaluateCondition);
-		assertThat(exception).hasMessageContaining("You must declare at least one OS");
+		evaluateCondition();
+		assertEnabled();
 	}
 
 	/**
@@ -72,7 +71,8 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	void disabledOnEveryOs() {
 		evaluateCondition();
 		assertDisabled();
-		assertReasonContains("Disabled on operating system: " + OS_NAME + " ==> Disabled on every OS");
+		assertReasonContains(
+			String.format("Disabled on operating system: %s (%s) ==> Disabled on every OS", OS_NAME, ARCH));
 	}
 
 	/**
@@ -157,14 +157,32 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 			!(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd() || onSolaris() || onWindows()));
 	}
 
+	/**
+	 * @see DisabledOnOsIntegrationTests#architectureX86_64()
+	 */
+	@Test
+	void architectureX86_64() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onArchitecture("x86_64"));
+	}
+
+	/**
+	 * @see DisabledOnOsIntegrationTests#architectureAarch64()
+	 */
+	@Test
+	void architectureAarch64() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onArchitecture("aarch64"));
+	}
+
 	private void assertDisabledOnCurrentOsIf(boolean condition) {
 		if (condition) {
 			assertDisabled();
-			assertReasonContains("Disabled on operating system: " + OS_NAME);
+			assertReasonContains(String.format("Disabled on operating system: %s (%s)", OS_NAME, ARCH));
 		}
 		else {
 			assertEnabled();
-			assertReasonContains("Enabled on operating system: " + OS_NAME);
+			assertReasonContains(String.format("Enabled on operating system: %s (%s)", OS_NAME, ARCH));
 		}
 	}
 

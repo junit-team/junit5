@@ -10,9 +10,8 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onAix;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onArchitecture;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onFreebsd;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onLinux;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onMac;
@@ -22,7 +21,6 @@ import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onWind
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link EnabledOnOsCondition}.
@@ -35,6 +33,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 
 	private static final String OS_NAME = System.getProperty("os.name");
+	private static final String ARCH = System.getProperty("os.arch");
 
 	@Override
 	protected ExecutionCondition getExecutionCondition() {
@@ -61,8 +60,8 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	 */
 	@Test
 	void missingOsDeclaration() {
-		Exception exception = assertThrows(PreconditionViolationException.class, this::evaluateCondition);
-		assertThat(exception).hasMessageContaining("You must declare at least one OS");
+		evaluateCondition();
+		assertDisabled();
 	}
 
 	/**
@@ -157,14 +156,32 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 		assertCustomDisabledReasonIs("Disabled on almost every OS");
 	}
 
+	/**
+	 * @see EnabledOnOsIntegrationTests#architectureX86_64()
+	 */
+	@Test
+	void architectureX86_64() {
+		evaluateCondition();
+		assertEnabledOnCurrentOsIf(onArchitecture("x86_64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#architectureAarch64()
+	 */
+	@Test
+	void architectureAarch64() {
+		evaluateCondition();
+		assertEnabledOnCurrentOsIf(onArchitecture("aarch64"));
+	}
+
 	private void assertEnabledOnCurrentOsIf(boolean condition) {
 		if (condition) {
 			assertEnabled();
-			assertReasonContains("Enabled on operating system: " + OS_NAME);
+			assertReasonContains(String.format("Enabled on operating system: %s (%s)", OS_NAME, ARCH));
 		}
 		else {
 			assertDisabled();
-			assertReasonContains("Disabled on operating system: " + OS_NAME);
+			assertReasonContains(String.format("Disabled on operating system: %s (%s)", OS_NAME, ARCH));
 		}
 	}
 

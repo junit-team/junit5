@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
  */
 class EnabledOnOsIntegrationTests {
 
+	private static final String ARCH = System.getProperty("os.arch").toLowerCase(Locale.ENGLISH);
 	private static final String OS_NAME = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
 
 	@Test
@@ -109,8 +110,24 @@ class EnabledOnOsIntegrationTests {
 		assertFalse(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd() || onSolaris() || onWindows());
 	}
 
+	@Test
+	@EnabledOnOs(architectures = "x86_64")
+	void architectureX86_64() {
+		assertFalse(onArchitecture("x_86_64"));
+	}
+
+	@Test
+	@EnabledOnOs(architectures = "aarch64")
+	void architectureAarch64() {
+		assertFalse(onArchitecture("aarch64"));
+	}
+
 	static boolean onAix() {
 		return OS_NAME.contains("aix");
+	}
+
+	static boolean onArchitecture(String arch) {
+		return ARCH.contains(arch);
 	}
 
 	static boolean onFreebsd() {

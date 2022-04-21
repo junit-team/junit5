@@ -13,7 +13,6 @@ package org.junit.jupiter.api.condition;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@link ExecutionCondition} for {@link EnabledOnOs @EnabledOnOs}.
@@ -23,9 +22,11 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class EnabledOnOsCondition extends BooleanExecutionCondition<EnabledOnOs> {
 
-	static final String ENABLED_ON_CURRENT_OS = "Enabled on operating system: " + System.getProperty("os.name");
+	static final String ENABLED_ON_CURRENT_OS = String.format("Enabled on operating system: %s (%s)",
+		System.getProperty("os.name"), System.getProperty("os.arch"));
 
-	static final String DISABLED_ON_CURRENT_OS = "Disabled on operating system: " + System.getProperty("os.name");
+	static final String DISABLED_ON_CURRENT_OS = String.format("Disabled on operating system: %s (%s)",
+		System.getProperty("os.name"), System.getProperty("os.arch"));
 
 	EnabledOnOsCondition() {
 		super(EnabledOnOs.class, ENABLED_ON_CURRENT_OS, DISABLED_ON_CURRENT_OS, EnabledOnOs::disabledReason);
@@ -33,9 +34,22 @@ class EnabledOnOsCondition extends BooleanExecutionCondition<EnabledOnOs> {
 
 	@Override
 	boolean isEnabled(EnabledOnOs annotation) {
+		return isEnabledBasedOnOs(annotation) || isEnabledBasedOnArchitecture(annotation);
+	}
+
+	private boolean isEnabledBasedOnArchitecture(EnabledOnOs annotation) {
+		String[] architectures = annotation.architectures();
+		String arch = getArchitecture();
+		return Arrays.stream(architectures).anyMatch(arch::equalsIgnoreCase);
+	}
+
+	private boolean isEnabledBasedOnOs(EnabledOnOs annotation) {
 		OS[] operatingSystems = annotation.value();
-		Preconditions.condition(operatingSystems.length > 0, "You must declare at least one OS in @EnabledOnOs");
 		return Arrays.stream(operatingSystems).anyMatch(OS::isCurrentOs);
+	}
+
+	protected String getArchitecture() {
+		return System.getProperty("os.arch");
 	}
 
 }
