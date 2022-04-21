@@ -142,7 +142,11 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	void execute(EngineExecutionListener parentEngineExecutionListener) {
 		parentEngineExecutionListener.executionStarted(this);
-		LauncherDiscoveryResult discoveryResult = this.launcherDiscoveryResult;
+		// #2838: The discovery result from a suite may have been filtered by
+		// post discovery filters from the launcher. The discovery result should
+		// be pruned accordingly
+		LauncherDiscoveryResult discoveryResult = this.launcherDiscoveryResult.withRetainedEngines(
+			getChildren()::contains);
 		TestExecutionSummary summary = launcher.execute(discoveryResult, parentEngineExecutionListener);
 		parentEngineExecutionListener.executionFinished(this, computeTestExecutionResult(summary));
 	}

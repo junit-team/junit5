@@ -15,7 +15,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Fix handling of global post-discovery filters that apply to `@Suite` classes.
 
 ==== Deprecations and Breaking Changes
 
