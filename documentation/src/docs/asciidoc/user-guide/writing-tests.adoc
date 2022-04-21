@@ -402,8 +402,8 @@ the `org.junit.jupiter.api.condition` package.
 [[writing-tests-conditional-execution-os]]
 ==== Operating System Conditions
 
-A container or test may be enabled or disabled on a particular operating system via the
-`{EnabledOnOs}` and `{DisabledOnOs}` annotations.
+A container or test may be enabled or disabled on a particular operating system or architecture
+via the `{EnabledOnOs}` and `{DisabledOnOs}` annotations.
 
 [[writing-tests-conditional-execution-os-demo]]
 [source,java,indent=0]
