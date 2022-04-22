@@ -59,6 +59,18 @@ class StandaloneTests {
 	}
 
 	@Test
+	void listAllObservableEngines() {
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setProject("standalone") //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("--list-engines").build() //
+				.run(false);
+
+		assertEquals(23, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+	}
+
+	@Test
 	@Order(1)
 	void compile() throws Exception {
 		var workspace = Request.WORKSPACE.resolve("standalone");
