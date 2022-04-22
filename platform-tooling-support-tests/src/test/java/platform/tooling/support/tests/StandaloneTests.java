@@ -67,7 +67,17 @@ class StandaloneTests {
 				.addArguments("--list-engines").build() //
 				.run(false);
 
-		assertEquals(23, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+
+		var jupiterVersion = Helper.version("junit-jupiter-engine");
+		var suiteVersion = Helper.version("junit-platform-suite-engine");
+		var vintageVersion = Helper.version("junit-vintage-engine");
+		assertLinesMatch("""
+				junit-jupiter (org.junit.jupiter:junit-jupiter-engine:%s)
+				junit-platform-suite (org.junit.platform:junit-platform-suite-engine:%s)
+				junit-vintage (org.junit.vintage:junit-vintage-engine:%s)
+				""".formatted(jupiterVersion, suiteVersion, vintageVersion).lines(), //
+			result.getOutput("out").lines());
 	}
 
 	@Test
