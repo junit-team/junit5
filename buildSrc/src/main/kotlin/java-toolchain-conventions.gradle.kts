@@ -12,4 +12,10 @@ project.pluginManager.withPlugin("java") {
 	tasks.withType<JavaCompile>().configureEach {
 		outputs.cacheIf { javaLanguageVersion == defaultLanguageVersion }
 	}
+	tasks.withType<GroovyCompile>().configureEach {
+		javaLauncher.set(javaToolchainService.launcherFor {
+			// Groovy does not yet support JDK 19, see https://issues.apache.org/jira/browse/GROOVY-10569
+			languageVersion.set(defaultLanguageVersion)
+		})
+	}
 }

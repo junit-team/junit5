@@ -154,7 +154,6 @@ val compileModule by tasks.registering(JavaCompile::class) {
 			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
 			"-Werror", // Terminates compilation when warnings occur.
 			"--module-version", "${project.version}",
-			"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
 	))
 	options.compilerArgumentProviders.add(ModulePathArgumentProvider())
 	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
@@ -218,7 +217,12 @@ tasks.compileTestJava {
 inner class ModulePathArgumentProvider : CommandLineArgumentProvider, Named {
 	@get:CompileClasspath
 	val modulePath: Provider<Configuration> = configurations.compileClasspath
-	override fun asArguments() = listOf("--module-path", modulePath.get().asPath)
+	override fun asArguments() = listOf(
+									"--module-path",
+									modulePath.get().asPath,
+									"--module-source-path",
+									files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
+								)
 	@Internal
 	override fun getName() = "module-path"
 }
@@ -282,20 +286,14 @@ afterEvaluate {
 	}
 	pluginManager.withPlugin("groovy") {
 		tasks.named<GroovyCompile>("compileGroovy").configure {
-			if (extension.configureRelease) {
-				options.release.set(extension.mainJavaVersion.majorVersion.toInt())
-			} else {
-				sourceCompatibility = extension.mainJavaVersion.majorVersion
-				targetCompatibility = extension.mainJavaVersion.majorVersion
-			}
+			// Groovy compiler does not support the --release flag.
+			sourceCompatibility = extension.mainJavaVersion.majorVersion
+			targetCompatibility = extension.mainJavaVersion.majorVersion
 		}
 		tasks.named<GroovyCompile>("compileTestGroovy").configure {
-			if (extension.configureRelease) {
-				options.release.set(extension.testJavaVersion.majorVersion.toInt())
-			} else {
-				sourceCompatibility = extension.testJavaVersion.majorVersion
-				targetCompatibility = extension.testJavaVersion.majorVersion
-			}
+			// Groovy compiler does not support the --release flag.
+			sourceCompatibility = extension.testJavaVersion.majorVersion
+			targetCompatibility = extension.testJavaVersion.majorVersion
 		}
 	}
 }

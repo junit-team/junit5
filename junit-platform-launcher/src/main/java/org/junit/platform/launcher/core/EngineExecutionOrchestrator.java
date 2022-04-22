@@ -11,12 +11,14 @@
 package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.launcher.core.ListenerRegistry.forEngineExecutionListeners;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -25,6 +27,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestPlan;
 
 /**
  * Orchestrates test execution using the configured test engines.
@@ -45,15 +48,47 @@ public class EngineExecutionOrchestrator {
 	}
 
 	void execute(InternalTestPlan internalTestPlan, TestExecutionListener... listeners) {
+		ConfigurationParameters configurationParameters = internalTestPlan.getConfigurationParameters();
+		ListenerRegistry<TestExecutionListener> testExecutionListenerListeners = buildListenerRegistryForExecution(
+			listeners);
+		withInterceptedStreams(configurationParameters, testExecutionListenerListeners,
+			testExecutionListener -> execute(internalTestPlan, EngineExecutionListener.NOOP, testExecutionListener));
+	}
+
+	/**
+	 * Executes tests for the supplied {@linkplain LauncherDiscoveryResult
+	 * discoveryResult} and notifies the supplied {@linkplain
+	 * EngineExecutionListener engineExecutionListener} and
+	 * {@linkplain TestExecutionListener testExecutionListener} of execution
+	 * events.
+	 */
+	@API(status = INTERNAL, since = "1.9", consumers = { "org.junit.platform.suite.engine" })
+	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener engineExecutionListener,
+			TestExecutionListener testExecutionListener) {
+		Preconditions.notNull(discoveryResult, "discoveryResult must not be null");
+		Preconditions.notNull(engineExecutionListener, "engineExecutionListener must not be null");
+		Preconditions.notNull(testExecutionListener, "testExecutionListener must not be null");
+
+		InternalTestPlan internalTestPlan = InternalTestPlan.from(discoveryResult);
+		execute(internalTestPlan, engineExecutionListener, testExecutionListener);
+	}
+
+	private void execute(InternalTestPlan internalTestPlan, EngineExecutionListener parentEngineExecutionListener,
+			TestExecutionListener testExecutionListener) {
 		internalTestPlan.markStarted();
+
+		// Do not directly pass the internal test plan to test execution listeners.
+		// Hyrum's Law indicates that someone will eventually come to depend on it.
+		TestPlan testPlan = internalTestPlan.getDelegate();
 		LauncherDiscoveryResult discoveryResult = internalTestPlan.getDiscoveryResult();
-		ConfigurationParameters configurationParameters = discoveryResult.getConfigurationParameters();
-		ListenerRegistry<TestExecutionListener> listenerRegistry = buildListenerRegistryForExecution(listeners);
-		withInterceptedStreams(configurationParameters, listenerRegistry, testExecutionListener -> {
-			testExecutionListener.testPlanExecutionStarted(internalTestPlan);
-			execute(discoveryResult, new ExecutionListenerAdapter(internalTestPlan, testExecutionListener));
-			testExecutionListener.testPlanExecutionFinished(internalTestPlan);
-		});
+
+		ListenerRegistry<EngineExecutionListener> engineExecutionListenerRegistry = forEngineExecutionListeners();
+		engineExecutionListenerRegistry.add(new ExecutionListenerAdapter(testPlan, testExecutionListener));
+		engineExecutionListenerRegistry.add(parentEngineExecutionListener);
+
+		testExecutionListener.testPlanExecutionStarted(testPlan);
+		execute(discoveryResult, engineExecutionListenerRegistry.getCompositeListener());
+		testExecutionListener.testPlanExecutionFinished(testPlan);
 	}
 
 	private void withInterceptedStreams(ConfigurationParameters configurationParameters,
@@ -76,16 +111,21 @@ public class EngineExecutionOrchestrator {
 	 * discovery results} and notifies the supplied {@linkplain
 	 * EngineExecutionListener listener} of execution events.
 	 */
-	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener listener) {
+	@API(status = INTERNAL, since = "1.7", consumers = { "org.junit.platform.testkit" })
+	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener engineExecutionListener) {
+		Preconditions.notNull(discoveryResult, "discoveryResult must not be null");
+		Preconditions.notNull(engineExecutionListener, "engineExecutionListener must not be null");
+
 		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
 			TestDescriptor engineDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 			if (engineDescriptor instanceof EngineDiscoveryErrorDescriptor) {
-				listener.executionStarted(engineDescriptor);
-				listener.executionFinished(engineDescriptor,
+				engineExecutionListener.executionStarted(engineDescriptor);
+				engineExecutionListener.executionFinished(engineDescriptor,
 					TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
 			}
 			else {
-				execute(engineDescriptor, listener, discoveryResult.getConfigurationParameters(), testEngine);
+				execute(engineDescriptor, engineExecutionListener, discoveryResult.getConfigurationParameters(),
+					testEngine);
 			}
 		}
 	}

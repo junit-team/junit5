@@ -50,6 +50,10 @@ class InternalTestPlan extends TestPlan {
 		return discoveryResult;
 	}
 
+	public TestPlan getDelegate() {
+		return delegate;
+	}
+
 	@Override
 	@SuppressWarnings("deprecation")
 	public void add(TestIdentifier testIdentifier) {

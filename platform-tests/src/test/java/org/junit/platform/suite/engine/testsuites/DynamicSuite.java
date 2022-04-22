@@ -10,15 +10,14 @@
 
 package org.junit.platform.suite.engine.testsuites;
 
-import org.junit.platform.suite.api.IncludeClassNamePatterns;
-import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.engine.testcases.DynamicTestsTestCase;
 
 /**
  * @since 1.8
  */
 @Suite
-@IncludeClassNamePatterns(".*TestCase$")
-@SelectPackages("org.junit.platform.suite.engine.testcases")
+@SelectClasses(DynamicTestsTestCase.class)
 public class DynamicSuite {
 }

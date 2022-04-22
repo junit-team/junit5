@@ -612,6 +612,27 @@ You can pass a real parameter with an initial `@` character by escaping it with 
 additional `@` symbol. For example, `@@somearg` will become `@somearg` and will not be
 subject to expansion.
 
+[[running-tests-console-launcher-color-customization]]
+==== Color customization
+
+The colors used in the output of the `{ConsoleLauncher}` can be customized.
+The option `--single-color` will apply a built-in monochrome style, while
+`--color-palette` will accept a properties file to override the
+https://en.wikipedia.org/wiki/ANSI_escape_code#Colors[ANSI SGR] color styling.
+The properties file below demonstrates the default style:
+
+[source,properties,indent=0]
+----
+SUCCESSFUL = 32
+ABORTED = 33
+FAILED = 31
+SKIPPED = 35
+CONTAINER = 35
+TEST = 34
+DYNAMIC = 35
+REPORTED = 37
+----
+
 
 [[running-tests-junit-platform-runner]]
 === Using JUnit 4 to run the JUnit Platform

@@ -15,7 +15,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Fix handling of global post-discovery filters that apply to `@Suite` classes.
 
 ==== Deprecations and Breaking Changes
 
@@ -27,9 +27,20 @@ on GitHub.
 * `ConfigurationParameters` has a new `keySet()` method which allows you to retrieve all
   configuration parameter keys.
 * New `IterationSelector` for selecting a subset of a test's or container's iterations.
+* `ParallelExecutionConfiguration` allows configuring the "saturate" predicate of the
+  `ForkJoinPool` used for parallel test execution.
 * JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
   resolution time a fully running set of dependencies is calculated, avoiding the need for
   these to be manually specified.
+* JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.
+* New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if
+  no tests were discovered.
+* `ConsoleLauncher`'s output color can now be customized. The option `--single-color` will
+  apply a built-in monochrome style, while `--color-palette` will accept a properties file.
+  See the <<../user-guide/index.adoc#running-tests-console-launcher-color-customization,
+  User Guide>> for details.
+* `ConsoleLauncher`'s default theme is now determined by the charset reported by the system
+  console on Java 17 and later.
 * Configuring include `EngineFilters` that do not match any registered `TestEngine`
   results in an error to avoid misconfiguration, e.g. due to typos.
 
@@ -39,7 +50,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Only retry deleting directories when cleaning up `@TempDir` once.
 
 ==== Deprecations and Breaking Changes
 
@@ -62,6 +73,7 @@ on GitHub.
   constructors via the new `ExecutableInvoker` available in the `ExtensionContext`.
 * A subset of the invocations of parameterized or dynamic tests can now be selected via
   the new `IterationSelector` discovery selector when launching the JUnit Platform.
+* `JAVA_19` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]

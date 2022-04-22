@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.concurrent.ForkJoinPool;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 
@@ -59,5 +60,17 @@ public interface ParallelExecutionConfiguration {
 	 * before terminating them and shrinking the thread pool.
 	 */
 	int getKeepAliveSeconds();
+
+	/**
+	 * Get the saturate predicate to be used for the execution's {@link ForkJoinPool}.
+	 * @return the saturate predicate to be passed to the {@code ForkJoinPool} constructor; may be {@code null}
+	 * @since 1.9
+	 * @see ForkJoinPool#ForkJoinPool(int, ForkJoinPool.ForkJoinWorkerThreadFactory, Thread.UncaughtExceptionHandler,
+	 * boolean, int, int, int, Predicate, long, TimeUnit)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.9")
+	default Predicate<? super ForkJoinPool> getSaturatePredicate() {
+		return null;
+	}
 
 }

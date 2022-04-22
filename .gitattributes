@@ -4,3 +4,4 @@
 *.key binary
 *.jar binary
 *.ttf binary
+release-notes-* merge=union
