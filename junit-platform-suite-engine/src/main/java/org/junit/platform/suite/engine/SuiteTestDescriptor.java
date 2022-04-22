@@ -18,6 +18,7 @@ import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuil
 
 import java.util.function.Supplier;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -85,7 +86,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		// @formatter:off
 		return findAnnotation(suiteClass, Suite.class)
 				.map(Suite::failIfNoTests)
-				.orElseThrow(() -> new IllegalStateException(String.format("Suite [%s] was not annotated with @Suite", suiteClass.getName())));
+				.orElseThrow(() -> new JUnitException(String.format("Suite [%s] was not annotated with @Suite", suiteClass.getName())));
 		// @formatter:on
 	}
 
@@ -141,14 +142,18 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	void execute(EngineExecutionListener parentEngineExecutionListener) {
 		parentEngineExecutionListener.executionStarted(this);
-		LauncherDiscoveryResult discoveryResult = this.launcherDiscoveryResult;
+		// #2838: The discovery result from a suite may have been filtered by
+		// post discovery filters from the launcher. The discovery result should
+		// be pruned accordingly
+		LauncherDiscoveryResult discoveryResult = this.launcherDiscoveryResult.withRetainedEngines(
+			getChildren()::contains);
 		TestExecutionSummary summary = launcher.execute(discoveryResult, parentEngineExecutionListener);
 		parentEngineExecutionListener.executionFinished(this, computeTestExecutionResult(summary));
 	}
 
 	private TestExecutionResult computeTestExecutionResult(TestExecutionSummary summary) {
 		if (failIfNoTests && summary.getTestsFoundCount() == 0) {
-			return TestExecutionResult.failed(new SuiteDidNotDiscoverAnyTests(suiteClass));
+			return TestExecutionResult.failed(new NoTestsDiscoveredException(suiteClass));
 		}
 		return TestExecutionResult.successful();
 	}

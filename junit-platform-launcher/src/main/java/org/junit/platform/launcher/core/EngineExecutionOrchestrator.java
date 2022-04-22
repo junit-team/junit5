@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.launcher.core.ListenerRegistry.forEngineExecutionListeners;
 
@@ -19,6 +18,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -65,9 +65,9 @@ public class EngineExecutionOrchestrator {
 	@API(status = INTERNAL, since = "1.9", consumers = { "org.junit.platform.suite.engine" })
 	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener engineExecutionListener,
 			TestExecutionListener testExecutionListener) {
-		requireNonNull(discoveryResult);
-		requireNonNull(engineExecutionListener);
-		requireNonNull(testExecutionListener);
+		Preconditions.notNull(discoveryResult, "discoveryResult must not be null");
+		Preconditions.notNull(engineExecutionListener, "engineExecutionListener must not be null");
+		Preconditions.notNull(testExecutionListener, "testExecutionListener must not be null");
 
 		InternalTestPlan internalTestPlan = InternalTestPlan.from(discoveryResult);
 		execute(internalTestPlan, engineExecutionListener, testExecutionListener);
@@ -113,8 +113,8 @@ public class EngineExecutionOrchestrator {
 	 */
 	@API(status = INTERNAL, since = "1.7", consumers = { "org.junit.platform.testkit" })
 	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener engineExecutionListener) {
-		requireNonNull(discoveryResult);
-		requireNonNull(engineExecutionListener);
+		Preconditions.notNull(discoveryResult, "discoveryResult must not be null");
+		Preconditions.notNull(engineExecutionListener, "engineExecutionListener must not be null");
 
 		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
 			TestDescriptor engineDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);

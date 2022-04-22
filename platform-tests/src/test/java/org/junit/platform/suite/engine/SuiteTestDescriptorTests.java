@@ -59,7 +59,7 @@ class SuiteTestDescriptorTests {
 	}
 
 	@Test
-	void suitDiscoversTestsFromClass() {
+	void suiteDiscoversTestsFromClass() {
 		suite.addDiscoveryRequestFrom(SelectClassesSuite.class);
 		suite.discover();
 		assertEquals(Set.of(jupiterEngineId, testClassId, methodId),

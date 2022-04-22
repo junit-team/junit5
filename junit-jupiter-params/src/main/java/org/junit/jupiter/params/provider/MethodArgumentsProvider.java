@@ -51,7 +51,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 
 	private Method getMethod(ExtensionContext context, String factoryMethodName) {
 		if (StringUtils.isNotBlank(factoryMethodName)) {
-			if (factoryMethodName.contains("#")) {
+			if (factoryMethodName.contains(".") || factoryMethodName.contains("#")) {
 				return getMethodByFullyQualifiedName(factoryMethodName);
 			}
 			else {

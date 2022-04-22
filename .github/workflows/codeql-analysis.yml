@@ -32,7 +32,6 @@ jobs:
       with:
         arguments: |
           --no-build-cache
-          -PjavaToolchainVersion=11
           -Dscan.tag.CodeQL
           allMainClasses
     - name: Perform CodeQL Analysis

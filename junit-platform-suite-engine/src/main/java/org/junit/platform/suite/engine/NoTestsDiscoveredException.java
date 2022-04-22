@@ -12,11 +12,11 @@ package org.junit.platform.suite.engine;
 
 import org.junit.platform.commons.JUnitException;
 
-class SuiteDidNotDiscoverAnyTests extends JUnitException {
+class NoTestsDiscoveredException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;
 
-	SuiteDidNotDiscoverAnyTests(Class<?> suiteClass) {
+	NoTestsDiscoveredException(Class<?> suiteClass) {
 		super(String.format("Suite [%s] did not discover any tests", suiteClass.getName()));
 	}
 
