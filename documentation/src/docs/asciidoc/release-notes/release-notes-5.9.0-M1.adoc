@@ -41,6 +41,8 @@ on GitHub.
   User Guide>> for details.
 * `ConsoleLauncher`'s default theme is now determined by the charset reported by the system
   console on Java 17 and later.
+* New `--list-engines` option added to the `ConsoleLauncher` displaying all registered test
+  engine implementations.
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
 === JUnit Jupiter

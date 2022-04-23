@@ -85,8 +85,12 @@ class AvailableOptions {
 		@Option(names = { "--h", "-help" }, help = true, hidden = true)
 		private boolean helpRequested2;
 
+		@Option(names = { "--list-engines" }, description = "List all observable test engines.")
+		private boolean listEnginesRequested;
+
 		private void applyTo(CommandLineOptions result) {
 			result.setDisplayHelp(this.helpRequested || this.helpRequested2);
+			result.setListEngines(this.listEnginesRequested);
 		}
 	}
 
