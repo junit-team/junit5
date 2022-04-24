@@ -32,8 +32,8 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	@Override
 	Stream<Serializable> createSerializableInstances() throws Exception {
 		return Stream.of( //
-				MethodSource.from(getMethod("method1")), //
-				MethodSource.from(getMethod("method2")) //
+			MethodSource.from(getMethod("method1")), //
+			MethodSource.from(getMethod("method2")) //
 		);
 	}
 
@@ -82,14 +82,14 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	@Test
 	void instantiationWithNullClassOrMethodShouldThrowPreconditionViolationException() {
 		assertThrows(PreconditionViolationException.class,
-				() -> MethodSource.from(null, String.class.getDeclaredMethod("getBytes")));
+			() -> MethodSource.from(null, String.class.getDeclaredMethod("getBytes")));
 		assertThrows(PreconditionViolationException.class, () -> MethodSource.from(String.class, null));
 	}
 
 	@Test
 	void instantiationWithClassAndMethodShouldResultInACorrectObject() throws Exception {
 		var source = MethodSource.from(String.class,
-				String.class.getDeclaredMethod("lastIndexOf", String.class, int.class));
+			String.class.getDeclaredMethod("lastIndexOf", String.class, int.class));
 		assertEquals(String.class.getName(), source.getClassName());
 		assertEquals("lastIndexOf", source.getMethodName());
 		assertEquals("java.lang.String, int", source.getMethodParameterTypes());
@@ -121,37 +121,37 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	@Test
 	void twoEqualMethodSourceObjectsShouldHaveEqualHashCodes() {
 		assertEquals(MethodSource.from("TestClass1", "testMethod1").hashCode(),
-				MethodSource.from("TestClass1", "testMethod1").hashCode());
+			MethodSource.from("TestClass1", "testMethod1").hashCode());
 	}
 
 	@Test
 	void twoEqualMethodsWithEqualParametersShouldHaveEqualMethodSourceObjects() {
 		assertEquals(MethodSource.from("TestClass1", "testMethod1", "int, String"),
-				MethodSource.from("TestClass1", "testMethod1", "int, String"));
+			MethodSource.from("TestClass1", "testMethod1", "int, String"));
 	}
 
 	@Test
 	void twoUnequalMethodsWithEqualParametersShouldHaveUnequalMethodSourceObjects() {
 		assertNotEquals(MethodSource.from("TestClass1", "testMethod1", "int, String"),
-				MethodSource.from("TestClass1", "testMethod2", "int, String"));
+			MethodSource.from("TestClass1", "testMethod2", "int, String"));
 	}
 
 	@Test
 	void twoEqualMethodsWithUnequalParametersShouldHaveUnequalMethodSourceObjects() {
 		assertNotEquals(MethodSource.from("TestClass1", "testMethod1", "int, String"),
-				MethodSource.from("TestClass1", "testMethod1", "float, int, String"));
+			MethodSource.from("TestClass1", "testMethod1", "float, int, String"));
 	}
 
 	@Test
 	void twoEqualMethodsWithEqualParametersShouldHaveEqualMethodSourceHashCodes() {
 		assertEquals(MethodSource.from("TestClass1", "testMethod1", "int, String").hashCode(),
-				MethodSource.from("TestClass1", "testMethod1", "int, String").hashCode());
+			MethodSource.from("TestClass1", "testMethod1", "int, String").hashCode());
 	}
 
 	@Test
 	void twoEqualMethodsWithUnequalParametersShouldHaveUnequalMethodSourceHashCodes() {
 		assertNotEquals(MethodSource.from("TestClass1", "testMethod1", "int, String").hashCode(),
-				MethodSource.from("TestClass1", "testMethod1", "float, int, String").hashCode());
+			MethodSource.from("TestClass1", "testMethod1", "float, int, String").hashCode());
 	}
 
 	@Test
@@ -270,11 +270,11 @@ class MethodSourceTests extends AbstractTestSourceTests {
 		var normalMethod = getClass().getDeclaredMethod("normalMethod", Integer.TYPE);
 		var internalMethod = getClass().getDeclaredMethod("internalMethod$kotlin", Integer.TYPE);
 
-		var  normal= MethodSource.from(normalMethod);
-		var internal= MethodSource.from(internalMethod);
+		var normal = MethodSource.from(normalMethod);
+		var internal = MethodSource.from(internalMethod);
 
-		assertEquals("normalMethod",normal.getKotlinFunctionName());
-		assertEquals("internalMethod",internal.getKotlinFunctionName(true));
+		assertEquals("normalMethod", normal.getKotlinFunctionName());
+		assertEquals("internalMethod", internal.getKotlinFunctionName(true));
 	}
 
 	private Method getMethod(String name) throws Exception {
