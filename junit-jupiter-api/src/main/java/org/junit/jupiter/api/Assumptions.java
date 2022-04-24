@@ -258,7 +258,7 @@ public class Assumptions {
 
 	private static void throwTestAbortedException(String message) {
 		throw new TestAbortedException(
-			StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
+		    StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
 	}
 
 	// --- assumingDoesNotThrow --------------------------------------------------
@@ -312,7 +312,7 @@ public class Assumptions {
 			executable.execute();
 		}
 		catch (Throwable t) {
-			UnrecoverableExceptions.rethrowIfUnrecoverable(t);//?  might not need finally
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			throwTestAbortedException(nullSafeGet(messageOrSupplier));
 		}
 	}
@@ -371,8 +371,7 @@ public class Assumptions {
 			return supplier.get();
 		}
 		catch (Throwable t) {
-			UnrecoverableExceptions.rethrowIfUnrecoverable(t);//?  might not need finally
-			//throwTestAbortedException(nullSafeGet(messageOrSupplier));
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			String message = nullSafeGet(messageOrSupplier);
 			throw new TestAbortedException(
 				StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
