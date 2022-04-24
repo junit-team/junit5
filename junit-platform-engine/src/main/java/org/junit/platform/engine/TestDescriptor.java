@@ -10,15 +10,15 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.Preconditions;
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * Mutable descriptor for a test or container that has been discovered by a
@@ -40,6 +40,7 @@ public interface TestDescriptor {
 	 */
 	UniqueId getUniqueId();
 
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 	/**
 	 * Get the test execution result for this descriptor.
 	 *
@@ -48,6 +49,7 @@ public interface TestDescriptor {
 	 */
 	TestExecutionResult getTestExecutionResult();
 
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 	/**
 	 * Set the test execution result for this descriptor.
 	 *

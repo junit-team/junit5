@@ -30,26 +30,15 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 	private final boolean stopFlag;
 	private final RepeatedTestDisplayNameFormatter formatter;
 
-	public RepeatedTestInvocationContext(int currentRepetition, int totalRepetitions,
+	public RepeatedTestInvocationContext(int currentRepetition, int totalRepetitions, boolean stopFlag,
 			RepeatedTestDisplayNameFormatter formatter) {
 
 		this.currentRepetition = currentRepetition;
 		this.totalRepetitions = totalRepetitions;
-		this.formatter = formatter;
 		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
-		this.stopFlag = false;
-	}
-
-	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
-	public RepeatedTestInvocationContext(int currentRepetition, int totalRepetitions, boolean stopFlag,
-										 RepeatedTestDisplayNameFormatter formatter) {
-
-		this.currentRepetition = currentRepetition;
-		this.totalRepetitions = totalRepetitions;
 		this.stopFlag = stopFlag;
 		this.formatter = formatter;
 	}
-
 
 	@Override
 	public String getDisplayName(int invocationIndex) {

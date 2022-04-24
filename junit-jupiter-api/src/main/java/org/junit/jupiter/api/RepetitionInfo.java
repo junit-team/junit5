@@ -51,5 +51,11 @@ public interface RepetitionInfo {
 	int getTotalRepetitions();
 
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+	/**
+	 * Get the stopFirstFail flag of the corresponding
+	 * {@link RepeatedTest @RepeatedTest} method.
+	 *
+	 * @see RepeatedTest#stopFirstFail
+	 */
 	boolean getStopFlag();
 }

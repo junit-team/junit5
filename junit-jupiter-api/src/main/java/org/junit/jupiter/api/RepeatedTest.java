@@ -121,6 +121,14 @@ public @interface RepeatedTest {
 	int value();
 
 	/**
+	 * The flag determining whether to stop remaining tests when a fail test is encountered
+	 *
+	 * @return the flag determining whether to stop remaining tests when a fail test is encountered
+	 */
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+	boolean stopFirstFail() default false;
+
+	/**
 	 * The display name for each repetition of the repeated test.
 	 *
 	 * <h4>Supported placeholders</h4>
@@ -151,8 +159,5 @@ public @interface RepeatedTest {
 	 * @see TestInfo#getDisplayName()
 	 */
 	String name() default SHORT_DISPLAY_NAME;
-
-	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
-	boolean stopFirstFail() default false;
 
 }

@@ -29,18 +29,11 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 	private final boolean stopFlag;
 
-	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 	public RepetitionInfoParameterResolver(int currentRepetition, int totalRepetitions, boolean stopFlag) {
 		this.currentRepetition = currentRepetition;
 		this.totalRepetitions = totalRepetitions;
-		this.stopFlag = stopFlag;
-	}
-
-	public RepetitionInfoParameterResolver(int currentRepetition, int totalRepetitions) {
-		this.currentRepetition = currentRepetition;
-		this.totalRepetitions = totalRepetitions;
 		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
-		this.stopFlag = false;
+		this.stopFlag = stopFlag;
 	}
 
 	@Override
@@ -54,11 +47,6 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 		return new DefaultRepetitionInfo(this.currentRepetition, this.totalRepetitions, this.stopFlag);
 	}
 
-	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
-	public boolean getStopFlag() {
-		return this.stopFlag;
-	}
-
 	private static class DefaultRepetitionInfo implements RepetitionInfo {
 
 		private final int currentRepetition;
@@ -66,17 +54,10 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 		private final boolean stopFlag;
 
-		DefaultRepetitionInfo(int currentRepetition, int totalRepetitions) {
-			this.currentRepetition = currentRepetition;
-			this.totalRepetitions = totalRepetitions;
-			// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
-			this.stopFlag = false;
-		}
-
-		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 		DefaultRepetitionInfo(int currentRepetition, int totalRepetitions, boolean stopFlag) {
 			this.currentRepetition = currentRepetition;
 			this.totalRepetitions = totalRepetitions;
+			// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 			this.stopFlag = stopFlag;
 		}
 

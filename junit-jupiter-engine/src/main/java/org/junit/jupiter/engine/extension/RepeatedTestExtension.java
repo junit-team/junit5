@@ -46,9 +46,9 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 		boolean stopFlag = repeatedTest.stopFirstFail();
 		// @formatter:off
-		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 		return IntStream
 				.rangeClosed(1, totalRepetitions)
+				// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 				.mapToObj(repetition -> new RepeatedTestInvocationContext(repetition, totalRepetitions, stopFlag, formatter));
 		// @formatter:on
 	}

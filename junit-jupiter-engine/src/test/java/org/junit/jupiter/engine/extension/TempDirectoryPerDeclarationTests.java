@@ -24,7 +24,6 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedWithFail
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,15 +52,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
-import org.junit.jupiter.engine.extension.TempDirectory.FileOperations;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -189,17 +184,6 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	void canBeUsedViaStaticFieldInsideNestedTestClasses() {
 		executeTestsForClass(StaticTempDirUsageInsideNestedClassTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(2).succeeded(2));
-	}
-
-	@Test
-	void onlyAttemptsToDeleteUndeletableDirectoriesOnce() {
-		var results = executeTestsForClass(UndeletableDirectoryTestCase.class);
-
-		assertSingleFailedTest(results, //
-			instanceOf(IOException.class), //
-			message(it -> it.startsWith("Failed to delete temp directory")), //
-			suppressed(0, instanceOf(IOException.class), message("Simulated failure")), //
-			suppressed(1, instanceOf(IOException.class), message("Simulated failure")));
 	}
 
 	@Nested
@@ -1003,21 +987,6 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 		private static Map<String, Path> getTempDirs(TestInfo testInfo) {
 			return tempDirs.computeIfAbsent(testInfo.getDisplayName(), __ -> new LinkedHashMap<>());
-		}
-	}
-
-	static class UndeletableDirectoryTestCase {
-
-		@RegisterExtension
-		Extension injector = (BeforeEachCallback) context -> context //
-				.getStore(TempDirectory.NAMESPACE) //
-				.put(TempDirectory.FILE_OPERATIONS_KEY, (FileOperations) path -> {
-					throw new IOException("Simulated failure");
-				});
-
-		@Test
-		void test(@TempDir Path tempDir) throws Exception {
-			Files.createDirectory(tempDir.resolve("test-sub-dir"));
 		}
 	}
 }

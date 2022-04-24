@@ -36,10 +36,10 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final UniqueId uniqueId;
 
-	private final String displayName;
-
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 	private TestExecutionResult result;
+
+	private final String displayName;
 
 	private final TestSource source;
 
@@ -95,11 +95,6 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		return this.uniqueId;
 	}
 
-	@Override
-	public final String getDisplayName() {
-		return this.displayName;
-	}
-
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 	@Override
 	public final TestExecutionResult getTestExecutionResult() {
@@ -110,6 +105,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public final void setTestExecutionResult(TestExecutionResult result) {
 		this.result = result;
+	}
+
+	@Override
+	public final String getDisplayName() {
+		return this.displayName;
 	}
 
 	@Override
