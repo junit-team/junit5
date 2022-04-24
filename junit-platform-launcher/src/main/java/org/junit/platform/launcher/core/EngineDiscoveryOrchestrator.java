@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
 
@@ -20,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -94,9 +96,8 @@ public class EngineDiscoveryOrchestrator {
 	 * will not emit start or emit events for engines without tests.
 	 */
 	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase, UniqueId parentId) {
-		Map<TestEngine, TestDescriptor> testEngines = discover(request, phase, parentId::appendEngine);
-		LauncherDiscoveryResult result = new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters());
-		return result.withRetainedEngines(TestDescriptor::containsTests);
+		Map<TestEngine, TestDescriptor> result = discover(request, phase, parentId::appendEngine);
+		return new LauncherDiscoveryResult(pruneEngines(result), request.getConfigurationParameters());
 	}
 
 	private Map<TestEngine, TestDescriptor> discover(LauncherDiscoveryRequest request, Phase phase,
@@ -114,10 +115,11 @@ public class EngineDiscoveryOrchestrator {
 	private Map<TestEngine, TestDescriptor> discoverSafely(LauncherDiscoveryRequest request, Phase phase,
 			LauncherDiscoveryListener listener, Function<String, UniqueId> uniqueIdCreator) {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
-		EngineFilterer engineFilterer = new EngineFilterer(request.getEngineFilters());
 
 		for (TestEngine testEngine : this.testEngines) {
-			boolean engineIsExcluded = engineFilterer.isExcluded(testEngine);
+			boolean engineIsExcluded = request.getEngineFilters().stream() //
+					.map(engineFilter -> engineFilter.apply(testEngine)) //
+					.anyMatch(FilterResult::excluded);
 
 			if (engineIsExcluded) {
 				logger.debug(() -> String.format(
@@ -132,8 +134,6 @@ public class EngineDiscoveryOrchestrator {
 			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, listener, uniqueIdCreator);
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
-
-		engineFilterer.performSanityChecks();
 
 		List<PostDiscoveryFilter> filters = new LinkedList<>(postDiscoveryFilters);
 		filters.addAll(request.getPostDiscoveryFilters());
@@ -200,6 +200,15 @@ public class EngineDiscoveryOrchestrator {
 			logger.debug(
 				() -> String.format("The following containers and tests were %s: %s", exclusionReason, displayNames));
 		});
+	}
+
+	private Map<TestEngine, TestDescriptor> pruneEngines(Map<TestEngine, TestDescriptor> result) {
+		// @formatter:off
+		return result.entrySet()
+				.stream()
+				.filter(entry -> TestDescriptor.containsTests(entry.getValue()))
+				.collect(toMap(Entry::getKey, Entry::getValue));
+		// @formatter:on
 	}
 
 	/**

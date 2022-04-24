@@ -13,6 +13,8 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 
 import java.lang.reflect.Method;
@@ -21,6 +23,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -31,6 +34,7 @@ import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -98,16 +102,37 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 
 		ExtensionContext extensionContext = context.getExtensionContext();
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+		boolean temp = false;
+		final boolean[] hasFailed = {false};
+		Method testMethod = extensionContext.getRequiredTestMethod();
+		if(isAnnotated(testMethod, RepeatedTest.class)){
+			RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
+			temp = repeatedTest.stopFirstFail();
+		}
+		final boolean StopFlag = temp;
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
 		// @formatter:off
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 		providers.stream()
 				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(extensionContext))
 				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
+				.forEach(invocationTestDescriptor ->
+						{
+							if(StopFlag){
+								if(!hasFailed[0]){
+									execute(dynamicTestExecutor, invocationTestDescriptor);
+									hasFailed[0] = invocationTestDescriptor.getTestExecutionResult().getStatus() == FAILED;
+								}
+							}else {
+								execute(dynamicTestExecutor, invocationTestDescriptor);
+							}
+						}
+				);
 		// @formatter:on
 		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
 		return context;

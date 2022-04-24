@@ -26,10 +26,14 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 
 	private final int currentRepetition;
 	private final int totalRepetitions;
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+	private final boolean stopFlag;
 
-	public RepetitionInfoParameterResolver(int currentRepetition, int totalRepetitions) {
+	public RepetitionInfoParameterResolver(int currentRepetition, int totalRepetitions, boolean stopFlag) {
 		this.currentRepetition = currentRepetition;
 		this.totalRepetitions = totalRepetitions;
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+		this.stopFlag = stopFlag;
 	}
 
 	@Override
@@ -39,17 +43,22 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 
 	@Override
 	public RepetitionInfo resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return new DefaultRepetitionInfo(this.currentRepetition, this.totalRepetitions);
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+		return new DefaultRepetitionInfo(this.currentRepetition, this.totalRepetitions, this.stopFlag);
 	}
 
 	private static class DefaultRepetitionInfo implements RepetitionInfo {
 
 		private final int currentRepetition;
 		private final int totalRepetitions;
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+		private final boolean stopFlag;
 
-		DefaultRepetitionInfo(int currentRepetition, int totalRepetitions) {
+		DefaultRepetitionInfo(int currentRepetition, int totalRepetitions, boolean stopFlag) {
 			this.currentRepetition = currentRepetition;
 			this.totalRepetitions = totalRepetitions;
+			// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+			this.stopFlag = stopFlag;
 		}
 
 		@Override
@@ -60,6 +69,12 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 		@Override
 		public int getTotalRepetitions() {
 			return this.totalRepetitions;
+		}
+
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+		@Override
+		public boolean getStopFlag() {
+			return this.stopFlag;
 		}
 
 		@Override

@@ -20,10 +20,7 @@ import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.TestTag;
-import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.*;
 
 /**
  * Abstract base implementation of {@link TestDescriptor} that may be used by
@@ -38,6 +35,9 @@ import org.junit.platform.engine.UniqueId;
 public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final UniqueId uniqueId;
+
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+	private TestExecutionResult result;
 
 	private final String displayName;
 
@@ -93,6 +93,18 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public final UniqueId getUniqueId() {
 		return this.uniqueId;
+	}
+
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+	@Override
+	public final TestExecutionResult getTestExecutionResult() {
+		return result;
+	}
+
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+	@Override
+	public final void setTestExecutionResult(TestExecutionResult result) {
+		this.result = result;
 	}
 
 	@Override
