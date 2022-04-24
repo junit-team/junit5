@@ -232,11 +232,11 @@ public class MethodSource implements TestSource {
 	public String getKotlinFunctionName(boolean forceConvert) {
 		Method method = this.javaMethod;
 		String name = method.getName();
-		if (isKotlinClass(method.getDeclaringClass())||forceConvert) {
-			if (isKotlinInternal(method)||(forceConvert&&method.getName().contains("$"))) {
+		if (isKotlinClass(method.getDeclaringClass()) || forceConvert) {
+			if (isKotlinInternal(method) || (forceConvert && method.getName().contains("$"))) {
 				name = nameWithoutInternalPart(name);
 			}
-			if (isKotlinSpecial(method)||(forceConvert&&method.getName().contains("-"))) {
+			if (isKotlinSpecial(method) || (forceConvert && method.getName().contains("-"))) {
 				name = nameWithoutSpecialPart(name);
 			}
 		}
@@ -255,7 +255,7 @@ public class MethodSource implements TestSource {
 	}
 
 	private static boolean isKotlinSpecial(Method method) {
-		String name = isKotlinInternal(method) ? nameWithoutInternalPart(method.getName()): method.getName();
+		String name = isKotlinInternal(method) ? nameWithoutInternalPart(method.getName()) : method.getName();
 		int lastIndexOfHyphen = name.lastIndexOf('-');
 		return lastIndexOfHyphen >= 0 && lastIndexOfHyphen == (name.length() - 8);
 	}

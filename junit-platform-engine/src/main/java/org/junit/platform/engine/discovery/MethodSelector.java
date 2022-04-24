@@ -183,7 +183,7 @@ public class MethodSelector implements DiscoverySelector {
 	 * the method to convert the internal kotlin name to java byte code
 	 * @return the java byte code after converting
 	 */
-	public String kotlinInternalByteCode(){
+	public String kotlinInternalByteCode() {
 		String originalname = this.getMethodName();
 		return originalname.concat("$kotlin");
 	}
