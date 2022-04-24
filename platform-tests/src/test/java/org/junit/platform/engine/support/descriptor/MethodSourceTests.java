@@ -266,7 +266,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void ConvertToKotlinFunctionName() throws NoSuchMethodException {
+	void convertToKotlinFunctionName() throws NoSuchMethodException {
 		var normalMethod = getClass().getDeclaredMethod("normalMethod", Integer.TYPE);
 		var internalMethod = getClass().getDeclaredMethod("internalMethod$kotlin", Integer.TYPE);
 
@@ -301,9 +301,11 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	void methodVoid() {
 	}
 
+	@SuppressWarnings("unused")
 	void normalMethod(int number) {
 	}
 
+	@SuppressWarnings("unused")
 	void internalMethod$kotlin(int number) {
 	}
 }
