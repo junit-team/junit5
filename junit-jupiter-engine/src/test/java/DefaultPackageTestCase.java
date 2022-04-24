@@ -8,8 +8,8 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test case that is used to verify proper support for classpath scanning
@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Disabled;
  */
 @Disabled("Only used reflectively by other tests")
 class DefaultPackageTestCase {
-    @Test
-    public void test(){
-        // not do anything
-    }
+	@Test
+	public void test() {
+		// not do anything
+	}
 }
