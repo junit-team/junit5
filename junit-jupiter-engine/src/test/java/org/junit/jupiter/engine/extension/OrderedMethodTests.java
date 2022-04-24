@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
 import static org.junit.jupiter.api.Order.DEFAULT;
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.MethodOrderer.EnforcingOrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
 import org.junit.jupiter.api.MethodOrdererContext;
 import org.junit.jupiter.api.Nested;
@@ -176,6 +178,26 @@ class OrderedMethodTests {
 
 		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()");
 		assertThat(threadNames).hasSize(1);
+	}
+
+	@Test
+	void duplicateOrderer() {
+		var tests = executeTestsInParallel(WithoutTestDuplicateMethodOrderTestCase.class, OrderAnnotation.class);
+
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()","test4()");
+		assertThat(threadNames).hasSize(1);
+	}
+
+	@Test
+	void duplicateOrdererException() {
+		try {
+			var tests = executeTestsInParallel(WithoutTestDuplicateMethodOrderExceptionTestCase.class, EnforcingOrderAnnotation.class);
+		}catch (Exception e){
+			fail("duplicate order");
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -728,6 +750,66 @@ class OrderedMethodTests {
 		@Test
 		@Order(2)
 		void test2() {
+		}
+
+		@Test
+		@Order(3)
+		void test3() {
+		}
+
+		@Test
+		@Order(1)
+		void test1() {
+		}
+
+	}
+
+	static class WithoutTestDuplicateMethodOrderExceptionTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			callSequence.add(testInfo.getDisplayName());
+			threadNames.add(Thread.currentThread().getName());
+		}
+
+		@Test
+		@Order(2)
+		void test2() {
+		}
+
+		@Test
+		@Order(2)
+		void test4() {
+		}
+
+		@Test
+		@Order(3)
+		void test3() {
+		}
+
+		@Test
+		@Order(1)
+		void test1() {
+		}
+
+	}
+
+	static class WithoutTestDuplicateMethodOrderTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			callSequence.add(testInfo.getDisplayName());
+			threadNames.add(Thread.currentThread().getName());
+		}
+
+		@Test
+		@Order(2)
+		void test2() {
+		}
+
+		@Test
+		@Order(4)
+		void test4() {
 		}
 
 		@Test
