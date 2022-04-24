@@ -110,11 +110,12 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
             RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
             temp = repeatedTest.stopFirstFail();
         }
+		final boolean StopFlag = temp;
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
 		// @formatter:off
-		final boolean StopFlag = temp;
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 		providers.stream()
 				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(extensionContext))
 				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
