@@ -20,7 +20,11 @@ import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.*;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.TestTag;
 
 /**
  * Abstract base implementation of {@link TestDescriptor} that may be used by
