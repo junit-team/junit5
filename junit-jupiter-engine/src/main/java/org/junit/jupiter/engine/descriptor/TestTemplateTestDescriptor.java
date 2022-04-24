@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -31,6 +32,7 @@ import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -98,6 +100,10 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 
 		ExtensionContext extensionContext = context.getExtensionContext();
+//		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+//		Method testMethod = extensionContext.getRequiredTestMethod();
+//		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
+//		boolean stopFirstFail = repeatedTest.stopFirstFail();
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();

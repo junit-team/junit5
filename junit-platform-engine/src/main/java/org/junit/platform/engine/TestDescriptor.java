@@ -41,6 +41,22 @@ public interface TestDescriptor {
 	UniqueId getUniqueId();
 
 	/**
+	 * Get the test execution result for this descriptor.
+	 *
+	 * @return the {@code TestExecutionResult} for this descriptor; never
+	 * {@code null}
+	 */
+	TestExecutionResult getTestExecutionResult();
+
+	/**
+	 * Set the test execution result for this descriptor.
+	 *
+	 * @param result the {@code TestExecutionResult} of the current testDescriptor; never
+	 * {@code null}
+	 */
+	void setTestExecutionResult(TestExecutionResult result);
+
+	/**
 	 * Get the display name for this descriptor.
 	 *
 	 * <p>A <em>display name</em> is a human-readable name for a test or

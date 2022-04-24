@@ -152,4 +152,7 @@ public @interface RepeatedTest {
 	 */
 	String name() default SHORT_DISPLAY_NAME;
 
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+	boolean stopFirstFail() default false;
+
 }

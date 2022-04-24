@@ -193,6 +193,8 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				() -> String.format("Failed to invoke nodeFinished() on Node %s", testDescriptor.getUniqueId()));
 		}
 		taskContext.getListener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
+//		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+//		testDescriptor.setTestExecutionResult(throwableCollector.toTestExecutionResult());
 		throwableCollector = null;
 	}
 

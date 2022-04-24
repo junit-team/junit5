@@ -50,4 +50,6 @@ public interface RepetitionInfo {
 	 */
 	int getTotalRepetitions();
 
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+	boolean getStopFlag();
 }
