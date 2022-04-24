@@ -375,6 +375,7 @@ public class Assumptions {
 			String message = nullSafeGet(messageOrSupplier);
 			throw new TestAbortedException(
 				StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
+
 		}
 	}
 }
