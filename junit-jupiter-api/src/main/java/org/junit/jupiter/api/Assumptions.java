@@ -324,8 +324,8 @@ public class Assumptions {
 	 * Validate that execution of the supplied supplier does not throw any kind of exception.
 	 *
 	 * @param supplier the supplied supplier which to check whether it throws an exception when executed
-	 * @throws TestAbortedException if the execution of the supplied supplier throws an exception
 	 * @return the supplier's result if the assumption passes
+	 * @throws TestAbortedException if the execution of the supplied supplier throws an exception
 	 */
 	public static <T> T assumeDoesNotThrow(ThrowingSupplier<T> supplier) {
 		return assumeDoesNotThrow(supplier, (Object) null);
@@ -337,8 +337,8 @@ public class Assumptions {
 	 * @param supplier the supplied supplier which to check whether it throws an exception when executed
 	 * @param message the message to be included in the {@code TestAbortedException}
 	 * if the execution throws an exception
-	 * @throws TestAbortedException if the execution of the supplied supplier throws an exception
 	 * @return the supplier's result if the assumption passes
+	 * @throws TestAbortedException if the execution of the supplied supplier throws an exception
 	 */
 	public static <T> T assumeDoesNotThrow(ThrowingSupplier<T> supplier, String message) {
 		return assumeDoesNotThrow(supplier, (Object) message);
@@ -350,8 +350,8 @@ public class Assumptions {
 	 * @param supplier the supplied supplier which to check whether it throws an exception when executed
 	 * @param messageSupplier the supplier of the message to be included in
 	 * the {@code TestAbortedException} if the execution throws an exception
-	 * @throws TestAbortedException if the execution of the supplied supplier throws an exception
 	 * @return the supplier's result if the assumption passes
+	 * @throws TestAbortedException if the execution of the supplied supplier throws an exception
 	 */
 	public static <T> T assumeDoesNotThrow(ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
 		return assumeDoesNotThrow(supplier, (Object) messageSupplier);
@@ -363,8 +363,8 @@ public class Assumptions {
 	 * @param supplier the supplier which to check whether it throws an exception when executed
 	 * @param messageOrSupplier the message itself or the supplier of the message to be included in
 	 * the {@code TestAbortedException} if the execution throws an exception
-	 * @throws TestAbortedException if the execution of the supplied supplier throws an exception
 	 * @return the supplier's result if the assumption passes
+	 * @throws TestAbortedException if the execution of the supplied supplier throws an exception
 	 */
 	public static <T> T assumeDoesNotThrow(ThrowingSupplier<T> supplier, Object messageOrSupplier) throws TestAbortedException{
 		try {
