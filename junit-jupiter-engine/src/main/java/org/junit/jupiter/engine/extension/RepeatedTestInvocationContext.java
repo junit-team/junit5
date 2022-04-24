@@ -42,14 +42,13 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 	public RepeatedTestInvocationContext(int currentRepetition, int totalRepetitions, boolean stopFlag,
-										 RepeatedTestDisplayNameFormatter formatter) {
+			RepeatedTestDisplayNameFormatter formatter) {
 
 		this.currentRepetition = currentRepetition;
 		this.totalRepetitions = totalRepetitions;
 		this.stopFlag = stopFlag;
 		this.formatter = formatter;
 	}
-
 
 	@Override
 	public String getDisplayName(int invocationIndex) {
@@ -59,7 +58,8 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 	@Override
 	public List<Extension> getAdditionalExtensions() {
 		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
-		return singletonList(new RepetitionInfoParameterResolver(this.currentRepetition, this.totalRepetitions, this.stopFlag));
+		return singletonList(
+			new RepetitionInfoParameterResolver(this.currentRepetition, this.totalRepetitions, this.stopFlag));
 	}
 
 }

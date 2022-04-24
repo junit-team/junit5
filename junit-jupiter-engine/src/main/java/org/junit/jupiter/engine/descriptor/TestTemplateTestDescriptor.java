@@ -103,13 +103,13 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 
 		ExtensionContext extensionContext = context.getExtensionContext();
 		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
-        boolean temp = false;
-		final boolean[] hasFailed = {false};
-        Method testMethod = extensionContext.getRequiredTestMethod();
-        if(isAnnotated(testMethod, RepeatedTest.class)){
-            RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
-            temp = repeatedTest.stopFirstFail();
-        }
+		boolean temp = false;
+		final boolean[] hasFailed = { false };
+		Method testMethod = extensionContext.getRequiredTestMethod();
+		if (isAnnotated(testMethod, RepeatedTest.class)) {
+			RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
+			temp = repeatedTest.stopFirstFail();
+		}
 		final boolean StopFlag = temp;
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
 			context.getExtensionRegistry());
