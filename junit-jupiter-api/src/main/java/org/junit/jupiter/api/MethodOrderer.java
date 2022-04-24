@@ -250,7 +250,7 @@ public interface MethodOrderer {
 	 * <p>If there are duplicate orders, then throw an {@link Exception}
 	 *
 	 */
-	class EnforcingOrderAnnotation implements MethodOrderer{
+	class EnforcingOrderAnnotation implements MethodOrderer {
 
 		public EnforcingOrderAnnotation() {
 		}
@@ -261,15 +261,18 @@ public interface MethodOrderer {
 		 * annotation.
 		 *
 		 * If {@code enforced} and methods have duplicate {@link Order}
-		 * throws an {@link DuplicateOrderException}
+		 * throws an {@link Exception}
 		 */
 		public void orderMethods(MethodOrdererContext context) {
 			try {
 				long methodCnt = context.getMethodDescriptors().size();
-				long distinctOrderCnt = context.getMethodDescriptors().stream().mapToInt(OrderAnnotation::getOrder).distinct().count();
+				long distinctOrderCnt = context.getMethodDescriptors().stream().mapToInt(
+					OrderAnnotation::getOrder).distinct().count();
 				if (methodCnt != distinctOrderCnt)
-					throw new Exception("duplicate order" + "expected: " + methodCnt + " but was: <" + distinctOrderCnt + ">");
-			}catch (Exception e){
+					throw new Exception(
+						"duplicate order" + "expected: " + methodCnt + " but was: <" + distinctOrderCnt + ">");
+			}
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
