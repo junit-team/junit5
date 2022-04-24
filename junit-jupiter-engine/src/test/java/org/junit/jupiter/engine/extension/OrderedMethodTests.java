@@ -34,9 +34,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.MethodOrderer.EnforcingOrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.MethodOrderer.EnforcingOrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
 import org.junit.jupiter.api.MethodOrdererContext;
 import org.junit.jupiter.api.Nested;
@@ -186,15 +186,17 @@ class OrderedMethodTests {
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
-		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()","test4()");
+		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()", "test4()");
 		assertThat(threadNames).hasSize(1);
 	}
 
 	@Test
 	void duplicateOrdererException() {
 		try {
-			var tests = executeTestsInParallel(WithoutTestDuplicateMethodOrderExceptionTestCase.class, EnforcingOrderAnnotation.class);
-		}catch (Exception e){
+			var tests = executeTestsInParallel(WithoutTestDuplicateMethodOrderExceptionTestCase.class,
+				EnforcingOrderAnnotation.class);
+		}
+		catch (Exception e) {
 			fail("duplicate order");
 			e.printStackTrace();
 		}
