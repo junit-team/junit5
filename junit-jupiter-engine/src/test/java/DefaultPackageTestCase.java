@@ -8,7 +8,6 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
-
 import org.junit.jupiter.api.Disabled;
 
 /**
