@@ -50,7 +50,8 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 
 	@Override
 	public RepetitionInfo resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return new DefaultRepetitionInfo(this.currentRepetition, this.totalRepetitions);
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+		return new DefaultRepetitionInfo(this.currentRepetition, this.totalRepetitions, this.stopFlag);
 	}
 
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119

@@ -14,6 +14,8 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
+import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -100,20 +102,36 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 
 		ExtensionContext extensionContext = context.getExtensionContext();
-//		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
-//		Method testMethod = extensionContext.getRequiredTestMethod();
-//		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
-//		boolean stopFirstFail = repeatedTest.stopFirstFail();
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+        boolean temp = false;
+		final boolean[] hasFailed = {false};
+        Method testMethod = extensionContext.getRequiredTestMethod();
+        if(isAnnotated(testMethod, RepeatedTest.class)){
+            RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
+            temp = repeatedTest.stopFirstFail();
+        }
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
 		// @formatter:off
+		final boolean StopFlag = temp;
 		providers.stream()
 				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(extensionContext))
 				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
+				.forEach(invocationTestDescriptor ->
+						{
+							if(StopFlag){
+								if(!hasFailed[0]){
+									execute(dynamicTestExecutor, invocationTestDescriptor);
+									hasFailed[0] = invocationTestDescriptor.getTestExecutionResult().getStatus() == FAILED;
+								}
+							}else {
+								execute(dynamicTestExecutor, invocationTestDescriptor);
+							}
+						}
+				);
 		// @formatter:on
 		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
 		return context;
