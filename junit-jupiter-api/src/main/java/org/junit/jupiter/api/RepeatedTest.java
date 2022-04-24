@@ -153,6 +153,12 @@ public @interface RepeatedTest {
 	String name() default SHORT_DISPLAY_NAME;
 
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
+	/**
+	 * The flag determining whether the repeated tests will stop after first
+	 * fail occurring.
+	 *
+	 * @return The flag stopFirstFail
+	 */
 	boolean stopFirstFail() default false;
 
 }

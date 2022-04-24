@@ -50,6 +50,13 @@ public interface RepetitionInfo {
 	 */
 	int getTotalRepetitions();
 
+	/**
+	 * Get The flag determining whether the repeated tests will stop after first
+	 * fail occurring of the corresponding
+	 * {@link RepeatedTest @RepeatedTest} method.
+	 *
+	 * @see RepeatedTest#stopFirstFail
+	 */
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2119
 	boolean getStopFlag();
 }
