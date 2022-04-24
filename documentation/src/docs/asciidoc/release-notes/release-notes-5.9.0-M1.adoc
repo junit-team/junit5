@@ -41,6 +41,8 @@ on GitHub.
   User Guide>> for details.
 * `ConsoleLauncher`'s default theme is now determined by the charset reported by the system
   console on Java 17 and later.
+* New `--list-engines` option added to the `ConsoleLauncher` displaying all registered test
+  engine implementations.
 * Configuring include `EngineFilters` that do not match any registered `TestEngine`
   results in an error to avoid misconfiguration, e.g. due to typos.
 
