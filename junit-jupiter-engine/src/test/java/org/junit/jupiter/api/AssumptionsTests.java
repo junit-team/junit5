@@ -204,7 +204,7 @@ class AssumptionsTests {
 
 	// --- assummeDoesNotThrow --------------------------------------------------
 	@Test
-	void assumeDoesNotThrowWithMethodReferenceForNonVoidReturnType(){
+	void assumeDoesNotThrowWithMethodReferenceForNonVoidReturnType() {
 		FutureTask<String> future = new FutureTask<>(() -> {
 			return "foo";
 		});
@@ -227,7 +227,7 @@ class AssumptionsTests {
 	}
 
 	@Test
-	void assumeDoesNotThrowWithMethodReferenceForVoidReturnType(){
+	void assumeDoesNotThrowWithMethodReferenceForVoidReturnType() {
 		var foo = new Foo();
 
 		// Note: the following does not compile since the compiler cannot properly
@@ -326,7 +326,7 @@ class AssumptionsTests {
 			assertMessageEquals(ex, "Assumption failed");
 		}
 	}
-	///
+
 	@Test
 	void assumeDoesNotThrowWithExecutableThatThrowsAnExceptionWithMessageString() {
 		try {
@@ -351,8 +351,7 @@ class AssumptionsTests {
 			expectTestAbortedException();
 		}
 		catch (TestAbortedException ex) {
-			assertMessageEquals(ex,
-					"Assumption failed: Custom message");
+			assertMessageEquals(ex, "Assumption failed: Custom message");
 		}
 	}
 
@@ -365,8 +364,7 @@ class AssumptionsTests {
 			expectTestAbortedException();
 		}
 		catch (TestAbortedException ex) {
-			assertMessageEquals(ex,
-					"Assumption failed: Custom message");
+			assertMessageEquals(ex, "Assumption failed: Custom message");
 		}
 	}
 
@@ -380,8 +378,7 @@ class AssumptionsTests {
 			expectTestAbortedException();
 		}
 		catch (TestAbortedException ex) {
-			assertMessageEquals(ex,
-					"Assumption failed: Custom message");
+			assertMessageEquals(ex, "Assumption failed: Custom message");
 		}
 	}
 
