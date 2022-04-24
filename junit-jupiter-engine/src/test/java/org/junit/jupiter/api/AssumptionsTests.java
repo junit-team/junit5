@@ -336,8 +336,7 @@ class AssumptionsTests {
 			expectTestAbortedException();
 		}
 		catch (TestAbortedException ex) {
-			assertMessageEquals(ex,
-					"Assumption failed: Custom message");
+			assertMessageEquals(ex, "Assumption failed: Custom message");
 		}
 	}
 
@@ -381,9 +380,6 @@ class AssumptionsTests {
 			assertMessageEquals(ex, "Assumption failed: Custom message");
 		}
 	}
-
-
-
 
 	// --- supplier ------------------------------------------------------------
 	@Test
@@ -476,7 +472,7 @@ class AssumptionsTests {
 		catch (Throwable ex) {
 			assertTrue(ex instanceof TestAbortedException);
 			assertMessageEquals((TestAbortedException) ex,
-					msg == null ? "Assumption failed" : "Assumption failed: " + msg);
+				msg == null ? "Assumption failed" : "Assumption failed: " + msg);
 		}
 	}
 
@@ -487,7 +483,7 @@ class AssumptionsTests {
 	private static void assertMessageEquals(TestAbortedException ex, String msg) throws AssertionError {
 		if (!msg.equals(ex.getMessage())) {
 			throw new AssertionError(
-					"Message in TestAbortedException should be [" + msg + "], but was [" + ex.getMessage() + "].");
+				"Message in TestAbortedException should be [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
