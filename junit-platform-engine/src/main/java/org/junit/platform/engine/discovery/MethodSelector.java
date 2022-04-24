@@ -154,7 +154,7 @@ public class MethodSelector implements DiscoverySelector {
 		if (this.javaClass == null) {
 			// @formatter:off
 			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
-				cause -> new PreconditionViolationException("Could not load class with name: " + this.className, cause));
+					cause -> new PreconditionViolationException("Could not load class with name: " + this.className, cause));
 			// @formatter:on
 		}
 	}
@@ -165,18 +165,27 @@ public class MethodSelector implements DiscoverySelector {
 		if (this.javaMethod == null) {
 			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
 				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName,
-					this.methodParameterTypes).orElseThrow(
+						this.methodParameterTypes).orElseThrow(
 						() -> new PreconditionViolationException(String.format(
-							"Could not find method with name [%s] and parameter types [%s] in class [%s].",
-							this.methodName, this.methodParameterTypes, this.javaClass.getName())));
+								"Could not find method with name [%s] and parameter types [%s] in class [%s].",
+								this.methodName, this.methodParameterTypes, this.javaClass.getName())));
 			}
 			else {
 				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName).orElseThrow(
-					() -> new PreconditionViolationException(
-						String.format("Could not find method with name [%s] in class [%s].", this.methodName,
-							this.javaClass.getName())));
+						() -> new PreconditionViolationException(
+								String.format("Could not find method with name [%s] in class [%s].", this.methodName,
+										this.javaClass.getName())));
 			}
 		}
+	}
+
+	/**
+	 * the method to convert the internal kotlin name to java byte code
+	 * @return the java byte code after converting
+	 */
+	public String kotlinInternalByteCode(){
+		String originalname = this.getMethodName();
+		return originalname.concat("$kotlin");
 	}
 
 	/**
