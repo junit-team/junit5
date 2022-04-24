@@ -11,6 +11,8 @@
 package org.junit.platform.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -45,7 +47,16 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 		var e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
 
 		assertThat(e).hasMessage("Could not load class with name: TestClass").hasCauseInstanceOf(
-			ClassNotFoundException.class);
+				ClassNotFoundException.class);
+	}
+
+	@Test
+	void testGetKotlinInternalByteCode(){
+		var selector1 = new MethodSelector("TestClass", "method", "int, boolean");
+		assertAll(()->assertEquals("method$kotlin", selector1.kotlinInternalByteCode()));
+
+		var selector2 = new MethodSelector("TestClass", "method");
+		assertAll(()->assertEquals("method$kotlin", selector2.kotlinInternalByteCode()));
 	}
 
 }

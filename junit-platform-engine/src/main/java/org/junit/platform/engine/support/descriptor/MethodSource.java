@@ -13,7 +13,9 @@ package org.junit.platform.engine.support.descriptor;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Objects;
 
 import org.apiguardian.api.API;
@@ -196,7 +198,7 @@ public class MethodSource implements TestSource {
 		if (this.javaClass == null) {
 			// @formatter:off
 			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
-				cause -> new PreconditionViolationException("Could not load class with name: " + this.className, cause));
+					cause -> new PreconditionViolationException("Could not load class with name: " + this.className, cause));
 			// @formatter:on
 		}
 	}
@@ -207,18 +209,74 @@ public class MethodSource implements TestSource {
 		if (this.javaMethod == null) {
 			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
 				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName,
-					this.methodParameterTypes).orElseThrow(
+						this.methodParameterTypes).orElseThrow(
 						() -> new PreconditionViolationException(String.format(
-							"Could not find method with name [%s] and parameter types [%s] in class [%s].",
-							this.methodName, this.methodParameterTypes, this.javaClass.getName())));
+								"Could not find method with name [%s] and parameter types [%s] in class [%s].",
+								this.methodName, this.methodParameterTypes, this.javaClass.getName())));
 			}
 			else {
 				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName).orElseThrow(
-					() -> new PreconditionViolationException(
-						String.format("Could not find method with name [%s] in class [%s].", this.methodName,
-							this.javaClass.getName())));
+						() -> new PreconditionViolationException(
+								String.format("Could not find method with name [%s] in class [%s].", this.methodName,
+										this.javaClass.getName())));
 			}
 		}
+	}
+
+	/**
+	 * the fuction to get the kotlin function name from the java method
+	 * @param forceConvert the boolean for forcing the method to convert without type check
+	 * @return the result of the kotlin function name
+	 */
+
+	public String getKotlinFunctionName(boolean forceConvert) {
+		Method method = this.javaMethod;
+		String name = method.getName();
+		if (isKotlinClass(method.getDeclaringClass())||forceConvert) {
+			if (isKotlinInternal(method)||(forceConvert&&method.getName().contains("$"))) {
+				name = nameWithoutInternalPart(name);
+			}
+			if (isKotlinSpecial(method)||(forceConvert&&method.getName().contains("-"))) {
+				name = nameWithoutSpecialPart(name);
+			}
+		}
+		return name;
+	}
+
+	public String getKotlinFunctionName() {
+		return getKotlinFunctionName(false);
+	}
+
+	private static boolean isKotlinInternal(Method method) {
+		if ((method.getModifiers() & Modifier.PUBLIC) == 0) {
+			return false;
+		}
+		return method.getName().endsWith("$kotlin");
+	}
+
+	private static boolean isKotlinSpecial(Method method) {
+		String name = isKotlinInternal(method) ? nameWithoutInternalPart(method.getName()): method.getName();
+		int lastIndexOfHyphen = name.lastIndexOf('-');
+		return lastIndexOfHyphen >= 0 && lastIndexOfHyphen == (name.length() - 8);
+	}
+
+	private static boolean isKotlinClass(Class<?> aClass) {
+		for (Annotation annotation : aClass.getDeclaredAnnotations()) {
+			if (annotation.annotationType().getTypeName().equals("kotlin.Metadata")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static String nameWithoutInternalPart(String name) {
+		int lastDollarPosition = name.lastIndexOf('$');
+		return name.substring(0, lastDollarPosition);
+	}
+
+	private static String nameWithoutSpecialPart(String name) {
+		int lastDollarPosition = name.lastIndexOf('-');
+		return name.substring(0, lastDollarPosition);
 	}
 
 	@Override
