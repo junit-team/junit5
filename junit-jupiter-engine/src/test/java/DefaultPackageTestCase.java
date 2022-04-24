@@ -9,7 +9,8 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Simple test case that is used to verify proper support for classpath scanning
@@ -20,9 +21,22 @@ import org.junit.jupiter.api.Test;
 @Disabled("Only used reflectively by other tests")
 class DefaultPackageTestCase {
 
-	@Test
-	void test() {
-		// do nothing
-	}
+//	// Set stopFirstFail as true, 10 tests all passed.
+//	@RepeatedTest(value = 10, stopFirstFail = true)
+//	void test0() {
+//		assertTrue(true);
+//	}
+//
+//	// Set stopFirstFail as default (false), 10 tests all passed.
+//	@RepeatedTest(value = 10)
+//	void test1() {
+//		assertTrue(true);
+//	}
+//
+//	// Set stopFirstFail as true, this set of test will stop after test1 failed.
+//	@RepeatedTest(value = 10, stopFirstFail = true)
+//	void test2() {
+//		assertEquals(1, 2);
+//	}
 
 }
