@@ -329,5 +329,13 @@ public @interface Timeout {
 	 * @see TimeUnit
 	 */
 	TimeUnit unit() default TimeUnit.SECONDS;
+	/**
+	 * The type of thread for invocation.
+	 *
+	 * @return timeout invocation mode
+	 * @see TimeoutInvocationMode
+	 */
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2087
+	TimeoutInvocationMode timeoutMode() default TimeoutInvocationMode.INFERRED;
 
 }

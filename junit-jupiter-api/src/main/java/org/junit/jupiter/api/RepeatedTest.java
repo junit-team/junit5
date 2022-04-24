@@ -55,7 +55,7 @@ import org.apiguardian.api.API;
  *
  * <p>Although true <em>unit tests</em> typically should not rely on the order
  * in which they are executed, there are times when it is necessary to enforce
- * a specific test method execution order &mdash; for example, when writing
+ * a specific test method execution order&mdash;for example, when writing
  * <em>integration tests</em> or <em>functional tests</em> where the sequence of
  * the tests is important, especially in conjunction with
  * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
