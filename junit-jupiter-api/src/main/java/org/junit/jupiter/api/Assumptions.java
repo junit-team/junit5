@@ -258,7 +258,7 @@ public class Assumptions {
 
 	private static void throwTestAbortedException(String message) {
 		throw new TestAbortedException(
-		    StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
+			StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
 	}
 
 	// --- assumingDoesNotThrow --------------------------------------------------
