@@ -11,6 +11,7 @@
 package org.junit.platform.launcher;
 
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.FilterResult.includedIf;
 
@@ -109,6 +110,16 @@ public class EngineFilter implements Filter<TestEngine> {
 		this.type = type;
 	}
 
+	@API(status = INTERNAL, since = "1.9")
+	public List<String> getEngineIds() {
+		return engineIds;
+	}
+
+	@API(status = INTERNAL, since = "1.9")
+	public boolean isIncludeFilter() {
+		return type == Type.INCLUDE;
+	}
+
 	@Override
 	public FilterResult apply(TestEngine testEngine) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
@@ -152,7 +163,7 @@ public class EngineFilter implements Filter<TestEngine> {
 
 		private final String verb;
 
-		private Type(String verb) {
+		Type(String verb) {
 			this.verb = verb;
 		}
 
