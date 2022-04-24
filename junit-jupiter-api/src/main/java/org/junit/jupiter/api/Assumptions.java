@@ -258,9 +258,8 @@ public class Assumptions {
 
 	private static void throwTestAbortedException(String message) {
 		throw new TestAbortedException(
-				StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
+			StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
 	}
-
 
 	// --- assumingDoesNotThrow --------------------------------------------------
 
@@ -308,7 +307,7 @@ public class Assumptions {
 	 * the {@code TestAbortedException} if the execution throws an exception
 	 * @throws TestAbortedException if the execution of the executable throws an exception
 	 */
-	public static void assumeDoesNotThrow(Executable executable, Object messageOrSupplier) throws TestAbortedException{
+	public static void assumeDoesNotThrow(Executable executable, Object messageOrSupplier) throws TestAbortedException {
 		try {
 			executable.execute();
 		}
@@ -366,7 +365,8 @@ public class Assumptions {
 	 * @return the supplier's result if the assumption passes
 	 * @throws TestAbortedException if the execution of the supplied supplier throws an exception
 	 */
-	public static <T> T assumeDoesNotThrow(ThrowingSupplier<T> supplier, Object messageOrSupplier) throws TestAbortedException{
+	public static <T> T assumeDoesNotThrow(ThrowingSupplier<T> supplier, Object messageOrSupplier)
+			throws TestAbortedException {
 		try {
 			return supplier.get();
 		}
@@ -374,7 +374,8 @@ public class Assumptions {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(t);//?  might not need finally
 			//throwTestAbortedException(nullSafeGet(messageOrSupplier));
 			String message = nullSafeGet(messageOrSupplier);
-			throw new TestAbortedException(StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
+			throw new TestAbortedException(
+				StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
 		}
 	}
 }
