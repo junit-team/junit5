@@ -251,8 +251,10 @@ public interface MethodOrderer {
 	 *
 	 */
 	class EnforcingOrderAnnotation implements MethodOrderer{
+
 		public EnforcingOrderAnnotation() {
 		}
+
 		/**
 		 * Sort the methods encapsulated in the supplied
 		 * {@link MethodOrdererContext} based on the {@link Order}
@@ -264,11 +266,7 @@ public interface MethodOrderer {
 		public void orderMethods(MethodOrdererContext context) {
 			try {
 				long methodCnt = context.getMethodDescriptors().size();
-				long distinctOrderCnt = context.getMethodDescriptors()
-						.stream()
-						.mapToInt(OrderAnnotation::getOrder)
-						.distinct()
-						.count();
+				long distinctOrderCnt = context.getMethodDescriptors().stream().mapToInt(OrderAnnotation::getOrder).distinct().count();
 				if (methodCnt != distinctOrderCnt)
 					throw new Exception("duplicate order" + "expected: " + methodCnt + " but was: <" + distinctOrderCnt + ">");
 			}catch (Exception e){
