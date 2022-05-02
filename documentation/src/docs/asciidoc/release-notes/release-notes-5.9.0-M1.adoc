@@ -33,8 +33,8 @@ on GitHub.
   resolution time a fully running set of dependencies is calculated, avoiding the need for
   these to be manually specified.
 * JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.
-* New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if
-  no tests were discovered.
+* New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if no tests
+  were discovered.
 * `ConsoleLauncher`'s output color can now be customized. The option `--single-color` will
   apply a built-in monochrome style, while `--color-palette` will accept a properties file.
   See the <<../user-guide/index.adoc#running-tests-console-launcher-color-customization,
@@ -44,7 +44,7 @@ on GitHub.
 * New `--list-engines` option added to the `ConsoleLauncher` displaying all registered test
   engine implementations.
 * Configuring include `EngineFilters` that do not match any registered `TestEngine`
-  results in an error to avoid misconfiguration, e.g. due to typos.
+  results in an error to avoid misconfiguration – for example, due to typos.
 
 
 [[release-notes-5.9.0-M1-junit-jupiter]]
@@ -62,7 +62,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* `@TempDir` now includes a cleanup mode attribute for preventing a temporary directory
+* `@TempDir` now includes a `cleanup` mode attribute for preventing a temporary directory
   from being deleted after a test. The default cleanup mode can be configured via a
   configuration parameter.
 * Support for FreeBSD and OpenBSD operating systems in `@EnabledOnOs` and `@DisabledOnOs`.
