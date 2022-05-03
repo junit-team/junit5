@@ -7287,8 +7287,8 @@ parameters</em> used for the following features.</p>
 </div>
 <div class="paragraph">
 <p>If the value for the given <em>configuration parameter</em> consists solely of an asterisk
-(<code>*</code>), the pattern will match against all candidate classes. Otherwise, the value will
-be treated as a comma-separated list of patterns where each pattern will be matched
+(<code>*</code>), the pattern will match against all candidate classes. Otherwise, the value
+will be treated as a comma-separated list of patterns where each pattern will be matched
 against the fully qualified class name (<em>FQCN</em>) of each candidate class. Any dot (<code>.</code>) in
 a pattern will match against a dot (<code>.</code>) or a dollar sign (<code>$</code>) in a FQCN. Any asterisk
 (<code>*</code>) will match against one or more characters in a FQCN. All other characters in a
@@ -7314,8 +7314,8 @@ any of its subpackages.</p>
 <p><code>*System*</code>: matches every candidate class whose FQCN contains <code>System</code>.</p>
 </li>
 <li>
-<p><code>*System*+, +*Unit*</code>: matches every candidate class whose FQCN contains <code>System</code> or
-<code>Unit</code>.</p>
+<p><code>*System*, *Unit*</code>: matches every candidate class whose FQCN contains
+<code>System</code> or <code>Unit</code>.</p>
 </li>
 <li>
 <p><code>org.example.MyCustomImpl</code>: matches the candidate class whose FQCN is exactly
@@ -7459,23 +7459,23 @@ expressions can be useful.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">product</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>product</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>product</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">catalog | shipping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>catalog | shipping</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>catalog</strong> plus all tests for <strong>shipping</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">catalog &amp; shipping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>catalog & shipping</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">all tests for the intersection between <strong>catalog</strong> and <strong>shipping</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">product &amp; !end-to-end</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>product & !end-to-end</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>product</strong>, but not the <em>end-to-end</em> tests</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(micro | integration) &amp; (product | shipping)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(micro | integration) & (product | shipping)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">all <em>micro</em> or <em>integration</em> tests for <strong>product</strong> or <strong>shipping</strong></p></td>
 </tr>
 </tbody>
@@ -11377,7 +11377,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-05-02 15:20:33 UTC
+Last updated 2022-05-03 09:14:11 UTC
 </div>
 </div>
 <style>
