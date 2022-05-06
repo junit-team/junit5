@@ -68,6 +68,7 @@ on GitHub.
 * Support for FreeBSD and OpenBSD operating systems in `@EnabledOnOs` and `@DisabledOnOs`.
 * New `MATCH_NONE` mode for `@EnumSource` that selects only those enum constants whose
   names match none of the supplied patterns.
+* The `@Order` annotation is now a `STABLE` API.
 * New `TestInstancePreConstructCallback` extension API that is called prior to test
   instance construction – symmetric to the existing `TestInstancePreDestroyCallback`
   extension API.
