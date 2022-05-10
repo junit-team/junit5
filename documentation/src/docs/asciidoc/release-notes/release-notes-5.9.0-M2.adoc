@@ -43,6 +43,8 @@ on GitHub.
   method is a method declared in the test class with the same name as the
   `@ParameterizedTest` method that is inferred as the factory method when no explicit
   factory method is specified in the `@MethodSource` annotation.
+* Three new `abort` methods have been added to the `Assumptions` class.
+  These are analogous to the `fail` methods in the `Assertions` class, but instead of failing they abort the test.
 
 
 [[release-notes-5.9.0-M2-junit-vintage]]

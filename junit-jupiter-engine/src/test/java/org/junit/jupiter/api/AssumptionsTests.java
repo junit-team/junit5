@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.abort;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.Assumptions.assumingThat;
@@ -193,6 +194,23 @@ class AssumptionsTests {
 		assertThrows(EnigmaThrowable.class, () -> assumingThat(true, () -> {
 			throw new EnigmaThrowable();
 		}));
+	}
+
+	// --- abort ---------------------------------------------------------
+
+	@Test
+	void abortWithNoArguments() {
+		assertAssumptionFailure("test aborted", () -> abort());
+	}
+
+	@Test
+	void abortWithStringMessage() {
+		assertAssumptionFailure("test", () -> abort("test"));
+	}
+
+	@Test
+	void abortWithStringSupplier() {
+		assertAssumptionFailure("test", () -> abort(() -> "test"));
 	}
 
 	// -------------------------------------------------------------------

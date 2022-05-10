@@ -253,6 +253,44 @@ public class Assumptions {
 		}
 	}
 
+	/**
+	 * <em>Abort</em> the test.
+	 *
+	 * <p>Although aborting with an explicit failure message is recommended,
+	 * this method may be useful when maintaining legacy code.
+	 *
+	 * @throws TestAbortedException always
+	 * @since 5.9
+	 */
+	@API(status = STABLE, since = "5.9")
+	public static void abort() {
+		throwTestAbortedException("test aborted");
+	}
+
+	/**
+	 * <em>Abort</em> the test with the given {@code message}.
+	 *
+	 * @param message the message to be included in the {@code TestAbortedException}
+	 * @throws TestAbortedException always
+	 * @since 5.9
+	 */
+	@API(status = STABLE, since = "5.9")
+	public static void abort(String message) {
+		throwTestAbortedException(message);
+	}
+
+	/**
+	 * <em>Abort</em> the test with the supplied message.
+	 *
+	 * @param messageSupplier the supplier of the message to be included in {@code TestAbortedException}
+	 * @throws TestAbortedException always
+	 * @since 5.9
+	 */
+	@API(status = STABLE, since = "5.9")
+	public static void abort(Supplier<String> messageSupplier) {
+		throwTestAbortedException(messageSupplier.get());
+	}
+
 	private static void throwTestAbortedException(String message) {
 		throw new TestAbortedException(
 			StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
