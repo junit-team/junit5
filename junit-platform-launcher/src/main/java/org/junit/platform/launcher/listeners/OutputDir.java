@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.StringUtils;
 
-@API(status = INTERNAL, since = "1.8")
+@API(status = INTERNAL, since = "1.9")
 public class OutputDir {
 
 	public static OutputDir create(Optional<String> customDir) {
