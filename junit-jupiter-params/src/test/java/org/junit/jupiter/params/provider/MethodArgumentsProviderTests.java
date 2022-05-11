@@ -257,7 +257,7 @@ class MethodArgumentsProviderTests {
 			() -> provideArguments(ExternalFactoryMethods.class.getName() + "#nonExistentMethod").toArray());
 
 		assertThat(exception.getMessage()).isEqualTo(
-			"Could not find method [nonExistentMethod] in class [" + ExternalFactoryMethods.class.getName() + "]");
+			"Could not find method [nonExistentMethod()] in class [" + ExternalFactoryMethods.class.getName() + "]");
 	}
 
 	@Test
@@ -389,7 +389,7 @@ class MethodArgumentsProviderTests {
 				() -> provideArguments("stringStreamProviderWithOrWithoutParameter").toArray());
 
 			assertThat(exception.getMessage()).isEqualTo(
-				"Several factory method named [stringStreamProviderWithOrWithoutParameter] were found in class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]");
+				"Several factory methods named [stringStreamProviderWithOrWithoutParameter] were found in class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]");
 		}
 
 		@Test

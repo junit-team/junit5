@@ -68,7 +68,8 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		String methodParameters = methodParts[2];
 
 		return ReflectionUtils.findMethod(loadRequiredClass(className), methodName, methodParameters).orElseThrow(
-			() -> new JUnitException(format("Could not find method [%s] in class [%s]", methodName, className)));
+			() -> new JUnitException(
+				format("Could not find method [%s(%s)] in class [%s]", methodName, methodParameters, className)));
 	}
 
 	private Method getMethodByShortName(Class<?> testClass, String methodName) {
@@ -76,7 +77,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		Preconditions.condition(methods.size() > 0,
 			() -> format("Could not find method [%s] in class [%s]", methodName, testClass.getName()));
 		Preconditions.condition(methods.size() <= 1,
-			() -> format("Several factory method named [%s] were found in class [%s]", methodName,
+			() -> format("Several factory methods named [%s] were found in class [%s]", methodName,
 				testClass.getName()));
 		return methods.get(0);
 	}
