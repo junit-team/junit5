@@ -108,8 +108,6 @@ tasks.test {
 		requirements.add("jdk=8")
 	}
 	jvmArgumentProviders += JavaHomeDir(project, 8)
-
-	maxParallelForks = 1 // Bartholdy.install is not parallel safe, see https://github.com/sormuras/bartholdy/issues/4
 }
 
 class MavenRepo(@get:InputDirectory @get:PathSensitive(RELATIVE) val repoDir: File) : CommandLineArgumentProvider {
