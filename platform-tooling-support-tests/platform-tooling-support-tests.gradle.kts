@@ -66,14 +66,22 @@ val unzipMavenDistribution by tasks.registering(Copy::class) {
 }
 
 tasks.test {
+	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
+	enabled = System.getProperty("platform.tooling.support.tests.enabled")?.toBoolean() ?: true
 
-	// All maven-aware projects must be installed, i.e. published to the local repository
-	val mavenizedProjects: List<Project> by rootProject
-	val tempRepoName: String by rootProject
+	// The following if-block is necessary since Gradle will otherwise
+	// always publish all mavenizedProjects even if this "test" task
+	// is not executed.
+	if (enabled) {
 
-	(mavenizedProjects + projects.junitBom.dependencyProject)
+		// All maven-aware projects must be installed, i.e. published to the local repository
+		val mavenizedProjects: List<Project> by rootProject
+		val tempRepoName: String by rootProject
+
+		(mavenizedProjects + projects.junitBom.dependencyProject)
 			.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
 			.forEach { dependsOn(it) }
+	}
 
 	val tempRepoDir: File by rootProject
 	jvmArgumentProviders += MavenRepo(tempRepoDir)
