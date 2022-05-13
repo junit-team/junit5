@@ -17,7 +17,9 @@ import static org.junit.jupiter.api.AssertionUtils.formatValues;
 import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,11 +51,19 @@ class AssertIterableEquals {
 
 	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
 			Object messageOrSupplier) {
+		assertIterableEquals(expected, actual, indexes, messageOrSupplier, new HashSet<>(), new HashSet<>());
+	}
+
+	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
+			Object messageOrSupplier, Collection<Iterable<?>> visitedIterablesExpected,
+			Collection<Iterable<?>> visitedIterablesActual) {
 
 		if (expected == actual) {
 			return;
 		}
 		assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
+		assertIterablesNotAlreadyVisited(expected, actual, indexes, messageOrSupplier, visitedIterablesExpected,
+			visitedIterablesActual);
 
 		Iterator<?> expectedIterator = expected.iterator();
 		Iterator<?> actualIterator = actual.iterator();
@@ -69,7 +79,8 @@ class AssertIterableEquals {
 			}
 
 			indexes.addLast(processed - 1);
-			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier);
+			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier,
+				visitedIterablesExpected, visitedIterablesActual);
 			indexes.removeLast();
 		}
 
@@ -77,12 +88,22 @@ class AssertIterableEquals {
 	}
 
 	private static void assertIterableElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageOrSupplier) {
+			Object messageOrSupplier, Collection<Iterable<?>> visitedIterablesExpected,
+			Collection<Iterable<?>> visitedIterablesActual) {
 		if (expected instanceof Iterable && actual instanceof Iterable) {
-			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageOrSupplier);
+			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageOrSupplier,
+				visitedIterablesExpected, visitedIterablesActual);
 		}
 		else if (!Objects.equals(expected, actual)) {
 			assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
+			failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
+		}
+	}
+
+	private static void assertIterablesNotAlreadyVisited(Iterable<?> expected, Iterable<?> actual,
+			Deque<Integer> indexes, Object messageOrSupplier, Collection<Iterable<?>> visitedIterablesExpected,
+			Collection<Iterable<?>> visitedIterablesActual) {
+		if (!visitedIterablesExpected.add(expected) || !visitedIterablesActual.add(actual)) {
 			failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
 		}
 	}

@@ -460,4 +460,18 @@ class AssertIterableEqualsAssertionsTests {
 		assertThrows(StackOverflowError.class, () -> assertIterableEquals(expected, actual));
 	}
 
+	// https://github.com/junit-team/junit5/issues/2915
+	@Test
+	void assertIterableEqualsWithDifferentListOfPath() {
+		try {
+			var expected = listOf(Path.of("1"), Path.of("2").resolve("3"), Path.of("5"));
+			var actual = listOf(Path.of("1"), Path.of("2").resolve("4"), Path.of("5"));
+			assertIterableEquals(expected, actual);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "iterable contents differ at index [1][1][0], expected: <3> but was: <4>");
+		}
+	}
+
 }
