@@ -72,9 +72,11 @@ class FlatPrintingListenerTests {
 	}
 
 	@Nested
-	class Color {
+	class ColorPaletteTests {
+
 		@Nested
-		class Default {
+		class DefaultColorPaletteTests {
+
 			@Test
 			void executionSkipped() {
 				var stringWriter = new StringWriter();
@@ -117,10 +119,12 @@ class FlatPrintingListenerTests {
 						lines[1]),
 					() -> assertTrue(lines[lines.length - 1].endsWith("\u001B[0m")));
 			}
+
 		}
 
 		@Nested
-		class Overrides {
+		class ColorPaletteOverrideTests {
+
 			@Test
 			void overridingSkipped() {
 				var stringWriter = new StringWriter();
@@ -150,6 +154,7 @@ class FlatPrintingListenerTests {
 					() -> assertEquals("\u001B[35m" + INDENTATION + "=> Reason: Test", lines[1]), //
 					() -> assertEquals(INDENTATION + "disabled\u001B[0m", lines[2]));
 			}
+
 		}
 
 	}

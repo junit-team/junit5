@@ -12,6 +12,7 @@ package org.junit.platform.suite.engine;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.suite.engine.SuiteEngineDescriptor.ENGINE_ID;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -33,14 +34,17 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.engine.testcases.DynamicTestsTestCase;
+import org.junit.platform.suite.engine.testcases.JUnit4TestsTestCase;
 import org.junit.platform.suite.engine.testcases.MultipleTestsTestCase;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
+import org.junit.platform.suite.engine.testcases.TaggedTestTestCase;
 import org.junit.platform.suite.engine.testsuites.AbstractSuite;
 import org.junit.platform.suite.engine.testsuites.DynamicSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestWithFailIfNoTestFalseSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyTestCaseSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyTestCaseWithFailIfNoTestFalseSuite;
+import org.junit.platform.suite.engine.testsuites.MultiEngineSuite;
 import org.junit.platform.suite.engine.testsuites.MultipleSuite;
 import org.junit.platform.suite.engine.testsuites.NestedSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
@@ -328,6 +332,21 @@ class SuiteEngineTests {
 				.allEvents()
 				.assertThatEvents()
 				.haveAtLeastOne(event(container(EmptyDynamicTestWithFailIfNoTestFalseSuite.class), finishedSuccessfully()));
+		// @formatter:on
+	}
+
+	@Test
+	void pruneAfterPostDiscoveryFilters() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(MultiEngineSuite.class))
+				.filters(excludeTags("excluded"))
+				.execute()
+				.allEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(test(JUnit4TestsTestCase.class.getName()), finishedSuccessfully()))
+				.doNotHave(test(TaggedTestTestCase.class.getName()))
+				.doNotHave(container("junit-jupiter"));
 		// @formatter:on
 	}
 

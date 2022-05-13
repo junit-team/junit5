@@ -341,10 +341,10 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 The Maven Surefire Plugin will scan for test classes whose fully qualified names match
 the following patterns.
 
-- `+**/Test*.java+`
-- `+**/*Test.java+`
-- `+**/*Tests.java+`
-- `+**/*TestCase.java+`
+- `+++**/Test*.java+++`
+- `+++**/*Test.java+++`
+- `+++**/*Tests.java+++`
+- `+++**/*TestCase.java+++`
 
 Moreover, it will exclude all nested classes (including static member classes) by default.
 
@@ -796,23 +796,23 @@ parameters_ used for the following features.
 - <<launcher-api-listeners-custom-deactivation>>
 
 If the value for the given _configuration parameter_ consists solely of an asterisk
-(`+*+`), the pattern will match against all candidate classes. Otherwise, the value will
-be treated as a comma-separated list of patterns where each pattern will be matched
+(`+++*+++`), the pattern will match against all candidate classes. Otherwise, the value
+will be treated as a comma-separated list of patterns where each pattern will be matched
 against the fully qualified class name (_FQCN_) of each candidate class. Any dot (`.`) in
 a pattern will match against a dot (`.`) or a dollar sign (`$`) in a FQCN. Any asterisk
-(`+*+`) will match against one or more characters in a FQCN. All other characters in a
+(`+++*+++`) will match against one or more characters in a FQCN. All other characters in a
 pattern will be matched one-to-one against a FQCN.
 
 Examples:
 
-- `+*+`: matches all candidate classes.
-- `+org.junit.*+`: matches all candidate classes under the `org.junit` base package and
+- `+++*+++`: matches all candidate classes.
+- `+++org.junit.*+++`: matches all candidate classes under the `org.junit` base package and
   any of its subpackages.
-- `+*.MyCustomImpl+`: matches every candidate class whose simple class name is exactly
+- `+++*.MyCustomImpl+++`: matches every candidate class whose simple class name is exactly
   `MyCustomImpl`.
-- `+*System*+`: matches every candidate class whose FQCN contains `System`.
-- `+*System*+, +*Unit*+`: matches every candidate class whose FQCN contains `System` or
-  `Unit`.
+- `+++*System*+++`: matches every candidate class whose FQCN contains `System`.
+- `+++*System*+++, +++*Unit*+++`: matches every candidate class whose FQCN contains
+  `System` or `Unit`.
 - `org.example.MyCustomImpl`: matches the candidate class whose FQCN is exactly
   `org.example.MyCustomImpl`.
 - `org.example.MyCustomImpl, org.example.TheirCustomImpl`: matches candidate classes whose
@@ -877,19 +877,19 @@ expressions can be useful.
 | Tag Expression
 | Selection
 
-| +product+
+| `+++product+++`
 | all tests for *product*
 
-| +catalog \| shipping+
+| `+++catalog \| shipping+++`
 | all tests for *catalog* plus all tests for *shipping*
 
-| +catalog & shipping+
+| `+++catalog & shipping+++`
 | all tests for the intersection between *catalog* and *shipping*
 
-| +product & !end-to-end+
+| `+++product & !end-to-end+++`
 | all tests for *product*, but not the _end-to-end_ tests
 
-| +(micro \| integration) & (product \| shipping)+
+| `+++(micro \| integration) & (product \| shipping)+++`
 | all _micro_ or _integration_ tests for *product* or *shipping*
 |===
 

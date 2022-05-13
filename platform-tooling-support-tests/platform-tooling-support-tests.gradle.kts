@@ -67,19 +67,20 @@ val unzipMavenDistribution by tasks.registering(Copy::class) {
 
 tasks.test {
 	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
-	enabled = System.getProperty("platform.tooling.support.tests.enabled")?.toBoolean() ?: false
+	enabled = System.getProperty("platform.tooling.support.tests.enabled")?.toBoolean() ?: true
 
 	// The following if-block is necessary since Gradle will otherwise
 	// always publish all mavenizedProjects even if this "test" task
 	// is not executed.
 	if (enabled) {
+
 		// All maven-aware projects must be installed, i.e. published to the local repository
 		val mavenizedProjects: List<Project> by rootProject
 		val tempRepoName: String by rootProject
 
 		(mavenizedProjects + projects.junitBom.dependencyProject)
-				.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
-				.forEach { dependsOn(it) }
+			.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
+			.forEach { dependsOn(it) }
 	}
 
 	val tempRepoDir: File by rootProject
@@ -107,8 +108,6 @@ tasks.test {
 		requirements.add("jdk=8")
 	}
 	jvmArgumentProviders += JavaHomeDir(project, 8)
-
-	maxParallelForks = 1 // Bartholdy.install is not parallel safe, see https://github.com/sormuras/bartholdy/issues/4
 }
 
 class MavenRepo(@get:InputDirectory @get:PathSensitive(RELATIVE) val repoDir: File) : CommandLineArgumentProvider {

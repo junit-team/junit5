@@ -34,6 +34,9 @@ tasks.withType<Test>().configureEach {
 			}
 		}
 	}
+	predictiveSelection {
+		enabled.set(providers.gradleProperty("enablePredictiveTestSelection").map(String::toBoolean).orElse(true))
+	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14
 	systemProperty("net.bytebuddy.experimental", true)
