@@ -144,8 +144,10 @@ loadScripts(document, 'script');</script>
  <p>Factory methods within the test class must be <code>static</code> unless the
  <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/TestInstance.Lifecycle.html#PER_CLASS"><code>PER_CLASS</code></a>
  test instance lifecycle mode is used; whereas, factory methods in external
- classes must always be <code>static</code>. In any case, factory methods must not
- declare any parameters.</div>
+ classes must always be <code>static</code>.
+
+ <p>Factory methods can declare parameters, which will be provided by registered
+ implementations of <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolver</code></a>.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.0</dd>

@@ -3740,7 +3740,7 @@ or external classes.</p>
 <div class="paragraph">
 <p>Factory methods within the test class must be <code>static</code> unless the test class is annotated
 with <code>@TestInstance(Lifecycle.PER_CLASS)</code>; whereas, factory methods in external classes
-must always be <code>static</code>. In addition, such factory methods must not accept any arguments.</p>
+must always be <code>static</code>.</p>
 </div>
 <div class="paragraph">
 <p>Each factory method must generate a <em>stream</em> of <em>arguments</em>, and each set of arguments
@@ -3859,6 +3859,48 @@ qualified method name</em> as demonstrated in the following example.</p>
     <span class="kd">static</span> <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">tinyStrings</span><span class="o">()</span> <span class="o">{</span>
         <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"."</span><span class="o">,</span> <span class="s">"oo"</span><span class="o">,</span> <span class="s">"OOO"</span><span class="o">);</span>
     <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Factory methods can declare parameters, which will be provided by registered implementations
+of <code>ParameterResolver</code>. In the following example, the factory method is referenced by its
+name since there&#8217;s only one such method in the test class. If there are several methods with
+the same name, the factory method needs to be referenced by its fully qualified method name
+(e.g., <code>@MethodSource("example.MyTests#factoryMethodWithArguments(java.lang.String)")</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@RegisterExtension</span>
+<span class="kd">static</span> <span class="kd">final</span> <span class="nc">IntegerResolver</span> <span class="n">integerResolver</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">IntegerResolver</span><span class="o">();</span>
+
+<span class="nd">@ParameterizedTest</span>
+<span class="nd">@MethodSource</span><span class="o">(</span><span class="s">"factoryMethodWithArguments"</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">testWithArgumentsProviderUsingParameterResolvers</span><span class="o">(</span><span class="nc">String</span> <span class="n">argument</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">assertTrue</span><span class="o">(</span><span class="n">argument</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">"2"</span><span class="o">));</span>
+<span class="o">}</span>
+
+<span class="kd">static</span> <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">Arguments</span><span class="o">&gt;</span> <span class="nf">factoryMethodWithArguments</span><span class="o">(</span><span class="kt">int</span> <span class="n">quantity</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span>
+            <span class="n">arguments</span><span class="o">(</span><span class="n">quantity</span> <span class="o">+</span> <span class="s">" apple"</span><span class="o">),</span>
+            <span class="n">arguments</span><span class="o">(</span><span class="n">quantity</span> <span class="o">+</span> <span class="s">" lemon"</span><span class="o">)</span>
+    <span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kd">static</span> <span class="kd">class</span> <span class="nc">IntegerResolver</span> <span class="kd">implements</span> <span class="nc">ParameterResolver</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">supportsParameter</span><span class="o">(</span><span class="nc">ParameterContext</span> <span class="n">parameterContext</span><span class="o">,</span> <span class="nc">ExtensionContext</span> <span class="n">extensionContext</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="nc">ParameterResolutionException</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">parameterContext</span><span class="o">.</span><span class="na">getParameter</span><span class="o">().</span><span class="na">getType</span><span class="o">()</span> <span class="o">==</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">resolveParameter</span><span class="o">(</span><span class="nc">ParameterContext</span> <span class="n">parameterContext</span><span class="o">,</span> <span class="nc">ExtensionContext</span> <span class="n">extensionContext</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="nc">ParameterResolutionException</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="o">}</span>
+
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -11372,7 +11414,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-05-06 13:53:31 UTC
+Last updated 2022-05-12 07:11:35 UTC
 </div>
 </div>
 <style>
