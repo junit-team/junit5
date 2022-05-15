@@ -24,6 +24,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Add support for https://github.com/ota4j-team/open-test-reporting[Open Test Reporting]
+  format which supports all features of the JUnit Platform such as hierarchical test
+  structures, display names, tags, etc. Please refer to the
+  <<../user-guide/index.adoc#junit-platform-reporting-open-test-reporting, User Guide>>
+  for instructions on how to enable such reports in your build.
 * `ConfigurationParameters` has a new `keySet()` method which allows you to retrieve all
   configuration parameter keys.
 * New `IterationSelector` for selecting a subset of a test's or container's iterations.
