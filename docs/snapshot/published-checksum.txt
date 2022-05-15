@@ -186,7 +186,6 @@
 421e428105c42c7cc17d7c5e2439d85c  junit-platform-console/src/main/java/org/junit/platform/console/options/Theme.java
 4255f3a9e3d7f3945c3cc043c8b186b0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/package-info.java
 42ad2c62ad3d50a11b07ed106449fab0  documentation/src/test/java/example/AssertionsDemo.java
-42e843858895296685460796cbac656a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.java
 433f6ce0bfe7b9dd2eac903790a5c274  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.java
 437a2b3884af6d43594109a83229ebda  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOsCondition.java
 444fc1ba568337a795f3f5c45e634cd9  documentation/src/test/java/example/ParameterizedTestDemo.java
@@ -250,6 +249,7 @@
 5742783d863c8c9573fbf115c231421d  documentation/src/test/java/org/junit/api/tools/ApiReportWriter.java
 57471711a581358e8d2c25c2c59d2c3b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.java
 578b9496fe530fa0c360aaac30bf2eb6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
+584df18ee7d092fe1969a9e3b58f184f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.java
 586f330f7cb741290c1d0b514de9924b  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.java
 58cb256bf8a4fe517d88b2701fa37d7b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NopLock.java
 58e57b1e6c67eda59892ceab9da6dbae  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/DequeStack.java
@@ -357,6 +357,7 @@
 7968fbc98d83186dbbc972033ec7dfb5  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestMethodContext.java
 79787c80943b40d745cb06af1f3238ad  documentation/src/docs/asciidoc/user-guide/index.adoc
 7989e907c336fd1c4bafa074cebd865b  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ModifierSupport.java
+7a8158c54bf2bb5636fda7cfd2da10df  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 7a93fb94ec4db6482815a938d889b599  documentation/src/test/resources/log4j2-test.xml
 7b1edcd2956f64328b61985bd8ac48b3  junit-platform-commons/src/main/java/org/junit/platform/commons/support/HierarchyTraversalMode.java
 7b56b97e4c9e103392243aa15bff0e45  documentation/src/docs/asciidoc/user-guide/advanced-topics.adoc
@@ -427,7 +428,6 @@
 9112bb376da38582fa54d215797a2f60  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/InvocationInterceptorChain.java
 91d3c14017874d1617d41561ddc2a8a5  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java
 91e6782c41f3553be200d4da99a2e38a  junit-platform-engine/src/main/java/org/junit/platform/engine/CompositeFilter.java
-91e6da7251341a7a8259cdcc8c7ffe82  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 91f06abae6eb690ca11104aa733ea89a  junit-platform-commons/src/main/java/org/junit/platform/commons/util/package-info.java
 92d50eb1d6102a2bf30b19ac01510c45  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/UseTechnicalNames.java
 93d88e17e2e3a6db4b7ae1848ba1f072  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.java

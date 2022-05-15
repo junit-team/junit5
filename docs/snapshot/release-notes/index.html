@@ -514,10 +514,32 @@ authors as well as build tool and IDE vendors.</p>
 <h2 id="release-notes-5.9.0-M1"><a class="anchor" href="#release-notes-5.9.0-M1"></a>5.9.0-M1</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> May 15, 2022</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>XML reports in new <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a> format</p>
+</li>
+<li>
+<p>Configurable cleanup mode for <code>@TempDir</code></p>
+</li>
+<li>
+<p>New <code>TestInstancePreConstructCallback</code> extension API</p>
+</li>
+<li>
+<p>Reusable parameter resolution for custom extension methods via <code>ExecutableInvoker</code></p>
+</li>
+<li>
+<p>New <code>IterationSelector</code></p>
+</li>
+<li>
+<p>Various improvements to <code>ConsoleLauncher</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -532,6 +554,11 @@ on GitHub.</p>
 <ul>
 <li>
 <p>Fix handling of global post-discovery filters that apply to <code>@Suite</code> classes.</p>
+</li>
+<li>
+<p>Since Turkish language has special characters as 'ı' and 'İ', the uppercase conversion on
+<code>DefaultParallelExecutionConfigurationStrategy#getStrategy</code> was causing all test to finish
+with exit code -1. That has been fixed by using Root locale instead of default one.</p>
 </li>
 </ul>
 </div>
@@ -611,6 +638,11 @@ results in an error to avoid misconfiguration – for example, due to typos.</p>
 <li>
 <p>Only retry deleting directories when cleaning up <code>@TempDir</code> once.</p>
 </li>
+<li>
+<p>Since Turkish language has special characters as 'ı' and 'İ', the uppercase conversion on
+<code>DefaultParallelExecutionConfigurationStrategy#getStrategy</code> was causing all test to finish
+with exit code -1. That has been fixed by using Root locale instead of default one.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -677,35 +709,8 @@ the new <code>IterationSelector</code> discovery selector when launching the JUn
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.9.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.9.0-M1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
+<div class="paragraph">
+<p>No changes.</p>
 </div>
 </div>
 </div>
@@ -746,7 +751,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.2-junit-jupiter"><a class="anchor" href="#release-notes-5.8.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -810,7 +815,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.1-junit-platform"><a class="anchor" href="#release-notes-5.8.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -823,7 +828,7 @@ JUnit Platform</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -837,7 +842,7 @@ detection.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.1-junit-jupiter"><a class="anchor" href="#release-notes-5.8.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -853,7 +858,7 @@ spaces correctly and no longer throws an <code>IndexOutOfBoundsException</code>.
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -876,7 +881,7 @@ Guide</a> for details and an example.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.1-junit-vintage"><a class="anchor" href="#release-notes-5.8.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -945,7 +950,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-05-15 14:27:26 UTC
+Last updated 2022-05-15 17:29:03 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
