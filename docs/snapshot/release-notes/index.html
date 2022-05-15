@@ -522,7 +522,8 @@ authors as well as build tool and IDE vendors.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>XML reports in new <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a> format</p>
+<p>XML reports in new <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a>
+format</p>
 </li>
 <li>
 <p>Configurable cleanup mode for <code>@TempDir</code></p>
@@ -553,12 +554,13 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fix handling of global post-discovery filters that apply to <code>@Suite</code> classes.</p>
+<p>Fixed handling of global post-discovery filters that apply to <code>@Suite</code> classes.</p>
 </li>
 <li>
-<p>Since Turkish language has special characters as 'ı' and 'İ', the uppercase conversion on
-<code>DefaultParallelExecutionConfigurationStrategy#getStrategy</code> was causing all test to finish
-with exit code -1. That has been fixed by using Root locale instead of default one.</p>
+<p>Since the Turkish language has special characters such as 'ı' and 'İ', the uppercase
+conversion in <code>DefaultParallelExecutionConfigurationStrategy#getStrategy</code> previously
+caused all tests to finish with exit code -1. This has been fixed by using the root
+locale instead of the default one.</p>
 </li>
 </ul>
 </div>
@@ -579,7 +581,7 @@ method.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Add support for <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a>
+<p>Support for the <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a>
 format which supports all features of the JUnit Platform such as hierarchical test
 structures, display names, tags, etc. Please refer to the
 <a href="../user-guide/index.html#junit-platform-reporting-open-test-reporting">User Guide</a>
@@ -593,7 +595,7 @@ configuration parameter keys.</p>
 <p>New <code>IterationSelector</code> for selecting a subset of a test&#8217;s or container&#8217;s iterations.</p>
 </li>
 <li>
-<p><code>ParallelExecutionConfiguration</code> allows configuring the "saturate" predicate of the
+<p><code>ParallelExecutionConfiguration</code> allows configuring the <code>saturate</code> predicate of the
 <code>ForkJoinPool</code> used for parallel test execution.</p>
 </li>
 <li>
@@ -606,23 +608,24 @@ these to be manually specified.</p>
 </li>
 <li>
 <p>New <code>failIfNoTests</code> attribute added to <code>@Suite</code>. This will fail the suite if no tests
-were discovered.</p>
+are discovered.</p>
 </li>
 <li>
-<p><code>ConsoleLauncher&#8217;s output color can now be customized. The option `--single-color</code> will
-apply a built-in monochrome style, while <code>--color-palette</code> will accept a properties file.
-See the <a href="../user-guide/index.html#running-tests-console-launcher-color-customization">User Guide</a> for details.</p>
+<p>The output color for the <code>ConsoleLauncher</code> can now be customized. The option
+<code>--single-color</code> will apply a built-in monochrome style, while <code>--color-palette</code> will
+accept a properties file. See the
+<a href="../user-guide/index.html#running-tests-console-launcher-color-customization">User Guide</a> for details.</p>
 </li>
 <li>
-<p>`ConsoleLauncher&#8217;s default theme is now determined by the charset reported by the system
-console on Java 17 and later.</p>
+<p>The default theme for the <code>ConsoleLauncher</code> is now determined by the charset reported by
+the system console on Java 17 and later.</p>
 </li>
 <li>
-<p>New <code>--list-engines</code> option added to the <code>ConsoleLauncher</code> displaying all registered test
-engine implementations.</p>
+<p>New <code>--list-engines</code> option added to the <code>ConsoleLauncher</code> which displays all registered
+test engine implementations.</p>
 </li>
 <li>
-<p>Configuring include <code>EngineFilters</code> that do not match any registered <code>TestEngine</code>
+<p>Configuring included <code>EngineFilters</code> that do not match any registered <code>TestEngine</code>
 results in an error to avoid misconfiguration – for example, due to typos.</p>
 </li>
 </ul>
@@ -636,12 +639,13 @@ results in an error to avoid misconfiguration – for example, due to typos.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Only retry deleting directories when cleaning up <code>@TempDir</code> once.</p>
+<p>When cleaning up a <code>@TempDir</code>, only one retry attempt will be made to delete directories.</p>
 </li>
 <li>
-<p>Since Turkish language has special characters as 'ı' and 'İ', the uppercase conversion on
-<code>DefaultParallelExecutionConfigurationStrategy#getStrategy</code> was causing all test to finish
-with exit code -1. That has been fixed by using Root locale instead of default one.</p>
+<p>Since the Turkish language has special characters such as 'ı' and 'İ', the uppercase
+conversion in <code>DefaultParallelExecutionConfigurationStrategy#getStrategy</code> previously
+caused all tests to finish with exit code -1. This has been fixed by using the root
+locale instead of the default one.</p>
 </li>
 </ul>
 </div>
@@ -689,8 +693,9 @@ instance construction – symmetric to the existing <code>TestInstancePreDestroy
 extension API.</p>
 </li>
 <li>
-<p>Extensions can now leverage registered <code>ParameterResolvers</code> when invoking methods and
-constructors via the new <code>ExecutableInvoker</code> available in the <code>ExtensionContext</code>.</p>
+<p>Extensions can now leverage registered <code>ParameterResolver</code> extensions when invoking
+methods and constructors via the new <code>ExecutableInvoker</code> API available in the
+<code>ExtensionContext</code>.</p>
 </li>
 <li>
 <p>A subset of the invocations of parameterized or dynamic tests can now be selected via
@@ -701,7 +706,7 @@ the new <code>IterationSelector</code> discovery selector when launching the JUn
 </li>
 <li>
 <p><code>@MethodSource</code> factory methods can now accept arguments resolved by registered
-<code>ParameterResolver</code>.</p>
+<code>ParameterResolver</code> extensions.</p>
 </li>
 </ul>
 </div>
@@ -950,7 +955,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-05-15 17:29:03 UTC
+Last updated 2022-05-15 18:20:12 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

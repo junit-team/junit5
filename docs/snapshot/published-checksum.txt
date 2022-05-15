@@ -185,6 +185,7 @@
 41966936f2b5769f57a54de2639a21ec  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/BeforeEachMethodAdapter.java
 421e428105c42c7cc17d7c5e2439d85c  junit-platform-console/src/main/java/org/junit/platform/console/options/Theme.java
 4255f3a9e3d7f3945c3cc043c8b186b0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/package-info.java
+42583ac544680581e2eb7ff68e2e07a9  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 42ad2c62ad3d50a11b07ed106449fab0  documentation/src/test/java/example/AssertionsDemo.java
 433f6ce0bfe7b9dd2eac903790a5c274  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.java
 437a2b3884af6d43594109a83229ebda  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOsCondition.java
@@ -357,7 +358,6 @@
 7968fbc98d83186dbbc972033ec7dfb5  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestMethodContext.java
 79787c80943b40d745cb06af1f3238ad  documentation/src/docs/asciidoc/user-guide/index.adoc
 7989e907c336fd1c4bafa074cebd865b  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ModifierSupport.java
-7a8158c54bf2bb5636fda7cfd2da10df  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M1.adoc
 7a93fb94ec4db6482815a938d889b599  documentation/src/test/resources/log4j2-test.xml
 7b1edcd2956f64328b61985bd8ac48b3  junit-platform-commons/src/main/java/org/junit/platform/commons/support/HierarchyTraversalMode.java
 7b56b97e4c9e103392243aa15bff0e45  documentation/src/docs/asciidoc/user-guide/advanced-topics.adoc
