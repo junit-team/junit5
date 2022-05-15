@@ -97,12 +97,16 @@ loadScripts(document, 'script');</script>
  the de facto standard for JUnit 4 based test reports that was made popular
  by the Ant build system.</div>
 </div>
-<div class="col-first even-row-color"><a href="#org.junit.platform.suite.commons">org.junit.platform.suite.commons</a></div>
+<div class="col-first even-row-color"><a href="#org.junit.platform.reporting.open.xml">org.junit.platform.reporting.open.xml</a></div>
 <div class="col-last even-row-color">
+<div class="block">Support for generating Open Test Reporting compatible XML event reports.</div>
+</div>
+<div class="col-first odd-row-color"><a href="#org.junit.platform.suite.commons">org.junit.platform.suite.commons</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Common support utilities for executing test suites on the JUnit Platform.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#org.junit.platform.testkit.engine">org.junit.platform.testkit.engine</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#org.junit.platform.testkit.engine">org.junit.platform.testkit.engine</a></div>
+<div class="col-last even-row-color">
 <div class="block">Test Kit for testing the execution of a <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>
  running on the JUnit Platform.</div>
 </div>
@@ -357,6 +361,30 @@ loadScripts(document, 'script');</script>
  usually part of a <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/TestPlan.html#org.junit.platform.reporting.legacy.xml">TestPlan</a></div>
+<div class="col-last even-row-color">
+<div class="block"><code>TestPlan</code> describes the tree of tests and containers as discovered
+ by a <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
+</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="org.junit.platform.reporting.open.xml">
+<div class="caption"><span>Classes in <a href="package-summary.html">org.junit.platform.launcher</a> used by <a href="../../../../../org.junit.platform.reporting/org/junit/platform/reporting/open/xml/package-summary.html">org.junit.platform.reporting.open.xml</a></span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><a href="class-use/TestExecutionListener.html#org.junit.platform.reporting.open.xml">TestExecutionListener</a></div>
+<div class="col-last even-row-color">
+<div class="block">Register a concrete implementation of this interface with a <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>
+ to be notified of events that occur during test execution.</div>
+</div>
+<div class="col-first odd-row-color"><a href="class-use/TestIdentifier.html#org.junit.platform.reporting.open.xml">TestIdentifier</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Immutable data transfer object that represents a test or container which is
+ usually part of a <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.</div>
+</div>
+<div class="col-first even-row-color"><a href="class-use/TestPlan.html#org.junit.platform.reporting.open.xml">TestPlan</a></div>
 <div class="col-last even-row-color">
 <div class="block"><code>TestPlan</code> describes the tree of tests and containers as discovered
  by a <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>

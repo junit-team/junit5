@@ -747,41 +747,52 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#advanced-topics">6. Advanced Topics</a>
 <ul class="sectlevel2">
-<li><a href="#launcher-api">6.1. JUnit Platform Launcher API</a>
+<li><a href="#junit-platform-reporting">6.1. JUnit Platform Reporting</a>
 <ul class="sectlevel3">
-<li><a href="#launcher-api-discovery">6.1.1. Discovering Tests</a></li>
-<li><a href="#launcher-api-execution">6.1.2. Executing Tests</a></li>
-<li><a href="#launcher-api-engines-custom">6.1.3. Registering a TestEngine</a></li>
-<li><a href="#launcher-api-post-discovery-filters-custom">6.1.4. Registering a PostDiscoveryFilter</a></li>
-<li><a href="#launcher-api-launcher-session-listeners-custom">6.1.5. Registering a LauncherSessionListener</a></li>
-<li><a href="#launcher-api-launcher-discovery-listeners-custom">6.1.6. Registering a LauncherDiscoveryListener</a></li>
-<li><a href="#launcher-api-listeners-custom">6.1.7. Registering a TestExecutionListener</a></li>
-<li><a href="#launcher-api-listeners-config">6.1.8. Configuring a TestExecutionListener</a></li>
-<li><a href="#launcher-api-listeners-custom-deactivation">6.1.9. Deactivating a TestExecutionListener</a>
+<li><a href="#junit-platform-reporting-legacy-xml">6.1.1. Legacy XML format</a></li>
+<li><a href="#junit-platform-reporting-open-test-reporting">6.1.2. Open Test Reporting XML format</a>
 <ul class="sectlevel4">
-<li><a href="#launcher-api-listeners-custom-deactivation-pattern">Pattern Matching Syntax</a></li>
+<li><a href="#gradle">Gradle</a></li>
+<li><a href="#maven">Maven</a></li>
+<li><a href="#console-launcher">Console Launcher</a></li>
 </ul>
 </li>
-<li><a href="#launcher-api-launcher-config">6.1.10. Configuring the Launcher</a></li>
 </ul>
 </li>
-<li><a href="#junit-platform-reporting">6.2. JUnit Platform Reporting</a></li>
-<li><a href="#junit-platform-suite-engine">6.3. JUnit Platform Suite Engine</a>
+<li><a href="#junit-platform-suite-engine">6.2. JUnit Platform Suite Engine</a>
 <ul class="sectlevel3">
-<li><a href="#junit-platform-suite-engine-setup">6.3.1. Setup</a>
+<li><a href="#junit-platform-suite-engine-setup">6.2.1. Setup</a>
 <ul class="sectlevel4">
 <li><a href="#junit-platform-suite-engine-setup-required-dependencies">Required Dependencies</a></li>
 <li><a href="#junit-platform-suite-engine-setup-transitive-dependencies">Transitive Dependencies</a></li>
 </ul>
 </li>
-<li><a href="#junit-platform-suite-engine-example">6.3.2. @Suite Example</a></li>
+<li><a href="#junit-platform-suite-engine-example">6.2.2. @Suite Example</a></li>
 </ul>
 </li>
-<li><a href="#testkit">6.4. JUnit Platform Test Kit</a>
+<li><a href="#testkit">6.3. JUnit Platform Test Kit</a>
 <ul class="sectlevel3">
-<li><a href="#testkit-engine">6.4.1. Engine Test Kit</a></li>
-<li><a href="#testkit-engine-statistics">6.4.2. Asserting Statistics</a></li>
-<li><a href="#testkit-engine-events">6.4.3. Asserting Events</a></li>
+<li><a href="#testkit-engine">6.3.1. Engine Test Kit</a></li>
+<li><a href="#testkit-engine-statistics">6.3.2. Asserting Statistics</a></li>
+<li><a href="#testkit-engine-events">6.3.3. Asserting Events</a></li>
+</ul>
+</li>
+<li><a href="#launcher-api">6.4. JUnit Platform Launcher API</a>
+<ul class="sectlevel3">
+<li><a href="#launcher-api-discovery">6.4.1. Discovering Tests</a></li>
+<li><a href="#launcher-api-execution">6.4.2. Executing Tests</a></li>
+<li><a href="#launcher-api-engines-custom">6.4.3. Registering a TestEngine</a></li>
+<li><a href="#launcher-api-post-discovery-filters-custom">6.4.4. Registering a PostDiscoveryFilter</a></li>
+<li><a href="#launcher-api-launcher-session-listeners-custom">6.4.5. Registering a LauncherSessionListener</a></li>
+<li><a href="#launcher-api-launcher-discovery-listeners-custom">6.4.6. Registering a LauncherDiscoveryListener</a></li>
+<li><a href="#launcher-api-listeners-custom">6.4.7. Registering a TestExecutionListener</a></li>
+<li><a href="#launcher-api-listeners-config">6.4.8. Configuring a TestExecutionListener</a></li>
+<li><a href="#launcher-api-listeners-custom-deactivation">6.4.9. Deactivating a TestExecutionListener</a>
+<ul class="sectlevel4">
+<li><a href="#launcher-api-listeners-custom-deactivation-pattern">Pattern Matching Syntax</a></li>
+</ul>
+</li>
+<li><a href="#launcher-api-launcher-config">6.4.10. Configuring the Launcher</a></li>
 </ul>
 </li>
 <li><a href="#test-engines">6.5. Test Engines</a>
@@ -7609,16 +7620,24 @@ test suite.</p>
 </div>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><a href="#junit-platform-reporting">JUnit Platform Reporting</a> </dt>
+<dd>
+<p><code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code> can be used via the
+<a href="#running-tests-console-launcher">Console Launcher</a> or registered manually to generate XML reports
+compatible with the de facto standard for JUnit 4 based test reports.</p>
+<div class="paragraph">
+<p><code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/open/xml/OpenTestReportGeneratingListener.html">OpenTestReportGeneratingListener</a></code> generates an XML report in the event-based format
+specified by <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a>. It is auto-registered and can be enabled and
+configured via <a href="#running-tests-config-params">Configuration Parameters</a>.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#junit-platform-reporting">JUnit Platform Reporting</a> for details.</p>
+</div>
+</dd>
 <dt class="hdlist1"><a href="#running-tests-listeners-flight-recorder">Flight Recorder Support</a> </dt>
 <dd>
 <p><code>FlightRecordingExecutionListener</code> and <code>FlightRecordingDiscoveryListener</code> that generate
 Java Flight Recorder events during test discovery and execution.</p>
-</dd>
-<dt class="hdlist1"><code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code> </dt>
-<dd>
-<p><code>TestExecutionListener</code> that generates XML reports compatible with the de facto
-standard for JUnit 4 based test reports. See <a href="#junit-platform-reporting">JUnit Platform Reporting</a> for
-details.</p>
 </dd>
 <dt class="hdlist1"><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/LoggingListener.html">LoggingListener</a></code> </dt>
 <dd>
@@ -9403,409 +9422,12 @@ methods.</p>
 <h2 id="advanced-topics"><a class="anchor" href="#advanced-topics"></a>6. Advanced Topics</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="launcher-api"><a class="anchor" href="#launcher-api"></a>6.1. JUnit Platform Launcher API</h3>
+<h3 id="junit-platform-reporting"><a class="anchor" href="#junit-platform-reporting"></a>6.1. JUnit Platform Reporting</h3>
 <div class="paragraph">
-<p>One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
-programmatic clients – build tools and IDEs – more powerful and stable. The purpose is to
-decouple the internals of discovering and executing tests from all the filtering and
-configuration that&#8217;s necessary from the outside.</p>
-</div>
-<div class="paragraph">
-<p>JUnit 5 introduces the concept of a <code>Launcher</code> that can be used to discover, filter, and
-execute tests. Moreover, third party test libraries – like Spock, Cucumber, and FitNesse
-– can plug into the JUnit Platform&#8217;s launching infrastructure by providing a custom
-<a href="#test-engines">TestEngine</a>.</p>
-</div>
-<div class="paragraph">
-<p>The launcher API is in the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module.</p>
-</div>
-<div class="paragraph">
-<p>An example consumer of the launcher API is the <code><a href="../api/org.junit.platform.console/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> in the
-<code><a href="../api/org.junit.platform.console/org/junit/platform/console/package-summary.html">junit-platform-console</a></code> project.</p>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-discovery"><a class="anchor" href="#launcher-api-discovery"></a>6.1.1. Discovering Tests</h4>
-<div class="paragraph">
-<p>Having <em>test discovery</em> as a dedicated feature of the platform itself frees IDEs and build
-tools from most of the difficulties they had to go through to identify test classes and
-test methods in previous versions of JUnit.</p>
-</div>
-<div class="paragraph">
-<p>Usage Example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">discovery</span><span class="o">.</span><span class="na">ClassNameFilter</span><span class="o">.</span><span class="na">includeClassNamePatterns</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">discovery</span><span class="o">.</span><span class="na">DiscoverySelectors</span><span class="o">.</span><span class="na">selectClass</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">discovery</span><span class="o">.</span><span class="na">DiscoverySelectors</span><span class="o">.</span><span class="na">selectPackage</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">java.io.PrintWriter</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.nio.file.Path</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.nio.file.Paths</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">org.junit.platform.engine.FilterResult</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.engine.TestDescriptor</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.Launcher</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherDiscoveryListener</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherDiscoveryRequest</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSession</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSessionListener</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.PostDiscoveryFilter</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestExecutionListener</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestPlan</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.core.LauncherConfig</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.core.LauncherFactory</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.listeners.SummaryGeneratingListener</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.listeners.TestExecutionSummary</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener</span><span class="o">;</span></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="nc">LauncherDiscoveryRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="nc">LauncherDiscoveryRequestBuilder</span><span class="o">.</span><span class="na">request</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">selectors</span><span class="o">(</span>
-        <span class="n">selectPackage</span><span class="o">(</span><span class="s">"com.example.mytests"</span><span class="o">),</span>
-        <span class="n">selectClass</span><span class="o">(</span><span class="nc">MyTestClass</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-    <span class="o">)</span>
-    <span class="o">.</span><span class="na">filters</span><span class="o">(</span>
-        <span class="n">includeClassNamePatterns</span><span class="o">(</span><span class="s">".*Tests"</span><span class="o">)</span>
-    <span class="o">)</span>
-    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-
-<span class="k">try</span> <span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">())</span> <span class="o">{</span>
-    <span class="nc">TestPlan</span> <span class="n">testPlan</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">().</span><span class="na">discover</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
-
-    <span class="c1">// ... discover additional test plans or execute tests</span>
-<span class="o">}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can select classes, methods, and all classes in a package or even search for all tests
-in the class-path or module-path. Discovery takes place across all participating test
-engines.</p>
-</div>
-<div class="paragraph">
-<p>The resulting <code>TestPlan</code> is a hierarchical (and read-only) description of all engines,
-classes, and test methods that fit the <code>LauncherDiscoveryRequest</code>. The client can
-traverse the tree, retrieve details about a node, and get a link to the original source
-(like class, method, or file position). Every node in the test plan has a <em>unique ID</em>
-that can be used to invoke a particular test or group of tests.</p>
-</div>
-<div class="paragraph">
-<p>Clients can register one or more <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code> implementations via the
-<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html">LauncherDiscoveryRequestBuilder</a></code> to gain insight into events that occur during test
-discovery. By default, the builder registers an "abort on failure" listener that aborts
-test discovery after the first discovery failure is encountered. The default
-<code>LauncherDiscoveryListener</code> can be changed via the
-<code>junit.platform.discovery.listener.default</code> <a href="#running-tests-config-params">configuration
-parameter</a>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-execution"><a class="anchor" href="#launcher-api-execution"></a>6.1.2. Executing Tests</h4>
-<div class="paragraph">
-<p>To execute tests, clients can use the same <code>LauncherDiscoveryRequest</code> as in the discovery
-phase or create a new request. Test progress and reporting can be achieved by registering
-one or more <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations with the <code>Launcher</code> as in the
-following example.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="nc">LauncherDiscoveryRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="nc">LauncherDiscoveryRequestBuilder</span><span class="o">.</span><span class="na">request</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">selectors</span><span class="o">(</span>
-        <span class="n">selectPackage</span><span class="o">(</span><span class="s">"com.example.mytests"</span><span class="o">),</span>
-        <span class="n">selectClass</span><span class="o">(</span><span class="nc">MyTestClass</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-    <span class="o">)</span>
-    <span class="o">.</span><span class="na">filters</span><span class="o">(</span>
-        <span class="n">includeClassNamePatterns</span><span class="o">(</span><span class="s">".*Tests"</span><span class="o">)</span>
-    <span class="o">)</span>
-    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-
-<span class="nc">SummaryGeneratingListener</span> <span class="n">listener</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SummaryGeneratingListener</span><span class="o">();</span>
-
-<span class="k">try</span> <span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">())</span> <span class="o">{</span>
-    <span class="nc">Launcher</span> <span class="n">launcher</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">();</span>
-    <span class="c1">// Register a listener of your choice</span>
-    <span class="n">launcher</span><span class="o">.</span><span class="na">registerTestExecutionListeners</span><span class="o">(</span><span class="n">listener</span><span class="o">);</span>
-    <span class="c1">// Discover tests and build a test plan</span>
-    <span class="nc">TestPlan</span> <span class="n">testPlan</span> <span class="o">=</span> <span class="n">launcher</span><span class="o">.</span><span class="na">discover</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
-    <span class="c1">// Execute test plan</span>
-    <span class="n">launcher</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">testPlan</span><span class="o">);</span>
-    <span class="c1">// Alternatively, execute the request directly</span>
-    <span class="n">launcher</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
-<span class="o">}</span>
-
-<span class="nc">TestExecutionSummary</span> <span class="n">summary</span> <span class="o">=</span> <span class="n">listener</span><span class="o">.</span><span class="na">getSummary</span><span class="o">();</span>
-<span class="c1">// Do something with the summary...</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>There is no return value for the <code>execute()</code> method, but you can use a
-<code>TestExecutionListener</code> to aggregate the results. For examples see the
-<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code>, <code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code>, and
-<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-engines-custom"><a class="anchor" href="#launcher-api-engines-custom"></a>6.1.3. Registering a TestEngine</h4>
-<div class="paragraph">
-<p>See the dedicated section on <a href="#test-engines-registration">TestEngine registration</a> for
-details.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-post-discovery-filters-custom"><a class="anchor" href="#launcher-api-post-discovery-filters-custom"></a>6.1.4. Registering a PostDiscoveryFilter</h4>
-<div class="paragraph">
-<p>In addition to specifying post-discovery filters as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
-passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html">PostDiscoveryFilter</a></code> implementations will be discovered
-at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically applied by the
-<code>Launcher</code> in addition to those that are part of the request.</p>
-</div>
-<div class="paragraph">
-<p>For example, an <code>example.CustomTagFilter</code> class implementing <code>PostDiscoveryFilter</code> and
-declared within the <code>/META-INF/services/org.junit.platform.launcher.PostDiscoveryFilter</code>
-file is loaded and applied automatically.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-launcher-session-listeners-custom"><a class="anchor" href="#launcher-api-launcher-session-listeners-custom"></a>6.1.5. Registering a LauncherSessionListener</h4>
-<div class="paragraph">
-<p>Registered implementations of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> are notified when a
-<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code> is opened (before a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> first discovers and executes tests)
-and closed (when no more tests will be discovered or executed). They can be registered
-programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> that is passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>, or
-they can be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
-registered with <code>LauncherSession</code> (unless automatic registration is disabled.)</p>
-</div>
-<div class="paragraph">
-<p>A <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> is well suited for implementing once-per-JVM setup/teardown
-behavior since it&#8217;s called before the first and after the last test in a launcher session,
-respectively. The scope of a launcher session depends on the used IDE or build tool but
-usually corresponds to the lifecycle of the test JVM. A custom listener that starts an
-HTTP server before executing the first test and stops it after the last test has been
-executed, could look like this:</p>
-</div>
-<div class="listingblock">
-<div class="title">src/test/java/example/session/GlobalSetupTeardownListener.java</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">example.session</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">InetAddress</span><span class="o">.</span><span class="na">getLoopbackAddress</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.io.UncheckedIOException</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.net.InetSocketAddress</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.util.concurrent.ExecutorService</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">com.sun.net.httpserver.HttpServer</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSession</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSessionListener</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestExecutionListener</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestPlan</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">GlobalSetupTeardownListener</span> <span class="kd">implements</span> <span class="nc">LauncherSessionListener</span> <span class="o">{</span>
-
-    <span class="kd">private</span> <span class="nc">Fixture</span> <span class="n">fixture</span><span class="o">;</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">launcherSessionOpened</span><span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span><span class="o">)</span> <span class="o">{</span>
-        <span class="c1">// Avoid setup for test discovery by delaying it until tests are about to be executed</span>
-        <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">().</span><span class="na">registerTestExecutionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">TestExecutionListener</span><span class="o">()</span> <span class="o">{</span>
-            <span class="nd">@Override</span>
-            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testPlanExecutionStarted</span><span class="o">(</span><span class="nc">TestPlan</span> <span class="n">testPlan</span><span class="o">)</span> <span class="o">{</span>
-                <span class="k">if</span> <span class="o">(</span><span class="n">fixture</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-                    <span class="n">fixture</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Fixture</span><span class="o">();</span>
-                    <span class="n">fixture</span><span class="o">.</span><span class="na">setUp</span><span class="o">();</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-        <span class="o">});</span>
-    <span class="o">}</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">launcherSessionClosed</span><span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">fixture</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">fixture</span><span class="o">.</span><span class="na">tearDown</span><span class="o">();</span>
-            <span class="n">fixture</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-
-    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Fixture</span> <span class="o">{</span>
-
-        <span class="kd">private</span> <span class="nc">HttpServer</span> <span class="n">server</span><span class="o">;</span>
-        <span class="kd">private</span> <span class="nc">ExecutorService</span> <span class="n">executorService</span><span class="o">;</span>
-
-        <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="o">{</span>
-            <span class="k">try</span> <span class="o">{</span>
-                <span class="n">server</span> <span class="o">=</span> <span class="nc">HttpServer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="k">new</span> <span class="nc">InetSocketAddress</span><span class="o">(</span><span class="n">getLoopbackAddress</span><span class="o">(),</span> <span class="mi">0</span><span class="o">),</span> <span class="mi">0</span><span class="o">);</span>
-            <span class="o">}</span>
-            <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="nf">UncheckedIOException</span><span class="o">(</span><span class="s">"Failed to start HTTP server"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
-            <span class="o">}</span>
-            <span class="n">server</span><span class="o">.</span><span class="na">createContext</span><span class="o">(</span><span class="s">"/test"</span><span class="o">,</span> <span class="n">exchange</span> <span class="o">-&gt;</span> <span class="o">{</span>
-                <span class="n">exchange</span><span class="o">.</span><span class="na">sendResponseHeaders</span><span class="o">(</span><span class="mi">204</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">);</span>
-                <span class="n">exchange</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-            <span class="o">});</span>
-            <span class="n">executorService</span> <span class="o">=</span> <span class="nc">Executors</span><span class="o">.</span><span class="na">newCachedThreadPool</span><span class="o">();</span>
-            <span class="n">server</span><span class="o">.</span><span class="na">setExecutor</span><span class="o">(</span><span class="n">executorService</span><span class="o">);</span>
-            <span class="n">server</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="1"></i><b>(1)</b>
-            <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="na">getAddress</span><span class="o">().</span><span class="na">getPort</span><span class="o">();</span>
-            <span class="nc">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"http.server.host"</span><span class="o">,</span> <span class="n">getLoopbackAddress</span><span class="o">().</span><span class="na">getHostAddress</span><span class="o">());</span> <i class="conum" data-value="2"></i><b>(2)</b>
-            <span class="nc">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"http.server.port"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">port</span><span class="o">));</span> <i class="conum" data-value="3"></i><b>(3)</b>
-        <span class="o">}</span>
-
-        <span class="kt">void</span> <span class="nf">tearDown</span><span class="o">()</span> <span class="o">{</span>
-            <span class="n">server</span><span class="o">.</span><span class="na">stop</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <i class="conum" data-value="4"></i><b>(4)</b>
-            <span class="n">executorService</span><span class="o">.</span><span class="na">shutdownNow</span><span class="o">();</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-
-<span class="o">}</span></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Start the HTTP server</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Export its host address as a system property for consumption by tests</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Export its port as a system property for consumption by tests</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Stop the HTTP server</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>This sample uses the HTTP server implementation from the jdk.httpserver module that comes
-with the JDK but would work similarly with any other server or resource. In order for the
-listener to be picked up by JUnit Platform, you need to register it as a service by adding
-a resource file with the following name and contents to your test runtime classpath (e.g.
-by adding the file to <code>src/test/resources</code>):</p>
-</div>
-<div class="listingblock">
-<div class="title">src/test/resources/META-INF/services/org.junit.platform.launcher.LauncherSessionListener</div>
-<div class="content">
-<pre class="rouge highlight"><code>example.session.GlobalSetupTeardownListener</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can now use the resource from your test:</p>
-</div>
-<div class="listingblock">
-<div class="title">src/test/java/example/session/HttpTests.java</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">example.session</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">java.net.HttpURLConnection</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span><span class="o">;</span>
-
-<span class="kd">class</span> <span class="nc">HttpTests</span> <span class="o">{</span>
-
-    <span class="nd">@Test</span>
-    <span class="kt">void</span> <span class="nf">respondsWith204</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
-        <span class="nc">String</span> <span class="n">host</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"http.server.host"</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
-        <span class="nc">String</span> <span class="n">port</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"http.server.port"</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
-        <span class="no">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="no">URL</span><span class="o">(</span><span class="s">"http://"</span> <span class="o">+</span> <span class="n">host</span> <span class="o">+</span> <span class="s">":"</span> <span class="o">+</span> <span class="n">port</span> <span class="o">+</span> <span class="s">"/test"</span><span class="o">);</span>
-
-        <span class="nc">HttpURLConnection</span> <span class="n">connection</span> <span class="o">=</span> <span class="o">(</span><span class="nc">HttpURLConnection</span><span class="o">)</span> <span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
-        <span class="n">connection</span><span class="o">.</span><span class="na">setRequestMethod</span><span class="o">(</span><span class="s">"GET"</span><span class="o">);</span>
-        <span class="kt">int</span> <span class="n">responseCode</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">getResponseCode</span><span class="o">();</span> <i class="conum" data-value="3"></i><b>(3)</b>
-
-        <span class="n">assertEquals</span><span class="o">(</span><span class="mi">204</span><span class="o">,</span> <span class="n">responseCode</span><span class="o">);</span> <i class="conum" data-value="4"></i><b>(4)</b>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Read the host address of the server from the system property set by the listener</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Read the port of the server from the system property set by the listener</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Send a request to the server</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Check the status code of the response</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-launcher-discovery-listeners-custom"><a class="anchor" href="#launcher-api-launcher-discovery-listeners-custom"></a>6.1.6. Registering a LauncherDiscoveryListener</h4>
-<div class="paragraph">
-<p>In addition to specifying discovery listeners as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> or
-registering them programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, custom
-<code>LauncherDiscoveryListener</code> implementations can be discovered at runtime via Java&#8217;s
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the <code>Launcher</code> created via
-the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
-</div>
-<div class="paragraph">
-<p>For example, an <code>example.CustomLauncherDiscoveryListener</code> class implementing
-<code>LauncherDiscoveryListener</code> and declared within the
-<code>/META-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener</code> file is loaded
-and registered automatically.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>6.1.7. Registering a TestExecutionListener</h4>
-<div class="paragraph">
-<p>In addition to the public <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution listeners
-programmatically, custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations will be discovered at
-runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the
-<code>Launcher</code> created via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
-</div>
-<div class="paragraph">
-<p>For example, an <code>example.CustomTestExecutionListener</code> class implementing
-<code>TestExecutionListener</code> and declared within the
-<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file is loaded and
-registered automatically.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-listeners-config"><a class="anchor" href="#launcher-api-listeners-config"></a>6.1.8. Configuring a TestExecutionListener</h4>
-<div class="paragraph">
-<p>When a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> is registered programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API,
-the listener may provide programmatic ways for it to be configured&#8201;&#8212;&#8201;for example, via its
-constructor, setter methods, etc. However, when a <code>TestExecutionListener</code> is registered
-automatically via Java&#8217;s <code>ServiceLoader</code> mechanism (see
-<a href="#launcher-api-listeners-custom">Registering a TestExecutionListener</a>), there is no way for the user to directly configure the
-listener. In such cases, the author of a <code>TestExecutionListener</code> may choose to make the
-listener configurable via <a href="#running-tests-config-params">configuration parameters</a>. The
-listener can then access the configuration parameters via the <code>TestPlan</code> supplied to the
-<code>testPlanExecutionStarted(TestPlan)</code> and <code>testPlanExecutionFinished(TestPlan)</code> callback
-methods. See the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code> for an example.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.1.9. Deactivating a TestExecutionListener</h4>
-<div class="paragraph">
-<p>Sometimes it can be useful to run a test suite <em>without</em> certain execution listeners being
-active. For example, you might have custom a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> that sends the test
-results to an external system for reporting purposes, and while debugging you might not
-want these <em>debug</em> results to be reported. To do this, provide a pattern for the
-<code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em> to specify which
-execution listeners should be deactivated (i.e. not registered) for the current test run.</p>
+<p>The <code>junit-platform-reporting</code> artifact contains <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations
+that generate XML test reports in two flavors:
+<a href="#junit-platform-reporting-legacy-xml">legacy</a> and
+<a href="#junit-platform-reporting-open-test-reporting">Open Test Reporting</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -9814,108 +9436,174 @@ execution listeners should be deactivated (i.e. not registered) for the current 
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
+The module also contains other <code>TestExecutionListener</code> implementations that can be
+used to build custom reporting. See <a href="#running-tests-listeners">Using Listeners</a> for details.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="junit-platform-reporting-legacy-xml"><a class="anchor" href="#junit-platform-reporting-legacy-xml"></a>6.1.1. Legacy XML format</h4>
 <div class="paragraph">
-<p>Only listeners registered via the <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism within the
-<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file can be
-deactivated. In other words, any <code>TestExecutionListener</code> registered explicitly via the
-<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> cannot be deactivated via the
-<code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em>.</p>
+<p><code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code> generates a separate XML report for each root in the
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code>. Note that the generated XML format is compatible with the de facto standard
+for JUnit 4 based test reports that was made popular by the Ant build system.</p>
 </div>
 <div class="paragraph">
-<p>In addition, since execution listeners are registered before the test run starts, the
-<code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em> can only be
-supplied as a JVM system property or via the JUnit Platform configuration file (see
-<a href="#running-tests-config-params">Configuration Parameters</a> for details). This <em>configuration parameter</em> cannot be
-supplied in the <code>LauncherDiscoveryRequest</code> that is passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code>.</p>
+<p>The <code>LegacyXmlReportGeneratingListener</code> is used by the <a href="#running-tests-console-launcher">Console Launcher</a>
+as well.</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="junit-platform-reporting-open-test-reporting"><a class="anchor" href="#junit-platform-reporting-open-test-reporting"></a>6.1.2. Open Test Reporting XML format</h4>
+<div class="paragraph">
+<p><code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/open/xml/OpenTestReportGeneratingListener.html">OpenTestReportGeneratingListener</a></code> writes an XML report for the entire execution in the
+event-based format specified by <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a> which supports all features of the
+JUnit Platform such as hierarchical test structures, display names, tags, etc.</p>
+</div>
+<div class="paragraph">
+<p>The listener is auto-registered and can be configured via the following
+<a href="#running-tests-config-params">Configuration Parameters</a>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>junit.platform.reporting.open.xml.enabled=true|false</code></dt>
+<dd>
+<p>Enable/disable writing the report.</p>
+</dd>
+<dt class="hdlist1"><code>junit.platform.reporting.output.dir=&lt;path&gt;</code></dt>
+<dd>
+<p>Configure the output directory for the reports. By default, <code>build</code> is used if a Gradle
+build script is found, and <code>target</code> if a Maven POM is found; otherwise, the current
+working directory is used.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>If enabled, the listener creates an XML report file named
+<code>junit-platform-events-&lt;random-id&gt;.xml</code> per test run in the configured output directory.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The <a href="https://github.com/ota4j-team/open-test-reporting#cli-tool-for-validation-and-format-conversion">Open Test Reporting CLI Tool</a> can be used to convert from the event-based format to
+the hierarchical format which is more human-readable.
 </td>
 </tr>
 </table>
 </div>
 <div class="sect4">
-<h5 id="launcher-api-listeners-custom-deactivation-pattern"><a class="anchor" href="#launcher-api-listeners-custom-deactivation-pattern"></a>Pattern Matching Syntax</h5>
+<h5 id="gradle"><a class="anchor" href="#gradle"></a>Gradle</h5>
 <div class="paragraph">
-<p>Refer to <a href="#running-tests-config-params-deactivation-pattern">Pattern Matching Syntax</a> for details.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.1.10. Configuring the Launcher</h4>
-<div class="paragraph">
-<p>If you require fine-grained control over automatic detection and registration of test
-engines and listeners, you may create an instance of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> and supply that to
-the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>. Typically, an instance of <code>LauncherConfig</code> is created via the
-built-in fluent <em>builder</em> API, as demonstrated in the following example.</p>
+<p>For Gradle, writing Open Test Reporting compatible XML reports can be enabled and
+configured via system properties. The following samples configure its output directory to
+be the same directory Gradle uses for its own XML reports. A <code>CommandLineArgumentProvider</code>
+is used to keep the tasks relocatable across different machines which is important when
+using Gradle&#8217;s Build Cache.</p>
 </div>
 <div class="listingblock">
+<div class="title">Groovy DSL</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="nc">LauncherConfig</span> <span class="n">launcherConfig</span> <span class="o">=</span> <span class="nc">LauncherConfig</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">enableTestEngineAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
-    <span class="o">.</span><span class="na">enableLauncherSessionListenerAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
-    <span class="o">.</span><span class="na">enableLauncherDiscoveryListenerAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
-    <span class="o">.</span><span class="na">enablePostDiscoveryFilterAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
-    <span class="o">.</span><span class="na">enableTestExecutionListenerAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
-    <span class="o">.</span><span class="na">addTestEngines</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomTestEngine</span><span class="o">())</span>
-    <span class="o">.</span><span class="na">addLauncherSessionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomLauncherSessionListener</span><span class="o">())</span>
-    <span class="o">.</span><span class="na">addLauncherDiscoveryListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomLauncherDiscoveryListener</span><span class="o">())</span>
-    <span class="o">.</span><span class="na">addPostDiscoveryFilters</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomPostDiscoveryFilter</span><span class="o">())</span>
-    <span class="o">.</span><span class="na">addTestExecutionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">LegacyXmlReportGeneratingListener</span><span class="o">(</span><span class="n">reportsDir</span><span class="o">,</span> <span class="n">out</span><span class="o">))</span>
-    <span class="o">.</span><span class="na">addTestExecutionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomTestExecutionListener</span><span class="o">())</span>
-    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-
-<span class="nc">LauncherDiscoveryRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="nc">LauncherDiscoveryRequestBuilder</span><span class="o">.</span><span class="na">request</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">selectors</span><span class="o">(</span><span class="n">selectPackage</span><span class="o">(</span><span class="s">"com.example.mytests"</span><span class="o">))</span>
-    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-
-<span class="k">try</span> <span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="n">launcherConfig</span><span class="o">))</span> <span class="o">{</span>
-    <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
+    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.platform:junit-platform-reporting:1.9.0-SNAPSHOT"</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="n">tasks</span><span class="o">.</span><span class="na">withType</span><span class="o">(</span><span class="n">Test</span><span class="o">).</span><span class="na">configureEach</span> <span class="o">{</span>
+    <span class="kt">def</span> <span class="n">outputDir</span> <span class="o">=</span> <span class="n">reports</span><span class="o">.</span><span class="na">junitXml</span><span class="o">.</span><span class="na">outputLocation</span>
+    <span class="n">jvmArgumentProviders</span> <span class="o">&lt;&lt;</span> <span class="o">({</span>
+        <span class="o">[</span>
+            <span class="s2">"-Djunit.platform.reporting.open.xml.enabled=true"</span><span class="o">,</span>
+            <span class="s2">"-Djunit.platform.reporting.output.dir=${outputDir.get().asFile.absolutePath}"</span>
+        <span class="o">]</span>
+    <span class="o">}</span> <span class="k">as</span> <span class="n">CommandLineArgumentProvider</span><span class="o">)</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="title">Kotlin DSL</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">dependencies</span> <span class="p">{</span>
+    <span class="nf">testRuntimeOnly</span><span class="p">(</span><span class="s">"org.junit.platform:junit-platform-reporting:1.9.0-SNAPSHOT"</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">tasks</span><span class="p">.</span><span class="n">withType</span><span class="p">&lt;</span><span class="nc">Test</span><span class="p">&gt;().</span><span class="nf">configureEach</span> <span class="p">{</span>
+    <span class="kd">val</span> <span class="py">outputDir</span> <span class="p">=</span> <span class="n">reports</span><span class="p">.</span><span class="n">junitXml</span><span class="p">.</span><span class="n">outputLocation</span>
+    <span class="n">jvmArgumentProviders</span> <span class="p">+=</span> <span class="nc">CommandLineArgumentProvider</span> <span class="p">{</span>
+        <span class="nf">listOf</span><span class="p">(</span>
+            <span class="s">"-Djunit.platform.reporting.open.xml.enabled=true"</span><span class="p">,</span>
+            <span class="s">"-Djunit.platform.reporting.output.dir=${outputDir.get().asFile.absolutePath}"</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="junit-platform-reporting"><a class="anchor" href="#junit-platform-reporting"></a>6.2. JUnit Platform Reporting</h3>
+</div>
+<div class="sect4">
+<h5 id="maven"><a class="anchor" href="#maven"></a>Maven</h5>
 <div class="paragraph">
-<p>The <code>junit-platform-reporting</code> artifact contains <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>
-implementations that generate test reports. These listeners are typically used by IDEs
-and build tools. The package <code>org.junit.platform.reporting.legacy.xml</code> currently contains
-the following implementation.</p>
+<p>For Maven Surefire/Failsafe, you can enable Open Test Reporting output and configure the
+resulting XML files to be written to the same directory Surefire/Failsafe uses for its own
+XML reports as follows:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code> generates a separate XML report for each root in
-the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code>. Note that the generated XML format is compatible with the de facto
-standard for JUnit 4 based test reports that was made popular by the Ant build system.
-The <code>LegacyXmlReportGeneratingListener</code> is used by the
-<a href="#running-tests-console-launcher">Console Launcher</a> as well.</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;project&gt;</span>
+    <span class="c">&lt;!-- ... --&gt;</span>
+    <span class="nt">&lt;dependencies&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.junit.platform<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>junit-platform-reporting<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.9.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;/dependencies&gt;</span>
+    <span class="nt">&lt;build&gt;</span>
+        <span class="nt">&lt;plugins&gt;</span>
+            <span class="nt">&lt;plugin&gt;</span>
+                <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
+                <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+                <span class="nt">&lt;configuration&gt;</span>
+                    <span class="nt">&lt;properties&gt;</span>
+                        <span class="nt">&lt;configurationParameters&gt;</span>
+                            junit.platform.reporting.open.xml.enabled = true
+                            junit.platform.reporting.output.dir = ${project.build.directory}/surefire-reports
+                        <span class="nt">&lt;/configurationParameters&gt;</span>
+                    <span class="nt">&lt;/properties&gt;</span>
+                <span class="nt">&lt;/configuration&gt;</span>
+            <span class="nt">&lt;/plugin&gt;</span>
+        <span class="nt">&lt;/plugins&gt;</span>
+    <span class="nt">&lt;/build&gt;</span>
+    <span class="c">&lt;!-- ... --&gt;</span>
+<span class="nt">&lt;/project&gt;</span></code></pre>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module also contains <code>TestExecutionListener</code>
-implementations that can be used for reporting purposes. See <a href="#running-tests-listeners">Using Listeners</a>
-for details.
-</td>
-</tr>
-</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="console-launcher"><a class="anchor" href="#console-launcher"></a>Console Launcher</h5>
+<div class="paragraph">
+<p>When using the <a href="#running-tests-console-launcher">Console Launcher</a>, you can enable Open Test Reporting
+output by setting the configuration parameters via <code>--config</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="console"><span class="gp">$</span><span class="w"> </span>java <span class="nt">-jar</span> junit-platform-console-standalone-1.9.0-SNAPSHOT.jar &lt;OPTIONS&gt; <span class="se">\</span>
+  <span class="nt">--config</span><span class="o">=</span>junit.platform.reporting.open.xml.enabled<span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+  <span class="nt">--config</span><span class="o">=</span>junit.platform.reporting.output.dir<span class="o">=</span>reports</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="junit-platform-suite-engine"><a class="anchor" href="#junit-platform-suite-engine"></a>6.3. JUnit Platform Suite Engine</h3>
+<h3 id="junit-platform-suite-engine"><a class="anchor" href="#junit-platform-suite-engine"></a>6.2. JUnit Platform Suite Engine</h3>
 <div class="paragraph">
 <p>The JUnit Platform supports the declarative definition and execution of suites of tests
 from <em>any</em> test engine using the JUnit Platform.</p>
 </div>
 <div class="sect3">
-<h4 id="junit-platform-suite-engine-setup"><a class="anchor" href="#junit-platform-suite-engine-setup"></a>6.3.1. Setup</h4>
+<h4 id="junit-platform-suite-engine-setup"><a class="anchor" href="#junit-platform-suite-engine-setup"></a>6.2.1. Setup</h4>
 <div class="paragraph">
 <p>In addition to the <code>junit-platform-suite-api</code> and <code>junit-platform-suite-engine</code> artifacts,
 you need <em>at least one</em> other test engine and its dependencies on the classpath. See
@@ -9974,7 +9662,7 @@ on <code>junit-platform-suite-api</code> and <code>junit-platform-suite-engine</
 </div>
 </div>
 <div class="sect3">
-<h4 id="junit-platform-suite-engine-example"><a class="anchor" href="#junit-platform-suite-engine-example"></a>6.3.2. @Suite Example</h4>
+<h4 id="junit-platform-suite-engine-example"><a class="anchor" href="#junit-platform-suite-engine-example"></a>6.2.2. @Suite Example</h4>
 <div class="paragraph">
 <p>By annotating a class with <code>@Suite</code> it is marked as a test suite on the JUnit Platform.
 As seen in the following example, selector and filter annotations can then be used to
@@ -10013,14 +9701,14 @@ list of supported annotations and further details.
 </div>
 </div>
 <div class="sect2">
-<h3 id="testkit"><a class="anchor" href="#testkit"></a>6.4. JUnit Platform Test Kit</h3>
+<h3 id="testkit"><a class="anchor" href="#testkit"></a>6.3. JUnit Platform Test Kit</h3>
 <div class="paragraph">
 <p>The <code>junit-platform-testkit</code> artifact provides support for executing a test plan on the
 JUnit Platform and then verifying the expected results. As of JUnit Platform 1.4, this
 support is limited to the execution of a single <code>TestEngine</code> (see <a href="#testkit-engine">Engine Test Kit</a>).</p>
 </div>
 <div class="sect3">
-<h4 id="testkit-engine"><a class="anchor" href="#testkit-engine"></a>6.4.1. Engine Test Kit</h4>
+<h4 id="testkit-engine"><a class="anchor" href="#testkit-engine"></a>6.3.1. Engine Test Kit</h4>
 <div class="paragraph">
 <p>The <code><a href="../api/org.junit.platform.testkit/org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></code> package provides support for executing a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code> for a
 given <code><a href="../api/org.junit.platform.engine/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> running on the JUnit Platform and then accessing the results via a
@@ -10103,7 +9791,7 @@ may test your own <code>TestEngine</code> by supplying an instance of it to the
 </div>
 </div>
 <div class="sect3">
-<h4 id="testkit-engine-statistics"><a class="anchor" href="#testkit-engine-statistics"></a>6.4.2. Asserting Statistics</h4>
+<h4 id="testkit-engine-statistics"><a class="anchor" href="#testkit-engine-statistics"></a>6.3.2. Asserting Statistics</h4>
 <div class="paragraph">
 <p>One of the most common features of the Test Kit is the ability to assert statistics
 against events fired during the execution of a <code>TestPlan</code>. The following tests demonstrate
@@ -10193,7 +9881,7 @@ In the <code>verifyJupiterContainerStats()</code> test method, the counts for th
 </div>
 </div>
 <div class="sect3">
-<h4 id="testkit-engine-events"><a class="anchor" href="#testkit-engine-events"></a>6.4.3. Asserting Events</h4>
+<h4 id="testkit-engine-events"><a class="anchor" href="#testkit-engine-events"></a>6.3.3. Asserting Events</h4>
 <div class="paragraph">
 <p>If you find that <a href="#testkit-engine-statistics">asserting statistics</a> alone is insufficient
 for verifying the expected behavior of test execution, you can work directly with the
@@ -10500,6 +10188,478 @@ following.</p>
     Event [type = FINISHED, testDescriptor = TestMethodTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase]/[method:failingTest()], timestamp = 2018-12-14T12:45:14.111217Z, payload = TestExecutionResult [status = FAILED, throwable = java.lang.ArithmeticException: / by zero]]
     Event [type = FINISHED, testDescriptor = ClassTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase], timestamp = 2018-12-14T12:45:14.113731Z, payload = TestExecutionResult [status = SUCCESSFUL, throwable = null]]
     Event [type = FINISHED, testDescriptor = JupiterEngineDescriptor: [engine:junit-jupiter], timestamp = 2018-12-14T12:45:14.113806Z, payload = TestExecutionResult [status = SUCCESSFUL, throwable = null]]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="launcher-api"><a class="anchor" href="#launcher-api"></a>6.4. JUnit Platform Launcher API</h3>
+<div class="paragraph">
+<p>One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
+programmatic clients – build tools and IDEs – more powerful and stable. The purpose is to
+decouple the internals of discovering and executing tests from all the filtering and
+configuration that&#8217;s necessary from the outside.</p>
+</div>
+<div class="paragraph">
+<p>JUnit 5 introduces the concept of a <code>Launcher</code> that can be used to discover, filter, and
+execute tests. Moreover, third party test libraries – like Spock, Cucumber, and FitNesse
+– can plug into the JUnit Platform&#8217;s launching infrastructure by providing a custom
+<a href="#test-engines">TestEngine</a>.</p>
+</div>
+<div class="paragraph">
+<p>The launcher API is in the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module.</p>
+</div>
+<div class="paragraph">
+<p>An example consumer of the launcher API is the <code><a href="../api/org.junit.platform.console/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> in the
+<code><a href="../api/org.junit.platform.console/org/junit/platform/console/package-summary.html">junit-platform-console</a></code> project.</p>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-discovery"><a class="anchor" href="#launcher-api-discovery"></a>6.4.1. Discovering Tests</h4>
+<div class="paragraph">
+<p>Having <em>test discovery</em> as a dedicated feature of the platform itself frees IDEs and build
+tools from most of the difficulties they had to go through to identify test classes and
+test methods in previous versions of JUnit.</p>
+</div>
+<div class="paragraph">
+<p>Usage Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">discovery</span><span class="o">.</span><span class="na">ClassNameFilter</span><span class="o">.</span><span class="na">includeClassNamePatterns</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">discovery</span><span class="o">.</span><span class="na">DiscoverySelectors</span><span class="o">.</span><span class="na">selectClass</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">discovery</span><span class="o">.</span><span class="na">DiscoverySelectors</span><span class="o">.</span><span class="na">selectPackage</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.PrintWriter</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.file.Path</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.file.Paths</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.platform.engine.FilterResult</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.engine.TestDescriptor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.Launcher</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherDiscoveryListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherDiscoveryRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSession</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSessionListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.PostDiscoveryFilter</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestExecutionListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestPlan</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.core.LauncherConfig</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.core.LauncherFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.listeners.SummaryGeneratingListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.listeners.TestExecutionSummary</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener</span><span class="o">;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nc">LauncherDiscoveryRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="nc">LauncherDiscoveryRequestBuilder</span><span class="o">.</span><span class="na">request</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">selectors</span><span class="o">(</span>
+        <span class="n">selectPackage</span><span class="o">(</span><span class="s">"com.example.mytests"</span><span class="o">),</span>
+        <span class="n">selectClass</span><span class="o">(</span><span class="nc">MyTestClass</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="o">)</span>
+    <span class="o">.</span><span class="na">filters</span><span class="o">(</span>
+        <span class="n">includeClassNamePatterns</span><span class="o">(</span><span class="s">".*Tests"</span><span class="o">)</span>
+    <span class="o">)</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="k">try</span> <span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">())</span> <span class="o">{</span>
+    <span class="nc">TestPlan</span> <span class="n">testPlan</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">().</span><span class="na">discover</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+
+    <span class="c1">// ... discover additional test plans or execute tests</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can select classes, methods, and all classes in a package or even search for all tests
+in the class-path or module-path. Discovery takes place across all participating test
+engines.</p>
+</div>
+<div class="paragraph">
+<p>The resulting <code>TestPlan</code> is a hierarchical (and read-only) description of all engines,
+classes, and test methods that fit the <code>LauncherDiscoveryRequest</code>. The client can
+traverse the tree, retrieve details about a node, and get a link to the original source
+(like class, method, or file position). Every node in the test plan has a <em>unique ID</em>
+that can be used to invoke a particular test or group of tests.</p>
+</div>
+<div class="paragraph">
+<p>Clients can register one or more <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code> implementations via the
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html">LauncherDiscoveryRequestBuilder</a></code> to gain insight into events that occur during test
+discovery. By default, the builder registers an "abort on failure" listener that aborts
+test discovery after the first discovery failure is encountered. The default
+<code>LauncherDiscoveryListener</code> can be changed via the
+<code>junit.platform.discovery.listener.default</code> <a href="#running-tests-config-params">configuration
+parameter</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-execution"><a class="anchor" href="#launcher-api-execution"></a>6.4.2. Executing Tests</h4>
+<div class="paragraph">
+<p>To execute tests, clients can use the same <code>LauncherDiscoveryRequest</code> as in the discovery
+phase or create a new request. Test progress and reporting can be achieved by registering
+one or more <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations with the <code>Launcher</code> as in the
+following example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nc">LauncherDiscoveryRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="nc">LauncherDiscoveryRequestBuilder</span><span class="o">.</span><span class="na">request</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">selectors</span><span class="o">(</span>
+        <span class="n">selectPackage</span><span class="o">(</span><span class="s">"com.example.mytests"</span><span class="o">),</span>
+        <span class="n">selectClass</span><span class="o">(</span><span class="nc">MyTestClass</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="o">)</span>
+    <span class="o">.</span><span class="na">filters</span><span class="o">(</span>
+        <span class="n">includeClassNamePatterns</span><span class="o">(</span><span class="s">".*Tests"</span><span class="o">)</span>
+    <span class="o">)</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="nc">SummaryGeneratingListener</span> <span class="n">listener</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SummaryGeneratingListener</span><span class="o">();</span>
+
+<span class="k">try</span> <span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">())</span> <span class="o">{</span>
+    <span class="nc">Launcher</span> <span class="n">launcher</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">();</span>
+    <span class="c1">// Register a listener of your choice</span>
+    <span class="n">launcher</span><span class="o">.</span><span class="na">registerTestExecutionListeners</span><span class="o">(</span><span class="n">listener</span><span class="o">);</span>
+    <span class="c1">// Discover tests and build a test plan</span>
+    <span class="nc">TestPlan</span> <span class="n">testPlan</span> <span class="o">=</span> <span class="n">launcher</span><span class="o">.</span><span class="na">discover</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+    <span class="c1">// Execute test plan</span>
+    <span class="n">launcher</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">testPlan</span><span class="o">);</span>
+    <span class="c1">// Alternatively, execute the request directly</span>
+    <span class="n">launcher</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="nc">TestExecutionSummary</span> <span class="n">summary</span> <span class="o">=</span> <span class="n">listener</span><span class="o">.</span><span class="na">getSummary</span><span class="o">();</span>
+<span class="c1">// Do something with the summary...</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is no return value for the <code>execute()</code> method, but you can use a
+<code>TestExecutionListener</code> to aggregate the results. For examples see the
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code>, <code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code>, and
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-engines-custom"><a class="anchor" href="#launcher-api-engines-custom"></a>6.4.3. Registering a TestEngine</h4>
+<div class="paragraph">
+<p>See the dedicated section on <a href="#test-engines-registration">TestEngine registration</a> for
+details.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-post-discovery-filters-custom"><a class="anchor" href="#launcher-api-post-discovery-filters-custom"></a>6.4.4. Registering a PostDiscoveryFilter</h4>
+<div class="paragraph">
+<p>In addition to specifying post-discovery filters as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
+passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html">PostDiscoveryFilter</a></code> implementations will be discovered
+at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically applied by the
+<code>Launcher</code> in addition to those that are part of the request.</p>
+</div>
+<div class="paragraph">
+<p>For example, an <code>example.CustomTagFilter</code> class implementing <code>PostDiscoveryFilter</code> and
+declared within the <code>/META-INF/services/org.junit.platform.launcher.PostDiscoveryFilter</code>
+file is loaded and applied automatically.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-launcher-session-listeners-custom"><a class="anchor" href="#launcher-api-launcher-session-listeners-custom"></a>6.4.5. Registering a LauncherSessionListener</h4>
+<div class="paragraph">
+<p>Registered implementations of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> are notified when a
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code> is opened (before a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> first discovers and executes tests)
+and closed (when no more tests will be discovered or executed). They can be registered
+programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> that is passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>, or
+they can be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
+registered with <code>LauncherSession</code> (unless automatic registration is disabled.)</p>
+</div>
+<div class="paragraph">
+<p>A <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> is well suited for implementing once-per-JVM setup/teardown
+behavior since it&#8217;s called before the first and after the last test in a launcher session,
+respectively. The scope of a launcher session depends on the used IDE or build tool but
+usually corresponds to the lifecycle of the test JVM. A custom listener that starts an
+HTTP server before executing the first test and stops it after the last test has been
+executed, could look like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">src/test/java/example/session/GlobalSetupTeardownListener.java</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">example.session</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">InetAddress</span><span class="o">.</span><span class="na">getLoopbackAddress</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.UncheckedIOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.InetSocketAddress</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.ExecutorService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.sun.net.httpserver.HttpServer</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSession</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherSessionListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestExecutionListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.TestPlan</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">GlobalSetupTeardownListener</span> <span class="kd">implements</span> <span class="nc">LauncherSessionListener</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">Fixture</span> <span class="n">fixture</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">launcherSessionOpened</span><span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Avoid setup for test discovery by delaying it until tests are about to be executed</span>
+        <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">().</span><span class="na">registerTestExecutionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">TestExecutionListener</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testPlanExecutionStarted</span><span class="o">(</span><span class="nc">TestPlan</span> <span class="n">testPlan</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">fixture</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">fixture</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Fixture</span><span class="o">();</span>
+                    <span class="n">fixture</span><span class="o">.</span><span class="na">setUp</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">launcherSessionClosed</span><span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">fixture</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">fixture</span><span class="o">.</span><span class="na">tearDown</span><span class="o">();</span>
+            <span class="n">fixture</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Fixture</span> <span class="o">{</span>
+
+        <span class="kd">private</span> <span class="nc">HttpServer</span> <span class="n">server</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="nc">ExecutorService</span> <span class="n">executorService</span><span class="o">;</span>
+
+        <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">server</span> <span class="o">=</span> <span class="nc">HttpServer</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="k">new</span> <span class="nc">InetSocketAddress</span><span class="o">(</span><span class="n">getLoopbackAddress</span><span class="o">(),</span> <span class="mi">0</span><span class="o">),</span> <span class="mi">0</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">UncheckedIOException</span><span class="o">(</span><span class="s">"Failed to start HTTP server"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">server</span><span class="o">.</span><span class="na">createContext</span><span class="o">(</span><span class="s">"/test"</span><span class="o">,</span> <span class="n">exchange</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="n">exchange</span><span class="o">.</span><span class="na">sendResponseHeaders</span><span class="o">(</span><span class="mi">204</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">exchange</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="o">});</span>
+            <span class="n">executorService</span> <span class="o">=</span> <span class="nc">Executors</span><span class="o">.</span><span class="na">newCachedThreadPool</span><span class="o">();</span>
+            <span class="n">server</span><span class="o">.</span><span class="na">setExecutor</span><span class="o">(</span><span class="n">executorService</span><span class="o">);</span>
+            <span class="n">server</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> <i class="conum" data-value="1"></i><b>(1)</b>
+            <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="na">getAddress</span><span class="o">().</span><span class="na">getPort</span><span class="o">();</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"http.server.host"</span><span class="o">,</span> <span class="n">getLoopbackAddress</span><span class="o">().</span><span class="na">getHostAddress</span><span class="o">());</span> <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="nc">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"http.server.port"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">port</span><span class="o">));</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="o">}</span>
+
+        <span class="kt">void</span> <span class="nf">tearDown</span><span class="o">()</span> <span class="o">{</span>
+            <span class="n">server</span><span class="o">.</span><span class="na">stop</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <i class="conum" data-value="4"></i><b>(4)</b>
+            <span class="n">executorService</span><span class="o">.</span><span class="na">shutdownNow</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Start the HTTP server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Export its host address as a system property for consumption by tests</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Export its port as a system property for consumption by tests</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Stop the HTTP server</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This sample uses the HTTP server implementation from the jdk.httpserver module that comes
+with the JDK but would work similarly with any other server or resource. In order for the
+listener to be picked up by JUnit Platform, you need to register it as a service by adding
+a resource file with the following name and contents to your test runtime classpath (e.g.
+by adding the file to <code>src/test/resources</code>):</p>
+</div>
+<div class="listingblock">
+<div class="title">src/test/resources/META-INF/services/org.junit.platform.launcher.LauncherSessionListener</div>
+<div class="content">
+<pre class="rouge highlight"><code>example.session.GlobalSetupTeardownListener</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can now use the resource from your test:</p>
+</div>
+<div class="listingblock">
+<div class="title">src/test/java/example/session/HttpTests.java</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">package</span> <span class="nn">example.session</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.net.HttpURLConnection</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">HttpTests</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">respondsWith204</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="nc">String</span> <span class="n">host</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"http.server.host"</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="nc">String</span> <span class="n">port</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"http.server.port"</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="no">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="no">URL</span><span class="o">(</span><span class="s">"http://"</span> <span class="o">+</span> <span class="n">host</span> <span class="o">+</span> <span class="s">":"</span> <span class="o">+</span> <span class="n">port</span> <span class="o">+</span> <span class="s">"/test"</span><span class="o">);</span>
+
+        <span class="nc">HttpURLConnection</span> <span class="n">connection</span> <span class="o">=</span> <span class="o">(</span><span class="nc">HttpURLConnection</span><span class="o">)</span> <span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
+        <span class="n">connection</span><span class="o">.</span><span class="na">setRequestMethod</span><span class="o">(</span><span class="s">"GET"</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">responseCode</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">getResponseCode</span><span class="o">();</span> <i class="conum" data-value="3"></i><b>(3)</b>
+
+        <span class="n">assertEquals</span><span class="o">(</span><span class="mi">204</span><span class="o">,</span> <span class="n">responseCode</span><span class="o">);</span> <i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Read the host address of the server from the system property set by the listener</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Read the port of the server from the system property set by the listener</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Send a request to the server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Check the status code of the response</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-launcher-discovery-listeners-custom"><a class="anchor" href="#launcher-api-launcher-discovery-listeners-custom"></a>6.4.6. Registering a LauncherDiscoveryListener</h4>
+<div class="paragraph">
+<p>In addition to specifying discovery listeners as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> or
+registering them programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, custom
+<code>LauncherDiscoveryListener</code> implementations can be discovered at runtime via Java&#8217;s
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the <code>Launcher</code> created via
+the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, an <code>example.CustomLauncherDiscoveryListener</code> class implementing
+<code>LauncherDiscoveryListener</code> and declared within the
+<code>/META-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener</code> file is loaded
+and registered automatically.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>6.4.7. Registering a TestExecutionListener</h4>
+<div class="paragraph">
+<p>In addition to the public <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution listeners
+programmatically, custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations will be discovered at
+runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the
+<code>Launcher</code> created via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, an <code>example.CustomTestExecutionListener</code> class implementing
+<code>TestExecutionListener</code> and declared within the
+<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file is loaded and
+registered automatically.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-listeners-config"><a class="anchor" href="#launcher-api-listeners-config"></a>6.4.8. Configuring a TestExecutionListener</h4>
+<div class="paragraph">
+<p>When a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> is registered programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API,
+the listener may provide programmatic ways for it to be configured&#8201;&#8212;&#8201;for example, via its
+constructor, setter methods, etc. However, when a <code>TestExecutionListener</code> is registered
+automatically via Java&#8217;s <code>ServiceLoader</code> mechanism (see
+<a href="#launcher-api-listeners-custom">Registering a TestExecutionListener</a>), there is no way for the user to directly configure the
+listener. In such cases, the author of a <code>TestExecutionListener</code> may choose to make the
+listener configurable via <a href="#running-tests-config-params">configuration parameters</a>. The
+listener can then access the configuration parameters via the <code>TestPlan</code> supplied to the
+<code>testPlanExecutionStarted(TestPlan)</code> and <code>testPlanExecutionFinished(TestPlan)</code> callback
+methods. See the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code> for an example.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.4.9. Deactivating a TestExecutionListener</h4>
+<div class="paragraph">
+<p>Sometimes it can be useful to run a test suite <em>without</em> certain execution listeners being
+active. For example, you might have custom a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> that sends the test
+results to an external system for reporting purposes, and while debugging you might not
+want these <em>debug</em> results to be reported. To do this, provide a pattern for the
+<code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em> to specify which
+execution listeners should be deactivated (i.e. not registered) for the current test run.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Only listeners registered via the <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism within the
+<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file can be
+deactivated. In other words, any <code>TestExecutionListener</code> registered explicitly via the
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> cannot be deactivated via the
+<code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em>.</p>
+</div>
+<div class="paragraph">
+<p>In addition, since execution listeners are registered before the test run starts, the
+<code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em> can only be
+supplied as a JVM system property or via the JUnit Platform configuration file (see
+<a href="#running-tests-config-params">Configuration Parameters</a> for details). This <em>configuration parameter</em> cannot be
+supplied in the <code>LauncherDiscoveryRequest</code> that is passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="launcher-api-listeners-custom-deactivation-pattern"><a class="anchor" href="#launcher-api-listeners-custom-deactivation-pattern"></a>Pattern Matching Syntax</h5>
+<div class="paragraph">
+<p>Refer to <a href="#running-tests-config-params-deactivation-pattern">Pattern Matching Syntax</a> for details.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.4.10. Configuring the Launcher</h4>
+<div class="paragraph">
+<p>If you require fine-grained control over automatic detection and registration of test
+engines and listeners, you may create an instance of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> and supply that to
+the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>. Typically, an instance of <code>LauncherConfig</code> is created via the
+built-in fluent <em>builder</em> API, as demonstrated in the following example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nc">LauncherConfig</span> <span class="n">launcherConfig</span> <span class="o">=</span> <span class="nc">LauncherConfig</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">enableTestEngineAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">enableLauncherSessionListenerAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">enableLauncherDiscoveryListenerAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">enablePostDiscoveryFilterAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">enableTestExecutionListenerAutoRegistration</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">addTestEngines</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomTestEngine</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">addLauncherSessionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomLauncherSessionListener</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">addLauncherDiscoveryListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomLauncherDiscoveryListener</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">addPostDiscoveryFilters</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomPostDiscoveryFilter</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">addTestExecutionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">LegacyXmlReportGeneratingListener</span><span class="o">(</span><span class="n">reportsDir</span><span class="o">,</span> <span class="n">out</span><span class="o">))</span>
+    <span class="o">.</span><span class="na">addTestExecutionListeners</span><span class="o">(</span><span class="k">new</span> <span class="nc">CustomTestExecutionListener</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="nc">LauncherDiscoveryRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="nc">LauncherDiscoveryRequestBuilder</span><span class="o">.</span><span class="na">request</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">selectors</span><span class="o">(</span><span class="n">selectPackage</span><span class="o">(</span><span class="s">"com.example.mytests"</span><span class="o">))</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="k">try</span> <span class="o">(</span><span class="nc">LauncherSession</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">LauncherFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="n">launcherConfig</span><span class="o">))</span> <span class="o">{</span>
+    <span class="n">session</span><span class="o">.</span><span class="na">getLauncher</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 </div>
@@ -11009,6 +11169,11 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.reporting.open.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OpenTestReportGeneratingListener</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.9</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConfigurationParameter</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
@@ -11414,7 +11579,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-05-12 07:11:35 UTC
+Last updated 2022-05-15 14:27:26 UTC
 </div>
 </div>
 <style>
