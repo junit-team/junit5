@@ -10,7 +10,7 @@ NOTE: The module also contains other `TestExecutionListener` implementations tha
 used to build custom reporting. See <<running-tests-listeners>> for details.
 
 [[junit-platform-reporting-legacy-xml]]
-==== Legacy XML reports
+==== Legacy XML format
 
 `{LegacyXmlReportGeneratingListener}` generates a separate XML report for each root in the
 `{TestPlan}`. Note that the generated XML format is compatible with the de facto standard
@@ -20,7 +20,7 @@ The `LegacyXmlReportGeneratingListener` is used by the <<running-tests-console-l
 as well.
 
 [[junit-platform-reporting-open-test-reporting]]
-==== Open Test Reporting XML reports
+==== Open Test Reporting XML format
 
 `{OpenTestReportGeneratingListener}` writes an XML report for the entire execution in the
 event-based format specified by {OpenTestReporting} which supports all features of the
@@ -38,6 +38,9 @@ The listener is auto-registered and can be configured via the following
 
 If enabled, the listener creates an XML report file named
 `junit-platform-events-<random-id>.xml` per test run in the configured output directory.
+
+TIP: The {OpenTestReportingCliTool} can be used to convert from the event-based format to
+the hierarchical format which is more human-readable.
 
 ===== Gradle
 
