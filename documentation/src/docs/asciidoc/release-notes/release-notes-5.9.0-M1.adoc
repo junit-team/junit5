@@ -1,9 +1,16 @@
 [[release-notes-5.9.0-M1]]
 == 5.9.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* May 15, 2022
 
-*Scope:* ❓
+*Scope:*
+
+* XML reports in new https://github.com/ota4j-team/open-test-reporting[Open Test Reporting] format
+* Configurable cleanup mode for `@TempDir`
+* New `TestInstancePreConstructCallback` extension API
+* Reusable parameter resolution for custom extension methods via `ExecutableInvoker`
+* New `IterationSelector`
+* Various improvements to `ConsoleLauncher`
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/58?closed=1+[5.9 M1] milestone page in the JUnit repository
@@ -61,6 +68,9 @@ on GitHub.
 ==== Bug Fixes
 
 * Only retry deleting directories when cleaning up `@TempDir` once.
+* Since Turkish language has special characters as 'ı' and 'İ', the uppercase conversion on
+  `DefaultParallelExecutionConfigurationStrategy#getStrategy` was causing all test to finish
+  with exit code -1. That has been fixed by using Root locale instead of default one.
 
 ==== Deprecations and Breaking Changes
 
@@ -92,16 +102,4 @@ on GitHub.
 [[release-notes-5.9.0-M1-junit-vintage]]
 === JUnit Vintage
 
-==== Bug Fixes
-
-* Since Turkish language has special characters as 'ı' and 'İ', the uppercase conversion on
-  `DefaultParallelExecutionConfigurationStrategy#getStrategy` was causing all test to finish
-  with exit code -1. That has been fixed by using Root locale instead of default one.
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes.
