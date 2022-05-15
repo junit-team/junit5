@@ -48,8 +48,16 @@ tasks.withType<Test>().configureEach {
 			"-XX:FlightRecorderOptions=stackdepth=1024"
 		)
 	}
+
 	// Track OS as input so that tests are executed on all configured operating systems on CI
 	trackOperationSystemAsInput()
+
+	jvmArgumentProviders += CommandLineArgumentProvider {
+		listOf(
+			"-Djunit.platform.reporting.open.xml.enabled=true",
+			"-Djunit.platform.reporting.output.dir=${reports.junitXml.outputLocation.get().asFile.absolutePath}"
+		)
+	}
 }
 
 dependencies {
@@ -63,6 +71,7 @@ dependencies {
 
 	"testRuntimeOnly"(project(":junit-platform-engine"))
 	"testRuntimeOnly"(project(":junit-platform-jfr"))
+	"testRuntimeOnly"(project(":junit-platform-reporting"))
 
 	"testRuntimeOnly"(bundleFromLibs("log4j"))
 }

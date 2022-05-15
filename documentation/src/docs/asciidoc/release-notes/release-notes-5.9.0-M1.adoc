@@ -27,6 +27,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Add support for https://github.com/ota4j-team/open-test-reporting[Open Test Reporting]
+  format which supports all features of the JUnit Platform such as hierarchical test
+  structures, display names, tags, etc. Please refer to the
+  <<../user-guide/index.adoc#junit-platform-reporting-open-test-reporting, User Guide>>
+  for instructions on how to enable such reports in your build.
 * `ConfigurationParameters` has a new `keySet()` method which allows you to retrieve all
   configuration parameter keys.
 * New `IterationSelector` for selecting a subset of a test's or container's iterations.
@@ -80,6 +85,8 @@ on GitHub.
 * A subset of the invocations of parameterized or dynamic tests can now be selected via
   the new `IterationSelector` discovery selector when launching the JUnit Platform.
 * `JAVA_19` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* `@MethodSource` factory methods can now accept arguments resolved by registered
+  `ParameterResolver`.
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]

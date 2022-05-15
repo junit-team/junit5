@@ -10,8 +10,17 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import org.junit.platform.engine.ExecutionRequest;
+
 /**
  * @since 1.0
  */
 public class DemoEngineExecutionContext implements EngineExecutionContext {
+
+	public final ExecutionRequest request;
+
+	public DemoEngineExecutionContext(ExecutionRequest request) {
+		this.request = request;
+	}
+
 }
