@@ -5,7 +5,8 @@
 
 *Scope:*
 
-* XML reports in new https://github.com/ota4j-team/open-test-reporting[Open Test Reporting] format
+* XML reports in new https://github.com/ota4j-team/open-test-reporting[Open Test Reporting]
+  format
 * Configurable cleanup mode for `@TempDir`
 * New `TestInstancePreConstructCallback` extension API
 * Reusable parameter resolution for custom extension methods via `ExecutableInvoker`
@@ -22,10 +23,11 @@ on GitHub.
 
 ==== Bug Fixes
 
-* Fix handling of global post-discovery filters that apply to `@Suite` classes.
-* Since Turkish language has special characters as 'ı' and 'İ', the uppercase conversion on
-  `DefaultParallelExecutionConfigurationStrategy#getStrategy` was causing all test to finish
-  with exit code -1. That has been fixed by using Root locale instead of default one.
+* Fixed handling of global post-discovery filters that apply to `@Suite` classes.
+* Since the Turkish language has special characters such as 'ı' and 'İ', the uppercase
+  conversion in `DefaultParallelExecutionConfigurationStrategy#getStrategy` previously
+  caused all tests to finish with exit code -1. This has been fixed by using the root
+  locale instead of the default one.
 
 ==== Deprecations and Breaking Changes
 
@@ -34,7 +36,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Add support for https://github.com/ota4j-team/open-test-reporting[Open Test Reporting]
+* Support for the https://github.com/ota4j-team/open-test-reporting[Open Test Reporting]
   format which supports all features of the JUnit Platform such as hierarchical test
   structures, display names, tags, etc. Please refer to the
   <<../user-guide/index.adoc#junit-platform-reporting-open-test-reporting, User Guide>>
@@ -42,23 +44,24 @@ on GitHub.
 * `ConfigurationParameters` has a new `keySet()` method which allows you to retrieve all
   configuration parameter keys.
 * New `IterationSelector` for selecting a subset of a test's or container's iterations.
-* `ParallelExecutionConfiguration` allows configuring the "saturate" predicate of the
+* `ParallelExecutionConfiguration` allows configuring the `saturate` predicate of the
   `ForkJoinPool` used for parallel test execution.
 * JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
   resolution time a fully running set of dependencies is calculated, avoiding the need for
   these to be manually specified.
 * JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.
 * New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if no tests
-  were discovered.
-* `ConsoleLauncher`'s output color can now be customized. The option `--single-color` will
-  apply a built-in monochrome style, while `--color-palette` will accept a properties file.
-  See the <<../user-guide/index.adoc#running-tests-console-launcher-color-customization,
+  are discovered.
+* The output color for the `ConsoleLauncher` can now be customized. The option
+  `--single-color` will apply a built-in monochrome style, while `--color-palette` will
+  accept a properties file. See the
+  <<../user-guide/index.adoc#running-tests-console-launcher-color-customization,
   User Guide>> for details.
-* `ConsoleLauncher`'s default theme is now determined by the charset reported by the system
-  console on Java 17 and later.
-* New `--list-engines` option added to the `ConsoleLauncher` displaying all registered test
-  engine implementations.
-* Configuring include `EngineFilters` that do not match any registered `TestEngine`
+* The default theme for the `ConsoleLauncher` is now determined by the charset reported by
+  the system console on Java 17 and later.
+* New `--list-engines` option added to the `ConsoleLauncher` which displays all registered
+  test engine implementations.
+* Configuring included `EngineFilters` that do not match any registered `TestEngine`
   results in an error to avoid misconfiguration – for example, due to typos.
 
 
@@ -67,10 +70,11 @@ on GitHub.
 
 ==== Bug Fixes
 
-* Only retry deleting directories when cleaning up `@TempDir` once.
-* Since Turkish language has special characters as 'ı' and 'İ', the uppercase conversion on
-  `DefaultParallelExecutionConfigurationStrategy#getStrategy` was causing all test to finish
-  with exit code -1. That has been fixed by using Root locale instead of default one.
+* When cleaning up a `@TempDir`, only one retry attempt will be made to delete directories.
+* Since the Turkish language has special characters such as 'ı' and 'İ', the uppercase
+  conversion in `DefaultParallelExecutionConfigurationStrategy#getStrategy` previously
+  caused all tests to finish with exit code -1. This has been fixed by using the root
+  locale instead of the default one.
 
 ==== Deprecations and Breaking Changes
 
@@ -90,13 +94,14 @@ on GitHub.
 * New `TestInstancePreConstructCallback` extension API that is called prior to test
   instance construction – symmetric to the existing `TestInstancePreDestroyCallback`
   extension API.
-* Extensions can now leverage registered `ParameterResolvers` when invoking methods and
-  constructors via the new `ExecutableInvoker` available in the `ExtensionContext`.
+* Extensions can now leverage registered `ParameterResolver` extensions when invoking
+  methods and constructors via the new `ExecutableInvoker` API available in the
+  `ExtensionContext`.
 * A subset of the invocations of parameterized or dynamic tests can now be selected via
   the new `IterationSelector` discovery selector when launching the JUnit Platform.
 * `JAVA_19` has been added to the `JRE` enum for use with JRE-based execution conditions.
 * `@MethodSource` factory methods can now accept arguments resolved by registered
-  `ParameterResolver`.
+  `ParameterResolver` extensions.
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]
