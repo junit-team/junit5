@@ -43,6 +43,7 @@ endif::[]
 :UniqueIdTrackingListener:                   {javadoc-root}/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html[UniqueIdTrackingListener]
 // Platform Reporting
 :LegacyXmlReportGeneratingListener:          {javadoc-root}/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html[LegacyXmlReportGeneratingListener]
+:OpenTestReportGeneratingListener:           {javadoc-root}/org.junit.platform.reporting/org/junit/platform/reporting/open/xml/OpenTestReportGeneratingListener.html[OpenTestReportGeneratingListener]
 // Platform Runner
 :JUnitPlatform-Runner:                       {javadoc-root}/org.junit.platform.runnner/org/junit/platform/runner/JUnitPlatform.html[JUnitPlatform]
 // Platform Suite
@@ -182,3 +183,5 @@ endif::[]
 :SpringExtension:                            https://github.com/spring-projects/spring-framework/tree/HEAD/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
 :StackOverflow:                              https://stackoverflow.com/questions/tagged/junit5[Stack Overflow]
 :Truth:                                      https://truth.dev/[Truth]
+:OpenTestReporting:                          https://github.com/ota4j-team/open-test-reporting[Open Test Reporting]
+:OpenTestReportingCliTool:                   https://github.com/ota4j-team/open-test-reporting#cli-tool-for-validation-and-format-conversion[Open Test Reporting CLI Tool]

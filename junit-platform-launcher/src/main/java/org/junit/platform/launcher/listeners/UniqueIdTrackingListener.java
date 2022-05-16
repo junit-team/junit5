@@ -17,15 +17,12 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -164,9 +161,9 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 		if (this.enabled) {
 			Path outputFile;
 			try {
-				outputFile = getOutputFile(testPlan.getConfigurationParameters());
+				outputFile = createOutputFile(testPlan.getConfigurationParameters());
 			}
-			catch (IOException ex) {
+			catch (Exception ex) {
 				logger.error(ex, () -> "Failed to create output file");
 				// Abort since we cannot generate the file.
 				return;
@@ -183,70 +180,11 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 		}
 	}
 
-	private Path getOutputFile(ConfigurationParameters configurationParameters) throws IOException {
-		String prefix = configurationParameters.get(OUTPUT_FILE_PREFIX_PROPERTY_NAME)//
+	private Path createOutputFile(ConfigurationParameters configurationParameters) {
+		String prefix = configurationParameters.get(OUTPUT_FILE_PREFIX_PROPERTY_NAME) //
 				.orElse(DEFAULT_OUTPUT_FILE_PREFIX);
-		String filename = String.format("%s-%d.txt", prefix, Math.abs(new SecureRandom().nextLong()));
-		Path outputFile = getOutputDir(configurationParameters).resolve(filename);
-
-		if (Files.exists(outputFile)) {
-			Files.delete(outputFile);
-		}
-
-		Files.createFile(outputFile);
-
-		return outputFile;
-	}
-
-	Path getOutputDir(ConfigurationParameters configurationParameters) throws IOException {
-		Path cwd = currentWorkingDir();
-		Path outputDir;
-
-		String customDir = configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME).orElse(null);
-		if (StringUtils.isNotBlank(customDir)) {
-			outputDir = cwd.resolve(customDir);
-		}
-		else if (Files.exists(cwd.resolve("pom.xml"))) {
-			outputDir = cwd.resolve("target");
-		}
-		else if (containsFilesWithExtensions(cwd, ".gradle", ".gradle.kts")) {
-			outputDir = cwd.resolve("build");
-		}
-		else {
-			outputDir = cwd;
-		}
-
-		if (!Files.exists(outputDir)) {
-			Files.createDirectories(outputDir);
-		}
-
-		return outputDir;
-	}
-
-	/**
-	 * Get the current working directory.
-	 * <p>Package private for testing purposes.
-	 */
-	Path currentWorkingDir() {
-		return Paths.get(".");
-	}
-
-	/**
-	 * Determine if the supplied directory contains files with any of the
-	 * supplied extensions.
-	 */
-	private boolean containsFilesWithExtensions(Path dir, String... extensions) throws IOException {
-		return Files.find(dir, 1, //
-			(path, basicFileAttributes) -> {
-				if (basicFileAttributes.isRegularFile()) {
-					for (String extension : extensions) {
-						if (path.getFileName().toString().endsWith(extension)) {
-							return true;
-						}
-					}
-				}
-				return false;
-			}).findFirst().isPresent();
+		return OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME)) //
+				.createFile(prefix, "txt");
 	}
 
 }
