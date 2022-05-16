@@ -22,6 +22,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
@@ -183,7 +184,21 @@ public interface InvocationInterceptor extends Extension {
 		// by default call the old interceptDynamicTest(Invocation, ExtensionContext) method so that existing extensions still work
 		interceptDynamicTest(invocation, extensionContext);
 	}
-
+	/**
+	 * Intercept the invocation of a {@link DynamicContainer}.
+	 *
+	 * @param invocation the invocation that is being intercepted; never
+	 * {@code null}
+	 * @param invocationContext the context of the invocation that is being
+	 * intercepted; never {@code null}
+	 * @param extensionContext the current extension context; never {@code null}
+	 * @throws Throwable in case of failures
+	 */
+	@API(status = EXPERIMENTAL, since = "5.8")                                            //no problem here
+	default void interceptDynamicContainer(Invocation<Void> invocation, DynamicContainerInvocationContext invocationContext,
+									  ExtensionContext extensionContext) throws Throwable {
+		invocation.proceed();
+	}
 	/**
 	 * Intercept the invocation of an {@link AfterEach @AfterEach} method.
 	 *

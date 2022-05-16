@@ -18,8 +18,14 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.extension.DynamicContainerInvocationContext;
+import org.junit.jupiter.api.extension.DynamicTestInvocationContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.InvocationInterceptorChain;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
@@ -36,6 +42,7 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	private final TestSource testSource;
 	private final DynamicDescendantFilter dynamicDescendantFilter;
 
+	private static final InvocationInterceptorChain interceptorChain = new InvocationInterceptorChain();
 	DynamicContainerTestDescriptor(UniqueId uniqueId, int index, DynamicContainer dynamicContainer,
 			TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter,
 			JupiterConfiguration configuration) {
