@@ -687,7 +687,7 @@ class JUnitPlatformRunnerTests {
 				ClassSource.from(getClass()));
 			containerDescriptor.addChild(
 				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
-					"testDisplayName", MethodSource.from(failingTest), () -> {
+					"testDisplayName", MethodSource.from(failingTest), (c, t) -> {
 					}));
 
 			var platformRunner = new JUnitPlatform(TestClass.class, createLauncher(engine));
@@ -723,7 +723,7 @@ class JUnitPlatformRunnerTests {
 				ClassSource.from(getClass()));
 			containerDescriptor.addChild(
 				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
-					"testDisplayName", MethodSource.from(failingTest), () -> {
+					"testDisplayName", MethodSource.from(failingTest), (c, t) -> {
 					}));
 
 			var platformRunner = new JUnitPlatform(TestClassWithTechnicalNames.class, createLauncher(engine));

@@ -50,6 +50,7 @@ dependencies {
 	antJars(platform(projects.junitBom))
 	antJars(libs.bundles.ant)
 	antJars(projects.junitPlatformConsoleStandalone)
+	antJars(projects.junitPlatformLauncher)
 
 	mavenDistribution(libs.maven) {
 		artifact {
