@@ -244,6 +244,46 @@ public interface MethodOrderer {
 	}
 
 	/**
+	 * {@code MethodOrderer} that sorts methods based on the {@link Order @Order}
+	 * annotation and check whether there is duplicate order
+	 *
+	 * <p>If there are duplicate orders, then throw an {@link Exception}
+	 *
+	 */
+	class EnforcingOrderAnnotation implements MethodOrderer {
+
+		public EnforcingOrderAnnotation() {
+		}
+
+		/**
+		 * Sort the methods encapsulated in the supplied
+		 * {@link MethodOrdererContext} based on the {@link Order}
+		 * annotation.
+		 *
+		 * If {@code enforced} and methods have duplicate {@link Order}
+		 * throws an {@link Exception}
+		 */
+		public void orderMethods(MethodOrdererContext context) {
+			try {
+				long methodCnt = context.getMethodDescriptors().size();
+				long distinctOrderCnt = context.getMethodDescriptors().stream().mapToInt(
+					OrderAnnotation::getOrder).distinct().count();
+				if (methodCnt != distinctOrderCnt)
+					throw new Exception(
+						"duplicate order" + "expected: " + methodCnt + " but was: <" + distinctOrderCnt + ">");
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public Optional<ExecutionMode> getDefaultExecutionMode() {
+			return MethodOrderer.super.getDefaultExecutionMode();
+		}
+	}
+
+	/**
 	 * {@code MethodOrderer} that orders methods pseudo-randomly.
 	 *
 	 * <h4>Custom Seed</h4>
