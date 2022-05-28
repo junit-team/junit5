@@ -1,6 +1,5 @@
 package org.junit.jupiter.params.provider;
 
-import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 
