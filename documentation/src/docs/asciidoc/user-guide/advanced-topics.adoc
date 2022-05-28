@@ -1,12 +1,12 @@
 [[advanced-topics]]
 == Advanced Topics
 
-include::advanced-topics/launcher-api.adoc[]
-
 include::advanced-topics/junit-platform-reporting.adoc[]
 
 include::advanced-topics/junit-platform-suite-engine.adoc[]
 
 include::advanced-topics/testkit.adoc[]
+
+include::advanced-topics/launcher-api.adoc[]
 
 include::advanced-topics/engines.adoc[]
