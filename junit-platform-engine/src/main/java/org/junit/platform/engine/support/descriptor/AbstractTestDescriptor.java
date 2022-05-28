@@ -106,11 +106,15 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
 	@Override
-	public final TestExecutionResult getTestExecutionResult() { return result; }
+	public final TestExecutionResult getTestExecutionResult() {
+		return result;
+	}
 
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
 	@Override
-	public final void setTestExecutionResult(TestExecutionResult result) { this.result = result; }
+	public final void setTestExecutionResult(TestExecutionResult result) {
+		this.result = result;
+	}
 
 	@Override
 	public Set<TestTag> getTags() {
