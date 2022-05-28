@@ -50,4 +50,13 @@ public interface RepetitionInfo {
 	 */
 	int getTotalRepetitions();
 
+	/**
+	 * Get the number of tolerable failures
+	 * {@link RepeatedTest @RepeatedTest} method.
+	 *
+	 * @see RepeatedTest#stopAfterFailure
+	 */
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+	int getStopAfterFailure();
+
 }

@@ -121,6 +121,15 @@ public @interface RepeatedTest {
 	int value();
 
 	/**
+	 * The number of tolerable failures.
+	 *
+	 * @return the number of tolerable failures; must be non-negative;
+	 * zero means that tests will not stop when they fail
+	 */
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+	int stopAfterFailure() default 0;
+
+	/**
 	 * The display name for each repetition of the repeated test.
 	 *
 	 * <h4>Supported placeholders</h4>

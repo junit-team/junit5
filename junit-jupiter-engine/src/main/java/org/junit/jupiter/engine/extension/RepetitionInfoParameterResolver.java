@@ -26,10 +26,21 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 
 	private final int currentRepetition;
 	private final int totalRepetitions;
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+	private final int stopAfterFailure;
+
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+	public RepetitionInfoParameterResolver(int currentRepetition, int totalRepetitions, int stopAfterFailure) {
+		this.currentRepetition = currentRepetition;
+		this.totalRepetitions = totalRepetitions;
+		this.stopAfterFailure = stopAfterFailure;
+	}
 
 	public RepetitionInfoParameterResolver(int currentRepetition, int totalRepetitions) {
 		this.currentRepetition = currentRepetition;
 		this.totalRepetitions = totalRepetitions;
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+		this.stopAfterFailure = 0;
 	}
 
 	@Override
@@ -39,17 +50,34 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 
 	@Override
 	public RepetitionInfo resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return new DefaultRepetitionInfo(this.currentRepetition, this.totalRepetitions);
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+		return new DefaultRepetitionInfo(this.currentRepetition, this.totalRepetitions, this.stopAfterFailure);
+	}
+
+	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+	public int getStopAfterFailure() {
+		return this.stopAfterFailure;
 	}
 
 	private static class DefaultRepetitionInfo implements RepetitionInfo {
 
 		private final int currentRepetition;
 		private final int totalRepetitions;
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+		private final int stopAfterFailure;
 
 		DefaultRepetitionInfo(int currentRepetition, int totalRepetitions) {
 			this.currentRepetition = currentRepetition;
 			this.totalRepetitions = totalRepetitions;
+			// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+			this.stopAfterFailure = 0;
+		}
+
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+		DefaultRepetitionInfo(int currentRepetition, int totalRepetitions, int stopAfterFailure) {
+			this.currentRepetition = currentRepetition;
+			this.totalRepetitions = totalRepetitions;
+			this.stopAfterFailure = stopAfterFailure;
 		}
 
 		@Override
@@ -61,6 +89,10 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 		public int getTotalRepetitions() {
 			return this.totalRepetitions;
 		}
+
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+		@Override
+		public int getStopAfterFailure() { return this.stopAfterFailure; }
 
 		@Override
 		public String toString() {

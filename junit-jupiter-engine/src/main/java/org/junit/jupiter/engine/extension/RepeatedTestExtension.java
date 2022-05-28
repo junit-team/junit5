@@ -43,11 +43,12 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
 		int totalRepetitions = totalRepetitions(repeatedTest, testMethod);
 		RepeatedTestDisplayNameFormatter formatter = displayNameFormatter(repeatedTest, testMethod, displayName);
-
+		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
+		int stopAfterFailure = repeatedTest.stopAfterFailure();
 		// @formatter:off
 		return IntStream
 				.rangeClosed(1, totalRepetitions)
-				.mapToObj(repetition -> new RepeatedTestInvocationContext(repetition, totalRepetitions, formatter));
+				.mapToObj(repetition -> new RepeatedTestInvocationContext(repetition, totalRepetitions, stopAfterFailure, formatter));
 		// @formatter:on
 	}
 
