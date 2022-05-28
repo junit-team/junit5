@@ -107,9 +107,11 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		final int[] hasFailed = { 0 };
 		Method testMethod = extensionContext.getRequiredTestMethod();
 		if (isAnnotated(testMethod, RepeatedTest.class)) {
-			RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
-			hasFailed[0] = repeatedTest.stopAfterFailure();
-			temp = repeatedTest.stopAfterFailure() != 0;
+			if(AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).isPresent()){
+				RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
+				hasFailed[0] = repeatedTest.stopAfterFailure();
+				temp = repeatedTest.stopAfterFailure() != 0;
+			}
 		}
 		final boolean StopFlag = temp;
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
@@ -121,20 +123,18 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.forEach(invocationTestDescriptor ->
-						{
-							if(StopFlag){
-								if(hasFailed[0] > 0){
-									execute(dynamicTestExecutor, invocationTestDescriptor);
-									if(invocationTestDescriptor.getTestExecutionResult().getStatus() == FAILED){
-										hasFailed[0]--;
-									}
-								}
-							}else {
-								execute(dynamicTestExecutor, invocationTestDescriptor);
+				.forEach(invocationTestDescriptor -> {
+					if(StopFlag){
+						if(hasFailed[0] > 0){
+							execute(dynamicTestExecutor, invocationTestDescriptor);
+							if(invocationTestDescriptor.getTestExecutionResult().getStatus() == FAILED){
+								hasFailed[0]--;
 							}
 						}
-				);
+					}else {
+						execute(dynamicTestExecutor, invocationTestDescriptor);
+					}
+				});
 		// @formatter:on
 		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
 		return context;
