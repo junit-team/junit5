@@ -10,14 +10,12 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.jupiter.api.Assumptions.assumingThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assumptions.*;
+import static org.junit.jupiter.api.Assumptions.assumeInstanceOf;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -193,6 +191,88 @@ class AssumptionsTests {
 		assertThrows(EnigmaThrowable.class, () -> assumingThat(true, () -> {
 			throw new EnigmaThrowable();
 		}));
+	}
+
+	// --- assumeInstanceOf --------------------------------------------------
+
+	@Test
+	void assumeInstanceOfFailsNullValue(){
+		assumeInstanceOfFails(String.class, null,"null value");
+	}
+
+	@Test
+	void assumeInstanceOfFailsWrongTypeValue(){
+		assumeInstanceOfFails(String.class, 1,"type");
+	}
+
+	@Test
+	void assumeInstanceOfFailsWrongExceptionValue(){
+		assumeInstanceOfFails(RuntimeException.class, new IOException(),"type");
+	}
+
+	@Test
+	void assumeInstanceOfFailsSuperTypeExceptionValue(){
+		assumeInstanceOfFails(IllegalArgumentException.class, new RuntimeException(),"type");
+	}
+
+	private static class BaseClass {
+	}
+
+	private static class SubClass extends BaseClass {
+
+	}
+
+	@Test
+	void assumeInstanceOfFailsSuperTypeValue(){
+		assumeInstanceOfFails(SubClass.class, new BaseClass(),"type");
+	}
+
+	@Test
+	void assumeInstanceOfSucceedsSameTypeValue() {
+		assumeInstanceOfSucceeds(String.class, "indeed a String");
+		assumeInstanceOfSucceeds(BaseClass.class, new BaseClass());
+		assumeInstanceOfSucceeds(SubClass.class, new SubClass());
+	}
+
+	@Test
+	void assumeInstanceOfSucceedsExpectSuperClassOfValue() {
+		assumeInstanceOfSucceeds(CharSequence.class, "indeed a CharSequence");
+		assumeInstanceOfSucceeds(BaseClass.class, new SubClass());
+	}
+
+	@Test
+	void assumeInstanceOfSucceedsSameTypeExceptionValue() {
+		assumeInstanceOfSucceeds(UnsupportedOperationException.class, new UnsupportedOperationException());
+	}
+
+	@Test
+	void assumeInstanceOfSucceedsExpectSuperClassOfExceptionValue() {
+		assumeInstanceOfSucceeds(RuntimeException.class, new IllegalArgumentException("is a RuntimeException"));
+	}
+
+	private <T> void assumeInstanceOfSucceeds(Class<T> expectedType, Object actualValue) {
+		T res = assumeInstanceOf(expectedType, actualValue);
+		assertSame(res, actualValue);
+		res = assumeInstanceOf(expectedType, actualValue, "extra");
+		assertSame(res, actualValue);
+		res = assumeInstanceOf(expectedType, actualValue, () -> "extra");
+		assertSame(res, actualValue);
+	}
+
+	private void assumeInstanceOfFails(Class<?> expectedType, Object actualValue, String unexpectedSort) {
+		String valueType = actualValue == null ? "null" : actualValue.getClass().getCanonicalName();
+		String expectedMessage = String.format("Unexpected %s ==> expected: <%s> but was: <%s>", unexpectedSort,
+				expectedType.getCanonicalName(), valueType);
+
+		assertThrowsWithMessage(expectedMessage, () -> assumeInstanceOf(expectedType, actualValue));
+		assertThrowsWithMessage("extra ==> " + expectedMessage,
+				() -> assumeInstanceOf(expectedType, actualValue, "extra"));
+		assertThrowsWithMessage("extra ==> " + expectedMessage,
+				() -> assumeInstanceOf(expectedType, actualValue, () -> "extra"));
+	}
+
+	private void assertThrowsWithMessage(String expectedMessage, Executable executable) {
+		assertEquals( "Assumption failed: " + expectedMessage, assertThrows(TestAbortedException.class, executable).getMessage());
 	}
 
 	// -------------------------------------------------------------------

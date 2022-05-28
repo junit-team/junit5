@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.jupiter.api.AssertionUtils.*;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -258,4 +259,89 @@ public class Assumptions {
 			StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
 	}
 
+	// --- assumeInstanceOf --------------------------------------------------
+
+	/**
+	 * Validate that the supplied object is of the expected type; in other words, check if it can
+	 * be assigned to the expected type
+	 *
+	 * @param expectedType the expected type of which the supplied object {@code actualValue} is
+	 * expected to be an instance
+	 * @param actualValue the supplied object to be validated whether it can be assigned to the
+	 * expected type {@code expectedType}
+	 * @return the supplied object after casting to the expected type, or null if it is null
+	 * @throws TestAbortedException if the supplied object can't be assigned to the expected type
+	 */
+	public static <T> T assumeInstanceOf(Class<T> expectedType, Object actualValue) {
+		return assumeInstanceOf(expectedType, actualValue, (Object) null);
+	}
+
+	/**
+	 * Validate that the supplied object is of the expected type; in other words, check if it can
+	 * be assigned to the expected type
+	 *
+	 * @param expectedType the expected type of which the supplied object {@code actualValue} is
+	 * expected to be an instance
+	 * @param actualValue the supplied object to be validated whether it can be assigned to the
+	 * expected type {@code expectedType}
+	 * @param message the message to be included in the {@code TestAbortedException} if the
+	 * assumption is invalid
+	 * @return the supplied object after casting to the expected type, or null if it is null
+	 * @throws TestAbortedException if the supplied object can't be assigned to the expected type
+	 */
+	public static <T> T assumeInstanceOf(Class<T> expectedType, Object actualValue, String message) {
+		return assumeInstanceOf(expectedType, actualValue, (Object) message);
+	}
+
+	/**
+	 * Validate that the supplied object is of the expected type; in other words, check if it can
+	 * be assigned to the expected type
+	 *
+	 * @param expectedType the expected type of which the supplied object {@code actualValue} is
+	 * expected to be an instance
+	 * @param actualValue the supplied object to be validated whether it can be assigned to the
+	 * expected type {@code expectedType}
+	 * @param messageSupplier the supplier of the message to be included in the
+	 * {@code TestAbortedException} if the assumption is invalid
+	 * @return the supplied object after casting to the expected type, or null if it is null
+	 * @throws TestAbortedException if the supplied object can't be assigned to the expected type
+	 */
+	public static <T> T assumeInstanceOf(Class<T> expectedType, Object actualValue, Supplier<String> messageSupplier) {
+		return assumeInstanceOf(expectedType, actualValue, (Object) messageSupplier);
+	}
+
+	/**
+	 * Validate that the supplied object is of the expected type; in other words, check if it can
+	 * be assigned to the expected type
+	 *
+	 * @param expectedType the expected type of which the supplied object {@code actualValue} is
+	 * expected to be an instance
+	 * @param actualValue the supplied object to be validated whether it can be assigned to the
+	 * expected type {@code expectedType}
+	 * @param messageOrSupplier the message itself or the supplier of the message to be included in
+	 * the {@code TestAbortedException} if the execution throws an exception
+	 * @return the supplied object after casting to the expected type, or null if it is null
+	 * @throws TestAbortedException if the supplied object can't be assigned to the expected type
+	 */
+	public static <T> T assumeInstanceOf(Class<T> expectedType, Object actualValue, Object messageOrSupplier) {
+		if (!expectedType.isInstance(actualValue)) {
+			String reason = (actualValue == null ? "Unexpected null value" : "Unexpected type");
+			String message = formatForFailingAssumeInstanceOf(messageOrSupplier, reason, expectedType, actualValue);
+			throwTestAbortedException(message);
+		}
+		return expectedType.cast(actualValue);
+	}
+
+	private static <T> String formatForFailingAssumeInstanceOf(Object messageOrSupplier, String reason,
+			Class<T> expectedType, Object actualValue) {
+		String messageWithPrefix = buildPrefix(nullSafeGet(messageOrSupplier));
+		String reasonWithPrefix = buildPrefix(reason);
+		String detail = formatValues(expectedType, actualValue == null ? null : actualValue.getClass());
+		return messageWithPrefix + reasonWithPrefix + detail;
+	}
+
+	private static void throwTestAbortedExceptionDemo(String message) {
+		throw new TestAbortedException(
+			StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
+	}
 }
