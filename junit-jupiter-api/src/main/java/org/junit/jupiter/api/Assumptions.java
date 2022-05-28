@@ -12,8 +12,8 @@ package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import static org.junit.jupiter.api.AssertionUtils.formatValues;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
