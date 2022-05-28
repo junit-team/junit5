@@ -107,11 +107,9 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		final int[] hasFailed = { 0 };
 		Method testMethod = extensionContext.getRequiredTestMethod();
 		if (isAnnotated(testMethod, RepeatedTest.class)) {
-			if(AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).isPresent()){
-				RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
-				hasFailed[0] = repeatedTest.stopAfterFailure();
-				temp = repeatedTest.stopAfterFailure() != 0;
-			}
+			RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
+			hasFailed[0] = repeatedTest.stopAfterFailure();
+			temp = repeatedTest.stopAfterFailure() != 0;
 		}
 		final boolean StopFlag = temp;
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
