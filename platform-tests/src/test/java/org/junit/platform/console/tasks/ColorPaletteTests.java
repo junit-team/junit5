@@ -11,13 +11,14 @@
 package org.junit.platform.console.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.Theme;
@@ -31,9 +32,16 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
-class ColorPaletteTest {
+/**
+ * Unit tests for {@link ColorPalette}.
+ *
+ * @since 1.9
+ */
+class ColorPaletteTests {
+
 	@Nested
-	class LoadFromProperties {
+	class LoadFromPropertiesTests {
+
 		@Test
 		void singleOverride() {
 			String properties = """
@@ -43,7 +51,7 @@ class ColorPaletteTest {
 
 			String actual = colorPalette.paint(Style.SUCCESSFUL, "text");
 
-			Assertions.assertEquals("\u001B[35;1mtext\u001B[0m", actual);
+			assertEquals("\u001B[35;1mtext\u001B[0m", actual);
 		}
 
 		@Test
@@ -55,7 +63,7 @@ class ColorPaletteTest {
 
 			String actual = colorPalette.paint(Style.SUCCESSFUL, "text");
 
-			Assertions.assertEquals("\u001B[35;1mtext\u001B[0m", actual);
+			assertEquals("\u001B[35;1mtext\u001B[0m", actual);
 		}
 
 		@Test
@@ -68,7 +76,7 @@ class ColorPaletteTest {
 
 			String actual = colorPalette.paint(Style.SUCCESSFUL, "text");
 
-			Assertions.assertEquals("\u001B[35;1mtext\u001B[0m", actual);
+			assertEquals("\u001B[35;1mtext\u001B[0m", actual);
 		}
 
 		@Test
@@ -82,8 +90,8 @@ class ColorPaletteTest {
 			String successful = colorPalette.paint(Style.SUCCESSFUL, "text");
 			String failed = colorPalette.paint(Style.FAILED, "text");
 
-			Assertions.assertEquals("\u001B[35;1mtext\u001B[0m", successful);
-			Assertions.assertEquals("\u001B[33;4mtext\u001B[0m", failed);
+			assertEquals("\u001B[35;1mtext\u001B[0m", successful);
+			assertEquals("\u001B[33;4mtext\u001B[0m", failed);
 		}
 
 		@Test
@@ -95,7 +103,7 @@ class ColorPaletteTest {
 
 			String actual = colorPalette.paint(Style.FAILED, "text");
 
-			Assertions.assertEquals("\u001B[31mtext\u001B[0m", actual);
+			assertEquals("\u001B[31mtext\u001B[0m", actual);
 		}
 
 		@Test
@@ -105,12 +113,16 @@ class ColorPaletteTest {
 					""";
 			StringReader reader = new StringReader(properties);
 
-			Assertions.assertThrows(IllegalArgumentException.class, () -> new ColorPalette(reader));
+			assertThrows(IllegalArgumentException.class, () -> new ColorPalette(reader));
 		}
 	}
 
+	/**
+	 * TODO Actually assert something in these "demo" tests and stop printing to SYSOUT.
+	 */
 	@Nested
-	class DemonstratePalettes {
+	class DemonstratePalettesTests {
+
 		@Test
 		void verbose_default() {
 			PrintWriter out = new PrintWriter(System.out);
@@ -190,5 +202,7 @@ class ColorPaletteTest {
 			listener.executionSkipped(TestIdentifier.from(testDescriptor), "to demonstrate skipping");
 			listener.testPlanExecutionFinished(testPlan);
 		}
+
 	}
+
 }

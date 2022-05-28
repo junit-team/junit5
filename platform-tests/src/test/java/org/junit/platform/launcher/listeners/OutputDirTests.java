@@ -11,9 +11,6 @@
 package org.junit.platform.launcher.listeners;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.launcher.listeners.UniqueIdTrackingListener.OUTPUT_DIR_PROPERTY_NAME;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,24 +19,13 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.ConfigurationParameters;
 
-/**
- * Unit tests for the {@link UniqueIdTrackingListener}.
- *
- * @since 1.8
- */
-class UniqueIdTrackingListenerUnitTests {
-
-	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+class OutputDirTests {
 
 	@Test
 	void getOutputDirUsesCustomOutputDir() throws Exception {
 		String customDir = "build/UniqueIdTrackingListenerIntegrationTests";
-
-		when(configParams.get(OUTPUT_DIR_PROPERTY_NAME)).thenReturn(Optional.of(customDir));
-
-		Path outputDir = new UniqueIdTrackingListener().getOutputDir(configParams);
+		Path outputDir = OutputDir.create(Optional.of(customDir)).toPath();
 		assertThat(Files.isSameFile(Paths.get(customDir), outputDir)).isTrue();
 		assertThat(outputDir).exists();
 	}
@@ -93,15 +79,7 @@ class UniqueIdTrackingListenerUnitTests {
 	}
 
 	private void assertOutputDirIsDetected(String cwd, String expected) throws IOException {
-		when(configParams.get(OUTPUT_DIR_PROPERTY_NAME)).thenReturn(Optional.empty());
-
-		UniqueIdTrackingListener listener = new UniqueIdTrackingListener() {
-			@Override
-			Path currentWorkingDir() {
-				return Paths.get(cwd);
-			}
-		};
-		Path outputDir = listener.getOutputDir(configParams);
+		Path outputDir = OutputDir.createSafely(Optional.empty(), () -> Paths.get(cwd)).toPath();
 		assertThat(Files.isSameFile(Paths.get(expected), outputDir)).isTrue();
 		assertThat(outputDir).exists();
 	}
