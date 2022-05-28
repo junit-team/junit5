@@ -11,7 +11,9 @@
 package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.jupiter.api.AssertionUtils.*;
+import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
+import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
+import static org.junit.jupiter.api.AssertionUtils.formatValues;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -340,8 +342,4 @@ public class Assumptions {
 		return messageWithPrefix + reasonWithPrefix + detail;
 	}
 
-	private static void throwTestAbortedExceptionDemo(String message) {
-		throw new TestAbortedException(
-			StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
-	}
 }
