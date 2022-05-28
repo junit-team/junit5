@@ -81,6 +81,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.AllBooleanCombinationsSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoverySelector;
@@ -907,6 +908,18 @@ class ParameterizedTestIntegrationTests {
 		void testWithThreeIterations(int argument) {
 			fail("argument: " + argument);
 		}
+
+		@ParameterizedTest
+		@AllBooleanCombinationsSource(2)
+		void testWithAllBooleanCombinationsSource(Boolean a,Boolean b) {
+			fail(a+","+b);
+		}
+
+		@ParameterizedTest
+		@AllBooleanCombinationsSource()
+		void testWithAllBooleanCombinationsSourceDefault(Boolean a) {
+			fail(String.valueOf(a));
+		}
 	}
 
 	static class NullSourceTestCase {
@@ -1336,6 +1349,33 @@ class ParameterizedTestIntegrationTests {
 			return Stream.of("foo", "bar");
 		}
 
+	}
+
+	@Nested
+	class AllBooleanCombinationsSourceTestCase{
+
+		@Test
+		void executesWithAllBooleanCombinationsSource2() {
+			var results = execute("testWithAllBooleanCombinationsSource", Boolean.class,Boolean.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(test(), displayName("[1] a=false, b=false"), finishedWithFailure(message("false,false")))) //
+					.haveExactly(1, event(test(), displayName("[2] a=false, b=true"), finishedWithFailure(message("false,true"))))
+					.haveExactly(1, event(test(), displayName("[3] a=true, b=false"), finishedWithFailure(message("true,false"))))
+					.haveExactly(1, event(test(), displayName("[4] a=true, b=true"), finishedWithFailure(message("true,true"))));
+		}
+
+		@Test
+		void executesWithAllBooleanCombinationsSourceDefault() {
+			var results = execute("testWithAllBooleanCombinationsSourceDefault", Boolean.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(test(), displayName("[1] a=false"), finishedWithFailure(message("false")))) //
+					.haveExactly(1, event(test(), displayName("[2] a=true"), finishedWithFailure(message("true"))));
+		}
+
+		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
+			return ParameterizedTestIntegrationTests.this.execute(TestCase.class, methodName,
+					methodParameterTypes);
+		}
 	}
 
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
