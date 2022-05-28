@@ -71,6 +71,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.provider.AllBooleanCombinationsSource;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -81,7 +82,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.jupiter.params.provider.AllBooleanCombinationsSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoverySelector;
@@ -911,8 +911,8 @@ class ParameterizedTestIntegrationTests {
 
 		@ParameterizedTest
 		@AllBooleanCombinationsSource(2)
-		void testWithAllBooleanCombinationsSource(Boolean a,Boolean b) {
-			fail(a+","+b);
+		void testWithAllBooleanCombinationsSource(Boolean a, Boolean b) {
+			fail(a + "," + b);
 		}
 
 		@ParameterizedTest
@@ -1352,16 +1352,22 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Nested
-	class AllBooleanCombinationsSourceTestCase{
+	class AllBooleanCombinationsSourceTestCase {
 
 		@Test
 		void executesWithAllBooleanCombinationsSource2() {
-			var results = execute("testWithAllBooleanCombinationsSource", Boolean.class,Boolean.class);
+			var results = execute("testWithAllBooleanCombinationsSource", Boolean.class, Boolean.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] a=false, b=false"), finishedWithFailure(message("false,false")))) //
-					.haveExactly(1, event(test(), displayName("[2] a=false, b=true"), finishedWithFailure(message("false,true"))))
-					.haveExactly(1, event(test(), displayName("[3] a=true, b=false"), finishedWithFailure(message("true,false"))))
-					.haveExactly(1, event(test(), displayName("[4] a=true, b=true"), finishedWithFailure(message("true,true"))));
+					.haveExactly(1,
+						event(test(), displayName("[1] a=false, b=false"), finishedWithFailure(message("false,false")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] a=false, b=true"),
+							finishedWithFailure(message("false,true")))).haveExactly(
+								1,
+								event(test(), displayName("[3] a=true, b=false"),
+									finishedWithFailure(message("true,false")))).haveExactly(1,
+										event(test(), displayName("[4] a=true, b=true"),
+											finishedWithFailure(message("true,true"))));
 		}
 
 		@Test
@@ -1373,8 +1379,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
-			return ParameterizedTestIntegrationTests.this.execute(TestCase.class, methodName,
-					methodParameterTypes);
+			return ParameterizedTestIntegrationTests.this.execute(TestCase.class, methodName, methodParameterTypes);
 		}
 	}
 
