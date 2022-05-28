@@ -11,14 +11,14 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assumptions.assumingThat;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeInstanceOf;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -201,23 +201,23 @@ class AssumptionsTests {
 	// --- assumeInstanceOf --------------------------------------------------
 
 	@Test
-	void assumeInstanceOfFailsNullValue(){
-		assumeInstanceOfFails(String.class, null,"null value");
+	void assumeInstanceOfFailsNullValue() {
+		assumeInstanceOfFails(String.class, null, "null value");
 	}
 
 	@Test
-	void assumeInstanceOfFailsWrongTypeValue(){
-		assumeInstanceOfFails(String.class, 1,"type");
+	void assumeInstanceOfFailsWrongTypeValue() {
+		assumeInstanceOfFails(String.class, 1, "type");
 	}
 
 	@Test
-	void assumeInstanceOfFailsWrongExceptionValue(){
-		assumeInstanceOfFails(RuntimeException.class, new IOException(),"type");
+	void assumeInstanceOfFailsWrongExceptionValue() {
+		assumeInstanceOfFails(RuntimeException.class, new IOException(), "type");
 	}
 
 	@Test
-	void assumeInstanceOfFailsSuperTypeExceptionValue(){
-		assumeInstanceOfFails(IllegalArgumentException.class, new RuntimeException(),"type");
+	void assumeInstanceOfFailsSuperTypeExceptionValue() {
+		assumeInstanceOfFails(IllegalArgumentException.class, new RuntimeException(), "type");
 	}
 
 	private static class BaseClass {
@@ -228,8 +228,8 @@ class AssumptionsTests {
 	}
 
 	@Test
-	void assumeInstanceOfFailsSuperTypeValue(){
-		assumeInstanceOfFails(SubClass.class, new BaseClass(),"type");
+	void assumeInstanceOfFailsSuperTypeValue() {
+		assumeInstanceOfFails(SubClass.class, new BaseClass(), "type");
 	}
 
 	@Test
@@ -267,17 +267,18 @@ class AssumptionsTests {
 	private void assumeInstanceOfFails(Class<?> expectedType, Object actualValue, String unexpectedSort) {
 		String valueType = actualValue == null ? "null" : actualValue.getClass().getCanonicalName();
 		String expectedMessage = String.format("Unexpected %s ==> expected: <%s> but was: <%s>", unexpectedSort,
-				expectedType.getCanonicalName(), valueType);
+			expectedType.getCanonicalName(), valueType);
 
 		assertThrowsWithMessage(expectedMessage, () -> assumeInstanceOf(expectedType, actualValue));
 		assertThrowsWithMessage("extra ==> " + expectedMessage,
-				() -> assumeInstanceOf(expectedType, actualValue, "extra"));
+			() -> assumeInstanceOf(expectedType, actualValue, "extra"));
 		assertThrowsWithMessage("extra ==> " + expectedMessage,
-				() -> assumeInstanceOf(expectedType, actualValue, () -> "extra"));
+			() -> assumeInstanceOf(expectedType, actualValue, () -> "extra"));
 	}
 
 	private void assertThrowsWithMessage(String expectedMessage, Executable executable) {
-		assertEquals( "Assumption failed: " + expectedMessage, assertThrows(TestAbortedException.class, executable).getMessage());
+		assertEquals("Assumption failed: " + expectedMessage,
+			assertThrows(TestAbortedException.class, executable).getMessage());
 	}
 
 	// -------------------------------------------------------------------
