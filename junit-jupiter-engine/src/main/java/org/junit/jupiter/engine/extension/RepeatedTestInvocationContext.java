@@ -42,7 +42,7 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 
 	// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
 	public RepeatedTestInvocationContext(int currentRepetition, int totalRepetitions, int stopAfterFailure,
-										 RepeatedTestDisplayNameFormatter formatter) {
+			RepeatedTestDisplayNameFormatter formatter) {
 
 		this.currentRepetition = currentRepetition;
 		this.totalRepetitions = totalRepetitions;
@@ -59,7 +59,7 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 	public List<Extension> getAdditionalExtensions() {
 		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
 		return singletonList(
-				new RepetitionInfoParameterResolver(this.currentRepetition, this.totalRepetitions, this.stopAfterFailure));
+			new RepetitionInfoParameterResolver(this.currentRepetition, this.totalRepetitions, this.stopAfterFailure));
 	}
 
 }

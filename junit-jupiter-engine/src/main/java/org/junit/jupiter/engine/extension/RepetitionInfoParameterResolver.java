@@ -92,7 +92,9 @@ class RepetitionInfoParameterResolver implements ParameterResolver {
 
 		// CS304 Issue link: https://github.com/junit-team/junit5/issues/2925
 		@Override
-		public int getStopAfterFailure() { return this.stopAfterFailure; }
+		public int getStopAfterFailure() {
+			return this.stopAfterFailure;
+		}
 
 		@Override
 		public String toString() {
