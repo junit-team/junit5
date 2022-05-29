@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryWithDefaultExtensions;
 import static org.junit.jupiter.params.provider.MethodArgumentsProviderTests.DefaultFactoryMethodNameTestCase.TEST_METHOD;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -205,10 +204,10 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void providesArgumentsUsingDefaultFactoryMethodName() {
-		var method = selectMethod(DefaultFactoryMethodNameTestCase.class, TEST_METHOD,
-			String.class.getName()).getJavaMethod();
-		var arguments = provideArguments(DefaultFactoryMethodNameTestCase.class, method, false, "");
+	void providesArgumentsUsingDefaultFactoryMethodName() throws Exception {
+		Class<?> testClass = DefaultFactoryMethodNameTestCase.class;
+		var testMethod = testClass.getDeclaredMethod(TEST_METHOD, String.class);
+		var arguments = provideArguments(testClass, testMethod, false, "");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
@@ -428,7 +427,7 @@ class MethodArgumentsProviderTests {
 		when(methodSource.value()).thenReturn(methodNames);
 
 		var extensionContext = mock(ExtensionContext.class);
-		when(extensionContext.getTestClass()).thenReturn(Optional.ofNullable(testClass));
+		when(extensionContext.getTestClass()).thenReturn(Optional.of(testClass));
 		when(extensionContext.getTestMethod()).thenReturn(Optional.ofNullable(testMethod));
 		when(extensionContext.getExecutableInvoker()).thenReturn(
 			new DefaultExecutableInvoker(extensionContext, extensionRegistry));
