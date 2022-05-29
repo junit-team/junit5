@@ -53,11 +53,11 @@ import org.junit.platform.commons.util.ClassUtils;
  * <li>{@link Random}</li>
  * </ul>
  *
+ * @since 5.4
  * @see TestMethodOrder
  * @see MethodOrdererContext
  * @see #orderMethods(MethodOrdererContext)
  * @see ClassOrderer
- * @since 5.4
  */
 @API(status = STABLE, since = "5.7")
 public interface MethodOrderer {
