@@ -86,4 +86,5 @@ public @interface TestMethodOrder {
 	 */
 	Class<? extends MethodOrderer> value();
 
+	boolean enforceUniqueOrder() default false;
 }
