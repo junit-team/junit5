@@ -43,41 +43,42 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
 		return Arrays.stream(this.methodNames)
-				.map(factoryMethodName -> getMethod(context, factoryMethodName))
-				.map(method -> context.getExecutableInvoker().invoke(method, testInstance))
+				.map(factoryMethodName -> getFactoryMethod(context, factoryMethodName))
+				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
 		// @formatter:on
 	}
 
-	private Method getMethod(ExtensionContext context, String factoryMethodName) {
+	private Method getFactoryMethod(ExtensionContext context, String factoryMethodName) {
 		if (StringUtils.isBlank(factoryMethodName)) {
 			return ReflectionUtils.getRequiredMethod(context.getRequiredTestClass(),
 				context.getRequiredTestMethod().getName());
 		}
 		if (factoryMethodName.contains(".") || factoryMethodName.contains("#")) {
-			return getMethodByFullyQualifiedName(factoryMethodName);
+			return getFactoryMethodByFullyQualifiedName(factoryMethodName);
 		}
-		return getMethodByShortName(context.getRequiredTestClass(), factoryMethodName);
+		return getFactoryMethodBySimpleName(context.getRequiredTestClass(), factoryMethodName);
 	}
 
-	private Method getMethodByFullyQualifiedName(String fullyQualifiedMethodName) {
+	private Method getFactoryMethodByFullyQualifiedName(String fullyQualifiedMethodName) {
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
 		String className = methodParts[0];
 		String methodName = methodParts[1];
 		String methodParameters = methodParts[2];
 
 		return ReflectionUtils.findMethod(loadRequiredClass(className), methodName, methodParameters).orElseThrow(
-			() -> new JUnitException(
-				format("Could not find method [%s(%s)] in class [%s]", methodName, methodParameters, className)));
+			() -> new JUnitException(format("Could not find factory method [%s(%s)] in class [%s]", methodName,
+				methodParameters, className)));
 	}
 
-	private Method getMethodByShortName(Class<?> testClass, String methodName) {
-		List<Method> methods = ReflectionUtils.findMethods(testClass, method -> method.getName().equals(methodName));
+	private Method getFactoryMethodBySimpleName(Class<?> testClass, String factoryMethodName) {
+		List<Method> methods = ReflectionUtils.findMethods(testClass,
+			factoryMethod -> factoryMethodName.equals(factoryMethod.getName()));
 		Preconditions.condition(methods.size() > 0,
-			() -> format("Could not find method [%s] in class [%s]", methodName, testClass.getName()));
-		Preconditions.condition(methods.size() <= 1,
-			() -> format("Several factory methods named [%s] were found in class [%s]", methodName,
+			() -> format("Could not find factory method [%s] in class [%s]", factoryMethodName, testClass.getName()));
+		Preconditions.condition(methods.size() == 1,
+			() -> format("Several factory methods named [%s] were found in class [%s]", factoryMethodName,
 				testClass.getName()));
 		return methods.get(0);
 	}
