@@ -384,7 +384,7 @@ class MethodArgumentsProviderTests {
 		}
 
 		@Test
-		void throwExceptionWhenSeveralFactoryMethodsWithSameNameAreAvailable() {
+		void throwsExceptionWhenSeveralFactoryMethodsWithSameNameAreAvailable() {
 			var exception = assertThrows(PreconditionViolationException.class,
 				() -> provideArguments("stringStreamProviderWithOrWithoutParameter").toArray());
 
@@ -472,6 +472,18 @@ class MethodArgumentsProviderTests {
 			return Stream.of("foo", "bar");
 		}
 
+		static Stream<String> stringStreamProviderWithParameter(String parameter) {
+			return Stream.of("foo" + parameter, "bar" + parameter);
+		}
+
+		static Stream<String> stringStreamProviderWithOrWithoutParameter() {
+			return stringStreamProvider();
+		}
+
+		static Stream<String> stringStreamProviderWithOrWithoutParameter(String parameter) {
+			return stringStreamProviderWithParameter(parameter);
+		}
+
 		static DoubleStream doubleStreamProvider() {
 			return DoubleStream.of(1.2, 3.4);
 		}
@@ -502,18 +514,6 @@ class MethodArgumentsProviderTests {
 
 		static Stream<Arguments> argumentsStreamProvider() {
 			return objectArrayStreamProvider().map(Arguments::of);
-		}
-
-		static Stream<String> stringStreamProviderWithParameter(String parameter) {
-			return Stream.of("foo" + parameter, "bar" + parameter);
-		}
-
-		static Stream<String> stringStreamProviderWithOrWithoutParameter() {
-			return stringStreamProvider();
-		}
-
-		static Stream<String> stringStreamProviderWithOrWithoutParameter(String parameter) {
-			return stringStreamProviderWithParameter(parameter);
 		}
 
 		// --- Iterable / Collection -------------------------------------------
