@@ -51,14 +51,14 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 	}
 
 	private Method getFactoryMethod(ExtensionContext context, String factoryMethodName) {
+		Method testMethod = context.getRequiredTestMethod();
 		if (StringUtils.isBlank(factoryMethodName)) {
-			return ReflectionUtils.getRequiredMethod(context.getRequiredTestClass(),
-				context.getRequiredTestMethod().getName());
+			factoryMethodName = testMethod.getName();
 		}
 		if (factoryMethodName.contains(".") || factoryMethodName.contains("#")) {
 			return getFactoryMethodByFullyQualifiedName(factoryMethodName);
 		}
-		return getFactoryMethodBySimpleName(context.getRequiredTestClass(), factoryMethodName);
+		return getFactoryMethodBySimpleName(context.getRequiredTestClass(), testMethod, factoryMethodName);
 	}
 
 	private Method getFactoryMethodByFullyQualifiedName(String fullyQualifiedMethodName) {
@@ -72,9 +72,10 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 				methodParameters, className)));
 	}
 
-	private Method getFactoryMethodBySimpleName(Class<?> testClass, String factoryMethodName) {
+	private Method getFactoryMethodBySimpleName(Class<?> testClass, Method testMethod, String factoryMethodName) {
+		// Find all methods with the desired factory method name, but ignore the test method itself.
 		List<Method> methods = ReflectionUtils.findMethods(testClass,
-			factoryMethod -> factoryMethodName.equals(factoryMethod.getName()));
+			factoryMethod -> factoryMethodName.equals(factoryMethod.getName()) && !testMethod.equals(factoryMethod));
 		Preconditions.condition(methods.size() > 0,
 			() -> format("Could not find factory method [%s] in class [%s]", factoryMethodName, testClass.getName()));
 		Preconditions.condition(methods.size() == 1,

@@ -39,7 +39,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Default `@MethodSource` factory methods can now accept arguments. A _default_ factory
+  method is a method declared in the test class with the same name as the
+  `@ParameterizedTest` method that is inferred as the factory method when no explicit
+  factory method is specified in the `@MethodSource` annotation.
 
 
 [[release-notes-5.9.0-M2-junit-vintage]]
