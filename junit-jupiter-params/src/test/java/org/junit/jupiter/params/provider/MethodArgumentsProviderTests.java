@@ -604,10 +604,6 @@ class MethodArgumentsProviderTests {
 			return Stream.of("string1", "string2");
 		}
 
-		static Stream<String> methodWithParams(String a, String b) {
-			return Stream.of(a, b);
-		}
-
 		static class Nested {
 
 			static Stream<String> stringsProvider() {
