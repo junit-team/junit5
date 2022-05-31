@@ -16,12 +16,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -53,11 +48,11 @@ import org.junit.platform.commons.util.ClassUtils;
  * <li>{@link Random}</li>
  * </ul>
  *
- * @since 5.4
  * @see TestMethodOrder
  * @see MethodOrdererContext
  * @see #orderMethods(MethodOrdererContext)
  * @see ClassOrderer
+ * @since 5.4
  */
 @API(status = STABLE, since = "5.7")
 public interface MethodOrderer {
@@ -239,20 +234,20 @@ public interface MethodOrderer {
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
 			List<? extends MethodDescriptor> descriptors = context.getMethodDescriptors();
-			Set<Integer> removeDuplicate = new HashSet<>();
+			Map<Integer, String> removeDuplicate = new LinkedHashMap<>();
 			for (MethodDescriptor descriptor : descriptors) {
 				if (descriptor.findAnnotation(TestMethodOrder.class).isPresent()
 						&& descriptor.findAnnotation(TestMethodOrder.class).get().enforceUniqueOrder()) {
-					removeDuplicate.add(getOrder(descriptor));
+					int order = getOrder(descriptor);
+					if (removeDuplicate.containsKey(order)) {
+						throw new IllegalArgumentException("duplicate order: " + "method " + removeDuplicate.get(order)
+								+ " and method " + descriptor.getMethod().getName() + " have same order.");
+					}
+					else {
+						removeDuplicate.put(order, descriptor.getMethod().getName());
+					}
 				}
 			}
-
-			long distinctOrderCnt = removeDuplicate.size();
-			long methodCnt = descriptors.size();
-
-			if (methodCnt != distinctOrderCnt && distinctOrderCnt != 0)
-				throw new IllegalArgumentException(
-					"duplicate order" + "expected: <" + methodCnt + "> but was: <" + distinctOrderCnt + ">");
 
 			context.getMethodDescriptors().sort(comparingInt(OrderAnnotation::getOrder));
 		}
