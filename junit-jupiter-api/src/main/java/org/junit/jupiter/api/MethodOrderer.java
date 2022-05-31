@@ -16,7 +16,12 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -48,11 +53,11 @@ import org.junit.platform.commons.util.ClassUtils;
  * <li>{@link Random}</li>
  * </ul>
  *
+ * @since 5.4
  * @see TestMethodOrder
  * @see MethodOrdererContext
  * @see #orderMethods(MethodOrdererContext)
  * @see ClassOrderer
- * @since 5.4
  */
 @API(status = STABLE, since = "5.7")
 public interface MethodOrderer {
