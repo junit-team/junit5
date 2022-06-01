@@ -39,7 +39,7 @@ For code styling it is recommended to run [EclipseCodeFormatter] and/or referenc
 - [Javadoc]
 - [Full suite of test features]
 - [Backwards compatibility with JUnit4]
-- [Compatibility with major IDE's]
+- [Compatibility with major IDEs]
 - [Extensions]
 
 ## Examples
@@ -130,9 +130,8 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and
 [Google Java Style Guide]: http://www.practicesofmastery.com/post/eclipse-google-java-style-guide/
 [Full suite of test features]: https://junit.org/junit5/docs/current/user-guide/#writing-tests
 [Backwards compatibility with JUnit4]: https://junit.org/junit5/docs/current/user-guide/#migrating-from-junit4
-[Compatibility with major IDE's]: https://junit.org/junit5/docs/current/user-guide/#running-tests
+[Compatibility with major IDEs]: https://junit.org/junit5/docs/current/user-guide/#running-tests
 [issue tracker]: https://github.com/junit-team/junit5/issues
-[Compatibility with major IDE's]: https://junit.org/junit5/docs/current/user-guide/#running-tests
 [Extensions]: https://junit.org/junit5/docs/current/user-guide/#extensions
 [Eclipse Public License v2.0]: https://github.com/junit-team/junit5/blob/main/LICENSE.md
 [Gradle Enterprise]: https://gradle.com/
