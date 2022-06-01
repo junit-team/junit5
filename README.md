@@ -127,7 +127,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and
 [crowdfunding campaign on Indiegogo.]: https://junit.org/junit4/junit-lambda-campaign.html
 [JUnit 5.8.2]: https://github.com/junit-team/junit5/releases/tag/r5.8.2
 [EclipseCodeFormatter]: https://github.com/krasa/EclipseCodeFormatter
-[Google Java Style Guide]: http://www.practicesofmastery.com/post/eclipse-google-java-style-guide/
+[Google Java Style Guide]: https://www.practicesofmastery.com/post/eclipse-google-java-style-guide/
 [Full suite of test features]: https://junit.org/junit5/docs/current/user-guide/#writing-tests
 [Backwards compatibility with JUnit4]: https://junit.org/junit5/docs/current/user-guide/#migrating-from-junit4
 [Compatibility with major IDEs]: https://junit.org/junit5/docs/current/user-guide/#running-tests
