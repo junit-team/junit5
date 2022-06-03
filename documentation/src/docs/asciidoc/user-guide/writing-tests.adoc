@@ -1323,8 +1323,8 @@ interface. In addition, `Arguments.of(Object...)` may be used as an alternative 
 include::{testDir}/example/ParameterizedTestDemo.java[tags=multi_arg_MethodSource_example]
 ----
 
-An external, `static` _factory_ method can be referenced by providing its _fully
-qualified method name_ as demonstrated in the following example.
+An external, `static` _factory_ method can be referenced by providing its _fully qualified
+method name_ as demonstrated in the following example.
 
 [source,java,indent=0]
 ----
@@ -1333,15 +1333,16 @@ package example;
 include::{testDir}/example/ExternalMethodSourceDemo.java[tags=external_MethodSource_example]
 ----
 
-Factory methods can declare parameters, which will be provided by registered implementations
-of `ParameterResolver`. In the following example, the factory method is referenced by its
-name since there's only one such method in the test class. If there are several methods with
-the same name, the factory method needs to be referenced by its fully qualified method name
-(e.g., `@MethodSource("example.MyTests#factoryMethodWithArguments(java.lang.String)")`).
+Factory methods can declare parameters, which will be provided by registered
+implementations of the `ParameterResolver` extension API. In the following example, the
+factory method is referenced by its name since there is only one such method in the test
+class. If there are several methods with the same name, the factory method must be
+referenced by its fully qualified method name – for example,
+`@MethodSource("example.MyTests#factoryMethodWithArguments(java.lang.String)")`.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/MethodSourceParameterResolutionTestDemo.java[tags=parameter_resolution_MethodSource_example]
+include::{testDir}/example/MethodSourceParameterResolutionDemo.java[tags=parameter_resolution_MethodSource_example]
 ----
 
 
@@ -1782,7 +1783,8 @@ Display name of container ✔
 └─ 3 ==> the rank of 'lemon, lime' is 3 ✔
 ....
 
-Please note that `name` is a `MessageFormat` pattern. Thus, a single quote (`'`) needs to be represented as a doubled single quote (`''`) in order to be displayed.
+Please note that `name` is a `MessageFormat` pattern. Thus, a single quote (`'`) needs to
+be represented as a doubled single quote (`''`) in order to be displayed.
 
 The following placeholders are supported within custom display names.
 
@@ -1802,9 +1804,9 @@ if they exceed the configured maximum length. The limit is configurable via the
 `junit.jupiter.params.displayname.argument.maxlength` configuration parameter and defaults
 to 512 characters.
 
-When using `@MethodSource` or `@ArgumentSource`, you can give names to arguments. This
-name will be used if the argument is included in the invocation display name, like in
-the example below.
+When using `@MethodSource` or `@ArgumentSource`, you can provide custom names for
+arguments using the `{Named}` API. A custom name will be used if the argument is included
+in the invocation display name, like in the example below.
 
 [source,java,indent=0]
 ----
@@ -1817,18 +1819,21 @@ A parameterized test with named arguments ✔
 └─ 2: Another file ✔
 ....
 
-If you'd like to set default name pattern for all parameterized tests in your project, you can add the following
-configuration to `junit-platform.properties`
+If you'd like to set a default name pattern for all parameterized tests in your project,
+you can declare the `junit.jupiter.params.displayname.default` configuration parameter in
+the `junit-platform.properties` file as demonstrated in the following example (see
+<<running-tests-config-params>> for other options).
 
 [source,properties,indent=0]
 ----
 junit.jupiter.params.displayname.default = {index}
 ----
 
-the display name for a parameterized method is determined according to the following precedence rules:
+The display name for a parameterized test is determined according to the following
+precedence rules:
 
-1. `name` of `@ParameterizedTest`, if present
-2. the value of `junit.jupiter.params.displayname.default` (from junit-platform.properties), if present
+1. `name` attribute in `@ParameterizedTest`, if present
+2. value of the `junit.jupiter.params.displayname.default` configuration parameter, if present
 3. `DEFAULT_DISPLAY_NAME` constant defined in `@ParameterizedTest`
 
 [[writing-tests-parameterized-tests-lifecycle-interop]]
