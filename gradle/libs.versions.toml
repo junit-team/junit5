@@ -24,7 +24,7 @@ apiguardian = { module = "org.apiguardian:apiguardian-api", version.ref = "apigu
 archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "0.23.1" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
-bnd = { module = "biz.aQute.bnd:biz.aQute.bndlib", version = "6.2.0" }
+bnd = { module = "biz.aQute.bnd:biz.aQute.bndlib", version = "6.3.0" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.132" }
 commons-io = { module = "commons-io:commons-io", version = "2.11.0" }
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.1" }
