@@ -467,7 +467,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <span id="author5" class="author">Marc Philipp</span><br>
 <span id="author6" class="author">Juliette de Rancourt</span><br>
 <span id="author7" class="author">Christian Stein</span><br>
-<span id="revnumber">version 5.9.1-SNAPSHOT</span>
+<span id="revnumber">version 5.9.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -3844,8 +3844,8 @@ interface. In addition, <code>Arguments.of(Object&#8230;&#8203;)</code> may be u
 </div>
 </div>
 <div class="paragraph">
-<p>An external, <code>static</code> <em>factory</em> method can be referenced by providing its <em>fully
-qualified method name</em> as demonstrated in the following example.</p>
+<p>An external, <code>static</code> <em>factory</em> method can be referenced by providing its <em>fully qualified
+method name</em> as demonstrated in the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3874,11 +3874,12 @@ qualified method name</em> as demonstrated in the following example.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Factory methods can declare parameters, which will be provided by registered implementations
-of <code>ParameterResolver</code>. In the following example, the factory method is referenced by its
-name since there&#8217;s only one such method in the test class. If there are several methods with
-the same name, the factory method needs to be referenced by its fully qualified method name
-(e.g., <code>@MethodSource("example.MyTests#factoryMethodWithArguments(java.lang.String)")</code>).</p>
+<p>Factory methods can declare parameters, which will be provided by registered
+implementations of the <code>ParameterResolver</code> extension API. In the following example, the
+factory method is referenced by its name since there is only one such method in the test
+class. If there are several methods with the same name, the factory method must be
+referenced by its fully qualified method name – for example,
+<code>@MethodSource("example.MyTests#factoryMethodWithArguments(java.lang.String)")</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3887,28 +3888,30 @@ the same name, the factory method needs to be referenced by its fully qualified 
 
 <span class="nd">@ParameterizedTest</span>
 <span class="nd">@MethodSource</span><span class="o">(</span><span class="s">"factoryMethodWithArguments"</span><span class="o">)</span>
-<span class="kt">void</span> <span class="nf">testWithArgumentsProviderUsingParameterResolvers</span><span class="o">(</span><span class="nc">String</span> <span class="n">argument</span><span class="o">)</span> <span class="o">{</span>
+<span class="kt">void</span> <span class="nf">testWithFactoryMethodWithArguments</span><span class="o">(</span><span class="nc">String</span> <span class="n">argument</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">assertTrue</span><span class="o">(</span><span class="n">argument</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">"2"</span><span class="o">));</span>
 <span class="o">}</span>
 
 <span class="kd">static</span> <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">Arguments</span><span class="o">&gt;</span> <span class="nf">factoryMethodWithArguments</span><span class="o">(</span><span class="kt">int</span> <span class="n">quantity</span><span class="o">)</span> <span class="o">{</span>
     <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span>
-            <span class="n">arguments</span><span class="o">(</span><span class="n">quantity</span> <span class="o">+</span> <span class="s">" apple"</span><span class="o">),</span>
-            <span class="n">arguments</span><span class="o">(</span><span class="n">quantity</span> <span class="o">+</span> <span class="s">" lemon"</span><span class="o">)</span>
+            <span class="n">arguments</span><span class="o">(</span><span class="n">quantity</span> <span class="o">+</span> <span class="s">" apples"</span><span class="o">),</span>
+            <span class="n">arguments</span><span class="o">(</span><span class="n">quantity</span> <span class="o">+</span> <span class="s">" lemons"</span><span class="o">)</span>
     <span class="o">);</span>
 <span class="o">}</span>
 
 <span class="kd">static</span> <span class="kd">class</span> <span class="nc">IntegerResolver</span> <span class="kd">implements</span> <span class="nc">ParameterResolver</span> <span class="o">{</span>
 
     <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">supportsParameter</span><span class="o">(</span><span class="nc">ParameterContext</span> <span class="n">parameterContext</span><span class="o">,</span> <span class="nc">ExtensionContext</span> <span class="n">extensionContext</span><span class="o">)</span>
-            <span class="kd">throws</span> <span class="nc">ParameterResolutionException</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">supportsParameter</span><span class="o">(</span><span class="nc">ParameterContext</span> <span class="n">parameterContext</span><span class="o">,</span>
+            <span class="nc">ExtensionContext</span> <span class="n">extensionContext</span><span class="o">)</span> <span class="o">{</span>
+
         <span class="k">return</span> <span class="n">parameterContext</span><span class="o">.</span><span class="na">getParameter</span><span class="o">().</span><span class="na">getType</span><span class="o">()</span> <span class="o">==</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
     <span class="o">}</span>
 
     <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">resolveParameter</span><span class="o">(</span><span class="nc">ParameterContext</span> <span class="n">parameterContext</span><span class="o">,</span> <span class="nc">ExtensionContext</span> <span class="n">extensionContext</span><span class="o">)</span>
-            <span class="kd">throws</span> <span class="nc">ParameterResolutionException</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">resolveParameter</span><span class="o">(</span><span class="nc">ParameterContext</span> <span class="n">parameterContext</span><span class="o">,</span>
+            <span class="nc">ExtensionContext</span> <span class="n">extensionContext</span><span class="o">)</span> <span class="o">{</span>
+
         <span class="k">return</span> <span class="mi">2</span><span class="o">;</span>
     <span class="o">}</span>
 
@@ -4744,7 +4747,8 @@ the following.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Please note that <code>name</code> is a <code>MessageFormat</code> pattern. Thus, a single quote (<code>'</code>) needs to be represented as a doubled single quote (<code>''</code>) in order to be displayed.</p>
+<p>Please note that <code>name</code> is a <code>MessageFormat</code> pattern. Thus, a single quote (<code>'</code>) needs to
+be represented as a doubled single quote (<code>''</code>) in order to be displayed.</p>
 </div>
 <div class="paragraph">
 <p>The following placeholders are supported within custom display names.</p>
@@ -4799,9 +4803,9 @@ to 512 characters.
 </table>
 </div>
 <div class="paragraph">
-<p>When using <code>@MethodSource</code> or <code>@ArgumentSource</code>, you can give names to arguments. This
-name will be used if the argument is included in the invocation display name, like in
-the example below.</p>
+<p>When using <code>@MethodSource</code> or <code>@ArgumentSource</code>, you can provide custom names for
+arguments using the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Named.html">Named</a></code> API. A custom name will be used if the argument is included
+in the invocation display name, like in the example below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4812,8 +4816,10 @@ the example below.</p>
 <span class="o">}</span>
 
 <span class="kd">static</span> <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">Arguments</span><span class="o">&gt;</span> <span class="nf">namedArguments</span><span class="o">()</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">arguments</span><span class="o">(</span><span class="nc">Named</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"An important file"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">"path1"</span><span class="o">))),</span>
-        <span class="n">arguments</span><span class="o">(</span><span class="nc">Named</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"Another file"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">"path2"</span><span class="o">))));</span>
+    <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span>
+        <span class="n">arguments</span><span class="o">(</span><span class="n">named</span><span class="o">(</span><span class="s">"An important file"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">"path1"</span><span class="o">))),</span>
+        <span class="n">arguments</span><span class="o">(</span><span class="n">named</span><span class="o">(</span><span class="s">"Another file"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">"path2"</span><span class="o">)))</span>
+    <span class="o">);</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -4825,8 +4831,10 @@ the example below.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>If you&#8217;d like to set default name pattern for all parameterized tests in your project, you can add the following
-configuration to <code>junit-platform.properties</code></p>
+<p>If you&#8217;d like to set a default name pattern for all parameterized tests in your project,
+you can declare the <code>junit.jupiter.params.displayname.default</code> configuration parameter in
+the <code>junit-platform.properties</code> file as demonstrated in the following example (see
+<a href="#running-tests-config-params">Configuration Parameters</a> for other options).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4834,15 +4842,16 @@ configuration to <code>junit-platform.properties</code></p>
 </div>
 </div>
 <div class="paragraph">
-<p>the display name for a parameterized method is determined according to the following precedence rules:</p>
+<p>The display name for a parameterized test is determined according to the following
+precedence rules:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><code>name</code> of <code>@ParameterizedTest</code>, if present</p>
+<p><code>name</code> attribute in <code>@ParameterizedTest</code>, if present</p>
 </li>
 <li>
-<p>the value of <code>junit.jupiter.params.displayname.default</code> (from junit-platform.properties), if present</p>
+<p>value of the <code>junit.jupiter.params.displayname.default</code> configuration parameter, if present</p>
 </li>
 <li>
 <p><code>DEFAULT_DISPLAY_NAME</code> constant defined in <code>@ParameterizedTest</code></p>
@@ -4973,7 +4982,7 @@ or extensions between the execution of individual dynamic tests generated by the
 </table>
 </div>
 <div class="paragraph">
-<p>As of JUnit Jupiter 5.9.1-SNAPSHOT, dynamic tests must always be created by factory
+<p>As of JUnit Jupiter 5.9.0-SNAPSHOT, dynamic tests must always be created by factory
 methods; however, this might be complemented by a registration facility in a later
 release.</p>
 </div>
@@ -6182,14 +6191,14 @@ below to use a newer version of JUnit 5 than the one bundled with IntelliJ IDEA.
 </table>
 </div>
 <div class="paragraph">
-<p>In order to use a different JUnit 5 version (e.g., 5.9.1-SNAPSHOT), you may need to
+<p>In order to use a different JUnit 5 version (e.g., 5.9.0-SNAPSHOT), you may need to
 include the corresponding versions of the <code>junit-platform-launcher</code>,
 <code>junit-jupiter-engine</code>, and <code>junit-vintage-engine</code> JARs in the classpath.</p>
 </div>
 <div class="listingblock">
 <div class="title">Additional Gradle Dependencies</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="groovy"><span class="n">testImplementation</span><span class="o">(</span><span class="n">platform</span><span class="o">(</span><span class="s2">"org.junit:junit-bom:5.9.1-SNAPSHOT"</span><span class="o">))</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">testImplementation</span><span class="o">(</span><span class="n">platform</span><span class="o">(</span><span class="s2">"org.junit:junit-bom:5.9.0-SNAPSHOT"</span><span class="o">))</span>
 <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.platform:junit-platform-launcher"</span><span class="o">)</span> <span class="o">{</span>
   <span class="n">because</span><span class="o">(</span><span class="s2">"Only needed to run tests in a version of IntelliJ IDEA that bundles older versions"</span><span class="o">)</span>
 <span class="o">}</span>
@@ -6224,7 +6233,7 @@ include the corresponding versions of the <code>junit-platform-launcher</code>,
         <span class="nt">&lt;dependency&gt;</span>
             <span class="nt">&lt;groupId&gt;</span>org.junit<span class="nt">&lt;/groupId&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>junit-bom<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>5.9.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>5.9.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
             <span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
             <span class="nt">&lt;scope&gt;</span>import<span class="nt">&lt;/scope&gt;</span>
         <span class="nt">&lt;/dependency&gt;</span>
@@ -6371,7 +6380,7 @@ on the dependency-aggregating JUnit Jupiter artifact similar to the following.</
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
-    <span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.junit.jupiter:junit-jupiter:5.9.1-SNAPSHOT"</span><span class="o">)</span>
+    <span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.junit.jupiter:junit-jupiter:5.9.0-SNAPSHOT"</span><span class="o">)</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -6384,7 +6393,7 @@ implementation similar to the following.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
     <span class="n">testImplementation</span><span class="o">(</span><span class="s2">"junit:junit:4.13.2"</span><span class="o">)</span>
-    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.vintage:junit-vintage-engine:5.9.1-SNAPSHOT"</span><span class="o">)</span>
+    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.vintage:junit-vintage-engine:5.9.0-SNAPSHOT"</span><span class="o">)</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -6465,7 +6474,7 @@ following.</p>
     <span class="nt">&lt;dependency&gt;</span>
         <span class="nt">&lt;groupId&gt;</span>org.junit.jupiter<span class="nt">&lt;/groupId&gt;</span>
         <span class="nt">&lt;artifactId&gt;</span>junit-jupiter<span class="nt">&lt;/artifactId&gt;</span>
-        <span class="nt">&lt;version&gt;</span>5.9.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;version&gt;</span>5.9.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
         <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
     <span class="nt">&lt;/dependency&gt;</span>
     <span class="c">&lt;!-- ... --&gt;</span>
@@ -6504,7 +6513,7 @@ long as you configure <code>test</code> scoped dependencies on JUnit 4 and the J
     <span class="nt">&lt;dependency&gt;</span>
         <span class="nt">&lt;groupId&gt;</span>org.junit.vintage<span class="nt">&lt;/groupId&gt;</span>
         <span class="nt">&lt;artifactId&gt;</span>junit-vintage-engine<span class="nt">&lt;/artifactId&gt;</span>
-        <span class="nt">&lt;version&gt;</span>5.9.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;version&gt;</span>5.9.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
         <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
     <span class="nt">&lt;/dependency&gt;</span>
     <span class="c">&lt;!-- ... --&gt;</span>
@@ -6747,7 +6756,7 @@ Platform from the console. For example, it can be used to run JUnit Vintage and 
 Jupiter tests and print test execution results to the console.</p>
 </div>
 <div class="paragraph">
-<p>An executable <code>junit-platform-console-standalone-1.9.1-SNAPSHOT.jar</code> with all
+<p>An executable <code>junit-platform-console-standalone-1.9.0-SNAPSHOT.jar</code> with all
 dependencies included is published in the <a href="https://search.maven.org/">Maven Central</a> repository under the
 <a href="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone">junit-platform-console-standalone</a>
 directory. It includes the following dependencies:</p>
@@ -6764,43 +6773,43 @@ directory. It includes the following dependencies:</p>
 <p><code>org.hamcrest:hamcrest-core:1.3</code></p>
 </li>
 <li>
-<p><code>org.junit.jupiter:junit-jupiter-api:5.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.jupiter:junit-jupiter-api:5.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.jupiter:junit-jupiter-engine:5.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.jupiter:junit-jupiter-engine:5.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.jupiter:junit-jupiter-params:5.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.jupiter:junit-jupiter-params:5.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.platform:junit-platform-commons:1.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.platform:junit-platform-commons:1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.platform:junit-platform-console:1.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.platform:junit-platform-console:1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.platform:junit-platform-engine:1.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.platform:junit-platform-engine:1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.platform:junit-platform-launcher:1.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.platform:junit-platform-launcher:1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.platform:junit-platform-reporting:1.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.platform:junit-platform-reporting:1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.platform:junit-platform-suite-api:1.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.platform:junit-platform-suite-api:1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.platform:junit-platform-suite-commons:1.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.platform:junit-platform-suite-commons:1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.platform:junit-platform-suite-engine:1.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.platform:junit-platform-suite-engine:1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.platform:junit-platform-suite:1.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.platform:junit-platform-suite:1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
-<p><code>org.junit.vintage:junit-vintage-engine:5.9.1-SNAPSHOT</code></p>
+<p><code>org.junit.vintage:junit-vintage-engine:5.9.0-SNAPSHOT</code></p>
 </li>
 <li>
 <p><code>org.opentest4j:opentest4j:1.2.0</code></p>
@@ -6813,7 +6822,7 @@ standalone <code>ConsoleLauncher</code> as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="console"><span class="gp">$</span><span class="w"> </span>java <span class="nt">-jar</span> junit-platform-console-standalone-1.9.1-SNAPSHOT.jar &lt;OPTIONS&gt;
+<pre class="rouge highlight"><code data-lang="console"><span class="gp">$</span><span class="w"> </span>java <span class="nt">-jar</span> junit-platform-console-standalone-1.9.0-SNAPSHOT.jar &lt;OPTIONS&gt;
 <span class="go">
 ├─ JUnit Vintage
 │  └─ example.JUnit4Tests
@@ -7688,7 +7697,7 @@ to a problem.
 <p>Ensure that you are using either Java 8 Update 262 or higher or Java 11 or later.</p>
 </li>
 <li>
-<p>Provide the <code>org.junit.platform.jfr</code> module (<code>junit-platform-jfr-1.9.1-SNAPSHOT.jar</code>)
+<p>Provide the <code>org.junit.platform.jfr</code> module (<code>junit-platform-jfr-1.9.0-SNAPSHOT.jar</code>)
 on the class-path or module-path at test runtime.</p>
 </li>
 <li>
@@ -9509,7 +9518,7 @@ using Gradle&#8217;s Build Cache.</p>
 <div class="title">Groovy DSL</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
-    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.platform:junit-platform-reporting:1.9.1-SNAPSHOT"</span><span class="o">)</span>
+    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.platform:junit-platform-reporting:1.9.0-SNAPSHOT"</span><span class="o">)</span>
 <span class="o">}</span>
 <span class="n">tasks</span><span class="o">.</span><span class="na">withType</span><span class="o">(</span><span class="n">Test</span><span class="o">).</span><span class="na">configureEach</span> <span class="o">{</span>
     <span class="kt">def</span> <span class="n">outputDir</span> <span class="o">=</span> <span class="n">reports</span><span class="o">.</span><span class="na">junitXml</span><span class="o">.</span><span class="na">outputLocation</span>
@@ -9526,7 +9535,7 @@ using Gradle&#8217;s Build Cache.</p>
 <div class="title">Kotlin DSL</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">dependencies</span> <span class="p">{</span>
-    <span class="nf">testRuntimeOnly</span><span class="p">(</span><span class="s">"org.junit.platform:junit-platform-reporting:1.9.1-SNAPSHOT"</span><span class="p">)</span>
+    <span class="nf">testRuntimeOnly</span><span class="p">(</span><span class="s">"org.junit.platform:junit-platform-reporting:1.9.0-SNAPSHOT"</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="n">tasks</span><span class="p">.</span><span class="n">withType</span><span class="p">&lt;</span><span class="nc">Test</span><span class="p">&gt;().</span><span class="nf">configureEach</span> <span class="p">{</span>
     <span class="kd">val</span> <span class="py">outputDir</span> <span class="p">=</span> <span class="n">reports</span><span class="p">.</span><span class="n">junitXml</span><span class="p">.</span><span class="n">outputLocation</span>
@@ -9555,7 +9564,7 @@ XML reports as follows:</p>
         <span class="nt">&lt;dependency&gt;</span>
             <span class="nt">&lt;groupId&gt;</span>org.junit.platform<span class="nt">&lt;/groupId&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>junit-platform-reporting<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>1.9.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.9.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
             <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
         <span class="nt">&lt;/dependency&gt;</span>
     <span class="nt">&lt;/dependencies&gt;</span>
@@ -9588,7 +9597,7 @@ output by setting the configuration parameters via <code>--config</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="console"><span class="gp">$</span><span class="w"> </span>java <span class="nt">-jar</span> junit-platform-console-standalone-1.9.1-SNAPSHOT.jar &lt;OPTIONS&gt; <span class="se">\</span>
+<pre class="rouge highlight"><code data-lang="console"><span class="gp">$</span><span class="w"> </span>java <span class="nt">-jar</span> junit-platform-console-standalone-1.9.0-SNAPSHOT.jar &lt;OPTIONS&gt; <span class="se">\</span>
   <span class="nt">--config</span><span class="o">=</span>junit.platform.reporting.open.xml.enabled<span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
   <span class="nt">--config</span><span class="o">=</span>junit.platform.reporting.output.dir<span class="o">=</span>reports</code></pre>
 </div>
@@ -11356,7 +11365,7 @@ artifacts are deployed to Sonatype&#8217;s <a href="https://oss.sonatype.org/con
 <p><strong>Group ID</strong>: <code>org.junit.platform</code></p>
 </li>
 <li>
-<p><strong>Version</strong>: <code>1.9.1-SNAPSHOT</code></p>
+<p><strong>Version</strong>: <code>1.9.0-SNAPSHOT</code></p>
 </li>
 <li>
 <p><strong>Artifact IDs</strong>:</p>
@@ -11444,7 +11453,7 @@ accessing the results via a fluent API to verify the expected results.</p>
 <p><strong>Group ID</strong>: <code>org.junit.jupiter</code></p>
 </li>
 <li>
-<p><strong>Version</strong>: <code>5.9.1-SNAPSHOT</code></p>
+<p><strong>Version</strong>: <code>5.9.0-SNAPSHOT</code></p>
 </li>
 <li>
 <p><strong>Artifact IDs</strong>:</p>
@@ -11487,7 +11496,7 @@ JUnit 4&#8217;s <code>@Ignore</code> annotation and for running selected JUnit 4
 <p><strong>Group ID</strong>: <code>org.junit.vintage</code></p>
 </li>
 <li>
-<p><strong>Version</strong>: <code>5.9.1-SNAPSHOT</code></p>
+<p><strong>Version</strong>: <code>5.9.0-SNAPSHOT</code></p>
 </li>
 <li>
 <p><strong>Artifact ID</strong>:</p>
@@ -11522,7 +11531,7 @@ or <a href="https://docs.gradle.org/current/userguide/managing_transitive_depend
 <p><strong>Artifact ID</strong>: <code>junit-bom</code></p>
 </li>
 <li>
-<p><strong>Version</strong>: <code>5.9.1-SNAPSHOT</code></p>
+<p><strong>Version</strong>: <code>5.9.0-SNAPSHOT</code></p>
 </li>
 </ul>
 </div>
@@ -11578,8 +11587,8 @@ following <em>OpenTest4J</em> JAR.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.9.1-SNAPSHOT<br>
-Last updated 2022-05-21 09:25:27 UTC
+Version 5.9.0-SNAPSHOT<br>
+Last updated 2022-06-03 16:43:21 UTC
 </div>
 </div>
 <style>
