@@ -2198,10 +2198,14 @@ indirectly present, or meta-present on a given element.</p>
 <div class="sect3">
 <h4 id="writing-tests-conditional-execution-custom"><a class="anchor" href="#writing-tests-conditional-execution-custom"></a>2.7.5. Custom Conditions</h4>
 <div class="paragraph">
-<p>A container or test may be enabled or disabled based on the boolean return of a
-method via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> annotations. The method is provided to
-the annotation via its name.
-If needed, the condition method can take a single parameter of type <code>ExtensionContext</code>.</p>
+<p>As an alternative to implementing an <a href="#extensions-conditions"><code>ExecutionCondition</code></a>, a
+container or test may be enabled or disabled based on a <em>condition method</em> configured via
+the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> annotations. A condition method must have a <code>boolean</code>
+return type and may accept either no arguments or a single <code>ExtensionContext</code> argument.</p>
+</div>
+<div class="paragraph">
+<p>The following test class demonstrates how to configure a local method named
+<code>customCondition</code> via <code>@EnabledIf</code> and <code>@DisabledIf</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2224,7 +2228,7 @@ If needed, the condition method can take a single parameter of type <code>Extens
 </div>
 <div class="paragraph">
 <p>Alternatively, the condition method can be located outside the test class. In this case,
-it has to be referenced by its <em>fully qualified name</em> as demonstrated in the following
+it must be referenced by its <em>fully qualified name</em> as demonstrated in the following
 example.</p>
 </div>
 <div class="listingblock">
@@ -2260,9 +2264,37 @@ example.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> or <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> is used at class level, the condition method
-must always be <code>static</code>. Condition methods located in external classes must also be
-<code>static</code>. In any other case, you can use both static or instance methods.
+When <code>@EnabledIf</code> or <code>@DisabledIf</code> is used at class level, the condition method must
+always be <code>static</code>. Condition methods located in external classes must also be <code>static</code>.
+In any other case, you can use either static methods or instance methods as condition
+methods.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It is often the case that you can use an existing static method in a utility class as a
+custom condition.</p>
+</div>
+<div class="paragraph">
+<p>For example, <code>java.awt.GraphicsEnvironment</code> provides a <code>public static boolean isHeadless()</code>
+method that can be used to determine if the current environment does not support a
+graphical display. Thus, if you have a test that depends on graphical support you can
+disable it when such support is unavailable as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@DisabledIf</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"java.awt.GraphicsEnvironment#isHeadless"</span><span class="o">,</span>
+    <span class="n">disabledReason</span> <span class="o">=</span> <span class="s">"headless environment"</span><span class="o">)</span></code></pre>
+</div>
+</div>
 </td>
 </tr>
 </table>
@@ -4998,8 +5030,8 @@ detected at compile time, a <code>JUnitException</code> is thrown when it is det
 </div>
 <div class="paragraph">
 <p>The next six methods are very simple examples that demonstrate the generation of a
-<code>Collection</code>, <code>Iterable</code>, <code>Iterator</code>, array, or <code>Stream</code> of <code>DynamicTest</code> instances. Most of
-these examples do not really exhibit dynamic behavior but merely demonstrate the
+<code>Collection</code>, <code>Iterable</code>, <code>Iterator</code>, array, or <code>Stream</code> of <code>DynamicTest</code> instances. Most
+of these examples do not really exhibit dynamic behavior but merely demonstrate the
 supported return types in principle. However, <code>dynamicTestsFromStream()</code> and
 <code>dynamicTestsFromIntStream()</code> demonstrate how easy it is to generate dynamic tests for a
 given set of strings or a range of input numbers.</p>
@@ -11588,7 +11620,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-06-03 16:43:21 UTC
+Last updated 2022-06-05 14:09:32 UTC
 </div>
 </div>
 <style>
