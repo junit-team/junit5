@@ -501,6 +501,22 @@ always be `static`. Condition methods located in external classes must also be `
 In any other case, you can use either static methods or instance methods as condition
 methods.
 
+[TIP]
+====
+It is often the case that you can use an existing static method in a utility class as a
+custom condition.
+
+For example, `java.awt.GraphicsEnvironment` provides a `public static boolean isHeadless()`
+method that can be used to determine if the current environment does not support a
+graphical display. Thus, if you have a test that depends on graphical support you can
+disable it when such support is unavailable as follows.
+
+[source,java,indent=0]
+----
+@DisabledIf(value = "java.awt.GraphicsEnvironment#isHeadless",
+	disabledReason = "headless environment")
+----
+====
 
 [[writing-tests-tagging-and-filtering]]
 === Tagging and Filtering
