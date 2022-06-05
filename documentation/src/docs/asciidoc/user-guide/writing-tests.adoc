@@ -472,10 +472,13 @@ indirectly present, or meta-present on a given element.
 [[writing-tests-conditional-execution-custom]]
 ==== Custom Conditions
 
-A container or test may be enabled or disabled based on the boolean return of a
-method via the `{EnabledIf}` and `{DisabledIf}` annotations. The method is provided to
-the annotation via its name.
-If needed, the condition method can take a single parameter of type `ExtensionContext`.
+As an alternative to implementing an <<extensions-conditions, `ExecutionCondition`>>, a
+container or test may be enabled or disabled based on a _condition method_ configured via
+the `{EnabledIf}` and `{DisabledIf}` annotations. A condition method must have a `boolean`
+return type and may accept either no arguments or a single `ExtensionContext` argument.
+
+The following test class demonstrates how to configure a local method named
+`customCondition` via `@EnabledIf` and `@DisabledIf`.
 
 [source,java,indent=0]
 ----
@@ -483,7 +486,7 @@ include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_cus
 ----
 
 Alternatively, the condition method can be located outside the test class. In this case,
-it has to be referenced by its _fully qualified name_ as demonstrated in the following
+it must be referenced by its _fully qualified name_ as demonstrated in the following
 example.
 
 [source,java,indent=0]
@@ -493,9 +496,10 @@ package example;
 include::{testDir}/example/ExternalCustomConditionDemo.java[tags=user_guide_external_custom_condition]
 ----
 
-NOTE: When `{EnabledIf}` or `{DisabledIf}` is used at class level, the condition method
-must always be `static`. Condition methods located in external classes must also be
-`static`. In any other case, you can use both static or instance methods.
+NOTE: When `@EnabledIf` or `@DisabledIf` is used at class level, the condition method must
+always be `static`. Condition methods located in external classes must also be `static`.
+In any other case, you can use either static methods or instance methods as condition
+methods.
 
 
 [[writing-tests-tagging-and-filtering]]
@@ -1930,8 +1934,8 @@ The first method returns an invalid return type. Since an invalid return type ca
 detected at compile time, a `JUnitException` is thrown when it is detected at runtime.
 
 The next six methods are very simple examples that demonstrate the generation of a
-`Collection`, `Iterable`, `Iterator`, array, or `Stream` of `DynamicTest` instances. Most of
-these examples do not really exhibit dynamic behavior but merely demonstrate the
+`Collection`, `Iterable`, `Iterator`, array, or `Stream` of `DynamicTest` instances. Most
+of these examples do not really exhibit dynamic behavior but merely demonstrate the
 supported return types in principle. However, `dynamicTestsFromStream()` and
 `dynamicTestsFromIntStream()` demonstrate how easy it is to generate dynamic tests for a
 given set of strings or a range of input numbers.
