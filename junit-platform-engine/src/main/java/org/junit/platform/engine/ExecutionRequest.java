@@ -45,6 +45,21 @@ public class ExecutionRequest {
 	}
 
 	/**
+	 * Factory for creating an execution request.
+	 *
+	 * @param rootTestDescriptor the engine's root {@link TestDescriptor}
+	 * @param engineExecutionListener the {@link EngineExecutionListener} to be
+	 * notified of test execution events
+	 * @param configurationParameters {@link ConfigurationParameters} that the
+	 * engine may use to influence test execution
+	 * @return a new {@code ExecutionRequest}; never {@code null}
+	 */
+	public static ExecutionRequest create(TestDescriptor rootTestDescriptor,
+			EngineExecutionListener engineExecutionListener, ConfigurationParameters configurationParameters) {
+		return new ExecutionRequest(rootTestDescriptor, engineExecutionListener, configurationParameters);
+	}
+
+	/**
 	 * Get the root {@link TestDescriptor} of the engine that processes this
 	 * request.
 	 *
