@@ -53,7 +53,9 @@ public class ExecutionRequest {
 	 * @param configurationParameters {@link ConfigurationParameters} that the
 	 * engine may use to influence test execution
 	 * @return a new {@code ExecutionRequest}; never {@code null}
+	 * @since 1.9
 	 */
+	@API(status = STABLE, since = "1.9")
 	public static ExecutionRequest create(TestDescriptor rootTestDescriptor,
 			EngineExecutionListener engineExecutionListener, ConfigurationParameters configurationParameters) {
 		return new ExecutionRequest(rootTestDescriptor, engineExecutionListener, configurationParameters);
