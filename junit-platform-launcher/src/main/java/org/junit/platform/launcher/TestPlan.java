@@ -121,15 +121,24 @@ public class TestPlan {
 	public void addInternal(TestIdentifier testIdentifier) {
 		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
 		allIdentifiers.put(testIdentifier.getUniqueIdObject(), testIdentifier);
-		if (testIdentifier.getParentIdObject().isPresent()) {
-			UniqueId parentId = testIdentifier.getParentIdObject().get();
-			Set<TestIdentifier> directChildren = children.computeIfAbsent(parentId,
-				key -> synchronizedSet(new LinkedHashSet<>(16)));
-			directChildren.add(testIdentifier);
-		}
-		else {
+
+		// Root identifiers. Typically, a test engine.
+		if (!testIdentifier.getParentIdObject().isPresent()) {
 			roots.add(testIdentifier);
+			return;
 		}
+
+		// Identifiers without a parent in this test plan. Could be a test
+		// engine that is used in a suite.
+		UniqueId parentId = testIdentifier.getParentIdObject().get();
+		if (!allIdentifiers.containsKey(parentId)) {
+			roots.add(testIdentifier);
+			return;
+		}
+
+		Set<TestIdentifier> directChildren = children.computeIfAbsent(parentId,
+			key -> synchronizedSet(new LinkedHashSet<>(16)));
+		directChildren.add(testIdentifier);
 	}
 
 	/**

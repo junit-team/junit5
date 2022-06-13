@@ -17,11 +17,11 @@ import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,11 +43,13 @@ import org.junit.platform.engine.discovery.UriSelector;
 @API(status = INTERNAL, since = "1.0")
 public class CommandLineOptions {
 
-	static final Details DEFAULT_DETAILS = Details.TREE;
-	static final Theme DEFAULT_THEME = Theme.valueOf(Charset.defaultCharset());
+	static final String DEFAULT_DETAILS_NAME = "tree";
+	static final Details DEFAULT_DETAILS = Details.valueOf(DEFAULT_DETAILS_NAME.toUpperCase(Locale.ROOT));
+	static final Theme DEFAULT_THEME = Theme.valueOf(ConsoleUtils.charset());
 
 	private boolean displayHelp;
 	private boolean listTests;
+	private boolean listEngines;
 	private boolean ansiColorOutputDisabled;
 	private Path colorPalettePath;
 	private boolean isSingleColorPalette;
@@ -99,6 +101,14 @@ public class CommandLineOptions {
 
 	public void setListTests(boolean listTests) {
 		this.listTests = listTests;
+	}
+
+	public boolean isListEngines() {
+		return this.listEngines;
+	}
+
+	public void setListEngines(boolean listEngines) {
+		this.listEngines = listEngines;
 	}
 
 	public boolean isAnsiColorOutputDisabled() {

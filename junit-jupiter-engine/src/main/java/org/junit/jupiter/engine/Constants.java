@@ -310,6 +310,7 @@ public final class Constants {
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "5.8")
+	@SuppressWarnings("deprecation")
 	public static final String TEMP_DIR_SCOPE_PROPERTY_NAME = TempDir.SCOPE_PROPERTY_NAME;
 
 	private Constants() {

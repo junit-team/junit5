@@ -154,7 +154,7 @@ public interface ClassOrderer {
 	 * arbitrarily adjacent to each other.
 	 *
 	 * <p>Any classes not annotated with {@code @Order} will be assigned the
-	 * {@link Order#DEFAULT default order} value which will effectively cause them
+	 * {@linkplain Order#DEFAULT default order} value which will effectively cause them
 	 * to appear at the end of the sorted list, unless certain classes are assigned
 	 * an explicit order value greater than the default order value. Any classes
 	 * assigned an explicit order value greater than the default order value will

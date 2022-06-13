@@ -21,10 +21,15 @@ import java.util.Properties;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * @since 1.9
+ */
 class ColorPalette {
+
 	public static final ColorPalette SINGLE_COLOR = new ColorPalette(singleColorPalette(), false);
 	public static final ColorPalette DEFAULT = new ColorPalette(defaultPalette(), false);
 	public static final ColorPalette NONE = new ColorPalette(new EnumMap<>(Style.class), true);
+
 	private final Map<Style, String> colorsToAnsiSequences;
 	private final boolean disableAnsiColors;
 
@@ -112,11 +117,12 @@ class ColorPalette {
 	}
 
 	public String paint(Style style, String text) {
-		return disableAnsiColors || style == Style.NONE ? text
+		return this.disableAnsiColors || style == Style.NONE ? text
 				: getAnsiFormatter(style) + text + getAnsiFormatter(Style.NONE);
 	}
 
 	private String getAnsiFormatter(Style style) {
-		return String.format("\u001B[%sm", colorsToAnsiSequences.get(style));
+		return String.format("\u001B[%sm", this.colorsToAnsiSequences.get(style));
 	}
+
 }

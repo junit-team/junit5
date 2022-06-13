@@ -15,6 +15,9 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Comparator;
+import java.util.StringJoiner;
+import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -22,6 +25,8 @@ import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.CommandLineOptionsParser;
 import org.junit.platform.console.options.PicocliCommandLineOptionsParser;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
+import org.junit.platform.engine.TestEngine;
+import org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
@@ -63,6 +68,10 @@ public class ConsoleLauncher {
 	ConsoleLauncherExecutionResult execute(String... args) {
 		try {
 			CommandLineOptions options = commandLineOptionsParser.parse(args);
+			if (options.isListEngines()) {
+				displayEngines(out);
+				return ConsoleLauncherExecutionResult.success();
+			}
 			if (!options.isBannerDisabled()) {
 				displayBanner(out);
 			}
@@ -101,6 +110,22 @@ public class ConsoleLauncher {
 		catch (Exception exception) {
 			return handleTestExecutorException(exception, options);
 		}
+	}
+
+	void displayEngines(PrintWriter out) {
+		ServiceLoaderTestEngineRegistry registry = new ServiceLoaderTestEngineRegistry();
+		Iterable<TestEngine> engines = registry.loadTestEngines();
+		StreamSupport.stream(engines.spliterator(), false) //
+				.sorted(Comparator.comparing(TestEngine::getId)) //
+				.forEach(engine -> displayEngine(out, engine));
+	}
+
+	private void displayEngine(PrintWriter out, TestEngine engine) {
+		StringJoiner details = new StringJoiner(":", " (", ")");
+		engine.getGroupId().ifPresent(details::add);
+		engine.getArtifactId().ifPresent(details::add);
+		engine.getVersion().ifPresent(details::add);
+		out.println(engine.getId() + details);
 	}
 
 	private ConsoleLauncherExecutionResult executeTests(CommandLineOptions options, PrintWriter out) {

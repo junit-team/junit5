@@ -17,6 +17,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +51,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(42);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + 42);
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
+		assertThat(configuration.getSaturatePredicate()).isNull();
 	}
 
 	@Test
@@ -64,6 +67,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors * 2);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + (availableProcessors * 2));
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
+		assertThat(configuration.getSaturatePredicate()).isNull();
 	}
 
 	@Test
@@ -79,6 +83,8 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(2);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(3);
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(5);
+		assertThat(configuration.getSaturatePredicate()).isNotNull();
+		assertThat(configuration.getSaturatePredicate().test(null)).isTrue();
 	}
 
 	@ParameterizedTest
@@ -177,7 +183,12 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 	static class CustomParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
-			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5);
+			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5) {
+				@Override
+				public Predicate<? super ForkJoinPool> getSaturatePredicate() {
+					return __ -> true;
+				}
+			};
 		}
 	}
 

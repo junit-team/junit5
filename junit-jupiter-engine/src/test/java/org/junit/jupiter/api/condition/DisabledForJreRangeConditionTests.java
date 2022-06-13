@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava16;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava17;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava18;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava19;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 
@@ -68,49 +69,41 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	}
 
 	/**
-	 * @see DisabledForJreRangeIntegrationTests#java8()
+	 * @see DisabledForJreRangeIntegrationTests#java17()
 	 */
 	@Test
-	void java8() {
+	void java17() {
 		evaluateCondition();
-		assertDisabledOnCurrentJreIf(onJava8());
+		assertDisabledOnCurrentJreIf(onJava17());
 	}
 
 	/**
-	 * @see DisabledForJreRangeIntegrationTests#java8to11()
+	 * @see DisabledForJreRangeIntegrationTests#java18to19()
 	 */
 	@Test
-	void java8to11() {
+	void java18to19() {
 		evaluateCondition();
-		assertDisabledOnCurrentJreIf(onJava8() || onJava9() || onJava10() || onJava11());
+		assertDisabledOnCurrentJreIf(onJava18() || onJava19());
 		assertCustomDisabledReasonIs("Disabled on some JRE");
 	}
 
 	/**
-	 * @see DisabledForJreRangeIntegrationTests#java9to12()
+	 * @see DisabledForJreRangeIntegrationTests#javaMax18()
 	 */
 	@Test
-	void java9to12() {
+	void javaMax18() {
 		evaluateCondition();
-		assertDisabledOnCurrentJreIf(onJava9() || onJava10() || onJava11() || onJava12());
+		assertDisabledOnCurrentJreIf(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13()
+				|| onJava14() || onJava15() || onJava16() || onJava17() || onJava18());
 	}
 
 	/**
-	 * @see DisabledForJreRangeIntegrationTests#javaMax12()
+	 * @see DisabledForJreRangeIntegrationTests#javaMin18()
 	 */
 	@Test
-	void javaMax12() {
+	void javaMin18() {
 		evaluateCondition();
-		assertDisabledOnCurrentJreIf(onJava8() || onJava9() || onJava10() || onJava11() || onJava12());
-	}
-
-	/**
-	 * @see DisabledForJreRangeIntegrationTests#javaMin10()
-	 */
-	@Test
-	void javaMin10() {
-		evaluateCondition();
-		assertDisabledOnCurrentJreIf(!(onJava8() || onJava9()));
+		assertDisabledOnCurrentJreIf(!(onJava17()));
 	}
 
 	/**
@@ -120,7 +113,7 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	void other() {
 		evaluateCondition();
 		assertDisabledOnCurrentJreIf(!(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13()
-				|| onJava14() || onJava15() || onJava16() || onJava17() || onJava18()));
+				|| onJava14() || onJava15() || onJava16() || onJava17() || onJava18() || onJava19()));
 	}
 
 	private void assertDisabledOnCurrentJreIf(boolean condition) {
