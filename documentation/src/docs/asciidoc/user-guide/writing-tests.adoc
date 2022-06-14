@@ -2294,6 +2294,59 @@ behind the scenes may spawn additional threads to ensure execution continues wit
 sufficient parallelism. Thus, if you require such guarantees in a test class, please use
 your own means of controlling concurrency.
 
+===== Relevant properties
+
+The below table lists out relevant parallel execution properties in `junit-platform.properties`.
+[cols="1,2,1,1"]
+|===
+|Property |Description |Acceptable values |Default value
+
+| ```junit.jupiter.execution.parallel.enabled```
+|Enable parallel test exection
+a|
+* `true`
+* `false`
+|```false```
+
+| ```junit.jupiter.execution.parallel.mode.default```
+|Set execution mode of the nodes in the test tree
+a|
+* `concurrent`
+* `same_thread`
+|```same_thread```
+
+| ```junit.jupiter.execution.parallel.mode.classes.default```
+|Set execution mode of the top-level classes
+a|
+* `concurrent`
+* `same_thread`
+|```same_thread```
+
+| ```junit.jupiter.execution.parallel.config.strategy```
+|Set execution strategy for desired parallelism and maximum pool size
+a|
+* `dynamic`
+* `fixed`
+* `custom`
+| ```dynamic```
+
+| ```junit.jupiter.execution.parallel.config.dynamic.factor```
+|Set the factor to be multiplied with the number of available processors/cores to determine the desired parallelism for the dynamic configuration strategy
+|Must be a decimal number
+| ```1```
+
+
+| ```junit.jupiter.execution.parallel.config.fixed.parallelism```
+|Set the desired parallelism for the fixed configuration strategy
+|Must be an integer
+|No default value
+
+| ```junit.jupiter.execution.parallel.config.custom.class```
+|Specify the fully qualified class name of the ```ParallelExecutionConfigurationStrategy``` to be used for the custom configuration strategy
+|for instance ```org.example.CustomStrategy```
+|No default value
+|===
+
 [[writing-tests-parallel-execution-synchronization]]
 ==== Synchronization
 
@@ -2332,7 +2385,6 @@ to the same shared resource is running.
 ----
 include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
 ----
-
 
 [[writing-tests-built-in-extensions]]
 === Built-in Extensions
