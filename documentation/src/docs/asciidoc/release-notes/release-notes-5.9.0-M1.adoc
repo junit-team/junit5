@@ -99,7 +99,8 @@ on GitHub.
   `ExtensionContext`.
 * A subset of the invocations of parameterized or dynamic tests can now be selected via
   the new `IterationSelector` discovery selector when launching the JUnit Platform.
-* `JAVA_19` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* `JAVA_19` and `JAVA_20` have been added to the `JRE` enum for use with JRE-based
+  execution conditions.
 * `@MethodSource` factory methods can now accept arguments resolved by registered
   `ParameterResolver` extensions.
 
