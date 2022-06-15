@@ -57,6 +57,7 @@ if (project in mavenizedProjects) {
 			locale = "en"
 			(this as StandardJavadocDocletOptions).apply {
 				addBooleanOption("Xdoclint:all,-missing,-reference", true)
+				addBooleanOption("XD-Xlint:none", true)
 				addBooleanOption("html5", true)
 				addMultilineStringsOption("tag").value = listOf(
 						"apiNote:a:API Note:",
