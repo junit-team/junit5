@@ -37,7 +37,7 @@ import org.apiguardian.api.API;
  * <p>Note that the presence of {@code @UseTechnicalNames} overrides any custom
  * display name configured for the suite via {@link SuiteDisplayName @SuiteDisplayName}.
  *
- * <h4>JUnit 4 Suite Support</h4>
+ * <h2>JUnit 4 Suite Support</h2>
  * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
  * {@code @RunWith(JUnitPlatform.class)}.
  *

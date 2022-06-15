@@ -35,7 +35,7 @@ import org.apiguardian.api.API;
  * {@link Test @Test}, {@link TestFactory @TestFactory}, or
  * {@link TestTemplate @TestTemplate}, but not to its lifecycle methods.
  *
- * <h3>Default Timeouts</h3>
+ * <h2>Default Timeouts</h2>
  *
  * <p>If this annotation is not present, no timeout will be used unless a
  * default timeout is defined via one of the following configuration parameters:
@@ -75,6 +75,7 @@ import org.apiguardian.api.API;
  * unit may be omitted. Specifying no unit is equivalent to using seconds.
  *
  * <table class="plain">
+ * <caption>Timeout configuration via configuration parameter vs. annotation</caption>
  * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
  * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
  * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
@@ -86,7 +87,7 @@ import org.apiguardian.api.API;
  * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
  * </table>
  *
- * <h3>Disabling Timeouts</h3>
+ * <h2>Disabling Timeouts</h2>
  *
  * <p>You may use the {@value #TIMEOUT_MODE_PROPERTY_NAME} configuration
  * parameter to explicitly enable or disable timeouts.

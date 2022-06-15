@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
  * {@link java.util.function.Supplier}, except that a {@code ThrowingSupplier}
  * can throw any kind of exception, including checked exceptions.
  *
- * <h4>Rationale for throwing {@code Throwable} instead of {@code Exception}</h4>
+ * <h2>Rationale for throwing {@code Throwable} instead of {@code Exception}</h2>
  *
  * <p>Although Java applications typically throw exceptions that are instances
  * of {@link Exception}, {@link RuntimeException},

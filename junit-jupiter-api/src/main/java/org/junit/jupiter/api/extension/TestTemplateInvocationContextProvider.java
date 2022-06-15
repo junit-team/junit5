@@ -41,7 +41,7 @@ import org.apiguardian.api.API;
  * the test template method will be invoked using the contexts of all active
  * providers.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.

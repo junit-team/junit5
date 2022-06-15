@@ -30,7 +30,7 @@ import org.junit.platform.launcher.TestExecutionListener;
  * {@code LauncherConfig} defines the configuration API for creating
  * {@link Launcher} instances via the {@link LauncherFactory}.
  *
- * <h4>Example</h4>
+ * <h2>Example</h2>
  *
  * <pre class="code">
  * LauncherConfig launcherConfig = LauncherConfig.builder()

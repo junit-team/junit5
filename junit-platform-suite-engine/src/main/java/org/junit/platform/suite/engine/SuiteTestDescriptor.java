@@ -40,7 +40,7 @@ import org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder;
 /**
  * {@link TestDescriptor} for tests based on the JUnit Platform Suite API.
  *
- * <h3>Default Display Names</h3>
+ * <h2>Default Display Names</h2>
  *
  * <p>The default display name is the simple name of the class.
  *

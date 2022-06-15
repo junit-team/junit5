@@ -35,7 +35,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 /**
  * {@link TestDescriptor} for tests based on nested (but not static) Java classes.
  *
- * <h3>Default Display Names</h3>
+ * <h2>Default Display Names</h2>
  *
  * <p>The default display name for a non-static nested test class is the simple
  * name of the class.

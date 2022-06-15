@@ -24,7 +24,7 @@ import org.apiguardian.api.API;
  * {@code @EmptySource} is an {@link ArgumentsSource} which provides a single
  * <em>empty</em> argument to the annotated {@code @ParameterizedTest} method.
  *
- * <h3>Supported Parameter Types</h3>
+ * <h2>Supported Parameter Types</h2>
  *
  * <p>This argument source will only provide an empty argument for the following
  * method parameter types. Subtypes of the supported types are not supported.

@@ -24,12 +24,12 @@ import org.apiguardian.api.API;
  * <p>Extensions that implement {@code AfterAllCallback} must be registered at
  * the class level.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.
  *
- * <h3>Wrapping Behavior</h3>
+ * <h2>Wrapping Behavior</h2>
  *
  * <p>JUnit Jupiter guarantees <em>wrapping behavior</em> for multiple
  * registered extensions that implement lifecycle callbacks such as

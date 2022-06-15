@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
  * the {@link java.util.ServiceLoader} mechanism. For details on the latter,
  * consult the User Guide.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Extension implementations must have a <em>default constructor</em> if
  * registered via {@code @ExtendWith} or the {@code ServiceLoader}. When

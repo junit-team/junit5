@@ -37,7 +37,7 @@ import org.apiguardian.api.API;
  * the User Guide for details. Note, however, that a {@code @TestClassOrder}
  * declaration always overrides a global {@code ClassOrderer}.
  *
- * <h4>Example Usage</h4>
+ * <h2>Example Usage</h2>
  *
  * <p>The following demonstrates how to guarantee that {@code @Nested} test classes
  * are executed in the order specified via the {@link Order @Order} annotation.

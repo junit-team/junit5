@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
  * <p>Extensions that implement {@code TestInstanceFactory} must be registered
  * at the class level.
  *
- * <h3>Warning</h3>
+ * <h2>Warning</h2>
  *
  * <p>Only one {@code TestInstanceFactory} is allowed to be registered for any
  * given test class. Registering multiple factories for any single test class
@@ -37,7 +37,7 @@ import org.apiguardian.api.API;
  * user's responsibility to ensure that only a single {@code TestInstanceFactory}
  * is registered for any specific test class.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.

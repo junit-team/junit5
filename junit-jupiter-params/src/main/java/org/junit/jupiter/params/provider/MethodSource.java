@@ -62,12 +62,13 @@ import org.junit.jupiter.params.ParameterizedTest;
  * {@code @ParameterizedTest} methods for those factories accept individual
  * {@code int[][]} and {@code Object[][]} arguments, respectively.
  *
- * <h3>Examples</h3>
+ * <h2>Examples</h2>
  *
  * <p>The following table displays compatible method signatures for parameterized
  * test methods and their corresponding factory methods.
  *
  * <table class="plain">
+ * <caption>Compatible method signatures and factory methods</caption>
  * <tr><th>{@code @ParameterizedTest} method</th><th>Factory method</th></tr>
  * <tr><td>{@code void test(int)}</td><td>{@code static int[] factory()}</td></tr>
  * <tr><td>{@code void test(int)}</td><td>{@code static IntStream factory()}</td></tr>

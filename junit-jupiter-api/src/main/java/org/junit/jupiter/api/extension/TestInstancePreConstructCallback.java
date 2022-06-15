@@ -32,7 +32,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * class level or at the method level. In the latter case, the extension will
  * only be applied to the test method for which it is registered.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on constructor
  * requirements.

@@ -1,7 +1,7 @@
 /**
  * Internal <em>logging</em> package.
  *
- * <h3>DISCLAIMER</h3>
+ * <h2>DISCLAIMER</h2>
  *
  * <p>These classes are intended solely for usage within the JUnit framework
  * itself. <strong>Any usage by external parties is not supported.</strong>

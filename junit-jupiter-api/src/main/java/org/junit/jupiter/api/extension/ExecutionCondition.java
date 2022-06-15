@@ -29,7 +29,7 @@ import org.apiguardian.api.API;
  * method-level lifecycle callbacks such as {@code @BeforeEach} methods,
  * {@code @AfterEach} methods, and corresponding extension APIs.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.
