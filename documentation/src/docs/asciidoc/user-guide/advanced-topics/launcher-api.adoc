@@ -93,8 +93,14 @@ file is loaded and applied automatically.
 ==== Registering a LauncherSessionListener
 
 Registered implementations of `{LauncherSessionListener}` are notified when a
-`{LauncherSession}` is opened (before a `{Launcher}` first discovers and executes tests)
-and closed (when no more tests will be discovered or executed). They can be registered
+`{LauncherSession}` is opened and closed -- 4 notifications in total:
+
+1. Before a `{Launcher}` first discovers the tests
+2. When no more tests will be discovered
+3. Before the tests are executed
+4. After the tests are executed
+
+They can be registered
 programmatically via the `{LauncherConfig}` that is passed to the `{LauncherFactory}`, or
 they can be discovered at runtime via Java's `{ServiceLoader}` mechanism and automatically
 registered with `LauncherSession` (unless automatic registration is disabled.)
