@@ -84,7 +84,7 @@ loadScripts(document, 'script');</script>
  <p>In contrast to <a href="AfterEach.html" title="annotation interface in org.junit.jupiter.api"><code>@AfterEach</code></a> methods, <code>@AfterAll</code>
  methods are only executed once for a given test class.
 
- <h3>Method Signatures</h3>
+ <h2>Method Signatures</h2>
 
  <p><code>@AfterAll</code> methods must have a <code>void</code> return type, must not
  be <code>private</code>, and must be <code>static</code> by default. Consequently,
@@ -97,7 +97,7 @@ loadScripts(document, 'script');</script>
  methods may optionally declare parameters to be resolved by
  <a href="extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolvers</code></a>.
 
- <h3>Inheritance and Execution Order</h3>
+ <h2>Inheritance and Execution Order</h2>
 
  <p><code>@AfterAll</code> methods are inherited from superclasses as long as
  they are not <em>hidden</em> or <em>overridden</em>. Furthermore,
@@ -130,7 +130,7 @@ loadScripts(document, 'script');</script>
  dependencies between the <code>@BeforeAll</code> methods or between the
  <code>@AfterAll</code> methods.
 
- <h3>Composition</h3>
+ <h2>Composition</h2>
 
  <p><code>@AfterAll</code> may be used as a meta-annotation in order to create
  a custom <em>composed annotation</em> that inherits the semantics of

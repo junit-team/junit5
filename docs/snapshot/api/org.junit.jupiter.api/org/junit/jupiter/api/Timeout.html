@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
  <a href="Test.html" title="annotation interface in org.junit.jupiter.api"><code>@Test</code></a>, <a href="TestFactory.html" title="annotation interface in org.junit.jupiter.api"><code>@TestFactory</code></a>, or
  <a href="TestTemplate.html" title="annotation interface in org.junit.jupiter.api"><code>@TestTemplate</code></a>, but not to its lifecycle methods.
 
- <h3>Default Timeouts</h3>
+ <h2>Default Timeouts</h2>
 
  <p>If this annotation is not present, no timeout will be used unless a
  default timeout is defined via one of the following configuration parameters:
@@ -131,6 +131,7 @@ loadScripts(document, 'script');</script>
  unit may be omitted. Specifying no unit is equivalent to using seconds.
 
  <table class="plain">
+ <caption>Timeout configuration via configuration parameter vs. annotation</caption>
  <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
  <tr><td> <code>42</code>    </td><td> <code>@Timeout(42)</code>                              </td></tr>
  <tr><td> <code>42 ns</code> </td><td> <code>@Timeout(value = 42, unit = NANOSECONDS)</code>  </td></tr>
@@ -142,7 +143,7 @@ loadScripts(document, 'script');</script>
  <tr><td> <code>42 d</code>  </td><td> <code>@Timeout(value = 42, unit = DAYS)</code>         </td></tr>
  </table>
 
- <h3>Disabling Timeouts</h3>
+ <h2>Disabling Timeouts</h2>
 
  <p>You may use the <a href="#TIMEOUT_MODE_PROPERTY_NAME">"junit.jupiter.execution.timeout.mode"</a> configuration
  parameter to explicitly enable or disable timeouts.

@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 
  <p>Such methods must not be <code>private</code> or <code>static</code>.
 
- <h3>Argument Providers and Sources</h3>
+ <h2>Argument Providers and Sources</h2>
 
  <p><code>@ParameterizedTest</code> methods must specify at least one
  <a href="provider/ArgumentsProvider.html" title="interface in org.junit.jupiter.params.provider"><code>ArgumentsProvider</code></a>
@@ -96,7 +96,7 @@ loadScripts(document, 'script');</script>
  <a href="provider/Arguments.html" title="interface in org.junit.jupiter.params.provider"><code>Arguments</code></a> that will be
  used to invoke the parameterized test method.
 
- <h3>Formal Parameter List</h3>
+ <h2>Formal Parameter List</h2>
 
  <p>A <code>@ParameterizedTest</code> method may declare additional parameters at
  the end of the method's parameter list to be resolved by other
@@ -120,7 +120,7 @@ loadScripts(document, 'script');</script>
  or any parameter annotated with
  <a href="aggregator/AggregateWith.html" title="annotation interface in org.junit.jupiter.params.aggregator"><code>@AggregateWith</code></a>.
 
- <h3>Argument Conversion</h3>
+ <h2>Argument Conversion</h2>
 
  <p>Method parameters may be annotated with
  <a href="converter/ConvertWith.html" title="annotation interface in org.junit.jupiter.params.converter"><code>@ConvertWith</code></a>
@@ -130,13 +130,13 @@ loadScripts(document, 'script');</script>
  conversion to the target type automatically (see the User Guide for further
  details).
 
- <h3>Composed Annotations</h3>
+ <h2>Composed Annotations</h2>
 
  <p><code>@ParameterizedTest</code> may also be used as a meta-annotation in order
  to create a custom <em>composed annotation</em> that inherits the semantics
  of <code>@ParameterizedTest</code>.
 
- <h3>Test Execution Order</h3>
+ <h2>Test Execution Order</h2>
 
  <p>By default, test methods will be ordered using an algorithm that is
  deterministic but intentionally nonobvious. This ensures that subsequent runs

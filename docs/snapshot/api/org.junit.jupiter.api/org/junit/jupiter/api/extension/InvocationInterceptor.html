@@ -88,14 +88,14 @@ loadScripts(document, 'script');</script>
 extends <a href="Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a></span></div>
 <div class="block"><code>InvocationInterceptor</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to intercept calls to test code.
 
- <h3>Invocation Contract</h3>
+ <h2>Invocation Contract</h2>
 
  <p>Each method in this class must call <a href="InvocationInterceptor.Invocation.html#proceed()"><code>InvocationInterceptor.Invocation.proceed()</code></a> or <a href="InvocationInterceptor.Invocation.html#skip()"><code>InvocationInterceptor.Invocation.skip()</code></a> exactly once on the supplied invocation. Otherwise, the
  enclosing test or container will be reported as failed.
 
  <p>The default implementation calls <a href="InvocationInterceptor.Invocation.html#proceed()"><code>proceed()</code></a> on the supplied <a href="InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">invocation</a>.
 
- <h3>Constructor Requirements</h3>
+ <h2>Constructor Requirements</h2>
 
  <p>Consult the documentation in <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> for details on
  constructor requirements.</div>

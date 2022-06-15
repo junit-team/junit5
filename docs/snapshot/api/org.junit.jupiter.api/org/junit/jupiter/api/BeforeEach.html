@@ -83,14 +83,14 @@ loadScripts(document, 'script');</script>
  <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>,
  and <code>@TestTemplate</code> method in the current test class.
 
- <h3>Method Signatures</h3>
+ <h2>Method Signatures</h2>
 
  <p><code>@BeforeEach</code> methods must have a <code>void</code> return type,
  must not be <code>private</code>, and must not be <code>static</code>.
  They may optionally declare parameters to be resolved by
  <a href="extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolvers</code></a>.
 
- <h3>Inheritance and Execution Order</h3>
+ <h2>Inheritance and Execution Order</h2>
 
  <p><code>@BeforeEach</code> methods are inherited from superclasses as long as
  they are not overridden. Furthermore, <code>@BeforeEach</code> methods from
@@ -122,7 +122,7 @@ loadScripts(document, 'script');</script>
  no dependencies between the <code>@BeforeEach</code> methods or between the
  <code>@AfterEach</code> methods.
 
- <h3>Composition</h3>
+ <h2>Composition</h2>
 
  <p><code>@BeforeEach</code> may be used as a meta-annotation in order to create
  a custom <em>composed annotation</em> that inherits the semantics of

@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
  <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
  <a href="https://ota4j-team.github.io/opentest4j/docs/1.2.0/api/org/opentest4j/AssertionFailedError.html" title="class or interface in org.opentest4j" class="external-link"><code>AssertionFailedError</code></a> or a subclass thereof.
 
- <h3>Object Equality</h3>
+ <h2>Object Equality</h2>
 
  <p>Assertion methods comparing two objects for <em>equality</em>, such as the
  <code>assertEquals(expected, actual)</code> and <code>assertNotEquals(unexpected, actual)</code>
@@ -106,13 +106,13 @@ loadScripts(document, 'script');</script>
  <code>assertTrue(actual.equals(expected))</code>, <code>assertFalse(expected.equals(null))</code>,
  etc.
 
- <h3>Kotlin Support</h3>
+ <h2>Kotlin Support</h2>
 
  <p>Additional <a href="https://kotlinlang.org/">Kotlin</a> assertions can be
  found as <em>top-level functions</em> in the <a href="package-summary.html"><code>org.junit.jupiter.api</code></a>
  package.
 
- <h3>Preemptive Timeouts</h3>
+ <h2>Preemptive Timeouts</h2>
 
  <p>The various <code>assertTimeoutPreemptively()</code> methods in this class
  execute the provided <code>executable</code> or <code>supplier</code> in a different
@@ -133,7 +133,7 @@ loadScripts(document, 'script');</script>
  <p>Similar side effects may be encountered with other frameworks that rely on
  <code>ThreadLocal</code> storage.
 
- <h3>Extensibility</h3>
+ <h2>Extensibility</h2>
 
  <p>Although it is technically possible to extend this class, extension is
  strongly discouraged. The JUnit Team highly recommends that the methods

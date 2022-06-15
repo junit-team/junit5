@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
  <p><code>@RegisterExtension</code> fields must not be <code>null</code> (when evaluated)
  but may be either <code>static</code> or non-static.
 
- <h3>Static Fields</h3>
+ <h2>Static Fields</h2>
 
  <p>If a <code>@RegisterExtension</code> field is <code>static</code>, the extension
  will be registered after extensions that are registered at the class level
@@ -102,7 +102,7 @@ loadScripts(document, 'script');</script>
  <a href="TestInstancePreDestroyCallback.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePreDestroyCallback</code></a> as well as method-level extension APIs
  such as <a href="BeforeEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeEachCallback</code></a>, etc.
 
- <h3>Instance Fields</h3>
+ <h2>Instance Fields</h2>
 
  <p>If a <code>@RegisterExtension</code> field is non-static (i.e., an instance
  field), the extension will be registered after the test class has been
@@ -119,14 +119,14 @@ loadScripts(document, 'script');</script>
  semantics, an instance extension will be registered <em>before</em> extensions
  that are registered at the method level via <code>@ExtendWith</code>.
 
- <h3>Inheritance</h3>
+ <h2>Inheritance</h2>
 
  <p><code>@RegisterExtension</code> fields are inherited from superclasses as long
  as they are not <em>hidden</em> or <em>overridden</em>. Furthermore,
  <code>@RegisterExtension</code> fields from superclasses will be registered before
  <code>@RegisterExtension</code> fields in subclasses.
 
- <h3>Registration Order</h3>
+ <h2>Registration Order</h2>
 
  <p>By default, if multiple extensions are registered via
  <code>@RegisterExtension</code>, they will be ordered using an algorithm that is
@@ -141,7 +141,7 @@ loadScripts(document, 'script');</script>
  <code>@Order</code>, relative to <code>@RegisterExtension</code> fields and other
  <code>@ExtendWith</code> fields.
 
- <h3>Example Usage</h3>
+ <h2>Example Usage</h2>
 
  <p>In the following example, the <code>docs</code> field in the test class is
  initialized programmatically by supplying a custom <code>lookUpDocsDir()</code>
@@ -167,7 +167,7 @@ loadScripts(document, 'script');</script>
      }
  }</pre>
 
- <h3>Supported Extension APIs</h3>
+ <h2>Supported Extension APIs</h2>
 
  <ul>
  <li><a href="ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a></li>
