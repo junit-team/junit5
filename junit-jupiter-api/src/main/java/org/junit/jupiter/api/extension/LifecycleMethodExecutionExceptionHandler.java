@@ -28,12 +28,12 @@ import org.apiguardian.api.API;
  * to be handled. When registered at the test level, only exceptions thrown from
  * {@code @BeforeEach} or {@code @AfterEach} methods will be handled.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on constructor
  * requirements.
  *
- * <h3 id="implementation-guidelines">Implementation Guidelines</h3>
+ * <h2 id="implementation-guidelines">Implementation Guidelines</h2>
  *
  * <p>An implementation of an exception handler method defined in this API must
  * perform one of the following.

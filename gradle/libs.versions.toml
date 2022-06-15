@@ -2,7 +2,7 @@
 ant = "1.10.12"
 apiguardian = "1.1.2"
 asciidoctor-pdf = "1.5.3"
-assertj = "3.21.0"
+assertj = "3.23.1"
 checkstyle = "9.0"
 jacoco = "0.8.7"
 jmh = "1.33"
@@ -24,7 +24,7 @@ apiguardian = { module = "org.apiguardian:apiguardian-api", version.ref = "apigu
 archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "0.23.1" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
-bnd = { module = "biz.aQute.bnd:biz.aQute.bndlib", version = "6.2.0" }
+bnd = { module = "biz.aQute.bnd:biz.aQute.bndlib", version = "6.3.1" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.132" }
 commons-io = { module = "commons-io:commons-io", version = "2.11.0" }
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.1" }

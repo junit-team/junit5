@@ -19,7 +19,7 @@ import org.apiguardian.api.API;
 /**
  * Class-related predicate used by reflection utilities.
  *
- * <h3>DISCLAIMER</h3>
+ * <h2>DISCLAIMER</h2>
  *
  * <p>These utilities are intended solely for usage within the JUnit framework
  * itself. <strong>Any usage by external parties is not supported.</strong>

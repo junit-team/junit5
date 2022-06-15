@@ -34,7 +34,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 /**
  * {@link TestDescriptor} for tests based on Java classes.
  *
- * <h3>Default Display Names</h3>
+ * <h2>Default Display Names</h2>
  *
  * <p>The default display name for a top-level or nested static test class is
  * the fully qualified name of the class with the package name and leading dot

@@ -27,7 +27,7 @@ import org.apiguardian.api.API;
  * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
  * within class hierarchies.
  *
- * <h3>Default Execution Mode</h3>
+ * <h2>Default Execution Mode</h2>
  *
  * <p>If this annotation is not present, {@link ExecutionMode#SAME_THREAD} is
  * used unless a default execution mode is defined via one of the following

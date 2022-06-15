@@ -35,7 +35,7 @@ import org.apiguardian.api.API;
  *
  * <p>Extensions implementing this API can be registered at any level.
  *
- * <h3>Exception Handling</h3>
+ * <h2>Exception Handling</h2>
  *
  * <p>In contrast to other {@link Extension} APIs, a {@code TestWatcher} is not
  * permitted to adversely influence the execution of tests. Consequently, any

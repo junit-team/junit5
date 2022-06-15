@@ -49,7 +49,7 @@ import org.junit.platform.launcher.TestPlan;
  * order to rerun the exact same tests from a standard JVM test run within a
  * native image.
  *
- * <h3>Configuration and Defaults</h3>
+ * <h2>Configuration and Defaults</h2>
  *
  * <p>The {@code OUTPUT_DIR} is the directory in which this listener generates
  * the output file. The exact path of the generated file is

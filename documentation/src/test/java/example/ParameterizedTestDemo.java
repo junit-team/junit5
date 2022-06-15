@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
@@ -40,7 +41,6 @@ import example.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestReporter;
@@ -451,6 +451,7 @@ class ParameterizedTestDemo {
 	}
 	// end::custom_display_names[]
 
+	// @formatter:off
 	// tag::named_arguments[]
 	@DisplayName("A parameterized test with named arguments")
 	@ParameterizedTest(name = "{index}: {0}")
@@ -459,8 +460,11 @@ class ParameterizedTestDemo {
 	}
 
 	static Stream<Arguments> namedArguments() {
-		return Stream.of(arguments(Named.of("An important file", new File("path1"))),
-			arguments(Named.of("Another file", new File("path2"))));
+		return Stream.of(
+			arguments(named("An important file", new File("path1"))),
+			arguments(named("Another file", new File("path2")))
+		);
 	}
 	// end::named_arguments[]
+	// @formatter:on
 }

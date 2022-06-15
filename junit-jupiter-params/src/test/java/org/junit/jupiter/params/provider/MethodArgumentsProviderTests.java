@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
@@ -368,6 +367,15 @@ class MethodArgumentsProviderTests {
 		}
 
 		@Test
+		void providesArgumentsUsingDefaultFactoryMethodWithParameter() throws Exception {
+			Class<?> testClass = TestCase.class;
+			var testMethod = testClass.getDeclaredMethod("overloadedStringStreamProvider", Object.class);
+			var arguments = provideArguments(testClass, testMethod, false, "");
+
+			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
+		}
+
+		@Test
 		void providesArgumentsUsingFactoryMethodWithParameter() {
 			var arguments = provideArguments("stringStreamProviderWithParameter");
 
@@ -422,13 +430,23 @@ class MethodArgumentsProviderTests {
 	private Stream<Object[]> provideArguments(Class<?> testClass, Method testMethod, boolean allowNonStaticMethod,
 			String... methodNames) {
 
+		if (testMethod == null) {
+			try {
+				// ensure we have a non-null method, even if it's not a real test method.
+				testMethod = getClass().getMethod("toString");
+			}
+			catch (Exception ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+
 		var methodSource = mock(MethodSource.class);
 
 		when(methodSource.value()).thenReturn(methodNames);
 
 		var extensionContext = mock(ExtensionContext.class);
 		when(extensionContext.getTestClass()).thenReturn(Optional.of(testClass));
-		when(extensionContext.getTestMethod()).thenReturn(Optional.ofNullable(testMethod));
+		when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 		when(extensionContext.getExecutableInvoker()).thenReturn(
 			new DefaultExecutableInvoker(extensionContext, extensionRegistry));
 
@@ -480,6 +498,17 @@ class MethodArgumentsProviderTests {
 		}
 
 		static Stream<String> stringStreamProviderWithOrWithoutParameter(String parameter) {
+			return stringStreamProviderWithParameter(parameter);
+		}
+
+		// @ParameterizedTest
+		// @MethodSource // use default, inferred factory method
+		void overloadedStringStreamProvider(Object parameter) {
+			// test implementation
+		}
+
+		// Default factory method for overloadedStringStreamProvider(Object)
+		static Stream<String> overloadedStringStreamProvider(String parameter) {
 			return stringStreamProviderWithParameter(parameter);
 		}
 
@@ -614,14 +643,12 @@ class MethodArgumentsProviderTests {
 	static class StringResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-				throws ParameterResolutionException {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return parameterContext.getParameter().getType() == String.class;
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-				throws ParameterResolutionException {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return "!";
 		}
 	}

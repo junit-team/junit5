@@ -34,7 +34,7 @@ import org.opentest4j.MultipleFailuresError;
  * <p>Unless otherwise noted, a <em>failed</em> assertion will throw an
  * {@link org.opentest4j.AssertionFailedError} or a subclass thereof.
  *
- * <h3>Object Equality</h3>
+ * <h2>Object Equality</h2>
  *
  * <p>Assertion methods comparing two objects for <em>equality</em>, such as the
  * {@code assertEquals(expected, actual)} and {@code assertNotEquals(unexpected, actual)}
@@ -50,13 +50,13 @@ import org.opentest4j.MultipleFailuresError;
  * {@code assertTrue(actual.equals(expected))}, {@code assertFalse(expected.equals(null))},
  * etc.
  *
- * <h3>Kotlin Support</h3>
+ * <h2>Kotlin Support</h2>
  *
  * <p>Additional <a href="https://kotlinlang.org/">Kotlin</a> assertions can be
  * found as <em>top-level functions</em> in the {@link org.junit.jupiter.api}
  * package.
  *
- * <h3>Preemptive Timeouts</h3>
+ * <h2>Preemptive Timeouts</h2>
  *
  * <p>The various {@code assertTimeoutPreemptively()} methods in this class
  * execute the provided {@code executable} or {@code supplier} in a different
@@ -77,7 +77,7 @@ import org.opentest4j.MultipleFailuresError;
  * <p>Similar side effects may be encountered with other frameworks that rely on
  * {@code ThreadLocal} storage.
  *
- * <h3>Extensibility</h3>
+ * <h2>Extensibility</h2>
  *
  * <p>Although it is technically possible to extend this class, extension is
  * strongly discouraged. The JUnit Team highly recommends that the methods

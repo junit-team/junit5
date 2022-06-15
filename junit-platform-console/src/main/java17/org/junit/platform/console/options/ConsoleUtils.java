@@ -21,7 +21,7 @@ import org.apiguardian.api.API;
  * Collection of utilities for working with {@code java.io.Console}
  * and friends.
  *
- * <h3>DISCLAIMER</h3>
+ * <h2>DISCLAIMER</h2>
  *
  * <p>These utilities are intended solely for usage within the JUnit framework
  * itself. <strong>Any usage by external parties is not supported.</strong>

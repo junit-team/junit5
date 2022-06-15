@@ -39,7 +39,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * for a test class via the {@link TestClassOrder @DisplayNameGeneration}
  * annotation.
  *
- * <h4>Built-in Implementations</h4>
+ * <h2>Built-in Implementations</h2>
  * <ul>
  * <li>{@link Standard}</li>
  * <li>{@link Simple}</li>
