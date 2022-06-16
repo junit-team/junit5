@@ -83,6 +83,7 @@ class AssertIterableEqualsAssertionsTests {
 			listOf(listOf(1), listOf(2), listOf(listOf(3, listOf(4)))));
 		assertIterableEquals(setOf(setOf(1), setOf(2), setOf(setOf(3, setOf(4)))),
 			setOf(setOf(1), setOf(2), setOf(setOf(3, setOf(4)))));
+		assertIterableEquals(listOf(listOf(1), listOf(listOf(1))), setOf(setOf(1), setOf(setOf(1))));
 	}
 
 	@Test
