@@ -17,11 +17,11 @@ import static org.junit.jupiter.api.AssertionUtils.formatValues;
 import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -51,19 +51,16 @@ class AssertIterableEquals {
 
 	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
 			Object messageOrSupplier) {
-		assertIterableEquals(expected, actual, indexes, messageOrSupplier, new HashSet<>(), new HashSet<>());
+		assertIterableEquals(expected, actual, indexes, messageOrSupplier, new LinkedHashSet<>());
 	}
 
 	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
-			Object messageOrSupplier, Collection<Iterable<?>> visitedIterablesExpected,
-			Collection<Iterable<?>> visitedIterablesActual) {
+			Object messageOrSupplier, Set<Pair> underInvestigation) {
 
 		if (expected == actual) {
 			return;
 		}
 		assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
-		assertIterablesNotAlreadyVisited(expected, actual, indexes, messageOrSupplier, visitedIterablesExpected,
-			visitedIterablesActual);
 
 		Iterator<?> expectedIterator = expected.iterator();
 		Iterator<?> actualIterator = actual.iterator();
@@ -78,9 +75,14 @@ class AssertIterableEquals {
 				continue;
 			}
 
+			Pair pair = new Pair(expectedElement, actualElement);
+			if (!underInvestigation.add(pair)) {
+				failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
+			}
+
 			indexes.addLast(processed - 1);
-			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier,
-				visitedIterablesExpected, visitedIterablesActual);
+			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier, underInvestigation);
+			underInvestigation.remove(pair);
 			indexes.removeLast();
 		}
 
@@ -88,22 +90,13 @@ class AssertIterableEquals {
 	}
 
 	private static void assertIterableElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageOrSupplier, Collection<Iterable<?>> visitedIterablesExpected,
-			Collection<Iterable<?>> visitedIterablesActual) {
+			Object messageOrSupplier, Set<Pair> underInvestigation) {
 		if (expected instanceof Iterable && actual instanceof Iterable) {
 			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageOrSupplier,
-				visitedIterablesExpected, visitedIterablesActual);
+				underInvestigation);
 		}
 		else if (!Objects.equals(expected, actual)) {
 			assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
-			failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
-		}
-	}
-
-	private static void assertIterablesNotAlreadyVisited(Iterable<?> expected, Iterable<?> actual,
-			Deque<Integer> indexes, Object messageOrSupplier, Collection<Iterable<?>> visitedIterablesExpected,
-			Collection<Iterable<?>> visitedIterablesActual) {
-		if (!visitedIterablesExpected.add(expected) || !visitedIterablesActual.add(actual)) {
 			failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
 		}
 	}
@@ -150,6 +143,32 @@ class AssertIterableEquals {
 		String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
 		String message = "iterable contents differ" + formatIndexes(indexes) + ", " + formatValues(expected, actual);
 		fail(prefix + message);
+	}
+
+	private final static class Pair {
+		private final Object left;
+		private final Object right;
+
+		public Pair(Object left, Object right) {
+			this.left = left;
+			this.right = right;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			Pair that = (Pair) o;
+			return Objects.equals(this.left, that.left) //
+					&& Objects.equals(this.right, that.right);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(left, right);
+		}
 	}
 
 }
