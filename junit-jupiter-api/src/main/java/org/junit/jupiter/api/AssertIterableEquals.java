@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -51,11 +51,11 @@ class AssertIterableEquals {
 
 	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
 			Object messageOrSupplier) {
-		assertIterableEquals(expected, actual, indexes, messageOrSupplier, new LinkedHashSet<>());
+		assertIterableEquals(expected, actual, indexes, messageOrSupplier, new LinkedHashMap<>());
 	}
 
 	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
-			Object messageOrSupplier, Set<Pair> underInvestigation) {
+			Object messageOrSupplier, Map<Pair, Status> investigatedElements) {
 
 		if (expected == actual) {
 			return;
@@ -76,13 +76,19 @@ class AssertIterableEquals {
 			}
 
 			Pair pair = new Pair(expectedElement, actualElement);
-			if (!underInvestigation.add(pair)) {
+			Status status = investigatedElements.get(pair);
+			if (status == Status.SAME_ELEMENTS) {
+				continue;
+			}
+			if (status == Status.UNDER_INVESTIGATION) {
 				failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
 			}
 
 			indexes.addLast(processed - 1);
-			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier, underInvestigation);
-			underInvestigation.remove(pair);
+			investigatedElements.put(pair, Status.UNDER_INVESTIGATION);
+			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier,
+				investigatedElements);
+			investigatedElements.put(pair, Status.SAME_ELEMENTS);
 			indexes.removeLast();
 		}
 
@@ -90,10 +96,10 @@ class AssertIterableEquals {
 	}
 
 	private static void assertIterableElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageOrSupplier, Set<Pair> underInvestigation) {
+			Object messageOrSupplier, Map<Pair, Status> investigatedElements) {
 		if (expected instanceof Iterable && actual instanceof Iterable) {
 			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageOrSupplier,
-				underInvestigation);
+				investigatedElements);
 		}
 		else if (!Objects.equals(expected, actual)) {
 			assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
@@ -169,6 +175,10 @@ class AssertIterableEquals {
 		public int hashCode() {
 			return Objects.hash(left, right);
 		}
+	}
+
+	private enum Status {
+		UNDER_INVESTIGATION, SAME_ELEMENTS
 	}
 
 }
