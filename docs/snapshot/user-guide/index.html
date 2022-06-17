@@ -587,7 +587,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#writing-tests-parallel-execution">2.19. Parallel Execution</a>
 <ul class="sectlevel3">
-<li><a href="#writing-tests-parallel-execution-config">2.19.1. Configuration</a></li>
+<li><a href="#writing-tests-parallel-execution-config">2.19.1. Configuration</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-parallel-execution-config-properties">Relevant properties</a></li>
+</ul>
+</li>
 <li><a href="#writing-tests-parallel-execution-synchronization">2.19.2. Synchronization</a></li>
 </ul>
 </li>
@@ -5668,6 +5672,120 @@ sufficient parallelism. Thus, if you require such guarantees in a test class, pl
 your own means of controlling concurrency.
 </td>
 </tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="writing-tests-parallel-execution-config-properties"><a class="anchor" href="#writing-tests-parallel-execution-config-properties"></a>Relevant properties</h5>
+<div class="paragraph">
+<p>The following table lists relevant properties for configuring parallel execution. See
+<a href="#running-tests-config-params">Configuration Parameters</a> for details on how to set such properties.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Supported Values</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.enabled</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable parallel test execution</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><code>true</code></p>
+</li>
+<li>
+<p><code>false</code></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>false</code></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.mode.default</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default execution mode of nodes in the test tree</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><code>concurrent</code></p>
+</li>
+<li>
+<p><code>same_thread</code></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>same_thread</code></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.mode.classes.default</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default execution mode of top-level classes</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><code>concurrent</code></p>
+</li>
+<li>
+<p><code>same_thread</code></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>same_thread</code></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.strategy</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Execution strategy for desired parallelism and maximum pool size</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><code>dynamic</code></p>
+</li>
+<li>
+<p><code>fixed</code></p>
+</li>
+<li>
+<p><code>custom</code></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>dynamic</code></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.dynamic.factor</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Factor to be multiplied by the number of available processors/cores to determine the
+  desired parallelism for the <code><code>dynamic</code></code> configuration strategy</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>a positive decimal number</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>1.0</code></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.fixed.parallelism</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Desired parallelism for the <code><code>fixed</code></code> configuration strategy</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>a positive integer</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no default value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.custom.class</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified class name of the <em>ParallelExecutionConfigurationStrategy</em> to be
+  used for the <code><code>custom</code></code> configuration strategy</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>for example, <em>org.example.CustomStrategy</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no default value</p></td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
@@ -11620,7 +11738,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-06-15 09:47:47 UTC
+Last updated 2022-06-17 12:24:27 UTC
 </div>
 </div>
 <style>
