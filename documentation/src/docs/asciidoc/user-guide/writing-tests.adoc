@@ -2294,46 +2294,7 @@ behind the scenes may spawn additional threads to ensure execution continues wit
 sufficient parallelism. Thus, if you require such guarantees in a test class, please use
 your own means of controlling concurrency.
 
-[[writing-tests-parallel-execution-synchronization]]
-==== Synchronization
-
-In addition to controlling the execution mode using the `{Execution}` annotation, JUnit
-Jupiter provides another annotation-based declarative synchronization mechanism. The
-`{ResourceLock}` annotation allows you to declare that a test class or method uses a
-specific shared resource that requires synchronized access to ensure reliable test
-execution. The shared resource is identified by a unique name which is a `String`. The
-name can be user-defined or one of the predefined constants in `{Resources}`:
-`SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
-
-If the tests in the following example were run in parallel _without_ the use of
-{ResourceLock}, they would be _flaky_. Sometimes they would pass, and at other times they
-would fail due to the inherent race condition of writing and then reading the same JVM
-System Property.
-
-When access to shared resources is declared using the `{ResourceLock}` annotation, the
-JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
-parallel.
-
-[NOTE]
-.Running tests in isolation
-====
-If most of your test classes can be run in parallel without any synchronization but you
-have some test classes that need to run in isolation, you can mark the latter with the
-`{Isolated}` annotation. Tests in such classes are executed sequentially without any other
-tests running at the same time.
-====
-
-In addition to the `String` that uniquely identifies the shared resource, you may specify
-an access mode. Two tests that require `READ` access to a shared resource may run in
-parallel with each other but not while any other test that requires `READ_WRITE` access
-to the same shared resource is running.
-
-[source,java]
-----
-include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
-----
-
-==== Relevant properties
+===== Relevant properties
 
 The below table lists out relevant parallel execution properties in `junit-platform.properties`.
 [cols="1,2,1,1"]
@@ -2385,6 +2346,45 @@ a|
 |for instance ```org.example.CustomStrategy```
 |No default value
 |===
+
+[[writing-tests-parallel-execution-synchronization]]
+==== Synchronization
+
+In addition to controlling the execution mode using the `{Execution}` annotation, JUnit
+Jupiter provides another annotation-based declarative synchronization mechanism. The
+`{ResourceLock}` annotation allows you to declare that a test class or method uses a
+specific shared resource that requires synchronized access to ensure reliable test
+execution. The shared resource is identified by a unique name which is a `String`. The
+name can be user-defined or one of the predefined constants in `{Resources}`:
+`SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
+
+If the tests in the following example were run in parallel _without_ the use of
+{ResourceLock}, they would be _flaky_. Sometimes they would pass, and at other times they
+would fail due to the inherent race condition of writing and then reading the same JVM
+System Property.
+
+When access to shared resources is declared using the `{ResourceLock}` annotation, the
+JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
+parallel.
+
+[NOTE]
+.Running tests in isolation
+====
+If most of your test classes can be run in parallel without any synchronization but you
+have some test classes that need to run in isolation, you can mark the latter with the
+`{Isolated}` annotation. Tests in such classes are executed sequentially without any other
+tests running at the same time.
+====
+
+In addition to the `String` that uniquely identifies the shared resource, you may specify
+an access mode. Two tests that require `READ` access to a shared resource may run in
+parallel with each other but not while any other test that requires `READ_WRITE` access
+to the same shared resource is running.
+
+[source,java]
+----
+include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
+----
 
 [[writing-tests-built-in-extensions]]
 === Built-in Extensions
