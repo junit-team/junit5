@@ -15,7 +15,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Absolute path entries are now supported in JUnit's Platform Console Launcher on Windows.
 
 ==== Deprecations and Breaking Changes
 

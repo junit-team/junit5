@@ -97,14 +97,15 @@ class AvailableOptions {
 	static class SelectorOptions {
 
 		@Option(names = { "--scan-classpath",
-				"--scan-class-path" }, split = ";|:", paramLabel = "PATH", arity = "0..1", description = "Scan all directories on the classpath or explicit classpath roots. " //
+				"--scan-class-path" }, converter = ClasspathEntriesConverter.class, paramLabel = "PATH", arity = "0..1", description = "Scan all directories on the classpath or explicit classpath roots. " //
 						+ "Without arguments, only directories on the system classpath as well as additional classpath " //
 						+ "entries supplied via -" + CP_OPTION + " (directories and JAR files) are scanned. " //
 						+ "Explicit classpath roots that are not on the classpath will be silently ignored. " //
 						+ "This option can be repeated.")
 		private List<Path> selectedClasspathEntries = new ArrayList<>();
 
-		@Option(names = { "-scan-class-path", "-scan-classpath" }, split = ";|:", arity = "0..1", hidden = true)
+		@Option(names = { "-scan-class-path",
+				"-scan-classpath" }, converter = ClasspathEntriesConverter.class, arity = "0..1", hidden = true)
 		private List<Path> selectedClasspathEntries2 = new ArrayList<>();
 
 		@Option(names = "--scan-modules", description = "EXPERIMENTAL: Scan all resolved modules for test discovery.")
@@ -282,11 +283,12 @@ class AvailableOptions {
 	static class RuntimeConfigurationOptions {
 
 		@Option(names = { "-" + CP_OPTION, "--classpath",
-				"--class-path" }, split = ";|:", paramLabel = "PATH", arity = "1", description = "Provide additional classpath entries "
+				"--class-path" }, converter = ClasspathEntriesConverter.class, paramLabel = "PATH", arity = "1", description = "Provide additional classpath entries "
 						+ "-- for example, for adding engines and their dependencies. This option can be repeated.")
 		private List<Path> additionalClasspathEntries = new ArrayList<>();
 
-		@Option(names = { "--cp", "-classpath", "-class-path" }, split = ";|:", hidden = true)
+		@Option(names = { "--cp", "-classpath",
+				"-class-path" }, converter = ClasspathEntriesConverter.class, hidden = true)
 		private List<Path> additionalClasspathEntries2 = new ArrayList<>();
 
 		// Implementation note: the @Option annotation is on a setter method to allow validation.
