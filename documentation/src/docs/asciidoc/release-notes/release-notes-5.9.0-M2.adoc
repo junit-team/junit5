@@ -24,6 +24,7 @@ on GitHub.
 ==== New Features and Improvements
 
 * New public factory method to instantiate an `ExecutionRequest`.
+* Added support for `architectures` parameter in @EnabledOnOs and @DisabledOnOs
 
 
 [[release-notes-5.9.0-M2-junit-jupiter]]

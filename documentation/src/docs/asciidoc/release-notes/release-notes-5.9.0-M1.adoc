@@ -103,7 +103,6 @@ on GitHub.
   execution conditions.
 * `@MethodSource` factory methods can now accept arguments resolved by registered
   `ParameterResolver` extensions.
-* Added support for `architectures` parameter in @EnabledOnOs and @DisabledOnOs
 
 
 [[release-notes-5.9.0-M1-junit-vintage]]
