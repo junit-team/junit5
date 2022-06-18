@@ -48,7 +48,7 @@ class EnabledOnOsIntegrationTests {
 	@Test
 	@Disabled("Only used in a unit test via reflection")
 	@EnabledOnOs({})
-	void missingOsDeclaration() {
+	void missingOsAndArchitectureDeclaration() {
 	}
 
 	@Test

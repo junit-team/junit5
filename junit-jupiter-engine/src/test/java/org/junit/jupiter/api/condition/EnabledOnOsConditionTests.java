@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.api.condition;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onAix;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onArchitecture;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onFreebsd;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onWind
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link EnabledOnOsCondition}.
@@ -56,12 +59,12 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
-	 * @see EnabledOnOsIntegrationTests#missingOsDeclaration()
+	 * @see EnabledOnOsIntegrationTests#missingOsAndArchitectureDeclaration()
 	 */
 	@Test
-	void missingOsDeclaration() {
-		evaluateCondition();
-		assertDisabled();
+	void missingOsAndArchitectureDeclaration() {
+		Exception exception = assertThrows(PreconditionViolationException.class, this::evaluateCondition);
+		assertThat(exception).hasMessageContaining("You must declare at least one OS or architecture");
 	}
 
 	/**

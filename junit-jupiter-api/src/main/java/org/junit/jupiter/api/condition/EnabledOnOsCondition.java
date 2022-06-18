@@ -13,6 +13,7 @@ package org.junit.jupiter.api.condition;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@link ExecutionCondition} for {@link EnabledOnOs @EnabledOnOs}.
@@ -34,6 +35,8 @@ class EnabledOnOsCondition extends BooleanExecutionCondition<EnabledOnOs> {
 
 	@Override
 	boolean isEnabled(EnabledOnOs annotation) {
+		Preconditions.condition(annotation.value().length > 0 || annotation.architectures().length > 0,
+			"You must declare at least one OS or architecture in @DisabledOnOs");
 		return isEnabledBasedOnOs(annotation) || isEnabledBasedOnArchitecture(annotation);
 	}
 
