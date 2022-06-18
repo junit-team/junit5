@@ -81,7 +81,7 @@ public @interface DisabledOnOs {
 	OS[] value() default {};
 
 	/**
-	 * Architecture on which the annotated class or method should be disabled.
+	 * Architectures on which the annotated class or method should be disabled.
 	 *
 	 * @since 5.9
 	 */
