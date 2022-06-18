@@ -128,6 +128,42 @@ class DisabledOnOsIntegrationTests {
 	void architectureAarch64() {
 		assertFalse(onArchitecture("aarch64"));
 	}
+
+	@Test
+	@DisabledOnOs(value = MAC, architectures = "x86_64")
+	void architectureX86_64WithMacOs() {
+		assertFalse(onMac() && onArchitecture("x_86_64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = WINDOWS, architectures = "x86_64")
+	void architectureX86_64WithWindows() {
+		assertFalse(onWindows() && onArchitecture("x86_64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = LINUX, architectures = "x86_64")
+	void architectureX86_64WithLinux() {
+		assertFalse(onLinux() && onArchitecture("x86_64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = MAC, architectures = "aarch64")
+	void aarch64WithMacOs() {
+		assertFalse(onMac() && onArchitecture("aarch64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = WINDOWS, architectures = "aarch64")
+	void aarch64WithWindows() {
+		assertFalse(onWindows() && onArchitecture("aarch64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = LINUX, architectures = "aarch64")
+	void aarch64WithLinux() {
+		assertFalse(onLinux() && onArchitecture("aarch64"));
+	}
 	// -------------------------------------------------------------------------
 
 	@Target(ElementType.METHOD)

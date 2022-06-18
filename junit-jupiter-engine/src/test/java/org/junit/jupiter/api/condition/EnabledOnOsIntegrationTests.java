@@ -122,6 +122,48 @@ class EnabledOnOsIntegrationTests {
 		assertFalse(onArchitecture("aarch64"));
 	}
 
+	@Test
+	@EnabledOnOs(value = MAC, architectures = "x86_64")
+	void architectureX86_64WithMacOs() {
+		assertTrue(onMac());
+		assertTrue(onArchitecture("x86_64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = WINDOWS, architectures = "x86_64")
+	void architectureX86_64WithWindows() {
+		assertTrue(onWindows());
+		assertTrue(onArchitecture("x86_64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = LINUX, architectures = "x86_64")
+	void architectureX86_64WithLinux() {
+		assertTrue(onLinux());
+		assertTrue(onArchitecture("x86_64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = MAC, architectures = "aarch64")
+	void aarch64WithMacOs() {
+		assertFalse(onMac());
+		assertFalse(onArchitecture("aarch64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = WINDOWS, architectures = "aarch64")
+	void aarch64WithWindows() {
+		assertFalse(onWindows());
+		assertFalse(onArchitecture("aarch64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = LINUX, architectures = "aarch64")
+	void aarch64WithLinux() {
+		assertFalse(onLinux());
+		assertFalse(onArchitecture("aarch64"));
+	}
+
 	static boolean onAix() {
 		return OS_NAME.contains("aix");
 	}

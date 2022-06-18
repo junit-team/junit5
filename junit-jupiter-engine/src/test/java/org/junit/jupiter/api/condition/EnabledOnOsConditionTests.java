@@ -177,6 +177,60 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 		assertEnabledOnCurrentOsIf(onArchitecture("aarch64"));
 	}
 
+	/**
+	 * @see EnabledOnOsIntegrationTests#architectureX86_64WithMacOs()
+	 */
+	@Test
+	void architectureX86_64WithMacOs() {
+		evaluateCondition();
+		assertEnabledOnCurrentOsIf(onMac() && onArchitecture("x86_64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#architectureX86_64WithWindows()
+	 */
+	@Test
+	void architectureX86_64WithWindows() {
+		evaluateCondition();
+		assertEnabledOnCurrentOsIf(onWindows() && onArchitecture("x86_64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#architectureX86_64WithLinux()
+	 */
+	@Test
+	void architectureX86_64WithLinux() {
+		evaluateCondition();
+		assertEnabledOnCurrentOsIf(onLinux() && onArchitecture("x86_64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#aarch64WithMacOs()
+	 */
+	@Test
+	void aarch64WithMacOs() {
+		evaluateCondition();
+		assertEnabledOnCurrentOsIf(onMac() && onArchitecture("aarch64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#aarch64WithWindows()
+	 */
+	@Test
+	void aarch64WithWindows() {
+		evaluateCondition();
+		assertEnabledOnCurrentOsIf(onWindows() && onArchitecture("aarch64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#aarch64WithLinux()
+	 */
+	@Test
+	void aarch64WithLinux() {
+		evaluateCondition();
+		assertEnabledOnCurrentOsIf(onLinux() && onArchitecture("aarch64"));
+	}
+
 	private void assertEnabledOnCurrentOsIf(boolean condition) {
 		if (condition) {
 			assertEnabled();

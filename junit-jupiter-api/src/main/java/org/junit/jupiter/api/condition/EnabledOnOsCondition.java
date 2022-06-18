@@ -37,17 +37,24 @@ class EnabledOnOsCondition extends BooleanExecutionCondition<EnabledOnOs> {
 	boolean isEnabled(EnabledOnOs annotation) {
 		Preconditions.condition(annotation.value().length > 0 || annotation.architectures().length > 0,
 			"You must declare at least one OS or architecture in @DisabledOnOs");
-		return isEnabledBasedOnOs(annotation) || isEnabledBasedOnArchitecture(annotation);
+		return isEnabledBasedOnOs(annotation) && isEnabledBasedOnArchitecture(annotation);
 	}
 
 	private boolean isEnabledBasedOnArchitecture(EnabledOnOs annotation) {
 		String[] architectures = annotation.architectures();
-		String arch = getArchitecture();
-		return Arrays.stream(architectures).anyMatch(arch::equalsIgnoreCase);
+		if (architectures.length == 0) {
+			return true;
+		}
+
+		String currentArchitecture = getArchitecture();
+		return Arrays.stream(architectures).anyMatch(currentArchitecture::equalsIgnoreCase);
 	}
 
 	private boolean isEnabledBasedOnOs(EnabledOnOs annotation) {
 		OS[] operatingSystems = annotation.value();
+		if (operatingSystems.length == 0) {
+			return true;
+		}
 		return Arrays.stream(operatingSystems).anyMatch(OS::isCurrentOs);
 	}
 

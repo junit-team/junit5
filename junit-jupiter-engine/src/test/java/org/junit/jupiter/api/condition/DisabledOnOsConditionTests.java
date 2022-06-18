@@ -10,10 +10,6 @@
 
 package org.junit.jupiter.api.condition;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.platform.commons.PreconditionViolationException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onAix;
@@ -24,6 +20,10 @@ import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onMac;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onOpenbsd;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onSolaris;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onWindows;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link DisabledOnOsCondition}.
@@ -176,6 +176,60 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	void architectureAarch64() {
 		evaluateCondition();
 		assertDisabledOnCurrentOsIf(onArchitecture("aarch64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#architectureX86_64WithMacOs()
+	 */
+	@Test
+	void architectureX86_64WithMacOs() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onMac() && onArchitecture("x86_64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#architectureX86_64WithWindows()
+	 */
+	@Test
+	void architectureX86_64WithWindows() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onWindows() && onArchitecture("x86_64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#architectureX86_64WithLinux()
+	 */
+	@Test
+	void architectureX86_64WithLinux() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onLinux() && onArchitecture("x86_64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#aarch64WithMacOs()
+	 */
+	@Test
+	void aarch64WithMacOs() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onMac() && onArchitecture("aarch64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#aarch64WithWindows()
+	 */
+	@Test
+	void aarch64WithWindows() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onWindows() && onArchitecture("aarch64"));
+	}
+
+	/**
+	 * @see EnabledOnOsIntegrationTests#aarch64WithLinux()
+	 */
+	@Test
+	void aarch64WithLinux() {
+		evaluateCondition();
+		assertDisabledOnCurrentOsIf(onLinux() && onArchitecture("aarch64"));
 	}
 
 	private void assertDisabledOnCurrentOsIf(boolean condition) {
