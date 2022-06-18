@@ -43,7 +43,7 @@ import org.junit.platform.commons.annotation.Testable;
  * resolved by {@link org.junit.jupiter.api.extension.ParameterResolver
  * ParameterResolvers}.
  *
- * <h3>Test Execution Order</h3>
+ * <h2>Test Execution Order</h2>
  *
  * <p>By default, test methods will be ordered using an algorithm that is
  * deterministic but intentionally nonobvious. This ensures that subsequent runs

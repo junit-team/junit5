@@ -35,7 +35,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * parameters. Please use field injection instead by annotating an instance
  * field with {@code @TempDir}.
  *
- * <h3>Creation</h3>
+ * <h2>Creation</h2>
  *
  * <p>The temporary directory is only created if a field in a test class or a
  * parameter in a lifecycle method or test method is annotated with
@@ -46,7 +46,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * addition, a {@code ParameterResolutionException} will be thrown for a
  * constructor parameter annotated with {@code @TempDir}.
  *
- * <h3>Scope</h3>
+ * <h2>Scope</h2>
  *
  * <p>By default, a separate temporary directory is created for every
  * declaration of the {@code @TempDir} annotation. If you want to share a
@@ -54,7 +54,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * annotation on a {@code static} field or on a parameter of a
  * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method.
  *
- * <h4>Old behavior</h4>
+ * <h3>Old behavior</h3>
  *
  * <p>You can revert to the old behavior of using a single temporary directory
  * by setting the {@value #SCOPE_PROPERTY_NAME} configuration parameter to
@@ -69,7 +69,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods &mdash; each test
  * will use its own temporary directory.
  *
- * <h3>Clean Up</h3>
+ * <h2>Clean Up</h2>
  *
  * <p>By default, when the end of the scope of a temporary directory is reached,
  * &mdash; when the test method or class has finished execution &mdash; JUnit will

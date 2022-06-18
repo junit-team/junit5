@@ -33,14 +33,14 @@ import org.apiguardian.api.API;
  *
  * <p>{@code @ExtendWith} fields may be either {@code static} or non-static.
  *
- * <h3>Inheritance</h3>
+ * <h2>Inheritance</h2>
  *
  * <p>{@code @ExtendWith} fields are inherited from superclasses as long as they
  * are not <em>hidden</em> or <em>overridden</em>. Furthermore, {@code @ExtendWith}
  * fields from superclasses will be registered before {@code @ExtendWith} fields
  * in subclasses.
  *
- * <h3>Registration Order</h3>
+ * <h2>Registration Order</h2>
  *
  * <p>When {@code @ExtendWith} is present on a test class, test interface, or
  * test method or on a parameter in a test method or lifecycle method, the
@@ -63,7 +63,7 @@ import org.apiguardian.api.API;
  * {@code @Order}, relative to {@code @ExtendWith} fields and other
  * {@code @RegisterExtension} fields.
  *
- * <h3>Supported Extension APIs</h3>
+ * <h2>Supported Extension APIs</h2>
  *
  * <ul>
  * <li>{@link ExecutionCondition}</li>

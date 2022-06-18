@@ -27,7 +27,7 @@ import org.apiguardian.api.API;
  * <p>In contrast to {@link AfterEach @AfterEach} methods, {@code @AfterAll}
  * methods are only executed once for a given test class.
  *
- * <h3>Method Signatures</h3>
+ * <h2>Method Signatures</h2>
  *
  * <p>{@code @AfterAll} methods must have a {@code void} return type, must not
  * be {@code private}, and must be {@code static} by default. Consequently,
@@ -40,7 +40,7 @@ import org.apiguardian.api.API;
  * methods may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *
- * <h3>Inheritance and Execution Order</h3>
+ * <h2>Inheritance and Execution Order</h2>
  *
  * <p>{@code @AfterAll} methods are inherited from superclasses as long as
  * they are not <em>hidden</em> or <em>overridden</em>. Furthermore,
@@ -73,7 +73,7 @@ import org.apiguardian.api.API;
  * dependencies between the {@code @BeforeAll} methods or between the
  * {@code @AfterAll} methods.
  *
- * <h3>Composition</h3>
+ * <h2>Composition</h2>
  *
  * <p>{@code @AfterAll} may be used as a meta-annotation in order to create
  * a custom <em>composed annotation</em> that inherits the semantics of

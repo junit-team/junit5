@@ -27,7 +27,7 @@ import org.junit.platform.commons.PreconditionViolationException;
  * <p>Each method in this class throws a {@link PreconditionViolationException}
  * if the precondition is violated.
  *
- * <h3>DISCLAIMER</h3>
+ * <h2>DISCLAIMER</h2>
  *
  * <p>These utilities are intended solely for usage within the JUnit framework
  * itself. <strong>Any usage by external parties is not supported.</strong>

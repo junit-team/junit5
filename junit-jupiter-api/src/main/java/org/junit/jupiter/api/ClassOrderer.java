@@ -41,7 +41,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * {@link Nested @Nested} test classes via the {@link TestClassOrder @TestClassOrder}
  * annotation.
  *
- * <h4>Built-in Implementations</h4>
+ * <h2>Built-in Implementations</h2>
  *
  * <p>JUnit Jupiter provides the following built-in {@code ClassOrderer}
  * implementations.
@@ -183,7 +183,7 @@ public interface ClassOrderer {
 	/**
 	 * {@code ClassOrderer} that orders classes pseudo-randomly.
 	 *
-	 * <h4>Custom Seed</h4>
+	 * <h2>Custom Seed</h2>
 	 *
 	 * <p>By default, the random <em>seed</em> used for ordering classes is the
 	 * value returned by {@link System#nanoTime()} during static initialization

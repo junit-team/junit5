@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
  * <p>Common use cases include swallowing an exception if it's anticipated
  * or rolling back a transaction in certain error scenarios.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.

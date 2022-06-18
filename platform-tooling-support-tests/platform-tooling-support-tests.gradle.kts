@@ -67,7 +67,7 @@ val unzipMavenDistribution by tasks.registering(Copy::class) {
 }
 
 tasks.test {
-	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
+	// Opt-out via system property: '-Dplatform.tooling.support.tests.enabled=false'
 	enabled = System.getProperty("platform.tooling.support.tests.enabled")?.toBoolean() ?: true
 
 	// The following if-block is necessary since Gradle will otherwise

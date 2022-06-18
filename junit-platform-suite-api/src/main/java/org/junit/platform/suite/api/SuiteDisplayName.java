@@ -28,11 +28,11 @@ import org.apiguardian.api.API;
  * <p>Display names are typically used for test reporting in IDEs and build
  * tools and may contain spaces, special characters, and even emoji.
  *
- * <h4>JUnit 4 Suite Support</h4>
+ * <h2>JUnit 4 Suite Support</h2>
  * <p>Test suites can be run on the JUnit Platform in a JUnit 4 environment via
  * {@code @RunWith(JUnitPlatform.class)}.
  *
- * <h4>JUnit 5 Suite Support</h4>
+ * <h2>JUnit 5 Suite Support</h2>
  * <p>Test suites can be run on the JUnit Platform in a JUnit 5 environment via
  * the {@code junit-platform-suite-engine} module.
  *

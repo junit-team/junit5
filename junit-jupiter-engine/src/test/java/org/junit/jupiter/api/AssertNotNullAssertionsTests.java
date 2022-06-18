@@ -38,6 +38,7 @@ class AssertNotNullAssertionsTests {
 	}
 
 	@Test
+	@SuppressWarnings("unused")
 	void assertNotNullWithNull() {
 		try {
 			assertNotNull(null);
@@ -49,6 +50,7 @@ class AssertNotNullAssertionsTests {
 	}
 
 	@Test
+	@SuppressWarnings("unused")
 	void assertNotNullWithNullAndMessageSupplier() {
 		try {
 			assertNotNull(null, () -> "test");

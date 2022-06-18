@@ -17,14 +17,13 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class MethodSourceParameterResolutionTestDemo {
+class MethodSourceParameterResolutionDemo {
 
 	// @formatter:off
 	// tag::parameter_resolution_MethodSource_example[]
@@ -33,28 +32,30 @@ class MethodSourceParameterResolutionTestDemo {
 
 	@ParameterizedTest
 	@MethodSource("factoryMethodWithArguments")
-	void testWithArgumentsProviderUsingParameterResolvers(String argument) {
+	void testWithFactoryMethodWithArguments(String argument) {
 		assertTrue(argument.startsWith("2"));
 	}
 
 	static Stream<Arguments> factoryMethodWithArguments(int quantity) {
 		return Stream.of(
-				arguments(quantity + " apple"),
-				arguments(quantity + " lemon")
+				arguments(quantity + " apples"),
+				arguments(quantity + " lemons")
 		);
 	}
 
 	static class IntegerResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-				throws ParameterResolutionException {
+		public boolean supportsParameter(ParameterContext parameterContext,
+				ExtensionContext extensionContext) {
+
 			return parameterContext.getParameter().getType() == int.class;
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-				throws ParameterResolutionException {
+		public Object resolveParameter(ParameterContext parameterContext,
+				ExtensionContext extensionContext) {
+
 			return 2;
 		}
 

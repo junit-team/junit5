@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
  * <p>Extensions that implement {@code TestInstancePostProcessor} must be
  * registered at the class level.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.

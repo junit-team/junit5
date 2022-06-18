@@ -43,7 +43,7 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
  *
- * <h3>DISCLAIMER</h3>
+ * <h2>DISCLAIMER</h2>
  *
  * <p>These utilities are intended solely for usage within the JUnit framework
  * itself. <strong>Any usage by external parties is not supported.</strong>
@@ -393,13 +393,13 @@ public final class AnnotationUtils {
 	 * annotations directly on a {@link Parameter} will fail for inner class
 	 * constructors.
 	 *
-	 * <h4>Bug in {@code javac} on JDK versions prior to JDK 9</h4>
+	 * <h3>Bug in {@code javac} on JDK versions prior to JDK 9</h3>
 	 *
 	 * <p>The parameter annotations array in the compiled byte code for the user's
 	 * class excludes an entry for the implicit <em>enclosing instance</em>
 	 * parameter for an inner class constructor.
 	 *
-	 * <h4>Workaround</h4>
+	 * <h3>Workaround</h3>
 	 *
 	 * <p>This method provides a workaround for this off-by-one error by helping
 	 * JUnit maintainers and extension authors to access annotations on the preceding

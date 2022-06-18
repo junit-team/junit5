@@ -50,6 +50,9 @@ class ModularUserGuideTests {
 			  requires org.junit.platform.runner;
 			  requires org.junit.platform.testkit;
 
+			  // Byte Buddy is used by AssertJ's soft assertions which are used by the Engine Test Kit
+			  requires net.bytebuddy;
+
 			  requires java.desktop;
 			  requires java.logging;
 			  requires java.scripting;
@@ -76,6 +79,8 @@ class ModularUserGuideTests {
 		var lib = Files.createDirectories(temp.resolve("lib"));
 		ThirdPartyJars.copy(lib, "junit", "junit");
 		ThirdPartyJars.copy(lib, "org.assertj", "assertj-core");
+		// Byte Buddy is used by AssertJ's soft assertions which are used by the Engine Test Kit
+		ThirdPartyJars.copy(lib, "net.bytebuddy", "byte-buddy");
 		ThirdPartyJars.copy(lib, "org.apiguardian", "apiguardian-api");
 		ThirdPartyJars.copy(lib, "org.hamcrest", "hamcrest");
 		ThirdPartyJars.copy(lib, "org.opentest4j", "opentest4j");
@@ -180,6 +185,7 @@ class ModularUserGuideTests {
 			"lib", //
 			"lib/apiguardian-api-.+\\.jar", //
 			"lib/assertj-core-.+\\.jar", //
+			"lib/byte-buddy-.+", //
 			"lib/hamcrest-.+\\.jar", //
 			"lib/junit-.+\\.jar", //
 			">> ALL JUNIT 5 JARS >>", //
@@ -193,4 +199,5 @@ class ModularUserGuideTests {
 
 		junit(temp, out, err);
 	}
+
 }

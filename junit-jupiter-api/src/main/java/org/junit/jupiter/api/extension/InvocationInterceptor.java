@@ -30,7 +30,7 @@ import org.junit.jupiter.api.TestTemplate;
  * {@code InvocationInterceptor} defines the API for {@link Extension
  * Extensions} that wish to intercept calls to test code.
  *
- * <h3>Invocation Contract</h3>
+ * <h2>Invocation Contract</h2>
  *
  * <p>Each method in this class must call {@link Invocation#proceed()} or {@link
  * Invocation#skip()} exactly once on the supplied invocation. Otherwise, the
@@ -39,7 +39,7 @@ import org.junit.jupiter.api.TestTemplate;
  * <p>The default implementation calls {@link Invocation#proceed()
  * proceed()} on the supplied {@linkplain Invocation invocation}.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.

@@ -23,8 +23,6 @@ import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryFilter;
@@ -57,8 +55,6 @@ import org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry;
  */
 @API(status = MAINTAINED, since = "1.7")
 public final class EngineTestKit {
-
-	private static final Logger logger = LoggerFactory.getLogger(EngineTestKit.class);
 
 	/**
 	 * Create an execution {@link Builder} for the {@link TestEngine} with the
@@ -260,10 +256,9 @@ public final class EngineTestKit {
 
 	private static void executeUsingLauncherOrchestration(TestEngine testEngine,
 			LauncherDiscoveryRequest discoveryRequest, EngineExecutionListener listener) {
-		TestDescriptor engineTestDescriptor;
 		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine),
 			emptySet()).discover(discoveryRequest, EXECUTION);
-		engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
+		TestDescriptor engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
 		new EngineExecutionOrchestrator().execute(discoveryResult, listener);
 	}
