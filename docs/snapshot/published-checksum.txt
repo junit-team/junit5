@@ -332,7 +332,6 @@
 75c22502c638930c5d50386e63ec45a3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRangeCondition.java
 76299abaebcc22ef2bb5b304753f24b7  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IsPotentialJUnit4TestClass.java
 764439a6013959eb17f5cb078c4ad9af  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Parser.java
-765df9ad56bd8a3ac86746996a22b8c5  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M2.adoc
 769cb4f4ae10df52a717b8ae39cf67a5  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/SuiteLauncher.java
 76bfba6c772492e6d36f49399455dd48  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/JUnitFactory.java
 76c1d512ffff1949d15b14ceb58aa97b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IsPotentialJUnit4TestMethod.java
@@ -568,6 +567,7 @@ c091570396c621824bed6ce3dad11352  documentation/src/test/java/example/SharedReso
 c0b5f61dc113db14e2fbe5d2da73bbe8  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/package-info.java
 c0df686099b5b6e25de45ab6db699e0d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertIterableEquals.java
 c0e3b25cd51458dd4a7a6ff6daa2a8f0  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassNamePatternFilterUtils.java
+c12161a7cc1c95f0beb9b48d4eeac41c  junit-platform-engine/src/main/java/org/junit/platform/engine/ExecutionRequest.java
 c125fc47090f46a9332199deac757daf  documentation/src/test/java/example/AssumptionsDemo.java
 c14c5a79917b4a45f09bcf8e0e062124  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
 c17248c65564fe294a1551fa7bf66901  documentation/src/test/java/example/registration/DocumentationDemo.java
@@ -605,7 +605,6 @@ cac5234921a1ca4f6585cdd29e7e564c  documentation/src/test/kotlin/example/Fibonacc
 cafa1898ad5ac7d336be0a82a9de1950  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherSession.java
 cb34b1d8278b820c6baa57c1e8485ac9  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
 cb4be46bd436ef962944963868fa0c7a  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportData.java
-cb56bd40b758873bbe6749b3d1df99d8  junit-platform-engine/src/main/java/org/junit/platform/engine/ExecutionRequest.java
 cb5cc403be1111380b9cd2b5dd426289  documentation/src/test/java/example/testinterface/TestInterfaceDynamicTestsDemo.java
 cba474dbb671b0f139a9ae95a3ebfedf  documentation/src/test/java/example/exception/RecordStateOnErrorExtension.java
 cba9704b898ba0afb56b1350791390fd  documentation/src/test/java/example/FastTest.java
@@ -766,6 +765,7 @@ f55d59ed420b532853391b214d4c2f7c  junit-platform-engine/src/main/java/org/junit/
 f57e049034489e60a2925d817e18b7cb  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java
 f6578cc77e5ca8a6a1c27ff758eef85d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseResults.java
 f66a6fd1d230a7af9f9e17175bfb6422  junit-platform-commons/src/main/java/org/junit/platform/commons/util/Preconditions.java
+f772689e7cdccb04c6a47e499ea60e0d  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M2.adoc
 f7e65676807d9103bd57da30207275e1  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
 f8561629f48c58da02a6c6322b72cd0f  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueId.java
 f8ff9545052f8b24e7ecf57c786fb820  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/package-info.java

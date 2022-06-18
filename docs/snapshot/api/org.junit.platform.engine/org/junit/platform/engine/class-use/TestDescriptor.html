@@ -300,41 +300,48 @@ loadScripts(document, 'script');</script>
  <a href="../TestDescriptor.html#mayRegisterTests()">may potentially register
  tests dynamically</a>.</div>
 </div>
-<div class="col-first even-row-color"><code>default void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)" class="member-name-link">dynamicTestRegistered</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></div>
+<div class="col-first even-row-color"><code>static <a href="../ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ExecutionRequest.</span><code><a href="../ExecutionRequest.html#create(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.EngineExecutionListener,org.junit.platform.engine.ConfigurationParameters)" class="member-name-link">create</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;rootTestDescriptor,
+ <a href="../EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;engineExecutionListener,
+ <a href="../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Factory for creating an execution request.</div>
+</div>
+<div class="col-first odd-row-color"><code>default void</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)" class="member-name-link">dynamicTestRegistered</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Must be called when a new, dynamic <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been
  registered.</div>
 </div>
-<div class="col-first odd-row-color"><code>default void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)" class="member-name-link">executionFinished</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+<div class="col-first even-row-color"><code>default void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)" class="member-name-link">executionFinished</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
  <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;testExecutionResult)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Must be called when the execution of a leaf or subtree of the test tree
  has finished, regardless of the outcome.</div>
 </div>
-<div class="col-first even-row-color"><code>default void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)" class="member-name-link">executionSkipped</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+<div class="col-first odd-row-color"><code>default void</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)" class="member-name-link">executionSkipped</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Must be called when the execution of a leaf or subtree of the test tree
  has been skipped.</div>
 </div>
-<div class="col-first odd-row-color"><code>default void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#executionStarted(org.junit.platform.engine.TestDescriptor)" class="member-name-link">executionStarted</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>default void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#executionStarted(org.junit.platform.engine.TestDescriptor)" class="member-name-link">executionStarted</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Must be called when the execution of a leaf or subtree of the test tree
  is about to be started.</div>
 </div>
-<div class="col-first even-row-color"><code>void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#removeChild(org.junit.platform.engine.TestDescriptor)" class="member-name-link">removeChild</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>void</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#removeChild(org.junit.platform.engine.TestDescriptor)" class="member-name-link">removeChild</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Remove a <em>child</em> from this descriptor.</div>
 </div>
-<div class="col-first odd-row-color"><code>default void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)" class="member-name-link">reportingEntryPublished</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+<div class="col-first even-row-color"><code>default void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">EngineExecutionListener.</span><code><a href="../EngineExecutionListener.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)" class="member-name-link">reportingEntryPublished</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
  <a href="../reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Can be called for any <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> in order to publish additional
  information to the reporting infrastructure &mdash; for example:
 
@@ -343,14 +350,14 @@ loadScripts(document, 'script');</script>
      Information about test context or test data
  </div>
 </div>
-<div class="col-first even-row-color"><code>void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#setParent(org.junit.platform.engine.TestDescriptor)" class="member-name-link">setParent</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;parent)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>void</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#setParent(org.junit.platform.engine.TestDescriptor)" class="member-name-link">setParent</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;parent)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Set the <em>parent</em> of this descriptor.</div>
 </div>
-<div class="col-first odd-row-color"><code>void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TestDescriptor.Visitor.</span><code><a href="../TestDescriptor.Visitor.html#visit(org.junit.platform.engine.TestDescriptor)" class="member-name-link">visit</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TestDescriptor.Visitor.</span><code><a href="../TestDescriptor.Visitor.html#visit(org.junit.platform.engine.TestDescriptor)" class="member-name-link">visit</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Visit a <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
 </div>
 </div>
