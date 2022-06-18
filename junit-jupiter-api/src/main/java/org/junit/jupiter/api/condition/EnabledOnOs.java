@@ -81,7 +81,7 @@ public @interface EnabledOnOs {
 	OS[] value() default {};
 
 	/**
-	 * Architecture on which the annotated class or method should be enabled.
+	 * Architectures on which the annotated class or method should be enabled.
 	 *
 	 * @since 5.9
 	 */
