@@ -1,0 +1,68 @@
+/*
+ * Copyright 2015-2022 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.jupiter.engine.extension;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.concurrent.TimeoutException;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
+import org.junit.jupiter.engine.execution.ExtensionValuesStore;
+import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.TimeoutInvocationParameters;
+
+/**
+ * @since 5.9
+ */
+@DisplayName("SeparateThreadTimeoutInvocation")
+class SeparateThreadTimeoutInvocationTest {
+
+	private static <T> SeparateThreadTimeoutInvocation<T> aSeparateThreadInvocation(Invocation<T> invocation) {
+		return (SeparateThreadTimeoutInvocation<T>) new TimeoutInvocationFactory(
+			new NamespaceAwareStore(new ExtensionValuesStore(null),
+				ExtensionContext.Namespace.create(SeparateThreadTimeoutInvocationTest.class))).create(
+					ThreadMode.SEPARATE_THREAD, new TimeoutInvocationParameters<>(invocation,
+						new TimeoutDuration(10, MILLISECONDS), () -> "method()"));
+	}
+
+	@Test
+	@DisplayName("throws timeout exception when timeout duration is exceeded")
+	void throwsTimeoutException() {
+		SeparateThreadTimeoutInvocation<Object> separateThreadTimeoutInvocation = aSeparateThreadInvocation(() -> {
+			Thread.sleep(12);
+			return null;
+		});
+
+		assertThatThrownBy(separateThreadTimeoutInvocation::proceed).hasMessage(
+			"method() timed out after 10 milliseconds").isInstanceOf(TimeoutException.class);
+	}
+
+	@Test
+	@DisplayName("executes invocation in a separate thread")
+	void runsInvocationUsingSeparateThread() throws Throwable {
+		String invocationThreadName = aSeparateThreadInvocation(() -> Thread.currentThread().getName()).proceed();
+		assertThat(invocationThreadName).isNotEqualTo(Thread.currentThread().getName());
+	}
+
+	@Test
+	@DisplayName("throws invocation exception")
+	void shouldThrowInvocationException() {
+		assertThatThrownBy(aSeparateThreadInvocation(() -> {
+			throw new RuntimeException("hi!");
+		})::proceed).isInstanceOf(RuntimeException.class).hasMessage("hi!");
+	}
+}

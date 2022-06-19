@@ -313,6 +313,15 @@ public final class Constants {
 	@SuppressWarnings("deprecation")
 	public static final String TEMP_DIR_SCOPE_PROPERTY_NAME = TempDir.SCOPE_PROPERTY_NAME;
 
+	/**
+	 * Property name used to set the default timeout thread mode.
+	 *
+	 * @see Timeout
+	 * @see Timeout.ThreadMode
+	 */
+	@API(status = EXPERIMENTAL, since = "5.9")
+	public static final String DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME = Timeout.DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME;
+
 	private Constants() {
 		/* no-op */
 	}

@@ -18,6 +18,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
 import static org.junit.jupiter.engine.Constants.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_FACTORY_METHOD_TIM
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -57,6 +59,7 @@ class TimeoutConfigurationTests {
 		assertThat(config.getDefaultTestFactoryMethodTimeout()).isEmpty();
 		assertThat(config.getDefaultAfterEachMethodTimeout()).isEmpty();
 		assertThat(config.getDefaultAfterAllMethodTimeout()).isEmpty();
+		assertThat(config.getDefaultTimeoutThreadMode()).isEmpty();
 	}
 
 	@Test
@@ -130,5 +133,24 @@ class TimeoutConfigurationTests {
 		assertThat(logRecordListener.stream(Level.WARNING).map(LogRecord::getMessage)) //
 				.containsExactly(
 					"Ignored invalid timeout 'invalid' set via the 'junit.jupiter.execution.timeout.test.method.default' configuration parameter.");
+	}
+
+	@Test
+	void specificThreadModeIsUsed() {
+		when(extensionContext.getConfigurationParameter(DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME)).thenReturn(
+			Optional.of("SEPARATE_THREAD"));
+		assertThat(config.getDefaultTimeoutThreadMode()).isEqualTo(Optional.of(SEPARATE_THREAD));
+	}
+
+	@Test
+	@TrackLogRecords
+	void logsInvalidThreadModeValueAndReturnEmpty(LogRecordListener logRecordListener) {
+		when(extensionContext.getConfigurationParameter(DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME)).thenReturn(
+			Optional.of("invalid"));
+
+		assertThat(config.getDefaultTimeoutThreadMode()).isEqualTo(Optional.empty());
+		assertThat(logRecordListener.stream(Level.WARNING).map(LogRecord::getMessage)) //
+				.containsExactly(
+					"Invalid timeout thread mode 'invalid' set via the 'junit.jupiter.execution.timeout.thread.mode.default' configuration parameter.");
 	}
 }
