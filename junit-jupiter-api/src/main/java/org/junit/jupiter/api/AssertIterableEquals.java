@@ -84,28 +84,43 @@ class AssertIterableEquals {
 
 	private static void assertIterableElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
 			Object messageOrSupplier, Map<Pair, Status> investigatedElements) {
+
+		// If both are equal, we don't need to check recursively.
 		if (Objects.equals(expected, actual)) {
 			return;
 		}
+
+		// If both are iterables, we need to check whether they contain the same elements.
 		if (expected instanceof Iterable && actual instanceof Iterable) {
 
 			Pair pair = new Pair(expected, actual);
+
+			// Before comparing their elements, we check whether we have already checked this pair.
 			Status status = investigatedElements.get(pair);
+
+			// If we've already determined that both contain the same elements, we don't need to check them again.
 			if (status == Status.CONTAIN_SAME_ELEMENTS) {
 				return;
 			}
+
+			// If the pair is already under investigation, we fail to avoid infinite recursion.
 			if (status == Status.UNDER_INVESTIGATION) {
 				indexes.removeLast();
 				failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
 			}
 
+			// Otherwise, we put the pair under investigation and recurse.
 			investigatedElements.put(pair, Status.UNDER_INVESTIGATION);
 
 			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageOrSupplier,
 				investigatedElements);
 
+			// If we reach this point, we've checked that the two iterables contain the same elements so we store this information
+			// in case we come across the same pair again.
 			investigatedElements.put(pair, Status.CONTAIN_SAME_ELEMENTS);
 		}
+
+		// Otherwise, they are neither equal nor iterables, so we fail.
 		else {
 			assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
 			failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
