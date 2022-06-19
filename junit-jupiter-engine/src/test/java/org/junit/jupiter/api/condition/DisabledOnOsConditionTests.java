@@ -74,8 +74,7 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	void disabledOnEveryOs() {
 		evaluateCondition();
 		assertDisabled();
-		assertReasonContains(
-			String.format("Disabled on operating system: %s (%s) ==> Disabled on every OS", OS_NAME, ARCH));
+		assertReasonContains(String.format("Disabled on operating system: %s ==> Disabled on every OS", OS_NAME));
 	}
 
 	/**
@@ -166,7 +165,7 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void architectureX86_64() {
 		evaluateCondition();
-		assertDisabledOnCurrentOsIf(onArchitecture("x86_64"));
+		assertDisabledOnCurrentArchitectureIf(onArchitecture("x86_64"));
 	}
 
 	/**
@@ -175,7 +174,7 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void architectureAarch64() {
 		evaluateCondition();
-		assertDisabledOnCurrentOsIf(onArchitecture("aarch64"));
+		assertDisabledOnCurrentArchitectureIf(onArchitecture("aarch64"));
 	}
 
 	/**
@@ -184,7 +183,7 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void architectureX86_64WithMacOs() {
 		evaluateCondition();
-		assertDisabledOnCurrentOsIf(onMac() && onArchitecture("x86_64"));
+		assertDisabledOnCurrentOsAndArchitectureIf(onMac() && onArchitecture("x86_64"));
 	}
 
 	/**
@@ -193,7 +192,7 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void architectureX86_64WithWindows() {
 		evaluateCondition();
-		assertDisabledOnCurrentOsIf(onWindows() && onArchitecture("x86_64"));
+		assertDisabledOnCurrentOsAndArchitectureIf(onWindows() && onArchitecture("x86_64"));
 	}
 
 	/**
@@ -202,7 +201,7 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void architectureX86_64WithLinux() {
 		evaluateCondition();
-		assertDisabledOnCurrentOsIf(onLinux() && onArchitecture("x86_64"));
+		assertDisabledOnCurrentOsAndArchitectureIf(onLinux() && onArchitecture("x86_64"));
 	}
 
 	/**
@@ -211,7 +210,7 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void aarch64WithMacOs() {
 		evaluateCondition();
-		assertDisabledOnCurrentOsIf(onMac() && onArchitecture("aarch64"));
+		assertDisabledOnCurrentOsAndArchitectureIf(onMac() && onArchitecture("aarch64"));
 	}
 
 	/**
@@ -220,7 +219,7 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void aarch64WithWindows() {
 		evaluateCondition();
-		assertDisabledOnCurrentOsIf(onWindows() && onArchitecture("aarch64"));
+		assertDisabledOnCurrentOsAndArchitectureIf(onWindows() && onArchitecture("aarch64"));
 	}
 
 	/**
@@ -229,10 +228,32 @@ class DisabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void aarch64WithLinux() {
 		evaluateCondition();
-		assertDisabledOnCurrentOsIf(onLinux() && onArchitecture("aarch64"));
+		assertDisabledOnCurrentOsAndArchitectureIf(onLinux() && onArchitecture("aarch64"));
 	}
 
 	private void assertDisabledOnCurrentOsIf(boolean condition) {
+		if (condition) {
+			assertDisabled();
+			assertReasonContains(String.format("Disabled on operating system: %s", OS_NAME));
+		}
+		else {
+			assertEnabled();
+			assertReasonContains(String.format("Enabled on operating system: %s", OS_NAME));
+		}
+	}
+
+	private void assertDisabledOnCurrentArchitectureIf(boolean condition) {
+		if (condition) {
+			assertDisabled();
+			assertReasonContains(String.format("Disabled on architecture: %s", ARCH));
+		}
+		else {
+			assertEnabled();
+			assertReasonContains(String.format("Enabled on architecture: %s", ARCH));
+		}
+	}
+
+	private void assertDisabledOnCurrentOsAndArchitectureIf(boolean condition) {
 		if (condition) {
 			assertDisabled();
 			assertReasonContains(String.format("Disabled on operating system: %s (%s)", OS_NAME, ARCH));

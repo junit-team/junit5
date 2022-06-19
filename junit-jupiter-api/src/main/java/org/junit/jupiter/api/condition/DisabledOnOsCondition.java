@@ -10,11 +10,9 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.junit.jupiter.api.condition.EnabledOnOsCondition.DISABLED_ON_CURRENT_OS;
-import static org.junit.jupiter.api.condition.EnabledOnOsCondition.ENABLED_ON_CURRENT_OS;
-
 import java.util.Arrays;
 
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -24,17 +22,24 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see DisabledOnOs
  */
-class DisabledOnOsCondition extends BooleanExecutionCondition<DisabledOnOs> {
+class DisabledOnOsCondition extends AbstractOsBasedExecutionCondition<DisabledOnOs> {
 
 	DisabledOnOsCondition() {
-		super(DisabledOnOs.class, ENABLED_ON_CURRENT_OS, DISABLED_ON_CURRENT_OS, DisabledOnOs::disabledReason);
+		super(DisabledOnOs.class);
 	}
 
 	@Override
-	boolean isEnabled(DisabledOnOs annotation) {
-		Preconditions.condition(annotation.value().length > 0 || annotation.architectures().length > 0,
+	ConditionEvaluationResult evaluateExecutionCondition(DisabledOnOs annotation) {
+		boolean osSpecified = annotation.value().length > 0;
+		boolean archSpecified = annotation.architectures().length > 0;
+		Preconditions.condition(osSpecified || archSpecified,
 			"You must declare at least one OS or architecture in @DisabledOnOs");
-		return isEnabledBasedOnOs(annotation) || isEnabledBasedOnArchitecture(annotation);
+
+		boolean enabled = isEnabledBasedOnOs(annotation) || isEnabledBasedOnArchitecture(annotation);
+		String reason = createReason(enabled, osSpecified, archSpecified);
+
+		return enabled ? ConditionEvaluationResult.enabled(reason)
+				: ConditionEvaluationResult.disabled(reason, annotation.disabledReason());
 	}
 
 	private boolean isEnabledBasedOnArchitecture(DisabledOnOs annotation) {
