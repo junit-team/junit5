@@ -67,29 +67,16 @@ class AssertIterableEquals {
 
 		int processed = 0;
 		while (expectedIterator.hasNext() && actualIterator.hasNext()) {
-			processed++;
 			Object expectedElement = expectedIterator.next();
 			Object actualElement = actualIterator.next();
 
-			if (Objects.equals(expectedElement, actualElement)) {
-				continue;
-			}
+			indexes.addLast(processed);
 
-			Pair pair = new Pair(expectedElement, actualElement);
-			Status status = investigatedElements.get(pair);
-			if (status == Status.CONTAIN_SAME_ELEMENTS) {
-				continue;
-			}
-			if (status == Status.UNDER_INVESTIGATION) {
-				failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
-			}
-
-			indexes.addLast(processed - 1);
-			investigatedElements.put(pair, Status.UNDER_INVESTIGATION);
 			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier,
 				investigatedElements);
-			investigatedElements.put(pair, Status.CONTAIN_SAME_ELEMENTS);
+
 			indexes.removeLast();
+			processed++;
 		}
 
 		assertIteratorsAreEmpty(expectedIterator, actualIterator, processed, indexes, messageOrSupplier);
@@ -97,11 +84,29 @@ class AssertIterableEquals {
 
 	private static void assertIterableElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
 			Object messageOrSupplier, Map<Pair, Status> investigatedElements) {
+		if (Objects.equals(expected, actual)) {
+			return;
+		}
 		if (expected instanceof Iterable && actual instanceof Iterable) {
+
+			Pair pair = new Pair(expected, actual);
+			Status status = investigatedElements.get(pair);
+			if (status == Status.CONTAIN_SAME_ELEMENTS) {
+				return;
+			}
+			if (status == Status.UNDER_INVESTIGATION) {
+				indexes.removeLast();
+				failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
+			}
+
+			investigatedElements.put(pair, Status.UNDER_INVESTIGATION);
+
 			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageOrSupplier,
 				investigatedElements);
+
+			investigatedElements.put(pair, Status.CONTAIN_SAME_ELEMENTS);
 		}
-		else if (!Objects.equals(expected, actual)) {
+		else {
 			assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
 			failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
 		}
