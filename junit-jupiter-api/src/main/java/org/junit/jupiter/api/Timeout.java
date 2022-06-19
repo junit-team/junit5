@@ -360,6 +360,7 @@ public @interface Timeout {
 	 *
 	 * @since 5.9
 	 */
+	@API(status = STABLE, since = "5.9")
 	enum ThreadMode {
 		/**
 		 * The thread mode is determined using the parameter configured in property

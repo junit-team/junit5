@@ -319,7 +319,7 @@ public final class Constants {
 	 * @see Timeout
 	 * @see Timeout.ThreadMode
 	 */
-	@API(status = EXPERIMENTAL, since = "5.9")
+	@API(status = STABLE, since = "5.9")
 	public static final String DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME = Timeout.DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME;
 
 	private Constants() {
