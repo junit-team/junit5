@@ -19,7 +19,7 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public abstract class AbstractOsBasedExecutionCondition<A extends Annotation> implements ExecutionCondition {
+abstract class AbstractOsBasedExecutionCondition<A extends Annotation> implements ExecutionCondition {
 	private final Class<A> annotationType;
 
 	AbstractOsBasedExecutionCondition(Class<A> annotationType) {
