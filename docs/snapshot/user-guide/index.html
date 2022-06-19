@@ -787,7 +787,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#launcher-api-execution">6.4.2. Executing Tests</a></li>
 <li><a href="#launcher-api-engines-custom">6.4.3. Registering a TestEngine</a></li>
 <li><a href="#launcher-api-post-discovery-filters-custom">6.4.4. Registering a PostDiscoveryFilter</a></li>
-<li><a href="#launcher-api-launcher-session-listeners-custom">6.4.5. Registering a LauncherSessionListener</a></li>
+<li><a href="#launcher-api-launcher-session-listeners-custom">6.4.5. Registering a LauncherSessionListener</a>
+<ul class="sectlevel4">
+<li><a href="#launcher-api-launcher-session-listeners-tool-support">Tool Support</a></li>
+<li><a href="#launcher-api-launcher-session-listeners-tool-example-usage">Example Usage</a></li>
+</ul>
+</li>
 <li><a href="#launcher-api-launcher-discovery-listeners-custom">6.4.6. Registering a LauncherDiscoveryListener</a></li>
 <li><a href="#launcher-api-listeners-custom">6.4.7. Registering a TestExecutionListener</a></li>
 <li><a href="#launcher-api-listeners-config">6.4.8. Configuring a TestExecutionListener</a></li>
@@ -10525,8 +10530,32 @@ file is loaded and applied automatically.</p>
 and closed (when no more tests will be discovered or executed). They can be registered
 programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> that is passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>, or
 they can be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
-registered with <code>LauncherSession</code> (unless automatic registration is disabled.)</p>
+registered with <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code> (unless automatic registration is disabled.)</p>
 </div>
+<div class="sect4">
+<h5 id="launcher-api-launcher-session-listeners-tool-support"><a class="anchor" href="#launcher-api-launcher-session-listeners-tool-support"></a>Tool Support</h5>
+<div class="paragraph">
+<p>The following build tools and IDEs are known to provide full support for <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Gradle 4.6 and later</p>
+</li>
+<li>
+<p>Maven Surefire/Failsafe 3.0.0-M6 and later</p>
+</li>
+<li>
+<p>IntelliJ IDEA 2017.3 and later</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Other tools might also work but have not been tested explicitly.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="launcher-api-launcher-session-listeners-tool-example-usage"><a class="anchor" href="#launcher-api-launcher-session-listeners-tool-example-usage"></a>Example Usage</h5>
 <div class="paragraph">
 <p>A <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> is well suited for implementing once-per-JVM setup/teardown
 behavior since it&#8217;s called before the first and after the last test in a launcher session,
@@ -10698,6 +10727,7 @@ by adding the file to <code>src/test/resources</code>):</p>
 <td>Check the status code of the response</td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -11738,7 +11768,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-06-18 14:25:46 UTC
+Last updated 2022-06-19 13:59:08 UTC
 </div>
 </div>
 <style>
