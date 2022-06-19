@@ -77,7 +77,7 @@ class AssertIterableEquals {
 
 			Pair pair = new Pair(expectedElement, actualElement);
 			Status status = investigatedElements.get(pair);
-			if (status == Status.SAME_ELEMENTS) {
+			if (status == Status.CONTAIN_SAME_ELEMENTS) {
 				continue;
 			}
 			if (status == Status.UNDER_INVESTIGATION) {
@@ -88,7 +88,7 @@ class AssertIterableEquals {
 			investigatedElements.put(pair, Status.UNDER_INVESTIGATION);
 			assertIterableElementsEqual(expectedElement, actualElement, indexes, messageOrSupplier,
 				investigatedElements);
-			investigatedElements.put(pair, Status.SAME_ELEMENTS);
+			investigatedElements.put(pair, Status.CONTAIN_SAME_ELEMENTS);
 			indexes.removeLast();
 		}
 
@@ -178,7 +178,7 @@ class AssertIterableEquals {
 	}
 
 	private enum Status {
-		UNDER_INVESTIGATION, SAME_ELEMENTS
+		UNDER_INVESTIGATION, CONTAIN_SAME_ELEMENTS
 	}
 
 }
