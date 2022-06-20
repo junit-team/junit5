@@ -2305,6 +2305,63 @@ behind the scenes may spawn additional threads to ensure execution continues wit
 sufficient parallelism. Thus, if you require such guarantees in a test class, please use
 your own means of controlling concurrency.
 
+[[writing-tests-parallel-execution-config-properties]]
+===== Relevant properties
+
+The following table lists relevant properties for configuring parallel execution. See
+<<running-tests-config-params>> for details on how to set such properties.
+
+[cols="d,d,a,d"]
+|===
+|Property |Description |Supported Values |Default Value
+
+| ```junit.jupiter.execution.parallel.enabled```
+| Enable parallel test execution
+|
+  * `true`
+  * `false`
+| ```false```
+
+| ```junit.jupiter.execution.parallel.mode.default```
+| Default execution mode of nodes in the test tree
+|
+  * `concurrent`
+  * `same_thread`
+| ```same_thread```
+
+| ```junit.jupiter.execution.parallel.mode.classes.default```
+| Default execution mode of top-level classes
+|
+  * `concurrent`
+  * `same_thread`
+| ```same_thread```
+
+| ```junit.jupiter.execution.parallel.config.strategy```
+| Execution strategy for desired parallelism and maximum pool size
+|
+  * `dynamic`
+  * `fixed`
+  * `custom`
+| ```dynamic```
+
+| ```junit.jupiter.execution.parallel.config.dynamic.factor```
+| Factor to be multiplied by the number of available processors/cores to determine the
+  desired parallelism for the ```dynamic``` configuration strategy
+| a positive decimal number
+| ```1.0```
+
+| ```junit.jupiter.execution.parallel.config.fixed.parallelism```
+| Desired parallelism for the ```fixed``` configuration strategy
+| a positive integer
+| no default value
+
+| ```junit.jupiter.execution.parallel.config.custom.class```
+| Fully qualified class name of the _ParallelExecutionConfigurationStrategy_ to be
+  used for the ```custom``` configuration strategy
+| for example, _org.example.CustomStrategy_
+| no default value
+|===
+
 [[writing-tests-parallel-execution-synchronization]]
 ==== Synchronization
 

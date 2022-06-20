@@ -97,7 +97,21 @@ Registered implementations of `{LauncherSessionListener}` are notified when a
 and closed (when no more tests will be discovered or executed). They can be registered
 programmatically via the `{LauncherConfig}` that is passed to the `{LauncherFactory}`, or
 they can be discovered at runtime via Java's `{ServiceLoader}` mechanism and automatically
-registered with `LauncherSession` (unless automatic registration is disabled.)
+registered with `{LauncherSession}` (unless automatic registration is disabled.)
+
+[[launcher-api-launcher-session-listeners-tool-support]]
+===== Tool Support
+
+The following build tools and IDEs are known to provide full support for `{LauncherSession}`:
+
+* Gradle 4.6 and later
+* Maven Surefire/Failsafe 3.0.0-M6 and later
+* IntelliJ IDEA 2017.3 and later
+
+Other tools might also work but have not been tested explicitly.
+
+[[launcher-api-launcher-session-listeners-tool-example-usage]]
+===== Example Usage
 
 A `{LauncherSessionListener}` is well suited for implementing once-per-JVM setup/teardown
 behavior since it's called before the first and after the last test in a launcher session,

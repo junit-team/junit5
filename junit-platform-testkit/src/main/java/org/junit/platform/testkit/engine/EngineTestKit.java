@@ -256,10 +256,9 @@ public final class EngineTestKit {
 
 	private static void executeUsingLauncherOrchestration(TestEngine testEngine,
 			LauncherDiscoveryRequest discoveryRequest, EngineExecutionListener listener) {
-		TestDescriptor engineTestDescriptor;
 		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine),
 			emptySet()).discover(discoveryRequest, EXECUTION);
-		engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
+		TestDescriptor engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
 		new EngineExecutionOrchestrator().execute(discoveryResult, listener);
 	}

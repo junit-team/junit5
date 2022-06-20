@@ -15,11 +15,11 @@ tasks.withType<Test>().configureEach {
 		events = setOf(FAILED)
 		exceptionFormat = FULL
 	}
+	val isCiServer = System.getenv("CI") != null
 	retry {
-		maxRetries.set(providers.gradleProperty("retries").map(String::toInt).orElse(2))
+		maxRetries.set(providers.gradleProperty("retries").map(String::toInt).orElse(if (isCiServer) 2 else 0))
 	}
 	distribution {
-		val isCiServer = System.getenv("CI") != null
 		enabled.convention(providers.gradleProperty("enableTestDistribution")
 			.map(String::toBoolean)
 			.map { enabled -> enabled && (!isCiServer || System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNotBlank()) }

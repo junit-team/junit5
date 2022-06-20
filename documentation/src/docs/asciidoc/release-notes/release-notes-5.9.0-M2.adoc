@@ -15,7 +15,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Absolute path entries are now supported in JUnit's Platform Console Launcher on Windows.
 
 ==== Deprecations and Breaking Changes
 
@@ -23,7 +23,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New public factory method to instantiate an `ExecutionRequest`.
 
 
 [[release-notes-5.9.0-M2-junit-jupiter]]
