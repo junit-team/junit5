@@ -730,7 +730,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	static class TimeoutExceededOnClassLevelTestCase {
 		@Test
 		void exceptionThrown() throws InterruptedException {
-			Thread.sleep(15);
+			Thread.sleep(100);
 		}
 	}
 
@@ -765,8 +765,8 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@AfterAll
-		static void stopLooper() throws InterruptedException {
-			Thread.sleep(11);
+		static void stop() throws InterruptedException {
+			Thread.sleep(100);
 			latch.countDown();
 		}
 	}
@@ -775,19 +775,19 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testZero() throws InterruptedException {
-			Thread.sleep(12);
+			Thread.sleep(100);
 		}
 
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SAME_THREAD)
 		void testOne() throws InterruptedException {
-			Thread.sleep(12);
+			Thread.sleep(100);
 		}
 
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testTwo() throws InterruptedException {
-			Thread.sleep(12);
+			Thread.sleep(100);
 		}
 	}
 
@@ -815,8 +815,8 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@AfterAll
-		static void stopLooper() throws InterruptedException {
-			Thread.sleep(11);
+		static void stop() throws InterruptedException {
+			Thread.sleep(100);
 			latch.countDown();
 		}
 	}

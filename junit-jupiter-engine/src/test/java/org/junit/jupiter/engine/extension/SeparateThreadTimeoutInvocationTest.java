@@ -43,7 +43,7 @@ class SeparateThreadTimeoutInvocationTest {
 	@DisplayName("throws timeout exception when timeout duration is exceeded")
 	void throwsTimeoutException() {
 		SeparateThreadTimeoutInvocation<Object> separateThreadTimeoutInvocation = aSeparateThreadInvocation(() -> {
-			Thread.sleep(12);
+			Thread.sleep(100);
 			return null;
 		});
 

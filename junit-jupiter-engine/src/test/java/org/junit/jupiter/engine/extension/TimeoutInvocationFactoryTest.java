@@ -12,8 +12,10 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -26,7 +28,8 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
-import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.ExecutorResource;
+import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.SeparateThreadExecutorResource;
+import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.SingleThreadExecutorResource;
 import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.TimeoutInvocationParameters;
 
 @DisplayName("TimeoutInvocationFactory")
@@ -41,7 +44,6 @@ class TimeoutInvocationFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		;
 		timeoutInvocationParameters = new TimeoutInvocationParameters<>(invocation, timeoutDuration,
 			() -> "description");
 		timeoutInvocationFactory = new TimeoutInvocationFactory(store);
@@ -73,7 +75,7 @@ class TimeoutInvocationFactoryTest {
 		Invocation<String> invocation = timeoutInvocationFactory.create(ThreadMode.SAME_THREAD,
 			timeoutInvocationParameters);
 		assertThat(invocation).isInstanceOf(SameThreadTimeoutInvocation.class);
-		verify(store).getOrComputeIfAbsent(ExecutorResource.class);
+		verify(store).getOrComputeIfAbsent(SingleThreadExecutorResource.class);
 	}
 
 	@Test
@@ -82,7 +84,8 @@ class TimeoutInvocationFactoryTest {
 		Invocation<String> invocation = timeoutInvocationFactory.create(ThreadMode.SEPARATE_THREAD,
 			timeoutInvocationParameters);
 		assertThat(invocation).isInstanceOf(SeparateThreadTimeoutInvocation.class);
-		verify(store, never()).getOrComputeIfAbsent(ExecutorResource.class);
+		verify(store).getOrComputeIfAbsent(matches("junit\\-jupiter\\-timeout\\-invocation\\-runner\\-\\d+"), any(),
+			eq(SeparateThreadExecutorResource.class));
 	}
 
 	private interface InvocationWithStringResult extends Invocation<String> {
