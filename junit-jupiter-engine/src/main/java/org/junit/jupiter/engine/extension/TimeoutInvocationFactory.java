@@ -12,11 +12,11 @@ package org.junit.jupiter.engine.extension;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 import org.junit.jupiter.api.Timeout.ThreadMode;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
@@ -40,28 +40,32 @@ class TimeoutInvocationFactory {
 		Preconditions.notNull(timeoutInvocationParameters, "timeout invocation parameters must not be null");
 		if (threadMode == ThreadMode.SEPARATE_THREAD) {
 			return new SeparateThreadTimeoutInvocation<>(timeoutInvocationParameters.getInvocation(),
-				timeoutInvocationParameters.getTimeoutDuration(), getThreadPoolExecutor(),
+				timeoutInvocationParameters.getTimeoutDuration(), getThreadExecutorForSeparateThreadInvocation(),
 				timeoutInvocationParameters.getDescriptionSupplier());
 		}
 		return new SameThreadTimeoutInvocation<>(timeoutInvocationParameters.getInvocation(),
-			timeoutInvocationParameters.getTimeoutDuration(), getSingleThreadExecutor(),
+			timeoutInvocationParameters.getTimeoutDuration(), getThreadExecutorForSameThreadInvocation(),
 			timeoutInvocationParameters.getDescriptionSupplier());
 	}
 
-	private ScheduledExecutorService getSingleThreadExecutor() {
-		return store.getOrComputeIfAbsent(SingleThreadExecutorResource.class).get();
+	private ScheduledExecutorService getThreadExecutorForSameThreadInvocation() {
+		return store.getOrComputeIfAbsent(ExecutorResource.class).get();
 	}
 
-	private ScheduledExecutorService getThreadPoolExecutor() {
-		return store.getOrComputeIfAbsent(ThreadPoolExecutorResource.class).get();
+	private ScheduledExecutorService getThreadExecutorForSeparateThreadInvocation() {
+		return Executors.newSingleThreadScheduledExecutor(new SeparateThreadFactory());
 	}
 
-	private static abstract class ExecutorResource implements CloseableResource {
+	static class ExecutorResource implements CloseableResource {
 
 		private final ScheduledExecutorService executor;
 
-		ExecutorResource(ScheduledExecutorService executor) {
-			this.executor = executor;
+		ExecutorResource() {
+			this.executor = Executors.newSingleThreadScheduledExecutor(runnable -> {
+				Thread thread = new Thread(runnable, "junit-jupiter-timeout-watcher");
+				thread.setPriority(Thread.MAX_PRIORITY);
+				return thread;
+			});
 		}
 
 		ScheduledExecutorService get() {
@@ -79,28 +83,15 @@ class TimeoutInvocationFactory {
 		}
 	}
 
-	static class SingleThreadExecutorResource extends ExecutorResource {
+	private static class SeparateThreadFactory implements ThreadFactory {
+		private static final AtomicInteger separateThreadNumber = new AtomicInteger(1);
 
-		@SuppressWarnings("unused")
-		SingleThreadExecutorResource() {
-			super(Executors.newSingleThreadScheduledExecutor(runnable -> {
-				Thread thread = new Thread(runnable, "junit-jupiter-timeout-watcher");
-				thread.setPriority(Thread.MAX_PRIORITY);
-				return thread;
-			}));
-		}
-	}
-
-	static class ThreadPoolExecutorResource extends ExecutorResource {
-
-		@SuppressWarnings("unused")
-		ThreadPoolExecutorResource() {
-			super(Executors.newScheduledThreadPool(5, runnable -> {
-				Thread thread = new Thread(runnable);
-				thread.setName("junit-jupiter-timeout-invocation-runner-" + thread.getId());
-				thread.setPriority(Thread.MAX_PRIORITY);
-				return thread;
-			}));
+		@Override
+		public Thread newThread(Runnable runnable) {
+			Thread thread = new Thread(runnable,
+				"junit-jupiter-timeout-invocation-runner-" + separateThreadNumber.getAndIncrement());
+			thread.setPriority(Thread.MAX_PRIORITY);
+			return thread;
 		}
 	}
 
