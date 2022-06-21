@@ -10530,12 +10530,12 @@ file is loaded and applied automatically.</p>
 and closed (when no more tests will be discovered or executed). They can be registered
 programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> that is passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>, or
 they can be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
-registered with <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code> (unless automatic registration is disabled.)</p>
+registered with <code>LauncherSession</code> (unless automatic registration is disabled.)</p>
 </div>
 <div class="sect4">
 <h5 id="launcher-api-launcher-session-listeners-tool-support"><a class="anchor" href="#launcher-api-launcher-session-listeners-tool-support"></a>Tool Support</h5>
 <div class="paragraph">
-<p>The following build tools and IDEs are known to provide full support for <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code>:</p>
+<p>The following build tools and IDEs are known to provide full support for <code>LauncherSession</code>:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -10557,7 +10557,7 @@ registered with <code><a href="../api/org.junit.platform.launcher/org/junit/plat
 <div class="sect4">
 <h5 id="launcher-api-launcher-session-listeners-tool-example-usage"><a class="anchor" href="#launcher-api-launcher-session-listeners-tool-example-usage"></a>Example Usage</h5>
 <div class="paragraph">
-<p>A <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> is well suited for implementing once-per-JVM setup/teardown
+<p>A <code>LauncherSessionListener</code> is well suited for implementing once-per-JVM setup/teardown
 behavior since it&#8217;s called before the first and after the last test in a launcher session,
 respectively. The scope of a launcher session depends on the used IDE or build tool but
 usually corresponds to the lifecycle of the test JVM. A custom listener that starts an
@@ -11768,7 +11768,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-06-20 07:51:37 UTC
+Last updated 2022-06-21 18:10:38 UTC
 </div>
 </div>
 <style>
