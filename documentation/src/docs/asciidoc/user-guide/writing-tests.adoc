@@ -2026,7 +2026,7 @@ include::{testDir}/example/TimeoutDemo.java[tags=user_guide]
 ----
 
 The timeout can be executed using one of the following three thread modes: `SAME_THREAD`,
-`SEPARATE_THREAD` or `INFRERRED`.
+`SEPARATE_THREAD` or `INFERRED`.
 
 When `SAME_THREAD` is used, the execution of the annotated method proceeds in the main
 thread of the test. If the timeout is exceeded, the main thread is interrupted from
