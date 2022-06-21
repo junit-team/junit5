@@ -23,7 +23,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 
 /**
- * Integration tests that very proper handling of invalid configuration for
+ * Integration tests that verify proper handling of invalid configuration for
  * lifecycle methods in conjunction with the {@link JupiterTestEngine}.
  *
  * <p>In general, configuration errors should not be thrown until the
@@ -44,13 +44,13 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 	}
 
 	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidBeforeEachDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidBeforeEachMethod.class);
+	void executeValidTestCaseAlongsideTestCaseWithInvalidStaticBeforeEachDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidStaticBeforeEachMethod.class);
 	}
 
 	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidAfterEachDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidAfterEachMethod.class);
+	void executeValidTestCaseAlongsideTestCaseWithInvalidStaticAfterEachDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidStaticAfterEachMethod.class);
 	}
 
 	private void assertExecutionResults(Class<?> invalidTestClass) {
@@ -104,7 +104,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidBeforeEachMethod {
+	static class TestCaseWithInvalidStaticBeforeEachMethod {
 
 		// must NOT be static
 		@BeforeEach
@@ -116,7 +116,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidAfterEachMethod {
+	static class TestCaseWithInvalidStaticAfterEachMethod {
 
 		// must NOT be static
 		@AfterEach
