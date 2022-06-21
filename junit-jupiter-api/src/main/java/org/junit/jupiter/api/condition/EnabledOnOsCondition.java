@@ -48,7 +48,7 @@ class EnabledOnOsCondition extends AbstractOsBasedExecutionCondition<EnabledOnOs
 			return true;
 		}
 
-		String currentArchitecture = getArchitecture();
+		String currentArchitecture = currentArchitecture();
 		return Arrays.stream(architectures).anyMatch(currentArchitecture::equalsIgnoreCase);
 	}
 
@@ -58,10 +58,6 @@ class EnabledOnOsCondition extends AbstractOsBasedExecutionCondition<EnabledOnOs
 			return true;
 		}
 		return Arrays.stream(operatingSystems).anyMatch(OS::isCurrentOs);
-	}
-
-	protected String getArchitecture() {
-		return System.getProperty("os.arch");
 	}
 
 }

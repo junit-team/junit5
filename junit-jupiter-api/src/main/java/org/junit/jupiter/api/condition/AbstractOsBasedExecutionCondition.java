@@ -39,13 +39,13 @@ abstract class AbstractOsBasedExecutionCondition<A extends Annotation> implement
 			osSpecified ? " on operating system: " : " on architecture: ");
 
 		if (osSpecified && archSpecified) {
-			reason.append(String.format("%s (%s)", System.getProperty("os.name"), System.getProperty("os.arch")));
+			reason.append(String.format("%s (%s)", currentOS(), currentArchitecture()));
 		}
 		else if (osSpecified) {
-			reason.append(System.getProperty("os.name"));
+			reason.append(currentOS());
 		}
 		else {
-			reason.append(System.getProperty("os.arch"));
+			reason.append(currentArchitecture());
 		}
 
 		return reason.toString();
@@ -54,6 +54,14 @@ abstract class AbstractOsBasedExecutionCondition<A extends Annotation> implement
 	private ConditionEvaluationResult enabledByDefault() {
 		String reason = String.format("@%s is not present", annotationType.getSimpleName());
 		return enabled(reason);
+	}
+
+	private String currentOS() {
+		return System.getProperty("os.name");
+	}
+
+	protected String currentArchitecture() {
+		return System.getProperty("os.arch");
 	}
 
 }
