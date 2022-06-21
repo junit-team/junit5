@@ -45,11 +45,11 @@ final class LifecycleMethodUtils {
 	}
 
 	static List<Method> findBeforeEachMethods(Class<?> testClass) {
-		return findMethodsAndAssertNonStatic(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
+		return findMethodsAndAssertNonStaticAndNonPrivate(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
 	}
 
 	static List<Method> findAfterEachMethods(Class<?> testClass) {
-		return findMethodsAndAssertNonStatic(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
+		return findMethodsAndAssertNonStaticAndNonPrivate(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
 	}
 
 	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
@@ -63,6 +63,13 @@ final class LifecycleMethodUtils {
 	private static void assertNonStatic(Class<? extends Annotation> annotationType, Method method) {
 		if (ReflectionUtils.isStatic(method)) {
 			throw new JUnitException(String.format("@%s method '%s' must not be static.",
+				annotationType.getSimpleName(), method.toGenericString()));
+		}
+	}
+
+	private static void assertNonPrivate(Class<? extends Annotation> annotationType, Method method) {
+		if (ReflectionUtils.isPrivate(method)) {
+			throw new JUnitException(String.format("@%s method '%s' must not be private.",
 				annotationType.getSimpleName(), method.toGenericString()));
 		}
 	}
@@ -83,10 +90,14 @@ final class LifecycleMethodUtils {
 		return methods;
 	}
 
-	private static List<Method> findMethodsAndAssertNonStatic(Class<?> testClass,
+	private static List<Method> findMethodsAndAssertNonStaticAndNonPrivate(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
 		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
-		methods.forEach(method -> assertNonStatic(annotationType, method));
+		methods.forEach(method -> {
+			assertNonStatic(annotationType, method);
+			assertNonPrivate(annotationType, method);
+		});
+
 		return methods;
 	}
 

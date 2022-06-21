@@ -49,8 +49,18 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 	}
 
 	@Test
+	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateBeforeEachDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidPrivateBeforeEachMethod.class);
+	}
+
+	@Test
 	void executeValidTestCaseAlongsideTestCaseWithInvalidStaticAfterEachDeclaration() {
 		assertExecutionResults(TestCaseWithInvalidStaticAfterEachMethod.class);
+	}
+
+	@Test
+	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateAfterEachDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidPrivateAfterEachMethod.class);
 	}
 
 	private void assertExecutionResults(Class<?> invalidTestClass) {
@@ -116,11 +126,35 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	static class TestCaseWithInvalidPrivateBeforeEachMethod {
+
+		// must NOT be private
+		@BeforeEach
+		private void beforeEach() {
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
 	static class TestCaseWithInvalidStaticAfterEachMethod {
 
 		// must NOT be static
 		@AfterEach
 		static void afterEach() {
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class TestCaseWithInvalidPrivateAfterEachMethod {
+
+		// must NOT be private
+		@AfterEach
+		private void afterEach() {
 		}
 
 		@Test
