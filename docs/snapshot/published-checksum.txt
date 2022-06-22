@@ -23,6 +23,7 @@
 0923cd8b977e9289a09936d389a6532d  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodArgumentsProvider.java
 0957d2cca7802fcc58464822aaf9f484  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathRootSelector.java
 0972a544133374c55bd43559bbb82022  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
+0977b2aa51c7a662225cee50555ea2cd  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ReflectionUtils.java
 098a58bc8fe77b96f7cf246f9dde8ba8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicNodeTestDescriptor.java
 0a1a3fa61e83943607656bdc13688b26  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SingleLock.java
 0a3fd4ccab2693c403e21805b04298ba  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageNameFilter.java
@@ -136,7 +137,6 @@
 2e3fcd582247fcbb0f1bc71c68ffa350  documentation/src/test/java/example/extensions/RandomNumberExtension.java
 2f1a405930c301d545696af326a43271  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java
 2f6c53349ee30bd5b0ac609dcd27fa35  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/package-info.java
-2f83470737beadc1b9d1841a3ac013ec  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ReflectionUtils.java
 2fa8f468a324914fc630ea9cce9a9acf  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/package-info.java
 2fc92656dcc625f7aba51ca8eba02111  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptionsParser.java
 30786fb53f1c079d5b807cd0a36ab390  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/FallbackStringToObjectConverter.java
@@ -207,7 +207,6 @@
 4a68c2260f2e59cd5db7bfa3dca011e8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutConfiguration.java
 4bbd6faa6b559b4c878d395d144c6e2d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodSelectorResolver.java
 4bbdb7f88917408d27adbb537fa6b346  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludePackages.java
-4bd55fd88a7863dd74a5e6e2c4e3dab3  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M2.adoc
 4c3238a6919faef2f316d3331cc917fa  junit-platform-jfr/src/main/java/org/junit/platform/jfr/FlightRecordingExecutionListener.java
 4c796086bbba4c298e0c77cfc5635527  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.java
 4c7d68f0ab34b8f5b924e2284e13d05a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/AbstractOrderingVisitor.java
@@ -490,6 +489,7 @@ a9bda2bcfd890afe6c137303a8ba08fc  documentation/src/test/java/example/intercepto
 aa3697525732da21661412feceecb39a  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/ExternalResourceAdapter.java
 aa80841a11790dd9b9753e57d498ddef  junit-platform-jfr/src/main/java/org/junit/platform/jfr/FlightRecordingDiscoveryListener.java
 aaa26c4f6b0042236ead4d8ff73692cc  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.java
+ab1993699a76f4e014af48125bb867b6  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M2.adoc
 ab53fc49b16352e46345d74ad1723057  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExtensionValuesStore.java
 ab72e7847b8203ddbb210e7d08a4315a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/package-info.java
 ab83ef64ae475dffa6ef688db027c5e0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/package-info.java
