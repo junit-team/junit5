@@ -103,7 +103,7 @@ class AssertIterableEquals {
 				return;
 			}
 
-			// If the pair is already under investigation, we fail to avoid infinite recursion.
+			// If the pair is already under investigation, we fail in order to avoid infinite recursion.
 			if (status == Status.UNDER_INVESTIGATION) {
 				indexes.removeLast();
 				failIterablesNotEqual(expected, actual, indexes, messageOrSupplier);
