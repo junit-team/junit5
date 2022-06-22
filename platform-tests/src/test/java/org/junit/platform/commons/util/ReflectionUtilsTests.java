@@ -10,7 +10,9 @@
 
 package org.junit.platform.commons.util;
 
+import static java.time.Duration.ofMillis;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -18,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.function.Try.success;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
@@ -45,6 +48,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Nested;
@@ -535,6 +539,20 @@ class ReflectionUtilsTests {
 	void tryToLoadClassWhenClassNotFoundException() {
 		assertThrows(ClassNotFoundException.class,
 			() -> ReflectionUtils.tryToLoadClass("foo.bar.EnigmaClassThatDoesNotExist").get());
+	}
+
+	@Test
+	void tryToLoadClassFailsWithinReasonableTimeForInsanelyLargeAndInvalidMultidimensionalPrimitiveArrayName() {
+		// Create a class name of the form int[][][]...[][][]X
+		String className = IntStream.rangeClosed(1, 20_000)//
+				.mapToObj(i -> "[]")//
+				.collect(joining("", "int", "X"));
+
+		// The following should ideally fail in less than 50ms. So we just make
+		// sure it fails in less than 500ms in order to (hopefully) allow the
+		// test to pass on CI servers with limited resources.
+		assertTimeoutPreemptively(ofMillis(500),
+			() -> assertThrows(ClassNotFoundException.class, () -> ReflectionUtils.tryToLoadClass(className).get()));
 	}
 
 	@Test

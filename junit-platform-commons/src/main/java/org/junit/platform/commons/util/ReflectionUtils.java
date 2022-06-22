@@ -115,6 +115,8 @@ public final class ReflectionUtils {
 	private static final Pattern VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN = Pattern.compile("^(\\[+)(\\[[ZBCDFIJS])$");
 
 	// Pattern: "java.lang.String[]", "int[]", "int[][][][]", etc.
+	// ?> => non-capturing atomic group
+	// ++ => possessive quantifier
 	private static final Pattern SOURCE_CODE_SYNTAX_ARRAY_PATTERN = Pattern.compile("^([^\\[\\]]+)((?>\\[\\])++)$");
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
