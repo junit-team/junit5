@@ -16,6 +16,7 @@ on GitHub.
 ==== Bug Fixes
 
 * Absolute path entries are now supported in JUnit's Platform Console Launcher on Windows.
+* Fix concurrency issue in classpath scanning.
 
 ==== Deprecations and Breaking Changes
 
