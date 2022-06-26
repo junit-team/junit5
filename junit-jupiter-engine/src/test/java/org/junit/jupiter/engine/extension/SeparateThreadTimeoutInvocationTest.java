@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,14 +35,17 @@ class SeparateThreadTimeoutInvocationTest {
 	@Test
 	@DisplayName("throws timeout exception when timeout duration is exceeded")
 	void throwsTimeoutException() {
+		AtomicReference<String> threadName = new AtomicReference<>();
 		var invocation = aSeparateThreadInvocation(() -> {
+			threadName.set(Thread.currentThread().getName());
 			Thread.sleep(100);
 			return null;
 		});
 
 		assertThatThrownBy(invocation::proceed) //
 				.hasMessage("method() timed out after 10 milliseconds") //
-				.isInstanceOf(TimeoutException.class);
+				.isInstanceOf(TimeoutException.class) //
+				.hasRootCauseMessage("Execution timed out in thread " + threadName.get());
 	}
 
 	@Test

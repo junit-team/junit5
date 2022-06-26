@@ -84,8 +84,6 @@ class TimeoutInvocationFactoryTest {
 	void shouldCreateTimeoutInvocationForSeparateThreadTimeoutThreadMode() {
 		var invocation = timeoutInvocationFactory.create(ThreadMode.SEPARATE_THREAD, parameters);
 		assertThat(invocation).isInstanceOf(SeparateThreadTimeoutInvocation.class);
-		verify(store).getOrComputeIfAbsent(matches("junit\\-jupiter\\-timeout\\-invocation\\-runner\\-\\d+"), any(),
-			eq(SeparateThreadExecutorResource.class));
 	}
 
 }

@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.extension;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Timeout.ThreadMode;
@@ -28,7 +27,6 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class TimeoutInvocationFactory {
 
-	private static final AtomicInteger separateThreadNumber = new AtomicInteger(1);
 	private final Store store;
 
 	TimeoutInvocationFactory(Store store) {
@@ -37,11 +35,11 @@ class TimeoutInvocationFactory {
 
 	<T> Invocation<T> create(ThreadMode threadMode, TimeoutInvocationParameters<T> timeoutInvocationParameters) {
 		Preconditions.notNull(threadMode, "thread mode must not be null");
+		Preconditions.condition(threadMode != ThreadMode.INFERRED, "thread mode must not be INFERRED");
 		Preconditions.notNull(timeoutInvocationParameters, "timeout invocation parameters must not be null");
 		if (threadMode == ThreadMode.SEPARATE_THREAD) {
 			return new SeparateThreadTimeoutInvocation<>(timeoutInvocationParameters.getInvocation(),
-				timeoutInvocationParameters.getTimeoutDuration(), getThreadExecutorForSeparateThreadInvocation(),
-				timeoutInvocationParameters.getDescriptionSupplier());
+				timeoutInvocationParameters.getTimeoutDuration(), timeoutInvocationParameters.getDescriptionSupplier());
 		}
 		return new SameThreadTimeoutInvocation<>(timeoutInvocationParameters.getInvocation(),
 			timeoutInvocationParameters.getTimeoutDuration(), getThreadExecutorForSameThreadInvocation(),
@@ -52,15 +50,9 @@ class TimeoutInvocationFactory {
 		return store.getOrComputeIfAbsent(SingleThreadExecutorResource.class).get();
 	}
 
-	private ScheduledExecutorService getThreadExecutorForSeparateThreadInvocation() {
-		String threadName = "junit-jupiter-timeout-invocation-runner-" + separateThreadNumber.getAndIncrement();
-		return store.getOrComputeIfAbsent(threadName, s -> new SeparateThreadExecutorResource(threadName),
-			SeparateThreadExecutorResource.class).get();
-	}
-
 	private static abstract class ExecutorResource implements CloseableResource {
 
-		private final ScheduledExecutorService executor;
+		protected final ScheduledExecutorService executor;
 
 		ExecutorResource(ScheduledExecutorService executor) {
 			this.executor = executor;
@@ -93,17 +85,6 @@ class TimeoutInvocationFactory {
 		}
 	}
 
-	static class SeparateThreadExecutorResource extends ExecutorResource {
-		SeparateThreadExecutorResource(String threadName) {
-			super(Executors.newSingleThreadScheduledExecutor(runnable -> {
-				Thread thread = new Thread(runnable);
-				thread.setName(threadName);
-				thread.setPriority(Thread.MAX_PRIORITY);
-				return thread;
-			}));
-		}
-	}
-
 	static class TimeoutInvocationParameters<T> {
 
 		private final Invocation<T> invocation;
@@ -112,9 +93,10 @@ class TimeoutInvocationFactory {
 
 		TimeoutInvocationParameters(Invocation<T> invocation, TimeoutDuration timeout,
 				Supplier<String> descriptionSupplier) {
-			this.invocation = invocation;
-			this.timeout = timeout;
-			this.descriptionSupplier = descriptionSupplier;
+			this.invocation = Preconditions.notNull(invocation, "invocation must not be null");
+			this.timeout = Preconditions.notNull(timeout, "timeout must not be null");
+			this.descriptionSupplier = Preconditions.notNull(descriptionSupplier,
+				"description supplier must not be null");
 		}
 
 		public Invocation<T> getInvocation() {
