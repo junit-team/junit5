@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -712,7 +713,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 	static class UnrecoverableExceptionInSeparateThreadTestCase {
 		@Test
-		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 5, unit = SECONDS, threadMode = SEPARATE_THREAD)
 		void test() {
 			throw new OutOfMemoryError();
 		}
