@@ -582,8 +582,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#writing-tests-declarative-timeouts">2.19. Timeouts</a>
 <ul class="sectlevel3">
-<li><a href="#writing-tests-declarative-timeouts-polling">2.19.1. Using @Timeout for Polling Tests</a></li>
-<li><a href="#writing-tests-declarative-timeouts-mode">2.19.2. Disable @Timeout Globally</a></li>
+<li><a href="#writing-tests-declarative-timeouts-thread-mode">2.19.1. Thread mode</a></li>
+<li><a href="#writing-tests-declarative-timeouts-default-timeouts">2.19.2. Default Timeouts</a></li>
+<li><a href="#writing-tests-declarative-timeouts-polling">2.19.3. Using @Timeout for Polling Tests</a></li>
+<li><a href="#writing-tests-declarative-timeouts-mode">2.19.4. Disable @Timeout Globally</a></li>
 </ul>
 </li>
 <li><a href="#writing-tests-parallel-execution">2.20. Parallel Execution</a>
@@ -1685,11 +1687,10 @@ are <code>static</code> methods in the <code><a href="../api/org.junit.jupiter.a
 <td class="content">
 <div class="title">Preemptive Timeouts with <code>assertTimeoutPreemptively()</code></div>
 <div class="paragraph">
-<p>Contrary to <a href="#writing-tests-declarative-timeouts">declarative timeouts</a>, the various
-<code>assertTimeoutPreemptively()</code> methods in the <code>Assertions</code> class execute the provided
-<code>executable</code> or <code>supplier</code> in a different thread than that of the calling code. This
-behavior can lead to undesirable side effects if the code that is executed within the
-<code>executable</code> or <code>supplier</code> relies on <code>java.lang.ThreadLocal</code> storage.</p>
+<p>The various`assertTimeoutPreemptively()` methods in the <code>Assertions</code> class execute
+the provided <code>executable</code> or <code>supplier</code> in a different thread than that of the calling
+code. This behavior can lead to undesirable side effects if the code that is executed
+within the <code>executable</code> or <code>supplier</code> relies on <code>java.lang.ThreadLocal</code> storage.</p>
 </div>
 <div class="paragraph">
 <p>One common example of this is the transactional testing support in the Spring Framework.
@@ -5343,15 +5344,14 @@ unit for the duration defaults to seconds but is configurable.</p>
         <span class="c1">// fails if execution time exceeds 100 milliseconds</span>
     <span class="o">}</span>
 
+    <span class="nd">@Test</span>
+    <span class="nd">@Timeout</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">,</span> <span class="n">threadMode</span> <span class="o">=</span> <span class="nc">ThreadMode</span><span class="o">.</span><span class="na">SEPARATE_THREAD</span><span class="o">)</span>
+    <span class="kt">void</span> <span class="nf">failsIfExecutionTimeExceeds100MillisecondsInSeparateThread</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// fails if execution time exceeds 100 milliseconds, the test code is executed in a separate thread</span>
+    <span class="o">}</span>
+
 <span class="o">}</span></code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Contrary to the <code>assertTimeoutPreemptively()</code> assertion, the execution of the annotated
-method proceeds in the main thread of the test. If the timeout is exceeded, the main
-thread is interrupted from another thread. This is done to ensure interoperability with
-frameworks such as Spring that make use of mechanisms that are sensitive to the currently
-running thread — for example, <code>ThreadLocal</code> transaction management.</p>
 </div>
 <div class="paragraph">
 <p>To apply the same timeout to all test methods within a test class and all of its <code>@Nested</code>
@@ -5371,9 +5371,36 @@ within the specified duration but does not verify the execution time of each ind
 <p>If <code>@Timeout</code> is present on a <code>@TestTemplate</code> method — for example, a <code>@RepeatedTest</code> or
 <code>@ParameterizedTest</code> — each invocation will have the given timeout applied to it.</p>
 </div>
+<div class="sect3">
+<h4 id="writing-tests-declarative-timeouts-thread-mode"><a class="anchor" href="#writing-tests-declarative-timeouts-thread-mode"></a>2.19.1. Thread mode</h4>
+<div class="paragraph">
+<p>The timeout can be applied using one of the following three thread modes: <code>SAME_THREAD</code>,
+<code>SEPARATE_THREAD</code>, or <code>INFERRED</code>.</p>
+</div>
+<div class="paragraph">
+<p>When <code>SAME_THREAD</code> is used, the execution of the annotated method proceeds in the main
+thread of the test. If the timeout is exceeded, the main thread is interrupted from
+another thread. This is done to ensure interoperability with frameworks such as Spring
+that make use of mechanisms that are sensitive to the currently running thread — for
+example, <code>ThreadLocal</code> transaction management.</p>
+</div>
+<div class="paragraph">
+<p>On the contrary when <code>SEPARATE_THREAD</code> is used, like the <code>assertTimeoutPreemptively()</code>
+assertion, the execution of the annotated method proceeds in a separate thread, this
+can lead to undesirable side effects, see <a href="#writing-tests-assertions-preemptive-timeouts">Preemptive Timeouts with <code>assertTimeoutPreemptively()</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>When <code>INFERRED</code> (default) thread mode is used, the thread mode is resolved via the
+<code>junit.jupiter.execution.timeout.thread.mode.default</code> configuration parameter. If the
+provided configuration parameter is invalid or not present then <code>SAME_THREAD</code> is used as
+fallback.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-declarative-timeouts-default-timeouts"><a class="anchor" href="#writing-tests-declarative-timeouts-default-timeouts"></a>2.19.2. Default Timeouts</h4>
 <div class="paragraph">
 <p>The following <a href="#running-tests-config-params">configuration parameters</a> can be used to
-specify global timeouts for all methods of a certain category unless they or an enclosing
+specify default timeouts for all methods of a certain category unless they or an enclosing
 test class is annotated with <code>@Timeout</code>:</p>
 </div>
 <div class="dlist">
@@ -5478,8 +5505,9 @@ omitted. Specifying no unit is equivalent to using seconds.</p>
 </tr>
 </tbody>
 </table>
+</div>
 <div class="sect3">
-<h4 id="writing-tests-declarative-timeouts-polling"><a class="anchor" href="#writing-tests-declarative-timeouts-polling"></a>2.19.1. Using @Timeout for Polling Tests</h4>
+<h4 id="writing-tests-declarative-timeouts-polling"><a class="anchor" href="#writing-tests-declarative-timeouts-polling"></a>2.19.3. Using @Timeout for Polling Tests</h4>
 <div class="paragraph">
 <p>When dealing with asynchronous code, it is common to write tests that poll while waiting
 for something to happen before performing any assertions. In some cases you can rewrite
@@ -5524,7 +5552,7 @@ asynchronous tests, consider using a dedicated library such as
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-declarative-timeouts-mode"><a class="anchor" href="#writing-tests-declarative-timeouts-mode"></a>2.19.2. Disable @Timeout Globally</h4>
+<h4 id="writing-tests-declarative-timeouts-mode"><a class="anchor" href="#writing-tests-declarative-timeouts-mode"></a>2.19.4. Disable @Timeout Globally</h4>
 <div class="paragraph">
 <p>When stepping through your code in a debug session, a fixed timeout limit may influence
 the result of the test, e.g. mark the test as failed although all assertions were met.</p>
@@ -11141,6 +11169,11 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeout.ThreadMode</code> <em>(enum)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.9</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DynamicTestInvocationContext</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
@@ -11801,7 +11834,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-06-26 10:29:08 UTC
+Last updated 2022-06-26 14:24:02 UTC
 </div>
 </div>
 <style>

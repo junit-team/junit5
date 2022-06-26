@@ -161,6 +161,24 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="Timeout.ThreadMode.html" class="type-name-link" title="enum class in org.junit.jupiter.api">Timeout.ThreadMode</a></code></div>
+<div class="col-last even-row-color">
+<div class="block"><code>ThreadMode</code> is use to define whether the test code should be executed in the thread
+ of the calling code or in a separated thread.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- =========== ANNOTATION INTERFACE REQUIRED MEMBER SUMMARY =========== -->
 <li>
 <section class="member-summary" id="annotation-interface-required-element-summary">
@@ -187,9 +205,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Optional Element</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html" title="class or interface in java.util.concurrent" class="external-link">TimeUnit</a></code></div>
-<div class="col-second even-row-color"><code><a href="#unit()" class="member-name-link">unit</a></code></div>
+<div class="col-first even-row-color"><code><a href="Timeout.ThreadMode.html" title="enum class in org.junit.jupiter.api">Timeout.ThreadMode</a></code></div>
+<div class="col-second even-row-color"><code><a href="#threadMode()" class="member-name-link">threadMode</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">The thread mode of this timeout.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html" title="class or interface in java.util.concurrent" class="external-link">TimeUnit</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#unit()" class="member-name-link">unit</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">The time unit of this timeout.</div>
 </div>
 </div>
@@ -265,8 +288,14 @@ loadScripts(document, 'script');</script>
  lifecycle methods: "junit.jupiter.execution.timeout.default".</div>
 </div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#TIMEOUT_MODE_PROPERTY_NAME" class="member-name-link">TIMEOUT_MODE_PROPERTY_NAME</a></code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME" class="member-name-link">DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Property name used to set the default thread mode for all testable and lifecycle
+ methods: "junit.jupiter.execution.timeout.thread.mode.default".</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#TIMEOUT_MODE_PROPERTY_NAME" class="member-name-link">TIMEOUT_MODE_PROPERTY_NAME</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Property used to determine if timeouts are applied to tests: "junit.jupiter.execution.timeout.mode".</div>
 </div>
 </div>
@@ -610,6 +639,32 @@ loadScripts(document, 'script');</script>
 </dl>
 </section>
 </li>
+<li>
+<section class="detail" id="DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME">
+<h3>DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.9")
+</span><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME</span></div>
+<div class="block">Property name used to set the default thread mode for all testable and lifecycle
+ methods: "junit.jupiter.execution.timeout.thread.mode.default".
+
+ <p>The value of this property will be used unless overridden by a <a href="Timeout.html" title="annotation interface in org.junit.jupiter.api"><code>@Timeout</code></a>
+ annotation present on the method or on an enclosing test class (for testable methods).
+
+ <p>The supported values are <code>SAME_THREAD</code> or <code>SEPARATE_THREAD</code>, if none is provided
+ <code>SAME_THREAD</code> is used as default.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.9</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../../constant-values.html#org.junit.jupiter.api.Timeout.DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -654,6 +709,31 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>SECONDS</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="threadMode()">
+<h3>threadMode</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.9")
+</span><span class="return-type"><a href="Timeout.ThreadMode.html" title="enum class in org.junit.jupiter.api">Timeout.ThreadMode</a></span>&nbsp;<span class="element-name">threadMode</span></div>
+<div class="block">The thread mode of this timeout.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>thread mode</dd>
+<dt>Since:</dt>
+<dd>5.9</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="Timeout.ThreadMode.html" title="enum class in org.junit.jupiter.api"><code>Timeout.ThreadMode</code></a></li>
+</ul>
+</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>INFERRED</dd>
 </dl>
 </section>
 </li>
