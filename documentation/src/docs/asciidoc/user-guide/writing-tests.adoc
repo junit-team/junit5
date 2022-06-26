@@ -2088,7 +2088,6 @@ test class is annotated with `@Timeout`:
     Default timeout for `@AfterEach` methods
 `junit.jupiter.execution.timeout.afterall.method.default`::
     Default timeout for `@AfterAll` methods
-`junit.jupiter.execution.timeout.thread.mode.default`:: Default timeout thread mode
 
 More specific configuration parameters override less specific ones. For example,
 `junit.jupiter.execution.timeout.test.method.default` overrides
