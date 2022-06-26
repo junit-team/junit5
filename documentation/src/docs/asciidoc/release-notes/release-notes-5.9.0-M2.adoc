@@ -18,6 +18,7 @@ on GitHub.
 * Absolute path entries are now supported in JUnit's Platform Console Launcher on Windows.
 * Attempts to load a `Class` for an invalid class name representing an extremely large
   multidimensional array now fail within a reasonable amount of time.
+* Fix concurrency issue in classpath scanning.
 
 ==== Deprecations and Breaking Changes
 
