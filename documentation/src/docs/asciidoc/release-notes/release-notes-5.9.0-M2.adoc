@@ -46,13 +46,12 @@ on GitHub.
   method is a method declared in the test class with the same name as the
   `@ParameterizedTest` method that is inferred as the factory method when no explicit
   factory method is specified in the `@MethodSource` annotation.
-
-* Thread mode can be set on `@Timeout` annotation. It allows to configure whether the test code
-  is executed in the thread of the calling code or in a separate thread, the modes are:
-  `INFERRED` (default) which resolves the thread mode configured via the
-  property `junit.jupiter.execution.timeout.thread.mode.default`, `SAME_THREAD` that executes
-  the test code in the same thread than the calling code, and `SEPARATE_THREAD` which
-  executes the test code in a separate thread.
+* Thread mode can be set on `@Timeout` annotation. It allows to configure whether test
+  code is executed in the thread of the calling code or in a separate thread. The three
+  modes are: `INFERRED` (default) which resolves the thread mode configured via the
+  property `junit.jupiter.execution.timeout.thread.mode.default`, `SAME_THREAD` that
+  executes the test code in the same thread as the calling code, and `SEPARATE_THREAD`
+  which executes it in a separate thread.
 
 
 [[release-notes-5.9.0-M2-junit-vintage]]
