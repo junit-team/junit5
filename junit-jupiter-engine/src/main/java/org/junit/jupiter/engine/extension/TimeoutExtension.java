@@ -11,24 +11,22 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.junit.jupiter.api.Timeout.TIMEOUT_MODE_PROPERTY_NAME;
+import static org.junit.jupiter.api.Timeout.ThreadMode.SAME_THREAD;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.Timeout.ThreadMode;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-import org.junit.platform.commons.JUnitException;
+import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.TimeoutInvocationParameters;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -41,6 +39,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(Timeout.class);
 	private static final String TESTABLE_METHOD_TIMEOUT_KEY = "testable_method_timeout_from_annotation";
+	private static final String TESTABLE_METHOD_TIMEOUT_THREAD_MODE_KEY = "testable_method_timeout_thread_mode_from_annotation";
 	private static final String GLOBAL_TIMEOUT_CONFIG_KEY = "global_timeout_config";
 	private static final String ENABLED_MODE_VALUE = "enabled";
 	private static final String DISABLED_MODE_VALUE = "disabled";
@@ -59,6 +58,9 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private void readAndStoreTimeoutSoChildrenInheritIt(ExtensionContext context) {
 		readTimeoutFromAnnotation(context.getElement()).ifPresent(
 			timeout -> context.getStore(NAMESPACE).put(TESTABLE_METHOD_TIMEOUT_KEY, timeout));
+		readTimeoutThreadModeFromAnnotation(context.getElement()).ifPresent(
+			timeoutThreadMode -> context.getStore(NAMESPACE).put(TESTABLE_METHOD_TIMEOUT_THREAD_MODE_KEY,
+				timeoutThreadMode));
 	}
 
 	@Override
@@ -131,6 +133,11 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		return AnnotationSupport.findAnnotation(element, Timeout.class).map(TimeoutDuration::from);
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	private Optional<ThreadMode> readTimeoutThreadModeFromAnnotation(Optional<AnnotatedElement> element) {
+		return AnnotationSupport.findAnnotation(element, Timeout.class).map(Timeout::threadMode);
+	}
+
 	private <T> T interceptTestableMethod(Invocation<T> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) throws Throwable {
@@ -167,8 +174,23 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		if (timeout == null || isTimeoutDisabled(extensionContext)) {
 			return invocation;
 		}
-		return new TimeoutInvocation<>(invocation, timeout, getExecutor(extensionContext),
-			() -> describe(invocationContext, extensionContext));
+
+		ThreadMode threadMode = resolveTimeoutThreadMode(extensionContext);
+		return new TimeoutInvocationFactory(extensionContext.getRoot().getStore(NAMESPACE)).create(threadMode,
+			new TimeoutInvocationParameters<>(invocation, timeout,
+				() -> describe(invocationContext, extensionContext)));
+	}
+
+	private ThreadMode resolveTimeoutThreadMode(ExtensionContext extensionContext) {
+		ThreadMode annotationThreadMode = getAnnotationThreadMode(extensionContext);
+		if (annotationThreadMode == null || annotationThreadMode == ThreadMode.INFERRED) {
+			return getGlobalTimeoutConfiguration(extensionContext).getDefaultTimeoutThreadMode().orElse(SAME_THREAD);
+		}
+		return annotationThreadMode;
+	}
+
+	private ThreadMode getAnnotationThreadMode(ExtensionContext extensionContext) {
+		return extensionContext.getStore(NAMESPACE).get(TESTABLE_METHOD_TIMEOUT_THREAD_MODE_KEY, ThreadMode.class);
 	}
 
 	private String describe(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
@@ -178,10 +200,6 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 			return String.format("%s(%s)", method.getName(), ClassUtils.nullSafeToString(method.getParameterTypes()));
 		}
 		return ReflectionUtils.getFullyQualifiedMethodName(invocationContext.getTargetClass(), method);
-	}
-
-	private ScheduledExecutorService getExecutor(ExtensionContext extensionContext) {
-		return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(ExecutorResource.class).get();
 	}
 
 	/**
@@ -211,34 +229,4 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	@FunctionalInterface
 	private interface TimeoutProvider extends Function<TimeoutConfiguration, Optional<TimeoutDuration>> {
 	}
-
-	private static class ExecutorResource implements CloseableResource {
-
-		private final ScheduledExecutorService executor;
-
-		@SuppressWarnings("unused")
-		ExecutorResource() {
-			executor = Executors.newSingleThreadScheduledExecutor(runnable -> {
-				Thread thread = new Thread(runnable, "junit-jupiter-timeout-watcher");
-				thread.setPriority(Thread.MAX_PRIORITY);
-				return thread;
-			});
-		}
-
-		ScheduledExecutorService get() {
-			return executor;
-		}
-
-		@Override
-		public void close() throws Throwable {
-			executor.shutdown();
-			boolean terminated = executor.awaitTermination(5, TimeUnit.SECONDS);
-			if (!terminated) {
-				executor.shutdownNow();
-				throw new JUnitException("Scheduled executor could not be stopped in an orderly manner");
-			}
-		}
-
-	}
-
 }
