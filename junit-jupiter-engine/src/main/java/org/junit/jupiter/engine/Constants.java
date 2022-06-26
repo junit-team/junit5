@@ -316,10 +316,11 @@ public final class Constants {
 	/**
 	 * Property name used to set the default timeout thread mode.
 	 *
+	 * @since 5.9
 	 * @see Timeout
 	 * @see Timeout.ThreadMode
 	 */
-	@API(status = STABLE, since = "5.9")
+	@API(status = EXPERIMENTAL, since = "5.9")
 	public static final String DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME = Timeout.DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME;
 
 	private Constants() {

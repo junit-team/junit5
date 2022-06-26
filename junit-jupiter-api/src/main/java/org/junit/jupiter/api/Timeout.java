@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -328,7 +329,7 @@ public @interface Timeout {
 	 *
 	 * @since 5.9
 	 */
-	@API(status = STABLE, since = "5.9")
+	@API(status = EXPERIMENTAL, since = "5.9")
 	String DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME = "junit.jupiter.execution.timeout.thread.mode.default";
 
 	/**
@@ -350,8 +351,10 @@ public @interface Timeout {
 	 * The thread mode of this timeout.
 	 *
 	 * @return thread mode
-	* @see ThreadMode
+	 * @since 5.9
+	 * @see ThreadMode
 	 */
+	@API(status = EXPERIMENTAL, since = "5.9")
 	ThreadMode threadMode() default ThreadMode.INFERRED;
 
 	/**
@@ -360,11 +363,11 @@ public @interface Timeout {
 	 *
 	 * @since 5.9
 	 */
-	@API(status = STABLE, since = "5.9")
+	@API(status = EXPERIMENTAL, since = "5.9")
 	enum ThreadMode {
 		/**
 		 * The thread mode is determined using the parameter configured in property
-		 * {@code DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME}.
+		 * {@value Timeout#DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME}.
 		 */
 		INFERRED,
 
