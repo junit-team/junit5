@@ -97,6 +97,7 @@
 1f998a3098e2e5af9556441efa7b9a69  documentation/src/docs/asciidoc/link-attributes.adoc
 1feec12617b781ea78facb35fe0291f0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactory.java
 1ff37fc341e9719a9a4570a631b9adac  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ConditionEvaluator.java
+2039b5a96a06c852b5311144573e449b  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M2.adoc
 20b1a1302f0a898b3bdafe2bbc3741bb  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/RegisterExtension.java
 20b976b7e4cb7bb0143bb0cf735a8953  junit-jupiter-api/src/main/java/org/junit/jupiter/api/IndicativeSentencesGeneration.java
 215e05db8f29fb9eafe679bbea958098  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/FilterableIgnoringRunnerDecorator.java
@@ -561,7 +562,6 @@ bdaadd002cc4ac1ed93cdc71cf58f9a6  junit-platform-launcher/src/main/java/org/juni
 bdd69e1f5ced3cc7f0a187349da09f57  junit-platform-console/src/main/java/org/junit/platform/console/tasks/Color.java
 bdfdf35266fe605e2f0f1277c93e9a23  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeEachCallback.java
 bea33e96c38d6e9784d166f7e95242af  documentation/src/docs/asciidoc/user-guide/advanced-topics/launcher-api.adoc
-beecd2fceda049946db11c1656f940d7  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-M2.adoc
 beeee2c70ddcbeec132fe8e3a49340b5  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistrar.java
 bf360709ef61950ae17d36f2b1844969  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ParameterResolutionUtils.java
 bf8d76cf67ea68f9d620a5fb5e2f9ab3  documentation/src/docs/asciidoc/tocbot-3.0.2/styles.css
