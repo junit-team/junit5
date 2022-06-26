@@ -355,8 +355,8 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("non timeout exceeded")
 		void nonTimeoutExceededInSeparateThread() {
-			executeTestsForClass(NonTimeoutExceedingSeparateThreadTestCase.class).allEvents().assertStatistics(
-				stats -> stats.failed(0));
+			executeTestsForClass(NonTimeoutExceedingSeparateThreadTestCase.class).allEvents() //
+					.assertStatistics(stats -> stats.failed(0));
 		}
 
 		@Test
@@ -470,8 +470,8 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 			@Test
 			@DisplayName("non timeout exceeded")
 			void nonTimeoutExceededInSeparateThreadOnClassLevel() {
-				executeTestsForClass(NonTimeoutExceededOnClassLevelTestCase.class).allEvents().assertStatistics(
-					stats -> stats.failed(0));
+				executeTestsForClass(NonTimeoutExceededOnClassLevelTestCase.class).allEvents() //
+						.assertStatistics(stats -> stats.failed(0));
 			}
 		}
 	}

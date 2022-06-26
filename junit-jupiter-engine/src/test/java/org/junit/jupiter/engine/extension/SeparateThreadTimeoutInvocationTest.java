@@ -31,38 +31,43 @@ import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.TimeoutInvoca
 @DisplayName("SeparateThreadTimeoutInvocation")
 class SeparateThreadTimeoutInvocationTest {
 
-	private static <T> SeparateThreadTimeoutInvocation<T> aSeparateThreadInvocation(Invocation<T> invocation) {
-		return (SeparateThreadTimeoutInvocation<T>) new TimeoutInvocationFactory(
-			new NamespaceAwareStore(new ExtensionValuesStore(null),
-				ExtensionContext.Namespace.create(SeparateThreadTimeoutInvocationTest.class))).create(
-					ThreadMode.SEPARATE_THREAD, new TimeoutInvocationParameters<>(invocation,
-						new TimeoutDuration(10, MILLISECONDS), () -> "method()"));
-	}
-
 	@Test
 	@DisplayName("throws timeout exception when timeout duration is exceeded")
 	void throwsTimeoutException() {
-		SeparateThreadTimeoutInvocation<Object> separateThreadTimeoutInvocation = aSeparateThreadInvocation(() -> {
+		var invocation = aSeparateThreadInvocation(() -> {
 			Thread.sleep(100);
 			return null;
 		});
 
-		assertThatThrownBy(separateThreadTimeoutInvocation::proceed).hasMessage(
-			"method() timed out after 10 milliseconds").isInstanceOf(TimeoutException.class);
+		assertThatThrownBy(invocation::proceed) //
+				.hasMessage("method() timed out after 10 milliseconds") //
+				.isInstanceOf(TimeoutException.class);
 	}
 
 	@Test
 	@DisplayName("executes invocation in a separate thread")
 	void runsInvocationUsingSeparateThread() throws Throwable {
-		String invocationThreadName = aSeparateThreadInvocation(() -> Thread.currentThread().getName()).proceed();
+		var invocationThreadName = aSeparateThreadInvocation(() -> Thread.currentThread().getName()).proceed();
 		assertThat(invocationThreadName).isNotEqualTo(Thread.currentThread().getName());
 	}
 
 	@Test
 	@DisplayName("throws invocation exception")
 	void shouldThrowInvocationException() {
-		assertThatThrownBy(aSeparateThreadInvocation(() -> {
+		var invocation = aSeparateThreadInvocation(() -> {
 			throw new RuntimeException("hi!");
-		})::proceed).isInstanceOf(RuntimeException.class).hasMessage("hi!");
+		});
+		assertThatThrownBy(invocation::proceed) //
+				.isInstanceOf(RuntimeException.class) //
+				.hasMessage("hi!");
+	}
+
+	private static <T> SeparateThreadTimeoutInvocation<T> aSeparateThreadInvocation(Invocation<T> invocation) {
+		var namespace = ExtensionContext.Namespace.create(SeparateThreadTimeoutInvocationTest.class);
+		var store = new NamespaceAwareStore(new ExtensionValuesStore(null), namespace);
+		var parameters = new TimeoutInvocationParameters<>(invocation, new TimeoutDuration(10, MILLISECONDS),
+			() -> "method()");
+		return (SeparateThreadTimeoutInvocation<T>) new TimeoutInvocationFactory(store) //
+				.create(ThreadMode.SEPARATE_THREAD, parameters);
 	}
 }

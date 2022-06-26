@@ -36,8 +36,9 @@ class TimeoutExceptionFactoryTest {
 	void createExceptionWithMethodSignatureTimeout() {
 		TimeoutException exception = create(methodSignature, tenMillisDuration);
 
-		assertThat(exception.getMessage()).isEqualTo("test() timed out after 10 milliseconds");
-		assertThat(exception.getSuppressed()).isEmpty();
+		assertThat(exception) //
+				.hasMessage("test() timed out after 10 milliseconds") //
+				.hasNoSuppressedExceptions();
 	}
 
 	@Test
@@ -45,8 +46,9 @@ class TimeoutExceptionFactoryTest {
 	void createExceptionWithMethodSignatureTimeoutAndThrowable() {
 		TimeoutException exception = create(methodSignature, tenMillisDuration, suppressedException);
 
-		assertThat(exception.getMessage()).isEqualTo("test() timed out after 10 milliseconds");
-		assertThat(exception.getSuppressed()).containsExactly(suppressedException);
+		assertThat(exception) //
+				.hasMessage("test() timed out after 10 milliseconds") //
+				.hasSuppressedException(suppressedException);
 	}
 
 	@Nested
@@ -56,15 +58,15 @@ class TimeoutExceptionFactoryTest {
 		@Test
 		@DisplayName("method signature is null")
 		void methodSignatureIsnull() {
-			assertThatThrownBy(() -> create(null, tenMillisDuration, suppressedException)).hasMessage(
-				"method signature must not be null");
+			assertThatThrownBy(() -> create(null, tenMillisDuration, suppressedException)) //
+					.hasMessage("method signature must not be null");
 		}
 
 		@Test
 		@DisplayName("method timeout duration is null")
 		void timeoutDurationIsnull() {
-			assertThatThrownBy(() -> create(methodSignature, null, suppressedException)).hasMessage(
-				"timeout duration must not be null");
+			assertThatThrownBy(() -> create(methodSignature, null, suppressedException)) //
+					.hasMessage("timeout duration must not be null");
 		}
 	}
 
