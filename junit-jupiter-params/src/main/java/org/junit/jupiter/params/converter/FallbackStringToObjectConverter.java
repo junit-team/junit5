@@ -35,7 +35,7 @@ import org.junit.platform.commons.util.Preconditions;
  * {@link String} to a given target type by invoking a static factory method
  * or factory constructor defined in the target type.
  *
- * <h3>Search Algorithm</h3>
+ * <h2>Search Algorithm</h2>
  *
  * <ol>
  * <li>Search for a single, non-private static factory method in the target

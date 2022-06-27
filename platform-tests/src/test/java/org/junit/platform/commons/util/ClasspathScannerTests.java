@@ -16,12 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
 
 import java.io.IOException;
 import java.lang.module.ModuleFinder;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -223,17 +226,25 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void findAllClassesInPackageWithinJarFile() throws Exception {
-		var jarfile = getClass().getResource("/jartest.jar");
+	void findAllClassesInPackageWithinJarFileConcurrently() throws Exception {
+		var jarFile = getClass().getResource("/jartest.jar");
+		var jarUri = URI.create("jar:" + jarFile);
 
-		try (var classLoader = new URLClassLoader(new URL[] { jarfile })) {
+		try (var classLoader = new URLClassLoader(new URL[] { jarFile })) {
 			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
-			var classes = classpathScanner.scanForClassesInPackage("org.junit.platform.jartest.included", allClasses);
-			assertThat(classes).hasSize(2);
-			var classNames = classes.stream().map(Class::getSimpleName).collect(Collectors.toList());
-			assertTrue(classNames.contains("Included"));
-			assertTrue(classNames.contains("RecursivelyIncluded"));
+			var results = executeConcurrently(10,
+				() -> classpathScanner.scanForClassesInPackage("org.junit.platform.jartest.included", allClasses));
+
+			assertThrows(FileSystemNotFoundException.class, () -> FileSystems.getFileSystem(jarUri),
+				"FileSystem should be closed");
+
+			results.forEach(classes -> {
+				assertThat(classes).hasSize(2);
+				var classNames = classes.stream().map(Class::getSimpleName).toList();
+				assertTrue(classNames.contains("Included"));
+				assertTrue(classNames.contains("RecursivelyIncluded"));
+			});
 		}
 	}
 

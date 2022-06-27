@@ -33,7 +33,7 @@ import org.apiguardian.api.API;
  * <p>{@code @RegisterExtension} fields must not be {@code null} (when evaluated)
  * but may be either {@code static} or non-static.
  *
- * <h3>Static Fields</h3>
+ * <h2>Static Fields</h2>
  *
  * <p>If a {@code @RegisterExtension} field is {@code static}, the extension
  * will be registered after extensions that are registered at the class level
@@ -45,7 +45,7 @@ import org.apiguardian.api.API;
  * {@link TestInstancePreDestroyCallback} as well as method-level extension APIs
  * such as {@link BeforeEachCallback}, etc.
  *
- * <h3>Instance Fields</h3>
+ * <h2>Instance Fields</h2>
  *
  * <p>If a {@code @RegisterExtension} field is non-static (i.e., an instance
  * field), the extension will be registered after the test class has been
@@ -63,14 +63,14 @@ import org.apiguardian.api.API;
  * semantics, an instance extension will be registered <em>before</em> extensions
  * that are registered at the method level via {@code @ExtendWith}.
  *
- * <h3>Inheritance</h3>
+ * <h2>Inheritance</h2>
  *
  * <p>{@code @RegisterExtension} fields are inherited from superclasses as long
  * as they are not <em>hidden</em> or <em>overridden</em>. Furthermore,
  * {@code @RegisterExtension} fields from superclasses will be registered before
  * {@code @RegisterExtension} fields in subclasses.
  *
- * <h3>Registration Order</h3>
+ * <h2>Registration Order</h2>
  *
  * <p>By default, if multiple extensions are registered via
  * {@code @RegisterExtension}, they will be ordered using an algorithm that is
@@ -85,7 +85,7 @@ import org.apiguardian.api.API;
  * {@code @Order}, relative to {@code @RegisterExtension} fields and other
  * {@code @ExtendWith} fields.
  *
- * <h3>Example Usage</h3>
+ * <h2>Example Usage</h2>
  *
  * <p>In the following example, the {@code docs} field in the test class is
  * initialized programmatically by supplying a custom {@code lookUpDocsDir()}
@@ -111,7 +111,7 @@ import org.apiguardian.api.API;
  *     }
  * }</pre>
  *
- * <h3>Supported Extension APIs</h3>
+ * <h2>Supported Extension APIs</h2>
  *
  * <ul>
  * <li>{@link ExecutionCondition}</li>

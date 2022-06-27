@@ -44,7 +44,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * <p>A symmetric {@link TestInstancePreConstructCallback} extension defines a callback
  * hook that is invoked prior to any test class instances being constructed.
  *
- * <h3>Constructor Requirements</h3>
+ * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on constructor
  * requirements.

@@ -43,7 +43,7 @@ import org.apiguardian.api.API;
  * create a custom <em>composed annotation</em> that inherits the semantics
  * of {@code @RepeatedTest}.
  *
- * <h3>Test Execution Order</h3>
+ * <h2>Test Execution Order</h2>
  *
  * <p>By default, test methods will be ordered using an algorithm that is
  * deterministic but intentionally nonobvious. This ensures that subsequent runs

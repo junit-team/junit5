@@ -32,7 +32,7 @@ import org.apiguardian.api.API;
  * list of tags to be included in or excluded from the current test plan,
  * potentially dependent on the current environment.
  *
- * <h3>Syntax Rules for Tags</h3>
+ * <h2>Syntax Rules for Tags</h2>
  * <ul>
  * <li>A tag must not be blank.</li>
  * <li>A <em>trimmed</em> tag must not contain whitespace.</li>

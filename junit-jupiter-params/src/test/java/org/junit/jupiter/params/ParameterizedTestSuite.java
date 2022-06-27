@@ -18,7 +18,7 @@ import org.junit.platform.suite.api.Suite;
 /**
  * Test suite for JUnit Jupiter parameterized test support.
  *
- * <h3>Logging Configuration</h3>
+ * <h2>Logging Configuration</h2>
  *
  * <p>In order for our log4j2 configuration to be used in an IDE, you must
  * set the following system property before running any tests &mdash; for

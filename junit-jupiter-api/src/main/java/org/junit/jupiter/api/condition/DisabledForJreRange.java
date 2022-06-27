@@ -38,7 +38,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * custom <em>composed annotation</em> that inherits the semantics of this
  * annotation.
  *
- * <h4>Warning</h4>
+ * <h2>Warning</h2>
  *
  * <p>This annotation can only be declared once on an
  * {@link java.lang.reflect.AnnotatedElement AnnotatedElement} (i.e., test

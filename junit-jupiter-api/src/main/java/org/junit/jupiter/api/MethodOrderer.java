@@ -39,7 +39,7 @@ import org.junit.platform.commons.util.ClassUtils;
  * parameter (see the User Guide for details) or <em>locally</em> for a test
  * class via the {@link TestMethodOrder @TestMethodOrder} annotation.
  *
- * <h4>Built-in Implementations</h4>
+ * <h2>Built-in Implementations</h2>
  *
  * <p>JUnit Jupiter provides the following built-in {@code MethodOrderer}
  * implementations.
@@ -246,7 +246,7 @@ public interface MethodOrderer {
 	/**
 	 * {@code MethodOrderer} that orders methods pseudo-randomly.
 	 *
-	 * <h4>Custom Seed</h4>
+	 * <h2>Custom Seed</h2>
 	 *
 	 * <p>By default, the random <em>seed</em> used for ordering methods is the
 	 * value returned by {@link System#nanoTime()} during static initialization

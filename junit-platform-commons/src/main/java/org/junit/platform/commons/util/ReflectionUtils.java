@@ -61,7 +61,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
 /**
  * Collection of utilities for working with the Java reflection APIs.
  *
- * <h3>DISCLAIMER</h3>
+ * <h2>DISCLAIMER</h2>
  *
  * <p>These utilities are intended solely for usage within the JUnit framework
  * itself. <strong>Any usage by external parties is not supported.</strong>
@@ -115,7 +115,9 @@ public final class ReflectionUtils {
 	private static final Pattern VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN = Pattern.compile("^(\\[+)(\\[[ZBCDFIJS])$");
 
 	// Pattern: "java.lang.String[]", "int[]", "int[][][][]", etc.
-	private static final Pattern SOURCE_CODE_SYNTAX_ARRAY_PATTERN = Pattern.compile("^([^\\[\\]]+)((\\[\\])+)+$");
+	// ?> => non-capturing atomic group
+	// ++ => possessive quantifier
+	private static final Pattern SOURCE_CODE_SYNTAX_ARRAY_PATTERN = Pattern.compile("^([^\\[\\]]+)((?>\\[\\])++)$");
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 

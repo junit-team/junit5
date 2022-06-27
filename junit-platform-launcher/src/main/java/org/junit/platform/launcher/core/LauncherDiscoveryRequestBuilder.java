@@ -38,7 +38,7 @@ import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListener
  * The {@code LauncherDiscoveryRequestBuilder} provides a light-weight DSL for
  * generating a {@link LauncherDiscoveryRequest}.
  *
- * <h4>Example</h4>
+ * <h2>Example</h2>
  *
  * <pre class="code">
  * import static org.junit.platform.engine.discovery.DiscoverySelectors.*;

@@ -340,7 +340,7 @@ tasks {
 
 			this as StandardJavadocDocletOptions
 			splitIndex(true)
-			addBooleanOption("Xdoclint:all,-accessibility,-missing", true)
+			addBooleanOption("Xdoclint:all,-missing", true)
 			addBooleanOption("html5", true)
 			addMultilineStringsOption("tag").value = listOf(
 					"apiNote:a:API Note:",

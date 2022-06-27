@@ -15,7 +15,10 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Absolute path entries are now supported in JUnit's Platform Console Launcher on Windows.
+* Attempts to load a `Class` for an invalid class name representing an extremely large
+  multidimensional array now fail within a reasonable amount of time.
+* Fix concurrency issue in classpath scanning.
 
 ==== Deprecations and Breaking Changes
 
@@ -23,7 +26,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New public factory method to instantiate an `ExecutionRequest`.
 
 
 [[release-notes-5.9.0-M2-junit-jupiter]]
@@ -43,9 +46,14 @@ on GitHub.
   method is a method declared in the test class with the same name as the
   `@ParameterizedTest` method that is inferred as the factory method when no explicit
   factory method is specified in the `@MethodSource` annotation.
+* Thread mode can be set on `@Timeout` annotation. It allows to configure whether test
+  code is executed in the thread of the calling code or in a separate thread. The three
+  modes are: `INFERRED` (default) which resolves the thread mode configured via the
+  property `junit.jupiter.execution.timeout.thread.mode.default`, `SAME_THREAD` that
+  executes the test code in the same thread as the calling code, and `SEPARATE_THREAD`
+  which executes it in a separate thread.
 * Three new `abort` methods have been added to the `Assumptions` class.
   These are analogous to the `fail` methods in the `Assertions` class, but instead of failing they abort the test.
-
 
 [[release-notes-5.9.0-M2-junit-vintage]]
 === JUnit Vintage

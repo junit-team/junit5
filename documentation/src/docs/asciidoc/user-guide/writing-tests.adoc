@@ -97,19 +97,38 @@ void myFastTest() {
 }
 ----
 
-[[writing-tests-classes-and-methods]]
-=== Test Classes and Methods
+[[writing-tests-definitions]]
+=== Definitions
 
-**Test Class**: any top-level class, `static` member class, or <<writing-tests-nested,
-`@Nested` class>> that contains at least one _test method_.
+.Platform Concepts
+****
+Container::
+a node in the test tree that contains other containers or tests as its children (e.g. a _test class_).
 
+Test::
+a node in the test tree that verifies expected behavior when executed (e.g. a `@Test` method).
+****
+
+.Jupiter Concepts
+****
+Lifecycle Method::
+any method that is directly annotated or meta-annotated with
+`@BeforeAll`, `@AfterAll`, `@BeforeEach`, or `@AfterEach`.
+
+Test Class::
+any top-level class, `static` member class, or <<writing-tests-nested,
+`@Nested` class>> that contains at least one _test method_, i.e. a _container_.
 Test classes must not be `abstract` and must have a single constructor.
 
-**Test Method**: any instance method that is directly annotated or meta-annotated with
+Test Method::
+any instance method that is directly annotated or meta-annotated with
 `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`.
+With the exception of `@Test`, these create a _container_ in the test tree that groups
+_tests_ or, potentially (for `@TestFactory`), other _containers_.
+****
 
-**Lifecycle Method**: any method that is directly annotated or meta-annotated with
-`@BeforeAll`, `@AfterAll`, `@BeforeEach`, or `@AfterEach`.
+[[writing-tests-classes-and-methods]]
+=== Test Classes and Methods
 
 Test methods and lifecycle methods may be declared locally within the current test class,
 inherited from superclasses, or inherited from interfaces (see
@@ -251,11 +270,10 @@ include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 [WARNING]
 .Preemptive Timeouts with `assertTimeoutPreemptively()`
 ====
-Contrary to <<writing-tests-declarative-timeouts, declarative timeouts>>, the various
-`assertTimeoutPreemptively()` methods in the `Assertions` class execute the provided
-`executable` or `supplier` in a different thread than that of the calling code. This
-behavior can lead to undesirable side effects if the code that is executed within the
-`executable` or `supplier` relies on `java.lang.ThreadLocal` storage.
+The various`assertTimeoutPreemptively()` methods in the `Assertions` class execute
+the provided `executable` or `supplier` in a different thread than that of the calling
+code. This behavior can lead to undesirable side effects if the code that is executed
+within the `executable` or `supplier` relies on `java.lang.ThreadLocal` storage.
 
 One common example of this is the transactional testing support in the Spring Framework.
 Specifically, Spring's testing support binds transaction state to the current thread (via
@@ -2026,12 +2044,6 @@ The following example shows how `@Timeout` is applied to lifecycle and test meth
 include::{testDir}/example/TimeoutDemo.java[tags=user_guide]
 ----
 
-Contrary to the `assertTimeoutPreemptively()` assertion, the execution of the annotated
-method proceeds in the main thread of the test. If the timeout is exceeded, the main
-thread is interrupted from another thread. This is done to ensure interoperability with
-frameworks such as Spring that make use of mechanisms that are sensitive to the currently
-running thread — for example, `ThreadLocal` transaction management.
-
 To apply the same timeout to all test methods within a test class and all of its `@Nested`
 classes, you can declare the `@Timeout` annotation at the class level. It will then be
 applied to all test, test factory, and test template methods within that class and its
@@ -2047,8 +2059,32 @@ within the specified duration but does not verify the execution time of each ind
 If `@Timeout` is present on a `@TestTemplate` method — for example, a `@RepeatedTest` or
 `@ParameterizedTest` — each invocation will have the given timeout applied to it.
 
+[[writing-tests-declarative-timeouts-thread-mode]]
+==== Thread mode
+
+The timeout can be applied using one of the following three thread modes: `SAME_THREAD`,
+`SEPARATE_THREAD`, or `INFERRED`.
+
+When `SAME_THREAD` is used, the execution of the annotated method proceeds in the main
+thread of the test. If the timeout is exceeded, the main thread is interrupted from
+another thread. This is done to ensure interoperability with frameworks such as Spring
+that make use of mechanisms that are sensitive to the currently running thread — for
+example, `ThreadLocal` transaction management.
+
+On the contrary when `SEPARATE_THREAD` is used, like the `assertTimeoutPreemptively()`
+assertion, the execution of the annotated method proceeds in a separate thread, this
+can lead to undesirable side effects, see <<writing-tests-assertions-preemptive-timeouts>>.
+
+When `INFERRED` (default) thread mode is used, the thread mode is resolved via the
+`junit.jupiter.execution.timeout.thread.mode.default` configuration parameter. If the
+provided configuration parameter is invalid or not present then `SAME_THREAD` is used as
+fallback.
+
+[[writing-tests-declarative-timeouts-default-timeouts]]
+==== Default Timeouts
+
 The following <<running-tests-config-params, configuration parameters>> can be used to
-specify global timeouts for all methods of a certain category unless they or an enclosing
+specify default timeouts for all methods of a certain category unless they or an enclosing
 test class is annotated with `@Timeout`:
 
 `junit.jupiter.execution.timeout.default`::
@@ -2293,6 +2329,63 @@ synchronization mechanisms described in the next section, the `ForkJoinPool` tha
 behind the scenes may spawn additional threads to ensure execution continues with
 sufficient parallelism. Thus, if you require such guarantees in a test class, please use
 your own means of controlling concurrency.
+
+[[writing-tests-parallel-execution-config-properties]]
+===== Relevant properties
+
+The following table lists relevant properties for configuring parallel execution. See
+<<running-tests-config-params>> for details on how to set such properties.
+
+[cols="d,d,a,d"]
+|===
+|Property |Description |Supported Values |Default Value
+
+| ```junit.jupiter.execution.parallel.enabled```
+| Enable parallel test execution
+|
+  * `true`
+  * `false`
+| ```false```
+
+| ```junit.jupiter.execution.parallel.mode.default```
+| Default execution mode of nodes in the test tree
+|
+  * `concurrent`
+  * `same_thread`
+| ```same_thread```
+
+| ```junit.jupiter.execution.parallel.mode.classes.default```
+| Default execution mode of top-level classes
+|
+  * `concurrent`
+  * `same_thread`
+| ```same_thread```
+
+| ```junit.jupiter.execution.parallel.config.strategy```
+| Execution strategy for desired parallelism and maximum pool size
+|
+  * `dynamic`
+  * `fixed`
+  * `custom`
+| ```dynamic```
+
+| ```junit.jupiter.execution.parallel.config.dynamic.factor```
+| Factor to be multiplied by the number of available processors/cores to determine the
+  desired parallelism for the ```dynamic``` configuration strategy
+| a positive decimal number
+| ```1.0```
+
+| ```junit.jupiter.execution.parallel.config.fixed.parallelism```
+| Desired parallelism for the ```fixed``` configuration strategy
+| a positive integer
+| no default value
+
+| ```junit.jupiter.execution.parallel.config.custom.class```
+| Fully qualified class name of the _ParallelExecutionConfigurationStrategy_ to be
+  used for the ```custom``` configuration strategy
+| for example, _org.example.CustomStrategy_
+| no default value
+|===
 
 [[writing-tests-parallel-execution-synchronization]]
 ==== Synchronization

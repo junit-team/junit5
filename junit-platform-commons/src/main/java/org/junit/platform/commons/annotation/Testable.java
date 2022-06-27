@@ -27,14 +27,14 @@ import org.apiguardian.api.API;
  * (typically a method, field, or class) can be executed by a {@code TestEngine}
  * as a test or test container on the JUnit Platform.
  *
- * <h3>Motivation for {@code @Testable}</h3>
+ * <h2>Motivation for {@code @Testable}</h2>
  * <p>Some clients of the JUnit Platform, notably IDEs such as IntelliJ IDEA,
  * operate only on sources for test discovery. Thus, they cannot use the full
  * runtime discovery mechanism of the JUnit Platform since it relies on compiled
  * classes. {@code @Testable} therefore serves as an alternative mechanism for
  * IDEs to discover potential tests by analyzing the source code only.
  *
- * <h3>Common Use Cases</h3>
+ * <h2>Common Use Cases</h2>
  * <p>{@code @Testable} will typically be used as a meta-annotation in order to
  * create a custom <em>composed annotation</em> that inherits the semantics
  * of {@code @Testable}. For example, the {@code @Test} and {@code @TestFactory}
@@ -45,7 +45,7 @@ import org.apiguardian.api.API;
  * can be annotated with {@code @Testable}. Note that {@code @Testable} is an
  * {@link Inherited @Inherited} annotation.
  *
- * <h3>Requirements for IDEs and Tooling Vendors</h3>
+ * <h2>Requirements for IDEs and Tooling Vendors</h2>
  * <ul>
  * <li>If a top-level class, static nested class, or inner class is not
  * annotated or meta-annotated with {@code @Testable} but contains a method or field
@@ -58,7 +58,7 @@ import org.apiguardian.api.API;
  * source code.</li>
  * </ul>
  *
- * <h3>Restrictions for TestEngine Implementations</h3>
+ * <h2>Restrictions for TestEngine Implementations</h2>
  * <p>A {@code TestEngine} must <strong>not</strong> in any way perform
  * <em>discovery</em> based on the presence of {@code @Testable}. In terms of
  * discovery, the presence of {@code @Testable} should only be meaningful to
@@ -66,7 +66,7 @@ import org.apiguardian.api.API;
  * is therefore required to discover tests based on information specific to
  * that test engine (e.g., annotations specific to that test engine).
  *
- * <h3>Supported Target Elements</h3>
+ * <h2>Supported Target Elements</h2>
  * <p>Since JUnit Platform version 1.7, {@code @Testable} may target any
  * declaration {@linkplain java.lang.annotation.ElementType element type}. This
  * includes the aforementioned method, field, and class elements.

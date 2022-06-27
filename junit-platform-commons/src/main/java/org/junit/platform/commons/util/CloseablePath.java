@@ -14,12 +14,16 @@ import static java.util.Collections.emptyMap;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 /**
@@ -35,10 +39,12 @@ final class CloseablePath implements Closeable {
 	private static final Closeable NULL_CLOSEABLE = () -> {
 	};
 
+	private static final ConcurrentMap<URI, ManagedFileSystem> MANAGED_FILE_SYSTEMS = new ConcurrentHashMap<>();
+
 	private final Path path;
 	private final Closeable delegate;
 
-	static CloseablePath create(URI uri) throws IOException, URISyntaxException {
+	static CloseablePath create(URI uri) throws URISyntaxException {
 		if (JAR_URI_SCHEME.equals(uri.getScheme())) {
 			String[] parts = uri.toString().split(JAR_URI_SEPARATOR);
 			String jarUri = parts[0];
@@ -52,11 +58,12 @@ final class CloseablePath implements Closeable {
 		return new CloseablePath(Paths.get(uri), NULL_CLOSEABLE);
 	}
 
-	private static CloseablePath createForJarFileSystem(URI jarUri, Function<FileSystem, Path> pathProvider)
-			throws IOException {
-		FileSystem fileSystem = FileSystems.newFileSystem(jarUri, emptyMap());
-		Path path = pathProvider.apply(fileSystem);
-		return new CloseablePath(path, fileSystem);
+	private static CloseablePath createForJarFileSystem(URI jarUri, Function<FileSystem, Path> pathProvider) {
+		ManagedFileSystem managedFileSystem = MANAGED_FILE_SYSTEMS.compute(jarUri,
+			(__, oldValue) -> oldValue == null ? new ManagedFileSystem(jarUri) : oldValue.retain());
+		Path path = pathProvider.apply(managedFileSystem.fileSystem);
+		return new CloseablePath(path,
+			() -> MANAGED_FILE_SYSTEMS.compute(jarUri, (__, ___) -> managedFileSystem.release()));
 	}
 
 	private CloseablePath(Path path, Closeable delegate) {
@@ -71,5 +78,44 @@ final class CloseablePath implements Closeable {
 	@Override
 	public void close() throws IOException {
 		delegate.close();
+	}
+
+	private static class ManagedFileSystem {
+
+		private final AtomicInteger referenceCount = new AtomicInteger(1);
+		private final FileSystem fileSystem;
+		private final URI jarUri;
+
+		ManagedFileSystem(URI jarUri) {
+			this.jarUri = jarUri;
+			try {
+				fileSystem = FileSystems.newFileSystem(jarUri, emptyMap());
+			}
+			catch (IOException e) {
+				throw new UncheckedIOException("Failed to create file system for " + jarUri, e);
+			}
+		}
+
+		private ManagedFileSystem retain() {
+			referenceCount.incrementAndGet();
+			return this;
+		}
+
+		private ManagedFileSystem release() {
+			if (referenceCount.decrementAndGet() == 0) {
+				close();
+				return null;
+			}
+			return this;
+		}
+
+		private void close() {
+			try {
+				fileSystem.close();
+			}
+			catch (IOException e) {
+				throw new UncheckedIOException("Failed to close file system for " + jarUri, e);
+			}
+		}
 	}
 }

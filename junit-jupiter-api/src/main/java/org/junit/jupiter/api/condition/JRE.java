@@ -131,11 +131,19 @@ public enum JRE {
 	JAVA_19,
 
 	/**
+	 * Java 20.
+	 *
+	 * @since 5.9
+	 */
+	@API(status = STABLE, since = "5.9")
+	JAVA_20,
+
+	/**
 	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
 	 * {@link #JAVA_10}, {@link #JAVA_11}, {@link #JAVA_12},
 	 * {@link #JAVA_13}, {@link #JAVA_14}, {@link #JAVA_15},
-	 * {@link #JAVA_16}, {@link #JAVA_17}, {@link #JAVA_18}, or
-	 * {@link #JAVA_19}.
+	 * {@link #JAVA_16}, {@link #JAVA_17}, {@link #JAVA_18},
+	 * {@link #JAVA_19}, or {@link #JAVA_20}.
 	 */
 	OTHER;
 
@@ -187,6 +195,8 @@ public enum JRE {
 					return JAVA_18;
 				case 19:
 					return JAVA_19;
+				case 20:
+					return JAVA_20;
 				default:
 					return OTHER;
 			}

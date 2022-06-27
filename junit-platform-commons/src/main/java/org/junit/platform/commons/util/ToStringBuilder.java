@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
  * Simple builder for generating strings in custom implementations of
  * {@link Object#toString toString()}.
  *
- * <h3>DISCLAIMER</h3>
+ * <h2>DISCLAIMER</h2>
  *
  * <p>These utilities are intended solely for usage within the JUnit framework
  * itself. <strong>Any usage by external parties is not supported.</strong>

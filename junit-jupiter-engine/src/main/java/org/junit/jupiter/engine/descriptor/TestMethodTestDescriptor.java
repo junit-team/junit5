@@ -50,7 +50,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 /**
  * {@link TestDescriptor} for {@link org.junit.jupiter.api.Test @Test} methods.
  *
- * <h3>Default Display Names</h3>
+ * <h2>Default Display Names</h2>
  *
  * <p>The default display name for a test method is the name of the method
  * concatenated with a comma-separated list of parameter types in parentheses.

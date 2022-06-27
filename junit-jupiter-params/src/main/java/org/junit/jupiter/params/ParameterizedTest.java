@@ -29,7 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  *
  * <p>Such methods must not be {@code private} or {@code static}.
  *
- * <h3>Argument Providers and Sources</h3>
+ * <h2>Argument Providers and Sources</h2>
  *
  * <p>{@code @ParameterizedTest} methods must specify at least one
  * {@link org.junit.jupiter.params.provider.ArgumentsProvider ArgumentsProvider}
@@ -40,7 +40,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * {@link org.junit.jupiter.params.provider.Arguments Arguments} that will be
  * used to invoke the parameterized test method.
  *
- * <h3>Formal Parameter List</h3>
+ * <h2>Formal Parameter List</h2>
  *
  * <p>A {@code @ParameterizedTest} method may declare additional parameters at
  * the end of the method's parameter list to be resolved by other
@@ -64,7 +64,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * or any parameter annotated with
  * {@link org.junit.jupiter.params.aggregator.AggregateWith @AggregateWith}.
  *
- * <h3>Argument Conversion</h3>
+ * <h2>Argument Conversion</h2>
  *
  * <p>Method parameters may be annotated with
  * {@link org.junit.jupiter.params.converter.ConvertWith @ConvertWith}
@@ -74,13 +74,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * conversion to the target type automatically (see the User Guide for further
  * details).
  *
- * <h3>Composed Annotations</h3>
+ * <h2>Composed Annotations</h2>
  *
  * <p>{@code @ParameterizedTest} may also be used as a meta-annotation in order
  * to create a custom <em>composed annotation</em> that inherits the semantics
  * of {@code @ParameterizedTest}.
  *
- * <h3>Test Execution Order</h3>
+ * <h2>Test Execution Order</h2>
  *
  * <p>By default, test methods will be ordered using an algorithm that is
  * deterministic but intentionally nonobvious. This ensures that subsequent runs

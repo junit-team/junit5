@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
  * <p>The {@code Executable} interface is similar to {@link java.lang.Runnable},
  * except that an {@code Executable} can throw any kind of exception.
  *
- * <h4>Rationale for throwing {@code Throwable} instead of {@code Exception}</h4>
+ * <h2>Rationale for throwing {@code Throwable} instead of {@code Exception}</h2>
  *
  * <p>Although Java applications typically throw exceptions that are instances
  * of {@link java.lang.Exception}, {@link java.lang.RuntimeException},

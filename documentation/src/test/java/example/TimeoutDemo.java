@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.Timeout.ThreadMode;
 
 // tag::user_guide[]
 class TimeoutDemo {
@@ -29,6 +30,12 @@ class TimeoutDemo {
 	@Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
 	void failsIfExecutionTimeExceeds100Milliseconds() {
 		// fails if execution time exceeds 100 milliseconds
+	}
+
+	@Test
+	@Timeout(value = 100, unit = TimeUnit.MILLISECONDS, threadMode = ThreadMode.SEPARATE_THREAD)
+	void failsIfExecutionTimeExceeds100MillisecondsInSeparateThread() {
+		// fails if execution time exceeds 100 milliseconds, the test code is executed in a separate thread
 	}
 
 }

@@ -37,7 +37,7 @@ import org.apiguardian.api.API;
  * configuration file (i.e., a file named {@code junit-platform.properties} in
  * the root of the class path). Consult the User Guide for further information.
  *
- * <h3>Use Cases</h3>
+ * <h2>Use Cases</h2>
  * <p>Setting the test instance lifecycle mode to {@link Lifecycle#PER_CLASS
  * PER_CLASS} enables the following features.
  * <ul>

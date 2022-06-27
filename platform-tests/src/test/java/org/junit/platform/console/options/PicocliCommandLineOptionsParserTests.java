@@ -43,6 +43,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.platform.commons.JUnitException;
@@ -290,6 +292,15 @@ class PicocliCommandLineOptionsParserTests {
 			() -> assertEquals(List.of(dir, Path.of("lib/some.jar")), type.parseArgLine("-cp ." + File.pathSeparator + "lib/some.jar").getAdditionalClasspathEntries())
 		);
 		// @formatter:on
+	}
+
+	@Test
+	@EnabledOnOs(OS.WINDOWS)
+	void parseValidAndAbsoluteAdditionalClasspathEntries() throws Exception {
+		ArgsType type = ArgsType.args;
+		assertEquals(List.of(Path.of("C:\\a.jar")), type.parseArgLine("-cp C:\\a.jar").getAdditionalClasspathEntries());
+		assertEquals(List.of(Path.of("C:\\foo.jar"), Path.of("D:\\bar.jar")),
+			type.parseArgLine("-cp C:\\foo.jar;D:\\bar.jar").getAdditionalClasspathEntries());
 	}
 
 	@Test
