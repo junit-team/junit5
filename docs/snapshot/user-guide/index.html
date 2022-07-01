@@ -651,6 +651,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#basic-usage">Basic Usage</a></li>
 </ul>
 </li>
+<li><a href="#running-tests-build-spring-boot">4.2.4. Spring Boot</a></li>
 </ul>
 </li>
 <li><a href="#running-tests-console-launcher">4.3. Console Launcher</a>
@@ -875,7 +876,7 @@ exists in popular IDEs (see <a href="#running-tests-ide-intellij-idea">IntelliJ 
 <a href="#running-tests-build-maven">Maven</a>, and <a href="#running-tests-build-ant">Ant</a>).</p>
 </div>
 <div class="paragraph">
-<p><strong>JUnit Jupiter</strong> is the combination of the new <a href="#writing-tests">programming model</a> and
+<p><strong>JUnit Jupiter</strong> is the combination of the <a href="#writing-tests">programming model</a> and
 <a href="#extensions">extension model</a> for writing tests and extensions in JUnit 5. The Jupiter
 sub-project provides a <code>TestEngine</code> for running Jupiter based tests on the platform.</p>
 </div>
@@ -5072,12 +5073,11 @@ and dynamic tests.</p>
 detected at compile time, a <code>JUnitException</code> is thrown when it is detected at runtime.</p>
 </div>
 <div class="paragraph">
-<p>The next six methods are very simple examples that demonstrate the generation of a
-<code>Collection</code>, <code>Iterable</code>, <code>Iterator</code>, array, or <code>Stream</code> of <code>DynamicTest</code> instances. Most
-of these examples do not really exhibit dynamic behavior but merely demonstrate the
-supported return types in principle. However, <code>dynamicTestsFromStream()</code> and
-<code>dynamicTestsFromIntStream()</code> demonstrate how easy it is to generate dynamic tests for a
-given set of strings or a range of input numbers.</p>
+<p>The next six methods demonstrate the generation of a <code>Collection</code>, <code>Iterable</code>, <code>Iterator</code>,
+array, or <code>Stream</code> of <code>DynamicTest</code> instances. Most of these examples do not really
+exhibit dynamic behavior but merely demonstrate the supported return types in principle.
+However, <code>dynamicTestsFromStream()</code> and <code>dynamicTestsFromIntStream()</code> demonstrate how to
+generate dynamic tests for a given set of strings or a range of input numbers.</p>
 </div>
 <div class="paragraph">
 <p>The next method is truly dynamic in nature. <code>generateRandomNumberOfTests()</code> implements an
@@ -6093,26 +6093,26 @@ temporary directories are deleted only after a test completed successfully.</p>
 <h2 id="migrating-from-junit4"><a class="anchor" href="#migrating-from-junit4"></a>3. Migrating from JUnit 4</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Although the JUnit Jupiter programming model and extension model will not support JUnit 4
+<p>Although the JUnit Jupiter programming model and extension model do not support JUnit 4
 features such as <code>Rules</code> and <code>Runners</code> natively, it is not expected that source code
 maintainers will need to update all of their existing tests, test extensions, and custom
 build test infrastructure to migrate to JUnit Jupiter.</p>
 </div>
 <div class="paragraph">
 <p>Instead, JUnit provides a gentle migration path via a <em>JUnit Vintage test engine</em> which
-allows existing tests based on JUnit 3 and JUnit 4 to be executed using the JUnit
-Platform infrastructure. Since all classes and annotations specific to JUnit Jupiter
-reside under a new <code>org.junit.jupiter</code> base package, having both JUnit 4 and JUnit
-Jupiter in the classpath does not lead to any conflicts. It is therefore safe to maintain
-existing JUnit 4 tests alongside JUnit Jupiter tests. Furthermore, since the JUnit team
-will continue to provide maintenance and bug fix releases for the JUnit 4.x baseline,
-developers have plenty of time to migrate to JUnit Jupiter on their own schedule.</p>
+allows existing tests based on JUnit 3 and JUnit 4 to be executed using the JUnit Platform
+infrastructure. Since all classes and annotations specific to JUnit Jupiter reside under
+the <code>org.junit.jupiter</code> base package, having both JUnit 4 and JUnit Jupiter in the
+classpath does not lead to any conflicts. It is therefore safe to maintain existing JUnit
+4 tests alongside JUnit Jupiter tests. Furthermore, since the JUnit team will continue to
+provide maintenance and bug fix releases for the JUnit 4.x baseline, developers have
+plenty of time to migrate to JUnit Jupiter on their own schedule.</p>
 </div>
 <div class="sect2">
 <h3 id="migrating-from-junit4-running"><a class="anchor" href="#migrating-from-junit4-running"></a>3.1. Running JUnit 4 Tests on the JUnit Platform</h3>
 <div class="paragraph">
-<p>Just make sure that the <code>junit-vintage-engine</code> artifact is in your test runtime path. In
-that case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
+<p>Make sure that the <code>junit-vintage-engine</code> artifact is in your test runtime path. In that
+case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
 launcher.</p>
 </div>
 <div class="paragraph">
@@ -6124,10 +6124,10 @@ find out how this is done with Gradle and Maven.</p>
 <div class="paragraph">
 <p>For test classes or methods that are annotated with <code>@Category</code>, the <em>JUnit Vintage test
 engine</em> exposes the category&#8217;s fully qualified class name as a <a href="#running-tests-tags">tag</a>
-of the corresponding test identifier. For example, if a test method is annotated with
-<code>@Category(Example.class)</code>, it will be tagged with <code>"com.acme.Example"</code>. Similar to the
-<code>Categories</code> runner in JUnit 4, this information can be used to filter the discovered
-tests before executing them (see <a href="#running-tests">Running Tests</a> for details).</p>
+for the corresponding test class or test method. For example, if a test method is
+annotated with <code>@Category(Example.class)</code>, it will be tagged with <code>"com.acme.Example"</code>.
+Similar to the <code>Categories</code> runner in JUnit 4, this information can be used to filter the
+discovered tests before executing them (see <a href="#running-tests">Running Tests</a> for details).</p>
 </div>
 </div>
 </div>
@@ -6192,7 +6192,7 @@ instead.</p>
 </li>
 <li>
 <p><code>@Rule</code> and <code>@ClassRule</code> no longer exist; superseded by <code>@ExtendWith</code> and
-<code>@RegisterExtension</code></p>
+<code>@RegisterExtension</code>.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -6258,7 +6258,7 @@ all rule migration support extensions: <code>VerifierSupport</code>, <code>Exter
 4&#8217;s <code>@Ignore</code> annotation (see <a href="#migrating-from-junit4-ignore-annotation-support">JUnit 4 @Ignore Support</a>).</p>
 </div>
 <div class="paragraph">
-<p>However, if you intend to develop a new extension for JUnit 5 please use the new
+<p>However, if you intend to develop a new extension for JUnit Jupiter please use the new
 extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.</p>
 </div>
 </div>
@@ -6304,16 +6304,16 @@ automatically registers the <code>IgnoreCondition</code> along with
 <h3 id="migrating-from-junit4-failure-message-arguments"><a class="anchor" href="#migrating-from-junit4-failure-message-arguments"></a>3.5. Failure Message Arguments</h3>
 <div class="paragraph">
 <p>The <code>Assumptions</code> and <code>Assertions</code> classes in JUnit Jupiter declare arguments in a
-different order than in JUnit 4. In JUnit 4 assertion and assumption methods accept
-the failure message as the first argument; whereas, in JUnit Jupiter assertion and
-assumption methods accept the failure message as the last argument.</p>
+different order than in JUnit 4. In JUnit 4 assertion and assumption methods accept the
+failure message as the first argument; whereas, in JUnit Jupiter assertion and assumption
+methods accept the failure message as the last argument.</p>
 </div>
 <div class="paragraph">
-<p>For instance, the method <code>assertEquals</code> in JUnit 4 is declared as
-<code>assertEquals(String message, Object expected, Object actual)</code>, but in JUnit Jupiter it
-is declared as <code>assertEquals(Object expected, Object actual, String message)</code>.
-The rationale for this is that a failure message is <em>optional</em>, and optional arguments
-should be declared after required arguments in a method signature.</p>
+<p>For instance, the method <code>assertEquals</code> in JUnit 4 is declared as <code>assertEquals(String
+message, Object expected, Object actual)</code>, but in JUnit Jupiter it is declared as
+<code>assertEquals(Object expected, Object actual, String message)</code>. The rationale for this is
+that a failure message is <em>optional</em>, and optional arguments should be declared after
+required arguments in a method signature.</p>
 </div>
 <div class="paragraph">
 <p>The methods affected by this change are the following:</p>
@@ -6532,7 +6532,7 @@ Platform 1.2 and discontinued in 1.3. Please switch to Gradle&#8217;s standard <
 <div class="paragraph">
 <p>Starting with <a href="https://docs.gradle.org/4.6/release-notes.html">version 4.6</a>, Gradle provides
 <a href="https://docs.gradle.org/current/userguide/java_testing.html#using_junit5">native support</a>
-for executing tests on the JUnit Platform. To enable it, you just need to specify
+for executing tests on the JUnit Platform. To enable it, you need to specify
 <code>useJUnitPlatform()</code> within a <code>test</code> task declaration in <code>build.gradle</code>:</p>
 </div>
 <div class="listingblock">
@@ -6562,6 +6562,19 @@ for executing tests on the JUnit Platform. To enable it, you just need to specif
 <p>Please refer to the
 <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_test">official Gradle documentation</a>
 for a comprehensive list of options.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+See <a href="#running-tests-build-spring-boot">Spring Boot</a> for details on how to override the version
+of JUnit used in your Spring Boot application.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect4">
 <h5 id="running-tests-build-gradle-config-params"><a class="anchor" href="#running-tests-build-gradle-config-params"></a>Configuration Parameters</h5>
@@ -6670,6 +6683,19 @@ Surefire and Maven Failsafe provide
 for executing tests on the JUnit Platform. The <code>pom.xml</code> file in the
 <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use the Maven Surefire plugin
 and can serve as a starting point for configuring your Maven build.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+See <a href="#running-tests-build-spring-boot">Spring Boot</a> for details on how to override the version
+of JUnit used in your Spring Boot application.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect4">
 <h5 id="running-tests-build-maven-engines-configure"><a class="anchor" href="#running-tests-build-maven-engines-configure"></a>Configuring Test Engines</h5>
@@ -6879,19 +6905,19 @@ below) or via the <code>junit-platform.properties</code> file.</p>
 <div class="sect3">
 <h4 id="running-tests-build-ant"><a class="anchor" href="#running-tests-build-ant"></a>4.2.3. Ant</h4>
 <div class="paragraph">
-<p>Starting with version <code>1.10.3</code> of <a href="https://ant.apache.org/">Ant</a>, a new
-<a href="https://ant.apache.org/manual/Tasks/junitlauncher.html"><code>junitlauncher</code></a> task has
-been introduced to provide native support for launching tests on the JUnit Platform. The
-<code>junitlauncher</code> task is solely responsible for launching the JUnit Platform and passing
-it the selected collection of tests. The JUnit Platform then delegates to registered test
-engines to discover and execute the tests.</p>
+<p>Starting with version <code>1.10.3</code>, <a href="https://ant.apache.org/">Ant</a> has a
+<a href="https://ant.apache.org/manual/Tasks/junitlauncher.html"><code>junitlauncher</code></a> task that
+provides native support for launching tests on the JUnit Platform. The <code>junitlauncher</code>
+task is solely responsible for launching the JUnit Platform and passing it the selected
+collection of tests. The JUnit Platform then delegates to registered test engines to
+discover and execute the tests.</p>
 </div>
 <div class="paragraph">
-<p>The <code>junitlauncher</code> task attempts to align as close as possible with native Ant
+<p>The <code>junitlauncher</code> task attempts to align as closely as possible with native Ant
 constructs such as
 <a href="https://ant.apache.org/manual/Types/resources.html#collection">resource collections</a>
-for allowing users to select the tests that they want executed by test engines. This
-gives the task a consistent and natural feel when compared to many other core Ant tasks.</p>
+for allowing users to select the tests that they want executed by test engines. This gives
+the task a consistent and natural feel when compared to many other core Ant tasks.</p>
 </div>
 <div class="paragraph">
 <p>Starting with version <code>1.10.6</code> of Ant, the <code>junitlauncher</code> task supports
@@ -6960,6 +6986,51 @@ classes that reside in different locations.</p>
 <p>For further details on usage and configuration options please refer to the official Ant
 documentation for the
 <a href="https://ant.apache.org/manual/Tasks/junitlauncher.html"><code>junitlauncher</code> task</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="running-tests-build-spring-boot"><a class="anchor" href="#running-tests-build-spring-boot"></a>4.2.4. Spring Boot</h4>
+<div class="paragraph">
+<p><a href="https://spring.io/projects/spring-boot">Spring Boot</a> provides automatic support for
+managing the version of JUnit used in your project. In addition, the
+<code>spring-boot-starter-test</code> artifact automatically includes testing libraries such as JUnit
+Jupiter, AspectJ, Mockito, etc.</p>
+</div>
+<div class="paragraph">
+<p>If your build relies on dependency management support from Spring Boot, you should not
+import the <a href="#dependency-metadata-junit-bom"><code>junit-bom</code></a> in your build script since that
+will result in duplicate (and potentially conflicting) management of JUnit dependencies.</p>
+</div>
+<div class="paragraph">
+<p>If you need to override the version of a dependency used in your Spring Boot application,
+you have to override the exact name of the
+<a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#appendix.dependency-versions.properties">version property</a>
+defined in the BOM used by the Spring Boot plugin. For example, the name of the JUnit
+Jupiter version property in Spring Boot is <code>junit-jupiter.version</code>. The mechanism for
+changing a dependency version is documented for both
+<a href="https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#managing-dependencies.dependency-management-plugin.customizing">Gradle</a>
+and
+<a href="https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#using.parent-pom">Maven</a>.</p>
+</div>
+<div class="paragraph">
+<p>With Gradle you can override the JUnit Jupiter version by including the following in your
+<code>build.gradle</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">ext</span><span class="o">[</span><span class="s1">'junit-jupiter.version'</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'5.9.0-SNAPSHOT'</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With Maven you can override the JUnit Jupiter version by including the following in your
+<code>pom.xml</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;properties&gt;</span>
+    <span class="nt">&lt;junit-jupiter.version&gt;</span>5.9.0-SNAPSHOT<span class="nt">&lt;/junit-jupiter.version&gt;</span>
+<span class="nt">&lt;/properties&gt;</span></code></pre>
 </div>
 </div>
 </div>
@@ -11834,7 +11905,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-07-01 11:05:12 UTC
+Last updated 2022-07-01 12:26:55 UTC
 </div>
 </div>
 <style>
