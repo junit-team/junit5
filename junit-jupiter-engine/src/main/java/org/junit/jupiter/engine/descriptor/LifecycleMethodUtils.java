@@ -37,11 +37,13 @@ final class LifecycleMethodUtils {
 	}
 
 	static List<Method> findBeforeAllMethods(Class<?> testClass, boolean requireStatic) {
-		return findMethodsAndAssertStatic(testClass, requireStatic, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN);
+		return findMethodsAndAssertStaticAndNonPrivate(testClass, requireStatic, BeforeAll.class,
+			HierarchyTraversalMode.TOP_DOWN);
 	}
 
 	static List<Method> findAfterAllMethods(Class<?> testClass, boolean requireStatic) {
-		return findMethodsAndAssertStatic(testClass, requireStatic, AfterAll.class, HierarchyTraversalMode.BOTTOM_UP);
+		return findMethodsAndAssertStaticAndNonPrivate(testClass, requireStatic, AfterAll.class,
+			HierarchyTraversalMode.BOTTOM_UP);
 	}
 
 	static List<Method> findBeforeEachMethods(Class<?> testClass) {
@@ -81,12 +83,14 @@ final class LifecycleMethodUtils {
 		}
 	}
 
-	private static List<Method> findMethodsAndAssertStatic(Class<?> testClass, boolean requireStatic,
+	private static List<Method> findMethodsAndAssertStaticAndNonPrivate(Class<?> testClass, boolean requireStatic,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
 		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
 		if (requireStatic) {
 			methods.forEach(method -> assertStatic(annotationType, method));
 		}
+		methods.forEach(method -> assertNonPrivate(annotationType, method));
+
 		return methods;
 	}
 
