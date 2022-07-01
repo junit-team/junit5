@@ -169,3 +169,4 @@ Your donations will help to make that a reality!
 - Roman Pylypaka
 - Ravi Vasamsetty
 - Rajesh Aadi
+- Jun Nakamura
