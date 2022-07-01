@@ -27,6 +27,8 @@ on GitHub.
 ==== New Features and Improvements
 
 * New public factory method to instantiate an `ExecutionRequest`.
+* Documentation for overriding the JUnit version used in Spring Boot applications. See the
+  <<../user-guide/index.adoc#running-tests-build-spring-boot, User Guide>> for details.
 
 
 [[release-notes-5.9.0-RC1-junit-jupiter]]
