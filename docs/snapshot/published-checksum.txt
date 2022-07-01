@@ -59,7 +59,6 @@
 12c1a45de087e972f83d0cf3dc26783a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/CompositeTestExecutionListener.java
 12f1d6ad4c97313fa7adc850a1980cce  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptySource.java
 138df4ec98fe5db01fcff983d6422dbd  documentation/src/main/java/example/registration/WebServerExtension.java
-139b42c8c176b9f12d43076f29152308  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-RC1.adoc
 139e4b05b83a37fb30fdca9f4b6363f5  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 13b820d87cd304bd1c1d4076a8048a3d  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumSource.java
 13c76a7853cbb65c8d2f2330aac9495d  documentation/src/docs/asciidoc/user-guide/api-evolution.adoc
@@ -406,6 +405,7 @@
 8aed8658743d8965a55928f5df04ee0f  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/FileSelector.java
 8aef6a5e7f59d439ad22720107b5a675  documentation/src/test/java/example/exception/IgnoreIOExceptionTests.java
 8b2ec00e1a83f83774569cc966ded6eb  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
+8b5a0ff53e631ccca0d17f4f62cbe7ec  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0-RC1.adoc
 8bd853e2952019b0be771f4b57e1f3ca  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DiscoverySelectors.java
 8c735ce3353033f55ef3ea4f05fa2a67  junit-platform-commons/src/main/java/org/junit/platform/commons/util/package-info.java
 8c8f2ec74086e3ab4dff9f115535aa37  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.java
