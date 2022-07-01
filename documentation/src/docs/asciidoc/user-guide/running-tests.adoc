@@ -162,6 +162,9 @@ Please refer to the
 https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_test[official Gradle documentation]
 for a comprehensive list of options.
 
+NOTE: See <<running-tests-build-spring-boot>> for details on how to override the version
+of JUnit used in your Spring Boot application.
+
 [[running-tests-build-gradle-config-params]]
 ===== Configuration Parameters
 
@@ -255,6 +258,9 @@ https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.
 for executing tests on the JUnit Platform. The `pom.xml` file in the
 `{junit5-jupiter-starter-maven}` project demonstrates how to use the Maven Surefire plugin
 and can serve as a starting point for configuring your Maven build.
+
+NOTE: See <<running-tests-build-spring-boot>> for details on how to override the version
+of JUnit used in your Spring Boot application.
 
 [[running-tests-build-maven-engines-configure]]
 ===== Configuring Test Engines
@@ -514,6 +520,48 @@ classes that reside in different locations.
 For further details on usage and configuration options please refer to the official Ant
 documentation for the
 link:https://ant.apache.org/manual/Tasks/junitlauncher.html[`junitlauncher` task].
+
+[[running-tests-build-spring-boot]]
+==== Spring Boot
+
+link:https://spring.io/projects/spring-boot[Spring Boot] provides automatic support for
+managing the version of JUnit used in your project. In addition, the
+`spring-boot-starter-test` artifact automatically includes testing libraries such as JUnit
+Jupiter, AspectJ, Mockito, etc.
+
+If your build relies on dependency management support from Spring Boot, you should not
+import the <<dependency-metadata-junit-bom,`junit-bom`>> in your build script since that
+will result in duplicate (and potentially conflicting) management of JUnit dependencies.
+
+If you need to override the version of a dependency used in your Spring Boot application,
+you have to override the exact name of the
+link:https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#appendix.dependency-versions.properties[version property]
+defined in the BOM used by the Spring Boot plugin. For example, the name of the JUnit
+Jupiter version property in Spring Boot is `junit-jupiter.version`. The mechanism for
+changing a dependency version is documented for both
+link:https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#managing-dependencies.dependency-management-plugin.customizing[Gradle]
+and
+link:https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#using.parent-pom[Maven].
+
+With Gradle you can override the JUnit Jupiter version by including the following in your
+`build.gradle` file.
+
+[source,groovy,indent=0]
+[subs=attributes+]
+----
+	ext['junit-jupiter.version'] = '{jupiter-version}'
+----
+
+With Maven you can override the JUnit Jupiter version by including the following in your
+`pom.xml` file.
+
+[source,xml,indent=0]
+[subs=attributes+]
+----
+	<properties>
+		<junit-jupiter.version>{jupiter-version}</junit-jupiter.version>
+	</properties>
+----
 
 [[running-tests-console-launcher]]
 === Console Launcher
