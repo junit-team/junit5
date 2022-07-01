@@ -29,14 +29,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Integration tests that explicitly demonstrate the shadowing/overriding
- * rules for lifecylce methods in the {@link JupiterTestEngine}.
+ * rules for lifecycle methods in the {@link JupiterTestEngine}.
  *
  * @since 5.9
  */
-class LifecycleMethodShadowingTests {
+class LifecycleMethodSupersedingTests {
 
 	@Nested
-	@DisplayName("A package-private lifecycle super-method can be combined with")
+	@DisplayName("A package-private lifecycle super-method can be superseded by")
 	class PackagePrivateSuperClassTests {
 
 		@Nested
@@ -73,7 +73,7 @@ class LifecycleMethodShadowingTests {
 	}
 
 	@Nested
-	@DisplayName("A protected lifecycle super-method can be combined with")
+	@DisplayName("A protected lifecycle super-method can be superseded by")
 	class ProtectedSuperClassTests {
 
 		@Nested
@@ -98,7 +98,7 @@ class LifecycleMethodShadowingTests {
 	}
 
 	@Nested
-	@DisplayName("A public lifecycle super-method can be combined with")
+	@DisplayName("A public lifecycle super-method can be superseded by")
 	class PublicSuperClassTests {
 
 		@Nested
