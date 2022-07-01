@@ -131,7 +131,7 @@ Platform 1.2 and discontinued in 1.3. Please switch to Gradle's standard `test` 
 
 Starting with https://docs.gradle.org/4.6/release-notes.html[version 4.6], Gradle provides
 https://docs.gradle.org/current/userguide/java_testing.html#using_junit5[native support]
-for executing tests on the JUnit Platform. To enable it, you just need to specify
+for executing tests on the JUnit Platform. To enable it, you need to specify
 `useJUnitPlatform()` within a `test` task declaration in `build.gradle`:
 
 [source,groovy,indent=0]
@@ -441,18 +441,18 @@ below) or via the `junit-platform.properties` file.
 [[running-tests-build-ant]]
 ==== Ant
 
-Starting with version `1.10.3` of link:https://ant.apache.org/[Ant], a new
-link:https://ant.apache.org/manual/Tasks/junitlauncher.html[`junitlauncher`] task has
-been introduced to provide native support for launching tests on the JUnit Platform. The
-`junitlauncher` task is solely responsible for launching the JUnit Platform and passing
-it the selected collection of tests. The JUnit Platform then delegates to registered test
-engines to discover and execute the tests.
+Starting with version `1.10.3`, link:https://ant.apache.org/[Ant] has a
+link:https://ant.apache.org/manual/Tasks/junitlauncher.html[`junitlauncher`] task that
+provides native support for launching tests on the JUnit Platform. The `junitlauncher`
+task is solely responsible for launching the JUnit Platform and passing it the selected
+collection of tests. The JUnit Platform then delegates to registered test engines to
+discover and execute the tests.
 
-The `junitlauncher` task attempts to align as close as possible with native Ant
+The `junitlauncher` task attempts to align as closely as possible with native Ant
 constructs such as
 link:https://ant.apache.org/manual/Types/resources.html#collection[resource collections]
-for allowing users to select the tests that they want executed by test engines. This
-gives the task a consistent and natural feel when compared to many other core Ant tasks.
+for allowing users to select the tests that they want executed by test engines. This gives
+the task a consistent and natural feel when compared to many other core Ant tasks.
 
 Starting with version `1.10.6` of Ant, the `junitlauncher` task supports
 link:https://ant.apache.org/manual/Tasks/junitlauncher.html#fork[forking the tests in a separate JVM].
