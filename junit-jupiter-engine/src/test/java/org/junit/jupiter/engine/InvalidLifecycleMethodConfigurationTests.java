@@ -34,13 +34,23 @@ import org.junit.platform.testkit.engine.Events;
 class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidBeforeAllDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidBeforeAllMethod.class);
+	void executeValidTestCaseAlongsideTestCaseWithInvalidNonStaticBeforeAllDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidNonStaticBeforeAllMethod.class);
 	}
 
 	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidAfterAllDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidAfterAllMethod.class);
+	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateBeforeAllDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidPrivateBeforeAllMethod.class);
+	}
+
+	@Test
+	void executeValidTestCaseAlongsideTestCaseWithInvalidNonStaticAfterAllDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidNonStaticAfterAllMethod.class);
+	}
+
+	@Test
+	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateAfterAllDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidPrivateAfterAllMethod.class);
 	}
 
 	@Test
@@ -90,7 +100,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidBeforeAllMethod {
+	static class TestCaseWithInvalidNonStaticBeforeAllMethod {
 
 		// must be static
 		@BeforeAll
@@ -102,11 +112,35 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidAfterAllMethod {
+	static class TestCaseWithInvalidPrivateBeforeAllMethod {
+
+		// must not be private
+		@BeforeAll
+        private static void beforeAll() {
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class TestCaseWithInvalidNonStaticAfterAllMethod {
 
 		// must be static
 		@AfterAll
 		void afterAll() {
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class TestCaseWithInvalidPrivateAfterAllMethod {
+
+        // must not be private
+        @AfterAll
+		private static void afterAll() {
 		}
 
 		@Test
