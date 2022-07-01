@@ -116,7 +116,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 
 		// must not be private
 		@BeforeAll
-        private static void beforeAll() {
+		private static void beforeAll() {
 		}
 
 		@Test
@@ -138,8 +138,8 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 
 	static class TestCaseWithInvalidPrivateAfterAllMethod {
 
-        // must not be private
-        @AfterAll
+		// must not be private
+		@AfterAll
 		private static void afterAll() {
 		}
 
