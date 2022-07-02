@@ -20,6 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
@@ -44,6 +46,7 @@ import org.junit.jupiter.engine.execution.NamespaceAwareStore;
  */
 class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 
+	private final TempDirFactory factory = Files::createTempDirectory;
 	private final ExtensionContext extensionContext = mock();
 
 	private TempDirectory.CloseablePath closeablePath;
@@ -64,7 +67,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 */
 	@Test
 	void always() throws IOException {
-		closeablePath = TempDirectory.createTempDir(ALWAYS, extensionContext);
+		closeablePath = TempDirectory.createTempDir(factory, ALWAYS, extensionContext);
 		assertThat(closeablePath.get()).exists();
 
 		closeablePath.close();
@@ -76,7 +79,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	 */
 	@Test
 	void never() throws IOException {
-		closeablePath = TempDirectory.createTempDir(NEVER, extensionContext);
+		closeablePath = TempDirectory.createTempDir(factory, NEVER, extensionContext);
 		assertThat(closeablePath.get()).exists();
 
 		closeablePath.close();
@@ -90,7 +93,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	void onSuccessWithException() throws IOException {
 		when(extensionContext.getExecutionException()).thenReturn(Optional.of(new Exception()));
 
-		closeablePath = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
+		closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, extensionContext);
 		assertThat(closeablePath.get()).exists();
 
 		closeablePath.close();
@@ -104,7 +107,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 	void onSuccessWithNoException() throws IOException {
 		when(extensionContext.getExecutionException()).thenReturn(Optional.empty());
 
-		closeablePath = TempDirectory.createTempDir(ON_SUCCESS, extensionContext);
+		closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, extensionContext);
 		assertThat(closeablePath.get()).exists();
 
 		closeablePath.close();
