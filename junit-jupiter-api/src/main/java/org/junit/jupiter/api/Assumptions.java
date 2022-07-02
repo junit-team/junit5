@@ -259,45 +259,58 @@ public class Assumptions {
 	 * <p>Although aborting with an explicit failure message is recommended,
 	 * this method may be useful when maintaining legacy code.
 	 *
+	 * <p>See Javadoc for {@link #abort(String)} for an explanation of this
+	 * method's generic return type {@code V}.
+	 *
 	 * @throws TestAbortedException always
 	 * @since 5.9
 	 */
 	@API(status = STABLE, since = "5.9")
-	public static void abort() {
-		throwTestAbortedException(null);
+	public static <V> V abort() {
+		throw new TestAbortedException();
 	}
 
 	/**
 	 * <em>Abort</em> the test with the given {@code message}.
+	 *
+	 * <p>The generic return type {@code V} allows this method to be used
+	 * directly as a single-statement lambda expression, thereby avoiding the
+	 * need to implement a code block with an explicit return value. Since this
+	 * method throws an {@link TestAbortedException} before its return
+	 * statement, this method never actually returns a value to its caller.
+	 * The following example demonstrates how this may be used in practice.
+	 *
+	 * <pre>{@code
+	 * Stream.of().map(entry -> abort("assumption not met"));
+	 * }</pre>
 	 *
 	 * @param message the message to be included in the {@code TestAbortedException}
 	 * @throws TestAbortedException always
 	 * @since 5.9
 	 */
 	@API(status = STABLE, since = "5.9")
-	public static void abort(String message) {
-		throwTestAbortedException(message);
+	public static <V> V abort(String message) {
+		throw new TestAbortedException(message);
 	}
 
 	/**
 	 * <em>Abort</em> the test with the supplied message.
+	 *
+	 * <p>See Javadoc for {@link #abort(String)} for an explanation of this
+	 * method's generic return type {@code V}.
 	 *
 	 * @param messageSupplier the supplier of the message to be included in {@code TestAbortedException}
 	 * @throws TestAbortedException always
 	 * @since 5.9
 	 */
 	@API(status = STABLE, since = "5.9")
-	public static void abort(Supplier<String> messageSupplier) {
-		throwTestAbortedException(messageSupplier.get());
+	public static <V> V abort(Supplier<String> messageSupplier) {
+		throw new TestAbortedException(messageSupplier.get());
 	}
 
 	private static void throwAssumptionFailed(String message) {
-		throwTestAbortedException(
-			StringUtils.isNotBlank(message) ? ("Assumption failed" + ": " + message) : "Assumption failed");
-	}
-
-	private static void throwTestAbortedException(String message) {
-		throw new TestAbortedException(message);
+		throw new TestAbortedException(
+			StringUtils.isNotBlank(message) ? "Assumption failed: " + message : "Assumption failed");
 	}
 
 }
