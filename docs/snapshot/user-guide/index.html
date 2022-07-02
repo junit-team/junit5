@@ -511,7 +511,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#writing-tests-disabling">2.7. Disabling Tests</a></li>
 <li><a href="#writing-tests-conditional-execution">2.8. Conditional Test Execution</a>
 <ul class="sectlevel3">
-<li><a href="#writing-tests-conditional-execution-os">2.8.1. Operating System Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-os">2.8.1. Operating System and Architecture Conditions</a></li>
 <li><a href="#writing-tests-conditional-execution-jre">2.8.2. Java Runtime Environment Conditions</a></li>
 <li><a href="#writing-tests-conditional-execution-system-properties">2.8.3. System Property Conditions</a></li>
 <li><a href="#writing-tests-conditional-execution-environment-variables">2.8.4. Environment Variable Conditions</a></li>
@@ -2049,12 +2049,14 @@ the <code>org.junit.jupiter.api.condition</code> package.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-conditional-execution-os"><a class="anchor" href="#writing-tests-conditional-execution-os"></a>2.8.1. Operating System Conditions</h4>
+<h4 id="writing-tests-conditional-execution-os"><a class="anchor" href="#writing-tests-conditional-execution-os"></a>2.8.1. Operating System and Architecture Conditions</h4>
 <div class="paragraph">
-<p>A container or test may be enabled or disabled on a particular operating system via the
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledOnOs.html">@EnabledOnOs</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html">@DisabledOnOs</a></code> annotations.</p>
+<p>A container or test may be enabled or disabled on a particular operating system,
+architecture, or combination of both via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledOnOs.html">@EnabledOnOs</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html">@DisabledOnOs</a></code>
+annotations.</p>
 </div>
 <div id="writing-tests-conditional-execution-os-demo" class="listingblock">
+<div class="title">Conditional execution based on operating system</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="nd">@Test</span>
 <span class="nd">@EnabledOnOs</span><span class="o">(</span><span class="no">MAC</span><span class="o">)</span>
@@ -2084,6 +2086,34 @@ the <code>org.junit.jupiter.api.condition</code> package.</p>
 <span class="nd">@Test</span>
 <span class="nd">@EnabledOnOs</span><span class="o">(</span><span class="no">MAC</span><span class="o">)</span>
 <span class="nd">@interface</span> <span class="nc">TestOnMac</span> <span class="o">{</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div id="writing-tests-conditional-execution-architectures-demo" class="listingblock">
+<div class="title">Conditional execution based on architecture</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@Test</span>
+<span class="nd">@EnabledOnOs</span><span class="o">(</span><span class="n">architectures</span> <span class="o">=</span> <span class="s">"aarch64"</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">onAarch64</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+<span class="o">}</span>
+
+<span class="nd">@Test</span>
+<span class="nd">@DisabledOnOs</span><span class="o">(</span><span class="n">architectures</span> <span class="o">=</span> <span class="s">"x86_64"</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">notOnX86_64</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+<span class="o">}</span>
+
+<span class="nd">@Test</span>
+<span class="nd">@EnabledOnOs</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="no">MAC</span><span class="o">,</span> <span class="n">architectures</span> <span class="o">=</span> <span class="s">"aarch64"</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">onNewMacs</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+<span class="o">}</span>
+
+<span class="nd">@Test</span>
+<span class="nd">@DisabledOnOs</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="no">MAC</span><span class="o">,</span> <span class="n">architectures</span> <span class="o">=</span> <span class="s">"aarch64"</span><span class="o">)</span>
+<span class="kt">void</span> <span class="nf">notOnNewMacs</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -11905,7 +11935,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-07-01 13:37:08 UTC
+Last updated 2022-07-02 13:28:17 UTC
 </div>
 </div>
 <style>

@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#annotation-interface-optional-element-summary">Optional</a>&nbsp;|&nbsp;</li>
-<li><a href="#annotation-interface-required-element-summary">Required</a></li>
+<li>Required</li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
@@ -81,10 +81,15 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">DisabledOnOs</span></div>
 <div class="block"><code>@DisabledOnOs</code> is used to signal that the annotated test class or
  test method is <em>disabled</em> on one or more specified
- <a href="#value()">operating systems</a>.
+ <a href="#value()">operating systems</a> or on one or more specified
+ <a href="#architectures()">architectures</a>
+
+ <p>If operating systems and architectures are specified, the annotated test
+ class or test method is disabled if both conditions apply.
 
  <p>When applied at the class level, all test methods within that class
- will be disabled on the same specified operating systems.
+ will be disabled on the same specified operating systems, architectures, or
+ the specified combinations of both.
 
  <p>If a test method is disabled via this annotation, that does not prevent
  the test class from being instantiated. Rather, it prevents the execution of
@@ -130,24 +135,6 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== ANNOTATION INTERFACE REQUIRED MEMBER SUMMARY =========== -->
-<li>
-<section class="member-summary" id="annotation-interface-required-element-summary">
-<h2>Required Element Summary</h2>
-<div class="caption"><span>Required Elements</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Required Element</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="OS.html" title="enum class in org.junit.jupiter.api.condition">OS</a>[]</code></div>
-<div class="col-second even-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Operating systems on which the annotated class or method should be
- disabled.</div>
-</div>
-</div>
-</section>
-</li>
 <!-- =========== ANNOTATION INTERFACE OPTIONAL MEMBER SUMMARY =========== -->
 <li>
 <section class="member-summary" id="annotation-interface-optional-element-summary">
@@ -157,10 +144,21 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Optional Element</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#disabledReason()" class="member-name-link">disabledReason</a></code></div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second even-row-color"><code><a href="#architectures()" class="member-name-link">architectures</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Architectures on which the annotated class or method should be disabled.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#disabledReason()" class="member-name-link">disabledReason</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Custom reason to provide if the test or container is disabled.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="OS.html" title="enum class in org.junit.jupiter.api.condition">OS</a>[]</code></div>
+<div class="col-second even-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Operating systems on which the annotated class or method should be
+ disabled.</div>
 </div>
 </div>
 </section>
@@ -188,15 +186,29 @@ loadScripts(document, 'script');</script>
 </ul>
 </dd>
 </dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
 </section>
 </li>
-</ul>
-</section>
-</li>
-<!-- ============ ANNOTATION INTERFACE MEMBER DETAIL =========== -->
 <li>
-<section class="member-details">
-<ul class="member-list">
+<section class="detail" id="architectures()">
+<h3>architectures</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.9")
+</span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">architectures</span></div>
+<div class="block">Architectures on which the annotated class or method should be disabled.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.9</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="disabledReason()">
 <h3>disabledReason</h3>
