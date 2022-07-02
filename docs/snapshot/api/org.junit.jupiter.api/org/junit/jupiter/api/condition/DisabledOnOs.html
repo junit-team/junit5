@@ -84,8 +84,8 @@ loadScripts(document, 'script');</script>
  <a href="#value()">operating systems</a> or on one or more specified
  <a href="#architectures()">architectures</a>
 
- <p>If operating systems and architectures are specified, the annotated test
- class or test method is disabled if both conditions apply.
+ <p>If operating systems <em>and</em> architectures are specified, the annotated
+ test class or test method is disabled if both conditions apply.
 
  <p>When applied at the class level, all test methods within that class
  will be disabled on the same specified operating systems, architectures, or
@@ -198,7 +198,10 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.9")
 </span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">architectures</span></div>
-<div class="block">Architectures on which the annotated class or method should be disabled.</div>
+<div class="block">Architectures on which the annotated class or method should be disabled.
+
+ <p>Each architecture will be compared to the value returned from
+ <code>System.getProperty("os.arch")</code>, ignoring case.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.9</dd>
