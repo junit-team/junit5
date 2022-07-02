@@ -27,8 +27,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * {@linkplain #value operating systems} or on one or more specified
  * {@linkplain #architectures architectures}
  *
+ * <p>If operating systems and architectures are specified, the annotated test
+ * class or test method is disabled if both conditions apply.
+ *
  * <p>When applied at the class level, all test methods within that class
- * will be disabled on the same specified operating systems or architectures.
+ * will be disabled on the same specified operating systems, architectures, or
+ * the specified combinations of both.
  *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of
