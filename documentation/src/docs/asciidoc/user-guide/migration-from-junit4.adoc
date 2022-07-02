@@ -1,26 +1,26 @@
 [[migrating-from-junit4]]
 == Migrating from JUnit 4
 
-Although the JUnit Jupiter programming model and extension model will not support JUnit 4
+Although the JUnit Jupiter programming model and extension model do not support JUnit 4
 features such as `Rules` and `Runners` natively, it is not expected that source code
 maintainers will need to update all of their existing tests, test extensions, and custom
 build test infrastructure to migrate to JUnit Jupiter.
 
 Instead, JUnit provides a gentle migration path via a _JUnit Vintage test engine_ which
-allows existing tests based on JUnit 3 and JUnit 4 to be executed using the JUnit
-Platform infrastructure. Since all classes and annotations specific to JUnit Jupiter
-reside under a new `org.junit.jupiter` base package, having both JUnit 4 and JUnit
-Jupiter in the classpath does not lead to any conflicts. It is therefore safe to maintain
-existing JUnit 4 tests alongside JUnit Jupiter tests. Furthermore, since the JUnit team
-will continue to provide maintenance and bug fix releases for the JUnit 4.x baseline,
-developers have plenty of time to migrate to JUnit Jupiter on their own schedule.
+allows existing tests based on JUnit 3 and JUnit 4 to be executed using the JUnit Platform
+infrastructure. Since all classes and annotations specific to JUnit Jupiter reside under
+the `org.junit.jupiter` base package, having both JUnit 4 and JUnit Jupiter in the
+classpath does not lead to any conflicts. It is therefore safe to maintain existing JUnit
+4 tests alongside JUnit Jupiter tests. Furthermore, since the JUnit team will continue to
+provide maintenance and bug fix releases for the JUnit 4.x baseline, developers have
+plenty of time to migrate to JUnit Jupiter on their own schedule.
 
 
 [[migrating-from-junit4-running]]
 === Running JUnit 4 Tests on the JUnit Platform
 
-Just make sure that the `junit-vintage-engine` artifact is in your test runtime path. In
-that case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
+Make sure that the `junit-vintage-engine` artifact is in your test runtime path. In that
+case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
 launcher.
 
 See the example projects in the {junit5-samples-repo}[`junit5-samples`] repository to
@@ -31,10 +31,10 @@ find out how this is done with Gradle and Maven.
 
 For test classes or methods that are annotated with `@Category`, the _JUnit Vintage test
 engine_ exposes the category's fully qualified class name as a <<running-tests-tags, tag>>
-of the corresponding test identifier. For example, if a test method is annotated with
-`@Category(Example.class)`, it will be tagged with `"com.acme.Example"`. Similar to the
-`Categories` runner in JUnit 4, this information can be used to filter the discovered
-tests before executing them (see <<running-tests>> for details).
+for the corresponding test class or test method. For example, if a test method is
+annotated with `@Category(Example.class)`, it will be tagged with `"com.acme.Example"`.
+Similar to the `Categories` runner in JUnit 4, this information can be used to filter the
+discovered tests before executing them (see <<running-tests>> for details).
 
 
 [[migrating-from-junit4-tips]]
@@ -61,7 +61,7 @@ tests to JUnit Jupiter.
 * `@Category` no longer exists; use `@Tag` instead.
 * `@RunWith` no longer exists; superseded by `@ExtendWith`.
 * `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith` and
-  `@RegisterExtension`
+  `@RegisterExtension`.
   - See also <<migrating-from-junit4-rule-support>>.
 * Assertions and assumptions in JUnit Jupiter accept the failure message as their last
   argument instead of the first one.
@@ -98,7 +98,7 @@ all rule migration support extensions: `VerifierSupport`, `ExternalResourceSuppo
 `@EnableJUnit4MigrationSupport` which registers migration support for rules _and_ JUnit
 4's `@Ignore` annotation (see <<migrating-from-junit4-ignore-annotation-support>>).
 
-However, if you intend to develop a new extension for JUnit 5 please use the new
+However, if you intend to develop a new extension for JUnit Jupiter please use the new
 extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.
 
 
@@ -127,15 +127,15 @@ include::{testDir}/example/IgnoredTestsDemo.java[tags=user_guide]
 === Failure Message Arguments
 
 The `Assumptions` and `Assertions` classes in JUnit Jupiter declare arguments in a
-different order than in JUnit 4. In JUnit 4 assertion and assumption methods accept
-the failure message as the first argument; whereas, in JUnit Jupiter assertion and
-assumption methods accept the failure message as the last argument.
+different order than in JUnit 4. In JUnit 4 assertion and assumption methods accept the
+failure message as the first argument; whereas, in JUnit Jupiter assertion and assumption
+methods accept the failure message as the last argument.
 
-For instance, the method `assertEquals` in JUnit 4 is declared as
-`assertEquals(String message, Object expected, Object actual)`, but in JUnit Jupiter it
-is declared as `assertEquals(Object expected, Object actual, String message)`.
-The rationale for this is that a failure message is _optional_, and optional arguments
-should be declared after required arguments in a method signature.
+For instance, the method `assertEquals` in JUnit 4 is declared as `assertEquals(String
+message, Object expected, Object actual)`, but in JUnit Jupiter it is declared as
+`assertEquals(Object expected, Object actual, String message)`. The rationale for this is
+that a failure message is _optional_, and optional arguments should be declared after
+required arguments in a method signature.
 
 The methods affected by this change are the following:
 

@@ -30,7 +30,7 @@ exists in popular IDEs (see <<running-tests-ide-intellij-idea>>,
 <<running-tests-ide-vscode>>) and build tools (see <<running-tests-build-gradle>>,
 <<running-tests-build-maven>>, and <<running-tests-build-ant>>).
 
-**JUnit Jupiter** is the combination of the new <<writing-tests,programming model>> and
+**JUnit Jupiter** is the combination of the <<writing-tests,programming model>> and
 <<extensions,extension model>> for writing tests and extensions in JUnit 5. The Jupiter
 sub-project provides a `TestEngine` for running Jupiter based tests on the platform.
 
