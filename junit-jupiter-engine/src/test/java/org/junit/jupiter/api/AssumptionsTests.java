@@ -14,12 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.abort;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.TestAbortedException;
@@ -195,17 +197,37 @@ class AssumptionsTests {
 		}));
 	}
 
+	// --- abort ---------------------------------------------------------
+
+	@Test
+	void abortWithNoArguments() {
+		assertTestAbortedException(null, Assumptions::abort);
+	}
+
+	@Test
+	void abortWithStringMessage() {
+		assertTestAbortedException("test", () -> abort("test"));
+	}
+
+	@Test
+	void abortWithStringSupplier() {
+		assertTestAbortedException("test", () -> abort(() -> "test"));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static void assertAssumptionFailure(String msg, Executable executable) {
+		assertTestAbortedException(msg == null ? "Assumption failed" : "Assumption failed: " + msg, executable);
+	}
+
+	private static void assertTestAbortedException(String expectedMessage, Executable executable) {
 		try {
 			executable.execute();
 			expectTestAbortedException();
 		}
 		catch (Throwable ex) {
 			assertTrue(ex instanceof TestAbortedException);
-			assertMessageEquals((TestAbortedException) ex,
-				msg == null ? "Assumption failed" : "Assumption failed: " + msg);
+			assertMessageEquals(ex, expectedMessage);
 		}
 	}
 
@@ -213,10 +235,10 @@ class AssumptionsTests {
 		throw new AssertionError("Should have thrown a " + TestAbortedException.class.getName());
 	}
 
-	private static void assertMessageEquals(TestAbortedException ex, String msg) throws AssertionError {
-		if (!msg.equals(ex.getMessage())) {
-			throw new AssertionError(
-				"Message in TestAbortedException should be [" + msg + "], but was [" + ex.getMessage() + "].");
+	private static void assertMessageEquals(Throwable t, String expectedMessage) throws AssertionError {
+		if (!Objects.equals(expectedMessage, t.getMessage())) {
+			throw new AssertionError("Message in TestAbortedException should be [" + expectedMessage + "], but was ["
+					+ t.getMessage() + "].");
 		}
 	}
 

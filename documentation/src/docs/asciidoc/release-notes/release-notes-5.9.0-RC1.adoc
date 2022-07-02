@@ -56,6 +56,9 @@ on GitHub.
   which executes it in a separate thread.
 * Support for enabling/disabling tests based on the system's hardware architecture via new
   `architectures` attributes on `@EnabledOnOs` and `@DisabledOnOs`.
+* Three new `abort` methods have been added to the `Assumptions` class. These are
+  analogous to the `fail` methods in the `Assertions` class, but instead of failing they
+  abort the test or container.
 
 
 [[release-notes-5.9.0-RC1-junit-vintage]]
