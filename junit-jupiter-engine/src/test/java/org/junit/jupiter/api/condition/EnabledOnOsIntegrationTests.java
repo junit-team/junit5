@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
  */
 class EnabledOnOsIntegrationTests {
 
+	private static final String ARCH = System.getProperty("os.arch").toLowerCase(Locale.ENGLISH);
 	private static final String OS_NAME = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
 
 	@Test
@@ -47,7 +48,7 @@ class EnabledOnOsIntegrationTests {
 	@Test
 	@Disabled("Only used in a unit test via reflection")
 	@EnabledOnOs({})
-	void missingOsDeclaration() {
+	void missingOsAndArchitectureDeclaration() {
 	}
 
 	@Test
@@ -109,8 +110,66 @@ class EnabledOnOsIntegrationTests {
 		assertFalse(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd() || onSolaris() || onWindows());
 	}
 
+	@Test
+	@EnabledOnOs(architectures = "x86_64")
+	void architectureX86_64() {
+		assertFalse(onArchitecture("x_86_64"));
+	}
+
+	@Test
+	@EnabledOnOs(architectures = "aarch64")
+	void architectureAarch64() {
+		assertTrue(onArchitecture("aarch64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = MAC, architectures = "x86_64")
+	void architectureX86_64WithMacOs() {
+		assertTrue(onMac());
+		assertTrue(onArchitecture("x86_64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = WINDOWS, architectures = "x86_64")
+	void architectureX86_64WithWindows() {
+		assertTrue(onWindows());
+		assertTrue(onArchitecture("x86_64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = LINUX, architectures = "x86_64")
+	void architectureX86_64WithLinux() {
+		assertTrue(onLinux());
+		assertTrue(onArchitecture("x86_64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = MAC, architectures = "aarch64")
+	void aarch64WithMacOs() {
+		assertTrue(onMac());
+		assertTrue(onArchitecture("aarch64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = WINDOWS, architectures = "aarch64")
+	void aarch64WithWindows() {
+		assertTrue(onWindows());
+		assertTrue(onArchitecture("aarch64"));
+	}
+
+	@Test
+	@EnabledOnOs(value = LINUX, architectures = "aarch64")
+	void aarch64WithLinux() {
+		assertTrue(onLinux());
+		assertTrue(onArchitecture("aarch64"));
+	}
+
 	static boolean onAix() {
 		return OS_NAME.contains("aix");
+	}
+
+	static boolean onArchitecture(String arch) {
+		return ARCH.contains(arch);
 	}
 
 	static boolean onFreebsd() {

@@ -24,10 +24,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 /**
  * {@code @DisabledOnOs} is used to signal that the annotated test class or
  * test method is <em>disabled</em> on one or more specified
- * {@linkplain #value operating systems}.
+ * {@linkplain #value operating systems} or on one or more specified
+ * {@linkplain #architectures architectures}
+ *
+ * <p>If operating systems and architectures are specified, the annotated test
+ * class or test method is disabled if both conditions apply.
  *
  * <p>When applied at the class level, all test methods within that class
- * will be disabled on the same specified operating systems.
+ * will be disabled on the same specified operating systems, architectures, or
+ * the specified combinations of both.
  *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of
@@ -77,7 +82,15 @@ public @interface DisabledOnOs {
 	 *
 	 * @see OS
 	 */
-	OS[] value();
+	OS[] value() default {};
+
+	/**
+	 * Architectures on which the annotated class or method should be disabled.
+	 *
+	 * @since 5.9
+	 */
+	@API(status = STABLE, since = "5.9")
+	String[] architectures() default {};
 
 	/**
 	 * Custom reason to provide if the test or container is disabled.
