@@ -19,6 +19,11 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/**
+ * Base class for OS-based {@link ExecutionCondition} implementations.
+ *
+ * @since 5.9
+ */
 abstract class AbstractOsBasedExecutionCondition<A extends Annotation> implements ExecutionCondition {
 	private final Class<A> annotationType;
 
@@ -26,17 +31,19 @@ abstract class AbstractOsBasedExecutionCondition<A extends Annotation> implement
 		this.annotationType = annotationType;
 	}
 
-	abstract ConditionEvaluationResult evaluateExecutionCondition(A annotation);
-
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
 		return findAnnotation(context.getElement(), annotationType) //
-				.map(this::evaluateExecutionCondition).orElseGet(this::enabledByDefault);
+				.map(this::evaluateExecutionCondition) //
+				.orElseGet(this::enabledByDefault);
 	}
 
+	abstract ConditionEvaluationResult evaluateExecutionCondition(A annotation);
+
 	protected String createReason(boolean enabled, boolean osSpecified, boolean archSpecified) {
-		StringBuilder reason = new StringBuilder().append(enabled ? "Enabled" : "Disabled").append(
-			osSpecified ? " on operating system: " : " on architecture: ");
+		StringBuilder reason = new StringBuilder() //
+				.append(enabled ? "Enabled" : "Disabled") //
+				.append(osSpecified ? " on operating system: " : " on architecture: ");
 
 		if (osSpecified && archSpecified) {
 			reason.append(String.format("%s (%s)", currentOS(), currentArchitecture()));
