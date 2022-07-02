@@ -119,7 +119,7 @@ class EnabledOnOsIntegrationTests {
 	@Test
 	@EnabledOnOs(architectures = "aarch64")
 	void architectureAarch64() {
-		assertFalse(onArchitecture("aarch64"));
+		assertTrue(onArchitecture("aarch64"));
 	}
 
 	@Test
@@ -146,22 +146,22 @@ class EnabledOnOsIntegrationTests {
 	@Test
 	@EnabledOnOs(value = MAC, architectures = "aarch64")
 	void aarch64WithMacOs() {
-		assertFalse(onMac());
-		assertFalse(onArchitecture("aarch64"));
+		assertTrue(onMac());
+		assertTrue(onArchitecture("aarch64"));
 	}
 
 	@Test
 	@EnabledOnOs(value = WINDOWS, architectures = "aarch64")
 	void aarch64WithWindows() {
-		assertFalse(onWindows());
-		assertFalse(onArchitecture("aarch64"));
+		assertTrue(onWindows());
+		assertTrue(onArchitecture("aarch64"));
 	}
 
 	@Test
 	@EnabledOnOs(value = LINUX, architectures = "aarch64")
 	void aarch64WithLinux() {
-		assertFalse(onLinux());
-		assertFalse(onArchitecture("aarch64"));
+		assertTrue(onLinux());
+		assertTrue(onArchitecture("aarch64"));
 	}
 
 	static boolean onAix() {
