@@ -71,6 +71,32 @@ class ConditionalTestExecutionDemo {
 	}
 	// end::user_guide_os[]
 
+	// tag::user_guide_architecture[]
+	@Test
+	@EnabledOnOs(architectures = "aarch64")
+	void onAarch64() {
+		// ...
+	}
+
+	@Test
+	@DisabledOnOs(architectures = "x86_64")
+	void notOnX86_64() {
+		// ...
+	}
+
+	@Test
+	@EnabledOnOs(value = MAC, architectures = "aarch64")
+	void onNewMacs() {
+		// ...
+	}
+
+	@Test
+	@DisabledOnOs(value = MAC, architectures = "aarch64")
+	void notOnNewMacs() {
+		// ...
+	}
+	// end::user_guide_architecture[]
+
 	// tag::user_guide_jre[]
 	@Test
 	@EnabledOnJre(JAVA_8)

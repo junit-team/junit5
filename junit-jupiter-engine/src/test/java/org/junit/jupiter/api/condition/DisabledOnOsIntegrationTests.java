@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onAix;
+import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onArchitecture;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onFreebsd;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onLinux;
 import static org.junit.jupiter.api.condition.EnabledOnOsIntegrationTests.onMac;
@@ -52,7 +53,7 @@ class DisabledOnOsIntegrationTests {
 	@Test
 	@Disabled("Only used in a unit test via reflection")
 	@DisabledOnOs({})
-	void missingOsDeclaration() {
+	void missingOsAndArchitectureDeclaration() {
 	}
 
 	@Test
@@ -116,6 +117,53 @@ class DisabledOnOsIntegrationTests {
 		assertTrue(onAix() || onFreebsd() || onLinux() || onMac() || onOpenbsd() || onSolaris() || onWindows());
 	}
 
+	@Test
+	@DisabledOnOs(architectures = "x86_64")
+	void architectureX86_64() {
+		assertFalse(onArchitecture("x_86_64"));
+	}
+
+	@Test
+	@DisabledOnOs(architectures = "aarch64")
+	void architectureAarch64() {
+		assertFalse(onArchitecture("aarch64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = MAC, architectures = "x86_64")
+	void architectureX86_64WithMacOs() {
+		assertFalse(onMac() && onArchitecture("x_86_64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = WINDOWS, architectures = "x86_64")
+	void architectureX86_64WithWindows() {
+		assertFalse(onWindows() && onArchitecture("x86_64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = LINUX, architectures = "x86_64")
+	void architectureX86_64WithLinux() {
+		assertFalse(onLinux() && onArchitecture("x86_64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = MAC, architectures = "aarch64")
+	void aarch64WithMacOs() {
+		assertFalse(onMac() && onArchitecture("aarch64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = WINDOWS, architectures = "aarch64")
+	void aarch64WithWindows() {
+		assertFalse(onWindows() && onArchitecture("aarch64"));
+	}
+
+	@Test
+	@DisabledOnOs(value = LINUX, architectures = "aarch64")
+	void aarch64WithLinux() {
+		assertFalse(onLinux() && onArchitecture("aarch64"));
+	}
 	// -------------------------------------------------------------------------
 
 	@Target(ElementType.METHOD)

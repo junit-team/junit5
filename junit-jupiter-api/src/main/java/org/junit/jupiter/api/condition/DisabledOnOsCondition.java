@@ -10,11 +10,9 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.junit.jupiter.api.condition.EnabledOnOsCondition.DISABLED_ON_CURRENT_OS;
-import static org.junit.jupiter.api.condition.EnabledOnOsCondition.ENABLED_ON_CURRENT_OS;
-
 import java.util.Arrays;
 
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -24,16 +22,42 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see DisabledOnOs
  */
-class DisabledOnOsCondition extends BooleanExecutionCondition<DisabledOnOs> {
+class DisabledOnOsCondition extends AbstractOsBasedExecutionCondition<DisabledOnOs> {
 
 	DisabledOnOsCondition() {
-		super(DisabledOnOs.class, ENABLED_ON_CURRENT_OS, DISABLED_ON_CURRENT_OS, DisabledOnOs::disabledReason);
+		super(DisabledOnOs.class);
 	}
 
 	@Override
-	boolean isEnabled(DisabledOnOs annotation) {
+	ConditionEvaluationResult evaluateExecutionCondition(DisabledOnOs annotation) {
+		boolean osSpecified = annotation.value().length > 0;
+		boolean archSpecified = annotation.architectures().length > 0;
+		Preconditions.condition(osSpecified || archSpecified,
+			"You must declare at least one OS or architecture in @DisabledOnOs");
+
+		boolean enabled = isEnabledBasedOnOs(annotation) || isEnabledBasedOnArchitecture(annotation);
+		String reason = createReason(enabled, osSpecified, archSpecified);
+
+		return enabled ? ConditionEvaluationResult.enabled(reason)
+				: ConditionEvaluationResult.disabled(reason, annotation.disabledReason());
+	}
+
+	private boolean isEnabledBasedOnArchitecture(DisabledOnOs annotation) {
+		String[] architectures = annotation.architectures();
+		if (architectures.length == 0) {
+			return false;
+		}
+
+		String currentArchitecture = currentArchitecture();
+		return Arrays.stream(architectures).noneMatch(currentArchitecture::equalsIgnoreCase);
+	}
+
+	private boolean isEnabledBasedOnOs(DisabledOnOs annotation) {
 		OS[] operatingSystems = annotation.value();
-		Preconditions.condition(operatingSystems.length > 0, "You must declare at least one OS in @DisabledOnOs");
+		if (operatingSystems.length == 0) {
+			return false;
+		}
+
 		return Arrays.stream(operatingSystems).noneMatch(OS::isCurrentOs);
 	}
 
