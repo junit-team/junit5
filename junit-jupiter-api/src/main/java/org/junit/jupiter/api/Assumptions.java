@@ -98,7 +98,7 @@ public class Assumptions {
 	 */
 	public static void assumeTrue(boolean assumption, Supplier<String> messageSupplier) throws TestAbortedException {
 		if (!assumption) {
-			throwTestAbortedException(messageSupplier.get());
+			throwAssumptionFailed(messageSupplier.get());
 		}
 	}
 
@@ -112,7 +112,7 @@ public class Assumptions {
 	 */
 	public static void assumeTrue(boolean assumption, String message) throws TestAbortedException {
 		if (!assumption) {
-			throwTestAbortedException(message);
+			throwAssumptionFailed(message);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class Assumptions {
 	 */
 	public static void assumeFalse(boolean assumption, Supplier<String> messageSupplier) throws TestAbortedException {
 		if (assumption) {
-			throwTestAbortedException(messageSupplier.get());
+			throwAssumptionFailed(messageSupplier.get());
 		}
 	}
 
@@ -188,7 +188,7 @@ public class Assumptions {
 	 */
 	public static void assumeFalse(boolean assumption, String message) throws TestAbortedException {
 		if (assumption) {
-			throwTestAbortedException(message);
+			throwAssumptionFailed(message);
 		}
 	}
 
@@ -254,7 +254,7 @@ public class Assumptions {
 	}
 
 	/**
-	 * <em>Abort</em> the test.
+	 * <em>Abort</em> the test <em>without</em> a message.
 	 *
 	 * <p>Although aborting with an explicit failure message is recommended,
 	 * this method may be useful when maintaining legacy code.
@@ -264,7 +264,7 @@ public class Assumptions {
 	 */
 	@API(status = STABLE, since = "5.9")
 	public static void abort() {
-		throwTestAbortedException("test aborted");
+		throwTestAbortedException(null);
 	}
 
 	/**
@@ -291,9 +291,13 @@ public class Assumptions {
 		throwTestAbortedException(messageSupplier.get());
 	}
 
+	private static void throwAssumptionFailed(String message) {
+		throwTestAbortedException(
+			StringUtils.isNotBlank(message) ? ("Assumption failed" + ": " + message) : "Assumption failed");
+	}
+
 	private static void throwTestAbortedException(String message) {
-		throw new TestAbortedException(
-			StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
+		throw new TestAbortedException(message);
 	}
 
 }
