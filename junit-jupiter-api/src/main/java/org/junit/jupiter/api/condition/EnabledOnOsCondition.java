@@ -33,7 +33,7 @@ class EnabledOnOsCondition extends AbstractOsBasedExecutionCondition<EnabledOnOs
 		boolean osSpecified = annotation.value().length > 0;
 		boolean archSpecified = annotation.architectures().length > 0;
 		Preconditions.condition(osSpecified || archSpecified,
-			"You must declare at least one OS or architecture in @DisabledOnOs");
+			"You must declare at least one OS or architecture in @EnabledOnOs");
 
 		boolean enabled = isEnabledBasedOnOs(annotation) && isEnabledBasedOnArchitecture(annotation);
 		String reason = createReason(enabled, osSpecified, archSpecified);
