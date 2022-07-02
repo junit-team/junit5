@@ -36,7 +36,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * <p>A {@link DisplayNameGenerator} can be configured <em>globally</em> for the
  * entire test suite via the {@value #DEFAULT_GENERATOR_PROPERTY_NAME}
  * configuration parameter (see the User Guide for details) or <em>locally</em>
- * for a test class via the {@link TestClassOrder @DisplayNameGeneration}
+ * for a test class via the {@link DisplayNameGeneration @DisplayNameGeneration}
  * annotation.
  *
  * <h2>Built-in Implementations</h2>
