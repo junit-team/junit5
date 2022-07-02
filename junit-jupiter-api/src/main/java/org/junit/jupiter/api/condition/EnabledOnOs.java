@@ -27,8 +27,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * {@linkplain #value operating systems} or one or more specified
  * {@linkplain #architectures architectures}.
  *
- * <p>If operating systems and architectures are specified, the annotated test
- * class or test method is enabled if both conditions apply.
+ * <p>If operating systems <em>and</em> architectures are specified, the annotated
+ * test class or test method is enabled if both conditions apply.
  *
  * <p>When applied at the class level, all test methods within that class
  * will be enabled on the same specified operating systems, architectures, or
@@ -86,6 +86,9 @@ public @interface EnabledOnOs {
 
 	/**
 	 * Architectures on which the annotated class or method should be enabled.
+	 *
+	 * <p>Each architecture will be compared to the value returned from
+	 * {@code System.getProperty("os.arch")}, ignoring case.
 	 *
 	 * @since 5.9
 	 */

@@ -54,7 +54,7 @@ public class Assumptions {
 		/* no-op */
 	}
 
-	// --- assumeTrue ----------------------------------------------------
+	// --- assumeTrue ----------------------------------------------------------
 
 	/**
 	 * Validate the given assumption.
@@ -130,7 +130,7 @@ public class Assumptions {
 		assumeTrue(assumptionSupplier.getAsBoolean(), messageSupplier);
 	}
 
-	// --- assumeFalse ----------------------------------------------------
+	// --- assumeFalse ---------------------------------------------------------
 
 	/**
 	 * Validate the given assumption.
@@ -206,7 +206,7 @@ public class Assumptions {
 		assumeFalse(assumptionSupplier.getAsBoolean(), messageSupplier);
 	}
 
-	// --- assumingThat --------------------------------------------------
+	// --- assumingThat --------------------------------------------------------
 
 	/**
 	 * Execute the supplied {@link Executable}, but only if the supplied
@@ -253,11 +253,13 @@ public class Assumptions {
 		}
 	}
 
+	// --- abort ---------------------------------------------------------------
+
 	/**
 	 * <em>Abort</em> the test <em>without</em> a message.
 	 *
-	 * <p>Although aborting with an explicit failure message is recommended,
-	 * this method may be useful when maintaining legacy code.
+	 * <p>Although aborting with an explicit message is recommended, this may be
+	 * useful when maintaining legacy code.
 	 *
 	 * <p>See Javadoc for {@link #abort(String)} for an explanation of this
 	 * method's generic return type {@code V}.
@@ -276,9 +278,9 @@ public class Assumptions {
 	 * <p>The generic return type {@code V} allows this method to be used
 	 * directly as a single-statement lambda expression, thereby avoiding the
 	 * need to implement a code block with an explicit return value. Since this
-	 * method throws an {@link TestAbortedException} before its return
-	 * statement, this method never actually returns a value to its caller.
-	 * The following example demonstrates how this may be used in practice.
+	 * method throws a {@link TestAbortedException} before its return statement,
+	 * this method never actually returns a value to its caller. The following
+	 * example demonstrates how this may be used in practice.
 	 *
 	 * <pre>{@code
 	 * Stream.of().map(entry -> abort("assumption not met"));
@@ -299,7 +301,8 @@ public class Assumptions {
 	 * <p>See Javadoc for {@link #abort(String)} for an explanation of this
 	 * method's generic return type {@code V}.
 	 *
-	 * @param messageSupplier the supplier of the message to be included in {@code TestAbortedException}
+	 * @param messageSupplier the supplier of the message to be included in the
+	 * {@code TestAbortedException}
 	 * @throws TestAbortedException always
 	 * @since 5.9
 	 */

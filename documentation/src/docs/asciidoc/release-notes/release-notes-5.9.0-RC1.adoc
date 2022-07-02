@@ -20,10 +20,6 @@ on GitHub.
   multidimensional array now fail within a reasonable amount of time.
 * Fix concurrency issue in classpath scanning.
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
 ==== New Features and Improvements
 
 * New public factory method to instantiate an `ExecutionRequest`.
@@ -34,16 +30,13 @@ on GitHub.
 [[release-notes-5.9.0-RC1-junit-jupiter]]
 === JUnit Jupiter
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
 ==== New Features and Improvements
 
+* Three new `abort` methods have been added to the `Assumptions` class. These are
+  analogous to the `fail` methods in the `Assertions` class, but instead of failing they
+  abort the test or container.
+* Support for enabling/disabling tests based on the system's hardware architecture via new
+  `architectures` attributes in `@EnabledOnOs` and `@DisabledOnOs`.
 * Default `@MethodSource` factory methods can now accept arguments. A _default_ factory
   method is a method declared in the test class with the same name as the
   `@ParameterizedTest` method that is inferred as the factory method when no explicit
@@ -54,24 +47,9 @@ on GitHub.
   property `junit.jupiter.execution.timeout.thread.mode.default`, `SAME_THREAD` that
   executes the test code in the same thread as the calling code, and `SEPARATE_THREAD`
   which executes it in a separate thread.
-* Support for enabling/disabling tests based on the system's hardware architecture via new
-  `architectures` attributes on `@EnabledOnOs` and `@DisabledOnOs`.
-* Three new `abort` methods have been added to the `Assumptions` class. These are
-  analogous to the `fail` methods in the `Assertions` class, but instead of failing they
-  abort the test or container.
 
 
 [[release-notes-5.9.0-RC1-junit-vintage]]
 === JUnit Vintage
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes.

@@ -25,6 +25,10 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * @since 5.9
  */
 abstract class AbstractOsBasedExecutionCondition<A extends Annotation> implements ExecutionCondition {
+
+	static final String CURRENT_ARCHITECTURE = System.getProperty("os.arch");
+	static final String CURRENT_OS = System.getProperty("os.name");
+
 	private final Class<A> annotationType;
 
 	AbstractOsBasedExecutionCondition(Class<A> annotationType) {
@@ -33,42 +37,34 @@ abstract class AbstractOsBasedExecutionCondition<A extends Annotation> implement
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		return findAnnotation(context.getElement(), annotationType) //
+		return findAnnotation(context.getElement(), this.annotationType) //
 				.map(this::evaluateExecutionCondition) //
 				.orElseGet(this::enabledByDefault);
 	}
 
 	abstract ConditionEvaluationResult evaluateExecutionCondition(A annotation);
 
-	protected String createReason(boolean enabled, boolean osSpecified, boolean archSpecified) {
+	String createReason(boolean enabled, boolean osSpecified, boolean archSpecified) {
 		StringBuilder reason = new StringBuilder() //
 				.append(enabled ? "Enabled" : "Disabled") //
 				.append(osSpecified ? " on operating system: " : " on architecture: ");
 
 		if (osSpecified && archSpecified) {
-			reason.append(String.format("%s (%s)", currentOS(), currentArchitecture()));
+			reason.append(String.format("%s (%s)", CURRENT_OS, CURRENT_ARCHITECTURE));
 		}
 		else if (osSpecified) {
-			reason.append(currentOS());
+			reason.append(CURRENT_OS);
 		}
 		else {
-			reason.append(currentArchitecture());
+			reason.append(CURRENT_ARCHITECTURE);
 		}
 
 		return reason.toString();
 	}
 
 	private ConditionEvaluationResult enabledByDefault() {
-		String reason = String.format("@%s is not present", annotationType.getSimpleName());
+		String reason = String.format("@%s is not present", this.annotationType.getSimpleName());
 		return enabled(reason);
-	}
-
-	private String currentOS() {
-		return System.getProperty("os.name");
-	}
-
-	protected String currentArchitecture() {
-		return System.getProperty("os.arch");
 	}
 
 }

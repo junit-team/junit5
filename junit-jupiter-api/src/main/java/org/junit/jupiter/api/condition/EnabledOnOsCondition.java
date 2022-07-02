@@ -42,22 +42,20 @@ class EnabledOnOsCondition extends AbstractOsBasedExecutionCondition<EnabledOnOs
 				: ConditionEvaluationResult.disabled(reason, annotation.disabledReason());
 	}
 
-	private boolean isEnabledBasedOnArchitecture(EnabledOnOs annotation) {
-		String[] architectures = annotation.architectures();
-		if (architectures.length == 0) {
-			return true;
-		}
-
-		String currentArchitecture = currentArchitecture();
-		return Arrays.stream(architectures).anyMatch(currentArchitecture::equalsIgnoreCase);
-	}
-
 	private boolean isEnabledBasedOnOs(EnabledOnOs annotation) {
 		OS[] operatingSystems = annotation.value();
 		if (operatingSystems.length == 0) {
 			return true;
 		}
 		return Arrays.stream(operatingSystems).anyMatch(OS::isCurrentOs);
+	}
+
+	private boolean isEnabledBasedOnArchitecture(EnabledOnOs annotation) {
+		String[] architectures = annotation.architectures();
+		if (architectures.length == 0) {
+			return true;
+		}
+		return Arrays.stream(architectures).anyMatch(CURRENT_ARCHITECTURE::equalsIgnoreCase);
 	}
 
 }
