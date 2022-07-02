@@ -1,0 +1,74 @@
+[[release-notes-5.9.0-RC1]]
+== 5.9.0-RC1
+
+*Date of Release:* July ❓, 2022
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/61?closed=1+[5.9 RC1] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.9.0-RC1-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* Absolute path entries are now supported in JUnit's Platform Console Launcher on Windows.
+* Attempts to load a `Class` for an invalid class name representing an extremely large
+  multidimensional array now fail within a reasonable amount of time.
+* Fix concurrency issue in classpath scanning.
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* New public factory method to instantiate an `ExecutionRequest`.
+* Documentation for overriding the JUnit version used in Spring Boot applications. See the
+  <<../user-guide/index.adoc#running-tests-build-spring-boot, User Guide>> for details.
+
+
+[[release-notes-5.9.0-RC1-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* Default `@MethodSource` factory methods can now accept arguments. A _default_ factory
+  method is a method declared in the test class with the same name as the
+  `@ParameterizedTest` method that is inferred as the factory method when no explicit
+  factory method is specified in the `@MethodSource` annotation.
+* Thread mode can be set on `@Timeout` annotation. It allows to configure whether test
+  code is executed in the thread of the calling code or in a separate thread. The three
+  modes are: `INFERRED` (default) which resolves the thread mode configured via the
+  property `junit.jupiter.execution.timeout.thread.mode.default`, `SAME_THREAD` that
+  executes the test code in the same thread as the calling code, and `SEPARATE_THREAD`
+  which executes it in a separate thread.
+* Support for enabling/disabling tests based on the system's hardware architecture via new
+  `architectures` attributes on `@EnabledOnOs` and `@DisabledOnOs`.
+
+
+[[release-notes-5.9.0-RC1-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓

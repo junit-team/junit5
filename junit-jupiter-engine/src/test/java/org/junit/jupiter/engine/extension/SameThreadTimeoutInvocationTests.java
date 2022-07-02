@@ -27,14 +27,14 @@ import org.junit.jupiter.api.function.ThrowingConsumer;
 /**
  * @since 5.5
  */
-class TimeoutInvocationTests {
+class SameThreadTimeoutInvocationTests {
 
 	@Test
 	void resetsInterruptFlag() {
 		var exception = assertThrows(TimeoutException.class, () -> withExecutor(executor -> {
 			var delegate = new EventuallyInterruptibleInvocation();
 			var duration = new TimeoutDuration(1, NANOSECONDS);
-			var timeoutInvocation = new TimeoutInvocation<>(delegate, duration, executor, () -> "execution");
+			var timeoutInvocation = new SameThreadTimeoutInvocation<>(delegate, duration, executor, () -> "execution");
 			timeoutInvocation.proceed();
 		}));
 		assertFalse(Thread.currentThread().isInterrupted());

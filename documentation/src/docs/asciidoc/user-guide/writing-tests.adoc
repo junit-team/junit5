@@ -97,19 +97,38 @@ void myFastTest() {
 }
 ----
 
-[[writing-tests-classes-and-methods]]
-=== Test Classes and Methods
+[[writing-tests-definitions]]
+=== Definitions
 
-**Test Class**: any top-level class, `static` member class, or <<writing-tests-nested,
-`@Nested` class>> that contains at least one _test method_.
+.Platform Concepts
+****
+Container::
+a node in the test tree that contains other containers or tests as its children (e.g. a _test class_).
 
+Test::
+a node in the test tree that verifies expected behavior when executed (e.g. a `@Test` method).
+****
+
+.Jupiter Concepts
+****
+Lifecycle Method::
+any method that is directly annotated or meta-annotated with
+`@BeforeAll`, `@AfterAll`, `@BeforeEach`, or `@AfterEach`.
+
+Test Class::
+any top-level class, `static` member class, or <<writing-tests-nested,
+`@Nested` class>> that contains at least one _test method_, i.e. a _container_.
 Test classes must not be `abstract` and must have a single constructor.
 
-**Test Method**: any instance method that is directly annotated or meta-annotated with
+Test Method::
+any instance method that is directly annotated or meta-annotated with
 `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`.
+With the exception of `@Test`, these create a _container_ in the test tree that groups
+_tests_ or, potentially (for `@TestFactory`), other _containers_.
+****
 
-**Lifecycle Method**: any method that is directly annotated or meta-annotated with
-`@BeforeAll`, `@AfterAll`, `@BeforeEach`, or `@AfterEach`.
+[[writing-tests-classes-and-methods]]
+=== Test Classes and Methods
 
 Test methods and lifecycle methods may be declared locally within the current test class,
 inherited from superclasses, or inherited from interfaces (see
@@ -251,11 +270,10 @@ include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 [WARNING]
 .Preemptive Timeouts with `assertTimeoutPreemptively()`
 ====
-Contrary to <<writing-tests-declarative-timeouts, declarative timeouts>>, the various
-`assertTimeoutPreemptively()` methods in the `Assertions` class execute the provided
-`executable` or `supplier` in a different thread than that of the calling code. This
-behavior can lead to undesirable side effects if the code that is executed within the
-`executable` or `supplier` relies on `java.lang.ThreadLocal` storage.
+The various`assertTimeoutPreemptively()` methods in the `Assertions` class execute
+the provided `executable` or `supplier` in a different thread than that of the calling
+code. This behavior can lead to undesirable side effects if the code that is executed
+within the `executable` or `supplier` relies on `java.lang.ThreadLocal` storage.
 
 One common example of this is the transactional testing support in the Spring Framework.
 Specifically, Spring's testing support binds transaction state to the current thread (via
@@ -1949,12 +1967,11 @@ and dynamic tests.
 The first method returns an invalid return type. Since an invalid return type cannot be
 detected at compile time, a `JUnitException` is thrown when it is detected at runtime.
 
-The next six methods are very simple examples that demonstrate the generation of a
-`Collection`, `Iterable`, `Iterator`, array, or `Stream` of `DynamicTest` instances. Most
-of these examples do not really exhibit dynamic behavior but merely demonstrate the
-supported return types in principle. However, `dynamicTestsFromStream()` and
-`dynamicTestsFromIntStream()` demonstrate how easy it is to generate dynamic tests for a
-given set of strings or a range of input numbers.
+The next six methods demonstrate the generation of a `Collection`, `Iterable`, `Iterator`,
+array, or `Stream` of `DynamicTest` instances. Most of these examples do not really
+exhibit dynamic behavior but merely demonstrate the supported return types in principle.
+However, `dynamicTestsFromStream()` and `dynamicTestsFromIntStream()` demonstrate how to
+generate dynamic tests for a given set of strings or a range of input numbers.
 
 The next method is truly dynamic in nature. `generateRandomNumberOfTests()` implements an
 `Iterator` that generates random numbers, a display name generator, and a test executor
@@ -2026,12 +2043,6 @@ The following example shows how `@Timeout` is applied to lifecycle and test meth
 include::{testDir}/example/TimeoutDemo.java[tags=user_guide]
 ----
 
-Contrary to the `assertTimeoutPreemptively()` assertion, the execution of the annotated
-method proceeds in the main thread of the test. If the timeout is exceeded, the main
-thread is interrupted from another thread. This is done to ensure interoperability with
-frameworks such as Spring that make use of mechanisms that are sensitive to the currently
-running thread — for example, `ThreadLocal` transaction management.
-
 To apply the same timeout to all test methods within a test class and all of its `@Nested`
 classes, you can declare the `@Timeout` annotation at the class level. It will then be
 applied to all test, test factory, and test template methods within that class and its
@@ -2047,8 +2058,32 @@ within the specified duration but does not verify the execution time of each ind
 If `@Timeout` is present on a `@TestTemplate` method — for example, a `@RepeatedTest` or
 `@ParameterizedTest` — each invocation will have the given timeout applied to it.
 
+[[writing-tests-declarative-timeouts-thread-mode]]
+==== Thread mode
+
+The timeout can be applied using one of the following three thread modes: `SAME_THREAD`,
+`SEPARATE_THREAD`, or `INFERRED`.
+
+When `SAME_THREAD` is used, the execution of the annotated method proceeds in the main
+thread of the test. If the timeout is exceeded, the main thread is interrupted from
+another thread. This is done to ensure interoperability with frameworks such as Spring
+that make use of mechanisms that are sensitive to the currently running thread — for
+example, `ThreadLocal` transaction management.
+
+On the contrary when `SEPARATE_THREAD` is used, like the `assertTimeoutPreemptively()`
+assertion, the execution of the annotated method proceeds in a separate thread, this
+can lead to undesirable side effects, see <<writing-tests-assertions-preemptive-timeouts>>.
+
+When `INFERRED` (default) thread mode is used, the thread mode is resolved via the
+`junit.jupiter.execution.timeout.thread.mode.default` configuration parameter. If the
+provided configuration parameter is invalid or not present then `SAME_THREAD` is used as
+fallback.
+
+[[writing-tests-declarative-timeouts-default-timeouts]]
+==== Default Timeouts
+
 The following <<running-tests-config-params, configuration parameters>> can be used to
-specify global timeouts for all methods of a certain category unless they or an enclosing
+specify default timeouts for all methods of a certain category unless they or an enclosing
 test class is annotated with `@Timeout`:
 
 `junit.jupiter.execution.timeout.default`::

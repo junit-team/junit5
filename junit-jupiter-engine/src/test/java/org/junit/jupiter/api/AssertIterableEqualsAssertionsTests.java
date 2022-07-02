@@ -83,6 +83,7 @@ class AssertIterableEqualsAssertionsTests {
 			listOf(listOf(1), listOf(2), listOf(listOf(3, listOf(4)))));
 		assertIterableEquals(setOf(setOf(1), setOf(2), setOf(setOf(3, setOf(4)))),
 			setOf(setOf(1), setOf(2), setOf(setOf(3, setOf(4)))));
+		assertIterableEquals(listOf(listOf(1), listOf(listOf(1))), setOf(setOf(1), setOf(setOf(1))));
 	}
 
 	@Test
@@ -458,6 +459,20 @@ class AssertIterableEqualsAssertionsTests {
 		actual.add(expected);
 		expected.add(actual);
 		assertThrows(StackOverflowError.class, () -> assertIterableEquals(expected, actual));
+	}
+
+	@Test
+	// https://github.com/junit-team/junit5/issues/2915
+	void assertIterableEqualsWithDifferentListOfPath() {
+		try {
+			var expected = listOf(Path.of("1").resolve("2"));
+			var actual = listOf(Path.of("1").resolve("3"));
+			assertIterableEquals(expected, actual);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "iterable contents differ at index [0][1], expected: <2> but was: <3>");
+		}
 	}
 
 }

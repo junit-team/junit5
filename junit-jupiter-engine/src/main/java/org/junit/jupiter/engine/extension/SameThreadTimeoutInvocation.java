@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.extension;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
@@ -21,14 +20,14 @@ import org.junit.platform.commons.util.UnrecoverableExceptions;
 /**
  * @since 5.5
  */
-class TimeoutInvocation<T> implements Invocation<T> {
+class SameThreadTimeoutInvocation<T> implements Invocation<T> {
 
 	private final Invocation<T> delegate;
 	private final TimeoutDuration timeout;
 	private final ScheduledExecutorService executor;
 	private final Supplier<String> descriptionSupplier;
 
-	TimeoutInvocation(Invocation<T> delegate, TimeoutDuration timeout, ScheduledExecutorService executor,
+	SameThreadTimeoutInvocation(Invocation<T> delegate, TimeoutDuration timeout, ScheduledExecutorService executor,
 			Supplier<String> descriptionSupplier) {
 		this.delegate = delegate;
 		this.timeout = timeout;
@@ -56,22 +55,13 @@ class TimeoutInvocation<T> implements Invocation<T> {
 			}
 			if (interruptTask.executed) {
 				Thread.interrupted();
-				failure = createTimeoutException(failure);
+				failure = TimeoutExceptionFactory.create(descriptionSupplier.get(), timeout, failure);
 			}
 		}
 		if (failure != null) {
 			throw failure;
 		}
 		return result;
-	}
-
-	private TimeoutException createTimeoutException(Throwable failure) {
-		String message = String.format("%s timed out after %s", descriptionSupplier.get(), timeout);
-		TimeoutException timeoutError = new TimeoutException(message);
-		if (failure != null) {
-			timeoutError.addSuppressed(failure);
-		}
-		return timeoutError;
 	}
 
 	static class InterruptTask implements Runnable {
