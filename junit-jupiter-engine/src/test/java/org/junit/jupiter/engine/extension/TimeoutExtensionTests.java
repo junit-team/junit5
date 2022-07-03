@@ -383,9 +383,11 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		@DisplayName("when one test is stuck \"forever\" the next tests should not stuck")
+		@DisplayName("when one test is stuck \"forever\" the next tests should not get stuck")
 		void oneThreadStuckForever() {
 			EngineExecutionResults results = executeTestsForClass(OneTestStuckForeverAndTheOthersNotTestCase.class);
+
+			results.allEvents().debug();
 
 			Execution stuckExecution = findExecution(results.testEvents(), "stuck()");
 			assertThat(stuckExecution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
@@ -465,7 +467,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				Execution execution = findExecution(results.testEvents(), "exceptionThrown()");
 				assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 						.isInstanceOf(TimeoutException.class) //
-						.hasMessage("exceptionThrown() timed out after 10 milliseconds");
+						.hasMessage("exceptionThrown() timed out after 100 milliseconds");
 			}
 
 			@Test
@@ -625,7 +627,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 		private static void waitForInterrupt(String methodName) throws InterruptedException {
 			if (methodName.equals(slowMethod)) {
-				new CountDownLatch(1).await();
+				blockUntilInterrupted();
 			}
 		}
 	}
@@ -692,7 +694,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS)
 		void testMethod() throws InterruptedException {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		}
 	}
 
@@ -700,20 +702,20 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testMethod() throws InterruptedException {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		}
 	}
 
 	static class NonTimeoutExceedingSeparateThreadTestCase {
 		@Test
-		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testMethod() {
 		}
 	}
 
 	static class UnrecoverableExceptionInSeparateThreadTestCase {
 		@Test
-		@Timeout(value = 5, unit = SECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 100, unit = SECONDS, threadMode = SEPARATE_THREAD)
 		void test() {
 			throw new OutOfMemoryError();
 		}
@@ -721,21 +723,21 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 	static class ExceptionInSeparateThreadTestCase {
 		@Test
-		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void test() {
 			throw new RuntimeException("Oppps!");
 		}
 	}
 
-	@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+	@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 	static class TimeoutExceededOnClassLevelTestCase {
 		@Test
 		void exceptionThrown() throws InterruptedException {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		}
 	}
 
-	@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+	@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 	static class NonTimeoutExceededOnClassLevelTestCase {
 		@Test
 		void test() {
@@ -744,31 +746,24 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 	@TestMethodOrder(OrderAnnotation.class)
 	static class OneTestStuckForeverAndTheOthersNotTestCase {
-		private static final CountDownLatch latch = new CountDownLatch(1);
 
 		@Test
 		@Order(0)
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void stuck() throws InterruptedException {
-			latch.await();
+			blockUntilInterrupted();
 		}
 
 		@Test
 		@Order(1)
-		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testZero() {
 		}
 
 		@Test
 		@Order(2)
-		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testOne() {
-		}
-
-		@AfterAll
-		static void stop() throws InterruptedException {
-			Thread.sleep(100);
-			latch.countDown();
 		}
 	}
 
@@ -776,31 +771,30 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testZero() throws InterruptedException {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		}
 
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SAME_THREAD)
 		void testOne() throws InterruptedException {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		}
 
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testTwo() throws InterruptedException {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		}
 	}
 
 	@TestMethodOrder(OrderAnnotation.class)
 	static class OneTestStuckForeverAndTheOthersInSameThreadNotTestCase {
-		private static final CountDownLatch latch = new CountDownLatch(1);
 
 		@Test
 		@Order(0)
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void stuck() throws InterruptedException {
-			latch.await();
+			blockUntilInterrupted();
 		}
 
 		@Test
@@ -814,11 +808,9 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SAME_THREAD)
 		void testOne() {
 		}
+	}
 
-		@AfterAll
-		static void stop() throws InterruptedException {
-			Thread.sleep(100);
-			latch.countDown();
-		}
+	private static void blockUntilInterrupted() throws InterruptedException {
+		new CountDownLatch(1).await();
 	}
 }
