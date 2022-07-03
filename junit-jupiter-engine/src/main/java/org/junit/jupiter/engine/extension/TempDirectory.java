@@ -280,13 +280,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 			SortedMap<Path, IOException> failures = new TreeMap<>();
 			Set<Path> retriedPaths = new HashSet<>();
-			resetPermissions(dir);
+			tryToResetPermissions(dir);
 			Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
 
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 					if (!dir.equals(CloseablePath.this.dir)) {
-						resetPermissions(dir);
+						tryToResetPermissions(dir);
 					}
 					return CONTINUE;
 				}
@@ -329,7 +329,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					boolean notYetRetried = retriedPaths.add(path);
 					if (notYetRetried) {
 						try {
-							resetPermissions(path);
+							tryToResetPermissions(path);
 							if (Files.isDirectory(path)) {
 								Files.walkFileTree(path, this);
 							}
@@ -351,12 +351,16 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 
 		@SuppressWarnings("ResultOfMethodCallIgnored")
-		private static void resetPermissions(Path path) {
-			File file = path.toFile();
-			file.setReadable(true);
-			file.setWritable(true);
-			if (Files.isDirectory(path)) {
-				file.setExecutable(true);
+		private static void tryToResetPermissions(Path path) {
+			try {
+				File file = path.toFile();
+				file.setReadable(true);
+				file.setWritable(true);
+				if (Files.isDirectory(path)) {
+					file.setExecutable(true);
+				}
+			}
+			catch (UnsupportedOperationException ignore) {
 			}
 		}
 
