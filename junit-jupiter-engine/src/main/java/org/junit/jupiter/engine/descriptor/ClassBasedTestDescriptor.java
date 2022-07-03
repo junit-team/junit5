@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -274,19 +275,21 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	private TestInstancesProvider testInstancesProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ClassExtensionContext extensionContext) {
 
-		return (registry, registrar, throwableCollector) -> extensionContext.getTestInstances().orElseGet(
-			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry, registrar,
-				throwableCollector));
+		return (registry, registrar, throwableCollector,
+				clientContext) -> extensionContext.getTestInstances().orElseGet(
+					() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry,
+						registrar, throwableCollector, clientContext));
 	}
 
 	private TestInstances instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionContext extensionContext, ExtensionRegistry registry, ExtensionRegistrar registrar,
-			ThrowableCollector throwableCollector) {
+			ThrowableCollector throwableCollector, ExtensionContext clientContext) {
 
-		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, registrar, extensionContext,
-			throwableCollector);
+		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, registrar,
+			Objects.isNull(clientContext) ? extensionContext : clientContext, throwableCollector);
 		throwableCollector.execute(() -> {
-			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
+			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry,
+				Objects.isNull(clientContext) ? extensionContext : clientContext);
 			// In addition, we register extensions from instance fields here since the
 			// best time to do that is immediately following test class instantiation
 			// and post processing.

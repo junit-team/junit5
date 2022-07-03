@@ -103,7 +103,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector, executableInvoker);
 		throwableCollector.execute(() -> {
 			TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(registry,
-				throwableCollector);
+				throwableCollector, extensionContext);
 			extensionContext.setTestInstances(testInstances);
 		});
 

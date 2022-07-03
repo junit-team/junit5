@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.execution;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -28,10 +29,15 @@ public interface TestInstancesProvider {
 
 	default TestInstances getTestInstances(MutableExtensionRegistry extensionRegistry,
 			ThrowableCollector throwableCollector) {
-		return getTestInstances(extensionRegistry, extensionRegistry, throwableCollector);
+		return getTestInstances(extensionRegistry, extensionRegistry, throwableCollector, null);
+	}
+
+	default TestInstances getTestInstances(MutableExtensionRegistry extensionRegistry,
+			ThrowableCollector throwableCollector, ExtensionContext context) {
+		return getTestInstances(extensionRegistry, extensionRegistry, throwableCollector, context);
 	}
 
 	TestInstances getTestInstances(ExtensionRegistry extensionRegistry, ExtensionRegistrar extensionRegistrar,
-			ThrowableCollector throwableCollector);
+			ThrowableCollector throwableCollector, ExtensionContext clientContext);
 
 }
