@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout.ThreadMode;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
@@ -34,7 +33,7 @@ import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.TimeoutInvoca
 @DisplayName("SeparateThreadTimeoutInvocation")
 class SeparateThreadTimeoutInvocationTest {
 
-	private static final long PREEMPTIVE_TIMEOUT_MILLIS = OS.current() == WINDOWS ? 1000 : 100;
+	private static final long PREEMPTIVE_TIMEOUT_MILLIS = WINDOWS.isCurrentOs() ? 1000 : 100;
 
 	@Test
 	@DisplayName("throws timeout exception when timeout duration is exceeded")
