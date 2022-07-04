@@ -568,6 +568,19 @@ multidimensional array now fail within a reasonable amount of time.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.9.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
+<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Private lifecycle methods (annotated with <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>, or
+<code>@AfterEach</code>) now correctly lead to an exception. Although this is a bug fix, it is
+technically also a breaking change since there might be existing user code with
+<code>private</code> lifecycle methods which will now start to fail.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
 <h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
@@ -593,18 +606,6 @@ modes are: <code>INFERRED</code> (default) which resolves the thread mode config
 property <code>junit.jupiter.execution.timeout.thread.mode.default</code>, <code>SAME_THREAD</code> that
 executes the test code in the same thread as the calling code, and <code>SEPARATE_THREAD</code>
 which executes it in a separate thread.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Private lifecycle methods now correctly lead to an exception. Despite being a bug fix,
-this is technically a breaking change as there might be existing user code with private
-lifecycle methods which will now start to fail.</p>
 </li>
 </ul>
 </div>
@@ -1064,7 +1065,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-07-04 13:10:16 UTC
+Last updated 2022-07-04 14:58:21 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
