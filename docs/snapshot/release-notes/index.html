@@ -597,6 +597,18 @@ which executes it in a separate thread.</p>
 </ul>
 </div>
 </div>
+<div class="sect3">
+<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Private lifecycle methods now correctly lead to an exception. Despite being a bug fix,
+this is technically a breaking change as there might be existing user code with private
+lifecycle methods which will now start to fail.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.9.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.9.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
@@ -662,7 +674,7 @@ locale instead of the default one.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -747,7 +759,7 @@ locale instead of the default one.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -917,7 +929,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.1-junit-platform"><a class="anchor" href="#release-notes-5.8.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1052,7 +1064,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-07-02 14:30:33 UTC
+Last updated 2022-07-04 13:10:16 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

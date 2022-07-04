@@ -1071,19 +1071,19 @@ in the <code>junit-jupiter-api</code> module.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeEach</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@Before</code>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@Before</code>. Such methods are <em>inherited</em> unless they are <em>overridden</em> or <em>superseded</em> (i.e., replaced based on signature only, irrespective of Java&#8217;s visibility rules).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterEach</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@After</code>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>each</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, or <code>@TestFactory</code> method in the current class; analogous to JUnit 4&#8217;s <code>@After</code>. Such methods are <em>inherited</em> unless they are <em>overridden</em> or <em>superseded</em> (i.e., replaced based on signature only, irrespective of Java&#8217;s visibility rules).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em> or <em>overridden</em>) and must be <code>static</code> (unless the "per-class" <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> is used).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em>, or <em>overridden</em>, or <em>superseded</em>, i.e., replaced based on signature only, irrespective of Java&#8217;s visibility rules) and must be <code>static</code> (unless the "per-class" <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> is used).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em> or <em>overridden</em>) and must be <code>static</code> (unless the "per-class" <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> is used).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, and <code>@TestFactory</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods are <em>inherited</em> (unless they are <em>hidden</em>, or <em>overridden</em>, or <em>superseded</em>, i.e., replaced based on signature only, irrespective of Java&#8217;s visibility rules) and must be <code>static</code> (unless the "per-class" <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> is used).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Nested</code></p></td>
@@ -9366,9 +9366,10 @@ for user-supplied <em>lifecycle methods</em> (see <a href="#writing-tests-classe
 <div class="ulist">
 <ul>
 <li>
-<p><code>@BeforeAll</code> methods are inherited from superclasses as long as they are not <em>hidden</em> or
-<em>overridden</em>. Furthermore, <code>@BeforeAll</code> methods from superclasses will be executed
-<strong>before</strong> <code>@BeforeAll</code> methods in subclasses.</p>
+<p><code>@BeforeAll</code> methods are inherited from superclasses as long as they are not <em>hidden</em>, or
+<em>overridden</em>, or <em>superseded</em> (i.e., replaced based on signature only, irrespective of
+Java&#8217;s visibility rules). Furthermore, <code>@BeforeAll</code> methods from superclasses will be
+executed <strong>before</strong> <code>@BeforeAll</code> methods in subclasses.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -9380,9 +9381,10 @@ executed <strong>before</strong> <code>@BeforeAll</code> methods in the class th
 </div>
 </li>
 <li>
-<p><code>@AfterAll</code> methods are inherited from superclasses as long as they are not <em>hidden</em> or
-<em>overridden</em>. Furthermore, <code>@AfterAll</code> methods from superclasses will be executed
-<strong>after</strong> <code>@AfterAll</code> methods in subclasses.</p>
+<p><code>@AfterAll</code> methods are inherited from superclasses as long as they are not <em>hidden</em>, or
+<em>overridden</em>, or <em>superseded</em> (i.e., replaced based on signature only, irrespective of
+Java&#8217;s visibility rules). Furthermore, <code>@AfterAll</code> methods from superclasses will be
+executed <strong>after</strong> <code>@AfterAll</code> methods in subclasses.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -9395,8 +9397,9 @@ executed <strong>after</strong> <code>@AfterAll</code> methods in the class that
 </li>
 <li>
 <p><code>@BeforeEach</code> methods are inherited from superclasses as long as they are not
-<em>overridden</em>. Furthermore, <code>@BeforeEach</code> methods from superclasses will be executed
-<strong>before</strong> <code>@BeforeEach</code> methods in subclasses.</p>
+<em>overridden</em> or <em>superseded</em> (i.e., replaced based on signature only, irrespective of
+Java&#8217;s visibility rules). Furthermore, <code>@BeforeEach</code> methods from superclasses will be
+executed <strong>before</strong> <code>@BeforeEach</code> methods in subclasses.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -9409,8 +9412,9 @@ long as they are not <em>overridden</em>, and <code>@BeforeEach</code> default m
 </li>
 <li>
 <p><code>@AfterEach</code> methods are inherited from superclasses as long as they are not
-<em>overridden</em>. Furthermore, <code>@AfterEach</code> methods from superclasses will be executed
-<strong>after</strong> <code>@AfterEach</code> methods in subclasses.</p>
+<em>overridden</em> or <em>superseded</em> (i.e., replaced based on signature only, irrespective of
+Java&#8217;s visibility rules). Furthermore, <code>@AfterEach</code> methods from superclasses will be
+executed <strong>after</strong> <code>@AfterEach</code> methods in subclasses.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -11935,7 +11939,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-07-02 14:30:33 UTC
+Last updated 2022-07-04 13:10:16 UTC
 </div>
 </div>
 <style>

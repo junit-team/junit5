@@ -93,8 +93,10 @@ loadScripts(document, 'script');</script>
  <h2>Inheritance and Execution Order</h2>
 
  <p><code>@BeforeEach</code> methods are inherited from superclasses as long as
- they are not overridden. Furthermore, <code>@BeforeEach</code> methods from
- superclasses will be executed before <code>@BeforeEach</code> methods in subclasses.
+ they are not overridden or <em>superseded</em> (i.e., replaced based on
+ signature only, irrespective of Java's visibility rules). Furthermore,
+ <code>@BeforeEach</code> methods from superclasses will be executed before
+ <code>@BeforeEach</code> methods in subclasses.
 
  <p>Similarly, <code>@BeforeEach</code> methods declared as <em>interface default
  methods</em> are inherited as long as they are not overridden, and
