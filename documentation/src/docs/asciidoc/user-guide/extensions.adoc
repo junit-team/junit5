@@ -799,14 +799,14 @@ callbacks implemented by `Extension2`. `Extension1` is therefore said to _wrap_
 JUnit Jupiter also guarantees _wrapping_ behavior within class and interface hierarchies
 for user-supplied _lifecycle methods_ (see <<writing-tests-classes-and-methods>>).
 
-* `@BeforeAll` methods are inherited from superclasses as long as they are not _hidden_, or
+* `@BeforeAll` methods are inherited from superclasses as long as they are not _hidden_,
   _overridden_, or _superseded_ (i.e., replaced based on signature only, irrespective of
   Java's visibility rules). Furthermore, `@BeforeAll` methods from superclasses will be
   executed **before** `@BeforeAll` methods in subclasses.
 ** Similarly, `@BeforeAll` methods declared in an interface are inherited as long as they
    are not _hidden_ or _overridden_, and `@BeforeAll` methods from an interface will be
    executed **before** `@BeforeAll` methods in the class that implements the interface.
-* `@AfterAll` methods are inherited from superclasses as long as they are not _hidden_, or
+* `@AfterAll` methods are inherited from superclasses as long as they are not _hidden_,
   _overridden_, or _superseded_ (i.e., replaced based on signature only, irrespective of
   Java's visibility rules). Furthermore, `@AfterAll` methods from superclasses will be
   executed **after** `@AfterAll` methods in subclasses.

@@ -26,17 +26,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.subpackage.SuperClassWithPackagePrivateLifecycleMethodInDifferentPackageTestCase;
 
 /**
- * Integration tests that explicitly demonstrate the shadowing/overriding
+ * Integration tests that explicitly demonstrate the overriding and superseding
  * rules for lifecycle methods in the {@link JupiterTestEngine}.
  *
  * @since 5.9
  */
-class LifecycleMethodSupersedingTests {
+class LifecycleMethodOverridingAndSupersedingTests {
 
 	@Nested
-	@DisplayName("A package-private lifecycle super-method can be superseded by")
+	@DisplayName("A package-private lifecycle super-method can be overridden by")
 	class PackagePrivateSuperClassTests {
 
 		@Nested
@@ -44,6 +45,7 @@ class LifecycleMethodSupersedingTests {
 		class ProtectedExtendsPackagePrivateLifecycleMethod
 				extends SuperClassWithPackagePrivateLifecycleMethodTestCase {
 
+			@Override
 			@BeforeEach
 			protected void beforeEach() {
 			}
@@ -55,6 +57,7 @@ class LifecycleMethodSupersedingTests {
 		class PackagePrivateExtendsPackagePrivateLifecycleMethod
 				extends SuperClassWithPackagePrivateLifecycleMethodTestCase {
 
+			@Override
 			@BeforeEach
 			void beforeEach() {
 			}
@@ -65,6 +68,7 @@ class LifecycleMethodSupersedingTests {
 		@DisplayName("a public lifecycle method in the derived class")
 		class PublicExtendsPackagePrivateLifecycleMethod extends SuperClassWithPackagePrivateLifecycleMethodTestCase {
 
+			@Override
 			@BeforeEach
 			public void beforeEach() {
 			}
@@ -73,13 +77,55 @@ class LifecycleMethodSupersedingTests {
 	}
 
 	@Nested
-	@DisplayName("A protected lifecycle super-method can be superseded by")
+	@DisplayName("A package-private lifecycle super-method from a different package can be superseded by")
+	class PackagePrivateSuperClassInDifferentPackageTests {
+
+		@Nested
+		@DisplayName("a protected lifecycle method in the derived class")
+		class ProtectedExtendsPackagePrivateLifecycleMethod
+				extends SuperClassWithPackagePrivateLifecycleMethodInDifferentPackageTestCase {
+
+			// @Override
+			@BeforeEach
+			protected void beforeEach() {
+			}
+
+		}
+
+		@Nested
+		@DisplayName("a package-private lifecycle method in the derived class")
+		class PackagePrivateExtendsPackagePrivateLifecycleMethod
+				extends SuperClassWithPackagePrivateLifecycleMethodInDifferentPackageTestCase {
+
+			// @Override
+			@BeforeEach
+			void beforeEach() {
+			}
+
+		}
+
+		@Nested
+		@DisplayName("a public lifecycle method in the derived class")
+		class PublicExtendsPackagePrivateLifecycleMethod
+				extends SuperClassWithPackagePrivateLifecycleMethodInDifferentPackageTestCase {
+
+			// @Override
+			@BeforeEach
+			public void beforeEach() {
+			}
+
+		}
+	}
+
+	@Nested
+	@DisplayName("A protected lifecycle super-method can be overridden by")
 	class ProtectedSuperClassTests {
 
 		@Nested
 		@DisplayName("a protected lifecycle method in the derived class")
 		class ProtectedExtendsPackagePrivate extends SuperClassWithProtectedLifecycleMethodTestCase {
 
+			@Override
 			@BeforeEach
 			protected void beforeEach() {
 			}
@@ -90,6 +136,7 @@ class LifecycleMethodSupersedingTests {
 		@DisplayName("a public lifecycle method in the derived class")
 		class PublicExtendsPackagePrivate extends SuperClassWithProtectedLifecycleMethodTestCase {
 
+			@Override
 			@BeforeEach
 			public void beforeEach() {
 			}
@@ -98,13 +145,14 @@ class LifecycleMethodSupersedingTests {
 	}
 
 	@Nested
-	@DisplayName("A public lifecycle super-method can be superseded by")
+	@DisplayName("A public lifecycle super-method can be overridden by")
 	class PublicSuperClassTests {
 
 		@Nested
 		@DisplayName("a public lifecycle method in the derived class")
 		class PublicExtendsPackagePrivate extends SuperClassWithPublicLifecycleMethodTestCase {
 
+			@Override
 			@BeforeEach
 			public void beforeEach() {
 			}
