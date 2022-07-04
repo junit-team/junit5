@@ -50,20 +50,15 @@ public class DisabledIfIntegrationTests {
 	void enabledBecauseConditionMethodReturnsFalse() {
 	}
 
-	@Nested
-	class ExternalConditionMethod {
+	@Test
+	@DisabledIf("org.junit.jupiter.api.condition.StaticConditionMethods#returnsTrue")
+	void disabledBecauseStaticExternalConditionMethodReturnsTrue() {
+		fail("Should be disabled");
+	}
 
-		@Test
-		@DisabledIf("org.junit.jupiter.api.condition.StaticConditionMethods#returnsTrue")
-		void disabledBecauseConditionMethodReturnsTrue() {
-			fail("Should be disabled");
-		}
-
-		@Test
-		@DisabledIf("org.junit.jupiter.api.condition.StaticConditionMethods#returnsFalse")
-		void enabledBecauseConditionMethodReturnsFalse() {
-		}
-
+	@Test
+	@DisabledIf("org.junit.jupiter.api.condition.StaticConditionMethods#returnsFalse")
+	void enabledBecauseStaticExternalConditionMethodReturnsFalse() {
 	}
 
 	@Nested
