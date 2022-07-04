@@ -16,7 +16,7 @@ dependencies {
 	implementation("com.github.ben-manes:gradle-versions-plugin:0.39.0")
 	implementation("gradle.plugin.com.github.johnrengelman:shadow:7.1.2")
 	implementation("org.gradle:test-retry-gradle-plugin:1.3.1")
-	compileOnly("com.gradle.enterprise:test-distribution-gradle-plugin:2.3.3") // keep in sync with root settings.gradle.kts
+	compileOnly("com.gradle.enterprise:test-distribution-gradle-plugin:2.3.5") // keep in sync with root settings.gradle.kts
 }
 
 tasks {
