@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -410,12 +411,16 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		Path pathTempDir;
 
 		@Test
-		@DisplayName("and injected File and Path reference the same temp directory")
+		@DisplayName("and injected File and Path do not reference the same temp directory")
 		void checkFile(@TempDir File tempDir, @TempDir Path ref) {
-			assertNotNull(tempDir);
-			assertNotNull(ref);
-			assertNotNull(this.fileTempDir);
-			assertNotNull(this.pathTempDir);
+			assertFileAndPathAreNotEqual(tempDir, ref);
+			assertFileAndPathAreNotEqual(this.fileTempDir, this.pathTempDir);
+		}
+
+		private static void assertFileAndPathAreNotEqual(File tempDir, Path ref) {
+			Path path = tempDir.toPath();
+			assertNotEquals(ref.toAbsolutePath(), path.toAbsolutePath());
+			assertTrue(Files.exists(path));
 		}
 
 	}
