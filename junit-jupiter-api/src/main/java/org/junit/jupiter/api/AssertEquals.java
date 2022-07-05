@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.AssertionUtils.objectsAreEqual;
 
 import java.util.function.Supplier;
 
+import org.junit.jupiter.api.function.BinaryPredicate;
+
 /**
  * {@code AssertEquals} is a collection of utility methods that support asserting
  * equality on objects and primitives in tests.
@@ -189,4 +191,21 @@ class AssertEquals {
 		}
 	}
 
+	static <T> void assertEquals(T expected, T actual, BinaryPredicate<T> equals) {
+		if (!equals.test(expected, actual)) {
+			failNotEqual(expected, actual, (String) null);
+		}
+	}
+
+	static <T> void assertEquals(T expected, T actual, BinaryPredicate<T> equals, String message) {
+		if (!equals.test(expected, actual)) {
+			failNotEqual(expected, actual, message);
+		}
+	}
+
+	static <T> void assertEquals(T expected, T actual, BinaryPredicate<T> equals, Supplier<String> messageSupplier) {
+		if (!equals.test(expected, actual)) {
+			failNotEqual(expected, actual, messageSupplier);
+		}
+	}
 }

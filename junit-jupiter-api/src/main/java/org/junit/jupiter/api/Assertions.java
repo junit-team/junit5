@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.function.BinaryPredicate;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.opentest4j.MultipleFailuresError;
@@ -3572,4 +3573,16 @@ public class Assertions {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
 
+	public static <T> void assertEquals(T expected, T actual, BinaryPredicate<T> equals) {
+		AssertEquals.assertEquals(expected, actual, equals);
+	}
+
+	public static <T> void assertEquals(T expected, T actual, BinaryPredicate<T> equals, String message) {
+		AssertEquals.assertEquals(expected, actual, equals, message);
+	}
+
+	public static <T> void assertEquals(T expected, T actual, BinaryPredicate<T> equals,
+			Supplier<String> messageSupplier) {
+		AssertEquals.assertEquals(expected, actual, equals, messageSupplier);
+	}
 }

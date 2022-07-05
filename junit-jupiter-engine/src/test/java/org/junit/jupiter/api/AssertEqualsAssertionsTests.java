@@ -15,9 +15,13 @@ import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEndsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.function.BinaryPredicate.not;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+
+import org.junit.jupiter.api.function.BinaryPredicate;
 import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.AssertionFailedError;
 
@@ -616,6 +620,45 @@ class AssertEqualsAssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "expected: <" + ToStringThrowsException.class.getName() + "@");
 			assertMessageEndsWith(ex, "but was: <foo>");
+		}
+	}
+
+	@Test
+	void assertEqualsWithBinaryPredicate() {
+		assertEquals(BigDecimal.valueOf(0.3), BigDecimal.valueOf(1.3).subtract(BigDecimal.valueOf(1.0)),
+			BinaryPredicate.compare());
+	}
+
+	@Test
+	void assertEqualsWithBinaryPredicate2() {
+		try {
+			assertEquals(BigDecimal.valueOf(0.3), BigDecimal.valueOf(1.3 - 1.0d), BinaryPredicate.compare());
+		}
+		catch (AssertionFailedError ex) {
+			assertEquals("expected: <0.3> but was: <0.30000000000000004>", ex.getMessage());
+		}
+	}
+
+	@Test
+	void assertEqualsWithBinaryPredicate3() {
+		try {
+			assertEquals(Optional.of(3), Optional.empty(), Optional::equals);
+		}
+		catch (AssertionFailedError ex) {
+			assertEquals("expected: <Optional[3]> but was: <Optional.empty>", ex.getMessage());
+		}
+	}
+
+	@Test
+	void assertEqualsWithBinaryPredicate3b() {
+		try {
+			assertEquals(Optional.of(3), Optional.of(3), BinaryPredicate.not(Optional::equals), "error message");
+		}
+		catch (AssertionFailedError ex) {
+			assertTrue(
+				ex.getMessage().matches("\\Qerror message ==> expected: java.util.Optional@\\E" + ".+"
+						+ "\\Q<Optional[3]> but was: java.util.Optional@\\E" + ".+" + "\\Q<Optional[3]>\\E"),
+				ex.getMessage());
 		}
 	}
 
