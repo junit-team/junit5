@@ -15,8 +15,9 @@ import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEndsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.function.BinaryPredicate.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -624,13 +625,13 @@ class AssertEqualsAssertionsTests {
 	}
 
 	@Test
-	void assertEqualsWithBinaryPredicate() {
+	void assertEqualsWithBinaryPredicateBigDecimal() {
 		assertEquals(BigDecimal.valueOf(0.3), BigDecimal.valueOf(1.3).subtract(BigDecimal.valueOf(1.0)),
 			BinaryPredicate.compare());
 	}
 
 	@Test
-	void assertEqualsWithBinaryPredicate2() {
+	void assertEqualsWithBinaryPredicateBigDecimalFail() {
 		try {
 			assertEquals(BigDecimal.valueOf(0.3), BigDecimal.valueOf(1.3 - 1.0d), BinaryPredicate.compare());
 		}
@@ -640,7 +641,7 @@ class AssertEqualsAssertionsTests {
 	}
 
 	@Test
-	void assertEqualsWithBinaryPredicate3() {
+	void assertEqualsWithBinaryPredicateOptional() {
 		try {
 			assertEquals(Optional.of(3), Optional.empty(), Optional::equals);
 		}
@@ -650,7 +651,7 @@ class AssertEqualsAssertionsTests {
 	}
 
 	@Test
-	void assertEqualsWithBinaryPredicate3b() {
+	void assertEqualsWithBinaryPredicateOptionalWithStringMessage() {
 		try {
 			assertEquals(Optional.of(3), Optional.of(3), BinaryPredicate.not(Optional::equals), "error message");
 		}
