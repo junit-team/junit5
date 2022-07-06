@@ -12,6 +12,10 @@ package org.junit.jupiter.api.function;
 
 import java.util.Comparator;
 
+import org.apiguardian.api.API;
+
+@FunctionalInterface
+@API(status = API.Status.EXPERIMENTAL, since = "5.10")
 public interface BinaryPredicate<T> {
 
 	boolean test(T expected, T actual);
@@ -31,4 +35,5 @@ public interface BinaryPredicate<T> {
 	static <T> BinaryPredicate<T> not(BinaryPredicate<T> predicate) {
 		return (expected, actual) -> !predicate.test(expected, actual);
 	}
+
 }

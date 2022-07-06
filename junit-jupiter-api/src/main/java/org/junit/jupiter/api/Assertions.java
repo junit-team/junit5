@@ -3573,14 +3573,17 @@ public class Assertions {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
 
+	@API(status = EXPERIMENTAL, since = "5.10")
 	public static <T> void assertEquals(T expected, T actual, BinaryPredicate<T> equals) {
 		AssertEquals.assertEquals(expected, actual, equals);
 	}
 
+	@API(status = EXPERIMENTAL, since = "5.10")
 	public static <T> void assertEquals(T expected, T actual, BinaryPredicate<T> equals, String message) {
 		AssertEquals.assertEquals(expected, actual, equals, message);
 	}
 
+	@API(status = EXPERIMENTAL, since = "5.10")
 	public static <T> void assertEquals(T expected, T actual, BinaryPredicate<T> equals,
 			Supplier<String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, equals, messageSupplier);

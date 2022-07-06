@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Optional;
 
 import org.junit.jupiter.api.function.BinaryPredicate;
@@ -661,6 +662,11 @@ class AssertEqualsAssertionsTests {
 						+ "\\Q<Optional[3]> but was: java.util.Optional@\\E" + ".+" + "\\Q<Optional[3]>\\E"),
 				ex.getMessage());
 		}
+	}
+
+	@Test
+	void assertEqualsWithBinaryPredicateOptionalWithMessageSupplier() {
+		assertEquals(4d, 4L, BinaryPredicate.compare(Comparator.comparingDouble(Number::doubleValue)));
 	}
 
 	// -------------------------------------------------------------------------
