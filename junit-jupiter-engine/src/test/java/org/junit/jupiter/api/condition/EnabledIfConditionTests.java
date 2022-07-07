@@ -41,7 +41,7 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 	void enabledBecauseAnnotationIsNotPresent() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("@EnabledIf is not present");
+		assertReasonMatches("(?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf is not present");
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 	void enabledBecauseStaticConditionMethodReturnsTrue() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("Condition provided in @EnabledIf evaluates to true");
+		assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to true");
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 	void enabledBecauseConditionMethodReturnsTrue() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("Condition provided in @EnabledIf evaluates to true");
+		assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to true");
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 	void disabledBecauseConditionMethodReturnsFalse() {
 		evaluateCondition();
 		assertDisabled();
-		assertReasonContains("Condition provided in @EnabledIf evaluates to false");
+		assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to false");
 	}
 
 	@Nested
@@ -94,7 +94,7 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 		void enabledBecauseConditionMethodReturnsTrue() {
 			evaluateCondition();
 			assertEnabled();
-			assertReasonContains("Condition provided in @EnabledIf evaluates to true");
+			assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to true");
 		}
 
 		/**
@@ -104,7 +104,7 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 		void disabledBecauseConditionMethodReturnsFalse() {
 			evaluateCondition();
 			assertDisabled();
-			assertReasonContains("Condition provided in @EnabledIf evaluates to false");
+			assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to false");
 		}
 
 	}
