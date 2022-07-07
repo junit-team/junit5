@@ -40,6 +40,11 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * Abstract base class for unit testing a concrete {@link ExecutionCondition}
  * implementation.
  *
+ * <p><strong>WARNING</strong>: this abstract base class currently does not
+ * support tests in {@code @Nested} test classes within the
+ * {@linkplain #getTestClass() test class}, since {@link #beforeEach(TestInfo)}
+ * instantiates the test class using the no-args default constructor.
+ *
  * @since 5.1
  */
 @TestInstance(Lifecycle.PER_CLASS)

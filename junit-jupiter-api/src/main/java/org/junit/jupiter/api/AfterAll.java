@@ -43,8 +43,10 @@ import org.apiguardian.api.API;
  * <h2>Inheritance and Execution Order</h2>
  *
  * <p>{@code @AfterAll} methods are inherited from superclasses as long as
- * they are not <em>hidden</em> or <em>overridden</em>. Furthermore,
- * {@code @AfterAll} methods from superclasses will be executed after
+ * they are not <em>hidden</em> (default mode with {@code static} modifier),
+ * <em>overridden</em>, or <em>superseded</em> (i.e., replaced based on
+ * signature only, irrespective of Java's visibility rules). Furthermore,
+ * {@code @AfterAll} methods from superclasses will be executed before
  * {@code @AfterAll} methods in subclasses.
  *
  * <p>Similarly, {@code @AfterAll} methods declared in an interface are

@@ -28,7 +28,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.opentest4j.AssertionFailedError;
@@ -40,7 +39,7 @@ import org.opentest4j.AssertionFailedError;
  */
 class AssertTimeoutAssertionsTests {
 
-	private static final Duration PREEMPTIVE_TIMEOUT = ofMillis(OS.current() == WINDOWS ? 1000 : 100);
+	private static final Duration PREEMPTIVE_TIMEOUT = ofMillis(WINDOWS.isCurrentOs() ? 1000 : 100);
 
 	private static ThreadLocal<AtomicBoolean> changed = ThreadLocal.withInitial(() -> new AtomicBoolean(false));
 

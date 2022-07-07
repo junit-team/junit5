@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.condition;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 
@@ -51,7 +50,8 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 	void enabledBecauseStaticConditionMethodReturnsTrue() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to true");
+		assertReasonContains("""
+				@EnabledIf("staticMethodThatReturnsTrue") evaluated to true""");
 	}
 
 	/**
@@ -71,7 +71,8 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 	void enabledBecauseConditionMethodReturnsTrue() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to true");
+		assertReasonContains("""
+				@EnabledIf("methodThatReturnsTrue") evaluated to true""");
 	}
 
 	/**
@@ -81,32 +82,31 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 	void disabledBecauseConditionMethodReturnsFalse() {
 		evaluateCondition();
 		assertDisabled();
-		assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to false");
+		assertReasonContains("""
+				@EnabledIf("methodThatReturnsFalse") evaluated to false""");
 	}
 
-	@Nested
-	class ExternalConditionMethod {
+	/**
+	 * @see EnabledIfIntegrationTests.ExternalConditionMethod#enabledBecauseStaticExternalConditionMethodReturnsTrue()
+	 */
+	@Test
+	void enabledBecauseStaticExternalConditionMethodReturnsTrue() {
+		evaluateCondition();
+		assertEnabled();
+		assertReasonContains("""
+				@EnabledIf("org.junit.jupiter.api.condition.StaticConditionMethods#returnsTrue") evaluated to true""");
+	}
 
-		/**
-		 * @see EnabledIfIntegrationTests.ExternalConditionMethod#enabledBecauseConditionMethodReturnsTrue()
-		 */
-		@Test
-		void enabledBecauseConditionMethodReturnsTrue() {
-			evaluateCondition();
-			assertEnabled();
-			assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to true");
-		}
-
-		/**
-		 * @see EnabledIfIntegrationTests.ExternalConditionMethod#disabledBecauseConditionMethodReturnsFalse()
-		 */
-		@Test
-		void disabledBecauseConditionMethodReturnsFalse() {
-			evaluateCondition();
-			assertDisabled();
-			assertReasonMatches("Condition provided in (?:interface org\\.junit\\.jupiter\\.api\\.condition\\.|@)EnabledIf evaluate(?:s|d) to false");
-		}
-
+	/**
+	 * @see EnabledIfIntegrationTests.ExternalConditionMethod#disabledBecauseStaticExternalConditionMethodReturnsFalse()
+	 */
+	@Test
+	void disabledBecauseStaticExternalConditionMethodReturnsFalse() {
+		evaluateCondition();
+		assertDisabled();
+		assertReasonContains(
+			"""
+					@EnabledIf("org.junit.jupiter.api.condition.StaticConditionMethods#returnsFalse") evaluated to false""");
 	}
 
 }

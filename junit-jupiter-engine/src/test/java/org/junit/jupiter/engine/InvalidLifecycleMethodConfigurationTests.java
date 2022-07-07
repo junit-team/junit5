@@ -23,7 +23,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 
 /**
- * Integration tests that very proper handling of invalid configuration for
+ * Integration tests that verify proper handling of invalid configuration for
  * lifecycle methods in conjunction with the {@link JupiterTestEngine}.
  *
  * <p>In general, configuration errors should not be thrown until the
@@ -34,23 +34,43 @@ import org.junit.platform.testkit.engine.Events;
 class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidBeforeAllDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidBeforeAllMethod.class);
+	void executeValidTestCaseAlongsideTestCaseWithInvalidNonStaticBeforeAllDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidNonStaticBeforeAllMethod.class);
 	}
 
 	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidAfterAllDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidAfterAllMethod.class);
+	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateBeforeAllDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidPrivateBeforeAllMethod.class);
 	}
 
 	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidBeforeEachDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidBeforeEachMethod.class);
+	void executeValidTestCaseAlongsideTestCaseWithInvalidNonStaticAfterAllDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidNonStaticAfterAllMethod.class);
 	}
 
 	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidAfterEachDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidAfterEachMethod.class);
+	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateAfterAllDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidPrivateAfterAllMethod.class);
+	}
+
+	@Test
+	void executeValidTestCaseAlongsideTestCaseWithInvalidStaticBeforeEachDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidStaticBeforeEachMethod.class);
+	}
+
+	@Test
+	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateBeforeEachDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidPrivateBeforeEachMethod.class);
+	}
+
+	@Test
+	void executeValidTestCaseAlongsideTestCaseWithInvalidStaticAfterEachDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidStaticAfterEachMethod.class);
+	}
+
+	@Test
+	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateAfterEachDeclaration() {
+		assertExecutionResults(TestCaseWithInvalidPrivateAfterEachMethod.class);
 	}
 
 	private void assertExecutionResults(Class<?> invalidTestClass) {
@@ -80,7 +100,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidBeforeAllMethod {
+	static class TestCaseWithInvalidNonStaticBeforeAllMethod {
 
 		// must be static
 		@BeforeAll
@@ -92,7 +112,19 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidAfterAllMethod {
+	static class TestCaseWithInvalidPrivateBeforeAllMethod {
+
+		// must not be private
+		@BeforeAll
+		private static void beforeAll() {
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class TestCaseWithInvalidNonStaticAfterAllMethod {
 
 		// must be static
 		@AfterAll
@@ -104,7 +136,19 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidBeforeEachMethod {
+	static class TestCaseWithInvalidPrivateAfterAllMethod {
+
+		// must not be private
+		@AfterAll
+		private static void afterAll() {
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class TestCaseWithInvalidStaticBeforeEachMethod {
 
 		// must NOT be static
 		@BeforeEach
@@ -116,11 +160,35 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidAfterEachMethod {
+	static class TestCaseWithInvalidPrivateBeforeEachMethod {
+
+		// must NOT be private
+		@BeforeEach
+		private void beforeEach() {
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class TestCaseWithInvalidStaticAfterEachMethod {
 
 		// must NOT be static
 		@AfterEach
 		static void afterEach() {
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
+	static class TestCaseWithInvalidPrivateAfterEachMethod {
+
+		// must NOT be private
+		@AfterEach
+		private void afterEach() {
 		}
 
 		@Test

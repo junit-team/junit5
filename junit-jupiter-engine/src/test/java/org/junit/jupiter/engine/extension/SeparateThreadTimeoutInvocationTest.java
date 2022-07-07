@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -32,18 +33,20 @@ import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.TimeoutInvoca
 @DisplayName("SeparateThreadTimeoutInvocation")
 class SeparateThreadTimeoutInvocationTest {
 
+	private static final long PREEMPTIVE_TIMEOUT_MILLIS = WINDOWS.isCurrentOs() ? 1000 : 100;
+
 	@Test
 	@DisplayName("throws timeout exception when timeout duration is exceeded")
 	void throwsTimeoutException() {
 		AtomicReference<String> threadName = new AtomicReference<>();
 		var invocation = aSeparateThreadInvocation(() -> {
 			threadName.set(Thread.currentThread().getName());
-			Thread.sleep(100);
+			Thread.sleep(PREEMPTIVE_TIMEOUT_MILLIS * 2);
 			return null;
 		});
 
 		assertThatThrownBy(invocation::proceed) //
-				.hasMessage("method() timed out after 10 milliseconds") //
+				.hasMessage("method() timed out after " + PREEMPTIVE_TIMEOUT_MILLIS + " milliseconds") //
 				.isInstanceOf(TimeoutException.class) //
 				.hasRootCauseMessage("Execution timed out in thread " + threadName.get());
 	}
@@ -69,8 +72,8 @@ class SeparateThreadTimeoutInvocationTest {
 	private static <T> SeparateThreadTimeoutInvocation<T> aSeparateThreadInvocation(Invocation<T> invocation) {
 		var namespace = ExtensionContext.Namespace.create(SeparateThreadTimeoutInvocationTest.class);
 		var store = new NamespaceAwareStore(new ExtensionValuesStore(null), namespace);
-		var parameters = new TimeoutInvocationParameters<>(invocation, new TimeoutDuration(10, MILLISECONDS),
-			() -> "method()");
+		var parameters = new TimeoutInvocationParameters<>(invocation,
+			new TimeoutDuration(PREEMPTIVE_TIMEOUT_MILLIS, MILLISECONDS), () -> "method()");
 		return (SeparateThreadTimeoutInvocation<T>) new TimeoutInvocationFactory(store) //
 				.create(ThreadMode.SEPARATE_THREAD, parameters);
 	}

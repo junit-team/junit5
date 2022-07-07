@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 
 /**
  * @since 5.7
@@ -73,9 +75,9 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 
 	private boolean invokeConditionMethod(Method method, ExtensionContext context) {
 		Preconditions.condition(method.getReturnType() == boolean.class,
-			() -> format("Method [%s] should return a boolean", method.getName()));
-		Preconditions.condition(acceptsExtensionContextArgument(method),
-			() -> format("Method [%s] should accept either an ExtensionContext or no arguments", method.getName()));
+			() -> format("Method [%s] must return a boolean", method));
+		Preconditions.condition(acceptsExtensionContextOrNoArguments(method),
+			() -> format("Method [%s] must accept either an ExtensionContext or no arguments", method));
 
 		Object testInstance = context.getTestInstance().orElse(null);
 		if (method.getParameterCount() == 0) {
@@ -84,28 +86,19 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 		return (boolean) ReflectionUtils.invokeMethod(method, testInstance, context);
 	}
 
-	private boolean acceptsExtensionContextArgument(Method method) {
-		switch (method.getParameterCount()) {
-			case 0:
-				return true;
-			case 1:
-				return method.getParameterTypes()[0] == ExtensionContext.class;
-			default:
-				return false;
-		}
+	private boolean acceptsExtensionContextOrNoArguments(Method method) {
+		int parameterCount = method.getParameterCount();
+		return parameterCount == 0 || (parameterCount == 1 && method.getParameterTypes()[0] == ExtensionContext.class);
 	}
 
 	private ConditionEvaluationResult buildConditionEvaluationResult(boolean methodResult, A annotation) {
-		String defaultReason = format("Condition provided in @%s evaluates to %s", this.annotationType.getSimpleName(),
-			methodResult);
+		Supplier<String> defaultReason = () -> format("@%s(\"%s\") evaluated to %s",
+			this.annotationType.getSimpleName(), this.methodName.apply(annotation), methodResult);
 		if (isEnabled(methodResult)) {
-			return enabled(defaultReason);
+			return enabled(defaultReason.get());
 		}
 		String customReason = this.customDisabledReason.apply(annotation);
-		if (customReason.isEmpty()) {
-			return disabled(defaultReason);
-		}
-		return disabled(customReason);
+		return StringUtils.isNotBlank(customReason) ? disabled(customReason) : disabled(defaultReason.get());
 	}
 
 	protected abstract boolean isEnabled(boolean methodResult);

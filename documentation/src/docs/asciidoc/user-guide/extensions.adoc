@@ -799,27 +799,31 @@ callbacks implemented by `Extension2`. `Extension1` is therefore said to _wrap_
 JUnit Jupiter also guarantees _wrapping_ behavior within class and interface hierarchies
 for user-supplied _lifecycle methods_ (see <<writing-tests-classes-and-methods>>).
 
-* `@BeforeAll` methods are inherited from superclasses as long as they are not _hidden_ or
-  _overridden_. Furthermore, `@BeforeAll` methods from superclasses will be executed
-  **before** `@BeforeAll` methods in subclasses.
+* `@BeforeAll` methods are inherited from superclasses as long as they are not _hidden_,
+  _overridden_, or _superseded_ (i.e., replaced based on signature only, irrespective of
+  Java's visibility rules). Furthermore, `@BeforeAll` methods from superclasses will be
+  executed **before** `@BeforeAll` methods in subclasses.
 ** Similarly, `@BeforeAll` methods declared in an interface are inherited as long as they
    are not _hidden_ or _overridden_, and `@BeforeAll` methods from an interface will be
    executed **before** `@BeforeAll` methods in the class that implements the interface.
-* `@AfterAll` methods are inherited from superclasses as long as they are not _hidden_ or
-  _overridden_. Furthermore, `@AfterAll` methods from superclasses will be executed
-  **after** `@AfterAll` methods in subclasses.
+* `@AfterAll` methods are inherited from superclasses as long as they are not _hidden_,
+  _overridden_, or _superseded_ (i.e., replaced based on signature only, irrespective of
+  Java's visibility rules). Furthermore, `@AfterAll` methods from superclasses will be
+  executed **after** `@AfterAll` methods in subclasses.
 ** Similarly, `@AfterAll` methods declared in an interface are inherited as long as they
    are not _hidden_ or _overridden_, and `@AfterAll` methods from an interface will be
    executed **after** `@AfterAll` methods in the class that implements the interface.
 * `@BeforeEach` methods are inherited from superclasses as long as they are not
-  _overridden_. Furthermore, `@BeforeEach` methods from superclasses will be executed
-  **before** `@BeforeEach` methods in subclasses.
+  _overridden_ or _superseded_ (i.e., replaced based on signature only, irrespective of
+  Java's visibility rules). Furthermore, `@BeforeEach` methods from superclasses will be
+  executed **before** `@BeforeEach` methods in subclasses.
 ** Similarly, `@BeforeEach` methods declared as interface default methods are inherited as
    long as they are not _overridden_, and `@BeforeEach` default methods will be executed
    **before** `@BeforeEach` methods in the class that implements the interface.
 * `@AfterEach` methods are inherited from superclasses as long as they are not
-  _overridden_. Furthermore, `@AfterEach` methods from superclasses will be executed
-  **after** `@AfterEach` methods in subclasses.
+  _overridden_ or _superseded_ (i.e., replaced based on signature only, irrespective of
+  Java's visibility rules). Furthermore, `@AfterEach` methods from superclasses will be
+  executed **after** `@AfterEach` methods in subclasses.
 ** Similarly, `@AfterEach` methods declared as interface default methods are inherited as
    long as they are not _overridden_, and `@AfterEach` default methods will be executed
    **after** `@AfterEach` methods in the class that implements the interface.

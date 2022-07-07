@@ -37,19 +37,51 @@ final class LifecycleMethodUtils {
 	}
 
 	static List<Method> findBeforeAllMethods(Class<?> testClass, boolean requireStatic) {
-		return findMethodsAndAssertStatic(testClass, requireStatic, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN);
+		return findMethodsAndAssertStaticAndNonPrivate(testClass, requireStatic, BeforeAll.class,
+			HierarchyTraversalMode.TOP_DOWN);
 	}
 
 	static List<Method> findAfterAllMethods(Class<?> testClass, boolean requireStatic) {
-		return findMethodsAndAssertStatic(testClass, requireStatic, AfterAll.class, HierarchyTraversalMode.BOTTOM_UP);
+		return findMethodsAndAssertStaticAndNonPrivate(testClass, requireStatic, AfterAll.class,
+			HierarchyTraversalMode.BOTTOM_UP);
 	}
 
 	static List<Method> findBeforeEachMethods(Class<?> testClass) {
-		return findMethodsAndAssertNonStatic(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
+		return findMethodsAndAssertNonStaticAndNonPrivate(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
 	}
 
 	static List<Method> findAfterEachMethods(Class<?> testClass) {
-		return findMethodsAndAssertNonStatic(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
+		return findMethodsAndAssertNonStaticAndNonPrivate(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
+	}
+
+	private static List<Method> findMethodsAndAssertStaticAndNonPrivate(Class<?> testClass, boolean requireStatic,
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+
+		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
+		if (requireStatic) {
+			methods.forEach(method -> assertStatic(annotationType, method));
+		}
+		methods.forEach(method -> assertNonPrivate(annotationType, method));
+		return methods;
+	}
+
+	private static List<Method> findMethodsAndAssertNonStaticAndNonPrivate(Class<?> testClass,
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+
+		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
+		methods.forEach(method -> {
+			assertNonStatic(annotationType, method);
+			assertNonPrivate(annotationType, method);
+		});
+		return methods;
+	}
+
+	private static List<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+
+		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
+		methods.forEach(method -> assertVoid(annotationType, method));
+		return methods;
 	}
 
 	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
@@ -67,34 +99,18 @@ final class LifecycleMethodUtils {
 		}
 	}
 
+	private static void assertNonPrivate(Class<? extends Annotation> annotationType, Method method) {
+		if (ReflectionUtils.isPrivate(method)) {
+			throw new JUnitException(String.format("@%s method '%s' must not be private.",
+				annotationType.getSimpleName(), method.toGenericString()));
+		}
+	}
+
 	private static void assertVoid(Class<? extends Annotation> annotationType, Method method) {
 		if (!returnsVoid(method)) {
 			throw new JUnitException(String.format("@%s method '%s' must not return a value.",
 				annotationType.getSimpleName(), method.toGenericString()));
 		}
-	}
-
-	private static List<Method> findMethodsAndAssertStatic(Class<?> testClass, boolean requireStatic,
-			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
-		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
-		if (requireStatic) {
-			methods.forEach(method -> assertStatic(annotationType, method));
-		}
-		return methods;
-	}
-
-	private static List<Method> findMethodsAndAssertNonStatic(Class<?> testClass,
-			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
-		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
-		methods.forEach(method -> assertNonStatic(annotationType, method));
-		return methods;
-	}
-
-	private static List<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,
-			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
-		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
-		methods.forEach(method -> assertVoid(annotationType, method));
-		return methods;
 	}
 
 }
