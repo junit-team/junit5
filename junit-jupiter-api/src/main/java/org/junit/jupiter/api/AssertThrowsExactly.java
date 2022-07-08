@@ -10,16 +10,14 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
-import static org.junit.jupiter.api.AssertionUtils.format;
+import static java.lang.String.format;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.jupiter.api.AssertionUtils.getCanonicalName;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
-import org.opentest4j.AssertionFailedError;
 
 /**
  * {@code AssertThrowsExactly} is a collection of utility methods that support asserting
@@ -60,15 +58,19 @@ class AssertThrowsExactly {
 			}
 			else {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(actualException);
-				String message = buildPrefix(nullSafeGet(messageOrSupplier))
-						+ format(expectedType, actualException.getClass(), "Unexpected exception type thrown");
-				throw new AssertionFailedError(message, actualException);
+				throw assertionFailure() //
+						.message(messageOrSupplier) //
+						.expected(expectedType) //
+						.actual(actualException.getClass()) //
+						.reason("Unexpected exception type thrown") //
+						.build();
 			}
 		}
 
-		String message = buildPrefix(nullSafeGet(messageOrSupplier))
-				+ String.format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType));
-		throw new AssertionFailedError(message);
+		throw assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason(format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType))) //
+				.build();
 	}
 
 }

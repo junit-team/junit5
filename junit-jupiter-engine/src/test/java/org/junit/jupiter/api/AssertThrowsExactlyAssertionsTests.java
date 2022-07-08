@@ -54,7 +54,7 @@ class AssertThrowsExactlyAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
+			assertMessageStartsWith(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.RuntimeException>");
 			assertMessageContains(ex, "but was: <java.lang.Exception>");
 		}
@@ -69,7 +69,7 @@ class AssertThrowsExactlyAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
+			assertMessageStartsWith(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.RuntimeException>");
 			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
 		}
@@ -191,7 +191,7 @@ class AssertThrowsExactlyAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
+			assertMessageStartsWith(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
 		}
@@ -207,9 +207,9 @@ class AssertThrowsExactlyAssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			// Should look something like this:
-			// Custom message ==> Unexpected exception type thrown ==> expected: <java.lang.IllegalStateException> but was: <java.lang.NumberFormatException>
+			// Custom message ==> Unexpected exception type thrown, expected: <java.lang.IllegalStateException> but was: <java.lang.NumberFormatException>
 			assertMessageStartsWith(ex, "Custom message ==> ");
-			assertMessageContains(ex, "Unexpected exception type thrown ==> ");
+			assertMessageContains(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
 		}
@@ -225,9 +225,9 @@ class AssertThrowsExactlyAssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			// Should look something like this:
-			// Custom message ==> Unexpected exception type thrown ==> expected: <java.lang.IllegalStateException> but was: <java.lang.NumberFormatException>
+			// Custom message ==> Unexpected exception type thrown, expected: <java.lang.IllegalStateException> but was: <java.lang.NumberFormatException>
 			assertMessageStartsWith(ex, "Custom message ==> ");
-			assertMessageContains(ex, "Unexpected exception type thrown ==> ");
+			assertMessageContains(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
 		}
@@ -244,7 +244,7 @@ class AssertThrowsExactlyAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
+			assertMessageStartsWith(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			// As of the time of this writing, the class name of the above anonymous inner
 			// class is org.junit.jupiter.api.AssertThrowsExactlyAssertionsTests$2; however, hard
@@ -263,7 +263,7 @@ class AssertThrowsExactlyAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
+			assertMessageStartsWith(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			// The following verifies that the canonical name is used (i.e., "." instead of "$").
 			assertMessageContains(ex, "but was: <" + LocalException.class.getName().replace("$", ".") + ">");
@@ -288,11 +288,11 @@ class AssertThrowsExactlyAssertionsTests {
 			catch (AssertionFailedError ex) {
 				// Example Output:
 				//
-				// Unexpected exception type thrown ==>
+				// Unexpected exception type thrown,
 				// expected: <org.junit.jupiter.api.EnigmaThrowable@5d3411d>
 				// but was: <org.junit.jupiter.api.EnigmaThrowable@2471cca7>
 
-				assertMessageStartsWith(ex, "Unexpected exception type thrown ==> ");
+				assertMessageStartsWith(ex, "Unexpected exception type thrown, ");
 				// The presence of the "@" sign is sufficient to indicate that the hash was
 				// generated to disambiguate between the two identical class names.
 				assertMessageContains(ex, "expected: <org.junit.jupiter.api.EnigmaThrowable@");

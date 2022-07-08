@@ -10,8 +10,8 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.jupiter.api.AssertionUtils.doublesAreEqual;
-import static org.junit.jupiter.api.AssertionUtils.failNotEqual;
 import static org.junit.jupiter.api.AssertionUtils.floatsAreEqual;
 import static org.junit.jupiter.api.AssertionUtils.objectsAreEqual;
 
@@ -189,4 +189,11 @@ class AssertEquals {
 		}
 	}
 
+	private static void failNotEqual(Object expected, Object actual, Object messageOrSupplier) {
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.expected(expected) //
+				.actual(actual) //
+				.buildAndThrow();
+	}
 }

@@ -12,8 +12,7 @@ package org.junit.jupiter.api;
 
 import static java.lang.String.format;
 import static java.lang.String.join;
-import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.platform.commons.util.Preconditions.condition;
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
@@ -195,8 +194,13 @@ class AssertLinesMatch {
 
 		void fail(String format, Object... args) {
 			String newLine = System.lineSeparator();
-			String message = buildPrefix(nullSafeGet(messageOrSupplier)) + format(format, args);
-			AssertionUtils.fail(message, join(newLine, expectedLines), join(newLine, actualLines));
+			assertionFailure() //
+					.message(messageOrSupplier) //
+					.reason(format(format, args)) //
+					.expected(join(newLine, expectedLines)) //
+					.actual(join(newLine, actualLines)) //
+					.includeValuesInMessage(false) //
+					.buildAndThrow();
 		}
 	}
 
