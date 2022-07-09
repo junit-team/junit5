@@ -34,7 +34,6 @@ import java.util.stream.Stream;
 import com.univocity.parsers.csv.CsvParser;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
@@ -42,11 +41,10 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * @since 5.0
  */
-class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvFileSource> {
+class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileSource> {
 
 	private final InputStreamProvider inputStreamProvider;
 
-	private CsvFileSource annotation;
 	private List<Source> sources;
 	private Charset charset;
 	private int numLinesToSkip;
@@ -61,8 +59,18 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	}
 
 	@Override
-	public void accept(CsvFileSource annotation) {
-		this.annotation = annotation;
+	public Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvFileSource annotation) {
+		initialize(annotation);
+		// @formatter:off
+		return Preconditions.notEmpty(this.sources, "Resources or files must not be empty")
+				.stream()
+				.map(source -> source.open(context))
+				.map(inputStream -> beginParsing(inputStream, annotation))
+				.flatMap(parser -> toStream(parser, annotation));
+		// @formatter:on
+	}
+
+	private void initialize(CsvFileSource annotation) {
 		Stream<Source> resources = Arrays.stream(annotation.resources()).map(inputStreamProvider::classpathResource);
 		Stream<Source> files = Arrays.stream(annotation.files()).map(inputStreamProvider::file);
 		this.sources = Stream.concat(resources, files).collect(toList());
@@ -80,29 +88,18 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		}
 	}
 
-	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		// @formatter:off
-		return Preconditions.notEmpty(this.sources, "Resources or files must not be empty")
-				.stream()
-				.map(source -> source.open(context))
-				.map(this::beginParsing)
-				.flatMap(this::toStream);
-		// @formatter:on
-	}
-
-	private CsvParser beginParsing(InputStream inputStream) {
+	private CsvParser beginParsing(InputStream inputStream, CsvFileSource annotation) {
 		try {
 			this.csvParser.beginParsing(inputStream, this.charset);
 		}
 		catch (Throwable throwable) {
-			handleCsvException(throwable, this.annotation);
+			handleCsvException(throwable, annotation);
 		}
 		return this.csvParser;
 	}
 
-	private Stream<Arguments> toStream(CsvParser csvParser) {
-		CsvParserIterator iterator = new CsvParserIterator(csvParser, this.annotation);
+	private Stream<Arguments> toStream(CsvParser csvParser, CsvFileSource annotation) {
+		CsvParserIterator iterator = new CsvParserIterator(csvParser, annotation);
 		return stream(spliteratorUnknownSize(iterator, Spliterator.ORDERED), false) //
 				.skip(this.numLinesToSkip) //
 				.onClose(() -> {
@@ -110,7 +107,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 						csvParser.stopParsing();
 					}
 					catch (Throwable throwable) {
-						handleCsvException(throwable, this.annotation);
+						handleCsvException(throwable, annotation);
 					}
 				});
 	}

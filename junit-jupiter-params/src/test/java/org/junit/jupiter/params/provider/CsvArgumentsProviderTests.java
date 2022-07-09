@@ -13,10 +13,12 @@ package org.junit.jupiter.params.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.params.provider.MockCsvAnnotationBuilder.csvSource;
+import static org.mockito.Mockito.mock;
 
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -378,7 +380,7 @@ class CsvArgumentsProviderTests {
 	private Stream<Object[]> provideArguments(CsvSource annotation) {
 		var provider = new CsvArgumentsProvider();
 		provider.accept(annotation);
-		return provider.provideArguments(null).map(Arguments::get);
+		return provider.provideArguments(mock(ExtensionContext.class)).map(Arguments::get);
 	}
 
 	@SuppressWarnings("unchecked")

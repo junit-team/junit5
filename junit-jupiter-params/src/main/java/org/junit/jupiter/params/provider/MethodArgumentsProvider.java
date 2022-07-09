@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -36,22 +35,15 @@ import org.junit.platform.commons.util.StringUtils;
 /**
  * @since 5.0
  */
-class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<MethodSource> {
-
-	private String[] methodNames;
+class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSource> {
 
 	@Override
-	public void accept(MethodSource annotation) {
-		this.methodNames = annotation.value();
-	}
-
-	@Override
-	public Stream<Arguments> provideArguments(ExtensionContext context) {
+	public Stream<? extends Arguments> provideArguments(ExtensionContext context, MethodSource annotation) {
 		Class<?> testClass = context.getRequiredTestClass();
 		Method testMethod = context.getRequiredTestMethod();
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
-		return stream(this.methodNames)
+		return stream(annotation.value())
 				.map(factoryMethodName -> getFactoryMethod(testClass, testMethod, factoryMethodName))
 				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
 				.flatMap(CollectionUtils::toStream)
