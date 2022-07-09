@@ -36,24 +36,46 @@ public final class AnnotationConsumerInitializer {
 		/* no-op */
 	}
 
-	// @formatter:off
-	private static final Predicate<Method> isAnnotationConsumerAcceptMethod = method ->
-			method.getName().equals("accept")
-			&& method.getParameterCount() == 1
-			&& method.getParameterTypes()[0].isAnnotation();
-	// @formatter:on
+	private static final Predicate<Method> isAcceptOrProvideArgumentsMethod = method -> isAnnotationConsumerAcceptMethod(
+		method) || isAnnotationBasedArgumentsProviderMethod(method);
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> T initialize(AnnotatedElement annotatedElement, T instance) {
-		if (instance instanceof AnnotationConsumer) {
-			Method method = findMethods(instance.getClass(), isAnnotationConsumerAcceptMethod, BOTTOM_UP).get(0);
-			Class<? extends Annotation> annotationType = (Class<? extends Annotation>) method.getParameterTypes()[0];
+	public static <T> T initialize(AnnotatedElement annotatedElement, T annotationConsumerInstance) {
+		if (annotationConsumerInstance instanceof AnnotationConsumer) {
+			Method method = findMethods(annotationConsumerInstance.getClass(), isAcceptOrProvideArgumentsMethod,
+				BOTTOM_UP).get(0);
+			Class<? extends Annotation> annotationType = getAnnotationType(method);
 			Annotation annotation = AnnotationUtils.findAnnotation(annotatedElement, annotationType) //
-					.orElseThrow(() -> new JUnitException(instance.getClass().getName()
+					.orElseThrow(() -> new JUnitException(annotationConsumerInstance.getClass().getName()
 							+ " must be used with an annotation of type " + annotationType.getName()));
-			initializeAnnotationConsumer((AnnotationConsumer) instance, annotation);
+			initializeAnnotationConsumer((AnnotationConsumer) annotationConsumerInstance, annotation);
 		}
-		return instance;
+		return annotationConsumerInstance;
+	}
+
+	private static boolean isAnnotationConsumerAcceptMethod(Method method) {
+		return isMethodWith(method, "accept", 1, 0);
+	}
+
+	private static boolean isAnnotationBasedArgumentsProviderMethod(Method method) {
+		return isMethodWith(method, "provideArguments", 2, 1);
+	}
+
+	// @formatter:off
+	private static boolean isMethodWith(Method method, String methodName, int parameterCount,
+			int annotationInParameterIndex) {
+		return method.getName().equals(methodName)
+				&& method.getParameterCount() == parameterCount
+				&& method.getParameterTypes()[annotationInParameterIndex].isAnnotation();
+	}
+	// @formatter:on
+
+	@SuppressWarnings({ "unchecked" })
+	private static Class<? extends Annotation> getAnnotationType(Method method) {
+		if (isAnnotationConsumerAcceptMethod(method)) {
+			return (Class<? extends Annotation>) method.getParameterTypes()[0];
+		}
+		return (Class<? extends Annotation>) method.getParameterTypes()[1];
 	}
 
 	private static <A extends Annotation> void initializeAnnotationConsumer(AnnotationConsumer<A> instance,
