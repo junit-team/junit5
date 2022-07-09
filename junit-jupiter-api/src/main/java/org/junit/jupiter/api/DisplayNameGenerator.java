@@ -74,21 +74,27 @@ public interface DisplayNameGenerator {
 	/**
 	 * Generate a display name for the given top-level or {@code static} nested test class.
 	 *
+	 * If {@code null} is generated, the default generator will be used to generate the display name.
+	 *
 	 * @param testClass the class to generate a name for; never {@code null}
-	 * @return the display name for the class; never {@code null} or blank
+	 * @return the display name for the class; never blank
 	 */
 	String generateDisplayNameForClass(Class<?> testClass);
 
 	/**
 	 * Generate a display name for the given {@link Nested @Nested} inner test class.
 	 *
+	 * If {@code null} is generated, the default generator will be used to generate the display name.
+	 *
 	 * @param nestedClass the class to generate a name for; never {@code null}
-	 * @return the display name for the nested class; never {@code null} or blank
+	 * @return the display name for the nested class; never blank
 	 */
 	String generateDisplayNameForNestedClass(Class<?> nestedClass);
 
 	/**
 	 * Generate a display name for the given method.
+	 *
+	 * If {@code null} is generated, the default generator will be used to generate the display name.
 	 *
 	 * @implNote The class instance supplied as {@code testClass} may differ from
 	 * the class returned by {@code testMethod.getDeclaringClass()} &mdash; for
@@ -96,7 +102,7 @@ public interface DisplayNameGenerator {
 	 *
 	 * @param testClass the class the test method is invoked on; never {@code null}
 	 * @param testMethod method to generate a display name for; never {@code null}
-	 * @return the display name for the test; never {@code null} or blank
+	 * @return the display name for the test; never blank
 	 */
 	String generateDisplayNameForMethod(Class<?> testClass, Method testMethod);
 
