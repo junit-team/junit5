@@ -12,9 +12,6 @@ package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionUtils.getCanonicalName;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Supplier;
 
 import org.junit.platform.commons.util.StringUtils;
@@ -24,7 +21,6 @@ public class AssertionFailureBuilder {
 
 	private Object message;
 	private Throwable cause;
-	private final List<Throwable> suppressed = new ArrayList<>();
 	private boolean mismatch;
 	private Object expected;
 	private Object actual;
@@ -50,16 +46,6 @@ public class AssertionFailureBuilder {
 
 	public AssertionFailureBuilder cause(Throwable cause) {
 		this.cause = cause;
-		return this;
-	}
-
-	public AssertionFailureBuilder suppressed(Throwable suppressed) {
-		this.suppressed.add(suppressed);
-		return this;
-	}
-
-	public AssertionFailureBuilder suppressed(Throwable... suppressed) {
-		this.suppressed.addAll(Arrays.asList(suppressed));
 		return this;
 	}
 
@@ -93,11 +79,9 @@ public class AssertionFailureBuilder {
 		if (reason != null) {
 			message = buildPrefix(message) + reason;
 		}
-		AssertionFailedError assertionFailedError = mismatch //
+		return mismatch //
 				? new AssertionFailedError(message, expected, actual, cause) //
 				: new AssertionFailedError(message, cause);
-		suppressed.forEach(assertionFailedError::addSuppressed);
-		return assertionFailedError;
 	}
 
 	private static String nullSafeGet(Object messageOrSupplier) {
