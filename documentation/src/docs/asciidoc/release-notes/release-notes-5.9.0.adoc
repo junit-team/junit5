@@ -39,7 +39,8 @@ GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* `AssertionFailureBuilder` allows reusing Jupiter's logic for creating failure messages
+  to assist in writing custom assertion methods.
 
 
 [[release-notes-5.9.0-junit-vintage]]
