@@ -29,20 +29,13 @@ import org.junit.platform.commons.util.StringUtils;
 /**
  * @since 5.0
  */
-class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<MethodSource> {
-
-	private String[] methodNames;
+class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSource> {
 
 	@Override
-	public void accept(MethodSource annotation) {
-		this.methodNames = annotation.value();
-	}
-
-	@Override
-	public Stream<Arguments> provideArguments(ExtensionContext context) {
+	public Stream<? extends Arguments> provideArguments(ExtensionContext context, MethodSource annotation) {
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
-		return Arrays.stream(this.methodNames)
+		return Arrays.stream(annotation.value())
 				.map(factoryMethodName -> getFactoryMethod(context, factoryMethodName))
 				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
 				.flatMap(CollectionUtils::toStream)
