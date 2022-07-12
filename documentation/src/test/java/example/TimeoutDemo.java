@@ -27,15 +27,15 @@ class TimeoutDemo {
 	}
 
 	@Test
-	@Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
-	void failsIfExecutionTimeExceeds100Milliseconds() {
-		// fails if execution time exceeds 100 milliseconds
+	@Timeout(value = 500, unit = TimeUnit.MILLISECONDS)
+	void failsIfExecutionTimeExceeds500Milliseconds() {
+		// fails if execution time exceeds 500 milliseconds
 	}
 
 	@Test
-	@Timeout(value = 100, unit = TimeUnit.MILLISECONDS, threadMode = ThreadMode.SEPARATE_THREAD)
-	void failsIfExecutionTimeExceeds100MillisecondsInSeparateThread() {
-		// fails if execution time exceeds 100 milliseconds, the test code is executed in a separate thread
+	@Timeout(value = 500, unit = TimeUnit.MILLISECONDS, threadMode = ThreadMode.SEPARATE_THREAD)
+	void failsIfExecutionTimeExceeds500MillisecondsInSeparateThread() {
+		// fails if execution time exceeds 500 milliseconds, the test code is executed in a separate thread
 	}
 
 }
