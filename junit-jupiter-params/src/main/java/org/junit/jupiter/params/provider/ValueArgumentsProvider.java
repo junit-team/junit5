@@ -36,20 +36,20 @@ class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSourc
 	private Object[] getArgumentsFromSource(ValueSource source) {
 		// @formatter:off
 		List<Object> arrays =
-				Stream.of(
-								source.shorts(),
-								source.bytes(),
-								source.ints(),
-								source.longs(),
-								source.floats(),
-								source.doubles(),
-								source.chars(),
-								source.booleans(),
-								source.strings(),
-								source.classes()
-						)
-						.filter(array -> Array.getLength(array) > 0)
-						.collect(toList());
+			Stream.of(
+				source.shorts(),
+				source.bytes(),
+				source.ints(),
+				source.longs(),
+				source.floats(),
+				source.doubles(),
+				source.chars(),
+				source.booleans(),
+				source.strings(),
+				source.classes()
+			)
+			.filter(array -> Array.getLength(array) > 0)
+			.collect(toList());
 		// @formatter:on
 
 		Preconditions.condition(arrays.size() == 1, () -> "Exactly one type of input must be provided in the @"
