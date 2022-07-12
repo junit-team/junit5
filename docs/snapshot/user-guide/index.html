@@ -5369,15 +5369,15 @@ unit for the duration defaults to seconds but is configurable.</p>
     <span class="o">}</span>
 
     <span class="nd">@Test</span>
-    <span class="nd">@Timeout</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">)</span>
-    <span class="kt">void</span> <span class="nf">failsIfExecutionTimeExceeds100Milliseconds</span><span class="o">()</span> <span class="o">{</span>
-        <span class="c1">// fails if execution time exceeds 100 milliseconds</span>
+    <span class="nd">@Timeout</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">500</span><span class="o">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">)</span>
+    <span class="kt">void</span> <span class="nf">failsIfExecutionTimeExceeds500Milliseconds</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// fails if execution time exceeds 500 milliseconds</span>
     <span class="o">}</span>
 
     <span class="nd">@Test</span>
-    <span class="nd">@Timeout</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">,</span> <span class="n">threadMode</span> <span class="o">=</span> <span class="nc">ThreadMode</span><span class="o">.</span><span class="na">SEPARATE_THREAD</span><span class="o">)</span>
-    <span class="kt">void</span> <span class="nf">failsIfExecutionTimeExceeds100MillisecondsInSeparateThread</span><span class="o">()</span> <span class="o">{</span>
-        <span class="c1">// fails if execution time exceeds 100 milliseconds, the test code is executed in a separate thread</span>
+    <span class="nd">@Timeout</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">500</span><span class="o">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">,</span> <span class="n">threadMode</span> <span class="o">=</span> <span class="nc">ThreadMode</span><span class="o">.</span><span class="na">SEPARATE_THREAD</span><span class="o">)</span>
+    <span class="kt">void</span> <span class="nf">failsIfExecutionTimeExceeds500MillisecondsInSeparateThread</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// fails if execution time exceeds 500 milliseconds, the test code is executed in a separate thread</span>
     <span class="o">}</span>
 
 <span class="o">}</span></code></pre>
@@ -11939,7 +11939,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-07-04 19:55:35 UTC
+Last updated 2022-07-12 17:59:25 UTC
 </div>
 </div>
 <style>
