@@ -79,12 +79,12 @@ loadScripts(document, 'script');</script>
 <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.7")
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">DisabledIf</span></div>
-<div class="block"><code>@DisabledIf</code> is used to signal that the annotated test class or
- test method is <em>disabled</em> only if the provided condition
- evaluates to <code>true</code>.
+<div class="block"><code>@DisabledIf</code> is used to signal that the annotated test class or test
+ method is <em>disabled</em> only if the provided
+ <a href="#value()">condition</a> evaluates to <code>true</code>.
 
- <p>When applied at the class level, all test methods within that class
- will be disabled on the same condition.
+ <p>When applied at the class level, all test methods within that class will
+ be disabled on the same condition.
 
  <p>If a test method is disabled via this annotation, that does not prevent
  the test class from being instantiated. Rather, it prevents the execution of
@@ -141,8 +141,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The name of a method within the test class or in external classes
- to use as a condition for the container's execution.</div>
+<div class="block">The name of a method within the test class or in an external class to use
+ as a condition for the test's or container's execution.</div>
 </div>
 </div>
 </section>
@@ -177,14 +177,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="value()">
 <h3>value</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">value</span></div>
-<div class="block">The name of a method within the test class or in external classes
- to use as a condition for the container's execution.
+<div class="block">The name of a method within the test class or in an external class to use
+ as a condition for the test's or container's execution.
 
- <p>Condition methods must be static if located outside the test class,
- or if <code>@DisabledIf</code> is used at class level.
+ <p>Condition methods must be static if located outside the test class or
+ if <code>@DisabledIf</code> is used at the class level.
 
- <p>Condition methods in external classes must be referenced by <em>fully
- qualified method name</em> &mdash; for example,
+ <p>A condition method in an external class must be referenced by its
+ <em>fully qualified method name</em> &mdash; for example,
  <code>com.example.Conditions#isEncryptionSupported</code>.</div>
 </section>
 </li>
