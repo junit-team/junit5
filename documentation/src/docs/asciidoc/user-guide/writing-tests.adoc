@@ -1851,7 +1851,7 @@ if they exceed the configured maximum length. The limit is configurable via the
 `junit.jupiter.params.displayname.argument.maxlength` configuration parameter and defaults
 to 512 characters.
 
-When using `@MethodSource` or `@ArgumentSource`, you can provide custom names for
+When using `@MethodSource` or `@ArgumentsSource`, you can provide custom names for
 arguments using the `{Named}` API. A custom name will be used if the argument is included
 in the invocation display name, like in the example below.
 
