@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.concurrent.ExecutionException;
@@ -32,6 +34,7 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
+@SuppressWarnings("ExcessiveLambdaUsage")
 class AssertThrowsAssertionsTests {
 
 	private static final Executable nix = () -> {
@@ -63,7 +66,7 @@ class AssertThrowsAssertionsTests {
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsThrowable() {
-		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, (Executable) () -> {
+		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, () -> {
 			throw new EnigmaThrowable();
 		});
 		assertNotNull(enigmaThrowable);
@@ -71,7 +74,7 @@ class AssertThrowsAssertionsTests {
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsThrowableWithMessage() {
-		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, (Executable) () -> {
+		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, () -> {
 			throw new EnigmaThrowable();
 		}, "message");
 		assertNotNull(enigmaThrowable);
@@ -79,7 +82,7 @@ class AssertThrowsAssertionsTests {
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsThrowableWithMessageSupplier() {
-		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, (Executable) () -> {
+		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, () -> {
 			throw new EnigmaThrowable();
 		}, () -> "message");
 		assertNotNull(enigmaThrowable);
@@ -87,7 +90,7 @@ class AssertThrowsAssertionsTests {
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsCheckedException() {
-		IOException exception = assertThrows(IOException.class, (Executable) () -> {
+		IOException exception = assertThrows(IOException.class, () -> {
 			throw new IOException();
 		});
 		assertNotNull(exception);
@@ -95,7 +98,7 @@ class AssertThrowsAssertionsTests {
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsRuntimeException() {
-		IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, (Executable) () -> {
+		IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
 			throw new IllegalStateException();
 		});
 		assertNotNull(illegalStateException);
@@ -104,7 +107,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithExecutableThatThrowsError() {
 		StackOverflowError stackOverflowError = assertThrows(StackOverflowError.class,
-			(Executable) AssertionTestUtils::recurseIndefinitely);
+			AssertionTestUtils::recurseIndefinitely);
 		assertNotNull(stackOverflowError);
 	}
 
@@ -146,7 +149,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithExecutableThatThrowsAnUnexpectedException() {
 		try {
-			assertThrows(IllegalStateException.class, (Executable) () -> {
+			assertThrows(IllegalStateException.class, () -> {
 				throw new NumberFormatException();
 			});
 			expectAssertionFailedError();
@@ -155,13 +158,14 @@ class AssertThrowsAssertionsTests {
 			assertMessageStartsWith(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
+			assertThat(ex).hasCauseInstanceOf(NumberFormatException.class);
 		}
 	}
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsAnUnexpectedExceptionWithMessageString() {
 		try {
-			assertThrows(IllegalStateException.class, (Executable) () -> {
+			assertThrows(IllegalStateException.class, () -> {
 				throw new NumberFormatException();
 			}, "Custom message");
 			expectAssertionFailedError();
@@ -173,13 +177,14 @@ class AssertThrowsAssertionsTests {
 			assertMessageContains(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
+			assertThat(ex).hasCauseInstanceOf(NumberFormatException.class);
 		}
 	}
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsAnUnexpectedExceptionWithMessageSupplier() {
 		try {
-			assertThrows(IllegalStateException.class, (Executable) () -> {
+			assertThrows(IllegalStateException.class, () -> {
 				throw new NumberFormatException();
 			}, () -> "Custom message");
 			expectAssertionFailedError();
@@ -191,14 +196,14 @@ class AssertThrowsAssertionsTests {
 			assertMessageContains(ex, "Unexpected exception type thrown, ");
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
+			assertThat(ex).hasCauseInstanceOf(NumberFormatException.class);
 		}
 	}
 
 	@Test
-	@SuppressWarnings("serial")
 	void assertThrowsWithExecutableThatThrowsInstanceOfAnonymousInnerClassAsUnexpectedException() {
 		try {
-			assertThrows(IllegalStateException.class, (Executable) () -> {
+			assertThrows(IllegalStateException.class, () -> {
 				throw new NumberFormatException() {
 				};
 			});
@@ -212,13 +217,14 @@ class AssertThrowsAssertionsTests {
 			// coding "$2" is fragile. So we just check for the presence of the "$"
 			// appended to this class's name.
 			assertMessageContains(ex, "but was: <" + getClass().getName() + "$");
+			assertThat(ex).hasCauseInstanceOf(NumberFormatException.class);
 		}
 	}
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsInstanceOfStaticNestedClassAsUnexpectedException() {
 		try {
-			assertThrows(IllegalStateException.class, (Executable) () -> {
+			assertThrows(IllegalStateException.class, () -> {
 				throw new LocalException();
 			});
 			expectAssertionFailedError();
@@ -228,6 +234,7 @@ class AssertThrowsAssertionsTests {
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			// The following verifies that the canonical name is used (i.e., "." instead of "$").
 			assertMessageContains(ex, "but was: <" + LocalException.class.getName().replace("$", ".") + ">");
+			assertThat(ex).hasCauseInstanceOf(LocalException.class);
 		}
 	}
 
@@ -241,7 +248,7 @@ class AssertThrowsAssertionsTests {
 				EnigmaThrowable.class.getName());
 
 			try {
-				assertThrows(enigmaThrowableClass, (Executable) () -> {
+				assertThrows(enigmaThrowableClass, () -> {
 					throw new EnigmaThrowable();
 				});
 				expectAssertionFailedError();
@@ -258,14 +265,16 @@ class AssertThrowsAssertionsTests {
 				// generated to disambiguate between the two identical class names.
 				assertMessageContains(ex, "expected: <org.junit.jupiter.api.EnigmaThrowable@");
 				assertMessageContains(ex, "but was: <org.junit.jupiter.api.EnigmaThrowable@");
+				assertThat(ex).hasCauseInstanceOf(EnigmaThrowable.class);
 			}
 		}
 	}
 
 	// -------------------------------------------------------------------------
 
-	@SuppressWarnings("serial")
 	private static class LocalException extends RuntimeException {
+		@Serial
+		private static final long serialVersionUID = 1L;
 	}
 
 	private static class EnigmaClassLoader extends URLClassLoader {

@@ -66,13 +66,6 @@ class AssertionTestUtils {
 		}
 	}
 
-	static void assertMessageDoesNotContain(Throwable ex, String msg) throws AssertionError {
-		if (ex.getMessage().contains(msg)) {
-			throw new AssertionError(
-				"Exception message should contain [" + msg + "], but was [" + ex.getMessage() + "].");
-		}
-	}
-
 	static void assertExpectedAndActualValues(AssertionFailedError ex, Object expected, Object actual)
 			throws AssertionError {
 		if (!wrapsEqualValue(ex.getExpected(), expected)) {

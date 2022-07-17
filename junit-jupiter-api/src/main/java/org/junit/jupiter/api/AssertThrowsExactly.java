@@ -63,6 +63,7 @@ class AssertThrowsExactly {
 						.expected(expectedType) //
 						.actual(actualException.getClass()) //
 						.reason("Unexpected exception type thrown") //
+						.cause(actualException) //
 						.build();
 			}
 		}
