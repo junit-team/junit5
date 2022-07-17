@@ -10,9 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
@@ -30,7 +28,6 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.opentest4j.AssertionFailedError;
 
 /**
  * {@code AssertTimeout} is a collection of utility methods that support asserting
@@ -87,8 +84,11 @@ class AssertTimeout {
 
 		long timeElapsed = System.currentTimeMillis() - start;
 		if (timeElapsed > timeoutInMillis) {
-			fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "execution exceeded timeout of " + timeoutInMillis
-					+ " ms by " + (timeElapsed - timeoutInMillis) + " ms");
+			assertionFailure() //
+					.message(messageOrSupplier) //
+					.reason("execution exceeded timeout of " + timeoutInMillis + " ms by "
+							+ (timeElapsed - timeoutInMillis) + " ms") //
+					.buildAndThrow();
 		}
 		return result;
 	}
@@ -147,19 +147,18 @@ class AssertTimeout {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
-				String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "execution timed out after "
-						+ timeoutInMillis + " ms";
+				AssertionFailureBuilder failure = assertionFailure() //
+						.message(messageOrSupplier) //
+						.reason("execution timed out after " + timeoutInMillis + " ms");
 
 				Thread thread = threadReference.get();
 				if (thread != null) {
 					ExecutionTimeoutException exception = new ExecutionTimeoutException(
 						"Execution timed out in thread " + thread.getName());
 					exception.setStackTrace(thread.getStackTrace());
-					throw new AssertionFailedError(message, exception);
+					failure.cause(exception);
 				}
-				else {
-					throw new AssertionFailedError(message);
-				}
+				throw failure.build();
 			}
 			catch (ExecutionException ex) {
 				throw ExceptionUtils.throwAsUncheckedException(ex.getCause());

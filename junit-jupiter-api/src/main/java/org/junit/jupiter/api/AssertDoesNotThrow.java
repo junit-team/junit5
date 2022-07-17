@@ -10,8 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 import java.util.function.Supplier;
 
@@ -78,9 +77,11 @@ class AssertDoesNotThrow {
 	}
 
 	private static AssertionFailedError createAssertionFailedError(Object messageOrSupplier, Throwable t) {
-		String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
-				+ t.getClass().getName() + buildSuffix(t.getMessage());
-		return new AssertionFailedError(message, t);
+		return assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason("Unexpected exception thrown: " + t.getClass().getName() + buildSuffix(t.getMessage())) //
+				.cause(t) //
+				.build();
 	}
 
 	private static String buildSuffix(String message) {
