@@ -10,9 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionUtils.fail;
-import static org.junit.jupiter.api.AssertionUtils.format;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 import java.util.function.Supplier;
 
@@ -40,12 +38,16 @@ class AssertSame {
 
 	static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {
 		if (expected != actual) {
-			failNotSame(expected, actual, nullSafeGet(messageSupplier));
+			failNotSame(expected, actual, messageSupplier);
 		}
 	}
 
-	private static void failNotSame(Object expected, Object actual, String message) {
-		fail(format(expected, actual, message), expected, actual);
+	private static void failNotSame(Object expected, Object actual, Object messageOrSupplier) {
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.expected(expected) //
+				.actual(actual) //
+				.buildAndThrow();
 	}
 
 }

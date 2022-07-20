@@ -10,11 +10,9 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.jupiter.api.AssertionUtils.doublesAreEqual;
-import static org.junit.jupiter.api.AssertionUtils.fail;
 import static org.junit.jupiter.api.AssertionUtils.floatsAreEqual;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import static org.junit.jupiter.api.AssertionUtils.objectsAreEqual;
 
 import java.util.function.Supplier;
@@ -52,7 +50,7 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(byte unexpected, byte actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
@@ -77,7 +75,7 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(short unexpected, short actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
@@ -102,7 +100,7 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(int unexpected, int actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
@@ -127,7 +125,7 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(long unexpected, long actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
@@ -152,7 +150,7 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(float unexpected, float actual, Supplier<String> messageSupplier) {
 		if (floatsAreEqual(unexpected, actual)) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
@@ -177,7 +175,7 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(float unexpected, float actual, float delta, Supplier<String> messageSupplier) {
 		if (floatsAreEqual(unexpected, actual, delta)) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
@@ -202,7 +200,7 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(double unexpected, double actual, Supplier<String> messageSupplier) {
 		if (doublesAreEqual(unexpected, actual)) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
@@ -227,7 +225,7 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(double unexpected, double actual, double delta, Supplier<String> messageSupplier) {
 		if (doublesAreEqual(unexpected, actual, delta)) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
@@ -252,7 +250,7 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(char unexpected, char actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
@@ -268,12 +266,15 @@ class AssertNotEquals {
 
 	static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
 		if (objectsAreEqual(unexpected, actual)) {
-			failEqual(actual, nullSafeGet(messageSupplier));
+			failEqual(actual, messageSupplier);
 		}
 	}
 
-	private static void failEqual(Object actual, String message) {
-		fail(buildPrefix(message) + "expected: not equal but was: <" + actual + ">");
+	private static void failEqual(Object actual, Object messageOrSupplier) {
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason("expected: not equal but was: <" + actual + ">") //
+				.buildAndThrow();
 	}
 
 }

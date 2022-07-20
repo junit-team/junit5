@@ -10,11 +10,8 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
-import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.jupiter.api.AssertionUtils.formatIndexes;
-import static org.junit.jupiter.api.AssertionUtils.formatValues;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import static org.junit.platform.commons.util.ReflectionUtils.isArray;
 
 import java.util.ArrayDeque;
@@ -406,30 +403,41 @@ class AssertArrayEquals {
 	}
 
 	private static void failExpectedArrayIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
-		fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "expected array was <null>" + formatIndexes(indexes));
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason("expected array was <null>" + formatIndexes(indexes)) //
+				.buildAndThrow();
 	}
 
 	private static void failActualArrayIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
-		fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "actual array was <null>" + formatIndexes(indexes));
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason("actual array was <null>" + formatIndexes(indexes)) //
+				.buildAndThrow();
 	}
 
 	private static void assertArraysHaveSameLength(int expected, int actual, Deque<Integer> indexes,
 			Object messageOrSupplier) {
 
 		if (expected != actual) {
-			String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
-			String message = "array lengths differ" + formatIndexes(indexes) + ", expected: <" + expected
-					+ "> but was: <" + actual + ">";
-			fail(prefix + message);
+			assertionFailure() //
+					.message(messageOrSupplier) //
+					.reason("array lengths differ" + formatIndexes(indexes)) //
+					.expected(expected) //
+					.actual(actual) //
+					.buildAndThrow();
 		}
 	}
 
 	private static void failArraysNotEqual(Object expected, Object actual, Deque<Integer> indexes,
 			Object messageOrSupplier) {
 
-		String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
-		String message = "array contents differ" + formatIndexes(indexes) + ", " + formatValues(expected, actual);
-		fail(prefix + message);
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason("array contents differ" + formatIndexes(indexes)) //
+				.expected(expected) //
+				.actual(actual) //
+				.buildAndThrow();
 	}
 
 	private static Deque<Integer> nullSafeIndexes(Deque<Integer> indexes, int newIndex) {

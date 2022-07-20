@@ -10,9 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
-import static org.junit.jupiter.api.AssertionUtils.fail;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -25,8 +23,6 @@ import java.util.function.Supplier;
  */
 class AssertFalse {
 
-	private static final String EXPECTED_FALSE = "expected: <false> but was: <true>";
-
 	private AssertFalse() {
 		/* no-op */
 	}
@@ -37,13 +33,13 @@ class AssertFalse {
 
 	static void assertFalse(boolean condition, String message) {
 		if (condition) {
-			fail(buildPrefix(message) + EXPECTED_FALSE, false, true);
+			failNotFalse(message);
 		}
 	}
 
 	static void assertFalse(boolean condition, Supplier<String> messageSupplier) {
 		if (condition) {
-			fail(buildPrefix(nullSafeGet(messageSupplier)) + EXPECTED_FALSE, false, true);
+			failNotFalse(messageSupplier);
 		}
 	}
 
@@ -57,6 +53,14 @@ class AssertFalse {
 
 	static void assertFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
 		assertFalse(booleanSupplier.getAsBoolean(), messageSupplier);
+	}
+
+	private static void failNotFalse(Object messageOrSupplier) {
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.expected(false) //
+				.actual(true) //
+				.buildAndThrow();
 	}
 
 }

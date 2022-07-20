@@ -10,11 +10,8 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
-import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.jupiter.api.AssertionUtils.formatIndexes;
-import static org.junit.jupiter.api.AssertionUtils.formatValues;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -139,11 +136,17 @@ class AssertIterableEquals {
 	}
 
 	private static void failExpectedIterableIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
-		fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "expected iterable was <null>" + formatIndexes(indexes));
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason("expected iterable was <null>" + formatIndexes(indexes)) //
+				.buildAndThrow();
 	}
 
 	private static void failActualIterableIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
-		fail(buildPrefix(nullSafeGet(messageOrSupplier)) + "actual iterable was <null>" + formatIndexes(indexes));
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason("actual iterable was <null>" + formatIndexes(indexes)) //
+				.buildAndThrow();
 	}
 
 	private static void assertIteratorsAreEmpty(Iterator<?> expected, Iterator<?> actual, int processed,
@@ -156,19 +159,24 @@ class AssertIterableEquals {
 			AtomicInteger actualCount = new AtomicInteger(processed);
 			actual.forEachRemaining(e -> actualCount.incrementAndGet());
 
-			String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
-			String message = "iterable lengths differ" + formatIndexes(indexes) + ", expected: <" + expectedCount.get()
-					+ "> but was: <" + actualCount.get() + ">";
-			fail(prefix + message);
+			assertionFailure() //
+					.message(messageOrSupplier) //
+					.reason("iterable lengths differ" + formatIndexes(indexes)) //
+					.expected(expectedCount.get()) //
+					.actual(actualCount.get()) //
+					.buildAndThrow();
 		}
 	}
 
 	private static void failIterablesNotEqual(Object expected, Object actual, Deque<Integer> indexes,
 			Object messageOrSupplier) {
 
-		String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
-		String message = "iterable contents differ" + formatIndexes(indexes) + ", " + formatValues(expected, actual);
-		fail(prefix + message);
+		assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason("iterable contents differ" + formatIndexes(indexes)) //
+				.expected(expected) //
+				.actual(actual) //
+				.buildAndThrow();
 	}
 
 	private final static class Pair {

@@ -22,12 +22,12 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * {@code @EnabledIf} is used to signal that the annotated test class or
- * test method is <em>enabled</em> only if the provided condition
- * evaluates to {@code true}.
+ * {@code @EnabledIf} is used to signal that the annotated test class or test
+ * method is <em>enabled</em> only if the provided
+ * {@linkplain #value() condition} evaluates to {@code true}.
  *
- * <p>When applied at the class level, all test methods within that class
- * will be disabled on the same condition.
+ * <p>When applied at the class level, all test methods within that class will
+ * be enabled on the same condition.
  *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of
@@ -71,14 +71,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public @interface EnabledIf {
 
 	/**
-	 * The name of a method within the test class or in external classes
-	 * to use as a condition for the container's execution.
+	 * The name of a method within the test class or in an external class to use
+	 * as a condition for the test's or container's execution.
 	 *
-	 * <p>Condition methods must be static if located outside the test class,
-	 * or if {@code @EnabledIf} is used at class level.
+	 * <p>Condition methods must be static if located outside the test class or
+	 * if {@code @EnabledIf} is used at the class level.
 	 *
-	 * <p>Condition methods in external classes must be referenced by <em>fully
-	 * qualified method name</em> &mdash; for example,
+	 * <p>A condition method in an external class must be referenced by its
+	 * <em>fully qualified method name</em> &mdash; for example,
 	 * {@code com.example.Conditions#isEncryptionSupported}.
 	 */
 	String value();

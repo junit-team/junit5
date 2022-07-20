@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.joining;
 import java.util.Deque;
 import java.util.function.Supplier;
 
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.opentest4j.AssertionFailedError;
 
@@ -51,50 +50,8 @@ class AssertionUtils {
 		throw new AssertionFailedError(nullSafeGet(messageSupplier));
 	}
 
-	static void fail(String message, Object expected, Object actual) {
-		throw new AssertionFailedError(message, expected, actual);
-	}
-
-	/**
-	 * Typically used for {@code assertEquals()}.
-	 */
-	static void failNotEqual(Object expected, Object actual, String message) {
-		fail(format(expected, actual, message), expected, actual);
-	}
-
-	/**
-	 * Typically used for {@code assertEquals()}.
-	 */
-	static void failNotEqual(Object expected, Object actual, Supplier<String> messageSupplier) {
-		fail(format(expected, actual, nullSafeGet(messageSupplier)), expected, actual);
-	}
-
 	static String nullSafeGet(Supplier<String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
-	}
-
-	/**
-	 * Alternative to {@link #nullSafeGet(Supplier)} that is used to avoid
-	 * wrapping a String in a lambda expression.
-	 *
-	 * @param messageOrSupplier an object that is either a {@code String} or
-	 * {@code Supplier<String>}
-	 */
-	static String nullSafeGet(Object messageOrSupplier) {
-		if (messageOrSupplier instanceof String) {
-			return (String) messageOrSupplier;
-		}
-		if (messageOrSupplier instanceof Supplier) {
-			Object message = ((Supplier<?>) messageOrSupplier).get();
-			if (message != null) {
-				return message.toString();
-			}
-		}
-		return null;
-	}
-
-	static String buildPrefix(String message) {
-		return (StringUtils.isNotBlank(message) ? message + " ==> " : "");
 	}
 
 	static String getCanonicalName(Class<?> clazz) {
@@ -106,46 +63,6 @@ class AssertionUtils {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			return clazz.getName();
 		}
-	}
-
-	static String format(Object expected, Object actual, String message) {
-		return buildPrefix(message) + formatValues(expected, actual);
-	}
-
-	static String formatValues(Object expected, Object actual) {
-		String expectedString = toString(expected);
-		String actualString = toString(actual);
-		if (expectedString.equals(actualString)) {
-			return String.format("expected: %s but was: %s", formatClassAndValue(expected, expectedString),
-				formatClassAndValue(actual, actualString));
-		}
-		return String.format("expected: <%s> but was: <%s>", expectedString, actualString);
-	}
-
-	private static String formatClassAndValue(Object value, String valueString) {
-		// If the value is null, return <null> instead of null<null>.
-		if (value == null) {
-			return "<null>";
-		}
-		String classAndHash = getClassName(value) + toHash(value);
-		// if it's a class, there's no need to repeat the class name contained in the valueString.
-		return (value instanceof Class ? "<" + classAndHash + ">" : classAndHash + "<" + valueString + ">");
-	}
-
-	private static String toString(Object obj) {
-		if (obj instanceof Class) {
-			return getCanonicalName((Class<?>) obj);
-		}
-		return StringUtils.nullSafeToString(obj);
-	}
-
-	private static String toHash(Object obj) {
-		return (obj == null ? "" : "@" + Integer.toHexString(System.identityHashCode(obj)));
-	}
-
-	private static String getClassName(Object obj) {
-		return (obj == null ? "null"
-				: obj instanceof Class ? getCanonicalName((Class<?>) obj) : obj.getClass().getName());
 	}
 
 	static String formatIndexes(Deque<Integer> indexes) {
