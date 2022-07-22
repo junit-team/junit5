@@ -2176,8 +2176,8 @@ the result of the test, e.g. mark the test as failed although all assertions wer
 JUnit Jupiter supports the `junit.jupiter.execution.timeout.mode` configuration parameter
 to configure when timeouts are applied. There are three modes: `enabled`, `disabled`,
 and `disabled_on_debug`. The default mode is `enabled`.
-A VM runtime is considered to run in debug mode when one or more of its input parameters
-contains `jdwp`.
+A VM runtime is considered to run in debug mode when one of its input parameters starts
+with `-agentlib:jdwp` or `-Xrunjdwp`.
 This heuristic is queried by the `disabled_on_debug` mode.
 
 

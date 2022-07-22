@@ -40,7 +40,8 @@ public final class RuntimeUtils {
 	 * Try to determine whether the VM was started in debug mode or not.
 	 */
 	public static boolean isDebugMode() {
-		return getInputArguments().map(args -> args.stream().anyMatch(arg -> arg.contains("jdwp"))).orElse(false);
+		return getInputArguments().map(args -> args.stream().anyMatch(
+			arg -> arg.startsWith("-agentlib:jdwp") || arg.startsWith("-Xrunjdwp"))).orElse(false);
 	}
 
 	/**
