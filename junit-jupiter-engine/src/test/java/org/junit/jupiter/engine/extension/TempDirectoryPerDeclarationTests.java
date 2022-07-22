@@ -61,6 +61,7 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.TempDirectory.FileOperations;
@@ -299,6 +300,26 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Order(11)
 		void supportsPrivateStaticFields() {
 			executeTestsForClass(AnnotationOnPrivateInstanceFieldTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+	}
+
+	@Nested
+	@DisplayName("supports @TempDir factory")
+	class Factory {
+
+		@Test
+		@DisplayName("that changes name prefix")
+		void supportsFactoryChangingNamePrefix() {
+			executeTestsForClass(FactoryChangingNamePrefixTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("that changes parent directory")
+		void supportsPrivateStaticFields() {
+			executeTestsForClass(FactoryChangingParentTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
@@ -1065,4 +1086,52 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			Files.createFile(tempDir.resolve(UNDELETABLE_PATH));
 		}
 	}
+
+	static class FactoryChangingNamePrefixTestCase {
+
+		@TempDir(factory = Factory.class)
+		private Path tempDir;
+
+		@Test
+		void test() {
+			assertTrue(Files.exists(tempDir));
+			assertThat(tempDir.toFile().getName()).startsWith("test");
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(String prefix) throws Exception {
+				return Files.createTempDirectory("test");
+			}
+		}
+
+	}
+
+	static class FactoryChangingParentTestCase {
+
+		@TempDir(factory = Factory.class)
+		private Path tempDir;
+
+		@Test
+		void test() {
+			assertThat(tempDir).exists().hasParent(Factory.parent);
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			private static Path parent;
+
+			public Factory() throws IOException {
+				parent = Files.createTempDirectory("parent");
+			}
+
+			@Override
+			public Path createTempDirectory(String prefix) throws Exception {
+				return Files.createTempDirectory(parent, prefix);
+			}
+		}
+
+	}
+
 }
