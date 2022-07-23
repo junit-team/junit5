@@ -193,6 +193,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	@DisplayName("only attempts to delete undeletable directories once")
 	void onlyAttemptsToDeleteUndeletableDirectoriesOnce() {
 		var results = executeTestsForClass(UndeletableDirectoryTestCase.class);
 
