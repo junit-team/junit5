@@ -306,18 +306,18 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Nested
-	@DisplayName("supports @TempDir factory")
+	@DisplayName("supports custom factory")
 	class Factory {
 
 		@Test
-		@DisplayName("that changes name prefix")
+		@DisplayName("that changes temp dir name prefix")
 		void supportsFactoryChangingNamePrefix() {
 			executeTestsForClass(FactoryChangingNamePrefixTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
 		@Test
-		@DisplayName("that changes parent directory")
+		@DisplayName("that changes temp dir parent directory")
 		void supportsPrivateStaticFields() {
 			executeTestsForClass(FactoryChangingParentTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
@@ -1089,11 +1089,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	static class FactoryChangingNamePrefixTestCase {
 
-		@TempDir(factory = Factory.class)
-		private Path tempDir;
-
 		@Test
-		void test() {
+		void test(@TempDir(factory = Factory.class) Path tempDir) {
 			assertTrue(Files.exists(tempDir));
 			assertThat(tempDir.toFile().getName()).startsWith("test");
 		}
@@ -1108,13 +1105,11 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	// https://github.com/junit-team/junit5/issues/2088
 	static class FactoryChangingParentTestCase {
 
-		@TempDir(factory = Factory.class)
-		private Path tempDir;
-
 		@Test
-		void test() {
+		void test(@TempDir(factory = Factory.class) Path tempDir) {
 			assertThat(tempDir).exists().hasParent(Factory.parent);
 		}
 
@@ -1122,7 +1117,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 			private static Path parent;
 
-			public Factory() throws IOException {
+			private Factory() throws IOException {
 				parent = Files.createTempDirectory("parent");
 			}
 

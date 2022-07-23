@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -42,19 +42,28 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = EXPERIMENTAL, since = "5.9")
 public interface TempDirFactory {
 
+	/**
+	 * Create a new temporary directory, using the given prefix to generate its name.
+	 * Depending on the implementation, the resulting {@code Path} may or may not be
+	 * associated with the default {@code FileSystem}.
+	 *
+	 * @param prefix the prefix string that can be used in generating the directory's name; never {@code null} or blank
+	 * @return the path to the newly created directory that did not exist before this method was invoked; never {@code null}
+	 * @throws Exception in case of failures
+	 */
 	Path createTempDirectory(String prefix) throws Exception;
 
 	/**
-	 * Default temporary directory factory that delegates to
+	 * Standard temporary directory factory that delegates to
 	 * {@link Files#createTempDirectory}.
 	 *
 	 * @see Files#createTempDirectory(String, FileAttribute[])
 	 */
-	class Default implements TempDirFactory {
+	class Standard implements TempDirFactory {
 
-		static final TempDirFactory INSTANCE = new Default();
+		static final TempDirFactory INSTANCE = new Standard();
 
-		public Default() {
+		public Standard() {
 		}
 
 		@Override
@@ -76,8 +85,8 @@ public interface TempDirFactory {
 		Preconditions.notNull(factoryClass, "Class must not be null");
 		Preconditions.condition(TempDirFactory.class.isAssignableFrom(factoryClass),
 			"Class must be a TempDirFactory implementation");
-		if (factoryClass == TempDirFactory.Default.class) {
-			return TempDirFactory.Default.INSTANCE;
+		if (factoryClass == Standard.class) {
+			return Standard.INSTANCE;
 		}
 		return (TempDirFactory) ReflectionUtils.newInstance(factoryClass);
 	}
