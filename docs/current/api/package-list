@@ -60,6 +60,7 @@ org.junit.platform.launcher.tagexpression
 module:org.junit.platform.reporting
 org.junit.platform.reporting.legacy
 org.junit.platform.reporting.legacy.xml
+org.junit.platform.reporting.open.xml
 module:org.junit.platform.runner
 org.junit.platform.runner
 module:org.junit.platform.suite
