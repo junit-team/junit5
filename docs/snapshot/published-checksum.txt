@@ -383,7 +383,6 @@
 7fd1bc075e678216c651ec659408db86  documentation/src/test/java/example/defaultmethods/Testable.java
 800a56904443a8560d07fb721b5c2ea1  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionConfigurationException.java
 80ca15723c327da77588b79e85bb05ec  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ExcludeClassNameFilter.java
-80ebaa49c901004cd41524ea9b37808c  documentation/src/docs/asciidoc/release-notes/index.adoc
 815a120f84d7153fbcebf1b92eb04255  documentation/src/test/java/example/PollingTimeoutDemo.java
 8190a3cf0ad99c6ee83c7e7a509d513b  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
 81a0e807ce81e3fc46b99692718db3af  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFileVisitor.java
@@ -427,6 +426,7 @@
 9112bb376da38582fa54d215797a2f60  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/InvocationInterceptorChain.java
 91d3c14017874d1617d41561ddc2a8a5  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java
 91e6782c41f3553be200d4da99a2e38a  junit-platform-engine/src/main/java/org/junit/platform/engine/CompositeFilter.java
+93348dd66fe51f7a3c04ff496692ce2c  documentation/src/docs/asciidoc/release-notes/index.adoc
 93d88e17e2e3a6db4b7ae1848ba1f072  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.java
 9410f94ddeb9073eb856806448ece660  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExecutionCondition.java
 9419edc198213f88e2f0b3436bb9210e  documentation/src/main/java/example/domain/Person.java
