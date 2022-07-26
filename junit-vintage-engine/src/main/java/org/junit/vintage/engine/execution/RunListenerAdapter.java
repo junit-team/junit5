@@ -55,6 +55,15 @@ class RunListenerAdapter extends RunListener {
 	}
 
 	@Override
+	public void testSuiteStarted(Description description) {
+		RunnerTestDescriptor runnerTestDescriptor = testRun.getRunnerTestDescriptor();
+		// runnerTestDescriptor is reported in testRunStarted
+		if (!runnerTestDescriptor.getDescription().equals(description)) {
+			testStarted(lookupOrRegisterNextTestDescriptor(description), EventType.REPORTED);
+		}
+	}
+
+	@Override
 	public void testIgnored(Description description) {
 		testIgnored(lookupOrRegisterNextTestDescriptor(description), determineReasonForIgnoredTest(description));
 	}
@@ -80,17 +89,29 @@ class RunListenerAdapter extends RunListener {
 	}
 
 	@Override
-	public void testRunFinished(Result result) {
+	public void testSuiteFinished(Description description) {
 		RunnerTestDescriptor runnerTestDescriptor = testRun.getRunnerTestDescriptor();
-		if (testRun.isNotSkipped(runnerTestDescriptor)) {
-			if (testRun.isNotStarted(runnerTestDescriptor)) {
-				fireExecutionStarted(runnerTestDescriptor, EventType.SYNTHETIC);
+		// runnerTestDescriptor is reported in testRunFinished
+		if (!runnerTestDescriptor.getDescription().equals(description)) {
+			reportContainerFinished(lookupOrRegisterNextTestDescriptor(description));
+		}
+	}
+
+	@Override
+	public void testRunFinished(Result result) {
+		reportContainerFinished(testRun.getRunnerTestDescriptor());
+	}
+
+	private void reportContainerFinished(TestDescriptor containerTestDescriptor) {
+		if (testRun.isNotSkipped(containerTestDescriptor)) {
+			if (testRun.isNotStarted(containerTestDescriptor)) {
+				fireExecutionStarted(containerTestDescriptor, EventType.SYNTHETIC);
 			}
 			testRun.getInProgressTestDescriptorsWithSyntheticStartEvents().stream() //
 					.filter(this::canFinish) //
 					.forEach(this::fireExecutionFinished);
-			if (testRun.isNotFinished(runnerTestDescriptor)) {
-				fireExecutionFinished(runnerTestDescriptor);
+			if (testRun.isNotFinished(containerTestDescriptor)) {
+				fireExecutionFinished(containerTestDescriptor);
 			}
 		}
 	}
@@ -143,6 +164,7 @@ class RunListenerAdapter extends RunListener {
 			testStarted(testDescriptor, EventType.SYNTHETIC);
 		}
 		if (testRun.isNotFinished(testDescriptor) && testDescriptor.isContainer()
+				&& testRun.hasSyntheticStartEvent(testDescriptor)
 				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
 			testFinished(testDescriptor);
 		}

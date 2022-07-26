@@ -11,6 +11,7 @@
 package org.junit.vintage.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
@@ -30,6 +31,10 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.in
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
+
+import java.math.BigDecimal;
+
+import junit.runner.Version;
 
 import org.assertj.core.api.Condition;
 import org.junit.AssumptionViolatedException;
@@ -80,6 +85,9 @@ import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCusto
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithDuplicateChangingChildDescriptions;
 import org.junit.vintage.engine.samples.junit4.MalformedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.ParameterizedTestCase;
+import org.junit.vintage.engine.samples.junit4.ParameterizedTimingTestCase;
+import org.junit.vintage.engine.samples.junit4.ParameterizedWithAfterParamFailureTestCase;
+import org.junit.vintage.engine.samples.junit4.ParameterizedWithBeforeParamFailureTestCase;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithLifecycleMethods;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
@@ -456,6 +464,74 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
+	void executesParameterizedTimingTestCase() {
+		assumeTrue(atLeastJUnit4_13(), "@BeforeParam and @AfterParam were introduced in JUnit 4.13");
+
+		Class<?> testClass = ParameterizedTimingTestCase.class;
+
+		var events = execute(testClass).allEvents().debug();
+
+		var firstParamStartedEvent = events.filter(event(container("[foo]"), started())::matches).findFirst() //
+				.orElseThrow(() -> new AssertionError("No start event for [foo]"));
+		var firstParamFinishedEvent = events.filter(
+			event(container("[foo]"), finishedSuccessfully())::matches).findFirst() //
+				.orElseThrow(() -> new AssertionError("No finish event for [foo]"));
+		var secondParamStartedEvent = events.filter(event(container("[bar]"), started())::matches).findFirst() //
+				.orElseThrow(() -> new AssertionError("No start event for [bar]"));
+		var secondParamFinishedEvent = events.filter(
+			event(container("[bar]"), finishedSuccessfully())::matches).findFirst() //
+				.orElseThrow(() -> new AssertionError("No finish event for [bar]"));
+
+		assertThat(ParameterizedTimingTestCase.EVENTS.get("beforeParam(foo)")).isAfterOrEqualTo(
+			firstParamStartedEvent.getTimestamp());
+		assertThat(ParameterizedTimingTestCase.EVENTS.get("afterParam(foo)")).isBeforeOrEqualTo(
+			firstParamFinishedEvent.getTimestamp());
+		assertThat(ParameterizedTimingTestCase.EVENTS.get("beforeParam(bar)")).isAfterOrEqualTo(
+			secondParamStartedEvent.getTimestamp());
+		assertThat(ParameterizedTimingTestCase.EVENTS.get("afterParam(bar)")).isBeforeOrEqualTo(
+			secondParamFinishedEvent.getTimestamp());
+	}
+
+	@Test
+	void executesParameterizedWithAfterParamFailureTestCase() {
+		assumeTrue(atLeastJUnit4_13(), "@AfterParam was introduced in JUnit 4.13");
+
+		Class<?> testClass = ParameterizedWithAfterParamFailureTestCase.class;
+
+		execute(testClass).allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container("[foo]"), started()), //
+			event(test("test[foo]"), started()), //
+			event(test("test[foo]"), finishedSuccessfully()), //
+			event(container("[foo]"), finishedWithFailure(instanceOf(AssertionError.class))), //
+			event(container("[bar]"), started()), //
+			event(test("test[bar]"), started()), //
+			event(test("test[bar]"),
+				finishedWithFailure(instanceOf(AssertionError.class), message("expected:<[foo]> but was:<[bar]>"))), //
+			event(container("[bar]"), finishedWithFailure(instanceOf(AssertionError.class))), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesParameterizedWithBeforeParamFailureTestCase() {
+		assumeTrue(atLeastJUnit4_13(), "@BeforeParam was introduced in JUnit 4.13");
+
+		Class<?> testClass = ParameterizedWithBeforeParamFailureTestCase.class;
+
+		execute(testClass).allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container("[foo]"), started()), //
+			event(container("[foo]"), finishedWithFailure(instanceOf(AssertionError.class))), //
+			event(container("[bar]"), started()), //
+			event(container("[bar]"), finishedWithFailure(instanceOf(AssertionError.class))), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
 	void executesJUnit4TestCaseWithExceptionThrowingRunner() {
 		Class<?> testClass = JUnit4TestCaseWithExceptionThrowingRunner.class;
 
@@ -804,6 +880,10 @@ class VintageTestEngineExecutionTests {
 
 	private static LauncherDiscoveryRequest request(Class<?> testClass) {
 		return LauncherDiscoveryRequestBuilder.request().selectors(selectClass(testClass)).build();
+	}
+
+	private static boolean atLeastJUnit4_13() {
+		return JUnit4VersionCheck.parseVersion(Version.id()).compareTo(new BigDecimal("4.13")) >= 0;
 	}
 
 }

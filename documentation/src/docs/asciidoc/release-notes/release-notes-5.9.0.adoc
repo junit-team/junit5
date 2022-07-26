@@ -56,4 +56,5 @@ GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* More accurate reporting of intermediate start/finish events, e.g. iterations of the
+  `Parameterized` runner and classes executed indirectly via the `Suite` runner.
