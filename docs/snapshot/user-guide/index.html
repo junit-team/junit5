@@ -5592,7 +5592,8 @@ the result of the test, e.g. mark the test as failed although all assertions wer
 to configure when timeouts are applied. There are three modes: <code>enabled</code>, <code>disabled</code>,
 and <code>disabled_on_debug</code>. The default mode is <code>enabled</code>.
 A VM runtime is considered to run in debug mode when one of its input parameters starts
-with <code>-agentlib:jdwp</code>. This heuristic is queried by the <code>disabled_on_debug</code> mode.</p>
+with <code>-agentlib:jdwp</code> or <code>-Xrunjdwp</code>.
+This heuristic is queried by the <code>disabled_on_debug</code> mode.</p>
 </div>
 </div>
 </div>
@@ -11939,7 +11940,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.9.0-SNAPSHOT<br>
-Last updated 2022-07-26 14:13:38 UTC
+Last updated 2022-07-26 14:27:33 UTC
 </div>
 </div>
 <style>
