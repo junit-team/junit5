@@ -91,6 +91,10 @@ class TestRun {
 		return runnerDescendants.contains(testDescriptor);
 	}
 
+	boolean hasSyntheticStartEvent(TestDescriptor testDescriptor) {
+		return inProgressDescriptors.get(testDescriptor) == EventType.SYNTHETIC;
+	}
+
 	Optional<VintageTestDescriptor> lookupNextTestDescriptor(Description description) {
 		return lookupUnambiguouslyOrApplyFallback(description, VintageDescriptors::getNextUnstarted);
 	}
