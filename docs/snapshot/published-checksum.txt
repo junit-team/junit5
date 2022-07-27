@@ -308,7 +308,6 @@
 6a069ee01ee990a73d176c61a60147e2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeEach.java
 6a1adfbe797ad6858f38d8c6e4b05894  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
 6a4041c973f46eb4ee5dbea9cbfcf1bb  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectUris.java
-6a8cb877422ccdc5a0bb5e2a6e76fef8  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 6ac2bfedfd09298776a844093edf803a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInstance.java
 6b60ceadb8a9741eae0e5546456798f5  documentation/src/test/java/example/exception/MultipleHandlersTestCase.java
 6b90effb663a9b51a9c5b01af7fea4a3  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/TestRuleSupport.java
@@ -734,6 +733,7 @@ eaa2ef7dacca67bf126fb122f2933384  junit-platform-launcher/src/main/java/org/juni
 eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit/platform/console/tasks/package-info.java
 eaff21bbb36884b3a3144b67abcaf8ec  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SuiteDisplayName.java
 eb131812de815ba9b9d27cb21f05911d  junit-platform-suite-commons/src/main/java/org/junit/platform/suite/commons/package-info.java
+eb2b4483ffaf110646f77584f357d7fb  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 eb989cf4cd2892ab27d5cd57f459444c  documentation/src/docs/asciidoc/user-guide/advanced-topics/engines.adoc
 ebc5bf07a78da7ae8f40b6c830b3c9d0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/JRE.java
 ec34b26ba8050acb09c1afd6d8977793  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolution.java
