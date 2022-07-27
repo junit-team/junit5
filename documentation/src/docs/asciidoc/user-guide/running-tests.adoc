@@ -527,7 +527,7 @@ link:https://ant.apache.org/manual/Tasks/junitlauncher.html[`junitlauncher` task
 link:https://spring.io/projects/spring-boot[Spring Boot] provides automatic support for
 managing the version of JUnit used in your project. In addition, the
 `spring-boot-starter-test` artifact automatically includes testing libraries such as JUnit
-Jupiter, AspectJ, Mockito, etc.
+Jupiter, AssertJ, Mockito, etc.
 
 If your build relies on dependency management support from Spring Boot, you should not
 import the <<dependency-metadata-junit-bom,`junit-bom`>> in your build script since that
