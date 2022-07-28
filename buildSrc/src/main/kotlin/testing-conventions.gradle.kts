@@ -52,6 +52,12 @@ tasks.withType<Test>().configureEach {
 	// Track OS as input so that tests are executed on all configured operating systems on CI
 	trackOperationSystemAsInput()
 
+	// Avoid passing unnecessary environment variables to the JVM (e.g. from GitHub Actions)
+	if (isCiServer) {
+		environment.clear()
+		environment(providers.environmentVariablesPrefixedBy("JDK").get())
+	}
+
 	jvmArgumentProviders += CommandLineArgumentProvider {
 		listOf(
 			"-Djunit.platform.reporting.open.xml.enabled=true",
