@@ -51,7 +51,7 @@ class JUnit4VersionCheck {
 		}
 	}
 
-	private static BigDecimal parseVersion(String versionString) {
+	static BigDecimal parseVersion(String versionString) {
 		try {
 			Matcher matcher = versionPattern.matcher(versionString);
 			if (matcher.matches()) {
