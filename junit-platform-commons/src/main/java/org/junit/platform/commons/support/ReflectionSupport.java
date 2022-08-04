@@ -282,8 +282,8 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Method methods} of the supplied class or interface
-	 * that match the specified {@code predicate}.
+	 * Find all distinct {@linkplain Method methods} of the supplied class or
+	 * interface that match the specified {@code predicate}.
 	 *
 	 * <p>The results will not contain instance methods that are <em>overridden</em>
 	 * or {@code static} methods that are <em>hidden</em>.

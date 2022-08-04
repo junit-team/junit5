@@ -1418,6 +1418,7 @@ public final class ReflectionUtils {
 		// @formatter:off
 		return findAllMethodsInHierarchy(clazz, traversalMode).stream()
 				.filter(predicate)
+				.distinct()
 				// unmodifiable since returned by public, non-internal method(s)
 				.collect(toUnmodifiableList());
 		// @formatter:on
