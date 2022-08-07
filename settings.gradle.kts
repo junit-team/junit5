@@ -89,8 +89,8 @@ buildCache {
 }
 
 val javaVersion = JavaVersion.current()
-require(javaVersion == JavaVersion.VERSION_17) {
-	"The JUnit 5 build must be executed with Java 17. Currently executing with Java ${javaVersion.majorVersion}."
+require(javaVersion == JavaVersion.VERSION_18) {
+	"The JUnit 5 build must be executed with Java 18. Currently executing with Java ${javaVersion.majorVersion}."
 }
 
 rootProject.name = "junit5"
