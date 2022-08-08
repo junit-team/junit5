@@ -38,6 +38,7 @@ dependencyResolutionManagement {
 
 val gradleEnterpriseServer = "https://ge.junit.org"
 val isCiServer = System.getenv("CI") != null
+val junitBuildCacheUrl: String? by extra
 val junitBuildCacheUsername: String? by extra
 val junitBuildCachePassword: String? by extra
 
@@ -79,7 +80,7 @@ buildCache {
 		isEnabled = !isCiServer
 	}
 	remote<HttpBuildCache> {
-		url = uri("$gradleEnterpriseServer/cache/")
+		url = uri(junitBuildCacheUrl ?: "$gradleEnterpriseServer/cache/")
 		isPush = isCiServer && !junitBuildCacheUsername.isNullOrEmpty() && !junitBuildCachePassword.isNullOrEmpty()
 		credentials {
 			username = junitBuildCacheUsername?.ifEmpty { null }
