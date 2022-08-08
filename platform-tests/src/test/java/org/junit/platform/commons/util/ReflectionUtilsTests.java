@@ -1074,6 +1074,16 @@ class ReflectionUtilsTests {
 		assertThat(findMethods(clazz, isFooMethod)).hasSize(1);
 	}
 
+	/**
+	 * @since 1.9.1
+	 * @see https://github.com/junit-team/junit5/issues/2993
+	 */
+	@Test
+	void findMethodsFindsDistinctMethodsDeclaredInMultipleInterfaces() {
+		Predicate<Method> isStringsMethod = method -> method.getName().equals("strings");
+		assertThat(findMethods(DoubleInheritedInterfaceMethodTestCase.class, isStringsMethod)).hasSize(1);
+	}
+
 	@Test
 	void findMethodsInObject() {
 		var methods = findMethods(Object.class, method -> true);
@@ -1425,6 +1435,21 @@ class ReflectionUtilsTests {
 	}
 
 	void methodWithParameterizedMap(Map<String, String> map) {
+	}
+
+	interface StringsInterface1 {
+		static Stream<String> strings() {
+			return Stream.of("abc", "def");
+		}
+	}
+
+	interface StringsInterface2 extends StringsInterface1 {
+	}
+
+	/**
+	 * Inherits strings() from interfaces StringsInterface1 and StringsInterface2.
+	 */
+	static class DoubleInheritedInterfaceMethodTestCase implements StringsInterface1, StringsInterface2 {
 	}
 
 	interface Generic<X, Y, Z extends X> {
