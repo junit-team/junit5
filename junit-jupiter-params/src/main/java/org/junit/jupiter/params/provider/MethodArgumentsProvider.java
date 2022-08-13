@@ -12,12 +12,17 @@ package org.junit.jupiter.params.provider;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
@@ -72,16 +77,26 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 				methodParameters, className)));
 	}
 
+	/**
+	 * Find all methods in the given {@code testClass} with the desired {@code factoryMethodName},
+	 * ignoring the {@code testMethod} itself as well as any {@code @Test}, {@code @TestTemplate},
+	 * or {@code @TestFactory} methods with the same name.
+	 */
 	private Method getFactoryMethodBySimpleName(Class<?> testClass, Method testMethod, String factoryMethodName) {
-		// Find all methods with the desired factory method name, but ignore the test method itself.
-		List<Method> methods = ReflectionUtils.findMethods(testClass,
-			factoryMethod -> factoryMethodName.equals(factoryMethod.getName()) && !testMethod.equals(factoryMethod));
+		Predicate<Method> isFactoryMethod = candidate -> factoryMethodName.equals(candidate.getName())
+				&& !(testMethod.equals(candidate) || isTestMethod(candidate));
+		List<Method> methods = ReflectionUtils.findMethods(testClass, isFactoryMethod);
 		Preconditions.condition(methods.size() > 0,
 			() -> format("Could not find factory method [%s] in class [%s]", factoryMethodName, testClass.getName()));
 		Preconditions.condition(methods.size() == 1,
 			() -> format("Several factory methods named [%s] were found in class [%s]", factoryMethodName,
 				testClass.getName()));
 		return methods.get(0);
+	}
+
+	private boolean isTestMethod(Method candidate) {
+		return isAnnotated(candidate, Test.class) || isAnnotated(candidate, TestTemplate.class)
+				|| isAnnotated(candidate, TestFactory.class);
 	}
 
 	private Class<?> loadRequiredClass(String className) {
