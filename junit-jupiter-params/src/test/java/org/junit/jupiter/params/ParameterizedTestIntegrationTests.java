@@ -12,9 +12,12 @@ package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendTestTemplateInvocationSegment;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
@@ -53,13 +56,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -722,11 +729,6 @@ class ParameterizedTestIntegrationTests {
 							message("Assumption failed: nothing to test"))));
 		}
 
-		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
-			return ParameterizedTestIntegrationTests.this.execute(MethodSourceTestCase.class, methodName,
-				methodParameterTypes);
-		}
-
 		@Test
 		void namedParameters() {
 			execute("namedParameters", String.class).allEvents().assertThatEvents() //
@@ -743,6 +745,27 @@ class ParameterizedTestIntegrationTests {
 						event(test(), displayName("cool name"), finishedWithFailure(message("parameter value")))) //
 					.haveAtLeast(1,
 						event(test(), displayName("default name"), finishedWithFailure(message("default name"))));
+		}
+
+		/**
+		 * @since 5.9.1
+		 * @see https://github.com/junit-team/junit5/issues/3001
+		 */
+		@Test
+		void duplicateMethodNames() {
+			// It is sufficient to assert that 8 tests started and finished, because
+			// without the fix for #3001 the 4 parameterized tests would fail. In
+			// other words, we're not really testing the support for @RepeatedTest
+			// and @TestFactory, but their presence also contributes to the bug
+			// reported in #3001.
+			ParameterizedTestIntegrationTests.this.execute(selectClass(DuplicateMethodNamesMethodSourceTestCase.class))//
+					.testEvents()//
+					.assertStatistics(stats -> stats.started(8).failed(0).finished(8));
+		}
+
+		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
+			return ParameterizedTestIntegrationTests.this.execute(MethodSourceTestCase.class, methodName,
+				methodParameterTypes);
 		}
 
 	}
@@ -1247,6 +1270,40 @@ class ParameterizedTestIntegrationTests {
 		static List<String> assumptionFailureInMethodSourceFactoryMethod() {
 			Assumptions.assumeFalse(true, "nothing to test");
 			return null;
+		}
+
+	}
+
+	/**
+	 * @since 5.9.1
+	 * @see https://github.com/junit-team/junit5/issues/3001
+	 */
+	static class DuplicateMethodNamesMethodSourceTestCase {
+
+		@ParameterizedTest
+		@MethodSource
+		void test(String value) {
+			assertEquals(1, value.length());
+		}
+
+		@ParameterizedTest
+		@MethodSource("test")
+		void anotherTest(String value) {
+			assertEquals(1, value.length());
+		}
+
+		@RepeatedTest(2)
+		void test(TestReporter testReporter) {
+			assertNotNull(testReporter);
+		}
+
+		@TestFactory
+		Stream<DynamicTest> test(TestInfo testInfo) {
+			return test().map(value -> dynamicTest(value, () -> assertEquals(1, value.length())));
+		}
+
+		private static Stream<String> test() {
+			return Stream.of("a", "b");
 		}
 
 	}
