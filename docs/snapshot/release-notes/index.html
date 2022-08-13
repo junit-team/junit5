@@ -575,6 +575,12 @@ on GitHub.</p>
 references a factory method inherited from multiple interfaces no longer fails with an
 exception stating that multiple factory methods with the same name were found.</p>
 </li>
+<li>
+<p>A <code>@ParameterizedTest</code> method configured with a <code>@MethodSource</code> annotation that
+references a factory method whose name is the same as other test methods in the same
+class no longer fails with an exception stating that multiple factory methods with the
+same name were found.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1148,7 +1154,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-08-04 08:25:56 UTC
+Last updated 2022-08-13 15:52:32 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
