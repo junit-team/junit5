@@ -395,8 +395,11 @@ class MethodArgumentsProviderTests {
 			var exception = assertThrows(PreconditionViolationException.class,
 				() -> provideArguments("stringStreamProviderWithOrWithoutParameter").toArray());
 
-			assertThat(exception.getMessage()).isEqualTo(
-				"Several factory methods named [stringStreamProviderWithOrWithoutParameter] were found in class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]");
+			assertThat(exception.getMessage())//
+					.startsWith("2 factory methods named [stringStreamProviderWithOrWithoutParameter] were found in "
+							+ "class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]: ")//
+					.contains("stringStreamProviderWithOrWithoutParameter()",
+						"stringStreamProviderWithOrWithoutParameter(java.lang.String)");
 		}
 
 		@Test
