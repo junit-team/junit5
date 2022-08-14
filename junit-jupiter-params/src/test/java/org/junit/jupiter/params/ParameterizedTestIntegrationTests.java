@@ -1283,13 +1283,13 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest
 		@MethodSource
 		void test(String value) {
-			assertEquals(1, value.length());
+			test(1, value);
 		}
 
 		@ParameterizedTest
 		@MethodSource("test")
 		void anotherTest(String value) {
-			assertEquals(1, value.length());
+			assertTrue(test(value, 1));
 		}
 
 		@RepeatedTest(2)
@@ -1299,9 +1299,22 @@ class ParameterizedTestIntegrationTests {
 
 		@TestFactory
 		Stream<DynamicTest> test(TestInfo testInfo) {
-			return test().map(value -> dynamicTest(value, () -> assertEquals(1, value.length())));
+			return test().map(value -> dynamicTest(value, () -> test(1, value)));
 		}
 
+		// neither a test method nor a factory method.
+		// intentionally void.
+		private void test(int expectedLength, String value) {
+			assertEquals(expectedLength, value.length());
+		}
+
+		// neither a test method nor a factory method.
+		// intentionally non-void and also not convertible to a Stream.
+		private boolean test(String value, int expectedLength) {
+			return (value.length() == expectedLength);
+		}
+
+		// legitimate factory method.
 		private static Stream<String> test() {
 			return Stream.of("a", "b");
 		}
