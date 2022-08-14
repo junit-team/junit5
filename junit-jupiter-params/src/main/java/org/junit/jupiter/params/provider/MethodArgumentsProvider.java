@@ -89,8 +89,8 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		Preconditions.condition(methods.size() > 0,
 			() -> format("Could not find factory method [%s] in class [%s]", factoryMethodName, testClass.getName()));
 		Preconditions.condition(methods.size() == 1,
-			() -> format("Several factory methods named [%s] were found in class [%s]", factoryMethodName,
-				testClass.getName()));
+			() -> format("%d factory methods named [%s] were found in class [%s]: %s", methods.size(),
+				factoryMethodName, testClass.getName(), methods));
 		return methods.get(0);
 	}
 
