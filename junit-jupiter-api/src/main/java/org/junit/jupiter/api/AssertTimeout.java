@@ -10,7 +10,10 @@
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.ASSERTION_EXCEPTION;
+import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.MASKED_TIMEOUT_EXCEPTION;
 import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
+import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
 
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
@@ -112,27 +115,55 @@ class AssertTimeout {
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
-		return assertTimeoutPreemptively(timeout, supplier, (Object) null);
+		return new PreemptiveTimeoutAssertionExecutor<T>(timeout, supplier, null).executeThrowing(ASSERTION_EXCEPTION);
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return assertTimeoutPreemptively(timeout, supplier, (Object) message);
+		return new PreemptiveTimeoutAssertionExecutor<T>(timeout, supplier, message).executeThrowing(
+			ASSERTION_EXCEPTION);
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
 			Supplier<String> messageSupplier) {
-
-		return assertTimeoutPreemptively(timeout, supplier, (Object) messageSupplier);
+		return new PreemptiveTimeoutAssertionExecutor<T>(timeout, supplier, messageSupplier).executeThrowing(
+			ASSERTION_EXCEPTION);
 	}
 
-	private static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
-			Object messageOrSupplier) {
+	static <T> T assertTimeoutPreemptivelyThrowingTimeoutException(Duration timeout, ThrowingSupplier<T> supplier,
+			Supplier<String> messageSupplier) {
+		return new PreemptiveTimeoutAssertionExecutor<T>(timeout, supplier, messageSupplier).executeThrowing(
+			MASKED_TIMEOUT_EXCEPTION);
+	}
 
-		AtomicReference<Thread> threadReference = new AtomicReference<>();
-		ExecutorService executorService = Executors.newSingleThreadExecutor(new TimeoutThreadFactory());
+	static class PreemptiveTimeoutAssertionExecutor<T> {
+		private final Duration timeout;
+		private final ThrowingSupplier<T> supplier;
+		private final Object messageOrSupplier;
 
-		try {
-			Future<T> future = executorService.submit(() -> {
+		PreemptiveTimeoutAssertionExecutor(Duration timeout, ThrowingSupplier<T> supplier, Object messageOrSupplier) {
+			this.timeout = timeout;
+			this.supplier = supplier;
+			this.messageOrSupplier = messageOrSupplier;
+		}
+
+		T executeThrowing(Throwing throwing) {
+			AtomicReference<Thread> threadReference = new AtomicReference<>();
+			ExecutorService executorService = Executors.newSingleThreadExecutor(new TimeoutThreadFactory());
+
+			try {
+				Future<T> future = submitTask(supplier, threadReference, executorService);
+				FutureResolverWithExceptionHandling<T> resolver = createFutureResolver(messageOrSupplier,
+					threadReference, throwing);
+				return resolver.resolveFutureAndHandleException(future, timeout.toMillis());
+			}
+			finally {
+				executorService.shutdownNow();
+			}
+		}
+
+		private Future<T> submitTask(ThrowingSupplier<T> supplier, AtomicReference<Thread> threadReference,
+				ExecutorService executorService) {
+			return executorService.submit(() -> {
 				try {
 					threadReference.set(Thread.currentThread());
 					return supplier.get();
@@ -141,34 +172,26 @@ class AssertTimeout {
 					throw ExceptionUtils.throwAsUncheckedException(throwable);
 				}
 			});
-
-			long timeoutInMillis = timeout.toMillis();
-			try {
-				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
-			}
-			catch (TimeoutException ex) {
-				AssertionFailureBuilder failure = assertionFailure() //
-						.message(messageOrSupplier) //
-						.reason("execution timed out after " + timeoutInMillis + " ms");
-
-				Thread thread = threadReference.get();
-				if (thread != null) {
-					ExecutionTimeoutException exception = new ExecutionTimeoutException(
-						"Execution timed out in thread " + thread.getName());
-					exception.setStackTrace(thread.getStackTrace());
-					failure.cause(exception);
-				}
-				throw failure.build();
-			}
-			catch (ExecutionException ex) {
-				throw ExceptionUtils.throwAsUncheckedException(ex.getCause());
-			}
-			catch (Throwable ex) {
-				throw ExceptionUtils.throwAsUncheckedException(ex);
-			}
 		}
-		finally {
-			executorService.shutdownNow();
+
+		private FutureResolverWithExceptionHandling<T> createFutureResolver(Object messageOrSupplier,
+				AtomicReference<Thread> threadReference, Throwing throwing) {
+			FutureResolverWithExceptionHandling<T> resolver;
+			switch (throwing) {
+				case MASKED_TIMEOUT_EXCEPTION:
+					resolver = new TimeoutPropagatingFutureResolver<>();
+					break;
+				case ASSERTION_EXCEPTION:
+					resolver = new AssertiveFutureResolver<>(threadReference, messageOrSupplier);
+					break;
+				default:
+					throw new IllegalStateException("Unexpected value: " + throwing);
+			}
+			return resolver;
+		}
+
+		enum Throwing {
+			ASSERTION_EXCEPTION, MASKED_TIMEOUT_EXCEPTION
 		}
 	}
 
@@ -194,4 +217,57 @@ class AssertTimeout {
 		}
 	}
 
+	private abstract static class FutureResolverWithExceptionHandling<T> {
+		T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis) {
+			try {
+				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
+			}
+			catch (TimeoutException ex) {
+				handleTimeoutAndThrow(ex, timeoutInMillis);
+				return null;
+			}
+			catch (ExecutionException ex) {
+				throw throwAsUncheckedException(ex.getCause());
+			}
+			catch (Throwable ex) {
+				throw throwAsUncheckedException(ex);
+			}
+		}
+
+		protected abstract void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis);
+	}
+
+	private static class AssertiveFutureResolver<T> extends FutureResolverWithExceptionHandling<T> {
+
+		private final AtomicReference<Thread> threadReference;
+		private final Object messageOrSupplier;
+
+		private AssertiveFutureResolver(AtomicReference<Thread> threadReference, Object messageOrSupplier) {
+			this.threadReference = threadReference;
+			this.messageOrSupplier = messageOrSupplier;
+		}
+
+		@Override
+		protected void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis) {
+			AssertionFailureBuilder failure = assertionFailure() //
+					.message(messageOrSupplier) //
+					.reason("execution timed out after " + timeoutInMillis + " ms");
+
+			Thread thread = threadReference.get();
+			if (thread != null) {
+				ExecutionTimeoutException exception = new ExecutionTimeoutException(
+					"Execution timed out in thread " + thread.getName());
+				exception.setStackTrace(thread.getStackTrace());
+				failure.cause(exception);
+			}
+			throw failure.build();
+		}
+	}
+
+	private static class TimeoutPropagatingFutureResolver<T> extends FutureResolverWithExceptionHandling<T> {
+		@Override
+		protected void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis) {
+			throw throwAsUncheckedException(ex);
+		}
+	}
 }

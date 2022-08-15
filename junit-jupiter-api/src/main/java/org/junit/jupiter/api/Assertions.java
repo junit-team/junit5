@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.time.Duration;
@@ -3521,6 +3522,37 @@ public class Assertions {
 	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
 			Supplier<String> messageSupplier) {
 		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
+	}
+
+	/**
+	 * <em>Assert</em> that execution of the supplied {@code supplier}
+	 * completes before the given {@code timeout} is exceeded.
+	 *
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 *
+	 * <p>In the case the assertion does not pass, a {@code TimeoutException} will be
+	 * thrown.
+	 *
+	 * <p>Note: the {@code supplier} will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the {@code supplier} will
+	 * be preemptively aborted if the timeout is exceeded. See the
+	 * {@linkplain Assertions Preemptive Timeouts} section of the class-level
+	 * Javadoc for a discussion of possible undesirable side effects.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @see #assertTimeoutPreemptively(Duration, Executable)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 */
+	@API(status = INTERNAL)
+	public static <T> T assertTimeoutPreemptivelyThrowingTimeoutException(Duration timeout,
+			ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
+		return AssertTimeout.assertTimeoutPreemptivelyThrowingTimeoutException(timeout, supplier, messageSupplier);
 	}
 
 	// --- assertInstanceOf ----------------------------------------------------
