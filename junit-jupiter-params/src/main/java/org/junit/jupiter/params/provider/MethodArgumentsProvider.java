@@ -11,13 +11,20 @@
 package org.junit.jupiter.params.provider;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.util.CollectionUtils.isConvertibleToStream;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
@@ -64,16 +71,40 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 				methodParameters, className)));
 	}
 
+	/**
+	 * Find all methods in the given {@code testClass} with the desired {@code factoryMethodName}
+	 * which have return types that can be converted to a {@link Stream}, ignoring the
+	 * {@code testMethod} itself as well as any {@code @Test}, {@code @TestTemplate},
+	 * or {@code @TestFactory} methods with the same name.
+	 */
 	private Method getFactoryMethodBySimpleName(Class<?> testClass, Method testMethod, String factoryMethodName) {
-		// Find all methods with the desired factory method name, but ignore the test method itself.
-		List<Method> methods = ReflectionUtils.findMethods(testClass,
-			factoryMethod -> factoryMethodName.equals(factoryMethod.getName()) && !testMethod.equals(factoryMethod));
-		Preconditions.condition(methods.size() > 0,
-			() -> format("Could not find factory method [%s] in class [%s]", factoryMethodName, testClass.getName()));
-		Preconditions.condition(methods.size() == 1,
-			() -> format("Several factory methods named [%s] were found in class [%s]", factoryMethodName,
-				testClass.getName()));
-		return methods.get(0);
+		Predicate<Method> isCandidate = candidate -> factoryMethodName.equals(candidate.getName())
+				&& !testMethod.equals(candidate);
+		List<Method> candidates = ReflectionUtils.findMethods(testClass, isCandidate);
+		Predicate<Method> isFactoryMethod = method -> isConvertibleToStream(method.getReturnType())
+				&& !isTestMethod(method);
+		List<Method> factoryMethods = candidates.stream().filter(isFactoryMethod).collect(toList());
+		Preconditions.condition(factoryMethods.size() > 0, () -> {
+			// If we didn't find the factory method using the isFactoryMethod Predicate, perhaps
+			// the specified factory method has an invalid return type or is a test method.
+			// In that case, we report the invalid candidates that were found.
+			if (candidates.size() > 0) {
+				return format(
+					"Could not find valid factory method [%s] in class [%s] but found the following invalid candidates: %s",
+					factoryMethodName, testClass.getName(), candidates);
+			}
+			// Otherwise, report that we didn't find anything.
+			return format("Could not find factory method [%s] in class [%s]", factoryMethodName, testClass.getName());
+		});
+		Preconditions.condition(factoryMethods.size() == 1,
+			() -> format("%d factory methods named [%s] were found in class [%s]: %s", factoryMethods.size(),
+				factoryMethodName, testClass.getName(), factoryMethods));
+		return factoryMethods.get(0);
+	}
+
+	private boolean isTestMethod(Method candidate) {
+		return isAnnotated(candidate, Test.class) || isAnnotated(candidate, TestTemplate.class)
+				|| isAnnotated(candidate, TestFactory.class);
 	}
 
 	private Class<?> loadRequiredClass(String className) {

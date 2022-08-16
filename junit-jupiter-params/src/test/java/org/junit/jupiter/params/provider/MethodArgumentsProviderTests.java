@@ -49,11 +49,23 @@ class MethodArgumentsProviderTests {
 	private MutableExtensionRegistry extensionRegistry;
 
 	@Test
+	void throwsExceptionWhenFactoryMethodDoesNotExist() {
+		var exception = assertThrows(JUnitException.class, () -> provideArguments("unknownMethod").toArray());
+
+		assertThat(exception.getMessage()).isEqualTo(
+			"Could not find factory method [unknownMethod] in class [" + TestCase.class.getName() + "]");
+	}
+
+	@Test
 	void throwsExceptionForIllegalReturnType() {
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments("providerWithIllegalReturnType").toArray());
 
-		assertThat(exception).hasMessageContaining("Cannot convert instance of java.lang.Integer into a Stream");
+		assertThat(exception.getMessage())//
+				.containsSubsequence("Could not find valid factory method [providerWithIllegalReturnType] in class [",
+					TestCase.class.getName() + "]", //
+					"but found the following invalid candidates: ", //
+					"[static java.lang.Object org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase.providerWithIllegalReturnType()]");
 	}
 
 	@Test
@@ -192,14 +204,6 @@ class MethodArgumentsProviderTests {
 		var arguments = provideArguments(NonStaticTestCase.class, null, true, "nonStaticStringStreamProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
-	}
-
-	@Test
-	void throwsExceptionWhenFactoryMethodDoesNotExist() {
-		var exception = assertThrows(JUnitException.class, () -> provideArguments("unknownMethod").toArray());
-
-		assertThat(exception.getMessage()).contains("Could not find factory method [unknownMethod] in class [",
-			TestCase.class.getName());
 	}
 
 	@Test
@@ -395,8 +399,11 @@ class MethodArgumentsProviderTests {
 			var exception = assertThrows(PreconditionViolationException.class,
 				() -> provideArguments("stringStreamProviderWithOrWithoutParameter").toArray());
 
-			assertThat(exception.getMessage()).isEqualTo(
-				"Several factory methods named [stringStreamProviderWithOrWithoutParameter] were found in class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]");
+			assertThat(exception.getMessage())//
+					.startsWith("2 factory methods named [stringStreamProviderWithOrWithoutParameter] were found in "
+							+ "class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]: ")//
+					.contains("stringStreamProviderWithOrWithoutParameter()",
+						"stringStreamProviderWithOrWithoutParameter(java.lang.String)");
 		}
 
 		@Test

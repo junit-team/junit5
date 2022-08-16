@@ -113,6 +113,34 @@ public final class CollectionUtils {
 	}
 
 	/**
+	 * Determine if an instance of the supplied type can be converted into a
+	 * {@code Stream}.
+	 *
+	 * <p>If this method returns {@code true}, {@link #toStream(Object)} can
+	 * successfully convert an object of the specified type into a stream. See
+	 * {@link #toStream(Object)} for supported types.
+	 *
+	 * @param type the type to check; may be {@code null}
+	 * @return {@code true} if an instance of the type can be converted into a stream
+	 * @since 1.9.1
+	 * @see #toStream(Object)
+	 */
+	@API(status = INTERNAL, since = "1.9.1")
+	public static boolean isConvertibleToStream(Class<?> type) {
+		if (type == null || type == void.class) {
+			return false;
+		}
+		return (Stream.class.isAssignableFrom(type)//
+				|| DoubleStream.class.isAssignableFrom(type)//
+				|| IntStream.class.isAssignableFrom(type)//
+				|| LongStream.class.isAssignableFrom(type)//
+				|| Iterable.class.isAssignableFrom(type)//
+				|| Iterator.class.isAssignableFrom(type)//
+				|| Object[].class.isAssignableFrom(type)//
+				|| (type.isArray() && type.getComponentType().isPrimitive()));
+	}
+
+	/**
 	 * Convert an object of one of the following supported types into a {@code Stream}.
 	 *
 	 * <ul>
@@ -131,6 +159,7 @@ public final class CollectionUtils {
 	 * @return the resulting stream
 	 * @throws PreconditionViolationException if the supplied object is {@code null}
 	 * or not one of the supported types
+	 * @see #isConvertibleToStream(Object)
 	 */
 	public static Stream<?> toStream(Object object) {
 		Preconditions.notNull(object, "Object must not be null");
