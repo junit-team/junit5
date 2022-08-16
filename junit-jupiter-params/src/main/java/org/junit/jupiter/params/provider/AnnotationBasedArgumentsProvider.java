@@ -25,8 +25,6 @@ import org.junit.platform.commons.util.Preconditions;
  * for {@linkplain #provideArguments providing} a stream of arguments to be passed to
  * a {@code @ParameterizedTest} method, by using the data given by an annotation.
  *
- * It can be used for convenience for not
- *
  * <p>An {@code ArgumentsProvider} can be registered via the
  * {@link ArgumentsSource @ArgumentsSource} annotation.
  *
