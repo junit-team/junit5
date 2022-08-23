@@ -354,6 +354,24 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
+	void supportsCsvHeadersWhenUsingValueAttribute() {
+		var annotation = csvSource().useHeadersInDisplayName(true).lines("FRUIT, RANK", "apple, 1",
+			"banana, 2").build();
+
+		var arguments = provideArguments(annotation);
+		Stream<String[]> argumentsAsStrings = arguments.map(array -> {
+			String[] strings = new String[array.length];
+			for (int i = 0; i < array.length; i++) {
+				strings[i] = String.valueOf(array[i]);
+			}
+			return strings;
+		});
+
+		assertThat(argumentsAsStrings).containsExactly(array("FRUIT = apple", "RANK = 1"),
+			array("FRUIT = banana", "RANK = 2"));
+	}
+
+	@Test
 	void throwsExceptionIfColumnCountExceedsHeaderCount() {
 		var annotation = csvSource().useHeadersInDisplayName(true).textBlock("""
 				FRUIT, RANK
