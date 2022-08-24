@@ -31,6 +31,8 @@ on GitHub.
 
 ==== Bug Fixes
 
+* Headers provided via the `value` attribute in `@CsvSource` for a `@ParameterizedTest`
+  are now properly parsed when the `useHeadersInDisplayName` attribute is set to `true`.
 * A `@ParameterizedTest` method configured with a `@MethodSource` annotation that
   references a factory method inherited from multiple interfaces no longer fails with an
   exception stating that multiple factory methods with the same name were found.
