@@ -571,15 +571,19 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>Headers provided via the <code>value</code> attribute in <code>@CsvSource</code> for a <code>@ParameterizedTest</code>
+are now properly parsed when the <code>useHeadersInDisplayName</code> attribute is set to <code>true</code>.</p>
+</li>
+<li>
 <p>A <code>@ParameterizedTest</code> method configured with a <code>@MethodSource</code> annotation that
 references a factory method inherited from multiple interfaces no longer fails with an
 exception stating that multiple factory methods with the same name were found.</p>
 </li>
 <li>
 <p>A <code>@ParameterizedTest</code> method configured with a <code>@MethodSource</code> annotation that
-references a factory method whose name is the same as other test methods in the same
-class no longer fails with an exception stating that multiple factory methods with the
-same name were found.</p>
+references a factory method whose name is the same as other non-factory methods in the
+same class no longer fails with an exception stating that multiple factory methods with
+the same name were found.</p>
 </li>
 </ul>
 </div>
@@ -1154,7 +1158,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-08-13 15:52:32 UTC
+Last updated 2022-08-24 08:25:52 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
