@@ -146,6 +146,20 @@ Your donations will help to make that a reality!
           <p>Since February 2022</p>
         </div>
       </a>
+    </li>    
+    <li>
+      <a class="cardbronze" href="https://www.infosupport.com//">
+        <div class="cardbronze-image">
+          <img style="height:100%" src="assets/img/sponsor-logo-InfoSupport.png" alt="ubie">
+        </div>
+        <div class="cardbronze-center">
+          <h4>Info Support</h4>
+        </div>
+        <div class="cardbronze-bottom">
+          <h4>Bronze Sponsor</h4>
+          <p>Since August 2022</p>
+        </div>
+      </a>
     </li>
   </ul>
 </div>
