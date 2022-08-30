@@ -150,7 +150,7 @@ Your donations will help to make that a reality!
     <li>
       <a class="cardbronze" href="https://www.infosupport.com//">
         <div class="cardbronze-image">
-          <img style="height:100%" src="assets/img/sponsor-logo-InfoSupport.png" alt="ubie">
+          <img style="height:100%" src="assets/img/sponsor-logo-InfoSupport.png" alt="Info Support">
         </div>
         <div class="cardbronze-center">
           <h4>Info Support</h4>
