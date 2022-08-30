@@ -766,5 +766,15 @@
     "speakers": [
       "sormuras"
     ]
+  },
+  {
+    "title": "Evolving JUnit 5",
+    "event": "IntelliJ IDEA Conf 2022",
+    "date": "2022-09-30",
+    "location": "online",
+    "link": "https://pages.jetbrains.com/intellij-idea-conf-2022/blog",
+    "speakers": [
+      "marcphilipp"
+    ]
   }
 ]
