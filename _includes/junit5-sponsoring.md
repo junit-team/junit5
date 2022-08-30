@@ -104,7 +104,7 @@ Your donations will help to make that a reality!
       </a>
     </li>
     <li>
-      <a class="cardbronze" href="https://www.testmo.com/">
+      <a class="cardbronze" href="https://www.testmo.com">
         <div class="cardbronze-image">
           <img style="width:80%; padding-top:10px" src="assets/img/sponsor-logo-testmo.svg" alt="testmo">
         </div>
@@ -120,7 +120,7 @@ Your donations will help to make that a reality!
   </ul>
   <ul class="list-inline">
     <li>
-      <a class="cardbronze" href="https://codefortynine.com/">
+      <a class="cardbronze" href="https://codefortynine.com">
         <div class="cardbronze-image">
           <img style="height:100%" src="assets/img/sponsor-logo-codefortynine.svg" alt="codefortynine">
         </div>
@@ -134,7 +134,7 @@ Your donations will help to make that a reality!
       </a>
     </li>
     <li>
-      <a class="cardbronze" href="https://ubiehealth.com/">
+      <a class="cardbronze" href="https://ubiehealth.com">
         <div class="cardbronze-image">
           <img style="height:100%" src="assets/img/sponsor-logo-ubie.png" alt="ubie">
         </div>
@@ -148,7 +148,7 @@ Your donations will help to make that a reality!
       </a>
     </li>    
     <li>
-      <a class="cardbronze" href="https://www.infosupport.com//">
+      <a class="cardbronze" href="https://www.infosupport.com">
         <div class="cardbronze-image">
           <img style="height:100%" src="assets/img/sponsor-logo-InfoSupport.png" alt="Info Support">
         </div>
