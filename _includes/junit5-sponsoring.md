@@ -164,7 +164,7 @@ Your donations will help to make that a reality!
     <li>
       <a class="cardbronze" href="https://stiltsoft.com">
         <div class="cardbronze-image">
-          <img style="height:150%; margin-top:-15px;" src="assets/img/sponsor-logo-Stiltsoft.svg" alt="Stiltsoft">
+          <img style="width:90%" src="assets/img/sponsor-logo-Stiltsoft.svg" alt="Stiltsoft">
         </div>
         <div class="cardbronze-center">
           <h4>Stiltsoft</h4>
