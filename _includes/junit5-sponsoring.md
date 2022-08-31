@@ -117,8 +117,6 @@ Your donations will help to make that a reality!
         </div>
       </a>
     </li>
-  </ul>
-  <ul class="list-inline">
     <li>
       <a class="cardbronze" href="https://codefortynine.com">
         <div class="cardbronze-image">
@@ -133,6 +131,8 @@ Your donations will help to make that a reality!
         </div>
       </a>
     </li>
+  </ul>
+  <ul class="list-inline">
     <li>
       <a class="cardbronze" href="https://ubiehealth.com">
         <div class="cardbronze-image">
@@ -146,7 +146,7 @@ Your donations will help to make that a reality!
           <p>Since February 2022</p>
         </div>
       </a>
-    </li>    
+    </li>
     <li>
       <a class="cardbronze" href="https://www.infosupport.com">
         <div class="cardbronze-image">
@@ -154,6 +154,20 @@ Your donations will help to make that a reality!
         </div>
         <div class="cardbronze-center">
           <h4>Info Support</h4>
+        </div>
+        <div class="cardbronze-bottom">
+          <h4>Bronze Sponsor</h4>
+          <p>Since August 2022</p>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="cardbronze" href="https://stiltsoft.com">
+        <div class="cardbronze-image">
+          <img style="width:80%; padding-top:10px" src="assets/img/sponsor-logo-Stiltsoft.svg" alt="Stiltsoft">
+        </div>
+        <div class="cardbronze-center">
+          <h4>Stiltsoft</h4>
         </div>
         <div class="cardbronze-bottom">
           <h4>Bronze Sponsor</h4>
