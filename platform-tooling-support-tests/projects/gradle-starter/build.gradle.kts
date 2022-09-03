@@ -2,9 +2,6 @@ plugins {
 	java
 }
 
-// don't use `build` as target to prevent Jenkins picking up
-buildDir = file("bin")
-
 // grab jupiter version from system environment
 val jupiterVersion: String = System.getenv("JUNIT_JUPITER_VERSION")
 val vintageVersion: String = System.getenv("JUNIT_VINTAGE_VERSION")
