@@ -13,6 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpectedStartedOpenTestReport;
 
 import java.util.List;
 
@@ -29,13 +30,14 @@ class AntStarterTests {
 
 	@Test
 	void ant_starter() {
-		var result = Request.builder() //
+		var request = Request.builder() //
 				.setTool(new Java()) //
 				.setProject("ant-starter") //
 				.addArguments("-cp", System.getProperty("antJars"), Main.class.getName()) //
 				.addArguments("-verbose") //
-				.build() //
-				.run();
+				.build();
+
+		var result = request.run();
 
 		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
@@ -54,5 +56,8 @@ class AntStarterTests {
 			"     \\[java\\] \\[         0 tests failed          \\]", //
 			">> TAIL >>"), //
 			result.getOutputLines("out"));
+
+		var testResultsDir = Request.WORKSPACE.resolve(request.getWorkspace()).resolve("build/test-report");
+		verifyContainsExpectedStartedOpenTestReport(testResultsDir);
 	}
 }
