@@ -7,11 +7,22 @@ package org.junit.jupiter.params.provider;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
-import java.util.stream.*;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 
@@ -94,30 +105,30 @@ import org.apiguardian.api.API;
  * }</pre>
  *
  * <p>The behaviour of this source is affected by several optional system properties:
- *     <dl>
- *         <dt>{@code org.junit.jupiter.params.provider.CombinationsSource.immutable}</dt>
- *         <dd>(default "false") If true then all sources provided are copied
- *         to ensure that the resulting stream
- *         is immutable.
- *         </dd>
- *         <dt>{@code org.junit.jupiter.params.provider.CombinationsSource.split}</dt>
- *         <dd>(default "100,000") An integer value that specifies the target
- *         minimum size of a split. If test cases are very slow then you may wish to
- *         reduce this for additional splitting.
- *         </dd>
- *         <dt>{@code org.junit.jupiter.params.provider.CombinationsSource.parallel}</dt>
- *         <dd>(default "false") A boolean value that controls whether the resulting
- *         stream is {@link Stream#parallel()}. JUnit5 does not currently use parameter
- *         sources in parallel, but there has been an RFE to support parallel sources
- *         </dd>
- *     </dl>
+ * 	<dl>
+ *		<dt>{@code org.junit.jupiter.params.provider.CombinationsSource.immutable}</dt>
+ *		<dd>(default "false") If true then all sources provided are copied
+ *		to ensure that the resulting stream
+ * 		is immutable.
+ * 		</dd>
+ *		<dt>{@code org.junit.jupiter.params.provider.CombinationsSource.split}</dt>
+ *		<dd>(default "100,000") An integer value that specifies the target
+ *		minimum size of a split. If test cases are very slow then you may wish to
+ * 		reduce this for additional splitting.
+ *		</dd>
+ *		<dt>{@code org.junit.jupiter.params.provider.CombinationsSource.parallel}</dt>
+ *		<dd>(default "false") A boolean value that controls whether the resulting
+ *		stream is {@link Stream#parallel()}. JUnit5 does not currently use parameter
+ *		sources in parallel, but there has been an RFE to support parallel sources
+ *      </dd>
+ *	</dl>
  */
 @API(status = EXPERIMENTAL)
 public class CombinationsSource {
 
 	/**
 	 * if true then all source inputs are copied before stream is returned.
-     * This requires more space but allows any source to be used.
+	 * This requires more space but allows any source to be used.
 	 */
 	private static final boolean SPLITERATOR_IMMUTABLE = Boolean.getBoolean(
 		"org.junit.jupiter.params.provider.CombinationsSource.immutable");
@@ -130,34 +141,37 @@ public class CombinationsSource {
 
 	/**
 	 * if true then returned stream will be parallel. JUnit5 does not currently
-     * use parameter sources in parallel, but there has been an RFE to support
-     * parallel sources
+	 * use parameter sources in parallel, but there has been an RFE to support
+	 * parallel sources
 	 */
 	private static final boolean STREAM_PARALLEL = Boolean.getBoolean(
 		"org.junit.jupiter.params.provider.CombinationsSource.parallel");
 
 	/**
-	 * A utility method that produces a stream of test arguments from provided sources.
+	 * A utility method that produces a stream of test arguments from provided 
+	 * sources.
 	 *
 	 * @param sources The sources over which to iterate to produce the
-     * {@link Arguments} values. The order and count of sources matches the
-     * order and count of arguments in the resulting combinations. Each source may be:
+	 * {@link Arguments} values. The order and count of sources matches the
+	 * order and count of arguments in the resulting combinations. Each source
+	 * may be:
 	 * <dl>
-	 * <dt>{@code null}<dd>The argument value will always be {@code null}.
-	 * <dt>A {@link Supplier}<dd>Used for wrapping. Will be called only once
-     * to produce a single value.
-	 * <dt>AN {@link Iterable}<dd>Any iterable.
-	 * <dt>An array<dd>A primitive or reference array.
-	 * <dt>A {@link Boolean} or {@code boolean} class<dd>Will iterate over
-     * the boolean values
-	 * {@link Boolean#FALSE} and {@link Boolean#TRUE}
-	 * <dt>An {@link Enum}<dd>Any enum class.
-	 * <dt>An {@link IntStream}, {@link LongStream}, {@link DoubleStream},
-     * or {@link Stream}<dd>Any finite stream.
-	 * <dt>An {@link Iterator}<dd>Any finite iterator.
-	 * <dt>An {@link Enumeration}<dd>Any finite enumeration.
+	 * 	<dt>{@code null}<dd>The argument value will always be {@code null}.
+	 * 	<dt>A {@link Supplier}<dd>Used for wrapping. Will be called only once
+	 * 	to produce a single value.
+	 * 	<dt>AN {@link Iterable}<dd>Any iterable.
+	 * 	<dt>An array<dd>A primitive or reference array.
+	 * 	<dt>A {@link Boolean} or {@code boolean} class<dd>Will iterate over
+	 * 	the boolean values
+	 * 	{@link Boolean#FALSE} and {@link Boolean#TRUE}
+	 * 	<dt>An {@link Enum}<dd>Any enum class.
+	 * 	<dt>An {@link IntStream}, {@link LongStream}, {@link DoubleStream},
+	 * 	or {@link Stream}<dd>Any finite stream.
+	 * 	<dt>An {@link Iterator}<dd>Any finite iterator.
+	 * 	<dt>An {@link Enumeration}<dd>Any finite enumeration.
 	 * </dl>
-	 * @return A stream of {@link Arguments} with values derived from the provided sources.
+	 * @return A stream of {@link Arguments} with values derived from the 
+	 * provided sources.
 	 */
 	public static Stream<Arguments> fromSources(Object... sources) {
 		return StreamSupport.stream(sourcesSpliterator(sources), STREAM_PARALLEL).map(Arguments::of);
@@ -165,12 +179,12 @@ public class CombinationsSource {
 
 	/**
 	 * Produce a spliterator of object arrays from the provided sources. Each
-     * object array contains the same number of objects as there are provided
-     * sources. The spliterator returns all combinations of each source.
+	 * object array contains the same number of objects as there are provided
+	 * sources. The spliterator returns all combinations of each source.
 	 *
 	 * @param sources the sources to be used for producing combinations.
 	 * @return spliterator providing all combinations of source objects as
-     * object arrays.
+	 * object arrays.
 	 */
 	static Spliterator<Object[]> sourcesSpliterator(Object... sources) {
 		Object[][] converted = convertSources(SPLITERATOR_IMMUTABLE,
@@ -180,15 +194,16 @@ public class CombinationsSource {
 
 	/**
 	 * Converts all the provided sources to fully boxed array instances. This
-     * is needed because, for all but the first source, we need to iterate
-     * over the source multiple times. Materializing the sources also minimizes
-     * the primitive boxing used.
+	 * is needed because, for all but the first source, we need to iterate
+	 * over the source multiple times. Materializing the sources also minimizes
+	 * the primitive boxing used.
 	 *
 	 * @param safeCopy if true then resulting arrays will be private copies.
 	 * @param sources The sources to materialize in to arrays.
 	 * @return an array of {@link Collection} instances which materialize the
-     * sources.
+	 * sources.
 	 */
+	@SuppressWarnings("UnnecessaryBoxing")
 	static Object[][] convertSources(boolean safeCopy, Object... sources) {
 		Object[][] converted = Arrays.stream(sources).map(source -> {
 			if (null == source) {
@@ -293,17 +308,17 @@ public class CombinationsSource {
 
 	/**
 	 * Iterates over an array of arrays returning rows consisting of all the
-     * combinations of elements from each column.
+	 * combinations of elements from each column.
 	 */
 	static class ArraysSpliterator implements Spliterator<Object[]> {
 		/**
 		 * if true then all of the sources are considered immutable and this
-         * spliterator is imutable.
+		 * spliterator is imutable.
 		 */
 		final boolean immutable;
 		/**
 		 * The sources for each column position converted to materialized array
-         * instances for multiple iteration.
+		 * instances for multiple iteration.
 		 */
 		final Object[][] sources;
 
@@ -386,8 +401,7 @@ public class CombinationsSource {
 				Object[][] split = Arrays.copyOf(sources, sources.length);
 				split[sourceIndex] = Arrays.copyOf(splitting, splitAt);
 				sources[sourceIndex] = Arrays.copyOfRange(splitting, splitAt, size);
-				ArraysSpliterator prefix = new ArraysSpliterator(immutable, split);
-				return prefix;
+				return new ArraysSpliterator(immutable, split);
 			}
 
 			return null;
