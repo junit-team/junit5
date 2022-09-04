@@ -1,5 +1,11 @@
 /*
- * Copyright © 2022. Mike Duigou
+ * Copyright 2015-2022 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.params.provider;
@@ -148,7 +154,7 @@ public class CombinationsSource {
 		"org.junit.jupiter.params.provider.CombinationsSource.parallel");
 
 	/**
-	 * A utility method that produces a stream of test arguments from provided 
+	 * A utility method that produces a stream of test arguments from provided
 	 * sources.
 	 *
 	 * @param sources The sources over which to iterate to produce the
@@ -170,7 +176,7 @@ public class CombinationsSource {
 	 * 	<dt>An {@link Iterator}<dd>Any finite iterator.
 	 * 	<dt>An {@link Enumeration}<dd>Any finite enumeration.
 	 * </dl>
-	 * @return A stream of {@link Arguments} with values derived from the 
+	 * @return A stream of {@link Arguments} with values derived from the
 	 * provided sources.
 	 */
 	public static Stream<Arguments> fromSources(Object... sources) {
