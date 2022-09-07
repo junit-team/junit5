@@ -114,7 +114,7 @@ XML reports as follows:
 					<properties>
 						<configurationParameters>
 							junit.platform.reporting.open.xml.enabled = true
-							junit.platform.reporting.output.dir = ${project.build.directory}/surefire-reports
+							junit.platform.reporting.output.dir = target/surefire-reports
 						</configurationParameters>
 					</properties>
 				</configuration>
