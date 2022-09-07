@@ -25,6 +25,7 @@
 0972a544133374c55bd43559bbb82022  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
 098a58bc8fe77b96f7cf246f9dde8ba8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicNodeTestDescriptor.java
 09b331dfe9e2e1a6d7ba87d5bf3815cb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/SameThreadTimeoutInvocation.java
+09edbce8d4cadb21a26c831b21d493d3  documentation/src/docs/asciidoc/user-guide/advanced-topics/junit-platform-reporting.adoc
 0a1a3fa61e83943607656bdc13688b26  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SingleLock.java
 0a3fd4ccab2693c403e21805b04298ba  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageNameFilter.java
 0abb8110e64d8700654c7b94b931986c  junit-platform-console/src/main/java/org/junit/platform/console/package-info.java
@@ -687,7 +688,6 @@ ddf32108cbe56bd6c80ff219d87e754f  junit-platform-testkit/src/main/java/org/junit
 de0560e795106df4ad2ebf3ed5591e5a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvParsingException.java
 de13d12a45a170889bd687beb07b6373  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/package-info.java
 de1aab8e79f3c52c9138e12c08ea303a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.java
-de59d9f2f3d09917de85deb89c3e6603  documentation/src/docs/asciidoc/user-guide/advanced-topics/junit-platform-reporting.adoc
 deeb3bf88801a94ff2eaf8f684a7aff7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultMethodDescriptor.java
 df3754af7250b81b04ed969594e5761f  documentation/src/docs/asciidoc/release-notes/release-notes-5.8.1.adoc
 df72413a980e960f49bc8be910798baf  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/SuiteTestDescriptor.java
