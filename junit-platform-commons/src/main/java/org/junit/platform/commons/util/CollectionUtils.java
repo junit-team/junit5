@@ -159,7 +159,7 @@ public final class CollectionUtils {
 	 * @return the resulting stream
 	 * @throws PreconditionViolationException if the supplied object is {@code null}
 	 * or not one of the supported types
-	 * @see #isConvertibleToStream(Object)
+	 * @see #isConvertibleToStream(Class)
 	 */
 	public static Stream<?> toStream(Object object) {
 		Preconditions.notNull(object, "Object must not be null");

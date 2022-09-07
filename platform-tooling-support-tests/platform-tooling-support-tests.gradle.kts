@@ -40,6 +40,7 @@ dependencies {
 	testImplementation(libs.ant) {
 		because("we reference Ant's main class")
 	}
+	testImplementation(libs.bundles.xmlunit)
 
 	thirdPartyJars(libs.junit4)
 	thirdPartyJars(libs.assertj)
@@ -51,6 +52,7 @@ dependencies {
 	antJars(libs.bundles.ant)
 	antJars(projects.junitPlatformConsoleStandalone)
 	antJars(projects.junitPlatformLauncher)
+	antJars(projects.junitPlatformReporting)
 
 	mavenDistribution(libs.maven) {
 		artifact {

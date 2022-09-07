@@ -9,9 +9,6 @@ repositories {
 	mavenCentral()
 }
 
-// don't use `build` as target to prevent Jenkins picking up
-project.buildDir = file("bin")
-
 // grab jupiter version from system environment
 val jupiterVersion = System.getenv("JUNIT_JUPITER_VERSION")
 

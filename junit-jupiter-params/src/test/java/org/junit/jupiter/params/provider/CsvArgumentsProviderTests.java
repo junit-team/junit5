@@ -336,13 +336,21 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void supportsCsvHeadersWhenUsingTextBlockAttribute() {
-		var annotation = csvSource().useHeadersInDisplayName(true).textBlock("""
+		supportsCsvHeaders(csvSource().useHeadersInDisplayName(true).textBlock("""
 				FRUIT, RANK
 				apple, 1
 				banana, 2
-				""").build();
+				""").build());
+	}
 
-		var arguments = provideArguments(annotation);
+	@Test
+	void supportsCsvHeadersWhenUsingValueAttribute() {
+		supportsCsvHeaders(csvSource().useHeadersInDisplayName(true)//
+				.lines("FRUIT, RANK", "apple, 1", "banana, 2").build());
+	}
+
+	private void supportsCsvHeaders(CsvSource csvSource) {
+		var arguments = provideArguments(csvSource);
 		Stream<String[]> argumentsAsStrings = arguments.map(array -> {
 			String[] strings = new String[array.length];
 			for (int i = 0; i < array.length; i++) {

@@ -88,6 +88,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 				// Lazily retrieve headers if necessary.
 				if (useHeadersInDisplayName && headers == null) {
 					headers = getHeaders(this.csvParser);
+					continue;
 				}
 				Preconditions.notNull(csvRecord,
 					() -> "Record at index " + index + " contains invalid CSV: \"" + input + "\"");

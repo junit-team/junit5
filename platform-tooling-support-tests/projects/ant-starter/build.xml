@@ -52,8 +52,11 @@
     <target name="test.console.launcher" depends="compile">
         <java classpathref="test.classpath" classname="org.junit.platform.console.ConsoleLauncher" fork="true">
             <arg value="--scan-classpath"/>
+            <arg value="--include-engine=junit-jupiter"/>
             <arg value="--disable-ansi-colors"/>
             <arg line="--reports-dir build/test-report"/>
+            <arg value="--config=junit.platform.reporting.open.xml.enabled=true"/>
+            <arg value="--config=junit.platform.reporting.output.dir=build/test-report"/>
         </java>
         <junitreport todir="build/test-report">
             <fileset dir="build/test-report">
