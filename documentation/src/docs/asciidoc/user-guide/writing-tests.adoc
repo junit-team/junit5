@@ -270,7 +270,7 @@ include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 [WARNING]
 .Preemptive Timeouts with `assertTimeoutPreemptively()`
 ====
-The various`assertTimeoutPreemptively()` methods in the `Assertions` class execute
+The various `assertTimeoutPreemptively()` methods in the `Assertions` class execute
 the provided `executable` or `supplier` in a different thread than that of the calling
 code. This behavior can lead to undesirable side effects if the code that is executed
 within the `executable` or `supplier` relies on `java.lang.ThreadLocal` storage.
