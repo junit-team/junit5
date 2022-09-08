@@ -23,8 +23,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
-
+* Support saturating the ForkJoinPool via a property.
 
 [[release-notes-5.9.1-junit-jupiter]]
 === JUnit Jupiter
@@ -47,8 +46,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
-
+* Added `junit.jupiter.execution.parallel.config.dynamic.saturate` and
+  `junit.jupiter.execution.parallel.config.fixed.saturate` to limit the concurrently
+  executing tests to the maximum desired parallelism.
 
 [[release-notes-5.9.1-junit-vintage]]
 === JUnit Vintage

@@ -42,8 +42,11 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 					() -> new JUnitException(String.format("Configuration parameter '%s' must be set",
 						CONFIG_FIXED_PARALLELISM_PROPERTY_NAME)));
 
+			boolean saturate = configurationParameters.get(CONFIG_FIXED_SATURATE_PROPERTY_NAME,
+				Boolean::valueOf).orElse(false);
+
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
-				KEEP_ALIVE_SECONDS);
+				KEEP_ALIVE_SECONDS, saturate);
 		}
 	},
 
@@ -65,8 +68,11 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 			int parallelism = Math.max(1,
 				factor.multiply(BigDecimal.valueOf(Runtime.getRuntime().availableProcessors())).intValue());
 
+			boolean saturate = configurationParameters.get(CONFIG_DYNAMIC_SATURATE_PROPERTY_NAME,
+				Boolean::valueOf).orElse(false);
+
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
-				KEEP_ALIVE_SECONDS);
+				KEEP_ALIVE_SECONDS, saturate);
 		}
 	},
 
@@ -115,6 +121,20 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	public static final String CONFIG_FIXED_PARALLELISM_PROPERTY_NAME = "fixed.parallelism";
 
 	/**
+	 * Property name used to enable saturation of the underlying fork join pool
+	 * for the {@link #FIXED} configuration strategy.
+	 *
+	 * <p>When set to {@code true} the maximum number of concurrent threads will
+	 * not exceed the desired parallelism, even when some threads are blocked.
+	 *
+	 * <p>Value must either {@code true} or {@code false}; defaults to {@code false}.
+	 *
+	 * @see #FIXED
+	 */
+	@API(status = EXPERIMENTAL, since = "1.9.1")
+	public static final String CONFIG_FIXED_SATURATE_PROPERTY_NAME = "fixed.saturate";
+
+	/**
 	 * Property name of the factor used to determine the desired parallelism for the
 	 * {@link #DYNAMIC} configuration strategy.
 	 *
@@ -123,6 +143,20 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	 * @see #DYNAMIC
 	 */
 	public static final String CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = "dynamic.factor";
+
+	/**
+	 * Property name used to enable saturation of the underlying fork join pool
+	 * for the {@link #DYNAMIC} configuration strategy.
+	 *
+	 * <p>When set to {@code true} the maximum number of concurrent threads will
+	 * not exceed the desired parallelism, even when some threads are blocked.
+	 *
+	 * <p>Value must either {@code true} or {@code false}; defaults to {@code false}.
+	 *
+	 * @see #DYNAMIC
+	 */
+	@API(status = EXPERIMENTAL, since = "1.9.1")
+	public static final String CONFIG_DYNAMIC_SATURATE_PROPERTY_NAME = "dynamic.saturate";
 
 	/**
 	 * Property name used to specify the fully qualified class name of the

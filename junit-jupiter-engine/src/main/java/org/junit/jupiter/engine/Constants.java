@@ -15,7 +15,9 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_SATURATE_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_SATURATE_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME;
 
 import org.apiguardian.api.API;
@@ -167,6 +169,19 @@ public final class Constants {
 			+ CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
 
 	/**
+	 * Property name used to limit the concurrently executing tests to the
+	 * maximum parallelism desired parallelism for the {@code fixed}
+	 * configuration strategy: {@value}
+	 *
+	 * <p>Value must either {@code true} or {@code false}; defaults to {@code false}.
+	 *
+	 * @since 5.9.1
+	 */
+	@API(status = EXPERIMENTAL, since = "5.9.1")
+	public static final String PARALLEL_CONFIG_FIXED_SATURATE_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_FIXED_SATURATE_PROPERTY_NAME;
+
+	/**
 	 * Property name used to set the factor to be multiplied with the number of
 	 * available processors/cores to determine the desired parallelism for the
 	 * {@code dynamic} configuration strategy: {@value}
@@ -178,6 +193,19 @@ public final class Constants {
 	@API(status = EXPERIMENTAL, since = "5.3")
 	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
+
+	/**
+	 * Property name used to limit the concurrently executing tests to the
+	 * maximum parallelism desired parallelism for the {@code dynamic}
+	 * configuration strategy: {@value}
+	 *
+	 * <p>Value must either {@code true} or {@code false}; defaults to {@code false}.
+	 *
+	 * @since 5.9.1
+	 */
+	@API(status = EXPERIMENTAL, since = "5.9.1")
+	public static final String PARALLEL_CONFIG_DYNAMIC_SATURATE_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_DYNAMIC_SATURATE_PROPERTY_NAME;
 
 	/**
 	 * Property name used to specify the fully qualified class name of the

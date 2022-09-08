@@ -17,8 +17,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import java.util.concurrent.ForkJoinPool;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +53,16 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 	}
 
 	@Test
+	void fixedSaturateStrategyCreatesValidConfiguration() {
+		when(configParams.get("fixed.parallelism")).thenReturn(Optional.of("42"));
+		when(configParams.get("fixed.saturate")).thenReturn(Optional.of("true"));
+
+		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.FIXED;
+		var configuration = strategy.createConfiguration(configParams);
+		assertThat(configuration.getSaturatePredicate()).isNotNull();
+	}
+
+	@Test
 	void dynamicStrategyCreatesValidConfiguration() {
 		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("2.0"));
 
@@ -68,6 +76,17 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + (availableProcessors * 2));
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
 		assertThat(configuration.getSaturatePredicate()).isNull();
+	}
+
+	@Test
+	void dynamicSaturateStrategyCreatesValidConfiguration() {
+		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("2.0"));
+		when(configParams.get("dynamic.saturate")).thenReturn(Optional.of("true"));
+
+		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
+		var configuration = strategy.createConfiguration(configParams);
+
+		assertThat(configuration.getSaturatePredicate()).isNotNull();
 	}
 
 	@Test
@@ -183,12 +202,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 	static class CustomParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
-			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5) {
-				@Override
-				public Predicate<? super ForkJoinPool> getSaturatePredicate() {
-					return __ -> true;
-				}
-			};
+			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5, true);
 		}
 	}
 
