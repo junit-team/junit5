@@ -150,8 +150,8 @@ class AssertTimeout {
 
 			try {
 				Future<T> future = submitTask(supplier, threadReference, executorService);
-				FutureResolverWithExceptionHandling<T> resolver = createFutureResolver(messageOrSupplier,
-					threadReference, throwing);
+				FutureResolverWithExceptionHandling resolver = createFutureResolver(messageOrSupplier, threadReference,
+					throwing);
 				return resolver.resolveFutureAndHandleException(future, timeout.toMillis());
 			}
 			finally {
@@ -172,20 +172,16 @@ class AssertTimeout {
 			});
 		}
 
-		private <T> FutureResolverWithExceptionHandling<T> createFutureResolver(Object messageOrSupplier,
+		private FutureResolverWithExceptionHandling createFutureResolver(Object messageOrSupplier,
 				AtomicReference<Thread> threadReference, Throwing throwing) {
-			FutureResolverWithExceptionHandling<T> resolver;
 			switch (throwing) {
 				case MASKED_TIMEOUT_EXCEPTION:
-					resolver = new TimeoutPropagatingFutureResolver<>();
-					break;
+					return new TimeoutPropagatingFutureResolver<>();
 				case ASSERTION_ERROR:
-					resolver = new AssertiveFutureResolver<>(threadReference, messageOrSupplier);
-					break;
+					return new AssertiveFutureResolver<>(threadReference, messageOrSupplier);
 				default:
 					throw new IllegalStateException("Unexpected value: " + throwing);
 			}
-			return resolver;
 		}
 
 		enum Throwing {
@@ -215,8 +211,8 @@ class AssertTimeout {
 		}
 	}
 
-	private abstract static class FutureResolverWithExceptionHandling<T> {
-		T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis) {
+	private abstract static class FutureResolverWithExceptionHandling {
+		<T> T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis) {
 			try {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
@@ -235,7 +231,7 @@ class AssertTimeout {
 		protected abstract void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis);
 	}
 
-	private static class AssertiveFutureResolver<T> extends FutureResolverWithExceptionHandling<T> {
+	private static class AssertiveFutureResolver<T> extends FutureResolverWithExceptionHandling {
 
 		private final AtomicReference<Thread> threadReference;
 		private final Object messageOrSupplier;
@@ -262,7 +258,7 @@ class AssertTimeout {
 		}
 	}
 
-	private static class TimeoutPropagatingFutureResolver<T> extends FutureResolverWithExceptionHandling<T> {
+	private static class TimeoutPropagatingFutureResolver<T> extends FutureResolverWithExceptionHandling {
 		@Override
 		protected void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis) {
 			throw throwAsUncheckedException(ex);
