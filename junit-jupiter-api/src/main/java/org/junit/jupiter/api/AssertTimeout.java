@@ -175,7 +175,13 @@ class AssertTimeout {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
-				throw failureFactory.handleTimeout(ex, timeoutInMillis, messageOrSupplier, threadSupplier);
+				Thread thread = threadSupplier.get();
+				ExecutionTimeoutException cause = null;
+				if (thread != null) {
+					cause = new ExecutionTimeoutException("Execution timed out in thread " + thread.getName());
+					cause.setStackTrace(thread.getStackTrace());
+				}
+				throw failureFactory.handleTimeout(ex, timeoutInMillis, messageOrSupplier, cause);
 			}
 			catch (ExecutionException ex) {
 				throw throwAsUncheckedException(ex.getCause());
@@ -209,27 +215,19 @@ class AssertTimeout {
 	}
 
 	private interface TimeoutFailureFactory<T extends Throwable> {
-		T handleTimeout(TimeoutException ex, long timeoutInMillis, Object messageOrSupplier,
-				Supplier<Thread> threadSupplier);
+		T handleTimeout(TimeoutException exception, long timeoutInMillis, Object messageOrSupplier, Throwable cause);
 	}
 
 	private static class AssertionTimeoutFailureFactory implements TimeoutFailureFactory<AssertionFailedError> {
 
 		@Override
-		public AssertionFailedError handleTimeout(TimeoutException ex, long timeoutInMillis, Object messageOrSupplier,
-				Supplier<Thread> threadSupplier) {
-			AssertionFailureBuilder failure = assertionFailure() //
+		public AssertionFailedError handleTimeout(TimeoutException exception, long timeoutInMillis,
+				Object messageOrSupplier, Throwable cause) {
+			return assertionFailure() //
 					.message(messageOrSupplier) //
-					.reason("execution timed out after " + timeoutInMillis + " ms");
-
-			Thread thread = threadSupplier.get();
-			if (thread != null) {
-				ExecutionTimeoutException exception = new ExecutionTimeoutException(
-					"Execution timed out in thread " + thread.getName());
-				exception.setStackTrace(thread.getStackTrace());
-				failure.cause(exception);
-			}
-			return failure.build();
+					.reason("execution timed out after " + timeoutInMillis + " ms") //
+					.cause(cause) //
+					.build();
 		}
 	}
 }
