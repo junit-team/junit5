@@ -150,8 +150,8 @@ class AssertTimeout {
 
 			try {
 				Future<T> future = submitTask(supplier, threadReference, executorService);
-				FutureResolverWithExceptionHandling resolver = createFutureResolver(messageOrSupplier, threadReference,
-					throwing);
+				FutureResolverWithExceptionHandling resolver = createFutureResolver(messageOrSupplier,
+					threadReference::get, throwing);
 				return resolveFutureAndHandleException(future, timeout.toMillis(), resolver);
 			}
 			finally {
@@ -190,12 +190,12 @@ class AssertTimeout {
 		}
 
 		private FutureResolverWithExceptionHandling createFutureResolver(Object messageOrSupplier,
-				AtomicReference<Thread> threadReference, Throwing throwing) {
+				Supplier<Thread> thread, Throwing throwing) {
 			switch (throwing) {
 				case MASKED_TIMEOUT_EXCEPTION:
 					return new TimeoutPropagatingFutureResolver();
 				case ASSERTION_ERROR:
-					return new AssertiveFutureResolver(threadReference, messageOrSupplier);
+					return new AssertiveFutureResolver(thread, messageOrSupplier);
 				default:
 					throw new IllegalStateException("Unexpected value: " + throwing);
 			}
@@ -234,11 +234,11 @@ class AssertTimeout {
 
 	private static class AssertiveFutureResolver implements FutureResolverWithExceptionHandling {
 
-		private final AtomicReference<Thread> threadReference;
+		private final Supplier<Thread> threadSupplier;
 		private final Object messageOrSupplier;
 
-		private AssertiveFutureResolver(AtomicReference<Thread> threadReference, Object messageOrSupplier) {
-			this.threadReference = threadReference;
+		private AssertiveFutureResolver(Supplier<Thread> threadSupplier, Object messageOrSupplier) {
+			this.threadSupplier = threadSupplier;
 			this.messageOrSupplier = messageOrSupplier;
 		}
 
@@ -248,7 +248,7 @@ class AssertTimeout {
 					.message(messageOrSupplier) //
 					.reason("execution timed out after " + timeoutInMillis + " ms");
 
-			Thread thread = threadReference.get();
+			Thread thread = threadSupplier.get();
 			if (thread != null) {
 				ExecutionTimeoutException exception = new ExecutionTimeoutException(
 					"Execution timed out in thread " + thread.getName());
