@@ -38,9 +38,9 @@ import org.opentest4j.AssertionFailedError;
  */
 class AssertTimeout {
 
-	private static final PreemptiveTimeoutAssertionExecutor ASSERTION_ERROR_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor(
-		new AssertiveFutureResolver());
-	private static final PreemptiveTimeoutAssertionExecutor TIMEOUT_EXCEPTION_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor(
+	private static final PreemptiveTimeoutAssertionExecutor<AssertionFailedError> ASSERTION_ERROR_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor<>(
+		new AssertionTimeoutFailureFactory());
+	private static final PreemptiveTimeoutAssertionExecutor<TimeoutException> TIMEOUT_EXCEPTION_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor<>(
 		(e, __, ___, ____) -> e);
 
 	private AssertTimeout() {
@@ -131,23 +131,23 @@ class AssertTimeout {
 	}
 
 	static <T> T assertTimeoutPreemptivelyThrowingTimeoutException(Duration timeout, ThrowingSupplier<T> supplier,
-			Supplier<String> messageSupplier) {
+			Supplier<String> messageSupplier) throws TimeoutException {
 		return TIMEOUT_EXCEPTION_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, messageSupplier);
 	}
 
-	static class PreemptiveTimeoutAssertionExecutor {
-		private final TimeoutFailureFactory<?> failureFactory;
+	static class PreemptiveTimeoutAssertionExecutor<T extends Throwable> {
+		private final TimeoutFailureFactory<T> failureFactory;
 
-		PreemptiveTimeoutAssertionExecutor(TimeoutFailureFactory<?> failureFactory) {
+		PreemptiveTimeoutAssertionExecutor(TimeoutFailureFactory<T> failureFactory) {
 			this.failureFactory = failureFactory;
 		}
 
-		<T> T executeThrowing(Duration timeout, ThrowingSupplier<T> supplier, Object messageOrSupplier) {
+		<V> V executeThrowing(Duration timeout, ThrowingSupplier<V> supplier, Object messageOrSupplier) throws T {
 			AtomicReference<Thread> threadReference = new AtomicReference<>();
 			ExecutorService executorService = Executors.newSingleThreadExecutor(new TimeoutThreadFactory());
 
 			try {
-				Future<T> future = submitTask(supplier, threadReference, executorService);
+				Future<V> future = submitTask(supplier, threadReference, executorService);
 				return resolveFutureAndHandleException(future, timeout.toMillis(), messageOrSupplier,
 					threadReference::get);
 			}
@@ -156,7 +156,7 @@ class AssertTimeout {
 			}
 		}
 
-		private <T> Future<T> submitTask(ThrowingSupplier<T> supplier, AtomicReference<Thread> threadReference,
+		private <V> Future<V> submitTask(ThrowingSupplier<V> supplier, AtomicReference<Thread> threadReference,
 				ExecutorService executorService) {
 			return executorService.submit(() -> {
 				try {
@@ -169,14 +169,13 @@ class AssertTimeout {
 			});
 		}
 
-		private <T> T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis, Object messageOrSupplier,
-				Supplier<Thread> threadSupplier) {
+		private <V> V resolveFutureAndHandleException(Future<V> future, long timeoutInMillis, Object messageOrSupplier,
+				Supplier<Thread> threadSupplier) throws T {
 			try {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
-				throw throwAsUncheckedException(
-					failureFactory.handleTimeout(ex, timeoutInMillis, messageOrSupplier, threadSupplier));
+				throw failureFactory.handleTimeout(ex, timeoutInMillis, messageOrSupplier, threadSupplier);
 			}
 			catch (ExecutionException ex) {
 				throw throwAsUncheckedException(ex.getCause());
@@ -214,7 +213,7 @@ class AssertTimeout {
 				Supplier<Thread> threadSupplier);
 	}
 
-	private static class AssertiveFutureResolver implements TimeoutFailureFactory<AssertionFailedError> {
+	private static class AssertionTimeoutFailureFactory implements TimeoutFailureFactory<AssertionFailedError> {
 
 		@Override
 		public AssertionFailedError handleTimeout(TimeoutException ex, long timeoutInMillis, Object messageOrSupplier,
