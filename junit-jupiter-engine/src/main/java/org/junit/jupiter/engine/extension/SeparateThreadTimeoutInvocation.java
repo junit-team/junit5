@@ -39,15 +39,10 @@ class SeparateThreadTimeoutInvocation<T> implements Invocation<T> {
 			return assertTimeoutPreemptivelyThrowingTimeoutException(timeout.toDuration(), delegate::proceed,
 				descriptionSupplier);
 		}
-		catch (Throwable failure) {
-			if (failure instanceof TimeoutException) {
-				TimeoutException exception = TimeoutExceptionFactory.create(descriptionSupplier.get(), timeout, null);
-				exception.initCause(failure.getCause());
-				throw exception;
-			}
-			else {
-				throw failure;
-			}
+		catch (TimeoutException failure) {
+			TimeoutException exception = TimeoutExceptionFactory.create(descriptionSupplier.get(), timeout, null);
+			exception.initCause(failure.getCause());
+			throw exception;
 		}
 	}
 }

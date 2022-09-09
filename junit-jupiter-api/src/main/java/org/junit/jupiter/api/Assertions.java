@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeoutException;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -3551,7 +3552,7 @@ public class Assertions {
 	 */
 	@API(status = INTERNAL)
 	public static <T> T assertTimeoutPreemptivelyThrowingTimeoutException(Duration timeout,
-			ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
+			ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) throws TimeoutException {
 		return AssertTimeout.assertTimeoutPreemptivelyThrowingTimeoutException(timeout, supplier, messageSupplier);
 	}
 

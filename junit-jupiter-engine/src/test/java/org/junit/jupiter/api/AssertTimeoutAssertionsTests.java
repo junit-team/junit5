@@ -342,7 +342,8 @@ class AssertTimeoutAssertionsTests {
 	}
 
 	@Test
-	void assertTimeoutPreemptivelyThrowingTimeoutExceptionWithMessageForSupplierThatCompletesBeforeTimeout() {
+	void assertTimeoutPreemptivelyThrowingTimeoutExceptionWithMessageForSupplierThatCompletesBeforeTimeout()
+			throws Exception {
 		var result = assertTimeoutPreemptivelyThrowingTimeoutException(PREEMPTIVE_TIMEOUT, () -> "Tempus Fugit",
 			() -> "Tempus Fugit");
 
