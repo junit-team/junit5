@@ -150,9 +150,9 @@ class AssertTimeout {
 
 			try {
 				Future<T> future = submitTask(supplier, threadReference, executorService);
-				TimeoutFailureFactory<?> factory = createTimeoutFailureFactory(messageOrSupplier, threadReference::get,
-					throwing);
-				return resolveFutureAndHandleException(future, timeout.toMillis(), factory);
+				TimeoutFailureFactory<?> factory = createTimeoutFailureFactory(throwing);
+				return resolveFutureAndHandleException(future, timeout.toMillis(), messageOrSupplier,
+					threadReference::get, factory);
 			}
 			finally {
 				executorService.shutdownNow();
@@ -172,13 +172,14 @@ class AssertTimeout {
 			});
 		}
 
-		private <T> T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis,
-				TimeoutFailureFactory<?> factory) {
+		private <T> T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis, Object messageOrSupplier,
+				Supplier<Thread> threadSupplier, TimeoutFailureFactory<?> factory) {
 			try {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
-				throw throwAsUncheckedException(factory.handleTimeout(ex, timeoutInMillis));
+				throw throwAsUncheckedException(
+					factory.handleTimeout(ex, timeoutInMillis, messageOrSupplier, threadSupplier));
 			}
 			catch (ExecutionException ex) {
 				throw throwAsUncheckedException(ex.getCause());
@@ -188,13 +189,12 @@ class AssertTimeout {
 			}
 		}
 
-		private TimeoutFailureFactory<?> createTimeoutFailureFactory(Object messageOrSupplier, Supplier<Thread> thread,
-				Throwing throwing) {
+		private TimeoutFailureFactory<?> createTimeoutFailureFactory(Throwing throwing) {
 			switch (throwing) {
 				case TIMEOUT_EXCEPTION:
-					return (e, __) -> e;
+					return (e, __, ___, ____) -> e;
 				case ASSERTION_ERROR:
-					return new AssertiveFutureResolver(thread, messageOrSupplier);
+					return new AssertiveFutureResolver();
 				default:
 					throw new IllegalStateException("Unexpected value: " + throwing);
 			}
@@ -216,7 +216,7 @@ class AssertTimeout {
 
 	/**
 	 * The thread factory used for preemptive timeout.
-	 *
+	 * <p>
 	 * The factory creates threads with meaningful names, helpful for debugging purposes.
 	 */
 	private static class TimeoutThreadFactory implements ThreadFactory {
@@ -228,21 +228,15 @@ class AssertTimeout {
 	}
 
 	private interface TimeoutFailureFactory<T extends Throwable> {
-		T handleTimeout(TimeoutException ex, long timeoutInMillis);
+		T handleTimeout(TimeoutException ex, long timeoutInMillis, Object messageOrSupplier,
+				Supplier<Thread> threadSupplier);
 	}
 
 	private static class AssertiveFutureResolver implements TimeoutFailureFactory<AssertionFailedError> {
 
-		private final Supplier<Thread> threadSupplier;
-		private final Object messageOrSupplier;
-
-		private AssertiveFutureResolver(Supplier<Thread> threadSupplier, Object messageOrSupplier) {
-			this.threadSupplier = threadSupplier;
-			this.messageOrSupplier = messageOrSupplier;
-		}
-
 		@Override
-		public AssertionFailedError handleTimeout(TimeoutException ex, long timeoutInMillis) {
+		public AssertionFailedError handleTimeout(TimeoutException ex, long timeoutInMillis, Object messageOrSupplier,
+				Supplier<Thread> threadSupplier) {
 			AssertionFailureBuilder failure = assertionFailure() //
 					.message(messageOrSupplier) //
 					.reason("execution timed out after " + timeoutInMillis + " ms");
