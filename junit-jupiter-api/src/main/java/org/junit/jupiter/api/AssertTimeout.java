@@ -11,7 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.ASSERTION_ERROR;
-import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.MASKED_TIMEOUT_EXCEPTION;
+import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.TIMEOUT_EXCEPTION;
 import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
 
@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.ExceptionUtils;
+import org.opentest4j.AssertionFailedError;
 
 /**
  * {@code AssertTimeout} is a collection of utility methods that support asserting
@@ -43,7 +43,7 @@ class AssertTimeout {
 	private static final PreemptiveTimeoutAssertionExecutor ASSERTION_ERROR_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor(
 		ASSERTION_ERROR);
 	private static final PreemptiveTimeoutAssertionExecutor TIMEOUT_EXCEPTION_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor(
-		MASKED_TIMEOUT_EXCEPTION);
+		TIMEOUT_EXCEPTION);
 
 	private AssertTimeout() {
 		/* no-op */
@@ -87,7 +87,7 @@ class AssertTimeout {
 			result = supplier.get();
 		}
 		catch (Throwable ex) {
-			ExceptionUtils.throwAsUncheckedException(ex);
+			throwAsUncheckedException(ex);
 		}
 
 		long timeElapsed = System.currentTimeMillis() - start;
@@ -150,9 +150,9 @@ class AssertTimeout {
 
 			try {
 				Future<T> future = submitTask(supplier, threadReference, executorService);
-				FutureResolverWithExceptionHandling resolver = createFutureResolver(messageOrSupplier,
-					threadReference::get, throwing);
-				return resolveFutureAndHandleException(future, timeout.toMillis(), resolver);
+				TimeoutFailureFactory<?> factory = createTimeoutFailureFactory(messageOrSupplier, threadReference::get,
+					throwing);
+				return resolveFutureAndHandleException(future, timeout.toMillis(), factory);
 			}
 			finally {
 				executorService.shutdownNow();
@@ -167,19 +167,18 @@ class AssertTimeout {
 					return supplier.get();
 				}
 				catch (Throwable throwable) {
-					throw ExceptionUtils.throwAsUncheckedException(throwable);
+					throw throwAsUncheckedException(throwable);
 				}
 			});
 		}
 
 		private <T> T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis,
-				FutureResolverWithExceptionHandling resolver) {
+				TimeoutFailureFactory<?> factory) {
 			try {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
-				resolver.handleTimeoutAndThrow(ex, timeoutInMillis);
-				return null;
+				throw throwAsUncheckedException(factory.handleTimeout(ex, timeoutInMillis));
 			}
 			catch (ExecutionException ex) {
 				throw throwAsUncheckedException(ex.getCause());
@@ -189,11 +188,11 @@ class AssertTimeout {
 			}
 		}
 
-		private FutureResolverWithExceptionHandling createFutureResolver(Object messageOrSupplier,
-				Supplier<Thread> thread, Throwing throwing) {
+		private TimeoutFailureFactory<?> createTimeoutFailureFactory(Object messageOrSupplier, Supplier<Thread> thread,
+				Throwing throwing) {
 			switch (throwing) {
-				case MASKED_TIMEOUT_EXCEPTION:
-					return new TimeoutPropagatingFutureResolver();
+				case TIMEOUT_EXCEPTION:
+					return (e, __) -> e;
 				case ASSERTION_ERROR:
 					return new AssertiveFutureResolver(thread, messageOrSupplier);
 				default:
@@ -202,7 +201,7 @@ class AssertTimeout {
 		}
 
 		enum Throwing {
-			ASSERTION_ERROR, MASKED_TIMEOUT_EXCEPTION
+			ASSERTION_ERROR, TIMEOUT_EXCEPTION
 		}
 	}
 
@@ -228,11 +227,11 @@ class AssertTimeout {
 		}
 	}
 
-	private interface FutureResolverWithExceptionHandling {
-		void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis);
+	private interface TimeoutFailureFactory<T extends Throwable> {
+		T handleTimeout(TimeoutException ex, long timeoutInMillis);
 	}
 
-	private static class AssertiveFutureResolver implements FutureResolverWithExceptionHandling {
+	private static class AssertiveFutureResolver implements TimeoutFailureFactory<AssertionFailedError> {
 
 		private final Supplier<Thread> threadSupplier;
 		private final Object messageOrSupplier;
@@ -243,7 +242,7 @@ class AssertTimeout {
 		}
 
 		@Override
-		public void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis) {
+		public AssertionFailedError handleTimeout(TimeoutException ex, long timeoutInMillis) {
 			AssertionFailureBuilder failure = assertionFailure() //
 					.message(messageOrSupplier) //
 					.reason("execution timed out after " + timeoutInMillis + " ms");
@@ -255,14 +254,7 @@ class AssertTimeout {
 				exception.setStackTrace(thread.getStackTrace());
 				failure.cause(exception);
 			}
-			throw failure.build();
-		}
-	}
-
-	private static class TimeoutPropagatingFutureResolver implements FutureResolverWithExceptionHandling {
-		@Override
-		public void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis) {
-			throw throwAsUncheckedException(ex);
+			return failure.build();
 		}
 	}
 }
