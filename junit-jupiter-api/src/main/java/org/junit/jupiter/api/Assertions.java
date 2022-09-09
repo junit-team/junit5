@@ -3396,7 +3396,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
-		AssertTimeout.assertTimeoutPreemptively(timeout, executable);
+		AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, executable);
 	}
 
 	/**
@@ -3419,7 +3419,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable, String)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
-		AssertTimeout.assertTimeoutPreemptively(timeout, executable, message);
+		AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, executable, message);
 	}
 
 	/**
@@ -3444,7 +3444,7 @@ public class Assertions {
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable,
 			Supplier<String> messageSupplier) {
-		AssertTimeout.assertTimeoutPreemptively(timeout, executable, messageSupplier);
+		AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, executable, messageSupplier);
 	}
 
 	// --- supplier - preemptively ---
@@ -3469,7 +3469,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable)
 	 */
 	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
-		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier);
+		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier);
 	}
 
 	/**
@@ -3494,7 +3494,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable, String)
 	 */
 	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, message);
+		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, message);
 	}
 
 	/**
@@ -3521,7 +3521,7 @@ public class Assertions {
 	 */
 	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
 			Supplier<String> messageSupplier) {
-		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
+		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
 	}
 
 	/**
@@ -3553,7 +3553,7 @@ public class Assertions {
 	@API(status = INTERNAL, since = "5.9.1")
 	public static <T, E extends Throwable> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
 			Supplier<String> messageSupplier, TimeoutFailureFactory<E> failureFactory) throws E {
-		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier, failureFactory);
+		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, messageSupplier, failureFactory);
 	}
 
 	// --- assertInstanceOf ----------------------------------------------------
