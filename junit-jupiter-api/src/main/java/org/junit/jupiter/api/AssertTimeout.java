@@ -122,7 +122,7 @@ class AssertTimeout {
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return ASSERTION_ERROR_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, message);
+		return ASSERTION_ERROR_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, () -> message);
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
@@ -142,13 +142,14 @@ class AssertTimeout {
 			this.failureFactory = failureFactory;
 		}
 
-		<V> V executeThrowing(Duration timeout, ThrowingSupplier<V> supplier, Object messageOrSupplier) throws T {
+		<V> V executeThrowing(Duration timeout, ThrowingSupplier<V> supplier, Supplier<String> messageSupplier)
+				throws T {
 			AtomicReference<Thread> threadReference = new AtomicReference<>();
 			ExecutorService executorService = Executors.newSingleThreadExecutor(new TimeoutThreadFactory());
 
 			try {
 				Future<V> future = submitTask(supplier, threadReference, executorService);
-				return resolveFutureAndHandleException(future, timeout, messageOrSupplier, threadReference::get);
+				return resolveFutureAndHandleException(future, timeout, messageSupplier, threadReference::get);
 			}
 			finally {
 				executorService.shutdownNow();
@@ -168,8 +169,8 @@ class AssertTimeout {
 			});
 		}
 
-		private <V> V resolveFutureAndHandleException(Future<V> future, Duration timeout, Object messageOrSupplier,
-				Supplier<Thread> threadSupplier) throws T {
+		private <V> V resolveFutureAndHandleException(Future<V> future, Duration timeout,
+				Supplier<String> messageSupplier, Supplier<Thread> threadSupplier) throws T {
 			try {
 				return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
 			}
@@ -180,7 +181,7 @@ class AssertTimeout {
 					cause = new ExecutionTimeoutException("Execution timed out in thread " + thread.getName());
 					cause.setStackTrace(thread.getStackTrace());
 				}
-				throw failureFactory.handleTimeout(ex, timeout, messageOrSupplier, cause);
+				throw failureFactory.handleTimeout(ex, timeout, messageSupplier, cause);
 			}
 			catch (ExecutionException ex) {
 				throw throwAsUncheckedException(ex.getCause());
@@ -214,16 +215,17 @@ class AssertTimeout {
 	}
 
 	private interface TimeoutFailureFactory<T extends Throwable> {
-		T handleTimeout(TimeoutException exception, Duration timeout, Object messageOrSupplier, Throwable cause);
+		T handleTimeout(TimeoutException exception, Duration timeout, Supplier<String> messageSupplier,
+				Throwable cause);
 	}
 
 	private static class AssertionTimeoutFailureFactory implements TimeoutFailureFactory<AssertionFailedError> {
 
 		@Override
 		public AssertionFailedError handleTimeout(TimeoutException exception, Duration timeout,
-				Object messageOrSupplier, Throwable cause) {
+				Supplier<String> messageSupplier, Throwable cause) {
 			return assertionFailure() //
-					.message(messageOrSupplier) //
+					.message(messageSupplier) //
 					.reason("execution timed out after " + timeout.toMillis() + " ms") //
 					.cause(cause) //
 					.build();
