@@ -40,6 +40,8 @@ on GitHub.
   references a factory method whose name is the same as other non-factory methods in the
   same class no longer fails with an exception stating that multiple factory methods with
   the same name were found.
+* Assertion failures thrown from methods with applied timeouts using `ThreadMode.SEPARATE`
+  are now properly reported.
 
 ==== Deprecations and Breaking Changes
 
