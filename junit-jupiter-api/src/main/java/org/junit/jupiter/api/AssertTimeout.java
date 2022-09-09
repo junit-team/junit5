@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.ASSERTION_ERROR;
-import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.TIMEOUT_EXCEPTION;
 import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
 
@@ -41,9 +39,9 @@ import org.opentest4j.AssertionFailedError;
 class AssertTimeout {
 
 	private static final PreemptiveTimeoutAssertionExecutor ASSERTION_ERROR_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor(
-		ASSERTION_ERROR);
+		new AssertiveFutureResolver());
 	private static final PreemptiveTimeoutAssertionExecutor TIMEOUT_EXCEPTION_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor(
-		TIMEOUT_EXCEPTION);
+		(e, __, ___, ____) -> e);
 
 	private AssertTimeout() {
 		/* no-op */
@@ -138,10 +136,10 @@ class AssertTimeout {
 	}
 
 	static class PreemptiveTimeoutAssertionExecutor {
-		private final Throwing throwing;
+		private final TimeoutFailureFactory<?> failureFactory;
 
-		PreemptiveTimeoutAssertionExecutor(Throwing throwing) {
-			this.throwing = throwing;
+		PreemptiveTimeoutAssertionExecutor(TimeoutFailureFactory<?> failureFactory) {
+			this.failureFactory = failureFactory;
 		}
 
 		<T> T executeThrowing(Duration timeout, ThrowingSupplier<T> supplier, Object messageOrSupplier) {
@@ -150,9 +148,8 @@ class AssertTimeout {
 
 			try {
 				Future<T> future = submitTask(supplier, threadReference, executorService);
-				TimeoutFailureFactory<?> factory = createTimeoutFailureFactory(throwing);
 				return resolveFutureAndHandleException(future, timeout.toMillis(), messageOrSupplier,
-					threadReference::get, factory);
+					threadReference::get);
 			}
 			finally {
 				executorService.shutdownNow();
@@ -173,13 +170,13 @@ class AssertTimeout {
 		}
 
 		private <T> T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis, Object messageOrSupplier,
-				Supplier<Thread> threadSupplier, TimeoutFailureFactory<?> factory) {
+				Supplier<Thread> threadSupplier) {
 			try {
 				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
 				throw throwAsUncheckedException(
-					factory.handleTimeout(ex, timeoutInMillis, messageOrSupplier, threadSupplier));
+					failureFactory.handleTimeout(ex, timeoutInMillis, messageOrSupplier, threadSupplier));
 			}
 			catch (ExecutionException ex) {
 				throw throwAsUncheckedException(ex.getCause());
@@ -187,21 +184,6 @@ class AssertTimeout {
 			catch (Throwable ex) {
 				throw throwAsUncheckedException(ex);
 			}
-		}
-
-		private TimeoutFailureFactory<?> createTimeoutFailureFactory(Throwing throwing) {
-			switch (throwing) {
-				case TIMEOUT_EXCEPTION:
-					return (e, __, ___, ____) -> e;
-				case ASSERTION_ERROR:
-					return new AssertiveFutureResolver();
-				default:
-					throw new IllegalStateException("Unexpected value: " + throwing);
-			}
-		}
-
-		enum Throwing {
-			ASSERTION_ERROR, TIMEOUT_EXCEPTION
 		}
 	}
 
