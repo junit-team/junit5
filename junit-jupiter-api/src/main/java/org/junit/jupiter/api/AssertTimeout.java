@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.ASSERTION_EXCEPTION;
+import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.ASSERTION_ERROR;
 import static org.junit.jupiter.api.AssertTimeout.PreemptiveTimeoutAssertionExecutor.Throwing.MASKED_TIMEOUT_EXCEPTION;
 import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
@@ -39,6 +39,11 @@ import org.junit.platform.commons.util.ExceptionUtils;
  * @since 5.0
  */
 class AssertTimeout {
+
+	private static final PreemptiveTimeoutAssertionExecutor ASSERTION_ERROR_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor(
+		ASSERTION_ERROR);
+	private static final PreemptiveTimeoutAssertionExecutor TIMEOUT_EXCEPTION_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor(
+		MASKED_TIMEOUT_EXCEPTION);
 
 	private AssertTimeout() {
 		/* no-op */
@@ -115,38 +120,31 @@ class AssertTimeout {
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
-		return new PreemptiveTimeoutAssertionExecutor<T>(timeout, supplier, null).executeThrowing(ASSERTION_EXCEPTION);
+		return ASSERTION_ERROR_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, null);
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return new PreemptiveTimeoutAssertionExecutor<T>(timeout, supplier, message).executeThrowing(
-			ASSERTION_EXCEPTION);
+		return ASSERTION_ERROR_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, message);
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
 			Supplier<String> messageSupplier) {
-		return new PreemptiveTimeoutAssertionExecutor<T>(timeout, supplier, messageSupplier).executeThrowing(
-			ASSERTION_EXCEPTION);
+		return ASSERTION_ERROR_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, messageSupplier);
 	}
 
 	static <T> T assertTimeoutPreemptivelyThrowingTimeoutException(Duration timeout, ThrowingSupplier<T> supplier,
 			Supplier<String> messageSupplier) {
-		return new PreemptiveTimeoutAssertionExecutor<T>(timeout, supplier, messageSupplier).executeThrowing(
-			MASKED_TIMEOUT_EXCEPTION);
+		return TIMEOUT_EXCEPTION_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, messageSupplier);
 	}
 
-	static class PreemptiveTimeoutAssertionExecutor<T> {
-		private final Duration timeout;
-		private final ThrowingSupplier<T> supplier;
-		private final Object messageOrSupplier;
+	static class PreemptiveTimeoutAssertionExecutor {
+		private final Throwing throwing;
 
-		PreemptiveTimeoutAssertionExecutor(Duration timeout, ThrowingSupplier<T> supplier, Object messageOrSupplier) {
-			this.timeout = timeout;
-			this.supplier = supplier;
-			this.messageOrSupplier = messageOrSupplier;
+		PreemptiveTimeoutAssertionExecutor(Throwing throwing) {
+			this.throwing = throwing;
 		}
 
-		T executeThrowing(Throwing throwing) {
+		<T> T executeThrowing(Duration timeout, ThrowingSupplier<T> supplier, Object messageOrSupplier) {
 			AtomicReference<Thread> threadReference = new AtomicReference<>();
 			ExecutorService executorService = Executors.newSingleThreadExecutor(new TimeoutThreadFactory());
 
@@ -161,7 +159,7 @@ class AssertTimeout {
 			}
 		}
 
-		private Future<T> submitTask(ThrowingSupplier<T> supplier, AtomicReference<Thread> threadReference,
+		private <T> Future<T> submitTask(ThrowingSupplier<T> supplier, AtomicReference<Thread> threadReference,
 				ExecutorService executorService) {
 			return executorService.submit(() -> {
 				try {
@@ -174,14 +172,14 @@ class AssertTimeout {
 			});
 		}
 
-		private FutureResolverWithExceptionHandling<T> createFutureResolver(Object messageOrSupplier,
+		private <T> FutureResolverWithExceptionHandling<T> createFutureResolver(Object messageOrSupplier,
 				AtomicReference<Thread> threadReference, Throwing throwing) {
 			FutureResolverWithExceptionHandling<T> resolver;
 			switch (throwing) {
 				case MASKED_TIMEOUT_EXCEPTION:
 					resolver = new TimeoutPropagatingFutureResolver<>();
 					break;
-				case ASSERTION_EXCEPTION:
+				case ASSERTION_ERROR:
 					resolver = new AssertiveFutureResolver<>(threadReference, messageOrSupplier);
 					break;
 				default:
@@ -191,7 +189,7 @@ class AssertTimeout {
 		}
 
 		enum Throwing {
-			ASSERTION_EXCEPTION, MASKED_TIMEOUT_EXCEPTION
+			ASSERTION_ERROR, MASKED_TIMEOUT_EXCEPTION
 		}
 	}
 
