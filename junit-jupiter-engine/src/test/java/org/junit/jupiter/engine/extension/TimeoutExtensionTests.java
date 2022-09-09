@@ -349,9 +349,13 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 			EngineExecutionResults results = executeTestsForClass(TimeoutExceedingSeparateThreadTestCase.class);
 
 			Execution execution = findExecution(results.testEvents(), "testMethod()");
-			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+			Throwable failure = execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow();
+			assertThat(failure) //
 					.isInstanceOf(TimeoutException.class) //
 					.hasMessage("testMethod() timed out after 10 milliseconds");
+			assertThat(failure.getCause()) //
+					.hasMessageStartingWith("Execution timed out in ") //
+					.hasStackTraceContaining(TimeoutExceedingSeparateThreadTestCase.class.getName() + ".testMethod");
 		}
 
 		@Test

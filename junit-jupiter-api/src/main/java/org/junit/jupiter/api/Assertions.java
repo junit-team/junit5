@@ -3531,8 +3531,9 @@ public class Assertions {
 	 *
 	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
 	 *
-	 * <p>In the case the assertion does not pass, a {@code TimeoutException} will be
-	 * thrown.
+	 * <p>In the case the assertion does not pass, the supplied
+	 * {@link TimeoutFailureFactory} is invoked to create an exception which is
+	 * then thrown.
 	 *
 	 * <p>Note: the {@code supplier} will be executed in a different thread than
 	 * that of the calling code. Furthermore, execution of the {@code supplier} will
@@ -3550,10 +3551,10 @@ public class Assertions {
 	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
 	 * @see #assertTimeout(Duration, Executable, Supplier)
 	 */
-	@API(status = INTERNAL)
-	public static <T> T assertTimeoutPreemptivelyThrowingTimeoutException(Duration timeout,
-			ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) throws TimeoutException {
-		return AssertTimeout.assertTimeoutPreemptivelyThrowingTimeoutException(timeout, supplier, messageSupplier);
+	@API(status = INTERNAL, since = "5.9.1")
+	public static <T, E extends Throwable> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
+			Supplier<String> messageSupplier, TimeoutFailureFactory<E> failureFactory) throws E {
+		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier, failureFactory);
 	}
 
 	// --- assertInstanceOf ----------------------------------------------------
@@ -3605,4 +3606,9 @@ public class Assertions {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
 
+	@API(status = INTERNAL, since = "5.9.1")
+	public interface TimeoutFailureFactory<T extends Throwable> {
+		T handleTimeout(TimeoutException exception, Duration timeout, Supplier<String> messageSupplier,
+				Throwable cause);
+	}
 }

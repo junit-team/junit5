@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptivelyThrowingTimeoutException;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
@@ -35,14 +35,11 @@ class SeparateThreadTimeoutInvocation<T> implements Invocation<T> {
 
 	@Override
 	public T proceed() throws Throwable {
-		try {
-			return assertTimeoutPreemptivelyThrowingTimeoutException(timeout.toDuration(), delegate::proceed,
-				descriptionSupplier);
-		}
-		catch (TimeoutException failure) {
-			TimeoutException exception = TimeoutExceptionFactory.create(descriptionSupplier.get(), timeout, null);
-			exception.initCause(failure.getCause());
-			throw exception;
-		}
+		return assertTimeoutPreemptively(timeout.toDuration(), delegate::proceed, descriptionSupplier,
+			(e, __, messageSupplier, cause) -> {
+				TimeoutException exception = TimeoutExceptionFactory.create(messageSupplier.get(), timeout, null);
+				exception.initCause(cause);
+				return exception;
+			});
 	}
 }
