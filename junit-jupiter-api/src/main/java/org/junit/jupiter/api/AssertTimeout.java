@@ -148,8 +148,7 @@ class AssertTimeout {
 
 			try {
 				Future<V> future = submitTask(supplier, threadReference, executorService);
-				return resolveFutureAndHandleException(future, timeout.toMillis(), messageOrSupplier,
-					threadReference::get);
+				return resolveFutureAndHandleException(future, timeout, messageOrSupplier, threadReference::get);
 			}
 			finally {
 				executorService.shutdownNow();
@@ -169,10 +168,10 @@ class AssertTimeout {
 			});
 		}
 
-		private <V> V resolveFutureAndHandleException(Future<V> future, long timeoutInMillis, Object messageOrSupplier,
+		private <V> V resolveFutureAndHandleException(Future<V> future, Duration timeout, Object messageOrSupplier,
 				Supplier<Thread> threadSupplier) throws T {
 			try {
-				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
+				return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
 				Thread thread = threadSupplier.get();
@@ -181,7 +180,7 @@ class AssertTimeout {
 					cause = new ExecutionTimeoutException("Execution timed out in thread " + thread.getName());
 					cause.setStackTrace(thread.getStackTrace());
 				}
-				throw failureFactory.handleTimeout(ex, timeoutInMillis, messageOrSupplier, cause);
+				throw failureFactory.handleTimeout(ex, timeout, messageOrSupplier, cause);
 			}
 			catch (ExecutionException ex) {
 				throw throwAsUncheckedException(ex.getCause());
@@ -215,17 +214,17 @@ class AssertTimeout {
 	}
 
 	private interface TimeoutFailureFactory<T extends Throwable> {
-		T handleTimeout(TimeoutException exception, long timeoutInMillis, Object messageOrSupplier, Throwable cause);
+		T handleTimeout(TimeoutException exception, Duration timeout, Object messageOrSupplier, Throwable cause);
 	}
 
 	private static class AssertionTimeoutFailureFactory implements TimeoutFailureFactory<AssertionFailedError> {
 
 		@Override
-		public AssertionFailedError handleTimeout(TimeoutException exception, long timeoutInMillis,
+		public AssertionFailedError handleTimeout(TimeoutException exception, Duration timeout,
 				Object messageOrSupplier, Throwable cause) {
 			return assertionFailure() //
 					.message(messageOrSupplier) //
-					.reason("execution timed out after " + timeoutInMillis + " ms") //
+					.reason("execution timed out after " + timeout.toMillis() + " ms") //
 					.cause(cause) //
 					.build();
 		}
