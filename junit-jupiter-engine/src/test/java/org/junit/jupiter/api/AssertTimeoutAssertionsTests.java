@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptivelyThrowingTimeoutException;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
@@ -42,6 +41,8 @@ import org.opentest4j.AssertionFailedError;
 class AssertTimeoutAssertionsTests {
 
 	private static final Duration PREEMPTIVE_TIMEOUT = ofMillis(WINDOWS.isCurrentOs() ? 1000 : 100);
+	private static final Assertions.TimeoutFailureFactory<TimeoutException> TIMEOUT_EXCEPTION_FACTORY = (__, ___, ____,
+			_____) -> new TimeoutException();
 
 	private static ThreadLocal<AtomicBoolean> changed = ThreadLocal.withInitial(() -> new AtomicBoolean(false));
 
@@ -318,34 +319,34 @@ class AssertTimeoutAssertionsTests {
 
 	@Test
 	void assertTimeoutPreemptivelyThrowingTimeoutExceptionWithMessageForSupplierThatCompletesAfterTheTimeout() {
-		assertThrows(TimeoutException.class,
-			() -> assertTimeoutPreemptivelyThrowingTimeoutException(PREEMPTIVE_TIMEOUT, () -> {
-				waitForInterrupt();
-				return "Tempus Fugit";
-			}, () -> "Tempus Fugit"));
+		assertThrows(TimeoutException.class, () -> Assertions.assertTimeoutPreemptively(PREEMPTIVE_TIMEOUT, () -> {
+			waitForInterrupt();
+			return "Tempus Fugit";
+		}, () -> "Tempus Fugit", TIMEOUT_EXCEPTION_FACTORY));
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyThrowingTimeoutExceptionWithMessageForSupplierThatThrowsAnAssertionFailedError() {
 		AssertionFailedError exception = assertThrows(AssertionFailedError.class,
-			() -> assertTimeoutPreemptivelyThrowingTimeoutException(ofMillis(500), () -> fail("enigma"),
-				() -> "Tempus Fugit"));
+			() -> Assertions.assertTimeoutPreemptively(ofMillis(500), () -> fail("enigma"), () -> "Tempus Fugit",
+				TIMEOUT_EXCEPTION_FACTORY));
 		assertMessageEquals(exception, "enigma");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyThrowingTimeoutExceptionWithMessageForSupplierThatThrowsAnException() {
 		RuntimeException exception = assertThrows(RuntimeException.class,
-			() -> assertTimeoutPreemptivelyThrowingTimeoutException(ofMillis(500),
-				() -> ExceptionUtils.throwAsUncheckedException(new RuntimeException(":(")), () -> "Tempus Fugit"));
+			() -> Assertions.assertTimeoutPreemptively(ofMillis(500),
+				() -> ExceptionUtils.throwAsUncheckedException(new RuntimeException(":(")), () -> "Tempus Fugit",
+				TIMEOUT_EXCEPTION_FACTORY));
 		assertMessageEquals(exception, ":(");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyThrowingTimeoutExceptionWithMessageForSupplierThatCompletesBeforeTimeout()
 			throws Exception {
-		var result = assertTimeoutPreemptivelyThrowingTimeoutException(PREEMPTIVE_TIMEOUT, () -> "Tempus Fugit",
-			() -> "Tempus Fugit");
+		var result = Assertions.assertTimeoutPreemptively(PREEMPTIVE_TIMEOUT, () -> "Tempus Fugit",
+			() -> "Tempus Fugit", TIMEOUT_EXCEPTION_FACTORY);
 
 		assertThat(result).isEqualTo("Tempus Fugit");
 	}

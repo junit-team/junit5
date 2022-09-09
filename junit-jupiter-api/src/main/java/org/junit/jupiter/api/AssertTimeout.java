@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
+import org.junit.jupiter.api.Assertions.TimeoutFailureFactory;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.junit.platform.commons.JUnitException;
@@ -40,8 +41,6 @@ class AssertTimeout {
 
 	private static final PreemptiveTimeoutAssertionExecutor<AssertionFailedError> ASSERTION_ERROR_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor<>(
 		new AssertionTimeoutFailureFactory());
-	private static final PreemptiveTimeoutAssertionExecutor<TimeoutException> TIMEOUT_EXCEPTION_TIMEOUT_EXECUTOR = new PreemptiveTimeoutAssertionExecutor<>(
-		(e, __, ___, ____) -> e);
 
 	private AssertTimeout() {
 		/* no-op */
@@ -122,7 +121,8 @@ class AssertTimeout {
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return ASSERTION_ERROR_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, () -> message);
+		return ASSERTION_ERROR_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier,
+			message == null ? null : () -> message);
 	}
 
 	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
@@ -130,9 +130,10 @@ class AssertTimeout {
 		return ASSERTION_ERROR_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, messageSupplier);
 	}
 
-	static <T> T assertTimeoutPreemptivelyThrowingTimeoutException(Duration timeout, ThrowingSupplier<T> supplier,
-			Supplier<String> messageSupplier) throws TimeoutException {
-		return TIMEOUT_EXCEPTION_TIMEOUT_EXECUTOR.executeThrowing(timeout, supplier, messageSupplier);
+	static <T, E extends Throwable> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
+			Supplier<String> messageSupplier, TimeoutFailureFactory<E> failureFactory) throws E {
+		return new PreemptiveTimeoutAssertionExecutor<>(failureFactory).executeThrowing(timeout, supplier,
+			messageSupplier);
 	}
 
 	static class PreemptiveTimeoutAssertionExecutor<T extends Throwable> {
@@ -212,11 +213,6 @@ class AssertTimeout {
 		public Thread newThread(Runnable r) {
 			return new Thread(r, "junit-timeout-thread-" + threadNumber.getAndIncrement());
 		}
-	}
-
-	private interface TimeoutFailureFactory<T extends Throwable> {
-		T handleTimeout(TimeoutException exception, Duration timeout, Supplier<String> messageSupplier,
-				Throwable cause);
 	}
 
 	private static class AssertionTimeoutFailureFactory implements TimeoutFailureFactory<AssertionFailedError> {
