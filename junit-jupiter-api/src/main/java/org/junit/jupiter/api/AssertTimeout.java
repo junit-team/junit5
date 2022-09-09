@@ -152,7 +152,7 @@ class AssertTimeout {
 				Future<T> future = submitTask(supplier, threadReference, executorService);
 				FutureResolverWithExceptionHandling resolver = createFutureResolver(messageOrSupplier, threadReference,
 					throwing);
-				return resolver.resolveFutureAndHandleException(future, timeout.toMillis());
+				return resolveFutureAndHandleException(future, timeout.toMillis(), resolver);
 			}
 			finally {
 				executorService.shutdownNow();
@@ -172,13 +172,30 @@ class AssertTimeout {
 			});
 		}
 
+		private <T> T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis,
+				FutureResolverWithExceptionHandling resolver) {
+			try {
+				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
+			}
+			catch (TimeoutException ex) {
+				resolver.handleTimeoutAndThrow(ex, timeoutInMillis);
+				return null;
+			}
+			catch (ExecutionException ex) {
+				throw throwAsUncheckedException(ex.getCause());
+			}
+			catch (Throwable ex) {
+				throw throwAsUncheckedException(ex);
+			}
+		}
+
 		private FutureResolverWithExceptionHandling createFutureResolver(Object messageOrSupplier,
 				AtomicReference<Thread> threadReference, Throwing throwing) {
 			switch (throwing) {
 				case MASKED_TIMEOUT_EXCEPTION:
-					return new TimeoutPropagatingFutureResolver<>();
+					return new TimeoutPropagatingFutureResolver();
 				case ASSERTION_ERROR:
-					return new AssertiveFutureResolver<>(threadReference, messageOrSupplier);
+					return new AssertiveFutureResolver(threadReference, messageOrSupplier);
 				default:
 					throw new IllegalStateException("Unexpected value: " + throwing);
 			}
@@ -211,27 +228,11 @@ class AssertTimeout {
 		}
 	}
 
-	private abstract static class FutureResolverWithExceptionHandling {
-		<T> T resolveFutureAndHandleException(Future<T> future, long timeoutInMillis) {
-			try {
-				return future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
-			}
-			catch (TimeoutException ex) {
-				handleTimeoutAndThrow(ex, timeoutInMillis);
-				return null;
-			}
-			catch (ExecutionException ex) {
-				throw throwAsUncheckedException(ex.getCause());
-			}
-			catch (Throwable ex) {
-				throw throwAsUncheckedException(ex);
-			}
-		}
-
-		protected abstract void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis);
+	private interface FutureResolverWithExceptionHandling {
+		void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis);
 	}
 
-	private static class AssertiveFutureResolver<T> extends FutureResolverWithExceptionHandling {
+	private static class AssertiveFutureResolver implements FutureResolverWithExceptionHandling {
 
 		private final AtomicReference<Thread> threadReference;
 		private final Object messageOrSupplier;
@@ -242,7 +243,7 @@ class AssertTimeout {
 		}
 
 		@Override
-		protected void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis) {
+		public void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis) {
 			AssertionFailureBuilder failure = assertionFailure() //
 					.message(messageOrSupplier) //
 					.reason("execution timed out after " + timeoutInMillis + " ms");
@@ -258,9 +259,9 @@ class AssertTimeout {
 		}
 	}
 
-	private static class TimeoutPropagatingFutureResolver<T> extends FutureResolverWithExceptionHandling {
+	private static class TimeoutPropagatingFutureResolver implements FutureResolverWithExceptionHandling {
 		@Override
-		protected void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis) {
+		public void handleTimeoutAndThrow(TimeoutException ex, long timeoutInMillis) {
 			throw throwAsUncheckedException(ex);
 		}
 	}
