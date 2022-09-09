@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeoutException;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -3608,7 +3607,6 @@ public class Assertions {
 
 	@API(status = INTERNAL, since = "5.9.1")
 	public interface TimeoutFailureFactory<T extends Throwable> {
-		T handleTimeout(TimeoutException exception, Duration timeout, Supplier<String> messageSupplier,
-				Throwable cause);
+		T createTimeoutFailure(Duration timeout, Supplier<String> messageSupplier, Throwable cause);
 	}
 }

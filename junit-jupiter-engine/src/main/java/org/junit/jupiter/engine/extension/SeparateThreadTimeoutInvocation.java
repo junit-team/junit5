@@ -36,7 +36,7 @@ class SeparateThreadTimeoutInvocation<T> implements Invocation<T> {
 	@Override
 	public T proceed() throws Throwable {
 		return assertTimeoutPreemptively(timeout.toDuration(), delegate::proceed, descriptionSupplier,
-			(e, __, messageSupplier, cause) -> {
+			(__, messageSupplier, cause) -> {
 				TimeoutException exception = TimeoutExceptionFactory.create(messageSupplier.get(), timeout, null);
 				exception.initCause(cause);
 				return exception;
