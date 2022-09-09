@@ -182,7 +182,7 @@ class AssertTimeout {
 					cause = new ExecutionTimeoutException("Execution timed out in thread " + thread.getName());
 					cause.setStackTrace(thread.getStackTrace());
 				}
-				throw failureFactory.handleTimeout(ex, timeout, messageSupplier, cause);
+				throw failureFactory.createTimeoutFailure(timeout, messageSupplier, cause);
 			}
 			catch (ExecutionException ex) {
 				throw throwAsUncheckedException(ex.getCause());
@@ -218,8 +218,8 @@ class AssertTimeout {
 	private static class AssertionTimeoutFailureFactory implements TimeoutFailureFactory<AssertionFailedError> {
 
 		@Override
-		public AssertionFailedError handleTimeout(TimeoutException exception, Duration timeout,
-				Supplier<String> messageSupplier, Throwable cause) {
+		public AssertionFailedError createTimeoutFailure(Duration timeout, Supplier<String> messageSupplier,
+				Throwable cause) {
 			return assertionFailure() //
 					.message(messageSupplier) //
 					.reason("execution timed out after " + timeout.toMillis() + " ms") //
