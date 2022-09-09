@@ -47,7 +47,8 @@ class SeparateThreadTimeoutInvocationTest {
 
 		assertThatThrownBy(invocation::proceed) //
 				.hasMessage("method() timed out after " + PREEMPTIVE_TIMEOUT_MILLIS + " milliseconds") //
-				.isInstanceOf(TimeoutException.class);
+				.isInstanceOf(TimeoutException.class) //
+				.hasRootCauseMessage("Execution timed out in thread " + threadName.get());
 	}
 
 	@Test
