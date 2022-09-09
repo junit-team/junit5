@@ -3605,8 +3605,21 @@ public class Assertions {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
 
+	/**
+	 * Factory for timeout failures.
+	 *
+	 * @param <T> The type of error or exception created
+	 * @since 5.9.1
+	 * @see Assertions#assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier, TimeoutFailureFactory)
+	 */
 	@API(status = INTERNAL, since = "5.9.1")
 	public interface TimeoutFailureFactory<T extends Throwable> {
+
+		/**
+		 * Create a failure for the given timeout, message, and cause.
+		 *
+		 * @return timeout failure; never {@code null}
+		 */
 		T createTimeoutFailure(Duration timeout, Supplier<String> messageSupplier, Throwable cause);
 	}
 }
