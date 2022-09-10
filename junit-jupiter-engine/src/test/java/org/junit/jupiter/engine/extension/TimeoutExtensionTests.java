@@ -352,7 +352,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 			Throwable failure = execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow();
 			assertThat(failure) //
 					.isInstanceOf(TimeoutException.class) //
-					.hasMessage("testMethod() timed out after 10 milliseconds");
+					.hasMessage("testMethod() timed out after 100 milliseconds");
 			assertThat(failure.getCause()) //
 					.hasMessageStartingWith("Execution timed out in ") //
 					.hasStackTraceContaining(TimeoutExceedingSeparateThreadTestCase.class.getName() + ".testMethod");
@@ -721,7 +721,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 	static class TimeoutExceedingSeparateThreadTestCase {
 		@Test
-		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testMethod() throws InterruptedException {
 			Thread.sleep(1000);
 		}
