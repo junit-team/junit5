@@ -5,8 +5,7 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 	plugins {
-		id("com.gradle.enterprise") version "3.10.3"
-		id("com.gradle.enterprise.test-distribution") version "2.3.5" // keep in sync with buildSrc/build.gradle.kts
+		id("com.gradle.enterprise") version "3.11.1" // keep in sync with buildSrc/build.gradle.kts
 		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.7.2"
 		id("org.ajoberstar.git-publish") version "3.0.0"
 		kotlin("jvm") version "1.5.31"
@@ -21,7 +20,6 @@ pluginManagement {
 
 plugins {
 	id("com.gradle.enterprise")
-	id("com.gradle.enterprise.test-distribution")
 	id("com.gradle.common-custom-user-data-gradle-plugin")
 }
 
