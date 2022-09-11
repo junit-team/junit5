@@ -376,7 +376,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 			Execution execution = findExecution(results.testEvents(), "test()");
 			assertThat(execution.getDuration()) //
-					.isLessThanOrEqualTo(Duration.ofMillis(10));
+					.isLessThan(Duration.ofSeconds(5));
 			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 					.isInstanceOf(RuntimeException.class) //
 					.hasMessage("Oppps!");
@@ -723,7 +723,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 	static class ExceptionInSeparateThreadTestCase {
 		@Test
-		@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 5, unit = SECONDS, threadMode = SEPARATE_THREAD)
 		void test() {
 			throw new RuntimeException("Oppps!");
 		}
