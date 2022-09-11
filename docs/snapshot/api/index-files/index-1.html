@@ -1155,6 +1155,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Protected constructor allowing subclassing but not direct instantiation.</div>
 </dd>
+<dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.TimeoutFailureFactory.html" class="type-name-link" title="interface in org.junit.jupiter.api">Assertions.TimeoutFailureFactory</a>&lt;<a href="../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.TimeoutFailureFactory.html" title="type parameter in Assertions.TimeoutFailureFactory">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&gt; - Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
+<dd>
+<div class="block">Factory for timeout failures.</div>
+</dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html#assertIterableEquals(java.lang.Iterable,java.lang.Iterable)" class="member-name-link">assertIterableEquals(Iterable&lt;?&gt;, Iterable&lt;?&gt;)</a> - Static method in class org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html" title="class in org.junit.jupiter.api">Assertions</a></dt>
 <dd>
 <div class="block"><em>Assert</em> that <code>expected</code> and <code>actual</code> iterables are deeply equal.</div>
@@ -1722,6 +1726,11 @@ loadScripts(document, 'script');</script>
  completes before the given <code>timeout</code> is exceeded.</div>
 </dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html#assertTimeoutPreemptively(java.time.Duration,org.junit.jupiter.api.function.ThrowingSupplier,java.util.function.Supplier)" class="member-name-link">assertTimeoutPreemptively(Duration, ThrowingSupplier&lt;T&gt;, Supplier&lt;String&gt;)</a> - Static method in class org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html" title="class in org.junit.jupiter.api">Assertions</a></dt>
+<dd>
+<div class="block"><em>Assert</em> that execution of the supplied <code>supplier</code>
+ completes before the given <code>timeout</code> is exceeded.</div>
+</dd>
+<dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html#assertTimeoutPreemptively(java.time.Duration,org.junit.jupiter.api.function.ThrowingSupplier,java.util.function.Supplier,org.junit.jupiter.api.Assertions.TimeoutFailureFactory)" class="member-name-link">assertTimeoutPreemptively(Duration, ThrowingSupplier&lt;T&gt;, Supplier&lt;String&gt;, Assertions.TimeoutFailureFactory&lt;E&gt;)</a> - Static method in class org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html" title="class in org.junit.jupiter.api">Assertions</a></dt>
 <dd>
 <div class="block"><em>Assert</em> that execution of the supplied <code>supplier</code>
  completes before the given <code>timeout</code> is exceeded.</div>
