@@ -19,7 +19,7 @@ project.pluginManager.withPlugin("java") {
 		})
 	}
 	if (javaLanguageVersion.asInt() >= 20) {
-		tasks.compileJava {
+		tasks.named<JavaCompile>("compileJava") {
 			options.compilerArgs.add(
 				"-Xlint:-options" // see https://github.com/junit-team/junit5/issues/3029
 			)
