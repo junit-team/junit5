@@ -11,6 +11,13 @@ project.pluginManager.withPlugin("java") {
 	}
 	tasks.withType<JavaCompile>().configureEach {
 		outputs.cacheIf { javaLanguageVersion == defaultLanguageVersion }
+		doFirst {
+			if (options.release.orNull == 8 && javaLanguageVersion.asInt() >= 20) {
+				options.compilerArgs.add(
+					"-Xlint:-options" // see https://github.com/junit-team/junit5/issues/3029
+				)
+			}
+		}
 	}
 	tasks.withType<GroovyCompile>().configureEach {
 		javaLauncher.set(javaToolchainService.launcherFor {

@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.time.Duration;
@@ -3395,7 +3396,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
-		AssertTimeout.assertTimeoutPreemptively(timeout, executable);
+		AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, executable);
 	}
 
 	/**
@@ -3418,7 +3419,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable, String)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
-		AssertTimeout.assertTimeoutPreemptively(timeout, executable, message);
+		AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, executable, message);
 	}
 
 	/**
@@ -3443,7 +3444,7 @@ public class Assertions {
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable,
 			Supplier<String> messageSupplier) {
-		AssertTimeout.assertTimeoutPreemptively(timeout, executable, messageSupplier);
+		AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, executable, messageSupplier);
 	}
 
 	// --- supplier - preemptively ---
@@ -3468,7 +3469,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable)
 	 */
 	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
-		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier);
+		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier);
 	}
 
 	/**
@@ -3493,7 +3494,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable, String)
 	 */
 	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
-		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, message);
+		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, message);
 	}
 
 	/**
@@ -3520,7 +3521,39 @@ public class Assertions {
 	 */
 	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
 			Supplier<String> messageSupplier) {
-		return AssertTimeout.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
+		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
+	}
+
+	/**
+	 * <em>Assert</em> that execution of the supplied {@code supplier}
+	 * completes before the given {@code timeout} is exceeded.
+	 *
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 *
+	 * <p>In the case the assertion does not pass, the supplied
+	 * {@link TimeoutFailureFactory} is invoked to create an exception which is
+	 * then thrown.
+	 *
+	 * <p>Note: the {@code supplier} will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the {@code supplier} will
+	 * be preemptively aborted if the timeout is exceeded. See the
+	 * {@linkplain Assertions Preemptive Timeouts} section of the class-level
+	 * Javadoc for a discussion of possible undesirable side effects.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @see #assertTimeoutPreemptively(Duration, Executable)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier)
+	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
+	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 */
+	@API(status = INTERNAL, since = "5.9.1")
+	public static <T, E extends Throwable> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
+			Supplier<String> messageSupplier, TimeoutFailureFactory<E> failureFactory) throws E {
+		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, messageSupplier, failureFactory);
 	}
 
 	// --- assertInstanceOf ----------------------------------------------------
@@ -3572,4 +3605,21 @@ public class Assertions {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
 
+	/**
+	 * Factory for timeout failures.
+	 *
+	 * @param <T> The type of error or exception created
+	 * @since 5.9.1
+	 * @see Assertions#assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier, TimeoutFailureFactory)
+	 */
+	@API(status = INTERNAL, since = "5.9.1")
+	public interface TimeoutFailureFactory<T extends Throwable> {
+
+		/**
+		 * Create a failure for the given timeout, message, and cause.
+		 *
+		 * @return timeout failure; never {@code null}
+		 */
+		T createTimeoutFailure(Duration timeout, Supplier<String> messageSupplier, Throwable cause);
+	}
 }

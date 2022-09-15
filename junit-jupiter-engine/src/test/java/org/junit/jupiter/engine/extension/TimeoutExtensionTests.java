@@ -60,6 +60,7 @@ import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 import org.junit.platform.testkit.engine.Execution;
+import org.opentest4j.AssertionFailedError;
 
 /**
  * @since 5.5
@@ -348,9 +349,13 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 			EngineExecutionResults results = executeTestsForClass(TimeoutExceedingSeparateThreadTestCase.class);
 
 			Execution execution = findExecution(results.testEvents(), "testMethod()");
-			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+			Throwable failure = execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow();
+			assertThat(failure) //
 					.isInstanceOf(TimeoutException.class) //
-					.hasMessage("testMethod() timed out after 10 milliseconds");
+					.hasMessage("testMethod() timed out after 100 milliseconds");
+			assertThat(failure.getCause()) //
+					.hasMessageStartingWith("Execution timed out in ") //
+					.hasStackTraceContaining(TimeoutExceedingSeparateThreadTestCase.class.getName() + ".testMethod");
 		}
 
 		@Test
@@ -376,18 +381,34 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 			Execution execution = findExecution(results.testEvents(), "test()");
 			assertThat(execution.getDuration()) //
-					.isLessThanOrEqualTo(Duration.ofMillis(10));
+					.isLessThan(Duration.ofSeconds(5));
 			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 					.isInstanceOf(RuntimeException.class) //
 					.hasMessage("Oppps!");
 		}
 
 		@Test
+		@DisplayName("propagates assertion exceptions")
+		void separateThreadHandlesOpenTestFailedAssertion() {
+			EngineExecutionResults results = executeTestsForClass(FailedAssertionInSeparateThreadTestCase.class);
+
+			Execution openTestFailure = findExecution(results.testEvents(), "testOpenTestAssertion()");
+			assertThat(openTestFailure.getDuration()) //
+					.isLessThan(Duration.ofSeconds(5));
+			assertThat(openTestFailure.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+					.isInstanceOf(AssertionFailedError.class);
+
+			Execution javaLangFailure = findExecution(results.testEvents(), "testJavaLangAssertion()");
+			assertThat(javaLangFailure.getDuration()) //
+					.isLessThan(Duration.ofSeconds(5));
+			assertThat(javaLangFailure.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+					.isInstanceOf(AssertionError.class);
+		}
+
+		@Test
 		@DisplayName("when one test is stuck \"forever\" the next tests should not get stuck")
 		void oneThreadStuckForever() {
 			EngineExecutionResults results = executeTestsForClass(OneTestStuckForeverAndTheOthersNotTestCase.class);
-
-			results.allEvents().debug();
 
 			Execution stuckExecution = findExecution(results.testEvents(), "stuck()");
 			assertThat(stuckExecution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
@@ -700,7 +721,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 	static class TimeoutExceedingSeparateThreadTestCase {
 		@Test
-		@Timeout(value = 10, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
 		void testMethod() throws InterruptedException {
 			Thread.sleep(1000);
 		}
@@ -723,9 +744,23 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 	static class ExceptionInSeparateThreadTestCase {
 		@Test
-		@Timeout(value = 100, unit = MILLISECONDS, threadMode = SEPARATE_THREAD)
+		@Timeout(value = 5, unit = SECONDS, threadMode = SEPARATE_THREAD)
 		void test() {
 			throw new RuntimeException("Oppps!");
+		}
+	}
+
+	static class FailedAssertionInSeparateThreadTestCase {
+		@Test
+		@Timeout(value = 5, unit = SECONDS, threadMode = SEPARATE_THREAD)
+		void testOpenTestAssertion() {
+			throw new AssertionFailedError();
+		}
+
+		@Test
+		@Timeout(value = 5, unit = SECONDS, threadMode = SEPARATE_THREAD)
+		void testJavaLangAssertion() {
+			throw new AssertionError();
 		}
 	}
 

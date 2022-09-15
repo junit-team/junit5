@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	`java-library-conventions`
@@ -61,6 +62,11 @@ tasks {
 			excludeTags("exclude")
 		}
 		jvmArgs("-Xmx1g")
+		distribution {
+			// Retry in a new JVM on Windows to improve chances of successful retries when
+			// cached resources are used (e.g. in ClasspathScannerTests)
+			retryInSameJvm.set(!OperatingSystem.current().isWindows)
+		}
 	}
 	test {
 		// Additional inputs for remote execution with Test Distribution
