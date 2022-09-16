@@ -453,6 +453,21 @@ half open ranges.
 include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_jre]
 ----
 
+[[writing-tests-conditional-execution-native]]
+==== Native Image Conditions
+
+A container or test may be enabled or disabled within a
+https://www.graalvm.org/reference-manual/native-image/[GraalVM native image] via the
+`{EnabledInNativeImage}` and `{DisabledInNativeImage}` annotations. These annotations are
+typically used when running tests within a native image using the Gradle and Maven
+plug-ins from the GraalVM https://graalvm.github.io/native-build-tools/latest/[Native
+Build Tools] project.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_native]
+----
+
 [[writing-tests-conditional-execution-system-properties]]
 ==== System Property Conditions
 

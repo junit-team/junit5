@@ -48,6 +48,8 @@ import org.apiguardian.api.API;
  * @see org.junit.jupiter.api.condition.DisabledForJreRange
  * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.DisabledOnOs
+ * @see org.junit.jupiter.api.condition.EnabledInNativeImage
+ * @see org.junit.jupiter.api.condition.DisabledInNativeImage
  * @see org.junit.jupiter.api.extension.ExecutionCondition
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })

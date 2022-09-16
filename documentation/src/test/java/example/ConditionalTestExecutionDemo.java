@@ -28,12 +28,14 @@ import org.junit.jupiter.api.condition.DisabledForJreRange;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.junit.jupiter.api.condition.DisabledOnJre;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.EnabledForJreRange;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.api.condition.EnabledInNativeImage;
 import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 
@@ -152,6 +154,20 @@ class ConditionalTestExecutionDemo {
 		// ...
 	}
 	// end::user_guide_jre[]
+
+	// tag::user_guide_native[]
+	@Test
+	@EnabledInNativeImage
+	void onlyWithinNativeImage() {
+		// ...
+	}
+
+	@Test
+	@DisabledInNativeImage
+	void neverWithinNativeImage() {
+		// ...
+	}
+	// end::user_guide_native[]
 
 	// tag::user_guide_system_property[]
 	@Test
