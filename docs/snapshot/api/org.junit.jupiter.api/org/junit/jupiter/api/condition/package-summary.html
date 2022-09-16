@@ -146,54 +146,66 @@ loadScripts(document, 'script');</script>
  <a href="DisabledIfSystemProperty.html#named()">system property</a> matches the specified
  <a href="DisabledIfSystemProperty.html#matches()">regular expression</a>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab7"><a href="DisabledOnJre.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnJre</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab7"><a href="DisabledInNativeImage.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledInNativeImage</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab7">
+<div class="block"><code>@DisabledInNativeImage</code> is used to signal that the annotated test class
+ or test method is only <em>disabled</em> when executing within a GraalVM native
+ image.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="DisabledOnJre.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnJre</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab7">
 <div class="block"><code>@DisabledOnJre</code> is used to signal that the annotated test class or
  test method is <em>disabled</em> on one or more specified Java
  Runtime Environment (JRE) <a href="DisabledOnJre.html#value()">versions</a>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="DisabledOnOs.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnOs</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab7">
+<div class="col-first even-row-color class-summary class-summary-tab7"><a href="DisabledOnOs.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnOs</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab7">
 <div class="block"><code>@DisabledOnOs</code> is used to signal that the annotated test class or
  test method is <em>disabled</em> on one or more specified
  <a href="DisabledOnOs.html#value()">operating systems</a> or on one or more specified
  <a href="DisabledOnOs.html#architectures()">architectures</a></div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab7"><a href="EnabledForJreRange.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledForJreRange</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab7">
+<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="EnabledForJreRange.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledForJreRange</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab7">
 <div class="block"><code>@EnabledForJreRange</code> is used to signal that the annotated test class or
  test method is only <em>enabled</em> for a specific range of Java Runtime
  Environment (JRE) versions from <a href="EnabledForJreRange.html#min()"><code>EnabledForJreRange.min()</code></a> to <a href="EnabledForJreRange.html#max()"><code>EnabledForJreRange.max()</code></a>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="EnabledIf.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIf</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab7">
+<div class="col-first even-row-color class-summary class-summary-tab7"><a href="EnabledIf.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIf</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab7">
 <div class="block"><code>@EnabledIf</code> is used to signal that the annotated test class or test
  method is <em>enabled</em> only if the provided
  <a href="EnabledIf.html#value()">condition</a> evaluates to <code>true</code>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab7"><a href="EnabledIfEnvironmentVariable.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfEnvironmentVariable</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab7">
+<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="EnabledIfEnvironmentVariable.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfEnvironmentVariable</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab7">
 <div class="block"><code>@EnabledIfEnvironmentVariable</code> is used to signal that the annotated test
  class or test method is only <em>enabled</em> if the value of the specified
  <a href="EnabledIfEnvironmentVariable.html#named()">environment variable</a> matches the specified
  <a href="EnabledIfEnvironmentVariable.html#matches()">regular expression</a>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="EnabledIfEnvironmentVariables.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfEnvironmentVariables</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab7">
+<div class="col-first even-row-color class-summary class-summary-tab7"><a href="EnabledIfEnvironmentVariables.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfEnvironmentVariables</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab7">
 <div class="block"><code>@EnabledIfEnvironmentVariables</code> is a container for one or more
  <a href="EnabledIfEnvironmentVariable.html" title="annotation interface in org.junit.jupiter.api.condition"><code>@EnabledIfEnvironmentVariable</code></a> declarations.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab7"><a href="EnabledIfSystemProperties.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfSystemProperties</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab7">
+<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="EnabledIfSystemProperties.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfSystemProperties</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab7">
 <div class="block"><code>@EnabledIfSystemProperties</code> is a container for one or more
  <a href="EnabledIfSystemProperty.html" title="annotation interface in org.junit.jupiter.api.condition"><code>@EnabledIfSystemProperty</code></a> declarations.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="EnabledIfSystemProperty.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfSystemProperty</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab7">
+<div class="col-first even-row-color class-summary class-summary-tab7"><a href="EnabledIfSystemProperty.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfSystemProperty</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab7">
 <div class="block"><code>@EnabledIfSystemProperty</code> is used to signal that the annotated test
  class or test method is only <em>enabled</em> if the value of the specified
  <a href="EnabledIfSystemProperty.html#named()">system property</a> matches the specified
  <a href="EnabledIfSystemProperty.html#matches()">regular expression</a>.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab7"><a href="EnabledInNativeImage.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledInNativeImage</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab7">
+<div class="block"><code>@EnabledInNativeImage</code> is used to signal that the annotated test class
+ or test method is only <em>enabled</em> when executing within a GraalVM native
+ image.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab7"><a href="EnabledOnJre.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledOnJre</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab7">

@@ -524,140 +524,152 @@ loadScripts(document, 'script');</script>
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html#named()">system property</a> matches the specified
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html#matches()">regular expression</a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnJre</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledInNativeImage.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledInNativeImage</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="block"><code>@DisabledInNativeImage</code> is used to signal that the annotated test class
+ or test method is only <em>disabled</em> when executing within a GraalVM native
+ image.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnJre</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@DisabledOnJre</code> is used to signal that the annotated test class or
  test method is <em>disabled</em> on one or more specified Java
  Runtime Environment (JRE) <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html#value()">versions</a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnOs</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnOs</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@DisabledOnOs</code> is used to signal that the annotated test class or
  test method is <em>disabled</em> on one or more specified
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html#value()">operating systems</a> or on one or more specified
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html#architectures()">architectures</a></div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.platform.suite.api/org/junit/platform/suite/api/DisableParentConfigurationParameters.html" title="annotation interface in org.junit.platform.suite.api">DisableParentConfigurationParameters</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.platform.suite.api/org/junit/platform/suite/api/DisableParentConfigurationParameters.html" title="annotation interface in org.junit.platform.suite.api">DisableParentConfigurationParameters</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block">Disable parent configuration parameters.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="org.junit.platform.engine/org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine">DiscoveryFilter</a>&lt;<a href="org.junit.platform.engine/org/junit/platform/engine/DiscoveryFilter.html" title="type parameter in DiscoveryFilter">T</a>&gt;</div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="org.junit.platform.engine/org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine">DiscoveryFilter</a>&lt;<a href="org.junit.platform.engine/org/junit/platform/engine/DiscoveryFilter.html" title="type parameter in DiscoveryFilter">T</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">A <a href="org.junit.platform.engine/org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> is applied during test discovery to determine if
  a given container or test should be included in the test plan.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="org.junit.platform.engine/org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="org.junit.platform.engine/org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">A selector defines what a <a href="org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> can use to discover tests
  &mdash; for example, the name of a Java class, the path to a file or
  directory, etc.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.engine/org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.html" title="class in org.junit.jupiter.engine.discovery">DiscoverySelectorResolver</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.engine/org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.html" title="class in org.junit.jupiter.engine.discovery">DiscoverySelectorResolver</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block"><code>DiscoverySelectorResolver</code> resolves <a href="org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a>
  for containers and tests selected by DiscoverySelectors with the help of the
  <code>JavaElementsResolver</code>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Collection of <code>static</code> factory methods for creating
  <a href="org.junit.platform.engine/org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayName.html" title="annotation interface in org.junit.jupiter.api">DisplayName</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayName.html" title="annotation interface in org.junit.jupiter.api">DisplayName</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@DisplayName</code> is used to declare a <a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayName.html#value()">custom display
  name</a> for the annotated test class or test method.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGeneration.html" title="annotation interface in org.junit.jupiter.api">DisplayNameGeneration</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGeneration.html" title="annotation interface in org.junit.jupiter.api">DisplayNameGeneration</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@DisplayNameGeneration</code> is used to declare a custom display name
  generator for the annotated test class.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block"><code>DisplayNameGenerator</code> defines the SPI for generating display names
  programmatically.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.IndicativeSentences.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.IndicativeSentences</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.IndicativeSentences.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.IndicativeSentences</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block"><code>DisplayNameGenerator</code> that generates complete sentences.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.ReplaceUnderscores.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.ReplaceUnderscores</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.ReplaceUnderscores.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.ReplaceUnderscores</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block"><code>DisplayNameGenerator</code> that replaces underscores with spaces.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.Simple.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Simple</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.Simple.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Simple</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Simple <code>DisplayNameGenerator</code> that removes trailing parentheses
  for methods with no parameters.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Standard <code>DisplayNameGenerator</code>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DynamicContainer.html" title="class in org.junit.jupiter.api">DynamicContainer</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DynamicContainer.html" title="class in org.junit.jupiter.api">DynamicContainer</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A <code>DynamicContainer</code> is a container generated at runtime.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.html" title="class in org.junit.jupiter.engine.descriptor">DynamicDescendantFilter</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.html" title="class in org.junit.jupiter.engine.descriptor">DynamicDescendantFilter</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Filter for dynamic descendants of <a href="org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a> that
  implement <a href="org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/Filterable.html" title="interface in org.junit.jupiter.engine.descriptor"><code>Filterable</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DynamicNode.html" title="class in org.junit.jupiter.api">DynamicNode</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DynamicNode.html" title="class in org.junit.jupiter.api">DynamicNode</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block"><code>DynamicNode</code> serves as the abstract base class for a container or a
  test case generated at runtime.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DynamicTest.html" title="class in org.junit.jupiter.api">DynamicTest</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.jupiter.api/org/junit/jupiter/api/DynamicTest.html" title="class in org.junit.jupiter.api">DynamicTest</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A <code>DynamicTest</code> is a test case generated at runtime.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="org.junit.jupiter.api/org/junit/jupiter/api/extension/DynamicTestInvocationContext.html" title="interface in org.junit.jupiter.api.extension">DynamicTestInvocationContext</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="org.junit.jupiter.api/org/junit/jupiter/api/extension/DynamicTestInvocationContext.html" title="interface in org.junit.jupiter.api.extension">DynamicTestInvocationContext</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block"><code>DynamicTestInvocationContext</code> represents the <em>context</em> of a
  single invocation of a <a href="org.junit.jupiter.api/org/junit/jupiter/api/DynamicTest.html" title="class in org.junit.jupiter.api">dynamic test</a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.params/org/junit/jupiter/params/provider/EmptySource.html" title="annotation interface in org.junit.jupiter.params.provider">EmptySource</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.params/org/junit/jupiter/params/provider/EmptySource.html" title="annotation interface in org.junit.jupiter.params.provider">EmptySource</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@EmptySource</code> is an <a href="org.junit.jupiter.params/org/junit/jupiter/params/provider/ArgumentsSource.html" title="annotation interface in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a> which provides a single
  <em>empty</em> argument to the annotated <code>@ParameterizedTest</code> method.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledForJreRange.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledForJreRange</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledForJreRange.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledForJreRange</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@EnabledForJreRange</code> is used to signal that the annotated test class or
  test method is only <em>enabled</em> for a specific range of Java Runtime
  Environment (JRE) versions from <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledForJreRange.html#min()"><code>EnabledForJreRange.min()</code></a> to <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledForJreRange.html#max()"><code>EnabledForJreRange.max()</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIf</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIf</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@EnabledIf</code> is used to signal that the annotated test class or test
  method is <em>enabled</em> only if the provided
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html#value()">condition</a> evaluates to <code>true</code>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfEnvironmentVariable</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfEnvironmentVariable</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@EnabledIfEnvironmentVariable</code> is used to signal that the annotated test
  class or test method is only <em>enabled</em> if the value of the specified
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html#named()">environment variable</a> matches the specified
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html#matches()">regular expression</a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariables.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfEnvironmentVariables</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariables.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfEnvironmentVariables</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@EnabledIfEnvironmentVariables</code> is a container for one or more
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html" title="annotation interface in org.junit.jupiter.api.condition"><code>@EnabledIfEnvironmentVariable</code></a> declarations.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperties.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfSystemProperties</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperties.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfSystemProperties</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@EnabledIfSystemProperties</code> is a container for one or more
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html" title="annotation interface in org.junit.jupiter.api.condition"><code>@EnabledIfSystemProperty</code></a> declarations.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfSystemProperty</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfSystemProperty</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@EnabledIfSystemProperty</code> is used to signal that the annotated test
  class or test method is only <em>enabled</em> if the value of the specified
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html#named()">system property</a> matches the specified
  <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html#matches()">regular expression</a>.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledInNativeImage.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledInNativeImage</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab7">
+<div class="block"><code>@EnabledInNativeImage</code> is used to signal that the annotated test class
+ or test method is only <em>enabled</em> when executing within a GraalVM native
+ image.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledOnJre.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledOnJre</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab7">

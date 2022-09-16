@@ -513,9 +513,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel3">
 <li><a href="#writing-tests-conditional-execution-os">2.8.1. Operating System and Architecture Conditions</a></li>
 <li><a href="#writing-tests-conditional-execution-jre">2.8.2. Java Runtime Environment Conditions</a></li>
-<li><a href="#writing-tests-conditional-execution-system-properties">2.8.3. System Property Conditions</a></li>
-<li><a href="#writing-tests-conditional-execution-environment-variables">2.8.4. Environment Variable Conditions</a></li>
-<li><a href="#writing-tests-conditional-execution-custom">2.8.5. Custom Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-native">2.8.3. Native Image Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-system-properties">2.8.4. System Property Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-environment-variables">2.8.5. Environment Variable Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-custom">2.8.6. Custom Conditions</a></li>
 </ul>
 </li>
 <li><a href="#writing-tests-tagging-and-filtering">2.9. Tagging and Filtering</a></li>
@@ -2187,7 +2188,33 @@ half open ranges.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-conditional-execution-system-properties"><a class="anchor" href="#writing-tests-conditional-execution-system-properties"></a>2.8.3. System Property Conditions</h4>
+<h4 id="writing-tests-conditional-execution-native"><a class="anchor" href="#writing-tests-conditional-execution-native"></a>2.8.3. Native Image Conditions</h4>
+<div class="paragraph">
+<p>A container or test may be enabled or disabled within a
+<a href="https://www.graalvm.org/reference-manual/native-image/">GraalVM native image</a> via the
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledInNativeImage.html">@EnabledInNativeImage</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledInNativeImage.html">@DisabledInNativeImage</a></code> annotations. These annotations are
+typically used when running tests within a native image using the Gradle and Maven
+plug-ins from the GraalVM <a href="https://graalvm.github.io/native-build-tools/latest/">Native
+Build Tools</a> project.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@Test</span>
+<span class="nd">@EnabledInNativeImage</span>
+<span class="kt">void</span> <span class="nf">onlyWithinNativeImage</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+<span class="o">}</span>
+
+<span class="nd">@Test</span>
+<span class="nd">@DisabledInNativeImage</span>
+<span class="kt">void</span> <span class="nf">neverWithinNativeImage</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-conditional-execution-system-properties"><a class="anchor" href="#writing-tests-conditional-execution-system-properties"></a>2.8.4. System Property Conditions</h4>
 <div class="paragraph">
 <p>A container or test may be enabled or disabled based on the value of the <code>named</code> JVM
 system property via the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html">@EnabledIfSystemProperty</a></code> and <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html">@DisabledIfSystemProperty</a></code>
@@ -2228,7 +2255,7 @@ found if they are directly present, indirectly present, or meta-present on a giv
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-conditional-execution-environment-variables"><a class="anchor" href="#writing-tests-conditional-execution-environment-variables"></a>2.8.4. Environment Variable Conditions</h4>
+<h4 id="writing-tests-conditional-execution-environment-variables"><a class="anchor" href="#writing-tests-conditional-execution-environment-variables"></a>2.8.5. Environment Variable Conditions</h4>
 <div class="paragraph">
 <p>A container or test may be enabled or disabled based on the value of the <code>named</code>
 environment variable from the underlying operating system via the
@@ -2270,7 +2297,7 @@ indirectly present, or meta-present on a given element.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-conditional-execution-custom"><a class="anchor" href="#writing-tests-conditional-execution-custom"></a>2.8.5. Custom Conditions</h4>
+<h4 id="writing-tests-conditional-execution-custom"><a class="anchor" href="#writing-tests-conditional-execution-custom"></a>2.8.6. Custom Conditions</h4>
 <div class="paragraph">
 <p>As an alternative to implementing an <a href="#extensions-conditions"><code>ExecutionCondition</code></a>, a
 container or test may be enabled or disabled based on a <em>condition method</em> configured via
@@ -11940,7 +11967,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-09-11 15:26:40 UTC
+Last updated 2022-09-16 14:57:39 UTC
 </div>
 </div>
 <style>
