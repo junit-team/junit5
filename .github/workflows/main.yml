@@ -27,6 +27,13 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install graphviz
+    - name: Install GraalVM
+      uses: graalvm/setup-graalvm@v1
+      with:
+        version: 'latest'
+        java-version: '17'
+        components: 'native-image'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       uses: ./.github/actions/main-build
       with:
