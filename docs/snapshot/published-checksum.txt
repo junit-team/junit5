@@ -346,6 +346,7 @@
 76bfba6c772492e6d36f49399455dd48  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/JUnitFactory.java
 76c1d512ffff1949d15b14ceb58aa97b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IsPotentialJUnit4TestMethod.java
 76d15923dc6954b5c05d51a47bac1879  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectFile.java
+7706e719445f5531c01880b5663ec1d9  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.1.adoc
 775a6cf1fce3cf9132f0b8b494efb150  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java
 77744b74c204b24c3749e12254f28b70  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfiguration.java
 778eac34c2a0125addfba5410f5d5980  documentation/src/test/java/example/ConditionalTestExecutionDemo.java
@@ -415,7 +416,6 @@
 8c8f2ec74086e3ab4dff9f115535aa37  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.java
 8cd1bb18f186616aa994cf5e11f203ac  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassBasedTestDescriptor.java
 8d119bfaa2d7b90180cd85b834ab5e12  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/NestedMethodSelector.java
-8d6f83b9558be88125d2533dcf382adc  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/OpenTestReportGeneratingListener.java
 8e915aacbcdb30b59c26871292dd0881  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/MethodSource.java
 8e9ebb3b6c38b21a9c9d7233aa20eb7c  documentation/src/test/java/example/registration/WebServerDemo.java
 8f6dc8b231002b81817b17b9f5c3ecef  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassDescriptor.java
@@ -433,7 +433,6 @@
 95ea8ad950b60b38fa935281ba6bf326  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerDecorator.java
 95f80073fd70c879adeb498401a5969f  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DirectorySelector.java
 96233d7888a2134bce2d771e63929b9e  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.png
-971159278ee604cacb39ea92996f7d98  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.1.adoc
 971a94d45abd089c2c8a358bd85d6d78  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 971fb53a6a35951a7643b01a8a495c87  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClasspathScanner.java
 972bfc1889cb599eded9c6cdb988a767  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodSource.java
@@ -515,6 +514,7 @@ ad20164408d5d0f907291e573c2ac5e4  junit-jupiter-engine/src/main/java/org/junit/j
 ad8b82efd1c72aebfcab048e95397921  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java
 ae3ad87fb1bf944fe0b32847c59b0839  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle_source.docx
 ae82d77feab1ac74e4d129def513f24d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/PostDiscoveryFilter.java
+af6fc7541934a350f726b1f50cbe2493  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/OpenTestReportGeneratingListener.java
 b025fa5453b58a242d5b86c3ec5e5c5e  documentation/src/test/java/example/MethodSourceParameterResolutionDemo.java
 b0acceea509faf3a82c15a39ebc2e881  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/MethodSelector.java
 b1bd0346c50462925e21695cb09ff44e  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/UriSelector.java
