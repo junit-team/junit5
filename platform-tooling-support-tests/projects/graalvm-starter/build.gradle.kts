@@ -1,10 +1,9 @@
 plugins {
 	java
+	id("org.graalvm.buildtools.native")
 }
 
-// grab jupiter version from system environment
 val jupiterVersion: String = System.getenv("JUNIT_JUPITER_VERSION")
-val vintageVersion: String = System.getenv("JUNIT_VINTAGE_VERSION")
 val platformVersion: String = System.getenv("JUNIT_PLATFORM_VERSION")
 
 repositories {
@@ -20,23 +19,11 @@ dependencies {
 tasks.test {
 	useJUnitPlatform()
 
-	testLogging {
-		events("passed", "skipped", "failed")
-	}
-
-	reports {
-		html.isEnabled = true
-	}
-
 	val outputDir = reports.junitXml.outputLocation
 	jvmArgumentProviders += CommandLineArgumentProvider {
 		listOf(
 			"-Djunit.platform.reporting.open.xml.enabled=true",
 			"-Djunit.platform.reporting.output.dir=${outputDir.get().asFile.absolutePath}"
 		)
-	}
-
-	doFirst {
-		println("Using Java version: ${JavaVersion.current()}")
 	}
 }
