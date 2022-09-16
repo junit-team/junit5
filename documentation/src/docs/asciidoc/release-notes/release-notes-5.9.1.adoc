@@ -47,8 +47,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
-
+* New `@EnabledInNativeImage` and `@DisabledInNativeImage` annotations for enabling and
+  disabling tests within a GraalVM native image.
 
 [[release-notes-5.9.1-junit-vintage]]
 === JUnit Vintage
