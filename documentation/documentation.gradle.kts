@@ -48,6 +48,9 @@ dependencies {
 	testRuntimeOnly(libs.apiguardian) {
 		because("it's required to generate API tables")
 	}
+	testRuntimeOnly(libs.openTestReporting.events) {
+		because("it's required to run tests via IntelliJ which does not consumed the shadowed jar of junit-platform-reporting")
+	}
 
 	testImplementation(libs.classgraph) {
 		because("ApiReportGenerator needs it")
