@@ -16,6 +16,8 @@ on GitHub.
 ==== Bug Fixes
 
 * `ReflectionSupport.findMethods(...)` now returns a distinct set of methods.
+* Execution in GraalVM native images no longer requires `--initialize-at-build-time` for
+  `OpenTestReportGeneratingListener`.
 
 ==== Deprecations and Breaking Changes
 
