@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpectedStartedOpenTestReport;
 
 import java.nio.file.Paths;
+import java.time.Duration;
 
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
@@ -38,7 +38,7 @@ class GraalVmStarterTests {
 				.setProject("graalvm-starter") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace") //
-				.setTimeout(TOOL_TIMEOUT) //
+				.setTimeout(Duration.ofMinutes(5)) //
 				.build();
 
 		var result = request.run();
