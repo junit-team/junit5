@@ -3,7 +3,7 @@
 
 *Date of Release:* ❓
 
-*Scope:* Minor bug fixes since 5.9.0
+*Scope:* Minor enhancements and bug fixes since 5.9.0
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/63?closed=1+[5.9.1] milestone page in the JUnit repository
