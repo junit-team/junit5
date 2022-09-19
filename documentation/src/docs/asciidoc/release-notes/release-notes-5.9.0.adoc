@@ -17,8 +17,10 @@ format
 * Various improvements to `ConsoleLauncher`
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/62?closed=1+[5.9.0] milestone page in the JUnit repository on
-GitHub.
+link:{junit5-repo}+/milestone/58?closed=1+[5.9 M1],
+link:{junit5-repo}+/milestone/61?closed=1+[5.9 RC1], and
+link:{junit5-repo}+/milestone/62?closed=1+[5.9 GA] milestone pages in the JUnit repository
+on GitHub.
 
 
 [[release-notes-5.9.0-junit-platform]]
