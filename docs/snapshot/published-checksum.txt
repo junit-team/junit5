@@ -346,7 +346,6 @@
 76bfba6c772492e6d36f49399455dd48  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/JUnitFactory.java
 76c1d512ffff1949d15b14ceb58aa97b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IsPotentialJUnit4TestMethod.java
 76d15923dc6954b5c05d51a47bac1879  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectFile.java
-7706e719445f5531c01880b5663ec1d9  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.1.adoc
 775a6cf1fce3cf9132f0b8b494efb150  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java
 77744b74c204b24c3749e12254f28b70  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfiguration.java
 778eac34c2a0125addfba5410f5d5980  documentation/src/test/java/example/ConditionalTestExecutionDemo.java
@@ -743,6 +742,7 @@ ec34b26ba8050acb09c1afd6d8977793  junit-platform-engine/src/main/java/org/junit/
 eca7e4cbe3996a758ba077b747f6d527  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestTemplateMethod.java
 ecd2c8ffb784bf4efbf5a26fcf18faba  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassUtils.java
 ed237b631449e0d21eac9f86a86637db  junit-platform-console/src/main/java/org/junit/platform/console/options/SelectorConverter.java
+ed2b58ab1471eaf014433462144e945e  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.1.adoc
 ed57d460ffb3eb9b88bbb093c5a71cd1  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Tokenizer.java
 ed7126219990320e34f4c2b6c4b5f16f  documentation/src/test/java/example/extensions/RandomNumberDemo.java
 ed8394139c05c16d002981004170cdff  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.js
