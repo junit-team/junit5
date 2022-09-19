@@ -119,6 +119,7 @@
 26def4b7e374f835ddd65cdd54cbee0f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ResourceLock.java
 2760f20033285c5a8d8f15e6b6121c36  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.java
 27fe622b5fcfc5ad113ffc163d37b828  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicContainerTestDescriptor.java
+282114c1c229e9facb8add1ad6ea64e9  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0.adoc
 2848bc141c337470d04109cfe7b7f28d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotSame.java
 29706f6076e8ef5b6bd4214c87fb38de  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestableMethod.java
 297ceb67a3c45b8fc8b89f98c2012b51  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeEngines.java
@@ -146,7 +147,6 @@
 30786fb53f1c079d5b807cd0a36ab390  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/FallbackStringToObjectConverter.java
 310153df0da4d099f9780bca32440199  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileSource.java
 31191b0389a9d04f0f494528403e22ad  documentation/src/test/java/example/testkit/EngineTestKitFailedMethodDemo.java
-323f1cc9ece8331cda9a67eedf95d4e3  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.0.adoc
 325208bdaf351ba7c65bbc197cf35995  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/Extension.java
 325a0f83a2bbd10db57b12285dd8e2c7  documentation/src/main/java/example/util/package-info.java
 328aad238291ec76ce9c454ba095f047  junit-platform-runner/src/main/java/org/junit/platform/runner/package-info.java
