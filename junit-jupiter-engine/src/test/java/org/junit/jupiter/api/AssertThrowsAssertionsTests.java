@@ -201,6 +201,7 @@ class AssertThrowsAssertionsTests {
 	}
 
 	@Test
+	@SuppressWarnings("serial")
 	void assertThrowsWithExecutableThatThrowsInstanceOfAnonymousInnerClassAsUnexpectedException() {
 		try {
 			assertThrows(IllegalStateException.class, () -> {
