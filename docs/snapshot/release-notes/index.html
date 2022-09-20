@@ -521,10 +521,21 @@ authors as well as build tool and IDE vendors.</p>
 <h2 id="release-notes-5.9.1"><a class="anchor" href="#release-notes-5.9.1"></a>5.9.1</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> September 20, 2022</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> Minor enhancements and bug fixes since 5.9.0</p>
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>New <code>@EnabledInNativeImage</code> and <code>@DisabledInNativeImage</code> annotations for testing in
+GraalVM native images.</p>
+</li>
+<li>
+<p>Minor bug fixes and enhancements since 5.9.0</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -543,26 +554,6 @@ on GitHub.</p>
 <li>
 <p>Execution in GraalVM native images no longer requires <code>--initialize-at-build-time</code> for
 <code>OpenTestReportGeneratingListener</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
 </li>
 </ul>
 </div>
@@ -597,17 +588,7 @@ are now properly reported.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -620,35 +601,8 @@ disabling tests within a GraalVM native image.</p>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.9.1-junit-vintage"><a class="anchor" href="#release-notes-5.9.1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
+<div class="paragraph">
+<p>No changes.</p>
 </div>
 </div>
 </div>
@@ -704,7 +658,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.0-junit-platform"><a class="anchor" href="#release-notes-5.9.0-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -730,7 +684,7 @@ multidimensional array now fail within a reasonable amount of time.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -741,7 +695,7 @@ method.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -806,7 +760,7 @@ results in an error to avoid misconfiguration – for example, due to typos.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.0-junit-jupiter"><a class="anchor" href="#release-notes-5.9.0-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -822,7 +776,7 @@ locale instead of the default one.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -846,7 +800,7 @@ technically also a breaking change since there might be existing user code with
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -920,7 +874,7 @@ which executes it in a separate thread.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.0-junit-vintage"><a class="anchor" href="#release-notes-5.9.0-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -970,7 +924,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.2-junit-jupiter"><a class="anchor" href="#release-notes-5.8.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1034,7 +988,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.1-junit-platform"><a class="anchor" href="#release-notes-5.8.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-6"><a class="anchor" href="#deprecations-and-breaking-changes-6"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1047,7 +1001,7 @@ JUnit Platform</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1061,7 +1015,7 @@ detection.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.1-junit-jupiter"><a class="anchor" href="#release-notes-5.8.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1077,7 +1031,7 @@ spaces correctly and no longer throws an <code>IndexOutOfBoundsException</code>.
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1100,7 +1054,7 @@ Guide</a> for details and an example.</p>
 <div class="sect2">
 <h3 id="release-notes-5.8.1-junit-vintage"><a class="anchor" href="#release-notes-5.8.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1169,7 +1123,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-09-19 16:26:35 UTC
+Last updated 2022-09-20 17:32:28 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
