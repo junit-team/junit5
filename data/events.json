@@ -776,5 +776,15 @@
     "speakers": [
       "marcphilipp"
     ]
+  },
+  {
+    "title": "Spring and JUnit 5",
+    "event": "SpringOne 2022",
+    "date": "2022-12-07",
+    "location": "online",
+    "link": "https://springone.io/2022/sessions/spring-and-junit-5",
+    "speakers": [
+      "sbrannen"
+    ]
   }
 ]
