@@ -12,7 +12,6 @@ package org.junit.platform.commons.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -23,7 +22,6 @@ import org.junit.jupiter.api.Test;
 class ModuleUtilsTests {
 
 	@Test
-	@Disabled("modules")
 	void isJavaPlatformModuleSystemAvailable() {
 		boolean expected;
 		try {
