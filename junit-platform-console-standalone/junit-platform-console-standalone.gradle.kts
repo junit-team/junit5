@@ -1,3 +1,5 @@
+import org.junit.gradle.java.WriteArtifactsFile
+
 plugins {
 	`java-library-conventions`
 	`shadow-conventions`
@@ -26,19 +28,9 @@ tasks {
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
 	}
-	val shadowedArtifactsFile by registering {
-		inputs.files(configurations.shadowed).withNormalizer(ClasspathNormalizer::class)
-		val outputFile = layout.buildDirectory.file("shadowed-artifacts")
-		outputs.file(outputFile)
-		doFirst {
-			outputFile.get().asFile.printWriter().use { out ->
-				configurations.shadowed.get().resolvedConfiguration.resolvedArtifacts
-					.map { it.moduleVersion.id }
-					.map { "${it.group}:${it.name}:${it.version}" }
-					.sorted()
-					.forEach(out::println)
-			}
-		}
+	val shadowedArtifactsFile by registering(WriteArtifactsFile::class) {
+		from(configurations.shadowed)
+		outputFile.set(layout.buildDirectory.file("shadowed-artifacts"))
 	}
 	shadowJar {
 		// https://github.com/junit-team/junit5/issues/2557
