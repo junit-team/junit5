@@ -38,19 +38,16 @@ tasks {
 			into("META-INF")
 		}
 		from(sourceSets.mainRelease9.get().output.classesDirs)
-		doLast {
-			exec {
-				executable = project.the<JavaToolchainService>().launcherFor(java.toolchain).get()
-					.metadata.installationPath.file("bin/jar").asFile.absolutePath
-				args(
-					"--update",
-					"--file", archiveFile.get().asFile.absolutePath,
-					"--main-class", "org.junit.platform.console.ConsoleLauncher",
-					"--release", "17",
-					"-C", release17ClassesDir.absolutePath, "."
-				)
-			}
-		}
+		doLast(objects.newInstance(org.junit.gradle.java.ExecJarAction::class).apply {
+			javaLauncher.set(project.the<JavaToolchainService>().launcherFor(java.toolchain))
+			args.addAll(
+				"--update",
+				"--file", archiveFile.get().asFile.absolutePath,
+				"--main-class", "org.junit.platform.console.ConsoleLauncher",
+				"--release", "17",
+				"-C", release17ClassesDir.absolutePath, "."
+			)
+		})
 	}
 	jar {
 		manifest {
