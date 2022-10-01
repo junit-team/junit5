@@ -56,6 +56,10 @@ tasks {
 		dependsOn(shadowJar)
 		enabled = false
 	}
+	named<Jar>("codeCoverageClassesJar") {
+		from(shadowJar.map { zipTree(it.archiveFile) })
+		exclude("**/shadow/**")
+	}
 	test {
 		dependsOn(shadowJar)
 		// in order to run the test against the shadowJar

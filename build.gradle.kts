@@ -1,3 +1,5 @@
+import org.junit.gradle.jacoco.JacocoConventions.COVERAGE_CLASSES
+
 plugins {
 	id("io.spring.nohttp")
 	id("io.github.gradle-nexus.publish-plugin")
@@ -65,29 +67,18 @@ dependencies {
 	}
 }
 
+configurations {
+	allCodeCoverageReportClassDirectories.get().apply {
+		attributes {
+			attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements::class, COVERAGE_CLASSES))
+		}
+	}
+}
+
 reporting {
 	reports {
 		create<JacocoCoverageReport>("jacocoRootReport") {
 			testType.set(TestSuiteType.UNIT_TEST)
-			afterEvaluate {
-				reportTask.configure {
-					classDirectories.setFrom(
-						files(
-							classDirectories.files
-								.filter { it.exists() }
-								.map {
-									zipTree(it).matching {
-										// Use MR-JAR classes instead
-										exclude("org/junit/platform/console/options/ConsoleUtils.class")
-										exclude("org/junit/platform/commons/util/ModuleUtils.class")
-										// Exclude shadowed classes
-										exclude("**/shadow/**") // exclude MR-JAR classes
-									}
-								}
-						)
-					)
-				}
-			}
 		}
 	}
 }

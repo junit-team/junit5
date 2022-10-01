@@ -49,11 +49,15 @@ tasks {
 			)
 		})
 	}
+	codeCoverageClassesJar {
+		exclude("org/junit/platform/console/options/ConsoleUtils.class")
+	}
 	jar {
 		manifest {
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
 	}
+
 
 	// This jar contains some Java 9 code
 	// (org.junit.platform.console.ConsoleLauncherToolProvider which implements
