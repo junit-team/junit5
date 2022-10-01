@@ -58,7 +58,6 @@ tasks {
 		}
 	}
 
-
 	// This jar contains some Java 9 code
 	// (org.junit.platform.console.ConsoleLauncherToolProvider which implements
 	// java.util.spi.ToolProvider which is @since 9).

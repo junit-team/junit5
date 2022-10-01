@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.junit.gradle.jacoco.JacocoConventions.COVERAGE_CLASSES
 
 plugins {
@@ -26,8 +27,6 @@ configurations.create("codeCoverageReportClasses") {
 	isCanBeResolved = false
 	isCanBeConsumed = true
 	isTransitive = false
-	attributes {
-		attributes.attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements::class, COVERAGE_CLASSES))
-	}
+	attributes.attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements::class, COVERAGE_CLASSES))
 	outgoing.artifact(codeCoverageClassesJar)
 }

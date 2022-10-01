@@ -1,5 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.attributes.LibraryElements
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.TestSuiteType
 import org.gradle.kotlin.dsl.invoke
 import org.gradle.kotlin.dsl.`jacoco-report-aggregation`
@@ -15,7 +16,7 @@ plugins {
 configurations {
 	allCodeCoverageReportClassDirectories {
 		attributes {
-			attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements::class, COVERAGE_CLASSES))
+			attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements::class, COVERAGE_CLASSES))
 		}
 	}
 }
