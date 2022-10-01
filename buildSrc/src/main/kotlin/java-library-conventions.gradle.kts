@@ -1,5 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import org.junit.gradle.java.ModulePathArgumentProvider
+import org.junit.gradle.java.PatchModuleArgumentProvider
 
 plugins {
 	`java-library`
@@ -156,8 +157,8 @@ val compileModule by tasks.registering(JavaCompile::class) {
 			"-Werror", // Terminates compilation when warnings occur.
 			"--module-version", "${project.version}",
 	))
-	options.compilerArgumentProviders.add(ModulePathArgumentProvider())
-	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
+	options.compilerArgumentProviders.add(ModulePathArgumentProvider(project, modularProjects))
+	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(project, it) })
 	modularity.inferModulePath.set(false)
 }
 
@@ -213,45 +214,6 @@ tasks.compileTestJava {
 			"-Werror", // Terminates compilation when warnings occur.
 			"-parameters" // Generates metadata for reflection on method parameters.
 	))
-}
-
-inner class ModulePathArgumentProvider : CommandLineArgumentProvider, Named {
-	@get:CompileClasspath
-	val modulePath: Provider<Configuration> = configurations.compileClasspath
-	override fun asArguments() = listOf(
-									"--module-path",
-									modulePath.get().asPath,
-									"--module-source-path",
-									files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
-								)
-	@Internal
-	override fun getName() = "module-path"
-}
-
-inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider, Named {
-
-	@get:Input
-	val module: String = it.javaModuleName
-
-	@get:InputFiles
-	@get:PathSensitive(RELATIVE)
-	val patch: Provider<FileCollection> = provider {
-		if (it == project)
-			files(sourceSets.matching { it.name.startsWith("main") }.map { it.output })
-		else
-			files(it.sourceSets["main"].java.srcDirs)
-	}
-
-	override fun asArguments(): List<String> {
-		val path = patch.get().filter { it.exists() }.asPath
-		if (path.isEmpty()) {
-			return emptyList()
-		}
-		return listOf("--patch-module", "$module=$path")
-	}
-
-	@Internal
-	override fun getName() = "patch-module($module)"
 }
 
 afterEvaluate {
