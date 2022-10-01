@@ -5,6 +5,7 @@ plugins {
 	`build-metadata`
 	`dependency-update-check`
 	`jacoco-conventions`
+	`jacoco-report-aggregation`
 	`temp-maven-repo`
 }
 
@@ -58,35 +59,35 @@ nohttp {
 	source.exclude("buildSrc/build/generated-sources/**")
 }
 
-val jacocoTestProjects = listOf(
-	projects.junitJupiterEngine,
-	projects.junitJupiterMigrationsupport,
-	projects.junitJupiterParams,
-	projects.junitVintageEngine,
-	projects.platformTests
-).map { it.dependencyProject }
-val jacocoClassesDir by extra(file("$buildDir/jacoco/classes"))
-
-val jacocoRootReport by tasks.registering(JacocoReport::class) {
-	modularProjects.forEach {
-		dependsOn(it.tasks.named("extractJar"))
-		it.pluginManager.withPlugin("java") {
-			sourceDirectories.from(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
-		}
-	}
-	classDirectories.from(files(jacocoClassesDir))
-	reports {
-		html.required.set(true)
-		xml.required.set(true)
-		csv.required.set(false)
+dependencies {
+	(modularProjects + listOf(projects.platformTests.dependencyProject)).forEach {
+		jacocoAggregation(project(it.path))
 	}
 }
 
-afterEvaluate {
-	jacocoRootReport {
-		jacocoTestProjects.forEach {
-			executionData(it.tasks.withType<Test>().map { task -> task.the<JacocoTaskExtension>().destinationFile })
-			dependsOn(it.tasks.withType<Test>())
+reporting {
+	reports {
+		create<JacocoCoverageReport>("jacocoRootReport") {
+			testType.set(TestSuiteType.UNIT_TEST)
+			afterEvaluate {
+				reportTask.configure {
+					classDirectories.setFrom(
+						files(
+							classDirectories.files
+								.filter { it.exists() }
+								.map {
+									zipTree(it).matching {
+										// Use MR-JAR classes instead
+										exclude("org/junit/platform/console/options/ConsoleUtils.class")
+										exclude("org/junit/platform/commons/util/ModuleUtils.class")
+										// Exclude shadowed classes
+										exclude("**/shadow/**") // exclude MR-JAR classes
+									}
+								}
+						)
+					)
+				}
+			}
 		}
 	}
 }

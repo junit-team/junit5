@@ -3,6 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
+	java
 	id("org.gradle.test-retry")
 }
 
@@ -11,10 +12,15 @@ tasks.withType<Test>().configureEach {
 		includeEngines("junit-jupiter")
 	}
 	include("**/*Test.class", "**/*Tests.class")
+
+	classpath -= sourceSets.main.get().output
+	classpath += files(tasks.jar.map { it.archiveFile })
+
 	testLogging {
 		events = setOf(FAILED)
 		exceptionFormat = FULL
 	}
+
 	val isCiServer = System.getenv("CI") != null
 	retry {
 		maxRetries.set(providers.gradleProperty("retries").map(String::toInt).orElse(if (isCiServer) 2 else 0))

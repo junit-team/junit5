@@ -5,12 +5,14 @@ plugins {
 
 val shadowed by configurations.creating
 
-configurations.forEach { configuration ->
-	configuration.outgoing.apply {
-		val removed = artifacts.removeIf { it.classifier.isNullOrEmpty() }
-		if (removed) {
-			artifact(tasks.shadowJar) {
-				classifier = ""
+configurations {
+	listOf(apiElements, runtimeElements).forEach {
+		it.configure {
+			outgoing {
+				artifacts.clear()
+				artifact(tasks.shadowJar) {
+					classifier = ""
+				}
 			}
 		}
 	}
