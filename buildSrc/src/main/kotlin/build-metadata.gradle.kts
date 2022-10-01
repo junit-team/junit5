@@ -1,4 +1,3 @@
-import org.codehaus.groovy.runtime.ProcessGroovyMethods
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -22,6 +21,8 @@ val buildTimeAndDate =
 val buildDate: String by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
 val buildTime: String by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
 val buildRevision: String by extra {
-	ProcessGroovyMethods.getText(ProcessGroovyMethods.execute("git rev-parse --verify HEAD"))
+	providers.exec {
+		commandLine("git", "rev-parse", "--verify", "HEAD")
+	}.standardOutput.asText.get()
 }
 val builtByValue by extra { project.findProperty("builtBy") ?: project.property("defaultBuiltBy") }
