@@ -1,13 +1,10 @@
-import org.junit.gradle.jacoco.JacocoConventions.COVERAGE_CLASSES
-
 plugins {
 	id("io.spring.nohttp")
 	id("io.github.gradle-nexus.publish-plugin")
 	`base-conventions`
 	`build-metadata`
 	`dependency-update-check`
-	`jacoco-conventions`
-	`jacoco-report-aggregation`
+	`jacoco-aggregation-conventions`
 	`temp-maven-repo`
 }
 
@@ -50,6 +47,12 @@ val vintageProjects by extra(listOf(
 val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProjects)
 val modularProjects by extra(mavenizedProjects - listOf(projects.junitPlatformConsoleStandalone.dependencyProject))
 
+dependencies {
+	(modularProjects + listOf(projects.platformTests.dependencyProject)).forEach {
+		jacocoAggregation(project(it.path))
+	}
+}
+
 nexusPublishing {
 	packageGroup.set("org.junit")
 	repositories {
@@ -59,26 +62,4 @@ nexusPublishing {
 
 nohttp {
 	source.exclude("buildSrc/build/generated-sources/**")
-}
-
-dependencies {
-	(modularProjects + listOf(projects.platformTests.dependencyProject)).forEach {
-		jacocoAggregation(project(it.path))
-	}
-}
-
-configurations {
-	allCodeCoverageReportClassDirectories.get().apply {
-		attributes {
-			attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements::class, COVERAGE_CLASSES))
-		}
-	}
-}
-
-reporting {
-	reports {
-		create<JacocoCoverageReport>("jacocoRootReport") {
-			testType.set(TestSuiteType.UNIT_TEST)
-		}
-	}
 }
