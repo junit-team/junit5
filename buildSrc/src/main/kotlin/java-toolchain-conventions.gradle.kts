@@ -1,8 +1,8 @@
-val javaToolchainVersion: String? by project
-val defaultLanguageVersion = JavaLanguageVersion.of(17)
-val javaLanguageVersion = javaToolchainVersion?.let { JavaLanguageVersion.of(it) } ?: defaultLanguageVersion
-
 project.pluginManager.withPlugin("java") {
+	val javaToolchainVersion: String? by project
+	val defaultLanguageVersion = JavaLanguageVersion.of(17)
+	val javaLanguageVersion = javaToolchainVersion?.let { JavaLanguageVersion.of(it) } ?: defaultLanguageVersion
+
 	val extension = the<JavaPluginExtension>()
 	val javaToolchainService = the<JavaToolchainService>()
 	extension.toolchain.languageVersion.set(javaLanguageVersion)
