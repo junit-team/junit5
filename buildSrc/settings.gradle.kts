@@ -1,1 +1,1 @@
-// intentionally left blank
+rootProject.name = "buildSrc"
