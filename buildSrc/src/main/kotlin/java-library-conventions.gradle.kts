@@ -157,8 +157,8 @@ val compileModule by tasks.registering(JavaCompile::class) {
 			"-Werror", // Terminates compilation when warnings occur.
 			"--module-version", "${project.version}",
 	))
-	options.compilerArgumentProviders.add(ModulePathArgumentProvider(project, modularProjects))
-	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(project, it) })
+	options.compilerArgumentProviders.add(objects.newInstance(ModulePathArgumentProvider::class, project, modularProjects))
+	options.compilerArgumentProviders.addAll(modularProjects.map { objects.newInstance(PatchModuleArgumentProvider::class, project, it) })
 	modularity.inferModulePath.set(false)
 }
 

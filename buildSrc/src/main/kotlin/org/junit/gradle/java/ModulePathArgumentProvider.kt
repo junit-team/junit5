@@ -3,25 +3,35 @@ package org.junit.gradle.java
 import org.gradle.api.Named
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
+import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.get
 import org.gradle.process.CommandLineArgumentProvider
+import javax.inject.Inject
 
-class ModulePathArgumentProvider(project: Project, modularProjects: List<Project>) : CommandLineArgumentProvider,
-    Named {
+abstract class ModulePathArgumentProvider @Inject constructor(project: Project, modularProjects: List<Project>) :
+    CommandLineArgumentProvider, Named {
 
     @get:CompileClasspath
-    val modulePath: Provider<Configuration> = project.configurations.named("compileClasspath")
+    abstract val modulePath: ConfigurableFileCollection
 
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.RELATIVE)
-    val moduleSourceDirs: FileCollection = project.files(modularProjects.map { "${it.projectDir}/src/module" })
+    abstract val moduleSourceDirs: ConfigurableFileCollection
+
+    init {
+        modulePath.from(project.configurations.named("compileClasspath"))
+        modularProjects.forEach {
+            moduleSourceDirs.from(project.files("${it.projectDir}/src/module"))
+        }
+    }
 
     override fun asArguments() = listOf(
         "--module-path",
-        modulePath.get().asPath,
+        modulePath.asPath,
         "--module-source-path",
         moduleSourceDirs.asPath
     )
