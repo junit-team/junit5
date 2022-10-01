@@ -49,6 +49,9 @@ tasks {
 			)
 		})
 	}
+	codeCoverageClassesJar {
+		exclude("org/junit/platform/console/options/ConsoleUtils.class")
+	}
 	jar {
 		manifest {
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")

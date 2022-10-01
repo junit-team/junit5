@@ -4,7 +4,7 @@ plugins {
 	`base-conventions`
 	`build-metadata`
 	`dependency-update-check`
-	`jacoco-conventions`
+	`jacoco-aggregation-conventions`
 	`temp-maven-repo`
 }
 
@@ -47,6 +47,12 @@ val vintageProjects by extra(listOf(
 val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProjects)
 val modularProjects by extra(mavenizedProjects - listOf(projects.junitPlatformConsoleStandalone.dependencyProject))
 
+dependencies {
+	(modularProjects + listOf(projects.platformTests.dependencyProject)).forEach {
+		jacocoAggregation(project(it.path))
+	}
+}
+
 nexusPublishing {
 	packageGroup.set("org.junit")
 	repositories {
@@ -56,37 +62,4 @@ nexusPublishing {
 
 nohttp {
 	source.exclude("buildSrc/build/generated-sources/**")
-}
-
-val jacocoTestProjects = listOf(
-	projects.junitJupiterEngine,
-	projects.junitJupiterMigrationsupport,
-	projects.junitJupiterParams,
-	projects.junitVintageEngine,
-	projects.platformTests
-).map { it.dependencyProject }
-val jacocoClassesDir by extra(file("$buildDir/jacoco/classes"))
-
-val jacocoRootReport by tasks.registering(JacocoReport::class) {
-	modularProjects.forEach {
-		dependsOn(it.tasks.named("extractJar"))
-		it.pluginManager.withPlugin("java") {
-			sourceDirectories.from(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
-		}
-	}
-	classDirectories.from(files(jacocoClassesDir))
-	reports {
-		html.required.set(true)
-		xml.required.set(true)
-		csv.required.set(false)
-	}
-}
-
-afterEvaluate {
-	jacocoRootReport {
-		jacocoTestProjects.forEach {
-			executionData(it.tasks.withType<Test>().map { task -> task.the<JacocoTaskExtension>().destinationFile })
-			dependsOn(it.tasks.withType<Test>())
-		}
-	}
 }

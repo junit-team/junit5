@@ -29,6 +29,10 @@ tasks.jar {
 	})
 }
 
+tasks.codeCoverageClassesJar {
+	exclude("org/junit/platform/commons/util/ModuleUtils.class")
+}
+
 eclipse {
 	classpath {
 		sourceSets -= project.sourceSets.mainRelease9.get()
