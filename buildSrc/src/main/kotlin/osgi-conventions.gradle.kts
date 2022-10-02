@@ -106,6 +106,7 @@ val verifyOSGi by tasks.registering(Resolve::class) {
 	// can use them to validate the metadata without causing those to
 	// end up in the dependencies of those projects.
 	bundles(osgiVerification)
+	properties.empty()
 }
 
 tasks.check {
