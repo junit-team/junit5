@@ -2,6 +2,7 @@ import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.junit.gradle.exec.ClasspathSystemPropertyProvider
+import org.junit.gradle.exec.RunConsoleLauncher
 import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
@@ -114,63 +115,21 @@ require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
 
 tasks {
 
-	val consoleLauncherTest by registering {
-		val runtimeClasspath = sourceSets["test"].runtimeClasspath
-		inputs.files(runtimeClasspath).withNormalizer(ClasspathNormalizer::class)
-		val reportsDir = file("$buildDir/test-results")
-		outputs.dir(reportsDir)
-
-		val debugging = providers.gradleProperty("consoleLauncherTestDebug")
-			.map { it != "false" }
-			.orElse(false)
-		outputs.cacheIf { !debugging.get() }
-		outputs.upToDateWhen { !debugging.get() }
-
-		// Track OS as input so that tests are executed on all configured operating systems on CI
-		trackOperationSystemAsInput()
-		doFirst {
-			val output = ByteArrayOutputStream()
-			val result = javaexec {
-				debug = project.findProperty("debug") == "true"
-				classpath = runtimeClasspath
-				mainClass.set("org.junit.platform.console.ConsoleLauncher")
-				args("--scan-classpath")
-				args("--config", "enableHttpServer=true")
-				args("--include-classname", ".*Tests")
-				args("--include-classname", ".*Demo")
-				args("--exclude-tag", "exclude")
-				args("--reports-dir", reportsDir)
-				args("--config=junit.platform.reporting.output.dir=${reportsDir}")
-				args("--config=junit.platform.reporting.open.xml.enabled=true")
-				systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
-				debug = debugging.get()
-				if (!debugging.get()) {
-					standardOutput = output
-					errorOutput = output
-				}
-				isIgnoreExitValue = true
-			}
-			if (result.exitValue != 0 && !debugging.get()) {
-				System.out.write(output.toByteArray())
-				System.out.flush()
-			}
-			result.rethrowFailure().assertNormalExitValue()
-		}
+	val consoleLauncherTest by registering(RunConsoleLauncher::class) {
+		args.addAll("--config", "enableHttpServer=true")
+		args.addAll("--include-classname", ".*Tests")
+		args.addAll("--include-classname", ".*Demo")
+		args.addAll("--exclude-tag", "exclude")
 	}
 
-	register<JavaExec>("consoleLauncher") {
-		val reportsDir = file("$buildDir/console-launcher")
-		outputs.dir(reportsDir)
+	register<RunConsoleLauncher>("consoleLauncher") {
+		hideOutput.set(false)
+		reportsDir.set(layout.buildDirectory.dir("console-launcher"))
 		outputs.upToDateWhen { false }
-		classpath = sourceSets["test"].runtimeClasspath
-		mainClass.set("org.junit.platform.console.ConsoleLauncher")
-		args("--scan-classpath")
-		args("--config", "enableHttpServer=true")
-		args("--include-classname", ".*Tests")
-		args("--include-classname", ".*Demo")
-		args("--exclude-tag", "exclude")
-		args("--reports-dir", reportsDir)
-		systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+		args.addAll("--config", "enableHttpServer=true")
+		args.addAll("--include-classname", ".*Tests")
+		args.addAll("--include-classname", ".*Demo")
+		args.addAll("--exclude-tag", "exclude")
 	}
 
 	test {
