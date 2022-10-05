@@ -14,6 +14,7 @@ import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
+import java.util.ArrayList;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
@@ -37,30 +38,39 @@ class EngineDiscoveryResultValidator {
 			() -> String.format(
 				"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
 				testEngine.getId()));
-		Preconditions.condition(isAcyclic(root),
-			() -> String.format("The discover() method for TestEngine with ID '%s' returned a cyclic graph.",
-				testEngine.getId()));
+		ArrayList<UniqueId> cyclicUIDs = getCyclicUIDs(root);
+		Preconditions.condition(cyclicUIDs.isEmpty(),
+			() -> String.format("The discover() method for TestEngine with ID '%s' returned a cyclic graph: "
+					+ "Unique ID(s) '%s' enter a cycle",
+				testEngine.getId(), cyclicUIDs));
 	}
 
 	/**
 	 * @return {@code true} if the tree does <em>not</em> contain a cycle; else {@code false}.
 	 */
 	boolean isAcyclic(TestDescriptor root) {
+		return getCyclicUIDs(root).isEmpty();
+	}
+
+	ArrayList<UniqueId> getCyclicUIDs(TestDescriptor root) {
 		Set<UniqueId> visited = new HashSet<>();
+		ArrayList<UniqueId> cyclic = new ArrayList<>();
 		visited.add(root.getUniqueId());
 		Queue<TestDescriptor> queue = new ArrayDeque<>();
 		queue.add(root);
 		while (!queue.isEmpty()) {
 			for (TestDescriptor child : queue.remove().getChildren()) {
-				if (!visited.add(child.getUniqueId())) {
-					return false; // id already known: cycle detected!
+				UniqueId uid = child.getUniqueId();
+				if (!visited.add(uid)) {
+					cyclic.add(uid);
+					return cyclic; // id already known: cycle detected!
 				}
 				if (child.isContainer()) {
 					queue.add(child);
 				}
 			}
 		}
-		return true;
+		return cyclic;
 	}
 
 }
