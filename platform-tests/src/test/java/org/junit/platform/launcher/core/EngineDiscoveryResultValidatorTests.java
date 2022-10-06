@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,6 +33,7 @@ class EngineDiscoveryResultValidatorTests {
 
 		root.addChild(root);
 		assertFalse(validator.isAcyclic(root));
+		assertEquals(validator.getFirstCyclicUID(root).get(), UniqueId.forEngine("root"));
 	}
 
 	@Test
@@ -46,6 +48,7 @@ class EngineDiscoveryResultValidatorTests {
 
 		group2.addChild(group1);
 		assertFalse(validator.isAcyclic(root));
+		assertEquals(validator.getFirstCyclicUID(root).get(), UniqueId.forEngine("root").append("group", "1"));
 	}
 
 	@Test
@@ -64,6 +67,7 @@ class EngineDiscoveryResultValidatorTests {
 
 		group2.addChild(test1);
 		assertFalse(validator.isAcyclic(root));
+		assertEquals(validator.getFirstCyclicUID(root).get(), UniqueId.forEngine("root").append("test", "1"));
 	}
 
 }
