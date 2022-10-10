@@ -110,7 +110,13 @@ loadScripts(document, 'script');</script>
  <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">configuration
  parameters</a> via the <a href="TestPlan.html#getConfigurationParameters()"><code>getConfigurationParameters()</code></a> method in the <code>TestPlan</code> supplied to
  <a href="#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)"><code>testPlanExecutionStarted(TestPlan)</code></a> and
- <a href="#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)"><code>testPlanExecutionFinished(TestPlan)</code></a>.</div>
+ <a href="#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)"><code>testPlanExecutionFinished(TestPlan)</code></a>.
+
+ <p>Note on concurrency: <a href="#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)"><code>testPlanExecutionStarted(TestPlan)</code></a> and
+ <a href="#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)"><code>testPlanExecutionFinished(TestPlan)</code></a> are always called from the same
+ thread. It is safe to assume that there is at most one <code>TestPlan</code>
+ instance at a time. All other methods could be called from different threads
+ concurrently in case one or multiple test engines execute tests in parallel.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.0</dd>
@@ -200,7 +206,9 @@ loadScripts(document, 'script');</script>
 <h3>testPlanExecutionStarted</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">testPlanExecutionStarted</span><wbr><span class="parameters">(<a href="TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan)</span></div>
 <div class="block">Called when the execution of the <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> has started,
- <em>before</em> any test has been executed.</div>
+ <em>before</em> any test has been executed.
+
+ <p>Called from the same thread as <a href="#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)"><code>testPlanExecutionFinished(TestPlan)</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>testPlan</code> - describes the tree of tests about to be executed</dd>
@@ -212,7 +220,9 @@ loadScripts(document, 'script');</script>
 <h3>testPlanExecutionFinished</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">testPlanExecutionFinished</span><wbr><span class="parameters">(<a href="TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan)</span></div>
 <div class="block">Called when the execution of the <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> has finished,
- <em>after</em> all tests have been executed.</div>
+ <em>after</em> all tests have been executed.
+
+ <p>Called from the same thread as <a href="#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)"><code>testPlanExecutionStarted(TestPlan)</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>testPlan</code> - describes the tree of tests that have been executed</dd>

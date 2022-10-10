@@ -605,6 +605,7 @@ c62e1cb3e4dd1fefecbc45398f98319c  junit-platform-commons/src/main/java/org/junit
 c665cbffd3af83710d24959605b66d5b  documentation/src/docs/asciidoc/docinfos/docinfo.html
 c67f54c834e112641497641c327bf8df  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ResourceUtils.java
 c6b7774d89d74b6160ab3b80c10fc622  documentation/src/docs/asciidoc/user-guide/extensions.adoc
+c6c09b27357c106b3887d565e0d52bee  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java
 c700e8bcb8cea8d74085989fe2a053d7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsPotentialTestContainer.java
 c77f25d530f08066bf21f2e0eae29e7a  documentation/src/docs/asciidoc/docinfos/docinfo-footer.html
 c7a2ee800a0cb08b95b53d1965423fb0  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestNameFormatter.java
@@ -684,7 +685,6 @@ dc889f48eebaff5273083180c306abb2  junit-jupiter-api/src/main/java/org/junit/jupi
 dca6da471ddade4325725706788f060b  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/package-info.java
 dd2a457365616caf77308003a03988ff  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutConfiguration.java
 dd459ed3e7dc545f2d144d7857feec97  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrderer.java
-dd68f5d541f9ea9e6a3732826296c54b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java
 dd9a443092a313a637edfd6fa72e64dd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolutionException.java
 ddcc89fac2e8bd9fe38b8d635f8aa35e  documentation/src/test/java/example/ParameterizedTestDemo.java
 ddf32108cbe56bd6c80ff219d87e754f  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Assertions.java

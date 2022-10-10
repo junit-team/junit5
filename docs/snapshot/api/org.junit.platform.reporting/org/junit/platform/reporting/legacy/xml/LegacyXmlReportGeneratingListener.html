@@ -216,7 +216,9 @@ implements <a href="../../../../../../../org.junit.platform.launcher/org/junit/p
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">testPlanExecutionStarted</span><wbr><span class="parameters">(<a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan)</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)">TestExecutionListener</a></code></span></div>
 <div class="block">Called when the execution of the <a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> has started,
- <em>before</em> any test has been executed.</div>
+ <em>before</em> any test has been executed.
+
+ <p>Called from the same thread as <a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)"><code>TestExecutionListener.testPlanExecutionFinished(TestPlan)</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)">testPlanExecutionStarted</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a></code></dd>
@@ -231,7 +233,9 @@ implements <a href="../../../../../../../org.junit.platform.launcher/org/junit/p
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">testPlanExecutionFinished</span><wbr><span class="parameters">(<a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan)</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)">TestExecutionListener</a></code></span></div>
 <div class="block">Called when the execution of the <a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> has finished,
- <em>after</em> all tests have been executed.</div>
+ <em>after</em> all tests have been executed.
+
+ <p>Called from the same thread as <a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)"><code>TestExecutionListener.testPlanExecutionStarted(TestPlan)</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html#testPlanExecutionFinished(org.junit.platform.launcher.TestPlan)">testPlanExecutionFinished</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a></code></dd>
