@@ -59,7 +59,7 @@ public class ExtensionValuesStoreTests {
 			store.put(namespace, key, value);
 
 			Object newValue = new Object();
-			store.put(namespace, key, newValue);
+			assertEquals(value, store.put(namespace, key, newValue));
 
 			assertEquals(newValue, store.get(namespace, key));
 		}

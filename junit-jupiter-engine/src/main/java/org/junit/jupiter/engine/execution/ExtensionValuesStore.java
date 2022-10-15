@@ -95,8 +95,9 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 		return castToRequiredType(key, value, requiredType);
 	}
 
-	void put(N namespace, Object key, Object value) {
-		storedValues.put(new CompositeKey<>(namespace, key), storedValue(() -> value));
+	public Object put(N namespace, Object key, Object value) {
+		StoredValue oldValue = storedValues.put(new CompositeKey<>(namespace, key), storedValue(() -> value));
+		return StoredValue.evaluateIfNotNull(oldValue);
 	}
 
 	private StoredValue storedValue(Supplier<Object> value) {
