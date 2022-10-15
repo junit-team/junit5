@@ -26,12 +26,15 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
- * {@code ExtensionValuesStore} is used inside implementations of
- * {@link ExtensionContext} to store and retrieve values.
+ * {@code ExtensionValuesStore} is a hierarchical namespaced key-value store.
+ * <p>
+ * Its behavior when closed can be customized by passing a {@link CloseAction}
+ * to {@link #ExtensionValuesStore(ExtensionValuesStore, CloseAction)}.
+ * <p>
+ * This class is thread-safe.
  *
  * @param <N> Namespace type
  * @since 5.0
@@ -47,15 +50,33 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 	private final ExtensionValuesStore<N> parentStore;
 	private final CloseAction closeAction;
 
+	/**
+	 * Create a new store with the supplied parent.
+	 *
+	 * @param parentStore The parent store to use for lookups; may be
+	 *                    {@code null}.
+	 */
 	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore) {
 		this(parentStore, null);
 	}
 
+	/**
+	 * Create a new store with the supplied parent and close action.
+	 *
+	 * @param parentStore The parent store to use for lookups; may be
+	 *                    {@code null}.
+	 * @param closeAction The action to be called for each stored value when
+	 *                    this store is closed.
+	 */
 	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore, CloseAction closeAction) {
 		this.parentStore = parentStore;
 		this.closeAction = closeAction;
 	}
 
+	/**
+	 * If a close action is configured, it will be called with all successfully
+	 * stored values in reverse insertion order.
+	 */
 	@Override
 	public void close() {
 		if (closeAction == null) {
@@ -70,17 +91,37 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 		throwableCollector.assertEmpty();
 	}
 
-	Object get(N namespace, Object key) {
+	/**
+	 * Get the value stored for the supplied namespace and key in this or the
+	 * parent store, if present.
+	 *
+	 * @return stored value; may be {@code null}
+	 */
+	public Object get(N namespace, Object key) {
 		StoredValue storedValue = getStoredValue(new CompositeKey<>(namespace, key));
-		return (storedValue != null ? storedValue.evaluate() : null);
+		return StoredValue.evaluateIfNotNull(storedValue);
 	}
 
-	<T> T get(N namespace, Object key, Class<T> requiredType) {
+	/**
+	 * Get the value stored for the supplied namespace and key in this or the
+	 * parent store, if present, and cast it to the supplied required type.
+	 *
+	 * @return stored value; may be {@code null}
+	 * @throws ExtensionValuesStoreException if the stored value cannot be cast
+	 *                                       to the required type
+	 */
+	public <T> T get(N namespace, Object key, Class<T> requiredType) {
 		Object value = get(namespace, key);
 		return castToRequiredType(key, value, requiredType);
 	}
 
-	<K, V> Object getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator) {
+	/**
+	 * Get the value stored for the supplied namespace and key in this or the
+	 * parent store, if present, or call the supplied function to compute it.
+	 *
+	 * @return stored value; may be {@code null}
+	 */
+	public <K, V> Object getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator) {
 		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
 		StoredValue storedValue = getStoredValue(compositeKey);
 		if (storedValue == null) {
@@ -90,28 +131,59 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 		return storedValue.evaluate();
 	}
 
-	<K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
+	/**
+	 * Get the value stored for the supplied namespace and key in this or the
+	 * parent store, if present, or call the supplied function to compute it
+	 * and, finally, cast it to the supplied required type.
+	 *
+	 * @return stored value; may be {@code null}
+	 * @throws ExtensionValuesStoreException if the stored value cannot be cast
+	 *                                       to the required type
+	 */
+	public <K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
 		return castToRequiredType(key, value, requiredType);
 	}
 
+	/**
+	 * Put the supplied value for the supplied namespace and key into this
+	 * store and return the previously associated value in this store.
+	 *
+	 * @return previously stored value; may be {@code null}
+	 * @throws ExtensionValuesStoreException if the stored value cannot be cast
+	 *                                       to the required type
+	 */
 	public Object put(N namespace, Object key, Object value) {
 		StoredValue oldValue = storedValues.put(new CompositeKey<>(namespace, key), storedValue(() -> value));
 		return StoredValue.evaluateIfNotNull(oldValue);
 	}
 
-	private StoredValue storedValue(Supplier<Object> value) {
-		return new StoredValue(insertOrderSequence.getAndIncrement(), value);
-	}
-
-	Object remove(N namespace, Object key) {
+	/**
+	 * Remove the value stored for the supplied namespace and key from this
+	 * store.
+	 *
+	 * @return previously stored value; may be {@code null}
+	 */
+	public Object remove(N namespace, Object key) {
 		StoredValue previous = storedValues.remove(new CompositeKey<>(namespace, key));
-		return (previous != null ? previous.evaluate() : null);
+		return StoredValue.evaluateIfNotNull(previous);
 	}
 
-	<T> T remove(N namespace, Object key, Class<T> requiredType) {
+	/**
+	 * Remove the value stored for the supplied namespace and key from this
+	 * store and cast it to the supplied required type.
+	 *
+	 * @return previously stored value; may be {@code null}
+	 * @throws ExtensionValuesStoreException if the stored value cannot be cast
+	 *                                       to the required type
+	 */
+	public <T> T remove(N namespace, Object key, Class<T> requiredType) {
 		Object value = remove(namespace, key);
 		return castToRequiredType(key, value, requiredType);
+	}
+
+	private StoredValue storedValue(Supplier<Object> value) {
+		return new StoredValue(insertOrderSequence.getAndIncrement(), value);
 	}
 
 	private StoredValue getStoredValue(CompositeKey<N> compositeKey) {
@@ -175,7 +247,7 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 		private final int order;
 		private final Supplier<Object> supplier;
 
-		public StoredValue(int order, Supplier<Object> supplier) {
+		StoredValue(int order, Supplier<Object> supplier) {
 			this.order = order;
 			this.supplier = supplier;
 		}
@@ -191,6 +263,10 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 
 		private Object evaluate() {
 			return supplier.get();
+		}
+
+		static Object evaluateIfNotNull(StoredValue value) {
+			return value != null ? value.evaluate() : null;
 		}
 
 	}
@@ -244,8 +320,15 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 
 	}
 
+	/**
+	 * Called for each stored value in a {@link ExtensionValuesStore}.
+	 */
 	@FunctionalInterface
 	public interface CloseAction {
+
+		/**
+		 * Attempt to close the supplied resource.
+		 */
 		void close(Object resource) throws Throwable;
 	}
 
