@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -39,7 +39,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class ExtensionValuesStore<N> {
+public class ExtensionValuesStore<N> implements AutoCloseable {
 
 	private static final Comparator<StoredValue> REVERSE_INSERT_ORDER = Comparator.<StoredValue, Integer> comparing(
 		it -> it.order).reversed();
@@ -47,24 +47,28 @@ public class ExtensionValuesStore<N> {
 	private final AtomicInteger insertOrderSequence = new AtomicInteger();
 	private final ConcurrentMap<CompositeKey<N>, StoredValue> storedValues = new ConcurrentHashMap<>(4);
 	private final ExtensionValuesStore<N> parentStore;
+	private final ThrowingConsumer<Object> closeAction;
 
 	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore) {
-		this.parentStore = parentStore;
+		this(parentStore, null);
 	}
 
-	/**
-	 * Close all values that implement {@link CloseableResource}.
-	 *
-	 * @implNote Only close values stored in this instance. This implementation
-	 * does not close values in parent stores.
-	 */
-	public void closeAllStoredCloseableValues() {
+	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore, ThrowingConsumer<Object> closeAction) {
+		this.parentStore = parentStore;
+		this.closeAction = closeAction;
+	}
+
+	@Override
+	public void close() {
+		if (closeAction == null) {
+			return;
+		}
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		storedValues.values().stream() //
-				.filter(storedValue -> storedValue.evaluateSafely() instanceof CloseableResource) //
+				.filter(storedValue -> storedValue.evaluateSafely() != null) //
 				.sorted(REVERSE_INSERT_ORDER) //
-				.map(storedValue -> (CloseableResource) storedValue.evaluate()) //
-				.forEach(resource -> throwableCollector.execute(resource::close));
+				.map(StoredValue::evaluate) //
+				.forEach(value -> throwableCollector.execute(() -> closeAction.accept(value)));
 		throwableCollector.assertEmpty();
 	}
 

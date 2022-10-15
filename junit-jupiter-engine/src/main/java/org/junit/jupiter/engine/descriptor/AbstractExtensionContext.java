@@ -22,6 +22,8 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
@@ -38,6 +40,12 @@ import org.junit.platform.engine.support.hierarchical.Node;
  * @since 5.0
  */
 abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext, AutoCloseable {
+
+	private static final ThrowingConsumer<Object> CLOSE_RESOURCES = value -> {
+		if (value instanceof CloseableResource) {
+			((CloseableResource) value).close();
+		}
+	};
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
@@ -72,12 +80,12 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		if (parent != null) {
 			parentStore = ((AbstractExtensionContext<?>) parent).valuesStore;
 		}
-		return new ExtensionValuesStore<>(parentStore);
+		return new ExtensionValuesStore<>(parentStore, CLOSE_RESOURCES);
 	}
 
 	@Override
 	public void close() {
-		this.valuesStore.closeAllStoredCloseableValues();
+		this.valuesStore.close();
 	}
 
 	@Override

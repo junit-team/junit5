@@ -83,7 +83,7 @@ class ExtensionContextStoreTests {
 		var e2 = assertThrows(RuntimeException.class, () -> store.get(KEY));
 		assertSame(e1, e2);
 
-		assertDoesNotThrow(localStore::closeAllStoredCloseableValues);
+		assertDoesNotThrow(localStore::close);
 		assertThat(invocations).hasValue(1);
 	}
 
