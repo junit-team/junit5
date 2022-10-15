@@ -29,7 +29,6 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
-import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -135,7 +134,7 @@ public class ExtensionValuesStore<N> {
 			return requiredType.cast(value);
 		}
 		// else
-		throw new ExtensionContextException(
+		throw new ExtensionValuesStoreException(
 			String.format("Object stored under key [%s] is not of required type [%s]", key, requiredType.getName()));
 	}
 

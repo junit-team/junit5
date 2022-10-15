@@ -13,10 +13,12 @@ package org.junit.jupiter.engine.execution;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -36,21 +38,21 @@ public class NamespaceAwareStore implements Store {
 	@Override
 	public Object get(Object key) {
 		Preconditions.notNull(key, "key must not be null");
-		return this.valuesStore.get(this.namespace, key);
+		return accessStore(() -> this.valuesStore.get(this.namespace, key));
 	}
 
 	@Override
 	public <T> T get(Object key, Class<T> requiredType) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(requiredType, "requiredType must not be null");
-		return this.valuesStore.get(this.namespace, key, requiredType);
+		return accessStore(() -> this.valuesStore.get(this.namespace, key, requiredType));
 	}
 
 	@Override
 	public <K, V> Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
-		return this.valuesStore.getOrComputeIfAbsent(this.namespace, key, defaultCreator);
+		return accessStore(() -> this.valuesStore.getOrComputeIfAbsent(this.namespace, key, defaultCreator));
 	}
 
 	@Override
@@ -58,26 +60,43 @@ public class NamespaceAwareStore implements Store {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
 		Preconditions.notNull(requiredType, "requiredType must not be null");
-		return this.valuesStore.getOrComputeIfAbsent(this.namespace, key, defaultCreator, requiredType);
+		return accessStore(
+			() -> this.valuesStore.getOrComputeIfAbsent(this.namespace, key, defaultCreator, requiredType));
 	}
 
 	@Override
 	public void put(Object key, Object value) {
 		Preconditions.notNull(key, "key must not be null");
-		this.valuesStore.put(this.namespace, key, value);
+		accessStore(() -> this.valuesStore.put(this.namespace, key, value));
 	}
 
 	@Override
 	public Object remove(Object key) {
 		Preconditions.notNull(key, "key must not be null");
-		return this.valuesStore.remove(this.namespace, key);
+		return accessStore(() -> this.valuesStore.remove(this.namespace, key));
 	}
 
 	@Override
 	public <T> T remove(Object key, Class<T> requiredType) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(requiredType, "requiredType must not be null");
-		return this.valuesStore.remove(this.namespace, key, requiredType);
+		return accessStore(() -> this.valuesStore.remove(this.namespace, key, requiredType));
+	}
+
+	private void accessStore(Runnable action) {
+		accessStore(() -> {
+			action.run();
+			return null;
+		});
+	}
+
+	private <T> T accessStore(Supplier<T> action) {
+		try {
+			return action.get();
+		}
+		catch (ExtensionValuesStoreException e) {
+			throw new ExtensionContextException(e.getMessage());
+		}
 	}
 
 }

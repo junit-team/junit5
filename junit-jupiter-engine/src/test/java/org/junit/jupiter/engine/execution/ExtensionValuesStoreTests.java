@@ -22,7 +22,6 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContextException;
 
 /**
  * Unit tests for {@link ExtensionValuesStore}.
@@ -162,7 +161,7 @@ public class ExtensionValuesStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = assertThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(ExtensionValuesStoreException.class,
 				() -> store.get(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
@@ -212,7 +211,7 @@ public class ExtensionValuesStoreTests {
 			// But declare that our function creates a String...
 			Function<String, String> defaultCreator = k -> "enigma";
 
-			Exception exception = assertThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(ExtensionValuesStoreException.class,
 				() -> store.getOrComputeIfAbsent(namespace, key, defaultCreator, String.class));
 			assertEquals("Object stored under key [pi] is not of required type [java.lang.String]",
 				exception.getMessage());
@@ -246,7 +245,7 @@ public class ExtensionValuesStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = assertThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(ExtensionValuesStoreException.class,
 				() -> store.remove(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
