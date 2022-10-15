@@ -25,10 +25,10 @@ import org.junit.platform.commons.util.Preconditions;
 @API(status = INTERNAL, since = "5.0")
 public class NamespaceAwareStore implements Store {
 
-	private final ExtensionValuesStore valuesStore;
+	private final ExtensionValuesStore<Namespace> valuesStore;
 	private final Namespace namespace;
 
-	public NamespaceAwareStore(ExtensionValuesStore valuesStore, Namespace namespace) {
+	public NamespaceAwareStore(ExtensionValuesStore<Namespace> valuesStore, Namespace namespace) {
 		this.valuesStore = valuesStore;
 		this.namespace = namespace;
 	}

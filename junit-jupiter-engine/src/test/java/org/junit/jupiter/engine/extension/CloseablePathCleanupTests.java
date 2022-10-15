@@ -56,7 +56,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 
 	@BeforeEach
 	void setUpExtensionContext() {
-		var store = new NamespaceAwareStore(new ExtensionValuesStore(null), Namespace.GLOBAL);
+		var store = new NamespaceAwareStore(new ExtensionValuesStore<>(null), Namespace.GLOBAL);
 		when(extensionContext.getStore(any())).thenReturn(store);
 	}
 

@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.execution;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
@@ -23,7 +22,6 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 
 /**
@@ -37,11 +35,11 @@ public class ExtensionValuesStoreTests {
 	private final Object key = "key";
 	private final Object value = "value";
 
-	private final Namespace namespace = Namespace.create("ns");
+	private final String namespace = "ns";
 
-	private final ExtensionValuesStore grandParentStore = new ExtensionValuesStore(null);
-	private final ExtensionValuesStore parentStore = new ExtensionValuesStore(grandParentStore);
-	private final ExtensionValuesStore store = new ExtensionValuesStore(parentStore);
+	private final ExtensionValuesStore<String> grandParentStore = new ExtensionValuesStore<>(null);
+	private final ExtensionValuesStore<String> parentStore = new ExtensionValuesStore<>(grandParentStore);
+	private final ExtensionValuesStore<String> store = new ExtensionValuesStore<>(parentStore);
 
 	@Nested
 	class StoringValuesTests {
@@ -119,10 +117,10 @@ public class ExtensionValuesStoreTests {
 		@Test
 		void sameKeyWithDifferentNamespaces() {
 			Object value1 = createObject("value1");
-			Namespace namespace1 = Namespace.create("ns1");
+			String namespace1 = "ns1";
 
 			Object value2 = createObject("value2");
-			Namespace namespace2 = Namespace.create("ns2");
+			String namespace2 = "ns2";
 
 			store.put(namespace1, key, value1);
 			store.put(namespace2, key, value2);
@@ -133,8 +131,8 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void valueIsComputedIfAbsentInDifferentNamespace() {
-			Namespace namespace1 = Namespace.create("ns1");
-			Namespace namespace2 = Namespace.create("ns2");
+			String namespace1 = "ns1";
+			String namespace2 = "ns2";
 
 			assertEquals(value, store.getOrComputeIfAbsent(namespace1, key, innerKey -> value));
 			assertEquals(value, store.get(namespace1, key));
@@ -144,8 +142,8 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void keyIsOnlyRemovedInGivenNamespace() {
-			Namespace namespace1 = Namespace.create("ns1");
-			Namespace namespace2 = Namespace.create("ns2");
+			String namespace1 = "ns1";
+			String namespace2 = "ns2";
 
 			Object value1 = createObject("value1");
 			Object value2 = createObject("value2");
@@ -297,7 +295,7 @@ public class ExtensionValuesStoreTests {
 		void simulateRaceConditionInGetOrComputeIfAbsent() throws Exception {
 			int threads = 10;
 			AtomicInteger counter = new AtomicInteger();
-			ExtensionValuesStore localStore = new ExtensionValuesStore(null);
+			ExtensionValuesStore<String> localStore = new ExtensionValuesStore<>(null);
 
 			List<Object> values = executeConcurrently(threads, //
 				() -> localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet()));
@@ -332,27 +330,10 @@ public class ExtensionValuesStoreTests {
 	class CompositeNamespaceTests {
 
 		@Test
-		void namespacesEqualForSamePartsSequence() {
-			Namespace ns1 = Namespace.create("part1", "part2");
-			Namespace ns2 = Namespace.create("part1", "part2");
-
-			assertEquals(ns1, ns2);
-		}
-
-		@Test
-		void orderOfNamespacePartsDoesMatter() {
-			Namespace ns1 = Namespace.create("part1", "part2");
-			Namespace ns2 = Namespace.create("part2", "part1");
-
-			assertNotEquals(ns1, ns2);
-		}
-
-		@Test
 		void additionNamespacePartMakesADifference() {
 
-			Namespace ns1 = Namespace.create("part1", "part2");
-			Namespace ns2 = Namespace.create("part1");
-			Namespace ns3 = Namespace.create("part1", "part2");
+			String ns1 = "part1/part2";
+			String ns2 = "part1";
 
 			Object value2 = createObject("value2");
 
@@ -360,7 +341,6 @@ public class ExtensionValuesStoreTests {
 			parentStore.put(ns2, key, value2);
 
 			assertEquals(value, store.get(ns1, key));
-			assertEquals(value, store.get(ns3, key));
 			assertEquals(value2, store.get(ns2, key));
 		}
 

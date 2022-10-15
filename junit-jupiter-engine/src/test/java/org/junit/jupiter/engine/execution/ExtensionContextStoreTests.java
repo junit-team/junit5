@@ -34,8 +34,8 @@ class ExtensionContextStoreTests {
 	private static final String KEY = "key";
 	private static final String VALUE = "value";
 
-	private final ExtensionValuesStore parentStore = new ExtensionValuesStore(null);
-	private final ExtensionValuesStore localStore = new ExtensionValuesStore(parentStore);
+	private final ExtensionValuesStore<Namespace> parentStore = new ExtensionValuesStore<>(null);
+	private final ExtensionValuesStore<Namespace> localStore = new ExtensionValuesStore<>(parentStore);
 	private final Store store = new NamespaceAwareStore(localStore, Namespace.GLOBAL);
 
 	@Test

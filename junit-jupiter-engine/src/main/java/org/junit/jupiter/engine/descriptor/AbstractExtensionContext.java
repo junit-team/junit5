@@ -44,7 +44,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final T testDescriptor;
 	private final Set<String> tags;
 	private final JupiterConfiguration configuration;
-	private final ExtensionValuesStore valuesStore;
+	private final ExtensionValuesStore<Namespace> valuesStore;
 	private final ExecutableInvoker executableInvoker;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
@@ -67,12 +67,12 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		// @formatter:on
 	}
 
-	private ExtensionValuesStore createStore(ExtensionContext parent) {
-		ExtensionValuesStore parentStore = null;
+	private ExtensionValuesStore<Namespace> createStore(ExtensionContext parent) {
+		ExtensionValuesStore<Namespace> parentStore = null;
 		if (parent != null) {
 			parentStore = ((AbstractExtensionContext<?>) parent).valuesStore;
 		}
-		return new ExtensionValuesStore(parentStore);
+		return new ExtensionValuesStore<>(parentStore);
 	}
 
 	@Override

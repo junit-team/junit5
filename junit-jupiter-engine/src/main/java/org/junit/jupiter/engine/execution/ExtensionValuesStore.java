@@ -28,7 +28,6 @@ import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -37,19 +36,20 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * {@code ExtensionValuesStore} is used inside implementations of
  * {@link ExtensionContext} to store and retrieve values.
  *
+ * @param <N> Namespace type
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class ExtensionValuesStore {
+public class ExtensionValuesStore<N> {
 
 	private static final Comparator<StoredValue> REVERSE_INSERT_ORDER = Comparator.<StoredValue, Integer> comparing(
 		it -> it.order).reversed();
 
 	private final AtomicInteger insertOrderSequence = new AtomicInteger();
-	private final ConcurrentMap<CompositeKey, StoredValue> storedValues = new ConcurrentHashMap<>(4);
-	private final ExtensionValuesStore parentStore;
+	private final ConcurrentMap<CompositeKey<N>, StoredValue> storedValues = new ConcurrentHashMap<>(4);
+	private final ExtensionValuesStore<N> parentStore;
 
-	public ExtensionValuesStore(ExtensionValuesStore parentStore) {
+	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore) {
 		this.parentStore = parentStore;
 	}
 
@@ -69,18 +69,18 @@ public class ExtensionValuesStore {
 		throwableCollector.assertEmpty();
 	}
 
-	Object get(Namespace namespace, Object key) {
-		StoredValue storedValue = getStoredValue(new CompositeKey(namespace, key));
+	Object get(N namespace, Object key) {
+		StoredValue storedValue = getStoredValue(new CompositeKey<>(namespace, key));
 		return (storedValue != null ? storedValue.evaluate() : null);
 	}
 
-	<T> T get(Namespace namespace, Object key, Class<T> requiredType) {
+	<T> T get(N namespace, Object key, Class<T> requiredType) {
 		Object value = get(namespace, key);
 		return castToRequiredType(key, value, requiredType);
 	}
 
-	<K, V> Object getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator) {
-		CompositeKey compositeKey = new CompositeKey(namespace, key);
+	<K, V> Object getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator) {
+		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
 		StoredValue storedValue = getStoredValue(compositeKey);
 		if (storedValue == null) {
 			StoredValue newValue = storedValue(new MemoizingSupplier(() -> defaultCreator.apply(key)));
@@ -89,30 +89,30 @@ public class ExtensionValuesStore {
 		return storedValue.evaluate();
 	}
 
-	<K, V> V getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
+	<K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
 		return castToRequiredType(key, value, requiredType);
 	}
 
-	void put(Namespace namespace, Object key, Object value) {
-		storedValues.put(new CompositeKey(namespace, key), storedValue(() -> value));
+	void put(N namespace, Object key, Object value) {
+		storedValues.put(new CompositeKey<>(namespace, key), storedValue(() -> value));
 	}
 
 	private StoredValue storedValue(Supplier<Object> value) {
 		return new StoredValue(insertOrderSequence.getAndIncrement(), value);
 	}
 
-	Object remove(Namespace namespace, Object key) {
-		StoredValue previous = storedValues.remove(new CompositeKey(namespace, key));
+	Object remove(N namespace, Object key) {
+		StoredValue previous = storedValues.remove(new CompositeKey<>(namespace, key));
 		return (previous != null ? previous.evaluate() : null);
 	}
 
-	<T> T remove(Namespace namespace, Object key, Class<T> requiredType) {
+	<T> T remove(N namespace, Object key, Class<T> requiredType) {
 		Object value = remove(namespace, key);
 		return castToRequiredType(key, value, requiredType);
 	}
 
-	private StoredValue getStoredValue(CompositeKey compositeKey) {
+	private StoredValue getStoredValue(CompositeKey<N> compositeKey) {
 		StoredValue storedValue = storedValues.get(compositeKey);
 		if (storedValue != null) {
 			return storedValue;
@@ -139,12 +139,12 @@ public class ExtensionValuesStore {
 			String.format("Object stored under key [%s] is not of required type [%s]", key, requiredType.getName()));
 	}
 
-	private static class CompositeKey {
+	private static class CompositeKey<N> {
 
-		private final Namespace namespace;
+		private final N namespace;
 		private final Object key;
 
-		private CompositeKey(Namespace namespace, Object key) {
+		private CompositeKey(N namespace, Object key) {
 			this.namespace = namespace;
 			this.key = key;
 		}
@@ -157,7 +157,7 @@ public class ExtensionValuesStore {
 			if (o == null || getClass() != o.getClass()) {
 				return false;
 			}
-			CompositeKey that = (CompositeKey) o;
+			CompositeKey<?> that = (CompositeKey<?>) o;
 			return this.namespace.equals(that.namespace) && this.key.equals(that.key);
 		}
 

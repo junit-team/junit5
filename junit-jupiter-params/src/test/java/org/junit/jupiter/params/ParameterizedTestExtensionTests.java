@@ -189,7 +189,7 @@ class ParameterizedTestExtensionTests {
 
 		return new ExtensionContext() {
 
-			private final ExtensionValuesStore store = new ExtensionValuesStore(null);
+			private final ExtensionValuesStore<Namespace> store = new ExtensionValuesStore<>(null);
 
 			@Override
 			public Optional<Method> getTestMethod() {
