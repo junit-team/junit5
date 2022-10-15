@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
@@ -62,7 +61,7 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 		if (closeAction == null) {
 			return;
 		}
-		ThrowableCollector throwableCollector = createThrowableCollector();
+		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
 		storedValues.values().stream() //
 				.filter(storedValue -> storedValue.evaluateSafely() != null) //
 				.sorted(REVERSE_INSERT_ORDER) //
