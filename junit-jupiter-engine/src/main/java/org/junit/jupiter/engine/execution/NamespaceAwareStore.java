@@ -20,6 +20,8 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalException;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
  * @since 5.0
@@ -27,10 +29,10 @@ import org.junit.platform.commons.util.Preconditions;
 @API(status = INTERNAL, since = "5.0")
 public class NamespaceAwareStore implements Store {
 
-	private final ExtensionValuesStore<Namespace> valuesStore;
+	private final NamespacedHierarchicalStore<Namespace> valuesStore;
 	private final Namespace namespace;
 
-	public NamespaceAwareStore(ExtensionValuesStore<Namespace> valuesStore, Namespace namespace) {
+	public NamespaceAwareStore(NamespacedHierarchicalStore<Namespace> valuesStore, Namespace namespace) {
 		this.valuesStore = valuesStore;
 		this.namespace = namespace;
 	}
@@ -94,7 +96,7 @@ public class NamespaceAwareStore implements Store {
 		try {
 			return action.get();
 		}
-		catch (ExtensionValuesStoreException e) {
+		catch (NamespacedHierarchicalException e) {
 			throw new ExtensionContextException(e.getMessage());
 		}
 	}

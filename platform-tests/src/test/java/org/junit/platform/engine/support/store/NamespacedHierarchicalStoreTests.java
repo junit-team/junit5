@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.execution;
+package org.junit.platform.engine.support.store;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,21 +24,20 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link ExtensionValuesStore}.
+ * Unit tests for {@link NamespacedHierarchicalStore}.
  *
  * @since 5.0
- * @see org.junit.jupiter.engine.descriptor.ExtensionContextTests
  */
-public class ExtensionValuesStoreTests {
+public class NamespacedHierarchicalStoreTests {
 
 	private final Object key = "key";
 	private final Object value = "value";
 
 	private final String namespace = "ns";
 
-	private final ExtensionValuesStore<String> grandParentStore = new ExtensionValuesStore<>(null);
-	private final ExtensionValuesStore<String> parentStore = new ExtensionValuesStore<>(grandParentStore);
-	private final ExtensionValuesStore<String> store = new ExtensionValuesStore<>(parentStore);
+	private final NamespacedHierarchicalStore<String> grandParentStore = new NamespacedHierarchicalStore<>(null);
+	private final NamespacedHierarchicalStore<String> parentStore = new NamespacedHierarchicalStore<>(grandParentStore);
+	private final NamespacedHierarchicalStore<String> store = new NamespacedHierarchicalStore<>(parentStore);
 
 	@Nested
 	class StoringValuesTests {
@@ -161,7 +160,7 @@ public class ExtensionValuesStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = assertThrows(ExtensionValuesStoreException.class,
+			Exception exception = assertThrows(NamespacedHierarchicalException.class,
 				() -> store.get(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
@@ -211,7 +210,7 @@ public class ExtensionValuesStoreTests {
 			// But declare that our function creates a String...
 			Function<String, String> defaultCreator = k -> "enigma";
 
-			Exception exception = assertThrows(ExtensionValuesStoreException.class,
+			Exception exception = assertThrows(NamespacedHierarchicalException.class,
 				() -> store.getOrComputeIfAbsent(namespace, key, defaultCreator, String.class));
 			assertEquals("Object stored under key [pi] is not of required type [java.lang.String]",
 				exception.getMessage());
@@ -245,7 +244,7 @@ public class ExtensionValuesStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = assertThrows(ExtensionValuesStoreException.class,
+			Exception exception = assertThrows(NamespacedHierarchicalException.class,
 				() -> store.remove(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
@@ -294,7 +293,7 @@ public class ExtensionValuesStoreTests {
 		void simulateRaceConditionInGetOrComputeIfAbsent() throws Exception {
 			int threads = 10;
 			AtomicInteger counter = new AtomicInteger();
-			ExtensionValuesStore<String> localStore = new ExtensionValuesStore<>(null);
+			NamespacedHierarchicalStore<String> localStore = new NamespacedHierarchicalStore<>(null);
 
 			List<Object> values = executeConcurrently(threads, //
 				() -> localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet()));

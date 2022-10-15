@@ -8,9 +8,9 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.execution;
+package org.junit.platform.engine.support.store;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
@@ -32,22 +32,22 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * {@code ExtensionValuesStore} is a hierarchical namespaced key-value store.
  * <p>
  * Its behavior when closed can be customized by passing a {@link CloseAction}
- * to {@link #ExtensionValuesStore(ExtensionValuesStore, CloseAction)}.
+ * to {@link #NamespacedHierarchicalStore(NamespacedHierarchicalStore, CloseAction)}.
  * <p>
  * This class is thread-safe.
  *
  * @param <N> Namespace type
- * @since 5.0
+ * @since 5.10
  */
-@API(status = INTERNAL, since = "5.0")
-public class ExtensionValuesStore<N> implements AutoCloseable {
+@API(status = EXPERIMENTAL, since = "5.10")
+public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	private static final Comparator<StoredValue> REVERSE_INSERT_ORDER = Comparator.<StoredValue, Integer> comparing(
 		it -> it.order).reversed();
 
 	private final AtomicInteger insertOrderSequence = new AtomicInteger();
 	private final ConcurrentMap<CompositeKey<N>, StoredValue> storedValues = new ConcurrentHashMap<>(4);
-	private final ExtensionValuesStore<N> parentStore;
+	private final NamespacedHierarchicalStore<N> parentStore;
 	private final CloseAction closeAction;
 
 	/**
@@ -56,7 +56,7 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 	 * @param parentStore The parent store to use for lookups; may be
 	 *                    {@code null}.
 	 */
-	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore) {
+	public NamespacedHierarchicalStore(NamespacedHierarchicalStore<N> parentStore) {
 		this(parentStore, null);
 	}
 
@@ -68,7 +68,7 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 	 * @param closeAction The action to be called for each stored value when
 	 *                    this store is closed.
 	 */
-	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore, CloseAction closeAction) {
+	public NamespacedHierarchicalStore(NamespacedHierarchicalStore<N> parentStore, CloseAction closeAction) {
 		this.parentStore = parentStore;
 		this.closeAction = closeAction;
 	}
@@ -107,8 +107,8 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 	 * parent store, if present, and cast it to the supplied required type.
 	 *
 	 * @return stored value; may be {@code null}
-	 * @throws ExtensionValuesStoreException if the stored value cannot be cast
-	 *                                       to the required type
+	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
+	 *                                         to the required type
 	 */
 	public <T> T get(N namespace, Object key, Class<T> requiredType) {
 		Object value = get(namespace, key);
@@ -137,8 +137,8 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 	 * and, finally, cast it to the supplied required type.
 	 *
 	 * @return stored value; may be {@code null}
-	 * @throws ExtensionValuesStoreException if the stored value cannot be cast
-	 *                                       to the required type
+	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
+	 *                                         to the required type
 	 */
 	public <K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
@@ -150,8 +150,8 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 	 * store and return the previously associated value in this store.
 	 *
 	 * @return previously stored value; may be {@code null}
-	 * @throws ExtensionValuesStoreException if the stored value cannot be cast
-	 *                                       to the required type
+	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
+	 *                                         to the required type
 	 */
 	public Object put(N namespace, Object key, Object value) {
 		StoredValue oldValue = storedValues.put(new CompositeKey<>(namespace, key), storedValue(() -> value));
@@ -174,8 +174,8 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 	 * store and cast it to the supplied required type.
 	 *
 	 * @return previously stored value; may be {@code null}
-	 * @throws ExtensionValuesStoreException if the stored value cannot be cast
-	 *                                       to the required type
+	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
+	 *                                         to the required type
 	 */
 	public <T> T remove(N namespace, Object key, Class<T> requiredType) {
 		Object value = remove(namespace, key);
@@ -209,7 +209,7 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 			return requiredType.cast(value);
 		}
 		// else
-		throw new ExtensionValuesStoreException(
+		throw new NamespacedHierarchicalException(
 			String.format("Object stored under key [%s] is not of required type [%s]", key, requiredType.getName()));
 	}
 
@@ -321,7 +321,7 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 	}
 
 	/**
-	 * Called for each stored value in a {@link ExtensionValuesStore}.
+	 * Called for each stored value in a {@link NamespacedHierarchicalStore}.
 	 */
 	@FunctionalInterface
 	public interface CloseAction {

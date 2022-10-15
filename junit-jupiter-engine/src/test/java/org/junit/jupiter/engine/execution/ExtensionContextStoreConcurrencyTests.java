@@ -18,9 +18,10 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
- * Concurrency tests for {@link NamespaceAwareStore} and {@link ExtensionValuesStore}.
+ * Concurrency tests for {@link NamespaceAwareStore} and {@link NamespacedHierarchicalStore}.
  *
  * @since 5.0
  */
@@ -46,7 +47,7 @@ class ExtensionContextStoreConcurrencyTests {
 
 	private Store reset() {
 		count.set(0);
-		return new NamespaceAwareStore(new ExtensionValuesStore<>(null), Namespace.GLOBAL);
+		return new NamespaceAwareStore(new NamespacedHierarchicalStore<>(null), Namespace.GLOBAL);
 	}
 
 }

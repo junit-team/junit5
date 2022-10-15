@@ -25,7 +25,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
@@ -34,13 +33,14 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.Node;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
  * @since 5.0
  */
 abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext, AutoCloseable {
 
-	private static final ExtensionValuesStore.CloseAction CLOSE_RESOURCES = value -> {
+	private static final NamespacedHierarchicalStore.CloseAction CLOSE_RESOURCES = value -> {
 		if (value instanceof CloseableResource) {
 			((CloseableResource) value).close();
 		}
@@ -51,7 +51,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final T testDescriptor;
 	private final Set<String> tags;
 	private final JupiterConfiguration configuration;
-	private final ExtensionValuesStore<Namespace> valuesStore;
+	private final NamespacedHierarchicalStore<Namespace> valuesStore;
 	private final ExecutableInvoker executableInvoker;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
@@ -74,12 +74,12 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		// @formatter:on
 	}
 
-	private ExtensionValuesStore<Namespace> createStore(ExtensionContext parent) {
-		ExtensionValuesStore<Namespace> parentStore = null;
+	private NamespacedHierarchicalStore<Namespace> createStore(ExtensionContext parent) {
+		NamespacedHierarchicalStore<Namespace> parentStore = null;
 		if (parent != null) {
 			parentStore = ((AbstractExtensionContext<?>) parent).valuesStore;
 		}
-		return new ExtensionValuesStore<>(parentStore, CLOSE_RESOURCES);
+		return new NamespacedHierarchicalStore<>(parentStore, CLOSE_RESOURCES);
 	}
 
 	@Override

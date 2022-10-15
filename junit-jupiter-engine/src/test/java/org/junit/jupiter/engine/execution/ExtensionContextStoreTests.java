@@ -21,9 +21,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContextException;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
- * Unit tests for {@link NamespaceAwareStore} and {@link ExtensionValuesStore}.
+ * Unit tests for {@link NamespaceAwareStore} and {@link NamespacedHierarchicalStore}.
  *
  * @since 5.5
  * @see ExtensionContextStoreConcurrencyTests
@@ -34,8 +35,8 @@ class ExtensionContextStoreTests {
 	private static final String KEY = "key";
 	private static final String VALUE = "value";
 
-	private final ExtensionValuesStore<Namespace> parentStore = new ExtensionValuesStore<>(null);
-	private final ExtensionValuesStore<Namespace> localStore = new ExtensionValuesStore<>(parentStore);
+	private final NamespacedHierarchicalStore<Namespace> parentStore = new NamespacedHierarchicalStore<>(null);
+	private final NamespacedHierarchicalStore<Namespace> localStore = new NamespacedHierarchicalStore<>(parentStore);
 	private final Store store = new NamespaceAwareStore(localStore, Namespace.GLOBAL);
 
 	@Test

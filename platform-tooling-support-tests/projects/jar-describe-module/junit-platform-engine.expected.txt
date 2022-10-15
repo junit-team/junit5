@@ -7,6 +7,7 @@ exports org.junit.platform.engine.support.descriptor
 exports org.junit.platform.engine.support.discovery
 exports org.junit.platform.engine.support.filter
 exports org.junit.platform.engine.support.hierarchical
+exports org.junit.platform.engine.support.store
 requires java.base mandated
 requires org.apiguardian.api static transitive
 requires org.junit.platform.commons transitive
