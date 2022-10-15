@@ -28,7 +28,6 @@ import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -47,13 +46,13 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 	private final AtomicInteger insertOrderSequence = new AtomicInteger();
 	private final ConcurrentMap<CompositeKey<N>, StoredValue> storedValues = new ConcurrentHashMap<>(4);
 	private final ExtensionValuesStore<N> parentStore;
-	private final ThrowingConsumer<Object> closeAction;
+	private final CloseAction closeAction;
 
 	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore) {
 		this(parentStore, null);
 	}
 
-	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore, ThrowingConsumer<Object> closeAction) {
+	public ExtensionValuesStore(ExtensionValuesStore<N> parentStore, CloseAction closeAction) {
 		this.parentStore = parentStore;
 		this.closeAction = closeAction;
 	}
@@ -68,7 +67,7 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 				.filter(storedValue -> storedValue.evaluateSafely() != null) //
 				.sorted(REVERSE_INSERT_ORDER) //
 				.map(StoredValue::evaluate) //
-				.forEach(value -> throwableCollector.execute(() -> closeAction.accept(value)));
+				.forEach(value -> throwableCollector.execute(() -> closeAction.close(value)));
 		throwableCollector.assertEmpty();
 	}
 
@@ -243,6 +242,11 @@ public class ExtensionValuesStore<N> implements AutoCloseable {
 			}
 		}
 
+	}
+
+	@FunctionalInterface
+	public interface CloseAction {
+		void close(Object resource) throws Throwable;
 	}
 
 }
