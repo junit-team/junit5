@@ -46,6 +46,12 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * {@link #testPlanExecutionStarted(TestPlan)} and
  * {@link #testPlanExecutionFinished(TestPlan)}.
  *
+ * <p>Note on concurrency: {@link #testPlanExecutionStarted(TestPlan)} and
+ * {@link #testPlanExecutionFinished(TestPlan)} are always called from the same
+ * thread. It is safe to assume that there is at most one {@code TestPlan}
+ * instance at a time. All other methods could be called from different threads
+ * concurrently in case one or multiple test engines execute tests in parallel.
+ *
  * @since 1.0
  * @see Launcher
  * @see TestPlan
@@ -58,6 +64,8 @@ public interface TestExecutionListener {
 	 * Called when the execution of the {@link TestPlan} has started,
 	 * <em>before</em> any test has been executed.
 	 *
+	 * <p>Called from the same thread as {@link #testPlanExecutionFinished(TestPlan)}.
+	 *
 	 * @param testPlan describes the tree of tests about to be executed
 	 */
 	default void testPlanExecutionStarted(TestPlan testPlan) {
@@ -66,6 +74,8 @@ public interface TestExecutionListener {
 	/**
 	 * Called when the execution of the {@link TestPlan} has finished,
 	 * <em>after</em> all tests have been executed.
+	 *
+	 * <p>Called from the same thread as {@link #testPlanExecutionStarted(TestPlan)}.
 	 *
 	 * @param testPlan describes the tree of tests that have been executed
 	 */

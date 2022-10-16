@@ -63,7 +63,7 @@ dependencies {
 	}
 }
 
-val unzipMavenDistribution by tasks.registering(Copy::class) {
+val unzipMavenDistribution by tasks.registering(Sync::class) {
 	from(zipTree(mavenDistribution.elements.map { it.single() }))
 	into(layout.buildDirectory.dir("maven-distribution"))
 }
