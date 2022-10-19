@@ -48,5 +48,5 @@ jobs:
       - name: Upload Test Distribution trace files
         uses: actions/upload-artifact@v2
         with:
-          name: Test Distribution trace files
+          name: Test Distribution trace files (${{ github.job }})
           path: '**/build/test-results/*/trace.json'
