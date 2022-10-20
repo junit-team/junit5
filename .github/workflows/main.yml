@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 1
     - name: Install Graphviz
@@ -49,7 +49,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 1
     - name: Build
@@ -59,7 +59,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 1
     - name: Build
@@ -72,7 +72,7 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 1
     - name: Publish
@@ -90,7 +90,7 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 1
     - name: Install Graphviz
