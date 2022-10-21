@@ -59,7 +59,7 @@ class TestInfoParameterResolverTests {
 	@Test
 	@Tag("method-tag")
 	void getTags(TestInfo testInfo) {
-		assertEquals(2, testInfo.getTags().size());
+		assertEquals(4, testInfo.getTags().size());
 		assertTrue(testInfo.getTags().contains("method-tag"));
 		assertTrue(testInfo.getTags().contains("class-tag"));
 	}
@@ -73,7 +73,7 @@ class TestInfoParameterResolverTests {
 	@BeforeAll
 	static void beforeAll(TestInfo testInfo) {
 		Set<String> tags = testInfo.getTags();
-		assertEquals(1, tags.size());
+		assertEquals(3, tags.size());
 		assertTrue(tags.contains("class-tag"));
 	}
 

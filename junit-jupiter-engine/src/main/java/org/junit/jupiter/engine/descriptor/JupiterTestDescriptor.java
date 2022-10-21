@@ -23,13 +23,16 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.TagResolver;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -79,8 +82,19 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	static Set<TestTag> getTags(AnnotatedElement element) {
 		// @formatter:off
-		return findRepeatableAnnotations(element, Tag.class).stream()
-				.map(Tag::value)
+		List<String> tags = findRepeatableAnnotations(element, Tag.class).stream()
+						.map(Tag::value)
+						.collect(Collectors.toList());
+		// @formatter:on
+
+		ServiceLoader<TagResolver> loader = ServiceLoader.load(TagResolver.class);
+		if (loader.iterator().hasNext()) {
+			for (TagResolver resolver : loader) {
+				tags.addAll(resolver.resolveAdditionalTags(element));
+			}
+		}
+		// @formatter:off
+		return tags.stream()
 				.filter(tag -> {
 					boolean isValid = TestTag.isValid(tag);
 					if (!isValid) {

@@ -133,18 +133,18 @@ public class ExtensionContextTests {
 		ClassExtensionContext outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor,
 			configuration, null, null);
 
-		assertThat(outerExtensionContext.getTags()).containsExactly("outer-tag");
+		assertThat(outerExtensionContext.getTags()).containsExactly("outer-tag", "resolved-tag1", "resolved-tag2");
 		assertThat(outerExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		ClassExtensionContext nestedExtensionContext = new ClassExtensionContext(outerExtensionContext, null,
 			nestedClassDescriptor, configuration, null, null);
-		assertThat(nestedExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "nested-tag");
+		assertThat(nestedExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "nested-tag", "resolved-tag1", "resolved-tag2");
 		assertThat(nestedExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(outerExtensionContext, null,
 			methodTestDescriptor, configuration, new OpenTest4JAwareThrowableCollector(), null);
 		methodExtensionContext.setTestInstances(DefaultTestInstances.of(new OuterClass()));
-		assertThat(methodExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "method-tag");
+		assertThat(methodExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "method-tag", "resolved-tag1", "resolved-tag2");
 		assertThat(methodExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 	}
 

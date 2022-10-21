@@ -949,3 +949,39 @@ most one of each type of _lifecycle method_ (see <<writing-tests-classes-and-met
 per test class or test interface unless there are no dependencies between such lifecycle
 methods.
 ====
+
+==== Adding additional tags
+
+When a simple `@Tag` is not sufficient for your test, you can extend the tagging
+mechanism by implementing the `TagResolver` SPI.
+
+A `TagResolver` is not registered like the other extension points using `@ExtendWith()`.
+Instead this uses the java `ServiceLoader` mechanism to search for classes implementing
+the `TagResolver` interface. To register such a `TagResolver` you have to create a file
+called `org.junit.jupiter.api.extension.TagResolver` in the directory `META-INF/services`.
+This file will contain a line separated list of your implementations of `TagResolver`.
+
+_META-INF/services/org.junit.jupiter.api.extension.TagResolver_
+----
+org.example.YourTagResolver
+----
+
+__
+----
+package org.example;
+
+import org.junit.jupiter.api.extension.TagResolver;
+
+import java.lang.reflect.AnnotatedElement;
+import java.util.List;
+
+class YourTagResolver implements TagResolver {
+
+    @Override
+    public List<String> resolveAdditionalTags(AnnotatedElement element) {
+        return List.of("tag1", "tag2");
+    }
+}
+----
+
+The `AnnotatedElement` is always not null and will either be a `Class` or `Method`

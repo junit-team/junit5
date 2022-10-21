@@ -67,7 +67,8 @@ class JupiterTestDescriptorTests {
 
 		assertEquals(TestCase.class, descriptor.getTestClass());
 		assertThat(descriptor.getTags()).containsExactly(TestTag.create("inherited-class-level-tag"),
-			TestTag.create("classTag1"), TestTag.create("classTag2"));
+			TestTag.create("classTag1"), TestTag.create("classTag2"), TestTag.create("resolved-tag1"),
+			TestTag.create("resolved-tag2"));
 	}
 
 	@Test
@@ -137,7 +138,7 @@ class JupiterTestDescriptorTests {
 
 		List<String> tags = methodDescriptor.getTags().stream().map(TestTag::getName).collect(toList());
 		assertThat(tags).containsExactlyInAnyOrder("inherited-class-level-tag", "classTag1", "classTag2", "methodTag1",
-			"methodTag2");
+			"methodTag2", "resolved-tag1", "resolved-tag2");
 	}
 
 	@Test
@@ -149,7 +150,8 @@ class JupiterTestDescriptorTests {
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
 		assertEquals("customTestAnnotation()", descriptor.getLegacyReportingName(), "legacy name:");
-		assertThat(descriptor.getTags()).containsExactly(TestTag.create("custom-tag"));
+		assertThat(descriptor.getTags()).containsExactly(TestTag.create("custom-tag"), TestTag.create("resolved-tag1"),
+			TestTag.create("resolved-tag2"));
 	}
 
 	@Test
@@ -277,6 +279,12 @@ class JupiterTestDescriptorTests {
 		parentDescriptor.addChild(nestedDescriptor);
 		assertThat(parentDescriptor.getEnclosingTestClasses()).isEmpty();
 		assertThat(nestedDescriptor.getEnclosingTestClasses()).containsExactly(StaticTestCase.class);
+	}
+
+	@Test
+	void resolvesAdditionalTags() {
+		ClassBasedTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
+		assertThat(descriptor.getTags()).contains(TestTag.create("resolved-tag1"), TestTag.create("resolved-tag2"));
 	}
 
 	// -------------------------------------------------------------------------

@@ -49,7 +49,7 @@ class TestTemplateTestDescriptorTests {
 		parent.addChild(testDescriptor);
 
 		assertThat(testDescriptor.getTags()).containsExactlyInAnyOrder(TestTag.create("foo"), TestTag.create("bar"),
-			TestTag.create("baz"));
+			TestTag.create("baz"), TestTag.create("resolved-tag1"), TestTag.create("resolved-tag2"));
 	}
 
 	@Test
