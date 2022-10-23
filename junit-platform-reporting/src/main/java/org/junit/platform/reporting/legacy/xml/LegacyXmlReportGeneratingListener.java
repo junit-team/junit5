@@ -24,7 +24,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -107,7 +106,7 @@ public class LegacyXmlReportGeneratingListener implements TestExecutionListener 
 
 	private void writeXmlReportInCaseOfRoot(TestIdentifier testIdentifier) {
 		if (isRoot(testIdentifier)) {
-			String rootName = UniqueId.parse(testIdentifier.getUniqueId()).getSegments().get(0).getValue();
+			String rootName = testIdentifier.getUniqueIdObject().getSegments().get(0).getValue();
 			writeXmlReportSafely(testIdentifier, rootName);
 		}
 	}
@@ -123,7 +122,7 @@ public class LegacyXmlReportGeneratingListener implements TestExecutionListener 
 	}
 
 	private boolean isRoot(TestIdentifier testIdentifier) {
-		return !testIdentifier.getParentId().isPresent();
+		return !testIdentifier.getParentIdObject().isPresent();
 	}
 
 	private void printException(String message, Exception exception) {

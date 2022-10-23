@@ -76,7 +76,7 @@ class XmlReportWriterTests {
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.addReportEntry(TestIdentifier.from(testDescriptor), ReportEntry.from("myKey", "myValue"));
-		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), successful());
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), successful());
 
 		var testsuite = writeXmlReport(testPlan, reportData);
 
@@ -99,7 +99,7 @@ class XmlReportWriterTests {
 			"foo", "bar"));
 		reportData.addReportEntry(TestIdentifier.from(testDescriptor), reportEntry);
 		reportData.addReportEntry(TestIdentifier.from(testDescriptor), ReportEntry.from(Map.of("baz", "qux")));
-		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), successful());
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), successful());
 
 		var testsuite = writeXmlReport(testPlan, reportData);
 
@@ -122,7 +122,7 @@ class XmlReportWriterTests {
 		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markSkipped(testPlan.getTestIdentifier(uniqueId.toString()), null);
+		reportData.markSkipped(testPlan.getTestIdentifier(uniqueId), null);
 
 		var testsuite = writeXmlReport(testPlan, reportData);
 
@@ -152,7 +152,7 @@ class XmlReportWriterTests {
 		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(null));
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), failed(null));
 
 		var testsuite = writeXmlReport(testPlan, reportData);
 
@@ -172,7 +172,7 @@ class XmlReportWriterTests {
 		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(new NullPointerException()));
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), failed(new NullPointerException()));
 
 		var testsuite = writeXmlReport(testPlan, reportData);
 
@@ -190,7 +190,7 @@ class XmlReportWriterTests {
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");
-		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), failed(assertionError));
 
 		var testsuite = writeXmlReport(testPlan, reportData);
 
@@ -206,7 +206,7 @@ class XmlReportWriterTests {
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var assertionError = new AssertionError("expected: <A> but was: <B\0>");
-		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), failed(assertionError));
 
 		System.setProperty("foo.bar", "\1");
 		Match testsuite;
@@ -235,7 +235,7 @@ class XmlReportWriterTests {
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");
-		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), failed(assertionError));
 		Writer assertingWriter = new StringWriter() {
 
 			@SuppressWarnings("NullableProblems")

@@ -395,14 +395,15 @@ class LegacyXmlReportGeneratingListenerTests {
 	@Test
 	void writesReportEntriesToSystemOutElement() throws Exception {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
-		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
+		var childUniqueId = UniqueId.root("child", "test");
+		engineDescriptor.addChild(new TestDescriptorStub(childUniqueId, "test"));
 		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class));
 
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(testPlan);
-		var testIdentifier = testPlan.getTestIdentifier("[child:test]");
+		var testIdentifier = testPlan.getTestIdentifier(childUniqueId);
 		listener.executionStarted(testIdentifier);
 		listener.reportingEntryPublished(testIdentifier, ReportEntry.from("foo", "bar"));
 		Map<String, String> map = new LinkedHashMap<>();
@@ -410,7 +411,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		map.put("qux", "foo");
 		listener.reportingEntryPublished(testIdentifier, ReportEntry.from(map));
 		listener.executionFinished(testIdentifier, successful());
-		listener.executionFinished(testPlan.getTestIdentifier("[engine:engine]"), successful());
+		listener.executionFinished(testPlan.getTestIdentifier(engineDescriptor.getUniqueId()), successful());
 
 		var testsuite = readValidXmlFile(tempDirectory.resolve("TEST-engine.xml"));
 

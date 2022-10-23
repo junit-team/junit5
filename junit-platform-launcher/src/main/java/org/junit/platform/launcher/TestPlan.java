@@ -158,7 +158,7 @@ public class TestPlan {
 	 */
 	public Optional<TestIdentifier> getParent(TestIdentifier child) {
 		Preconditions.notNull(child, "child must not be null");
-		return child.getParentId().map(this::getTestIdentifier);
+		return child.getParentIdObject().map(this::getTestIdentifier);
 	}
 
 	/**
@@ -166,11 +166,11 @@ public class TestPlan {
 	 *
 	 * @param parent the identifier to look up the children for; never {@code null}
 	 * @return an unmodifiable set of the parent's children, potentially empty
-	 * @see #getChildren(String)
+	 * @see #getChildren(UniqueId)
 	 */
 	public Set<TestIdentifier> getChildren(TestIdentifier parent) {
 		Preconditions.notNull(parent, "parent must not be null");
-		return getChildren(parent.getUniqueId());
+		return getChildren(parent.getUniqueIdObject());
 	}
 
 	/**
@@ -180,11 +180,26 @@ public class TestPlan {
 	 * {@code null} or blank
 	 * @return an unmodifiable set of the parent's children, potentially empty
 	 * @see #getChildren(TestIdentifier)
+	 * @deprecated Use {@link #getChildren(UniqueId)}
 	 */
+	@API(status = DEPRECATED, since = "1.10")
+	@Deprecated
 	public Set<TestIdentifier> getChildren(String parentId) {
 		Preconditions.notBlank(parentId, "parent ID must not be null or blank");
-		UniqueId uniqueId = UniqueId.parse(parentId);
-		return children.containsKey(uniqueId) ? unmodifiableSet(children.get(uniqueId)) : emptySet();
+		return getChildren(UniqueId.parse(parentId));
+	}
+
+	/**
+	 * Get the children of the supplied unique ID.
+	 *
+	 * @param parentId the unique ID to look up the children for; never
+	 * {@code null}
+	 * @return an unmodifiable set of the parent's children, potentially empty
+	 * @see #getChildren(TestIdentifier)
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public Set<TestIdentifier> getChildren(UniqueId parentId) {
+		return children.containsKey(parentId) ? unmodifiableSet(children.get(parentId)) : emptySet();
 	}
 
 	/**
@@ -195,13 +210,29 @@ public class TestPlan {
 	 * @return the identifier with the supplied unique ID; never {@code null}
 	 * @throws PreconditionViolationException if no {@code TestIdentifier}
 	 * with the supplied unique ID is present in this test plan
+	 * @deprecated Use {@link #getTestIdentifier(UniqueId)}
 	 */
+	@API(status = DEPRECATED, since = "1.10")
+	@Deprecated
 	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
 		Preconditions.notBlank(uniqueId, "unique ID must not be null or blank");
-		UniqueId uniqueIdObject = UniqueId.parse(uniqueId);
-		Preconditions.condition(allIdentifiers.containsKey(uniqueIdObject),
+		return getTestIdentifier(UniqueId.parse(uniqueId));
+	}
+
+	/**
+	 * Get the {@link TestIdentifier} with the supplied unique ID.
+	 *
+	 * @param uniqueId the unique ID to look up the identifier for; never
+	 * {@code null}
+	 * @return the identifier with the supplied unique ID; never {@code null}
+	 * @throws PreconditionViolationException if no {@code TestIdentifier}
+	 * with the supplied unique ID is present in this test plan
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public TestIdentifier getTestIdentifier(UniqueId uniqueId) {
+		Preconditions.notNull(uniqueId, () -> "uniqueId must not be null");
+		return Preconditions.notNull(allIdentifiers.get(uniqueId),
 			() -> "No TestIdentifier with unique ID [" + uniqueId + "] has been added to this TestPlan.");
-		return allIdentifiers.get(uniqueIdObject);
 	}
 
 	/**
