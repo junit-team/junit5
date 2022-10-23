@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -27,7 +28,7 @@ import org.junit.platform.launcher.TestPlan;
  */
 class TreePrintingListener implements TestExecutionListener {
 
-	private final Map<String, TreeNode> nodesByUniqueId = new ConcurrentHashMap<>();
+	private final Map<UniqueId, TreeNode> nodesByUniqueId = new ConcurrentHashMap<>();
 	private TreeNode root;
 	private final TreePrinter treePrinter;
 
@@ -35,15 +36,14 @@ class TreePrintingListener implements TestExecutionListener {
 		this.treePrinter = new TreePrinter(out, theme, colorPalette);
 	}
 
-	private TreeNode addNode(TestIdentifier testIdentifier, Supplier<TreeNode> nodeSupplier) {
+	private void addNode(TestIdentifier testIdentifier, Supplier<TreeNode> nodeSupplier) {
 		TreeNode node = nodeSupplier.get();
-		nodesByUniqueId.put(testIdentifier.getUniqueId(), node);
-		testIdentifier.getParentId().map(nodesByUniqueId::get).orElse(root).addChild(node);
-		return node;
+		nodesByUniqueId.put(testIdentifier.getUniqueIdObject(), node);
+		testIdentifier.getParentIdObject().map(nodesByUniqueId::get).orElse(root).addChild(node);
 	}
 
 	private TreeNode getNode(TestIdentifier testIdentifier) {
-		return nodesByUniqueId.get(testIdentifier.getUniqueId());
+		return nodesByUniqueId.get(testIdentifier.getUniqueIdObject());
 	}
 
 	@Override

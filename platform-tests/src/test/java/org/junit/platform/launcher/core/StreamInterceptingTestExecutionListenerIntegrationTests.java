@@ -65,7 +65,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 		var listener = mock(TestExecutionListener.class);
 		doAnswer(invocation -> {
 			TestIdentifier testIdentifier = invocation.getArgument(0);
-			if (testIdentifier.getUniqueId().equals(test.getUniqueId().toString())) {
+			if (testIdentifier.getUniqueIdObject().equals(test.getUniqueId())) {
 				printStreamSupplier.get().print("123");
 			}
 			return null;
@@ -83,7 +83,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 		var inOrder = inOrder(listener);
 		inOrder.verify(listener).testPlanExecutionStarted(testPlanArgumentCaptor.capture());
 		var testPlan = testPlanArgumentCaptor.getValue();
-		var testIdentifier = testPlan.getTestIdentifier(test.getUniqueId().toString());
+		var testIdentifier = testPlan.getTestIdentifier(test.getUniqueId());
 
 		var reportEntryArgumentCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 		inOrder.verify(listener).reportingEntryPublished(same(testIdentifier), reportEntryArgumentCaptor.capture());

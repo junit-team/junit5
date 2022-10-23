@@ -346,8 +346,8 @@ class DefaultLauncherTests {
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		var rootIdentifier = testPlan.getRoots().iterator().next();
-		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(2);
-		assertThat(testPlan.getChildren("[engine:myEngine]")).hasSize(2);
+		assertThat(testPlan.getChildren(rootIdentifier.getUniqueIdObject())).hasSize(2);
+		assertThat(testPlan.getChildren(UniqueId.parse("[engine:myEngine]"))).hasSize(2);
 	}
 
 	@Test
@@ -363,8 +363,8 @@ class DefaultLauncherTests {
 			request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(2);
-		assertThat(testPlan.getChildren(UniqueId.forEngine("engine1").toString())).hasSize(1);
-		assertThat(testPlan.getChildren(UniqueId.forEngine("engine2").toString())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("engine1"))).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("engine2"))).hasSize(1);
 	}
 
 	@Test
@@ -387,8 +387,8 @@ class DefaultLauncherTests {
 					.filters(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
 					.build());
 
-		assertThat(testPlan.getChildren(UniqueId.forEngine("myEngine").toString())).hasSize(1);
-		assertThat(testPlan.getTestIdentifier(test1.getUniqueId().toString())).isNotNull();
+		assertThat(testPlan.getChildren(UniqueId.forEngine("myEngine"))).hasSize(1);
+		assertThat(testPlan.getTestIdentifier(test1.getUniqueId())).isNotNull();
 	}
 
 	@Test
@@ -535,12 +535,12 @@ class DefaultLauncherTests {
 		inOrder.verify(listener).testPlanExecutionStarted(testPlanArgumentCaptor.capture());
 
 		var testPlan = testPlanArgumentCaptor.getValue();
-		var engineTestIdentifier = testPlan.getTestIdentifier(engineId.toString());
-		var containerAndTestIdentifier = testPlan.getTestIdentifier(containerAndTestId.toString());
-		var dynamicTestIdentifier = testPlan.getTestIdentifier(dynamicTestId.toString());
-		assertThat(engineTestIdentifier.getParentId()).isEmpty();
-		assertThat(containerAndTestIdentifier.getParentId()).contains(engineId.toString());
-		assertThat(dynamicTestIdentifier.getParentId()).contains(containerAndTestId.toString());
+		var engineTestIdentifier = testPlan.getTestIdentifier(engineId);
+		var containerAndTestIdentifier = testPlan.getTestIdentifier(containerAndTestId);
+		var dynamicTestIdentifier = testPlan.getTestIdentifier(dynamicTestId);
+		assertThat(engineTestIdentifier.getParentIdObject()).isEmpty();
+		assertThat(containerAndTestIdentifier.getParentIdObject()).contains(engineId);
+		assertThat(dynamicTestIdentifier.getParentIdObject()).contains(containerAndTestId);
 
 		inOrder.verify(listener).executionStarted(engineTestIdentifier);
 		inOrder.verify(listener).executionStarted(containerAndTestIdentifier);
@@ -579,7 +579,7 @@ class DefaultLauncherTests {
 		var launcher = createLauncher(engine);
 		var testPlan = launcher.discover(request().build());
 		var engineIdentifier = getOnlyElement(testPlan.getRoots());
-		var engineUniqueId = UniqueId.parse(engineIdentifier.getUniqueId());
+		var engineUniqueId = engineIdentifier.getUniqueIdObject();
 		assertThat(testPlan.getChildren(engineIdentifier)).hasSize(1);
 
 		var addedIdentifier = TestIdentifier.from(

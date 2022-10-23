@@ -42,7 +42,7 @@ import org.junit.platform.launcher.TestPlan;
 public class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	private final AtomicReference<TestPlanExecutionEvent> testPlanExecutionEvent = new AtomicReference<>();
-	private final Map<String, TestExecutionEvent> testExecutionEvents = new ConcurrentHashMap<>();
+	private final Map<org.junit.platform.engine.UniqueId, TestExecutionEvent> testExecutionEvents = new ConcurrentHashMap<>();
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan plan) {
@@ -70,7 +70,7 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 	@Override
 	public void executionStarted(TestIdentifier test) {
 		TestExecutionEvent event = new TestExecutionEvent();
-		testExecutionEvents.put(test.getUniqueId(), event);
+		testExecutionEvents.put(test.getUniqueIdObject(), event);
 		event.initialize(test);
 		event.begin();
 	}
@@ -78,7 +78,7 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 	@Override
 	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
 		Optional<Throwable> throwable = result.getThrowable();
-		TestExecutionEvent event = testExecutionEvents.remove(test.getUniqueId());
+		TestExecutionEvent event = testExecutionEvents.remove(test.getUniqueIdObject());
 		event.end();
 		event.result = result.getStatus().toString();
 		event.exceptionClass = throwable.map(Throwable::getClass).orElse(null);

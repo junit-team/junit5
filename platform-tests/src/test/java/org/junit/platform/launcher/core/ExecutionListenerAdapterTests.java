@@ -39,7 +39,7 @@ class ExecutionListenerAdapterTests {
 		var discoveryResult = new LauncherDiscoveryResult(Map.of(mock(TestEngine.class), testDescriptor),
 			mock(ConfigurationParameters.class));
 		var testPlan = InternalTestPlan.from(discoveryResult);
-		var testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
+		var testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId());
 
 		//not yet spyable with mockito? -> https://github.com/mockito/mockito/issues/146
 		var testExecutionListener = new MockTestExecutionListener();
