@@ -23,7 +23,8 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Introduce `TestPlan.getTestIdentifier(UniqueId)` and `TestPlan.getChildren(UniqueId)` to
+  avoid parsing unique IDs unnecessarily during test execution.
 
 
 [[release-notes-5.9.2-junit-jupiter]]

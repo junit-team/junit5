@@ -760,11 +760,11 @@ class JUnitPlatformRunnerTests {
 	// -------------------------------------------------------------------------
 
 	private static Description suiteDescription(String uniqueId) {
-		return createSuiteDescription(uniqueId, uniqueId);
+		return createSuiteDescription(uniqueId, UniqueId.parse(uniqueId));
 	}
 
 	private static Description testDescription(String uniqueId) {
-		return createTestDescription(uniqueId, uniqueId, uniqueId);
+		return createTestDescription(uniqueId, uniqueId, UniqueId.parse(uniqueId));
 	}
 
 	private TestDescriptor testDescriptorWithTags(String... tag) {

@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.Events;
@@ -40,7 +41,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 			event -> event.getTestDescriptor().getUniqueId().toString().contains(TestInfo.class.getName())).findFirst();
 		assertTrue(first.isPresent());
 		TestIdentifier testIdentifier = TestIdentifier.from(first.get().getTestDescriptor());
-		String uniqueId = testIdentifier.getUniqueId();
+		UniqueId uniqueId = testIdentifier.getUniqueIdObject();
 
 		tests = executeTests(selectUniqueId(uniqueId)).testEvents();
 

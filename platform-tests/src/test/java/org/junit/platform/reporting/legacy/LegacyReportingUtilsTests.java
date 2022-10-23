@@ -73,14 +73,14 @@ class LegacyReportingUtilsTests {
 
 	private String getClassName(UniqueId uniqueId) {
 		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class));
-		return LegacyReportingUtils.getClassName(testPlan, testPlan.getTestIdentifier(uniqueId.toString()));
+		return LegacyReportingUtils.getClassName(testPlan, testPlan.getTestIdentifier(uniqueId));
 	}
 
 	@SuppressWarnings("deprecation")
 	private String getClassNameFromOldLocation(UniqueId uniqueId) {
 		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class));
 		return org.junit.platform.launcher.listeners.LegacyReportingUtils.getClassName(testPlan,
-			testPlan.getTestIdentifier(uniqueId.toString()));
+			testPlan.getTestIdentifier(uniqueId));
 	}
 
 	private TestDescriptor createTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
