@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 1
       - name: Set up Test JDK
@@ -48,5 +48,5 @@ jobs:
       - name: Upload Test Distribution trace files
         uses: actions/upload-artifact@v2
         with:
-          name: Test Distribution trace files
+          name: "Test Distribution trace files (OpenJDK ${{ matrix.jdk }})"
           path: '**/build/test-results/*/trace.json'

@@ -5,8 +5,8 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 	plugins {
-		id("com.gradle.enterprise") version "3.11.1" // keep in sync with buildSrc/build.gradle.kts
-		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.8.1"
+		id("com.gradle.enterprise") version "3.11.2" // keep in sync with buildSrc/build.gradle.kts
+		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.8.2"
 		id("org.ajoberstar.git-publish") version "4.1.1"
 		kotlin("jvm") version "1.5.31"
 		// Check if workaround in documentation.gradle.kts can be removed when upgrading
