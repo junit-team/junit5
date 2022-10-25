@@ -2337,7 +2337,7 @@ configuration parameter to one of the following options.
   Uses the mandatory `junit.jupiter.execution.parallel.config.fixed.parallelism`
   configuration parameter as the desired parallelism.
   The optional `junit.jupiter.execution.parallel.config.fixed.max-pool-size`
-  configuration parameter can be used to limit the maximum number of concurrent tests.
+  configuration parameter can be used to limit the maximum number of threads.
 
 `custom`::
   Allows you to specify a custom `{ParallelExecutionConfigurationStrategy}`
@@ -2355,7 +2355,7 @@ of the synchronization mechanisms described in the next section, the `ForkJoinPo
 is used behind the scenes may spawn additional threads to ensure execution continues with
 sufficient parallelism.
 If you require such guarantees, with Java 9+, it is possible to limit the maximum number
-of concurrent tests by controlling the maximum pool size of the `fixed` and `custom`
+of concurrent threads by controlling the maximum pool size of the `fixed` and `custom`
 strategies.
 
 [[writing-tests-parallel-execution-config-properties]]

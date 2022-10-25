@@ -23,7 +23,7 @@ GitHub.
 
 ==== New Features and Improvements
 
-* Support limiting the number of concurrently executing tests via a property
+* Support limiting the max-pool-size for parallel execution via a property
 
 
 [[release-notes-5.10.0-M1️-junit-jupiter]]
