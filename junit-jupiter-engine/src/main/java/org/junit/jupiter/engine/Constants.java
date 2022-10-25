@@ -172,7 +172,7 @@ public final class Constants {
 	 * Property name used to configure the maximum pool size of the underlying
 	 * fork join pool for the {@code fixed} configuration strategy: {@value}
 	 *
-	 * <p>Value must be an integer and larger or equal to
+	 * <p>Value must be an integer and greater than or equal to
 	 * {@value #PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME}; defaults to
 	 * {@code 256 + fixed.parallelism}.
 	 *

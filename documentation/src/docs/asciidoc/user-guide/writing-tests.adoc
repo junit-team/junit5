@@ -2411,7 +2411,7 @@ The following table lists relevant properties for configuring parallel execution
 | ```junit.jupiter.execution.parallel.config.fixed.max-pool-size```
 | Desired maximum pool size of the underlying fork join pool for the ```fixed```
   configuration strategy
-| a positive integer, must not be smaller then `junit.jupiter.execution.parallel.config.fixed.parallelism`
+| a positive integer, must not be less than `junit.jupiter.execution.parallel.config.fixed.parallelism`
 | 256 + `junit.jupiter.execution.parallel.config.fixed.parallelism`
 
 | ```junit.jupiter.execution.parallel.config.fixed.saturate```
