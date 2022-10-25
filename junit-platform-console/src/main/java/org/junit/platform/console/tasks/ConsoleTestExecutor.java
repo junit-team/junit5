@@ -30,6 +30,7 @@ import org.junit.platform.console.options.Theme;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -54,8 +55,23 @@ public class ConsoleTestExecutor {
 		this.launcherSupplier = launcherSupplier;
 	}
 
+	public Void list(PrintWriter out) throws Exception {
+		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> listTests(out));
+	}
+
 	public TestExecutionSummary execute(PrintWriter out) throws Exception {
 		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> executeTests(out));
+	}
+
+	private Void listTests(PrintWriter out) {
+		Launcher launcher = launcherSupplier.get();
+		Optional<DetailsPrintingListener> commandLineTestPrinter = createDetailsPrintingListener(out);
+
+		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
+		TestPlan testPlan = launcher.discover(discoveryRequest);
+
+		commandLineTestPrinter.ifPresent(printer -> printer.listTests(testPlan));
+		return null;
 	}
 
 	private TestExecutionSummary executeTests(PrintWriter out) {
@@ -104,7 +120,7 @@ public class ConsoleTestExecutor {
 		return summaryListener;
 	}
 
-	private Optional<TestExecutionListener> createDetailsPrintingListener(PrintWriter out) {
+	private Optional<DetailsPrintingListener> createDetailsPrintingListener(PrintWriter out) {
 		ColorPalette colorPalette = getColorPalette();
 		Theme theme = options.getTheme();
 		switch (options.getDetails()) {
