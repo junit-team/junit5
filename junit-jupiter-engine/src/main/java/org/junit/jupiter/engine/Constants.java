@@ -170,7 +170,7 @@ public final class Constants {
 
 	/**
 	 * Property name used to configure the maximum pool size of the underlying
-	 * fork join pool for the {@code fixed} configuration strategy: {@value}
+	 * fork-join pool for the {@code fixed} configuration strategy: {@value}
 	 *
 	 * <p>Value must be an integer and greater than or equal to
 	 * {@value #PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME}; defaults to
@@ -185,11 +185,11 @@ public final class Constants {
 			+ CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME;
 
 	/**
-	 * Property name used to enable saturation of the underlying fork join pool
-	 * for the {@code ffixed} configuration strategy: {@value}
+	 * Property name used to disable saturation of the underlying fork-join pool
+	 * for the {@code fixed} configuration strategy: {@value}
 	 *
-	 * <p>When set to {@code false} the underlying fork join pool will reject
-	 * additional tasks when all available workers are busy and the maximum
+	 * <p>When set to {@code false} the underlying fork-join pool will reject
+	 * additional tasks if all available workers are busy and the maximum
 	 * pool-size would be exceeded.
 
 	 * <p>Value must either {@code true} or {@code false}; defaults to {@code true}.

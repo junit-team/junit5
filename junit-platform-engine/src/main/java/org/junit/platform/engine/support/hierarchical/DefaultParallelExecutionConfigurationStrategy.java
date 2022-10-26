@@ -122,7 +122,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	/**
 	 * Property name used to configure the maximum pool size of the underlying
-	 * fork join pool for the {@link #FIXED} configuration strategy.
+	 * fork-join pool for the {@link #FIXED} configuration strategy.
 	 *
 	 * <p>Value must be an integer and greater than or equal to
 	 * {@value #CONFIG_FIXED_PARALLELISM_PROPERTY_NAME}; defaults to
@@ -135,11 +135,11 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	public static final String CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME = "fixed.max-pool-size";
 
 	/**
-	 * Property name used to enable saturation of the underlying fork join pool
+	 * Property name used to disable saturation of the underlying fork-join pool
 	 * for the {@link #FIXED} configuration strategy.
 	 *
-	 * <p>When set to {@code false} the underlying fork join pool will reject
-	 * additional tasks when all available workers are busy and the maximum
+	 * <p>When set to {@code false} the underlying fork-join pool will reject
+	 * additional tasks if all available workers are busy and the maximum
 	 * pool-size would be exceeded.
 	 * <p>Value must either {@code true} or {@code false}; defaults to {@code true}.
 	 *
