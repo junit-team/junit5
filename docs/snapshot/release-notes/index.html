@@ -486,28 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#release-notes-5.9.1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#release-notes-5.9.0">5.9.0</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.9.0-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.9.0-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.9.0-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.8.2">5.8.2</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.8.2-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.8.2-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.8.2-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.8.1">5.8.1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.8.1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.8.1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.8.1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.8.0">5.8.0</a></li>
+<li><a href="#release-notes-5.9.0">5.9.0</a></li>
 </ul>
 </div>
 </div>
@@ -515,7 +494,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document contains the <em>change log</em> for all JUnit 5 releases since 5.8 GA.</p>
+<p>This document contains the <em>change log</em> for all JUnit 5 releases since 5.9 GA.</p>
 </div>
 <div class="paragraph">
 <p>Please refer to the <a href="../user-guide/index.html#user-guide">User Guide</a> for comprehensive
@@ -545,7 +524,10 @@ repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fixed fallback to ForkJoinPool&#8217;s Java 7 constructor on Java 9 and higher.</p>
+<p>The Java 7 based constructor for <code>ForkJoinPool</code> is no longer accidentally used on Java 9
+or higher when invalid <code>ParallelExecutionConfiguration</code> is provided. Instead, an
+exception is thrown for invalid configuration, thereby preventing invalid configuration
+from being silently ignored.</p>
 </li>
 </ul>
 </div>
@@ -741,7 +723,7 @@ disabling tests within a GraalVM native image.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>XML reports in new <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a>
+<p>XML reports in the new <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a>
 format</p>
 </li>
 <li>
@@ -768,468 +750,6 @@ format</p>
 <li>
 <p>Various improvements to <code>ConsoleLauncher</code></p>
 </li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/58?closed=1">5.9 M1</a>,
-<a href="https://github.com/junit-team/junit5/milestone/61?closed=1">5.9 RC1</a>, and
-<a href="https://github.com/junit-team/junit5/milestone/62?closed=1">5.9 GA</a> milestone pages in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.9.0-junit-platform"><a class="anchor" href="#release-notes-5.9.0-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Fixed handling of global post-discovery filters that apply to <code>@Suite</code> classes.</p>
-</li>
-<li>
-<p>Since the Turkish language has special characters such as 'ı' and 'İ', the uppercase
-conversion in <code>DefaultParallelExecutionConfigurationStrategy#getStrategy</code> previously
-caused all tests to finish with exit code -1. This has been fixed by using the root
-locale instead of the default one.</p>
-</li>
-<li>
-<p>Absolute path entries are now supported in JUnit&#8217;s Platform Console Launcher on Windows.</p>
-</li>
-<li>
-<p>Attempts to load a <code>Class</code> for an invalid class name representing an extremely large
-multidimensional array now fail within a reasonable amount of time.</p>
-</li>
-<li>
-<p>Fix concurrency issue in classpath scanning.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ConfigurationParameters.size()</code> has been deprecated in favor of the new <code>keySet()</code>
-method.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Support for the <a href="https://github.com/ota4j-team/open-test-reporting">Open Test Reporting</a>
-format which supports all features of the JUnit Platform such as hierarchical test
-structures, display names, tags, etc. Please refer to the
-<a href="../user-guide/index.html#junit-platform-reporting-open-test-reporting">User Guide</a>
-for instructions on how to enable such reports in your build.</p>
-</li>
-<li>
-<p><code>ConfigurationParameters</code> has a new <code>keySet()</code> method which allows you to retrieve all
-configuration parameter keys.</p>
-</li>
-<li>
-<p>New <code>IterationSelector</code> for selecting a subset of a test&#8217;s or container&#8217;s iterations.</p>
-</li>
-<li>
-<p><code>ParallelExecutionConfiguration</code> allows configuring the <code>saturate</code> predicate of the
-<code>ForkJoinPool</code> used for parallel test execution.</p>
-</li>
-<li>
-<p>JUnit OSGi bundles now contain <code>engine</code> and <code>launcher</code> requirements ensuring that at
-resolution time a fully running set of dependencies is calculated, avoiding the need for
-these to be manually specified.</p>
-</li>
-<li>
-<p>JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.</p>
-</li>
-<li>
-<p>New <code>failIfNoTests</code> attribute added to <code>@Suite</code>. This will fail the suite if no tests
-are discovered.</p>
-</li>
-<li>
-<p>The output color for the <code>ConsoleLauncher</code> can now be customized. The option
-<code>--single-color</code> will apply a built-in monochrome style, while <code>--color-palette</code> will
-accept a properties file. See the
-<a href="../user-guide/index.html#running-tests-console-launcher-color-customization">User Guide</a> for details.</p>
-</li>
-<li>
-<p>The default theme for the <code>ConsoleLauncher</code> is now determined by the charset reported by
-the system console on Java 17 and later.</p>
-</li>
-<li>
-<p>New <code>--list-engines</code> option added to the <code>ConsoleLauncher</code> which displays all registered
-test engine implementations.</p>
-</li>
-<li>
-<p>Configuring included <code>EngineFilters</code> that do not match any registered <code>TestEngine</code>
-results in an error to avoid misconfiguration – for example, due to typos.</p>
-</li>
-<li>
-<p>New public factory method to instantiate an <code>ExecutionRequest</code>.</p>
-</li>
-<li>
-<p>Documentation for overriding the JUnit version used in Spring Boot applications. See the
-<a href="../user-guide/index.html#running-tests-build-spring-boot">User Guide</a> for details.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.9.0-junit-jupiter"><a class="anchor" href="#release-notes-5.9.0-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>When cleaning up a <code>@TempDir</code>, only one retry attempt will be made to delete directories.</p>
-</li>
-<li>
-<p>Since the Turkish language has special characters such as 'ı' and 'İ', the uppercase
-conversion in <code>DefaultParallelExecutionConfigurationStrategy#getStrategy</code> previously
-caused all tests to finish with exit code -1. This has been fixed by using the root
-locale instead of the default one.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>@TempDir</code> fields are no longer allowed to be declared as <code>final</code>.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>This improves diagnostics for failures resulting from a user-declared <code>static final</code>
-<code>@TempDir</code> field by throwing an exception with an informative error message.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Private lifecycle methods (annotated with <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>, or
-<code>@AfterEach</code>) now correctly lead to an exception. Although this is a bug fix, it is
-technically also a breaking change since there might be existing user code with
-<code>private</code> lifecycle methods which will now start to fail.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>@TempDir</code> now includes a <code>cleanup</code> mode attribute for preventing a temporary directory
-from being deleted after a test. The default cleanup mode can be configured via a
-configuration parameter.</p>
-</li>
-<li>
-<p>Support for FreeBSD and OpenBSD operating systems in <code>@EnabledOnOs</code> and <code>@DisabledOnOs</code>.</p>
-</li>
-<li>
-<p>New <code>MATCH_NONE</code> mode for <code>@EnumSource</code> that selects only those enum constants whose
-names match none of the supplied patterns.</p>
-</li>
-<li>
-<p>The <code>@Order</code> annotation is now a <code>STABLE</code> API.</p>
-</li>
-<li>
-<p>New <code>TestInstancePreConstructCallback</code> extension API that is called prior to test
-instance construction – symmetric to the existing <code>TestInstancePreDestroyCallback</code>
-extension API.</p>
-</li>
-<li>
-<p>Extensions can now leverage registered <code>ParameterResolver</code> extensions when invoking
-methods and constructors via the new <code>ExecutableInvoker</code> API available in the
-<code>ExtensionContext</code>.</p>
-</li>
-<li>
-<p>A subset of the invocations of parameterized or dynamic tests can now be selected via
-the new <code>IterationSelector</code> discovery selector when launching the JUnit Platform.</p>
-</li>
-<li>
-<p><code>JAVA_19</code> and <code>JAVA_20</code> have been added to the <code>JRE</code> enum for use with JRE-based
-execution conditions.</p>
-</li>
-<li>
-<p><code>@MethodSource</code> factory methods can now accept arguments resolved by registered
-<code>ParameterResolver</code> extensions.</p>
-</li>
-<li>
-<p><code>AssertionFailureBuilder</code> allows reusing Jupiter&#8217;s logic for creating failure messages
-to assist in writing custom assertion methods.</p>
-</li>
-<li>
-<p>Three new <code>abort</code> methods have been added to the <code>Assumptions</code> class. These are
-analogous to the <code>fail</code> methods in the <code>Assertions</code> class, but instead of failing they
-abort the test or container.</p>
-</li>
-<li>
-<p>Support for enabling/disabling tests based on the system&#8217;s hardware architecture via new
-<code>architectures</code> attributes in <code>@EnabledOnOs</code> and <code>@DisabledOnOs</code>.</p>
-</li>
-<li>
-<p>Default <code>@MethodSource</code> factory methods can now accept arguments. A <em>default</em> factory
-method is a method declared in the test class with the same name as the
-<code>@ParameterizedTest</code> method that is inferred as the factory method when no explicit
-factory method is specified in the <code>@MethodSource</code> annotation.</p>
-</li>
-<li>
-<p>Thread mode can be set on <code>@Timeout</code> annotation. It allows to configure whether test
-code is executed in the thread of the calling code or in a separate thread. The three
-modes are: <code>INFERRED</code> (default) which resolves the thread mode configured via the
-property <code>junit.jupiter.execution.timeout.thread.mode.default</code>, <code>SAME_THREAD</code> that
-executes the test code in the same thread as the calling code, and <code>SEPARATE_THREAD</code>
-which executes it in a separate thread.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.9.0-junit-vintage"><a class="anchor" href="#release-notes-5.9.0-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>More accurate reporting of intermediate start/finish events, e.g. iterations of the
-<code>Parameterized</code> runner and classes executed indirectly via the <code>Suite</code> runner, when
-running with JUnit 4.13 or later.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.8.2"><a class="anchor" href="#release-notes-5.8.2"></a>5.8.2</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> November 28, 2021</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Text blocks in <code>@CsvSource</code> are treated like CSV files</p>
-</li>
-<li>
-<p>CSV headers in display names for <code>@CsvSource</code> and <code>@CsvFileSource</code></p>
-</li>
-<li>
-<p>Custom quote character support in <code>@CsvSource</code> and <code>@CsvFileSource</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/60?closed=1">5.8.2</a> milestone page in the JUnit repository on
-GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.2-junit-platform"><a class="anchor" href="#release-notes-5.8.2-junit-platform"></a>JUnit Platform</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.2-junit-jupiter"><a class="anchor" href="#release-notes-5.8.2-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Text blocks in <code>@CsvSource</code> are now treated like complete CSV files, including support
-for comments beginning with a <code>#</code> symbol as well as support for new lines within
-quoted strings. See the
-<a href="../user-guide/index.html#writing-tests-parameterized-tests-sources-CsvSource">User
-Guide</a> for details and examples.</p>
-</li>
-<li>
-<p>CSV headers can now be used in display names in parameterized tests. See
-<a href="../user-guide/index.html#writing-tests-parameterized-tests-sources-CsvSource"><code>@CsvSource</code></a> and
-<a href="../user-guide/index.html#writing-tests-parameterized-tests-sources-CsvFileSource"><code>@CsvFileSource</code></a> in the User Guide for details and examples.</p>
-</li>
-<li>
-<p>The quote character for <em>quoted strings</em> in <code>@CsvSource</code> and <code>@CsvFileSource</code> is now
-configurable via a new <code>quoteCharacter</code> attribute in each annotation.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.2-junit-vintage"><a class="anchor" href="#release-notes-5.8.2-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.8.1"><a class="anchor" href="#release-notes-5.8.1"></a>5.8.1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> September 22, 2021</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Support for <em>text blocks</em> in <code>@CsvSource</code></p>
-</li>
-<li>
-<p>Java 18 support in the <code>JRE</code> enum</p>
-</li>
-<li>
-<p>Access to the <code>ExecutionMode</code> in the <code>ExtensionContext</code></p>
-</li>
-<li>
-<p>Minor bug fixes and enhancements since 5.8.0</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/59?closed=1">5.8.1</a> milestone page in the JUnit repository on
-GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.1-junit-platform"><a class="anchor" href="#release-notes-5.8.1-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-6"><a class="anchor" href="#deprecations-and-breaking-changes-6"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>@UseTechnicalNames</code> has been deprecated in favor of the new <code>@Suite</code> support which does
-not require the use of technical names. See the warning in
-<a href="../user-guide/index.html#running-tests-junit-platform-runner">Using JUnit 4 to run the
-JUnit Platform</a> for details.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ReflectionSupport.findNestedClasses(..)</code> is now thread-safe with regard to cycle
-detection.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.1-junit-jupiter"><a class="anchor" href="#release-notes-5.8.1-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>assertLinesMatch()</code> in <code>Assertions</code> no longer fails with a <code>NoSuchElementException</code> if
-a limited fast-forward followed by at least one more expected line exceeds the remaining
-actual lines.</p>
-</li>
-<li>
-<p><code>assertLinesMatch()</code> in <code>Assertions</code> now handles fast-forwards with leading and trailing
-spaces correctly and no longer throws an <code>IndexOutOfBoundsException</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-10"><a class="anchor" href="#new-features-and-improvements-10"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>JAVA_18</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
-</li>
-<li>
-<p>CSV content in <code>@CsvSource</code> can now be supplied as a <em>text block</em> instead of an array of
-strings. See the
-<a href="../user-guide/index.html#writing-tests-parameterized-tests-sources-CsvSource">User
-Guide</a> for details and an example.</p>
-</li>
-<li>
-<p>The <code>ExecutionMode</code> for the current test or container is now accessible via the
-<code>ExtensionContext</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.8.1-junit-vintage"><a class="anchor" href="#release-notes-5.8.1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Relaxed version constraint in published Gradle Module Metadata to allow downgrading the
-<code>junit:junit</code> dependency from 4.13.2.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.8.0"><a class="anchor" href="#release-notes-5.8.0"></a>5.8.0</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> September 12, 2021</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Declarative test suites via <code>@Suite</code> classes</p>
-</li>
-<li>
-<p><code>LauncherSession</code> and accompanying listener</p>
-</li>
-<li>
-<p>New <code>UniqueIdTrackingListener</code></p>
-</li>
-<li>
-<p>More fine-grained Java Flight Recorder events</p>
-</li>
-<li>
-<p>Java Flight Recorder support on Java 8 Update 262 or higher</p>
-</li>
-<li>
-<p>Test class ordering</p>
-</li>
-<li>
-<p><code>@TempDir</code> can be used to create multiple temporary directories</p>
-</li>
-<li>
-<p>Extension registration via <code>@ExtendWith</code> on fields and parameters</p>
-</li>
-<li>
-<p>Auto-close support for arguments in <code>@ParameterizedTest</code> methods</p>
-</li>
-<li>
-<p>Memory and performance optimizations</p>
-</li>
 <li>
 <p>Numerous bug fixes and minor improvements</p>
 </li>
@@ -1237,7 +757,7 @@ Guide</a> for details and an example.</p>
 </div>
 <div class="paragraph">
 <p>For complete details consult the
-<a href="https://junit.org/junit5/docs/5.8.0/release-notes/index.html">5.8.0 Release Notes</a> online.</p>
+<a href="https://junit.org/junit5/docs/5.9.0/release-notes/index.html">5.9.0 Release Notes</a> online.</p>
 </div>
 </div>
 </div>
@@ -1245,7 +765,7 @@ Guide</a> for details and an example.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-10-26 09:37:58 UTC
+Last updated 2022-10-26 12:03:20 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
