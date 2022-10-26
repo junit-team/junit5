@@ -5,8 +5,8 @@
 
 *Scope:*
 
-* XML reports in new https://github.com/ota4j-team/open-test-reporting[Open Test Reporting]
-format
+* XML reports in the new https://github.com/ota4j-team/open-test-reporting[Open Test Reporting]
+  format
 * Configurable cleanup mode for `@TempDir`
 * Configurable thread mode for `@Timeout`
 * Conditional execution based on OS architectures
@@ -15,134 +15,7 @@ format
 * Parameter injection for `@MethodSource` methods
 * New `IterationSelector`
 * Various improvements to `ConsoleLauncher`
+* Numerous bug fixes and minor improvements
 
-For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/58?closed=1+[5.9 M1],
-link:{junit5-repo}+/milestone/61?closed=1+[5.9 RC1], and
-link:{junit5-repo}+/milestone/62?closed=1+[5.9 GA] milestone pages in the JUnit repository
-on GitHub.
-
-
-[[release-notes-5.9.0-junit-platform]]
-=== JUnit Platform
-
-==== Bug Fixes
-
-* Fixed handling of global post-discovery filters that apply to `@Suite` classes.
-* Since the Turkish language has special characters such as 'ı' and 'İ', the uppercase
-  conversion in `DefaultParallelExecutionConfigurationStrategy#getStrategy` previously
-  caused all tests to finish with exit code -1. This has been fixed by using the root
-  locale instead of the default one.
-* Absolute path entries are now supported in JUnit's Platform Console Launcher on Windows.
-* Attempts to load a `Class` for an invalid class name representing an extremely large
-  multidimensional array now fail within a reasonable amount of time.
-* Fix concurrency issue in classpath scanning.
-
-==== Deprecations and Breaking Changes
-
-* `ConfigurationParameters.size()` has been deprecated in favor of the new `keySet()`
-  method.
-
-==== New Features and Improvements
-
-* Support for the https://github.com/ota4j-team/open-test-reporting[Open Test Reporting]
-  format which supports all features of the JUnit Platform such as hierarchical test
-  structures, display names, tags, etc. Please refer to the
-  <<../user-guide/index.adoc#junit-platform-reporting-open-test-reporting, User Guide>>
-  for instructions on how to enable such reports in your build.
-* `ConfigurationParameters` has a new `keySet()` method which allows you to retrieve all
-  configuration parameter keys.
-* New `IterationSelector` for selecting a subset of a test's or container's iterations.
-* `ParallelExecutionConfiguration` allows configuring the `saturate` predicate of the
-  `ForkJoinPool` used for parallel test execution.
-* JUnit OSGi bundles now contain `engine` and `launcher` requirements ensuring that at
-  resolution time a fully running set of dependencies is calculated, avoiding the need for
-  these to be manually specified.
-* JUnit Platform Standalone Console JAR now also includes the JUnit Platform Suite Engine.
-* New `failIfNoTests` attribute added to `@Suite`. This will fail the suite if no tests
-  are discovered.
-* The output color for the `ConsoleLauncher` can now be customized. The option
-  `--single-color` will apply a built-in monochrome style, while `--color-palette` will
-  accept a properties file. See the
-  <<../user-guide/index.adoc#running-tests-console-launcher-color-customization,
-  User Guide>> for details.
-* The default theme for the `ConsoleLauncher` is now determined by the charset reported by
-  the system console on Java 17 and later.
-* New `--list-engines` option added to the `ConsoleLauncher` which displays all registered
-  test engine implementations.
-* Configuring included `EngineFilters` that do not match any registered `TestEngine`
-  results in an error to avoid misconfiguration – for example, due to typos.
-* New public factory method to instantiate an `ExecutionRequest`.
-* Documentation for overriding the JUnit version used in Spring Boot applications. See the
-  <<../user-guide/index.adoc#running-tests-build-spring-boot, User Guide>> for details.
-
-
-[[release-notes-5.9.0-junit-jupiter]]
-=== JUnit Jupiter
-
-==== Bug Fixes
-
-* When cleaning up a `@TempDir`, only one retry attempt will be made to delete directories.
-* Since the Turkish language has special characters such as 'ı' and 'İ', the uppercase
-  conversion in `DefaultParallelExecutionConfigurationStrategy#getStrategy` previously
-  caused all tests to finish with exit code -1. This has been fixed by using the root
-  locale instead of the default one.
-
-==== Deprecations and Breaking Changes
-
-* `@TempDir` fields are no longer allowed to be declared as `final`.
-  - This improves diagnostics for failures resulting from a user-declared `static final`
-    `@TempDir` field by throwing an exception with an informative error message.
-* Private lifecycle methods (annotated with `@BeforeAll`, `@AfterAll`, `@BeforeEach`, or
-  `@AfterEach`) now correctly lead to an exception. Although this is a bug fix, it is
-  technically also a breaking change since there might be existing user code with
-  `private` lifecycle methods which will now start to fail.
-
-==== New Features and Improvements
-
-* `@TempDir` now includes a `cleanup` mode attribute for preventing a temporary directory
-  from being deleted after a test. The default cleanup mode can be configured via a
-  configuration parameter.
-* Support for FreeBSD and OpenBSD operating systems in `@EnabledOnOs` and `@DisabledOnOs`.
-* New `MATCH_NONE` mode for `@EnumSource` that selects only those enum constants whose
-  names match none of the supplied patterns.
-* The `@Order` annotation is now a `STABLE` API.
-* New `TestInstancePreConstructCallback` extension API that is called prior to test
-  instance construction – symmetric to the existing `TestInstancePreDestroyCallback`
-  extension API.
-* Extensions can now leverage registered `ParameterResolver` extensions when invoking
-  methods and constructors via the new `ExecutableInvoker` API available in the
-  `ExtensionContext`.
-* A subset of the invocations of parameterized or dynamic tests can now be selected via
-  the new `IterationSelector` discovery selector when launching the JUnit Platform.
-* `JAVA_19` and `JAVA_20` have been added to the `JRE` enum for use with JRE-based
-  execution conditions.
-* `@MethodSource` factory methods can now accept arguments resolved by registered
-  `ParameterResolver` extensions.
-* `AssertionFailureBuilder` allows reusing Jupiter's logic for creating failure messages
-  to assist in writing custom assertion methods.
-* Three new `abort` methods have been added to the `Assumptions` class. These are
-  analogous to the `fail` methods in the `Assertions` class, but instead of failing they
-  abort the test or container.
-* Support for enabling/disabling tests based on the system's hardware architecture via new
-  `architectures` attributes in `@EnabledOnOs` and `@DisabledOnOs`.
-* Default `@MethodSource` factory methods can now accept arguments. A _default_ factory
-  method is a method declared in the test class with the same name as the
-  `@ParameterizedTest` method that is inferred as the factory method when no explicit
-  factory method is specified in the `@MethodSource` annotation.
-* Thread mode can be set on `@Timeout` annotation. It allows to configure whether test
-  code is executed in the thread of the calling code or in a separate thread. The three
-  modes are: `INFERRED` (default) which resolves the thread mode configured via the
-  property `junit.jupiter.execution.timeout.thread.mode.default`, `SAME_THREAD` that
-  executes the test code in the same thread as the calling code, and `SEPARATE_THREAD`
-  which executes it in a separate thread.
-
-
-[[release-notes-5.9.0-junit-vintage]]
-=== JUnit Vintage
-
-==== New Features and Improvements
-
-* More accurate reporting of intermediate start/finish events, e.g. iterations of the
-  `Parameterized` runner and classes executed indirectly via the `Suite` runner, when
-  running with JUnit 4.13 or later.
+For complete details consult the
+https://junit.org/junit5/docs/5.9.0/release-notes/index.html[5.9.0 Release Notes] online.
