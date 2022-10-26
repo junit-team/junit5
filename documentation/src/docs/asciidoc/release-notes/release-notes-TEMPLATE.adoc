@@ -1,5 +1,14 @@
-// TODO: replace all occurrences of VERSION with appropriate values, delete this comment, and
-// 'include:' this new file in index.adoc.
+// TODO:
+//
+// 1) Replace all occurrences of VERSION with an appropriate value (for example, 5.10.0-M1,
+//    5.10.0-RC1, 5.10.0).
+// 2) Replace MILESTONE_NUMBER with the appropriate milestone number. This is an integer
+//    which you can determine via https://github.com/junit-team/junit5/milestones/. If a
+//    GitHub milestone does not yet exist for the given VERSION, you will need to create
+//    a new GitHub milestone or ask a member of the JUnit team to create it for you.
+// 3) Delete this comment.
+// 4) 'include:' this new file in index.adoc.
+//
 [[release-notes-VERSION]]
 == VERSION
 
@@ -8,8 +17,8 @@
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/VERSION?closed=1+[VERSION] milestone page in the JUnit repository on
-GitHub.
+link:{junit5-repo}+/milestone/MILESTONE_NUMBER?closed=1+[VERSION] milestone page in the
+JUnit repository on GitHub.
 
 
 [[release-notes-VERSION-junit-platform]]
