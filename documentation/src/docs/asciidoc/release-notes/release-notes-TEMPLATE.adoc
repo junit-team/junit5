@@ -1,18 +1,18 @@
-// TODO: replace all occurrences of ⚠️ with appropriate values, delete this comment, and
+// TODO: replace all occurrences of VERSION with appropriate values, delete this comment, and
 // 'include:' this new file in index.adoc.
-[[release-notes-⚠️]]
-== ⚠️
+[[release-notes-VERSION]]
+== VERSION
 
 *Date of Release:* ❓
 
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/⚠️?closed=1+[⚠️] milestone page in the JUnit repository on
+link:{junit5-repo}+/milestone/VERSION?closed=1+[VERSION] milestone page in the JUnit repository on
 GitHub.
 
 
-[[release-notes-⚠️-junit-platform]]
+[[release-notes-VERSION-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
@@ -28,7 +28,7 @@ GitHub.
 * ❓
 
 
-[[release-notes-⚠️-junit-jupiter]]
+[[release-notes-VERSION-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
@@ -44,7 +44,7 @@ GitHub.
 * ❓
 
 
-[[release-notes-⚠️-junit-vintage]]
+= [[release-notes-VERSION-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes
