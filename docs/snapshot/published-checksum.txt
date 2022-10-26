@@ -324,6 +324,7 @@
 6fd347e6d12b0a96c8ac399a3110d75b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/package-info.java
 6fe8200f9e1345be9c89e8048cad11a4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/OpenTest4JAndJUnit4AwareThrowableCollector.java
 70c703b533eefd87d2705b42137a261d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/package-info.java
+712d6d166650edcced38e5f4ea3e3bf5  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 71386f9b806ea6e84ed90517adce160f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeExecutionAdvisor.java
 718b02714259d753d88821f2edb5240c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/LifecycleMethodUtils.java
 718d50f84892ba9295a774d676e87eb4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/InstantiatingConfigurationParameterConverter.java
@@ -354,7 +355,6 @@
 780627d5e94dd4ebb7c902ae9838d0b0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.java
 780f8e07d2acb57f9ece107172e6cda4  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/package-info.java
 78136f9c101fdfa4c983ca4cd2b817a1  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
-7824e0bc6e86e3714281ad19f7339586  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 78aaa3bb0656c0c91b75ef6f0de1f43a  junit-platform-console/src/main/java/org/junit/platform/console/options/Details.java
 78e3da888f3b7f7543f2b8297f60ebb8  documentation/src/main/java/example/registration/package-info.java
 7926f01199f90876c60a24151563f3d6  documentation/src/test/java/example/defaultmethods/EqualsContract.java
