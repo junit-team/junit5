@@ -155,6 +155,7 @@
 34232b41b4c506f6dee819654f086be6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
 3449501277276cb44ca2b5038a574d9d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherDiscoveryResult.java
 35587d4af429a85a5be5581fac54894e  junit-platform-engine/src/main/java/org/junit/platform/engine/reporting/ReportEntry.java
+3574f732b627b7f7c5bc96761dbdde0e  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 35a11d8fc6cf53d6b64a54484f380909  junit-platform-console/src/main/java17/org/junit/platform/console/options/ConsoleUtils.java
 35ab253e15e423fae9571acb2c926848  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/OS.java
 36083dfb756ddc90d9eccfbd3a620123  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java
@@ -409,7 +410,6 @@
 8ab5c4ae6f449b7fc977521a60bd4042  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptions.java
 8aed8658743d8965a55928f5df04ee0f  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/FileSelector.java
 8aef6a5e7f59d439ad22720107b5a675  documentation/src/test/java/example/exception/IgnoreIOExceptionTests.java
-8b2ec00e1a83f83774569cc966ded6eb  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 8bd853e2952019b0be771f4b57e1f3ca  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DiscoverySelectors.java
 8c735ce3353033f55ef3ea4f05fa2a67  junit-platform-commons/src/main/java/org/junit/platform/commons/util/package-info.java
 8c8f2ec74086e3ab4dff9f115535aa37  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.java
