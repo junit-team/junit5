@@ -45,11 +45,6 @@ GitHub.
 * New `junit.jupiter.execution.parallel.config.fixed.saturate` configuration
   parameter to disable pool saturation.
 
-==== New Features and Improvements
-
-* ❓
-
-
 [[release-notes-5.10.0-M1️-junit-vintage]]
 === JUnit Vintage
 
