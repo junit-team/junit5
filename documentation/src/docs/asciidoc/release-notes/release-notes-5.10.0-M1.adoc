@@ -1,21 +1,21 @@
-[[release-notes-5.10.0-M1️]]
-== 5.10.0-M1️
+[[release-notes-5.10.0-M1]]
+== 5.10.0-M1
 
 *Date of Release:* ❓
 
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/5.10.0-M1️?closed=1+[5.10.0-M1️] milestone page in the JUnit repository on
-GitHub.
+link:{junit5-repo}+/milestone/65?closed=1+[5.10.0-M1] milestone page in the JUnit
+repository on GitHub.
 
 
-[[release-notes-5.10.0-M1️-junit-platform]]
+[[release-notes-5.10.0-M1-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
 
-* Fixed fallback to ForkJoinPools Java 7 constructor on Java 9 and higher
+* Fixed fallback to ForkJoinPool's Java 7 constructor on Java 9 and higher.
 
 ==== Deprecations and Breaking Changes
 
@@ -26,7 +26,7 @@ GitHub.
 * Support for limiting the `max-pool-size` for parallel execution via a configuration parameter
 
 
-[[release-notes-5.10.0-M1️-junit-jupiter]]
+[[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
@@ -45,7 +45,7 @@ GitHub.
 * New `junit.jupiter.execution.parallel.config.fixed.saturate` configuration
   parameter to disable pool saturation.
 
-[[release-notes-5.10.0-M1️-junit-vintage]]
+[[release-notes-5.10.0-M1-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes
