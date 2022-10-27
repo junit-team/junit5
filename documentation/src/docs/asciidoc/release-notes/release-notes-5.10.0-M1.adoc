@@ -15,7 +15,10 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* Fixed fallback to ForkJoinPool's Java 7 constructor on Java 9 and higher.
+* The Java 7 based constructor for `ForkJoinPool` is no longer accidentally used on Java 9
+  or higher when invalid `ParallelExecutionConfiguration` is provided. Instead, an
+  exception is thrown for invalid configuration, thereby preventing invalid configuration
+  from being silently ignored.
 
 ==== Deprecations and Breaking Changes
 
