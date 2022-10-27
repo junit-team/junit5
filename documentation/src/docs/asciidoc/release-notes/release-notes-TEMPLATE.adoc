@@ -1,13 +1,17 @@
 // TODO:
 //
-// 1) Replace all occurrences of VERSION with an appropriate value (for example, 5.10.0-M1,
-//    5.10.0-RC1, 5.10.0).
-// 2) Replace MILESTONE_NUMBER with the appropriate milestone number. This is an integer
+// 1) Make a copy of this template file, replacing TEMPLATE in the file name with the
+//    current version (for example, 5.10.0-M1, 5.10.0-RC1, 5.10.0).
+// 2) Open the new file for editing.
+// 3) Replace all occurrences of VERSION with the current version (for example, 5.10.0-M1,
+//    5.10.0-RC1, 5.10.0). The same version must be used in the file name and within the
+//    file.
+// 4) Replace MILESTONE_NUMBER with the appropriate milestone number. This is an integer
 //    which you can determine via https://github.com/junit-team/junit5/milestones/. If a
 //    GitHub milestone does not yet exist for the given VERSION, you will need to create
 //    a new GitHub milestone or ask a member of the JUnit team to create it for you.
-// 3) Delete this comment.
-// 4) 'include:' this new file in index.adoc.
+// 5) 'include:' this new file in index.adoc.
+// 6) Delete this entire comment block.
 //
 [[release-notes-VERSION]]
 == VERSION
