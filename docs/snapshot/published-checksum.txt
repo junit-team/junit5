@@ -155,7 +155,6 @@
 34232b41b4c506f6dee819654f086be6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
 3449501277276cb44ca2b5038a574d9d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherDiscoveryResult.java
 35587d4af429a85a5be5581fac54894e  junit-platform-engine/src/main/java/org/junit/platform/engine/reporting/ReportEntry.java
-3574f732b627b7f7c5bc96761dbdde0e  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 35a11d8fc6cf53d6b64a54484f380909  junit-platform-console/src/main/java17/org/junit/platform/console/options/ConsoleUtils.java
 35ab253e15e423fae9571acb2c926848  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/OS.java
 36083dfb756ddc90d9eccfbd3a620123  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java
@@ -428,6 +427,7 @@
 9419edc198213f88e2f0b3436bb9210e  documentation/src/main/java/example/domain/Person.java
 94cd8f24fc14fcc4d97cdec76818dced  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.java
 94dca1e48822fcb283932cc82831d215  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/ClassSelectorResolver.java
+95d095ff4955632e04d0303d77aa4c15  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 95dc1f6ffe2d1e27f88309d422674665  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/package-info.java
 95ea8ad950b60b38fa935281ba6bf326  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerDecorator.java
 95f80073fd70c879adeb498401a5969f  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DirectorySelector.java
