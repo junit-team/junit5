@@ -3,6 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
+	`java-library`
 	id("org.gradle.test-retry")
 }
 
@@ -67,17 +68,17 @@ tasks.withType<Test>().configureEach {
 }
 
 dependencies {
-	"testImplementation"(dependencyFromLibs("assertj"))
-	"testImplementation"(dependencyFromLibs("mockito"))
+	testImplementation(dependencyFromLibs("assertj"))
+	testImplementation(dependencyFromLibs("mockito"))
 
 	if (!project.name.startsWith("junit-jupiter")) {
-		"testImplementation"(project(":junit-jupiter"))
+		testImplementation(project(":junit-jupiter"))
 	}
-	"testImplementation"(testFixtures(project(":junit-jupiter-api")))
+	testImplementation(testFixtures(project(":junit-jupiter-api")))
 
-	"testRuntimeOnly"(project(":junit-platform-engine"))
-	"testRuntimeOnly"(project(":junit-platform-jfr"))
-	"testRuntimeOnly"(project(":junit-platform-reporting"))
+	testRuntimeOnly(project(":junit-platform-engine"))
+	testRuntimeOnly(project(":junit-platform-jfr"))
+	testRuntimeOnly(project(":junit-platform-reporting"))
 
-	"testRuntimeOnly"(bundleFromLibs("log4j"))
+	testRuntimeOnly(bundleFromLibs("log4j"))
 }
