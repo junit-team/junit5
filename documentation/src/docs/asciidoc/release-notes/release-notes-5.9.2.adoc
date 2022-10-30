@@ -1,0 +1,58 @@
+[[release-notes-5.9.2]]
+== 5.9.2
+
+*Date of Release:* ❓
+
+*Scope:* Bug fixes and enhancements since 5.9.1
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestones/5.9.2+[5.9.2] milestone page in the
+JUnit repository on GitHub.
+
+
+[[release-notes-5.9.2-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.9.2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+= [[release-notes-5.9.2-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
