@@ -55,8 +55,8 @@ class DefaultLauncherEngineFilterTests {
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		var rootIdentifier = testPlan.getRoots().iterator().next();
-		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
-		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
+		assertThat(testPlan.getChildren(rootIdentifier.getUniqueIdObject())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("first"))).hasSize(1);
 	}
 
 	@Test
@@ -118,8 +118,8 @@ class DefaultLauncherEngineFilterTests {
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		var rootIdentifier = testPlan.getRoots().iterator().next();
-		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
-		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
+		assertThat(testPlan.getChildren(rootIdentifier.getUniqueIdObject())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("first"))).hasSize(1);
 	}
 
 	@Test
@@ -143,8 +143,8 @@ class DefaultLauncherEngineFilterTests {
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		var rootIdentifier = testPlan.getRoots().iterator().next();
-		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
-		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
+		assertThat(testPlan.getChildren(rootIdentifier.getUniqueIdObject())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("first"))).hasSize(1);
 	}
 
 	@Test

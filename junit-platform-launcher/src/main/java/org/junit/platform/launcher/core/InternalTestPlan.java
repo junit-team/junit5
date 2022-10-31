@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -80,13 +81,25 @@ class InternalTestPlan extends TestPlan {
 		return delegate.getChildren(parent);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Set<TestIdentifier> getChildren(String parentId) {
 		return delegate.getChildren(parentId);
 	}
 
 	@Override
+	public Set<TestIdentifier> getChildren(UniqueId parentId) {
+		return delegate.getChildren(parentId);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
 	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
+		return delegate.getTestIdentifier(uniqueId);
+	}
+
+	@Override
+	public TestIdentifier getTestIdentifier(UniqueId uniqueId) {
 		return delegate.getTestIdentifier(uniqueId);
 	}
 

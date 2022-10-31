@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherSessionListener;
@@ -114,10 +115,10 @@ class LauncherFactoryTests {
 				.addPostDiscoveryFilters(TagFilter.includeTags("test-post-discovery")).build();
 
 		var testPlan = LauncherFactory.create(config).discover(discoveryRequest);
-		final var vintage = testPlan.getChildren("[engine:junit-vintage]");
+		final var vintage = testPlan.getChildren(UniqueId.parse("[engine:junit-vintage]"));
 		assertThat(vintage).isEmpty();
 
-		final var jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+		final var jupiter = testPlan.getChildren(UniqueId.parse("[engine:junit-jupiter]"));
 		assertThat(jupiter).hasSize(1);
 	}
 
@@ -135,10 +136,10 @@ class LauncherFactoryTests {
 					.build();
 
 			var testPlan = LauncherFactory.create(config).discover(discoveryRequest);
-			final var vintage = testPlan.getChildren("[engine:junit-vintage]");
+			final var vintage = testPlan.getChildren(UniqueId.parse("[engine:junit-vintage]"));
 			assertThat(vintage).isEmpty();
 
-			final var jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+			final var jupiter = testPlan.getChildren(UniqueId.parse("[engine:junit-jupiter]"));
 			assertThat(jupiter).hasSize(1);
 		}
 		finally {
@@ -160,10 +161,10 @@ class LauncherFactoryTests {
 					.enablePostDiscoveryFilterAutoRegistration(false).build();
 
 			var testPlan = LauncherFactory.create(config).discover(discoveryRequest);
-			final var vintage = testPlan.getChildren("[engine:junit-vintage]");
+			final var vintage = testPlan.getChildren(UniqueId.parse("[engine:junit-vintage]"));
 			assertThat(vintage).hasSize(1);
 
-			final var jupiter = testPlan.getChildren("[engine:junit-jupiter]");
+			final var jupiter = testPlan.getChildren(UniqueId.parse("[engine:junit-jupiter]"));
 			assertThat(jupiter).hasSize(1);
 		}
 		finally {

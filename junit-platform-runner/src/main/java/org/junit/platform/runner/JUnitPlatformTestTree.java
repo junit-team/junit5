@@ -25,6 +25,7 @@ import java.util.function.Predicate;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
@@ -86,7 +87,7 @@ class JUnitPlatformTestTree {
 		testPlan.getRoots().forEach(testIdentifier -> buildDescription(testIdentifier, suiteDescription, testPlan));
 	}
 
-	void addDynamicDescription(TestIdentifier newIdentifier, String parentId) {
+	void addDynamicDescription(TestIdentifier newIdentifier, UniqueId parentId) {
 		Description parent = getDescription(this.testPlan.getTestIdentifier(parentId));
 		buildDescription(newIdentifier, parent, this.testPlan);
 	}
@@ -103,9 +104,9 @@ class JUnitPlatformTestTree {
 		String name = nameExtractor.apply(identifier);
 		if (identifier.isTest()) {
 			String containerName = testPlan.getParent(identifier).map(nameExtractor).orElse("<unrooted>");
-			return Description.createTestDescription(containerName, name, identifier.getUniqueId());
+			return Description.createTestDescription(containerName, name, identifier.getUniqueIdObject());
 		}
-		return Description.createSuiteDescription(name, identifier.getUniqueId());
+		return Description.createSuiteDescription(name, identifier.getUniqueIdObject());
 	}
 
 	private String getTechnicalName(TestIdentifier testIdentifier) {
