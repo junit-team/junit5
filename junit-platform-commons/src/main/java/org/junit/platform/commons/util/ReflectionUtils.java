@@ -52,7 +52,6 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
@@ -1182,9 +1181,12 @@ public final class ReflectionUtils {
 	 */
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
-		return findFieldsAsStream(clazz, predicate, traversalMode).toList();
+		return findFieldsAsStream(clazz, predicate, traversalMode).collect(toUnmodifiableList());
 	}
 
+	/**
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findFieldsAsStream(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
+	 */
 	public static Stream<Field> findFieldsAsStream(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
 

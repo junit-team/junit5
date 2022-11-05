@@ -11,7 +11,6 @@
 package org.junit.platform.commons.support;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.reflect.Field;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
@@ -249,16 +247,6 @@ public final class ReflectionSupport {
 			HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 		return ReflectionUtils.findFieldsAsStream(clazz, predicate,
-			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
-	}
-
-	@API(status = EXPERIMENTAL, since = "1.4")
-	public static List<Field> findFieldsT(Class<?> clazz, Predicate<Field> predicate,
-			HierarchyTraversalMode traversalMode) {
-
-		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
-
-		return ReflectionUtils.findFields(clazz, predicate,
 			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
 
