@@ -1179,6 +1179,7 @@ public final class ReflectionUtils {
 
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findFieldsAsStream(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
