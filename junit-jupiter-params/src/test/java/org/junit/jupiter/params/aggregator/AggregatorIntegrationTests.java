@@ -207,6 +207,16 @@ public class AggregatorIntegrationTests {
 	private EngineExecutionResults execute(DiscoverySelector... selectors) {
 		return EngineTestKit.execute("junit-jupiter", request().selectors(selectors).build());
 	}
+	@ParameterizedTest
+	@CsvSource({ "first", "second"})
+	void argumentsAccessorInvocationIndex(ArgumentsAccessor arguments) {
+		if("first".equals(arguments.getString(0))){
+			assertEquals(1, arguments.getInvocationIndex());
+		}
+		if("second".equals(arguments.getString(0))){
+			assertEquals(2, arguments.getInvocationIndex());
+		}
+	}
 
 	// -------------------------------------------------------------------------
 

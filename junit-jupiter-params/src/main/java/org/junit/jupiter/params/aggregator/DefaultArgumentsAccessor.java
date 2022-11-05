@@ -36,10 +36,12 @@ import org.junit.platform.commons.util.Preconditions;
 public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
 	private final Object[] arguments;
+	private final int invocationIndex;
 
-	public DefaultArgumentsAccessor(Object... arguments) {
+	public DefaultArgumentsAccessor(int invocationIndex, Object... arguments) {
 		Preconditions.notNull(arguments, "Arguments array must not be null");
 		this.arguments = arguments;
+		this.invocationIndex = invocationIndex;
 	}
 
 	@Override
@@ -124,6 +126,11 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	@Override
 	public List<Object> toList() {
 		return Collections.unmodifiableList(Arrays.asList(this.arguments));
+	}
+
+	@Override
+	public int getInvocationIndex() {
+		return this.invocationIndex;
 	}
 
 }

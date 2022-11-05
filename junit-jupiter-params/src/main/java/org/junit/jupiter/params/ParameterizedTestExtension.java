@@ -92,7 +92,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(arguments -> consumedArguments(arguments, methodContext))
 				.map(arguments -> {
 					invocationCount.incrementAndGet();
-					return createInvocationContext(formatter, methodContext, arguments);
+					return createInvocationContext(formatter, methodContext, arguments, invocationCount.intValue());
 				})
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0,
@@ -122,8 +122,8 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments) {
-		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments);
+			ParameterizedTestMethodContext methodContext, Object[] arguments, Integer invocationIndex) {
+		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments, invocationIndex);
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(ExtensionContext extensionContext, Method templateMethod,
