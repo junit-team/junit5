@@ -227,21 +227,21 @@ public final class ReflectionSupport {
 	}
 
 	/**
-		 * Find all {@linkplain Field fields} of the supplied class or interface
-		 * that match the specified {@code predicate}.
-		 *
-		 * <p>Fields declared in the same class or interface will be ordered using
-		 * an algorithm that is deterministic but intentionally nonobvious.
-		 *
-		 * <p>The results will not contain fields that are <em>hidden</em> or
-		 * {@linkplain Field#isSynthetic() synthetic}.
-		 *
-		 * @param clazz the class or interface in which to find the fields; never {@code null}
-		 * @param predicate the field filter; never {@code null}
-		 * @param traversalMode the hierarchy traversal mode; never {@code null}
-		 * @return a stream of all such fields found; never {@code null}
-		 * but potentially empty
-		 * @since 1.10
+	 * Find all {@linkplain Field fields} of the supplied class or interface
+	 * that match the specified {@code predicate}.
+	 *
+	 * <p>Fields declared in the same class or interface will be ordered using
+	 * an algorithm that is deterministic but intentionally nonobvious.
+	 *
+	 * <p>The results will not contain fields that are <em>hidden</em> or
+	 * {@linkplain Field#isSynthetic() synthetic}.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param predicate the field filter; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return a stream of all such fields found; never {@code null}
+	 * but potentially empty
+	 * @since 1.10
 	 */
 	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Field> findFieldsAsStream(Class<?> clazz, Predicate<Field> predicate,
