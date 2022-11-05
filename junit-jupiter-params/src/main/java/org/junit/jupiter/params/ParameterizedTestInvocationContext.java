@@ -27,7 +27,7 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 	private final Object[] arguments;
 	private final Integer invocationIndex;
 
-	public ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
+	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
 			ParameterizedTestMethodContext methodContext, Object[] arguments, Integer invocationIndex) {
 		this.formatter = formatter;
 		this.methodContext = methodContext;
