@@ -51,6 +51,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -1181,17 +1182,18 @@ public final class ReflectionUtils {
 	 */
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
+		return findFieldsAsStream(clazz, predicate, traversalMode).toList();
+	}
+
+	public static Stream<Field> findFieldsAsStream(Class<?> clazz, Predicate<Field> predicate,
+			HierarchyTraversalMode traversalMode) {
 
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
-		// @formatter:off
-		return findAllFieldsInHierarchy(clazz, traversalMode).stream()
-				.filter(predicate)
-				// unmodifiable since returned by public, non-internal method(s)
-				.collect(toUnmodifiableList());
-		// @formatter:on
+		return findAllFieldsInHierarchy(clazz, traversalMode).stream().filter(predicate);
+
 	}
 
 	private static List<Field> findAllFieldsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {

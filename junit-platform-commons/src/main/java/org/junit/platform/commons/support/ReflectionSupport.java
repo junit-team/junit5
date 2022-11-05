@@ -247,7 +247,9 @@ public final class ReflectionSupport {
 	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Field> findFieldsAsStream(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
-		return findFields(clazz, predicate, traversalMode).stream();
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+		return ReflectionUtils.findFieldsAsStream(clazz, predicate,
+			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
 
 	@API(status = EXPERIMENTAL, since = "1.4")
