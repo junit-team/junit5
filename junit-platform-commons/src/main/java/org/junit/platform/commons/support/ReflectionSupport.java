@@ -11,6 +11,7 @@
 package org.junit.platform.commons.support;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.reflect.Field;
@@ -19,6 +20,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -217,6 +219,39 @@ public final class ReflectionSupport {
 	 */
 	@API(status = MAINTAINED, since = "1.4")
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
+			HierarchyTraversalMode traversalMode) {
+
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+
+		return ReflectionUtils.findFields(clazz, predicate,
+			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
+	}
+
+	/**
+		 * Find all {@linkplain Field fields} of the supplied class or interface
+		 * that match the specified {@code predicate}.
+		 *
+		 * <p>Fields declared in the same class or interface will be ordered using
+		 * an algorithm that is deterministic but intentionally nonobvious.
+		 *
+		 * <p>The results will not contain fields that are <em>hidden</em> or
+		 * {@linkplain Field#isSynthetic() synthetic}.
+		 *
+		 * @param clazz the class or interface in which to find the fields; never {@code null}
+		 * @param predicate the field filter; never {@code null}
+		 * @param traversalMode the hierarchy traversal mode; never {@code null}
+		 * @return a stream of all such fields found; never {@code null}
+		 * but potentially empty
+		 * @since 1.10
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public static Stream<Field> findFieldsAsStream(Class<?> clazz, Predicate<Field> predicate,
+			HierarchyTraversalMode traversalMode) {
+		return findFields(clazz, predicate, traversalMode).stream();
+	}
+
+	@API(status = EXPERIMENTAL, since = "1.4")
+	public static List<Field> findFieldsT(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
 
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
