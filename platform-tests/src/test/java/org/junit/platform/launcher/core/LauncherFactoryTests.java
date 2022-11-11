@@ -14,22 +14,32 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.LauncherConstants.ENABLE_LAUNCHER_INTERCEPTORS;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.ExecutionRequest;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.fakes.TestEngineSpy;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TagFilter;
+import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestLauncherDiscoveryListener;
+import org.junit.platform.launcher.TestLauncherInterceptor1;
+import org.junit.platform.launcher.TestLauncherInterceptor2;
 import org.junit.platform.launcher.TestLauncherSessionListener;
 import org.junit.platform.launcher.listeners.AnotherUnusedTestExecutionListener;
 import org.junit.platform.launcher.listeners.NoopTestExecutionListener;
@@ -196,6 +206,80 @@ class LauncherFactoryTests {
 
 			assertThat(session.getListener()).isEqualTo(new TestLauncherSessionListener());
 		});
+	}
+
+	@Test
+	void appliesLauncherInterceptorsToTestDiscovery() {
+		withTestServices(() -> withSystemProperty(ENABLE_LAUNCHER_INTERCEPTORS, "true", () -> {
+			var engine = new TestEngineSpy() {
+				@Override
+				public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+					throw new RuntimeException("from discovery");
+				}
+			};
+			var config = LauncherConfig.builder() //
+					.enableTestEngineAutoRegistration(false) //
+					.addTestEngines(engine) //
+					.build();
+			var launcher = LauncherFactory.create(config);
+			var request = request().build();
+
+			var exception = assertThrows(RuntimeException.class, () -> launcher.discover(request));
+
+			assertThat(exception) //
+					.hasRootCauseMessage("from discovery") //
+					.hasStackTraceContaining(TestLauncherInterceptor1.class.getName() + ".intercept(") //
+					.hasStackTraceContaining(TestLauncherInterceptor2.class.getName() + ".intercept(");
+		}));
+	}
+
+	@Test
+	void appliesLauncherInterceptorsToTestExecution() {
+		withTestServices(() -> withSystemProperty(ENABLE_LAUNCHER_INTERCEPTORS, "true", () -> {
+			var engine = new TestEngineSpy() {
+				@Override
+				public void execute(ExecutionRequest request) {
+					throw new RuntimeException("from execution");
+				}
+			};
+			var config = LauncherConfig.builder() //
+					.enableTestEngineAutoRegistration(false) //
+					.addTestEngines(engine) //
+					.build();
+			var launcher = LauncherFactory.create(config);
+			var request = request().build();
+
+			AtomicReference<TestExecutionResult> result = new AtomicReference<>();
+			launcher.execute(request, new TestExecutionListener() {
+				@Override
+				public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+					if (testIdentifier.getParentId().isEmpty()) {
+						result.set(testExecutionResult);
+					}
+				}
+			});
+
+			assertThat(result.get().getThrowable().orElseThrow()) //
+					.hasRootCauseMessage("from execution") //
+					.hasStackTraceContaining(TestLauncherInterceptor1.class.getName() + ".intercept(") //
+					.hasStackTraceContaining(TestLauncherInterceptor2.class.getName() + ".intercept(");
+		}));
+	}
+
+	private static void withSystemProperty(String key, String value, Runnable runnable) {
+		var oldValue = System.getProperty(key);
+		System.setProperty(key, value);
+		try {
+			runnable.run();
+		}
+		finally {
+			if (oldValue == null) {
+				System.clearProperty(key);
+			}
+			else {
+				System.setProperty(key, oldValue);
+			}
+		}
 	}
 
 	private static void withTestServices(Runnable runnable) {

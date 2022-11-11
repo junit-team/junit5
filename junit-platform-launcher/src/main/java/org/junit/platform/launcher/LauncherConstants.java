@@ -135,6 +135,8 @@ public class LauncherConstants {
 	 */
 	public static final String DEACTIVATE_ALL_LISTENERS_PATTERN = ClassNamePatternFilterUtils.DEACTIVATE_ALL_PATTERN;
 
+	public static final String ENABLE_LAUNCHER_INTERCEPTORS = "junit.platform.launcher.interceptors.enabled";
+
 	private LauncherConstants() {
 		/* no-op */
 	}
