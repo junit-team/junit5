@@ -10,7 +10,10 @@
 
 package org.junit.platform.launcher.core;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.Queue;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
