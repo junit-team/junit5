@@ -10,8 +10,11 @@
 
 package org.junit.platform.launcher.core;
 
-import org.junit.platform.launcher.LauncherDiscoveryListener;
+import java.util.List;
+import java.util.function.Supplier;
+
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.LauncherInterceptor;
 import org.junit.platform.launcher.LauncherSession;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -20,24 +23,16 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.8
  */
-class SessionPerRequestLauncher implements InternalLauncher {
+class SessionPerRequestLauncher extends DelegatingInternalLauncher<InternalLauncher> {
 
-	private final InternalLauncher delegate;
 	private final LauncherSessionListener sessionListener;
+	private final Supplier<List<LauncherInterceptor>> interceptorFactory;
 
-	SessionPerRequestLauncher(InternalLauncher delegate, LauncherSessionListener sessionListener) {
-		this.delegate = delegate;
+	SessionPerRequestLauncher(InternalLauncher delegate, LauncherSessionListener sessionListener,
+			Supplier<List<LauncherInterceptor>> interceptorFactory) {
+		super(delegate);
 		this.sessionListener = sessionListener;
-	}
-
-	@Override
-	public void registerLauncherDiscoveryListeners(LauncherDiscoveryListener... listeners) {
-		delegate.registerLauncherDiscoveryListeners(listeners);
-	}
-
-	@Override
-	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		delegate.registerTestExecutionListeners(listeners);
+		this.interceptorFactory = interceptorFactory;
 	}
 
 	@Override
@@ -61,17 +56,7 @@ class SessionPerRequestLauncher implements InternalLauncher {
 		}
 	}
 
-	@Override
-	public ListenerRegistry<TestExecutionListener> getTestExecutionListenerRegistry() {
-		return delegate.getTestExecutionListenerRegistry();
-	}
-
-	@Override
-	public ListenerRegistry<LauncherDiscoveryListener> getLauncherDiscoveryListenerRegistry() {
-		return delegate.getLauncherDiscoveryListenerRegistry();
-	}
-
 	private LauncherSession createSession() {
-		return new DefaultLauncherSession(delegate, sessionListener);
+		return new DefaultLauncherSession(delegate, sessionListener, interceptorFactory.get());
 	}
 }
