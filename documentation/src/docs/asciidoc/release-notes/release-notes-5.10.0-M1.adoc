@@ -42,7 +42,7 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* Adding the possibility to get the invocation index : `ArgumentsAccessor.getInvocationIndex`
+* New `ArgumentsAccessor.getInvocationIndex` method to supply index of a `@ParameterizedTest` invocation.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
