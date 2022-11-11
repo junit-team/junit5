@@ -122,7 +122,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments, Integer invocationIndex) {
+			ParameterizedTestMethodContext methodContext, Object[] arguments, int invocationIndex) {
 		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments, invocationIndex);
 	}
 

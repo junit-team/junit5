@@ -34,10 +34,10 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 
 	private final ParameterizedTestMethodContext methodContext;
 	private final Object[] arguments;
-	private final Integer invocationIndex;
+	private final int invocationIndex;
 
 	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, Object[] arguments,
-			Integer invocationIndex) {
+			int invocationIndex) {
 		this.methodContext = methodContext;
 		this.arguments = arguments;
 		this.invocationIndex = invocationIndex;
