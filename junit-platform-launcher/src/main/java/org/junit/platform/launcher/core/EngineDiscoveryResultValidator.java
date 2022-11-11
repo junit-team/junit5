@@ -10,11 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
@@ -38,39 +34,75 @@ class EngineDiscoveryResultValidator {
 			() -> String.format(
 				"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
 				testEngine.getId()));
-		Optional<UniqueId> cyclicUIDs = getFirstCyclicUID(root);
-		Preconditions.condition(!cyclicUIDs.isPresent(),
+		Optional<String> cyclicGraphInfo = getCyclicGraphInfo(root);
+		Preconditions.condition(!cyclicGraphInfo.isPresent(),
 			() -> String.format("The discover() method for TestEngine with ID '%s' returned a cyclic graph: "
-					+ "Cycle found at unique ID '%s'",
-				testEngine.getId(), cyclicUIDs));
+					+ cyclicGraphInfo
+			)
+		);
 	}
 
 	/**
 	 * @return {@code true} if the tree does <em>not</em> contain a cycle; else {@code false}.
 	 */
 	boolean isAcyclic(TestDescriptor root) {
-		return !getFirstCyclicUID(root).isPresent();
+		return !getCyclicGraphInfo(root).isPresent();
 	}
 
-	Optional<UniqueId> getFirstCyclicUID(TestDescriptor root) {
-		Set<UniqueId> visited = new HashSet<>();
-		Optional<UniqueId> cyclic = Optional.empty();
-		visited.add(root.getUniqueId());
+	Optional<String> getCyclicGraphInfo(TestDescriptor root) {
+		HashMap<UniqueId, Optional<UniqueId>> visited = new HashMap<>();
+
+		visited.put(root.getUniqueId(), Optional.empty());
 		Queue<TestDescriptor> queue = new ArrayDeque<>();
 		queue.add(root);
 		while (!queue.isEmpty()) {
-			for (TestDescriptor child : queue.remove().getChildren()) {
+			TestDescriptor parent = queue.remove();
+			for (TestDescriptor child : parent.getChildren()) {
 				UniqueId uid = child.getUniqueId();
-				if (!visited.add(uid)) {
-					cyclic = Optional.of(uid);
-					return cyclic; // id already known: cycle detected!
+				if (visited.containsKey(uid)) {// id already known: cycle detected!
+
+					StringBuilder path1 = new StringBuilder();
+					path1.append(uid);
+					addPath(visited, uid, path1);
+
+					StringBuilder path2 = new StringBuilder();
+					path2.append(uid);
+					UniqueId parentUID = parent.getUniqueId();
+					path2.append(" <- ").append(parentUID);
+					addPath(visited, parentUID, path2);
+
+					String msg = String.format("Test %s exists in at least two paths:", uid) +
+							"\n\t" + path1.toString() +
+							"\n\t" + path2.toString();
+					return Optional.of(msg);
+				}
+				else {
+					visited.put(uid, Optional.of(parent.getUniqueId()));
 				}
 				if (child.isContainer()) {
 					queue.add(child);
 				}
 			}
 		}
-		return cyclic;
+		return Optional.empty();
+	}
+
+	private static void addPath(
+			HashMap<UniqueId, Optional<UniqueId>> visited,
+			UniqueId from,
+			StringBuilder path
+	) {
+		UniqueId current = from;
+		
+		while (visited.containsKey(current)) {
+			Optional<UniqueId> backTraced = visited.get(current);
+			if (backTraced.isPresent()) {
+				path.append(" <- ").append(backTraced.get());
+				current = backTraced.get();
+			} else {
+				break;
+			}
+		}
 	}
 
 }
