@@ -33,12 +33,8 @@ class EngineDiscoveryResultValidatorTests {
 
 		root.addChild(root);
 		assertFalse(validator.isAcyclic(root));
-		assertEquals(
-				validator.getCyclicGraphInfo(root).get(),
-				"Test [engine:root] exists in at least two paths:\n" +
-						"\t[engine:root]\n" +
-						"\t[engine:root] <- [engine:root]"
-		);
+		assertEquals(validator.getCyclicGraphInfo(root).get(), "Test [engine:root] exists in at least two paths:\n"
+				+ "\t[engine:root]\n" + "\t[engine:root] <- [engine:root]");
 	}
 
 	@Test
@@ -53,12 +49,10 @@ class EngineDiscoveryResultValidatorTests {
 
 		group2.addChild(group1);
 		assertFalse(validator.isAcyclic(root));
-		assertEquals(
-				validator.getCyclicGraphInfo(root).get(),
-				"Test [engine:root]/[group:1] exists in at least two paths:\n" +
-						"\t[engine:root]/[group:1] <- [engine:root]\n" +
-						"\t[engine:root]/[group:1] <- [engine:root]/[group:2] <- [engine:root]"
-		);
+		assertEquals(validator.getCyclicGraphInfo(root).get(),
+			"Test [engine:root]/[group:1] exists in at least two paths:\n"
+					+ "\t[engine:root]/[group:1] <- [engine:root]\n"
+					+ "\t[engine:root]/[group:1] <- [engine:root]/[group:2] <- [engine:root]");
 	}
 
 	@Test
@@ -77,12 +71,10 @@ class EngineDiscoveryResultValidatorTests {
 
 		group2.addChild(test1);
 		assertFalse(validator.isAcyclic(root));
-		assertEquals(
-				validator.getCyclicGraphInfo(root).get(),
-				"Test [engine:root]/[test:1] exists in at least two paths:\n" +
-						"\t[engine:root]/[test:1] <- [engine:root]/[group:1] <- [engine:root]\n" +
-						"\t[engine:root]/[test:1] <- [engine:root]/[group:2] <- [engine:root]"
-		);
+		assertEquals(validator.getCyclicGraphInfo(root).get(),
+			"Test [engine:root]/[test:1] exists in at least two paths:\n"
+					+ "\t[engine:root]/[test:1] <- [engine:root]/[group:1] <- [engine:root]\n"
+					+ "\t[engine:root]/[test:1] <- [engine:root]/[group:2] <- [engine:root]");
 	}
 
 }

@@ -35,11 +35,8 @@ class EngineDiscoveryResultValidator {
 				"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
 				testEngine.getId()));
 		Optional<String> cyclicGraphInfo = getCyclicGraphInfo(root);
-		Preconditions.condition(!cyclicGraphInfo.isPresent(),
-			() -> String.format("The discover() method for TestEngine with ID '%s' returned a cyclic graph: "
-					+ cyclicGraphInfo
-			)
-		);
+		Preconditions.condition(!cyclicGraphInfo.isPresent(), () -> String.format(
+			"The discover() method for TestEngine with ID '%s' returned a cyclic graph: " + cyclicGraphInfo));
 	}
 
 	/**
@@ -71,9 +68,8 @@ class EngineDiscoveryResultValidator {
 					path2.append(" <- ").append(parentUID);
 					addPath(visited, parentUID, path2);
 
-					String msg = String.format("Test %s exists in at least two paths:", uid) +
-							"\n\t" + path1.toString() +
-							"\n\t" + path2.toString();
+					String msg = String.format("Test %s exists in at least two paths:", uid) + "\n\t" + path1.toString()
+							+ "\n\t" + path2.toString();
 					return Optional.of(msg);
 				}
 				else {
@@ -87,19 +83,16 @@ class EngineDiscoveryResultValidator {
 		return Optional.empty();
 	}
 
-	private static void addPath(
-			HashMap<UniqueId, Optional<UniqueId>> visited,
-			UniqueId from,
-			StringBuilder path
-	) {
+	private static void addPath(HashMap<UniqueId, Optional<UniqueId>> visited, UniqueId from, StringBuilder path) {
 		UniqueId current = from;
-		
+
 		while (visited.containsKey(current)) {
 			Optional<UniqueId> backTraced = visited.get(current);
 			if (backTraced.isPresent()) {
 				path.append(" <- ").append(backTraced.get());
 				current = backTraced.get();
-			} else {
+			}
+			else {
 				break;
 			}
 		}
