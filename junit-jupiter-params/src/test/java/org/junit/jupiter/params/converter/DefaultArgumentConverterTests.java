@@ -184,7 +184,7 @@ class DefaultArgumentConverterTests {
 
 	@Test
 	void convertsStringToURL() throws Exception {
-		assertConverts("https://junit.org/junit5", URL.class, new URL("https://junit.org/junit5"));
+		assertConverts("https://junit.org/junit5", URL.class, URI.create("https://junit.org/junit5").toURL());
 	}
 
 	// --- java.time -----------------------------------------------------------

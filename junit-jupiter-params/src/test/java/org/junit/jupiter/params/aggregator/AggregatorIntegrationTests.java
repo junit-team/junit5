@@ -184,6 +184,20 @@ public class AggregatorIntegrationTests {
 					message("Error aggregating arguments for parameter at index 0: something went horribly wrong"))));
 	}
 
+	@ParameterizedTest
+	@CsvSource({ //
+			"first", //
+			"second" //
+	})
+	void argumentsAccessorInvocationIndex(ArgumentsAccessor arguments) {
+		if ("first".equals(arguments.getString(0))) {
+			assertEquals(1, arguments.getInvocationIndex());
+		}
+		if ("second".equals(arguments.getString(0))) {
+			assertEquals(2, arguments.getInvocationIndex());
+		}
+	}
+
 	private void testPersonAggregator(Person person) {
 		if (person.firstName.equals("Jane")) {
 			assertEquals("Jane Doe", person.getFullName());

@@ -41,7 +41,8 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New `ArgumentsAccessor.getInvocationIndex()` method that supplies the index of a
+  `@ParameterizedTest` invocation.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]

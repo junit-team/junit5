@@ -21,14 +21,14 @@ class ArgumentsAccessorKotlinTests {
 
     @Test
     fun `get() with reified type and index`() {
-        assertEquals(1, DefaultArgumentsAccessor(1).get<Int>(0))
-        assertEquals('A', DefaultArgumentsAccessor('A').get<Char>(0))
+        assertEquals(1, DefaultArgumentsAccessor(1, 1).get<Int>(0))
+        assertEquals('A', DefaultArgumentsAccessor(1, 'A').get<Char>(0))
     }
 
     @Test
     fun `get() with reified type and index for incompatible type`() {
         val exception = assertThrows<ArgumentAccessException> {
-            DefaultArgumentsAccessor(Integer.valueOf(1)).get<Char>(0)
+            DefaultArgumentsAccessor(1, Integer.valueOf(1)).get<Char>(0)
         }
 
         assertThat(exception).hasMessage(
@@ -38,13 +38,13 @@ class ArgumentsAccessorKotlinTests {
 
     @Test
     fun `get() with index`() {
-        assertEquals(1, DefaultArgumentsAccessor(1).get(0))
-        assertEquals('A', DefaultArgumentsAccessor('A').get(0))
+        assertEquals(1, DefaultArgumentsAccessor(1, 1).get(0))
+        assertEquals('A', DefaultArgumentsAccessor(1, 'A').get(0))
     }
 
     @Test
     fun `get() with index and class reference`() {
-        assertEquals(1, DefaultArgumentsAccessor(1).get(0, Integer::class.java))
-        assertEquals('A', DefaultArgumentsAccessor('A').get(0, Character::class.java))
+        assertEquals(1, DefaultArgumentsAccessor(1, 1).get(0, Integer::class.java))
+        assertEquals('A', DefaultArgumentsAccessor(1, 'A').get(0, Character::class.java))
     }
 }
