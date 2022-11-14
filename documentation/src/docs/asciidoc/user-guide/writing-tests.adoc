@@ -1769,6 +1769,9 @@ this API, you can access the provided arguments through a single argument passed
 test method. In addition, type conversion is supported as discussed in
 <<writing-tests-parameterized-tests-argument-conversion-implicit>>.
 
+Besides, you can retrieve the current test invocation index with
+`ArgumentsAccessor.getInvocationIndex()`.
+
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAccessor_example]

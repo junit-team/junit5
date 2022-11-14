@@ -213,7 +213,9 @@ class ParameterizedTestMethodContext {
 	}
 
 	interface Resolver {
+
 		Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex);
+
 	}
 
 	static class Converter implements Resolver {
