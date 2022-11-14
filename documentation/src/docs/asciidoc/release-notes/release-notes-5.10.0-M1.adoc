@@ -26,7 +26,7 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* Add ` ReflectionSupport.findFieldsAsStream` method
+* allow methods returning a list to return a stream in the ReflectionSupport class
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter
