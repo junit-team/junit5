@@ -2365,10 +2365,27 @@ example.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When <code>@EnabledIf</code> or <code>@DisabledIf</code> is used at class level, the condition method must
-always be <code>static</code>. Condition methods located in external classes must also be <code>static</code>.
-In any other case, you can use either static methods or instance methods as condition
-methods.
+<div class="paragraph">
+<p>There are several cases where a condition method would need to be <code>static</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>when <code>@EnabledIf</code> or <code>@DisabledIf</code> is used at class level</p>
+</li>
+<li>
+<p>when <code>@EnabledIf</code> or <code>@DisabledIf</code> is used on a <code>@ParameterizedTest</code> or a
+<code>@TestTemplate</code> method</p>
+</li>
+<li>
+<p>when the condition method is located in an external class</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In any other case, you can use either static methods or instance methods as condition
+methods.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -11972,7 +11989,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-11-14 17:36:48 UTC
+Last updated 2022-11-14 18:04:03 UTC
 </div>
 </div>
 <style>
