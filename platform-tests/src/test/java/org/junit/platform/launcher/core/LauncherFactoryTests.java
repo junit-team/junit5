@@ -124,12 +124,7 @@ class LauncherFactoryTests {
 
 	@Test
 	void applyPostDiscoveryFiltersViaServiceApi() {
-		final var current = Thread.currentThread().getContextClassLoader();
-		try {
-			var url = getClass().getClassLoader().getResource("testservices/");
-			var classLoader = new URLClassLoader(new URL[] { url }, current);
-			Thread.currentThread().setContextClassLoader(classLoader);
-
+		withTestServices(() -> {
 			var discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
 
 			var config = LauncherConfig.builder()//
@@ -141,20 +136,12 @@ class LauncherFactoryTests {
 
 			final var jupiter = testPlan.getChildren(UniqueId.parse("[engine:junit-jupiter]"));
 			assertThat(jupiter).hasSize(1);
-		}
-		finally {
-			Thread.currentThread().setContextClassLoader(current);
-		}
+		});
 	}
 
 	@Test
 	void notApplyIfDisabledPostDiscoveryFiltersViaServiceApi() {
-		final var current = Thread.currentThread().getContextClassLoader();
-		try {
-			var url = getClass().getClassLoader().getResource("testservices/");
-			var classLoader = new URLClassLoader(new URL[] { url }, current);
-			Thread.currentThread().setContextClassLoader(classLoader);
-
+		withTestServices(() -> {
 			var discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
 
 			var config = LauncherConfig.builder()//
@@ -166,10 +153,7 @@ class LauncherFactoryTests {
 
 			final var jupiter = testPlan.getChildren(UniqueId.parse("[engine:junit-jupiter]"));
 			assertThat(jupiter).hasSize(1);
-		}
-		finally {
-			Thread.currentThread().setContextClassLoader(current);
-		}
+		});
 	}
 
 	@Test
