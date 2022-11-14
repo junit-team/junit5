@@ -161,8 +161,8 @@ class ParameterizedTestMethodContext {
 	 * Resolve the parameter for the supplied context using the supplied
 	 * arguments.
 	 */
-	Object resolve(ParameterContext parameterContext, Object[] arguments) {
-		return getResolver(parameterContext).resolve(parameterContext, arguments);
+	Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
+		return getResolver(parameterContext).resolve(parameterContext, arguments, invocationIndex);
 	}
 
 	private Resolver getResolver(ParameterContext parameterContext) {
@@ -213,9 +213,7 @@ class ParameterizedTestMethodContext {
 	}
 
 	interface Resolver {
-
-		Object resolve(ParameterContext parameterContext, Object[] arguments);
-
+		Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex);
 	}
 
 	static class Converter implements Resolver {
@@ -229,7 +227,7 @@ class ParameterizedTestMethodContext {
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, Object[] arguments) {
+		public Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
 			Object argument = arguments[parameterContext.getIndex()];
 			try {
 				return this.argumentConverter.convert(argument, parameterContext);
@@ -252,8 +250,8 @@ class ParameterizedTestMethodContext {
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, Object[] arguments) {
-			ArgumentsAccessor accessor = new DefaultArgumentsAccessor(arguments);
+		public Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
+			ArgumentsAccessor accessor = new DefaultArgumentsAccessor(invocationIndex, arguments);
 			try {
 				return this.argumentsAggregator.aggregateArguments(accessor, parameterContext);
 			}

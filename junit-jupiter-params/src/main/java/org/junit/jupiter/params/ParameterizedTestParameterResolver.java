@@ -34,10 +34,13 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 
 	private final ParameterizedTestMethodContext methodContext;
 	private final Object[] arguments;
+	private final int invocationIndex;
 
-	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, Object[] arguments) {
+	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, Object[] arguments,
+			int invocationIndex) {
 		this.methodContext = methodContext;
 		this.arguments = arguments;
+		this.invocationIndex = invocationIndex;
 	}
 
 	@Override
@@ -69,7 +72,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return this.methodContext.resolve(parameterContext, extractPayloads(this.arguments));
+		return this.methodContext.resolve(parameterContext, extractPayloads(this.arguments), this.invocationIndex);
 	}
 
 	/**
