@@ -4509,7 +4509,7 @@ integral types: <code>byte</code>, <code>short</code>, <code>int</code>, <code>l
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.net.URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"https://junit.org/"</code>                   &#8594; <code>new URL("https://junit.org/")</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"https://junit.org/"</code>                   &#8594; <code>URI.create("https://junit.org/").toURL()</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.nio.charset.Charset</code></p></td>
@@ -10881,6 +10881,7 @@ by adding the file to <code>src/test/resources</code>):</p>
 <span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.net.HttpURLConnection</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URI</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span><span class="o">;</span>
@@ -10891,7 +10892,7 @@ by adding the file to <code>src/test/resources</code>):</p>
     <span class="kt">void</span> <span class="nf">respondsWith204</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
         <span class="nc">String</span> <span class="n">host</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"http.server.host"</span><span class="o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
         <span class="nc">String</span> <span class="n">port</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"http.server.port"</span><span class="o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
-        <span class="no">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="no">URL</span><span class="o">(</span><span class="s">"http://"</span> <span class="o">+</span> <span class="n">host</span> <span class="o">+</span> <span class="s">":"</span> <span class="o">+</span> <span class="n">port</span> <span class="o">+</span> <span class="s">"/test"</span><span class="o">);</span>
+        <span class="no">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="no">URI</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"http://"</span> <span class="o">+</span> <span class="n">host</span> <span class="o">+</span> <span class="s">":"</span> <span class="o">+</span> <span class="n">port</span> <span class="o">+</span> <span class="s">"/test"</span><span class="o">).</span><span class="na">toURL</span><span class="o">();</span>
 
         <span class="nc">HttpURLConnection</span> <span class="n">connection</span> <span class="o">=</span> <span class="o">(</span><span class="nc">HttpURLConnection</span><span class="o">)</span> <span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
         <span class="n">connection</span><span class="o">.</span><span class="na">setRequestMethod</span><span class="o">(</span><span class="s">"GET"</span><span class="o">);</span>
@@ -11967,7 +11968,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-10-30 18:36:07 UTC
+Last updated 2022-11-14 07:11:48 UTC
 </div>
 </div>
 <style>
