@@ -538,10 +538,18 @@ package example;
 include::{testDir}/example/ExternalCustomConditionDemo.java[tags=user_guide_external_custom_condition]
 ----
 
-NOTE: When `@EnabledIf` or `@DisabledIf` is used at class level, the condition method must
-always be `static`. Condition methods located in external classes must also be `static`.
+[NOTE]
+====
+There are several cases where a condition method would need to be `static`:
+
+- when `@EnabledIf` or `@DisabledIf` is used at class level
+- when `@EnabledIf` or `@DisabledIf` is used on a `@ParameterizedTest` or a
+  `@TestTemplate` method
+- when the condition method is located in an external class
+
 In any other case, you can use either static methods or instance methods as condition
 methods.
+====
 
 [TIP]
 ====
