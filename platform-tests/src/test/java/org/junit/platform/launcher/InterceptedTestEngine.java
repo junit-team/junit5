@@ -10,11 +10,13 @@
 
 package org.junit.platform.launcher;
 
-public class TestLauncherDiscoveryListener implements LauncherDiscoveryListener {
-	public static boolean called;
+import org.junit.platform.fakes.TestEngineSpy;
 
-	@Override
-	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
-		called = true;
+public class InterceptedTestEngine extends TestEngineSpy {
+
+	public static final String ID = "intercepted-engine";
+
+	public InterceptedTestEngine() {
+		super(ID);
 	}
 }

@@ -13,6 +13,8 @@ package org.junit.platform.launcher.core;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherInterceptor;
 import org.junit.platform.launcher.LauncherSession;
@@ -23,16 +25,28 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.8
  */
-class SessionPerRequestLauncher extends DelegatingInternalLauncher<InternalLauncher> {
+class SessionPerRequestLauncher implements Launcher {
 
+	private final LauncherListenerRegistry listenerRegistry = new LauncherListenerRegistry();
+	private final Supplier<Launcher> launcherSupplier;
 	private final LauncherSessionListener sessionListener;
 	private final Supplier<List<LauncherInterceptor>> interceptorFactory;
 
-	SessionPerRequestLauncher(InternalLauncher delegate, LauncherSessionListener sessionListener,
+	SessionPerRequestLauncher(Supplier<Launcher> launcherSupplier, LauncherSessionListener sessionListener,
 			Supplier<List<LauncherInterceptor>> interceptorFactory) {
-		super(delegate);
+		this.launcherSupplier = launcherSupplier;
 		this.sessionListener = sessionListener;
 		this.interceptorFactory = interceptorFactory;
+	}
+
+	@Override
+	public void registerLauncherDiscoveryListeners(LauncherDiscoveryListener... listeners) {
+		listenerRegistry.launcherDiscoveryListeners.addAll(listeners);
+	}
+
+	@Override
+	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
+		listenerRegistry.testExecutionListeners.addAll(listeners);
 	}
 
 	@Override
@@ -57,6 +71,12 @@ class SessionPerRequestLauncher extends DelegatingInternalLauncher<InternalLaunc
 	}
 
 	private LauncherSession createSession() {
-		return new DefaultLauncherSession(delegate, sessionListener, interceptorFactory.get());
+		LauncherSession session = new DefaultLauncherSession(launcherSupplier, interceptorFactory.get(),
+			sessionListener);
+		Launcher launcher = session.getLauncher();
+		listenerRegistry.launcherDiscoveryListeners.getListeners().forEach(
+			launcher::registerLauncherDiscoveryListeners);
+		listenerRegistry.testExecutionListeners.getListeners().forEach(launcher::registerTestExecutionListeners);
+		return session;
 	}
 }

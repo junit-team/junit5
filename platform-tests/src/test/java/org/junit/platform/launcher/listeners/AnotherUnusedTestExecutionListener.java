@@ -11,7 +11,13 @@
 package org.junit.platform.launcher.listeners;
 
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestPlan;
 
 public class AnotherUnusedTestExecutionListener implements TestExecutionListener {
-	// empty on purpose
+	public static boolean called;
+
+	@Override
+	public void testPlanExecutionStarted(TestPlan testPlan) {
+		called = true;
+	}
 }

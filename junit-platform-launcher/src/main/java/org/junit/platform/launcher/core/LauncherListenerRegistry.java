@@ -10,16 +10,10 @@
 
 package org.junit.platform.launcher.core;
 
-import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.TestExecutionListener;
 
-/**
- * @since 1.8
- */
-interface InternalLauncher extends Launcher {
-
-	ListenerRegistry<TestExecutionListener> getTestExecutionListenerRegistry();
-
-	ListenerRegistry<LauncherDiscoveryListener> getLauncherDiscoveryListenerRegistry();
+class LauncherListenerRegistry {
+	final ListenerRegistry<LauncherDiscoveryListener> launcherDiscoveryListeners = ListenerRegistry.forLauncherDiscoveryListeners();
+	final ListenerRegistry<TestExecutionListener> testExecutionListeners = ListenerRegistry.forTestExecutionListeners();
 }

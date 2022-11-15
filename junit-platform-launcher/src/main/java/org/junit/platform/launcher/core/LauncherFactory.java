@@ -98,9 +98,10 @@ public class LauncherFactory {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.8")
 	public static LauncherSession openSession(LauncherConfig config) throws PreconditionViolationException {
+		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
-		return new DefaultLauncherSession(createDefaultLauncher(config, configurationParameters),
-			createLauncherSessionListener(config), collectLauncherInterceptors(configurationParameters));
+		return new DefaultLauncherSession(() -> createDefaultLauncher(config, configurationParameters),
+			collectLauncherInterceptors(configurationParameters), createLauncherSessionListener(config));
 	}
 
 	/**
@@ -127,15 +128,14 @@ public class LauncherFactory {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3")
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
+		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
-		return new SessionPerRequestLauncher(createDefaultLauncher(config, configurationParameters),
+		return new SessionPerRequestLauncher(() -> createDefaultLauncher(config, configurationParameters),
 			createLauncherSessionListener(config), () -> collectLauncherInterceptors(configurationParameters));
 	}
 
 	private static DefaultLauncher createDefaultLauncher(LauncherConfig config,
 			LauncherConfigurationParameters configurationParameters) {
-		Preconditions.notNull(config, "LauncherConfig must not be null");
-
 		Set<TestEngine> engines = collectTestEngines(config);
 		List<PostDiscoveryFilter> filters = collectPostDiscoveryFilters(config);
 

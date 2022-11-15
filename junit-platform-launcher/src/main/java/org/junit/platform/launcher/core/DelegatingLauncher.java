@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -18,11 +19,11 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.10
  */
-class DelegatingInternalLauncher<T extends InternalLauncher> implements InternalLauncher {
+class DelegatingLauncher<T extends Launcher> implements Launcher {
 
 	protected T delegate;
 
-	DelegatingInternalLauncher(T delegate) {
+	DelegatingLauncher(T delegate) {
 		this.delegate = delegate;
 	}
 
@@ -51,13 +52,4 @@ class DelegatingInternalLauncher<T extends InternalLauncher> implements Internal
 		delegate.execute(testPlan, listeners);
 	}
 
-	@Override
-	public ListenerRegistry<TestExecutionListener> getTestExecutionListenerRegistry() {
-		return delegate.getTestExecutionListenerRegistry();
-	}
-
-	@Override
-	public ListenerRegistry<LauncherDiscoveryListener> getLauncherDiscoveryListenerRegistry() {
-		return delegate.getLauncherDiscoveryListenerRegistry();
-	}
 }

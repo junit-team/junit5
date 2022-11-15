@@ -21,19 +21,27 @@ import org.junit.platform.engine.UniqueId;
  */
 public class TestEngineSpy implements TestEngine {
 
-	public static final String ID = TestEngineSpy.class.getSimpleName();
+	private final String id;
 
 	public ExecutionRequest requestForExecution;
 
+	public TestEngineSpy() {
+		this(TestEngineSpy.class.getSimpleName());
+	}
+
+	public TestEngineSpy(String id) {
+		this.id = id;
+	}
+
 	@Override
 	public String getId() {
-		return ID;
+		return id;
 	}
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		var engineUniqueId = UniqueId.forEngine(ID);
-		var engineDescriptor = new TestDescriptorStub(engineUniqueId, ID);
+		var engineUniqueId = UniqueId.forEngine(id);
+		var engineDescriptor = new TestDescriptorStub(engineUniqueId, id);
 		var testDescriptor = new TestDescriptorStub(engineUniqueId.append("test", "test"), "test");
 		engineDescriptor.addChild(testDescriptor);
 		return engineDescriptor;

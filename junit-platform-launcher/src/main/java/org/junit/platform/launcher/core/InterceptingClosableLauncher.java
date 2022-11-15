@@ -10,9 +10,13 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.function.Function.identity;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
+import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherInterceptor;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -21,15 +25,15 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.10
  */
-class InterceptingInternalLauncher extends DelegatingCloseableInternalLauncher<InternalLauncher> {
+class InterceptingClosableLauncher extends DelegatingCloseableLauncher<Launcher> {
 
-	static CloseableInternalLauncher decorate(InternalLauncher launcher, List<LauncherInterceptor> interceptors) {
-		return composite(interceptors) //
-				.map(combinedInterceptor -> (CloseableInternalLauncher) new InterceptingInternalLauncher(launcher,
-					combinedInterceptor)) //
-				.orElse(new DelegatingCloseableInternalLauncher<>(launcher, () -> {
-					// do nothing
-				}));
+	static CloseableLauncher decorate(Supplier<Launcher> launcherSupplier, List<LauncherInterceptor> interceptors) {
+		Optional<LauncherInterceptor> combinedInterceptor = composite(interceptors);
+		Launcher launcher = combinedInterceptor.map(it -> it.intercept(launcherSupplier::get)).orElseGet(
+			launcherSupplier);
+		return combinedInterceptor //
+				.map(it -> (CloseableLauncher) new InterceptingClosableLauncher(launcher, it)) //
+				.orElse(new DelegatingCloseableLauncher<>(launcher, identity()));
 	}
 
 	private static Optional<LauncherInterceptor> composite(List<LauncherInterceptor> interceptors) {
@@ -58,8 +62,11 @@ class InterceptingInternalLauncher extends DelegatingCloseableInternalLauncher<I
 
 	private final LauncherInterceptor interceptor;
 
-	private InterceptingInternalLauncher(InternalLauncher delegate, LauncherInterceptor interceptor) {
-		super(delegate, interceptor::close);
+	private InterceptingClosableLauncher(Launcher delegate, LauncherInterceptor interceptor) {
+		super(delegate, it -> {
+			interceptor.close();
+			return it;
+		});
 		this.interceptor = interceptor;
 	}
 
