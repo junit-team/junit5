@@ -11,10 +11,16 @@
 package org.junit.platform.launcher.listeners;
 
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
  */
 public class NoopTestExecutionListener implements TestExecutionListener {
-	// empty on purpose
+	public static boolean called;
+
+	@Override
+	public void testPlanExecutionStarted(TestPlan testPlan) {
+		called = true;
+	}
 }

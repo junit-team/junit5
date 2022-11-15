@@ -76,17 +76,20 @@ class DefaultLauncherTests {
 
 	@Test
 	void constructLauncherWithoutAnyEngines() {
+		var launcher = createLauncher();
+
 		Throwable exception = assertThrows(PreconditionViolationException.class,
-			LauncherFactoryForTestingPurposesOnly::createLauncher);
+			() -> launcher.discover(request().build()));
 
 		assertThat(exception).hasMessageContaining("Cannot create Launcher without at least one TestEngine");
 	}
 
 	@Test
 	void constructLauncherWithMultipleTestEnginesWithDuplicateIds() {
-		var exception = assertThrows(JUnitException.class,
-			() -> createLauncher(new DemoHierarchicalTestEngine("dummy id"),
-				new DemoHierarchicalTestEngine("dummy id")));
+		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"),
+			new DemoHierarchicalTestEngine("dummy id"));
+
+		var exception = assertThrows(JUnitException.class, () -> launcher.discover(request().build()));
 
 		assertThat(exception).hasMessageContaining("multiple engines with the same ID");
 	}
@@ -486,11 +489,11 @@ class DefaultLauncherTests {
 
 	@Test
 	void reportsDynamicTestDescriptorsCorrectly() {
-		var engineId = UniqueId.forEngine(TestEngineSpy.ID);
+		var engineId = UniqueId.forEngine("engine");
 		var containerAndTestId = engineId.append("c&t", "c&t");
 		var dynamicTestId = containerAndTestId.append("test", "test");
 
-		var engine = new TestEngineSpy() {
+		var engine = new TestEngineSpy(engineId.getLastSegment().getValue()) {
 
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
@@ -595,7 +598,8 @@ class DefaultLauncherTests {
 	@TrackLogRecords
 	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(LogRecordListener listener) {
 		var id = "junit-using-reserved-prefix";
-		createLauncher(new TestEngineStub(id));
+		var launcher = createLauncher(new TestEngineStub(id));
+		launcher.discover(request().build());
 		assertThat(listener.stream(EngineIdValidator.class, Level.WARNING).map(LogRecord::getMessage)) //
 				.containsExactly(
 					"Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '"
@@ -614,7 +618,8 @@ class DefaultLauncherTests {
 
 	private void assertImposter(String id) {
 		TestEngine impostor = new TestEngineStub(id);
-		Exception exception = assertThrows(JUnitException.class, () -> createLauncher(impostor));
+		var launcher = createLauncher(impostor);
+		Exception exception = assertThrows(JUnitException.class, () -> launcher.discover(request().build()));
 		assertThat(exception).hasMessage(
 			"Third-party TestEngine '%s' is forbidden to use the reserved '%s' TestEngine ID.",
 			impostor.getClass().getName(), id);

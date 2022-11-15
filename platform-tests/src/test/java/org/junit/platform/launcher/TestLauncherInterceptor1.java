@@ -10,7 +10,22 @@
 
 package org.junit.platform.launcher;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 public class TestLauncherInterceptor1 implements LauncherInterceptor {
+
+	private final ClassLoader originalClassLoader;
+	private final URLClassLoader replacedClassLoader;
+
+	public TestLauncherInterceptor1() {
+		originalClassLoader = Thread.currentThread().getContextClassLoader();
+		var url = getClass().getClassLoader().getResource("intercepted-testservices/");
+		replacedClassLoader = new URLClassLoader(new URL[] { url }, originalClassLoader);
+		Thread.currentThread().setContextClassLoader(replacedClassLoader);
+	}
 
 	@Override
 	public <T> T intercept(Invocation<T> invocation) {
@@ -19,5 +34,14 @@ public class TestLauncherInterceptor1 implements LauncherInterceptor {
 
 	@Override
 	public void close() {
+		try {
+			replacedClassLoader.close();
+		}
+		catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(originalClassLoader);
+		}
 	}
 }

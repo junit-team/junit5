@@ -12,11 +12,16 @@ package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.ENABLE_LAUNCHER_INTERCEPTORS;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.concurrent.atomic.AtomicReference;
@@ -31,7 +36,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.fakes.TestEngineSpy;
-import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.InterceptedTestEngine;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TagFilter;
@@ -56,24 +61,41 @@ class LauncherFactoryTests {
 	}
 
 	@Test
-	void noopTestExecutionListenerIsLoadedViaServiceApi() {
+	void testExecutionListenerIsLoadedViaServiceApi() {
 		withTestServices(() -> {
-			var launcher = (InternalLauncher) LauncherFactory.create();
-			var listeners = launcher.getTestExecutionListenerRegistry().getListeners();
-			var listener = listeners.stream().filter(NoopTestExecutionListener.class::isInstance).findFirst();
-			assertThat(listener).isPresent();
+			var config = LauncherConfig.builder() //
+					.addTestEngines(new TestEngineSpy()) //
+					.enableTestEngineAutoRegistration(false) //
+					.build();
+			var launcher = LauncherFactory.create(config);
+
+			NoopTestExecutionListener.called = false;
+
+			launcher.execute(request().build());
+
+			assertTrue(NoopTestExecutionListener.called);
 		});
 	}
 
 	@Test
-	void unusedTestExecutionListenerIsNotLoadedViaServiceApi() {
+	void testExecutionListenersExcludedViaConfigParametersIsNotLoadedViaServiceApi() {
 		withTestServices(() -> {
-			var launcher = (InternalLauncher) LauncherFactory.create();
-			var listeners = launcher.getTestExecutionListenerRegistry().getListeners();
+			var value = "org.junit.*.launcher.listeners.Unused*,org.junit.*.launcher.listeners.AnotherUnused*";
+			withSystemProperty(DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME, value, () -> {
+				var config = LauncherConfig.builder() //
+						.addTestEngines(new TestEngineSpy()) //
+						.enableTestEngineAutoRegistration(false) //
+						.build();
+				var launcher = LauncherFactory.create(config);
 
-			assertThat(listeners).filteredOn(AnotherUnusedTestExecutionListener.class::isInstance).isEmpty();
-			assertThat(listeners).filteredOn(UnusedTestExecutionListener.class::isInstance).isEmpty();
-			assertThat(listeners).filteredOn(NoopTestExecutionListener.class::isInstance).isNotEmpty();
+				UnusedTestExecutionListener.called = false;
+				AnotherUnusedTestExecutionListener.called = false;
+
+				launcher.execute(request().build());
+
+				assertFalse(UnusedTestExecutionListener.called);
+				assertFalse(AnotherUnusedTestExecutionListener.called);
+			});
 		});
 	}
 
@@ -169,43 +191,68 @@ class LauncherFactoryTests {
 	@Test
 	void doesNotDiscoverLauncherDiscoverRequestListenerViaServiceApiWhenDisabled() {
 		withTestServices(() -> {
-			var launcher = (InternalLauncher) LauncherFactory.create(
-				LauncherConfig.builder().enableLauncherDiscoveryListenerAutoRegistration(false).build());
-			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListenerRegistry().getCompositeListener();
+			var config = LauncherConfig.builder() //
+					.enableLauncherDiscoveryListenerAutoRegistration(false) //
+					.build();
+			var launcher = LauncherFactory.create(config);
+			TestLauncherDiscoveryListener.called = false;
 
-			assertThat(launcherDiscoveryListener).isSameAs(LauncherDiscoveryListener.NOOP);
+			launcher.discover(request().build());
+
+			assertFalse(TestLauncherDiscoveryListener.called);
 		});
 	}
 
 	@Test
 	void discoversLauncherDiscoverRequestListenerViaServiceApiByDefault() {
 		withTestServices(() -> {
-			var launcher = (InternalLauncher) LauncherFactory.create();
-			var launcherDiscoveryListener = launcher.getLauncherDiscoveryListenerRegistry().getCompositeListener();
+			var launcher = LauncherFactory.create();
+			TestLauncherDiscoveryListener.called = false;
 
-			assertThat(launcherDiscoveryListener.getClass().getSimpleName()).startsWith("Composite");
-			assertThat(launcherDiscoveryListener).extracting("listeners").asList() //
-					.contains(new TestLauncherDiscoveryListener());
+			launcher.discover(request().build());
+
+			assertTrue(TestLauncherDiscoveryListener.called);
 		});
 	}
 
 	@Test
 	void doesNotDiscoverLauncherSessionListenerViaServiceApiWhenDisabled() {
 		withTestServices(() -> {
-			var session = (DefaultLauncherSession) LauncherFactory.openSession(
-				LauncherConfig.builder().enableLauncherSessionListenerAutoRegistration(false).build());
+			try (var session = (DefaultLauncherSession) LauncherFactory.openSession(
+				LauncherConfig.builder().enableLauncherSessionListenerAutoRegistration(false).build())) {
 
-			assertThat(session.getListener()).isSameAs(LauncherSessionListener.NOOP);
+				assertThat(session.getListener()).isSameAs(LauncherSessionListener.NOOP);
+			}
 		});
 	}
 
 	@Test
 	void discoversLauncherSessionListenerViaServiceApiByDefault() {
 		withTestServices(() -> {
-			var session = (DefaultLauncherSession) LauncherFactory.openSession();
-
-			assertThat(session.getListener()).isEqualTo(new TestLauncherSessionListener());
+			try (var session = (DefaultLauncherSession) LauncherFactory.openSession()) {
+				assertThat(session.getListener()).isEqualTo(new TestLauncherSessionListener());
+			}
 		});
+	}
+
+	@Test
+	void createsLauncherInterceptorsBeforeDiscoveringTestEngines() {
+		withTestServices(() -> withSystemProperty(ENABLE_LAUNCHER_INTERCEPTORS, "true", () -> {
+			var config = LauncherConfig.builder() //
+					.enableTestEngineAutoRegistration(true) //
+					.build();
+			var request = request().build();
+
+			var testPlan = LauncherFactory.create(config).discover(request);
+
+			assertThat(testPlan.getRoots()) //
+					.map(TestIdentifier::getUniqueIdObject) //
+					.map(UniqueId::getLastSegment) //
+					.map(UniqueId.Segment::getValue) //
+					.describedAs(
+						"Intercepted test engine is added by class loader created by TestLauncherInterceptor1").contains(
+							InterceptedTestEngine.ID);
+		}));
 	}
 
 	@Test
@@ -266,6 +313,7 @@ class LauncherFactoryTests {
 		}));
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private static void withSystemProperty(String key, String value, Runnable runnable) {
 		var oldValue = System.getProperty(key);
 		System.setProperty(key, value);
@@ -284,11 +332,13 @@ class LauncherFactoryTests {
 
 	private static void withTestServices(Runnable runnable) {
 		var current = Thread.currentThread().getContextClassLoader();
-		try {
-			var url = LauncherFactoryTests.class.getClassLoader().getResource("testservices/");
-			var classLoader = new URLClassLoader(new URL[] { url }, current);
+		var url = LauncherFactoryTests.class.getClassLoader().getResource("testservices/");
+		try (var classLoader = new URLClassLoader(new URL[] { url }, current)) {
 			Thread.currentThread().setContextClassLoader(classLoader);
 			runnable.run();
+		}
+		catch (IOException e) {
+			throw new UncheckedIOException(e);
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(current);
@@ -304,6 +354,7 @@ class LauncherFactoryTests {
 		// @formatter:on
 	}
 
+	@SuppressWarnings("NewClassNamingConvention")
 	public static class JUnit4Example {
 
 		@org.junit.Test
@@ -312,6 +363,7 @@ class LauncherFactoryTests {
 
 	}
 
+	@SuppressWarnings("NewClassNamingConvention")
 	static class JUnit5Example {
 
 		@Tag("test-post-discovery")

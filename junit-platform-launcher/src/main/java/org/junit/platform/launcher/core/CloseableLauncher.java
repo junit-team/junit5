@@ -10,10 +10,12 @@
 
 package org.junit.platform.launcher.core;
 
+import org.junit.platform.launcher.Launcher;
+
 /**
  * @since 1.10
  */
-interface CloseableInternalLauncher extends InternalLauncher, AutoCloseable {
+interface CloseableLauncher extends Launcher, AutoCloseable {
 	@Override
 	void close();
 }

@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.launcher.Launcher;
@@ -27,12 +28,16 @@ import org.junit.platform.launcher.TestPlan;
  */
 class DefaultLauncherSession implements LauncherSession {
 
-	private final DelegatingLauncher launcher;
+	private final DelegatingCloseableLauncher<CloseableLauncher> launcher;
 	private final LauncherSessionListener listener;
 
-	DefaultLauncherSession(InternalLauncher launcher, LauncherSessionListener listener,
-			List<LauncherInterceptor> interceptors) {
-		this.launcher = new DelegatingLauncher(InterceptingInternalLauncher.decorate(launcher, interceptors));
+	DefaultLauncherSession(Supplier<Launcher> launcherSupplier, List<LauncherInterceptor> interceptors,
+			LauncherSessionListener listener) {
+		CloseableLauncher closeableLauncher = InterceptingClosableLauncher.decorate(launcherSupplier, interceptors);
+		this.launcher = new DelegatingCloseableLauncher<>(closeableLauncher, delegate -> {
+			delegate.close();
+			return ClosedLauncher.INSTANCE;
+		});
 		this.listener = listener;
 		listener.launcherSessionOpened(this);
 	}
@@ -48,31 +53,13 @@ class DefaultLauncherSession implements LauncherSession {
 
 	@Override
 	public void close() {
-		if (launcher.isClosed()) {
+		if (!launcher.isClosed()) {
 			launcher.close();
 			listener.launcherSessionClosed(this);
 		}
 	}
 
-	private static class DelegatingLauncher extends DelegatingInternalLauncher<CloseableInternalLauncher>
-			implements CloseableInternalLauncher {
-
-		DelegatingLauncher(CloseableInternalLauncher delegate) {
-			super(delegate);
-		}
-
-		boolean isClosed() {
-			return delegate != ClosedLauncher.INSTANCE;
-		}
-
-		@Override
-		public void close() {
-			delegate.close();
-			delegate = ClosedLauncher.INSTANCE;
-		}
-	}
-
-	private static class ClosedLauncher implements CloseableInternalLauncher {
+	private static class ClosedLauncher implements CloseableLauncher {
 
 		static final ClosedLauncher INSTANCE = new ClosedLauncher();
 
@@ -101,16 +88,6 @@ class DefaultLauncherSession implements LauncherSession {
 
 		@Override
 		public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
-			throw new PreconditionViolationException("Launcher session has already been closed");
-		}
-
-		@Override
-		public ListenerRegistry<TestExecutionListener> getTestExecutionListenerRegistry() {
-			throw new PreconditionViolationException("Launcher session has already been closed");
-		}
-
-		@Override
-		public ListenerRegistry<LauncherDiscoveryListener> getLauncherDiscoveryListenerRegistry() {
 			throw new PreconditionViolationException("Launcher session has already been closed");
 		}
 
