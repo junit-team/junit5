@@ -29,13 +29,14 @@ class SessionPerRequestLauncher implements Launcher {
 
 	private final LauncherListenerRegistry listenerRegistry = new LauncherListenerRegistry();
 	private final Supplier<Launcher> launcherSupplier;
-	private final LauncherSessionListener sessionListener;
+	private final Supplier<LauncherSessionListener> sessionListenerSupplier;
 	private final Supplier<List<LauncherInterceptor>> interceptorFactory;
 
-	SessionPerRequestLauncher(Supplier<Launcher> launcherSupplier, LauncherSessionListener sessionListener,
+	SessionPerRequestLauncher(Supplier<Launcher> launcherSupplier,
+			Supplier<LauncherSessionListener> sessionListenerSupplier,
 			Supplier<List<LauncherInterceptor>> interceptorFactory) {
 		this.launcherSupplier = launcherSupplier;
-		this.sessionListener = sessionListener;
+		this.sessionListenerSupplier = sessionListenerSupplier;
 		this.interceptorFactory = interceptorFactory;
 	}
 
@@ -71,8 +72,8 @@ class SessionPerRequestLauncher implements Launcher {
 	}
 
 	private LauncherSession createSession() {
-		LauncherSession session = new DefaultLauncherSession(launcherSupplier, interceptorFactory.get(),
-			sessionListener);
+		LauncherSession session = new DefaultLauncherSession(interceptorFactory.get(), sessionListenerSupplier,
+			launcherSupplier);
 		Launcher launcher = session.getLauncher();
 		listenerRegistry.launcherDiscoveryListeners.getListeners().forEach(
 			launcher::registerLauncherDiscoveryListeners);

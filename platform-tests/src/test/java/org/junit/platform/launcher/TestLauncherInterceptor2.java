@@ -12,9 +12,17 @@ package org.junit.platform.launcher;
 
 public class TestLauncherInterceptor2 implements LauncherInterceptor {
 
+	public static boolean INTERCEPTING;
+
 	@Override
 	public <T> T intercept(Invocation<T> invocation) {
-		return invocation.proceed();
+		INTERCEPTING = true;
+		try {
+			return invocation.proceed();
+		}
+		finally {
+			INTERCEPTING = false;
+		}
 	}
 
 	@Override

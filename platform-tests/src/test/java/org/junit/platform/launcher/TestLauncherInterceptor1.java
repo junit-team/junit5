@@ -17,13 +17,15 @@ import java.net.URLClassLoader;
 
 public class TestLauncherInterceptor1 implements LauncherInterceptor {
 
+	public static final String CLASSLOADER_NAME = "interceptor-loader";
+
 	private final ClassLoader originalClassLoader;
 	private final URLClassLoader replacedClassLoader;
 
 	public TestLauncherInterceptor1() {
 		originalClassLoader = Thread.currentThread().getContextClassLoader();
 		var url = getClass().getClassLoader().getResource("intercepted-testservices/");
-		replacedClassLoader = new URLClassLoader(new URL[] { url }, originalClassLoader);
+		replacedClassLoader = new URLClassLoader(CLASSLOADER_NAME, new URL[] { url }, originalClassLoader);
 		Thread.currentThread().setContextClassLoader(replacedClassLoader);
 	}
 

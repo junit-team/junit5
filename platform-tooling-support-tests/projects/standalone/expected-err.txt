@@ -1,4 +1,6 @@
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
+.+ Loaded LauncherInterceptor instances: ..
+.+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
 .+ Loaded LauncherSessionListener instances: ..
 .+ org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
 .+ Discovered TestEngines:

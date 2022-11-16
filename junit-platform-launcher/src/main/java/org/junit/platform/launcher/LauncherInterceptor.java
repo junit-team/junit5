@@ -11,6 +11,9 @@
 package org.junit.platform.launcher;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import java.util.List;
 
 import org.apiguardian.api.API;
 
@@ -27,6 +30,18 @@ import org.apiguardian.api.API;
  */
 @API(status = EXPERIMENTAL, since = "1.10")
 public interface LauncherInterceptor {
+
+	LauncherInterceptor NOOP = new LauncherInterceptor() {
+		@Override
+		public <T> T intercept(Invocation<T> invocation) {
+			return invocation.proceed();
+		}
+
+		@Override
+		public void close() {
+			// do nothing
+		}
+	};
 
 	/**
 	 * Intercept the supplied invocation.
@@ -53,5 +68,30 @@ public interface LauncherInterceptor {
 	 */
 	interface Invocation<T> {
 		T proceed();
+	}
+
+	@API(status = INTERNAL, since = "1.10")
+	static LauncherInterceptor composite(List<LauncherInterceptor> interceptors) {
+		if (interceptors.isEmpty()) {
+			return NOOP;
+		}
+		return interceptors.stream() //
+				.skip(1) //
+				.reduce(interceptors.get(0), (a, b) -> new LauncherInterceptor() {
+					@Override
+					public void close() {
+						try {
+							a.close();
+						}
+						finally {
+							b.close();
+						}
+					}
+
+					@Override
+					public <T> T intercept(Invocation<T> invocation) {
+						return a.intercept(() -> b.intercept(invocation));
+					}
+				});
 	}
 }
