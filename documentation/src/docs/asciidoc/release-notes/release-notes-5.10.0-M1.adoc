@@ -44,6 +44,8 @@ repository on GitHub.
 
 * New `ArgumentsAccessor.getInvocationIndex()` method that supplies the index of a
   `@ParameterizedTest` invocation.
+* `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal
+  to fall back to the default display name generator.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
