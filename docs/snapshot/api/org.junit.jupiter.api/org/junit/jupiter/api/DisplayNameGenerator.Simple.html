@@ -194,7 +194,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">generateDisplayNameForMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;testClass,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&nbsp;testMethod)</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="DisplayNameGenerator.html#generateDisplayNameForMethod(java.lang.Class,java.lang.reflect.Method)">DisplayNameGenerator</a></code></span></div>
-<div class="block">Generate a display name for the given method.</div>
+<div class="block">Generate a display name for the given method.
+
+ <p>If it returns <code>null</code>, the default display name generator will be used instead.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="DisplayNameGenerator.html#generateDisplayNameForMethod(java.lang.Class,java.lang.reflect.Method)">generateDisplayNameForMethod</a></code>&nbsp;in interface&nbsp;<code><a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></code></dd>
@@ -204,7 +206,7 @@ loadScripts(document, 'script');</script>
 <dd><code>testClass</code> - the class the test method is invoked on; never <code>null</code></dd>
 <dd><code>testMethod</code> - method to generate a display name for; never <code>null</code></dd>
 <dt>Returns:</dt>
-<dd>the display name for the test; never <code>null</code> or blank</dd>
+<dd>the display name for the test; never blank</dd>
 </dl>
 </section>
 </li>
