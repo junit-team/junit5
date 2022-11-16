@@ -37,6 +37,7 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.fakes.TestEngineSpy;
 import org.junit.platform.launcher.InterceptedTestEngine;
+import org.junit.platform.launcher.InterceptorInjectedLauncherSessionListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TagFilter;
@@ -257,6 +258,7 @@ class LauncherFactoryTests {
 
 	@Test
 	void appliesLauncherInterceptorsToTestDiscovery() {
+		InterceptorInjectedLauncherSessionListener.CALLS = 0;
 		withTestServices(() -> withSystemProperty(ENABLE_LAUNCHER_INTERCEPTORS, "true", () -> {
 			var engine = new TestEngineSpy() {
 				@Override
@@ -277,11 +279,13 @@ class LauncherFactoryTests {
 					.hasRootCauseMessage("from discovery") //
 					.hasStackTraceContaining(TestLauncherInterceptor1.class.getName() + ".intercept(") //
 					.hasStackTraceContaining(TestLauncherInterceptor2.class.getName() + ".intercept(");
+			assertThat(InterceptorInjectedLauncherSessionListener.CALLS).isEqualTo(1);
 		}));
 	}
 
 	@Test
 	void appliesLauncherInterceptorsToTestExecution() {
+		InterceptorInjectedLauncherSessionListener.CALLS = 0;
 		withTestServices(() -> withSystemProperty(ENABLE_LAUNCHER_INTERCEPTORS, "true", () -> {
 			var engine = new TestEngineSpy() {
 				@Override
@@ -310,6 +314,7 @@ class LauncherFactoryTests {
 					.hasRootCauseMessage("from execution") //
 					.hasStackTraceContaining(TestLauncherInterceptor1.class.getName() + ".intercept(") //
 					.hasStackTraceContaining(TestLauncherInterceptor2.class.getName() + ".intercept(");
+			assertThat(InterceptorInjectedLauncherSessionListener.CALLS).isEqualTo(1);
 		}));
 	}
 

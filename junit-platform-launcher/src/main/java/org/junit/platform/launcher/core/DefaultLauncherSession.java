@@ -28,17 +28,23 @@ import org.junit.platform.launcher.TestPlan;
  */
 class DefaultLauncherSession implements LauncherSession {
 
-	private final DelegatingCloseableLauncher<CloseableLauncher> launcher;
+	private final LauncherInterceptor interceptor;
 	private final LauncherSessionListener listener;
+	private final DelegatingLauncher launcher;
 
-	DefaultLauncherSession(Supplier<Launcher> launcherSupplier, List<LauncherInterceptor> interceptors,
-			LauncherSessionListener listener) {
-		CloseableLauncher closeableLauncher = InterceptingClosableLauncher.decorate(launcherSupplier, interceptors);
-		this.launcher = new DelegatingCloseableLauncher<>(closeableLauncher, delegate -> {
-			delegate.close();
-			return ClosedLauncher.INSTANCE;
-		});
-		this.listener = listener;
+	DefaultLauncherSession(List<LauncherInterceptor> interceptors, Supplier<LauncherSessionListener> listenerSupplier,
+			Supplier<Launcher> launcherSupplier) {
+		interceptor = LauncherInterceptor.composite(interceptors);
+		Launcher launcher;
+		if (interceptor == LauncherInterceptor.NOOP) {
+			this.listener = listenerSupplier.get();
+			launcher = launcherSupplier.get();
+		}
+		else {
+			this.listener = interceptor.intercept(listenerSupplier::get);
+			launcher = new InterceptingLauncher(interceptor.intercept(launcherSupplier::get), interceptor);
+		}
+		this.launcher = new DelegatingLauncher(launcher);
 		listener.launcherSessionOpened(this);
 	}
 
@@ -53,13 +59,14 @@ class DefaultLauncherSession implements LauncherSession {
 
 	@Override
 	public void close() {
-		if (!launcher.isClosed()) {
-			launcher.close();
+		if (launcher.delegate != ClosedLauncher.INSTANCE) {
+			launcher.delegate = ClosedLauncher.INSTANCE;
 			listener.launcherSessionClosed(this);
+			interceptor.close();
 		}
 	}
 
-	private static class ClosedLauncher implements CloseableLauncher {
+	private static class ClosedLauncher implements Launcher {
 
 		static final ClosedLauncher INSTANCE = new ClosedLauncher();
 
@@ -89,11 +96,6 @@ class DefaultLauncherSession implements LauncherSession {
 		@Override
 		public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 			throw new PreconditionViolationException("Launcher session has already been closed");
-		}
-
-		@Override
-		public void close() {
-			// do nothing
 		}
 	}
 }

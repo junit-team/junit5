@@ -100,8 +100,8 @@ public class LauncherFactory {
 	public static LauncherSession openSession(LauncherConfig config) throws PreconditionViolationException {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
-		return new DefaultLauncherSession(() -> createDefaultLauncher(config, configurationParameters),
-			collectLauncherInterceptors(configurationParameters), createLauncherSessionListener(config));
+		return new DefaultLauncherSession(collectLauncherInterceptors(configurationParameters),
+			() -> createLauncherSessionListener(config), () -> createDefaultLauncher(config, configurationParameters));
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class LauncherFactory {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
 		return new SessionPerRequestLauncher(() -> createDefaultLauncher(config, configurationParameters),
-			createLauncherSessionListener(config), () -> collectLauncherInterceptors(configurationParameters));
+			() -> createLauncherSessionListener(config), () -> collectLauncherInterceptors(configurationParameters));
 	}
 
 	private static DefaultLauncher createDefaultLauncher(LauncherConfig config,

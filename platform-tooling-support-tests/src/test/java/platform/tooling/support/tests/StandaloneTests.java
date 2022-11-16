@@ -120,6 +120,7 @@ class StandaloneTests {
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
+				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("--scan-class-path") //
 				.addArguments("--disable-banner") //
@@ -153,6 +154,7 @@ class StandaloneTests {
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
+				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("--scan-class-path") //
 				.addArguments("--disable-banner") //
@@ -187,6 +189,7 @@ class StandaloneTests {
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
+				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("--select-package", "standalone") //
 				.addArguments("--disable-banner") //

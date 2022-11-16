@@ -11,45 +11,41 @@
 package org.junit.platform.launcher.core;
 
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.LauncherInterceptor;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.10
  */
-class DelegatingLauncher implements Launcher {
+class InterceptingLauncher extends DelegatingLauncher {
 
-	protected Launcher delegate;
+	private final LauncherInterceptor interceptor;
 
-	DelegatingLauncher(Launcher delegate) {
-		this.delegate = delegate;
-	}
-
-	@Override
-	public void registerLauncherDiscoveryListeners(LauncherDiscoveryListener... listeners) {
-		delegate.registerLauncherDiscoveryListeners(listeners);
-	}
-
-	@Override
-	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		delegate.registerTestExecutionListeners(listeners);
+	InterceptingLauncher(Launcher delegate, LauncherInterceptor interceptor) {
+		super(delegate);
+		this.interceptor = interceptor;
 	}
 
 	@Override
 	public TestPlan discover(LauncherDiscoveryRequest launcherDiscoveryRequest) {
-		return delegate.discover(launcherDiscoveryRequest);
+		return interceptor.intercept(() -> super.discover(launcherDiscoveryRequest));
 	}
 
 	@Override
 	public void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners) {
-		delegate.execute(launcherDiscoveryRequest, listeners);
+		interceptor.intercept(() -> {
+			super.execute(launcherDiscoveryRequest, listeners);
+			return null;
+		});
 	}
 
 	@Override
 	public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
-		delegate.execute(testPlan, listeners);
+		interceptor.intercept(() -> {
+			super.execute(testPlan, listeners);
+			return null;
+		});
 	}
-
 }
