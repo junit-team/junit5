@@ -106,7 +106,7 @@ final class DisplayNameUtils {
 			generator -> generator.generateDisplayNameForNestedClass(testClass));
 	}
 
-	static Supplier<String> createDisplayNameSupplierForMethod(Class<?> testClass, Method testMethod,
+	private static Supplier<String> createDisplayNameSupplierForMethod(Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
 		return createDisplayNameSupplier(testClass, configuration,
 			generator -> generator.generateDisplayNameForMethod(testClass, testMethod));
@@ -114,13 +114,12 @@ final class DisplayNameUtils {
 
 	private static Supplier<String> createDisplayNameSupplier(Class<?> testClass, JupiterConfiguration configuration,
 			Function<DisplayNameGenerator, String> generatorFunction) {
-		Preconditions.notNull(generatorFunction, "DisplayNameGenerator function must not be null");
-		return () -> getOptionalDisplayNameGenerator(testClass) //
+		return () -> findDisplayNameGenerator(testClass) //
 				.map(generatorFunction) //
 				.orElseGet(() -> generatorFunction.apply(configuration.getDefaultDisplayNameGenerator()));
 	}
 
-	private static Optional<DisplayNameGenerator> getOptionalDisplayNameGenerator(Class<?> testClass) {
+	private static Optional<DisplayNameGenerator> findDisplayNameGenerator(Class<?> testClass) {
 		Preconditions.notNull(testClass, "Test class must not be null");
 
 		return AnnotationUtils.findAnnotation(testClass, DisplayNameGeneration.class, true) //

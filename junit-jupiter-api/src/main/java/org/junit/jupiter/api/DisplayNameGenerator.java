@@ -74,7 +74,7 @@ public interface DisplayNameGenerator {
 	/**
 	 * Generate a display name for the given top-level or {@code static} nested test class.
 	 *
-	 * If {@code null} is generated, the default generator will be used to generate the display name.
+	 * <p>If it returns {@code null}, the default display name generator will be used instead.
 	 *
 	 * @param testClass the class to generate a name for; never {@code null}
 	 * @return the display name for the class; never blank
@@ -84,7 +84,7 @@ public interface DisplayNameGenerator {
 	/**
 	 * Generate a display name for the given {@link Nested @Nested} inner test class.
 	 *
-	 * If {@code null} is generated, the default generator will be used to generate the display name.
+	 * <p>If it returns {@code null}, the default display name generator will be used instead.
 	 *
 	 * @param nestedClass the class to generate a name for; never {@code null}
 	 * @return the display name for the nested class; never blank
@@ -94,7 +94,7 @@ public interface DisplayNameGenerator {
 	/**
 	 * Generate a display name for the given method.
 	 *
-	 * If {@code null} is generated, the default generator will be used to generate the display name.
+	 * <p>If it returns {@code null}, the default display name generator will be used instead.
 	 *
 	 * @implNote The class instance supplied as {@code testClass} may differ from
 	 * the class returned by {@code testMethod.getDeclaringClass()} &mdash; for

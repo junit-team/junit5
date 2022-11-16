@@ -101,6 +101,15 @@ class DisplayNameUtilsTests {
 
 				assertThat(displayName.get()).isEqualTo("class-display-name");
 			}
+
+			@Test
+			void shouldFallbackOnDefaultDisplayNameGeneratorWhenNullIsGenerated() {
+				when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(
+					NullDisplayNameTestCase.class, configuration);
+
+				assertThat(displayName.get()).isEqualTo("class-display-name");
+			}
 		}
 	}
 
@@ -123,6 +132,15 @@ class DisplayNameUtilsTests {
 			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
 				NestedTestCase.class, configuration);
+
+			assertThat(displayName.get()).isEqualTo("nested-class-display-name");
+		}
+
+		@Test
+		void shouldFallbackOnDefaultDisplayNameGeneratorWhenNullIsGenerated() {
+			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
+				NullDisplayNameTestCase.NestedTestCase.class, configuration);
 
 			assertThat(displayName.get()).isEqualTo("nested-class-display-name");
 		}
@@ -149,6 +167,17 @@ class DisplayNameUtilsTests {
 			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
 			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NotDisplayNameTestCase.class, method,
+				configuration);
+
+			assertThat(displayName).isEqualTo("method-display-name");
+		}
+
+		@Test
+		void shouldFallbackOnDefaultDisplayNameGeneratorWhenNullIsGenerated() throws Exception {
+			Method method = NullDisplayNameTestCase.class.getDeclaredMethod("test");
+			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+
+			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NullDisplayNameTestCase.class, method,
 				configuration);
 
 			assertThat(displayName).isEqualTo("method-display-name");
@@ -186,6 +215,38 @@ class DisplayNameUtilsTests {
 
 	@Nested
 	class NestedTestCase {
+	}
+
+	@DisplayNameGeneration(value = NullDisplayNameGenerator.class)
+	static class NullDisplayNameTestCase {
+
+		@Test
+		void test() {
+		}
+
+		@Nested
+		class NestedTestCase {
+		}
+
+	}
+
+	static class NullDisplayNameGenerator implements DisplayNameGenerator {
+
+		@Override
+		public String generateDisplayNameForClass(Class<?> testClass) {
+			return null;
+		}
+
+		@Override
+		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+			return null;
+		}
+
+		@Override
+		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+			return null;
+		}
+
 	}
 
 }
