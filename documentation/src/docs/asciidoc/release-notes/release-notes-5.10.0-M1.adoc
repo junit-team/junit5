@@ -26,7 +26,7 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* allow methods returning a list to return a stream in the ReflectionSupport class
+*  All utility methods from `ReflectionSupport` now have counterparts returning `Stream` instead of `List`
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter

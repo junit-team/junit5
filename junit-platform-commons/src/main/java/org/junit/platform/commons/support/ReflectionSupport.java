@@ -129,9 +129,11 @@ public final class ReflectionSupport {
 	 * @param classNameFilter the class name filter; never {@code null}
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
+	 * @since 1.10
 	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
 	 * @see #findAllClassesInModule(String, Predicate, Predicate)
 	 */
+	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Class<?>> findAllClassesInClasspathRootAsStream(URI root, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 
@@ -177,9 +179,11 @@ public final class ReflectionSupport {
 	 * @param classNameFilter the class name filter; never {@code null}
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
+	 * @since 1.10
 	 * @see #findAllClassesInClasspathRoot(URI, Predicate, Predicate)
 	 * @see #findAllClassesInModule(String, Predicate, Predicate)
 	 */
+	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Class<?>> findAllClassesInPackageAsStream(String basePackageName,
 			Predicate<Class<?>> classFilter, Predicate<String> classNameFilter) {
 
@@ -224,10 +228,11 @@ public final class ReflectionSupport {
 	 * @param classNameFilter the class name filter; never {@code null}
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
-	 * @since 1.1.1
+	 * @since 1.10
 	 * @see #findAllClassesInClasspathRoot(URI, Predicate, Predicate)
 	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
 	 */
+	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Class<?>> findAllClassesInModuleAsStream(String moduleName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 
@@ -418,9 +423,11 @@ public final class ReflectionSupport {
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param predicate the method filter; never {@code null}
 	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @since 1.10
 	 * @return a stream of all such methods found; never {@code null}
 	 * but potentially empty
 	 */
+	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Method> findMethodsAsStream(Class<?> clazz, Predicate<Method> predicate,
 			HierarchyTraversalMode traversalMode) {
 
@@ -472,10 +479,12 @@ public final class ReflectionSupport {
 	 * @param clazz the class to be searched; never {@code null}
 	 * @param predicate the predicate against which the list of nested classes is
 	 * checked; never {@code null}
+	 * @since 1.10
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
 	 * @throws JUnitException if a cycle is detected within an inner class hierarchy
 	 */
+	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Class<?>> findNestedClassesAsStream(Class<?> clazz, Predicate<Class<?>> predicate)
 			throws JUnitException {
 
