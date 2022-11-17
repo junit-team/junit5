@@ -423,8 +423,8 @@ public final class ReflectionSupport {
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param predicate the method filter; never {@code null}
 	 * @param traversalMode the hierarchy traversal mode; never {@code null}
-	 * @since 1.10
 	 * @return a stream of all such methods found; never {@code null}
+	 * @since 1.10
 	 * but potentially empty
 	 */
 	@API(status = MAINTAINED, since = "1.10")
@@ -479,10 +479,10 @@ public final class ReflectionSupport {
 	 * @param clazz the class to be searched; never {@code null}
 	 * @param predicate the predicate against which the list of nested classes is
 	 * checked; never {@code null}
-	 * @since 1.10
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
 	 * @throws JUnitException if a cycle is detected within an inner class hierarchy
+	 * @since 1.10
 	 */
 	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Class<?>> findNestedClassesAsStream(Class<?> clazz, Predicate<Class<?>> predicate)
