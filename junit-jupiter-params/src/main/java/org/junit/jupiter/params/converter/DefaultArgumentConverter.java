@@ -289,7 +289,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 		private static URL toURL(String url) {
 			try {
-				return new URL(url);
+				return URI.create(url).toURL();
 			}
 			catch (MalformedURLException ex) {
 				throw new ArgumentConversionException(

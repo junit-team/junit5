@@ -188,4 +188,8 @@ public interface ArgumentsAccessor {
 	 */
 	List<Object> toList();
 
+	/**
+	 * Get the index of the current test invocation.
+	 */
+	int getInvocationIndex();
 }
