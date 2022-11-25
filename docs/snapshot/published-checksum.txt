@@ -160,7 +160,6 @@
 36083dfb756ddc90d9eccfbd3a620123  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java
 3637c5a4668f17c04cb84d0523635c54  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/MethodBasedCondition.java
 36ad4280d76741da4ccc330cbca0cf4a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/DefaultArgumentConverter.java
-36d3000209461ddcf256dba5921343ce  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.2.adoc
 37111e39d983e8b0f116f0ab46a28e3c  documentation/src/test/java/org/junit/api/tools/HtmlApiReportWriter.java
 37139ccbf6a2412aaad3454a9020c2fb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/DefaultParameterContext.java
 371a0db822978a30f84ba382ffb43dd2  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherFactory.java
@@ -438,7 +437,6 @@
 9802d42a5088967802a639805b85a748  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnOsCondition.java
 983ee660afeca8e30bbde57dd4614c24  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ClassSupport.java
 984f07b53ddac3960737b8e3f50aa07e  documentation/src/test/java/example/TestReporterDemo.java
-98a6f7ce71a52b302ab5381b5edce53e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/RunListenerAdapter.java
 98de92aa5d0db342342dc738333683c2  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Executions.java
 99b2183dae63a21aac23009f0290de75  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Resources.java
 99d1c7f2057de4d90a41d15750df640e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java
@@ -459,6 +457,7 @@
 9f0f322136e28212ded94fc759b0189c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventStatistics.java
 9f17bb66395e5dc1504cbad5b3909e65  junit-platform-console/src/main/java/org/junit/platform/console/options/ClasspathEntriesConverter.java
 9fb3416d0665205125ec4654bc3c2bda  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineFilterer.java
+a0060539228404efe90a73756064dbcf  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.2.adoc
 a007845ebe6158c69a9c813d2610a0d2  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectModules.java
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a088ec8cb29fea51efe7075dd3416bf3  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
@@ -776,6 +775,7 @@ f6578cc77e5ca8a6a1c27ff758eef85d  junit-platform-launcher/src/main/java/org/juni
 f66a6fd1d230a7af9f9e17175bfb6422  junit-platform-commons/src/main/java/org/junit/platform/commons/util/Preconditions.java
 f7e65676807d9103bd57da30207275e1  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
 f8561629f48c58da02a6c6322b72cd0f  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueId.java
+f86cf7d477a5094ed34994235965b932  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/RunListenerAdapter.java
 f8ff9545052f8b24e7ecf57c786fb820  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/package-info.java
 f9cebc3b1e61f67c4584abd8965e1d6c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/package-info.java
 f9df049721e7377164a0c5329e0cd360  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/Executable.java
