@@ -62,6 +62,7 @@ import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTest
 import org.junit.vintage.engine.samples.junit4.CompletelyDynamicTestCase;
 import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestCase;
 import org.junit.vintage.engine.samples.junit4.EnclosedJUnit4TestCase;
+import org.junit.vintage.engine.samples.junit4.EnclosedWithParameterizedChildrenJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredParameterizedTestCase;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
@@ -168,6 +169,39 @@ class VintageTestEngineExecutionTests {
 			event(test("failingTest"),
 				finishedWithFailure(instanceOf(AssertionError.class), message("this test should fail"))), //
 			event(container(nestedClass), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesEnclosedWithParameterizedChildrenJUnit4TestCase() {
+		Class<?> testClass = EnclosedWithParameterizedChildrenJUnit4TestCase.class;
+		String commonNestedClassPrefix = EnclosedWithParameterizedChildrenJUnit4TestCase.class.getName()
+				+ "$NestedTestCase";
+
+		execute(testClass).allEvents().debug().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container(commonNestedClassPrefix), started()), //
+			event(container("[0]"), started()), //
+			event(test("test[0]"), started()), //
+			event(test("test[0]"), finishedSuccessfully()), //
+			event(container("[0]"), finishedSuccessfully()), //
+			event(container("[1]"), started()), //
+			event(test("test[1]"), started()), //
+			event(test("test[1]"), finishedSuccessfully()), //
+			event(container("[1]"), finishedSuccessfully()), //
+			event(container(commonNestedClassPrefix), finishedSuccessfully()), //
+			event(container(commonNestedClassPrefix), started()), //
+			event(container("[0]"), started()), //
+			event(test("test[0]"), started()), //
+			event(test("test[0]"), finishedSuccessfully()), //
+			event(container("[0]"), finishedSuccessfully()), //
+			event(container("[1]"), started()), //
+			event(test("test[1]"), started()), //
+			event(test("test[1]"), finishedSuccessfully()), //
+			event(container("[1]"), finishedSuccessfully()), //
+			event(container(commonNestedClassPrefix), finishedSuccessfully()), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}

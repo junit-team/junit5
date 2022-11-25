@@ -93,7 +93,7 @@ class RunListenerAdapter extends RunListener {
 		RunnerTestDescriptor runnerTestDescriptor = testRun.getRunnerTestDescriptor();
 		// runnerTestDescriptor is reported in testRunFinished
 		if (!runnerTestDescriptor.getDescription().equals(description)) {
-			reportContainerFinished(lookupOrRegisterNextTestDescriptor(description));
+			reportContainerFinished(lookupOrRegisterCurrentTestDescriptor(description));
 		}
 	}
 
