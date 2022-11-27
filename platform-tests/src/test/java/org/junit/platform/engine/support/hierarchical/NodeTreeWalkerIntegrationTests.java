@@ -154,7 +154,7 @@ class NodeTreeWalkerIntegrationTests {
 
 	@Test
 	void coarsensGlobalLockToEngineDescriptorChild() {
-		var engineDescriptor = discover(TestCaseWithGlobalLockRequiringChild.class);
+		var engineDescriptor = discover(TestCaseWithGlobalResourceLockRequiringChild.class);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -172,35 +172,6 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()) //
 				.isEqualTo(List.of(getLock(GLOBAL_READ_WRITE)));
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
-	}
-
-	@Test
-	void addsLocksIfExtendedWithCustomExclusiveResourceProvider() {
-		var engineDescriptor = discover(CustomExclusiveResourceProviderTestCase.class);
-
-		var advisor = nodeTreeWalker.walk(engineDescriptor);
-
-		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getLock(GLOBAL_READ_WRITE)));
-		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).contains(SAME_THREAD);
-
-		assertThat(testClassDescriptor.getChildren()).hasSize(2);
-		var children = testClassDescriptor.getChildren().iterator();
-		var testMethodDescriptor = children.next();
-		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getLock(GLOBAL_READ)));
-		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
-
-		var nestedTestClassDescriptor = children.next();
-		assertThat(advisor.getResourceLock(nestedTestClassDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getLock(GLOBAL_READ)));
-		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
-
-		var nestedTestMethodDescriptor = getOnlyElement(nestedTestClassDescriptor.getChildren());
-		assertThat(advisor.getResourceLock(nestedTestMethodDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getLock(GLOBAL_READ_WRITE)));
-		assertThat(advisor.getForcedExecutionMode(nestedTestMethodDescriptor)).contains(SAME_THREAD);
 	}
 
 	private static Function<org.junit.platform.engine.support.hierarchical.ResourceLock, List<Lock>> allLocks() {
@@ -248,7 +219,7 @@ class NodeTreeWalkerIntegrationTests {
 		}
 	}
 
-	static class TestCaseWithGlobalLockRequiringChild {
+	static class TestCaseWithGlobalResourceLockRequiringChild {
 		@Nested
 		class NestedTestCaseWithResourceLock {
 			@Test
@@ -281,42 +252,148 @@ class NodeTreeWalkerIntegrationTests {
 	}
 
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
-	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTestCase {
+	static class TestCaseWithResourceReadLockOnClassAndReadLockOnTestCase {
 		@Test
 		@ResourceLock(value = "b", mode = ResourceAccessMode.READ)
 		void test() {
 		}
 	}
 
-	//	@ExtendWith(EmptyExclusiveResourceProvider.class)
-	//	static class EmptyExclusiveResourceProviderTestCase {
-	//		@Test
-	//		@ExtendWith(EmptyExclusiveResourceProvider.class)
-	//		void test() {
-	//		}
-	//
-	//		@Nested
-	//		@ExtendWith(EmptyExclusiveResourceProvider.class)
-	//		class NestedTestCaseWithResourceLock {
-	//			@Test
-	//			@ExtendWith(EmptyExclusiveResourceProvider.class)
-	//			void test() {
-	//			}
-	//		}
-	//	}
+	// TODO: Write tests pointing to all the ExcluseResourceProvider-based test cases below.
 
 	@ExtendWith(ExclusiveResourceProviderA.class)
-	static class CustomExclusiveResourceProviderTestCase {
+	// TODO: The above ExclusiveResourceProvider is to have the same behaviour as
+	//       @ResourceLock(value = "a")
+	static class TestCaseWithExclusiveResourceProvider {
 		@Test
 		@ExtendWith(ExclusiveResourceProviderB.class)
+		// TODO: The above ExclusiveResourceProvider is to have the same behaviour as
+		//       @ResourceLock(value = "b")
+		void test() {
+		}
+	}
+
+	static class TestCaseWithoutExclusiveResourceProvider {
+		@Test
+		@ExtendWith(ExclusiveResourceProviderA.class)
 		void test() {
 		}
 
 		@Nested
 		@ExtendWith(ExclusiveResourceProviderC.class)
-		class NestedTestCaseWithResourceLock {
+		// TODO: The above ExclusiveResourceProvider is to have the same behaviour as
+		//       @ResourceLock(value = "c")
+		class NestedTestCaseWithExclusiveResourceProvider {
 			@Test
-			@ExtendWith(ExclusiveResourceProviderD.class)
+			@ExtendWith(ExclusiveResourceProviderB.class)
+			void test() {
+			}
+		}
+	}
+
+	static class TestCaseWithGlobalExclusiveResourceProviderLockRequiringChild {
+		@Nested
+		class NestedTestCaseWithExclusiveResourceProvider {
+			@Test
+			@ExtendWith(ExclusiveResourceProviderWithGlobalLock.class)
+			// TODO: The above ExclusiveResourceProvider is to have the same behaviour as
+			//       @ResourceLock(org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY)
+			void test() {
+			}
+		}
+	}
+
+	@ExtendWith(ExclusiveResourceProviderWithWriteLock.class)
+	// TODO: The above ExclusiveResourceProvider is to have the same behaviour as
+	//       @ResourceLock(value = "a", mode = ResourceAccessMode.READ_WRITE)
+	static class TestCaseWithExclusiveResourceProviderWithWriteLockOnClass {
+		@Test
+		void test() {
+		}
+	}
+
+	@ExtendWith(ExclusiveResourceProviderWithReadLockA.class)
+	// TODO: The above ExclusiveResourceProvider is to have the same behaviour as
+	//       @ResourceLock(value = "a", mode = ResourceAccessMode.READ)
+	static class TestCaseWithExclusiveResourceProviderWithReadLockOnClass {
+		@Test
+		void test() {
+		}
+	}
+
+	@ExtendWith(ExclusiveResourceProviderWithReadLockA.class)
+	static class TestCaseWithExclusiveResourceProviderReadLockOnClassAndWriteLockOnTestCase {
+		@Test
+		@ExtendWith(ExclusiveResourceProviderWithWriteLock.class)
+		void test() {
+		}
+	}
+
+	@ExtendWith(ExclusiveResourceProviderWithReadLockA.class)
+	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTestCase {
+		@Test
+		@ExtendWith(ExclusiveResourceProviderWithReadLockB.class)
+		// TODO: The above ExclusiveResourceProvider is to have the same behaviour as
+		//       @ResourceLock(value = "b", mode = ResourceAccessMode.READ)
+		void test() {
+		}
+	}
+
+	@ExtendWith(ExclusiveResourceProviderA.class)
+	@ExtendWith(DefaultExclusiveResourceProvider.class)
+	// TODO: Check that DefaultExclusiveResourceProvider just forwards the locks from ExclusiveResourceProviderA.
+	static class TestCaseWithDefaultResourceProvider {
+		@Test
+		@ExtendWith(ExclusiveResourceProviderB.class)
+		@ExtendWith(DefaultExclusiveResourceProvider.class)
+		// TODO: Check that DefaultExclusiveResourceProvider just forwards the locks from ExclusiveResourceProviderB.
+		void test() {
+		}
+
+		@Nested
+		@ExtendWith(ExclusiveResourceProviderB.class)
+		@ExtendWith(DefaultExclusiveResourceProvider.class)
+		// TODO: Check that DefaultExclusiveResourceProvider just forwards the locks from ExclusiveResourceProviderC.
+		class NestedTestCaseWithExclusiveResourceProvider {
+			@Test
+			void test() {
+			}
+		}
+	}
+
+	@ExtendWith(ExclusiveResourceProviderAB.class)
+	// TODO: Above has same behaviour as @ResourceLock(value = "a") and @ResourceLock(value = "b") combined.
+	static class TestCaseWithExclusiveResourceProviderWithManyLocks {
+		@Test
+		@ExtendWith(ExclusiveResourceProviderBC.class)
+		// TODO: Above has same behaviour as @ResourceLock(value = "b") and @ResourceLock(value = "c") combined.
+		void test() {
+		}
+
+		@Nested
+		@ExtendWith(ExclusiveResourceProviderCA.class)
+		// TODO: Above has same behaviour as @ResourceLock(value = "c") and @ResourceLock(value = "a") combined.
+		class NestedTestCaseWithExclusiveResourceProvider {
+			@Test
+			void test() {
+			}
+		}
+	}
+
+	@ExtendWith(ExclusiveResourceProviderWithNoLocks.class)
+	// TODO: Above has same behaviour as not providing any @ResourceLocks
+	static class TestCaseWithExclusiveResourceProviderWithNoLocks {
+		@Test
+		@ExtendWith(ExclusiveResourceProviderWithNoLocks.class)
+		// TODO: Above has same behaviour as not providing any @ResourceLocks
+		void test() {
+		}
+
+		@Nested
+		@ExtendWith(ExclusiveResourceProviderWithNoLocks.class)
+		// TODO: Above has same behaviour as not providing any @ResourceLocks
+		class NestedTestCaseWithExclusiveResourceProvider {
+			@Test
 			void test() {
 			}
 		}
@@ -324,67 +401,18 @@ class NodeTreeWalkerIntegrationTests {
 
 	static class ExclusiveResourceProviderA implements ExclusiveResourceProvider {
 		@Override
-		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForClass(Class<?> testClass, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
-			if (testClass.equals(CustomExclusiveResourceProviderTestCase.class)) {
-				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
-						"a",
-						ResourceAccessMode.READ_WRITE
-				));
-			}
-			return Set.of();
+		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForClass(
+				Class<?> testClass, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
+			return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of("a"));
 		}
 	}
 
 	static class ExclusiveResourceProviderB implements ExclusiveResourceProvider {
 		@Override
-		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForMethod(Class<?> testClass, Method testMethod, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
-			if (testClass.equals(CustomExclusiveResourceProviderTestCase.class)) {
-				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
-						"b",
-						ResourceAccessMode.READ
-				));
-			}
-		}
-	}
-
-	static class CustomExclusiveResourceProvider implements ExclusiveResourceProvider {
-		@Override
-		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForClass(Class<?> testClass, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
-			if (testClass.equals(CustomExclusiveResourceProviderTestCase.class)) {
-				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
-						"a",
-						ResourceAccessMode.READ_WRITE
-				));
-			}
-			return Set.of();
-		}
-
-		@Override
-		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForNestedClass(Class<?> nestedClass, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
-			if (nestedClass.equals(CustomExclusiveResourceProviderTestCase.NestedTestCaseWithResourceLock.class)) {
-				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
-						"c",
-						ResourceAccessMode.READ
-				));
-			}
-			return Set.of();
-		}
-
-		@Override
-		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForMethod(Class<?> testClass, Method testMethod, Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
-			if (testClass.equals(CustomExclusiveResourceProviderTestCase.class)) {
-				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
-						"b",
-						ResourceAccessMode.READ
-				));
-			}
-			if (testClass.equals(CustomExclusiveResourceProviderTestCase.NestedTestCaseWithResourceLock.class)) {
-				return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of(
-						"c",
-						ResourceAccessMode.READ_WRITE
-				));
-			}
-			return Set.of();
+		public Set<org.junit.jupiter.api.extension.ExclusiveResource> provideExclusiveResourcesForMethod(
+				Class<?> testClass, Method testMethod,
+				Set<org.junit.jupiter.api.extension.ExclusiveResource> declaredResources) {
+			return Set.of(org.junit.jupiter.api.extension.ExclusiveResource.of("b"));
 		}
 	}
 

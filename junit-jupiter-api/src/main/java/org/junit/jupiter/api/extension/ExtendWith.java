@@ -80,6 +80,7 @@ import org.apiguardian.api.API;
  * <li>{@link ParameterResolver}</li>
  * <li>{@link TestExecutionExceptionHandler}</li>
  * <li>{@link TestTemplateInvocationContextProvider}</li>
+ * <li>{@link ExclusiveResourceProvider}</li>
  * </ul>
  *
  * @since 5.0

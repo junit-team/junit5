@@ -71,6 +71,8 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
 
+// TODO: Do we need to test ExclusiveResourceProvider here?
+
 /**
  * @since 1.3
  */
