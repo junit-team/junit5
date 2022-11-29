@@ -194,6 +194,10 @@ tasks.jar {
 	}
 }
 
+tasks.withType<ShadowJar>().configureEach {
+	outputs.doNotCacheIf("Shadow jar contains a Manifest with Build-Time") { true }
+}
+
 tasks.withType<JavaCompile>().configureEach {
 	options.encoding = "UTF-8"
 }
