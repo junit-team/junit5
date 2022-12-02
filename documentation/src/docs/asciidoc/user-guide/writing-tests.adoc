@@ -538,10 +538,18 @@ package example;
 include::{testDir}/example/ExternalCustomConditionDemo.java[tags=user_guide_external_custom_condition]
 ----
 
-NOTE: When `@EnabledIf` or `@DisabledIf` is used at class level, the condition method must
-always be `static`. Condition methods located in external classes must also be `static`.
+[NOTE]
+====
+There are several cases where a condition method would need to be `static`:
+
+- when `@EnabledIf` or `@DisabledIf` is used at class level
+- when `@EnabledIf` or `@DisabledIf` is used on a `@ParameterizedTest` or a
+  `@TestTemplate` method
+- when the condition method is located in an external class
+
 In any other case, you can use either static methods or instance methods as condition
 methods.
+====
 
 [TIP]
 ====
@@ -1666,7 +1674,7 @@ integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 | `java.math.BigDecimal`     | `"123.456e789"`                          -> `new BigDecimal("123.456e789")`
 | `java.math.BigInteger`     | `"1234567890123456789"`                  -> `new BigInteger("1234567890123456789")`
 | `java.net.URI`             | `"https://junit.org/"`                   -> `URI.create("https://junit.org/")`
-| `java.net.URL`             | `"https://junit.org/"`                   -> `new URL("https://junit.org/")`
+| `java.net.URL`             | `"https://junit.org/"`                   -> `URI.create("https://junit.org/").toURL()`
 | `java.nio.charset.Charset` | `"UTF-8"`                                -> `Charset.forName("UTF-8")`
 | `java.nio.file.Path`       | `"/path/to/file"`                        -> `Paths.get("/path/to/file")`
 | `java.time.Duration`       | `"PT3S"`                                 -> `Duration.ofSeconds(3)`
@@ -1768,6 +1776,9 @@ In such cases, an `{ArgumentsAccessor}` can be used instead of multiple paramete
 this API, you can access the provided arguments through a single argument passed to your
 test method. In addition, type conversion is supported as discussed in
 <<writing-tests-parameterized-tests-argument-conversion-implicit>>.
+
+Besides, you can retrieve the current test invocation index with
+`ArgumentsAccessor.getInvocationIndex()`.
 
 [source,java,indent=0]
 ----

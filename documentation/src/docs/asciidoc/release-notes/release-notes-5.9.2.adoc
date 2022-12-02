@@ -48,7 +48,8 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Fix reporting of `Parameterized` tests when used in combination with the `Enclosed`
+  runner.
 
 ==== Deprecations and Breaking Changes
 
