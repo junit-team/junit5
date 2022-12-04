@@ -928,6 +928,7 @@ public final class ReflectionUtils {
 	 * @param simpleMethodName a simple method name, never {@code null} or blank
 	 * @return a 2-element array of strings containing the parsed values
 	 */
+	@API(status = INTERNAL, since = "1.9")
 	public static String[] parseSimpleMethodName(String simpleMethodName) {
 		String methodName = simpleMethodName;
 		String methodParameters = "";
