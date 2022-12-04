@@ -1406,9 +1406,11 @@ include::{testDir}/example/ExternalMethodSourceDemo.java[tags=external_MethodSou
 Factory methods can declare parameters, which will be provided by registered
 implementations of the `ParameterResolver` extension API. In the following example, the
 factory method is referenced by its name since there is only one such method in the test
-class. If there are several methods with the same name, the factory method must be
-referenced by its fully qualified method name – for example,
-`@MethodSource("example.MyTests#factoryMethodWithArguments(java.lang.String)")`.
+class. If there are several local methods with the same name, parameters can also be
+provided to differentiate them – for example, `@MethodSource("factoryMethod()")` or
+`@MethodSource("factoryMethod(java.lang.String)")`. Alternatively, the factory method
+can be referenced by its fully qualified method name, e.g.
+`@MethodSource("example.MyTests#factoryMethod(java.lang.String)")`.
 
 [source,java,indent=0]
 ----

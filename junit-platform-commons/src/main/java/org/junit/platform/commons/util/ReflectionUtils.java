@@ -910,20 +910,42 @@ public final class ReflectionUtils {
 
 		String className = fullyQualifiedMethodName.substring(0, indexOfFirstHashtag);
 		String methodPart = fullyQualifiedMethodName.substring(indexOfFirstHashtag + 1);
-		String methodName = methodPart;
+		String[] parsedMethodPart = parseSimpleMethodName(methodPart);
+
+		return new String[] { className, parsedMethodPart[0], parsedMethodPart[1] };
+	}
+
+	/**
+	 * Parse the supplied method name into a 2-element {@code String[]} with
+	 * the following content.
+	 *
+	 * <ul>
+	 *   <li>index {@code 0}: the name of the method</li>
+	 *   <li>index {@code 1}: a comma-separated list of parameter types, or a
+	 *       blank string if the method does not declare any formal parameters</li>
+	 * </ul>
+	 *
+	 * @param simpleMethodName a simple method name, never {@code null} or blank
+	 * @return a 2-element array of strings containing the parsed values
+	 */
+	public static String[] parseSimpleMethodName(String simpleMethodName) {
+		String methodName = simpleMethodName;
 		String methodParameters = "";
 
-		if (methodPart.endsWith("()")) {
-			methodName = methodPart.substring(0, methodPart.length() - 2);
+		if (simpleMethodName.endsWith("()")) {
+			methodName = simpleMethodName.substring(0, simpleMethodName.length() - 2);
 		}
-		else if (methodPart.endsWith(")")) {
-			int indexOfLastOpeningParenthesis = methodPart.lastIndexOf('(');
-			if ((indexOfLastOpeningParenthesis > 0) && (indexOfLastOpeningParenthesis < methodPart.length() - 1)) {
-				methodName = methodPart.substring(0, indexOfLastOpeningParenthesis);
-				methodParameters = methodPart.substring(indexOfLastOpeningParenthesis + 1, methodPart.length() - 1);
+		else if (simpleMethodName.endsWith(")")) {
+			int indexOfLastOpeningParenthesis = simpleMethodName.lastIndexOf('(');
+			if ((indexOfLastOpeningParenthesis > 0)
+					&& (indexOfLastOpeningParenthesis < simpleMethodName.length() - 1)) {
+				methodName = simpleMethodName.substring(0, indexOfLastOpeningParenthesis);
+				methodParameters = simpleMethodName.substring(indexOfLastOpeningParenthesis + 1,
+					simpleMethodName.length() - 1);
 			}
 		}
-		return new String[] { className, methodName, methodParameters };
+
+		return new String[] { methodName, methodParameters };
 	}
 
 	/**

@@ -395,6 +395,20 @@ class MethodArgumentsProviderTests {
 		}
 
 		@Test
+		void providesArgumentsUsingSimpleNameWithoutParameter() {
+			var arguments = provideArguments("stringStreamProviderWithOrWithoutParameter()");
+
+			assertThat(arguments).containsExactly(array("foo"), array("bar"));
+		}
+
+		@Test
+		void providesArgumentsUsingSimpleNameWithParameter() {
+			var arguments = provideArguments("stringStreamProviderWithOrWithoutParameter(java.lang.String)");
+
+			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
+		}
+
+		@Test
 		void throwsExceptionWhenSeveralFactoryMethodsWithSameNameAreAvailable() {
 			var exception = assertThrows(PreconditionViolationException.class,
 				() -> provideArguments("stringStreamProviderWithOrWithoutParameter").toArray());

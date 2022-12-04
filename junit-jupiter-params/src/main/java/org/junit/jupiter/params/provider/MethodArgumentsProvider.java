@@ -28,6 +28,7 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -62,10 +63,21 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		if (StringUtils.isBlank(factoryMethodName)) {
 			factoryMethodName = testMethod.getName();
 		}
-		if (factoryMethodName.contains(".") || factoryMethodName.contains("#")) {
+		if (looksLikeAFullyQualifiedMethodName(factoryMethodName)) {
 			return getFactoryMethodByFullyQualifiedName(factoryMethodName);
 		}
 		return getFactoryMethodBySimpleName(context.getRequiredTestClass(), testMethod, factoryMethodName);
+	}
+
+	private static boolean looksLikeAFullyQualifiedMethodName(String factoryMethodName) {
+		if (factoryMethodName.contains("#")) {
+			return true;
+		}
+		if (factoryMethodName.contains(".") && factoryMethodName.contains("(")) {
+			// Excluding cases of simple method names with parameters
+			return factoryMethodName.indexOf(".") < factoryMethodName.indexOf("(");
+		}
+		return factoryMethodName.contains(".");
 	}
 
 	private Method getFactoryMethodByFullyQualifiedName(String fullyQualifiedMethodName) {
@@ -86,12 +98,30 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 	 * or {@code @TestFactory} methods with the same name.
 	 */
 	private Method getFactoryMethodBySimpleName(Class<?> testClass, Method testMethod, String factoryMethodName) {
-		Predicate<Method> isCandidate = candidate -> factoryMethodName.equals(candidate.getName())
+		List<Method> factoryMethods = findFactoryMethodCandidates(testClass, testMethod, factoryMethodName);
+		if (factoryMethods.size() == 1) {
+			return factoryMethods.get(0);
+		}
+
+		List<Method> exactlyMatchingFactoryMethods = filterFactoryMethodsWithMatchingParameters(factoryMethods,
+			factoryMethodName);
+		Preconditions.condition(exactlyMatchingFactoryMethods.size() == 1,
+			() -> format("%d factory methods named [%s] were found in class [%s]: %s", factoryMethods.size(),
+				factoryMethodName, testClass.getName(), factoryMethods));
+		return exactlyMatchingFactoryMethods.get(0);
+	}
+
+	private List<Method> findFactoryMethodCandidates(Class<?> testClass, Method testMethod, String factoryMethodName) {
+		String[] methodParts = ReflectionUtils.parseSimpleMethodName(factoryMethodName);
+		String methodName = methodParts[0];
+		Predicate<Method> isCandidate = candidate -> methodName.equals(candidate.getName())
 				&& !testMethod.equals(candidate);
 		List<Method> candidates = ReflectionUtils.findMethods(testClass, isCandidate);
+
 		Predicate<Method> isFactoryMethod = method -> isConvertibleToStream(method.getReturnType())
 				&& !isTestMethod(method);
 		List<Method> factoryMethods = candidates.stream().filter(isFactoryMethod).collect(toList());
+
 		Preconditions.condition(factoryMethods.size() > 0, () -> {
 			// If we didn't find the factory method using the isFactoryMethod Predicate, perhaps
 			// the specified factory method has an invalid return type or is a test method.
@@ -104,10 +134,20 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 			// Otherwise, report that we didn't find anything.
 			return format("Could not find factory method [%s] in class [%s]", factoryMethodName, testClass.getName());
 		});
-		Preconditions.condition(factoryMethods.size() == 1,
-			() -> format("%d factory methods named [%s] were found in class [%s]: %s", factoryMethods.size(),
-				factoryMethodName, testClass.getName(), factoryMethods));
-		return factoryMethods.get(0);
+		return factoryMethods;
+	}
+
+	private static List<Method> filterFactoryMethodsWithMatchingParameters(List<Method> factoryMethods,
+			String factoryMethodName) {
+		if (!factoryMethodName.endsWith(")")) {
+			// If parameters are not specified, no choice is made
+			return factoryMethods;
+		}
+		String[] methodParts = ReflectionUtils.parseSimpleMethodName(factoryMethodName);
+		String methodParameters = methodParts[1];
+		Predicate<Method> hasRequiredParameters = method -> methodParameters.equals(
+			ClassUtils.nullSafeToString(method.getParameterTypes()));
+		return factoryMethods.stream().filter(hasRequiredParameters).collect(toList());
 	}
 
 	private boolean isTestMethod(Method candidate) {
