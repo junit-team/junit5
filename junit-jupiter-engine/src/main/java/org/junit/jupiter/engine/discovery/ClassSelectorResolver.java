@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.discovery;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests.isTestOrTestFactoryOrTestTemplateMethod;
-import static org.junit.platform.commons.support.ReflectionSupport.findNestedClassesAsStream;
+import static org.junit.platform.commons.support.ReflectionSupport.streamFindNestedClasses;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
@@ -135,7 +135,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			return Resolution.match(Match.exact(it, () -> {
 				Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
 						.map(method -> selectMethod(testClasses, method));
-				Stream<NestedClassSelector> nestedClasses = findNestedClassesAsStream(testClass, isNestedTestClass)
+				Stream<NestedClassSelector> nestedClasses = streamFindNestedClasses(testClass, isNestedTestClass)
 						.map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
 				return Stream.concat(methods, nestedClasses).collect(toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
 			}));

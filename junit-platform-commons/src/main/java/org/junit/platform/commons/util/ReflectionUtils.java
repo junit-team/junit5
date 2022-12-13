@@ -1000,11 +1000,11 @@ public final class ReflectionUtils {
 
 	/**
 	 * @since 1.10
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInClasspathRootAsStream(URI, Predicate, Predicate)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFindAllClassesInClasspathRoot(URI, Predicate, Predicate)
 	 */
-	public static Stream<Class<?>> findAllClassesInClasspathRootAsStream(URI root, Predicate<Class<?>> classFilter,
+	public static Stream<Class<?>> streamFindAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
-		return findAllClassesInClasspathRootAsStream(root, ClassFilter.of(classNameFilter, classFilter));
+		return streamFindAllClassesInClasspathRoot(root, ClassFilter.of(classNameFilter, classFilter));
 	}
 
 	/**
@@ -1017,7 +1017,7 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.10
 	 */
-	public static Stream<Class<?>> findAllClassesInClasspathRootAsStream(URI root, ClassFilter classFilter) {
+	public static Stream<Class<?>> streamFindAllClassesInClasspathRoot(URI root, ClassFilter classFilter) {
 		return findAllClassesInClasspathRoot(root, classFilter).stream();
 	}
 
@@ -1032,11 +1032,11 @@ public final class ReflectionUtils {
 
 	/**
 	 * since 1.10
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInPackageAsStream(String, Predicate, Predicate)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFindAllClassesInPackage(String, Predicate, Predicate)
 	 */
-	public static Stream<Class<?>> findAllClassesInPackageAsStream(String basePackageName,
+	public static Stream<Class<?>> streamFindAllClassesInPackage(String basePackageName,
 			Predicate<Class<?>> classFilter, Predicate<String> classNameFilter) {
-		return findAllClassesInPackageAsStream(basePackageName, ClassFilter.of(classNameFilter, classFilter));
+		return streamFindAllClassesInPackage(basePackageName, ClassFilter.of(classNameFilter, classFilter));
 	}
 
 	/**
@@ -1049,7 +1049,7 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.10
 	 */
-	public static Stream<Class<?>> findAllClassesInPackageAsStream(String basePackageName, ClassFilter classFilter) {
+	public static Stream<Class<?>> streamFindAllClassesInPackage(String basePackageName, ClassFilter classFilter) {
 		return findAllClassesInPackage(basePackageName, classFilter).stream();
 	}
 
@@ -1065,11 +1065,11 @@ public final class ReflectionUtils {
 
 	/**
 	 * @since 1.10
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInModuleAsStream(String, Predicate, Predicate)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFindAllClassesInModule(String, Predicate, Predicate)
 	 */
-	public static Stream<Class<?>> findAllClassesInModuleAsStream(String moduleName, Predicate<Class<?>> classFilter,
+	public static Stream<Class<?>> streamFindAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
-		return findAllClassesInModuleAsStream(moduleName, ClassFilter.of(classNameFilter, classFilter));
+		return streamFindAllClassesInModule(moduleName, ClassFilter.of(classNameFilter, classFilter));
 	}
 
 	/**
@@ -1082,7 +1082,7 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.10
 	 */
-	public static Stream<Class<?>> findAllClassesInModuleAsStream(String moduleName, ClassFilter classFilter) {
+	public static Stream<Class<?>> streamFindAllClassesInModule(String moduleName, ClassFilter classFilter) {
 		return findAllClassesInModule(moduleName, classFilter).stream();
 	}
 
@@ -1101,9 +1101,9 @@ public final class ReflectionUtils {
 	/**
 	 * since 1.10
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findNestedClasses(Class, Predicate)
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findNestedClassesAsStream(Class, Predicate)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFindNestedClasses(Class, Predicate)
 	 */
-	public static Stream<Class<?>> findNestedClassesAsStream(Class<?> clazz, Predicate<Class<?>> predicate) {
+	public static Stream<Class<?>> streamFindNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
 		return findNestedClasses(clazz, predicate).stream();
 	}
 
@@ -1236,18 +1236,18 @@ public final class ReflectionUtils {
 
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findFieldsAsStream(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFindFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
-		return findFieldsAsStream(clazz, predicate, traversalMode).collect(toUnmodifiableList());
+		return streamFindFields(clazz, predicate, traversalMode).collect(toUnmodifiableList());
 	}
 
 	/**
 	 * @since 1.10
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findFieldsAsStream(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFindFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
-	public static Stream<Field> findFieldsAsStream(Class<?> clazz, Predicate<Field> predicate,
+	public static Stream<Field> streamFindFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
 
 		Preconditions.notNull(clazz, "Class must not be null");
@@ -1470,19 +1470,19 @@ public final class ReflectionUtils {
 
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethodsAsStream(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFindMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
 			HierarchyTraversalMode traversalMode) {
 
-		return findMethodsAsStream(clazz, predicate, traversalMode).collect(toUnmodifiableList());
+		return streamFindMethods(clazz, predicate, traversalMode).collect(toUnmodifiableList());
 	}
 
 	/**
 	 * @since 1.10
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethodsAsStream(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFindMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
-	public static Stream<Method> findMethodsAsStream(Class<?> clazz, Predicate<Method> predicate,
+	public static Stream<Method> streamFindMethods(Class<?> clazz, Predicate<Method> predicate,
 			HierarchyTraversalMode traversalMode) {
 
 		Preconditions.notNull(clazz, "Class must not be null");
