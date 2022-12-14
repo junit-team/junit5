@@ -134,10 +134,10 @@ public final class ReflectionSupport {
 	 * @see #findAllClassesInModule(String, Predicate, Predicate)
 	 */
 	@API(status = MAINTAINED, since = "1.10")
-	public static Stream<Class<?>> streamFindAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
+	public static Stream<Class<?>> streamAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 
-		return ReflectionUtils.streamFindAllClassesInClasspathRoot(root, classFilter, classNameFilter);
+		return ReflectionUtils.streamAllClassesInClasspathRoot(root, classFilter, classNameFilter);
 	}
 
 	/**
@@ -184,10 +184,10 @@ public final class ReflectionSupport {
 	 * @see #findAllClassesInModule(String, Predicate, Predicate)
 	 */
 	@API(status = MAINTAINED, since = "1.10")
-	public static Stream<Class<?>> streamFindAllClassesInPackage(String basePackageName,
-			Predicate<Class<?>> classFilter, Predicate<String> classNameFilter) {
+	public static Stream<Class<?>> streamAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
 
-		return ReflectionUtils.streamFindAllClassesInPackage(basePackageName, classFilter, classNameFilter);
+		return ReflectionUtils.streamAllClassesInPackage(basePackageName, classFilter, classNameFilter);
 	}
 
 	/**
@@ -233,10 +233,10 @@ public final class ReflectionSupport {
 	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
 	 */
 	@API(status = MAINTAINED, since = "1.10")
-	public static Stream<Class<?>> streamFindAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
+	public static Stream<Class<?>> streamAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 
-		return ReflectionUtils.streamFindAllClassesInModule(moduleName, classFilter, classNameFilter);
+		return ReflectionUtils.streamAllClassesInModule(moduleName, classFilter, classNameFilter);
 	}
 
 	/**
@@ -320,10 +320,10 @@ public final class ReflectionSupport {
 	 * @since 1.10
 	 */
 	@API(status = MAINTAINED, since = "1.10")
-	public static Stream<Field> streamFindFields(Class<?> clazz, Predicate<Field> predicate,
+	public static Stream<Field> streamFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
-		return ReflectionUtils.streamFindFields(clazz, predicate,
+		return ReflectionUtils.streamFields(clazz, predicate,
 			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
 
@@ -428,12 +428,12 @@ public final class ReflectionSupport {
 	 * but potentially empty
 	 */
 	@API(status = MAINTAINED, since = "1.10")
-	public static Stream<Method> streamFindMethods(Class<?> clazz, Predicate<Method> predicate,
+	public static Stream<Method> streamMethods(Class<?> clazz, Predicate<Method> predicate,
 			HierarchyTraversalMode traversalMode) {
 
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
-		return ReflectionUtils.streamFindMethods(clazz, predicate,
+		return ReflectionUtils.streamMethods(clazz, predicate,
 			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
 
@@ -485,10 +485,10 @@ public final class ReflectionSupport {
 	 * @since 1.10
 	 */
 	@API(status = MAINTAINED, since = "1.10")
-	public static Stream<Class<?>> streamFindNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate)
+	public static Stream<Class<?>> streamNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate)
 			throws JUnitException {
 
-		return ReflectionUtils.streamFindNestedClasses(clazz, predicate);
+		return ReflectionUtils.streamNestedClasses(clazz, predicate);
 	}
 
 }
