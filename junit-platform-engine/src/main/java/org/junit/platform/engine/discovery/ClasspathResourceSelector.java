@@ -12,10 +12,13 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
@@ -101,4 +104,33 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 			this.position).toString();
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return "classpath";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			String part = selector.getSchemeSpecificPart();
+
+			// Unfortunately, URI only parses the query if you have scheme://something?query
+			int queryIndex = part.indexOf('?');
+			String resourceName;
+			FilePosition position;
+			if (queryIndex == -1) {
+				resourceName = part;
+				position = null;
+			} else {
+				resourceName = part.substring(0, queryIndex);
+				position = FilePosition.fromQuery(part.substring(queryIndex + 1)).orElse(null);
+			}
+
+			return Stream.of(new ClasspathResourceSelector(resourceName, position));
+		}
+	}
 }

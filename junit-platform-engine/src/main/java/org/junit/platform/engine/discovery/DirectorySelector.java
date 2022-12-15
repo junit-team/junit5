@@ -13,11 +13,13 @@ package org.junit.platform.engine.discovery;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -107,4 +109,22 @@ public class DirectorySelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("path", this.path).toString();
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			// maybe we should merge FileSelector and DirectorySelector into a single parser, and
+			// distinguish between files and directories based on whether the path ends with a slash or not, or
+			// actually resolve the path and check whether it is a file or directory
+			return "directory";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			return Stream.of(new DirectorySelector(selector.getSchemeSpecificPart()));
+		}
+	}
 }

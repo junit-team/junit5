@@ -12,7 +12,9 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.net.URI;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -108,4 +110,19 @@ public class ClassSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("className", this.className).toString();
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return "class";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			return Stream.of(new ClassSelector(selector.getSchemeSpecificPart()));
+		}
+	}
 }

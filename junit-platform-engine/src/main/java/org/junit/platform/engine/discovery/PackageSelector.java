@@ -12,7 +12,9 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.net.URI;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -73,4 +75,19 @@ public class PackageSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("packageName", this.packageName).toString();
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return "package";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			return Stream.of(new PackageSelector(selector.getSchemeSpecificPart()));
+		}
+	}
 }
