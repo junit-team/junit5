@@ -15,8 +15,11 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
+import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -143,4 +146,20 @@ public class NestedClassSelector implements DiscoverySelector {
 				.toString();
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return "nested-class";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			List<String> parts = Arrays.asList(selector.getSchemeSpecificPart().split("/"));
+			return Stream.of(new NestedClassSelector(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
+		}
+	}
 }

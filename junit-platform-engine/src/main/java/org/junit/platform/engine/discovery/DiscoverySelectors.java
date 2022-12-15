@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -937,4 +938,8 @@ public final class DiscoverySelectors {
 		return new IterationSelector(parentSelector, iterationIndices);
 	}
 
+	public static Stream<DiscoverySelector> parse(String selector) {
+		// TODO should we hold a static reference to the parser either here or in the parser itself?
+		return new SelectorParsers().parse(selector);
+	}
 }

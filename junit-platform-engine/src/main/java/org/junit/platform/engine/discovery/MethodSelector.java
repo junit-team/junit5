@@ -15,7 +15,9 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -308,4 +310,20 @@ public class MethodSelector implements DiscoverySelector {
 		// @formatter:on
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+		}
+
+
+		@Override
+		public String getPrefix() {
+			return "method";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			return Stream.of(new MethodSelector(selector.getSchemeSpecificPart(), selector.getFragment()));
+		}
+	}
 }

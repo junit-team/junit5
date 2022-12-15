@@ -12,8 +12,14 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -82,4 +88,26 @@ public class ClasspathRootSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("classpathRoot", this.classpathRoot).toString();
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+
+		}
+		@Override
+		public String getPrefix() {
+			return "classpath-root";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			try {
+				String rootSelector = URLDecoder.decode(selector.getSchemeSpecificPart(), "UTF-8");
+				return DiscoverySelectors.selectClasspathRoots(Collections.singleton(Paths.get(rootSelector)))
+						.stream()
+						.map(DiscoverySelector.class::cast);
+			} catch (UnsupportedEncodingException e) {
+				throw new IllegalArgumentException("Could not decode classpath root selector: " + selector, e);
+			}
+		}
+	}
 }

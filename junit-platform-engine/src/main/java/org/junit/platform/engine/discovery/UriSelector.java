@@ -12,8 +12,11 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -77,4 +80,24 @@ public class UriSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("uri", this.uri).toString();
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return "uri";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			try {
+				String uri = URLDecoder.decode(selector.getSchemeSpecificPart(), "UTF-8");
+				return Stream.of(new UriSelector(URI.create(uri)));
+			} catch (UnsupportedEncodingException ex) {
+				throw new IllegalArgumentException("Could not parse uri selector: " + selector, ex);
+			}
+		}
+	}
 }

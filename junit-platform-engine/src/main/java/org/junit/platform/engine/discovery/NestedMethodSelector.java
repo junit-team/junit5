@@ -15,8 +15,11 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -239,4 +242,20 @@ public class NestedMethodSelector implements DiscoverySelector {
 				.toString();
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return "nested-method";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			List<String> parts = Arrays.asList(selector.getSchemeSpecificPart().split("/"));
+			return Stream.of(new NestedMethodSelector(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1), selector.getFragment()));
+		}
+	}
 }

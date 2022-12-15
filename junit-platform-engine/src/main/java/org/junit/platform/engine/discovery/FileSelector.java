@@ -13,12 +13,14 @@ package org.junit.platform.engine.discovery;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -117,4 +119,29 @@ public class FileSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("path", this.path).append("position", this.position).toString();
 	}
 
+	public static class Parser implements SelectorParser {
+
+		public Parser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return "file";
+		}
+
+		@Override
+		public Stream<DiscoverySelector> parse(URI selector) {
+			// Problem: the real file url, e.g. `file:///` does not support relative paths.
+			// if we use just the schemeSpecificPart and omit the `///` we can support `file:relative/path` and `file:/absolute/path`
+			// however it won't parse the Query part of the URI anymore, which is used to specify the line and column.
+			// and it won't be a standard file URI (https://en.wikipedia.org/wiki/File_URI_scheme) anymore.
+			// For now, we misuse the host part of the uri, so when it is set, we treat it as relative path and when it is not set, we treat it as absolute path.
+
+			String path = selector.getHost() == null ? selector.getPath() : selector.getHost() + selector.getPath();
+
+			return FilePosition.fromQuery(selector.getQuery())
+					.map(filePosition -> Stream.<DiscoverySelector>of(new FileSelector(path, filePosition)))
+					.orElseGet(() -> Stream.of(new FileSelector(path, null)));
+		}
+	}
 }
