@@ -159,7 +159,7 @@ public class NestedClassSelector implements DiscoverySelector {
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
 			List<String> parts = Arrays.asList(selector.getSchemeSpecificPart().split("/"));
-			return Stream.of(new NestedClassSelector(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
+			return Stream.of(DiscoverySelectors.selectNestedClass(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
 		}
 	}
 }

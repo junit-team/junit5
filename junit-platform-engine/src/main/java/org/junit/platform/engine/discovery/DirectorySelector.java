@@ -124,7 +124,7 @@ public class DirectorySelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			return Stream.of(new DirectorySelector(selector.getSchemeSpecificPart()));
+			return Stream.of(DiscoverySelectors.selectDirectory(selector.getSchemeSpecificPart()));
 		}
 	}
 }

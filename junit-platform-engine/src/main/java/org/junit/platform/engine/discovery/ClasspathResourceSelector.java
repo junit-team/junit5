@@ -130,7 +130,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 				position = FilePosition.fromQuery(part.substring(queryIndex + 1)).orElse(null);
 			}
 
-			return Stream.of(new ClasspathResourceSelector(resourceName, position));
+			return Stream.of(DiscoverySelectors.selectClasspathResource(resourceName, position));
 		}
 	}
 }

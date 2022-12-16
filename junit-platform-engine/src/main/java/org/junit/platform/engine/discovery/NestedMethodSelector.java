@@ -255,7 +255,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
 			List<String> parts = Arrays.asList(selector.getSchemeSpecificPart().split("/"));
-			return Stream.of(new NestedMethodSelector(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1), selector.getFragment()));
+			return Stream.of(DiscoverySelectors.selectNestedMethod(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1), selector.getFragment()));
 		}
 	}
 }

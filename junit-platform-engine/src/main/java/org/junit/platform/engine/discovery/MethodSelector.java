@@ -323,7 +323,7 @@ public class MethodSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			return Stream.of(new MethodSelector(selector.getSchemeSpecificPart(), selector.getFragment()));
+			return Stream.of(DiscoverySelectors.selectMethod(selector.getSchemeSpecificPart(), selector.getFragment()));
 		}
 	}
 }

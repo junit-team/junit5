@@ -111,7 +111,7 @@ public class IterationSelector implements DiscoverySelector {
 			try {
 				int[] iterationIndices = Arrays.stream(selector.getFragment().split(",")).mapToInt(Integer::parseInt).toArray();
 				String parentSelector = URLDecoder.decode(selector.getSchemeSpecificPart(), "UTF-8");
-				return DiscoverySelectors.parse(parentSelector).map(parent -> new IterationSelector(parent, iterationIndices));
+				return DiscoverySelectors.parse(parentSelector).map(parent -> DiscoverySelectors.selectIteration(parent, iterationIndices));
 			} catch (UnsupportedEncodingException e) {
 				throw new IllegalArgumentException("Could not decode iteration selector: " + selector, e);
 			}

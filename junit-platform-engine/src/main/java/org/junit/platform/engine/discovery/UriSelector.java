@@ -94,7 +94,7 @@ public class UriSelector implements DiscoverySelector {
 		public Stream<DiscoverySelector> parse(URI selector) {
 			try {
 				String uri = URLDecoder.decode(selector.getSchemeSpecificPart(), "UTF-8");
-				return Stream.of(new UriSelector(URI.create(uri)));
+				return Stream.of(DiscoverySelectors.selectUri(uri));
 			} catch (UnsupportedEncodingException ex) {
 				throw new IllegalArgumentException("Could not parse uri selector: " + selector, ex);
 			}

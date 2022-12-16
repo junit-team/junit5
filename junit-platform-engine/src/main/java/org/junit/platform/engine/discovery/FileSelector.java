@@ -140,8 +140,8 @@ public class FileSelector implements DiscoverySelector {
 			String path = selector.getHost() == null ? selector.getPath() : selector.getHost() + selector.getPath();
 
 			return FilePosition.fromQuery(selector.getQuery())
-					.map(filePosition -> Stream.<DiscoverySelector>of(new FileSelector(path, filePosition)))
-					.orElseGet(() -> Stream.of(new FileSelector(path, null)));
+					.map(filePosition -> Stream.<DiscoverySelector>of(DiscoverySelectors.selectFile(path, filePosition)))
+					.orElseGet(() -> Stream.of(DiscoverySelectors.selectFile(path)));
 		}
 	}
 }
