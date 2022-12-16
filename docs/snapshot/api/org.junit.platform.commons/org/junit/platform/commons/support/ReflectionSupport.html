@@ -212,6 +212,56 @@ loadScripts(document, 'script');</script>
  the constructor whose argument list matches the types of the supplied
  arguments.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)" class="member-name-link">streamAllClassesInClasspathRoot</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;root,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;classNameFilter)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Find all <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">classes</a> in the supplied classpath <code>root</code>
+ that match the specified <code>classFilter</code> and <code>classNameFilter</code>
+ predicates.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)" class="member-name-link">streamAllClassesInModule</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;moduleName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;classNameFilter)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Find all <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">classes</a> in the supplied <code>moduleName</code>
+ that match the specified <code>classFilter</code> and <code>classNameFilter</code>
+ predicates.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)" class="member-name-link">streamAllClassesInPackage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;basePackageName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;classNameFilter)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Find all <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">classes</a> in the supplied <code>basePackageName</code>
+ that match the specified <code>classFilter</code> and <code>classNameFilter</code>
+ predicates.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link">Field</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamFields(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)" class="member-name-link">streamFields</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link">Field</a>&gt;&nbsp;predicate,
+ <a href="HierarchyTraversalMode.html" title="enum class in org.junit.platform.commons.support">HierarchyTraversalMode</a>&nbsp;traversalMode)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Find all <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link">fields</a> of the supplied class or interface
+ that match the specified <code>predicate</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamMethods(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)" class="member-name-link">streamMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&gt;&nbsp;predicate,
+ <a href="HierarchyTraversalMode.html" title="enum class in org.junit.platform.commons.support">HierarchyTraversalMode</a>&nbsp;traversalMode)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Find all distinct <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">methods</a> of the supplied class or
+ interface that match the specified <code>predicate</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamNestedClasses(java.lang.Class,java.util.function.Predicate)" class="member-name-link">streamNestedClasses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;predicate)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Find all nested classes within the supplied class, or inherited by the
+ supplied class, that conform to the supplied predicate.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#tryToLoadClass(java.lang.String)" class="member-name-link">tryToLoadClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -326,6 +376,41 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="streamAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)">
+<h3>streamAllClassesInClasspathRoot</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#MAINTAINED" title="class or interface in org.apiguardian.api" class="external-link">MAINTAINED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">streamAllClassesInClasspathRoot</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;root,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;classNameFilter)</span></div>
+<div class="block">Find all <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">classes</a> in the supplied classpath <code>root</code>
+ that match the specified <code>classFilter</code> and <code>classNameFilter</code>
+ predicates.
+
+ <p>The classpath scanning algorithm searches recursively in subpackages
+ beginning with the root of the classpath.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>root</code> - the URI for the classpath root in which to scan; never
+ <code>null</code></dd>
+<dd><code>classFilter</code> - the class type filter; never <code>null</code></dd>
+<dd><code>classNameFilter</code> - the class name filter; never <code>null</code></dd>
+<dt>Returns:</dt>
+<dd>a stream of all such classes found; never <code>null</code>
+ but potentially empty</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="#findAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInPackage(String, Predicate, Predicate)</code></a></li>
+<li><a href="#findAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInModule(String, Predicate, Predicate)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="findAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)">
 <h3>findAllClassesInPackage</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">findAllClassesInPackage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;basePackageName,
@@ -347,6 +432,42 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>an immutable list of all such classes found; never <code>null</code>
  but potentially empty</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="#findAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInClasspathRoot(URI, Predicate, Predicate)</code></a></li>
+<li><a href="#findAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInModule(String, Predicate, Predicate)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="streamAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)">
+<h3>streamAllClassesInPackage</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#MAINTAINED" title="class or interface in org.apiguardian.api" class="external-link">MAINTAINED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">streamAllClassesInPackage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;basePackageName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;classNameFilter)</span></div>
+<div class="block">Find all <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">classes</a> in the supplied <code>basePackageName</code>
+ that match the specified <code>classFilter</code> and <code>classNameFilter</code>
+ predicates.
+
+ <p>The classpath scanning algorithm searches recursively in subpackages
+ beginning within the supplied base package.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>basePackageName</code> - the name of the base package in which to start
+ scanning; must not be <code>null</code> and must be valid in terms of Java
+ syntax</dd>
+<dd><code>classFilter</code> - the class type filter; never <code>null</code></dd>
+<dd><code>classNameFilter</code> - the class name filter; never <code>null</code></dd>
+<dt>Returns:</dt>
+<dd>a stream of all such classes found; never <code>null</code>
+ but potentially empty</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list-long">
@@ -380,6 +501,41 @@ loadScripts(document, 'script');</script>
  but potentially empty</dd>
 <dt>Since:</dt>
 <dd>1.1.1</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="#findAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInClasspathRoot(URI, Predicate, Predicate)</code></a></li>
+<li><a href="#findAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInPackage(String, Predicate, Predicate)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="streamAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)">
+<h3>streamAllClassesInModule</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#MAINTAINED" title="class or interface in org.apiguardian.api" class="external-link">MAINTAINED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">streamAllClassesInModule</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;moduleName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;classNameFilter)</span></div>
+<div class="block">Find all <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">classes</a> in the supplied <code>moduleName</code>
+ that match the specified <code>classFilter</code> and <code>classNameFilter</code>
+ predicates.
+
+ <p>The module-path scanning algorithm searches recursively in all
+ packages contained in the module.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>moduleName</code> - the name of the module to scan; never <code>null</code> or
+ <em>empty</em></dd>
+<dd><code>classFilter</code> - the class type filter; never <code>null</code></dd>
+<dd><code>classNameFilter</code> - the class name filter; never <code>null</code></dd>
+<dt>Returns:</dt>
+<dd>a stream of all such classes found; never <code>null</code>
+ but potentially empty</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list-long">
@@ -471,6 +627,35 @@ loadScripts(document, 'script');</script>
  but potentially empty</dd>
 <dt>Since:</dt>
 <dd>1.4</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="streamFields(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)">
+<h3>streamFields</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#MAINTAINED" title="class or interface in org.apiguardian.api" class="external-link">MAINTAINED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link">Field</a>&gt;</span>&nbsp;<span class="element-name">streamFields</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link">Field</a>&gt;&nbsp;predicate,
+ <a href="HierarchyTraversalMode.html" title="enum class in org.junit.platform.commons.support">HierarchyTraversalMode</a>&nbsp;traversalMode)</span></div>
+<div class="block">Find all <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link">fields</a> of the supplied class or interface
+ that match the specified <code>predicate</code>.
+
+ <p>Fields declared in the same class or interface will be ordered using
+ an algorithm that is deterministic but intentionally nonobvious.
+
+ <p>The results will not contain fields that are <em>hidden</em> or
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Field.html#isSynthetic()" title="class or interface in java.lang.reflect" class="external-link">synthetic</a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>clazz</code> - the class or interface in which to find the fields; never <code>null</code></dd>
+<dd><code>predicate</code> - the field filter; never <code>null</code></dd>
+<dd><code>traversalMode</code> - the hierarchy traversal mode; never <code>null</code></dd>
+<dt>Returns:</dt>
+<dd>a stream of all such fields found; never <code>null</code>
+ but potentially empty</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
 </dl>
 </section>
 </li>
@@ -582,6 +767,36 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="streamMethods(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)">
+<h3>streamMethods</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#MAINTAINED" title="class or interface in org.apiguardian.api" class="external-link">MAINTAINED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&gt;</span>&nbsp;<span class="element-name">streamMethods</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&gt;&nbsp;predicate,
+ <a href="HierarchyTraversalMode.html" title="enum class in org.junit.platform.commons.support">HierarchyTraversalMode</a>&nbsp;traversalMode)</span></div>
+<div class="block">Find all distinct <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">methods</a> of the supplied class or
+ interface that match the specified <code>predicate</code>.
+
+ <p>The results will not contain instance methods that are <em>overridden</em>
+ or <code>static</code> methods that are <em>hidden</em>.
+
+ <p>If you're are looking for methods annotated with a certain annotation
+ type, consider using
+ <a href="AnnotationSupport.html#findAnnotatedMethods(java.lang.Class,java.lang.Class,org.junit.platform.commons.support.HierarchyTraversalMode)"><code>AnnotationSupport.findAnnotatedMethods(Class, Class, HierarchyTraversalMode)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>clazz</code> - the class or interface in which to find the methods; never <code>null</code></dd>
+<dd><code>predicate</code> - the method filter; never <code>null</code></dd>
+<dd><code>traversalMode</code> - the hierarchy traversal mode; never <code>null</code></dd>
+<dt>Returns:</dt>
+<dd>a stream of all such methods found; never <code>null</code></dd>
+<dt>Since:</dt>
+<dd>1.10
+ but potentially empty</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="findNestedClasses(java.lang.Class,java.util.function.Predicate)">
 <h3>findNestedClasses</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">findNestedClasses</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
@@ -608,6 +823,40 @@ loadScripts(document, 'script');</script>
  but potentially empty</dd>
 <dt>Throws:</dt>
 <dd><code><a href="../JUnitException.html" title="class in org.junit.platform.commons">JUnitException</a></code> - if a cycle is detected within an inner class hierarchy</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="streamNestedClasses(java.lang.Class,java.util.function.Predicate)">
+<h3>streamNestedClasses</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#MAINTAINED" title="class or interface in org.apiguardian.api" class="external-link">MAINTAINED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">streamNestedClasses</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;predicate)</span>
+                                            throws <span class="exceptions"><a href="../JUnitException.html" title="class in org.junit.platform.commons">JUnitException</a></span></div>
+<div class="block">Find all nested classes within the supplied class, or inherited by the
+ supplied class, that conform to the supplied predicate.
+
+ <p>This method does <strong>not</strong> search for nested classes
+ recursively.
+
+ <p>As of JUnit Platform 1.6, this method detects cycles in <em>inner</em>
+ class hierarchies &mdash; from the supplied class up to the outermost
+ enclosing class &mdash; and throws a <a href="../JUnitException.html" title="class in org.junit.platform.commons"><code>JUnitException</code></a> if such a cycle
+ is detected. Cycles within inner class hierarchies <em>below</em> the
+ supplied class are not detected by this method.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>clazz</code> - the class to be searched; never <code>null</code></dd>
+<dd><code>predicate</code> - the predicate against which the list of nested classes is
+ checked; never <code>null</code></dd>
+<dt>Returns:</dt>
+<dd>a stream of all such classes found; never <code>null</code>
+ but potentially empty</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../JUnitException.html" title="class in org.junit.platform.commons">JUnitException</a></code> - if a cycle is detected within an inner class hierarchy</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
 </dl>
 </section>
 </li>
