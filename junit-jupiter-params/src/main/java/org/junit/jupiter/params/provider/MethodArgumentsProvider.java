@@ -66,7 +66,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		if (looksLikeAFullyQualifiedMethodName(factoryMethodName)) {
 			return getFactoryMethodByFullyQualifiedName(factoryMethodName);
 		}
-		return getFactoryMethodBySimpleName(context.getRequiredTestClass(), testMethod, factoryMethodName);
+		return getFactoryMethodBySimpleOrQualifiedName(context.getRequiredTestClass(), testMethod, factoryMethodName);
 	}
 
 	private static boolean looksLikeAFullyQualifiedMethodName(String factoryMethodName) {
@@ -91,31 +91,33 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 				methodParameters, className)));
 	}
 
-	/**
-	 * Find all methods in the given {@code testClass} with the desired {@code factoryMethodSimpleName}
-	 * which have return types that can be converted to a {@link Stream}, ignoring the
-	 * {@code testMethod} itself as well as any {@code @Test}, {@code @TestTemplate},
-	 * or {@code @TestFactory} methods with the same name.
-	 */
-	private Method getFactoryMethodBySimpleName(Class<?> testClass, Method testMethod, String factoryMethodSimpleName) {
-		String[] factoryMethodParts = ReflectionUtils.parseSimpleMethodName(factoryMethodSimpleName);
-		String factoryMethodName = factoryMethodParts[0];
-		String factoryMethodParameters = factoryMethodParts[1];
+	private Method getFactoryMethodBySimpleOrQualifiedName(Class<?> testClass, Method testMethod,
+			String simpleOrQualifiedMethodName) {
+		String[] methodParts = ReflectionUtils.parseQualifiedMethodName(simpleOrQualifiedMethodName);
+		String methodSimpleName = methodParts[0];
+		String methodParameters = methodParts[1];
 
-		List<Method> factoryMethods = findFactoryMethodCandidates(testClass, testMethod, factoryMethodName);
+		List<Method> factoryMethods = findFactoryMethodsBySimpleName(testClass, testMethod, methodSimpleName);
 		if (factoryMethods.size() == 1) {
 			return factoryMethods.get(0);
 		}
 
-		List<Method> exactlyMatchingFactoryMethods = filterFactoryMethodsWithMatchingParameters(factoryMethods,
-			factoryMethodSimpleName, factoryMethodParameters);
-		Preconditions.condition(exactlyMatchingFactoryMethods.size() == 1,
+		List<Method> exactMatches = filterFactoryMethodsWithMatchingParameters(factoryMethods,
+			simpleOrQualifiedMethodName, methodParameters);
+		Preconditions.condition(exactMatches.size() == 1,
 			() -> format("%d factory methods named [%s] were found in class [%s]: %s", factoryMethods.size(),
-				factoryMethodSimpleName, testClass.getName(), factoryMethods));
-		return exactlyMatchingFactoryMethods.get(0);
+				simpleOrQualifiedMethodName, testClass.getName(), factoryMethods));
+		return exactMatches.get(0);
 	}
 
-	private List<Method> findFactoryMethodCandidates(Class<?> testClass, Method testMethod, String factoryMethodName) {
+	/**
+	 * Find all methods in the given {@code testClass} with the desired {@code factoryMethodName}
+	 * which have return types that can be converted to a {@link Stream}, ignoring the
+	 * {@code testMethod} itself as well as any {@code @Test}, {@code @TestTemplate},
+	 * or {@code @TestFactory} methods with the same name.
+	 */
+	private List<Method> findFactoryMethodsBySimpleName(Class<?> testClass, Method testMethod,
+			String factoryMethodName) {
 		Predicate<Method> isCandidate = candidate -> factoryMethodName.equals(candidate.getName())
 				&& !testMethod.equals(candidate);
 		List<Method> candidates = ReflectionUtils.findMethods(testClass, isCandidate);

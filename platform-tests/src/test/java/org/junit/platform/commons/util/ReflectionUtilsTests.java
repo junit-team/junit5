@@ -705,19 +705,19 @@ class ReflectionUtilsTests {
 	@ParameterizedTest
 	@ValueSource(strings = { "method", "method()" })
 	void parseSimpleMethodNameForMethodWithoutParameters(String methodName) {
-		assertThat(ReflectionUtils.parseSimpleMethodName(methodName))//
+		assertThat(ReflectionUtils.parseQualifiedMethodName(methodName))//
 				.containsExactly("method", "");
 	}
 
 	@Test
 	void parseSimpleMethodNameForMethodWithSingleParameter() {
-		assertThat(ReflectionUtils.parseSimpleMethodName("method(java.lang.Object)"))//
+		assertThat(ReflectionUtils.parseQualifiedMethodName("method(java.lang.Object)"))//
 				.containsExactly("method", "java.lang.Object");
 	}
 
 	@Test
 	void parseSimpleMethodNameForMethodWithMultipleParameters() {
-		assertThat(ReflectionUtils.parseSimpleMethodName("method(int, java.lang.Object)"))//
+		assertThat(ReflectionUtils.parseQualifiedMethodName("method(int, java.lang.Object)"))//
 				.containsExactly("method", "int, java.lang.Object");
 	}
 

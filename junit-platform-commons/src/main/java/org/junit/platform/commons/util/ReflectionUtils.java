@@ -909,10 +909,10 @@ public final class ReflectionUtils {
 					+ "and then the method name, optionally followed by a parameter list enclosed in parentheses.");
 
 		String className = fullyQualifiedMethodName.substring(0, indexOfFirstHashtag);
-		String methodPart = fullyQualifiedMethodName.substring(indexOfFirstHashtag + 1);
-		String[] parsedMethodPart = parseSimpleMethodName(methodPart);
+		String qualifiedMethodName = fullyQualifiedMethodName.substring(indexOfFirstHashtag + 1);
+		String[] methodPart = parseQualifiedMethodName(qualifiedMethodName);
 
-		return new String[] { className, parsedMethodPart[0], parsedMethodPart[1] };
+		return new String[] { className, methodPart[0], methodPart[1] };
 	}
 
 	/**
@@ -925,24 +925,24 @@ public final class ReflectionUtils {
 	 *       blank string if the method does not declare any formal parameters</li>
 	 * </ul>
 	 *
-	 * @param simpleMethodName a simple method name, never {@code null} or blank
+	 * @param qualifiedMethodName a qualified method name, never {@code null} or blank
 	 * @return a 2-element array of strings containing the parsed values
 	 */
 	@API(status = INTERNAL, since = "1.9")
-	public static String[] parseSimpleMethodName(String simpleMethodName) {
-		String methodName = simpleMethodName;
+	public static String[] parseQualifiedMethodName(String qualifiedMethodName) {
+		String methodName = qualifiedMethodName;
 		String methodParameters = "";
 
-		if (simpleMethodName.endsWith("()")) {
-			methodName = simpleMethodName.substring(0, simpleMethodName.length() - 2);
+		if (qualifiedMethodName.endsWith("()")) {
+			methodName = qualifiedMethodName.substring(0, qualifiedMethodName.length() - 2);
 		}
-		else if (simpleMethodName.endsWith(")")) {
-			int indexOfLastOpeningParenthesis = simpleMethodName.lastIndexOf('(');
+		else if (qualifiedMethodName.endsWith(")")) {
+			int indexOfLastOpeningParenthesis = qualifiedMethodName.lastIndexOf('(');
 			if ((indexOfLastOpeningParenthesis > 0)
-					&& (indexOfLastOpeningParenthesis < simpleMethodName.length() - 1)) {
-				methodName = simpleMethodName.substring(0, indexOfLastOpeningParenthesis);
-				methodParameters = simpleMethodName.substring(indexOfLastOpeningParenthesis + 1,
-					simpleMethodName.length() - 1);
+					&& (indexOfLastOpeningParenthesis < qualifiedMethodName.length() - 1)) {
+				methodName = qualifiedMethodName.substring(0, indexOfLastOpeningParenthesis);
+				methodParameters = qualifiedMethodName.substring(indexOfLastOpeningParenthesis + 1,
+					qualifiedMethodName.length() - 1);
 			}
 		}
 
