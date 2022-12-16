@@ -403,8 +403,8 @@ loadScripts(document, 'script');</script>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list-long">
-<li><a href="#findAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInPackage(String, Predicate, Predicate)</code></a></li>
-<li><a href="#findAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInModule(String, Predicate, Predicate)</code></a></li>
+<li><a href="#streamAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>streamAllClassesInPackage(String, Predicate, Predicate)</code></a></li>
+<li><a href="#streamAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>streamAllClassesInModule(String, Predicate, Predicate)</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -471,8 +471,8 @@ loadScripts(document, 'script');</script>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list-long">
-<li><a href="#findAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInClasspathRoot(URI, Predicate, Predicate)</code></a></li>
-<li><a href="#findAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInModule(String, Predicate, Predicate)</code></a></li>
+<li><a href="#streamAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)"><code>streamAllClassesInClasspathRoot(URI, Predicate, Predicate)</code></a></li>
+<li><a href="#streamAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>streamAllClassesInModule(String, Predicate, Predicate)</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -539,8 +539,8 @@ loadScripts(document, 'script');</script>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list-long">
-<li><a href="#findAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInClasspathRoot(URI, Predicate, Predicate)</code></a></li>
-<li><a href="#findAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>findAllClassesInPackage(String, Predicate, Predicate)</code></a></li>
+<li><a href="#streamAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)"><code>streamAllClassesInClasspathRoot(URI, Predicate, Predicate)</code></a></li>
+<li><a href="#streamAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>streamAllClassesInPackage(String, Predicate, Predicate)</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -752,7 +752,7 @@ loadScripts(document, 'script');</script>
  <p>The results will not contain instance methods that are <em>overridden</em>
  or <code>static</code> methods that are <em>hidden</em>.
 
- <p>If you're are looking for methods annotated with a certain annotation
+ <p>If you are looking for methods annotated with a certain annotation
  type, consider using
  <a href="AnnotationSupport.html#findAnnotatedMethods(java.lang.Class,java.lang.Class,org.junit.platform.commons.support.HierarchyTraversalMode)"><code>AnnotationSupport.findAnnotatedMethods(Class, Class, HierarchyTraversalMode)</code></a>.</div>
 <dl class="notes">
@@ -780,7 +780,7 @@ loadScripts(document, 'script');</script>
  <p>The results will not contain instance methods that are <em>overridden</em>
  or <code>static</code> methods that are <em>hidden</em>.
 
- <p>If you're are looking for methods annotated with a certain annotation
+ <p>If you are looking for methods annotated with a certain annotation
  type, consider using
  <a href="AnnotationSupport.html#findAnnotatedMethods(java.lang.Class,java.lang.Class,org.junit.platform.commons.support.HierarchyTraversalMode)"><code>AnnotationSupport.findAnnotatedMethods(Class, Class, HierarchyTraversalMode)</code></a>.</div>
 <dl class="notes">
@@ -789,10 +789,10 @@ loadScripts(document, 'script');</script>
 <dd><code>predicate</code> - the method filter; never <code>null</code></dd>
 <dd><code>traversalMode</code> - the hierarchy traversal mode; never <code>null</code></dd>
 <dt>Returns:</dt>
-<dd>a stream of all such methods found; never <code>null</code></dd>
-<dt>Since:</dt>
-<dd>1.10
+<dd>a stream of all such methods found; never <code>null</code>
  but potentially empty</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
 </dl>
 </section>
 </li>
