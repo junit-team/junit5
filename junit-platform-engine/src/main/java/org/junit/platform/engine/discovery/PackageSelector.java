@@ -87,7 +87,7 @@ public class PackageSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			return Stream.of(new PackageSelector(selector.getSchemeSpecificPart()));
+			return Stream.of(DiscoverySelectors.selectPackage(selector.getSchemeSpecificPart()));
 		}
 	}
 }

@@ -88,7 +88,7 @@ public class UniqueIdSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			return Stream.of(new UniqueIdSelector(UniqueId.parse(selector.getSchemeSpecificPart())));
+			return Stream.of(DiscoverySelectors.selectUniqueId(selector.getSchemeSpecificPart()));
 		}
 	}
 }

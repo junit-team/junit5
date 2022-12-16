@@ -87,7 +87,7 @@ public class ModuleSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			return Stream.of(new ModuleSelector(selector.getSchemeSpecificPart()));
+			return Stream.of(DiscoverySelectors.selectModule(selector.getSchemeSpecificPart()));
 		}
 	}
 }
