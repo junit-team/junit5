@@ -50,8 +50,8 @@ import org.junit.platform.engine.DiscoverySelector;
 @API(status = STABLE, since = "1.6")
 public class NestedClassSelector implements DiscoverySelector {
 
-	private List<ClassSelector> enclosingClassSelectors;
-	private ClassSelector nestedClassSelector;
+	private final List<ClassSelector> enclosingClassSelectors;
+	private final ClassSelector nestedClassSelector;
 
 	NestedClassSelector(List<String> enclosingClassNames, String nestedClassName) {
 		this.enclosingClassSelectors = enclosingClassNames.stream().map(ClassSelector::new).collect(toList());
