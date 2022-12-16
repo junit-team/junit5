@@ -130,8 +130,8 @@ public final class ReflectionSupport {
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
 	 * @since 1.10
-	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
-	 * @see #findAllClassesInModule(String, Predicate, Predicate)
+	 * @see #streamAllClassesInPackage(String, Predicate, Predicate)
+	 * @see #streamAllClassesInModule(String, Predicate, Predicate)
 	 */
 	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Class<?>> streamAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
@@ -180,8 +180,8 @@ public final class ReflectionSupport {
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
 	 * @since 1.10
-	 * @see #findAllClassesInClasspathRoot(URI, Predicate, Predicate)
-	 * @see #findAllClassesInModule(String, Predicate, Predicate)
+	 * @see #streamAllClassesInClasspathRoot(URI, Predicate, Predicate)
+	 * @see #streamAllClassesInModule(String, Predicate, Predicate)
 	 */
 	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Class<?>> streamAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
@@ -229,8 +229,8 @@ public final class ReflectionSupport {
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
 	 * @since 1.10
-	 * @see #findAllClassesInClasspathRoot(URI, Predicate, Predicate)
-	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
+	 * @see #streamAllClassesInClasspathRoot(URI, Predicate, Predicate)
+	 * @see #streamAllClassesInPackage(String, Predicate, Predicate)
 	 */
 	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Class<?>> streamAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
@@ -322,7 +322,9 @@ public final class ReflectionSupport {
 	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Field> streamFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
+
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+
 		return ReflectionUtils.streamFields(clazz, predicate,
 			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
@@ -390,7 +392,7 @@ public final class ReflectionSupport {
 	 * <p>The results will not contain instance methods that are <em>overridden</em>
 	 * or {@code static} methods that are <em>hidden</em>.
 	 *
-	 * <p>If you're are looking for methods annotated with a certain annotation
+	 * <p>If you are looking for methods annotated with a certain annotation
 	 * type, consider using
 	 * {@link AnnotationSupport#findAnnotatedMethods(Class, Class, HierarchyTraversalMode)}.
 	 *
@@ -416,7 +418,7 @@ public final class ReflectionSupport {
 	 * <p>The results will not contain instance methods that are <em>overridden</em>
 	 * or {@code static} methods that are <em>hidden</em>.
 	 *
-	 * <p>If you're are looking for methods annotated with a certain annotation
+	 * <p>If you are looking for methods annotated with a certain annotation
 	 * type, consider using
 	 * {@link AnnotationSupport#findAnnotatedMethods(Class, Class, HierarchyTraversalMode)}.
 	 *
@@ -424,8 +426,8 @@ public final class ReflectionSupport {
 	 * @param predicate the method filter; never {@code null}
 	 * @param traversalMode the hierarchy traversal mode; never {@code null}
 	 * @return a stream of all such methods found; never {@code null}
-	 * @since 1.10
 	 * but potentially empty
+	 * @since 1.10
 	 */
 	@API(status = MAINTAINED, since = "1.10")
 	public static Stream<Method> streamMethods(Class<?> clazz, Predicate<Method> predicate,

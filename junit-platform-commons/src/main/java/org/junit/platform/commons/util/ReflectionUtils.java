@@ -1100,7 +1100,6 @@ public final class ReflectionUtils {
 
 	/**
 	 * since 1.10
-	 * @see org.junit.platform.commons.support.ReflectionSupport#findNestedClasses(Class, Predicate)
 	 * @see org.junit.platform.commons.support.ReflectionSupport#streamNestedClasses(Class, Predicate)
 	 */
 	public static Stream<Class<?>> streamNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
@@ -1236,7 +1235,6 @@ public final class ReflectionUtils {
 
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
-	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
@@ -1470,7 +1468,6 @@ public final class ReflectionUtils {
 
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
-	 * @see org.junit.platform.commons.support.ReflectionSupport#streamMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
 			HierarchyTraversalMode traversalMode) {
