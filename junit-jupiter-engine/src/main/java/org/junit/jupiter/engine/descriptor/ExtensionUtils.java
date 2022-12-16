@@ -15,8 +15,8 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
-import static org.junit.platform.commons.util.ReflectionUtils.findFields;
 import static org.junit.platform.commons.util.ReflectionUtils.getDeclaredConstructor;
+import static org.junit.platform.commons.util.ReflectionUtils.streamFields;
 import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
 
 import java.lang.reflect.AnnotatedElement;
@@ -93,7 +93,7 @@ final class ExtensionUtils {
 
 		Predicate<Field> predicate = (instance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
 
-		findFields(clazz, predicate, TOP_DOWN).stream()//
+		streamFields(clazz, predicate, TOP_DOWN)//
 				.sorted(orderComparator)//
 				.forEach(field -> {
 					List<Class<? extends Extension>> extensionTypes = streamExtensionTypes(field).collect(toList());

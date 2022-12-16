@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -115,6 +116,31 @@ public final class ReflectionSupport {
 	}
 
 	/**
+	 * Find all {@linkplain Class classes} in the supplied classpath {@code root}
+	 * that match the specified {@code classFilter} and {@code classNameFilter}
+	 * predicates.
+	 *
+	 * <p>The classpath scanning algorithm searches recursively in subpackages
+	 * beginning with the root of the classpath.
+	 *
+	 * @param root the URI for the classpath root in which to scan; never
+	 * {@code null}
+	 * @param classFilter the class type filter; never {@code null}
+	 * @param classNameFilter the class name filter; never {@code null}
+	 * @return a stream of all such classes found; never {@code null}
+	 * but potentially empty
+	 * @since 1.10
+	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
+	 * @see #findAllClassesInModule(String, Predicate, Predicate)
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public static Stream<Class<?>> streamAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
+
+		return ReflectionUtils.streamAllClassesInClasspathRoot(root, classFilter, classNameFilter);
+	}
+
+	/**
 	 * Find all {@linkplain Class classes} in the supplied {@code basePackageName}
 	 * that match the specified {@code classFilter} and {@code classNameFilter}
 	 * predicates.
@@ -139,6 +165,32 @@ public final class ReflectionSupport {
 	}
 
 	/**
+	 * Find all {@linkplain Class classes} in the supplied {@code basePackageName}
+	 * that match the specified {@code classFilter} and {@code classNameFilter}
+	 * predicates.
+	 *
+	 * <p>The classpath scanning algorithm searches recursively in subpackages
+	 * beginning within the supplied base package.
+	 *
+	 * @param basePackageName the name of the base package in which to start
+	 * scanning; must not be {@code null} and must be valid in terms of Java
+	 * syntax
+	 * @param classFilter the class type filter; never {@code null}
+	 * @param classNameFilter the class name filter; never {@code null}
+	 * @return a stream of all such classes found; never {@code null}
+	 * but potentially empty
+	 * @since 1.10
+	 * @see #findAllClassesInClasspathRoot(URI, Predicate, Predicate)
+	 * @see #findAllClassesInModule(String, Predicate, Predicate)
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public static Stream<Class<?>> streamAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
+
+		return ReflectionUtils.streamAllClassesInPackage(basePackageName, classFilter, classNameFilter);
+	}
+
+	/**
 	 * Find all {@linkplain Class classes} in the supplied {@code moduleName}
 	 * that match the specified {@code classFilter} and {@code classNameFilter}
 	 * predicates.
@@ -160,6 +212,31 @@ public final class ReflectionSupport {
 			Predicate<String> classNameFilter) {
 
 		return ReflectionUtils.findAllClassesInModule(moduleName, classFilter, classNameFilter);
+	}
+
+	/**
+	 * Find all {@linkplain Class classes} in the supplied {@code moduleName}
+	 * that match the specified {@code classFilter} and {@code classNameFilter}
+	 * predicates.
+	 *
+	 * <p>The module-path scanning algorithm searches recursively in all
+	 * packages contained in the module.
+	 *
+	 * @param moduleName the name of the module to scan; never {@code null} or
+	 * <em>empty</em>
+	 * @param classFilter the class type filter; never {@code null}
+	 * @param classNameFilter the class name filter; never {@code null}
+	 * @return a stream of all such classes found; never {@code null}
+	 * but potentially empty
+	 * @since 1.10
+	 * @see #findAllClassesInClasspathRoot(URI, Predicate, Predicate)
+	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public static Stream<Class<?>> streamAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
+
+		return ReflectionUtils.streamAllClassesInModule(moduleName, classFilter, classNameFilter);
 	}
 
 	/**
@@ -222,6 +299,31 @@ public final class ReflectionSupport {
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		return ReflectionUtils.findFields(clazz, predicate,
+			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
+	}
+
+	/**
+	 * Find all {@linkplain Field fields} of the supplied class or interface
+	 * that match the specified {@code predicate}.
+	 *
+	 * <p>Fields declared in the same class or interface will be ordered using
+	 * an algorithm that is deterministic but intentionally nonobvious.
+	 *
+	 * <p>The results will not contain fields that are <em>hidden</em> or
+	 * {@linkplain Field#isSynthetic() synthetic}.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param predicate the field filter; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return a stream of all such fields found; never {@code null}
+	 * but potentially empty
+	 * @since 1.10
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public static Stream<Field> streamFields(Class<?> clazz, Predicate<Field> predicate,
+			HierarchyTraversalMode traversalMode) {
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+		return ReflectionUtils.streamFields(clazz, predicate,
 			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
 
@@ -308,6 +410,34 @@ public final class ReflectionSupport {
 	}
 
 	/**
+	 * Find all distinct {@linkplain Method methods} of the supplied class or
+	 * interface that match the specified {@code predicate}.
+	 *
+	 * <p>The results will not contain instance methods that are <em>overridden</em>
+	 * or {@code static} methods that are <em>hidden</em>.
+	 *
+	 * <p>If you're are looking for methods annotated with a certain annotation
+	 * type, consider using
+	 * {@link AnnotationSupport#findAnnotatedMethods(Class, Class, HierarchyTraversalMode)}.
+	 *
+	 * @param clazz the class or interface in which to find the methods; never {@code null}
+	 * @param predicate the method filter; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return a stream of all such methods found; never {@code null}
+	 * @since 1.10
+	 * but potentially empty
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public static Stream<Method> streamMethods(Class<?> clazz, Predicate<Method> predicate,
+			HierarchyTraversalMode traversalMode) {
+
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+
+		return ReflectionUtils.streamMethods(clazz, predicate,
+			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
+	}
+
+	/**
 	 * Find all nested classes within the supplied class, or inherited by the
 	 * supplied class, that conform to the supplied predicate.
 	 *
@@ -331,6 +461,34 @@ public final class ReflectionSupport {
 			throws JUnitException {
 
 		return ReflectionUtils.findNestedClasses(clazz, predicate);
+	}
+
+	/**
+	 * Find all nested classes within the supplied class, or inherited by the
+	 * supplied class, that conform to the supplied predicate.
+	 *
+	 * <p>This method does <strong>not</strong> search for nested classes
+	 * recursively.
+	 *
+	 * <p>As of JUnit Platform 1.6, this method detects cycles in <em>inner</em>
+	 * class hierarchies &mdash; from the supplied class up to the outermost
+	 * enclosing class &mdash; and throws a {@link JUnitException} if such a cycle
+	 * is detected. Cycles within inner class hierarchies <em>below</em> the
+	 * supplied class are not detected by this method.
+	 *
+	 * @param clazz the class to be searched; never {@code null}
+	 * @param predicate the predicate against which the list of nested classes is
+	 * checked; never {@code null}
+	 * @return a stream of all such classes found; never {@code null}
+	 * but potentially empty
+	 * @throws JUnitException if a cycle is detected within an inner class hierarchy
+	 * @since 1.10
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public static Stream<Class<?>> streamNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate)
+			throws JUnitException {
+
+		return ReflectionUtils.streamNestedClasses(clazz, predicate);
 	}
 
 }
