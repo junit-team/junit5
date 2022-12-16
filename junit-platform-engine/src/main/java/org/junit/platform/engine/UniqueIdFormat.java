@@ -48,23 +48,13 @@ class UniqueIdFormat implements Serializable {
 		return Pattern.quote(String.valueOf(c));
 	}
 
-	private static String encode(char c) {
-		try {
-			return URLEncoder.encode(String.valueOf(c), StandardCharsets.UTF_8.name());
-		}
-		catch (UnsupportedEncodingException e) {
-			throw new AssertionError("UTF-8 should be supported", e);
-		}
-	}
-
-	private final char openSegment;
+    private final char openSegment;
 	private final char closeSegment;
 	private final char segmentDelimiter;
 	private final char typeValueSeparator;
 	private final Pattern segmentPattern;
-	private final HashMap<Character, String> encodedCharacterMap = new HashMap<>();
 
-	UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
+    UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
 		this.openSegment = openSegment;
 		this.typeValueSeparator = typeValueSeparator;
 		this.closeSegment = closeSegment;
@@ -72,16 +62,6 @@ class UniqueIdFormat implements Serializable {
 		this.segmentPattern = Pattern.compile(
 			String.format("%s(.+)%s(.+)%s", quote(openSegment), quote(typeValueSeparator), quote(closeSegment)),
 			Pattern.DOTALL);
-
-		// Compute "forbidden" character encoding map.
-		// Note that the map is always empty at this point. Thus the use of
-		// computeIfAbsent() is purely syntactic sugar.
-		encodedCharacterMap.computeIfAbsent('%', UniqueIdFormat::encode);
-		encodedCharacterMap.computeIfAbsent('+', UniqueIdFormat::encode);
-		encodedCharacterMap.computeIfAbsent(openSegment, UniqueIdFormat::encode);
-		encodedCharacterMap.computeIfAbsent(typeValueSeparator, UniqueIdFormat::encode);
-		encodedCharacterMap.computeIfAbsent(closeSegment, UniqueIdFormat::encode);
-		encodedCharacterMap.computeIfAbsent(segmentDelimiter, UniqueIdFormat::encode);
 	}
 
 	/**
@@ -136,17 +116,12 @@ class UniqueIdFormat implements Serializable {
 	}
 
 	private String encode(String s) {
-		StringBuilder builder = new StringBuilder(s.length());
-		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
-			String value = encodedCharacterMap.get(c);
-			if (value == null) {
-				builder.append(c);
-				continue;
-			}
-			builder.append(value);
-		}
-		return builder.toString();
+        try {
+            return URLEncoder.encode(s, StandardCharsets.UTF_8.name());
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new AssertionError("UTF-8 should be supported", e);
+        }
 	}
 
 	private static String decode(String s) {
