@@ -14,15 +14,9 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -96,25 +90,32 @@ public class IterationSelector implements DiscoverySelector {
 		// @formatter:on
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        return parentSelector.toSelectorString()
+            .map(parentSelectorString -> String.format("%s:%s#%s", //
+                Parser.PREFIX, //
+                CodingUtil.urlEncode(parentSelectorString), //
+                iterationIndices.stream().map(String::valueOf).collect(Collectors.joining(","))));
+    }
 
-		public Parser() {
+    public static class Parser implements SelectorParser {
+
+        private static final String PREFIX = "iteration";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			return "iteration";
+			return PREFIX;
 		}
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			try {
-				int[] iterationIndices = Arrays.stream(selector.getFragment().split(",")).mapToInt(Integer::parseInt).toArray();
-				String parentSelector = URLDecoder.decode(selector.getSchemeSpecificPart(), "UTF-8");
-				return DiscoverySelectors.parse(parentSelector).map(parent -> DiscoverySelectors.selectIteration(parent, iterationIndices));
-			} catch (UnsupportedEncodingException e) {
-				throw new IllegalArgumentException("Could not decode iteration selector: " + selector, e);
-			}
+            int[] iterationIndices = Arrays.stream(selector.getFragment().split(",")).mapToInt(Integer::parseInt).toArray();
+            String parentSelector = CodingUtil.urlDecode(selector.getSchemeSpecificPart());
+            return DiscoverySelectors.parse(parentSelector).map(parent -> DiscoverySelectors.selectIteration(parent, iterationIndices));
 		}
 	}
 }

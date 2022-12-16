@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -110,14 +111,21 @@ public class ClassSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("className", this.className).toString();
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.className)));
+    }
 
-		public Parser() {
+    public static class Parser implements SelectorParser {
+
+        private static final String PREFIX = "class";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			return "class";
+			return PREFIX;
 		}
 
 		@Override

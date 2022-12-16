@@ -153,6 +153,14 @@ public class FilePosition implements Serializable {
 		return Optional.ofNullable(this.column);
 	}
 
+    String toQueryPart() {
+        StringBuilder builder = new StringBuilder("line=").append(this.line);
+        if (this.column != null) {
+            builder.append("&column=").append(this.column);
+        }
+        return builder.toString();
+    }
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {

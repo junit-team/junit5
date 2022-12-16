@@ -18,7 +18,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
@@ -104,14 +103,21 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 			this.position).toString();
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.classpathResourceName)));
+    }
 
-		public Parser() {
+    public static class Parser implements SelectorParser {
+
+        private static final String PREFIX = "classpath";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			return "classpath";
+			return PREFIX;
 		}
 
 		@Override

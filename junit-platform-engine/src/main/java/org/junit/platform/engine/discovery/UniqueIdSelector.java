@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -76,14 +77,23 @@ public class UniqueIdSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("uniqueId", this.uniqueId).toString();
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        // TODO use urlEncode in UniqueIdFormat for all chars
+        // UniqueId already takes care of properly encoding problematic characters
+        return Optional.of(String.format("%s:%s", Parser.PREFIX, this.uniqueId.toString()));
+    }
 
-		public Parser() {
+    public static class Parser implements SelectorParser {
+
+        private static final String PREFIX = "uid";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			return "uid";
+			return PREFIX;
 		}
 
 		@Override
