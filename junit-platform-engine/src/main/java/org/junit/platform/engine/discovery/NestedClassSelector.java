@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -146,19 +147,38 @@ public class NestedClassSelector implements DiscoverySelector {
 				.toString();
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        StringBuilder sb = new StringBuilder() //
+            .append(Parser.PREFIX) //
+            .append(":");
 
-		public Parser() {
+        enclosingClassSelectors.stream() //
+            .map(ClassSelector::getClassName) //
+            .map(CodingUtil::urlEncode) //
+            .forEach(s -> sb.append(s).append("/"));
+
+        sb.append(CodingUtil.urlEncode(getNestedClassName()));
+        return Optional.of(sb.toString());
+    }
+
+    public static class Parser implements SelectorParser {
+
+        static final String PREFIX = "nested-class";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			return "nested-class";
+			return PREFIX;
 		}
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			List<String> parts = Arrays.asList(selector.getSchemeSpecificPart().split("/"));
+			List<String> parts = Arrays.stream(selector.getSchemeSpecificPart().split("/")) //
+                .map(CodingUtil::urlDecode) //
+                .collect(toList());
 			return Stream.of(DiscoverySelectors.selectNestedClass(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
 		}
 	}

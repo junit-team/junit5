@@ -119,14 +119,25 @@ public class FileSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("path", this.path).append("position", this.position).toString();
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        if(this.position == null) {
+            return Optional.of(String.format("%s://%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
+        } else {
+            return Optional.of(String.format("%s://%s?%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path), this.position.toQueryPart()));
+        }
+    }
 
-		public Parser() {
+    public static class Parser implements SelectorParser {
+
+        private static final String PREFIX = "file";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			return "file";
+			return PREFIX;
 		}
 
 		@Override

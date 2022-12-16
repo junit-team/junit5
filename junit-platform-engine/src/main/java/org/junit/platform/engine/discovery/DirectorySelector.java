@@ -19,6 +19,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -109,17 +110,20 @@ public class DirectorySelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("path", this.path).toString();
 	}
 
+    @Override
+    public Optional<String> toSelectorString() {
+        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
+    }
 	public static class Parser implements SelectorParser {
 
-		public Parser() {
+        private static final String PREFIX = "directory";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			// maybe we should merge FileSelector and DirectorySelector into a single parser, and
-			// distinguish between files and directories based on whether the path ends with a slash or not, or
-			// actually resolve the path and check whether it is a file or directory
-			return "directory";
+			return PREFIX;
 		}
 
 		@Override

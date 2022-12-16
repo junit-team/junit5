@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -75,19 +76,26 @@ public class ModuleSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("moduleName", this.moduleName).toString();
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.moduleName)));
+    }
 
-		public Parser() {
+    public static class Parser implements SelectorParser {
+
+        private static final String PREFIX = "module";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			return "module";
+			return PREFIX;
 		}
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			return Stream.of(DiscoverySelectors.selectModule(selector.getSchemeSpecificPart()));
+			return Stream.of(DiscoverySelectors.selectModule(CodingUtil.urlDecode(selector.getSchemeSpecificPart())));
 		}
 	}
 }

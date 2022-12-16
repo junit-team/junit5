@@ -17,8 +17,8 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -88,14 +88,21 @@ public class ClasspathRootSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("classpathRoot", this.classpathRoot).toString();
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(String.valueOf(this.classpathRoot))));
+    }
 
-		public Parser() {
+    public static class Parser implements SelectorParser {
+
+        private static final String PREFIX = "classpath-root";
+
+        public Parser() {
 
 		}
 		@Override
 		public String getPrefix() {
-			return "classpath-root";
+			return PREFIX;
 		}
 
 		@Override

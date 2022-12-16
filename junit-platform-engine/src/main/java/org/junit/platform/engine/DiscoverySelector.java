@@ -14,6 +14,8 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
+import java.util.Optional;
+
 /**
  * A selector defines what a {@link TestEngine} can use to discover tests
  * &mdash; for example, the name of a Java class, the path to a file or
@@ -25,4 +27,16 @@ import org.apiguardian.api.API;
  */
 @API(status = STABLE, since = "1.0")
 public interface DiscoverySelector {
+
+    /**
+     * Return a {@link String} representation of this selector.
+     * <p>
+     * The returned string has to be parsable by a corresponding
+     * {@link org.junit.platform.engine.discovery.SelectorParser}.
+     * <p>
+     * @return a {@link String} representation of this selector or empty if it is not supported.
+     */
+    default Optional<String> toSelectorString() {
+        return Optional.empty();
+    }
 }

@@ -17,6 +17,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -310,20 +311,32 @@ public class MethodSelector implements DiscoverySelector {
 		// @formatter:on
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        if (StringUtils.isNotBlank(this.methodParameterTypes)) {
+            return Optional.of(String.format("%s#%s(%s)", this.className, this.methodName, this.methodParameterTypes));
+        } else {
+            return Optional.of(String.format("%s#%s", this.className, this.methodName));
+        }
+    }
 
-		public Parser() {
+    public static class Parser implements SelectorParser {
+
+        private static final String PREFIX = "method";
+
+        public Parser() {
 		}
 
 
 		@Override
 		public String getPrefix() {
-			return "method";
+			return PREFIX;
 		}
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			return Stream.of(DiscoverySelectors.selectMethod(selector.getSchemeSpecificPart(), selector.getFragment()));
+            // TODO fix decoding
+			return Stream.of(DiscoverySelectors.selectMethod(CodingUtil.urlDecode(selector.getSchemeSpecificPart()), CodingUtil.urlDecode(selector.getFragment())));
 		}
 	}
 }

@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -75,19 +76,26 @@ public class PackageSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("packageName", this.packageName).toString();
 	}
 
-	public static class Parser implements SelectorParser {
+    @Override
+    public Optional<String> toSelectorString() {
+        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.packageName)));
+    }
 
-		public Parser() {
+    public static class Parser implements SelectorParser {
+
+        private static final String PREFIX = "package";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			return "package";
+			return PREFIX;
 		}
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			return Stream.of(DiscoverySelectors.selectPackage(selector.getSchemeSpecificPart()));
+			return Stream.of(DiscoverySelectors.selectPackage(CodingUtil.urlDecode(selector.getSchemeSpecificPart())));
 		}
 	}
 }

@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -19,6 +20,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -242,19 +244,40 @@ public class NestedMethodSelector implements DiscoverySelector {
 				.toString();
 	}
 
+    @Override
+    public Optional<String> toSelectorString() {
+        return nestedClassSelector.toSelectorString().map(parent -> {
+           StringBuilder sb = new StringBuilder(parent)
+               // Not totally happy with how we have to change the prefix here.
+               // Alternativly, we could duplicate the logic of the NestedClassSelector
+               .delete(0, NestedClassSelector.Parser.PREFIX.length() ) //
+               .insert(0, Parser.PREFIX) //
+               .append("#") //
+               .append(CodingUtil.urlEncode(methodSelector.getMethodName()));
+          if (methodSelector.getMethodParameterTypes() != null) {
+                sb.append("(").append(methodSelector.getMethodParameterTypes()).append(")");
+          }
+          return sb.toString();
+        });
+    }
+
 	public static class Parser implements SelectorParser {
 
-		public Parser() {
+        private static final String PREFIX = "nested-method";
+
+        public Parser() {
 		}
 
 		@Override
 		public String getPrefix() {
-			return "nested-method";
+			return PREFIX;
 		}
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector) {
-			List<String> parts = Arrays.asList(selector.getSchemeSpecificPart().split("/"));
+            List<String> parts = Arrays.stream(selector.getSchemeSpecificPart().split("/"))
+                .map(CodingUtil::urlDecode)
+                .collect(toList());
 			return Stream.of(DiscoverySelectors.selectNestedMethod(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1), selector.getFragment()));
 		}
 	}
