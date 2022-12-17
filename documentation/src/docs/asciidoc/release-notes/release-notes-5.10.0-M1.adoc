@@ -28,6 +28,8 @@ repository on GitHub.
 
 * Support for limiting the `max-pool-size` for parallel execution via a configuration parameter
 
+* All utility methods from `ReflectionSupport` now have counterparts returning `Stream`
+  instead of `List`.
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter
