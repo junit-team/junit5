@@ -120,7 +120,7 @@ Your donations will help to make that a reality!
     <li>
       <a class="cardbronze" href="https://codefortynine.com">
         <div class="cardbronze-image">
-          <img style="height:100%" src="assets/img/sponsor-logo-codefortynine.svg" alt="codefortynine">
+          <img style="width:90%" src="assets/img/sponsor-logo-codefortynine.svg" alt="codefortynine">
         </div>
         <div class="cardbronze-center">
           <h4>codefortynine</h4>
