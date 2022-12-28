@@ -25,6 +25,7 @@ JUnit repository on GitHub.
 
 * Introduce `TestPlan.getTestIdentifier(UniqueId)` and `TestPlan.getChildren(UniqueId)` to
   avoid parsing unique IDs unnecessarily during test execution.
+* Quietly stop further suite discovery when encountering a cycle in a test suite
 
 
 [[release-notes-5.9.2-junit-jupiter]]
