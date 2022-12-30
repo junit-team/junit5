@@ -277,4 +277,13 @@ class CollectionUtilsTests {
 		}
 	}
 
+	@Test
+	void iteratesListElementsInReverseOrder() {
+		var items = List.of("foo", "bar", "baz");
+		var result = new ArrayList<>();
+
+		CollectionUtils.forEachInReverseOrder(items, result::add);
+
+		assertThat(result).containsExactly("baz", "bar", "foo");
+	}
 }
