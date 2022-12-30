@@ -34,8 +34,13 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ArgumentConversionException;
+import org.junit.jupiter.params.converter.ArgumentConverter;
+import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -277,13 +282,26 @@ class CollectionUtilsTests {
 		}
 	}
 
-	@Test
-	void iteratesListElementsInReverseOrder() {
-		var items = List.of("foo", "bar", "baz");
+	@ParameterizedTest
+	@CsvSource(delimiter = '|', nullValues = "N/A", textBlock = """
+			        foo,bar,baz | baz,bar,foo
+			        foo,bar     | bar,foo
+			        foo         | foo
+			        N/A         | N/A
+			""")
+	void iteratesListElementsInReverseOrder(@ConvertWith(CommaSeparator.class) List<String> input,
+			@ConvertWith(CommaSeparator.class) List<String> expected) {
 		var result = new ArrayList<>();
 
-		CollectionUtils.forEachInReverseOrder(items, result::add);
+		CollectionUtils.forEachInReverseOrder(input, result::add);
 
-		assertThat(result).containsExactly("baz", "bar", "foo");
+		assertEquals(expected, result);
+	}
+
+	private static class CommaSeparator implements ArgumentConverter {
+		@Override
+		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+			return source == null ? List.of() : List.of(((String) source).split(","));
+		}
 	}
 }
