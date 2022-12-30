@@ -558,6 +558,9 @@ from being silently ignored.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>Support for limiting the <code>max-pool-size</code> for parallel execution via a configuration parameter</p>
+</li>
+<li>
 <p>All utility methods from <code>ReflectionSupport</code> now have counterparts returning <code>Stream</code>
 instead of <code>List</code>.</p>
 </li>
@@ -582,7 +585,8 @@ instead of <code>List</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>fixed</code> parallel execution strategy now allows the thread pool to be saturated by
+default.</p>
 </li>
 </ul>
 </div>
@@ -591,6 +595,14 @@ instead of <code>List</code>.</p>
 <h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>New <code>junit.jupiter.execution.parallel.config.fixed.max-pool-size</code> configuration
+parameter to set the maximum pool size.</p>
+</li>
+<li>
+<p>New <code>junit.jupiter.execution.parallel.config.fixed.saturate</code> configuration
+parameter to disable pool saturation.</p>
+</li>
 <li>
 <p>New <code>ArgumentsAccessor.getInvocationIndex()</code> method that supplies the index of a
 <code>@ParameterizedTest</code> invocation.</p>
@@ -900,7 +912,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-12-16 16:33:54 UTC
+Last updated 2022-12-30 14:49:29 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

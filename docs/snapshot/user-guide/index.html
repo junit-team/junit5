@@ -5786,7 +5786,9 @@ configuration parameter (defaults to <code>1</code>).</p>
 <dt class="hdlist1"><code>fixed</code></dt>
 <dd>
 <p>Uses the mandatory <code>junit.jupiter.execution.parallel.config.fixed.parallelism</code>
-configuration parameter as the desired parallelism.</p>
+configuration parameter as the desired parallelism.
+The optional <code>junit.jupiter.execution.parallel.config.fixed.max-pool-size</code>
+configuration parameter can be used to limit the maximum number of threads.</p>
 </dd>
 <dt class="hdlist1"><code>custom</code></dt>
 <dd>
@@ -5808,13 +5810,15 @@ number of available processors/cores.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="title">Parallelism does not imply maximum number of concurrent threads</div>
-JUnit Jupiter does not guarantee that the number of concurrently executing tests
-will not exceed the configured parallelism. For example, when using one of the
-synchronization mechanisms described in the next section, the <code>ForkJoinPool</code> that is used
-behind the scenes may spawn additional threads to ensure execution continues with
-sufficient parallelism. Thus, if you require such guarantees in a test class, please use
-your own means of controlling concurrency.
+<div class="title">Parallelism alone does not imply maximum number of concurrent threads</div>
+By default JUnit Jupiter does not guarantee that the number of concurrently
+executing tests will not exceed the configured parallelism. For example, when using one
+of the synchronization mechanisms described in the next section, the <code>ForkJoinPool</code> that
+is used behind the scenes may spawn additional threads to ensure execution continues with
+sufficient parallelism.
+If you require such guarantees, with Java 9+, it is possible to limit the maximum number
+of concurrent threads by controlling the maximum pool size of the <code>fixed</code> and <code>custom</code>
+strategies.
 </td>
 </tr>
 </table>
@@ -5920,6 +5924,31 @@ your own means of controlling concurrency.
 <p>a positive integer</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">no default value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.fixed.max-pool-size</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Desired maximum pool size of the underlying fork-join pool for the <code><code>fixed</code></code>
+  configuration strategy</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>a positive integer, must greater than or equal to <code>junit.jupiter.execution.parallel.config.fixed.parallelism</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">256 + the value of <code>junit.jupiter.execution.parallel.config.fixed.parallelism</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.fixed.saturate</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable saturation of the underlying fork-join pool for the <code><code>fixed</code></code> configuration
+  strategy</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><code>true</code></p>
+</li>
+<li>
+<p><code>false</code></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>true</code></code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.custom.class</code></code></p></td>
@@ -11989,7 +12018,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-12-16 16:33:54 UTC
+Last updated 2022-12-30 14:49:29 UTC
 </div>
 </div>
 <style>
