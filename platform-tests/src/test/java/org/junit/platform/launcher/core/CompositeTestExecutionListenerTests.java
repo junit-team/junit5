@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.CompositeTestExecutionListener.EagerTestExecutionListener;
+import org.mockito.InOrder;
 
 @TrackLogRecords
 class CompositeTestExecutionListenerTests {
@@ -41,9 +43,7 @@ class CompositeTestExecutionListenerTests {
 
 	@Test
 	void shouldNotThrowExceptionButLogIfDynamicTestRegisteredListenerMethodFails(LogRecordListener logRecordListener) {
-		var testIdentifier = getSampleMethodTestIdentifier();
-
-		compositeTestExecutionListener().dynamicTestRegistered(testIdentifier);
+		compositeTestExecutionListener().dynamicTestRegistered(anyTestIdentifier());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"dynamicTestRegistered");
@@ -51,27 +51,21 @@ class CompositeTestExecutionListenerTests {
 
 	@Test
 	void shouldNotThrowExceptionButLogIfExecutionStartedListenerMethodFails(LogRecordListener logRecordListener) {
-		var testIdentifier = getSampleMethodTestIdentifier();
-
-		compositeTestExecutionListener().executionStarted(testIdentifier);
+		compositeTestExecutionListener().executionStarted(anyTestIdentifier());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class, "executionStarted");
 	}
 
 	@Test
 	void shouldNotThrowExceptionButLogIfExecutionSkippedListenerMethodFails(LogRecordListener logRecordListener) {
-		var testIdentifier = getSampleMethodTestIdentifier();
-
-		compositeTestExecutionListener().executionSkipped(testIdentifier, "deliberately skipped container");
+		compositeTestExecutionListener().executionSkipped(anyTestIdentifier(), "deliberately skipped container");
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class, "executionSkipped");
 	}
 
 	@Test
 	void shouldNotThrowExceptionButLogIfExecutionFinishedListenerMethodFails(LogRecordListener logRecordListener) {
-		var testIdentifier = getSampleMethodTestIdentifier();
-
-		compositeTestExecutionListener().executionFinished(testIdentifier, mock(TestExecutionResult.class));
+		compositeTestExecutionListener().executionFinished(anyTestIdentifier(), anyTestExecutionResult());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class, "executionFinished");
 	}
@@ -79,9 +73,7 @@ class CompositeTestExecutionListenerTests {
 	@Test
 	void shouldNotThrowExceptionButLogIfReportingEntryPublishedListenerMethodFails(
 			LogRecordListener logRecordListener) {
-		var testIdentifier = getSampleMethodTestIdentifier();
-
-		compositeTestExecutionListener().reportingEntryPublished(testIdentifier, ReportEntry.from("one", "two"));
+		compositeTestExecutionListener().reportingEntryPublished(anyTestIdentifier(), ReportEntry.from("one", "two"));
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"reportingEntryPublished");
@@ -90,10 +82,7 @@ class CompositeTestExecutionListenerTests {
 	@Test
 	void shouldNotThrowExceptionButLogIfTesPlanExecutionStartedListenerMethodFails(
 			LogRecordListener logRecordListener) {
-		var testDescriptor = getDemoMethodTestDescriptor();
-
-		compositeTestExecutionListener().testPlanExecutionStarted(
-			TestPlan.from(Set.of(testDescriptor), mock(ConfigurationParameters.class)));
+		compositeTestExecutionListener().testPlanExecutionStarted(anyTestPlan());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"testPlanExecutionStarted");
@@ -102,10 +91,7 @@ class CompositeTestExecutionListenerTests {
 	@Test
 	void shouldNotThrowExceptionButLogIfTesPlanExecutionFinishedListenerMethodFails(
 			LogRecordListener logRecordListener) {
-		var testDescriptor = getDemoMethodTestDescriptor();
-
-		compositeTestExecutionListener().testPlanExecutionFinished(
-			TestPlan.from(Set.of(testDescriptor), mock(ConfigurationParameters.class)));
+		compositeTestExecutionListener().testPlanExecutionFinished(anyTestPlan());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
 			"testPlanExecutionFinished");
@@ -116,8 +102,7 @@ class CompositeTestExecutionListenerTests {
 			LogRecordListener logRecordListener) {
 		listeners.add(new ThrowingEagerTestExecutionListener());
 
-		var testIdentifier = getSampleMethodTestIdentifier();
-		compositeTestExecutionListener().executionStarted(testIdentifier);
+		compositeTestExecutionListener().executionStarted(anyTestIdentifier());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEagerTestExecutionListener.class,
 			"executionJustStarted");
@@ -128,8 +113,7 @@ class CompositeTestExecutionListenerTests {
 			LogRecordListener logRecordListener) {
 		listeners.add(new ThrowingEagerTestExecutionListener());
 
-		var testIdentifier = getSampleMethodTestIdentifier();
-		compositeTestExecutionListener().executionFinished(testIdentifier, mock(TestExecutionResult.class));
+		compositeTestExecutionListener().executionFinished(anyTestIdentifier(), anyTestExecutionResult());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEagerTestExecutionListener.class,
 			"executionJustFinished");
@@ -144,8 +128,8 @@ class CompositeTestExecutionListenerTests {
 				throw new OutOfMemoryError();
 			}
 		});
-		var testIdentifier = getSampleMethodTestIdentifier();
-		assertThatThrownBy(() -> compositeTestExecutionListener().executionStarted(testIdentifier)).isInstanceOf(
+
+		assertThatThrownBy(() -> compositeTestExecutionListener().executionStarted(anyTestIdentifier())).isInstanceOf(
 			OutOfMemoryError.class);
 
 		assertNotLogs(logRecordListener);
@@ -159,11 +143,40 @@ class CompositeTestExecutionListenerTests {
 				throw new OutOfMemoryError();
 			}
 		});
-		var testIdentifier = getSampleMethodTestIdentifier();
-		assertThatThrownBy(() -> compositeTestExecutionListener().executionStarted(testIdentifier)).isInstanceOf(
+
+		assertThatThrownBy(() -> compositeTestExecutionListener().executionStarted(anyTestIdentifier())).isInstanceOf(
 			OutOfMemoryError.class);
 
 		assertNotLogs(logRecordListener);
+	}
+
+	@Test
+	void callsListenersInReverseOrderForFinishedEvents() {
+		listeners.clear();
+		var firstListener = mock(TestExecutionListener.class, "firstListener");
+		var secondListener = mock(TestExecutionListener.class, "secondListener");
+		listeners.add(firstListener);
+		listeners.add(secondListener);
+
+		var testPlan = anyTestPlan();
+		var testIdentifier = anyTestIdentifier();
+		var testExecutionResult = anyTestExecutionResult();
+
+		var composite = compositeTestExecutionListener();
+		composite.testPlanExecutionStarted(testPlan);
+		composite.executionStarted(testIdentifier);
+		composite.executionFinished(testIdentifier, testExecutionResult);
+		composite.testPlanExecutionFinished(testPlan);
+
+		InOrder inOrder = inOrder(firstListener, secondListener);
+		inOrder.verify(firstListener).testPlanExecutionStarted(testPlan);
+		inOrder.verify(secondListener).testPlanExecutionStarted(testPlan);
+		inOrder.verify(firstListener).executionStarted(testIdentifier);
+		inOrder.verify(secondListener).executionStarted(testIdentifier);
+		inOrder.verify(secondListener).executionFinished(testIdentifier, testExecutionResult);
+		inOrder.verify(firstListener).executionFinished(testIdentifier, testExecutionResult);
+		inOrder.verify(secondListener).testPlanExecutionFinished(testPlan);
+		inOrder.verify(firstListener).testPlanExecutionFinished(testPlan);
 	}
 
 	private TestExecutionListener compositeTestExecutionListener() {
@@ -179,9 +192,12 @@ class CompositeTestExecutionListenerTests {
 		assertThat(logRecordListener.stream(CompositeTestExecutionListener.class, Level.WARNING).count()).isZero();
 	}
 
-	private TestIdentifier getSampleMethodTestIdentifier() {
-		var demoMethodTestDescriptor = getDemoMethodTestDescriptor();
-		return TestIdentifier.from(demoMethodTestDescriptor);
+	private static TestExecutionResult anyTestExecutionResult() {
+		return TestExecutionResult.successful();
+	}
+
+	private static TestIdentifier anyTestIdentifier() {
+		return TestIdentifier.from(anyTestDescriptor());
 	}
 
 	private void assertThatTestListenerErrorLogged(LogRecordListener logRecordListener, Class<?> listenerClass,
@@ -190,10 +206,14 @@ class CompositeTestExecutionListenerTests {
 			"TestExecutionListener [" + listenerClass.getName() + "] threw exception for method: " + methodName);
 	}
 
-	private DemoMethodTestDescriptor getDemoMethodTestDescriptor() {
-		var method = ReflectionUtils.findMethod(this.getClass(), "getDemoMethodTestDescriptor",
-			new Class<?>[0]).orElseThrow();
-		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(), method);
+	private static TestPlan anyTestPlan() {
+		return TestPlan.from(Set.of(anyTestDescriptor()), mock(ConfigurationParameters.class));
+	}
+
+	private static DemoMethodTestDescriptor anyTestDescriptor() {
+		var testClass = CompositeTestExecutionListenerTests.class;
+		var method = ReflectionUtils.findMethod(testClass, "anyTestDescriptor", new Class<?>[0]).orElseThrow();
+		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), testClass, method);
 	}
 
 	private static class ThrowingEagerTestExecutionListener extends ThrowingTestExecutionListener
