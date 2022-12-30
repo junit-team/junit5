@@ -2344,6 +2344,8 @@ configuration parameter to one of the following options.
 `fixed`::
   Uses the mandatory `junit.jupiter.execution.parallel.config.fixed.parallelism`
   configuration parameter as the desired parallelism.
+  The optional `junit.jupiter.execution.parallel.config.fixed.max-pool-size`
+  configuration parameter can be used to limit the maximum number of threads.
 
 `custom`::
   Allows you to specify a custom `{ParallelExecutionConfigurationStrategy}`
@@ -2354,13 +2356,15 @@ If no configuration strategy is set, JUnit Jupiter uses the `dynamic` configurat
 strategy with a factor of `1`. Consequently, the desired parallelism will be equal to the
 number of available processors/cores.
 
-.Parallelism does not imply maximum number of concurrent threads
-NOTE: JUnit Jupiter does not guarantee that the number of concurrently executing tests
-will not exceed the configured parallelism. For example, when using one of the
-synchronization mechanisms described in the next section, the `ForkJoinPool` that is used
-behind the scenes may spawn additional threads to ensure execution continues with
-sufficient parallelism. Thus, if you require such guarantees in a test class, please use
-your own means of controlling concurrency.
+.Parallelism alone does not imply maximum number of concurrent threads
+NOTE: By default JUnit Jupiter does not guarantee that the number of concurrently
+executing tests will not exceed the configured parallelism. For example, when using one
+of the synchronization mechanisms described in the next section, the `ForkJoinPool` that
+is used behind the scenes may spawn additional threads to ensure execution continues with
+sufficient parallelism.
+If you require such guarantees, with Java 9+, it is possible to limit the maximum number
+of concurrent threads by controlling the maximum pool size of the `fixed` and `custom`
+strategies.
 
 [[writing-tests-parallel-execution-config-properties]]
 ===== Relevant properties
@@ -2411,6 +2415,20 @@ The following table lists relevant properties for configuring parallel execution
 | Desired parallelism for the ```fixed``` configuration strategy
 | a positive integer
 | no default value
+
+| ```junit.jupiter.execution.parallel.config.fixed.max-pool-size```
+| Desired maximum pool size of the underlying fork-join pool for the ```fixed```
+  configuration strategy
+| a positive integer, must greater than or equal to `junit.jupiter.execution.parallel.config.fixed.parallelism`
+| 256 + the value of `junit.jupiter.execution.parallel.config.fixed.parallelism`
+
+| ```junit.jupiter.execution.parallel.config.fixed.saturate```
+| Disable saturation of the underlying fork-join pool for the ```fixed``` configuration
+  strategy
+|
+  * `true`
+  * `false`
+| ```true```
 
 | ```junit.jupiter.execution.parallel.config.custom.class```
 | Fully qualified class name of the _ParallelExecutionConfigurationStrategy_ to be
