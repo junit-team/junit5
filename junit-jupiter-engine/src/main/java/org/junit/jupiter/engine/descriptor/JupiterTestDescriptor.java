@@ -107,7 +107,9 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	<E extends Extension> void invokeExecutionExceptionHandlers(Class<E> handlerType, ExtensionRegistry registry,
 			Throwable throwable, ExceptionHandlerInvoker<E> handlerInvoker) {
 
-		invokeExecutionExceptionHandlers(registry.getReversedExtensions(handlerType), throwable, handlerInvoker);
+		List<E> extensions = registry.getExtensions(handlerType);
+		Collections.reverse(extensions);
+		invokeExecutionExceptionHandlers(extensions, throwable, handlerInvoker);
 	}
 
 	private <E extends Extension> void invokeExecutionExceptionHandlers(List<E> exceptionHandlers, Throwable throwable,

@@ -22,6 +22,7 @@ import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBefor
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getTestInstanceLifecycle;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
+import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -457,15 +458,15 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.getReversedExtensions(AfterAllCallback.class)//
-				.forEach(extension -> throwableCollector.execute(() -> extension.afterAll(extensionContext)));
+		forEachInReverseOrder(registry.getExtensions(AfterAllCallback.class), //
+			extension -> throwableCollector.execute(() -> extension.afterAll(extensionContext)));
 	}
 
 	private void invokeTestInstancePreDestroyCallbacks(JupiterEngineExecutionContext context) {
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		context.getExtensionRegistry().getReversedExtensions(TestInstancePreDestroyCallback.class).forEach(
+		forEachInReverseOrder(context.getExtensionRegistry().getExtensions(TestInstancePreDestroyCallback.class), //
 			extension -> throwableCollector.execute(() -> extension.preDestroyTestInstance(extensionContext)));
 	}
 
