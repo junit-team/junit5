@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromExecutableParameters;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
+import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
 
@@ -272,7 +273,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.getReversedExtensions(type).forEach(callback -> {
+		forEachInReverseOrder(registry.getExtensions(type), callback -> {
 			throwableCollector.execute(() -> callbackInvoker.invoke(callback, extensionContext));
 		});
 	}

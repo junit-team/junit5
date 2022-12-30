@@ -130,7 +130,6 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 * <p>Extensions in ancestors are ignored.
 	 *
 	 * @param extensionType the type of {@link Extension} to stream
-	 * @see #getReversedExtensions(Class)
 	 */
 	private <E extends Extension> Stream<E> streamLocal(Class<E> extensionType) {
 		// @formatter:off
