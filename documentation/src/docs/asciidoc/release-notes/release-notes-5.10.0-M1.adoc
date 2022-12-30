@@ -25,6 +25,11 @@ repository on GitHub.
 
 * All utility methods from `ReflectionSupport` now have counterparts returning `Stream`
   instead of `List`.
+* For consistency with Jupiter lifecycle callbacks, listener method pairs for started/
+  finished and opened/closed events are now called using "wrap" semantics, i.e. the latter
+  methods are called in reverse order compared to the former when multiple listeners are
+  registered. This affects the following listener interfaces: `TestExecutionListener`,
+  `EngineExecutionListener`, `LauncherDiscoveryListener`, and `LauncherSessionListener`.
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter
