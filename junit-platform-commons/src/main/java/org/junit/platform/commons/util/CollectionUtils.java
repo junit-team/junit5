@@ -210,6 +210,13 @@ public final class CollectionUtils {
 	 */
 	@API(status = INTERNAL, since = "1.9.2")
 	public static <T> void forEachInReverseOrder(List<T> list, Consumer<? super T> action) {
+		if (list.isEmpty()) {
+			return;
+		}
+		if (list.size() == 1) {
+			action.accept(list.get(0));
+			return;
+		}
 		for (ListIterator<T> iterator = list.listIterator(list.size()); iterator.hasPrevious();) {
 			action.accept(iterator.previous());
 		}
