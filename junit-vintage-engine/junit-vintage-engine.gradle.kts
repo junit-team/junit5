@@ -28,7 +28,7 @@ dependencies {
 
 tasks {
 	compileTestFixturesGroovy {
-		javaLauncher.set(project.the<JavaToolchainService>().launcherFor {
+		javaLauncher.set(project.javaToolchains.launcherFor {
 			// Groovy 2.x (used for Spock tests) does not support current JDKs
 			languageVersion.set(JavaLanguageVersion.of(8))
 		})

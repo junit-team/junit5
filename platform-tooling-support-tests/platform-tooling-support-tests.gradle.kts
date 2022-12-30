@@ -128,7 +128,7 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 	val javaLauncher: Property<JavaLauncher> = project.objects.property<JavaLauncher>()
 			.value(project.provider {
 				try {
-					project.the<JavaToolchainService>().launcherFor {
+					project.javaToolchains.launcherFor {
 						languageVersion.set(JavaLanguageVersion.of(version))
 					}.get()
 				} catch (e: NoToolchainAvailableException) {
