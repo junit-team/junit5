@@ -1,10 +1,10 @@
+import com.gradle.enterprise.gradleplugin.testretry.retry
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	`java-library`
-	id("org.gradle.test-retry")
 }
 
 tasks.withType<Test>().configureEach {
