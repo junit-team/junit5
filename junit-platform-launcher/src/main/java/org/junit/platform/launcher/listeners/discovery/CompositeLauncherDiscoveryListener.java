@@ -10,6 +10,8 @@
 
 package org.junit.platform.launcher.listeners.discovery;
 
+import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +42,7 @@ class CompositeLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	@Override
 	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
-		listeners.forEach(delegate -> delegate.launcherDiscoveryFinished(request));
+		forEachInReverseOrder(listeners, delegate -> delegate.launcherDiscoveryFinished(request));
 	}
 
 	@Override
@@ -50,7 +52,7 @@ class CompositeLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	@Override
 	public void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
-		listeners.forEach(delegate -> delegate.engineDiscoveryFinished(engineId, result));
+		forEachInReverseOrder(listeners, delegate -> delegate.engineDiscoveryFinished(engineId, result));
 	}
 
 	@Override
