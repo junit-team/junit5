@@ -26,8 +26,8 @@ import org.mockito.ArgumentCaptor;
 
 class LauncherSessionTests {
 
-	LauncherSessionListener firstSessionListener = mock(LauncherSessionListener.class);
-	LauncherSessionListener secondSessionListener = mock(LauncherSessionListener.class);
+	LauncherSessionListener firstSessionListener = mock(LauncherSessionListener.class, "firstSessionListener");
+	LauncherSessionListener secondSessionListener = mock(LauncherSessionListener.class, "secondSessionListener");
 	LauncherConfig launcherConfig = createLauncherConfigBuilderWithDisabledServiceLoading() //
 			.addLauncherSessionListeners(firstSessionListener, secondSessionListener) //
 			.addTestEngines(new TestEngineStub()) //
@@ -44,22 +44,22 @@ class LauncherSessionTests {
 		var launcherSession = ArgumentCaptor.forClass(LauncherSession.class);
 		inOrder.verify(firstSessionListener).launcherSessionOpened(launcherSession.capture());
 		inOrder.verify(secondSessionListener).launcherSessionOpened(launcherSession.getValue());
-		inOrder.verify(firstSessionListener).launcherSessionClosed(launcherSession.getValue());
 		inOrder.verify(secondSessionListener).launcherSessionClosed(launcherSession.getValue());
+		inOrder.verify(firstSessionListener).launcherSessionClosed(launcherSession.getValue());
 
 		launcher.execute(testPlan);
 
 		inOrder.verify(firstSessionListener).launcherSessionOpened(launcherSession.capture());
 		inOrder.verify(secondSessionListener).launcherSessionOpened(launcherSession.getValue());
-		inOrder.verify(firstSessionListener).launcherSessionClosed(launcherSession.getValue());
 		inOrder.verify(secondSessionListener).launcherSessionClosed(launcherSession.getValue());
+		inOrder.verify(firstSessionListener).launcherSessionClosed(launcherSession.getValue());
 
 		launcher.execute(request);
 
 		inOrder.verify(firstSessionListener).launcherSessionOpened(launcherSession.capture());
 		inOrder.verify(secondSessionListener).launcherSessionOpened(launcherSession.getValue());
-		inOrder.verify(firstSessionListener).launcherSessionClosed(launcherSession.getValue());
 		inOrder.verify(secondSessionListener).launcherSessionClosed(launcherSession.getValue());
+		inOrder.verify(firstSessionListener).launcherSessionClosed(launcherSession.getValue());
 	}
 
 	@Test
@@ -87,8 +87,8 @@ class LauncherSessionTests {
 
 		session.close();
 
-		inOrder.verify(firstSessionListener).launcherSessionClosed(session);
 		inOrder.verify(secondSessionListener).launcherSessionClosed(session);
+		inOrder.verify(firstSessionListener).launcherSessionClosed(session);
 		verifyNoMoreInteractions(firstSessionListener, secondSessionListener);
 	}
 

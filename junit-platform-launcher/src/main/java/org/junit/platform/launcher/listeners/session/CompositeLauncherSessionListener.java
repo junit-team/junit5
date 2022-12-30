@@ -10,6 +10,8 @@
 
 package org.junit.platform.launcher.listeners.session;
 
+import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +38,6 @@ class CompositeLauncherSessionListener implements LauncherSessionListener {
 
 	@Override
 	public void launcherSessionClosed(LauncherSession session) {
-		listeners.forEach(delegate -> delegate.launcherSessionClosed(session));
+		forEachInReverseOrder(listeners, delegate -> delegate.launcherSessionClosed(session));
 	}
 }
