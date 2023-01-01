@@ -22,7 +22,7 @@ subprojects {
 			}
 		}
 		tasks.withType<PublishToMavenRepository>().configureEach {
-			if (name.endsWith("To${tempRepoName.capitalize()}Repository")) {
+			if (name.endsWith("To${tempRepoName.replaceFirstChar(Char::titlecase)}Repository")) {
 				dependsOn(clearTempRepoDir)
 			}
 		}

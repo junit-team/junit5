@@ -25,7 +25,7 @@ tasks.test {
 	}
 
 	reports {
-		html.isEnabled = true
+		html.required.set(true)
 	}
 
 	val outputDir = reports.junitXml.outputLocation

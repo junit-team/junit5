@@ -27,7 +27,7 @@ listOf(9, 17).forEach { javaVersion ->
 			options.release.set(javaVersion)
 		}
 
-		named<Checkstyle>("checkstyle${sourceSet.name.capitalize()}").configure {
+		named<Checkstyle>("checkstyle${sourceSet.name.replaceFirstChar(Char::titlecase)}").configure {
 			configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
 		}
 
