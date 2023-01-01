@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_17;
 import static org.junit.jupiter.api.condition.JRE.JAVA_18;
 import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.JAVA_20;
+import static org.junit.jupiter.api.condition.JRE.JAVA_21;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
@@ -52,7 +53,7 @@ class EnabledOnJreIntegrationTests {
 
 	@Test
 	@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15, JAVA_16, JAVA_17, JAVA_18,
-			JAVA_19, JAVA_20, OTHER })
+			JAVA_19, JAVA_20, JAVA_21, OTHER })
 	void enabledOnAllJavaVersions() {
 	}
 
@@ -135,10 +136,16 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
+	@EnabledOnJre(JAVA_21)
+	void java21() {
+		assertTrue(onJava21());
+	}
+
+	@Test
 	@EnabledOnJre(value = OTHER, disabledReason = "Disabled on almost every JRE")
 	void other() {
 		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
-				|| onJava15() || onJava16() || onJava17() || onJava18() || onJava19() || onJava20());
+				|| onJava15() || onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21());
 	}
 
 	static boolean onJava8() {
@@ -191,6 +198,10 @@ class EnabledOnJreIntegrationTests {
 
 	static boolean onJava20() {
 		return JAVA_VERSION.startsWith("20");
+	}
+
+	static boolean onJava21() {
+		return JAVA_VERSION.startsWith("21");
 	}
 
 }

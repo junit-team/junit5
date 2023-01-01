@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava18;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava19;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava20;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava21;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 
@@ -112,8 +113,9 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void other() {
 		evaluateCondition();
-		assertEnabledOnCurrentJreIf(!(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13()
-				|| onJava14() || onJava15() || onJava16() || onJava17() || onJava18() || onJava19() || onJava20()));
+		assertEnabledOnCurrentJreIf(
+			!(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15()
+					|| onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21()));
 	}
 
 	private void assertEnabledOnCurrentJreIf(boolean condition) {
