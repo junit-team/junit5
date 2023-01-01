@@ -1,3 +1,4 @@
+import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
@@ -190,7 +191,8 @@ tasks {
 		// Temporary workaround for https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/599
 		inputs.dir(sourceDir).withPropertyName("sourceDir").withPathSensitivity(RELATIVE)
 
-		attributes(mapOf(
+		attributeProviders += AsciidoctorAttributeProvider {
+			mapOf(
 				"jupiter-version" to version,
 				"platform-version" to project.property("platformVersion"),
 				"vintage-version" to project.property("vintageVersion"),
@@ -202,10 +204,10 @@ tasks {
 				"release-branch" to releaseBranch,
 				"docs-version" to docsVersion,
 				"revnumber" to version,
-				"consoleLauncherOptionsFile" to consoleLauncherOptionsFile,
-				"experimentalApisTableFile" to experimentalApisTableFile,
-				"deprecatedApisTableFile" to deprecatedApisTableFile,
-				"standaloneConsoleLauncherShadowedArtifactsFile" to standaloneConsoleLauncherShadowedArtifactsFile,
+				"consoleLauncherOptionsFile" to consoleLauncherOptionsFile.get(),
+				"experimentalApisTableFile" to experimentalApisTableFile.get(),
+				"deprecatedApisTableFile" to deprecatedApisTableFile.get(),
+				"standaloneConsoleLauncherShadowedArtifactsFile" to standaloneConsoleLauncherShadowedArtifactsFile.get(),
 				"outdir" to outputDir.absolutePath,
 				"source-highlighter" to "rouge",
 				"tabsize" to "4",
@@ -215,7 +217,8 @@ tasks {
 				"idprefix" to "",
 				"idseparator" to "-",
 				"jdk-javadoc-base-url" to jdkJavadocBaseUrl
-		))
+			)
+		}
 
 		sourceSets["test"].apply {
 			attributes(mapOf(
