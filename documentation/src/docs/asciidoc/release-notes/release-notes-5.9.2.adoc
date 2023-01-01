@@ -40,7 +40,7 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* `JAVA_21` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.9.2-junit-vintage]]
