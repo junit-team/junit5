@@ -93,7 +93,7 @@ class StreamInterceptor extends PrintStream {
 		super.write(buf, off, len);
 	}
 
-	class RewindableByteArrayOutputStream extends ByteArrayOutputStream {
+	staticclass RewindableByteArrayOutputStream extends ByteArrayOutputStream {
 
 		private final Deque<Integer> markedPositions = new ArrayDeque<>();
 
