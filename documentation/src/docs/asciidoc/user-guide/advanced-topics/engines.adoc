@@ -79,8 +79,15 @@ For example, the `junit-jupiter-engine` module registers its
 `org.junit.platform.engine.TestEngine` within the `/META-INF/services` folder in the
 `junit-jupiter-engine` JAR.
 
-[[test-engines-minimum-requirements]]
-==== Minimum Requirements
+[[test-engines-requirements]]
+==== Requirements
+
+NOTE: The words "must", "must not", "required", "shall", "shall not", "should", "should
+not", "recommended",  "may", and "optional" in this section are to be interpreted as
+described in https://www.ietf.org/rfc/rfc2119.txt[RFC 2119.]
+
+[[test-engines-requirements-mandatory]]
+===== Mandatory requirements
 
 For interoperability with build tools and IDEs, `TestEngine` implementations must adhere
 to the following requirements:
@@ -88,13 +95,9 @@ to the following requirements:
 * The `TestDescriptor` returned from `TestEngine.discover()` _must_ be the root of a tree
   of `TestDescriptor` instances. This implies that there _must not_ be any cycles between
   a node and its descendants.
-* The root node _should_ have children rather than being completely dynamic. This allows
-  tools to display the structure of the tests and to select a subset of tests to execute.
 * A `TestEngine` _must_ be able to discover `UniqueIdSelectors` for any unique ID that it
   previously generated and returned from `TestEngine.discover()`. This enables selecting a
-  subset of tests to execute or rerun. It _should_ only return `TestDescriptor` instances
-  with matching unique IDs including their ancestors but _may_ return additional siblings
-  or other nodes that are required for the execution of the selected tests.
+  subset of tests to execute or rerun.
 * The `executionSkipped`, `executionStarted`, and `executionFinished` methods of the
   `EngineExecutionListener` passed to `TestEngine.execute()` _must_ be called for every
   `TestDescriptor` node in the tree returned from `TestEngine.discover()` at most
@@ -102,6 +105,18 @@ to the following requirements:
   after their children. If a node is reported as skipped, there _must not_ be any events
   reported for its descendants.
 
-NOTE: The words "must", "must not", "required", "shall", "shall not", "should", "should
-not", "recommended",  "may", and "optional" in this section are to be interpreted as
-described in https://www.ietf.org/rfc/rfc2119.txt[RFC 2119.]
+[[test-engines-requirements-enhanced-compatibility]]
+===== Enhanced compatibility
+
+Adhering to the following requirements is optional but recommended for enhanced
+compatibility with build tools and IDEs:
+
+* Unless to indicate an empty discovery result, the `TestDescriptor` returned from
+  `TestEngine.discover()` _should_ have children rather than being completely dynamic.
+  This allows tools to display the structure of the tests and to select a subset of tests
+  to execute.
+* When resolving `UniqueIdSelectors`, a `TestEngine` _should_ only return `TestDescriptor`
+  instances with matching unique IDs including their ancestors but _may_ return additional
+  siblings or other nodes that are required for the execution of the selected tests.
+* `TestEngines` _should_ support <<running-tests-tags, tagging>> tests and containers so
+  that tag filters can be applied when discovering tests.
