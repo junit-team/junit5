@@ -16,7 +16,6 @@
 0710de8d0b8471165c16023dd7045ea6  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineDiscoveryListener.java
 076f9ab689a07fd5e0e82e3aa6561347  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/UniqueId.java
 0780c30e8014ce332d2223519fd31ab9  documentation/src/test/kotlin/example/registration/KotlinWebServerDemo.kt
-07931b3578fa1fa946a966ce7cff0790  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptor.java
 07aaea033d302efdb99722e4e9978398  documentation/src/test/java/example/testinterface/TimeExecutionLogger.java
 07ff5e67b4394a038869b00e07c82ee3  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestPlan.java
 083043495b5e65b8064b222db6524c51  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodFinder.java
@@ -508,6 +507,7 @@ ae3ad87fb1bf944fe0b32847c59b0839  documentation/src/docs/asciidoc/user-guide/ima
 ae82d77feab1ac74e4d129def513f24d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/PostDiscoveryFilter.java
 af6fc7541934a350f726b1f50cbe2493  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/OpenTestReportGeneratingListener.java
 b025fa5453b58a242d5b86c3ec5e5c5e  documentation/src/test/java/example/MethodSourceParameterResolutionDemo.java
+b030cc463bd198e9f86d3e8f62b438cf  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptor.java
 b0acceea509faf3a82c15a39ebc2e881  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/MethodSelector.java
 b1bd0346c50462925e21695cb09ff44e  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/UriSelector.java
 b1d8377aaa1f8e1d31a74e34f7c141c5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultDiscoveryRequest.java
