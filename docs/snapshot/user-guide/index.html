@@ -6773,23 +6773,6 @@ additional dependency to the runtime classpath.</p>
 </div>
 <div class="sect3">
 <h4 id="running-tests-build-maven"><a class="anchor" href="#running-tests-build-maven"></a>4.2.2. Maven</h4>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="title">The JUnit Platform Maven Surefire Provider has been discontinued</div>
-<div class="paragraph">
-<p>The <code>junit-platform-surefire-provider</code>, which was originally developed by the JUnit team,
-was deprecated in JUnit Platform 1.3 and discontinued in 1.4. Please use Maven Surefire&#8217;s
-native support instead.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Starting with <a href="https://issues.apache.org/jira/browse/SUREFIRE-1330">version 2.22.0</a>, Maven
 Surefire and Maven Failsafe provide
@@ -6798,11 +6781,44 @@ for executing tests on the JUnit Platform. The <code>pom.xml</code> file in the
 <code><a href="https://github.com/junit-team/junit5-samples/tree/HEAD/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use the Maven Surefire plugin
 and can serve as a starting point for configuring your Maven build.</p>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock warning">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Use Maven Surefire/Failsafe 3.0.0-M4 or later to avoid interoperability issues</div>
+<div class="paragraph">
+<p>Maven Surefire/Failsafe 3.0.0-M4
+<a href="https://issues.apache.org/jira/browse/SUREFIRE-1585">introduced support</a> for aligning the
+version of the JUnit Platform Launcher it uses with the JUnit Platform version found on
+the test runtime classpath. Therefore, it is recommended to use version 3.0.0-M4 or later
+to avoid interoperability issues.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can add a test dependency on the matching version of the JUnit Platform
+Launcher to your Maven build as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.junit.platform<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>junit-platform-launcher<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>1.10.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
 See <a href="#running-tests-build-spring-boot">Spring Boot</a> for details on how to override the version
@@ -6839,11 +6855,11 @@ following.</p>
     <span class="nt">&lt;plugins&gt;</span>
         <span class="nt">&lt;plugin&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>3.0.0-M7<span class="nt">&lt;/version&gt;</span>
         <span class="nt">&lt;/plugin&gt;</span>
         <span class="nt">&lt;plugin&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>3.0.0-M7<span class="nt">&lt;/version&gt;</span>
         <span class="nt">&lt;/plugin&gt;</span>
     <span class="nt">&lt;/plugins&gt;</span>
 <span class="nt">&lt;/build&gt;</span>
@@ -6879,11 +6895,11 @@ long as you configure <code>test</code> scoped dependencies on JUnit 4 and the J
     <span class="nt">&lt;plugins&gt;</span>
         <span class="nt">&lt;plugin&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>3.0.0-M7<span class="nt">&lt;/version&gt;</span>
         <span class="nt">&lt;/plugin&gt;</span>
         <span class="nt">&lt;plugin&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>3.0.0-M7<span class="nt">&lt;/version&gt;</span>
         <span class="nt">&lt;/plugin&gt;</span>
     <span class="nt">&lt;/plugins&gt;</span>
 <span class="nt">&lt;/build&gt;</span>
@@ -6929,7 +6945,7 @@ from excluding static member classes, you can override its exclude rules as foll
     <span class="nt">&lt;plugins&gt;</span>
         <span class="nt">&lt;plugin&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>3.0.0-M7<span class="nt">&lt;/version&gt;</span>
             <span class="nt">&lt;configuration&gt;</span>
                 <span class="nt">&lt;excludes&gt;</span>
                     <span class="nt">&lt;exclude/&gt;</span>
@@ -6971,7 +6987,7 @@ properties.</p>
     <span class="nt">&lt;plugins&gt;</span>
         <span class="nt">&lt;plugin&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>3.0.0-M7<span class="nt">&lt;/version&gt;</span>
             <span class="nt">&lt;configuration&gt;</span>
                 <span class="nt">&lt;groups&gt;</span>acceptance | !feature-a<span class="nt">&lt;/groups&gt;</span>
                 <span class="nt">&lt;excludedGroups&gt;</span>integration, regression<span class="nt">&lt;/excludedGroups&gt;</span>
@@ -6998,7 +7014,7 @@ below) or via the <code>junit-platform.properties</code> file.</p>
     <span class="nt">&lt;plugins&gt;</span>
         <span class="nt">&lt;plugin&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>3.0.0-M7<span class="nt">&lt;/version&gt;</span>
             <span class="nt">&lt;configuration&gt;</span>
                 <span class="nt">&lt;properties&gt;</span>
                     <span class="nt">&lt;configurationParameters&gt;</span>
@@ -9977,7 +9993,7 @@ XML reports as follows:</p>
         <span class="nt">&lt;plugins&gt;</span>
             <span class="nt">&lt;plugin&gt;</span>
                 <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
-                <span class="nt">&lt;version&gt;</span>2.22.2<span class="nt">&lt;/version&gt;</span>
+                <span class="nt">&lt;version&gt;</span>3.0.0-M7<span class="nt">&lt;/version&gt;</span>
                 <span class="nt">&lt;configuration&gt;</span>
                     <span class="nt">&lt;properties&gt;</span>
                         <span class="nt">&lt;configurationParameters&gt;</span>
@@ -12096,7 +12112,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-01-06 15:20:29 UTC
+Last updated 2023-01-06 15:30:11 UTC
 </div>
 </div>
 <style>

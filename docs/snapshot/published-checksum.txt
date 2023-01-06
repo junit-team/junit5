@@ -198,6 +198,7 @@
 425204c29d0d17d737d3b5eedad7217d  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassLoaderUtils.java
 4255f3a9e3d7f3945c3cc043c8b186b0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/package-info.java
 42ad2c62ad3d50a11b07ed106449fab0  documentation/src/test/java/example/AssertionsDemo.java
+42f8530fdfae2e7da3c9af8c529f0e82  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 433f6ce0bfe7b9dd2eac903790a5c274  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.java
 438e2282373e2a38585463aab577b138  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
 44efd5de813b9eabd43be72bc551f5bf  documentation/src/main/java/example/registration/WebResponse.java
@@ -735,7 +736,6 @@ ea359337127c671219f9f80a5241a398  junit-platform-launcher/src/main/java/org/juni
 eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit/platform/console/tasks/package-info.java
 eaff21bbb36884b3a3144b67abcaf8ec  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SuiteDisplayName.java
 eb131812de815ba9b9d27cb21f05911d  junit-platform-suite-commons/src/main/java/org/junit/platform/suite/commons/package-info.java
-eb2b4483ffaf110646f77584f357d7fb  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 eb36d4804884f1c1e981193f0679f3d1  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
 ec34b26ba8050acb09c1afd6d8977793  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolution.java
 eca7e4cbe3996a758ba077b747f6d527  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestTemplateMethod.java
