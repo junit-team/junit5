@@ -15,7 +15,9 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_SATURATE_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME;
 
 import org.apiguardian.api.API;
@@ -165,6 +167,40 @@ public final class Constants {
 	@API(status = EXPERIMENTAL, since = "5.3")
 	public static final String PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+
+	/**
+	 * Property name used to configure the maximum pool size of the underlying
+	 * fork-join pool for the {@code fixed} configuration strategy: {@value}
+	 *
+	 * <p>Value must be an integer and greater than or equal to
+	 * {@value #PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME}; defaults to
+	 * {@code 256 + fixed.parallelism}.
+	 *
+	 * <p>Note: This property only takes affect on Java 9+.
+	 *
+	 * @since 5.10
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	public static final String PARALLEL_CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME;
+
+	/**
+	 * Property name used to disable saturation of the underlying fork-join pool
+	 * for the {@code fixed} configuration strategy: {@value}
+	 *
+	 * <p>When set to {@code false} the underlying fork-join pool will reject
+	 * additional tasks if all available workers are busy and the maximum
+	 * pool-size would be exceeded.
+
+	 * <p>Value must either {@code true} or {@code false}; defaults to {@code true}.
+	 *
+	 * <p>Note: This property only takes affect on Java 9+.
+	 *
+	 * @since 5.10
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	public static final String PARALLEL_CONFIG_FIXED_SATURATE_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_FIXED_SATURATE_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the factor to be multiplied with the number of

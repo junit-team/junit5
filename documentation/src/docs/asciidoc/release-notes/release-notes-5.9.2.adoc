@@ -25,6 +25,8 @@ JUnit repository on GitHub.
 
 * Introduce `TestPlan.getTestIdentifier(UniqueId)` and `TestPlan.getChildren(UniqueId)` to
   avoid parsing unique IDs unnecessarily during test execution.
+* Support for limiting the `max-pool-size` for parallel execution via a configuration
+  parameter
 * Quietly stop further suite discovery when encountering a cycle in a test suite
 
 
@@ -37,14 +39,19 @@ JUnit repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The `fixed` parallel execution strategy now allows the thread pool to be saturated by
+  default.
 
 ==== New Features and Improvements
 
-* ❓
+* New `junit.jupiter.execution.parallel.config.fixed.max-pool-size` configuration
+  parameter to set the maximum pool size.
+* New `junit.jupiter.execution.parallel.config.fixed.saturate` configuration parameter to
+  disable pool saturation.
+* `JAVA_21` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
-= [[release-notes-5.9.2-junit-vintage]]
+[[release-notes-5.9.2-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes

@@ -39,7 +39,7 @@ tasks {
 		}
 		from(sourceSets.mainRelease9.get().output.classesDirs)
 		doLast(objects.newInstance(org.junit.gradle.java.ExecJarAction::class).apply {
-			javaLauncher.set(project.the<JavaToolchainService>().launcherFor(java.toolchain))
+			javaLauncher.set(project.javaToolchains.launcherFor(java.toolchain))
 			args.addAll(
 				"--update",
 				"--file", archiveFile.get().asFile.absolutePath,

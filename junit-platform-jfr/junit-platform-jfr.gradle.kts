@@ -21,7 +21,7 @@ javaLibrary {
 
 tasks {
 	compileJava {
-		javaCompiler.set(project.the<JavaToolchainService>().compilerFor {
+		javaCompiler.set(project.javaToolchains.compilerFor {
 			languageVersion.set(JavaLanguageVersion.of(8))
 		})
 	}
