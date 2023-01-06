@@ -13,7 +13,7 @@ ktlint = "0.43.0"
 log4j = "2.19.0"
 opentest4j = "1.2.0"
 openTestReporting = "0.1.0-M1"
-surefire = "2.22.2"
+surefire = "3.0.0-M7"
 xmlunit = "2.9.0"
 
 [libraries]
