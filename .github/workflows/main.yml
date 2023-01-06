@@ -43,7 +43,7 @@ jobs:
           jacocoRootReport
           prepareDocsForUploadToGhPages
     - name: Upload to Codecov.io
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
 
   Windows:
     runs-on: windows-latest
