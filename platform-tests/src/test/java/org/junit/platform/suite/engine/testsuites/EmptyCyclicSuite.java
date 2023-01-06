@@ -13,13 +13,12 @@ package org.junit.platform.suite.engine.testsuites;
 import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
-import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 
 /**
- * @since 1.8
+ * @since 1.9.2
  */
 @Suite
 @IncludeClassNamePatterns(".*")
-@SelectClasses({ CyclicSuite.class, SingleTestTestCase.class })
-public class CyclicSuite {
+@SelectClasses(EmptyCyclicSuite.class)
+public class EmptyCyclicSuite {
 }
