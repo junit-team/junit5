@@ -85,7 +85,10 @@ jobs:
 
   update_documentation:
     name: Update Snapshot Documentation
-    needs: linux
+    concurrency:
+      group: github-pages
+      cancel-in-progress: true
+    needs: Linux
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
