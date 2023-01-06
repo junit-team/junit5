@@ -26,8 +26,6 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* Support for limiting the `max-pool-size` for parallel execution via a configuration parameter
-
 * All utility methods from `ReflectionSupport` now have counterparts returning `Stream`
   instead of `List`.
 
@@ -40,15 +38,10 @@ repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* The `fixed` parallel execution strategy now allows the thread pool to be saturated by
-  default.
+* ❓
 
 ==== New Features and Improvements
 
-* New `junit.jupiter.execution.parallel.config.fixed.max-pool-size` configuration
-  parameter to set the maximum pool size.
-* New `junit.jupiter.execution.parallel.config.fixed.saturate` configuration
-  parameter to disable pool saturation.
 * New `ArgumentsAccessor.getInvocationIndex()` method that supplies the index of a
   `@ParameterizedTest` invocation.
 * `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal
