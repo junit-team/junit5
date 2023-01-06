@@ -2,12 +2,26 @@ import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
 
 plugins {
-	`java-library-conventions`
+	`kotlin-library-conventions`
 	`testing-conventions`
 }
 
 javaLibrary {
 	mainJavaVersion = JavaVersion.VERSION_11
+}
+
+spotless {
+	java {
+		target(files(project.java.sourceSets.map { it.allJava }), "projects/**/*.java")
+	}
+	kotlin {
+		target("projects/**/*.kt")
+	}
+	format("projects") {
+		target("projects/**/*.gradle.kts", "projects/**/*.md")
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
 }
 
 val thirdPartyJars by configurations.creating
