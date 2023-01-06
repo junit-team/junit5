@@ -554,9 +554,6 @@ from being silently ignored.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Support for limiting the <code>max-pool-size</code> for parallel execution via a configuration parameter</p>
-</li>
-<li>
 <p>All utility methods from <code>ReflectionSupport</code> now have counterparts returning <code>Stream</code>
 instead of <code>List</code>.</p>
 </li>
@@ -581,8 +578,7 @@ instead of <code>List</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>fixed</code> parallel execution strategy now allows the thread pool to be saturated by
-default.</p>
+<p>❓</p>
 </li>
 </ul>
 </div>
@@ -591,14 +587,6 @@ default.</p>
 <h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
-<li>
-<p>New <code>junit.jupiter.execution.parallel.config.fixed.max-pool-size</code> configuration
-parameter to set the maximum pool size.</p>
-</li>
-<li>
-<p>New <code>junit.jupiter.execution.parallel.config.fixed.saturate</code> configuration
-parameter to disable pool saturation.</p>
-</li>
 <li>
 <p>New <code>ArgumentsAccessor.getInvocationIndex()</code> method that supplies the index of a
 <code>@ParameterizedTest</code> invocation.</p>
@@ -690,6 +678,10 @@ JUnit repository on GitHub.</p>
 <p>Introduce <code>TestPlan.getTestIdentifier(UniqueId)</code> and <code>TestPlan.getChildren(UniqueId)</code> to
 avoid parsing unique IDs unnecessarily during test execution.</p>
 </li>
+<li>
+<p>Support for limiting the <code>max-pool-size</code> for parallel execution via a configuration
+parameter</p>
+</li>
 </ul>
 </div>
 </div>
@@ -711,7 +703,8 @@ avoid parsing unique IDs unnecessarily during test execution.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>fixed</code> parallel execution strategy now allows the thread pool to be saturated by
+default.</p>
 </li>
 </ul>
 </div>
@@ -720,6 +713,14 @@ avoid parsing unique IDs unnecessarily during test execution.</p>
 <h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>New <code>junit.jupiter.execution.parallel.config.fixed.max-pool-size</code> configuration
+parameter to set the maximum pool size.</p>
+</li>
+<li>
+<p>New <code>junit.jupiter.execution.parallel.config.fixed.saturate</code> configuration parameter to
+disable pool saturation.</p>
+</li>
 <li>
 <p><code>JAVA_21</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
 </li>
@@ -907,7 +908,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2022-12-30 18:55:16 UTC
+Last updated 2023-01-06 15:13:35 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

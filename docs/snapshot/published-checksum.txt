@@ -212,7 +212,6 @@
 4999f35a01bb747f82a6d68d4e605438  documentation/src/main/java/example/util/Calculator.java
 49c8ac101fb54c7f5c33369377e20559  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ConfigurationParameters.java
 4a1da47ce2b5b7b4d5fd1145737a933a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/package-info.java
-4b4ca8f0f0933cd1f9cd68636a09ecb8  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 4bbd6faa6b559b4c878d395d144c6e2d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodSelectorResolver.java
 4bbdb7f88917408d27adbb537fa6b346  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludePackages.java
 4c796086bbba4c298e0c77cfc5635527  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.java
@@ -233,6 +232,7 @@
 4f1feb9cb624c2f98545b42f6adae2ba  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.java
 4f8499153774ba454971a281013d8748  documentation/documentation.gradle.kts
 4f9b809a0b4315d598e28079508c6143  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.java
+500cffaebd498facd296ac4b033cff16  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.2.adoc
 50b2683cc08b422ae859a0e704938dac  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/XmlReportWriter.java
 50b30aeda40519586d04bf430c858380  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
 50f64be32014d23801e961d73752485e  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
@@ -313,6 +313,7 @@
 6c602de9608669590efbd054484dd31a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ThrowableCollector.java
 6cf50c28a1a95b9acd2015c47f74dd95  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/RunnerExecutor.java
 6d54c1dec71f0268fb288468c68be3cc  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrintingListener.java
+6d5d9f0c52039515dcb8c2f924b4aeb3  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 6d71c976c2078e815220a6566385a10e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterAllCallback.java
 6d924925bde783798bed853ded00412e  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/package-info.java
 6db609e76942be7dcfdce1939c161e29  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestTemplate.java
@@ -541,7 +542,6 @@ b8e22184bc231aaacfb41b819faaf047  documentation/src/test/java/example/exception/
 b8f6a60647c490b7e1a45d54edac7d44  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutDurationParser.java
 b8fe67c0fbc751d3498ad1b3336b9d10  junit-platform-launcher/src/main/java/org/junit/platform/launcher/Launcher.java
 b965136573e247e8e52a716c94170c20  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/session/CompositeLauncherSessionListener.java
-ba196a336d357470a62aeb64c3a043ff  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.2.adoc
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 ba551ef7b14e5964362a6a02cec7a523  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreeNode.java
 ba7d104d7cb83fed454467fa81c2c0fc  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.java
