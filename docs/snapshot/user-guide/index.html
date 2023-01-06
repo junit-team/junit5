@@ -814,6 +814,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#test-engines-junit">6.5.1. JUnit Test Engines</a></li>
 <li><a href="#test-engines-custom">6.5.2. Custom Test Engines</a></li>
 <li><a href="#test-engines-registration">6.5.3. Registering a TestEngine</a></li>
+<li><a href="#test-engines-requirements">6.5.4. Requirements</a>
+<ul class="sectlevel4">
+<li><a href="#test-engines-requirements-mandatory">Mandatory requirements</a></li>
+<li><a href="#test-engines-requirements-enhanced-compatibility">Enhanced compatibility</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -10039,7 +10045,7 @@ configure a test suite</p>
 </td>
 <td class="content">
 Both of the required dependencies are aggregated in the <code>junit-platform-suite</code>
-artifact which can be declard in <em>test</em> scope instead of declaring explicit dependencies
+artifact which can be declared in <em>test</em> scope instead of declaring explicit dependencies
 on <code>junit-platform-suite-api</code> and <code>junit-platform-suite-engine</code>.
 </td>
 </tr>
@@ -11223,6 +11229,78 @@ implement the <code>Node</code> interface, including support for parallel execut
 <code>junit-jupiter-engine</code> JAR.</p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="test-engines-requirements"><a class="anchor" href="#test-engines-requirements"></a>6.5.4. Requirements</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The words "must", "must not", "required", "shall", "shall not", "should", "should
+not", "recommended",  "may", and "optional" in this section are to be interpreted as
+described in <a href="https://www.ietf.org/rfc/rfc2119.txt">RFC 2119.</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="test-engines-requirements-mandatory"><a class="anchor" href="#test-engines-requirements-mandatory"></a>Mandatory requirements</h5>
+<div class="paragraph">
+<p>For interoperability with build tools and IDEs, <code>TestEngine</code> implementations must adhere
+to the following requirements:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>TestDescriptor</code> returned from <code>TestEngine.discover()</code> <em>must</em> be the root of a tree
+of <code>TestDescriptor</code> instances. This implies that there <em>must not</em> be any cycles between
+a node and its descendants.</p>
+</li>
+<li>
+<p>A <code>TestEngine</code> <em>must</em> be able to discover <code>UniqueIdSelectors</code> for any unique ID that it
+previously generated and returned from <code>TestEngine.discover()</code>. This enables selecting a
+subset of tests to execute or rerun.</p>
+</li>
+<li>
+<p>The <code>executionSkipped</code>, <code>executionStarted</code>, and <code>executionFinished</code> methods of the
+<code>EngineExecutionListener</code> passed to <code>TestEngine.execute()</code> <em>must</em> be called for every
+<code>TestDescriptor</code> node in the tree returned from <code>TestEngine.discover()</code> at most
+once. Parent nodes <em>must</em> be reported as started before their children and as finished
+after their children. If a node is reported as skipped, there <em>must not</em> be any events
+reported for its descendants.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="test-engines-requirements-enhanced-compatibility"><a class="anchor" href="#test-engines-requirements-enhanced-compatibility"></a>Enhanced compatibility</h5>
+<div class="paragraph">
+<p>Adhering to the following requirements is optional but recommended for enhanced
+compatibility with build tools and IDEs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Unless to indicate an empty discovery result, the <code>TestDescriptor</code> returned from
+<code>TestEngine.discover()</code> <em>should</em> have children rather than being completely dynamic.
+This allows tools to display the structure of the tests and to select a subset of tests
+to execute.</p>
+</li>
+<li>
+<p>When resolving <code>UniqueIdSelectors</code>, a <code>TestEngine</code> <em>should</em> only return <code>TestDescriptor</code>
+instances with matching unique IDs including their ancestors but <em>may</em> return additional
+siblings or other nodes that are required for the execution of the selected tests.</p>
+</li>
+<li>
+<p><code>TestEngines</code> <em>should</em> support <a href="#running-tests-tags">tagging</a> tests and containers so
+that tag filters can be applied when discovering tests.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -12018,7 +12096,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-01-06 15:13:35 UTC
+Last updated 2023-01-06 15:20:29 UTC
 </div>
 </div>
 <style>
