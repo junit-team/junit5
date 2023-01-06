@@ -46,7 +46,7 @@ jobs:
             -Dscan.tag.JDK_${{ matrix.jdk }}
             build
       - name: Upload Test Distribution trace files
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "Test Distribution trace files (OpenJDK ${{ matrix.jdk }})"
           path: '**/build/test-results/*/trace.json'
