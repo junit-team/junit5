@@ -27,6 +27,7 @@ JUnit repository on GitHub.
   avoid parsing unique IDs unnecessarily during test execution.
 * Support for limiting the `max-pool-size` for parallel execution via a configuration
   parameter
+* Quietly stop further suite discovery when encountering a cycle in a test suite
 
 
 [[release-notes-5.9.2-junit-jupiter]]

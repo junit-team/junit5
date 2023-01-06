@@ -16,10 +16,28 @@ import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 
 /**
- * @since 1.8
+ * @since 1.9.2
  */
-@Suite
-@IncludeClassNamePatterns(".*")
-@SelectClasses({ CyclicSuite.class, SingleTestTestCase.class })
-public class CyclicSuite {
+public class ThreePartCyclicSuite {
+
+	@Suite
+	@IncludeClassNamePatterns(".*")
+	@SelectClasses({ PartB.class })
+	public static class PartA {
+
+	}
+
+	@Suite
+	@IncludeClassNamePatterns(".*")
+	@SelectClasses({ PartC.class })
+	public static class PartB {
+
+	}
+
+	@Suite
+	@IncludeClassNamePatterns(".*")
+	@SelectClasses({ PartB.class, SingleTestTestCase.class })
+	public static class PartC {
+
+	}
 }

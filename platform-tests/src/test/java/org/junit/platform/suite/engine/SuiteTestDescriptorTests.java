@@ -25,14 +25,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
-import org.junit.platform.suite.engine.testsuites.CyclicSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
 
 /**
@@ -88,21 +86,6 @@ class SuiteTestDescriptorTests {
 				() -> suite.addDiscoveryRequestFrom(methodId));
 			assertEquals("discovery request can not be modified after discovery", exception.getMessage());
 		});
-	}
-
-	@Test
-	void suitesMayNotContainACycle() {
-		// @formatter:off
-		UniqueId expectedCycle = suiteId
-				.append("engine", SuiteEngineDescriptor.ENGINE_ID)
-				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuite.class.getName())
-				.append("engine", SuiteEngineDescriptor.ENGINE_ID)
-				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuite.class.getName());
-		// @formatter:on
-		suite.addDiscoveryRequestFrom(CyclicSuite.class);
-		JUnitException exception = assertThrows(JUnitException.class, suite::discover);
-		assertEquals("Configuration error: The suite configuration may not contain a cycle [" + expectedCycle + "]",
-			exception.getCause().getCause().getCause().getMessage());
 	}
 
 	@Test

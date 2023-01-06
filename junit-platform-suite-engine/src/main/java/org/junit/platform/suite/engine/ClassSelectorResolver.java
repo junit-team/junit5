@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
@@ -29,6 +31,8 @@ import org.junit.platform.engine.support.discovery.SelectorResolver;
  * @since 1.8
  */
 final class ClassSelectorResolver implements SelectorResolver {
+
+	private static final Logger log = LoggerFactory.getLogger(ClassSelectorResolver.class);
 
 	private static final IsSuiteClass isSuiteClass = new IsSuiteClass();
 
@@ -94,7 +98,31 @@ final class ClassSelectorResolver implements SelectorResolver {
 
 	private Optional<SuiteTestDescriptor> newSuiteDescriptor(Class<?> suiteClass, TestDescriptor parent) {
 		UniqueId id = parent.getUniqueId().append(SuiteTestDescriptor.SEGMENT_TYPE, suiteClass.getName());
+		if (containsCycle(id)) {
+			log.config(() -> createConfigContainsCycleMessage(suiteClass, id));
+			return Optional.empty();
+		}
+
 		return Optional.of(new SuiteTestDescriptor(id, suiteClass, configurationParameters));
+	}
+
+	private static boolean containsCycle(UniqueId id) {
+		List<Segment> segments = id.getSegments();
+		List<Segment> engineAndSuiteSegment = segments.subList(segments.size() - 2, segments.size());
+		List<Segment> ancestorSegments = segments.subList(0, segments.size() - 2);
+		for (int i = 0; i < ancestorSegments.size() - 1; i++) {
+			List<Segment> candidate = ancestorSegments.subList(i, i + 2);
+			if (engineAndSuiteSegment.equals(candidate)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static String createConfigContainsCycleMessage(Class<?> suiteClass, UniqueId suiteId) {
+		return String.format(
+			"The suite configuration of [%s] resulted in a cycle [%s] and will not be discovered a second time.",
+			suiteClass.getName(), suiteId);
 	}
 
 }

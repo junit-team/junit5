@@ -22,6 +22,7 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessf
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
@@ -39,7 +40,9 @@ import org.junit.platform.suite.engine.testcases.MultipleTestsTestCase;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 import org.junit.platform.suite.engine.testcases.TaggedTestTestCase;
 import org.junit.platform.suite.engine.testsuites.AbstractSuite;
+import org.junit.platform.suite.engine.testsuites.CyclicSuite;
 import org.junit.platform.suite.engine.testsuites.DynamicSuite;
+import org.junit.platform.suite.engine.testsuites.EmptyCyclicSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestWithFailIfNoTestFalseSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyTestCaseSuite;
@@ -50,6 +53,7 @@ import org.junit.platform.suite.engine.testsuites.NestedSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
 import org.junit.platform.suite.engine.testsuites.SuiteDisplayNameSuite;
 import org.junit.platform.suite.engine.testsuites.SuiteSuite;
+import org.junit.platform.suite.engine.testsuites.ThreePartCyclicSuite;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
 /**
@@ -347,6 +351,44 @@ class SuiteEngineTests {
 				.haveExactly(1, event(test(JUnit4TestsTestCase.class.getName()), finishedSuccessfully()))
 				.doNotHave(test(TaggedTestTestCase.class.getName()))
 				.doNotHave(container("junit-jupiter"));
+		// @formatter:on
+	}
+
+	@Test
+	void cyclicSuite() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(CyclicSuite.class))
+				.execute()
+				.allEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
+		// @formatter:on
+	}
+
+	@Test
+	void emptyCyclicSuite() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(EmptyCyclicSuite.class))
+				.execute()
+				.allEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(container(EmptyCyclicSuite.class), finishedWithFailure(message(
+						"Suite [org.junit.platform.suite.engine.testsuites.EmptyCyclicSuite] did not discover any tests"
+				))));
+		// @formatter:on
+	}
+
+	@Test
+	void threePartCyclicSuite() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(ThreePartCyclicSuite.PartA.class))
+				.execute()
+				.allEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
 
