@@ -71,7 +71,9 @@ There is no return value for the `execute()` method, but you can use a
 `{SummaryGeneratingListener}`, `{LegacyXmlReportGeneratingListener}`, and
 `{UniqueIdTrackingListener}`.
 
-NOTE: `TestExecutionListener` are called sequentially in registration order.
+NOTE: All `TestExecutionListener` methods are called sequentially. Methods for start
+events are called in registration order while methods for finish events are called in
+reverse order.
 Test case execution won't start before all `executionStarted` calls have returned.
 
 [[launcher-api-engines-custom]]
