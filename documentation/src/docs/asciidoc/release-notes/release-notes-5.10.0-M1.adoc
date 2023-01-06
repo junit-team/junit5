@@ -39,8 +39,7 @@ GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* The `fixed` parallel execution strategy now allows the thread pool to be saturated by
-  default.
+* ❓
 
 ==== New Features and Improvements
 
