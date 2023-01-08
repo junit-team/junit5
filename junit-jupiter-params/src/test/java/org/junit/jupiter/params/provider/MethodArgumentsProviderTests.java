@@ -37,6 +37,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -408,16 +409,25 @@ class MethodArgumentsProviderTests {
 			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
 		}
 
+		@ParameterizedTest
+		@ValueSource(strings = { "java.lang.String,java.lang.String", "java.lang.String, java.lang.String",
+				"java.lang.String,    java.lang.String" })
+		void providesArgumentsUsingSimpleNameWithMultipleParameters(String params) {
+			var arguments = provideArguments("stringStreamProviderWithOrWithoutParameter(" + params + ")");
+			assertThat(arguments).containsExactly(array("foo!!"), array("bar!!"));
+		}
+
 		@Test
 		void throwsExceptionWhenSeveralFactoryMethodsWithSameNameAreAvailable() {
 			var exception = assertThrows(PreconditionViolationException.class,
 				() -> provideArguments("stringStreamProviderWithOrWithoutParameter").toArray());
 
 			assertThat(exception.getMessage())//
-					.startsWith("2 factory methods named [stringStreamProviderWithOrWithoutParameter] were found in "
+					.startsWith("3 factory methods named [stringStreamProviderWithOrWithoutParameter] were found in "
 							+ "class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]: ")//
 					.contains("stringStreamProviderWithOrWithoutParameter()",
-						"stringStreamProviderWithOrWithoutParameter(java.lang.String)");
+						"stringStreamProviderWithOrWithoutParameter(java.lang.String)",
+						"stringStreamProviderWithOrWithoutParameter(java.lang.String,java.lang.String)");
 		}
 
 		@Test
@@ -426,6 +436,16 @@ class MethodArgumentsProviderTests {
 				TestCase.class.getName() + "#stringStreamProviderWithOrWithoutParameter(java.lang.String)");
 
 			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "java.lang.String,java.lang.String", "java.lang.String, java.lang.String",
+				"java.lang.String,    java.lang.String" })
+		void providesArgumentsUsingFactoryMethodSelectedViaFullyQualifiedNameWithMultipleParameters(String params) {
+			var arguments = provideArguments(
+				TestCase.class.getName() + "#stringStreamProviderWithOrWithoutParameter(" + params + ")");
+
+			assertThat(arguments).containsExactly(array("foo!!"), array("bar!!"));
 		}
 
 		@Test
@@ -520,6 +540,10 @@ class MethodArgumentsProviderTests {
 
 		static Stream<String> stringStreamProviderWithOrWithoutParameter(String parameter) {
 			return stringStreamProviderWithParameter(parameter);
+		}
+
+		static Stream<String> stringStreamProviderWithOrWithoutParameter(String parameter1, String parameter2) {
+			return stringStreamProviderWithParameter(parameter1 + parameter2);
 		}
 
 		// @ParameterizedTest

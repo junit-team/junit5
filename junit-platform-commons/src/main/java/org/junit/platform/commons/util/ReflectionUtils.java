@@ -928,7 +928,7 @@ public final class ReflectionUtils {
 	 * @param qualifiedMethodName a qualified method name, never {@code null} or blank
 	 * @return a 2-element array of strings containing the parsed values
 	 */
-	@API(status = INTERNAL, since = "1.9")
+	@API(status = INTERNAL, since = "1.9.2")
 	public static String[] parseQualifiedMethodName(String qualifiedMethodName) {
 		String methodName = qualifiedMethodName;
 		String methodParameters = "";

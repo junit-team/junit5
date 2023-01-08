@@ -38,8 +38,8 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* Introduce new `@MethodSource` syntax to add the possibility to explicitly select
-  an overloaded local factory method without specifying its fully qualified name
+* New `@MethodSource` syntax for explicitly selecting an overloaded local factory method
+  without specifying its fully qualified name.
 
 ==== Deprecations and Breaking Changes
 
