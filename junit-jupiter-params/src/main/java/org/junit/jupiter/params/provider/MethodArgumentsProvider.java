@@ -11,13 +11,14 @@
 package org.junit.jupiter.params.provider;
 
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.platform.commons.util.CollectionUtils.isConvertibleToStream;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -28,7 +29,6 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -50,7 +50,7 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 	public Stream<Arguments> provideArguments(ExtensionContext context) {
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
-		return Arrays.stream(this.methodNames)
+		return stream(this.methodNames)
 				.map(factoryMethodName -> getFactoryMethod(context, factoryMethodName))
 				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
 				.flatMap(CollectionUtils::toStream)
@@ -73,11 +73,20 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		if (factoryMethodName.contains("#")) {
 			return true;
 		}
-		if (factoryMethodName.contains(".") && factoryMethodName.contains("(")) {
-			// Excluding cases of simple method names with parameters
-			return factoryMethodName.indexOf(".") < factoryMethodName.indexOf("(");
+		int indexOfDot = factoryMethodName.indexOf(".");
+		if (indexOfDot == -1) {
+			return false;
 		}
-		return factoryMethodName.contains(".");
+		int indexOfOpeningParenthesis = factoryMethodName.indexOf("(");
+		if (indexOfOpeningParenthesis > 0) {
+			// Exclude simple method names with parameters
+			return indexOfDot < indexOfOpeningParenthesis;
+		}
+		// If we get this far, we conclude the supplied factory method name "looks"
+		// like it was intended to be a fully qualified method name, even if the
+		// syntax is invalid. We do this in order to provide better diagnostics for
+		// the user when a fully qualified method name is in fact invalid.
+		return true;
 	}
 
 	private Method getFactoryMethodByFullyQualifiedName(String fullyQualifiedMethodName) {
@@ -143,12 +152,21 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 
 	private static List<Method> filterFactoryMethodsWithMatchingParameters(List<Method> factoryMethods,
 			String factoryMethodName, String factoryMethodParameters) {
+
 		if (!factoryMethodName.endsWith(")")) {
-			// If parameters are not specified, no choice is made
+			// If parameters are not specified, nothing is filtered.
 			return factoryMethods;
 		}
-		Predicate<Method> hasRequiredParameters = method -> factoryMethodParameters.equals(
-			ClassUtils.nullSafeToString(method.getParameterTypes()));
+
+		// Compare against canonical parameter list, ignoring whitespace.
+		String parameterList = factoryMethodParameters.replaceAll("\\s+", "");
+		Predicate<Method> hasRequiredParameters = method -> {
+			if (parameterList.isEmpty()) {
+				return method.getParameterCount() == 0;
+			}
+			return parameterList.equals(stream(method.getParameterTypes()).map(Class::getName).collect(joining(",")));
+		};
+
 		return factoryMethods.stream().filter(hasRequiredParameters).collect(toList());
 	}
 
