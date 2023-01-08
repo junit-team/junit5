@@ -1,13 +1,13 @@
 [[release-notes-5.9.2]]
 == 5.9.2
 
-*Date of Release:* ❓
+*Date of Release:* January ❓, 2023
 
 *Scope:* Bug fixes and enhancements since 5.9.1
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestones/5.9.2+[5.9.2] milestone page in the
-JUnit repository on GitHub.
+link:{junit5-repo}+/milestones/5.9.2+[5.9.2] milestone page in the JUnit repository on
+GitHub.
 
 
 [[release-notes-5.9.2-junit-platform]]
@@ -20,17 +20,14 @@ JUnit repository on GitHub.
   exception is thrown for invalid configuration, thereby preventing invalid configuration
   from being silently ignored.
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
 ==== New Features and Improvements
 
-* Introduce `TestPlan.getTestIdentifier(UniqueId)` and `TestPlan.getChildren(UniqueId)` to
-  avoid parsing unique IDs unnecessarily during test execution.
+* New `TestPlan.getTestIdentifier(UniqueId)` and `TestPlan.getChildren(UniqueId)` methods
+  to avoid parsing unique IDs unnecessarily during test execution.
 * Support for limiting the `max-pool-size` for parallel execution via a configuration
-  parameter
-* Quietly stop further suite discovery when encountering a cycle in a test suite
+  parameter.
+* Suite discovery now ignores cycles encountered in a test suite and logs an informational
+  message at `CONFIG` level instead of throwing an exception.
 
 
 [[release-notes-5.9.2-junit-jupiter]]
@@ -48,11 +45,11 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
+* `JAVA_21` has been added to the `JRE` enum for use with JRE-based execution conditions.
 * New `junit.jupiter.execution.parallel.config.fixed.max-pool-size` configuration
   parameter to set the maximum pool size.
 * New `junit.jupiter.execution.parallel.config.fixed.saturate` configuration parameter to
   disable pool saturation.
-* `JAVA_21` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.9.2-junit-vintage]]
@@ -60,13 +57,5 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* Fix reporting of `Parameterized` tests when used in combination with the `Enclosed`
-  runner.
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+* `Parameterized` tests are now properly reported when used in combination with the
+  `Enclosed` runner.
