@@ -635,15 +635,15 @@ to fall back to the default display name generator.</p>
 <h2 id="release-notes-5.9.2"><a class="anchor" href="#release-notes-5.9.2"></a>5.9.2</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> January ❓, 2023</p>
 </div>
 <div class="paragraph">
 <p><strong>Scope:</strong> Bug fixes and enhancements since 5.9.1</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestones/5.9.2">5.9.2</a> milestone page in the
-JUnit repository on GitHub.</p>
+<a href="https://github.com/junit-team/junit5/milestones/5.9.2">5.9.2</a> milestone page in the JUnit repository on
+GitHub.</p>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.9.2-junit-platform"><a class="anchor" href="#release-notes-5.9.2-junit-platform"></a>JUnit Platform</h3>
@@ -661,29 +661,20 @@ from being silently ignored.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
 <h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Introduce <code>TestPlan.getTestIdentifier(UniqueId)</code> and <code>TestPlan.getChildren(UniqueId)</code> to
-avoid parsing unique IDs unnecessarily during test execution.</p>
+<p>New <code>TestPlan.getTestIdentifier(UniqueId)</code> and <code>TestPlan.getChildren(UniqueId)</code> methods
+to avoid parsing unique IDs unnecessarily during test execution.</p>
 </li>
 <li>
 <p>Support for limiting the <code>max-pool-size</code> for parallel execution via a configuration
-parameter</p>
+parameter.</p>
 </li>
 <li>
-<p>Quietly stop further suite discovery when encountering a cycle in a test suite</p>
+<p>Suite discovery now ignores cycles encountered in a test suite and logs an informational
+message at <code>CONFIG</code> level instead of throwing an exception.</p>
 </li>
 </ul>
 </div>
@@ -696,13 +687,14 @@ parameter</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>New <code>@MethodSource</code> syntax for explicitly selecting an overloaded local factory method
+without specifying its fully qualified name.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -717,15 +709,15 @@ default.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><code>JAVA_21</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
+</li>
+<li>
 <p>New <code>junit.jupiter.execution.parallel.config.fixed.max-pool-size</code> configuration
 parameter to set the maximum pool size.</p>
 </li>
 <li>
 <p>New <code>junit.jupiter.execution.parallel.config.fixed.saturate</code> configuration parameter to
 disable pool saturation.</p>
-</li>
-<li>
-<p><code>JAVA_21</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
 </li>
 </ul>
 </div>
@@ -738,28 +730,8 @@ disable pool saturation.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Fix reporting of <code>Parameterized</code> tests when used in combination with the <code>Enclosed</code>
-runner.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-6"><a class="anchor" href="#deprecations-and-breaking-changes-6"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
+<p><code>Parameterized</code> tests are now properly reported when used in combination with the
+<code>Enclosed</code> runner.</p>
 </li>
 </ul>
 </div>
@@ -838,7 +810,7 @@ are now properly reported.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -911,7 +883,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-01-06 18:27:30 UTC
+Last updated 2023-01-08 17:44:43 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
