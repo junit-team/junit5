@@ -1,7 +1,7 @@
 [[release-notes-5.9.2]]
 == 5.9.2
 
-*Date of Release:* January ❓, 2023
+*Date of Release:* January 10, 2023
 
 *Scope:* Bug fixes and enhancements since 5.9.1
 
