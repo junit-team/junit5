@@ -14,7 +14,7 @@ pluginManagement {
 		id("org.asciidoctor.jvm.convert") version "4.0.0-alpha.1"
 		id("org.asciidoctor.jvm.pdf") version "4.0.0-alpha.1"
 		id("me.champeau.jmh") version "0.6.8"
-		id("io.spring.nohttp") version "0.0.10"
+		id("io.spring.nohttp") version "0.0.11"
 		id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 	}
 }
