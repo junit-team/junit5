@@ -25,6 +25,11 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * Concrete implementations may therefore override one or more of these methods
  * to be notified of the selected events.
  *
+ * <p>All {@code TestExecutionListener} methods are called sequentially. Methods
+ * for start events are called in registration order while methods for finish
+ * events are called in reverse order. Test case execution won't start before
+ * all {@link #executionStarted(TestIdentifier)} calls have returned.
+ *
  * <p>JUnit provides two example implementations.
  *
  * <ul>
