@@ -255,7 +255,6 @@
 51e6030fd9bd7dab177d1ac475c18fb3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/IndicativeSentencesGeneration.java
 521008db393d7ebe4f127ad974019c1c  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/AbstractTestRuleAnnotatedMember.java
 5265fdec28a7e95c43dee51936e6f746  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/ClassSelectorResolver.java
-52959a0bc66a3ae24f7498b35e6398c3  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.2.adoc
 5298aaffeab1d1e90b5e78d9fccba9f8  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java
 52aa65d7e12dc9eb8a96c4c418392a88  documentation/src/test/java/example/AssertionsDemo.java
 531611096fc2507c803d682cbe6cd789  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestExtension.java
@@ -747,6 +746,7 @@ ec2565372958a782de19b37c5c0b0b50  junit-vintage-engine/src/main/java/org/junit/v
 ec27585673bc62f9ad797e878a4f2593  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeEach.java
 ec36a47691ed847401d7302f27445803  junit-platform-jfr/src/main/java/org/junit/platform/jfr/UniqueId.java
 ec47f91f99f39248fe353d35a22c1cf3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ConditionEvaluationResult.java
+ecdfb8bf91563105bab55999d6abc29d  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.2.adoc
 ece75a42eac6a387ad157be0718a0694  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsInnerClass.java
 ed074fdb4e0f87135a718a790a34b490  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutExceptionFactory.java
 ed0f37cab303fe07f951335983944450  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
