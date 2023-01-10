@@ -10768,6 +10768,21 @@ following example.</p>
 <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code>, <code><a href="../api/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code>, and
 <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/listeners/UniqueIdTrackingListener.html">UniqueIdTrackingListener</a></code>.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+All <code>TestExecutionListener</code> methods are called sequentially. Methods for start
+events are called in registration order while methods for finish events are called in
+reverse order.
+Test case execution won&#8217;t start before all <code>executionStarted</code> calls have returned.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="launcher-api-engines-custom"><a class="anchor" href="#launcher-api-engines-custom"></a>6.4.3. Registering a TestEngine</h4>
@@ -12114,7 +12129,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-01-10 11:34:03 UTC
+Last updated 2023-01-10 14:47:31 UTC
 </div>
 </div>
 <style>

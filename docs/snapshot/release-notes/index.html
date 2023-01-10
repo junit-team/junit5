@@ -554,6 +554,13 @@ repository on GitHub.</p>
 <p>All utility methods from <code>ReflectionSupport</code> now have counterparts returning <code>Stream</code>
 instead of <code>List</code>.</p>
 </li>
+<li>
+<p>For consistency with Jupiter lifecycle callbacks, listener method pairs for started/
+finished and opened/closed events are now called using "wrap" semantics, i.e. the latter
+methods are called in reverse order compared to the former when multiple listeners are
+registered. This affects the following listener interfaces: <code>TestExecutionListener</code>,
+<code>EngineExecutionListener</code>, <code>LauncherDiscoveryListener</code>, and <code>LauncherSessionListener</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -883,7 +890,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-01-10 11:34:03 UTC
+Last updated 2023-01-10 14:47:31 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

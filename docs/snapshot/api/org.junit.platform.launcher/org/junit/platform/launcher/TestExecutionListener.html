@@ -92,6 +92,11 @@ loadScripts(document, 'script');</script>
  Concrete implementations may therefore override one or more of these methods
  to be notified of the selected events.
 
+ <p>All <code>TestExecutionListener</code> methods are called sequentially. Methods
+ for start events are called in registration order while methods for finish
+ events are called in reverse order. Test case execution won't start before
+ all <a href="#executionStarted(org.junit.platform.launcher.TestIdentifier)"><code>executionStarted(TestIdentifier)</code></a> calls have returned.
+
  <p>JUnit provides two example implementations.
 
  <ul>
