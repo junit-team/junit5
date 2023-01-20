@@ -22,7 +22,6 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.Theme;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -187,7 +186,7 @@ class ColorPaletteTests {
 
 		private void demoTestRun(TestExecutionListener listener) {
 			TestDescriptor testDescriptor = new TestDescriptorStub(UniqueId.forEngine("demo-engine"), "My Test");
-			TestPlan testPlan = TestPlan.from(List.of(testDescriptor), mock(ConfigurationParameters.class));
+			TestPlan testPlan = TestPlan.from(List.of(testDescriptor), mock());
 			listener.testPlanExecutionStarted(testPlan);
 			listener.executionStarted(TestIdentifier.from(testDescriptor));
 			listener.executionFinished(TestIdentifier.from(testDescriptor), TestExecutionResult.successful());

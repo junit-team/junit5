@@ -30,7 +30,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 class DefaultParallelExecutionConfigurationStrategyTests {
 
-	private ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+	private ConfigurationParameters configParams = mock();
 
 	@BeforeEach
 	void setUp() {

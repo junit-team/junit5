@@ -465,7 +465,7 @@ class JUnitPlatformRunnerTests {
 			TestDescriptor container2 = new TestDescriptorStub(UniqueId.root("root", "container2"), "container2");
 			container2.addChild(new TestDescriptorStub(UniqueId.root("root", "test2a"), "test2a"));
 			container2.addChild(new TestDescriptorStub(UniqueId.root("root", "test2b"), "test2b"));
-			var testPlan = TestPlan.from(List.of(container1, container2), mock(ConfigurationParameters.class));
+			var testPlan = TestPlan.from(List.of(container1, container2), mock());
 
 			var launcher = mock(Launcher.class);
 			when(launcher.discover(any())).thenReturn(testPlan);
@@ -502,7 +502,7 @@ class JUnitPlatformRunnerTests {
 	@Nested
 	class Filtering {
 
-		private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+		private final ConfigurationParameters configParams = mock();
 
 		@Test
 		void appliesFilter() throws Exception {
@@ -777,8 +777,7 @@ class JUnitPlatformRunnerTests {
 	private LauncherDiscoveryRequest instantiateRunnerAndCaptureGeneratedRequest(Class<?> testClass) {
 		var launcher = mock(Launcher.class);
 		var captor = ArgumentCaptor.forClass(LauncherDiscoveryRequest.class);
-		when(launcher.discover(captor.capture())).thenReturn(
-			TestPlan.from(Set.of(), mock(ConfigurationParameters.class)));
+		when(launcher.discover(captor.capture())).thenReturn(TestPlan.from(Set.of(), mock()));
 
 		new JUnitPlatform(testClass, launcher);
 

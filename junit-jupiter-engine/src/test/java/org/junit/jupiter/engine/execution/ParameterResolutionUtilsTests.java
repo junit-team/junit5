@@ -43,12 +43,12 @@ class ParameterResolutionUtilsTests {
 
 	private static final String ENIGMA = "enigma";
 
-	private final MethodSource instance = mock(MethodSource.class);
+	private final MethodSource instance = mock();
 	private Method method;
 
-	private final ExtensionContext extensionContext = mock(ExtensionContext.class);
+	private final ExtensionContext extensionContext = mock();
 
-	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+	private final JupiterConfiguration configuration = mock();
 
 	private final MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
 		configuration);

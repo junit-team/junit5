@@ -37,12 +37,12 @@ abstract class AbstractExecutableInvokerTests {
 
 	private static final String ENIGMA = "enigma";
 
-	protected final MethodSource instance = mock(MethodSource.class);
+	protected final MethodSource instance = mock();
 	protected Method method;
 
-	protected final ExtensionContext extensionContext = mock(ExtensionContext.class);
+	protected final ExtensionContext extensionContext = mock();
 
-	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+	private final JupiterConfiguration configuration = mock();
 
 	protected final MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
 		configuration);

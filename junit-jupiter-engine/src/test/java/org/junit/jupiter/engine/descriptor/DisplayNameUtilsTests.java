@@ -71,7 +71,7 @@ class DisplayNameUtilsTests {
 		@Nested
 		class ClassDisplayNameSupplierTests {
 
-			private JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+			private JupiterConfiguration configuration = mock();
 
 			@Test
 			void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
@@ -107,7 +107,7 @@ class DisplayNameUtilsTests {
 	@Nested
 	class NestedClassDisplayNameTests {
 
-		private JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+		private JupiterConfiguration configuration = mock();
 
 		@Test
 		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
@@ -131,7 +131,7 @@ class DisplayNameUtilsTests {
 	@Nested
 	class MethodDisplayNameTests {
 
-		private JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+		private JupiterConfiguration configuration = mock();
 
 		@Test
 		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() throws Exception {

@@ -91,8 +91,8 @@ import org.mockito.ArgumentCaptor;
  */
 class DiscoverySelectorResolverTests {
 
-	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
-	private final LauncherDiscoveryListener discoveryListener = mock(LauncherDiscoveryListener.class);
+	private final JupiterConfiguration configuration = mock();
+	private final LauncherDiscoveryListener discoveryListener = mock();
 	private final JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineId(), configuration);
 
 	@BeforeEach

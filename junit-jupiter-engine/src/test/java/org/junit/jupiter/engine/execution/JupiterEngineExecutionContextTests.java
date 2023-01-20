@@ -35,9 +35,9 @@ import org.junit.platform.engine.EngineExecutionListener;
  */
 class JupiterEngineExecutionContextTests {
 
-	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+	private final JupiterConfiguration configuration = mock();
 
-	private final EngineExecutionListener engineExecutionListener = mock(EngineExecutionListener.class);
+	private final EngineExecutionListener engineExecutionListener = mock();
 
 	private final JupiterEngineExecutionContext originalContext = new JupiterEngineExecutionContext(
 		engineExecutionListener, configuration);
@@ -51,10 +51,10 @@ class JupiterEngineExecutionContextTests {
 
 	@Test
 	void extendWithAllAttributes() {
-		ExtensionContext extensionContext = mock(ExtensionContext.class);
+		ExtensionContext extensionContext = mock();
 		MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
 			configuration);
-		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
+		TestInstancesProvider testInstancesProvider = mock();
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
 				.withExtensionRegistry(extensionRegistry) //
@@ -68,11 +68,11 @@ class JupiterEngineExecutionContextTests {
 
 	@Test
 	void canOverrideAttributeWhenContextIsExtended() {
-		ExtensionContext extensionContext = mock(ExtensionContext.class);
+		ExtensionContext extensionContext = mock();
 		MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
 			configuration);
-		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
-		ExtensionContext newExtensionContext = mock(ExtensionContext.class);
+		TestInstancesProvider testInstancesProvider = mock();
+		ExtensionContext newExtensionContext = mock();
 
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //

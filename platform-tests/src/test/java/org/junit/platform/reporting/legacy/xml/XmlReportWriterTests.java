@@ -48,7 +48,7 @@ import org.junit.platform.launcher.TestPlan;
  */
 class XmlReportWriterTests {
 
-	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+	private final ConfigurationParameters configParams = mock();
 
 	private EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 

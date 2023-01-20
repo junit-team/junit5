@@ -31,11 +31,11 @@ class TestTemplateInvocationTestDescriptorTests {
 	void invocationsDoNotDeclareExclusiveResources() throws Exception {
 		Class<MyTestCase> testClass = MyTestCase.class;
 		Method testTemplateMethod = testClass.getDeclaredMethod("testTemplate");
-		JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+		JupiterConfiguration configuration = mock();
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 		TestTemplateTestDescriptor parent = new TestTemplateTestDescriptor(UniqueId.root("segment", "template"),
 			testClass, testTemplateMethod, configuration);
-		TestTemplateInvocationContext invocationContext = mock(TestTemplateInvocationContext.class);
+		TestTemplateInvocationContext invocationContext = mock();
 		when(invocationContext.getDisplayName(anyInt())).thenReturn("invocation");
 
 		TestTemplateInvocationTestDescriptor testDescriptor = new TestTemplateInvocationTestDescriptor(

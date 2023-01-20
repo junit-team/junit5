@@ -59,7 +59,7 @@ import org.mockito.Mockito;
  */
 public class ExtensionContextTests {
 
-	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+	private final JupiterConfiguration configuration = mock();
 
 	@BeforeEach
 	void setUp() {

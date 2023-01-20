@@ -366,7 +366,7 @@ class MethodArgumentsProviderTests {
 
 		@BeforeEach
 		void registerParameterResolver() {
-			JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+			JupiterConfiguration configuration = mock();
 			extensionRegistry = createRegistryWithDefaultExtensions(configuration);
 			extensionRegistry.registerExtension(StringResolver.class);
 		}

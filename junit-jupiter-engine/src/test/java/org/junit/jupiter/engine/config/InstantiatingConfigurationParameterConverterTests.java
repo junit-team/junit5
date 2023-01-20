@@ -38,7 +38,7 @@ class InstantiatingConfigurationParameterConverterTests {
 	@Test
 	void shouldInstantiateConfiguredClass(LogRecordListener listener) {
 
-		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters configurationParameters = mock();
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of(CustomDisplayNameGenerator.class.getName()));
 
 		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
@@ -54,7 +54,7 @@ class InstantiatingConfigurationParameterConverterTests {
 
 	@Test
 	void shouldReturnEmptyOptionalIfNoConfigurationFound() {
-		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters configurationParameters = mock();
 		when(configurationParameters.get(KEY)).thenReturn(Optional.empty());
 
 		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
@@ -66,7 +66,7 @@ class InstantiatingConfigurationParameterConverterTests {
 
 	@Test
 	void shouldReturnEmptyOptionalIfConfigurationIsBlank() {
-		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters configurationParameters = mock();
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of(""));
 
 		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
@@ -78,7 +78,7 @@ class InstantiatingConfigurationParameterConverterTests {
 
 	@Test
 	void shouldTrimAndInstantiateConfiguredClass(LogRecordListener listener) {
-		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters configurationParameters = mock();
 		String classNameWithSpaces = " " + CustomDisplayNameGenerator.class.getName() + "  ";
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of(classNameWithSpaces));
 
@@ -95,7 +95,7 @@ class InstantiatingConfigurationParameterConverterTests {
 
 	@Test
 	void shouldReturnEmptyOptionalIfNoClassFound(LogRecordListener listener) {
-		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters configurationParameters = mock();
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of("random-string"));
 
 		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
@@ -111,7 +111,7 @@ class InstantiatingConfigurationParameterConverterTests {
 
 	@Test
 	void shouldReturnEmptyOptionalIfClassFoundIsNotATypeOfExpectedType(LogRecordListener listener) {
-		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters configurationParameters = mock();
 		when(configurationParameters.get(KEY)).thenReturn(Optional.of(Object.class.getName()));
 
 		InstantiatingConfigurationParameterConverter<DisplayNameGenerator> converter = new InstantiatingConfigurationParameterConverter<>(
@@ -127,7 +127,7 @@ class InstantiatingConfigurationParameterConverterTests {
 
 	@Test
 	void shouldReturnEmptyOptionalIfClassNameIsNotFullyQualified(LogRecordListener listener) {
-		ConfigurationParameters configurationParameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters configurationParameters = mock();
 		when(configurationParameters.get(KEY)).thenReturn(
 			Optional.of(CustomDisplayNameGenerator.class.getSimpleName()));
 

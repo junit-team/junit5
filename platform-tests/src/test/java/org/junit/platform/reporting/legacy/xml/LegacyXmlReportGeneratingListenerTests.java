@@ -42,7 +42,6 @@ import java.util.Set;
 import org.joox.Match;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -370,7 +369,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(reportsDir, new PrintWriter(out));
 
-		listener.testPlanExecutionStarted(TestPlan.from(Set.of(), mock(ConfigurationParameters.class)));
+		listener.testPlanExecutionStarted(TestPlan.from(Set.of(), mock()));
 
 		assertThat(out.toString()).containsSubsequence("Could not create reports directory",
 			"FileAlreadyExistsException", "at ");
@@ -386,7 +385,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));
 
-		listener.testPlanExecutionStarted(TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class)));
+		listener.testPlanExecutionStarted(TestPlan.from(Set.of(engineDescriptor), mock()));
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
 
 		assertThat(out.toString()).containsSubsequence("Could not write XML report", "Exception", "at ");
@@ -397,7 +396,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		var childUniqueId = UniqueId.root("child", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(childUniqueId, "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock());
 
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));

@@ -13,6 +13,7 @@ package org.junit.jupiter.params.converter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.annotation.ElementType;
@@ -30,7 +31,6 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.mockito.Mockito;
 
 /**
  * Tests for {@link TypedArgumentConverter}.
@@ -92,7 +92,7 @@ class TypedArgumentConverterTests {
 		}
 
 		private ParameterContext parameterContext(Parameter parameter) {
-			ParameterContext parameterContext = Mockito.mock(ParameterContext.class);
+			ParameterContext parameterContext = mock();
 			when(parameterContext.getParameter()).thenReturn(parameter);
 			return parameterContext;
 		}
