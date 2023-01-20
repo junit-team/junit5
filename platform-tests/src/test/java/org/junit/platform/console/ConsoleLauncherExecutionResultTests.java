@@ -24,7 +24,7 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 class ConsoleLauncherExecutionResultTests {
 
 	private final CommandLineOptions options = new CommandLineOptions();
-	private final TestExecutionSummary summary = mock(TestExecutionSummary.class);
+	private final TestExecutionSummary summary = mock();
 
 	@Test
 	void hasStatusCode0ForNoTotalFailures() {

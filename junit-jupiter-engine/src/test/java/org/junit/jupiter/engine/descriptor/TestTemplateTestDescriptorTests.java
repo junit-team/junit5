@@ -32,7 +32,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
  * @since 5.0
  */
 class TestTemplateTestDescriptorTests {
-	private JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
+	private JupiterConfiguration jupiterConfiguration = mock();
 
 	@Test
 	void inheritsTagsFromParent() throws Exception {

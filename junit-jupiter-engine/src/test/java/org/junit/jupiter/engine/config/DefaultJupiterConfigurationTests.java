@@ -45,14 +45,14 @@ class DefaultJupiterConfigurationTests {
 
 	@Test
 	void getDefaultTestInstanceLifecycleWithNoConfigParamSet() {
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock(ConfigurationParameters.class));
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock());
 		Lifecycle lifecycle = configuration.getDefaultTestInstanceLifecycle();
 		assertThat(lifecycle).isEqualTo(PER_METHOD);
 	}
 
 	@Test
 	void getDefaultTempDirCleanupModeWithNoConfigParamSet() {
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock(ConfigurationParameters.class));
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock());
 		CleanupMode cleanupMode = configuration.getDefaultTempDirCleanupMode();
 		assertThat(cleanupMode).isEqualTo(ALWAYS);
 	}
@@ -74,7 +74,7 @@ class DefaultJupiterConfigurationTests {
 
 	@Test
 	void shouldGetDefaultDisplayNameGeneratorWithConfigParamSet() {
-		ConfigurationParameters parameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters parameters = mock();
 		String key = Constants.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME;
 		when(parameters.get(key)).thenReturn(Optional.of(CustomDisplayNameGenerator.class.getName()));
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
@@ -86,7 +86,7 @@ class DefaultJupiterConfigurationTests {
 
 	@Test
 	void shouldGetStandardAsDefaultDisplayNameGeneratorWithoutConfigParamSet() {
-		ConfigurationParameters parameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters parameters = mock();
 		String key = Constants.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME;
 		when(parameters.get(key)).thenReturn(Optional.empty());
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
@@ -98,7 +98,7 @@ class DefaultJupiterConfigurationTests {
 
 	@Test
 	void shouldGetNothingAsDefaultTestMethodOrderWithoutConfigParamSet() {
-		ConfigurationParameters parameters = mock(ConfigurationParameters.class);
+		ConfigurationParameters parameters = mock();
 		String key = Constants.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
 		when(parameters.get(key)).thenReturn(Optional.empty());
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
@@ -109,7 +109,7 @@ class DefaultJupiterConfigurationTests {
 	}
 
 	private void assertDefaultConfigParam(String configValue, Lifecycle expected) {
-		ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+		ConfigurationParameters configParams = mock();
 		when(configParams.get(KEY)).thenReturn(Optional.ofNullable(configValue));
 		Lifecycle lifecycle = new DefaultJupiterConfiguration(configParams).getDefaultTestInstanceLifecycle();
 		assertThat(lifecycle).isEqualTo(expected);

@@ -229,13 +229,11 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName) {
-		return new ParameterizedTestNameFormatter(pattern, displayName, mock(ParameterizedTestMethodContext.class),
-			512);
+		return new ParameterizedTestNameFormatter(pattern, displayName, mock(), 512);
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, int argumentMaxLength) {
-		return new ParameterizedTestNameFormatter(pattern, "display name", mock(ParameterizedTestMethodContext.class),
-			argumentMaxLength);
+		return new ParameterizedTestNameFormatter(pattern, "display name", mock(), argumentMaxLength);
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {

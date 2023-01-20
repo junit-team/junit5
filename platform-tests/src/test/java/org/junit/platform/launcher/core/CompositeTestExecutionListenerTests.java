@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -207,7 +206,7 @@ class CompositeTestExecutionListenerTests {
 	}
 
 	private static TestPlan anyTestPlan() {
-		return TestPlan.from(Set.of(anyTestDescriptor()), mock(ConfigurationParameters.class));
+		return TestPlan.from(Set.of(anyTestDescriptor()), mock());
 	}
 
 	private static DemoMethodTestDescriptor anyTestDescriptor() {

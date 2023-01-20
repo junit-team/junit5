@@ -50,7 +50,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 @TestInstance(Lifecycle.PER_CLASS)
 abstract class AbstractExecutionConditionTests {
 
-	private final ExtensionContext context = mock(ExtensionContext.class);
+	private final ExtensionContext context = mock();
 
 	private ConditionEvaluationResult result;
 

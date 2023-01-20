@@ -34,7 +34,7 @@ import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
  */
 class CachingJupiterConfigurationTests {
 
-	private final JupiterConfiguration delegate = mock(JupiterConfiguration.class);
+	private final JupiterConfiguration delegate = mock();
 	private final JupiterConfiguration cache = new CachingJupiterConfiguration(delegate);
 
 	@Test

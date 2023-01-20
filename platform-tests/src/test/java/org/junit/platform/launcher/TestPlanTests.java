@@ -23,7 +23,7 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 class TestPlanTests {
 
-	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+	private final ConfigurationParameters configParams = mock();
 
 	private EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("foo"), "Foo");
 

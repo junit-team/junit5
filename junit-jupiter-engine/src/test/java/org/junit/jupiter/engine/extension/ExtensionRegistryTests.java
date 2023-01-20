@@ -41,7 +41,7 @@ class ExtensionRegistryTests {
 
 	private static final int NUM_DEFAULT_EXTENSIONS = 6;
 
-	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+	private final JupiterConfiguration configuration = mock();
 
 	private MutableExtensionRegistry registry = createRegistryWithDefaultExtensions(configuration);
 

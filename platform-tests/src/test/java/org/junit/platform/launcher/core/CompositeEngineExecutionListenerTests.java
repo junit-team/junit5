@@ -130,7 +130,7 @@ class CompositeEngineExecutionListenerTests {
 	}
 
 	private static TestExecutionResult anyTestExecutionResult() {
-		return mock(TestExecutionResult.class);
+		return mock();
 	}
 
 	private void assertThatTestListenerErrorLogged(LogRecordListener logRecordListener, Class<?> listenerClass,

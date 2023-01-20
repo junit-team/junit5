@@ -17,9 +17,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.DemoMethodTestDescriptor;
@@ -36,8 +34,7 @@ class ExecutionListenerAdapterTests {
 	void testReportingEntryPublished() {
 		var testDescriptor = getSampleMethodTestDescriptor();
 
-		var discoveryResult = new LauncherDiscoveryResult(Map.of(mock(TestEngine.class), testDescriptor),
-			mock(ConfigurationParameters.class));
+		var discoveryResult = new LauncherDiscoveryResult(Map.of(mock(), testDescriptor), mock());
 		var testPlan = InternalTestPlan.from(discoveryResult);
 		var testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId());
 

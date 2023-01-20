@@ -47,7 +47,7 @@ import org.junit.platform.commons.logging.LogRecordListener;
  */
 class TimeoutConfigurationTests {
 
-	ExtensionContext extensionContext = mock(ExtensionContext.class);
+	ExtensionContext extensionContext = mock();
 	TimeoutConfiguration config = new TimeoutConfiguration(extensionContext);
 
 	@Test

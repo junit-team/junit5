@@ -30,7 +30,7 @@ import org.junit.platform.launcher.TestPlan;
  */
 class XmlReportDataTests {
 
-	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+	private final ConfigurationParameters configParams = mock();
 
 	@Test
 	void resultsOfTestIdentifierWithoutAnyReportedEventsAreEmpty() {

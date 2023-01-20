@@ -44,7 +44,7 @@ import org.junit.jupiter.engine.execution.NamespaceAwareStore;
  */
 class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 
-	private final ExtensionContext extensionContext = mock(ExtensionContext.class);
+	private final ExtensionContext extensionContext = mock();
 
 	private TempDirectory.CloseablePath closeablePath;
 

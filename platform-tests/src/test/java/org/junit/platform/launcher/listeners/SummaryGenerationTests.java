@@ -25,7 +25,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -40,7 +39,7 @@ import org.junit.platform.launcher.TestPlan;
 class SummaryGenerationTests {
 
 	private final SummaryGeneratingListener listener = new SummaryGeneratingListener();
-	private final TestPlan testPlan = TestPlan.from(List.of(), mock(ConfigurationParameters.class));
+	private final TestPlan testPlan = TestPlan.from(List.of(), mock());
 
 	@Test
 	void emptyReport() {

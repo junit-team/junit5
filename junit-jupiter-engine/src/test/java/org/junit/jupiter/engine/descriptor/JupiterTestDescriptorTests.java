@@ -53,7 +53,7 @@ class JupiterTestDescriptorTests {
 
 	private static final UniqueId uniqueId = UniqueId.root("enigma", "foo");
 
-	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+	private final JupiterConfiguration configuration = mock();
 
 	@BeforeEach
 	void setUp() {
