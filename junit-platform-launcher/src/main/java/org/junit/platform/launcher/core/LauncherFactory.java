@@ -66,8 +66,6 @@ import org.junit.platform.launcher.TestExecutionListener;
 @API(status = STABLE, since = "1.0")
 public class LauncherFactory {
 
-	private static final ServiceLoaderRegistry SERVICE_LOADER_REGISTRY = new ServiceLoaderRegistry();
-
 	private LauncherFactory() {
 		/* no-op */
 	}
@@ -151,7 +149,7 @@ public class LauncherFactory {
 			LauncherConfigurationParameters configurationParameters) {
 		if (configurationParameters.getBoolean(ENABLE_LAUNCHER_INTERCEPTORS).orElse(false)) {
 			List<LauncherInterceptor> interceptors = new ArrayList<>();
-			SERVICE_LOADER_REGISTRY.load(LauncherInterceptor.class).forEach(interceptors::add);
+			ServiceLoaderRegistry.load(LauncherInterceptor.class).forEach(interceptors::add);
 			return interceptors;
 		}
 		return emptyList();
@@ -169,7 +167,7 @@ public class LauncherFactory {
 	private static LauncherSessionListener createLauncherSessionListener(LauncherConfig config) {
 		ListenerRegistry<LauncherSessionListener> listenerRegistry = ListenerRegistry.forLauncherSessionListeners();
 		if (config.isLauncherSessionListenerAutoRegistrationEnabled()) {
-			SERVICE_LOADER_REGISTRY.load(LauncherSessionListener.class).forEach(listenerRegistry::add);
+			ServiceLoaderRegistry.load(LauncherSessionListener.class).forEach(listenerRegistry::add);
 		}
 		config.getAdditionalLauncherSessionListeners().forEach(listenerRegistry::add);
 		return listenerRegistry.getCompositeListener();
@@ -178,7 +176,7 @@ public class LauncherFactory {
 	private static List<PostDiscoveryFilter> collectPostDiscoveryFilters(LauncherConfig config) {
 		List<PostDiscoveryFilter> filters = new ArrayList<>();
 		if (config.isPostDiscoveryFilterAutoRegistrationEnabled()) {
-			SERVICE_LOADER_REGISTRY.load(PostDiscoveryFilter.class).forEach(filters::add);
+			ServiceLoaderRegistry.load(PostDiscoveryFilter.class).forEach(filters::add);
 		}
 		filters.addAll(config.getAdditionalPostDiscoveryFilters());
 		return filters;
@@ -186,7 +184,7 @@ public class LauncherFactory {
 
 	private static void registerLauncherDiscoveryListeners(LauncherConfig config, Launcher launcher) {
 		if (config.isLauncherDiscoveryListenerAutoRegistrationEnabled()) {
-			SERVICE_LOADER_REGISTRY.load(LauncherDiscoveryListener.class).forEach(
+			ServiceLoaderRegistry.load(LauncherDiscoveryListener.class).forEach(
 				launcher::registerLauncherDiscoveryListeners);
 		}
 		config.getAdditionalLauncherDiscoveryListeners().forEach(launcher::registerLauncherDiscoveryListeners);
@@ -203,7 +201,7 @@ public class LauncherFactory {
 
 	private static Stream<TestExecutionListener> loadAndFilterTestExecutionListeners(
 			ConfigurationParameters configurationParameters) {
-		Iterable<TestExecutionListener> listeners = SERVICE_LOADER_REGISTRY.load(TestExecutionListener.class);
+		Iterable<TestExecutionListener> listeners = ServiceLoaderRegistry.load(TestExecutionListener.class);
 		String deactivatedListenersPattern = configurationParameters.get(
 			DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME).orElse(null);
 		// @formatter:off

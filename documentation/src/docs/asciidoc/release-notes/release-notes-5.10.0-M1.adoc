@@ -19,7 +19,8 @@ repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* Building native images with GraalVM now requires configuring the build arg
+  `--initialize-at-build-time=org.junit.platform.launcher.core.LauncherConfig`.
 
 ==== New Features and Improvements
 

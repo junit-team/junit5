@@ -29,13 +29,16 @@ public final class ServiceLoaderTestEngineRegistry {
 	public ServiceLoaderTestEngineRegistry() {
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(ServiceLoaderTestEngineRegistry.class);
-
 	public Iterable<TestEngine> loadTestEngines() {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ClassLoaderUtils.getDefaultClassLoader());
-		logger.config(() -> TestEngineFormatter.format("Discovered TestEngines", testEngines));
+		getLogger().config(() -> TestEngineFormatter.format("Discovered TestEngines", testEngines));
 		return testEngines;
+	}
+
+	private static Logger getLogger() {
+		// Not a constant to avoid problems with building GraalVM native images
+		return LoggerFactory.getLogger(ServiceLoaderTestEngineRegistry.class);
 	}
 
 }

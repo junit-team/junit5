@@ -27,3 +27,12 @@ tasks.test {
 		)
 	}
 }
+
+graalvmNative {
+	binaries {
+		named("test") {
+			buildArgs.add("--initialize-at-build-time=org.junit.platform.launcher.core.LauncherConfig")
+			buildArgs.add("-H:+ReportExceptionStackTraces")
+		}
+	}
+}
