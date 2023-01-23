@@ -73,14 +73,14 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		if (factoryMethodName.contains("#")) {
 			return true;
 		}
-		int indexOfDot = factoryMethodName.indexOf(".");
-		if (indexOfDot == -1) {
+		int indexOfFirstDot = factoryMethodName.indexOf('.');
+		if (indexOfFirstDot == -1) {
 			return false;
 		}
-		int indexOfOpeningParenthesis = factoryMethodName.indexOf("(");
-		if (indexOfOpeningParenthesis > 0) {
-			// Exclude simple method names with parameters
-			return indexOfDot < indexOfOpeningParenthesis;
+		int indexOfLastOpeningParenthesis = factoryMethodName.lastIndexOf('(');
+		if (indexOfLastOpeningParenthesis > 0) {
+			// Exclude simple/local method names with parameters
+			return indexOfFirstDot < indexOfLastOpeningParenthesis;
 		}
 		// If we get this far, we conclude the supplied factory method name "looks"
 		// like it was intended to be a fully qualified method name, even if the

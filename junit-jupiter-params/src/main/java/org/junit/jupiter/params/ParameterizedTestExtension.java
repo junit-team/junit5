@@ -150,10 +150,10 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private Object[] consumedArguments(Object[] arguments, ParameterizedTestMethodContext methodContext) {
-		int parameterCount = methodContext.getParameterCount();
 		if (methodContext.hasAggregator()) {
 			return arguments;
 		}
+		int parameterCount = methodContext.getParameterCount();
 		return arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments;
 	}
 
