@@ -572,7 +572,17 @@ registered. This affects the following listener interfaces: <code>TestExecutionL
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Parameter types for <em>local</em> <code>@MethodSource</code> factory method names are now validated. For
+example, <code>@MethodSource("myFactory(example.NonexistentType)")</code> will now result in an
+exception stating that <code>example.NonexistentType</code> cannot be resolved to a valid type.</p>
+</li>
+<li>
+<p>The syntax for parameter types in <em>local</em> <code>@MethodSource</code> factory method names now
+supports canonical array names&#8201;&#8212;&#8201;for example, you may now specify <code>int[]</code> as in
+<code>@MethodSource("myFactory(int[])"</code> instead of the <em>binary</em> name <code>[I</code> as in
+<code>@MethodSource("myFactory([I)"</code> (which was already supported) and
+<code>@MethodSource("myFactory(java.lang.String[])</code> instead of
+<code>@MethodSource("myFactory([Ljava.lang.String;)</code>.</p>
 </li>
 </ul>
 </div>
@@ -890,7 +900,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-01-10 14:47:31 UTC
+Last updated 2023-01-23 20:01:17 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

@@ -366,6 +366,7 @@
 764852f6bdee7765eff482b25cc498ce  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
 767a188a591e4862fa8dc4ca504dfd96  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java
 76d7ef279a5b5c6b5f2ebcaf3c69be49  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Parser.java
+775fd26c78b8420e5fd6973fe074b8b9  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 77e8f5be02bb893bcacdc6e83de0b27f  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/AbstractTestRuleAdapter.java
 78008e86ee14f01fc11f239ff13bccc7  documentation/src/docs/asciidoc/user-guide/advanced-topics/engines.adoc
 780f8e07d2acb57f9ece107172e6cda4  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/package-info.java
@@ -753,7 +754,6 @@ ed8b15c71495bf7d13524130b1b6919a  junit-jupiter-engine/src/main/java/org/junit/j
 edc2164ab472bfd9a2d7c8394ce15e24  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInstance.java
 ee524b86dc4c2c9815c7ae1ef957aaf6  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ShuntingYard.java
 eea281cc6a7b75168b0b462c117fd611  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/FilterableIgnoringRunnerDecorator.java
-eeb664cd73679b24a0e1c480f9affe4f  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 eedda622128b2ef954746c461b838f85  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeConversionPattern.java
 ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/package-info.java
 efa817b68328110fe7db1ea8f10b1ca7  documentation/src/test/java/example/ExampleTestCase.java
