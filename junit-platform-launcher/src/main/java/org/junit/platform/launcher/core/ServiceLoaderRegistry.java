@@ -24,13 +24,16 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  */
 class ServiceLoaderRegistry {
 
-	private static final Logger logger = LoggerFactory.getLogger(ServiceLoaderRegistry.class);
-
-	<T> Iterable<T> load(Class<T> serviceProviderClass) {
+	static <T> Iterable<T> load(Class<T> serviceProviderClass) {
 		Iterable<T> listeners = ServiceLoader.load(serviceProviderClass, ClassLoaderUtils.getDefaultClassLoader());
-		logger.config(() -> "Loaded " + serviceProviderClass.getSimpleName() + " instances: "
+		getLogger().config(() -> "Loaded " + serviceProviderClass.getSimpleName() + " instances: "
 				+ stream(listeners.spliterator(), false).map(Object::toString).collect(toList()));
 		return listeners;
+	}
+
+	private static Logger getLogger() {
+		// Not a constant to avoid problems with building GraalVM native images
+		return LoggerFactory.getLogger(ServiceLoaderRegistry.class);
 	}
 
 }

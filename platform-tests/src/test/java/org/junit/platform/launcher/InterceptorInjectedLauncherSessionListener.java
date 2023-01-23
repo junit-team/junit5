@@ -28,8 +28,9 @@ public class InterceptorInjectedLauncherSessionListener implements LauncherSessi
 		CALLS++;
 	}
 
-    @Override
-    public void launcherSessionClosed(LauncherSession session) {
-        assertEquals(TestLauncherInterceptor1.CLASSLOADER_NAME, Thread.currentThread().getContextClassLoader().getName());
-    }
+	@Override
+	public void launcherSessionClosed(LauncherSession session) {
+		assertEquals(TestLauncherInterceptor1.CLASSLOADER_NAME,
+			Thread.currentThread().getContextClassLoader().getName());
+	}
 }
