@@ -12,7 +12,6 @@ package org.junit.jupiter.params.provider;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
@@ -48,25 +47,33 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 
 	@Override
 	public Stream<Arguments> provideArguments(ExtensionContext context) {
+		Class<?> testClass = context.getRequiredTestClass();
+		Method testMethod = context.getRequiredTestMethod();
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
 		return stream(this.methodNames)
-				.map(factoryMethodName -> getFactoryMethod(context, factoryMethodName))
+				.map(factoryMethodName -> getFactoryMethod(testClass, testMethod, factoryMethodName))
 				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
 		// @formatter:on
 	}
 
-	private Method getFactoryMethod(ExtensionContext context, String factoryMethodName) {
-		Method testMethod = context.getRequiredTestMethod();
-		if (StringUtils.isBlank(factoryMethodName)) {
+	private Method getFactoryMethod(Class<?> testClass, Method testMethod, String factoryMethodName) {
+		if (!StringUtils.isBlank(factoryMethodName)) {
+			if (looksLikeAFullyQualifiedMethodName(factoryMethodName)) {
+				return getFactoryMethodByFullyQualifiedName(factoryMethodName);
+			}
+			else if (looksLikeALocalQualifiedMethodName(factoryMethodName)) {
+				return getFactoryMethodByFullyQualifiedName(testClass.getName() + "#" + factoryMethodName);
+			}
+		}
+		else {
+			// User did not provide a factory method name, so we search for a
+			// factory method with the same name as the parameterized test method.
 			factoryMethodName = testMethod.getName();
 		}
-		if (looksLikeAFullyQualifiedMethodName(factoryMethodName)) {
-			return getFactoryMethodByFullyQualifiedName(factoryMethodName);
-		}
-		return getFactoryMethodBySimpleOrQualifiedName(context.getRequiredTestClass(), testMethod, factoryMethodName);
+		return findFactoryMethodBySimpleName(testClass, testMethod, factoryMethodName);
 	}
 
 	private static boolean looksLikeAFullyQualifiedMethodName(String factoryMethodName) {
@@ -89,6 +96,18 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		return true;
 	}
 
+	private static boolean looksLikeALocalQualifiedMethodName(String factoryMethodName) {
+		// This method is intended to be called after looksLikeAFullyQualifiedMethodName()
+		// and therefore does not check for the absence of '#' and does not reason about
+		// the presence or absence of a fully qualified class name.
+		if (factoryMethodName.endsWith("()")) {
+			return true;
+		}
+		int indexOfLastOpeningParenthesis = factoryMethodName.lastIndexOf('(');
+		return (indexOfLastOpeningParenthesis > 0)
+				&& (indexOfLastOpeningParenthesis < factoryMethodName.lastIndexOf(')'));
+	}
+
 	private Method getFactoryMethodByFullyQualifiedName(String fullyQualifiedMethodName) {
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
 		String className = methodParts[0];
@@ -100,33 +119,17 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 				methodParameters, className)));
 	}
 
-	private Method getFactoryMethodBySimpleOrQualifiedName(Class<?> testClass, Method testMethod,
-			String simpleOrQualifiedMethodName) {
-		String[] methodParts = ReflectionUtils.parseQualifiedMethodName(simpleOrQualifiedMethodName);
-		String methodSimpleName = methodParts[0];
-		String methodParameters = methodParts[1];
-
-		List<Method> factoryMethods = findFactoryMethodsBySimpleName(testClass, testMethod, methodSimpleName);
-		if (factoryMethods.size() == 1) {
-			return factoryMethods.get(0);
-		}
-
-		List<Method> exactMatches = filterFactoryMethodsWithMatchingParameters(factoryMethods,
-			simpleOrQualifiedMethodName, methodParameters);
-		Preconditions.condition(exactMatches.size() == 1,
-			() -> format("%d factory methods named [%s] were found in class [%s]: %s", factoryMethods.size(),
-				simpleOrQualifiedMethodName, testClass.getName(), factoryMethods));
-		return exactMatches.get(0);
-	}
-
 	/**
 	 * Find all methods in the given {@code testClass} with the desired {@code factoryMethodName}
 	 * which have return types that can be converted to a {@link Stream}, ignoring the
 	 * {@code testMethod} itself as well as any {@code @Test}, {@code @TestTemplate},
 	 * or {@code @TestFactory} methods with the same name.
+	 * @return the factory method, if found
+	 * @throws org.junit.platform.commons.PreconditionViolationException if the
+	 * factory method was not found or if multiple competing factory methods with
+	 * the same name were found
 	 */
-	private List<Method> findFactoryMethodsBySimpleName(Class<?> testClass, Method testMethod,
-			String factoryMethodName) {
+	private Method findFactoryMethodBySimpleName(Class<?> testClass, Method testMethod, String factoryMethodName) {
 		Predicate<Method> isCandidate = candidate -> factoryMethodName.equals(candidate.getName())
 				&& !testMethod.equals(candidate);
 		List<Method> candidates = ReflectionUtils.findMethods(testClass, isCandidate);
@@ -147,27 +150,10 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 			// Otherwise, report that we didn't find anything.
 			return format("Could not find factory method [%s] in class [%s]", factoryMethodName, testClass.getName());
 		});
-		return factoryMethods;
-	}
-
-	private static List<Method> filterFactoryMethodsWithMatchingParameters(List<Method> factoryMethods,
-			String factoryMethodName, String factoryMethodParameters) {
-
-		if (!factoryMethodName.endsWith(")")) {
-			// If parameters are not specified, nothing is filtered.
-			return factoryMethods;
-		}
-
-		// Compare against canonical parameter list, ignoring whitespace.
-		String parameterList = factoryMethodParameters.replaceAll("\\s+", "");
-		Predicate<Method> hasRequiredParameters = method -> {
-			if (parameterList.isEmpty()) {
-				return method.getParameterCount() == 0;
-			}
-			return parameterList.equals(stream(method.getParameterTypes()).map(Class::getName).collect(joining(",")));
-		};
-
-		return factoryMethods.stream().filter(hasRequiredParameters).collect(toList());
+		Preconditions.condition(factoryMethods.size() == 1,
+			() -> format("%d factory methods named [%s] were found in class [%s]: %s", factoryMethods.size(),
+				factoryMethodName, testClass.getName(), factoryMethods));
+		return factoryMethods.get(0);
 	}
 
 	private boolean isTestMethod(Method candidate) {

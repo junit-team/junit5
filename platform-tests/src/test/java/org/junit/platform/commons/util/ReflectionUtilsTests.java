@@ -55,8 +55,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
@@ -700,25 +698,6 @@ class ReflectionUtilsTests {
 	void parseFullyQualifiedMethodNameForMethodWithMultipleParameters() {
 		assertThat(ReflectionUtils.parseFullyQualifiedMethodName("com.example.Test#method(int, java.lang.Object)"))//
 				.containsExactly("com.example.Test", "method", "int, java.lang.Object");
-	}
-
-	@ParameterizedTest
-	@ValueSource(strings = { "method", "method()" })
-	void parseSimpleMethodNameForMethodWithoutParameters(String methodName) {
-		assertThat(ReflectionUtils.parseQualifiedMethodName(methodName))//
-				.containsExactly("method", "");
-	}
-
-	@Test
-	void parseSimpleMethodNameForMethodWithSingleParameter() {
-		assertThat(ReflectionUtils.parseQualifiedMethodName("method(java.lang.Object)"))//
-				.containsExactly("method", "java.lang.Object");
-	}
-
-	@Test
-	void parseSimpleMethodNameForMethodWithMultipleParameters() {
-		assertThat(ReflectionUtils.parseQualifiedMethodName("method(int, java.lang.Object)"))//
-				.containsExactly("method", "int, java.lang.Object");
 	}
 
 	@Test
