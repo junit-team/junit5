@@ -36,7 +36,15 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Parameter types for _local_ `@MethodSource` factory method names are now validated. For
+  example, `@MethodSource("myFactory(example.NonexistentType)")` will now result in an
+  exception stating that `example.NonexistentType` cannot be resolved to a valid type.
+* The syntax for parameter types in _local_ `@MethodSource` factory method names now
+  supports canonical array names -- for example, you may now specify `int[]` as in
+  `@MethodSource("myFactory(int[])"` instead of the _binary_ name `[I` as in
+  `@MethodSource("myFactory([I)"` (which was already supported) and
+  `@MethodSource("myFactory(java.lang.String[])` instead of
+  `@MethodSource("myFactory([Ljava.lang.String;)`.
 
 ==== Deprecations and Breaking Changes
 
