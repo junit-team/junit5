@@ -48,7 +48,7 @@ class ReflectionSupportTests {
 	void loadClassDelegates() {
 		assertEquals(ReflectionUtils.loadClass("-"), ReflectionSupport.loadClass("-"));
 		assertEquals(ReflectionUtils.loadClass("A"), ReflectionSupport.loadClass("A"));
-		assertEquals(ReflectionUtils.loadClass("java.io.Bits"), ReflectionSupport.loadClass("java.io.Bits"));
+		assertEquals(ReflectionUtils.loadClass("java.nio.Bits"), ReflectionSupport.loadClass("java.nio.Bits"));
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class ReflectionSupportTests {
 			ReflectionSupport.tryToLoadClass("-").toOptional());
 		assertEquals(ReflectionUtils.tryToLoadClass("A").toOptional(),
 			ReflectionSupport.tryToLoadClass("A").toOptional());
-		assertEquals(ReflectionUtils.tryToLoadClass("java.io.Bits"), ReflectionSupport.tryToLoadClass("java.io.Bits"));
+		assertEquals(ReflectionUtils.tryToLoadClass("java.nio.Bits"), ReflectionSupport.tryToLoadClass("java.nio.Bits"));
 	}
 
 	@Test
