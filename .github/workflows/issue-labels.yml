@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: Renato66/auto-label@69b3cbe79438b2079aed0a49474275d3e572cae5 # or v2
+      - uses: Renato66/auto-label@2fc6ce23006cea59b7b23ce7f4c70e4e233de49f # or v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           labels-synonyms: '{"3rd-party: Eclipse":["Eclipse"],"3rd-party: Gradle":["Gradle"],"3rd-party: IntelliJ IDEA":["IDEA","IntelliJ"],"3rd-party: Maven Surefire":["Failsafe","Maven","Surefire"],"3rd-party: Pioneer":["pioneer"],"component: Groovy":["Groovy"],"component: Test Kit":["Test Kit","TestKit"]}'
