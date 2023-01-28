@@ -46,7 +46,7 @@ class GraalVmStarterTests {
 		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		assumeFalse(
-			result.getOutputLines("err").stream().anyMatch(line -> line.contains("No compatible toolchains found")),
+			result.getOutputLines("err").stream().anyMatch(line -> line.contains("No matching toolchains found")),
 			"Abort test if GraalVM is not installed");
 
 		assertEquals(0, result.getExitCode());
