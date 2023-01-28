@@ -8,8 +8,6 @@ registries:
 updates:
   - package-ecosystem: "gradle"
     directory: "/"
-    allow:
-      - dependency-name: "com.gradle*"
     registries:
       - gradle-plugin-portal
     schedule:
