@@ -10,3 +10,5 @@ updates:
     directory: "/"
     registries:
       - gradle-plugin-portal
+  - package-ecosystem: "github-actions"
+    directory: "/"
