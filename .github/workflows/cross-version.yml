@@ -18,6 +18,7 @@ env:
 jobs:
   openjdk:
     strategy:
+      fail-fast: false
       matrix:
         jdk: [19, 20, 21]
     name: "OpenJDK ${{ matrix.jdk }}"
