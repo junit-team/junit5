@@ -64,7 +64,8 @@ class ReflectionSupportTests {
 			ReflectionSupport.tryToLoadClass("-").toOptional());
 		assertEquals(ReflectionUtils.tryToLoadClass("A").toOptional(),
 			ReflectionSupport.tryToLoadClass("A").toOptional());
-		assertEquals(ReflectionUtils.tryToLoadClass("java.nio.Bits"), ReflectionSupport.tryToLoadClass("java.nio.Bits"));
+		assertEquals(ReflectionUtils.tryToLoadClass("java.nio.Bits"),
+			ReflectionSupport.tryToLoadClass("java.nio.Bits"));
 	}
 
 	@Test
