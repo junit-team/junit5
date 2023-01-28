@@ -190,6 +190,7 @@
 3e55f6a125df488c2827a5776505096e  documentation/src/test/java/example/MyFirstJUnitJupiterTests.java
 3eefe5bbe2b4eb8c07c1046d26c58568  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
 3f831d7d8fdb239f5861fe3c08975295  documentation/src/main/java/example/registration/WebResponse.java
+3ffaeff15c4e384b74b76c8ebe8bb093  junit-platform-console/src/main/java/org/junit/platform/console/options/SelectorConverter.java
 3fff9646ecfd1e745a25a7181ca5b263  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/MethodInvocation.java
 405380b357756e748b3ecc69470af07e  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectFiles.java
 4081ed487cd32594ceaa02032e78d37d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/EnumConfigurationParameterConverter.java
@@ -431,7 +432,6 @@
 8cb5df43b38968543bdf69dc0d4b2f96  documentation/src/test/java/example/ExternalCustomConditionDemo.java
 8cbc57e9f35d3401eda0535450b9ee84  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.java
 8cbeb5a34cdca1884241ad293e80f4c7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeAll.java
-8cfa9c95f8ed655b0410170e94dd844e  junit-platform-console/src/main/java/org/junit/platform/console/options/SelectorConverter.java
 8d5184f65c0dd6b4e6be06a40fcf46dd  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateExtensionContext.java
 8d9325aa660cdd8e747ef456516822d1  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnOsCondition.java
 8da3055b0be5b350d347498cf62c1280  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ArgumentsSources.java
