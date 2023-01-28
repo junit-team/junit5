@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-      - 'releases/*'
+      - 'releases/**'
+    branches-ignore:
+      - dependabot/**
   pull_request:
     branches:
       - '*'

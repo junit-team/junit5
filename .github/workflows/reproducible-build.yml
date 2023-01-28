@@ -3,11 +3,13 @@ name: Reproducible build
 on:
   push:
     branches:
-    - main
-    - 'releases/*'
+      - main
+      - 'releases/**'
+    branches-ignore:
+      - dependabot/**
   pull_request:
     branches:
-    - '*'
+      - '*'
 
 env:
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
