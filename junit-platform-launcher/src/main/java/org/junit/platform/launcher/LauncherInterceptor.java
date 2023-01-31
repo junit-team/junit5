@@ -18,10 +18,37 @@ import java.util.List;
 import org.apiguardian.api.API;
 
 /**
- * Interceptor for test discovery and execution by a {@link Launcher}.
+ * Interceptor for test discovery and execution by a {@link Launcher} in the
+ * context of a {@link LauncherSession}.
  *
  * <p>Interceptors are instantiated once per {@link LauncherSession} and closed
- * when the session is about to be closed.
+ * after the session is closed. They can
+ * {@linkplain #intercept(Invocation) intercept} the following invocations:
+ * <ul>
+ *     <li>
+ *         creation of {@link LauncherSessionListener} instances registered via the
+ *         {@link java.util.ServiceLoader ServiceLoader} mechanism
+ *     </li>
+ *     <li>
+ *         creation of {@link Launcher} instances
+ *     </li>
+ *     <li>
+ *         calls to {@link Launcher#discover(LauncherDiscoveryRequest)},
+ *         {@link Launcher#execute(TestPlan, TestExecutionListener...)}, and
+ *         {@link Launcher#execute(LauncherDiscoveryRequest, TestExecutionListener...)}
+ *     </li>
+ * </ul>
+ *
+ * <p>Implementations of this interface can be registered via the
+ * {@link java.util.ServiceLoader ServiceLoader} mechanism by additionally
+ * setting the {@value LauncherConstants#ENABLE_LAUNCHER_INTERCEPTORS}
+ * configuration parameter to {@code true}.
+ *
+ * <p>A typical use case is to create a custom {@link ClassLoader} in the
+ * constructor of the implementing class, replace the
+ * {@link Thread#setContextClassLoader(ClassLoader) contextClassLoader} of the
+ * current thread while {@link #intercept(Invocation) intercepting} invocations,
+ * and close the custom {@code ClassLoader} in {@link #close()}
  *
  * @since 1.10
  * @see Launcher
