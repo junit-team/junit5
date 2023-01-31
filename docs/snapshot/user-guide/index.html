@@ -902,7 +902,7 @@ pre.rouge {
 </ul>
 </li>
 <li><a href="#running-tests-capturing-output">4.7. Capturing Standard Output/Error</a></li>
-<li><a href="#running-tests-listeners">4.8. Using Listeners</a>
+<li><a href="#running-tests-listeners">4.8. Using Listeners and Interceptors</a>
 <ul class="sectlevel3">
 <li><a href="#running-tests-listeners-flight-recorder">4.8.1. Flight Recorder Support</a></li>
 </ul>
@@ -1013,15 +1013,16 @@ pre.rouge {
 <li><a href="#launcher-api-launcher-session-listeners-tool-example-usage">Example Usage</a></li>
 </ul>
 </li>
-<li><a href="#launcher-api-launcher-discovery-listeners-custom">6.4.6. Registering a LauncherDiscoveryListener</a></li>
-<li><a href="#launcher-api-listeners-custom">6.4.7. Registering a TestExecutionListener</a></li>
-<li><a href="#launcher-api-listeners-config">6.4.8. Configuring a TestExecutionListener</a></li>
-<li><a href="#launcher-api-listeners-custom-deactivation">6.4.9. Deactivating a TestExecutionListener</a>
+<li><a href="#launcher-api-launcher-interceptors-custom">6.4.6. Registering a LauncherInterceptor</a></li>
+<li><a href="#launcher-api-launcher-discovery-listeners-custom">6.4.7. Registering a LauncherDiscoveryListener</a></li>
+<li><a href="#launcher-api-listeners-custom">6.4.8. Registering a TestExecutionListener</a></li>
+<li><a href="#launcher-api-listeners-config">6.4.9. Configuring a TestExecutionListener</a></li>
+<li><a href="#launcher-api-listeners-custom-deactivation">6.4.10. Deactivating a TestExecutionListener</a>
 <ul class="sectlevel4">
 <li><a href="#launcher-api-listeners-custom-deactivation-pattern">Pattern Matching Syntax</a></li>
 </ul>
 </li>
-<li><a href="#launcher-api-launcher-config">6.4.10. Configuring the Launcher</a></li>
+<li><a href="#launcher-api-launcher-config">6.4.11. Configuring the Launcher</a></li>
 </ul>
 </li>
 <li><a href="#test-engines">6.5. Test Engines</a>
@@ -8203,7 +8204,7 @@ to attribute it to a specific test or container.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-listeners"><a class="anchor" href="#running-tests-listeners"></a>4.8. Using Listeners</h3>
+<h3 id="running-tests-listeners"><a class="anchor" href="#running-tests-listeners"></a>4.8. Using Listeners and Interceptors</h3>
 <div class="paragraph">
 <p>The JUnit Platform provides the following listener APIs that allow JUnit, third parties,
 and custom user code to react to events fired at various points during the discovery and
@@ -8214,6 +8215,10 @@ execution of a <code>TestPlan</code>.</p>
 <li>
 <p><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code>: receives events when a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code> is opened and
 closed.</p>
+</li>
+<li>
+<p><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherInterceptor.html">LauncherInterceptor</a></code>: intercepts test discovery and execution in the context of a
+<code>LauncherSession</code>.</p>
 </li>
 <li>
 <p><code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code>: receives events that occur during test discovery.</p>
@@ -8242,6 +8247,9 @@ guide.</p>
 <ul>
 <li>
 <p><a href="#launcher-api-launcher-session-listeners-custom">Registering a LauncherSessionListener</a></p>
+</li>
+<li>
+<p><a href="#launcher-api-launcher-interceptors-custom">Registering a LauncherInterceptor</a></p>
 </li>
 <li>
 <p><a href="#launcher-api-launcher-discovery-listeners-custom">Registering a LauncherDiscoveryListener</a></p>
@@ -10084,7 +10092,7 @@ that generate XML test reports in two flavors:
 </td>
 <td class="content">
 The module also contains other <code>TestExecutionListener</code> implementations that can be
-used to build custom reporting. See <a href="#running-tests-listeners">Using Listeners</a> for details.
+used to build custom reporting. See <a href="#running-tests-listeners">Using Listeners and Interceptors</a> for details.
 </td>
 </tr>
 </table>
@@ -11230,7 +11238,65 @@ by adding the file to <code>src/test/resources</code>):</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-launcher-discovery-listeners-custom"><a class="anchor" href="#launcher-api-launcher-discovery-listeners-custom"></a>6.4.6. Registering a LauncherDiscoveryListener</h4>
+<h4 id="launcher-api-launcher-interceptors-custom"><a class="anchor" href="#launcher-api-launcher-interceptors-custom"></a>6.4.6. Registering a LauncherInterceptor</h4>
+<div class="paragraph">
+<p>In order to intercept the creation of instances of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> and
+<code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> and calls to the <code>discover</code> and <code>execute</code> methods of the
+former, clients can registercustom implementations of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherInterceptor.html">LauncherInterceptor</a></code> via Java&#8217;s
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism by additionally setting the
+<code>junit.platform.launcher.interceptors.enabled</code> <a href="#running-tests-config-params">configuration parameter</a> to <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>A typical use case is to create a custom replace the <code>ClassLoader</code> used by the JUnit
+Platform to load test classes and engine implementations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.UncheckedIOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URI</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URLClassLoader</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.platform.launcher.LauncherInterceptor</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomLauncherInterceptor</span> <span class="kd">implements</span> <span class="nc">LauncherInterceptor</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">URLClassLoader</span> <span class="n">customClassLoader</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">CustomLauncherInterceptor</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="nc">ClassLoader</span> <span class="n">parent</span> <span class="o">=</span> <span class="nc">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getContextClassLoader</span><span class="o">();</span>
+        <span class="n">customClassLoader</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">URLClassLoader</span><span class="o">(</span><span class="k">new</span> <span class="no">URL</span><span class="o">[]</span> <span class="o">{</span> <span class="no">URI</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"some.jar"</span><span class="o">).</span><span class="na">toURL</span><span class="o">()</span> <span class="o">},</span> <span class="n">parent</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="no">T</span> <span class="nf">intercept</span><span class="o">(</span><span class="nc">Invocation</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">invocation</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Thread</span> <span class="n">currentThread</span> <span class="o">=</span> <span class="nc">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">();</span>
+        <span class="nc">ClassLoader</span> <span class="n">originalClassLoader</span> <span class="o">=</span> <span class="n">currentThread</span><span class="o">.</span><span class="na">getContextClassLoader</span><span class="o">();</span>
+        <span class="n">currentThread</span><span class="o">.</span><span class="na">setContextClassLoader</span><span class="o">(</span><span class="n">customClassLoader</span><span class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">invocation</span><span class="o">.</span><span class="na">proceed</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">currentThread</span><span class="o">.</span><span class="na">setContextClassLoader</span><span class="o">(</span><span class="n">originalClassLoader</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">customClassLoader</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UncheckedIOException</span><span class="o">(</span><span class="s">"Failed to close custom class loader"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-launcher-discovery-listeners-custom"><a class="anchor" href="#launcher-api-launcher-discovery-listeners-custom"></a>6.4.7. Registering a LauncherDiscoveryListener</h4>
 <div class="paragraph">
 <p>In addition to specifying discovery listeners as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> or
 registering them programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, custom
@@ -11246,7 +11312,7 @@ and registered automatically.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>6.4.7. Registering a TestExecutionListener</h4>
+<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>6.4.8. Registering a TestExecutionListener</h4>
 <div class="paragraph">
 <p>In addition to the public <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution listeners
 programmatically, custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations will be discovered at
@@ -11261,7 +11327,7 @@ registered automatically.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-config"><a class="anchor" href="#launcher-api-listeners-config"></a>6.4.8. Configuring a TestExecutionListener</h4>
+<h4 id="launcher-api-listeners-config"><a class="anchor" href="#launcher-api-listeners-config"></a>6.4.9. Configuring a TestExecutionListener</h4>
 <div class="paragraph">
 <p>When a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> is registered programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API,
 the listener may provide programmatic ways for it to be configured&#8201;&#8212;&#8201;for example, via its
@@ -11276,7 +11342,7 @@ methods. See the <code><a href="../api/org.junit.platform.launcher/org/junit/pla
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.4.9. Deactivating a TestExecutionListener</h4>
+<h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.4.10. Deactivating a TestExecutionListener</h4>
 <div class="paragraph">
 <p>Sometimes it can be useful to run a test suite <em>without</em> certain execution listeners being
 active. For example, you might have custom a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> that sends the test
@@ -11318,7 +11384,7 @@ supplied in the <code>LauncherDiscoveryRequest</code> that is passed to the <cod
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.4.10. Configuring the Launcher</h4>
+<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.4.11. Configuring the Launcher</h4>
 <div class="paragraph">
 <p>If you require fine-grained control over automatic detection and registration of test
 engines and listeners, you may create an instance of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> and supply that to
@@ -11915,6 +11981,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherInterceptor</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherSession</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
 </tr>
@@ -12344,7 +12415,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-01-28 13:16:29 UTC
+Last updated 2023-01-31 14:33:54 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

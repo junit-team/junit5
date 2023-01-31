@@ -191,34 +191,38 @@ loadScripts(document, 'script');</script>
 <div class="block"><code>LauncherDiscoveryRequest</code> extends the <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> API
  with additional filters that are applied by the <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> itself.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/LauncherSession.html#org.junit.platform.launcher">LauncherSession</a></div>
+<div class="col-first even-row-color"><a href="class-use/LauncherInterceptor.Invocation.html#org.junit.platform.launcher">LauncherInterceptor.Invocation</a></div>
 <div class="col-last even-row-color">
+<div class="block">An invocation that can be intercepted.</div>
+</div>
+<div class="col-first odd-row-color"><a href="class-use/LauncherSession.html#org.junit.platform.launcher">LauncherSession</a></div>
+<div class="col-last odd-row-color">
 <div class="block">The <code>LauncherSession</code> API is the main entry point for client code that
  wishes to repeatedly <em>discover</em> and <em>execute</em> tests using one
  or more <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">test engines</a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/LauncherSessionListener.html#org.junit.platform.launcher">LauncherSessionListener</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/LauncherSessionListener.html#org.junit.platform.launcher">LauncherSessionListener</a></div>
+<div class="col-last even-row-color">
 <div class="block">Register an implementation of this interface to be notified when a
  <a href="LauncherSession.html" title="interface in org.junit.platform.launcher"><code>LauncherSession</code></a> is opened and closed.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/PostDiscoveryFilter.html#org.junit.platform.launcher">PostDiscoveryFilter</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/PostDiscoveryFilter.html#org.junit.platform.launcher">PostDiscoveryFilter</a></div>
+<div class="col-last odd-row-color">
 <div class="block">A <code>PostDiscoveryFilter</code> is applied to <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a>
  after test discovery.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/TestExecutionListener.html#org.junit.platform.launcher">TestExecutionListener</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/TestExecutionListener.html#org.junit.platform.launcher">TestExecutionListener</a></div>
+<div class="col-last even-row-color">
 <div class="block">Register a concrete implementation of this interface with a <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>
  to be notified of events that occur during test execution.</div>
 </div>
-<div class="col-first even-row-color"><a href="class-use/TestIdentifier.html#org.junit.platform.launcher">TestIdentifier</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="class-use/TestIdentifier.html#org.junit.platform.launcher">TestIdentifier</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Immutable data transfer object that represents a test or container which is
  usually part of a <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/TestPlan.html#org.junit.platform.launcher">TestPlan</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="class-use/TestPlan.html#org.junit.platform.launcher">TestPlan</a></div>
+<div class="col-last even-row-color">
 <div class="block"><code>TestPlan</code> describes the tree of tests and containers as discovered
  by a <a href="Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </div>

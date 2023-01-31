@@ -541,7 +541,8 @@ repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Building native images with GraalVM now requires configuring the build arg
+<code>--initialize-at-build-time=org.junit.platform.launcher.core.LauncherConfig</code>.</p>
 </li>
 </ul>
 </div>
@@ -560,6 +561,13 @@ finished and opened/closed events are now called using "wrap" semantics, i.e. th
 methods are called in reverse order compared to the former when multiple listeners are
 registered. This affects the following listener interfaces: <code>TestExecutionListener</code>,
 <code>EngineExecutionListener</code>, <code>LauncherDiscoveryListener</code>, and <code>LauncherSessionListener</code>.</p>
+</li>
+<li>
+<p>Introduce <code>LauncherInterceptor</code> SPI for intercepting the creation of instances of
+<code>Launcher</code> and <code>LauncherSessionlistener</code> as well as calls for <code>discover</code> and <code>execute</code>
+of the former. Please refer to the
+<a href="../user-guide/index.html#launcher-api-launcher-interceptors-custom">User Guide</a> for
+details.</p>
 </li>
 </ul>
 </div>
@@ -900,7 +908,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-01-28 13:16:29 UTC
+Last updated 2023-01-31 14:33:54 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
