@@ -31,6 +31,11 @@ repository on GitHub.
   methods are called in reverse order compared to the former when multiple listeners are
   registered. This affects the following listener interfaces: `TestExecutionListener`,
   `EngineExecutionListener`, `LauncherDiscoveryListener`, and `LauncherSessionListener`.
+* Introduce `LauncherInterceptor` SPI for intercepting the creation of instances of
+  `Launcher` and `LauncherSessionlistener` as well as calls for `discover` and `execute`
+  of the former. Please refer to the
+  <<../user-guide/index.adoc#launcher-api-launcher-interceptors-custom, User Guide>> for
+  details.
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter

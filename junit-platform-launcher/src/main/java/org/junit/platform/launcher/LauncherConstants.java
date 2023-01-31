@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -135,6 +136,16 @@ public class LauncherConstants {
 	 */
 	public static final String DEACTIVATE_ALL_LISTENERS_PATTERN = ClassNamePatternFilterUtils.DEACTIVATE_ALL_PATTERN;
 
+	/**
+	 * Property name used to enable support for
+	 * {@link LauncherInterceptor} instances to be registered via the
+	 * {@link java.util.ServiceLoader ServiceLoader} mechanism: {@value}
+	 *
+	 * <p>By default, interceptor registration is disabled.
+	 *
+	 * @see LauncherInterceptor
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
 	public static final String ENABLE_LAUNCHER_INTERCEPTORS = "junit.platform.launcher.interceptors.enabled";
 
 	private LauncherConstants() {

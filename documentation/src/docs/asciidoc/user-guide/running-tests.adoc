@@ -979,7 +979,7 @@ because particularly when
 to attribute it to a specific test or container.
 
 [[running-tests-listeners]]
-=== Using Listeners
+=== Using Listeners and Interceptors
 
 The JUnit Platform provides the following listener APIs that allow JUnit, third parties,
 and custom user code to react to events fired at various points during the discovery and
@@ -987,6 +987,8 @@ execution of a `TestPlan`.
 
 * `{LauncherSessionListener}`: receives events when a `{LauncherSession}` is opened and
   closed.
+* `{LauncherInterceptor}`: intercepts test discovery and execution in the context of a
+  `LauncherSession`.
 * `{LauncherDiscoveryListener}`: receives events that occur during test discovery.
 * `{TestExecutionListener}`: receives events that occur during test execution.
 
@@ -1003,6 +1005,7 @@ For details on registering and configuring listeners, see the following sections
 guide.
 
 * <<launcher-api-launcher-session-listeners-custom>>
+* <<launcher-api-launcher-interceptors-custom>>
 * <<launcher-api-launcher-discovery-listeners-custom>>
 * <<launcher-api-listeners-custom>>
 * <<launcher-api-listeners-config>>
