@@ -28,15 +28,27 @@ import org.junit.platform.launcher.TestPlan;
  */
 class DefaultLauncherSession implements LauncherSession {
 
+	private static final LauncherInterceptor NOOP_INTERCEPTOR = new LauncherInterceptor() {
+		@Override
+		public <T> T intercept(Invocation<T> invocation) {
+			return invocation.proceed();
+		}
+
+		@Override
+		public void close() {
+			// do nothing
+		}
+	};
+
 	private final LauncherInterceptor interceptor;
 	private final LauncherSessionListener listener;
 	private final DelegatingLauncher launcher;
 
 	DefaultLauncherSession(List<LauncherInterceptor> interceptors, Supplier<LauncherSessionListener> listenerSupplier,
 			Supplier<Launcher> launcherSupplier) {
-		interceptor = LauncherInterceptor.composite(interceptors);
+		interceptor = composite(interceptors);
 		Launcher launcher;
-		if (interceptor == LauncherInterceptor.NOOP) {
+		if (interceptor == NOOP_INTERCEPTOR) {
 			this.listener = listenerSupplier.get();
 			launcher = launcherSupplier.get();
 		}
@@ -97,5 +109,29 @@ class DefaultLauncherSession implements LauncherSession {
 		public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 			throw new PreconditionViolationException("Launcher session has already been closed");
 		}
+	}
+
+	private static LauncherInterceptor composite(List<LauncherInterceptor> interceptors) {
+		if (interceptors.isEmpty()) {
+			return NOOP_INTERCEPTOR;
+		}
+		return interceptors.stream() //
+				.skip(1) //
+				.reduce(interceptors.get(0), (a, b) -> new LauncherInterceptor() {
+					@Override
+					public void close() {
+						try {
+							a.close();
+						}
+						finally {
+							b.close();
+						}
+					}
+
+					@Override
+					public <T> T intercept(Invocation<T> invocation) {
+						return a.intercept(() -> b.intercept(invocation));
+					}
+				});
 	}
 }
