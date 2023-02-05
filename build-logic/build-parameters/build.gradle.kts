@@ -15,7 +15,7 @@ buildParameters {
 			description.set("Username to authenticate with the remote build cache")
 			fromEnvironment()
 		}
-		string("Password") {
+		string("password") {
 			description.set("Password to authenticate with the remote build cache")
 			fromEnvironment()
 		}
