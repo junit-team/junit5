@@ -1,11 +1,10 @@
 plugins {
-	id("org.gradlex.build-parameters") version "1.4"
+	id("org.gradlex.build-parameters") version "1.4.1"
 }
 
 group = "org.junit.gradle"
 
 buildParameters {
-	enableValidation.set(false) // see https://github.com/gradlex-org/build-parameters/issues/80
 	bool("ci") {
 		description.set("Whether or not this build is running a CI environment")
 		defaultValue.set(false)
