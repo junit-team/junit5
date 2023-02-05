@@ -1,6 +1,8 @@
+import buildparameters.BuildParametersExtension
 import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
+	includeBuild("build-logic")
 	repositories {
 		gradlePluginPortal()
 	}
@@ -23,6 +25,7 @@ plugins {
 	id("com.gradle.enterprise")
 	id("com.gradle.common-custom-user-data-gradle-plugin")
 	id("org.gradle.toolchains.foojay-resolver-convention")
+	id("build-parameters")
 }
 
 dependencyResolutionManagement {
@@ -37,15 +40,11 @@ dependencyResolutionManagement {
 }
 
 val gradleEnterpriseServer = "https://ge.junit.org"
-val isCiServer = System.getenv("CI") != null
-val junitBuildCacheUrl: String? by extra
-val junitBuildCacheUsername: String? by extra
-val junitBuildCachePassword: String? by extra
 
 gradleEnterprise {
 	buildScan {
 		capture.isTaskInputFiles = true
-		isUploadInBackground = !isCiServer
+		isUploadInBackground = !buildParameters.ci
 
 		publishAlways()
 
@@ -57,7 +56,7 @@ gradleEnterprise {
 		}
 
 		obfuscation {
-			if (isCiServer) {
+			if (buildParameters.ci) {
 				username { "github" }
 			} else {
 				hostname { null }
@@ -65,10 +64,7 @@ gradleEnterprise {
 			}
 		}
 
-		val enableTestDistribution = providers.gradleProperty("enableTestDistribution")
-			.map(String::toBoolean)
-			.getOrElse(false)
-		if (enableTestDistribution) {
+		if (buildParameters.enterprise.enableTestDistribution) {
 			tag("test-distribution")
 		}
 	}
@@ -76,14 +72,14 @@ gradleEnterprise {
 
 buildCache {
 	local {
-		isEnabled = !isCiServer
+		isEnabled = !buildParameters.ci
 	}
 	remote<HttpBuildCache> {
-		url = uri(junitBuildCacheUrl ?: "$gradleEnterpriseServer/cache/")
-		isPush = isCiServer && !junitBuildCacheUsername.isNullOrEmpty() && !junitBuildCachePassword.isNullOrEmpty()
+		url = uri(buildParameters.buildCache.url.getOrElse("$gradleEnterpriseServer/cache/"))
+		isPush = buildParameters.ci && buildParameters.buildCache.username.isPresent && buildParameters.buildCache.password.isPresent
 		credentials {
-			username = junitBuildCacheUsername?.ifEmpty { null }
-			password = junitBuildCachePassword?.ifEmpty { null }
+			username = buildParameters.buildCache.username.orNull
+			password = buildParameters.buildCache.password.orNull
 		}
 	}
 }
@@ -130,5 +126,8 @@ rootProject.children.forEach { project ->
 		"${project.buildFile} must exist"
 	}
 }
+
+val buildParameters: BuildParametersExtension
+	get() = the()
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

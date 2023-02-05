@@ -1,0 +1,36 @@
+plugins {
+	id("org.gradlex.build-parameters") version "1.4"
+}
+
+group = "org.junit.gradle"
+
+buildParameters {
+	enableValidation.set(false) // see https://github.com/gradlex-org/build-parameters/issues/80
+	bool("ci") {
+		description.set("Whether or not this build is running a CI environment")
+		defaultValue.set(false)
+		fromEnvironment()
+	}
+	group("buildCache") {
+		string("username") {
+			description.set("Username to authenticate with the remote build cache")
+			fromEnvironment()
+		}
+		string("Password") {
+			description.set("Password to authenticate with the remote build cache")
+			fromEnvironment()
+		}
+		string("url") {
+			description.set("URL to the remote build cache")
+			fromEnvironment()
+		}
+	}
+	group("enterprise") {
+		description.set("Parameters controlling Gradle Enterprise features")
+		bool("enableTestDistribution") {
+			description.set("Whether or not to use Test Distribution for executing tests")
+			defaultValue.set(false)
+			fromEnvironment()
+		}
+	}
+}
