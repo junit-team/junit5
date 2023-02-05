@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+	implementation(project(":build-parameters"))
 	implementation(kotlin("gradle-plugin"))
 	implementation("biz.aQute.bnd:biz.aQute.bnd.gradle:6.4.0")
 	implementation("com.diffplug.spotless:spotless-plugin-gradle:6.15.0")

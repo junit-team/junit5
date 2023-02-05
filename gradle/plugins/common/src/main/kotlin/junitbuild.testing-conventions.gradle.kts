@@ -6,6 +6,7 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	`java-library`
+	id("junitbuild.build-parameters")
 }
 
 tasks.withType<Test>().configureEach {
@@ -46,7 +47,7 @@ tasks.withType<Test>().configureEach {
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14
 	systemProperty("net.bytebuddy.experimental", true)
-	if (project.hasProperty("enableJFR")) {
+	if (buildParameters.testing.enableJFR) {
 		jvmArgs(
 			"-XX:+UnlockDiagnosticVMOptions",
 			"-XX:+DebugNonSafepoints",
