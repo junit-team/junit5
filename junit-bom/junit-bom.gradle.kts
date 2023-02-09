@@ -1,6 +1,6 @@
 plugins {
 	`java-platform`
-	`publishing-conventions`
+	id("junitbuild.publishing-conventions")
 }
 
 description = "${rootProject.description} (Bill of Materials)"

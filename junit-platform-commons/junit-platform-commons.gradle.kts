@@ -1,9 +1,9 @@
-import org.junit.gradle.java.ExecJarAction
+import junitbuild.java.ExecJarAction
 
 plugins {
-	`java-library-conventions`
-	`java-multi-release-sources`
-	`java-repackage-jars`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.java-multi-release-sources")
+	id("junitbuild.java-repackage-jars")
 	`java-test-fixtures`
 }
 

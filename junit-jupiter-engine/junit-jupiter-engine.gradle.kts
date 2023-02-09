@@ -1,8 +1,8 @@
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 
 plugins {
-	`kotlin-library-conventions`
-	`testing-conventions`
+	id("junitbuild.kotlin-library-conventions")
+	id("junitbuild.testing-conventions")
 	groovy
 	`java-test-fixtures`
 }

@@ -1,7 +1,7 @@
 plugins {
-	`java-library-conventions`
-	`junit4-compatibility`
-	`testing-conventions`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.junit4-compatibility")
+	id("junitbuild.testing-conventions")
 	`java-test-fixtures`
 	groovy
 }

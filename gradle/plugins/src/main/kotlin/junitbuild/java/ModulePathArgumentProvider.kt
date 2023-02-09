@@ -1,4 +1,4 @@
-package org.junit.gradle.java
+package junitbuild.java
 
 import org.gradle.api.Named
 import org.gradle.api.Project

@@ -1,4 +1,4 @@
-package org.junit.gradle.exec
+package junitbuild.exec
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection

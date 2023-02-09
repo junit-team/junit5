@@ -1,4 +1,4 @@
-package org.junit.gradle.java
+package junitbuild.java
 
 import org.gradle.api.Action
 import org.gradle.api.Task

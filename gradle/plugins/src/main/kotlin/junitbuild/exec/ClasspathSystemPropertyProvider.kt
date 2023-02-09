@@ -1,4 +1,4 @@
-package org.junit.gradle.exec
+package junitbuild.exec
 
 import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.Classpath

@@ -3,7 +3,7 @@ import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 
 plugins {
 	java
-	id("jacoco-conventions")
+	id("junitbuild.jacoco-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
