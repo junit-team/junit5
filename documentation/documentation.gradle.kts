@@ -2,9 +2,9 @@ import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-import org.junit.gradle.exec.ClasspathSystemPropertyProvider
-import org.junit.gradle.exec.RunConsoleLauncher
-import org.junit.gradle.javadoc.ModuleSpecificJavadocFileOption
+import junitbuild.exec.ClasspathSystemPropertyProvider
+import junitbuild.exec.RunConsoleLauncher
+import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
 
@@ -12,7 +12,7 @@ plugins {
 	id("org.asciidoctor.jvm.convert")
 	id("org.asciidoctor.jvm.pdf")
 	id("org.ajoberstar.git-publish")
-	`kotlin-library-conventions`
+	id("junitbuild.kotlin-library-conventions")
 }
 
 val modularProjects: List<Project> by rootProject

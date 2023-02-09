@@ -4,7 +4,7 @@ import org.gradle.kotlin.dsl.`jacoco-report-aggregation`
 import org.gradle.testing.jacoco.plugins.JacocoCoverageReport
 
 plugins {
-	id("jacoco-conventions")
+	id("junitbuild.jacoco-conventions")
 	`jacoco-report-aggregation`
 }
 

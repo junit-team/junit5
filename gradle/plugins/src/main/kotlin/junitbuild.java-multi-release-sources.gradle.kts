@@ -1,5 +1,5 @@
 plugins {
-	id("java-library-conventions")
+	id("junitbuild.java-library-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra

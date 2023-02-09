@@ -1,6 +1,6 @@
 plugins {
-	`java-library-conventions`
-	`shadow-conventions`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.shadow-conventions")
 }
 
 description = "JUnit Platform Reporting"

@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("java-library-conventions")
+	id("junitbuild.java-library-conventions")
 	kotlin("jvm")
 }
 
