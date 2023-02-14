@@ -1,4 +1,5 @@
 import com.gradle.enterprise.gradleplugin.testretry.retry
+import com.gradle.enterprise.gradleplugin.testselection.internal.PredictiveTestSelectionExtensionInternal
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
@@ -37,6 +38,10 @@ tasks.withType<Test>().configureEach {
 	}
 	predictiveSelection {
 		enabled.set(providers.gradleProperty("enablePredictiveTestSelection").map(String::toBoolean).orElse(true))
+
+        // Ensure PTS works when publishing Build Scans to scans.gradle.com
+		this as PredictiveTestSelectionExtensionInternal
+		server.set(uri("https://ge.junit.org"))
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14
