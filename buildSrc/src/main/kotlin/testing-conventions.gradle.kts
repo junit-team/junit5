@@ -39,7 +39,7 @@ tasks.withType<Test>().configureEach {
 	predictiveSelection {
 		enabled.set(providers.gradleProperty("enablePredictiveTestSelection").map(String::toBoolean).orElse(true))
 
-        // Ensure PTS works when publishing Build Scans to scans.gradle.com
+		// Ensure PTS works when publishing Build Scans to scans.gradle.com
 		this as PredictiveTestSelectionExtensionInternal
 		server.set(uri("https://ge.junit.org"))
 	}
