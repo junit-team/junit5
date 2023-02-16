@@ -1,8 +1,8 @@
 plugins {
-	`java-library-conventions`
-	`shadow-conventions`
-	`java-multi-release-sources`
-	`java-repackage-jars`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.shadow-conventions")
+	id("junitbuild.java-multi-release-sources")
+	id("junitbuild.java-repackage-jars")
 }
 
 description = "JUnit Platform Console"
@@ -38,7 +38,7 @@ tasks {
 			into("META-INF")
 		}
 		from(sourceSets.mainRelease9.get().output.classesDirs)
-		doLast(objects.newInstance(org.junit.gradle.java.ExecJarAction::class).apply {
+		doLast(objects.newInstance(junitbuild.java.ExecJarAction::class).apply {
 			javaLauncher.set(project.javaToolchains.launcherFor(java.toolchain))
 			args.addAll(
 				"--update",

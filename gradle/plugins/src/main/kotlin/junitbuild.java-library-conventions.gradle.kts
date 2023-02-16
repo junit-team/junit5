@@ -1,14 +1,14 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.junit.gradle.java.ModulePathArgumentProvider
-import org.junit.gradle.java.PatchModuleArgumentProvider
+import junitbuild.java.ModulePathArgumentProvider
+import junitbuild.java.PatchModuleArgumentProvider
 
 plugins {
 	`java-library`
 	eclipse
 	idea
 	checkstyle
-	id("base-conventions")
-	id("jacoco-java-conventions")
+	id("junitbuild.base-conventions")
+	id("junitbuild.jacoco-java-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
@@ -42,8 +42,8 @@ java {
 
 if (project in mavenizedProjects) {
 
-	apply(plugin = "publishing-conventions")
-	apply(plugin = "osgi-conventions")
+	apply(plugin = "junitbuild.publishing-conventions")
+	apply(plugin = "junitbuild.osgi-conventions")
 
 	java {
 		withJavadocJar()

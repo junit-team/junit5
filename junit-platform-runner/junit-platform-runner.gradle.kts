@@ -1,6 +1,6 @@
 plugins {
-	`java-library-conventions`
-	`junit4-compatibility`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.junit4-compatibility")
 }
 
 description = "JUnit Platform Runner"

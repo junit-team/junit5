@@ -2,6 +2,7 @@ import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionW
 
 pluginManagement {
 	repositories {
+		includeBuild("gradle/plugins")
 		gradlePluginPortal()
 	}
 	plugins {

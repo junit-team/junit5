@@ -2,8 +2,8 @@ import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
 
 plugins {
-	`kotlin-library-conventions`
-	`testing-conventions`
+	id("junitbuild.kotlin-library-conventions")
+	id("junitbuild.testing-conventions")
 }
 
 javaLibrary {

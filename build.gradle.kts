@@ -1,11 +1,11 @@
 plugins {
 	id("io.spring.nohttp")
 	id("io.github.gradle-nexus.publish-plugin")
-	`base-conventions`
-	`build-metadata`
-	`dependency-update-check`
-	`jacoco-aggregation-conventions`
-	`temp-maven-repo`
+	id("junitbuild.base-conventions")
+	id("junitbuild.build-metadata")
+	id("junitbuild.dependency-update-check")
+	id("junitbuild.jacoco-aggregation-conventions")
+	id("junitbuild.temp-maven-repo")
 }
 
 description = "JUnit 5"
@@ -61,5 +61,5 @@ nexusPublishing {
 }
 
 nohttp {
-	source.exclude("buildSrc/build/generated-sources/**")
+	source.exclude("**/.gradle/**", "gradle/plugins/build/generated-sources/**")
 }

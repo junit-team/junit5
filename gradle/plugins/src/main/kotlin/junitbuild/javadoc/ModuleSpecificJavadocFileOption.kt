@@ -1,4 +1,4 @@
-package org.junit.gradle.javadoc
+package junitbuild.javadoc
 
 import org.gradle.external.javadoc.JavadocOptionFileOption
 import org.gradle.external.javadoc.internal.JavadocOptionFileWriterContext

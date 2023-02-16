@@ -12,7 +12,7 @@ dependencies {
 			strictly("4.12")
 		}
 	}
-	pluginManager.withPlugin("osgi-conventions") {
+	pluginManager.withPlugin("junitbuild.osgi-conventions") {
 		val junit4Osgi = requiredVersionFromLibs("junit4Osgi")
 		"osgiVerification"("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:${junit4Osgi}")
 	}

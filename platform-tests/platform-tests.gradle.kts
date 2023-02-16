@@ -3,9 +3,9 @@ import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
-	`java-library-conventions`
-	`junit4-compatibility`
-	`testing-conventions`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.junit4-compatibility")
+	id("junitbuild.testing-conventions")
 	id("me.champeau.jmh")
 }
 
