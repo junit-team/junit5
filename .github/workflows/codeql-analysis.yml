@@ -19,7 +19,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['java', 'javascript']
+        language:
+          # - java # Currently broken because it doesn't support Kotlin 1.8.10, yet (https://github.com/github/codeql/discussions/11460#discussioncomment-4879731)
+          - javascript
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
