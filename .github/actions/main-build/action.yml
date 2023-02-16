@@ -4,7 +4,7 @@ inputs:
   arguments:
     required: true
     description: Gradle arguments
-    default: build
+    default: :platform-tooling-support-tests:test build
 runs:
   using: "composite"
   steps:

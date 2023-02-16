@@ -45,6 +45,7 @@ jobs:
           arguments: |
             -PjavaToolchainVersion=${{ matrix.jdk }}
             -Dscan.tag.JDK_${{ matrix.jdk }}
+            :platform-tooling-support-tests:test
             build
       - name: Upload Test Distribution trace files
         uses: actions/upload-artifact@v3

@@ -39,6 +39,7 @@ jobs:
       with:
         arguments: |
           -PenableJaCoCo
+          :platform-tooling-support-tests:test
           build
           jacocoRootReport
           prepareDocsForUploadToGhPages
