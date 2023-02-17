@@ -17,7 +17,7 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
 
-abstract class RunConsoleLauncher @Inject constructor(private val execOperations: ExecOperations): DefaultTask() {
+abstract class RunConsoleLauncher @Inject constructor(private val execOperations: ExecOperations) : DefaultTask() {
 
     @get:Classpath
     abstract val runtimeClasspath: ConfigurableFileCollection
@@ -41,11 +41,8 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
         runtimeClasspath.from(project.the<SourceSetContainer>()["test"].runtimeClasspath)
         reportsDir.convention(project.layout.buildDirectory.dir("test-results"))
 
-        debugging.convention(
-            project.providers.gradleProperty("consoleLauncherTestDebug")
-            .map { it != "false" }
-            .orElse(false)
-        )
+        debugging.convention(false)
+        commandLineArgs.convention(emptyList())
         outputs.cacheIf { !debugging.get() }
         outputs.upToDateWhen { !debugging.get() }
 
@@ -91,4 +88,14 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     fun setCliArgs(args: String) {
         commandLineArgs.set(Commandline.translateCommandline(args).toList())
     }
+
+    @Suppress("unused")
+    @Option(
+        option = "debug-jvm",
+        description = "Enable debugging. The process is started suspended and listening on port 5005."
+    )
+    fun setDebug(enabled: Boolean) {
+        debugging.set(enabled)
+    }
+
 }
