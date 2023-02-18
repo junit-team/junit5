@@ -2,7 +2,7 @@ plugins {
 	`java-library`
 }
 
-val junit_4_12 by configurations.creating {
+val junit_4_12 by configurations.creatingResolvable {
 	extendsFrom(configurations.testRuntimeClasspath.get())
 }
 

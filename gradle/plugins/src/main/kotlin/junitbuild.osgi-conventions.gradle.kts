@@ -87,7 +87,7 @@ val osgiProperties by tasks.registering(WriteProperties::class) {
 	property("-runblacklist", "org.apiguardian.api")
 }
 
-val osgiVerification by configurations.creating {
+val osgiVerification by configurations.creatingResolvable {
 	extendsFrom(configurations.runtimeClasspath.get())
 }
 
