@@ -99,10 +99,10 @@ public class InterceptingExecutableInvoker {
 				ReflectiveInvocationContext<E> invocationContext, ExtensionContext extensionContext) throws Throwable;
 
 		static ReflectiveInterceptorCall<Method, Void> ofVoidMethod(VoidMethodInterceptorCall call) {
-			return ((interceptorChain, invocation, invocationContext, extensionContext) -> {
+			return (interceptorChain, invocation, invocationContext, extensionContext) -> {
 				call.apply(interceptorChain, invocation, invocationContext, extensionContext);
 				return null;
-			});
+			};
 		}
 
 		interface VoidMethodInterceptorCall {

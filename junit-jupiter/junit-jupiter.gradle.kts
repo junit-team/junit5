@@ -1,4 +1,5 @@
 plugins {
+	id("junitbuild.errorprone-conventions")
 	id("junitbuild.java-library-conventions")
 }
 

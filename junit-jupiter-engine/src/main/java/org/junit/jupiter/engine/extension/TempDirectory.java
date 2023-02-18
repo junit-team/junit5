@@ -354,6 +354,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			return exception;
 		}
 
+		@SuppressWarnings("EmptyCatch")
 		private Path tryToDeleteOnExit(Path path) {
 			try {
 				path.toFile().deleteOnExit();

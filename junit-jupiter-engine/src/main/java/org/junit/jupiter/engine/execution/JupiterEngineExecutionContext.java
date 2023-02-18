@@ -24,6 +24,8 @@ import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
+ * The {@link EngineExecutionContext} of the Jupiter engine.
+ *
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
@@ -93,8 +95,9 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	}
 
 	/**
-	 * @return {@code true} if an attempt was made to execute {@code BeforeAllCallback}
+	 * Return {@code true} if an attempt was made to execute {@code BeforeAllCallback}
 	 * extensions
+	 *
 	 * @since 5.3
 	 */
 	public boolean beforeAllCallbacksExecuted() {
@@ -109,7 +112,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	}
 
 	/**
-	 * @return {@code true} if an attempt was made to execute {@code @BeforeAll}
+	 * Return {@code true} if an attempt was made to execute {@code @BeforeAll}
 	 * methods
 	 */
 	public boolean beforeAllMethodsExecuted() {

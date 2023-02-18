@@ -40,7 +40,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class ExtensionValuesStore {
+public final class ExtensionValuesStore {
 
 	private static final Comparator<StoredValue> REVERSE_INSERT_ORDER = Comparator.<StoredValue, Integer> comparing(
 		it -> it.order).reversed();
@@ -139,7 +139,7 @@ public class ExtensionValuesStore {
 			String.format("Object stored under key [%s] is not of required type [%s]", key, requiredType.getName()));
 	}
 
-	private static class CompositeKey {
+	private static final class CompositeKey {
 
 		private final Namespace namespace;
 		private final Object key;

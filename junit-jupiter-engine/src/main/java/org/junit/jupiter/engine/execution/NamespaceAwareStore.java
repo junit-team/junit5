@@ -20,6 +20,8 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
+ * Namespace-aware {@link Store} implementation.
+ *
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")

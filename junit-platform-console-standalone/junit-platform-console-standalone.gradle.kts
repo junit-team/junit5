@@ -57,6 +57,7 @@ tasks {
 				Import-Package: \
 					${extra["importAPIGuardian"]},\
 					kotlin.*;resolution:="optional",\
+					!com.google.errorprone.*,\
 					*
 				# Disable the APIGuardian plugin since everything was already
 				# processed, again because this is an aggregate jar

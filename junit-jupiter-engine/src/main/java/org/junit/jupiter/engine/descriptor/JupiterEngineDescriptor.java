@@ -26,6 +26,8 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
+ * Descriptor of the Jupiter engine, providing access to its configuration.
+ *
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")

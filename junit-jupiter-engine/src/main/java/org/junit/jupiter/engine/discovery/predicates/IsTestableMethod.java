@@ -20,9 +20,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+import com.google.errorprone.annotations.Immutable;
+
 /**
  * @since 5.0
  */
+@Immutable
 abstract class IsTestableMethod implements Predicate<Method> {
 
 	private final Class<? extends Annotation> annotationType;

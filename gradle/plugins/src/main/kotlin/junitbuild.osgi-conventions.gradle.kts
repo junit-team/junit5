@@ -37,6 +37,7 @@ tasks.withType<Jar>().matching { task: Jar ->
 					${importAPIGuardian},\
 					org.junit.platform.commons.logging;status=INTERNAL,\
 					kotlin.*;resolution:="optional",\
+					!com.google.errorprone.*,\
 					*
 
 				# This tells bnd not to complain if a module doesn't actually import

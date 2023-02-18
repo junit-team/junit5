@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForNestedClass;
 
@@ -68,7 +69,7 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 			ClassBasedTestDescriptor parentClassDescriptor = (ClassBasedTestDescriptor) parent;
 			List<Class<?>> result = new ArrayList<>(parentClassDescriptor.getEnclosingTestClasses());
 			result.add(parentClassDescriptor.getTestClass());
-			return result;
+			return unmodifiableList(result);
 		}
 		return emptyList();
 	}

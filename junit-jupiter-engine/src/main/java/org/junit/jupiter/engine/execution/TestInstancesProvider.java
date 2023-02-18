@@ -20,6 +20,8 @@ import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
+ * Creator of instances of test classes.
+ *
  * @since 5.0
  */
 @FunctionalInterface

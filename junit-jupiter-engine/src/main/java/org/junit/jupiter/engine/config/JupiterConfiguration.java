@@ -27,6 +27,8 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
+ * Jupiter-specific configuration options backed by configuration parameters.
+ *
  * @since 5.4
  */
 @API(status = INTERNAL, since = "5.4")

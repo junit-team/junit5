@@ -74,10 +74,10 @@ public class InvocationInterceptorChain {
 		T apply(InvocationInterceptor interceptor, Invocation<T> invocation) throws Throwable;
 
 		static InterceptorCall<Void> ofVoid(VoidInterceptorCall call) {
-			return ((interceptorChain, invocation) -> {
+			return (interceptorChain, invocation) -> {
 				call.apply(interceptorChain, invocation);
 				return null;
-			});
+			};
 		}
 
 	}

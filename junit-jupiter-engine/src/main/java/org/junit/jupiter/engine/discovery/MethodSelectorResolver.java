@@ -161,6 +161,7 @@ class MethodSelectorResolver implements SelectorResolver {
 		};
 	}
 
+	@SuppressWarnings("ImmutableEnumChecker")
 	private enum MethodType {
 
 		TEST(new IsTestMethod(), TestMethodTestDescriptor.SEGMENT_TYPE) {

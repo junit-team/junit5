@@ -52,6 +52,8 @@ import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
+ * Base class for Jupiter-specific test descriptors.
+ *
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")

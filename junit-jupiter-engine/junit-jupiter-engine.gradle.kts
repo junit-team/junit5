@@ -1,6 +1,7 @@
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 
 plugins {
+	id("junitbuild.errorprone-conventions")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
 	groovy

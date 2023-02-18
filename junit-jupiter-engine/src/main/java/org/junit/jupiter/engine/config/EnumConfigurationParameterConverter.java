@@ -23,6 +23,8 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 
 /**
+ * Converter for {@link Enum} configuration parameters.
+ *
  * @since 5.4
  */
 @API(status = INTERNAL, since = "5.8")

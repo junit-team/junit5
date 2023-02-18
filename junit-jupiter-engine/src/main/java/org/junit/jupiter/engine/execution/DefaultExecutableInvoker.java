@@ -24,6 +24,8 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
+ * Default implementation of the {@link ExecutableInvoker} API.
+ *
  * @since 5.9
  */
 @API(status = INTERNAL, since = "5.9")

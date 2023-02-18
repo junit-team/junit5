@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * @since 5.5
  */
-class TimeoutDuration {
+final class TimeoutDuration {
 
 	static TimeoutDuration from(Timeout timeout) {
 		return new TimeoutDuration(timeout.value(), timeout.unit());

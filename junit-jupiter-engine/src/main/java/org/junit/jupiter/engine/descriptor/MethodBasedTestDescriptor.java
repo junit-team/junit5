@@ -118,6 +118,9 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	/**
+	 * Invoke the supplied callback for each registered {@link TestWatcher}
+	 * in the supplied order.
+	 *
 	 * @since 5.4
 	 */
 	protected void invokeTestWatchers(JupiterEngineExecutionContext context, boolean reverseOrder,
