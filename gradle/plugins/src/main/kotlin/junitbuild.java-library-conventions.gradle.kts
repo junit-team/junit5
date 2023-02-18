@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import junitbuild.java.ModuleCompileOptions
 import junitbuild.java.ModulePathArgumentProvider
 import junitbuild.java.PatchModuleArgumentProvider
 
@@ -21,6 +22,7 @@ val builtByValue: String by rootProject.extra
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
 val moduleSourceDir = file("src/module/$javaModuleName")
+val combinedModuleSourceDir = layout.buildDirectory.dir("module")
 val moduleOutputDir = file("$buildDir/classes/java/module")
 val javaVersion = JavaVersion.current()
 
@@ -143,9 +145,17 @@ val allMainClasses by tasks.registering {
 	dependsOn(tasks.classes)
 }
 
+val prepareModuleSourceDir by tasks.registering(Sync::class) {
+    from(moduleSourceDir)
+    from(sourceSets.matching { it.name.startsWith("main") }.map { it.allJava })
+    into(combinedModuleSourceDir.map { it.dir(javaModuleName) })
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 val compileModule by tasks.registering(JavaCompile::class) {
 	dependsOn(allMainClasses)
-	source = fileTree(moduleSourceDir)
+    enabled = project in modularProjects
+	source = fileTree(combinedModuleSourceDir).builtBy(prepareModuleSourceDir)
 	destinationDirectory.set(moduleOutputDir)
 	sourceCompatibility = "9"
 	targetCompatibility = "9"
@@ -157,9 +167,23 @@ val compileModule by tasks.registering(JavaCompile::class) {
 			"-Werror", // Terminates compilation when warnings occur.
 			"--module-version", "${project.version}",
 	))
-	options.compilerArgumentProviders.add(objects.newInstance(ModulePathArgumentProvider::class, project, modularProjects))
+
+    val moduleOptions = objects.newInstance(ModuleCompileOptions::class)
+    extensions.add("moduleOptions", moduleOptions)
+    moduleOptions.modulePath.from(configurations.compileClasspath)
+
+	options.compilerArgumentProviders.add(objects.newInstance(ModulePathArgumentProvider::class, project, combinedModuleSourceDir, modularProjects).apply {
+        modulePath.from(moduleOptions.modulePath)
+    })
 	options.compilerArgumentProviders.addAll(modularProjects.map { objects.newInstance(PatchModuleArgumentProvider::class, project, it) })
+
 	modularity.inferModulePath.set(false)
+
+    doFirst {
+        options.allCompilerArgs.forEach {
+            logger.info(it)
+        }
+    }
 }
 
 tasks.withType<Jar>().configureEach {

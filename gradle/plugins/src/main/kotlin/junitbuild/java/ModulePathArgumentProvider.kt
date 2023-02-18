@@ -3,11 +3,13 @@ package junitbuild.java
 import org.gradle.api.Named
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.Directory
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.*
 import org.gradle.process.CommandLineArgumentProvider
 import javax.inject.Inject
 
-abstract class ModulePathArgumentProvider @Inject constructor(project: Project, modularProjects: List<Project>) :
+abstract class ModulePathArgumentProvider @Inject constructor(project: Project, combinedModuleSourceDir: Provider<Directory>, modularProjects: List<Project>) :
     CommandLineArgumentProvider, Named {
 
     @get:CompileClasspath
@@ -18,9 +20,11 @@ abstract class ModulePathArgumentProvider @Inject constructor(project: Project, 
     abstract val moduleSourceDirs: ConfigurableFileCollection
 
     init {
-        modulePath.from(project.configurations.named("compileClasspath"))
         modularProjects.forEach {
-            moduleSourceDirs.from(project.files("${it.projectDir}/src/module"))
+            if (it == project)
+                moduleSourceDirs.from(combinedModuleSourceDir)
+            else
+                moduleSourceDirs.from(project.files("${it.projectDir}/src/module"))
         }
     }
 
