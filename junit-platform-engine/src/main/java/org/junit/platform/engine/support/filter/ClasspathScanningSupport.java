@@ -63,6 +63,7 @@ public final class ClasspathScanningSupport {
 	 * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver} instead.
 	 */
 	@Deprecated
+	@SuppressWarnings("exports")
 	public static ClassFilter buildClassFilter(EngineDiscoveryRequest request, Predicate<Class<?>> classPredicate) {
 		return ClassFilter.of(buildClassNamePredicate(request), classPredicate);
 	}

@@ -72,6 +72,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Repeatable(EnabledIfSystemProperties.class)
 @ExtendWith(EnabledIfSystemPropertyCondition.class)
 @API(status = STABLE, since = "5.1")
+@SuppressWarnings("exports")
 public @interface EnabledIfSystemProperty {
 
 	/**

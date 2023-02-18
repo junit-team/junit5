@@ -104,6 +104,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 @Documented
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(MethodArgumentsProvider.class)
+@SuppressWarnings("exports")
 public @interface MethodSource {
 
 	/**

@@ -71,6 +71,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Documented
 @ExtendWith(DisabledOnJreCondition.class)
 @API(status = STABLE, since = "5.1")
+@SuppressWarnings("exports")
 public @interface DisabledOnJre {
 
 	/**

@@ -35,6 +35,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 @Documented
 @API(status = STABLE, since = "5.7")
 @ConvertWith(JavaTimeArgumentConverter.class)
+@SuppressWarnings("exports")
 public @interface JavaTimeConversionPattern {
 
 	/**

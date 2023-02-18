@@ -72,6 +72,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Repeatable(EnabledIfEnvironmentVariables.class)
 @ExtendWith(EnabledIfEnvironmentVariableCondition.class)
 @API(status = STABLE, since = "5.1")
+@SuppressWarnings("exports")
 public @interface EnabledIfEnvironmentVariable {
 
 	/**

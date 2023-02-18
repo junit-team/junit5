@@ -51,6 +51,7 @@ import org.junit.platform.commons.util.Preconditions;
 @Documented
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(EnumArgumentsProvider.class)
+@SuppressWarnings("exports")
 public @interface EnumSource {
 
 	/**
