@@ -27,13 +27,18 @@ import org.apiguardian.api.API;
  * <h2>Supported Parameter Types</h2>
  *
  * <p>This argument source will only provide an empty argument for the following
- * method parameter types. Subtypes of the supported types are not supported.
+ * method parameter types.
  *
  * <ul>
  * <li>{@link java.lang.String}</li>
+ * <li>{@link java.util.Collection} and subtypes with a public no-arg constructor</li>
  * <li>{@link java.util.List}</li>
  * <li>{@link java.util.Set}</li>
- * <li>{@link java.util.Map}</li>
+ * <li>{@link java.util.SortedSet}</li>
+ * <li>{@link java.util.NavigableSet}</li>
+ * <li>{@link java.util.Map} and subtypes with a public no-arg constructor</li>
+ * <li>{@link java.util.SortedMap}</li>
+ * <li>{@link java.util.NavigableMap}</li>
  * <li>primitive arrays &mdash; for example {@code int[]}, {@code char[][]}, etc.</li>
  * <li>object arrays &mdash; for example {@code String[]}, {@code Integer[][]}, etc.</li>
  * </ul>

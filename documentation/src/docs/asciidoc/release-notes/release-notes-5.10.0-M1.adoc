@@ -62,6 +62,8 @@ repository on GitHub.
   `@ParameterizedTest` invocation.
 * `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal
   to fall back to the default display name generator.
+* `@EmptySource` now supports additional types, including `Collection` and `Map` subtypes
+  with a public no-arg constructor.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
