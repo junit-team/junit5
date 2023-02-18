@@ -48,4 +48,10 @@ tasks {
 			into("META-INF")
 		}
 	}
+	compileModule {
+		options.compilerArgs.addAll(listOf(
+			"--add-modules", "univocity.parsers",
+			"--add-reads", "${javaModuleName}=univocity.parsers"
+		))
+	}
 }
