@@ -768,6 +768,16 @@
     ]
   },
   {
+    "title": "JUnit 5 wird 5",
+    "event": "JUG Karlsruhe",
+    "date": "2022-09-27",
+    "location": "Karlsruhe, Germany",
+    "link": "https://jug-karlsruhe.de/content/accento/",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
     "title": "Evolving JUnit 5",
     "event": "IntelliJ IDEA Conf 2022",
     "date": "2022-09-30",
@@ -785,6 +795,16 @@
     "link": "https://springone.io/2022/sessions/spring-and-junit-5",
     "speakers": [
       "sbrannen"
+    ]
+  },
+  {
+    "title": "JUnit 5 wird 5",
+    "event": "JUG Frankfurt",
+    "date": "2023-03-29",
+    "location": "online",
+    "link": "https://jugf.github.io/posts/junit5-wird-5/",
+    "speakers": [
+      "marcphilipp"
     ]
   }
 ]
