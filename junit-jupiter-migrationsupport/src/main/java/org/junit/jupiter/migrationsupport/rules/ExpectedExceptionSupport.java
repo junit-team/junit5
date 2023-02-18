@@ -46,6 +46,9 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 
 	private final TestRuleSupport support = new TestRuleSupport(ExpectedExceptionAdapter::new, ExpectedException.class);
 
+	public ExpectedExceptionSupport() {
+	}
+
 	@Override
 	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 		getStore(context).put(EXCEPTION_WAS_HANDLED, TRUE);

@@ -43,6 +43,9 @@ public class ExternalResourceSupport implements BeforeEachCallback, AfterEachCal
 
 	private final TestRuleSupport support = new TestRuleSupport(ExternalResourceAdapter::new, ExternalResource.class);
 
+	public ExternalResourceSupport() {
+	}
+
 	@Override
 	public void beforeEach(ExtensionContext context) throws Exception {
 		this.support.beforeEach(context);

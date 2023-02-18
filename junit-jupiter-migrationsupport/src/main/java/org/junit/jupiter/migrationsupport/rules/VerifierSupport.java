@@ -42,6 +42,9 @@ public class VerifierSupport implements AfterEachCallback {
 
 	private final TestRuleSupport support = new TestRuleSupport(VerifierAdapter::new, Verifier.class);
 
+	public VerifierSupport() {
+	}
+
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
 		this.support.afterEach(context);

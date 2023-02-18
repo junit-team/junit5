@@ -28,6 +28,9 @@ import org.junit.jupiter.api.extension.ParameterContext;
 @API(status = STABLE, since = "5.7")
 public abstract class SimpleArgumentConverter implements ArgumentConverter {
 
+	public SimpleArgumentConverter() {
+	}
+
 	@Override
 	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
 		return convert(source, context.getParameter().getType());
