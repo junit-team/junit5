@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -44,8 +44,8 @@ class VirtualThreadHierarchicalTestExecutorService implements HierarchicalTestEx
 		forkJoinPool = new ForkJoinPool(configuration.getParallelism(), systemThreadFactory, null, false,
 			configuration.getCorePoolSize(), configuration.getMaxPoolSize(), configuration.getMinimumRunnable(), null,
 			configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
-		var virtualThreadFactory = Thread.builder().virtual(forkJoinPool).name("junit-executor", 1).factory();
-		executorService = Executors.newThreadExecutor(virtualThreadFactory);
+		var virtualThreadFactory = Thread.ofVirtual().name("junit-executor", 1).factory();
+		executorService = Executors.newThreadPerTaskExecutor(virtualThreadFactory);
 	}
 
 	@Override

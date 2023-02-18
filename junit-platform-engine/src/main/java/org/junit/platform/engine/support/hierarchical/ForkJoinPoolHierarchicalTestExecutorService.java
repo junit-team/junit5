@@ -212,6 +212,9 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 		private final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 
+		public WorkerThreadFactory() {
+		}
+
 		@Override
 		public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
 			return new WorkerThread(pool, contextClassLoader);

@@ -1,7 +1,7 @@
 plugins {
 	id("junitbuild.java-library-conventions")
+	id("junitbuild.java-multi-release-sources")
 	`java-test-fixtures`
-	`java-multi-release-sources`
 }
 
 description = "JUnit Platform Engine API"
@@ -19,22 +19,23 @@ dependencies {
 	osgiVerification(projects.junitPlatformLauncher)
 }
 
-multiReleaseSources {
-	releases.add(16)
+tasks.jar {
+	val release19ClassesDir = project.sourceSets.mainRelease19.get().output.classesDirs.singleFile
+	inputs.dir(release19ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
+	doLast(objects.newInstance(junitbuild.java.ExecJarAction::class).apply {
+		javaLauncher.set(project.javaToolchains.launcherFor(java.toolchain))
+		args.addAll(
+			"--update",
+			"--file", archiveFile.get().asFile.absolutePath,
+			"--release", "19",
+			"-C", release19ClassesDir.absolutePath, "."
+		)
+	})
 }
 
-val compileMainRelease16Java by tasks.existing(JavaCompile::class)
 
-tasks.jar {
-	val release16ClassesDir = sourceSets["mainRelease16"].java.classesDirectory
-	inputs.dir(release16ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
-	doLast {
-		exec {
-			val javaHome = compileMainRelease16Java.get().javaCompiler.get().metadata.installationPath.asFile.absolutePath
-			commandLine("$javaHome/bin/jar", "--update",
-					"--file", archiveFile.get().asFile.absolutePath,
-					"--release", "16",
-					"-C", release16ClassesDir.get().asFile.absolutePath, ".")
-		}
+eclipse {
+	classpath {
+		sourceSets -= project.sourceSets.mainRelease19.get()
 	}
 }
