@@ -5,6 +5,6 @@ requires org.apiguardian.api static transitive
 requires org.assertj.core transitive
 requires org.junit.platform.commons
 requires org.junit.platform.engine transitive
-requires org.junit.platform.launcher
+requires org.junit.platform.launcher transitive
 requires org.opentest4j transitive
 uses org.junit.platform.engine.TestEngine
