@@ -38,6 +38,9 @@ public class IgnoreCondition implements ExecutionCondition {
 	private static final ConditionEvaluationResult ENABLED = //
 		ConditionEvaluationResult.enabled("@org.junit.Ignore is not present");
 
+	public IgnoreCondition() {
+	}
+
 	/**
 	 * Containers/tests are disabled if {@link Ignore @Ignore} is present on
 	 * the test class or method.

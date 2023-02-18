@@ -37,6 +37,9 @@ public class ExecutionRecorder implements EngineExecutionListener {
 
 	private final List<Event> events = new CopyOnWriteArrayList<>();
 
+	public ExecutionRecorder() {
+	}
+
 	/**
 	 * Record an {@link Event} for a dynamically registered container
 	 * or test.

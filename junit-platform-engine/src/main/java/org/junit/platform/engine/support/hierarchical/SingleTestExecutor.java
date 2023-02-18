@@ -31,6 +31,7 @@ import org.opentest4j.TestAbortedException;
  */
 @Deprecated
 @API(status = DEPRECATED, since = "1.2")
+@SuppressWarnings("missing-explicit-ctor")
 public class SingleTestExecutor {
 
 	/**
