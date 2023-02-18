@@ -1,3 +1,5 @@
+import junitbuild.java.ModuleCompileOptions
+
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("com.github.johnrengelman.shadow")
@@ -66,4 +68,7 @@ tasks {
 		classpath -= sourceSets.main.get().output
 		classpath += files(shadowJar.map { it.archiveFile })
 	}
+    named<JavaCompile>("compileModule") {
+        the<ModuleCompileOptions>().modulePath.from(shadowed)
+    }
 }
