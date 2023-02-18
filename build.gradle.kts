@@ -61,5 +61,5 @@ nexusPublishing {
 }
 
 nohttp {
-	source.exclude("**/.gradle/**", "gradle/plugins/build/generated-sources/**")
+	source.exclude("**/.gradle/**", "gradle/plugins/build/**")
 }
