@@ -107,4 +107,4 @@ jobs:
     - name: Upload Documentation
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
-      run: ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
+      run: ./gradle/scripts/publishDocumentationSnapshotOnlyIfNecessary.sh
