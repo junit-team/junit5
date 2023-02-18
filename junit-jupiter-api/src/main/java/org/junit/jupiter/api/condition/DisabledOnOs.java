@@ -76,6 +76,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Documented
 @ExtendWith(DisabledOnOsCondition.class)
 @API(status = STABLE, since = "5.1")
+@SuppressWarnings("exports")
 public @interface DisabledOnOs {
 
 	/**

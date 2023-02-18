@@ -71,6 +71,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Documented
 @ExtendWith(EnabledForJreRangeCondition.class)
 @API(status = STABLE, since = "5.6")
+@SuppressWarnings("exports")
 public @interface EnabledForJreRange {
 
 	/**

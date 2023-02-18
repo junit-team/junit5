@@ -39,5 +39,6 @@ import org.apiguardian.api.API;
 @Documented
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(NullArgumentsProvider.class)
+@SuppressWarnings("exports")
 public @interface NullSource {
 }

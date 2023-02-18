@@ -70,6 +70,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Documented
 @ExtendWith(EnabledIfCondition.class)
 @API(status = STABLE, since = "5.7")
+@SuppressWarnings("exports")
 public @interface EnabledIf {
 
 	/**

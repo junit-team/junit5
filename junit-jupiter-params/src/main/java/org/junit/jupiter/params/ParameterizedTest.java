@@ -123,6 +123,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @API(status = STABLE, since = "5.7")
 @TestTemplate
 @ExtendWith(ParameterizedTestExtension.class)
+@SuppressWarnings("exports")
 public @interface ParameterizedTest {
 
 	/**
