@@ -25,4 +25,10 @@ tasks {
 			into("META-INF")
 		}
 	}
+	compileModule {
+		options.compilerArgs.addAll(listOf(
+			"--add-modules", "org.opentest4j.reporting.events",
+			"--add-reads", "${javaModuleName}=org.opentest4j.reporting.events"
+		))
+	}
 }
