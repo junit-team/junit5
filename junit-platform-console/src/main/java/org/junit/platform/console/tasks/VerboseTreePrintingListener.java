@@ -71,6 +71,12 @@ class VerboseTreePrintingListener implements DetailsPrintingListener {
 		printNumberOfTests(testPlan, "Test plan execution finished. Number of all tests: ");
 	}
 
+	private void printNumberOfTests(TestPlan testPlan, String prefix) {
+		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
+		printf(NONE, "%s", prefix);
+		printf(Style.TEST, "%d%n", tests);
+	}
+
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
 		this.executionStartedMillis = System.currentTimeMillis();
@@ -215,13 +221,5 @@ class VerboseTreePrintingListener implements DetailsPrintingListener {
 			}
 		});
 		frames.pop();
-
-		printNumberOfTests(testPlan, "Number of static tests: ");
-	}
-
-	private void printNumberOfTests(TestPlan testPlan, String prefix) {
-		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
-		printf(NONE, "%s", prefix);
-		printf(Style.TEST, "%d%n", tests);
 	}
 }

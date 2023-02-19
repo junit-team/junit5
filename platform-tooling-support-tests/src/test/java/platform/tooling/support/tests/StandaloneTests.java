@@ -139,6 +139,10 @@ class StandaloneTests {
 				      └─ JUnit Jupiter
 				         └─ SuiteIntegration$SingleTestContainer
 				            └─ successful()
+
+				[        11 containers found ]
+				[         9 tests found      ]
+
 				""".stripIndent();
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}
@@ -169,6 +173,10 @@ class StandaloneTests {
 				JUnit Jupiter ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter])
 				SuiteIntegration$SingleTestContainer ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer])
 				successful() ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]/[method:successful()])
+
+				[        11 containers found ]
+				[         9 tests found      ]
+
 				""".stripIndent();
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}
@@ -249,7 +257,10 @@ class StandaloneTests {
 				│  │  └─ JUnit Jupiter
 				│  └─ SuiteIntegration
 				└─ JUnit Platform Suite
-				Number of static tests: 9
+
+				[        11 containers found ]
+				[         9 tests found      ]
+
 				""".stripIndent();
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}

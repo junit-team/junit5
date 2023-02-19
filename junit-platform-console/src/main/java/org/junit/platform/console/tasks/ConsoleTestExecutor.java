@@ -55,15 +55,18 @@ public class ConsoleTestExecutor {
 		this.launcherSupplier = launcherSupplier;
 	}
 
-	public Void list(PrintWriter out) throws Exception {
-		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> listTests(out));
+	public void discover(PrintWriter out) throws Exception {
+		new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> {
+			discoverTests(out);
+			return null;
+		});
 	}
 
 	public TestExecutionSummary execute(PrintWriter out) throws Exception {
 		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> executeTests(out));
 	}
 
-	private Void listTests(PrintWriter out) {
+	private void discoverTests(PrintWriter out) {
 		Launcher launcher = launcherSupplier.get();
 		Optional<DetailsPrintingListener> commandLineTestPrinter = createDetailsPrintingListener(out);
 
@@ -71,7 +74,17 @@ public class ConsoleTestExecutor {
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 
 		commandLineTestPrinter.ifPresent(printer -> printer.listTests(testPlan));
-		return null;
+		printFoundTestsSummary(out, testPlan);
+	}
+
+	private static void printFoundTestsSummary(PrintWriter out, TestPlan testPlan) {
+		SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
+		summaryListener.testPlanExecutionStarted(testPlan);
+		TestExecutionSummary summary = summaryListener.getSummary();
+
+		out.printf("%n[%10d containers found ]%n[%10d tests found      ]%n%n", summary.getContainersFoundCount(),
+			summary.getTestsFoundCount());
+		out.flush();
 	}
 
 	private TestExecutionSummary executeTests(PrintWriter out) {

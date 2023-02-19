@@ -120,7 +120,7 @@ public class ConsoleLauncher {
 
 	private ConsoleLauncherExecutionResult listTests(CommandLineOptions options, PrintWriter out) {
 		try {
-			new ConsoleTestExecutor(options).list(out);
+			new ConsoleTestExecutor(options).discover(out);
 			return ConsoleLauncherExecutionResult.success();
 		}
 		catch (Exception exception) {
