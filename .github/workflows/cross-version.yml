@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [19, 20, 21]
+        jdk: [20, 21]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     steps:
