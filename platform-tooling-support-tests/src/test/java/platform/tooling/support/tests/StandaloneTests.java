@@ -173,6 +173,87 @@ class StandaloneTests {
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}
 
+	@Test
+	@Order(2)
+	void discoverVerbose() {
+		Result result = listTests("--details=verbose");
+
+		var expected = """
+				├─ JUnit Jupiter
+				│  ├─ JupiterIntegration
+				│  │  ├─ successful()
+				│  │  │       tags: []
+				│  │  │   uniqueId: [engine:junit-jupiter]/[class:standalone.JupiterIntegration]/[method:successful()]
+				│  │  │     parent: [engine:junit-jupiter]/[class:standalone.JupiterIntegration]
+				│  │  │     source: MethodSource [className = 'standalone.JupiterIntegration', methodName = 'successful', methodParameterTypes = '']
+				│  │  ├─ fail()
+				│  │  │       tags: []
+				│  │  │   uniqueId: [engine:junit-jupiter]/[class:standalone.JupiterIntegration]/[method:fail()]
+				│  │  │     parent: [engine:junit-jupiter]/[class:standalone.JupiterIntegration]
+				│  │  │     source: MethodSource [className = 'standalone.JupiterIntegration', methodName = 'fail', methodParameterTypes = '']
+				│  │  ├─ abort()
+				│  │  │       tags: []
+				│  │  │   uniqueId: [engine:junit-jupiter]/[class:standalone.JupiterIntegration]/[method:abort()]
+				│  │  │     parent: [engine:junit-jupiter]/[class:standalone.JupiterIntegration]
+				│  │  │     source: MethodSource [className = 'standalone.JupiterIntegration', methodName = 'abort', methodParameterTypes = '']
+				│  │  ├─ disabled()
+				│  │  │       tags: []
+				│  │  │   uniqueId: [engine:junit-jupiter]/[class:standalone.JupiterIntegration]/[method:disabled()]
+				│  │  │     parent: [engine:junit-jupiter]/[class:standalone.JupiterIntegration]
+				│  │  │     source: MethodSource [className = 'standalone.JupiterIntegration', methodName = 'disabled', methodParameterTypes = '']
+				│  └─ JupiterIntegration
+				│  ├─ SuiteIntegration$SingleTestContainer
+				│  │  ├─ successful()
+				│  │  │       tags: []
+				│  │  │   uniqueId: [engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]/[method:successful()]
+				│  │  │     parent: [engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]
+				│  │  │     source: MethodSource [className = 'standalone.SuiteIntegration$SingleTestContainer', methodName = 'successful', methodParameterTypes = '']
+				│  └─ SuiteIntegration$SingleTestContainer
+				│  ├─ JupiterParamsIntegration
+				│  │  ├─ parameterizedTest(String)
+				│  │  │       tags: []
+				│  │  │   uniqueId: [engine:junit-jupiter]/[class:standalone.JupiterParamsIntegration]/[test-template:parameterizedTest(java.lang.String)]
+				│  │  │     parent: [engine:junit-jupiter]/[class:standalone.JupiterParamsIntegration]
+				│  │  │     source: MethodSource [className = 'standalone.JupiterParamsIntegration', methodName = 'parameterizedTest', methodParameterTypes = 'java.lang.String']
+				│  └─ JupiterParamsIntegration
+				└─ JUnit Jupiter
+				├─ JUnit Vintage
+				│  ├─ VintageIntegration
+				│  │  ├─ f4il
+				│  │  │       tags: []
+				│  │  │   uniqueId: [engine:junit-vintage]/[runner:standalone.VintageIntegration]/[test:f4il(standalone.VintageIntegration)]
+				│  │  │     parent: [engine:junit-vintage]/[runner:standalone.VintageIntegration]
+				│  │  │     source: MethodSource [className = 'standalone.VintageIntegration', methodName = 'f4il', methodParameterTypes = '']
+				│  │  ├─ ignored
+				│  │  │       tags: []
+				│  │  │   uniqueId: [engine:junit-vintage]/[runner:standalone.VintageIntegration]/[test:ignored(standalone.VintageIntegration)]
+				│  │  │     parent: [engine:junit-vintage]/[runner:standalone.VintageIntegration]
+				│  │  │     source: MethodSource [className = 'standalone.VintageIntegration', methodName = 'ignored', methodParameterTypes = '']
+				│  │  ├─ succ3ssful
+				│  │  │       tags: []
+				│  │  │   uniqueId: [engine:junit-vintage]/[runner:standalone.VintageIntegration]/[test:succ3ssful(standalone.VintageIntegration)]
+				│  │  │     parent: [engine:junit-vintage]/[runner:standalone.VintageIntegration]
+				│  │  │     source: MethodSource [className = 'standalone.VintageIntegration', methodName = 'succ3ssful', methodParameterTypes = '']
+				│  └─ VintageIntegration
+				└─ JUnit Vintage
+				├─ JUnit Platform Suite
+				│  ├─ SuiteIntegration
+				│  │  ├─ JUnit Jupiter
+				│  │  │  ├─ SuiteIntegration$SingleTestContainer
+				│  │  │  │  ├─ successful()
+				│  │  │  │  │       tags: []
+				│  │  │  │  │   uniqueId: [engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]/[method:successful()]
+				│  │  │  │  │     parent: [engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]
+				│  │  │  │  │     source: MethodSource [className = 'standalone.SuiteIntegration$SingleTestContainer', methodName = 'successful', methodParameterTypes = '']
+				│  │  │  └─ SuiteIntegration$SingleTestContainer
+				│  │  └─ JUnit Jupiter
+				│  └─ SuiteIntegration
+				└─ JUnit Platform Suite
+				Number of static tests: 9
+				""".stripIndent();
+		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+	}
+
 	private static Result listTests(String... args) {
 		var result = Request.builder() //
 				.setTool(new Java()) //

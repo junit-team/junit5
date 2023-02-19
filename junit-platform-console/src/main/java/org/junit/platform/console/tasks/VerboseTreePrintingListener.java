@@ -59,9 +59,8 @@ class VerboseTreePrintingListener implements DetailsPrintingListener {
 	public void testPlanExecutionStarted(TestPlan testPlan) {
 		frames.push(System.currentTimeMillis());
 
-		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
-		printf(NONE, "%s", "Test plan execution started. Number of static tests: ");
-		printf(Style.TEST, "%d%n", tests);
+		String prefix = "Test plan execution started. Number of static tests: ";
+		printNumberOfTests(testPlan, prefix);
 		printf(Style.CONTAINER, "%s%n", theme.root());
 	}
 
@@ -69,9 +68,7 @@ class VerboseTreePrintingListener implements DetailsPrintingListener {
 	public void testPlanExecutionFinished(TestPlan testPlan) {
 		frames.pop();
 
-		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
-		printf(NONE, "%s", "Test plan execution finished. Number of all tests: ");
-		printf(Style.TEST, "%d%n", tests);
+		printNumberOfTests(testPlan, "Test plan execution finished. Number of all tests: ");
 	}
 
 	@Override
@@ -187,10 +184,44 @@ class VerboseTreePrintingListener implements DetailsPrintingListener {
 
 	@Override
 	public void listTests(TestPlan testPlan) {
-		for (TestIdentifier testIdentifier : testPlan.getAllIdentifiers().values()) {
-			printVerticals(theme.entry());
-			printf(Style.valueOf(testIdentifier), " %s%n", testIdentifier.getDisplayName());
-			printDetails(testIdentifier);
-		}
+		frames.push(0L);
+		testPlan.accept(new TestPlan.Visitor() {
+			@Override
+			public void preVisitContainer(TestIdentifier testIdentifier) {
+				if (!testPlan.getChildren(testIdentifier).isEmpty()) {
+					printVerticals(theme.entry());
+					printf(Style.CONTAINER, " %s", testIdentifier.getDisplayName());
+					printf(NONE, "%n");
+					frames.push(0L);
+				}
+			}
+
+			@Override
+			public void visit(TestIdentifier testIdentifier) {
+				if (testPlan.getChildren(testIdentifier).isEmpty()) {
+					printVerticals(theme.entry());
+					printf(Style.valueOf(testIdentifier), " %s%n", testIdentifier.getDisplayName());
+					printDetails(testIdentifier);
+				}
+			}
+
+			@Override
+			public void postVisitContainer(TestIdentifier testIdentifier) {
+				if (!testPlan.getChildren(testIdentifier).isEmpty()) {
+					frames.pop();
+					printVerticals(theme.end());
+					printf(Style.CONTAINER, " %s%n", testIdentifier.getDisplayName());
+				}
+			}
+		});
+		frames.pop();
+
+		printNumberOfTests(testPlan, "Number of static tests: ");
+	}
+
+	private void printNumberOfTests(TestPlan testPlan, String prefix) {
+		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
+		printf(NONE, "%s", prefix);
+		printf(Style.TEST, "%d%n", tests);
 	}
 }
