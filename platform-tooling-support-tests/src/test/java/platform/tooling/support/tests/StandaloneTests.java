@@ -265,6 +265,34 @@ class StandaloneTests {
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}
 
+	@Test
+	@Order(2)
+	void discoverNone() {
+		Result result = listTests("--details=none");
+
+		var expected = """
+
+				[        11 containers found ]
+				[         9 tests found      ]
+
+				""".stripIndent();
+		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+	}
+
+	@Test
+	@Order(2)
+	void discoverSummary() {
+		Result result = listTests("--details=summary");
+
+		var expected = """
+
+				[        11 containers found ]
+				[         9 tests found      ]
+
+				""".stripIndent();
+		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+	}
+
 	private static Result listTests(String... args) {
 		var result = Request.builder() //
 				.setTool(new Java()) //
