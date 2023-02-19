@@ -18,8 +18,14 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -59,7 +65,7 @@ import org.junit.platform.engine.UniqueId;
  * @see TestExecutionListener
  */
 @API(status = STABLE, since = "1.0")
-public class TestPlan {
+public class TestPlan implements Iterable<TestIdentifier> {
 
 	private final Set<TestIdentifier> roots = synchronizedSet(new LinkedHashSet<>(4));
 
@@ -295,4 +301,31 @@ public class TestPlan {
 		return this.configurationParameters;
 	}
 
+	@Override
+	public Iterator<TestIdentifier> iterator() {
+		return new DepthFirstIterator(getRoots());
+	}
+
+	private class DepthFirstIterator implements Iterator<TestIdentifier> {
+
+		private final Deque<TestIdentifier> deque = new ArrayDeque<>();
+
+		public DepthFirstIterator(Set<TestIdentifier> roots) {
+			roots.forEach(deque::addLast);
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !deque.isEmpty();
+		}
+
+		@Override
+		public TestIdentifier next() {
+			TestIdentifier result = deque.removeFirst();
+			List<TestIdentifier> children = new ArrayList<>(getChildren(result));
+			Collections.reverse(children);
+			children.forEach(deque::addFirst);
+			return result;
+		}
+	}
 }

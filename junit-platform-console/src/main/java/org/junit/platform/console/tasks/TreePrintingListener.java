@@ -78,13 +78,7 @@ class TreePrintingListener implements DetailsPrintingListener {
 	@Override
 	public void listTests(TestPlan testPlan) {
 		root = new TreeNode(testPlan.toString());
-		testPlan.getRoots().forEach(testIdentifier -> addRecursively(testPlan, testIdentifier));
+		testPlan.forEach(testIdentifier -> addNode(testIdentifier, () -> new TreeNode(testIdentifier)));
 		treePrinter.print(root);
-	}
-
-	private void addRecursively(TestPlan testPlan, TestIdentifier testIdentifier) {
-		addNode(testIdentifier, () -> new TreeNode(testIdentifier));
-		testPlan.getChildren(testIdentifier.getUniqueIdObject()) //
-				.forEach(child -> addRecursively(testPlan, child));
 	}
 }
