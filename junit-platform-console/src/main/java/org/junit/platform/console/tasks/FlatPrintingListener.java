@@ -107,9 +107,12 @@ class FlatPrintingListener implements DetailsPrintingListener {
 
 	@Override
 	public void listTests(TestPlan testPlan) {
-		for (TestIdentifier testIdentifier : testPlan) {
-			println(Style.valueOf(testIdentifier), "%s (%s)", testIdentifier.getDisplayName(),
-				testIdentifier.getUniqueId());
-		}
+		testPlan.accept(new TestPlan.Visitor() {
+			@Override
+			public void visit(TestIdentifier testIdentifier) {
+				println(Style.valueOf(testIdentifier), "%s (%s)", testIdentifier.getDisplayName(),
+					testIdentifier.getUniqueId());
+			}
+		});
 	}
 }
