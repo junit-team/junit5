@@ -67,10 +67,6 @@ class TreePrinter {
 		String caption = colorCaption(node);
 		String duration = color(Style.CONTAINER, node.duration + " ms");
 		String icon = color(Style.SKIPPED, theme.skipped());
-		boolean nodeIsBeingListed = node.duration == 0 && !node.result().isPresent() && !node.reason().isPresent();
-		if (nodeIsBeingListed) {
-			icon = color(Style.SKIPPED, theme.blank());
-		}
 		if (node.result().isPresent()) {
 			TestExecutionResult result = node.result().get();
 			Style resultStyle = Style.valueOf(result);
@@ -83,8 +79,11 @@ class TreePrinter {
 			out.print(" ");
 			out.print(duration);
 		}
-		out.print(" ");
-		out.print(icon);
+		boolean nodeIsBeingListed = node.duration == 0 && !node.result().isPresent() && !node.reason().isPresent();
+		if (!nodeIsBeingListed) {
+			out.print(" ");
+			out.print(icon);
+		}
 		node.result().ifPresent(result -> printThrowable(tabbed, result));
 		node.reason().ifPresent(reason -> printMessage(Style.SKIPPED, tabbed, reason));
 		node.reports.forEach(e -> printReportEntry(tabbed, e));
