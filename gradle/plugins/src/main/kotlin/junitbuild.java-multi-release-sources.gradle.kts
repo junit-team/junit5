@@ -35,11 +35,6 @@ listOf(9, 17, 19).forEach { javaVersion ->
 		if (project in mavenizedProjects) {
 			javadoc {
 				source(sourceSet.get().allJava)
-                val javadocOptions = options as CoreJavadocOptions
-                if (javaVersion == 19) {
-                    javadocOptions.addStringOption("-release", "19")
-                    javadocOptions.addBooleanOption("-enable-preview", true)
-                }
 			}
 			named<Jar>("sourcesJar").configure {
 				from(sourceSet.get().allSource)
