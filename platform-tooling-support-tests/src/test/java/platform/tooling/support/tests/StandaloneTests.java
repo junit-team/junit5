@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.jdk.Jar;
 import de.sormuras.bartholdy.jdk.Javac;
 import de.sormuras.bartholdy.tool.Java;
@@ -114,19 +115,7 @@ class StandaloneTests {
 	@Test
 	@Order(2)
 	void discoverTree() {
-		var result = Request.builder() //
-				.setTool(new Java()) //
-				.setProject("standalone") //
-				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
-				.addArguments("--list-tests") //
-				.addArguments("--scan-class-path") //
-				.addArguments("--disable-banner") //
-				.addArguments("--disable-ansi-colors") //
-				.addArguments("--include-classname", "standalone.*") //
-				.addArguments("--classpath", "bin").build() //
-				.run(false);
-
-		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		Result result = listTests();
 
 		var expected = """
 				╷
@@ -152,6 +141,55 @@ class StandaloneTests {
 				            └─ successful()
 				""".stripIndent();
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+	}
+
+	@Test
+	@Order(2)
+	void discoverFlat() {
+		Result result = listTests("--details=flat");
+
+		var expected = """
+				JUnit Jupiter ([engine:junit-jupiter])
+				JupiterIntegration ([engine:junit-jupiter]/[class:standalone.JupiterIntegration])
+				successful() ([engine:junit-jupiter]/[class:standalone.JupiterIntegration]/[method:successful()])
+				fail() ([engine:junit-jupiter]/[class:standalone.JupiterIntegration]/[method:fail()])
+				abort() ([engine:junit-jupiter]/[class:standalone.JupiterIntegration]/[method:abort()])
+				disabled() ([engine:junit-jupiter]/[class:standalone.JupiterIntegration]/[method:disabled()])
+				SuiteIntegration$SingleTestContainer ([engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer])
+				successful() ([engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]/[method:successful()])
+				JupiterParamsIntegration ([engine:junit-jupiter]/[class:standalone.JupiterParamsIntegration])
+				parameterizedTest(String) ([engine:junit-jupiter]/[class:standalone.JupiterParamsIntegration]/[test-template:parameterizedTest(java.lang.String)])
+				JUnit Vintage ([engine:junit-vintage])
+				VintageIntegration ([engine:junit-vintage]/[runner:standalone.VintageIntegration])
+				f4il ([engine:junit-vintage]/[runner:standalone.VintageIntegration]/[test:f4il(standalone.VintageIntegration)])
+				ignored ([engine:junit-vintage]/[runner:standalone.VintageIntegration]/[test:ignored(standalone.VintageIntegration)])
+				succ3ssful ([engine:junit-vintage]/[runner:standalone.VintageIntegration]/[test:succ3ssful(standalone.VintageIntegration)])
+				JUnit Platform Suite ([engine:junit-platform-suite])
+				SuiteIntegration ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration])
+				JUnit Jupiter ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter])
+				SuiteIntegration$SingleTestContainer ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer])
+				successful() ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]/[method:successful()])
+				""".stripIndent();
+		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+	}
+
+	private static Result listTests(String... args) {
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setProject("standalone") //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("--list-tests") //
+				.addArguments("--scan-class-path") //
+				.addArguments("--disable-banner") //
+				.addArguments("--disable-ansi-colors") //
+				.addArguments("--include-classname", "standalone.*") //
+				.addArguments("--classpath", "bin") //
+				.addArguments((Object[]) args) //
+				.build() //
+				.run(false);
+
+		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		return result;
 	}
 
 	@Test
