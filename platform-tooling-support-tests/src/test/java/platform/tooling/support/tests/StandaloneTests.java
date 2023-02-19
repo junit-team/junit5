@@ -113,7 +113,50 @@ class StandaloneTests {
 
 	@Test
 	@Order(2)
-	void test() throws IOException {
+	void discoverTree() {
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setProject("standalone") //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("--list-tests") //
+				.addArguments("--scan-class-path") //
+				.addArguments("--disable-banner") //
+				.addArguments("--disable-ansi-colors") //
+				.addArguments("--include-classname", "standalone.*") //
+				.addArguments("--classpath", "bin").build() //
+				.run(false);
+
+		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+
+		var expected = """
+				╷
+				├─ JUnit Jupiter
+				│  ├─ JupiterIntegration
+				│  │  ├─ successful()
+				│  │  ├─ fail()
+				│  │  ├─ abort()
+				│  │  └─ disabled()
+				│  ├─ SuiteIntegration$SingleTestContainer
+				│  │  └─ successful()
+				│  └─ JupiterParamsIntegration
+				│     └─ parameterizedTest(String)
+				├─ JUnit Vintage
+				│  └─ VintageIntegration
+				│     ├─ f4il
+				│     ├─ ignored
+				│     └─ succ3ssful
+				└─ JUnit Platform Suite
+				   └─ SuiteIntegration
+				      └─ JUnit Jupiter
+				         └─ SuiteIntegration$SingleTestContainer
+				            └─ successful()
+				""".stripIndent();
+		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+	}
+
+	@Test
+	@Order(3)
+	void execute() throws IOException {
 		var result = Request.builder() //
 				.setTool(new Java()) //
 				.setProject("standalone") //
@@ -145,8 +188,8 @@ class StandaloneTests {
 	}
 
 	@Test
-	@Order(3)
-	void testOnJava8() throws IOException {
+	@Order(4)
+	void executeOnJava8() throws IOException {
 		var result = Request.builder() //
 				.setTool(new Java()) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
@@ -179,9 +222,9 @@ class StandaloneTests {
 	}
 
 	@Test
-	@Order(3)
+	@Order(5)
 	// https://github.com/junit-team/junit5/issues/2600
-	void testOnJava8SelectPackage() throws IOException {
+	void executeOnJava8SelectPackage() throws IOException {
 		var result = Request.builder() //
 				.setTool(new Java()) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
@@ -214,9 +257,9 @@ class StandaloneTests {
 	}
 
 	@Test
-	@Order(5)
+	@Order(6)
 	@Disabled("https://github.com/junit-team/junit5/issues/1724")
-	void testWithJarredTestClasses() {
+	void executeWithJarredTestClasses() {
 		var jar = MavenRepo.jar("junit-platform-console-standalone");
 		var path = new ArrayList<String>();
 		// path.add("bin"); // "exploded" test classes are found, see also test() above
