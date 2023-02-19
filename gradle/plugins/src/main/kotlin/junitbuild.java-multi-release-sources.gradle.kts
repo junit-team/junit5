@@ -29,7 +29,7 @@ listOf(9, 17, 19).forEach { javaVersion ->
 		}
 
 		named<Checkstyle>("checkstyle${sourceSet.name.replaceFirstChar(Char::titlecase)}").configure {
-			configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
+            config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
 		}
 
 		if (project in mavenizedProjects) {

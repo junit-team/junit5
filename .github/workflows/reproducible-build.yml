@@ -28,4 +28,4 @@ jobs:
     - name: Build and compare checksums
       shell: bash
       run: |
-        ./src/checkBuildReproducibility.sh
+        ./gradle/scripts/checkBuildReproducibility.sh

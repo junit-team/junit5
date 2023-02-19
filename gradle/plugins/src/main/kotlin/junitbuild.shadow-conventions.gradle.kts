@@ -3,7 +3,7 @@ plugins {
 	id("com.github.johnrengelman.shadow")
 }
 
-val shadowed by configurations.creating
+val shadowed by configurations.creatingResolvable
 
 configurations {
 	listOf(apiElements, runtimeElements).forEach {

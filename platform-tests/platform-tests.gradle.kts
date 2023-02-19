@@ -79,7 +79,7 @@ tasks {
 		}
 	}
 	checkstyleJmh { // use same style rules as defined for tests
-		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 }
 

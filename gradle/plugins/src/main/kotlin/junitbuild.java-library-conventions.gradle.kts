@@ -267,21 +267,21 @@ afterEvaluate {
 
 checkstyle {
 	toolVersion = requiredVersionFromLibs("checkstyle")
-	configDirectory.set(rootProject.file("src/checkstyle"))
+	configDirectory.set(rootProject.layout.projectDirectory.dir("gradle/config/checkstyle"))
 }
 
 tasks {
 	checkstyleMain {
-		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
+        config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
 	}
 	checkstyleTest {
-		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+        config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 }
 
 pluginManager.withPlugin("java-test-fixtures") {
 	tasks.named<Checkstyle>("checkstyleTestFixtures") {
-		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+        config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 	tasks.named<JavaCompile>("compileTestFixturesJava") {
 		options.release.set(extension.testJavaVersion.majorVersion.toInt())

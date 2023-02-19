@@ -4,10 +4,7 @@ import org.gradle.api.Action
 import org.gradle.api.Task
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
-import org.gradle.jvm.tasks.Jar
 import org.gradle.jvm.toolchain.JavaLauncher
-import org.gradle.jvm.toolchain.JavaToolchainService
-import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.gradle.process.ExecOperations
 import javax.inject.Inject
 

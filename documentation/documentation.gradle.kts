@@ -25,8 +25,8 @@ javaLibrary {
 	testJavaVersion = JavaVersion.VERSION_1_8
 }
 
-val apiReport by configurations.creating
-val standaloneConsoleLauncher by configurations.creating
+val apiReport by configurations.creatingResolvable
+val standaloneConsoleLauncher by configurations.creatingResolvable
 
 dependencies {
 	implementation(projects.junitJupiterApi) {

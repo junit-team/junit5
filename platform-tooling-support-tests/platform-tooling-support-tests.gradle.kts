@@ -24,9 +24,9 @@ spotless {
 	}
 }
 
-val thirdPartyJars by configurations.creating
-val antJars by configurations.creating
-val mavenDistribution by configurations.creating
+val thirdPartyJars by configurations.creatingResolvable
+val antJars by configurations.creatingResolvable
+val mavenDistribution by configurations.creatingResolvable
 
 dependencies {
 	implementation(libs.bartholdy) {

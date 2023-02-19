@@ -71,8 +71,8 @@ Code formatting is enforced using the [Spotless](https://github.com/diffplug/spo
 Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing
 license headers to source files. Formatter and import order settings for Eclipse are
 available in the repository under
-[src/eclipse/junit-eclipse-formatter-settings.xml](src/eclipse/junit-eclipse-formatter-settings.xml)
-and [src/eclipse/junit-eclipse.importorder](src/eclipse/junit-eclipse.importorder),
+[junit-eclipse-formatter-settings.xml](gradle/config/eclipse/junit-eclipse-formatter-settings.xml)
+and [junit-eclipse.importorder](gradle/config/eclipse/junit-eclipse.importorder),
 respectively. For IntelliJ IDEA there's a
 [plugin](https://plugins.jetbrains.com/plugin/6546) you can use in conjunction with the
 Eclipse settings.

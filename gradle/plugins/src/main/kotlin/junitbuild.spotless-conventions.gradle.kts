@@ -1,6 +1,3 @@
-import org.gradle.kotlin.dsl.extra
-import org.gradle.kotlin.dsl.provideDelegate
-
 plugins {
 	id("com.diffplug.spotless")
 }
@@ -25,8 +22,9 @@ spotless {
 
 	pluginManager.withPlugin("java") {
 
-		val importOrderConfigFile = rootProject.file("src/eclipse/junit-eclipse.importorder")
-		val javaFormatterConfigFile = rootProject.file("src/eclipse/junit-eclipse-formatter-settings.xml")
+        val configDir = rootProject.layout.projectDirectory.dir("gradle/config/eclipse")
+        val importOrderConfigFile = configDir.file("junit-eclipse.importorder")
+		val javaFormatterConfigFile = configDir.file("junit-eclipse-formatter-settings.xml")
 
 		java {
 			licenseHeaderFile(license.headerFile, "(package|import|open|module) ")
