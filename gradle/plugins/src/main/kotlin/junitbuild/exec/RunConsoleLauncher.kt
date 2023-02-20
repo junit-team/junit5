@@ -26,6 +26,9 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     abstract val runtimeClasspath: ConfigurableFileCollection
 
     @get:Input
+    abstract val jvmArgs: ListProperty<String>
+
+    @get:Input
     abstract val args: ListProperty<String>
 
     @get:Input
@@ -63,6 +66,7 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
         val output = ByteArrayOutputStream()
         val result = execOperations.javaexec {
             executable = javaLauncher.get().executablePath.asFile.absolutePath
+            jvmArgs(this@RunConsoleLauncher.jvmArgs.get())
             classpath = runtimeClasspath
             mainClass.set("org.junit.platform.console.ConsoleLauncher")
             args("--scan-classpath")
@@ -77,7 +81,6 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
                 )
             }
             systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
-            jvmArgs("--enable-preview")
             debug = debugging.get()
             if (hideOutput.get()) {
                 standardOutput = output
@@ -90,6 +93,12 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
             System.out.flush()
         }
         result.rethrowFailure().assertNormalExitValue()
+    }
+
+    @Suppress("unused")
+    @Option(option = "jvm-args", description = "JVM args for the console launcher")
+    fun setVMArgs(args: String) {
+        jvmArgs.set(Commandline.translateCommandline(args).toList())
     }
 
     @Suppress("unused")
