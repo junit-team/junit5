@@ -10,14 +10,11 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.jupiter.api.condition.JRE.JAVA_15;
+import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 
-import java.util.List;
+import org.junit.jupiter.api.condition.EnabledOnJre;
 
-import org.junit.jupiter.api.condition.EnabledForJreRange;
-import org.junit.platform.testkit.engine.Event;
-
-@EnabledForJreRange(min = JAVA_15)
+@EnabledOnJre(value = JAVA_19, disabledReason = "Use Java 19 preview features")
 public class VirtualParallelExecutionIntegrationTests extends ParallelExecutionIntegrationTests {
 
 	@Override
@@ -25,8 +22,4 @@ public class VirtualParallelExecutionIntegrationTests extends ParallelExecutionI
 		return "virtual";
 	}
 
-	@Override
-	protected void assertThreadNamesCount(List<Event> events, int expectedCount) {
-		// TODO nothing to see here
-	}
 }
