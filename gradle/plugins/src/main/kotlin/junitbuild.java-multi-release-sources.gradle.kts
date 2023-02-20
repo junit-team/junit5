@@ -25,7 +25,12 @@ listOf(9, 17, 19).forEach { javaVersion ->
 
 		named<JavaCompile>(sourceSet.get().compileJavaTaskName).configure {
 			options.release.set(javaVersion)
-			if (javaVersion == 19) options.compilerArgs.add("--enable-preview")
+			if (javaVersion == 19) {
+                options.compilerArgs.add("--enable-preview")
+                javaCompiler.set(javaToolchains.compilerFor {
+                    languageVersion.set(JavaLanguageVersion.of(javaVersion))
+                })
+            }
 		}
 
 		named<Checkstyle>("checkstyle${sourceSet.name.replaceFirstChar(Char::titlecase)}").configure {
