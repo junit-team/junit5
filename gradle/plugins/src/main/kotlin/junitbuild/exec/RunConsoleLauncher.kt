@@ -77,6 +77,7 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
                 )
             }
             systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+            jvmArgs("--enable-preview")
             debug = debugging.get()
             if (hideOutput.get()) {
                 standardOutput = output
