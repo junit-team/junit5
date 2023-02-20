@@ -4,10 +4,13 @@ import org.apache.tools.ant.types.Commandline
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.*
 import org.gradle.api.tasks.options.Option
+import org.gradle.jvm.toolchain.JavaLauncher
+import org.gradle.jvm.toolchain.JavaToolchainService
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.the
 import org.gradle.process.CommandLineArgumentProvider
@@ -28,6 +31,9 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     @get:Input
     abstract val commandLineArgs: ListProperty<String>
 
+    @get:Nested
+    abstract val javaLauncher: Property<JavaLauncher>
+
     @get:OutputDirectory
     abstract val reportsDir: DirectoryProperty
 
@@ -40,6 +46,7 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     init {
         runtimeClasspath.from(project.the<SourceSetContainer>()["test"].runtimeClasspath)
         reportsDir.convention(project.layout.buildDirectory.dir("test-results"))
+        javaLauncher.set(project.the<JavaToolchainService>().launcherFor(project.the<JavaPluginExtension>().toolchain))
 
         debugging.convention(false)
         commandLineArgs.convention(emptyList())
@@ -55,6 +62,7 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     fun execute() {
         val output = ByteArrayOutputStream()
         val result = execOperations.javaexec {
+            executable = javaLauncher.get().executablePath.asFile.absolutePath
             classpath = runtimeClasspath
             mainClass.set("org.junit.platform.console.ConsoleLauncher")
             args("--scan-classpath")
