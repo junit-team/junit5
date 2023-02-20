@@ -1,31 +1,38 @@
 package junitbuild.exec
 
+import org.apache.tools.ant.types.Commandline
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Classpath
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.OutputDirectory
-import org.gradle.api.tasks.SourceSetContainer
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
+import org.gradle.api.tasks.options.Option
+import org.gradle.jvm.toolchain.JavaLauncher
+import org.gradle.jvm.toolchain.JavaToolchainService
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.the
 import org.gradle.process.CommandLineArgumentProvider
 import org.gradle.process.ExecOperations
 import trackOperationSystemAsInput
 import java.io.ByteArrayOutputStream
+import java.util.*
 import javax.inject.Inject
 
-abstract class RunConsoleLauncher @Inject constructor(private val execOperations: ExecOperations): DefaultTask() {
+abstract class RunConsoleLauncher @Inject constructor(private val execOperations: ExecOperations) : DefaultTask() {
 
     @get:Classpath
     abstract val runtimeClasspath: ConfigurableFileCollection
 
     @get:Input
     abstract val args: ListProperty<String>
+
+    @get:Input
+    abstract val commandLineArgs: ListProperty<String>
+
+    @get:Nested
+    abstract val javaLauncher: Property<JavaLauncher>
 
     @get:OutputDirectory
     abstract val reportsDir: DirectoryProperty
@@ -39,12 +46,10 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     init {
         runtimeClasspath.from(project.the<SourceSetContainer>()["test"].runtimeClasspath)
         reportsDir.convention(project.layout.buildDirectory.dir("test-results"))
+        javaLauncher.set(project.the<JavaToolchainService>().launcherFor(project.the<JavaPluginExtension>().toolchain))
 
-        debugging.convention(
-            project.providers.gradleProperty("consoleLauncherTestDebug")
-            .map { it != "false" }
-            .orElse(false)
-        )
+        debugging.convention(false)
+        commandLineArgs.convention(emptyList())
         outputs.cacheIf { !debugging.get() }
         outputs.upToDateWhen { !debugging.get() }
 
@@ -57,11 +62,13 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     fun execute() {
         val output = ByteArrayOutputStream()
         val result = execOperations.javaexec {
+            executable = javaLauncher.get().executablePath.asFile.absolutePath
             classpath = runtimeClasspath
             mainClass.set("org.junit.platform.console.ConsoleLauncher")
             args("--scan-classpath")
             args("--config=junit.platform.reporting.open.xml.enabled=true")
             args(this@RunConsoleLauncher.args.get())
+            args(this@RunConsoleLauncher.commandLineArgs.get())
             argumentProviders += CommandLineArgumentProvider {
                 listOf(
                     "--reports-dir=${reportsDir.get()}",
@@ -83,4 +90,20 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
         }
         result.rethrowFailure().assertNormalExitValue()
     }
+
+    @Suppress("unused")
+    @Option(option = "args", description = "Additional command line arguments for the console launcher")
+    fun setCliArgs(args: String) {
+        commandLineArgs.set(Commandline.translateCommandline(args).toList())
+    }
+
+    @Suppress("unused")
+    @Option(
+        option = "debug-jvm",
+        description = "Enable debugging. The process is started suspended and listening on port 5005."
+    )
+    fun setDebug(enabled: Boolean) {
+        debugging.set(enabled)
+    }
+
 }
