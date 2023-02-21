@@ -24,6 +24,7 @@ dependencies {
 	testImplementation(libs.junit4)
 	testImplementation(libs.kotlinx.coroutines)
 	testImplementation(libs.groovy4)
+	testImplementation(testFixtures(projects.junitJupiterApi))
 
 	osgiVerification(projects.junitPlatformLauncher)
 }

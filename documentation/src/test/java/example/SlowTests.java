@@ -10,15 +10,16 @@
 
 package example;
 
-// tag::user_guide[]
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 
+@Tag("exclude")
 @Disabled
 class SlowTests {
 
@@ -123,4 +124,3 @@ class SlowTests {
 		IntStream.range(1, 100_000_000).mapToDouble(i -> Math.pow(i, i)).map(Math::sqrt).max();
 	}
 }
-// end::user_guide[]

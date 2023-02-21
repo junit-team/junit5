@@ -33,6 +33,7 @@ dependencies {
 	testImplementation(libs.joox)
 	testImplementation(libs.openTestReporting.tooling)
 	testImplementation(libs.bundles.xmlunit)
+	testImplementation(testFixtures(projects.junitJupiterApi))
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(projects.junitVintageEngine)

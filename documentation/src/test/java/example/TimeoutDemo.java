@@ -13,10 +13,12 @@ package example;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.Timeout.ThreadMode;
 
+@Tag("timeout")
 // tag::user_guide[]
 class TimeoutDemo {
 
