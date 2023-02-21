@@ -148,6 +148,8 @@ public class LauncherConstants {
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static final String ENABLE_LAUNCHER_INTERCEPTORS = "junit.platform.launcher.interceptors.enabled";
 
+	public static final String DRY_RUN_PROPERTY_NAME = "junit.platform.execution.dryRun.enabled";
+
 	private LauncherConstants() {
 		/* no-op */
 	}
