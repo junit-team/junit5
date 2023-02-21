@@ -1257,10 +1257,12 @@ for parameterized tests that accept a single argument.
   method.
    - `@NullSource` cannot be used for a parameter that has a primitive type.
 * `{EmptySource}`: provides a single _empty_ argument to the annotated `@ParameterizedTest`
-  method for parameters of the following types: `java.lang.String`, `java.util.List`,
-  `java.util.Set`, `java.util.Map`, primitive arrays (e.g., `int[]`, `char[][]`, etc.),
-  object arrays (e.g.,`String[]`, `Integer[][]`, etc.).
-   - Subtypes of the supported types are not supported.
+  method for parameters of the following types: `java.lang.String`, `java.util.Collection`
+  and subtypes with a public no-arg constructor, `java.util.List`, `java.util.Set`,
+  `java.util.SortedSet`, `java.util.NavigableSet`, `java.util.Map` and subtypes with a
+  public no-arg constructor, `java.util.SortedMap`, `java.util.NavigableMap`, primitive
+  arrays (e.g., `int[]`, `char[][]`, etc.), object arrays (e.g.,`String[]`, `Integer[][]`,
+  etc.).
 * `{NullAndEmptySource}`: a _composed annotation_ that combines the functionality of
   `@NullSource` and `@EmptySource`.
 
