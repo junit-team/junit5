@@ -30,6 +30,7 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
@@ -210,7 +211,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	static CloseablePath createTempDir(CleanupMode cleanupMode, ExtensionContext executionContext) {
 		try {
-			return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX), cleanupMode, executionContext);
+			String tmpDir = System.getProperty("java.io.tmpdir");
+			if (tmpDir == null) {
+				return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX), cleanupMode, executionContext);
+			}
+			return new CloseablePath(Files.createTempDirectory(Paths.get(tmpDir), TEMP_DIR_PREFIX), cleanupMode,
+				executionContext);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
