@@ -43,7 +43,7 @@ class ConsoleLauncherTests {
 		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(options);
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		var exitCode = consoleLauncher.execute("--help").getExitCode();
+		var exitCode = consoleLauncher.run("--help").getExitCode();
 
 		assertEquals(0, exitCode);
 		verify(commandLineOptionsParser).parse("--help");
@@ -59,7 +59,7 @@ class ConsoleLauncherTests {
 		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(options);
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		var exitCode = consoleLauncher.execute("--help").getExitCode();
+		var exitCode = consoleLauncher.run("--help").getExitCode();
 
 		assertEquals(0, exitCode);
 		assertLinesMatch(
@@ -77,7 +77,7 @@ class ConsoleLauncherTests {
 		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(options);
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		var exitCode = consoleLauncher.execute("--help", "--disable-banner").getExitCode();
+		var exitCode = consoleLauncher.run("--help", "--disable-banner").getExitCode();
 
 		assertEquals(0, exitCode);
 		assertLinesMatch(List.of(), stringWriter.toString().lines().collect(Collectors.toList()));
@@ -89,7 +89,7 @@ class ConsoleLauncherTests {
 		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(new CommandLineOptions());
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		var exitCode = consoleLauncher.execute("--all").getExitCode();
+		var exitCode = consoleLauncher.run("--all").getExitCode();
 
 		assertEquals(-1, exitCode);
 		verify(commandLineOptionsParser).parse("--all");
@@ -101,7 +101,7 @@ class ConsoleLauncherTests {
 		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(new CommandLineOptions());
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
-		var exitCode = consoleLauncher.execute("--scan-classpath").getExitCode();
+		var exitCode = consoleLauncher.run("--scan-classpath").getExitCode();
 
 		assertEquals(-1, exitCode);
 		verify(commandLineOptionsParser).parse("--scan-classpath");

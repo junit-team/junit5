@@ -32,6 +32,6 @@ public class ConsoleLauncherToolProvider implements ToolProvider {
 
 	@Override
 	public int run(PrintWriter out, PrintWriter err, String... args) {
-		return ConsoleLauncher.execute(out, err, args).getExitCode();
+		return ConsoleLauncher.run(out, err, args).getExitCode();
 	}
 }

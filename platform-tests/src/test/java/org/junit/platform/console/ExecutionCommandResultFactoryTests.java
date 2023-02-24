@@ -19,9 +19,9 @@ import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
- * @since 1.3
+ * @since 1.10
  */
-class ConsoleLauncherExecutionResultTests {
+class ExecutionCommandResultFactoryTests {
 
 	private final CommandLineOptions options = new CommandLineOptions();
 	private final TestExecutionSummary summary = mock();
@@ -30,7 +30,7 @@ class ConsoleLauncherExecutionResultTests {
 	void hasStatusCode0ForNoTotalFailures() {
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -39,7 +39,7 @@ class ConsoleLauncherExecutionResultTests {
 	void hasStatusCode1ForForAnyFailure() {
 		when(summary.getTotalFailureCount()).thenReturn(1L);
 
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(1);
 	}
@@ -52,7 +52,7 @@ class ConsoleLauncherExecutionResultTests {
 		options.setFailIfNoTests(true);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(2);
 	}
@@ -66,7 +66,7 @@ class ConsoleLauncherExecutionResultTests {
 		when(summary.getTestsFoundCount()).thenReturn(1L);
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -79,7 +79,7 @@ class ConsoleLauncherExecutionResultTests {
 		options.setFailIfNoTests(false);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
+		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
