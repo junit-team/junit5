@@ -162,6 +162,17 @@ public abstract class Try<V> {
 	public abstract <E extends Exception> V getOrThrow(Function<? super Exception, E> exceptionTransformer) throws E;
 
 	/**
+	 * If this {@code Try} is a success, get the contained value; if this
+	 * {@code Try} is a failure, call the supplied {@link Function} with the
+	 * contained exception and return its result.
+	 *
+	 * @param action the action to try; must not be {@code null}
+	 * @return the contained value, if available; otherwise, the result of the
+	 * supplied action
+	 */
+	public abstract V getOrElse(Function<Exception, V> action);
+
+	/**
 	 * If this {@code Try} is a success, call the supplied {@link Consumer} with
 	 * the contained value; otherwise, do nothing.
 	 *
@@ -253,6 +264,12 @@ public abstract class Try<V> {
 		}
 
 		@Override
+		public V getOrElse(Function<Exception, V> action) {
+			// don't call action because this Try is a success
+			return this.value;
+		}
+
+		@Override
 		public Try<V> ifSuccess(Consumer<V> valueConsumer) {
 			checkNotNull(valueConsumer, "valueConsumer");
 			valueConsumer.accept(this.value);
@@ -333,6 +350,12 @@ public abstract class Try<V> {
 		public <E extends Exception> V getOrThrow(Function<? super Exception, E> exceptionTransformer) throws E {
 			checkNotNull(exceptionTransformer, "exceptionTransformer");
 			throw exceptionTransformer.apply(this.cause);
+		}
+
+		@Override
+		public V getOrElse(Function<Exception, V> action) {
+			checkNotNull(action, "action");
+			return action.apply(this.cause);
 		}
 
 		@Override

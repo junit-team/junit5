@@ -8,20 +8,19 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console;
+package org.junit.platform.console.options;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
  * @since 1.10
  */
-class ExecutionCommandResultFactoryTests {
+class ExecuteTestsCommandTests {
 
 	private final CommandLineOptions options = new CommandLineOptions();
 	private final TestExecutionSummary summary = mock();
@@ -30,7 +29,7 @@ class ExecutionCommandResultFactoryTests {
 	void hasStatusCode0ForNoTotalFailures() {
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -39,7 +38,7 @@ class ExecutionCommandResultFactoryTests {
 	void hasStatusCode1ForForAnyFailure() {
 		when(summary.getTotalFailureCount()).thenReturn(1L);
 
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(1);
 	}
@@ -52,7 +51,7 @@ class ExecutionCommandResultFactoryTests {
 		options.setFailIfNoTests(true);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(2);
 	}
@@ -66,7 +65,7 @@ class ExecutionCommandResultFactoryTests {
 		when(summary.getTestsFoundCount()).thenReturn(1L);
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -79,7 +78,7 @@ class ExecutionCommandResultFactoryTests {
 		options.setFailIfNoTests(false);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(summary, options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}

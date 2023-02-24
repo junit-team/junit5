@@ -23,9 +23,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.console.ExecutionCommandResultFactory;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.Details;
+import org.junit.platform.console.options.ExecuteTestsCommand;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 
 /**
@@ -99,7 +99,7 @@ class ConsoleTestExecutorTests {
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 
 		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(task.execute(dummyWriter()), options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(task.execute(dummyWriter()), options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -109,7 +109,7 @@ class ConsoleTestExecutorTests {
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(task.execute(dummyWriter()), options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(task.execute(dummyWriter()), options);
 
 		assertThat(exitCode).isEqualTo(1);
 	}
@@ -119,7 +119,7 @@ class ConsoleTestExecutorTests {
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
 		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(task.execute(dummyWriter()), options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(task.execute(dummyWriter()), options);
 
 		assertThat(exitCode).isEqualTo(1);
 	}
@@ -132,7 +132,7 @@ class ConsoleTestExecutorTests {
 		options.setFailIfNoTests(true);
 
 		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(task.execute(dummyWriter()), options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(task.execute(dummyWriter()), options);
 
 		assertThat(exitCode).isEqualTo(2);
 	}
@@ -143,7 +143,7 @@ class ConsoleTestExecutorTests {
 	@Test
 	void hasStatusCode0ForNoTestsAndNotFailIfNoTestsFound() throws Exception {
 		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ExecutionCommandResultFactory.computeExitCode(task.execute(dummyWriter()), options);
+		var exitCode = ExecuteTestsCommand.computeExitCode(task.execute(dummyWriter()), options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
