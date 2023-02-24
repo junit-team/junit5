@@ -39,20 +39,20 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 public class ConsoleLauncher {
 
 	public static void main(String... args) {
-		int exitCode = execute(System.out, System.err, args).getExitCode();
+		int exitCode = run(System.out, System.err, args).getExitCode();
 		System.exit(exitCode);
 	}
 
 	@API(status = INTERNAL, since = "1.0")
-	public static ConsoleLauncherExecutionResult execute(PrintStream out, PrintStream err, String... args) {
-		return execute(new PrintWriter(out), new PrintWriter(err), args);
+	public static CommandResult<?> run(PrintStream out, PrintStream err, String... args) {
+		return run(new PrintWriter(out), new PrintWriter(err), args);
 	}
 
 	@API(status = INTERNAL, since = "1.0")
-	public static ConsoleLauncherExecutionResult execute(PrintWriter out, PrintWriter err, String... args) {
+	public static CommandResult<?> run(PrintWriter out, PrintWriter err, String... args) {
 		CommandLineOptionsParser parser = new PicocliCommandLineOptionsParser();
 		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, out, err);
-		return consoleLauncher.execute(args);
+		return consoleLauncher.run(args);
 	}
 
 	private final CommandLineOptionsParser commandLineOptionsParser;
@@ -65,12 +65,12 @@ public class ConsoleLauncher {
 		this.err = err;
 	}
 
-	ConsoleLauncherExecutionResult execute(String... args) {
+	CommandResult<?> run(String... args) {
 		try {
 			CommandLineOptions options = commandLineOptionsParser.parse(args);
 			if (options.isListEngines()) {
 				displayEngines(out);
-				return ConsoleLauncherExecutionResult.success();
+				return CommandResult.success();
 			}
 			if (!options.isBannerDisabled()) {
 				displayBanner(out);
@@ -80,7 +80,7 @@ public class ConsoleLauncher {
 			}
 			if (options.isDisplayHelp()) {
 				commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
-				return ConsoleLauncherExecutionResult.success();
+				return CommandResult.success();
 			}
 			return executeTests(options, out);
 		}
@@ -88,7 +88,7 @@ public class ConsoleLauncher {
 			err.println(ex.getMessage());
 			err.println();
 			commandLineOptionsParser.printHelp(err, false);
-			return ConsoleLauncherExecutionResult.failed();
+			return CommandResult.failure();
 		}
 		finally {
 			out.flush();
@@ -118,32 +118,31 @@ public class ConsoleLauncher {
 		out.println(engine.getId() + details);
 	}
 
-	private ConsoleLauncherExecutionResult listTests(CommandLineOptions options, PrintWriter out) {
+	private CommandResult<Void> listTests(CommandLineOptions options, PrintWriter out) {
 		try {
 			new ConsoleTestExecutor(options).discover(out);
-			return ConsoleLauncherExecutionResult.success();
+			return CommandResult.success();
 		}
 		catch (Exception exception) {
 			return handleTestExecutorException(exception, options);
 		}
 	}
 
-	private ConsoleLauncherExecutionResult executeTests(CommandLineOptions options, PrintWriter out) {
+	private CommandResult<TestExecutionSummary> executeTests(CommandLineOptions options, PrintWriter out) {
 		try {
 			TestExecutionSummary testExecutionSummary = new ConsoleTestExecutor(options).execute(out);
-			return ConsoleLauncherExecutionResult.forSummary(testExecutionSummary, options);
+			return ExecutionCommandResultFactory.forSummary(testExecutionSummary, options);
 		}
 		catch (Exception exception) {
 			return handleTestExecutorException(exception, options);
 		}
 	}
 
-	private ConsoleLauncherExecutionResult handleTestExecutorException(Exception exception,
-			CommandLineOptions options) {
+	private <T> CommandResult<T> handleTestExecutorException(Exception exception, CommandLineOptions options) {
 		exception.printStackTrace(err);
 		err.println();
 		commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
-		return ConsoleLauncherExecutionResult.failed();
+		return CommandResult.failure();
 	}
 
 }
