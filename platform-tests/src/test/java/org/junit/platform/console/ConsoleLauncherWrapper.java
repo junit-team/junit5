@@ -52,7 +52,7 @@ class ConsoleLauncherWrapper {
 	}
 
 	public ConsoleLauncherWrapperResult execute(Optional<Integer> expectedCode, String... args) {
-		var result = consoleLauncher.execute(args);
+		var result = consoleLauncher.run(args);
 		var code = result.getExitCode();
 		var outText = out.toString();
 		var errText = err.toString();
