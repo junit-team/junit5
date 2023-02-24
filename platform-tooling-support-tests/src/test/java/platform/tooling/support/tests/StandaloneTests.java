@@ -66,7 +66,7 @@ class StandaloneTests {
 				.setTool(new Java()) //
 				.setProject("standalone") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
-				.addArguments("--list-engines").build() //
+				.addArguments("--list-engines", "--disable-banner").build() //
 				.run(false);
 
 		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
