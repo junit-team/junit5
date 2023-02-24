@@ -8,20 +8,16 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console;
+package org.junit.platform.console.options;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.console.CommandResult.SUCCESS;
+import static org.junit.platform.console.options.CommandResult.SUCCESS;
 
-import org.apiguardian.api.API;
-import org.junit.platform.console.options.CommandLineOptions;
+import java.io.PrintWriter;
+
+import org.junit.platform.console.tasks.ConsoleTestExecutor;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
-/**
- * @since 1.10
- */
-@API(status = INTERNAL, since = "1.10")
-public class ExecutionCommandResultFactory {
+public class ExecuteTestsCommand implements Command<TestExecutionSummary> {
 
 	/**
 	 * Exit code indicating test failure(s)
@@ -40,8 +36,16 @@ public class ExecutionCommandResultFactory {
 		return summary.getTotalFailureCount() == 0 ? SUCCESS : TEST_FAILED;
 	}
 
-	static CommandResult<TestExecutionSummary> forSummary(TestExecutionSummary summary, CommandLineOptions options) {
-		int exitCode = computeExitCode(summary, options);
-		return CommandResult.create(exitCode, summary);
+	private final CommandLineOptions options;
+
+	public ExecuteTestsCommand(CommandLineOptions options) {
+		this.options = options;
+	}
+
+	@Override
+	public CommandResult<TestExecutionSummary> run(PrintWriter out, PrintWriter err) throws Exception {
+		TestExecutionSummary testExecutionSummary = new ConsoleTestExecutor(options).execute(out);
+		int exitCode = computeExitCode(testExecutionSummary, options);
+		return CommandResult.create(exitCode, testExecutionSummary);
 	}
 }

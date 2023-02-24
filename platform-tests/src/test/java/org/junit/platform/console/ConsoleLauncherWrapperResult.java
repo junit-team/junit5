@@ -13,6 +13,7 @@ package org.junit.platform.console;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.junit.platform.console.options.CommandResult;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**

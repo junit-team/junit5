@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console;
+package org.junit.platform.console.options;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -25,7 +25,7 @@ public class CommandResult<T> {
 	/**
 	 * Exit code indicating successful execution
 	 */
-	protected static final int SUCCESS = 0;
+	public static final int SUCCESS = 0;
 
 	/**
 	 * Exit code indicating any failure(s)

@@ -108,6 +108,7 @@ public class TryTests {
 		var failure = Try.failure(new Exception());
 		assertThrows(JUnitException.class, () -> failure.orElse(null));
 		assertThrows(JUnitException.class, () -> failure.orElseTry(null));
+		assertThrows(JUnitException.class, () -> failure.getOrElse(null));
 		assertThrows(JUnitException.class, () -> failure.ifFailure(null));
 	}
 
