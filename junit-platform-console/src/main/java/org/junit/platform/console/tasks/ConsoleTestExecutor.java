@@ -74,7 +74,9 @@ public class ConsoleTestExecutor {
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 
 		commandLineTestPrinter.ifPresent(printer -> printer.listTests(testPlan));
-		printFoundTestsSummary(out, testPlan);
+		if (options.getDetails() != Details.NONE) {
+			printFoundTestsSummary(out, testPlan);
+		}
 	}
 
 	private static void printFoundTestsSummary(PrintWriter out, TestPlan testPlan) {

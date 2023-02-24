@@ -10,6 +10,7 @@
 
 package platform.tooling.support.tests;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -270,13 +271,7 @@ class StandaloneTests {
 	void discoverNone() {
 		Result result = listTests("--details=none");
 
-		var expected = """
-
-				[        11 containers found ]
-				[         9 tests found      ]
-
-				""".stripIndent();
-		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+		assertThat(result.getOutputLines("out")).isEmpty();
 	}
 
 	@Test
