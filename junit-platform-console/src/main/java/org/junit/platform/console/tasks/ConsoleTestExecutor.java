@@ -55,14 +55,14 @@ public class ConsoleTestExecutor {
 		this.launcherSupplier = launcherSupplier;
 	}
 
-	public void discover(PrintWriter out) throws Exception {
+	public void discover(PrintWriter out) {
 		new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> {
 			discoverTests(out);
 			return null;
 		});
 	}
 
-	public TestExecutionSummary execute(PrintWriter out) throws Exception {
+	public TestExecutionSummary execute(PrintWriter out) {
 		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> executeTests(out));
 	}
 

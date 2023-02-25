@@ -3,7 +3,6 @@ package junitbuild.exec
 import org.apache.tools.ant.types.Commandline
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
@@ -20,6 +19,7 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
 
+@CacheableTask
 abstract class RunConsoleLauncher @Inject constructor(private val execOperations: ExecOperations) : DefaultTask() {
 
     @get:Classpath
@@ -28,14 +28,14 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     @get:Input
     abstract val args: ListProperty<String>
 
+    @get:Nested
+    abstract val argumentProviders: ListProperty<CommandLineArgumentProvider>
+
     @get:Input
     abstract val commandLineArgs: ListProperty<String>
 
     @get:Nested
     abstract val javaLauncher: Property<JavaLauncher>
-
-    @get:OutputDirectory
-    abstract val reportsDir: DirectoryProperty
 
     @get:Internal
     abstract val debugging: Property<Boolean>
@@ -45,7 +45,6 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
 
     init {
         runtimeClasspath.from(project.the<SourceSetContainer>()["test"].runtimeClasspath)
-        reportsDir.convention(project.layout.buildDirectory.dir("test-results"))
         javaLauncher.set(project.the<JavaToolchainService>().launcherFor(project.the<JavaPluginExtension>().toolchain))
 
         debugging.convention(false)
@@ -65,17 +64,9 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
             executable = javaLauncher.get().executablePath.asFile.absolutePath
             classpath = runtimeClasspath
             mainClass.set("org.junit.platform.console.ConsoleLauncher")
-            args("--scan-classpath")
-            args("--config=junit.platform.reporting.open.xml.enabled=true")
             args(this@RunConsoleLauncher.args.get())
             args(this@RunConsoleLauncher.commandLineArgs.get())
-            argumentProviders += CommandLineArgumentProvider {
-                listOf(
-                    "--reports-dir=${reportsDir.get()}",
-                    "--config=junit.platform.reporting.output.dir=${reportsDir.get()}"
-
-                )
-            }
+            argumentProviders.addAll(this@RunConsoleLauncher.argumentProviders.get())
             systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
             debug = debugging.get()
             if (hideOutput.get()) {

@@ -48,8 +48,6 @@ public class CommandLineOptions {
 	static final Theme DEFAULT_THEME = Theme.valueOf(ConsoleUtils.charset());
 
 	private boolean displayHelp;
-	private boolean listEngines;
-	private boolean listTests;
 	private boolean ansiColorOutputDisabled;
 	private Path colorPalettePath;
 	private boolean isSingleColorPalette;
@@ -93,22 +91,6 @@ public class CommandLineOptions {
 
 	public void setDisplayHelp(boolean displayHelp) {
 		this.displayHelp = displayHelp;
-	}
-
-	public boolean isListEngines() {
-		return this.listEngines;
-	}
-
-	public void setListEngines(boolean listEngines) {
-		this.listEngines = listEngines;
-	}
-
-	public boolean isListTests() {
-		return listTests;
-	}
-
-	public void setListTests(boolean listTests) {
-		this.listTests = listTests;
 	}
 
 	public boolean isAnsiColorOutputDisabled() {

@@ -17,7 +17,12 @@ import java.io.PrintWriter;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
-public class ExecuteTestsCommand implements Command<TestExecutionSummary> {
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
+
+@Command(name = "execute", description = "Execute tests")
+public class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements CommandLine.IExitCodeGenerator {
 
 	/**
 	 * Exit code indicating test failure(s)
@@ -29,6 +34,20 @@ public class ExecuteTestsCommand implements Command<TestExecutionSummary> {
 	 */
 	private static final int NO_TESTS_FOUND = 2;
 
+	@Mixin
+	CommandLineOptionsMixin options;
+
+	@Override
+	protected TestExecutionSummary execute(PrintWriter out) {
+		CommandLineOptions options = this.options.toCommandLineOptions();
+		return new ConsoleTestExecutor(options).execute(out);
+	}
+
+	@Override
+	public int getExitCode() {
+		return computeExitCode(commandSpec.commandLine().getExecutionResult(), options.toCommandLineOptions());
+	}
+
 	public static int computeExitCode(TestExecutionSummary summary, CommandLineOptions options) {
 		if (options.isFailIfNoTests() && summary.getTestsFoundCount() == 0) {
 			return NO_TESTS_FOUND;
@@ -36,16 +55,4 @@ public class ExecuteTestsCommand implements Command<TestExecutionSummary> {
 		return summary.getTotalFailureCount() == 0 ? SUCCESS : TEST_FAILED;
 	}
 
-	private final CommandLineOptions options;
-
-	public ExecuteTestsCommand(CommandLineOptions options) {
-		this.options = options;
-	}
-
-	@Override
-	public CommandResult<TestExecutionSummary> run(PrintWriter out, PrintWriter err) throws Exception {
-		TestExecutionSummary testExecutionSummary = new ConsoleTestExecutor(options).execute(out);
-		int exitCode = computeExitCode(testExecutionSummary, options);
-		return CommandResult.create(exitCode, testExecutionSummary);
-	}
 }

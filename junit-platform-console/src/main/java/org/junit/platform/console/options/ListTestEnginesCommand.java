@@ -10,8 +10,6 @@
 
 package org.junit.platform.console.options;
 
-import static org.junit.platform.console.options.CommandResult.success;
-
 import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.StringJoiner;
@@ -20,12 +18,15 @@ import java.util.stream.StreamSupport;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry;
 
-public class ListTestEnginesCommand implements Command<Void> {
+import picocli.CommandLine;
+
+@CommandLine.Command(name = "engines", description = "List available test engines")
+public class ListTestEnginesCommand extends BaseCommand<Void> {
 
 	@Override
-	public CommandResult<Void> run(PrintWriter out, PrintWriter err) throws Exception {
+	protected Void execute(PrintWriter out) {
 		displayEngines(out);
-		return success();
+		return null;
 	}
 
 	void displayEngines(PrintWriter out) {
