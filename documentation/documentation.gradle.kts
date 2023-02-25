@@ -117,6 +117,18 @@ require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
 tasks {
 
 	val consoleLauncherTest by registering(RunConsoleLauncher::class) {
+		args.addAll("execute")
+		args.addAll("--scan-classpath")
+		args.addAll("--config=junit.platform.reporting.open.xml.enabled=true")
+		val reportsDir = project.layout.buildDirectory.dir("console-launcher-test-results")
+		outputs.dir(reportsDir)
+		argumentProviders.add(CommandLineArgumentProvider {
+			listOf(
+				"--reports-dir=${reportsDir.get()}",
+				"--config=junit.platform.reporting.output.dir=${reportsDir.get()}"
+
+			)
+		})
 		args.addAll("--config", "enableHttpServer=true")
 		args.addAll("--include-classname", ".*Tests")
 		args.addAll("--include-classname", ".*Demo")
@@ -126,13 +138,7 @@ tasks {
 
 	register<RunConsoleLauncher>("consoleLauncher") {
 		hideOutput.set(false)
-		reportsDir.set(layout.buildDirectory.dir("console-launcher"))
 		outputs.upToDateWhen { false }
-		args.addAll("--config", "enableHttpServer=true")
-		args.addAll("--include-classname", ".*Tests")
-		args.addAll("--include-classname", ".*Demo")
-		args.addAll("--exclude-tag", "exclude")
-		args.addAll("--exclude-tag", "timeout")
 	}
 
 	test {

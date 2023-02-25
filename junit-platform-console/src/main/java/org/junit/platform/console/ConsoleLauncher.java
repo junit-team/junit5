@@ -13,15 +13,12 @@ package org.junit.platform.console;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
-import java.io.PrintStream;
 import java.io.PrintWriter;
 
 import org.apiguardian.api.API;
 import org.junit.platform.console.options.CommandLineOptionsParser;
-import org.junit.platform.console.options.CommandLineParser;
 import org.junit.platform.console.options.CommandResult;
-import org.junit.platform.console.options.PicocliCommandLineOptionsParser;
-import org.junit.platform.console.options.SafeCommand;
+import org.junit.platform.console.options.MainCommand;
 
 /**
  * The {@code ConsoleLauncher} is a stand-alone application for launching the
@@ -33,36 +30,29 @@ import org.junit.platform.console.options.SafeCommand;
 public class ConsoleLauncher {
 
 	public static void main(String... args) {
-		int exitCode = run(System.out, System.err, args).getExitCode();
-		System.exit(exitCode);
-	}
-
-	@API(status = INTERNAL, since = "1.0")
-	public static CommandResult<?> run(PrintStream out, PrintStream err, String... args) {
-		return run(new PrintWriter(out), new PrintWriter(err), args);
+		PrintWriter out = new PrintWriter(System.out);
+		PrintWriter err = new PrintWriter(System.err);
+		CommandResult<?> result = run(out, err, args);
+		System.exit(result.getExitCode());
 	}
 
 	@API(status = INTERNAL, since = "1.0")
 	public static CommandResult<?> run(PrintWriter out, PrintWriter err, String... args) {
-		CommandLineOptionsParser parser = new PicocliCommandLineOptionsParser();
-		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, out, err);
+		ConsoleLauncher consoleLauncher = new ConsoleLauncher(null, out, err);
 		return consoleLauncher.run(args);
 	}
 
-	private final CommandLineParser commandLineParser;
 	private final PrintWriter out;
 	private final PrintWriter err;
 
 	ConsoleLauncher(CommandLineOptionsParser commandLineOptionsParser, PrintWriter out, PrintWriter err) {
-		this.commandLineParser = new CommandLineParser(commandLineOptionsParser);
 		this.out = out;
 		this.err = err;
 	}
 
 	CommandResult<?> run(String... args) {
 		try {
-			SafeCommand<?> command = commandLineParser.parse(args);
-			return command.run(out, err);
+			return MainCommand.run(out, err, args);
 		}
 		finally {
 			out.flush();

@@ -14,16 +14,18 @@ import java.io.PrintWriter;
 
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
-public class DiscoverTestsCommand implements Command<Void> {
-	private final CommandLineOptions options;
+import picocli.CommandLine;
+import picocli.CommandLine.Mixin;
 
-	public DiscoverTestsCommand(CommandLineOptions options) {
-		this.options = options;
-	}
+@CommandLine.Command(name = "discover", description = "Discover tests")
+public class DiscoverTestsCommand extends BaseCommand<Void> {
+
+	@Mixin
+	CommandLineOptionsMixin options;
 
 	@Override
-	public CommandResult<Void> run(PrintWriter out, PrintWriter err) throws Exception {
-		new ConsoleTestExecutor(options).discover(out);
-		return CommandResult.success();
+	protected Void execute(PrintWriter out) {
+		new ConsoleTestExecutor(options.toCommandLineOptions()).discover(out);
+		return null;
 	}
 }
