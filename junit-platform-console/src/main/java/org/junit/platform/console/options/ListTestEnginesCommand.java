@@ -35,6 +35,7 @@ public class ListTestEnginesCommand extends BaseCommand<Void> {
 		StreamSupport.stream(engines.spliterator(), false) //
 				.sorted(Comparator.comparing(TestEngine::getId)) //
 				.forEach(engine -> displayEngine(out, engine));
+		out.flush();
 	}
 
 	private void displayEngine(PrintWriter out, TestEngine engine) {
@@ -42,6 +43,7 @@ public class ListTestEnginesCommand extends BaseCommand<Void> {
 		engine.getGroupId().ifPresent(details::add);
 		engine.getArtifactId().ifPresent(details::add);
 		engine.getVersion().ifPresent(details::add);
-		out.println(engine.getId() + details);
+		out.println(
+			commandSpec.commandLine().getColorScheme().text(String.format("@|bold %s|@%s", engine.getId(), details)));
 	}
 }
