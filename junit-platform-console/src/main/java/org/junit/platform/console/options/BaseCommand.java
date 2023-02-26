@@ -13,6 +13,7 @@ package org.junit.platform.console.options;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -24,15 +25,16 @@ abstract class BaseCommand<T> implements Callable<T> {
 	CommandSpec commandSpec;
 
 	@Mixin
-	OutputOptionsMixin banner;
+	OutputOptionsMixin outputOptions;
 
-	@Option(names = { "-h", "--help" }, usageHelp = true)
+	@SuppressWarnings("unused")
+	@Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help information.")
 	private boolean helpRequested;
 
 	@Override
 	public final T call() {
 		PrintWriter out = getOut();
-		if (!banner.isDisableBanner()) {
+		if (!outputOptions.isDisableBanner()) {
 			displayBanner(out);
 		}
 		return execute(out);
@@ -44,8 +46,14 @@ abstract class BaseCommand<T> implements Callable<T> {
 
 	private void displayBanner(PrintWriter out) {
 		out.println();
-		out.println("Thanks for using JUnit! Support its development at https://junit.org/sponsoring");
+		CommandLine.Help.ColorScheme colorScheme = commandSpec.commandLine().getColorScheme();
+		if (colorScheme.ansi().enabled()) {
+			out.print("💚 ");
+		}
+		out.println(colorScheme.text(
+			"@|italic Thanks for using JUnit!|@ Support its development at @|underline https://junit.org/sponsoring|@"));
 		out.println();
+		out.flush();
 	}
 
 	protected abstract T execute(PrintWriter out);

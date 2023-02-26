@@ -10,11 +10,10 @@
 
 package org.junit.platform.console;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.commons.util.StringUtils.isBlank;
 
 import org.junit.jupiter.api.Test;
 
@@ -27,8 +26,8 @@ class ConsoleLauncherIntegrationTests {
 	void executeWithoutArgumentsFailsAndPrintsHelpInformation() {
 		var result = new ConsoleLauncherWrapper().execute(-1);
 		assertAll("empty args array results in display of help information and an exception stacktrace", //
-			() -> assertTrue(result.out.contains("help information")), //
-			() -> assertTrue(result.err.contains("No arguments were supplied to the ConsoleLauncher")) //
+			() -> assertThat(result.out).contains("help information"), //
+			() -> assertThat(result.err).contains("No arguments were supplied to the ConsoleLauncher") //
 		);
 	}
 
@@ -46,8 +45,7 @@ class ConsoleLauncherIntegrationTests {
 		assertAll("all subpackage test classes are excluded by the class name filter", //
 			() -> assertArrayEquals(args, result.args), //
 			() -> assertEquals(0, result.code), //
-			() -> assertEquals(0, result.getTestsFoundCount()), //
-			() -> assertTrue(isBlank(result.err)) //
+			() -> assertEquals(0, result.getTestsFoundCount()) //
 		);
 	}
 

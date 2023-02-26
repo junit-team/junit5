@@ -78,9 +78,8 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Object runCommand(String subcommand, Optional<String> triggeringOption) {
 		CommandLine commandLine = commandSpec.commandLine();
+		commandLine.setUnmatchedArgumentsAllowed(false);
 		Object command = commandLine.getSubcommands().get(subcommand).getCommandSpec().userObject();
-
-		printDeprecationWarning(subcommand, triggeringOption, commandLine);
 
 		List<String> args = new ArrayList<>(commandLine.getParseResult().expandedArgs());
 		triggeringOption.ifPresent(args::remove);
@@ -89,6 +88,9 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 			args.toArray(new String[0]), //
 			command);
 		this.commandResult = result;
+
+		printDeprecationWarning(subcommand, triggeringOption, commandLine);
+
 		return result.getValue().orElse(null);
 	}
 
@@ -96,9 +98,15 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 			CommandLine commandLine) {
 		PrintWriter err = commandLine.getErr();
 		String reason = triggeringOption.map(it -> " due to use of '" + it + "'").orElse("");
-		err.printf("WARNING: Delegating to the '%s' command%s.%n", subcommand, reason);
-		err.println("WARNING: This behaviour has been deprecated and will be removed in a future release.");
-		err.println("WARNING: Please use the '" + subcommand + "' command directly.");
+
+		commandLine.getOut().flush();
+		err.println();
+		err.println(commandLine.getColorScheme().text(
+			String.format("@|yellow,bold WARNING:|@ Delegated to the '%s' command%s.", subcommand, reason)));
+		err.println(commandLine.getColorScheme().text(
+			"         This behaviour has been deprecated and will be removed in a future release."));
+		err.println(
+			commandLine.getColorScheme().text("         Please use the '" + subcommand + "' command directly."));
 		err.flush();
 	}
 
@@ -112,7 +120,13 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 		int exitCode = commandLine //
 				.setOut(out) //
 				.setErr(err) //
-				.setUnmatchedArgumentsAllowed(false) //
+				.setExecutionExceptionHandler((ex, cmd, parseResult) -> {
+					err.println(cmd.getColorScheme().richStackTraceString(ex));
+					err.println();
+					err.flush();
+					cmd.usage(out);
+					return CommandResult.FAILURE;
+				}) //
 				.setCaseInsensitiveEnumValuesAllowed(true) //
 				.setAtFileCommentChar(null) // for --select-method com.acme.Foo#m()
 				.execute(args);

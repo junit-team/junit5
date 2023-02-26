@@ -10,11 +10,8 @@
 
 package org.junit.platform.console;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.commons.util.StringUtils.isBlank;
-import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -58,10 +55,10 @@ class ConsoleLauncherWrapper {
 		var errText = err.toString();
 		if (expectedCode.isPresent()) {
 			int expectedValue = expectedCode.get();
-			assertAll("wrapped execution failed:\n" + outText + "\n", //
-				() -> assertEquals(expectedValue, code, "ConsoleLauncher execute code mismatch!"), //
-				() -> assertTrue(expectedValue == 0 ? isBlank(errText) : isNotBlank(errText)) //
-			);
+			assertEquals(expectedValue, code, "ConsoleLauncher execute code mismatch!");
+			if (expectedValue != 0) {
+				assertThat(errText).isNotBlank();
+			}
 		}
 		return new ConsoleLauncherWrapperResult(args, outText, errText, result);
 	}
