@@ -25,7 +25,9 @@ public class DiscoverTestsCommand extends BaseCommand<Void> {
 
 	@Override
 	protected Void execute(PrintWriter out) {
-		new ConsoleTestExecutor(options.toCommandLineOptions()).discover(out);
+		CommandLineOptions options = this.options.toCommandLineOptions();
+		options.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
+		new ConsoleTestExecutor(options).discover(out);
 		return null;
 	}
 }

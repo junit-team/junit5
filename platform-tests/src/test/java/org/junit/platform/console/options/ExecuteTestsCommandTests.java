@@ -29,7 +29,7 @@ class ExecuteTestsCommandTests {
 	void hasStatusCode0ForNoTotalFailures() {
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
+		var exitCode = CommandResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -38,7 +38,7 @@ class ExecuteTestsCommandTests {
 	void hasStatusCode1ForForAnyFailure() {
 		when(summary.getTotalFailureCount()).thenReturn(1L);
 
-		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
+		var exitCode = CommandResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(1);
 	}
@@ -51,7 +51,7 @@ class ExecuteTestsCommandTests {
 		options.setFailIfNoTests(true);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
+		var exitCode = CommandResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(2);
 	}
@@ -65,7 +65,7 @@ class ExecuteTestsCommandTests {
 		when(summary.getTestsFoundCount()).thenReturn(1L);
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
+		var exitCode = CommandResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
@@ -78,7 +78,7 @@ class ExecuteTestsCommandTests {
 		options.setFailIfNoTests(false);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		var exitCode = ExecuteTestsCommand.computeExitCode(summary, options);
+		var exitCode = CommandResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(0);
 	}
