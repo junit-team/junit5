@@ -19,7 +19,7 @@ runs:
       with:
         arguments: |
           -Porg.gradle.java.installations.auto-download=false
-          -PenablePredictiveTestSelection=${{ github.event_name == 'pull_request' }}
+          -Penterprise.predictiveTestSelection.enabled=${{ github.event_name == 'pull_request' }}
           "-Dscan.value.GitHub job=${{ github.job }}"
           javaToolchains
           ${{ inputs.arguments }}

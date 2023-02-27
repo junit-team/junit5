@@ -64,7 +64,7 @@ gradleEnterprise {
 			}
 		}
 
-		if (buildParameters.enterprise.enableTestDistribution) {
+		if (buildParameters.enterprise.testDistribution.enabled) {
 			tag("test-distribution")
 		}
 	}
