@@ -147,9 +147,11 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		static {
 			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
 			converters.put(Boolean.class, source -> {
-				Preconditions.condition("true".equalsIgnoreCase(source) || "false".equalsIgnoreCase(source),
+				boolean isTrue = "true".equalsIgnoreCase(source);
+				boolean isFalse = "false".equalsIgnoreCase(source);
+				Preconditions.condition(isTrue || isFalse,
 					() -> "String must be (ignoring case) 'true' or 'false': " + source);
-				return Boolean.valueOf(source);
+				return isTrue;
 			});
 			converters.put(Character.class, source -> {
 				Preconditions.condition(source.length() == 1, () -> "String must have length of 1: " + source);

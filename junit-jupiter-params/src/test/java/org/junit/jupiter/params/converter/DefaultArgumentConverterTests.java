@@ -11,7 +11,7 @@
 package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.io.File;
 import java.lang.Thread.State;
@@ -102,15 +102,15 @@ class DefaultArgumentConverterTests {
 
 	@Test
 	void throwsExceptionOnInvalidStringForPrimitiveTypes() {
-		var invalidCharException = assertThrows(ArgumentConversionException.class, () -> convert("ab", char.class));
-		assertThat(invalidCharException).hasMessage("Failed to convert String \"ab\" to type java.lang.Character");
-		assertThat(invalidCharException.getCause()).hasMessage("String must have length of 1: ab");
+		assertThatExceptionOfType(ArgumentConversionException.class).isThrownBy(
+			() -> convert("ab", char.class)).withMessage(
+				"Failed to convert String \"ab\" to type java.lang.Character").havingCause().withMessage(
+					"String must have length of 1: ab");
 
-		var invalidBooleanException = assertThrows(ArgumentConversionException.class,
-			() -> convert("tru", boolean.class));
-		assertThat(invalidBooleanException).hasMessage("Failed to convert String \"tru\" to type java.lang.Boolean");
-		assertThat(invalidBooleanException.getCause()).hasMessage(
-			"String must be (ignoring case) 'true' or 'false': tru");
+		assertThatExceptionOfType(ArgumentConversionException.class).isThrownBy(
+			() -> convert("tru", boolean.class)).withMessage(
+				"Failed to convert String \"tru\" to type java.lang.Boolean").havingCause().withMessage(
+					"String must be (ignoring case) 'true' or 'false': tru");
 	}
 
 	/**
