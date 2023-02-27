@@ -148,8 +148,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
 			converters.put(Boolean.class, source -> {
 				boolean isTrue = "true".equalsIgnoreCase(source);
-				boolean isFalse = "false".equalsIgnoreCase(source);
-				Preconditions.condition(isTrue || isFalse,
+				Preconditions.condition(isTrue || "false".equalsIgnoreCase(source),
 					() -> "String must be (ignoring case) 'true' or 'false': " + source);
 				return isTrue;
 			});
