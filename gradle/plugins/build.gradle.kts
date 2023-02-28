@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	`kotlin-dsl`
-	id("com.github.ben-manes.versions") version "0.45.0"
+	id("com.github.ben-manes.versions") version "0.46.0"
 }
 
 repositories {
