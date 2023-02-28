@@ -1,0 +1,15 @@
+name: Combine PRs
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Wednesday at 01:00
+  workflow_dispatch:
+
+jobs:
+  combine-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: combine-prs
+        uses: github/combine-prs@v2.0.0
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
