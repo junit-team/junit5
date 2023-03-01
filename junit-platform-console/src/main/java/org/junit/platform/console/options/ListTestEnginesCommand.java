@@ -22,7 +22,8 @@ import picocli.CommandLine.Command;
 
 @Command(//
 		name = "engines", //
-		description = "List available test engines")
+		description = "List available test engines" //
+)
 class ListTestEnginesCommand extends BaseCommand<Void> {
 
 	@Override
