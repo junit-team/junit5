@@ -86,7 +86,6 @@ class AvailableOptions {
 		private boolean helpRequested2;
 
 		private void applyTo(CommandLineOptions result) {
-			result.setDisplayHelp(this.helpRequested || this.helpRequested2);
 		}
 	}
 

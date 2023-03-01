@@ -31,6 +31,24 @@ abstract class BaseCommand<T> implements Callable<T> {
 	@Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help information.")
 	private boolean helpRequested;
 
+	static CommandLine initialize(CommandLine commandLine) {
+		CommandLine.IParameterExceptionHandler defaultParameterExceptionHandler = commandLine.getParameterExceptionHandler();
+		return commandLine //
+				.setParameterExceptionHandler((ex, args) -> {
+					defaultParameterExceptionHandler.handleParseException(ex, args);
+					return CommandResult.FAILURE;
+				}) //
+				.setExecutionExceptionHandler((ex, cmd, __) -> {
+					commandLine.getErr().println(cmd.getColorScheme().richStackTraceString(ex));
+					commandLine.getErr().println();
+					commandLine.getErr().flush();
+					cmd.usage(commandLine.getOut());
+					return CommandResult.FAILURE;
+				}) //
+				.setCaseInsensitiveEnumValuesAllowed(true) //
+				.setAtFileCommentChar(null);
+	}
+
 	@Override
 	public final T call() {
 		PrintWriter out = getOut();

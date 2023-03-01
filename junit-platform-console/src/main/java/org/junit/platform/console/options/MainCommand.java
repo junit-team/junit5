@@ -125,8 +125,9 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 	public CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
 		CommandLine commandLine = new CommandLine(this).addSubcommand(
-			new DiscoverTestsCommand(consoleTestExecutorFactory)).addSubcommand(
-				new ExecuteTestsCommand(consoleTestExecutorFactory)).addSubcommand(new ListTestEnginesCommand());
+			new DiscoverTestsCommand(consoleTestExecutorFactory)) //
+				.addSubcommand(new ExecuteTestsCommand(consoleTestExecutorFactory)) //
+				.addSubcommand(new ListTestEnginesCommand());
 		return runCommand(out, err, args, commandLine);
 	}
 
@@ -136,19 +137,9 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 	private static CommandResult<Object> runCommand(PrintWriter out, PrintWriter err, String[] args,
 			CommandLine commandLine) {
-		int exitCode = commandLine //
+		int exitCode = BaseCommand.initialize(commandLine) //
 				.setOut(out) //
-				.setErr(err) //
-				.setExecutionExceptionHandler((ex, cmd, parseResult) -> {
-					err.println(cmd.getColorScheme().richStackTraceString(ex));
-					err.println();
-					err.flush();
-					cmd.usage(out);
-					return CommandResult.FAILURE;
-				}) //
-				.setCaseInsensitiveEnumValuesAllowed(true) //
-				.setAtFileCommentChar(null) // for --select-method com.acme.Foo#m()
-				.execute(args);
+				.setErr(err).execute(args);
 		return CommandResult.create(exitCode, commandLine.getExecutionResult());
 	}
 }

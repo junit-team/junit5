@@ -22,25 +22,33 @@ import picocli.CommandLine.Mixin;
 
 @Command(//
 		name = "execute", //
-		description = "Execute tests", //
-		exitCodeOnInvalidInput = CommandResult.FAILURE, //
-		exitCodeOnExecutionException = CommandResult.FAILURE //
-)
-public class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements CommandLine.IExitCodeGenerator {
+		description = "Execute tests")
+class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements CommandLine.IExitCodeGenerator {
 
 	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
 	@Mixin
 	CommandLineOptionsMixin options;
 
-	public ExecuteTestsCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+	ExecuteTestsCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
+	}
+
+	static CommandLineOptions parseCommandLineOptions(String[] args) {
+		ExecuteTestsCommand command = new ExecuteTestsCommand(__ -> null);
+		BaseCommand.initialize(new CommandLine(command)).parseArgs(args);
+		return command.toCommandLineOptions();
 	}
 
 	@Override
 	protected TestExecutionSummary execute(PrintWriter out) {
+		CommandLineOptions options = toCommandLineOptions();
+		return consoleTestExecutorFactory.apply(options).execute(out);
+	}
+
+	private CommandLineOptions toCommandLineOptions() {
 		CommandLineOptions options = this.options.toCommandLineOptions();
 		options.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
-		return consoleTestExecutorFactory.apply(options).execute(out);
+		return options;
 	}
 
 	@Override

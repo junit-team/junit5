@@ -31,8 +31,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,22 +45,20 @@ import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.platform.commons.JUnitException;
 
 /**
- * @since 1.0
+ * @since 1.10
  */
-class PicocliCommandLineOptionsParserTests {
+class CommandLineOptionsParsingTests {
 
 	@Test
 	void parseNoArguments() {
 		String[] noArguments = {};
-		var options = createParser().parse(noArguments);
+		var options = parse(noArguments);
 
 		// @formatter:off
 		assertAll(
 			() -> assertFalse(options.isAnsiColorOutputDisabled()),
-			() -> assertFalse(options.isDisplayHelp()),
 			() -> assertEquals(CommandLineOptions.DEFAULT_DETAILS, options.getDetails()),
 			() -> assertFalse(options.isScanClasspath()),
 			() -> assertEquals(List.of(STANDARD_INCLUDE_PATTERN), options.getIncludedClassNamePatterns()),
@@ -90,7 +86,6 @@ class PicocliCommandLineOptionsParserTests {
 		// @formatter:off
 		assertAll(
 			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "--disable-ansi-colors"),
-			() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
 			() -> assertParses("scan class path", CommandLineOptions::isScanClasspath, "--scan-class-path")
 		);
 		// @formatter:on
@@ -563,51 +558,14 @@ class PicocliCommandLineOptionsParserTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseInvalidConfigurationParametersWithDuplicateKey(ArgsType type) {
-		Exception e = assertThrows(JUnitException.class, () -> type.parseArgLine("--config foo=bar --config foo=baz"));
+		Exception e = assertThrows(Exception.class, () -> type.parseArgLine("--config foo=bar --config foo=baz"));
 
-		assertThat(e.getMessage()).isEqualTo(
-			"Error parsing command-line arguments: Duplicate key 'foo' for values 'bar' and 'baz'.");
-		assertThat(e.getCause().getMessage()).isEqualTo("Duplicate key 'foo' for values 'bar' and 'baz'.");
-	}
-
-	@Test
-	void printHelpOutputsHelpOption() {
-		var writer = new StringWriter();
-
-		createParser().printHelp(writer, true);
-
-		assertThat(writer.toString()).contains("--help");
-	}
-
-	@Test
-	void printHelpPreservesOriginalIOException() {
-		var writer = new Writer() {
-
-			@SuppressWarnings("NullableProblems")
-			@Override
-			public void write(char[] buffer, int off, int len) throws IOException {
-				throw new IOException("Something went wrong");
-			}
-
-			@Override
-			public void flush() {
-			}
-
-			@Override
-			public void close() {
-			}
-		};
-
-		var parser = createParser();
-		var exception = assertThrows(RuntimeException.class, () -> parser.printHelp(writer, true));
-
-		assertThat(exception).hasCauseInstanceOf(IOException.class);
-		assertThat(exception.getCause()).hasMessage("Something went wrong");
+		assertThat(e.getMessage()).isEqualTo("Duplicate key 'foo' for values 'bar' and 'baz'.");
 	}
 
 	private void assertOptionWithMissingRequiredArgumentThrowsException(String... options) {
-		assertAll(Stream.of(options).map(
-			opt -> () -> assertThrows(JUnitException.class, () -> ArgsType.args.parseArgLine(opt))));
+		assertAll(
+			Stream.of(options).map(opt -> () -> assertThrows(Exception.class, () -> ArgsType.args.parseArgLine(opt))));
 	}
 
 	private void assertParses(String name, Predicate<CommandLineOptions> property, String... argLines) {
@@ -626,7 +584,7 @@ class PicocliCommandLineOptionsParserTests {
 	enum ArgsType {
 		args {
 			CommandLineOptions parseArgLine(String argLine) {
-				return createParser().parse(split(argLine));
+				return parse(split(argLine));
 			}
 		},
 		atFile {
@@ -634,7 +592,7 @@ class PicocliCommandLineOptionsParserTests {
 				var atFile = Files.createTempFile("junit-launcher-args", ".txt");
 				try {
 					Files.write(atFile, List.of(split(argLine)));
-					return createParser().parse("@" + atFile);
+					return parse("@" + atFile);
 				}
 				finally {
 					Files.deleteIfExists(atFile);
@@ -648,8 +606,8 @@ class PicocliCommandLineOptionsParserTests {
 		}
 	}
 
-	private static CommandLineOptionsParser createParser() {
-		return new PicocliCommandLineOptionsParser();
+	private static CommandLineOptions parse(String... args) {
+		return ExecuteTestsCommand.parseCommandLineOptions(args);
 	}
 
 }
