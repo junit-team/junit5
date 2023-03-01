@@ -22,7 +22,8 @@ import picocli.CommandLine.Mixin;
 
 @Command(//
 		name = "execute", //
-		description = "Execute tests")
+		description = "Execute tests" //
+)
 class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements CommandLine.IExitCodeGenerator {
 
 	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;

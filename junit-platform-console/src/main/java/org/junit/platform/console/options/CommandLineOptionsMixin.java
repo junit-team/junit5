@@ -34,7 +34,7 @@ import org.junit.platform.engine.discovery.UriSelector;
 
 import picocli.CommandLine;
 
-public class CommandLineOptionsMixin {
+class CommandLineOptionsMixin {
 
 	private static final String CP_OPTION = "cp";
 

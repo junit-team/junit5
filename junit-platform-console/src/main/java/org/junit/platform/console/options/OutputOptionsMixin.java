@@ -18,7 +18,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-public class OutputOptionsMixin {
+class OutputOptionsMixin {
 
 	@Spec(MIXEE)
 	CommandSpec commandSpec;
