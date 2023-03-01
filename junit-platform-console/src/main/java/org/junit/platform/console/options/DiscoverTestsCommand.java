@@ -20,17 +20,14 @@ import picocli.CommandLine.Mixin;
 
 @Command(//
 		name = "discover", //
-		description = "Discover tests", //
-		exitCodeOnInvalidInput = CommandResult.FAILURE, //
-		exitCodeOnExecutionException = CommandResult.FAILURE //
-)
-public class DiscoverTestsCommand extends BaseCommand<Void> {
+		description = "Discover tests")
+class DiscoverTestsCommand extends BaseCommand<Void> {
 
 	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
 	@Mixin
 	CommandLineOptionsMixin options;
 
-	public DiscoverTestsCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+	DiscoverTestsCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 

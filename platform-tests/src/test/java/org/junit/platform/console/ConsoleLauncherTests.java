@@ -12,9 +12,6 @@ package org.junit.platform.console;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -23,8 +20,6 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.platform.console.options.CommandLineOptions;
-import org.junit.platform.console.options.CommandLineOptionsParser;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 /**
@@ -38,22 +33,16 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayHelp(String command) {
-		var options = new CommandLineOptions();
-		options.setDisplayHelp(true);
-
 		var consoleLauncher = new ConsoleLauncher(__ -> null, printSink, printSink);
 		var exitCode = consoleLauncher.run(command, "--help").getExitCode();
 
 		assertEquals(0, exitCode);
+		assertThat(stringWriter.toString()).contains("--help");
 	}
 
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayBanner(String command) {
-		var options = new CommandLineOptions();
-		options.setBannerDisabled(false);
-		options.setDisplayHelp(true);
-
 		var consoleLauncher = new ConsoleLauncher(__ -> null, printSink, printSink);
 		consoleLauncher.run(command);
 
@@ -64,13 +53,6 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void disableBanner(String command, int expectedExitCode) {
-		var options = new CommandLineOptions();
-		options.setBannerDisabled(true);
-		options.setDisplayHelp(true);
-
-		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(options);
-
 		var consoleLauncher = new ConsoleLauncher(__ -> null, printSink, printSink);
 		var exitCode = consoleLauncher.run(command, "--disable-banner").getExitCode();
 
@@ -85,6 +67,7 @@ class ConsoleLauncherTests {
 		var exitCode = consoleLauncher.run(command, "--all").getExitCode();
 
 		assertEquals(-1, exitCode);
+		assertThat(stringWriter.toString()).contains("Unknown option: '--all'").contains("Usage:");
 	}
 
 	@ParameterizedTest(name = "{0}")

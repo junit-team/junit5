@@ -22,11 +22,8 @@ import picocli.CommandLine.Command;
 
 @Command(//
 		name = "engines", //
-		description = "List available test engines", //
-		exitCodeOnInvalidInput = CommandResult.FAILURE, //
-		exitCodeOnExecutionException = CommandResult.FAILURE //
-)
-public class ListTestEnginesCommand extends BaseCommand<Void> {
+		description = "List available test engines")
+class ListTestEnginesCommand extends BaseCommand<Void> {
 
 	@Override
 	protected Void execute(PrintWriter out) {

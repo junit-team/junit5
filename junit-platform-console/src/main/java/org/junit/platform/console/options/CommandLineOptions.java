@@ -47,7 +47,6 @@ public class CommandLineOptions {
 	static final Details DEFAULT_DETAILS = Details.valueOf(DEFAULT_DETAILS_NAME.toUpperCase(Locale.ROOT));
 	static final Theme DEFAULT_THEME = Theme.valueOf(ConsoleUtils.charset());
 
-	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
 	private Path colorPalettePath;
 	private boolean isSingleColorPalette;
@@ -84,14 +83,6 @@ public class CommandLineOptions {
 	private Path reportsDir;
 
 	private Map<String, String> configurationParameters = emptyMap();
-
-	public boolean isDisplayHelp() {
-		return this.displayHelp;
-	}
-
-	public void setDisplayHelp(boolean displayHelp) {
-		this.displayHelp = displayHelp;
-	}
 
 	public boolean isAnsiColorOutputDisabled() {
 		return this.ansiColorOutputDisabled;
