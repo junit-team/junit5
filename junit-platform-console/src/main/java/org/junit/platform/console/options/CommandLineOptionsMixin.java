@@ -67,7 +67,7 @@ public class CommandLineOptionsMixin {
 				"-scan-classpath" }, converter = ClasspathEntriesConverter.class, arity = "0..1", hidden = true)
 		private List<Path> selectedClasspathEntries2;
 
-		@CommandLine.Option(names = "--scan-modules", description = "EXPERIMENTAL: Scan all resolved modules for test discovery.")
+		@CommandLine.Option(names = "--scan-modules", description = "Scan all resolved modules for test discovery.")
 		private boolean scanModulepath;
 
 		@CommandLine.Option(names = "-scan-modules", hidden = true)
@@ -98,7 +98,7 @@ public class CommandLineOptionsMixin {
 		private List<DirectorySelector> selectedDirectories2 = new ArrayList<>();
 
 		@CommandLine.Option(names = { "-o",
-				"--select-module" }, paramLabel = "NAME", arity = "1", converter = SelectorConverter.Module.class, description = "EXPERIMENTAL: Select single module for test discovery. This option can be repeated.")
+				"--select-module" }, paramLabel = "NAME", arity = "1", converter = SelectorConverter.Module.class, description = "Select single module for test discovery. This option can be repeated.")
 		private List<ModuleSelector> selectedModules = new ArrayList<>();
 
 		@CommandLine.Option(names = { "--o",
