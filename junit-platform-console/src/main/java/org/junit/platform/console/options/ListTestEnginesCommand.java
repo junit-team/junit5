@@ -18,9 +18,14 @@ import java.util.stream.StreamSupport;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry;
 
-import picocli.CommandLine;
+import picocli.CommandLine.Command;
 
-@CommandLine.Command(name = "engines", description = "List available test engines")
+@Command(//
+		name = "engines", //
+		description = "List available test engines", //
+		exitCodeOnInvalidInput = CommandResult.FAILURE, //
+		exitCodeOnExecutionException = CommandResult.FAILURE //
+)
 public class ListTestEnginesCommand extends BaseCommand<Void> {
 
 	@Override

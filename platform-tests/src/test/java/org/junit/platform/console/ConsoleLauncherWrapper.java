@@ -16,9 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
+import java.util.function.Function;
 
-import org.junit.platform.console.options.CommandLineOptionsParser;
-import org.junit.platform.console.options.PicocliCommandLineOptionsParser;
+import org.junit.platform.console.options.CommandLineOptions;
+import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 /**
  * @since 1.0
@@ -30,13 +31,13 @@ class ConsoleLauncherWrapper {
 	private final ConsoleLauncher consoleLauncher;
 
 	ConsoleLauncherWrapper() {
-		this(new PicocliCommandLineOptionsParser());
+		this(ConsoleTestExecutor::new);
 	}
 
-	private ConsoleLauncherWrapper(CommandLineOptionsParser parser) {
+	private ConsoleLauncherWrapper(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
 		var outWriter = new PrintWriter(out, false);
 		var errWriter = new PrintWriter(err, false);
-		this.consoleLauncher = new ConsoleLauncher(parser, outWriter, errWriter);
+		this.consoleLauncher = new ConsoleLauncher(consoleTestExecutorFactory, outWriter, errWriter);
 
 	}
 

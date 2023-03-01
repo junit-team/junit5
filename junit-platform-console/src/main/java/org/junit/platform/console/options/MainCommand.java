@@ -10,11 +10,17 @@
 
 package org.junit.platform.console.options;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
+
+import org.apiguardian.api.API;
+import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -25,7 +31,7 @@ import picocli.CommandLine.Spec;
 import picocli.CommandLine.Unmatched;
 
 /**
- * @since 1.0
+ * @since 1.10
  */
 @Command(//
 		name = "junit", //
@@ -38,11 +44,14 @@ import picocli.CommandLine.Unmatched;
 		footerHeading = "%n", //
 		footer = "For more information, please refer to the JUnit User Guide at%n" //
 				+ "@|underline https://junit.org/junit5/docs/current/user-guide/|@", //
-		subcommands = { DiscoverTestsCommand.class, ExecuteTestsCommand.class, ListTestEnginesCommand.class,
-				CommandLine.HelpCommand.class }, //
-		scope = CommandLine.ScopeType.INHERIT)
+		scope = CommandLine.ScopeType.INHERIT, //
+		exitCodeOnInvalidInput = CommandResult.FAILURE, //
+		exitCodeOnExecutionException = CommandResult.FAILURE //
+)
+@API(status = INTERNAL, since = "1.10")
 public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
+	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
 	@Option(names = { "-h", "--help" }, help = true, hidden = true)
 	private boolean helpRequested;
 
@@ -56,6 +65,10 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 	CommandSpec commandSpec;
 
 	CommandResult<?> commandResult;
+
+	public MainCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
+	}
 
 	@Override
 	public Object call() {
@@ -110,13 +123,19 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 		err.flush();
 	}
 
-	public static CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
-		Object command = new MainCommand();
-		return runCommand(out, err, args, command);
+	public CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
+		CommandLine commandLine = new CommandLine(this).addSubcommand(
+			new DiscoverTestsCommand(consoleTestExecutorFactory)).addSubcommand(
+				new ExecuteTestsCommand(consoleTestExecutorFactory)).addSubcommand(new ListTestEnginesCommand());
+		return runCommand(out, err, args, commandLine);
 	}
 
 	private static CommandResult<?> runCommand(PrintWriter out, PrintWriter err, String[] args, Object command) {
-		CommandLine commandLine = new CommandLine(command);
+		return runCommand(out, err, args, new CommandLine(command));
+	}
+
+	private static CommandResult<Object> runCommand(PrintWriter out, PrintWriter err, String[] args,
+			CommandLine commandLine) {
 		int exitCode = commandLine //
 				.setOut(out) //
 				.setErr(err) //
