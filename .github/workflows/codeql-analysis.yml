@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         language:
-          # - java # Currently broken because it doesn't support Kotlin 1.8.10, yet (https://github.com/github/codeql/discussions/11460#discussioncomment-4879731)
+          - java
           - javascript
     steps:
     - name: Check out repository
@@ -29,6 +29,7 @@ jobs:
       uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
+        tools: latest
     - name: Build
       uses: ./.github/actions/run-gradle
       with:
