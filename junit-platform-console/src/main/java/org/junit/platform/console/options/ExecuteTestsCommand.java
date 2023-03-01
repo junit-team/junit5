@@ -11,6 +11,7 @@
 package org.junit.platform.console.options;
 
 import java.io.PrintWriter;
+import java.util.function.Function;
 
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -19,17 +20,27 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
-@Command(name = "execute", description = "Execute tests")
+@Command(//
+		name = "execute", //
+		description = "Execute tests", //
+		exitCodeOnInvalidInput = CommandResult.FAILURE, //
+		exitCodeOnExecutionException = CommandResult.FAILURE //
+)
 public class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements CommandLine.IExitCodeGenerator {
 
+	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
 	@Mixin
 	CommandLineOptionsMixin options;
+
+	public ExecuteTestsCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
+	}
 
 	@Override
 	protected TestExecutionSummary execute(PrintWriter out) {
 		CommandLineOptions options = this.options.toCommandLineOptions();
 		options.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
-		return new ConsoleTestExecutor(options).execute(out);
+		return consoleTestExecutorFactory.apply(options).execute(out);
 	}
 
 	@Override
