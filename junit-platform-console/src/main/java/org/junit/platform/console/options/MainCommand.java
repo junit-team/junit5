@@ -10,8 +10,6 @@
 
 package org.junit.platform.console.options;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +17,6 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 
-import org.apiguardian.api.API;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 import picocli.CommandLine;
@@ -30,9 +27,6 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 import picocli.CommandLine.Unmatched;
 
-/**
- * @since 1.10
- */
 @Command(//
 		name = "junit", //
 		abbreviateSynopsis = true, //
@@ -48,8 +42,7 @@ import picocli.CommandLine.Unmatched;
 		exitCodeOnInvalidInput = CommandResult.FAILURE, //
 		exitCodeOnExecutionException = CommandResult.FAILURE //
 )
-@API(status = INTERNAL, since = "1.10")
-public class MainCommand implements Callable<Object>, IExitCodeGenerator {
+class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
 	@Option(names = { "-h", "--help" }, help = true, hidden = true)
@@ -66,7 +59,7 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 	CommandResult<?> commandResult;
 
-	public MainCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+	MainCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 
@@ -123,9 +116,9 @@ public class MainCommand implements Callable<Object>, IExitCodeGenerator {
 		err.flush();
 	}
 
-	public CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
-		CommandLine commandLine = new CommandLine(this).addSubcommand(
-			new DiscoverTestsCommand(consoleTestExecutorFactory)) //
+	CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
+		CommandLine commandLine = new CommandLine(this) //
+				.addSubcommand(new DiscoverTestsCommand(consoleTestExecutorFactory)) //
 				.addSubcommand(new ExecuteTestsCommand(consoleTestExecutorFactory)) //
 				.addSubcommand(new ListTestEnginesCommand());
 		return runCommand(out, err, args, commandLine);

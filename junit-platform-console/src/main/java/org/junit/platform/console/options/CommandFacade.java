@@ -10,33 +10,30 @@
 
 package org.junit.platform.console.options;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.io.PrintWriter;
 import java.util.function.Function;
 
+import org.apiguardian.api.API;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
-
-@Command(//
-		name = "discover", //
-		description = "Discover tests" //
-)
-class DiscoverTestsCommand extends BaseCommand<Void> {
+/**
+ * Internal facade to run a CLI command that exists to hide implementation
+ * details such as the used library.
+ *
+ * @since 1.10
+ */
+@API(status = INTERNAL, since = "1.10")
+public class CommandFacade {
 
 	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
-	@Mixin
-	CommandLineOptionsMixin options;
 
-	DiscoverTestsCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+	public CommandFacade(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 
-	@Override
-	protected Void execute(PrintWriter out) {
-		CommandLineOptions options = this.options.toCommandLineOptions();
-		options.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
-		consoleTestExecutorFactory.apply(options).discover(out);
-		return null;
+	public CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
+		return new MainCommand(consoleTestExecutorFactory).run(out, err, args);
 	}
 }

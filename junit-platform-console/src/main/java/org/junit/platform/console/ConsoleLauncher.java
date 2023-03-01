@@ -17,9 +17,9 @@ import java.io.PrintWriter;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.junit.platform.console.options.CommandFacade;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.CommandResult;
-import org.junit.platform.console.options.MainCommand;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 /**
@@ -57,7 +57,7 @@ public class ConsoleLauncher {
 
 	CommandResult<?> run(String... args) {
 		try {
-			return new MainCommand(consoleTestExecutorFactory).run(out, err, args);
+			return new CommandFacade(consoleTestExecutorFactory).run(out, err, args);
 		}
 		finally {
 			out.flush();
