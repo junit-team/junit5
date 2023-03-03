@@ -35,11 +35,11 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * for a test class field or method parameter via the {@link TempDir @TempDir}
  * annotation.
  *
- * @since 5.9
+ * @since 5.10
  * @see TempDir @TempDir
  */
 @FunctionalInterface
-@API(status = EXPERIMENTAL, since = "5.9")
+@API(status = EXPERIMENTAL, since = "5.10")
 public interface TempDirFactory {
 
 	/**

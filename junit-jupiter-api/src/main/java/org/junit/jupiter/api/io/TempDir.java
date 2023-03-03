@@ -100,7 +100,10 @@ public @interface TempDir {
 	 * Factory for the temporary directory.
 	 *
 	 * @return the class instance of the factory
+	 *
+	 * @since 5.10
 	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
 	Class<? extends TempDirFactory> factory() default Standard.class;
 
 	/**
