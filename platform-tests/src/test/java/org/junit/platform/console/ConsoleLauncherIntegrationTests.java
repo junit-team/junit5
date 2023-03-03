@@ -26,8 +26,9 @@ class ConsoleLauncherIntegrationTests {
 	void executeWithoutArgumentsFailsAndPrintsHelpInformation() {
 		var result = new ConsoleLauncherWrapper().execute(-1);
 		assertAll("empty args array results in display of help information and an exception stacktrace", //
-			() -> assertThat(result.out).contains("help information"), //
-			() -> assertThat(result.err).contains("No arguments were supplied to the ConsoleLauncher") //
+			() -> assertThat(result.err).contains("help information"), //
+			() -> assertThat(result.err).contains(
+				"Please specify an explicit selector option or use --scan-class-path or --scan-modules") //
 		);
 	}
 
