@@ -69,7 +69,8 @@ class DiscoveryRequestCreator {
 				"Scanning the module-path and using explicit selectors at the same time is not supported");
 			return selectModules(ModuleUtils.findAllNonSystemBootModuleNames());
 		}
-		return Preconditions.notEmpty(explicitSelectors, "No arguments were supplied to the ConsoleLauncher");
+		return Preconditions.notEmpty(explicitSelectors,
+			"Please specify an explicit selector option or use --scan-class-path or --scan-modules");
 	}
 
 	private List<ClasspathRootSelector> createClasspathRootSelectors(CommandLineOptions options) {
