@@ -13,10 +13,13 @@ package org.junit.platform.console.options;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;
 
+import org.junit.platform.commons.PreconditionViolationException;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.Spec;
 
 abstract class BaseCommand<T> implements Callable<T> {
@@ -55,7 +58,12 @@ abstract class BaseCommand<T> implements Callable<T> {
 		if (!outputOptions.isDisableBanner()) {
 			displayBanner(out);
 		}
-		return execute(out);
+		try {
+			return execute(out);
+		}
+		catch (PreconditionViolationException e) {
+			throw new ParameterException(commandSpec.commandLine(), e.getMessage(), e.getCause());
+		}
 	}
 
 	private PrintWriter getOut() {
