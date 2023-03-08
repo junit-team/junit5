@@ -7,12 +7,12 @@ group = "junitbuild"
 buildParameters {
 	pluginId("junitbuild.build-parameters")
 	bool("ci") {
-		description.set("Whether or not this build is running a CI environment")
+		description.set("Whether or not this build is running in a CI environment")
 		defaultValue.set(false)
 		fromEnvironment()
 	}
 	integer("javaToolchainVersion") {
-		description.set("Defines the Java Toolchain version to use for compiling code")
+		description.set("Defines the Java toolchain version to use for compiling code")
 	}
 	group("buildCache") {
 		string("username") {
@@ -59,7 +59,7 @@ buildParameters {
 		}
 	}
 	group("testing") {
-		description.set("Testing related parmeters")
+		description.set("Testing related parameters")
 		bool("enableJaCoCo") {
 			description.set("Enables JaCoCo test coverage reporting")
 			defaultValue.set(false)
