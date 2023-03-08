@@ -22,7 +22,7 @@ tasks.withType<Test>().configureEach {
 		maxRetries.set(buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0))
 	}
 	distribution {
-		enabled.convention(buildParameters.enterprise.testDistribution.enabled && (!buildParameters.ci || buildParameters.enterprise.accessKey.isPresent))
+		enabled.convention(buildParameters.enterprise.testDistribution.enabled && (!buildParameters.ci || System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNotBlank()))
 		maxLocalExecutors.set(buildParameters.enterprise.testDistribution.maxLocalExecutors)
 		maxRemoteExecutors.set(buildParameters.enterprise.testDistribution.maxRemoteExecutors)
 		if (buildParameters.ci) {

@@ -37,10 +37,6 @@ buildParameters {
 	}
 	group("enterprise") {
 		description.set("Parameters controlling Gradle Enterprise features")
-		string("accessKey") {
-			description.set("The access key used to authenticate with Gradle Enterprise")
-			fromEnvironment("GRADLE_ENTERPRISE_ACCESS_KEY")
-		}
 		group("predictiveTestSelection") {
 			bool("enabled") {
 				description.set("Whether or not to use Predictive Test Selection for selecting tests to execute")
