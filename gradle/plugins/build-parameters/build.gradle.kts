@@ -1,5 +1,5 @@
 plugins {
-	id("org.gradlex.build-parameters") version "1.4.1"
+	id("org.gradlex.build-parameters") version "1.4.3"
 }
 
 group = "junitbuild"
