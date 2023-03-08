@@ -11,6 +11,9 @@ buildParameters {
 		defaultValue.set(false)
 		fromEnvironment()
 	}
+	integer("javaToolchainVersion") {
+		description.set("Defines the Java Toolchain version to use for compiling code")
+	}
 	group("buildCache") {
 		string("username") {
 			description.set("Username to authenticate with the remote build cache")
