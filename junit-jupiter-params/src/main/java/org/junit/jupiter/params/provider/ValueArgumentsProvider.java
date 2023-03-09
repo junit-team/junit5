@@ -29,7 +29,6 @@ class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSourc
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context, ValueSource source) {
 		Object[] arguments = getArgumentsFromSource(source);
-
 		return Arrays.stream(arguments).map(Arguments::of);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.support.AnnotationConsumerInitializer.initialize;
 import static org.mockito.Mockito.mock;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +36,9 @@ class AnnotationConsumerInitializerTest {
 		var method = SubjectClass.class.getDeclaredMethod("foo");
 		var initialisedAnnotationConsumer = initialize(method, instance);
 
-		assertThat(initialisedAnnotationConsumer.annotation).isInstanceOf(CsvSource.class);
+		assertThat(initialisedAnnotationConsumer.annotation) //
+				.isInstanceOf(CsvSource.class) //
+				.matches(annotation -> Arrays.equals(annotation.value(), new String[] { "a", "b" }));
 	}
 
 	@Test
@@ -45,9 +48,11 @@ class AnnotationConsumerInitializerTest {
 		var method = SubjectClass.class.getDeclaredMethod("foo");
 		var initialisedAnnotationConsumer = initialize(method, instance);
 
-		initialisedAnnotationConsumer.provideArguments(mock(ExtensionContext.class));
+		initialisedAnnotationConsumer.provideArguments(mock());
 
-		assertThat(initialisedAnnotationConsumer.assignedAnnotation).isInstanceOf(CsvSource.class);
+		assertThat(initialisedAnnotationConsumer.assignedAnnotation) //
+				.isInstanceOf(CsvSource.class) //
+				.matches(annotation -> Arrays.equals(annotation.value(), new String[] { "a", "b" }));
 	}
 
 	@Test
@@ -82,7 +87,7 @@ class AnnotationConsumerInitializerTest {
 
 	private static class SubjectClass {
 
-		@CsvSource("")
+		@CsvSource({ "a", "b" })
 		void foo() {
 
 		}

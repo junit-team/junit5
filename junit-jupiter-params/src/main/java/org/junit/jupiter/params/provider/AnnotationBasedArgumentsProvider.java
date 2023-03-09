@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,28 +21,26 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * The implementations of an {@code AnnotationBasedArgumentsProvider} are responsible
- * for {@linkplain #provideArguments providing} a stream of arguments to be passed to
- * a {@code @ParameterizedTest} method, by using the data given by an annotation.
+ * {@code AnnotationBasedArgumentsProvider} is an abstract base class for
+ * {@link ArgumentsProvider} implementations that also need to consume an
+ * annotation in order to provide the arguments.
  *
- * <p>An {@code ArgumentsProvider} can be registered via the
- * {@link ArgumentsSource @ArgumentsSource} annotation.
- *
- * @since 5.9
+ * @since 5.10
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.Arguments
+ * @see org.junit.jupiter.params.provider.ArgumentsProvider
  * @see org.junit.jupiter.params.support.AnnotationConsumer
  */
-@API(status = EXPERIMENTAL, since = "5.9")
+@API(status = EXPERIMENTAL, since = "5.10")
 public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 		implements ArgumentsProvider, AnnotationConsumer<A> {
 
+	public AnnotationBasedArgumentsProvider() {
+	}
+
 	private A annotation;
 
-	/**
-	 * @param annotation that provides the source of the parameters, never {@code null}
-	 */
 	@Override
 	public final void accept(A annotation) {
 		Preconditions.notNull(annotation, "annotation must not be null");
@@ -51,7 +49,6 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 
 	@Override
 	public final Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		Preconditions.notNull(context, "context must not be null");
 		return provideArguments(context, annotation);
 	}
 
@@ -60,8 +57,9 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	 * {@code @ParameterizedTest} method, by using the data given by an annotation.
 	 *
 	 * @param context the current extension context; never {@code null}
-	 * @param annotation that provides the source of the parameters, never {@code null}
+	 * @param annotation the annotation used to specify the arguments; never {@code null}
 	 * @return a stream of arguments; never {@code null}
 	 */
 	protected abstract Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation);
+
 }
