@@ -1622,6 +1622,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsSource_examp
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsProvider_example]
 ----
 
+If you wish to implement a custom `ArgumentsProvider` that also consumes an annotation
+(like built-in providers such as `{ValueArgumentsProvider}` or `{CsvArgumentsProvider}`),
+you have the possibility to extend the `{AnnotationBasedArgumentsProvider}` class.
 
 [[writing-tests-parameterized-tests-argument-conversion]]
 ==== Argument Conversion
