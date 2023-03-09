@@ -42,8 +42,9 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		Class<?> testClass = context.getRequiredTestClass();
 		Method testMethod = context.getRequiredTestMethod();
 		Object testInstance = context.getTestInstance().orElse(null);
+		String[] methodNames = annotation.value();
 		// @formatter:off
-		return stream(annotation.value())
+		return stream(methodNames)
 				.map(factoryMethodName -> getFactoryMethod(testClass, testMethod, factoryMethodName))
 				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
 				.flatMap(CollectionUtils::toStream)

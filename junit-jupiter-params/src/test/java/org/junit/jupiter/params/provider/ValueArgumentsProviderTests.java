@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -161,7 +160,7 @@ class ValueArgumentsProviderTests {
 
 		var provider = new ValueArgumentsProvider();
 		provider.accept(annotation);
-		return provider.provideArguments(mock(ExtensionContext.class)).map(Arguments::get);
+		return provider.provideArguments(mock()).map(Arguments::get);
 	}
 
 	private static Object[] array(Object... objects) {

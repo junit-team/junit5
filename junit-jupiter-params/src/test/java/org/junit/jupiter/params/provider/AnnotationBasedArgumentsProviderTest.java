@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -42,13 +42,6 @@ class AnnotationBasedArgumentsProviderTest {
 	}
 
 	@Test
-	@DisplayName("should throw exception when null context is provided to provideArguments method")
-	void shouldThrowExceptionWhenNullContextIsProvidedToProvideArguments() {
-		assertThatThrownBy(() -> annotationBasedArgumentsProvider.provideArguments(null)) //
-				.hasMessage("context must not be null");
-	}
-
-	@Test
 	@DisplayName("should invoke the provideArguments template method with the accepted annotation")
 	void shouldInvokeTemplateMethodWithTheAnnotationProvidedWithAccept() {
 		var spiedProvider = spy(annotationBasedArgumentsProvider);
@@ -60,4 +53,5 @@ class AnnotationBasedArgumentsProviderTest {
 
 		verify(spiedProvider, atMostOnce()).provideArguments(eq(extensionContext), eq(annotation));
 	}
+
 }

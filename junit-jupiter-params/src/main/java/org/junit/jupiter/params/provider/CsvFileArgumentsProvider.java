@@ -45,7 +45,6 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 
 	private final InputStreamProvider inputStreamProvider;
 
-	private List<Source> sources;
 	private Charset charset;
 	private int numLinesToSkip;
 	private CsvParser csvParser;
@@ -60,23 +59,21 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvFileSource annotation) {
-		initialize(annotation);
+		this.charset = getCharsetFrom(annotation);
+		this.numLinesToSkip = annotation.numLinesToSkip();
+		this.csvParser = createParserFor(annotation);
+
+		Stream<Source> resources = Arrays.stream(annotation.resources()).map(inputStreamProvider::classpathResource);
+		Stream<Source> files = Arrays.stream(annotation.files()).map(inputStreamProvider::file);
+		List<Source> sources = Stream.concat(resources, files).collect(toList());
+
 		// @formatter:off
-		return Preconditions.notEmpty(this.sources, "Resources or files must not be empty")
+		return Preconditions.notEmpty(sources, "Resources or files must not be empty")
 				.stream()
 				.map(source -> source.open(context))
 				.map(inputStream -> beginParsing(inputStream, annotation))
 				.flatMap(parser -> toStream(parser, annotation));
 		// @formatter:on
-	}
-
-	private void initialize(CsvFileSource annotation) {
-		Stream<Source> resources = Arrays.stream(annotation.resources()).map(inputStreamProvider::classpathResource);
-		Stream<Source> files = Arrays.stream(annotation.files()).map(inputStreamProvider::file);
-		this.sources = Stream.concat(resources, files).collect(toList());
-		this.charset = getCharsetFrom(annotation);
-		this.numLinesToSkip = annotation.numLinesToSkip();
-		this.csvParser = createParserFor(annotation);
 	}
 
 	private Charset getCharsetFrom(CsvFileSource annotation) {
