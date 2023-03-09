@@ -2,10 +2,10 @@ plugins {
 	`maven-publish`
 	signing
 	id("junitbuild.base-conventions")
+	id("junitbuild.build-parameters")
 }
 
 val isSnapshot = project.version.toString().contains("SNAPSHOT")
-val isContinuousIntegrationEnvironment = System.getenv("CI")?.toBoolean() ?: false
 
 val jupiterProjects: List<Project> by rootProject
 val platformProjects: List<Project> by rootProject
@@ -43,7 +43,7 @@ tasks.withType<PublishToMavenLocal>().configureEach {
 signing {
 	useGpgCmd()
 	sign(publishing.publications)
-	isRequired = !(isSnapshot || isContinuousIntegrationEnvironment)
+	isRequired = !(isSnapshot || buildParameters.ci)
 }
 
 tasks.withType<Sign>().configureEach {

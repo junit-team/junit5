@@ -1,9 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
+plugins {
+	id("junitbuild.build-parameters")
+}
+
 project.pluginManager.withPlugin("java") {
-	val javaToolchainVersion: String? by project
 	val defaultLanguageVersion = JavaLanguageVersion.of(17)
-	val javaLanguageVersion = javaToolchainVersion?.let { JavaLanguageVersion.of(it) } ?: defaultLanguageVersion
+	val javaLanguageVersion = buildParameters.javaToolchainVersion.map { JavaLanguageVersion.of(it) }.getOrElse(defaultLanguageVersion)
 
 	val extension = the<JavaPluginExtension>()
 	val javaToolchainService = the<JavaToolchainService>()

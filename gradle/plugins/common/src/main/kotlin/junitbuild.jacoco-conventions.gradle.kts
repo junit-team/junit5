@@ -1,13 +1,12 @@
 plugins {
 	jacoco
+	id("junitbuild.build-parameters")
 }
-
-val enableJaCoCo = project.hasProperty("enableJaCoCo")
 
 jacoco {
 	toolVersion = requiredVersionFromLibs("jacoco")
 }
 
 tasks.withType<JacocoReport>().configureEach {
-	enabled = enableJaCoCo
+	enabled = buildParameters.testing.enableJaCoCo
 }

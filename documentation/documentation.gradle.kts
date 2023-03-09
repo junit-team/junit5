@@ -12,6 +12,7 @@ plugins {
 	id("org.asciidoctor.jvm.convert")
 	id("org.asciidoctor.jvm.pdf")
 	id("org.ajoberstar.git-publish")
+	id("junitbuild.build-parameters")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
 }
@@ -71,7 +72,7 @@ val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val releaseBranch = if (snapshot) "HEAD" else "r${rootProject.version}"
 val docsDir = file("$buildDir/ghpages-docs")
-val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
+val replaceCurrentDocs = buildParameters.documentation.replaceCurrentDocs
 val uploadPdfs = !snapshot
 val userGuidePdfFileName = "junit-user-guide-${rootProject.version}.pdf"
 val ota4jDocVersion = if (libs.versions.opentest4j.get().contains("SNAPSHOT")) "snapshot" else libs.versions.opentest4j.get()

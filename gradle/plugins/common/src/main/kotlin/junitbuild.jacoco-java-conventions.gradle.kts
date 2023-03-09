@@ -3,15 +3,15 @@ import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 
 plugins {
 	java
+	id("junitbuild.build-parameters")
 	id("junitbuild.jacoco-conventions")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
-val enableJaCoCo = project.hasProperty("enableJaCoCo")
 
 tasks.withType<Test>().configureEach {
 	configure<JacocoTaskExtension> {
-		isEnabled = enableJaCoCo
+		isEnabled = buildParameters.testing.enableJaCoCo
 	}
 }
 

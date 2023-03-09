@@ -6,6 +6,7 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	`java-library`
+	id("junitbuild.build-parameters")
 }
 
 tasks.withType<Test>().configureEach {
@@ -17,18 +18,14 @@ tasks.withType<Test>().configureEach {
 		events = setOf(FAILED)
 		exceptionFormat = FULL
 	}
-	val isCiServer = System.getenv("CI") != null
 	retry {
-		maxRetries.set(providers.gradleProperty("retries").map(String::toInt).orElse(if (isCiServer) 2 else 0))
+		maxRetries.set(buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0))
 	}
 	distribution {
-		enabled.convention(providers.gradleProperty("enableTestDistribution")
-			.map(String::toBoolean)
-			.map { enabled -> enabled && (!isCiServer || System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNotBlank()) }
-			.orElse(false))
-		maxLocalExecutors.set(providers.gradleProperty("testDistribution.maxLocalExecutors").map(String::toInt).orElse(1))
-		maxRemoteExecutors.set(providers.gradleProperty("testDistribution.maxRemoteExecutors").map(String::toInt))
-		if (isCiServer) {
+		enabled.convention(buildParameters.enterprise.testDistribution.enabled && (!buildParameters.ci || System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNotBlank()))
+		maxLocalExecutors.set(buildParameters.enterprise.testDistribution.maxLocalExecutors)
+		maxRemoteExecutors.set(buildParameters.enterprise.testDistribution.maxRemoteExecutors)
+		if (buildParameters.ci) {
 			when {
 				OperatingSystem.current().isLinux -> requirements.add("os=linux")
 				OperatingSystem.current().isWindows -> requirements.add("os=windows")
@@ -37,7 +34,7 @@ tasks.withType<Test>().configureEach {
 		}
 	}
 	predictiveSelection {
-		enabled.set(providers.gradleProperty("enablePredictiveTestSelection").map(String::toBoolean).orElse(true))
+		enabled.set(buildParameters.enterprise.predictiveTestSelection.enabled)
 
 		// Ensure PTS works when publishing Build Scans to scans.gradle.com
 		this as PredictiveTestSelectionExtensionInternal
@@ -46,7 +43,7 @@ tasks.withType<Test>().configureEach {
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14
 	systemProperty("net.bytebuddy.experimental", true)
-	if (project.hasProperty("enableJFR")) {
+	if (buildParameters.testing.enableJFR) {
 		jvmArgs(
 			"-XX:+UnlockDiagnosticVMOptions",
 			"-XX:+DebugNonSafepoints",
@@ -59,7 +56,7 @@ tasks.withType<Test>().configureEach {
 	trackOperationSystemAsInput()
 
 	// Avoid passing unnecessary environment variables to the JVM (from GitHub Actions)
-	if (isCiServer) {
+	if (buildParameters.ci) {
 		environment.remove("RUNNER_TEMP")
 		environment.remove("GITHUB_ACTION")
 	}

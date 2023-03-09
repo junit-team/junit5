@@ -10,9 +10,9 @@ on:
       - '*'
 
 env:
-  ORG_GRADLE_PROJECT_enableTestDistribution: true
-  ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
-  ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
+  ENTERPRISE_TESTDISTRIBUTION_ENABLED: true
+  BUILDCACHE_USERNAME: ${{ secrets.BUILD_CACHE_USERNAME }}
+  BUILDCACHE_PASSWORD: ${{ secrets.BUILD_CACHE_PASSWORD }}
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:
@@ -38,7 +38,7 @@ jobs:
       uses: ./.github/actions/main-build
       with:
         arguments: |
-          -PenableJaCoCo
+          -Ptesting.enableJaCoCo
           build
           jacocoRootReport
           prepareDocsForUploadToGhPages
