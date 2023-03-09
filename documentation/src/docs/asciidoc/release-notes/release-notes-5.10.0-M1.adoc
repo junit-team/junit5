@@ -64,6 +64,8 @@ repository on GitHub.
   to fall back to the default display name generator.
 * `@EmptySource` now supports additional types, including `Collection` and `Map` subtypes
   with a public no-arg constructor.
+* New `AnnotationBasedArgumentsProvider` that implements both `ArgumentsProvider` and
+  `AnnotationConsumer` interfaces.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
