@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpectedStartedOpenTestReport;
 
+import java.io.IOException;
+
 import org.junit.jupiter.api.Test;
 import org.opentest4j.TestAbortedException;
 
@@ -30,9 +32,14 @@ import platform.tooling.support.Request;
 class MavenStarterTests {
 
 	@Test
-	void verifyMavenStarterProject() {
+	void verifyMavenStarterProject() throws IOException, InterruptedException {
 		var javaHome = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
-		System.out.println("javaHome = " + javaHome);
+		System.out.println("javaHome = " + javaHome.normalize().toAbsolutePath());
+
+		var processBuilder = new ProcessBuilder(Request.maven().getHome().resolve("bin/mvn").toString(), "--version");
+		processBuilder.environment().put("JAVA_HOME", javaHome.normalize().toAbsolutePath().toString());
+		processBuilder.inheritIO();
+		processBuilder.start().waitFor();
 
 		var request = Request.builder() //
 				.setTool(Request.maven()) //
