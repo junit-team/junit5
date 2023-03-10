@@ -412,7 +412,6 @@
 86cc61f036883b00d526c04081f349f2  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/DirectorySource.java
 86d550ae7980a369ee250e3d45e39b72  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFilter.java
 8702917bc1adb873636a760248e2147a  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectUris.java
-87a76832360e2244853d0f7700735c66  documentation/documentation.gradle.kts
 886cf74e6f1023545a05b0bc90e50895  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 89406f40f711e284ed7587f18cca0c3d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
 89718e551cfe40a123823f221bebaa67  documentation/src/docs/asciidoc/resources/themes/junit-pdf-theme.yml
@@ -721,6 +720,7 @@ e520cdac56a6ad23126588ba3813f11e  junit-jupiter-migrationsupport/src/main/java/o
 e597cae1f8b7a0db17d94ba072474735  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineExecutionListener.java
 e5f1af66826140ce99f3eae533b99e94  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventType.java
 e60a3c8c0f34a9f9f7a4e9f837f3351e  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassNamePatternFilterUtils.java
+e6620e42a63d1d10d7587a24e3a07ec3  documentation/documentation.gradle.kts
 e67dedc3ddb1f805cd17701a105d662c  documentation/src/test/java/org/junit/api/tools/AsciidocApiReportWriter.java
 e6fe36ddb12b8ffbfbc1b7668993aa1f  documentation/src/test/java/example/OrderedNestedTestClassesDemo.java
 e72947becdd61d6e3083a081b7313157  junit-platform-console/src/main/java9/org/junit/platform/console/ConsoleLauncherToolProvider.java
