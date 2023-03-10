@@ -31,13 +31,16 @@ class MavenStarterTests {
 
 	@Test
 	void verifyMavenStarterProject() {
+		var javaHome = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
+		System.out.println("javaHome = " + javaHome);
+
 		var request = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject("maven-starter") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //
 				.setTimeout(TOOL_TIMEOUT) //
-				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.setJavaHome(javaHome) //
 				.build();
 
 		var result = request.run();
