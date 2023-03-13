@@ -32,7 +32,7 @@ class ExecuteTestsCommandTests {
 
 	private final TestExecutionSummary summary = mock();
 	private final ConsoleTestExecutor consoleTestExecutor = mock();
-	private final ExecuteTestsCommand command = new ExecuteTestsCommand(__ -> consoleTestExecutor);
+	private final ExecuteTestsCommand command = new ExecuteTestsCommand((__, ___) -> consoleTestExecutor);
 
 	@BeforeEach
 	void setUp() {

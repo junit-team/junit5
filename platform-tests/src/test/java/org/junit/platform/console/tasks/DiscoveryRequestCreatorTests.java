@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.console.options.CommandLineOptions;
+import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -54,7 +54,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  */
 class DiscoveryRequestCreatorTests {
 
-	private final CommandLineOptions options = new CommandLineOptions();
+	private final TestDiscoveryOptions options = new TestDiscoveryOptions();
 
 	@Test
 	void convertsScanClasspathOptionWithoutExplicitRootDirectories() {

@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apiguardian.api.API;
@@ -37,23 +36,13 @@ import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UriSelector;
 
 /**
- * @since 1.0
+ * @since 1.10
  */
-@API(status = INTERNAL, since = "1.0")
-public class CommandLineOptions {
-
-	static final String DEFAULT_DETAILS_NAME = "tree";
-	static final Details DEFAULT_DETAILS = Details.valueOf(DEFAULT_DETAILS_NAME.toUpperCase(Locale.ROOT));
-	static final Theme DEFAULT_THEME = Theme.valueOf(ConsoleUtils.charset());
-
-	private boolean ansiColorOutputDisabled;
-	private Path colorPalettePath;
-	private boolean isSingleColorPalette;
-	private Details details = DEFAULT_DETAILS;
-	private Theme theme = DEFAULT_THEME;
-	private List<Path> additionalClasspathEntries = emptyList();
+@API(status = INTERNAL, since = "1.10")
+public class TestDiscoveryOptions {
 
 	private boolean scanClasspath;
+	private List<Path> additionalClasspathEntries = emptyList();
 	private List<Path> selectedClasspathEntries = emptyList();
 
 	private boolean scanModulepath;
@@ -79,30 +68,6 @@ public class CommandLineOptions {
 
 	private Map<String, String> configurationParameters = emptyMap();
 
-	public boolean isAnsiColorOutputDisabled() {
-		return this.ansiColorOutputDisabled;
-	}
-
-	public void setAnsiColorOutputDisabled(boolean ansiColorOutputDisabled) {
-		this.ansiColorOutputDisabled = ansiColorOutputDisabled;
-	}
-
-	public Path getColorPalettePath() {
-		return colorPalettePath;
-	}
-
-	public void setColorPalettePath(Path colorPalettePath) {
-		this.colorPalettePath = colorPalettePath;
-	}
-
-	public boolean isSingleColorPalette() {
-		return isSingleColorPalette;
-	}
-
-	public void setSingleColorPalette(boolean singleColorPalette) {
-		this.isSingleColorPalette = singleColorPalette;
-	}
-
 	public boolean isScanModulepath() {
 		return this.scanModulepath;
 	}
@@ -117,22 +82,6 @@ public class CommandLineOptions {
 
 	public void setScanClasspath(boolean scanClasspath) {
 		this.scanClasspath = scanClasspath;
-	}
-
-	public Details getDetails() {
-		return this.details;
-	}
-
-	public void setDetails(Details details) {
-		this.details = details;
-	}
-
-	public Theme getTheme() {
-		return this.theme;
-	}
-
-	public void setTheme(Theme theme) {
-		this.theme = theme;
 	}
 
 	public List<Path> getExistingAdditionalClasspathEntries() {

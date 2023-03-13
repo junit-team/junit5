@@ -10,10 +10,6 @@
 
 package org.junit.platform.console.options;
 
-import static org.junit.platform.console.options.CommandLineOptions.DEFAULT_DETAILS;
-import static org.junit.platform.console.options.CommandLineOptions.DEFAULT_DETAILS_NAME;
-import static org.junit.platform.console.options.CommandLineOptions.DEFAULT_THEME;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +32,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
-class CommandLineOptionsMixin {
+class TestDiscoveryOptionsMixin {
 
 	private static final String CP_OPTION = "cp";
 
@@ -48,9 +44,6 @@ class CommandLineOptionsMixin {
 
 	@ArgGroup(validate = false, order = 4, heading = "%n@|bold RUNTIME CONFIGURATION|@%n%n")
 	RuntimeConfigurationOptions runtimeConfigurationOptions;
-
-	@ArgGroup(validate = false, order = 5, heading = "%n@|bold CONSOLE OUTPUT|@%n%n")
-	ConsoleOutputOptions consoleOutputOptions = new ConsoleOutputOptions();
 
 	static class SelectorOptions {
 
@@ -145,7 +138,7 @@ class CommandLineOptionsMixin {
 		SelectorOptions() {
 		}
 
-		private void applyTo(CommandLineOptions result) {
+		private void applyTo(TestDiscoveryOptions result) {
 			result.setScanClasspath(this.selectedClasspathEntries != null || this.selectedClasspathEntries2 != null); // flag was specified
 			result.setScanModulepath(this.scanModulepath || this.scanModulepath2);
 			result.setSelectedModules(merge(this.selectedModules, this.selectedModules2));
@@ -229,7 +222,7 @@ class CommandLineOptionsMixin {
 		@Option(names = { "--E", "-exclude-engine" }, arity = "1", hidden = true)
 		private List<String> excludedEngines2 = new ArrayList<>();
 
-		private void applyTo(CommandLineOptions result) {
+		private void applyTo(TestDiscoveryOptions result) {
 			result.setIncludedClassNamePatterns(merge(this.includeClassNamePatterns, this.includeClassNamePatterns2));
 			result.setExcludedClassNamePatterns(merge(this.excludeClassNamePatterns, this.excludeClassNamePatterns2));
 			result.setIncludedPackages(merge(this.includePackages, this.includePackages2));
@@ -289,49 +282,14 @@ class CommandLineOptionsMixin {
 			}
 		}
 
-		private void applyTo(CommandLineOptions result) {
+		private void applyTo(TestDiscoveryOptions result) {
 			result.setAdditionalClasspathEntries(merge(additionalClasspathEntries, additionalClasspathEntries2));
 			result.setConfigurationParameters(configurationParameters);
 		}
 	}
 
-	static class ConsoleOutputOptions {
-
-		@Option(names = "--color-palette", paramLabel = "FILE", description = "Specify a path to a properties file to customize ANSI style of output (not supported by all terminals).")
-		private Path colorPalette;
-		@Option(names = "-color-palette", hidden = true)
-		private Path colorPalette2;
-
-		@Option(names = "--single-color", description = "Style test output using only text attributes, no color (not supported by all terminals).")
-		private boolean singleColorPalette;
-		@Option(names = "-single-color", hidden = true)
-		private boolean singleColorPalette2;
-
-		@Option(names = "--details", paramLabel = "MODE", defaultValue = DEFAULT_DETAILS_NAME, description = "Select an output details mode for when tests are executed. " //
-				+ "Use one of: ${COMPLETION-CANDIDATES}. If 'none' is selected, " //
-				+ "then only the summary and test failures are shown. Default: ${DEFAULT-VALUE}.")
-		private Details details = DEFAULT_DETAILS;
-
-		@Option(names = "-details", hidden = true, defaultValue = DEFAULT_DETAILS_NAME)
-		private Details details2 = DEFAULT_DETAILS;
-
-		@Option(names = "--details-theme", paramLabel = "THEME", description = "Select an output details tree theme for when tests are executed. "
-				+ "Use one of: ${COMPLETION-CANDIDATES}. Default is detected based on default character encoding.")
-		private Theme theme = DEFAULT_THEME;
-
-		@Option(names = "-details-theme", hidden = true)
-		private Theme theme2 = DEFAULT_THEME;
-
-		private void applyTo(CommandLineOptions result) {
-			result.setColorPalettePath(choose(colorPalette, colorPalette2, null));
-			result.setSingleColorPalette(singleColorPalette || singleColorPalette2);
-			result.setDetails(choose(details, details2, DEFAULT_DETAILS));
-			result.setTheme(choose(theme, theme2, DEFAULT_THEME));
-		}
-	}
-
-	CommandLineOptions toCommandLineOptions() {
-		CommandLineOptions result = new CommandLineOptions();
+	TestDiscoveryOptions toTestDiscoveryOptions() {
+		TestDiscoveryOptions result = new TestDiscoveryOptions();
 		if (this.selectorOptions != null) {
 			this.selectorOptions.applyTo(result);
 		}
@@ -341,9 +299,6 @@ class CommandLineOptionsMixin {
 		if (this.runtimeConfigurationOptions != null) {
 			this.runtimeConfigurationOptions.applyTo(result);
 		}
-		if (this.consoleOutputOptions != null) {
-			this.consoleOutputOptions.applyTo(result);
-		}
 		return result;
 	}
 
@@ -351,9 +306,5 @@ class CommandLineOptionsMixin {
 		List<T> result = new ArrayList<>(list1 == null ? Collections.emptyList() : list1);
 		result.addAll(list2 == null ? Collections.emptyList() : list2);
 		return result;
-	}
-
-	private static <T> T choose(T left, T right, T defaultValue) {
-		return left == right ? left : (left == defaultValue ? right : left);
 	}
 }

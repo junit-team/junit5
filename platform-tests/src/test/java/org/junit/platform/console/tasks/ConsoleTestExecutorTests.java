@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.Details;
+import org.junit.platform.console.options.TestConsoleOutputOptions;
+import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 
 /**
@@ -38,11 +39,12 @@ class ConsoleTestExecutorTests {
 	};
 
 	private final StringWriter stringWriter = new StringWriter();
-	private final CommandLineOptions options = new CommandLineOptions();
+	private final TestDiscoveryOptions discoveryOptions = new TestDiscoveryOptions();
+	private final TestConsoleOutputOptions outputOptions = new TestConsoleOutputOptions();
 	private final DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 
 	{
-		options.setScanClasspath(true);
+		discoveryOptions.setScanClasspath(true);
 	}
 
 	@Test
@@ -50,7 +52,7 @@ class ConsoleTestExecutorTests {
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("Test run finished after", "2 tests found", "0 tests skipped",
@@ -59,11 +61,11 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void printsDetailsIfTheyAreNotHidden() {
-		options.setDetails(Details.FLAT);
+		outputOptions.setDetails(Details.FLAT);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("Test execution started.");
@@ -71,11 +73,11 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void printsNoDetailsIfTheyAreHidden() {
-		options.setDetails(Details.NONE);
+		outputOptions.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).doesNotContain("Test execution started.");
@@ -83,12 +85,12 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void printsFailuresEvenIfDetailsAreHidden() {
-		options.setDetails(Details.NONE);
+		outputOptions.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("Failures (2)", "failingTest", "failingContainer");
@@ -96,13 +98,13 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() {
-		options.setAdditionalClasspathEntries(List.of(Paths.get(".")));
+		discoveryOptions.setAdditionalClasspathEntries(List.of(Paths.get(".")));
 
 		var oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("failingTest", "should fail", "1 tests failed");
@@ -110,20 +112,16 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void usesSameClassLoaderIfNoAdditionalClassPathEntriesArePresent() {
-		options.setAdditionalClasspathEntries(List.of());
+		discoveryOptions.setAdditionalClasspathEntries(List.of());
 
 		var oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertNotSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("failingTest", "should fail", "1 tests failed");
-	}
-
-	private PrintWriter dummyWriter() {
-		return new PrintWriter(new StringWriter());
 	}
 
 }

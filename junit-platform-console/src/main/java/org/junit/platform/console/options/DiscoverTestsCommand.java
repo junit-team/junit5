@@ -11,7 +11,6 @@
 package org.junit.platform.console.options;
 
 import java.io.PrintWriter;
-import java.util.function.Function;
 
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
@@ -24,19 +23,24 @@ import picocli.CommandLine.Mixin;
 )
 class DiscoverTestsCommand extends BaseCommand<Void> {
 
-	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
-	@Mixin
-	CommandLineOptionsMixin options;
+	private final ConsoleTestExecutor.Factory consoleTestExecutorFactory;
 
-	DiscoverTestsCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+	@Mixin
+	TestDiscoveryOptionsMixin discoveryOptions;
+
+	@Mixin
+	TestConsoleOutputOptionsMixin testOutputOptions;
+
+	DiscoverTestsCommand(ConsoleTestExecutor.Factory consoleTestExecutorFactory) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 
 	@Override
 	protected Void execute(PrintWriter out) {
-		CommandLineOptions options = this.options.toCommandLineOptions();
-		options.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
-		consoleTestExecutorFactory.apply(options).discover(out);
+		TestDiscoveryOptions discoveryOptions = this.discoveryOptions.toTestDiscoveryOptions();
+		TestConsoleOutputOptions testOutputOptions = this.testOutputOptions.toTestConsoleOutputOptions();
+		testOutputOptions.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
+		consoleTestExecutorFactory.create(discoveryOptions, testOutputOptions).discover(out);
 		return null;
 	}
 }

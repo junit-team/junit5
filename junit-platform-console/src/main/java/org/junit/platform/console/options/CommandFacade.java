@@ -13,7 +13,6 @@ package org.junit.platform.console.options;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.PrintWriter;
-import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
@@ -27,9 +26,9 @@ import org.junit.platform.console.tasks.ConsoleTestExecutor;
 @API(status = INTERNAL, since = "1.10")
 public class CommandFacade {
 
-	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
+	private final ConsoleTestExecutor.Factory consoleTestExecutorFactory;
 
-	public CommandFacade(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+	public CommandFacade(ConsoleTestExecutor.Factory consoleTestExecutorFactory) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 

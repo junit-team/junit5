@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
@@ -44,7 +43,8 @@ import picocli.CommandLine.Unmatched;
 )
 class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
-	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
+	private final ConsoleTestExecutor.Factory consoleTestExecutorFactory;
+
 	@Option(names = { "-h", "--help" }, help = true, hidden = true)
 	private boolean helpRequested;
 
@@ -59,7 +59,7 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 	CommandResult<?> commandResult;
 
-	MainCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+	MainCommand(ConsoleTestExecutor.Factory consoleTestExecutorFactory) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 
