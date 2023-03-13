@@ -10,13 +10,18 @@
 
 package org.junit.platform.console.options;
 
+import static org.junit.platform.console.options.CommandResult.SUCCESS;
+
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 import picocli.CommandLine;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
@@ -26,36 +31,71 @@ import picocli.CommandLine.Mixin;
 )
 class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements CommandLine.IExitCodeGenerator {
 
+	/**
+	 * Exit code indicating test failure(s)
+	 */
+	private static final int TEST_FAILED = 1;
+
+	/**
+	 * Exit code indicating no tests found
+	 */
+	private static final int NO_TESTS_FOUND = 2;
+
 	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
+
 	@Mixin
 	CommandLineOptionsMixin options;
+
+	@ArgGroup(validate = false, order = 6, heading = "%n@|bold REPORTING|@%n%n")
+	ReportingOptions reportingOptions;
 
 	ExecuteTestsCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 
-	static CommandLineOptions parseCommandLineOptions(String[] args) {
-		ExecuteTestsCommand command = new ExecuteTestsCommand(__ -> null);
-		BaseCommand.initialize(new CommandLine(command)).parseArgs(args);
-		return command.toCommandLineOptions();
-	}
-
 	@Override
 	protected TestExecutionSummary execute(PrintWriter out) {
-		CommandLineOptions options = toCommandLineOptions();
-		return consoleTestExecutorFactory.apply(options).execute(out);
+		return consoleTestExecutorFactory.apply(toCommandLineOptions()).execute(out, getReportsDir());
 	}
 
-	private CommandLineOptions toCommandLineOptions() {
-		CommandLineOptions options = this.options.toCommandLineOptions();
+	Optional<Path> getReportsDir() {
+		return getReportingOptions().flatMap(ReportingOptions::getReportsDir);
+	}
+
+	private Optional<ReportingOptions> getReportingOptions() {
+		return Optional.ofNullable(reportingOptions);
+	}
+
+	CommandLineOptions toCommandLineOptions() {
+		CommandLineOptions options = this.options == null ? new CommandLineOptions()
+				: this.options.toCommandLineOptions();
 		options.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
 		return options;
 	}
 
 	@Override
 	public int getExitCode() {
-		return CommandResult.computeExitCode(commandSpec.commandLine().getExecutionResult(),
-			options.toCommandLineOptions());
+		TestExecutionSummary executionResult = commandSpec.commandLine().getExecutionResult();
+		boolean failIfNoTests = getReportingOptions().map(it -> it.failIfNoTests).orElse(false);
+		if (failIfNoTests && executionResult.getTestsFoundCount() == 0) {
+			return NO_TESTS_FOUND;
+		}
+		return executionResult.getTotalFailureCount() == 0 ? SUCCESS : TEST_FAILED;
 	}
 
+	static class ReportingOptions {
+
+		@CommandLine.Option(names = "--fail-if-no-tests", description = "Fail and return exit status code 2 if no tests are found.")
+		private boolean failIfNoTests; // no single-dash equivalent: was introduced in 5.3-M1
+
+		@CommandLine.Option(names = "--reports-dir", paramLabel = "DIR", description = "Enable report output into a specified local directory (will be created if it does not exist).")
+		private Path reportsDir;
+
+		@CommandLine.Option(names = "-reports-dir", hidden = true)
+		private Path reportsDir2;
+
+		Optional<Path> getReportsDir() {
+			return reportsDir == null ? Optional.ofNullable(reportsDir2) : Optional.of(reportsDir);
+		}
+	}
 }

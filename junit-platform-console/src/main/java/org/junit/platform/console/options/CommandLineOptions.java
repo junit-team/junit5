@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.DiscoverySelector;
@@ -53,7 +52,6 @@ public class CommandLineOptions {
 	private Details details = DEFAULT_DETAILS;
 	private Theme theme = DEFAULT_THEME;
 	private List<Path> additionalClasspathEntries = emptyList();
-	private boolean failIfNoTests;
 
 	private boolean scanClasspath;
 	private List<Path> selectedClasspathEntries = emptyList();
@@ -78,8 +76,6 @@ public class CommandLineOptions {
 	private List<String> excludedEngines = emptyList();
 	private List<String> includedTagExpressions = emptyList();
 	private List<String> excludedTagExpressions = emptyList();
-
-	private Path reportsDir;
 
 	private Map<String, String> configurationParameters = emptyMap();
 
@@ -149,14 +145,6 @@ public class CommandLineOptions {
 
 	public void setAdditionalClasspathEntries(List<Path> additionalClasspathEntries) {
 		this.additionalClasspathEntries = additionalClasspathEntries;
-	}
-
-	public boolean isFailIfNoTests() {
-		return this.failIfNoTests;
-	}
-
-	public void setFailIfNoTests(boolean failIfNoTests) {
-		this.failIfNoTests = failIfNoTests;
 	}
 
 	public List<Path> getSelectedClasspathEntries() {
@@ -315,14 +303,6 @@ public class CommandLineOptions {
 
 	public void setExcludedTagExpressions(List<String> excludedTags) {
 		this.excludedTagExpressions = excludedTags;
-	}
-
-	public Optional<Path> getReportsDir() {
-		return Optional.ofNullable(this.reportsDir);
-	}
-
-	public void setReportsDir(Path reportsDir) {
-		this.reportsDir = reportsDir;
 	}
 
 	public Map<String, String> getConfigurationParameters() {
