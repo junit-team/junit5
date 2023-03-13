@@ -36,7 +36,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -68,7 +67,6 @@ class CommandLineOptionsParsingTests {
 			() -> assertEquals(List.of(), options.getIncludedTagExpressions()),
 			() -> assertEquals(List.of(), options.getExcludedTagExpressions()),
 			() -> assertEquals(List.of(), options.getAdditionalClasspathEntries()),
-			() -> assertEquals(Optional.empty(), options.getReportsDir()),
 			() -> assertEquals(List.of(), options.getSelectedUris()),
 			() -> assertEquals(List.of(), options.getSelectedFiles()),
 			() -> assertEquals(List.of(), options.getSelectedDirectories()),
@@ -301,18 +299,6 @@ class CommandLineOptionsParsingTests {
 	@Test
 	void parseInvalidAdditionalClasspathEntries() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-cp", "--classpath", "--class-path");
-	}
-
-	@ParameterizedTest
-	@EnumSource
-	void parseValidXmlReportsDirs(ArgsType type) {
-		var dir = Paths.get("build", "test-results");
-		// @formatter:off
-		assertAll(
-			() -> assertEquals(Optional.of(dir), type.parseArgLine("--reports-dir build/test-results").getReportsDir()),
-			() -> assertEquals(Optional.of(dir), type.parseArgLine("--reports-dir=build/test-results").getReportsDir())
-		);
-		// @formatter:on
 	}
 
 	@Test
@@ -607,7 +593,9 @@ class CommandLineOptionsParsingTests {
 	}
 
 	private static CommandLineOptions parse(String... args) {
-		return ExecuteTestsCommand.parseCommandLineOptions(args);
+		ExecuteTestsCommand command = new ExecuteTestsCommand(__ -> null);
+		command.parseArgs(args);
+		return command.toCommandLineOptions();
 	}
 
 }

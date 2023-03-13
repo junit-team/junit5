@@ -132,7 +132,8 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 			CommandLine commandLine) {
 		int exitCode = BaseCommand.initialize(commandLine) //
 				.setOut(out) //
-				.setErr(err).execute(args);
+				.setErr(err) //
+				.execute(args);
 		return CommandResult.create(exitCode, commandLine.getExecutionResult());
 	}
 }

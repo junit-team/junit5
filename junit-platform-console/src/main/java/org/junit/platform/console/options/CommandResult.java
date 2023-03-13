@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
  * @since 1.10
@@ -32,16 +31,6 @@ public class CommandResult<T> {
 	 * Exit code indicating any failure(s)
 	 */
 	protected static final int FAILURE = -1;
-
-	/**
-	 * Exit code indicating test failure(s)
-	 */
-	private static final int TEST_FAILED = 1;
-
-	/**
-	 * Exit code indicating no tests found
-	 */
-	private static final int NO_TESTS_FOUND = 2;
 
 	public static <T> CommandResult<T> success() {
 		return create(SUCCESS, null);
@@ -61,13 +50,6 @@ public class CommandResult<T> {
 	private CommandResult(int exitCode, T value) {
 		this.exitCode = exitCode;
 		this.value = value;
-	}
-
-	public static int computeExitCode(TestExecutionSummary summary, CommandLineOptions options) {
-		if (options.isFailIfNoTests() && summary.getTestsFoundCount() == 0) {
-			return NO_TESTS_FOUND;
-		}
-		return summary.getTotalFailureCount() == 0 ? SUCCESS : TEST_FAILED;
 	}
 
 	public int getExitCode() {

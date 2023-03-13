@@ -62,8 +62,9 @@ public class ConsoleTestExecutor {
 		});
 	}
 
-	public TestExecutionSummary execute(PrintWriter out) {
-		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> executeTests(out));
+	public TestExecutionSummary execute(PrintWriter out, Optional<Path> reportsDir) {
+		return new CustomContextClassLoaderExecutor(createCustomClassLoader()) //
+				.invoke(() -> executeTests(out, reportsDir));
 	}
 
 	private void discoverTests(PrintWriter out) {
@@ -89,9 +90,9 @@ public class ConsoleTestExecutor {
 		out.flush();
 	}
 
-	private TestExecutionSummary executeTests(PrintWriter out) {
+	private TestExecutionSummary executeTests(PrintWriter out, Optional<Path> reportsDir) {
 		Launcher launcher = launcherSupplier.get();
-		SummaryGeneratingListener summaryListener = registerListeners(out, launcher);
+		SummaryGeneratingListener summaryListener = registerListeners(out, reportsDir, launcher);
 
 		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
 		launcher.execute(discoveryRequest);
@@ -124,14 +125,14 @@ public class ConsoleTestExecutor {
 		}
 	}
 
-	private SummaryGeneratingListener registerListeners(PrintWriter out, Launcher launcher) {
+	private SummaryGeneratingListener registerListeners(PrintWriter out, Optional<Path> reportsDir, Launcher launcher) {
 		// always register summary generating listener
 		SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(summaryListener);
 		// optionally, register test plan execution details printing listener
 		createDetailsPrintingListener(out).ifPresent(launcher::registerTestExecutionListeners);
 		// optionally, register XML reports writing listener
-		createXmlWritingListener(out).ifPresent(launcher::registerTestExecutionListeners);
+		createXmlWritingListener(out, reportsDir).ifPresent(launcher::registerTestExecutionListeners);
 		return summaryListener;
 	}
 
@@ -168,8 +169,8 @@ public class ConsoleTestExecutor {
 		return ColorPalette.DEFAULT;
 	}
 
-	private Optional<TestExecutionListener> createXmlWritingListener(PrintWriter out) {
-		return options.getReportsDir().map(reportsDir -> new LegacyXmlReportGeneratingListener(reportsDir, out));
+	private Optional<TestExecutionListener> createXmlWritingListener(PrintWriter out, Optional<Path> reportsDir) {
+		return reportsDir.map(it -> new LegacyXmlReportGeneratingListener(it, out));
 	}
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
