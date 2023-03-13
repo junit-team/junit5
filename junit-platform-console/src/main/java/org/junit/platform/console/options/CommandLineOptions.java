@@ -50,7 +50,6 @@ public class CommandLineOptions {
 	private boolean ansiColorOutputDisabled;
 	private Path colorPalettePath;
 	private boolean isSingleColorPalette;
-	private boolean bannerDisabled;
 	private Details details = DEFAULT_DETAILS;
 	private Theme theme = DEFAULT_THEME;
 	private List<Path> additionalClasspathEntries = emptyList();
@@ -106,14 +105,6 @@ public class CommandLineOptions {
 
 	public void setSingleColorPalette(boolean singleColorPalette) {
 		this.isSingleColorPalette = singleColorPalette;
-	}
-
-	public boolean isBannerDisabled() {
-		return this.bannerDisabled;
-	}
-
-	public void setBannerDisabled(boolean bannerDisabled) {
-		this.bannerDisabled = bannerDisabled;
 	}
 
 	public boolean isScanModulepath() {
