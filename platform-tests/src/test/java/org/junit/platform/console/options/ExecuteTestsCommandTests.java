@@ -11,10 +11,18 @@
 package org.junit.platform.console.options;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.nio.file.Paths;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.console.tasks.ConsoleTestExecutor;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
@@ -22,25 +30,31 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
  */
 class ExecuteTestsCommandTests {
 
-	private final CommandLineOptions options = new CommandLineOptions();
 	private final TestExecutionSummary summary = mock();
+	private final ConsoleTestExecutor consoleTestExecutor = mock();
+	private final ExecuteTestsCommand command = new ExecuteTestsCommand(__ -> consoleTestExecutor);
+
+	@BeforeEach
+	void setUp() {
+		when(consoleTestExecutor.execute(any(), any())).thenReturn(summary);
+	}
 
 	@Test
 	void hasStatusCode0ForNoTotalFailures() {
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		var exitCode = CommandResult.computeExitCode(summary, options);
+		command.execute();
 
-		assertThat(exitCode).isEqualTo(0);
+		assertThat(command.getExitCode()).isEqualTo(0);
 	}
 
 	@Test
 	void hasStatusCode1ForForAnyFailure() {
 		when(summary.getTotalFailureCount()).thenReturn(1L);
 
-		var exitCode = CommandResult.computeExitCode(summary, options);
+		command.execute();
 
-		assertThat(exitCode).isEqualTo(1);
+		assertThat(command.getExitCode()).isEqualTo(1);
 	}
 
 	/**
@@ -48,12 +62,11 @@ class ExecuteTestsCommandTests {
 	 */
 	@Test
 	void hasStatusCode2ForNoTestsAndHasOptionFailIfNoTestsFound() {
-		options.setFailIfNoTests(true);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		var exitCode = CommandResult.computeExitCode(summary, options);
+		command.execute("--fail-if-no-tests");
 
-		assertThat(exitCode).isEqualTo(2);
+		assertThat(command.getExitCode()).isEqualTo(2);
 	}
 
 	/**
@@ -61,13 +74,12 @@ class ExecuteTestsCommandTests {
 	 */
 	@Test
 	void hasStatusCode0ForTestsAndHasOptionFailIfNoTestsFound() {
-		options.setFailIfNoTests(true);
 		when(summary.getTestsFoundCount()).thenReturn(1L);
 		when(summary.getTotalFailureCount()).thenReturn(0L);
 
-		var exitCode = CommandResult.computeExitCode(summary, options);
+		command.execute("--fail-if-no-tests");
 
-		assertThat(exitCode).isEqualTo(0);
+		assertThat(command.getExitCode()).isEqualTo(0);
 	}
 
 	/**
@@ -75,12 +87,28 @@ class ExecuteTestsCommandTests {
 	 */
 	@Test
 	void hasStatusCode0ForNoTestsAndNotFailIfNoTestsFound() {
-		options.setFailIfNoTests(false);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
-		var exitCode = CommandResult.computeExitCode(summary, options);
+		command.execute();
 
-		assertThat(exitCode).isEqualTo(0);
+		assertThat(command.getExitCode()).isEqualTo(0);
+	}
+
+	@Test
+	void parseValidXmlReportsDirs() {
+		var dir = Paths.get("build", "test-results");
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(Optional.empty(), parseArgs().getReportsDir()),
+				() -> assertEquals(Optional.of(dir), parseArgs("--reports-dir", "build/test-results").getReportsDir()),
+				() -> assertEquals(Optional.of(dir), parseArgs("--reports-dir=build/test-results").getReportsDir())
+		);
+		// @formatter:on
+	}
+
+	private ExecuteTestsCommand parseArgs(String... args) {
+		command.parseArgs(args);
+		return command;
 	}
 
 }

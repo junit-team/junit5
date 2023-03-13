@@ -34,6 +34,18 @@ abstract class BaseCommand<T> implements Callable<T> {
 	@Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help information.")
 	private boolean helpRequested;
 
+	void execute(String... args) {
+		toCommandLine().execute(args);
+	}
+
+	void parseArgs(String... args) {
+		toCommandLine().parseArgs(args);
+	}
+
+	private CommandLine toCommandLine() {
+		return BaseCommand.initialize(new CommandLine(this));
+	}
+
 	static CommandLine initialize(CommandLine commandLine) {
 		CommandLine.IParameterExceptionHandler defaultParameterExceptionHandler = commandLine.getParameterExceptionHandler();
 		return commandLine //
