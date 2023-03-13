@@ -1,5 +1,5 @@
 [versions]
-ant = "1.10.12"
+ant = "1.10.13"
 apiguardian = "1.1.2"
 asciidoctor-pdf = "1.5.3"
 assertj = "3.23.1"
