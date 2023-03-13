@@ -15,7 +15,6 @@ import static org.junit.platform.console.options.CommandResult.SUCCESS;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.function.Function;
 
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -41,21 +40,25 @@ class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements C
 	 */
 	private static final int NO_TESTS_FOUND = 2;
 
-	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
+	private final ConsoleTestExecutor.Factory consoleTestExecutorFactory;
 
 	@Mixin
-	CommandLineOptionsMixin options;
+	TestDiscoveryOptionsMixin discoveryOptions;
+
+	@Mixin
+	TestConsoleOutputOptionsMixin testOutputOptions;
 
 	@ArgGroup(validate = false, order = 6, heading = "%n@|bold REPORTING|@%n%n")
 	ReportingOptions reportingOptions;
 
-	ExecuteTestsCommand(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+	ExecuteTestsCommand(ConsoleTestExecutor.Factory consoleTestExecutorFactory) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 
 	@Override
 	protected TestExecutionSummary execute(PrintWriter out) {
-		return consoleTestExecutorFactory.apply(toCommandLineOptions()).execute(out, getReportsDir());
+		return consoleTestExecutorFactory.create(toTestDiscoveryOptions(), toTestConsoleOutputOptions()) //
+				.execute(out, getReportsDir());
 	}
 
 	Optional<Path> getReportsDir() {
@@ -66,11 +69,16 @@ class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements C
 		return Optional.ofNullable(reportingOptions);
 	}
 
-	CommandLineOptions toCommandLineOptions() {
-		CommandLineOptions options = this.options == null ? new CommandLineOptions()
-				: this.options.toCommandLineOptions();
-		options.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
-		return options;
+	TestDiscoveryOptions toTestDiscoveryOptions() {
+		return this.discoveryOptions == null //
+				? new TestDiscoveryOptions() //
+				: this.discoveryOptions.toTestDiscoveryOptions();
+	}
+
+	TestConsoleOutputOptions toTestConsoleOutputOptions() {
+		TestConsoleOutputOptions testOutputOptions = this.testOutputOptions.toTestConsoleOutputOptions();
+		testOutputOptions.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
+		return testOutputOptions;
 	}
 
 	@Override

@@ -14,11 +14,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.io.PrintWriter;
-import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.console.options.CommandFacade;
-import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.CommandResult;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
@@ -44,12 +42,11 @@ public class ConsoleLauncher {
 		return consoleLauncher.run(args);
 	}
 
-	private final Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory;
+	private final ConsoleTestExecutor.Factory consoleTestExecutorFactory;
 	private final PrintWriter out;
 	private final PrintWriter err;
 
-	ConsoleLauncher(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory, PrintWriter out,
-			PrintWriter err) {
+	ConsoleLauncher(ConsoleTestExecutor.Factory consoleTestExecutorFactory, PrintWriter out, PrintWriter err) {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 		this.out = out;
 		this.err = err;

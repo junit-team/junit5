@@ -33,7 +33,7 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayHelp(String command) {
-		var consoleLauncher = new ConsoleLauncher(__ -> null, printSink, printSink);
+		var consoleLauncher = new ConsoleLauncher((__, ___) -> null, printSink, printSink);
 		var exitCode = consoleLauncher.run(command, "--help").getExitCode();
 
 		assertEquals(0, exitCode);
@@ -43,7 +43,7 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayBanner(String command) {
-		var consoleLauncher = new ConsoleLauncher(__ -> null, printSink, printSink);
+		var consoleLauncher = new ConsoleLauncher((__, ___) -> null, printSink, printSink);
 		consoleLauncher.run(command);
 
 		assertThat(stringWriter.toString()).contains(
@@ -53,7 +53,7 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void disableBanner(String command, int expectedExitCode) {
-		var consoleLauncher = new ConsoleLauncher(__ -> null, printSink, printSink);
+		var consoleLauncher = new ConsoleLauncher((__, ___) -> null, printSink, printSink);
 		var exitCode = consoleLauncher.run(command, "--disable-banner").getExitCode();
 
 		assertEquals(expectedExitCode, exitCode);
