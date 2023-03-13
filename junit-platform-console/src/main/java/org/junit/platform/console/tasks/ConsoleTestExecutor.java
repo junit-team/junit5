@@ -24,8 +24,9 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ClassLoaderUtils;
-import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.Details;
+import org.junit.platform.console.options.TestConsoleOutputOptions;
+import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -42,16 +43,19 @@ import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener
 @API(status = INTERNAL, since = "1.0")
 public class ConsoleTestExecutor {
 
-	private final CommandLineOptions options;
+	private final TestDiscoveryOptions discoveryOptions;
+	private final TestConsoleOutputOptions outputOptions;
 	private final Supplier<Launcher> launcherSupplier;
 
-	public ConsoleTestExecutor(CommandLineOptions options) {
-		this(options, LauncherFactory::create);
+	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions) {
+		this(discoveryOptions, outputOptions, LauncherFactory::create);
 	}
 
 	// for tests only
-	ConsoleTestExecutor(CommandLineOptions options, Supplier<Launcher> launcherSupplier) {
-		this.options = options;
+	ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions,
+			Supplier<Launcher> launcherSupplier) {
+		this.discoveryOptions = discoveryOptions;
+		this.outputOptions = outputOptions;
 		this.launcherSupplier = launcherSupplier;
 	}
 
@@ -71,11 +75,11 @@ public class ConsoleTestExecutor {
 		Launcher launcher = launcherSupplier.get();
 		Optional<DetailsPrintingListener> commandLineTestPrinter = createDetailsPrintingListener(out);
 
-		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
+		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 
 		commandLineTestPrinter.ifPresent(printer -> printer.listTests(testPlan));
-		if (options.getDetails() != Details.NONE) {
+		if (outputOptions.getDetails() != Details.NONE) {
 			printFoundTestsSummary(out, testPlan);
 		}
 	}
@@ -94,11 +98,11 @@ public class ConsoleTestExecutor {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, reportsDir, launcher);
 
-		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
+		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
 		launcher.execute(discoveryRequest);
 
 		TestExecutionSummary summary = summaryListener.getSummary();
-		if (summary.getTotalFailureCount() > 0 || options.getDetails() != Details.NONE) {
+		if (summary.getTotalFailureCount() > 0 || outputOptions.getDetails() != Details.NONE) {
 			printSummary(summary, out);
 		}
 
@@ -106,7 +110,7 @@ public class ConsoleTestExecutor {
 	}
 
 	private Optional<ClassLoader> createCustomClassLoader() {
-		List<Path> additionalClasspathEntries = options.getExistingAdditionalClasspathEntries();
+		List<Path> additionalClasspathEntries = discoveryOptions.getExistingAdditionalClasspathEntries();
 		if (!additionalClasspathEntries.isEmpty()) {
 			URL[] urls = additionalClasspathEntries.stream().map(this::toURL).toArray(URL[]::new);
 			ClassLoader parentClassLoader = ClassLoaderUtils.getDefaultClassLoader();
@@ -138,8 +142,8 @@ public class ConsoleTestExecutor {
 
 	private Optional<DetailsPrintingListener> createDetailsPrintingListener(PrintWriter out) {
 		ColorPalette colorPalette = getColorPalette();
-		Theme theme = options.getTheme();
-		switch (options.getDetails()) {
+		Theme theme = outputOptions.getTheme();
+		switch (outputOptions.getDetails()) {
 			case SUMMARY:
 				// summary listener is always created and registered
 				return Optional.empty();
@@ -157,13 +161,13 @@ public class ConsoleTestExecutor {
 	}
 
 	private ColorPalette getColorPalette() {
-		if (options.isAnsiColorOutputDisabled()) {
+		if (outputOptions.isAnsiColorOutputDisabled()) {
 			return ColorPalette.NONE;
 		}
-		if (options.getColorPalettePath() != null) {
-			return new ColorPalette(options.getColorPalettePath());
+		if (outputOptions.getColorPalettePath() != null) {
+			return new ColorPalette(outputOptions.getColorPalettePath());
 		}
-		if (options.isSingleColorPalette()) {
+		if (outputOptions.isSingleColorPalette()) {
 			return ColorPalette.SINGLE_COLOR;
 		}
 		return ColorPalette.DEFAULT;
@@ -175,10 +179,14 @@ public class ConsoleTestExecutor {
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
 		// Otherwise the failures have already been printed in detail
-		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(options.getDetails())) {
+		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(outputOptions.getDetails())) {
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);
 	}
 
+	@FunctionalInterface
+	public interface Factory {
+		ConsoleTestExecutor create(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions);
+	}
 }

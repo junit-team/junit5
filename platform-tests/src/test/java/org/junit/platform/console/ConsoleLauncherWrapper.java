@@ -16,9 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
-import java.util.function.Function;
 
-import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 /**
@@ -34,11 +32,10 @@ class ConsoleLauncherWrapper {
 		this(ConsoleTestExecutor::new);
 	}
 
-	private ConsoleLauncherWrapper(Function<CommandLineOptions, ConsoleTestExecutor> consoleTestExecutorFactory) {
+	private ConsoleLauncherWrapper(ConsoleTestExecutor.Factory consoleTestExecutorFactory) {
 		var outWriter = new PrintWriter(out, false);
 		var errWriter = new PrintWriter(err, false);
 		this.consoleLauncher = new ConsoleLauncher(consoleTestExecutorFactory, outWriter, errWriter);
-
 	}
 
 	public ConsoleLauncherWrapperResult execute(String... args) {

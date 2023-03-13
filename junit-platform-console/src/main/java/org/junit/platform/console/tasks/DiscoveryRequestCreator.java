@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.console.options.CommandLineOptions;
+import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -48,7 +48,7 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
  */
 class DiscoveryRequestCreator {
 
-	LauncherDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
+	LauncherDiscoveryRequest toDiscoveryRequest(TestDiscoveryOptions options) {
 		LauncherDiscoveryRequestBuilder requestBuilder = request();
 		List<? extends DiscoverySelector> selectors = createDiscoverySelectors(options);
 		requestBuilder.selectors(selectors);
@@ -57,7 +57,7 @@ class DiscoveryRequestCreator {
 		return requestBuilder.build();
 	}
 
-	private List<? extends DiscoverySelector> createDiscoverySelectors(CommandLineOptions options) {
+	private List<? extends DiscoverySelector> createDiscoverySelectors(TestDiscoveryOptions options) {
 		List<DiscoverySelector> explicitSelectors = options.getExplicitSelectors();
 		if (options.isScanClasspath()) {
 			Preconditions.condition(explicitSelectors.isEmpty(),
@@ -73,12 +73,12 @@ class DiscoveryRequestCreator {
 			"Please specify an explicit selector option or use --scan-class-path or --scan-modules");
 	}
 
-	private List<ClasspathRootSelector> createClasspathRootSelectors(CommandLineOptions options) {
+	private List<ClasspathRootSelector> createClasspathRootSelectors(TestDiscoveryOptions options) {
 		Set<Path> classpathRoots = determineClasspathRoots(options);
 		return selectClasspathRoots(classpathRoots);
 	}
 
-	private Set<Path> determineClasspathRoots(CommandLineOptions options) {
+	private Set<Path> determineClasspathRoots(TestDiscoveryOptions options) {
 		if (options.getSelectedClasspathEntries().isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
 			rootDirs.addAll(options.getExistingAdditionalClasspathEntries());
@@ -87,7 +87,7 @@ class DiscoveryRequestCreator {
 		return new LinkedHashSet<>(options.getSelectedClasspathEntries());
 	}
 
-	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options,
+	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, TestDiscoveryOptions options,
 			List<? extends DiscoverySelector> selectors) {
 		requestBuilder.filters(includedClassNamePatterns(options, selectors));
 
@@ -121,7 +121,7 @@ class DiscoveryRequestCreator {
 		}
 	}
 
-	private ClassNameFilter includedClassNamePatterns(CommandLineOptions options,
+	private ClassNameFilter includedClassNamePatterns(TestDiscoveryOptions options,
 			List<? extends DiscoverySelector> selectors) {
 		Stream<String> patternStreams = Stream.concat( //
 			options.getIncludedClassNamePatterns().stream(), //
