@@ -14,7 +14,7 @@
  * @since 5.0
  */
 module org.junit.jupiter.params {
-	requires static transitive org.apiguardian.api;
+	requires static org.apiguardian.api;
 	requires transitive org.junit.jupiter.api;
 	requires transitive org.junit.platform.commons;
 

@@ -21,7 +21,7 @@
  */
 module org.junit.platform.launcher {
 	requires transitive java.logging;
-	requires static transitive org.apiguardian.api;
+	requires static org.apiguardian.api;
 	requires transitive org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
 
