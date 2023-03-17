@@ -8,7 +8,7 @@ pluginManagement {
 	}
 	plugins {
 		id("com.gradle.enterprise") version "3.12.4" // keep in sync with gradle/plugins/build.gradle.kts
-		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.8.2"
+		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.9"
 		id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
 		id("org.ajoberstar.git-publish") version "4.1.1"
 		kotlin("jvm") version "1.8.10"
