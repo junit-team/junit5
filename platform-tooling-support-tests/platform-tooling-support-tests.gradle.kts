@@ -151,11 +151,11 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 
 	override fun asArguments(): List<String> {
 		if (buildParameters.enterprise.testDistribution.enabled) {
-			val metadata = javaLauncher.map { it.metadata }
-			val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
-			return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
+			return emptyList()
 		}
-		return emptyList()
+		val metadata = javaLauncher.map { it.metadata }
+		val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
+		return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
 	}
 }
 
