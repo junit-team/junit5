@@ -51,7 +51,7 @@ class TreeNodeTests {
 			}
 		});
 
-		assertThat(treeNode.children.size()).isEqualTo(NUM_THREADS * ITEMS_PER_THREAD);
+		assertThat(treeNode.children).hasSize(NUM_THREADS * ITEMS_PER_THREAD);
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class TreeNodeTests {
 			}
 		});
 
-		assertThat(treeNode.reports.size()).isEqualTo(NUM_THREADS * ITEMS_PER_THREAD);
+		assertThat(treeNode.reports).hasSize(NUM_THREADS * ITEMS_PER_THREAD);
 	}
 
 	private void runConcurrently(Runnable action) throws InterruptedException {

@@ -172,12 +172,12 @@ class TagFilterTests {
 
 	private void assertIncluded(FilterResult filterResult, String expectedReason) {
 		assertTrue(filterResult.included());
-		assertThat(filterResult.getReason()).isPresent().contains(expectedReason);
+		assertThat(filterResult.getReason()).contains(expectedReason);
 	}
 
 	private void assertExcluded(FilterResult filterResult, String expectedReason) {
 		assertTrue(filterResult.excluded());
-		assertThat(filterResult.getReason()).isPresent().contains(expectedReason);
+		assertThat(filterResult.getReason()).contains(expectedReason);
 	}
 
 	// -------------------------------------------------------------------------

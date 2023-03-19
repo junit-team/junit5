@@ -450,9 +450,9 @@ class DiscoverySelectorResolverTests {
 		resolve(request().selectors(selectPackage("")));
 
 		// 150 is completely arbitrary. The actual number is likely much higher.
-		assertThat(engineDescriptor.getDescendants().size())//
+		assertThat(engineDescriptor.getDescendants())//
 				.describedAs("Too few test descriptors in classpath")//
-				.isGreaterThan(150);
+				.hasSizeGreaterThan(150);
 
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertThat(uniqueIds)//
@@ -474,9 +474,9 @@ class DiscoverySelectorResolverTests {
 		resolve(request().selectors(selectors));
 
 		// 150 is completely arbitrary. The actual number is likely much higher.
-		assertThat(engineDescriptor.getDescendants().size())//
+		assertThat(engineDescriptor.getDescendants())//
 				.describedAs("Too few test descriptors in classpath")//
-				.isGreaterThan(150);
+				.hasSizeGreaterThan(150);
 
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertThat(uniqueIds)//
