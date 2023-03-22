@@ -114,9 +114,8 @@ class JavaTimeArgumentConverterTests {
 		var converter = new JavaTimeArgumentConverter();
 		var annotation = mock(JavaTimeConversionPattern.class);
 		when(annotation.value()).thenReturn(pattern);
-		converter.accept(annotation);
 
-		return converter.convert(input, targetClass);
+		return converter.convert(input, targetClass, annotation);
 	}
 
 }

@@ -14,13 +14,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.support.AnnotationConsumerInitializer.initialize;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.params.converter.AnnotationBasedArgumentConverter;
+import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
 import org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -44,34 +49,71 @@ class AnnotationConsumerInitializerTest {
 	@Test
 	@DisplayName("should initialize annotation based arguments provider")
 	void shouldInitializeAnnotationBasedArgumentsProvider() throws NoSuchMethodException {
-		var instance = new SomeAnnotationBasedArgumentProvider();
+		var instance = new SomeAnnotationBasedArgumentsProvider();
 		var method = SubjectClass.class.getDeclaredMethod("foo");
 		var initialisedAnnotationConsumer = initialize(method, instance);
 
 		initialisedAnnotationConsumer.provideArguments(mock());
 
-		assertThat(initialisedAnnotationConsumer.assignedAnnotation) //
+		assertThat(initialisedAnnotationConsumer.annotation) //
 				.isInstanceOf(CsvSource.class) //
 				.matches(annotation -> Arrays.equals(annotation.value(), new String[] { "a", "b" }));
+	}
+
+	@Test
+	@DisplayName("should initialize annotation based argument converter")
+	void shouldInitializeAnnotationBasedArgumentConverter() throws NoSuchMethodException {
+		var instance = new SomeAnnotationBasedArgumentConverter();
+		var parameter = SubjectClass.class.getDeclaredMethod("bar", LocalDate.class).getParameters()[0];
+		var initialisedAnnotationConsumer = initialize(parameter, instance);
+
+		ParameterContext parameterContext = mock();
+		when(parameterContext.getParameter()).thenReturn(parameter);
+		initialisedAnnotationConsumer.convert("source", parameterContext);
+
+		assertThat(initialisedAnnotationConsumer.annotation) //
+				.isInstanceOf(JavaTimeConversionPattern.class) //
+				.matches(annotation -> annotation.value().equals("pattern"));
 	}
 
 	@Test
 	@DisplayName("should throw exception when method is not annotated")
 	void shouldThrowExceptionWhenMethodIsNotAnnotated() throws NoSuchMethodException {
 		var instance = new SomeAnnotationConsumer();
-		var method = SubjectClass.class.getDeclaredMethod("noAnnotation");
+		var method = SubjectClass.class.getDeclaredMethod("noAnnotation", String.class);
 
 		assertThatThrownBy(() -> initialize(method, instance)).isInstanceOf(JUnitException.class);
 	}
 
-	private static class SomeAnnotationBasedArgumentProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
+	@Test
+	@DisplayName("should throw exception when parameter is not annotated")
+	void shouldThrowExceptionWhenParameterIsNotAnnotated() throws NoSuchMethodException {
+		var instance = new SomeAnnotationConsumer();
+		var parameter = SubjectClass.class.getDeclaredMethod("noAnnotation", String.class).getParameters()[0];
 
-		CsvSource assignedAnnotation;
+		assertThatThrownBy(() -> initialize(parameter, instance)).isInstanceOf(JUnitException.class);
+	}
+
+	private static class SomeAnnotationBasedArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
+
+		CsvSource annotation;
 
 		@Override
 		protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
-			assignedAnnotation = annotation;
+			this.annotation = annotation;
 			return Stream.empty();
+		}
+	}
+
+	private static class SomeAnnotationBasedArgumentConverter
+			extends AnnotationBasedArgumentConverter<JavaTimeConversionPattern> {
+
+		JavaTimeConversionPattern annotation;
+
+		@Override
+		protected Object convert(Object source, Class<?> targetType, JavaTimeConversionPattern annotation) {
+			this.annotation = annotation;
+			return null;
 		}
 	}
 
@@ -92,7 +134,11 @@ class AnnotationConsumerInitializerTest {
 
 		}
 
-		void noAnnotation() {
+		void bar(@JavaTimeConversionPattern("pattern") LocalDate date) {
+
+		}
+
+		void noAnnotation(String param) {
 
 		}
 	}

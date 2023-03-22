@@ -1772,6 +1772,10 @@ composed annotation `JavaTimeConversionPattern`.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_java_time_converter]
 ----
 
+If you wish to implement a custom `ArgumentConverter` that also consumes an annotation
+(like `JavaTimeArgumentConverter`), you have the possibility to extend the
+`{AnnotationBasedArgumentConverter}` class.
+
 [[writing-tests-parameterized-tests-argument-aggregation]]
 ==== Argument Aggregation
 
