@@ -138,6 +138,7 @@ endif::[]
 :TempDir:                                    {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/io/TempDir.html[@TempDir]
 // Jupiter Params
 :params-provider-package:                    {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/provider/package-summary.html[org.junit.jupiter.params.provider]
+:AnnotationBasedArgumentConverter:           {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/provider/AnnotationBasedArgumentConverter.html[AnnotationBasedArgumentConverter]
 :AnnotationBasedArgumentsProvider:           {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/provider/AnnotationBasedArgumentsProvider.html[AnnotationBasedArgumentsProvider]
 :ArgumentsAccessor:                          {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAccessor.html[ArgumentsAccessor]
 :ArgumentsAggregator:                        {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html[ArgumentsAggregator]

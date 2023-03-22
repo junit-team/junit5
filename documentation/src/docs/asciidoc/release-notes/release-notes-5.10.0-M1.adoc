@@ -66,6 +66,8 @@ repository on GitHub.
   with a public no-arg constructor.
 * New `AnnotationBasedArgumentsProvider` that implements both `ArgumentsProvider` and
   `AnnotationConsumer` interfaces.
+* New `AnnotationBasedArgumentConverter` that implements both `ArgumentConverter` and
+  `AnnotationConsumer` interfaces.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
