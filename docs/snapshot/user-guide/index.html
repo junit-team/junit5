@@ -4618,6 +4618,11 @@ class or as a <code>static</code> nested class.</p>
 <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>If you wish to implement a custom <code>ArgumentsProvider</code> that also consumes an annotation
+(like built-in providers such as <code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/ValueArgumentsProvider.html">ValueArgumentsProvider</a></code> or <code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/CsvArgumentsProvider.html">CsvArgumentsProvider</a></code>),
+you have the possibility to extend the <code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/AnnotationBasedArgumentsProvider.html">AnnotationBasedArgumentsProvider</a></code> class.</p>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -4970,6 +4975,11 @@ composed annotation <code>JavaTimeConversionPattern</code>.</p>
     <span class="n">assertEquals</span><span class="o">(</span><span class="mi">2017</span><span class="o">,</span> <span class="n">argument</span><span class="o">.</span><span class="na">getYear</span><span class="o">());</span>
 <span class="o">}</span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>If you wish to implement a custom <code>ArgumentConverter</code> that also consumes an annotation
+(like <code>JavaTimeArgumentConverter</code>), you have the possibility to extend the
+<code><a href="../api/org.junit.jupiter.params/org/junit/jupiter/params/provider/AnnotationBasedArgumentConverter.html">AnnotationBasedArgumentConverter</a></code> class.</p>
 </div>
 </div>
 </div>
@@ -11839,8 +11849,18 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.converter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotationBasedArgumentConverter</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.10</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.converter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TypedArgumentConverter</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotationBasedArgumentsProvider</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.commons.support</code></p></td>
@@ -12413,7 +12433,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-03-09 07:28:43 UTC
+Last updated 2023-03-22 18:56:17 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

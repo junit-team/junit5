@@ -54,7 +54,65 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1 title="Uses of Interface org.junit.jupiter.params.support.AnnotationConsumer" class="title">Uses of Interface<br>org.junit.jupiter.params.support.AnnotationConsumer</h1>
 </div>
-No usage of org.junit.jupiter.params.support.AnnotationConsumer</main>
+<div class="caption"><span>Packages that use <a href="../AnnotationConsumer.html" title="interface in org.junit.jupiter.params.support">AnnotationConsumer</a></span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Package</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><a href="#org.junit.jupiter.params.converter">org.junit.jupiter.params.converter</a></div>
+<div class="col-last even-row-color">
+<div class="block"><a href="../../converter/ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a>
+ implementations and the corresponding
+ <a href="../../converter/ConvertWith.html" title="annotation interface in org.junit.jupiter.params.converter"><code>@ConvertWith</code></a> annotation.</div>
+</div>
+<div class="col-first odd-row-color"><a href="#org.junit.jupiter.params.provider">org.junit.jupiter.params.provider</a></div>
+<div class="col-last odd-row-color">
+<div class="block"><a href="../../provider/ArgumentsProvider.html" title="interface in org.junit.jupiter.params.provider"><code>ArgumentsProvider</code></a>
+ implementations and their corresponding
+ <a href="../../provider/ArgumentsSource.html" title="annotation interface in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a>
+ annotations.</div>
+</div>
+</div>
+<section class="class-uses">
+<ul class="block-list">
+<li>
+<section class="detail" id="org.junit.jupiter.params.converter">
+<h2>Uses of <a href="../AnnotationConsumer.html" title="interface in org.junit.jupiter.params.support">AnnotationConsumer</a> in <a href="../../converter/package-summary.html">org.junit.jupiter.params.converter</a></h2>
+<div class="caption"><span>Classes in <a href="../../converter/package-summary.html">org.junit.jupiter.params.converter</a> that implement <a href="../AnnotationConsumer.html" title="interface in org.junit.jupiter.params.support">AnnotationConsumer</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../../converter/AnnotationBasedArgumentConverter.html" class="type-name-link" title="class in org.junit.jupiter.params.converter">AnnotationBasedArgumentConverter</a>&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</code></div>
+<div class="col-last even-row-color">
+<div class="block"><code>SimpleArgumentConverter</code> is an abstract base class for
+ <a href="../../converter/ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a> implementations that also need to consume an
+ annotation in order to perform the conversion.</div>
+</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="org.junit.jupiter.params.provider">
+<h2>Uses of <a href="../AnnotationConsumer.html" title="interface in org.junit.jupiter.params.support">AnnotationConsumer</a> in <a href="../../provider/package-summary.html">org.junit.jupiter.params.provider</a></h2>
+<div class="caption"><span>Classes in <a href="../../provider/package-summary.html">org.junit.jupiter.params.provider</a> that implement <a href="../AnnotationConsumer.html" title="interface in org.junit.jupiter.params.support">AnnotationConsumer</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../../provider/AnnotationBasedArgumentsProvider.html" class="type-name-link" title="class in org.junit.jupiter.params.provider">AnnotationBasedArgumentsProvider</a>&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</code></div>
+<div class="col-last even-row-color">
+<div class="block"><code>AnnotationBasedArgumentsProvider</code> is an abstract base class for
+ <a href="../../provider/ArgumentsProvider.html" title="interface in org.junit.jupiter.params.provider"><code>ArgumentsProvider</code></a> implementations that also need to consume an
+ annotation in order to provide the arguments.</div>
+</div>
+</div>
+</section>
+</li>
+</ul>
+</section>
+</main>
 </div>
 </div>
 </body>
