@@ -36,6 +36,7 @@ repository on GitHub.
   of the former. Please refer to the
   <<../user-guide/index.adoc#launcher-api-launcher-interceptors-custom, User Guide>> for
   details.
+* Support for limiting the `max-pool-size-factor` for parallel execution via a configuration parameter.
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter
@@ -54,7 +55,8 @@ repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The `dynamic` parallel execution strategy now allows the thread pool to be saturated by
+default.
 
 ==== New Features and Improvements
 
@@ -68,7 +70,10 @@ repository on GitHub.
   `AnnotationConsumer` interfaces.
 * New `AnnotationBasedArgumentConverter` that implements both `ArgumentConverter` and
   `AnnotationConsumer` interfaces.
-
+* New `junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor` configuration
+parameter to set the maximum pool size factor.
+* New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
+parameter to disable pool saturation.
 
 [[release-notes-5.10.0-M1-junit-vintage]]
 === JUnit Vintage
