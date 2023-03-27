@@ -14,7 +14,7 @@ log4j = "2.20.0"
 opentest4j = "1.2.0"
 openTestReporting = "0.1.0-M1"
 surefire = "3.0.0-M7"
-xmlunit = "2.9.0"
+xmlunit = "2.9.1"
 
 [libraries]
 ant = { module = "org.apache.ant:ant", version.ref = "ant" }
