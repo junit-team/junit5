@@ -310,16 +310,16 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	class Factory {
 
 		@Test
-		@DisplayName("that changes temp dir name prefix")
-		void supportsFactoryChangingNamePrefix() {
-			executeTestsForClass(FactoryChangingNamePrefixTestCase.class).testEvents()//
+		@DisplayName("that uses custom temp dir name prefix")
+		void supportsFactoryWithCustomNamePrefix() {
+			executeTestsForClass(FactoryWithCustomNamePrefixTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
 		@Test
-		@DisplayName("that changes temp dir parent directory")
-		void supportsPrivateStaticFields() {
-			executeTestsForClass(FactoryChangingParentTestCase.class).testEvents()//
+		@DisplayName("that uses custom temp dir parent directory")
+		void supportsFactoryWithCustomParentDirectory() {
+			executeTestsForClass(FactoryWithCustomParentDirectoryTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
@@ -1087,7 +1087,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class FactoryChangingNamePrefixTestCase {
+	static class FactoryWithCustomNamePrefixTestCase {
 
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
@@ -1106,7 +1106,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2088
-	static class FactoryChangingParentTestCase {
+	static class FactoryWithCustomParentDirectoryTestCase {
 
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
