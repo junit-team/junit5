@@ -18,8 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileAttribute;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code TempDirFactory} defines the SPI for creating temporary directories
@@ -61,7 +59,7 @@ public interface TempDirFactory {
 	 */
 	class Standard implements TempDirFactory {
 
-		static final TempDirFactory INSTANCE = new Standard();
+		public static final TempDirFactory INSTANCE = new Standard();
 
 		public Standard() {
 		}
@@ -71,24 +69,6 @@ public interface TempDirFactory {
 			return Files.createTempDirectory(prefix);
 		}
 
-	}
-
-	/**
-	 * Return the {@code TempDirFactory} instance corresponding to the
-	 * given {@code Class}.
-	 *
-	 * @param factoryClass the factory's {@code Class}; never {@code null},
-	 * has to be a {@code TempDirFactory} implementation
-	 * @return a {@code TempDirFactory} implementation instance
-	 */
-	static TempDirFactory getTempDirFactory(Class<?> factoryClass) {
-		Preconditions.notNull(factoryClass, "Class must not be null");
-		Preconditions.condition(TempDirFactory.class.isAssignableFrom(factoryClass),
-			"Class must be a TempDirFactory implementation");
-		if (factoryClass == Standard.class) {
-			return Standard.INSTANCE;
-		}
-		return (TempDirFactory) ReflectionUtils.newInstance(factoryClass);
 	}
 
 }

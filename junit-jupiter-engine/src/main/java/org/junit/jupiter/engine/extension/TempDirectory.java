@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
-import static org.junit.jupiter.api.io.TempDirFactory.getTempDirFactory;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
@@ -59,6 +58,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -189,6 +189,16 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		TempDir tempDir = parameterContext.findAnnotation(TempDir.class).orElseThrow(() -> new JUnitException(
 			"Parameter " + parameterContext.getParameter() + " must be annotated with @TempDir"));
 		return getTempDirFactory(tempDir.factory());
+	}
+
+	private static TempDirFactory getTempDirFactory(Class<?> factoryClass) {
+		Preconditions.notNull(factoryClass, "Class must not be null");
+		Preconditions.condition(TempDirFactory.class.isAssignableFrom(factoryClass),
+				"Class must be a TempDirFactory implementation");
+		if (factoryClass == TempDirFactory.Standard.class) {
+			return TempDirFactory.Standard.INSTANCE;
+		}
+		return (TempDirFactory) ReflectionUtils.newInstance(factoryClass);
 	}
 
 	private void assertNonFinalField(Field field) {
