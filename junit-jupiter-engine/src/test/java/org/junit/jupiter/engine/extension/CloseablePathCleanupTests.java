@@ -17,14 +17,17 @@ import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -34,6 +37,7 @@ import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.mockito.Mockito;
 
 /**
  * Integration tests for cleanup of the {@link TempDirectory} when the {@link CleanupMode} is
@@ -46,7 +50,6 @@ import org.junit.jupiter.engine.execution.NamespaceAwareStore;
  */
 class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 
-	private final TempDirFactory factory = Files::createTempDirectory;
 	private final ExtensionContext extensionContext = mock();
 
 	private TempDirectory.CloseablePath closeablePath;
@@ -62,56 +65,120 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 		deleteIfExists(closeablePath.get());
 	}
 
-	/**
-	 * Ensure a closeable path is cleaned up for a cleanup mode of ALWAYS.
-	 */
-	@Test
-	void always() throws IOException {
-		closeablePath = TempDirectory.createTempDir(factory, ALWAYS, extensionContext);
-		assertThat(closeablePath.get()).exists();
+	@Nested
+	@DisplayName("with standard temp dir factory")
+	class StandardFactory {
 
-		closeablePath.close();
-		assertThat(closeablePath.get()).doesNotExist();
+		private final TempDirFactory factory = TempDirFactory.Standard.INSTANCE;
+
+		@Test
+		@DisplayName("is cleaned up for a cleanup mode of ALWAYS")
+		void always() throws IOException {
+			closeablePath = TempDirectory.createTempDir(factory, ALWAYS, extensionContext);
+			assertThat(closeablePath.get()).exists();
+
+			closeablePath.close();
+			assertThat(closeablePath.get()).doesNotExist();
+		}
+
+		@Test
+		@DisplayName("is not cleaned up for a cleanup mode of NEVER")
+		void never() throws IOException {
+			closeablePath = TempDirectory.createTempDir(factory, NEVER, extensionContext);
+			assertThat(closeablePath.get()).exists();
+
+			closeablePath.close();
+			assertThat(closeablePath.get()).exists();
+		}
+
+		@Test
+		@DisplayName("is not cleaned up for a cleanup mode of ON_SUCCESS, if there is an exception")
+		void onSuccessWithException() throws IOException {
+			when(extensionContext.getExecutionException()).thenReturn(Optional.of(new Exception()));
+
+			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, extensionContext);
+			assertThat(closeablePath.get()).exists();
+
+			closeablePath.close();
+			assertThat(closeablePath.get()).exists();
+		}
+
+		@Test
+		@DisplayName("is cleaned up for a cleanup mode of ON_SUCCESS, if there is no exception")
+		void onSuccessWithNoException() throws IOException {
+			when(extensionContext.getExecutionException()).thenReturn(Optional.empty());
+
+			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, extensionContext);
+			assertThat(closeablePath.get()).exists();
+
+			closeablePath.close();
+			assertThat(closeablePath.get()).doesNotExist();
+		}
+
 	}
 
-	/**
-	 * Ensure a closeable path is not cleaned up for a cleanup mode of NEVER.
-	 */
-	@Test
-	void never() throws IOException {
-		closeablePath = TempDirectory.createTempDir(factory, NEVER, extensionContext);
-		assertThat(closeablePath.get()).exists();
+	@Nested
+	@DisplayName("with auto closeable temp dir factory")
+	class AutoCloseableFactory {
 
-		closeablePath.close();
-		assertThat(closeablePath.get()).exists();
-	}
+		private final AutoCloseableTempDirFactory factory = spy(new AutoCloseableTempDirFactory());
 
-	/**
-	 * Ensure a closeable path is not cleaned up for a cleanup mode of ON_SUCCESS, if there is a TestAbortedException.
-	 */
-	@Test
-	void onSuccessWithException() throws IOException {
-		when(extensionContext.getExecutionException()).thenReturn(Optional.of(new Exception()));
+		@Test
+		@DisplayName("is cleaned up for a cleanup mode of ALWAYS")
+		void always() throws IOException {
+			closeablePath = TempDirectory.createTempDir(factory, ALWAYS, extensionContext);
+			assertThat(closeablePath.get()).exists();
 
-		closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, extensionContext);
-		assertThat(closeablePath.get()).exists();
+			closeablePath.close();
+			assertThat(closeablePath.get()).doesNotExist();
+			verify(factory).close();
+		}
 
-		closeablePath.close();
-		assertThat(closeablePath.get()).exists();
-	}
+		@Test
+		@DisplayName("is not cleaned up for a cleanup mode of NEVER")
+		void never() throws IOException {
+			closeablePath = TempDirectory.createTempDir(factory, NEVER, extensionContext);
+			assertThat(closeablePath.get()).exists();
 
-	/**
-	 * Ensure a closeable path is cleaned up for a cleanup mode of ON_SUCCESS, if there is no exception.
-	 */
-	@Test
-	void onSuccessWithNoException() throws IOException {
-		when(extensionContext.getExecutionException()).thenReturn(Optional.empty());
+			closeablePath.close();
+			assertThat(closeablePath.get()).exists();
+			verify(factory, Mockito.never()).close();
+		}
 
-		closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, extensionContext);
-		assertThat(closeablePath.get()).exists();
+		@Test
+		@DisplayName("is not cleaned up for a cleanup mode of ON_SUCCESS, if there is an exception")
+		void onSuccessWithException() throws IOException {
+			when(extensionContext.getExecutionException()).thenReturn(Optional.of(new Exception()));
 
-		closeablePath.close();
-		assertThat(closeablePath.get()).doesNotExist();
+			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, extensionContext);
+			assertThat(closeablePath.get()).exists();
+
+			closeablePath.close();
+			assertThat(closeablePath.get()).exists();
+			verify(factory, Mockito.never()).close();
+		}
+
+		@Test
+		@DisplayName("is cleaned up for a cleanup mode of ON_SUCCESS, if there is no exception")
+		void onSuccessWithNoException() throws IOException {
+			when(extensionContext.getExecutionException()).thenReturn(Optional.empty());
+
+			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, extensionContext);
+			assertThat(closeablePath.get()).exists();
+
+			closeablePath.close();
+			assertThat(closeablePath.get()).doesNotExist();
+			verify(factory).close();
+		}
+
+		private static class AutoCloseableTempDirFactory extends TempDirFactory.Standard implements AutoCloseable {
+
+			@Override
+			public void close() {
+			}
+
+		}
+
 	}
 
 }

@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileAttribute;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
  * {@code TempDirFactory} defines the SPI for creating temporary directories
@@ -45,11 +46,11 @@ public interface TempDirFactory {
 	 * Depending on the implementation, the resulting {@code Path} may or may not be
 	 * associated with the default {@code FileSystem}.
 	 *
-	 * @param prefix the prefix string that can be used in generating the directory's name; never {@code null} or blank
+	 * @param context the current extension context; never {@code null}
 	 * @return the path to the newly created directory that did not exist before this method was invoked; never {@code null}
 	 * @throws Exception in case of failures
 	 */
-	Path createTempDirectory(String prefix) throws Exception;
+	Path createTempDirectory(ExtensionContext context) throws Exception;
 
 	/**
 	 * Standard temporary directory factory that delegates to
@@ -61,12 +62,14 @@ public interface TempDirFactory {
 
 		public static final TempDirFactory INSTANCE = new Standard();
 
+		private static final String TEMP_DIR_PREFIX = "junit";
+
 		public Standard() {
 		}
 
 		@Override
-		public Path createTempDirectory(String prefix) throws IOException {
-			return Files.createTempDirectory(prefix);
+		public Path createTempDirectory(ExtensionContext context) throws IOException {
+			return Files.createTempDirectory(TEMP_DIR_PREFIX);
 		}
 
 	}

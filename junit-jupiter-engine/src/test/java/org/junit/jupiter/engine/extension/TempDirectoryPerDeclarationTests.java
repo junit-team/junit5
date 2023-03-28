@@ -58,6 +58,7 @@ import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
@@ -310,9 +311,9 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	class Factory {
 
 		@Test
-		@DisplayName("that uses custom temp dir name prefix")
-		void supportsFactoryWithCustomNamePrefix() {
-			executeTestsForClass(FactoryWithCustomNamePrefixTestCase.class).testEvents()//
+		@DisplayName("that uses test method name as temp dir name prefix")
+		void supportsFactoryWithTestMethodNameAsPrefix() {
+			executeTestsForClass(FactoryWithTestMethodNameAsPrefixTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
@@ -1087,7 +1088,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class FactoryWithCustomNamePrefixTestCase {
+	static class FactoryWithTestMethodNameAsPrefixTestCase {
 
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
@@ -1098,8 +1099,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		private static class Factory implements TempDirFactory {
 
 			@Override
-			public Path createTempDirectory(String prefix) throws Exception {
-				return Files.createTempDirectory("test");
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				return Files.createTempDirectory(context.getRequiredTestMethod().getName());
 			}
 		}
 
@@ -1111,6 +1112,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
 			assertThat(tempDir).exists().hasParent(Factory.parent);
+			assertThat(tempDir.toFile().getName()).startsWith("prefix");
 		}
 
 		private static class Factory implements TempDirFactory {
@@ -1122,8 +1124,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Override
-			public Path createTempDirectory(String prefix) throws Exception {
-				return Files.createTempDirectory(parent, prefix);
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				return Files.createTempDirectory(parent, "prefix");
 			}
 		}
 

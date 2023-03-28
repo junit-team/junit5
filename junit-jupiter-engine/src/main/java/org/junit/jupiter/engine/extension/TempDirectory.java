@@ -76,7 +76,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	private static final String KEY = "temp.dir";
-	private static final String TEMP_DIR_PREFIX = "junit";
 
 	// for testing purposes
 	static final String FILE_OPERATIONS_KEY = "file.operations";
@@ -194,7 +193,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private static TempDirFactory getTempDirFactory(Class<?> factoryClass) {
 		Preconditions.notNull(factoryClass, "Class must not be null");
 		Preconditions.condition(TempDirFactory.class.isAssignableFrom(factoryClass),
-				"Class must be a TempDirFactory implementation");
+			"Class must be a TempDirFactory implementation");
 		if (factoryClass == TempDirFactory.Standard.class) {
 			return TempDirFactory.Standard.INSTANCE;
 		}
@@ -240,7 +239,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	static CloseablePath createTempDir(TempDirFactory factory, CleanupMode cleanupMode,
 			ExtensionContext executionContext) {
 		try {
-			return new CloseablePath(factory.createTempDirectory(TEMP_DIR_PREFIX), cleanupMode, executionContext);
+			return new CloseablePath(factory, cleanupMode, executionContext);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
@@ -252,11 +251,14 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private static final Logger logger = LoggerFactory.getLogger(CloseablePath.class);
 
 		private final Path dir;
+		private final TempDirFactory factory;
 		private final CleanupMode cleanupMode;
 		private final ExtensionContext executionContext;
 
-		CloseablePath(Path dir, CleanupMode cleanupMode, ExtensionContext executionContext) {
-			this.dir = dir;
+		CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, ExtensionContext executionContext)
+				throws Exception {
+			this.dir = factory.createTempDirectory(executionContext);
+			this.factory = factory;
 			this.cleanupMode = cleanupMode;
 			this.executionContext = executionContext;
 		}
@@ -279,6 +281,19 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(fileOperations);
 			if (!failures.isEmpty()) {
 				throw createIOExceptionWithAttachedFailures(failures);
+			}
+
+			closeFactory();
+		}
+
+		private void closeFactory() throws IOException {
+			try {
+				if (factory instanceof AutoCloseable) {
+					((AutoCloseable) factory).close();
+				}
+			}
+			catch (Exception e) {
+				throw new IOException("Failed to close factory", e);
 			}
 		}
 
