@@ -1,4 +1,5 @@
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
 
 plugins {
@@ -97,7 +98,7 @@ tasks.test {
 		val tempRepoName: String by rootProject
 
 		(mavenizedProjects + projects.junitBom.dependencyProject)
-			.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
+			.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalized()}Repository") }
 			.forEach { dependsOn(it) }
 	}
 
