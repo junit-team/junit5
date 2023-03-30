@@ -78,6 +78,8 @@ consumption in other projects via the following command.
 
 ## Dependency Metadata
 
+[![Maven Central](https://img.shields.io/maven-central/v/org.junit.jupiter/junit-jupiter)](https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter)
+
 Consult the [Dependency Metadata] section of the [User Guide] for a list of all artifacts
 of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.
 
