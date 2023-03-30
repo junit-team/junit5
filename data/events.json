@@ -806,5 +806,19 @@
     "speakers": [
       "marcphilipp"
     ]
+  },
+  {
+    "title": "Meet the JUnit team in person",
+    "event": "JUG Zurich",
+    "date": "2023-04-12",
+    "location": "Zurich, Switzerland",
+    "link": "https://www.jug.ch/html/events/2023/meet_the_junit-team.html",
+    "speakers": [
+      "sormuras",
+      "juliettederancourt",
+      "marcphilipp",
+      "mmerdes",
+      "sbrannen"
+    ]
   }
 ]
