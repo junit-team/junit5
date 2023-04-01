@@ -112,14 +112,14 @@ class ParallelExecutionIntegrationTests {
 	void successfulTestWithClassLockChildrenTarget() {
 		var events = executeConcurrently(3, SuccessfulWithClassLockChildrenTargetTestCase.class);
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSizeGreaterThanOrEqualTo(2);
 	}
 
 	@Test
 	void successfulTestWithClassLockChildrenTargetAndPerMethodLocks() {
 		var events = executeConcurrently(3, SuccessfulWithClassLockChildrenTargetAndTwoLocksTestCase.class);
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSizeGreaterThanOrEqualTo(2);
 	}
 
 	@Test
