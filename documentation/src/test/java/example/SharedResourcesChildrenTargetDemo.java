@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
-import static org.junit.jupiter.api.parallel.Resources.SYSTEM_OUT;
 import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
 import static org.junit.jupiter.api.parallel.Resources.TIME_ZONE;
 
