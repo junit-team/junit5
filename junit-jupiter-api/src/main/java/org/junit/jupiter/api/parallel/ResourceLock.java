@@ -40,6 +40,9 @@ import org.apiguardian.api.API;
  * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
  * within class hierarchies.
  *
+ * <p>Since JUnit Jupiter 5.10, this annotation can be used to specify the target
+ * of the lock with {@link ResourceLockTarget}.
+ *
  * @see Isolated
  * @see Resources
  * @see ResourceAccessMode
@@ -68,5 +71,14 @@ public @interface ResourceLock {
 	 * @see ResourceAccessMode
 	 */
 	ResourceAccessMode mode() default ResourceAccessMode.READ_WRITE;
+
+	/**
+	 * Resource lock target.
+	 *
+	 * <p>Defaults to {@link ResourceLockTarget#SELF SELF}.
+	 *
+	 * @see ResourceLockTarget
+	 */
+	ResourceLockTarget target() default ResourceLockTarget.SELF;
 
 }

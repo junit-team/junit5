@@ -2490,6 +2490,16 @@ to the same shared resource is running.
 include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
 ----
 
+[[specifying-target-for-resource-lock]]
+You can declare a resource lock on the class level which will apply only to its children,
+and will not be applied to the class itself. This is useful if you want to keep `CONCURRENT`
+execution mode for each method.
+
+[source,java]
+----
+include::{testDir}/example/SharedResourcesChildrenTargetDemo.java[tags=user_guide]
+----
+
 
 [[writing-tests-built-in-extensions]]
 === Built-in Extensions

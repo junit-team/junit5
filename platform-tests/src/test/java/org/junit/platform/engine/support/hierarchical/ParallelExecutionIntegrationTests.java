@@ -63,7 +63,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.ResourceLockTarget;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -102,6 +104,20 @@ class ParallelExecutionIntegrationTests {
 	void successfulTestWithMethodLock() {
 		var events = executeConcurrently(3, SuccessfulWithMethodLockTestCase.class);
 
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+	}
+
+	@Test
+	void successfulTestWithClassLockChildrenTarget() {
+		var events = executeConcurrently(3, SuccessfulWithClassLockChildrenTargetTestCase.class);
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+	}
+
+	@Test
+	void successfulTestWithClassLockChildrenTargetAndPerMethodLocks() {
+		var events = executeConcurrently(3, SuccessfulWithClassLockChildrenTargetAndTwoLocksTestCase.class);
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
 	}
@@ -492,6 +508,92 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@ExtendWith(ThreadReporter.class)
+	@ResourceLock(value = "sharedResource", mode = ResourceAccessMode.READ, target = ResourceLockTarget.CHILDREN)
+	static class SuccessfulWithClassLockChildrenTargetTestCase {
+
+		static AtomicInteger sharedResource;
+		static CountDownLatch countDownLatch;
+		static CountDownLatch assertionCountDownLatch;
+
+		@BeforeAll
+		static void initialize() {
+			sharedResource = new AtomicInteger();
+			countDownLatch = new CountDownLatch(2);
+			assertionCountDownLatch = new CountDownLatch(2);
+		}
+
+		@Test
+		void test1() throws Exception {
+			sharedResource.incrementAndGet();
+			countDownLatch.countDown();
+			countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+			assertEquals(2, sharedResource.get());
+			assertionCountDownLatch.countDown();
+			assertionCountDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+			sharedResource.decrementAndGet();
+		}
+
+		@Test
+		void test2() throws Exception {
+			sharedResource.incrementAndGet();
+			countDownLatch.countDown();
+			countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+			assertEquals(2, sharedResource.get());
+			assertionCountDownLatch.countDown();
+			assertionCountDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+			sharedResource.decrementAndGet();
+		}
+
+		@Test
+		@ResourceLock(value = "sharedResource", mode = ResourceAccessMode.READ_WRITE)
+		void test3() throws Exception {
+			int readWrite = sharedResource.addAndGet(5);
+			assertEquals(5, readWrite);
+			sharedResource.addAndGet(-5);
+		}
+
+	}
+
+	@ExtendWith(ThreadReporter.class)
+	@ResourceLock(value = "sharedResource", mode = ResourceAccessMode.READ, target = ResourceLockTarget.CHILDREN)
+	static class SuccessfulWithClassLockChildrenTargetAndTwoLocksTestCase {
+
+		static AtomicInteger sharedResource;
+		static CountDownLatch countDownLatch;
+		static CountDownLatch assertionCountDownLatch;
+
+		@BeforeAll
+		static void initialize() {
+			sharedResource = new AtomicInteger();
+			countDownLatch = new CountDownLatch(2);
+			assertionCountDownLatch = new CountDownLatch(2);
+		}
+
+		@Test
+		@ResourceLock(value = "otherSharedResource", mode = ResourceAccessMode.READ)
+		void test1() throws Exception {
+			assertExecutionInParallelWithAnotherReadLockBasedMethod(sharedResource, countDownLatch,
+				assertionCountDownLatch);
+		}
+
+		@Test
+		@ResourceLock(value = "otherSharedResource", mode = ResourceAccessMode.READ)
+		void test2() throws Exception {
+			assertExecutionInParallelWithAnotherReadLockBasedMethod(sharedResource, countDownLatch,
+				assertionCountDownLatch);
+		}
+
+		@Test
+		@ResourceLock(value = "otherSharedResource", mode = ResourceAccessMode.READ_WRITE)
+		void test3() throws Exception {
+			int readWrite = sharedResource.addAndGet(5);
+			assertEquals(5, readWrite);
+			sharedResource.addAndGet(-5);
+		}
+
+	}
+
+	@ExtendWith(ThreadReporter.class)
 	@ResourceLock("sharedResource")
 	static class SuccessfulWithClassLockTestCase {
 
@@ -780,6 +882,17 @@ class ParallelExecutionIntegrationTests {
 			throws InterruptedException {
 		var value = incrementAndBlock(sharedResource, countDownLatch);
 		assertEquals(value, sharedResource.get());
+	}
+
+	private static void assertExecutionInParallelWithAnotherReadLockBasedMethod(AtomicInteger sharedResource,
+			CountDownLatch countDownLatch, CountDownLatch assertionCountDownLatch) throws InterruptedException {
+		sharedResource.incrementAndGet();
+		countDownLatch.countDown();
+		countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+		assertEquals(2, sharedResource.get());
+		assertionCountDownLatch.countDown();
+		assertionCountDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+		sharedResource.decrementAndGet();
 	}
 
 	private static int incrementAndBlock(AtomicInteger sharedResource, CountDownLatch countDownLatch)

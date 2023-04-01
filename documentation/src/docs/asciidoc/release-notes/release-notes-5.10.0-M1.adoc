@@ -36,6 +36,9 @@ repository on GitHub.
   of the former. Please refer to the
   <<../user-guide/index.adoc#launcher-api-launcher-interceptors-custom, User Guide>> for
   details.
+* Introduced `@ResourceLock(target = SELF | CHILDREN)` where the target defaults to SELF to
+  preserve existing behavior. Using CHILDREN has the same effect as declaring @ResourceLock
+  on every @Test method of a test class. Please refer to the <<../user-guide/writing-tests.adoc#specifying-target-for-resource-lock, User Guide. Writing Tests>> for details.
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter

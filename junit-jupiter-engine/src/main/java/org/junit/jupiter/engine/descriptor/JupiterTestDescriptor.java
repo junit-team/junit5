@@ -33,6 +33,7 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.ResourceLockTarget;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -49,6 +50,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockScope;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
@@ -183,7 +185,11 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, ResourceLock.class).stream()
-				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
+				.map(resource -> new ExclusiveResource(
+						resource.value(),
+						toLockMode(resource.mode()),
+						toLockScope(resource.target()))
+				)
 				.collect(toSet());
 		// @formatter:on
 	}
@@ -196,6 +202,16 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 				return LockMode.READ_WRITE;
 		}
 		throw new JUnitException("Unknown ResourceAccessMode: " + mode);
+	}
+
+	private static LockScope toLockScope(ResourceLockTarget lockTarget) {
+		switch (lockTarget) {
+			case SELF:
+				return LockScope.SELF;
+			case CHILDREN:
+				return LockScope.CHILDREN;
+		}
+		throw new JUnitException("Unknown ResourceLockTarget: " + lockTarget);
 	}
 
 	@Override

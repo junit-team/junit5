@@ -23,11 +23,13 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.ResourceLockTarget;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -170,6 +172,37 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
 	}
 
+	@Test
+	void acquireLocksForMethodsButDoNotForceSameThreadForAllMethods() {
+		var engineDescriptor = discover(
+			TestCaseWithResourceReadLockOnClassButTargetChildrenAndReadWriteLockOnTestCase.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()).isEqualTo(
+			List.of(getLock(GLOBAL_READ)));
+
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
+
+		var testMethods = testClassDescriptor.getChildren().stream().collect(
+			Collectors.groupingBy(TestDescriptor::getDisplayName));
+
+		TestDescriptor readOnlyMethod1 = testMethods.get("readOnlyMethod1()").get(0);
+		TestDescriptor readOnlyMethod2 = testMethods.get("readOnlyMethod2()").get(0);
+		TestDescriptor readWriteMethod = testMethods.get("greedyMethod()").get(0);
+
+		assertThat(advisor.getResourceLock(readOnlyMethod1)).extracting(allLocks()).isEqualTo(
+			List.of(getReadLock("a"), getReadLock("b")));
+		assertThat(advisor.getResourceLock(readOnlyMethod2)).extracting(allLocks()).isEqualTo(
+			List.of(getReadLock("a"), getReadLock("b")));
+		assertThat(advisor.getResourceLock(readWriteMethod)).extracting(allLocks()).isEqualTo(
+			List.of(getReadLock("a"), getReadWriteLock("b")));
+		assertThat(advisor.getForcedExecutionMode(readOnlyMethod1)).isEmpty();
+		assertThat(advisor.getForcedExecutionMode(readOnlyMethod2)).isEmpty();
+		assertThat(advisor.getForcedExecutionMode(readWriteMethod)).isEmpty();
+	}
+
 	private static Function<org.junit.platform.engine.support.hierarchical.ResourceLock, List<Lock>> allLocks() {
 		return ResourceLockSupport::getLocks;
 	}
@@ -252,6 +285,24 @@ class NodeTreeWalkerIntegrationTests {
 		@Test
 		@ResourceLock(value = "b", mode = ResourceAccessMode.READ)
 		void test() {
+		}
+	}
+
+	@ResourceLock(value = "a", mode = ResourceAccessMode.READ, target = ResourceLockTarget.CHILDREN)
+	static class TestCaseWithResourceReadLockOnClassButTargetChildrenAndReadWriteLockOnTestCase {
+		@Test
+		@ResourceLock(value = "b", mode = ResourceAccessMode.READ)
+		void readOnlyMethod1() {
+		}
+
+		@Test
+		@ResourceLock(value = "b", mode = ResourceAccessMode.READ)
+		void readOnlyMethod2() {
+		}
+
+		@Test
+		@ResourceLock(value = "b", mode = ResourceAccessMode.READ_WRITE)
+		void greedyMethod() {
 		}
 	}
 }
