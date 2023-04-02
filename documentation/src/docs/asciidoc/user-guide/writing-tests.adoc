@@ -751,8 +751,8 @@ NOTE: Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declar
 `static` in `@Nested` test classes.
 
 If you are authoring tests using the Kotlin programming language, you may also find it
-easier to implement `@BeforeAll` and `@AfterAll` methods by switching to the "per-class"
-test instance lifecycle mode.
+easier to implement `@BeforeAll` and `@AfterAll` methods and also factory methods for
+`@MethodSource` by switching to the "per-class" test instance lifecycle mode.
 
 [[writing-tests-test-instance-lifecycle-changing-default]]
 ==== Changing the Default Test Instance Lifecycle
