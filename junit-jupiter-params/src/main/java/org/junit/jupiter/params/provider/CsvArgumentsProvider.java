@@ -41,7 +41,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	private CsvParser csvParser;
 
 	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
 		this.nullValues = toSet(annotation.nullValues());
 		this.csvParser = createParserFor(annotation);
 		final boolean textBlockDeclared = !annotation.textBlock().isEmpty();
