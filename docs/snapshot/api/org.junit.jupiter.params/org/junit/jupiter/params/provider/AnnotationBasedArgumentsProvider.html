@@ -147,8 +147,8 @@ implements <a href="ArgumentsProvider.html" title="interface in org.junit.jupite
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#provideArguments(org.junit.jupiter.api.extension.ExtensionContext,A)" class="member-name-link">provideArguments</a><wbr>(<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
  <a href="AnnotationBasedArgumentsProvider.html" title="type parameter in AnnotationBasedArgumentsProvider">A</a>&nbsp;annotation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Provide a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> of <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider"><code>Arguments</code></a> to be passed to a
- <code>@ParameterizedTest</code> method, by using the data given by an annotation.</div>
+<div class="block">Provide a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> of <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider"><code>Arguments</code></a> &mdash; based on metadata in the
+ provided annotation &mdash; to be passed to a <code>@ParameterizedTest</code> method.</div>
 </div>
 </div>
 </div>
@@ -216,12 +216,12 @@ implements <a href="ArgumentsProvider.html" title="interface in org.junit.jupite
 <h3 id="provideArguments(org.junit.jupiter.api.extension.ExtensionContext,java.lang.annotation.Annotation)">provideArguments</h3>
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;? extends <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a>&gt;</span>&nbsp;<span class="element-name">provideArguments</span><wbr><span class="parameters">(<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
  <a href="AnnotationBasedArgumentsProvider.html" title="type parameter in AnnotationBasedArgumentsProvider">A</a>&nbsp;annotation)</span></div>
-<div class="block">Provide a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> of <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider"><code>Arguments</code></a> to be passed to a
- <code>@ParameterizedTest</code> method, by using the data given by an annotation.</div>
+<div class="block">Provide a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> of <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider"><code>Arguments</code></a> &mdash; based on metadata in the
+ provided annotation &mdash; to be passed to a <code>@ParameterizedTest</code> method.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>
-<dd><code>annotation</code> - the annotation used to specify the arguments; never <code>null</code></dd>
+<dd><code>annotation</code> - the annotation to process; never <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>a stream of arguments; never <code>null</code></dd>
 </dl>

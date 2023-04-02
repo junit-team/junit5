@@ -140,8 +140,8 @@ implements <a href="ArgumentConverter.html" title="interface in org.junit.jupite
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;targetType,
  <a href="AnnotationBasedArgumentConverter.html" title="type parameter in AnnotationBasedArgumentConverter">A</a>&nbsp;annotation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Convert the supplied <code>source</code> object into the supplied
- <code>targetType</code>.</div>
+<div class="block">Convert the supplied <code>source</code> object into the supplied <code>targetType</code>,
+ based on metadata in the provided annotation.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#convert(java.lang.Object,org.junit.jupiter.api.extension.ParameterContext)" class="member-name-link">convert</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;source,
@@ -224,15 +224,16 @@ implements <a href="ArgumentConverter.html" title="interface in org.junit.jupite
 <h3 id="convert(java.lang.Object,java.lang.Class,java.lang.annotation.Annotation)">convert</h3>
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">convert</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;source,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;targetType,
- <a href="AnnotationBasedArgumentConverter.html" title="type parameter in AnnotationBasedArgumentConverter">A</a>&nbsp;annotation)</span></div>
-<div class="block">Convert the supplied <code>source</code> object into the supplied
- <code>targetType</code>.</div>
+ <a href="AnnotationBasedArgumentConverter.html" title="type parameter in AnnotationBasedArgumentConverter">A</a>&nbsp;annotation)</span>
+                           throws <span class="exceptions"><a href="ArgumentConversionException.html" title="class in org.junit.jupiter.params.converter">ArgumentConversionException</a></span></div>
+<div class="block">Convert the supplied <code>source</code> object into the supplied <code>targetType</code>,
+ based on metadata in the provided annotation.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>source</code> - the source object to convert; may be <code>null</code></dd>
 <dd><code>targetType</code> - the target type the source object should be converted
  into; never <code>null</code></dd>
-<dd><code>annotation</code> - the annotation needed to convert the source; never <code>null</code></dd>
+<dd><code>annotation</code> - the annotation to process; never <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>the converted object; may be <code>null</code> but only if the target
  type is a reference type</dd>

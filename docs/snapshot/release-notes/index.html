@@ -552,20 +552,22 @@ repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>All utility methods from <code>ReflectionSupport</code> now have counterparts returning <code>Stream</code>
-instead of <code>List</code>.</p>
+<p>All utility methods in <code>ReflectionSupport</code> that return a <code>List</code> now have counterparts
+which return a <code>Stream</code>.</p>
 </li>
 <li>
-<p>For consistency with Jupiter lifecycle callbacks, listener method pairs for started/
-finished and opened/closed events are now called using "wrap" semantics, i.e. the latter
-methods are called in reverse order compared to the former when multiple listeners are
-registered. This affects the following listener interfaces: <code>TestExecutionListener</code>,
-<code>EngineExecutionListener</code>, <code>LauncherDiscoveryListener</code>, and <code>LauncherSessionListener</code>.</p>
+<p>For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
+started/finished and opened/closed events are now invoked using "wrapping" semantics.
+This means that finished/closed event methods are invoked in reverse order compared to
+the corresponding started/opened event methods when multiple listeners are registered.
+This affects the following listener interfaces:
+<code>TestExecutionListener</code>, <code>EngineExecutionListener</code>, <code>LauncherDiscoveryListener</code>, and
+<code>LauncherSessionListener</code>.</p>
 </li>
 <li>
-<p>Introduce <code>LauncherInterceptor</code> SPI for intercepting the creation of instances of
-<code>Launcher</code> and <code>LauncherSessionlistener</code> as well as calls for <code>discover</code> and <code>execute</code>
-of the former. Please refer to the
+<p>New <code>LauncherInterceptor</code> SPI for intercepting the creation of instances of <code>Launcher</code>
+and <code>LauncherSessionlistener</code> as well as invocations of the <code>discover</code> and <code>execute</code>
+methods of the former. Please refer to the
 <a href="../user-guide/index.html#launcher-api-launcher-interceptors-custom">User Guide</a> for
 details.</p>
 </li>
@@ -614,20 +616,20 @@ supports canonical array names&#8201;&#8212;&#8201;for example, you may now spec
 <code>@ParameterizedTest</code> invocation.</p>
 </li>
 <li>
-<p><code>DisplayNameGenerator</code> methods are now allowed to return <code>null</code>, in order to signal
-to fall back to the default display name generator.</p>
+<p><code>DisplayNameGenerator</code> methods are now allowed to return <code>null</code>, in order to signal to
+fall back to the default display name generator.</p>
 </li>
 <li>
 <p><code>@EmptySource</code> now supports additional types, including <code>Collection</code> and <code>Map</code> subtypes
 with a public no-arg constructor.</p>
 </li>
 <li>
-<p>New <code>AnnotationBasedArgumentsProvider</code> that implements both <code>ArgumentsProvider</code> and
-<code>AnnotationConsumer</code> interfaces.</p>
+<p>New <code>AnnotationBasedArgumentsProvider</code> convenience base class which implements both
+<code>ArgumentsProvider</code> and <code>AnnotationConsumer</code>.</p>
 </li>
 <li>
-<p>New <code>AnnotationBasedArgumentConverter</code> that implements both <code>ArgumentConverter</code> and
-<code>AnnotationConsumer</code> interfaces.</p>
+<p>New <code>AnnotationBasedArgumentConverter</code> convenience base class which implements both
+<code>ArgumentConverter</code> and <code>AnnotationConsumer</code>.</p>
 </li>
 </ul>
 </div>
@@ -920,7 +922,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-02 13:44:51 UTC
+Last updated 2023-04-02 15:35:27 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
