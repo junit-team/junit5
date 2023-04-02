@@ -51,7 +51,7 @@ import org.apiguardian.api.API;
  * <li>Declaration of {@code @BeforeAll} and {@code @AfterAll} on interface
  * {@code default} methods.</li>
  * <li>Simplified declaration of non-static {@code @BeforeAll} and {@code @AfterAll}
- * methods and also factory methods for {@code @MethodSource} in test classes
+ * lifecycle methods as well as {@code @MethodSource} factory methods in test classes
  * implemented with the Kotlin programming language.</li>
  * </ul>
  *
