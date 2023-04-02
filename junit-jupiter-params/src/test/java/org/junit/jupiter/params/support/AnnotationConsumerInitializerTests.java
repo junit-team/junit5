@@ -32,7 +32,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.JUnitException;
 
 @DisplayName("AnnotationConsumerInitializer")
-class AnnotationConsumerInitializerTest {
+class AnnotationConsumerInitializerTests {
 
 	@Test
 	@DisplayName("should initialize annotation consumer")
