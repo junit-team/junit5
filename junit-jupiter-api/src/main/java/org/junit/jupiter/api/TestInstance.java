@@ -51,7 +51,8 @@ import org.apiguardian.api.API;
  * <li>Declaration of {@code @BeforeAll} and {@code @AfterAll} on interface
  * {@code default} methods.</li>
  * <li>Simplified declaration of non-static {@code @BeforeAll} and {@code @AfterAll}
- * methods in test classes implemented with the Kotlin programming language.</li>
+ * methods and also factory methods for {@code @MethodSource} in test classes
+ * implemented with the Kotlin programming language.</li>
  * </ul>
  *
  * <p>{@code @TestInstance} may also be used as a meta-annotation in order to
