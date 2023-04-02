@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 @DisplayName("AnnotationBasedArgumentsProvider")
-class AnnotationBasedArgumentsProviderTest {
+class AnnotationBasedArgumentsProviderTests {
 
 	private final AnnotationBasedArgumentsProvider<CsvSource> annotationBasedArgumentsProvider = new AnnotationBasedArgumentsProvider<>() {
 		@Override

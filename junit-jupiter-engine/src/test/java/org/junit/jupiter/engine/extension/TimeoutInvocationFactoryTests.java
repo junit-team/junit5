@@ -32,11 +32,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @DisplayName("TimeoutInvocationFactory")
 @ExtendWith(MockitoExtension.class)
-class TimeoutInvocationFactoryTest {
+class TimeoutInvocationFactoryTests {
 
 	@Spy
 	private final Store store = new NamespaceAwareStore(new ExtensionValuesStore(null),
-		ExtensionContext.Namespace.create(TimeoutInvocationFactoryTest.class));
+		ExtensionContext.Namespace.create(TimeoutInvocationFactoryTests.class));
 	@Mock
 	private Invocation<String> invocation;
 	@Mock
