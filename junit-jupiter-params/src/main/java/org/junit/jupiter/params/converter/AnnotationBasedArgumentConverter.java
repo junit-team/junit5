@@ -46,22 +46,23 @@ public abstract class AnnotationBasedArgumentConverter<A extends Annotation>
 
 	@Override
 	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
-		return convert(source, context.getParameter().getType(), annotation);
+		return convert(source, context.getParameter().getType(), this.annotation);
 	}
 
 	/**
-	 * Convert the supplied {@code source} object into the supplied
-	 * {@code targetType}.
+	 * Convert the supplied {@code source} object into the supplied {@code targetType},
+	 * based on metadata in the provided annotation.
 	 *
 	 * @param source the source object to convert; may be {@code null}
 	 * @param targetType the target type the source object should be converted
 	 * into; never {@code null}
-	 * @param annotation the annotation needed to convert the source; never {@code null}
+	 * @param annotation the annotation to process; never {@code null}
 	 * @return the converted object; may be {@code null} but only if the target
 	 * type is a reference type
 	 * @throws ArgumentConversionException in case an error occurs during the
 	 * conversion
 	 */
-	protected abstract Object convert(Object source, Class<?> targetType, A annotation);
+	protected abstract Object convert(Object source, Class<?> targetType, A annotation)
+			throws ArgumentConversionException;
 
 }

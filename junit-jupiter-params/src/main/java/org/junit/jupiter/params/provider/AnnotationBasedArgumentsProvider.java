@@ -49,15 +49,15 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 
 	@Override
 	public final Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		return provideArguments(context, annotation);
+		return provideArguments(context, this.annotation);
 	}
 
 	/**
-	 * Provide a {@link Stream} of {@link Arguments} to be passed to a
-	 * {@code @ParameterizedTest} method, by using the data given by an annotation.
+	 * Provide a {@link Stream} of {@link Arguments} &mdash; based on metadata in the
+	 * provided annotation &mdash; to be passed to a {@code @ParameterizedTest} method.
 	 *
 	 * @param context the current extension context; never {@code null}
-	 * @param annotation the annotation used to specify the arguments; never {@code null}
+	 * @param annotation the annotation to process; never {@code null}
 	 * @return a stream of arguments; never {@code null}
 	 */
 	protected abstract Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation);

@@ -38,7 +38,7 @@ import org.junit.platform.commons.util.StringUtils;
 class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSource> {
 
 	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context, MethodSource annotation) {
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, MethodSource annotation) {
 		Class<?> testClass = context.getRequiredTestClass();
 		Method testMethod = context.getRequiredTestMethod();
 		Object testInstance = context.getTestInstance().orElse(null);

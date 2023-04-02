@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.Preconditions;
 class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSource> {
 
 	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context, ValueSource source) {
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, ValueSource source) {
 		Object[] arguments = getArgumentsFromSource(source);
 		return Arrays.stream(arguments).map(Arguments::of);
 	}

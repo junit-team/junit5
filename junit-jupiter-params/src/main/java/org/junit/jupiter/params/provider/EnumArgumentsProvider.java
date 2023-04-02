@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.Preconditions;
 class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource> {
 
 	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context, EnumSource enumSource) {
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, EnumSource enumSource) {
 		Set<? extends Enum<?>> constants = getEnumConstants(context, enumSource);
 		EnumSource.Mode mode = enumSource.mode();
 		String[] declaredConstantNames = enumSource.names();
