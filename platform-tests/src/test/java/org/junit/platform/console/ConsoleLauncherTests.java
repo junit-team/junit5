@@ -40,7 +40,7 @@ class ConsoleLauncherTests {
 		options.setDisplayHelp(true);
 
 		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		when(commandLineOptionsParser.parse(any())).thenReturn(options);
+		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(options);
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
 		var exitCode = consoleLauncher.execute("--help").getExitCode();
@@ -56,7 +56,7 @@ class ConsoleLauncherTests {
 		options.setDisplayHelp(true);
 
 		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		when(commandLineOptionsParser.parse(any())).thenReturn(options);
+		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(options);
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
 		var exitCode = consoleLauncher.execute("--help").getExitCode();
@@ -74,7 +74,7 @@ class ConsoleLauncherTests {
 		options.setDisplayHelp(true);
 
 		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		when(commandLineOptionsParser.parse(any())).thenReturn(options);
+		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(options);
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
 		var exitCode = consoleLauncher.execute("--help", "--disable-banner").getExitCode();
@@ -86,7 +86,7 @@ class ConsoleLauncherTests {
 	@Test
 	void executeWithUnknownCommandLineOption() {
 		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		when(commandLineOptionsParser.parse(any())).thenReturn(new CommandLineOptions());
+		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(new CommandLineOptions());
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
 		var exitCode = consoleLauncher.execute("--all").getExitCode();
@@ -98,7 +98,7 @@ class ConsoleLauncherTests {
 	@Test
 	void executeWithSupportedCommandLineOption() {
 		var commandLineOptionsParser = mock(CommandLineOptionsParser.class);
-		when(commandLineOptionsParser.parse(any())).thenReturn(new CommandLineOptions());
+		when(commandLineOptionsParser.parse(any(String[].class))).thenReturn(new CommandLineOptions());
 
 		var consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
 		var exitCode = consoleLauncher.execute("--scan-classpath").getExitCode();
