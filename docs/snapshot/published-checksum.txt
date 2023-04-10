@@ -459,6 +459,7 @@
 95f8fe5a4f8918a159179297402fa1ff  documentation/src/test/java/example/UsingTheLauncherDemo.java
 96233d7888a2134bce2d771e63929b9e  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.png
 96b651b94dcfafb6f183a8135a1532fc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodArgumentsProvider.java
+96b709a7a3e3e246da604429147abecd  documentation/documentation.gradle.kts
 96d7772ea5415a35bed8b3fd1a69353b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineDiscoveryErrorDescriptor.java
 96f8d55b123227ce9ac9eb03d6134d4d  documentation/src/test/java/example/FastTest.java
 971f4bd49b24793fdb98779ba8c10baa  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/IncludeClassNameFilter.java
@@ -722,7 +723,6 @@ e520cdac56a6ad23126588ba3813f11e  junit-jupiter-migrationsupport/src/main/java/o
 e597cae1f8b7a0db17d94ba072474735  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineExecutionListener.java
 e5f1af66826140ce99f3eae533b99e94  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventType.java
 e60a3c8c0f34a9f9f7a4e9f837f3351e  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassNamePatternFilterUtils.java
-e6620e42a63d1d10d7587a24e3a07ec3  documentation/documentation.gradle.kts
 e67dedc3ddb1f805cd17701a105d662c  documentation/src/test/java/org/junit/api/tools/AsciidocApiReportWriter.java
 e6fe36ddb12b8ffbfbc1b7668993aa1f  documentation/src/test/java/example/OrderedNestedTestClassesDemo.java
 e72947becdd61d6e3083a081b7313157  junit-platform-console/src/main/java9/org/junit/platform/console/ConsoleLauncherToolProvider.java
