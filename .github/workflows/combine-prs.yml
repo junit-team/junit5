@@ -7,6 +7,7 @@ on:
 
 jobs:
   combine-prs:
+    if: github.repository == 'junit-team/junit5'
     runs-on: ubuntu-latest
     steps:
       - name: combine-prs
