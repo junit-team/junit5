@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -275,6 +276,16 @@ public final class ReflectionUtils {
 		return Modifier.isStatic(clazz.getModifiers());
 	}
 
+    public static boolean isKotlinClass(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+
+		return stream(clazz.getDeclaredAnnotations())
+                .anyMatch(it -> it.annotationType().getName().equals("kotlin.Metadata"));
+	}
+
+
+
+
 	@API(status = INTERNAL, since = "1.4")
 	public static boolean isNotStatic(Class<?> clazz) {
 		return !isStatic(clazz);
@@ -524,7 +535,7 @@ public final class ReflectionUtils {
 		Preconditions.containsNoNullElements(args, "Individual arguments must not be null");
 
 		try {
-			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
+			Class<?>[] parameterTypes = stream(args).map(Object::getClass).toArray(Class[]::new);
 			return newInstance(clazz.getDeclaredConstructor(parameterTypes), args);
 		}
 		catch (Throwable t) {
@@ -964,7 +975,7 @@ public final class ReflectionUtils {
 		// but has been stable so far in all JDKs
 
 		// @formatter:off
-		return Arrays.stream(inner.getClass().getDeclaredFields())
+		return stream(inner.getClass().getDeclaredFields())
 				.filter(field -> field.getName().startsWith("this$"))
 				.findFirst()
 				.map(field -> {
@@ -982,7 +993,7 @@ public final class ReflectionUtils {
 		// This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
 		// @formatter:off
-		return Arrays.stream(fullClassPath.split(File.pathSeparator))
+		return stream(fullClassPath.split(File.pathSeparator))
 				.map(Paths::get)
 				.filter(Files::isDirectory)
 				.collect(toSet());
@@ -1188,7 +1199,7 @@ public final class ReflectionUtils {
 	public static <T> Constructor<T> getDeclaredConstructor(Class<T> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		try {
-			List<Constructor<?>> constructors = Arrays.stream(clazz.getDeclaredConstructors())//
+			List<Constructor<?>> constructors = stream(clazz.getDeclaredConstructors())//
 					.filter(ctor -> !ctor.isSynthetic())//
 					.collect(toList());
 
@@ -1223,7 +1234,7 @@ public final class ReflectionUtils {
 
 		try {
 			// @formatter:off
-			return Arrays.stream(clazz.getDeclaredConstructors())
+			return stream(clazz.getDeclaredConstructors())
 					.filter(predicate)
 					.collect(toUnmodifiableList());
 			// @formatter:on
@@ -1367,7 +1378,7 @@ public final class ReflectionUtils {
 		}
 
 		// @formatter:off
-		return Arrays.stream(parameterTypeNames.split(","))
+		return stream(parameterTypeNames.split(","))
 				.map(String::trim)
 				.map(typeName -> loadRequiredParameterType(clazz, methodName, typeName))
 				.toArray(Class[]::new);
@@ -1587,13 +1598,13 @@ public final class ReflectionUtils {
 		// @formatter:off
 		// Visible default methods are interface default methods that have not
 		// been overridden.
-		List<Method> visibleDefaultMethods = Arrays.stream(clazz.getMethods())
+		List<Method> visibleDefaultMethods = stream(clazz.getMethods())
 				.filter(Method::isDefault)
 				.collect(toCollection(ArrayList::new));
 		if (visibleDefaultMethods.isEmpty()) {
 			return visibleDefaultMethods;
 		}
-		return Arrays.stream(clazz.getInterfaces())
+		return stream(clazz.getInterfaces())
 				.map(ReflectionUtils::getMethods)
 				.flatMap(List::stream)
 				.filter(visibleDefaultMethods::contains)
@@ -1603,7 +1614,7 @@ public final class ReflectionUtils {
 
 	private static List<Field> toSortedMutableList(Field[] fields) {
 		// @formatter:off
-		return Arrays.stream(fields)
+		return stream(fields)
 				.sorted(ReflectionUtils::defaultFieldSorter)
 				// Use toCollection() instead of toList() to ensure list is mutable.
 				.collect(toCollection(ArrayList::new));
@@ -1612,7 +1623,7 @@ public final class ReflectionUtils {
 
 	private static List<Method> toSortedMutableList(Method[] methods) {
 		// @formatter:off
-		return Arrays.stream(methods)
+		return stream(methods)
 				.sorted(ReflectionUtils::defaultMethodSorter)
 				// Use toCollection() instead of toList() to ensure list is mutable.
 				.collect(toCollection(ArrayList::new));
@@ -1754,7 +1765,7 @@ public final class ReflectionUtils {
 
 	static boolean isGeneric(Method method) {
 		return isGeneric(method.getGenericReturnType())
-				|| Arrays.stream(method.getGenericParameterTypes()).anyMatch(ReflectionUtils::isGeneric);
+				|| stream(method.getGenericParameterTypes()).anyMatch(ReflectionUtils::isGeneric);
 	}
 
 	private static boolean isGeneric(Type type) {

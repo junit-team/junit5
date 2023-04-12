@@ -11,10 +11,7 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
-import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
-import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
-import static org.junit.platform.commons.util.ReflectionUtils.returnsVoid;
+import static org.junit.platform.commons.util.ReflectionUtils.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -36,7 +33,7 @@ abstract class IsTestableMethod implements Predicate<Method> {
 	@Override
 	public boolean test(Method candidate) {
 		// Please do not collapse the following into a single statement.
-		if (isStatic(candidate)) {
+		if (isStatic(candidate) && !isKotlinClass(candidate.getDeclaringClass())) {
 			return false;
 		}
 		if (isPrivate(candidate)) {
