@@ -17,6 +17,7 @@ import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -103,9 +104,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		MethodExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector, executableInvoker);
 		throwableCollector.execute(() -> {
-			TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(registry,
+			Optional<TestInstances> testInstances = context.getTestInstancesProvider().getTestInstances(registry,
 				throwableCollector);
-			extensionContext.setTestInstances(testInstances);
+            testInstances.ifPresent(extensionContext::setTestInstances);
 		});
 
 		// @formatter:off

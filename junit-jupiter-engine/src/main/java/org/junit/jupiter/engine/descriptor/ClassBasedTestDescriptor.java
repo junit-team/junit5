@@ -201,9 +201,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			// and store the instance in the ExtensionContext.
 			ClassExtensionContext extensionContext = (ClassExtensionContext) context.getExtensionContext();
 			throwableCollector.execute(() -> {
-				TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(
+				Optional<TestInstances> testInstances = context.getTestInstancesProvider().getTestInstances(
 					context.getExtensionRegistry(), throwableCollector);
-				extensionContext.setTestInstances(testInstances);
+
+                testInstances.ifPresent(extensionContext::setTestInstances);
 			});
 		}
 
@@ -275,9 +276,9 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	private TestInstancesProvider testInstancesProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ClassExtensionContext extensionContext) {
 
-		return (registry, registrar, throwableCollector) -> extensionContext.getTestInstances().orElseGet(
+		return (registry, registrar, throwableCollector) -> Optional.of(extensionContext.getTestInstances().orElseGet(
 			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry, registrar,
-				throwableCollector));
+				throwableCollector)));
 	}
 
 	private TestInstances instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext parentExecutionContext,

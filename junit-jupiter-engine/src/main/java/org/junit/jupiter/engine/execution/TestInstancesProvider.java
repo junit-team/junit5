@@ -19,6 +19,8 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
+import java.util.Optional;
+
 /**
  * @since 5.0
  */
@@ -26,12 +28,12 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 @API(status = INTERNAL, since = "5.0")
 public interface TestInstancesProvider {
 
-	default TestInstances getTestInstances(MutableExtensionRegistry extensionRegistry,
+	default Optional<TestInstances> getTestInstances(MutableExtensionRegistry extensionRegistry,
 			ThrowableCollector throwableCollector) {
 		return getTestInstances(extensionRegistry, extensionRegistry, throwableCollector);
 	}
 
-	TestInstances getTestInstances(ExtensionRegistry extensionRegistry, ExtensionRegistrar extensionRegistrar,
-			ThrowableCollector throwableCollector);
+	Optional<TestInstances> getTestInstances(ExtensionRegistry extensionRegistry, ExtensionRegistrar extensionRegistrar,
+                                             ThrowableCollector throwableCollector);
 
 }
