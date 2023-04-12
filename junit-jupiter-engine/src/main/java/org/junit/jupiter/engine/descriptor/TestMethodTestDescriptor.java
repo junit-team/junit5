@@ -15,6 +15,7 @@ import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExte
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromExecutableParameters;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
+import static org.junit.platform.commons.util.ReflectionUtils.isKotlinTopLevelFunctionClass;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -130,6 +131,12 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			DynamicTestExecutor dynamicTestExecutor) {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
+
+        if (isKotlinTopLevelFunctionClass(context.getExtensionContext().getRequiredTestClass()) ) {
+            invokeTestMethod(context, dynamicTestExecutor);
+            return context;
+        }
+
 		// @formatter:off
 		invokeBeforeEachCallbacks(context);
 			if (throwableCollector.isEmpty()) {
@@ -215,8 +222,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		throwableCollector.execute(() -> {
 			try {
 				Method testMethod = getTestMethod();
-				Object instance = extensionContext.getRequiredTestInstance();
-				executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry(),
+                Object instance = getPotentialInstance(extensionContext);
+
+                executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry(),
 					interceptorCall);
 			}
 			catch (Throwable throwable) {
@@ -226,7 +234,15 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		});
 	}
 
-	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, ExtensionContext context,
+    //TODO: maybe return (potentially null) getTestInstance directly
+    private static Object getPotentialInstance(ExtensionContext extensionContext) {
+        if (isKotlinTopLevelFunctionClass(extensionContext.getRequiredTestClass()))
+            return Optional.empty();
+
+        return extensionContext.getRequiredTestInstance();
+    }
+
+    private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, ExtensionContext context,
 			Throwable throwable) {
 
 		invokeExecutionExceptionHandlers(TestExecutionExceptionHandler.class, registry, throwable,

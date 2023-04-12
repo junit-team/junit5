@@ -23,6 +23,7 @@ import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBefor
 import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getTestInstanceLifecycle;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
+import static org.junit.platform.commons.util.ReflectionUtils.isKotlinTopLevelFunctionClass;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -275,6 +276,9 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 	private TestInstancesProvider testInstancesProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ClassExtensionContext extensionContext) {
+
+        if (isKotlinTopLevelFunctionClass(extensionContext.getRequiredTestClass()))
+            return (registry, registrar, throwableCollector) -> Optional.empty();
 
 		return (registry, registrar, throwableCollector) -> Optional.of(extensionContext.getTestInstances().orElseGet(
 			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry, registrar,

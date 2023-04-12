@@ -14,10 +14,8 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.util.ReflectionUtils.*;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
-import static org.junit.platform.commons.util.ReflectionUtils.getDeclaredConstructor;
-import static org.junit.platform.commons.util.ReflectionUtils.streamFields;
-import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Executable;
@@ -135,6 +133,9 @@ final class ExtensionUtils {
 	 * @since 5.8
 	 */
 	static void registerExtensionsFromConstructorParameters(ExtensionRegistrar registrar, Class<?> clazz) {
+        if (isKotlinTopLevelFunctionClass(clazz))
+            return;
+
 		registerExtensionsFromExecutableParameters(registrar, getDeclaredConstructor(clazz));
 	}
 
