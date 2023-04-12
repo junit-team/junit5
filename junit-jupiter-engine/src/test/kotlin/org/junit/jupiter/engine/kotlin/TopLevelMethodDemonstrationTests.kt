@@ -7,7 +7,7 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
-package org.junit.jupiter
+package org.junit.jupiter.engine.kotlin
 
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
