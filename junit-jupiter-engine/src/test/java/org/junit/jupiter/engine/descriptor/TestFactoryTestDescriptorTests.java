@@ -173,7 +173,7 @@ class TestFactoryTestDescriptorTests {
 
 		private void prepareMockForTestInstanceWithCustomStream(Stream<?> stream) {
 			Stream<?> mockStream = stream.onClose(() -> isClosed = true);
-			when(extensionContext.getRequiredTestInstance()).thenReturn(new CustomStreamTestCase(mockStream));
+			when(extensionContext.getTestInstance()).thenReturn(Optional.of(new CustomStreamTestCase(mockStream)));
 		}
 
 	}

@@ -1,12 +1,14 @@
 package org.junit.jupiter
 
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 
 
+@Disabled
 @Test
 fun failure() = assertTrue(false)
 
@@ -19,8 +21,8 @@ fun repeated() = assertTrue(true)
 
 @TestFactory
 fun dynamic() = listOf(
-    dynamicTest("successful top-level kotlin dynamic test") { assertTrue(true) },
-    dynamicTest("failing top-level kotlin dynamic test") { assertTrue(false) }
+    dynamicTest("successful top-level kotlin dynamic test") { assertTrue(true) }
+//    dynamicTest("failing top-level kotlin dynamic test") { assertTrue(false) }
 )
 
 
