@@ -33,6 +33,7 @@ tasks {
 	test {
 		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
 		systemProperty("developmentVersion", version)
+		include("**/*Kt.class")
 	}
 	jar {
 		bundle {
