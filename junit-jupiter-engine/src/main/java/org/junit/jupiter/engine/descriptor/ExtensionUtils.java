@@ -133,8 +133,8 @@ final class ExtensionUtils {
 	 * @since 5.8
 	 */
 	static void registerExtensionsFromConstructorParameters(ExtensionRegistrar registrar, Class<?> clazz) {
-        if (isKotlinTopLevelFunctionClass(clazz))
-            return;
+		if (isKotlinTopLevelFunctionClass(clazz))
+			return;
 
 		registerExtensionsFromExecutableParameters(registrar, getDeclaredConstructor(clazz));
 	}

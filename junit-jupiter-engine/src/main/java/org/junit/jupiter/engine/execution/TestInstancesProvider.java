@@ -12,14 +12,14 @@ package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.Optional;
+
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
-
-import java.util.Optional;
 
 /**
  * @since 5.0
@@ -34,6 +34,6 @@ public interface TestInstancesProvider {
 	}
 
 	Optional<TestInstances> getTestInstances(ExtensionRegistry extensionRegistry, ExtensionRegistrar extensionRegistrar,
-                                             ThrowableCollector throwableCollector);
+			ThrowableCollector throwableCollector);
 
 }

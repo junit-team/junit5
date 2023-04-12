@@ -107,7 +107,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		throwableCollector.execute(() -> {
 			Optional<TestInstances> testInstances = context.getTestInstancesProvider().getTestInstances(registry,
 				throwableCollector);
-            testInstances.ifPresent(extensionContext::setTestInstances);
+			testInstances.ifPresent(extensionContext::setTestInstances);
 		});
 
 		// @formatter:off
@@ -131,11 +131,10 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			DynamicTestExecutor dynamicTestExecutor) {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-
-        if (isKotlinTopLevelFunctionClass(context.getExtensionContext().getRequiredTestClass()) ) {
-            invokeTestMethod(context, dynamicTestExecutor);
-            return context;
-        }
+		if (isKotlinTopLevelFunctionClass(context.getExtensionContext().getRequiredTestClass())) {
+			invokeTestMethod(context, dynamicTestExecutor);
+			return context;
+		}
 
 		// @formatter:off
 		invokeBeforeEachCallbacks(context);
@@ -222,9 +221,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		throwableCollector.execute(() -> {
 			try {
 				Method testMethod = getTestMethod();
-                Object instance = getPotentialInstance(extensionContext);
+				Object instance = getPotentialInstance(extensionContext);
 
-                executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry(),
+				executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry(),
 					interceptorCall);
 			}
 			catch (Throwable throwable) {
@@ -234,15 +233,15 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		});
 	}
 
-    //TODO: maybe return (potentially null) getTestInstance directly
-    private static Object getPotentialInstance(ExtensionContext extensionContext) {
-        if (isKotlinTopLevelFunctionClass(extensionContext.getRequiredTestClass()))
-            return Optional.empty();
+	//TODO: maybe return (potentially null) getTestInstance directly
+	private static Object getPotentialInstance(ExtensionContext extensionContext) {
+		if (isKotlinTopLevelFunctionClass(extensionContext.getRequiredTestClass()))
+			return Optional.empty();
 
-        return extensionContext.getRequiredTestInstance();
-    }
+		return extensionContext.getRequiredTestInstance();
+	}
 
-    private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, ExtensionContext context,
+	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, ExtensionContext context,
 			Throwable throwable) {
 
 		invokeExecutionExceptionHandlers(TestExecutionExceptionHandler.class, registry, throwable,

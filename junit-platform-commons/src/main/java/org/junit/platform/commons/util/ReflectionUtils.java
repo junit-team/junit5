@@ -276,27 +276,26 @@ public final class ReflectionUtils {
 		return Modifier.isStatic(clazz.getModifiers());
 	}
 
-    //TODO add unit test
-    public static boolean isKotlinClass(Class<?> clazz) {
+	//TODO add unit test
+	public static boolean isKotlinClass(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 
-		return stream(clazz.getDeclaredAnnotations())
-                .anyMatch(it -> it.annotationType().getName().equals("kotlin.Metadata"));
+		return stream(clazz.getDeclaredAnnotations()).anyMatch(
+			it -> it.annotationType().getName().equals("kotlin.Metadata"));
 	}
 
-    //TODO add unit test
-    public static boolean isKotlinTopLevelFunctionClass(Class<?> clazz) {
+	//TODO add unit test
+	public static boolean isKotlinTopLevelFunctionClass(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 
-        return isKotlinClass(clazz) && hasNoConstructors(clazz);
+		return isKotlinClass(clazz) && hasNoConstructors(clazz);
 	}
 
-    private static boolean hasNoConstructors(Class<?> clazz) {
-        return clazz.getDeclaredConstructors().length == 0;
-    }
+	private static boolean hasNoConstructors(Class<?> clazz) {
+		return clazz.getDeclaredConstructors().length == 0;
+	}
 
-
-    @API(status = INTERNAL, since = "1.4")
+	@API(status = INTERNAL, since = "1.4")
 	public static boolean isNotStatic(Class<?> clazz) {
 		return !isStatic(clazz);
 	}

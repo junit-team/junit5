@@ -205,7 +205,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 				Optional<TestInstances> testInstances = context.getTestInstancesProvider().getTestInstances(
 					context.getExtensionRegistry(), throwableCollector);
 
-                testInstances.ifPresent(extensionContext::setTestInstances);
+				testInstances.ifPresent(extensionContext::setTestInstances);
 			});
 		}
 
@@ -277,12 +277,13 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	private TestInstancesProvider testInstancesProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ClassExtensionContext extensionContext) {
 
-        if (isKotlinTopLevelFunctionClass(extensionContext.getRequiredTestClass()))
-            return (registry, registrar, throwableCollector) -> Optional.empty();
+		if (isKotlinTopLevelFunctionClass(extensionContext.getRequiredTestClass()))
+			return (registry, registrar, throwableCollector) -> Optional.empty();
 
-		return (registry, registrar, throwableCollector) -> Optional.of(extensionContext.getTestInstances().orElseGet(
-			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry, registrar,
-				throwableCollector)));
+		return (registry, registrar,
+				throwableCollector) -> Optional.of(extensionContext.getTestInstances().orElseGet(
+					() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry,
+						registrar, throwableCollector)));
 	}
 
 	private TestInstances instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext parentExecutionContext,
