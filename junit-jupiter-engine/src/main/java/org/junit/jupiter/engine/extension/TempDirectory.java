@@ -101,8 +101,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 */
 	@Override
 	public void beforeEach(ExtensionContext context) {
-		context.getRequiredTestInstances().getAllInstances() //
-				.forEach(instance -> injectInstanceFields(context, instance));
+		context.getTestInstances().ifPresent(testInstances -> testInstances.getAllInstances() //
+				.forEach(instance -> injectInstanceFields(context, instance)));
 	}
 
 	private void injectStaticFields(ExtensionContext context, Class<?> testClass) {
