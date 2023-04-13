@@ -88,6 +88,9 @@ a.btn {
   @include button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-border);
 }
 
+.btn-ukraine {
+  @include button-variant(#0057b7, #ffd700, #e6c200);
+}
 
 // Link buttons
 // -------------------------

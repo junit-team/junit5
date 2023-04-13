@@ -2,7 +2,7 @@
 
 As human beings, we stand with Ukraine and condemn the Russian government's war against the Ukrainian people, including our own colleagues and their families.
 
-<a class="btn btn-danger btn-lg" href="https://crisisrelief.un.org/t/ukraine" role="button">
+<a class="btn btn-ukraine btn-lg" href="https://crisisrelief.un.org/t/ukraine" role="button">
       <i class="fas fa-heart"></i>&nbsp;
       Donate to UN's Ukraine Humanitarian Fund
 </a>
