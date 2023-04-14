@@ -190,14 +190,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return getTempDirFactory(tempDir.factory());
 	}
 
-	private static TempDirFactory getTempDirFactory(Class<?> factoryClass) {
+	private static TempDirFactory getTempDirFactory(Class<? extends TempDirFactory> factoryClass) {
 		Preconditions.notNull(factoryClass, "Class must not be null");
-		Preconditions.condition(TempDirFactory.class.isAssignableFrom(factoryClass),
-			"Class must be a TempDirFactory implementation");
 		if (factoryClass == TempDirFactory.Standard.class) {
 			return TempDirFactory.Standard.INSTANCE;
 		}
-		return (TempDirFactory) ReflectionUtils.newInstance(factoryClass);
+		return ReflectionUtils.newInstance(factoryClass);
 	}
 
 	private void assertNonFinalField(Field field) {
@@ -213,9 +211,17 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, TempDirFactory factory,
 			CleanupMode cleanupMode, ExtensionContext extensionContext) {
-		Namespace namespace = getScope(extensionContext) == Scope.PER_DECLARATION //
+		Scope scope = getScope(extensionContext);
+
+		if (scope == Scope.PER_CONTEXT && factory != TempDirFactory.Standard.INSTANCE) {
+			throw new ExtensionConfigurationException("Custom @TempDir factory is not supported with "
+					+ TempDir.SCOPE_PROPERTY_NAME + "=" + Scope.PER_CONTEXT.toString().toLowerCase());
+		}
+
+		Namespace namespace = scope == Scope.PER_DECLARATION //
 				? NAMESPACE.append(sourceElement) //
 				: NAMESPACE;
 		Path path = extensionContext.getStore(namespace) //

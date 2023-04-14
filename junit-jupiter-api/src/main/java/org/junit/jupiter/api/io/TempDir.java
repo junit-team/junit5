@@ -99,6 +99,9 @@ public @interface TempDir {
 	/**
 	 * Factory for the temporary directory.
 	 *
+	 * <p>If {@value #SCOPE_PROPERTY_NAME} is set to {@code per_context}, no
+	 * custom factory is allowed.
+	 *
 	 * @return the class instance of the factory
 	 *
 	 * @since 5.10
