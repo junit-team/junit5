@@ -79,7 +79,9 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 	}
 
 	private String generateMessageFromUniqueId(String uniqueId) {
-		System.out.println(uniqueId);
+
+		// TODO this should use the display names from the TestPlan rather than parsing unique IDs
+
 		String[] messages = uniqueId.split("/");
 		String engine = parseEngine(messages[0]);
 		String output = engine + "";
