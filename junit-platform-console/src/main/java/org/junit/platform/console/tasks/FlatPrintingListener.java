@@ -11,7 +11,6 @@
 package org.junit.platform.console.tasks;
 
 import java.io.PrintWriter;
-import java.util.regex.Pattern;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
@@ -23,8 +22,6 @@ import org.junit.platform.launcher.TestPlan;
  * @since 1.0
  */
 class FlatPrintingListener implements DetailsPrintingListener {
-
-	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
 
 	static final String INDENTATION = "             ";
 
@@ -102,7 +99,7 @@ class FlatPrintingListener implements DetailsPrintingListener {
 	 * @return indented message
 	 */
 	private static String indented(String message) {
-		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();
+		return DetailsPrintingListener.indented(message, INDENTATION);
 	}
 
 	@Override

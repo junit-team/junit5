@@ -10,11 +10,18 @@
 
 package org.junit.platform.console.tasks;
 
+import java.util.regex.Pattern;
+
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 
 interface DetailsPrintingListener extends TestExecutionListener {
 
+	Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
+
 	void listTests(TestPlan testPlan);
 
+	static String indented(String message, String indentation) {
+		return LINE_START_PATTERN.matcher(message).replaceAll(indentation).trim();
+	}
 }
