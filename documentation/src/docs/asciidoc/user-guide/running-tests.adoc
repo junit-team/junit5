@@ -598,7 +598,7 @@ standalone `ConsoleLauncher` as shown below.
 
 [source,console,subs=attributes+]
 ----
-$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS>
+$ java -jar junit-platform-console-standalone-{platform-version}.jar execute <OPTIONS>
 
 ├─ JUnit Vintage
 │  └─ example.JUnit4Tests
@@ -638,14 +638,34 @@ $ java -cp classes:testlib/* org.junit.platform.console.ConsoleLauncher <OPTIONS
 .Exit Code
 NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
 failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
-supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise the exit code
+supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise, the exit code
 is `0`.
 
 [[running-tests-console-launcher-options]]
-==== Options
+==== Subcommands and Options
+
+The `{ConsoleLauncher}` provides the following subcommands:
 
 ----
 include::{consoleLauncherOptionsFile}[]
+----
+
+===== Discovering tests
+
+----
+include::{consoleLauncherDiscoverOptionsFile}[]
+----
+
+===== Executing tests
+
+----
+include::{consoleLauncherExecuteOptionsFile}[]
+----
+
+===== Listing test engines
+
+----
+include::{consoleLauncherEnginesOptionsFile}[]
 ----
 
 [[running-tests-console-launcher-argument-files]]

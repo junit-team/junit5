@@ -99,6 +99,9 @@ gitPublish {
 
 val generatedAsciiDocPath = layout.buildDirectory.dir("generated/asciidoc")
 val consoleLauncherOptionsFile = generatedAsciiDocPath.map { it.file("console-launcher-options.txt") }
+val consoleLauncherDiscoverOptionsFile = generatedAsciiDocPath.map { it.file("console-launcher-discover-options.txt") }
+val consoleLauncherExecuteOptionsFile = generatedAsciiDocPath.map { it.file("console-launcher-execute-options.txt") }
+val consoleLauncherEnginesOptionsFile = generatedAsciiDocPath.map { it.file("console-launcher-engines-options.txt") }
 val experimentalApisTableFile = generatedAsciiDocPath.map { it.file("experimental-apis-table.adoc") }
 val deprecatedApisTableFile = generatedAsciiDocPath.map { it.file("deprecated-apis-table.adoc") }
 val standaloneConsoleLauncherShadowedArtifactsFile = generatedAsciiDocPath.map { it.file("console-launcher-standalone-shadowed-artifacts.adoc") }
@@ -160,6 +163,27 @@ tasks {
 		redirectOutput(consoleLauncherOptionsFile)
 	}
 
+	val generateConsoleLauncherDiscoverOptions by registering(JavaExec::class) {
+		classpath = sourceSets["test"].runtimeClasspath
+		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		args("discover", "--help", "--disable-banner")
+		redirectOutput(consoleLauncherDiscoverOptionsFile)
+	}
+
+	val generateConsoleLauncherExecuteOptions by registering(JavaExec::class) {
+		classpath = sourceSets["test"].runtimeClasspath
+		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		args("execute", "--help", "--disable-banner")
+		redirectOutput(consoleLauncherExecuteOptionsFile)
+	}
+
+	val generateConsoleLauncherEnginesOptions by registering(JavaExec::class) {
+		classpath = sourceSets["test"].runtimeClasspath
+		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		args("engines", "--help", "--disable-banner")
+		redirectOutput(consoleLauncherEnginesOptionsFile)
+	}
+
 	val generateExperimentalApisTable by registering(JavaExec::class) {
 		classpath = sourceSets["test"].runtimeClasspath
 		mainClass.set("org.junit.api.tools.ApiReportGenerator")
@@ -191,6 +215,9 @@ tasks {
 	withType<AbstractAsciidoctorTask>().configureEach {
 		inputs.files(
 			generateConsoleLauncherOptions,
+			generateConsoleLauncherDiscoverOptions,
+			generateConsoleLauncherExecuteOptions,
+			generateConsoleLauncherEnginesOptions,
 			generateExperimentalApisTable,
 			generateDeprecatedApisTable,
 			generateStandaloneConsoleLauncherShadowedArtifactsFile
@@ -220,6 +247,9 @@ tasks {
 				"docs-version" to docsVersion,
 				"revnumber" to version,
 				"consoleLauncherOptionsFile" to consoleLauncherOptionsFile.get(),
+				"consoleLauncherDiscoverOptionsFile" to consoleLauncherDiscoverOptionsFile.get(),
+				"consoleLauncherExecuteOptionsFile" to consoleLauncherExecuteOptionsFile.get(),
+				"consoleLauncherEnginesOptionsFile" to consoleLauncherEnginesOptionsFile.get(),
 				"experimentalApisTableFile" to experimentalApisTableFile.get(),
 				"deprecatedApisTableFile" to deprecatedApisTableFile.get(),
 				"standaloneConsoleLauncherShadowedArtifactsFile" to standaloneConsoleLauncherShadowedArtifactsFile.get(),
