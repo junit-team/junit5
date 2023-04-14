@@ -689,7 +689,6 @@ d8de75eb134ac62780487423cf8f837e  junit-jupiter-engine/src/main/java/org/junit/j
 d8f765cdaae86ca58de5ebf87d38ef59  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeClassNamePatterns.java
 d9c4b2ecfd40ab714e5f249ab1d1641a  documentation/src/docs/asciidoc/user-guide/advanced-topics/testkit.adoc
 d9d5c16c9edfc6011816243e3099211b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/package-info.java
-da09283141f7ffe1a71a0edc1e260330  junit-platform-console/src/main/java/org/junit/platform/console/tasks/Color.java
 da369510c5511b2e45b273e801ebfb7e  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LogRecordListener.java
 da3c11f05b4ff820a370b533f787a5ad  documentation/src/test/java/example/callbacks/BrokenLifecycleMethodConfigDemo.java
 dab29fdd48d5d8a283c0cceacc8b63a7  junit-platform-commons/src/main/java/org/junit/platform/commons/util/Preconditions.java
