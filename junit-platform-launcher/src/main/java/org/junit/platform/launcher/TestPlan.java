@@ -266,10 +266,6 @@ public class TestPlan {
 		return unmodifiableSet(result);
 	}
 
-	public Map<UniqueId, TestIdentifier> getAllIdentifiers() {
-		return this.allIdentifiers;
-	}
-
 	/**
 	 * Return whether this test plan contains any tests.
 	 *
