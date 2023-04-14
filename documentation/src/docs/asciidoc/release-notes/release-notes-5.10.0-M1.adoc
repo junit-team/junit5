@@ -45,6 +45,10 @@ repository on GitHub.
 * Support for limiting the `max-pool-size-factor` for parallel execution via a configuration parameter.
 * The new `testfeed` details mode for `ConsoleLauncher` prints test execution events as
   they occur in a concise format.
+* The existing functionality of the Console Launcher has been split into two subcommands:
+  `execute` for executing tests and `engines` for listing registered test engines.
+* A new `discover` subcommand has been added to the Console Launcher to print the
+  discovered tests for the specified details mode without executing them.
 
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
