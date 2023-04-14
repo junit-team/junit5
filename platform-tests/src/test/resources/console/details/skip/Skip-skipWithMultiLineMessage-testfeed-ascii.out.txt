@@ -1,8 +1,8 @@
 JUnit Jupiter > Skip > skipWithMultiLineMessage() :: SKIPPED
 	Reason: multi
-line
-fail
-message
+	line
+	fail
+	message
 
 Test run finished after [\d]+ ms
 [         2 containers found      ]

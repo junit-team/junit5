@@ -52,8 +52,9 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 		if (testIdentifier.isContainer())
 			return;
 		String msg = formatTestIdentifier(testIdentifier);
+		String indentedReason = indented(String.format("Reason: %s", reason));
 		println(Style.SKIPPED,
-			String.format("%s" + STATUS_SEPARATOR + "SKIPPED%n" + INDENTATION + "Reason: %s", msg, reason));
+			String.format("%s" + STATUS_SEPARATOR + "SKIPPED%n" + INDENTATION + "%s", msg, indentedReason));
 	}
 
 	@Override
