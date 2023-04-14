@@ -46,12 +46,14 @@ public enum Details {
 	VERBOSE,
 
 	/**
-	 * Test plan executes in a combination of tree and flat
+	 * Test plan execution events are rendered as they occur in a concise format.
+	 *
+	 * @since 1.10
 	 */
 	TESTFEED;
 
 	/**
-	 * Return lower case {@link #name} for easier usage in help text for
+	 * Return lower case {@link #name()} for easier usage in help text for
 	 * available options.
 	 */
 	@Override
