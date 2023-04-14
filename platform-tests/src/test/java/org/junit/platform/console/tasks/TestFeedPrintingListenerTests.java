@@ -11,6 +11,7 @@
 package org.junit.platform.console.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.mockito.Mockito.mock;
 
 import java.io.PrintWriter;
@@ -30,6 +31,7 @@ import org.opentest4j.TestAbortedException;
 
 public class TestFeedPrintingListenerTests {
 
+	TestPlan testPlan;
 	TestIdentifier testIdentifier;
 
 	StringWriter stringWriter = new StringWriter();
@@ -41,9 +43,9 @@ public class TestFeedPrintingListenerTests {
 		var testDescriptor = new TestDescriptorStub(engineDescriptor.getUniqueId().append("type", "test"),
 			"%c ool test");
 		engineDescriptor.addChild(testDescriptor);
-		var testPlan = TestPlan.from(Collections.singleton(engineDescriptor), mock());
 
-		testIdentifier = TestIdentifier.from(testDescriptor);
+		testPlan = TestPlan.from(Collections.singleton(engineDescriptor), mock());
+		testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId());
 
 		listener.testPlanExecutionStarted(testPlan);
 	}
@@ -90,6 +92,20 @@ public class TestFeedPrintingListenerTests {
 	public void testExecutionSucceeded() {
 		listener.executionFinished(testIdentifier, TestExecutionResult.successful());
 		assertLinesMatch(Stream.of("Demo Engine > %c ool test :: SUCCESSFUL"), actualLines());
+	}
+
+	@Test
+	public void testExecutionFailedOfContainer() {
+		var engineIdentifier = getOnlyElement(testPlan.getRoots());
+		listener.executionFinished(engineIdentifier, TestExecutionResult.failed(new AssertionError("Boom!")));
+		assertLinesMatch( //
+			"""
+					Demo Engine :: FAILED
+					\tjava.lang.AssertionError: Boom!
+					>>>>
+					""".lines(), //
+			actualLines() //
+		);
 	}
 
 	private Stream<String> actualLines() {

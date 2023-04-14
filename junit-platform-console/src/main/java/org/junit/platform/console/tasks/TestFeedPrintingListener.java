@@ -10,6 +10,8 @@
 
 package org.junit.platform.console.tasks;
 
+import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,36 +48,36 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		if (testIdentifier.isContainer())
-			return;
-		String msg = formatTestIdentifier(testIdentifier);
-		String indentedReason = indented(String.format("Reason: %s", reason));
-		println(Style.SKIPPED,
-			String.format("%s" + STATUS_SEPARATOR + "SKIPPED%n" + INDENTATION + "%s", msg, indentedReason));
+		if (shouldPrint(testIdentifier)) {
+			String msg = formatTestIdentifier(testIdentifier);
+			String indentedReason = indented(String.format("Reason: %s", reason));
+			println(Style.SKIPPED,
+				String.format("%s" + STATUS_SEPARATOR + "SKIPPED%n" + INDENTATION + "%s", msg, indentedReason));
+		}
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		if (testIdentifier.isContainer())
-			return;
-		String msg = formatTestIdentifier(testIdentifier);
-		println(Style.NONE, String.format("%s" + STATUS_SEPARATOR + "STARTED", msg));
+		if (shouldPrint(testIdentifier)) {
+			String msg = formatTestIdentifier(testIdentifier);
+			println(Style.NONE, String.format("%s" + STATUS_SEPARATOR + "STARTED", msg));
+		}
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		if (testIdentifier.isContainer())
-			return;
 		TestExecutionResult.Status status = testExecutionResult.getStatus();
-		String msg = formatTestIdentifier(testIdentifier);
-		Style style = Style.valueOf(testExecutionResult);
 		if (testExecutionResult.getThrowable().isPresent()) {
+			Style style = Style.valueOf(testExecutionResult);
+			String msg = formatTestIdentifier(testIdentifier);
 			Throwable throwable = testExecutionResult.getThrowable().get();
 			String stacktrace = indented(ExceptionUtils.readStackTrace(throwable));
 			println(style,
 				String.format("%s" + STATUS_SEPARATOR + "%s%n" + INDENTATION + "%s", msg, status, stacktrace));
 		}
-		else {
+		else if (shouldPrint(testIdentifier) || testExecutionResult.getStatus() != SUCCESSFUL) {
+			Style style = Style.valueOf(testExecutionResult);
+			String msg = formatTestIdentifier(testIdentifier);
 			println(style, String.format("%s" + STATUS_SEPARATOR + "%s", msg, status));
 		}
 	}
@@ -111,14 +113,18 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 			testPlan.accept(new TestPlan.Visitor() {
 				@Override
 				public void visit(TestIdentifier testIdentifier) {
-					if (testIdentifier.isContainer())
-						return;
-					println(Style.NONE, formatTestIdentifier(testIdentifier));
+					if (shouldPrint(testIdentifier)) {
+						println(Style.NONE, formatTestIdentifier(testIdentifier));
+					}
 				}
 			});
 		}
 		finally {
 			this.testPlan = null;
 		}
+	}
+
+	private static boolean shouldPrint(TestIdentifier testIdentifier) {
+		return testIdentifier.isTest();
 	}
 }
