@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
 
-public class TestFeedPrintingListener implements TestExecutionListener {
+class TestFeedPrintingListener implements DetailsPrintingListener {
 
 	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
 
@@ -27,7 +27,7 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 	private final PrintWriter out;
 	private final ColorPalette colorPalette;
 
-	public TestFeedPrintingListener(PrintWriter out, ColorPalette colorPalette) {
+	TestFeedPrintingListener(PrintWriter out, ColorPalette colorPalette) {
 		this.out = out;
 		this.colorPalette = colorPalette;
 	}
@@ -113,5 +113,17 @@ public class TestFeedPrintingListener implements TestExecutionListener {
 
 	private static String indented(String message) {
 		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();
+	}
+
+	@Override
+	public void listTests(TestPlan testPlan) {
+		testPlan.accept(new TestPlan.Visitor() {
+			@Override
+			public void visit(TestIdentifier testIdentifier) {
+				if (testIdentifier.isContainer())
+					return;
+				println(Style.valueOf(testIdentifier), printTestIdentifier(testIdentifier));
+			}
+		});
 	}
 }
