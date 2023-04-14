@@ -294,15 +294,15 @@ class StandaloneTests {
 		Result result = listTests("--details=testfeed");
 
 		var expected = """
-				JUnit Jupiter > standalone.JupiterIntegration > successful() > successful()
-				JUnit Jupiter > standalone.JupiterIntegration > fail() > fail()
-				JUnit Jupiter > standalone.JupiterIntegration > abort() > abort()
-				JUnit Jupiter > standalone.JupiterIntegration > disabled() > disabled()
-				JUnit Jupiter > standalone.SuiteIntegration$SingleTestContainer > successful() > successful()
-				JUnit Vintage > f4il
-				JUnit Vintage > ignored
-				JUnit Vintage > succ3ssful
-				[engine:junit-platform-suite] > standalone.SuiteIntegration$SingleTestContainer > successful() > successful()
+				JUnit Jupiter > JupiterIntegration > successful()
+				JUnit Jupiter > JupiterIntegration > fail()
+				JUnit Jupiter > JupiterIntegration > abort()
+				JUnit Jupiter > JupiterIntegration > disabled()
+				JUnit Jupiter > SuiteIntegration$SingleTestContainer > successful()
+				JUnit Vintage > VintageIntegration > f4il
+				JUnit Vintage > VintageIntegration > ignored
+				JUnit Vintage > VintageIntegration > succ3ssful
+				JUnit Platform Suite > SuiteIntegration > JUnit Jupiter > SuiteIntegration$SingleTestContainer > successful()
 
 				[        11 containers found ]
 				[         9 tests found      ]

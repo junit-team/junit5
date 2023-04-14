@@ -11,10 +11,13 @@
 package org.junit.platform.console.tasks;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -26,6 +29,7 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 
 	private final PrintWriter out;
 	private final ColorPalette colorPalette;
+	private TestPlan testPlan;
 
 	TestFeedPrintingListener(PrintWriter out, ColorPalette colorPalette) {
 		this.out = out;
@@ -33,18 +37,28 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 	}
 
 	@Override
+	public void testPlanExecutionStarted(TestPlan testPlan) {
+		this.testPlan = testPlan;
+	}
+
+	@Override
+	public void testPlanExecutionFinished(TestPlan testPlan) {
+		this.testPlan = null;
+	}
+
+	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		if (testIdentifier.isContainer())
 			return;
-		String msg = printTestIdentifier(testIdentifier);
-		println(Style.SKIPPED, "%s SKIPPED\n\tReason: %s", msg, reason);
+		String msg = formatTestIdentifier(testIdentifier);
+		println(Style.SKIPPED, "%s > SKIPPED%n\tReason: %s", msg, reason);
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
 		if (testIdentifier.isContainer())
 			return;
-		String msg = printTestIdentifier(testIdentifier);
+		String msg = formatTestIdentifier(testIdentifier);
 		println(Style.valueOf(testIdentifier), "%s > STARTED", msg);
 	}
 
@@ -53,21 +67,20 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 		if (testIdentifier.isContainer())
 			return;
 		TestExecutionResult.Status status = testExecutionResult.getStatus();
-		String msg = printTestIdentifier(testIdentifier);
+		String msg = formatTestIdentifier(testIdentifier);
 		if (testExecutionResult.getThrowable().isPresent()) {
 			Throwable throwable = testExecutionResult.getThrowable().get();
-			println(Style.valueOf(testIdentifier), "%s > %s\n\t%s", msg, status.toString(),
-				indented(ExceptionUtils.readStackTrace(throwable)));
+			String format = "%s > %s%n" + INDENTATION + "%s";
+			String stacktrace = indented(ExceptionUtils.readStackTrace(throwable));
+			println(Style.valueOf(testIdentifier), format, msg, status, stacktrace);
 		}
 		else {
-			println(Style.valueOf(testIdentifier), "%s > %s", msg, status.toString());
+			println(Style.valueOf(testIdentifier), "%s > %s", msg, status);
 		}
 	}
 
-	private String printTestIdentifier(TestIdentifier testIdentifier) {
-		String msg = generateMessageFromUniqueId(testIdentifier.getUniqueId());
-		msg += " > " + testIdentifier.getDisplayName();
-		return msg;
+	private String formatTestIdentifier(TestIdentifier testIdentifier) {
+		return String.join(" > ", collectDisplayNames(testIdentifier.getUniqueIdObject()));
 	}
 
 	private void println(Style style, String format, Object... args) {
@@ -78,37 +91,16 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 		this.out.println(colorPalette.paint(color, message));
 	}
 
-	private String generateMessageFromUniqueId(String uniqueId) {
-
-		// TODO this should use the display names from the TestPlan rather than parsing unique IDs
-
-		String[] messages = uniqueId.split("/");
-		String engine = parseEngine(messages[0]);
-		String output = engine + "";
-		for (int i = 1; i < messages.length; i++) {
-			String message = messages[i];
-			if (message.indexOf("class:") != -1) {
-				output += " > " + parseMessage(message, "class:");
-			}
-			else if (message.indexOf("method:") != -1) {
-				output += " > " + parseMessage(message, "method:");
+	private List<String> collectDisplayNames(UniqueId uniqueId) {
+		int size = uniqueId.getSegments().size();
+		List<String> displayNames = new ArrayList<>(size);
+		for (int i = 0; i < size; i++) {
+			displayNames.add(0, testPlan.getTestIdentifier(uniqueId).getDisplayName());
+			if (i < size - 1) {
+				uniqueId = uniqueId.removeLastSegment();
 			}
 		}
-		return output;
-	}
-
-	private String parseEngine(String uniqueId) {
-		if (uniqueId.contains("junit-jupiter")) {
-			return "JUnit Jupiter";
-		}
-		else if (uniqueId.contains("junit-vintage")) {
-			return "JUnit Vintage";
-		}
-		return uniqueId;
-	}
-
-	private String parseMessage(String className, String prefix) {
-		return className.replaceAll("\\[", "").replaceAll("]", "").replaceAll(prefix, "");
+		return displayNames;
 	}
 
 	private static String indented(String message) {
@@ -117,13 +109,19 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 
 	@Override
 	public void listTests(TestPlan testPlan) {
-		testPlan.accept(new TestPlan.Visitor() {
-			@Override
-			public void visit(TestIdentifier testIdentifier) {
-				if (testIdentifier.isContainer())
-					return;
-				println(Style.valueOf(testIdentifier), printTestIdentifier(testIdentifier));
-			}
-		});
+		this.testPlan = testPlan;
+		try {
+			testPlan.accept(new TestPlan.Visitor() {
+				@Override
+				public void visit(TestIdentifier testIdentifier) {
+					if (testIdentifier.isContainer())
+						return;
+					println(Style.valueOf(testIdentifier), formatTestIdentifier(testIdentifier));
+				}
+			});
+		}
+		finally {
+			this.testPlan = null;
+		}
 	}
 }
