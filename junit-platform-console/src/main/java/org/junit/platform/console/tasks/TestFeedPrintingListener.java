@@ -113,7 +113,7 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 				public void visit(TestIdentifier testIdentifier) {
 					if (testIdentifier.isContainer())
 						return;
-					println(Style.valueOf(testIdentifier), formatTestIdentifier(testIdentifier));
+					println(Style.NONE, formatTestIdentifier(testIdentifier));
 				}
 			});
 		}
