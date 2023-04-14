@@ -296,7 +296,9 @@ public class TestPlan {
 	 * test plan.
 	 *
 	 * @param visitor the visitor to accept; never {@code null}
+	 * @since 1.10
 	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
 	public void accept(Visitor visitor) {
 		getRoots().forEach(it -> accept(visitor, it));
 	}
