@@ -25,7 +25,8 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 
 	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
 
-	static final String INDENTATION = "\t";
+	private static final String INDENTATION = "\t";
+	private static final String STATUS_SEPARATOR = " :: ";
 
 	private final PrintWriter out;
 	private final ColorPalette colorPalette;
@@ -51,7 +52,8 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 		if (testIdentifier.isContainer())
 			return;
 		String msg = formatTestIdentifier(testIdentifier);
-		println(Style.SKIPPED, "%s > SKIPPED%n\tReason: %s", msg, reason);
+		println(Style.SKIPPED,
+			String.format("%s" + STATUS_SEPARATOR + "SKIPPED%n" + INDENTATION + "Reason: %s", msg, reason));
 	}
 
 	@Override
@@ -59,7 +61,7 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 		if (testIdentifier.isContainer())
 			return;
 		String msg = formatTestIdentifier(testIdentifier);
-		println(Style.valueOf(testIdentifier), "%s > STARTED", msg);
+		println(Style.NONE, String.format("%s" + STATUS_SEPARATOR + "STARTED", msg));
 	}
 
 	@Override
@@ -68,14 +70,15 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 			return;
 		TestExecutionResult.Status status = testExecutionResult.getStatus();
 		String msg = formatTestIdentifier(testIdentifier);
+		Style style = Style.valueOf(testExecutionResult);
 		if (testExecutionResult.getThrowable().isPresent()) {
 			Throwable throwable = testExecutionResult.getThrowable().get();
-			String format = "%s > %s%n" + INDENTATION + "%s";
 			String stacktrace = indented(ExceptionUtils.readStackTrace(throwable));
-			println(Style.valueOf(testIdentifier), format, msg, status, stacktrace);
+			println(style,
+				String.format("%s" + STATUS_SEPARATOR + "%s%n" + INDENTATION + "%s", msg, status, stacktrace));
 		}
 		else {
-			println(Style.valueOf(testIdentifier), "%s > %s", msg, status);
+			println(style, String.format("%s" + STATUS_SEPARATOR + "%s", msg, status));
 		}
 	}
 
@@ -83,12 +86,8 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 		return String.join(" > ", collectDisplayNames(testIdentifier.getUniqueIdObject()));
 	}
 
-	private void println(Style style, String format, Object... args) {
-		println(style, String.format(format, args));
-	}
-
-	private void println(Style color, String message) {
-		this.out.println(colorPalette.paint(color, message));
+	private void println(Style style, String message) {
+		this.out.println(colorPalette.paint(style, message));
 	}
 
 	private List<String> collectDisplayNames(UniqueId uniqueId) {

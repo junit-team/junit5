@@ -26,6 +26,7 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.opentest4j.TestAbortedException;
 
 public class TestFeedPrintingListenerTests {
 
@@ -52,7 +53,7 @@ public class TestFeedPrintingListenerTests {
 		listener.executionSkipped(testIdentifier, "Test disabled");
 		assertLinesMatch( //
 			"""
-					Demo Engine > %c ool test > SKIPPED
+					Demo Engine > %c ool test :: SKIPPED
 					\tReason: Test disabled
 					""".lines(), //
 			actualLines() //
@@ -64,8 +65,21 @@ public class TestFeedPrintingListenerTests {
 		listener.executionFinished(testIdentifier, TestExecutionResult.failed(new AssertionError("Boom!")));
 		assertLinesMatch( //
 			"""
-					Demo Engine > %c ool test > FAILED
+					Demo Engine > %c ool test :: FAILED
 					\tjava.lang.AssertionError: Boom!
+					>>>>
+					""".lines(), //
+			actualLines() //
+		);
+	}
+
+	@Test
+	public void testExecutionAborted() {
+		listener.executionFinished(testIdentifier, TestExecutionResult.aborted(new TestAbortedException("Boom!")));
+		assertLinesMatch( //
+			"""
+					Demo Engine > %c ool test :: ABORTED
+					\torg.opentest4j.TestAbortedException: Boom!
 					>>>>
 					""".lines(), //
 			actualLines() //
@@ -75,7 +89,7 @@ public class TestFeedPrintingListenerTests {
 	@Test
 	public void testExecutionSucceeded() {
 		listener.executionFinished(testIdentifier, TestExecutionResult.successful());
-		assertLinesMatch(Stream.of("Demo Engine > %c ool test > SUCCESSFUL"), actualLines());
+		assertLinesMatch(Stream.of("Demo Engine > %c ool test :: SUCCESSFUL"), actualLines());
 	}
 
 	private Stream<String> actualLines() {
