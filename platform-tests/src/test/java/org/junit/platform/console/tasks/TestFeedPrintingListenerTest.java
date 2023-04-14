@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,8 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -28,7 +29,7 @@ class TestFeedPrintingListenerTest {
 	@Test
 	void executionSkipped() {
 		StringWriter writer = new StringWriter();
-		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer, true);
+		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer);
 		testFeedPrintingListener.executionSkipped(createTestIdentifier(), "Test skipped");
 
 		String[] lines = writer.toString().split(EOL);
@@ -42,7 +43,7 @@ class TestFeedPrintingListenerTest {
 	@Test
 	void executionStarted() {
 		StringWriter writer = new StringWriter();
-		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer, true);
+		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer);
 		testFeedPrintingListener.executionStarted(createTestIdentifier());
 
 		String[] lines = writer.toString().split(EOL);
@@ -54,7 +55,7 @@ class TestFeedPrintingListenerTest {
 	@Test
 	void executionFinishedSuccessfully() {
 		StringWriter writer = new StringWriter();
-		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer, true);
+		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer);
 		testFeedPrintingListener.executionFinished(createTestIdentifier(), TestExecutionResult.successful());
 
 		String[] lines = writer.toString().split(EOL);
@@ -66,7 +67,7 @@ class TestFeedPrintingListenerTest {
 	@Test
 	void executionFinishedWithFailure() {
 		StringWriter writer = new StringWriter();
-		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer, true);
+		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer);
 		testFeedPrintingListener.executionFinished(createTestIdentifier(),
 			TestExecutionResult.failed(new AssertionError("test failed")));
 
@@ -80,7 +81,7 @@ class TestFeedPrintingListenerTest {
 	@Test
 	void executionAborted() {
 		StringWriter writer = new StringWriter();
-		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer, true);
+		TestFeedPrintingListener testFeedPrintingListener = createTestFeedPrintingListener(writer);
 		testFeedPrintingListener.executionFinished(createTestIdentifier(),
 			TestExecutionResult.aborted(new AssertionError("test aborted")));
 
@@ -91,9 +92,8 @@ class TestFeedPrintingListenerTest {
 			() -> assertEquals("\tjava.lang.AssertionError: test aborted", lines[1]));
 	}
 
-	private TestFeedPrintingListener createTestFeedPrintingListener(StringWriter stringWriter,
-			boolean disableAnsiColors) {
-		return new TestFeedPrintingListener(new PrintWriter(stringWriter), disableAnsiColors);
+	private TestFeedPrintingListener createTestFeedPrintingListener(StringWriter stringWriter) {
+		return new TestFeedPrintingListener(new PrintWriter(stringWriter), ColorPalette.NONE);
 	}
 
 	private TestIdentifier createTestIdentifier() {
