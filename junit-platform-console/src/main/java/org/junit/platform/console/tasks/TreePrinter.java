@@ -79,8 +79,11 @@ class TreePrinter {
 			out.print(" ");
 			out.print(duration);
 		}
-		out.print(" ");
-		out.print(icon);
+		boolean nodeIsBeingListed = node.duration == 0 && !node.result().isPresent() && !node.reason().isPresent();
+		if (!nodeIsBeingListed) {
+			out.print(" ");
+			out.print(icon);
+		}
 		node.result().ifPresent(result -> printThrowable(tabbed, result));
 		node.reason().ifPresent(reason -> printMessage(Style.SKIPPED, tabbed, reason));
 		node.reports.forEach(e -> printReportEntry(tabbed, e));

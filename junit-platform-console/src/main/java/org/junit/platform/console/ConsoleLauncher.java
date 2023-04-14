@@ -75,6 +75,9 @@ public class ConsoleLauncher {
 			if (!options.isBannerDisabled()) {
 				displayBanner(out);
 			}
+			if (options.isListTests()) {
+				return listTests(options, out);
+			}
 			if (options.isDisplayHelp()) {
 				commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
 				return ConsoleLauncherExecutionResult.success();
@@ -115,17 +118,32 @@ public class ConsoleLauncher {
 		out.println(engine.getId() + details);
 	}
 
+	private ConsoleLauncherExecutionResult listTests(CommandLineOptions options, PrintWriter out) {
+		try {
+			new ConsoleTestExecutor(options).discover(out);
+			return ConsoleLauncherExecutionResult.success();
+		}
+		catch (Exception exception) {
+			return handleTestExecutorException(exception, options);
+		}
+	}
+
 	private ConsoleLauncherExecutionResult executeTests(CommandLineOptions options, PrintWriter out) {
 		try {
 			TestExecutionSummary testExecutionSummary = new ConsoleTestExecutor(options).execute(out);
 			return ConsoleLauncherExecutionResult.forSummary(testExecutionSummary, options);
 		}
 		catch (Exception exception) {
-			exception.printStackTrace(err);
-			err.println();
-			commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
-			return ConsoleLauncherExecutionResult.failed();
+			return handleTestExecutorException(exception, options);
 		}
+	}
+
+	private ConsoleLauncherExecutionResult handleTestExecutorException(Exception exception,
+			CommandLineOptions options) {
+		exception.printStackTrace(err);
+		err.println();
+		commandLineOptionsParser.printHelp(out, options.isAnsiColorOutputDisabled());
+		return ConsoleLauncherExecutionResult.failed();
 	}
 
 }

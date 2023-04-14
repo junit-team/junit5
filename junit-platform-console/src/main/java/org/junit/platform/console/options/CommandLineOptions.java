@@ -49,6 +49,7 @@ public class CommandLineOptions {
 
 	private boolean displayHelp;
 	private boolean listEngines;
+	private boolean listTests;
 	private boolean ansiColorOutputDisabled;
 	private Path colorPalettePath;
 	private boolean isSingleColorPalette;
@@ -100,6 +101,14 @@ public class CommandLineOptions {
 
 	public void setListEngines(boolean listEngines) {
 		this.listEngines = listEngines;
+	}
+
+	public boolean isListTests() {
+		return listTests;
+	}
+
+	public void setListTests(boolean listTests) {
+		this.listTests = listTests;
 	}
 
 	public boolean isAnsiColorOutputDisabled() {
