@@ -75,4 +75,14 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 		// forget invocationContext so it can be garbage collected
 		invocationContext = null;
 	}
+
+	@Override
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+		if (this.invocationContext.shouldBeSkipped()) {
+			return SkipResult.skip(
+				this.invocationContext.getClass().getSimpleName() + " signalled that the invocation should be skipped");
+		}
+		return super.shouldBeSkipped(context);
+	}
+
 }

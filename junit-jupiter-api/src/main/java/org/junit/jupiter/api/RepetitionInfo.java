@@ -50,4 +50,8 @@ public interface RepetitionInfo {
 	 */
 	int getTotalRepetitions();
 
+	int getFailureThreshold();
+
+	int getFailureCount();
+
 }

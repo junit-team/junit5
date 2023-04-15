@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static java.util.Collections.singletonList;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -26,13 +27,17 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 
 	private final int currentRepetition;
 	private final int totalRepetitions;
+	private final int failureThreshold;
+	private final AtomicInteger failureCount;
 	private final RepeatedTestDisplayNameFormatter formatter;
 
-	public RepeatedTestInvocationContext(int currentRepetition, int totalRepetitions,
-			RepeatedTestDisplayNameFormatter formatter) {
+	public RepeatedTestInvocationContext(int currentRepetition, int totalRepetitions, int failureThreshold,
+			AtomicInteger failureCount, RepeatedTestDisplayNameFormatter formatter) {
 
 		this.currentRepetition = currentRepetition;
 		this.totalRepetitions = totalRepetitions;
+		this.failureThreshold = failureThreshold;
+		this.failureCount = failureCount;
 		this.formatter = formatter;
 	}
 
@@ -43,7 +48,13 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return singletonList(new RepetitionInfoParameterResolver(this.currentRepetition, this.totalRepetitions));
+		return singletonList(new RepetitionInfoParameterResolver(this.currentRepetition, this.totalRepetitions,
+			this.failureThreshold, this.failureCount));
+	}
+
+	@Override
+	public boolean shouldBeSkipped() {
+		return this.failureCount.get() >= this.failureThreshold;
 	}
 
 }

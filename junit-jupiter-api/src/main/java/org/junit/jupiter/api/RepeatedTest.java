@@ -152,4 +152,6 @@ public @interface RepeatedTest {
 	 */
 	String name() default SHORT_DISPLAY_NAME;
 
+	int failureThreshold() default Integer.MAX_VALUE;
+
 }

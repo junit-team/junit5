@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -42,12 +43,14 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		String displayName = context.getDisplayName();
 		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
 		int totalRepetitions = totalRepetitions(repeatedTest, testMethod);
+		int failureThreshold = failureThreshold(repeatedTest, testMethod);
+		AtomicInteger failureCount = new AtomicInteger();
 		RepeatedTestDisplayNameFormatter formatter = displayNameFormatter(repeatedTest, testMethod, displayName);
 
 		// @formatter:off
 		return IntStream
 				.rangeClosed(1, totalRepetitions)
-				.mapToObj(repetition -> new RepeatedTestInvocationContext(repetition, totalRepetitions, formatter));
+				.mapToObj(repetition -> new RepeatedTestInvocationContext(repetition, totalRepetitions, failureThreshold, failureCount, formatter));
 		// @formatter:on
 	}
 
@@ -56,6 +59,13 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		Preconditions.condition(repetitions > 0, () -> String.format(
 			"Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'value'.", method));
 		return repetitions;
+	}
+
+	private int failureThreshold(RepeatedTest repeatedTest, Method method) {
+		int failureThreshold = repeatedTest.failureThreshold();
+		Preconditions.condition(failureThreshold > 0, () -> String.format(
+			"Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'failureThreshold'.", method));
+		return failureThreshold;
 	}
 
 	private RepeatedTestDisplayNameFormatter displayNameFormatter(RepeatedTest repeatedTest, Method method,
