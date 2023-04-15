@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -172,5 +173,13 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		@RepeatedTest(0)
 		void zeroRepeatCount() {
 		}
+
+		@RepeatedTest(value = 10, failureThreshold = 2)
+		void failureThreshold(RepetitionInfo info) {
+			if (info.getCurrentRepetition() > 5) {
+				fail("Boom!");
+			}
+		}
+
 	}
 }
