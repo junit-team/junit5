@@ -58,7 +58,6 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -181,21 +180,20 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private TempDirFactory getTempDirFactoryForField(Field field) {
 		TempDir tempDir = findAnnotation(field, TempDir.class).orElseThrow(
 			() -> new JUnitException("Field " + field + " must be annotated with @TempDir"));
-		return getTempDirFactory(tempDir.factory());
+		return getTempDirFactory(tempDir);
 	}
 
 	private TempDirFactory getTempDirFactoryForParameter(ParameterContext parameterContext) {
 		TempDir tempDir = parameterContext.findAnnotation(TempDir.class).orElseThrow(() -> new JUnitException(
 			"Parameter " + parameterContext.getParameter() + " must be annotated with @TempDir"));
-		return getTempDirFactory(tempDir.factory());
+		return getTempDirFactory(tempDir);
 	}
 
-	private static TempDirFactory getTempDirFactory(Class<? extends TempDirFactory> factoryClass) {
-		Preconditions.notNull(factoryClass, "Class must not be null");
-		if (factoryClass == TempDirFactory.Standard.class) {
-			return TempDirFactory.Standard.INSTANCE;
-		}
-		return ReflectionUtils.newInstance(factoryClass);
+	private static TempDirFactory getTempDirFactory(TempDir tempDir) {
+		Class<? extends TempDirFactory> factory = tempDir.factory();
+		return factory == TempDirFactory.Standard.class //
+				? TempDirFactory.Standard.INSTANCE
+				: ReflectionUtils.newInstance(factory);
 	}
 
 	private void assertNonFinalField(Field field) {

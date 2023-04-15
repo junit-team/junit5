@@ -111,7 +111,7 @@ public @interface TempDir {
 
 	/**
 	 * Property name used to set the scope of temporary directories created via
-	 * {@link org.junit.jupiter.api.io.TempDir @TempDir} annotation: {@value}
+	 * {@link TempDir @TempDir} annotation: {@value}
 	 *
 	 * <h4>Supported Values</h4>
 	 * <ul>
