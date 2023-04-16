@@ -12,6 +12,7 @@ package example;
 
 // tag::user_guide[]
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.logging.Logger;
 
@@ -21,6 +22,10 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInfo;
 
+// end::user_guide[]
+// Use fully-qualified names to avoid having them show up in the imports.
+@org.junit.jupiter.api.parallel.Execution(org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD)
+// tag::user_guide[]
 class RepeatedTestsDemo {
 
 	private Logger logger = // ...
@@ -45,6 +50,18 @@ class RepeatedTestsDemo {
 	@RepeatedTest(5)
 	void repeatedTestWithRepetitionInfo(RepetitionInfo repetitionInfo) {
 		assertEquals(5, repetitionInfo.getTotalRepetitions());
+	}
+
+	// end::user_guide[]
+	// Use fully-qualified name to avoid having it show up in the imports.
+	@org.junit.jupiter.api.Disabled("intentional failures would break the build")
+	// tag::user_guide[]
+	@RepeatedTest(value = 8, failureThreshold = 2)
+	void repeatedTestWithFailureThreshold(RepetitionInfo repetitionInfo) {
+		// Simulate unexpected failure every second repetition
+		if (repetitionInfo.getCurrentRepetition() % 2 == 0) {
+			fail("Boom!");
+		}
 	}
 
 	@RepeatedTest(value = 1, name = "{displayName} {currentRepetition}/{totalRepetitions}")

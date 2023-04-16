@@ -13,21 +13,38 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.skippedWithReason;
+import static org.junit.platform.testkit.engine.EventConditions.started;
+import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.engine.Events;
 
 /**
@@ -37,37 +54,6 @@ import org.junit.platform.testkit.engine.Events;
  * @since 5.0
  */
 class RepeatedTestTests extends AbstractJupiterTestEngineTests {
-
-	private static int fortyTwo = 0;
-
-	@BeforeEach
-	@AfterEach
-	void beforeAndAfterEach(TestInfo testInfo, RepetitionInfo repetitionInfo) {
-		if (testInfo.getTestMethod().get().getName().equals("repeatedOnce")) {
-			assertThat(repetitionInfo.getCurrentRepetition()).isEqualTo(1);
-			assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(1);
-		}
-		else if (testInfo.getTestMethod().get().getName().equals("repeatedFortyTwoTimes")) {
-			assertThat(repetitionInfo.getCurrentRepetition()).isBetween(1, 42);
-			assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(42);
-		}
-	}
-
-	@AfterAll
-	static void afterAll() {
-		assertEquals(42, fortyTwo);
-	}
-
-	@RepeatedTest(1)
-	void repeatedOnce(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
-	}
-
-	@RepeatedTest(42)
-	void repeatedFortyTwoTimes(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).matches("repetition \\d+ of 42");
-		fortyTwo++;
-	}
 
 	@RepeatedTest(1)
 	@DisplayName("Repeat!")
@@ -124,39 +110,218 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(5);
 	}
 
-	@RepeatedTest(1)
-	void failsContainerOnEmptyPattern() {
-		executeTest("testWithEmptyPattern").assertThatEvents() //
-				.haveExactly(1, event(container(), displayName("testWithEmptyPattern()"), //
-					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
+	@Nested
+	class LifecycleMethodTests {
+
+		private static int fortyTwo = 0;
+
+		@AfterAll
+		static void afterAll() {
+			assertEquals(42, fortyTwo);
+		}
+
+		@BeforeEach
+		@AfterEach
+		void beforeAndAfterEach(TestInfo testInfo, RepetitionInfo repetitionInfo) {
+			switch (testInfo.getTestMethod().get().getName()) {
+				case "repeatedOnce": {
+					assertThat(repetitionInfo.getCurrentRepetition()).isEqualTo(1);
+					assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(1);
+					break;
+				}
+				case "repeatedFortyTwoTimes": {
+					assertThat(repetitionInfo.getCurrentRepetition()).isBetween(1, 42);
+					assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(42);
+					break;
+				}
+			}
+		}
+
+		@RepeatedTest(1)
+		void repeatedOnce(TestInfo testInfo) {
+			assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
+		}
+
+		@RepeatedTest(42)
+		void repeatedFortyTwoTimes(TestInfo testInfo) {
+			assertThat(testInfo.getDisplayName()).matches("repetition \\d+ of 42");
+			fortyTwo++;
+		}
+
 	}
 
-	@RepeatedTest(1)
-	void failsContainerOnBlankPattern() {
-		executeTest("testWithBlankPattern").assertThatEvents() //
-				.haveExactly(1, event(container(), displayName("testWithBlankPattern()"), //
-					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
-	}
+	@Nested
+	class FailureTests {
 
-	@RepeatedTest(1)
-	void failsContainerOnNegativeRepeatCount() {
-		executeTest("negativeRepeatCount").assertThatEvents() //
-				.haveExactly(1, event(container(), displayName("negativeRepeatCount()"), //
-					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
-	}
+		private static final Condition<Throwable> emptyPattern = message(
+			value -> value.contains("must be declared with a non-empty name"));
 
-	@RepeatedTest(1)
-	void failsContainerOnZeroRepeatCount() {
-		executeTest("zeroRepeatCount").assertThatEvents() //
-				.haveExactly(1, event(container(), displayName("zeroRepeatCount()"), //
-					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
-	}
+		private static final Condition<Throwable> invalidRepetitionCount = message(
+			value -> value.contains("must be declared with a positive 'value'"));
 
-	private Events executeTest(String methodName) {
-		return executeTests(selectMethod(TestCase.class, methodName)).allEvents();
+		private static final Condition<Throwable> invalidThreshold = message(value -> value.endsWith(
+			"must declare a 'failureThreshold' greater than zero and less than the total number of repetitions [10]."));
+
+		@BeforeEach
+		void resetCounter() {
+			TestCase.counter.set(0);
+		}
+
+		@Test
+		void failsContainerForEmptyPattern() {
+			executeTest("testWithEmptyPattern").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("testWithEmptyPattern()"), //
+						finishedWithFailure(emptyPattern)));
+		}
+
+		@Test
+		void failsContainerForBlankPattern() {
+			executeTest("testWithBlankPattern").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("testWithBlankPattern()"), //
+						finishedWithFailure(emptyPattern)));
+		}
+
+		@Test
+		void failsContainerForNegativeRepeatCount() {
+			executeTest("negativeRepeatCount").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("negativeRepeatCount()"), //
+						finishedWithFailure(invalidRepetitionCount)));
+		}
+
+		@Test
+		void failsContainerForZeroRepeatCount() {
+			executeTest("zeroRepeatCount").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("zeroRepeatCount()"), //
+						finishedWithFailure(invalidRepetitionCount)));
+		}
+
+		@Test
+		void failsContainerForFailureThresholdSetToNegativeValue() {
+			executeTest("failureThresholdSetToNegativeValue").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("failureThresholdSetToNegativeValue()"), //
+						finishedWithFailure(invalidThreshold)));
+		}
+
+		@Test
+		void failsContainerForFailureThresholdSetToZero() {
+			executeTest("failureThresholdSetToZero").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("failureThresholdSetToZero()"), //
+						finishedWithFailure(invalidThreshold)));
+		}
+
+		@Test
+		void failsContainerForFailureThresholdGreaterThanRepetitionCount() {
+			executeTest("failureThresholdGreaterThanRepetitionCount").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("failureThresholdGreaterThanRepetitionCount()"), //
+						finishedWithFailure(invalidThreshold)));
+		}
+
+		@Test
+		void failsContainerForFailureThresholdEqualToRepetitionCount() {
+			executeTest("failureThresholdEqualToRepetitionCount").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("failureThresholdEqualToRepetitionCount()"), //
+						finishedWithFailure(invalidThreshold)));
+		}
+
+		@Test
+		void failureThresholdEqualToRepetitionCountMinusOne() {
+			String methodName = "failureThresholdEqualToRepetitionCountMinusOne";
+			// @formatter:off
+			executeTest(methodName).assertEventsMatchLooselyInOrder(
+				event(container(methodName), started()),
+				event(test("test-template-invocation:#1"), finishedWithFailure(message("Boom!"))),
+				event(test("test-template-invocation:#2"), finishedWithFailure(message("Boom!"))),
+				event(test("test-template-invocation:#3"), skippedWithReason("Failure threshold [2] exceeded")),
+				event(container(methodName), finishedSuccessfully()));
+			// @formatter:on
+		}
+
+		@Test
+		void failureThreshold1() {
+			String methodName = "failureThreshold1";
+			// @formatter:off
+			executeTest(methodName).assertEventsMatchLooselyInOrder(
+				event(container(methodName), started()),
+				event(test("test-template-invocation:#1"), finishedSuccessfully()),
+				event(test("test-template-invocation:#2"), finishedWithFailure(message("Boom!"))),
+				event(test("test-template-invocation:#3"), skippedWithReason("Failure threshold [1] exceeded")),
+				event(container(methodName), finishedSuccessfully()));
+			// @formatter:on
+		}
+
+		@Test
+		void failureThreshold2() {
+			String methodName = "failureThreshold2";
+			// @formatter:off
+			executeTest(methodName).assertEventsMatchLooselyInOrder(
+				event(container(methodName), started()),
+				event(test("test-template-invocation:#1"), finishedSuccessfully()),
+				event(test("test-template-invocation:#2"), finishedWithFailure(message("Boom!"))),
+				event(test("test-template-invocation:#3"), finishedWithFailure(message("Boom!"))),
+				event(test("test-template-invocation:#4"), skippedWithReason("Failure threshold [2] exceeded")),
+				event(container(methodName), finishedSuccessfully()));
+			// @formatter:on
+		}
+
+		@Test
+		void failureThreshold3() {
+			String methodName = "failureThreshold3";
+			// @formatter:off
+			executeTest(methodName).assertEventsMatchLooselyInOrder(
+				event(container(methodName), started()),
+				event(test("test-template-invocation:#1"), finishedSuccessfully()),
+				event(test("test-template-invocation:#2"), finishedWithFailure(message("Boom!"))),
+				event(test("test-template-invocation:#3"), finishedSuccessfully()),
+				event(test("test-template-invocation:#4"), finishedWithFailure(message("Boom!"))),
+				event(test("test-template-invocation:#5"), finishedSuccessfully()),
+				event(test("test-template-invocation:#6"), finishedWithFailure(message("Boom!"))),
+				event(test("test-template-invocation:#7"), skippedWithReason("Failure threshold [3] exceeded")),
+				event(test("test-template-invocation:#8"), skippedWithReason("Failure threshold [3] exceeded")),
+				event(container(methodName), finishedSuccessfully()));
+			// @formatter:on
+		}
+
+		@Test
+		void failureThresholdWithConcurrentExecution() {
+			Class<TestCase> testClass = TestCase.class;
+			String methodName = "failureThresholdWithConcurrentExecution";
+			Method method = ReflectionUtils.findMethod(testClass, methodName).get();
+			LauncherDiscoveryRequest request = request()//
+					.selectors(selectMethod(testClass, method))//
+					.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")//
+					.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")//
+					.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed")//
+					.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, "4")//
+					.build();
+
+			Events tests = executeTests(request).testEvents();
+
+			// There are 20 repetitions/tests in total.
+			assertThat(tests.dynamicallyRegistered().count()).as("registered").isEqualTo(20);
+			assertThat(tests.started().count() + tests.skipped().count()).as("started or skipped").isEqualTo(20);
+			// Would be 3 successful tests without parallel execution, but with race conditions
+			// and multiple threads we may encounter more; and yet we still should not
+			// encounter too many.
+			assertThat(tests.succeeded().count()).as("succeeded").isBetween(3L, 10L);
+			// Would be 3 failed tests without parallel execution, but with race conditions
+			// and multiple threads we may encounter more.
+			assertThat(tests.failed().count()).as("failed").isGreaterThanOrEqualTo(3);
+			// Would be 14 skipped tests without parallel execution, but with race conditions
+			// and multiple threads we may not encounter many.
+			assertThat(tests.skipped().count()).as("skipped").isGreaterThan(0);
+		}
+
+		private Events executeTest(String methodName) {
+			Class<TestCase> testClass = TestCase.class;
+			Method method = ReflectionUtils.findMethod(testClass, methodName).get();
+			return executeTests(selectMethod(testClass, method)).allEvents();
+		}
+
 	}
 
 	static class TestCase {
+
+		static final AtomicInteger counter = new AtomicInteger();
 
 		@RepeatedTest(value = 1, name = "")
 		void testWithEmptyPattern() {
@@ -174,12 +339,63 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		void zeroRepeatCount() {
 		}
 
-		@RepeatedTest(value = 10, failureThreshold = 2)
-		void failureThreshold(RepetitionInfo info) {
-			if (info.getCurrentRepetition() > 5) {
+		@RepeatedTest(value = 10, failureThreshold = -1)
+		void failureThresholdSetToNegativeValue() {
+			fail("Boom!");
+		}
+
+		@RepeatedTest(value = 10, failureThreshold = 0)
+		void failureThresholdSetToZero() {
+			fail("Boom!");
+		}
+
+		@RepeatedTest(value = 10, failureThreshold = 11)
+		void failureThresholdGreaterThanRepetitionCount() {
+			fail("Boom!");
+		}
+
+		@RepeatedTest(value = 10, failureThreshold = 10)
+		void failureThresholdEqualToRepetitionCount() {
+			fail("Boom!");
+		}
+
+		@RepeatedTest(value = 3, failureThreshold = 2)
+		void failureThresholdEqualToRepetitionCountMinusOne() {
+			fail("Boom!");
+		}
+
+		@RepeatedTest(value = 3, failureThreshold = 1)
+		void failureThreshold1() {
+			int count = counter.incrementAndGet();
+			if (count > 1) {
+				fail("Boom!");
+			}
+		}
+
+		@RepeatedTest(value = 4, failureThreshold = 2)
+		void failureThreshold2() {
+			int count = counter.incrementAndGet();
+			if (count > 1) {
+				fail("Boom!");
+			}
+		}
+
+		@RepeatedTest(value = 8, failureThreshold = 3)
+		void failureThreshold3() {
+			int count = counter.incrementAndGet();
+			if ((count > 1) && (count % 2 == 0)) {
+				fail("Boom!");
+			}
+		}
+
+		@RepeatedTest(value = 20, failureThreshold = 3)
+		void failureThresholdWithConcurrentExecution() {
+			int count = counter.incrementAndGet();
+			if ((count > 1) && (count % 2 == 0)) {
 				fail("Boom!");
 			}
 		}
 
 	}
+
 }

@@ -43,14 +43,15 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		String displayName = context.getDisplayName();
 		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
 		int totalRepetitions = totalRepetitions(repeatedTest, testMethod);
-		int failureThreshold = failureThreshold(repeatedTest, testMethod);
 		AtomicInteger failureCount = new AtomicInteger();
+		int failureThreshold = failureThreshold(repeatedTest, testMethod);
 		RepeatedTestDisplayNameFormatter formatter = displayNameFormatter(repeatedTest, testMethod, displayName);
 
 		// @formatter:off
 		return IntStream
 				.rangeClosed(1, totalRepetitions)
-				.mapToObj(repetition -> new RepeatedTestInvocationContext(repetition, totalRepetitions, failureThreshold, failureCount, formatter));
+				.mapToObj(repetition -> new DefaultRepetitionInfo(repetition, totalRepetitions, failureCount, failureThreshold))
+				.map(repetitionInfo -> new RepeatedTestInvocationContext(repetitionInfo, formatter));
 		// @formatter:on
 	}
 
@@ -63,8 +64,13 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 
 	private int failureThreshold(RepeatedTest repeatedTest, Method method) {
 		int failureThreshold = repeatedTest.failureThreshold();
-		Preconditions.condition(failureThreshold > 0, () -> String.format(
-			"Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'failureThreshold'.", method));
+		if (failureThreshold != Integer.MAX_VALUE) {
+			int repetitions = repeatedTest.value();
+			Preconditions.condition((failureThreshold > 0) && (failureThreshold < repetitions),
+				() -> String.format("Configuration error: @RepeatedTest on method [%s] must declare a "
+						+ "'failureThreshold' greater than zero and less than the total number of repetitions [%d].",
+					method, repetitions));
+		}
 		return failureThreshold;
 	}
 

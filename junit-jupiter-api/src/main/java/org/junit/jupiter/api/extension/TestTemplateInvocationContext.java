@@ -66,8 +66,4 @@ public interface TestTemplateInvocationContext {
 		return emptyList();
 	}
 
-	default boolean shouldBeSkipped() {
-		return false;
-	}
-
 }
