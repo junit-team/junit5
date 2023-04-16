@@ -30,6 +30,7 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
@@ -341,13 +342,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 
 		private IOException createIOExceptionWithAttachedFailures(SortedMap<Path, IOException> failures) {
-			// @formatter:off
-			String joinedPaths = failures.keySet().stream()
-					.map(this::tryToDeleteOnExit)
-					.map(this::relativizeSafely)
-					.map(String::valueOf)
+			Path emptyPath = Paths.get("");
+			String joinedPaths = failures.keySet().stream() //
+					.map(this::tryToDeleteOnExit) //
+					.map(this::relativizeSafely) //
+					.map(path -> emptyPath.equals(path) ? "<root>" : path.toString()) //
 					.collect(joining(", "));
-			// @formatter:on
 			IOException exception = new IOException("Failed to delete temp directory " + dir.toAbsolutePath()
 					+ ". The following paths could not be deleted (see suppressed exceptions for details): "
 					+ joinedPaths);
