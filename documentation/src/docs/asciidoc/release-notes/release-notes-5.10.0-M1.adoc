@@ -65,12 +65,16 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
+
+* `@RepeatedTest` can now be configured with a failure threshold which signifies the
+  number of failures after which remaining repetitions will be automatically skipped. See
+  the <<../user-guide/index.adoc#writing-tests-repeated-tests, User Guide>> for details.
 * New `ArgumentsAccessor.getInvocationIndex()` method that supplies the index of a
   `@ParameterizedTest` invocation.
-* `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal to
-  fall back to the default display name generator.
 * `@EmptySource` now supports additional types, including `Collection` and `Map` subtypes
   with a public no-arg constructor.
+* `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal to
+  fall back to the default display name generator.
 * New `AnnotationBasedArgumentsProvider` convenience base class which implements both
   `ArgumentsProvider` and `AnnotationConsumer`.
 * New `AnnotationBasedArgumentConverter` convenience base class which implements both
