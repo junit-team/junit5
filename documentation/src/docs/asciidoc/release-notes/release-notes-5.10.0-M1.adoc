@@ -54,6 +54,8 @@ repository on GitHub.
   `@MethodSource("myFactory([I)"` (which was already supported) and
   `@MethodSource("myFactory(java.lang.String[])` instead of
   `@MethodSource("myFactory([Ljava.lang.String;)`.
+* Exceptions thrown for undeletable files when cleaning up a temporary directory created
+  via `@TempDir` now include the root cause.
 
 ==== Deprecations and Breaking Changes
 
