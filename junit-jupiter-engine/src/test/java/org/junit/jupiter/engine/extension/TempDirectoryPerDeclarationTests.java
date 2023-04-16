@@ -200,6 +200,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		assertSingleFailedTest(results, //
 			instanceOf(IOException.class), //
 			message(it -> it.startsWith("Failed to delete temp directory")), //
+			message(it -> it.endsWith(
+				"The following paths could not be deleted (see suppressed exceptions for details): <root>, undeletable")), //
 			suppressed(0, instanceOf(DirectoryNotEmptyException.class)), //
 			suppressed(1, instanceOf(IOException.class), message("Simulated failure")));
 	}
@@ -212,6 +214,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		assertSingleFailedTest(results, //
 			instanceOf(IOException.class), //
 			message(it -> it.startsWith("Failed to delete temp directory")), //
+			message(it -> it.endsWith(
+				"The following paths could not be deleted (see suppressed exceptions for details): <root>, undeletable")), //
 			suppressed(0, instanceOf(DirectoryNotEmptyException.class)), //
 			suppressed(1, instanceOf(IOException.class), message("Simulated failure")));
 	}
