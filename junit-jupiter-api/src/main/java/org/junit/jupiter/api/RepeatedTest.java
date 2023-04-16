@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -152,6 +153,29 @@ public @interface RepeatedTest {
 	 */
 	String name() default SHORT_DISPLAY_NAME;
 
+	/**
+	 * Configures the number of failures after which remaining repetitions will
+	 * be automatically skipped.
+	 *
+	 * <p>Set this to a positive number less than the total {@linkplain #value()
+	 * number of repetitions} in order to skip the invocations of remaining
+	 * repetitions after the specified number of failures has been encountered.
+	 *
+	 * <p>For example, if you are using {@code @RepeatedTest} to repeatedly invoke
+	 * a test that you suspect to be <em>flaky</em>, a single failure is sufficient
+	 * to demonstrate that the test is flaky, and there is no need to invoke the
+	 * remaining repetitions. To support that specific use case, set
+	 * {@code failureThreshold = 1}. You can alternatively set the threshold to
+	 * a number greater than {@code 1} depending on your use case.
+	 *
+	 * <p>Defaults to {@link Integer#MAX_VALUE}, signaling that no failure
+	 * threshold will be applied, which effectively means that the specified
+	 * {@linkplain #value() number of repetitions} will be invoked regardless of
+	 * whether any repetitions fail.
+	 *
+	 * @since 5.10
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
 	int failureThreshold() default Integer.MAX_VALUE;
 
 }
