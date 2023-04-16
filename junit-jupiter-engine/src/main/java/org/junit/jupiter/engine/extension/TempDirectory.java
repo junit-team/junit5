@@ -319,6 +319,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 						}
 						catch (Exception suppressed) {
 							exception.addSuppressed(suppressed);
+							failures.put(path, exception);
 						}
 					}
 					else {
