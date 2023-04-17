@@ -53,6 +53,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -63,6 +64,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.TempDirectory.FileOperations;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -192,30 +194,26 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				.assertStatistics(stats -> stats.started(2).succeeded(2));
 	}
 
-	@Test
-	@DisplayName("only attempts to delete undeletable directories once")
-	void onlyAttemptsToDeleteUndeletableDirectoriesOnce() {
-		var results = executeTestsForClass(UndeletableDirectoryTestCase.class);
-
-		assertSingleFailedTest(results, //
-			instanceOf(IOException.class), //
-			message(it -> it.startsWith("Failed to delete temp directory")), //
-			message(it -> it.endsWith(
-				"The following paths could not be deleted (see suppressed exceptions for details): <root>, undeletable")), //
-			suppressed(0, instanceOf(DirectoryNotEmptyException.class)), //
-			suppressed(1, instanceOf(IOException.class), message("Simulated failure")));
+	@TestFactory
+	@DisplayName("only attempts to delete undeletable paths once")
+	Stream<DynamicTest> onlyAttemptsToDeleteUndeletablePathsOnce() {
+		return Stream.of( //
+			dynamicTest("directory", () -> onlyAttemptsToDeleteUndeletablePathOnce(UndeletableDirectoryTestCase.class)), //
+			dynamicTest("file", () -> onlyAttemptsToDeleteUndeletablePathOnce(UndeletableFileTestCase.class)) //
+		);
 	}
 
-	@Test
-	@DisplayName("only attempts to delete undeletable files once")
-	void onlyAttemptsToDeleteUndeletableFilesOnce() {
-		var results = executeTestsForClass(UndeletableFileTestCase.class);
+	private void onlyAttemptsToDeleteUndeletablePathOnce(Class<? extends UndeletableTestCase> testClass) {
+		var results = executeTestsForClass(testClass);
+
+		var tempDir = results.testEvents().reportingEntryPublished().stream().map(
+			it -> it.getPayload(ReportEntry.class).orElseThrow()).map(
+				it -> Path.of(it.getKeyValuePairs().get(UndeletableTestCase.TEMP_DIR))).findAny().orElseThrow();
 
 		assertSingleFailedTest(results, //
 			instanceOf(IOException.class), //
-			message(it -> it.startsWith("Failed to delete temp directory")), //
-			message(it -> it.endsWith(
-				"The following paths could not be deleted (see suppressed exceptions for details): <root>, undeletable")), //
+			message("Failed to delete temp directory " + tempDir.toAbsolutePath() + ". " + //
+					"The following paths could not be deleted (see suppressed exceptions for details): <root>, undeletable"), //
 			suppressed(0, instanceOf(DirectoryNotEmptyException.class)), //
 			suppressed(1, instanceOf(IOException.class), message("Simulated failure")));
 	}
@@ -1028,15 +1026,16 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class UndeletableDirectoryTestCase {
+	static class UndeletableTestCase {
 
-		static final Path UNDELETABLE_SUB_DIR = Path.of("undeletable");
+		static final Path UNDELETABLE_PATH = Path.of("undeletable");
+		static final String TEMP_DIR = "TEMP_DIR";
 
 		@RegisterExtension
 		BeforeEachCallback injector = context -> context //
 				.getStore(TempDirectory.NAMESPACE) //
 				.put(TempDirectory.FILE_OPERATIONS_KEY, (FileOperations) path -> {
-					if (path.endsWith(UNDELETABLE_SUB_DIR)) {
+					if (path.endsWith(UNDELETABLE_PATH)) {
 						throw new IOException("Simulated failure");
 					}
 					else {
@@ -1044,31 +1043,26 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 					}
 				});
 
-		@Test
-		void test(@TempDir Path tempDir) throws Exception {
-			Files.createDirectory(tempDir.resolve(UNDELETABLE_SUB_DIR));
+		@TempDir
+		Path tempDir;
+
+		@BeforeEach
+		void reportTempDir(TestReporter reporter) {
+			reporter.publishEntry(TEMP_DIR, tempDir.toString());
 		}
 	}
 
-	static class UndeletableFileTestCase {
-
-		static final Path UNDELETABLE_FILE = Path.of("undeletable");
-
-		@RegisterExtension
-		BeforeEachCallback injector = context -> context //
-				.getStore(TempDirectory.NAMESPACE) //
-				.put(TempDirectory.FILE_OPERATIONS_KEY, (FileOperations) path -> {
-					if (path.endsWith(UNDELETABLE_FILE)) {
-						throw new IOException("Simulated failure");
-					}
-					else {
-						Files.delete(path);
-					}
-				});
-
+	static class UndeletableDirectoryTestCase extends UndeletableTestCase {
 		@Test
-		void test(@TempDir Path tempDir) throws Exception {
-			Files.createFile(tempDir.resolve(UNDELETABLE_FILE));
+		void test() throws Exception {
+			Files.createDirectory(tempDir.resolve(UNDELETABLE_PATH));
+		}
+	}
+
+	static class UndeletableFileTestCase extends UndeletableTestCase {
+		@Test
+		void test() throws Exception {
+			Files.createFile(tempDir.resolve(UNDELETABLE_PATH));
 		}
 	}
 }
