@@ -25,7 +25,7 @@ archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "1.0.1" 
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 bnd = { module = "biz.aQute.bnd:biz.aQute.bndlib", version = "6.4.0" }
-classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.153" }
+classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.157" }
 commons-io = { module = "commons-io:commons-io", version = "2.11.0" }
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.11" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.21" }
