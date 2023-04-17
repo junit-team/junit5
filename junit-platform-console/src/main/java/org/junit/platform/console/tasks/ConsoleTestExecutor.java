@@ -148,6 +148,8 @@ public class ConsoleTestExecutor {
 				return Optional.of(new TreePrintingListener(out, colorPalette, theme));
 			case VERBOSE:
 				return Optional.of(new VerboseTreePrintingListener(out, colorPalette, 16, theme));
+			case TESTFEED:
+				return Optional.of(new TestFeedPrintingListener(out, colorPalette));
 			default:
 				return Optional.empty();
 		}

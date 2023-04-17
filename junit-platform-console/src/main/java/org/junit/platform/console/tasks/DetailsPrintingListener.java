@@ -10,18 +10,18 @@
 
 package org.junit.platform.console.tasks;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import java.util.regex.Pattern;
 
-import org.apiguardian.api.API;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 
-/**
- * @since 1.9
- */
-@API(status = EXPERIMENTAL, since = "1.9")
-public interface DetailsPrintingListener extends TestExecutionListener {
+interface DetailsPrintingListener extends TestExecutionListener {
+
+	Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
 
 	void listTests(TestPlan testPlan);
 
+	static String indented(String message, String indentation) {
+		return LINE_START_PATTERN.matcher(message).replaceAll(indentation).trim();
+	}
 }

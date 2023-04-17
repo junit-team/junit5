@@ -38,6 +38,8 @@ repository on GitHub.
   methods of the former. Please refer to the
   <<../user-guide/index.adoc#launcher-api-launcher-interceptors-custom, User Guide>> for
   details.
+* The new `testfeed` details mode for `ConsoleLauncher` prints test execution events as
+  they occur in a concise format.
 
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
