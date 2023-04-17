@@ -16,7 +16,7 @@ dependencies {
 	implementation("com.diffplug.spotless:spotless-plugin-gradle:6.17.0")
 	implementation("com.github.ben-manes:gradle-versions-plugin:0.46.0")
 	implementation("gradle.plugin.com.github.johnrengelman:shadow:8.0.0")
-	compileOnly("com.gradle:gradle-enterprise-gradle-plugin:3.12.6") // keep in sync with root settings.gradle.kts
+	compileOnly("com.gradle:gradle-enterprise-gradle-plugin:3.13") // keep in sync with root settings.gradle.kts
 }
 
 tasks {
