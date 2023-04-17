@@ -571,6 +571,10 @@ methods of the former. Please refer to the
 <a href="../user-guide/index.html#launcher-api-launcher-interceptors-custom">User Guide</a> for
 details.</p>
 </li>
+<li>
+<p>The new <code>testfeed</code> details mode for <code>ConsoleLauncher</code> prints test execution events as
+they occur in a concise format.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -593,6 +597,10 @@ supports canonical array names&#8201;&#8212;&#8201;for example, you may now spec
 <code>@MethodSource("myFactory([I)"</code> (which was already supported) and
 <code>@MethodSource("myFactory(java.lang.String[])</code> instead of
 <code>@MethodSource("myFactory([Ljava.lang.String;)</code>.</p>
+</li>
+<li>
+<p>Exceptions thrown for undeletable files when cleaning up a temporary directory created
+via <code>@TempDir</code> now include the root cause.</p>
 </li>
 </ul>
 </div>
@@ -922,7 +930,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-14 10:57:30 UTC
+Last updated 2023-04-17 17:39:42 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
