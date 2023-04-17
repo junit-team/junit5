@@ -10,21 +10,34 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
+import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
+
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestWatcher;
 
 /**
- * {@code RepetitionExtension} implements {@link ParameterResolver} to resolve
- * the {@link RepetitionInfo} for the currently executing {@code @RepeatedTest}
- * and also implements {@link TestWatcher} to track the
- * {@linkplain RepetitionInfo#getFailureCount() failure count}.
+ * {@code RepetitionExtension} implements the following extension APIs to support
+ * repetitions of a {@link RepeatedTest @RepeatedTest} method.
+ *
+ * <ul>
+ * <li>{@link ParameterResolver} to resolve {@link RepetitionInfo} arguments</li>
+ * <li>{@link TestWatcher} to track the {@linkplain RepetitionInfo#getFailureCount()
+ * failure count}</li>
+ * <li>{@link ExecutionCondition} to disable the repetition if the
+ * {@linkplain RepetitionInfo#getFailureThreshold() failure threshold} has been
+ * exceeded</li>
+ * </ul>
  *
  * @since 5.0
  */
-class RepetitionExtension implements ParameterResolver, TestWatcher {
+class RepetitionExtension implements ParameterResolver, TestWatcher, ExecutionCondition {
 
 	private final DefaultRepetitionInfo repetitionInfo;
 
@@ -45,6 +58,15 @@ class RepetitionExtension implements ParameterResolver, TestWatcher {
 	@Override
 	public void testFailed(ExtensionContext context, Throwable cause) {
 		this.repetitionInfo.failureCount.incrementAndGet();
+	}
+
+	@Override
+	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+		int failureThreshold = this.repetitionInfo.failureThreshold;
+		if (this.repetitionInfo.failureCount.get() >= failureThreshold) {
+			return disabled("Failure threshold [" + failureThreshold + "] exceeded");
+		}
+		return enabled("Failure threshold not exceeded");
 	}
 
 }

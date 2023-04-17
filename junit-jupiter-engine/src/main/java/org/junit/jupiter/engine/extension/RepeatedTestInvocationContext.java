@@ -44,9 +44,4 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 		return singletonList(new RepetitionExtension(this.repetitionInfo));
 	}
 
-	@Override
-	public boolean shouldBeSkipped() {
-		return this.repetitionInfo.failureCount.get() >= this.repetitionInfo.failureThreshold;
-	}
-
 }

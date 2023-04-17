@@ -11,7 +11,6 @@
 package org.junit.jupiter.api.extension;
 
 import static java.util.Collections.emptyList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -65,22 +64,6 @@ public interface TestTemplateInvocationContext {
 	 */
 	default List<Extension> getAdditionalExtensions() {
 		return emptyList();
-	}
-
-	/**
-	 * Determine if this invocation should be skipped.
-	 *
-	 * <p>This is analogous to applying an {@link ExecutionCondition} to the
-	 * current test template invocation.
-	 *
-	 * <p>Defaults to {@code false}.
-	 *
-	 * @return {@code true} to have this invocation skipped
-	 * @since 5.10
-	 */
-	@API(status = EXPERIMENTAL, since = "5.10")
-	default boolean shouldBeSkipped() {
-		return false;
 	}
 
 }

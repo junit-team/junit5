@@ -51,7 +51,7 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		return IntStream
 				.rangeClosed(1, totalRepetitions)
 				.mapToObj(repetition -> new DefaultRepetitionInfo(repetition, totalRepetitions, failureCount, failureThreshold))
-				.map(repetitionInfo -> new RepeatedTestInvocationContext(repetitionInfo,formatter));
+				.map(repetitionInfo -> new RepeatedTestInvocationContext(repetitionInfo, formatter));
 		// @formatter:on
 	}
 
