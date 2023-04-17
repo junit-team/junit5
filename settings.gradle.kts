@@ -76,12 +76,12 @@ buildCache {
 	}
 	remote<HttpBuildCache> {
 		url = uri(buildParameters.buildCache.url.getOrElse("$gradleEnterpriseServer/cache/"))
-		val buildCacheUsername = buildParameters.buildCache.username.map { it.ifBlank { null } }
-		val buildCachePassword = buildParameters.buildCache.password.map { it.ifBlank { null } }
-		isPush = buildParameters.ci && buildCacheUsername.isPresent && buildCachePassword.isPresent
+		val buildCacheUsername = buildParameters.buildCache.username.orNull?.ifBlank { null }
+		val buildCachePassword = buildParameters.buildCache.password.orNull?.ifBlank { null }
+		isPush = buildParameters.ci && buildCacheUsername != null && buildCachePassword != null
 		credentials {
-			username = buildCacheUsername.orNull
-			password = buildCachePassword.orNull
+			username = buildCacheUsername
+			password = buildCachePassword
 		}
 	}
 }
