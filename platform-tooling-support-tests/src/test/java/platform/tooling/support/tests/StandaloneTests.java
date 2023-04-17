@@ -288,6 +288,29 @@ class StandaloneTests {
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}
 
+	@Test
+	@Order(2)
+	void discoverTestFeed() {
+		Result result = listTests("--details=testfeed");
+
+		var expected = """
+				JUnit Jupiter > JupiterIntegration > successful()
+				JUnit Jupiter > JupiterIntegration > fail()
+				JUnit Jupiter > JupiterIntegration > abort()
+				JUnit Jupiter > JupiterIntegration > disabled()
+				JUnit Jupiter > SuiteIntegration$SingleTestContainer > successful()
+				JUnit Vintage > VintageIntegration > f4il
+				JUnit Vintage > VintageIntegration > ignored
+				JUnit Vintage > VintageIntegration > succ3ssful
+				JUnit Platform Suite > SuiteIntegration > JUnit Jupiter > SuiteIntegration$SingleTestContainer > successful()
+
+				[        11 containers found ]
+				[         9 tests found      ]
+
+				""".stripIndent();
+		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+	}
+
 	private static Result listTests(String... args) {
 		var result = Request.builder() //
 				.setTool(new Java()) //
