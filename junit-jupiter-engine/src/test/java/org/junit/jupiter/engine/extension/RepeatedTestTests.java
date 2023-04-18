@@ -24,8 +24,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.testkit.engine.Events;
@@ -37,37 +39,6 @@ import org.junit.platform.testkit.engine.Events;
  * @since 5.0
  */
 class RepeatedTestTests extends AbstractJupiterTestEngineTests {
-
-	private static int fortyTwo = 0;
-
-	@BeforeEach
-	@AfterEach
-	void beforeAndAfterEach(TestInfo testInfo, RepetitionInfo repetitionInfo) {
-		if (testInfo.getTestMethod().get().getName().equals("repeatedOnce")) {
-			assertThat(repetitionInfo.getCurrentRepetition()).isEqualTo(1);
-			assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(1);
-		}
-		else if (testInfo.getTestMethod().get().getName().equals("repeatedFortyTwoTimes")) {
-			assertThat(repetitionInfo.getCurrentRepetition()).isBetween(1, 42);
-			assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(42);
-		}
-	}
-
-	@AfterAll
-	static void afterAll() {
-		assertEquals(42, fortyTwo);
-	}
-
-	@RepeatedTest(1)
-	void repeatedOnce(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
-	}
-
-	@RepeatedTest(42)
-	void repeatedFortyTwoTimes(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).matches("repetition \\d+ of 42");
-		fortyTwo++;
-	}
 
 	@RepeatedTest(1)
 	@DisplayName("Repeat!")
@@ -124,36 +95,85 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(5);
 	}
 
-	@RepeatedTest(1)
-	void failsContainerOnEmptyPattern() {
-		executeTest("testWithEmptyPattern").assertThatEvents() //
-				.haveExactly(1, event(container(), displayName("testWithEmptyPattern()"), //
-					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
+	@Nested
+	class LifecycleMethodTests {
+
+		private static int fortyTwo = 0;
+
+		@AfterAll
+		static void afterAll() {
+			assertEquals(42, fortyTwo);
+		}
+
+		@BeforeEach
+		@AfterEach
+		void beforeAndAfterEach(TestInfo testInfo, RepetitionInfo repetitionInfo) {
+			switch(testInfo.getTestMethod().get().getName()) {
+				case "repeatedOnce": {
+					assertThat(repetitionInfo.getCurrentRepetition()).isEqualTo(1);
+					assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(1);
+					break;
+				}
+				case "repeatedFortyTwoTimes": {
+					assertThat(repetitionInfo.getCurrentRepetition()).isBetween(1, 42);
+					assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(42);
+					break;
+				}
+			}
+		}
+
+		@RepeatedTest(1)
+		void repeatedOnce(TestInfo testInfo) {
+			assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
+		}
+
+		@RepeatedTest(42)
+		void repeatedFortyTwoTimes(TestInfo testInfo) {
+			assertThat(testInfo.getDisplayName()).matches("repetition \\d+ of 42");
+			fortyTwo++;
+		}
+
 	}
 
-	@RepeatedTest(1)
-	void failsContainerOnBlankPattern() {
-		executeTest("testWithBlankPattern").assertThatEvents() //
-				.haveExactly(1, event(container(), displayName("testWithBlankPattern()"), //
-					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
-	}
+	@Nested
+	class FailureIntegrationTests {
 
-	@RepeatedTest(1)
-	void failsContainerOnNegativeRepeatCount() {
-		executeTest("negativeRepeatCount").assertThatEvents() //
-				.haveExactly(1, event(container(), displayName("negativeRepeatCount()"), //
-					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
-	}
+		@Test
+		void failsContainerOnEmptyPattern() {
+			executeTest("testWithEmptyPattern").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("testWithEmptyPattern()"), //
+						finishedWithFailure(
+							message(value -> value.contains("must be declared with a non-empty name")))));
+		}
 
-	@RepeatedTest(1)
-	void failsContainerOnZeroRepeatCount() {
-		executeTest("zeroRepeatCount").assertThatEvents() //
-				.haveExactly(1, event(container(), displayName("zeroRepeatCount()"), //
-					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
-	}
+		@Test
+		void failsContainerOnBlankPattern() {
+			executeTest("testWithBlankPattern").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("testWithBlankPattern()"), //
+						finishedWithFailure(
+							message(value -> value.contains("must be declared with a non-empty name")))));
+		}
 
-	private Events executeTest(String methodName) {
-		return executeTests(selectMethod(TestCase.class, methodName)).allEvents();
+		@Test
+		void failsContainerOnNegativeRepeatCount() {
+			executeTest("negativeRepeatCount").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("negativeRepeatCount()"), //
+						finishedWithFailure(
+							message(value -> value.contains("must be declared with a positive 'value'")))));
+		}
+
+		@Test
+		void failsContainerOnZeroRepeatCount() {
+			executeTest("zeroRepeatCount").assertThatEvents() //
+					.haveExactly(1, event(container(), displayName("zeroRepeatCount()"), //
+						finishedWithFailure(
+							message(value -> value.contains("must be declared with a positive 'value'")))));
+		}
+
+		private Events executeTest(String methodName) {
+			return executeTests(selectMethod(TestCase.class, methodName)).allEvents();
+		}
+
 	}
 
 	static class TestCase {
