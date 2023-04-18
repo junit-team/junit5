@@ -176,33 +176,45 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 
 		@RepeatedTest(value = 10, failureThreshold = -1)
 		void failureThresholdSetToNegativeValue(RepetitionInfo info) {
+			fail("Boom!");
 		}
 
 		@RepeatedTest(value = 10, failureThreshold = 0)
 		void failureThresholdSetToZero(RepetitionInfo info) {
+			fail("Boom!");
 		}
 
-		@RepeatedTest(value = 10, failureThreshold = 99)
-		void failureThresholdUseCase0(RepetitionInfo info) {
+		@RepeatedTest(value = 10, failureThreshold = 11)
+		void failureThresholdGreaterThanRepetitionCount(RepetitionInfo info) {
+			fail("Boom!");
+		}
+
+		@RepeatedTest(value = 10, failureThreshold = 10)
+		void failureThresholdEqualToRepetitionCount(RepetitionInfo info) {
+			fail("Boom!");
+		}
+
+		@RepeatedTest(value = 10, failureThreshold = 9)
+		void failureThresholdEqualToRepetitionCountMinusOne(RepetitionInfo info) {
 			fail("Boom!");
 		}
 
 		@RepeatedTest(value = 10, failureThreshold = 1)
-		void failureThresholdUseCase1(RepetitionInfo info) {
+		void failureThreshold1(RepetitionInfo info) {
 			if (info.getCurrentRepetition() > 5) {
 				fail("Boom!");
 			}
 		}
 
 		@RepeatedTest(value = 10, failureThreshold = 2)
-		void failureThresholdUseCase2(RepetitionInfo info) {
+		void failureThreshold2(RepetitionInfo info) {
 			if (info.getCurrentRepetition() > 5) {
 				fail("Boom!");
 			}
 		}
 
 		@RepeatedTest(value = 10, failureThreshold = 3)
-		void failureThresholdUseCase3(RepetitionInfo info) {
+		void failureThreshold3(RepetitionInfo info) {
 			int count = info.getCurrentRepetition();
 			if ((count > 3) && (count % 2 == 0)) {
 				fail("Boom!");

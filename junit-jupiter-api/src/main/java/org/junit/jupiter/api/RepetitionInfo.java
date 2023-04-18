@@ -56,7 +56,7 @@ public interface RepetitionInfo {
 	 * {@link RepeatedTest @RepeatedTest} method that have ended in a failure.
 	 *
 	 * @since 5.10
-	 * @see RepeatedTest#failureThreshold()
+	 * @see #getFailureThreshold()
 	 */
 	@API(status = EXPERIMENTAL, since = "5.10")
 	int getFailureCount();
