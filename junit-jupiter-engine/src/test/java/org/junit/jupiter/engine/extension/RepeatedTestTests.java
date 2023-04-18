@@ -108,7 +108,7 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		@BeforeEach
 		@AfterEach
 		void beforeAndAfterEach(TestInfo testInfo, RepetitionInfo repetitionInfo) {
-			switch(testInfo.getTestMethod().get().getName()) {
+			switch (testInfo.getTestMethod().get().getName()) {
 				case "repeatedOnce": {
 					assertThat(repetitionInfo.getCurrentRepetition()).isEqualTo(1);
 					assertThat(repetitionInfo.getTotalRepetitions()).isEqualTo(1);
