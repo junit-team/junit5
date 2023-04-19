@@ -31,7 +31,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 
 	/**
-	 * Uses the mandatory {@value CONFIG_FIXED_PARALLELISM_PROPERTY_NAME} configuration
+	 * Uses the mandatory {@value #CONFIG_FIXED_PARALLELISM_PROPERTY_NAME} configuration
 	 * parameter as the desired parallelism.
 	 */
 	FIXED {
@@ -55,7 +55,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	/**
 	 * Computes the desired parallelism based on the number of available
-	 * processors/cores multiplied by the {@value CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME}
+	 * processors/cores multiplied by the {@value #CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME}
 	 * configuration parameter.
 	 */
 	DYNAMIC {
@@ -78,7 +78,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	/**
 	 * Allows the specification of a custom {@link ParallelExecutionConfigurationStrategy}
-	 * implementation via the mandatory {@value CONFIG_CUSTOM_CLASS_PROPERTY_NAME}
+	 * implementation via the mandatory {@value #CONFIG_CUSTOM_CLASS_PROPERTY_NAME}
 	 * configuration parameter to determine the desired configuration.
 	 */
 	CUSTOM {

@@ -65,7 +65,7 @@ public class LauncherConstants {
 	 * to use per thread and output type if output capturing is enabled:
 	 * {@value}
 	 *
-	 * <p>Value must be an integer; defaults to {@value CAPTURE_MAX_BUFFER_DEFAULT}.
+	 * <p>Value must be an integer; defaults to {@value #CAPTURE_MAX_BUFFER_DEFAULT}.
 	 *
 	 * @see #CAPTURE_MAX_BUFFER_DEFAULT
 	 */

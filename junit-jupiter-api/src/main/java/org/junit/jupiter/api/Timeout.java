@@ -50,9 +50,9 @@ import org.apiguardian.api.API;
  *     <dd>Default timeout for {@link Test @Test} methods</dd>
  *     <dt>{@value #DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
  *     <dd>Default timeout for {@link TestTemplate @TestTemplate} methods</dd>
- *     <dt>{@value DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
+ *     <dt>{@value #DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
  *     <dd>Default timeout for {@link TestFactory @TestFactory} methods</dd>
- *     <dt>{@value DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
+ *     <dt>{@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
  *     <dd>Default timeout for all lifecycle methods</dd>
  *     <dt>{@value #DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
  *     <dd>Default timeout for {@link BeforeAll @BeforeAll} methods</dd>
