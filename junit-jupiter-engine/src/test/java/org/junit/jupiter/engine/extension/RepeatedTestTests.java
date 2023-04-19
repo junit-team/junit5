@@ -13,7 +13,12 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -25,6 +30,7 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -37,6 +43,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.engine.Events;
 
 /**
@@ -145,6 +152,11 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 	@Nested
 	class FailureTests {
 
+		@BeforeEach
+		void resetCounter() {
+			TestCase.counter.set(0);
+		}
+
 		@Test
 		void failsContainerForEmptyPattern() {
 			executeTest("testWithEmptyPattern").assertThatEvents() //
@@ -226,7 +238,7 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		void failureThreshold1() {
 			String methodName = "failureThreshold1";
 			// @formatter:off
-			executeTest(methodName, RepetitionInfo.class).assertEventsMatchLooselyInOrder(
+			executeTest(methodName).assertEventsMatchLooselyInOrder(
 				event(container(methodName), started()),
 				event(test("test-template-invocation:#1"), finishedSuccessfully()),
 				event(test("test-template-invocation:#2"), finishedWithFailure(message("Boom!"))),
@@ -239,7 +251,7 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		void failureThreshold2() {
 			String methodName = "failureThreshold2";
 			// @formatter:off
-			executeTest(methodName, RepetitionInfo.class).assertEventsMatchLooselyInOrder(
+			executeTest(methodName).assertEventsMatchLooselyInOrder(
 				event(container(methodName), started()),
 				event(test("test-template-invocation:#1"), finishedSuccessfully()),
 				event(test("test-template-invocation:#2"), finishedWithFailure(message("Boom!"))),
@@ -253,7 +265,7 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		void failureThreshold3() {
 			String methodName = "failureThreshold3";
 			// @formatter:off
-			executeTest(methodName, RepetitionInfo.class).assertEventsMatchLooselyInOrder(
+			executeTest(methodName).assertEventsMatchLooselyInOrder(
 				event(container(methodName), started()),
 				event(test("test-template-invocation:#1"), finishedSuccessfully()),
 				event(test("test-template-invocation:#2"), finishedWithFailure(message("Boom!"))),
@@ -267,19 +279,47 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 			// @formatter:on
 		}
 
-		private Events executeTest(String methodName) {
-			return executeTest(methodName, new Class<?>[0]);
+		@Test
+		void failureThresholdWithConcurrentExecution() {
+			Class<TestCase> testClass = TestCase.class;
+			String methodName = "failureThresholdWithConcurrentExecution";
+			Method method = ReflectionUtils.findMethod(testClass, methodName).get();
+			LauncherDiscoveryRequest request = request()//
+					.selectors(selectMethod(testClass, method))//
+					.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")//
+					.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")//
+					.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed")//
+					.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, "4")//
+					.build();
+
+			Events tests = executeTests(request).testEvents();
+
+			// There are 20 repetitions/tests in total.
+			assertThat(tests.dynamicallyRegistered().count()).as("registered").isEqualTo(20);
+			assertThat(tests.started().count() + tests.skipped().count()).as("started or skipped").isEqualTo(20);
+			// Would be 3 successful tests without parallel execution, but with race conditions
+			// and multiple threads we may encounter more; and yet we still should not
+			// encounter too many.
+			assertThat(tests.succeeded().count()).as("succeeded").isBetween(3L, 10L);
+			// Would be 3 failed tests without parallel execution, but with race conditions
+			// and multiple threads we may encounter more.
+			assertThat(tests.failed().count()).as("failed").isGreaterThanOrEqualTo(3);
+			// Would be 14 skipped tests without parallel execution, but with race conditions
+			// and multiple threads we may not encounter many.
+			assertThat(tests.skipped().count()).as("skipped").isGreaterThan(0);
 		}
 
-		private Events executeTest(String methodName, Class<?>... parameterTypes) {
+		private Events executeTest(String methodName) {
 			Class<TestCase> testClass = TestCase.class;
-			Method method = ReflectionUtils.findMethod(testClass, methodName, parameterTypes).get();
+			Method method = ReflectionUtils.findMethod(testClass, methodName).get();
 			return executeTests(selectMethod(testClass, method)).allEvents();
 		}
 
 	}
 
 	static class TestCase {
+
+		static final AtomicInteger counter = new AtomicInteger();
 
 		@RepeatedTest(value = 1, name = "")
 		void testWithEmptyPattern() {
@@ -323,22 +363,32 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@RepeatedTest(value = 3, failureThreshold = 1)
-		void failureThreshold1(RepetitionInfo info) {
-			if (info.getCurrentRepetition() > 1) {
+		void failureThreshold1() {
+			int count = counter.incrementAndGet();
+			if (count > 1) {
 				fail("Boom!");
 			}
 		}
 
 		@RepeatedTest(value = 4, failureThreshold = 2)
-		void failureThreshold2(RepetitionInfo info) {
-			if (info.getCurrentRepetition() > 1) {
+		void failureThreshold2() {
+			int count = counter.incrementAndGet();
+			if (count > 1) {
 				fail("Boom!");
 			}
 		}
 
 		@RepeatedTest(value = 8, failureThreshold = 3)
-		void failureThreshold3(RepetitionInfo info) {
-			int count = info.getCurrentRepetition();
+		void failureThreshold3() {
+			int count = counter.incrementAndGet();
+			if ((count > 1) && (count % 2 == 0)) {
+				fail("Boom!");
+			}
+		}
+
+		@RepeatedTest(value = 20, failureThreshold = 3)
+		void failureThresholdWithConcurrentExecution() {
+			int count = counter.incrementAndGet();
 			if ((count > 1) && (count % 2 == 0)) {
 				fail("Boom!");
 			}
