@@ -64,11 +64,11 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 
 	private int failureThreshold(RepeatedTest repeatedTest, Method method) {
 		int failureThreshold = repeatedTest.failureThreshold();
-		int repetitions = repeatedTest.value();
-		Preconditions.condition(failureThreshold > 0, () -> String.format(
-			"Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'failureThreshold'.",
-			method));
 		if (failureThreshold != Integer.MAX_VALUE) {
+			Preconditions.condition(failureThreshold > 0, () -> String.format(
+				"Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'failureThreshold'.",
+				method));
+			int repetitions = repeatedTest.value();
 			Preconditions.condition(failureThreshold < repetitions,
 				() -> String.format("Configuration error: @RepeatedTest on method [%s] must be declared with a "
 						+ "'failureThreshold' less than the number of repetitions.",
