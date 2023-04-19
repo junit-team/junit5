@@ -228,7 +228,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * <p>In addition to the {@linkplain LauncherDiscoveryListener listeners}
 	 * registered using this method, this builder will add a default listener
 	 * to this request that can be specified using the
-	 * {@value LauncherDiscoveryRequestBuilder#DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME}
+	 * {@value #DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME}
 	 * configuration parameter.
 	 *
 	 * @param listeners the {@code LauncherDiscoveryListeners} to add; never
