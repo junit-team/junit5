@@ -51,12 +51,15 @@ class JavaTimeArgumentConverter extends AnnotationBasedArgumentConverter<JavaTim
 
 	@Override
 	protected Object convert(Object input, Class<?> targetClass, JavaTimeConversionPattern annotation) {
-		String pattern = annotation.value();
-		if (!TEMPORAL_QUERIES.containsKey(targetClass)) {
+		if (input == null) {
+			throw new ArgumentConversionException("Cannot convert null to " + targetClass.getName());
+		}
+		TemporalQuery<?> temporalQuery = TEMPORAL_QUERIES.get(targetClass);
+		if (temporalQuery == null) {
 			throw new ArgumentConversionException("Cannot convert to " + targetClass.getName() + ": " + input);
 		}
+		String pattern = annotation.value();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-		TemporalQuery<?> temporalQuery = TEMPORAL_QUERIES.get(targetClass);
 		return formatter.parse(input.toString(), temporalQuery);
 	}
 

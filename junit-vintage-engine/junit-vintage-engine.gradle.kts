@@ -62,11 +62,13 @@ tasks {
 		}
 	}
 	val testWithoutJUnit4 by registering(Test::class) {
+		val test by testing.suites.existing(JvmTestSuite::class)
 		(options as JUnitPlatformOptions).apply {
 			includeTags("missing-junit4")
 		}
 		setIncludes(listOf("**/JUnit4VersionCheckTests.class"))
-		classpath = classpath.filter {
+		testClassesDirs = files(test.map { it.sources.output.classesDirs })
+		classpath = files(test.map { it.sources.runtimeClasspath }).filter {
 			!it.name.startsWith("junit-4")
 		}
 	}

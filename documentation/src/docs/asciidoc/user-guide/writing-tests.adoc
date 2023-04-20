@@ -751,8 +751,9 @@ NOTE: Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declar
 `static` in `@Nested` test classes.
 
 If you are authoring tests using the Kotlin programming language, you may also find it
-easier to implement `@BeforeAll` and `@AfterAll` methods by switching to the "per-class"
-test instance lifecycle mode.
+easier to implement non-static `@BeforeAll` and `@AfterAll` lifecycle methods as well as
+`@MethodSource` factory methods by switching to the "per-class" test instance lifecycle
+mode.
 
 [[writing-tests-test-instance-lifecycle-changing-default]]
 ==== Changing the Default Test Instance Lifecycle
@@ -1256,13 +1257,13 @@ for parameterized tests that accept a single argument.
 * `{NullSource}`: provides a single `null` argument to the annotated `@ParameterizedTest`
   method.
    - `@NullSource` cannot be used for a parameter that has a primitive type.
-* `{EmptySource}`: provides a single _empty_ argument to the annotated `@ParameterizedTest`
-  method for parameters of the following types: `java.lang.String`, `java.util.Collection`
-  and subtypes with a public no-arg constructor, `java.util.List`, `java.util.Set`,
-  `java.util.SortedSet`, `java.util.NavigableSet`, `java.util.Map` and subtypes with a
-  public no-arg constructor, `java.util.SortedMap`, `java.util.NavigableMap`, primitive
-  arrays (e.g., `int[]`, `char[][]`, etc.), object arrays (e.g.,`String[]`, `Integer[][]`,
-  etc.).
+* `{EmptySource}`: provides a single _empty_ argument to the annotated
+  `@ParameterizedTest` method for parameters of the following types: `java.lang.String`,
+  `java.util.Collection` (and concrete subtypes with a `public` no-arg constructor),
+  `java.util.List`, `java.util.Set`, `java.util.SortedSet`, `java.util.NavigableSet`,
+  `java.util.Map` (and concrete subtypes with a `public` no-arg constructor,
+  `java.util.SortedMap`, `java.util.NavigableMap`, primitive arrays (e.g., `int[]`,
+  `char[][]`, etc.), object arrays (e.g.,`String[]`, `Integer[][]`, etc.).
 * `{NullAndEmptySource}`: a _composed annotation_ that combines the functionality of
   `@NullSource` and `@EmptySource`.
 

@@ -30,6 +30,7 @@ import org.junit.platform.console.options.Theme;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -54,8 +55,38 @@ public class ConsoleTestExecutor {
 		this.launcherSupplier = launcherSupplier;
 	}
 
+	public void discover(PrintWriter out) throws Exception {
+		new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> {
+			discoverTests(out);
+			return null;
+		});
+	}
+
 	public TestExecutionSummary execute(PrintWriter out) throws Exception {
 		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> executeTests(out));
+	}
+
+	private void discoverTests(PrintWriter out) {
+		Launcher launcher = launcherSupplier.get();
+		Optional<DetailsPrintingListener> commandLineTestPrinter = createDetailsPrintingListener(out);
+
+		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
+		TestPlan testPlan = launcher.discover(discoveryRequest);
+
+		commandLineTestPrinter.ifPresent(printer -> printer.listTests(testPlan));
+		if (options.getDetails() != Details.NONE) {
+			printFoundTestsSummary(out, testPlan);
+		}
+	}
+
+	private static void printFoundTestsSummary(PrintWriter out, TestPlan testPlan) {
+		SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
+		summaryListener.testPlanExecutionStarted(testPlan);
+		TestExecutionSummary summary = summaryListener.getSummary();
+
+		out.printf("%n[%10d containers found ]%n[%10d tests found      ]%n%n", summary.getContainersFoundCount(),
+			summary.getTestsFoundCount());
+		out.flush();
 	}
 
 	private TestExecutionSummary executeTests(PrintWriter out) {
@@ -104,7 +135,7 @@ public class ConsoleTestExecutor {
 		return summaryListener;
 	}
 
-	private Optional<TestExecutionListener> createDetailsPrintingListener(PrintWriter out) {
+	private Optional<DetailsPrintingListener> createDetailsPrintingListener(PrintWriter out) {
 		ColorPalette colorPalette = getColorPalette();
 		Theme theme = options.getTheme();
 		switch (options.getDetails()) {
@@ -117,6 +148,8 @@ public class ConsoleTestExecutor {
 				return Optional.of(new TreePrintingListener(out, colorPalette, theme));
 			case VERBOSE:
 				return Optional.of(new VerboseTreePrintingListener(out, colorPalette, 16, theme));
+			case TESTFEED:
+				return Optional.of(new TestFeedPrintingListener(out, colorPalette));
 			default:
 				return Optional.empty();
 		}

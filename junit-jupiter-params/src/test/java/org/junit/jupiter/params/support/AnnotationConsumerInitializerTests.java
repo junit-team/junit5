@@ -17,7 +17,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +31,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.JUnitException;
 
 @DisplayName("AnnotationConsumerInitializer")
-class AnnotationConsumerInitializerTest {
+class AnnotationConsumerInitializerTests {
 
 	@Test
 	@DisplayName("should initialize annotation consumer")
@@ -42,12 +41,12 @@ class AnnotationConsumerInitializerTest {
 		var initialisedAnnotationConsumer = initialize(method, instance);
 
 		assertThat(initialisedAnnotationConsumer.annotation) //
-				.isInstanceOf(CsvSource.class) //
-				.matches(annotation -> Arrays.equals(annotation.value(), new String[] { "a", "b" }));
+				.isInstanceOfSatisfying(CsvSource.class, //
+					source -> assertThat(source.value()).containsExactly("a", "b"));
 	}
 
 	@Test
-	@DisplayName("should initialize annotation based arguments provider")
+	@DisplayName("should initialize annotation-based ArgumentsProvider")
 	void shouldInitializeAnnotationBasedArgumentsProvider() throws NoSuchMethodException {
 		var instance = new SomeAnnotationBasedArgumentsProvider();
 		var method = SubjectClass.class.getDeclaredMethod("foo");
@@ -56,12 +55,12 @@ class AnnotationConsumerInitializerTest {
 		initialisedAnnotationConsumer.provideArguments(mock());
 
 		assertThat(initialisedAnnotationConsumer.annotation) //
-				.isInstanceOf(CsvSource.class) //
-				.matches(annotation -> Arrays.equals(annotation.value(), new String[] { "a", "b" }));
+				.isInstanceOfSatisfying(CsvSource.class, //
+					source -> assertThat(source.value()).containsExactly("a", "b"));
 	}
 
 	@Test
-	@DisplayName("should initialize annotation based argument converter")
+	@DisplayName("should initialize annotation-based ArgumentConverter")
 	void shouldInitializeAnnotationBasedArgumentConverter() throws NoSuchMethodException {
 		var instance = new SomeAnnotationBasedArgumentConverter();
 		var parameter = SubjectClass.class.getDeclaredMethod("bar", LocalDate.class).getParameters()[0];
@@ -72,8 +71,8 @@ class AnnotationConsumerInitializerTest {
 		initialisedAnnotationConsumer.convert("source", parameterContext);
 
 		assertThat(initialisedAnnotationConsumer.annotation) //
-				.isInstanceOf(JavaTimeConversionPattern.class) //
-				.matches(annotation -> annotation.value().equals("pattern"));
+				.isInstanceOfSatisfying(JavaTimeConversionPattern.class, //
+					annotation -> assertThat(annotation.value()).isEqualTo("pattern"));
 	}
 
 	@Test
@@ -127,19 +126,18 @@ class AnnotationConsumerInitializerTest {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static class SubjectClass {
 
 		@CsvSource({ "a", "b" })
 		void foo() {
-
 		}
 
 		void bar(@JavaTimeConversionPattern("pattern") LocalDate date) {
-
 		}
 
 		void noAnnotation(String param) {
-
 		}
 	}
+
 }

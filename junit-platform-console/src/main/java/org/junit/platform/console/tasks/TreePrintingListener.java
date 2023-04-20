@@ -13,20 +13,18 @@ package org.junit.platform.console.tasks;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
  */
-class TreePrintingListener implements TestExecutionListener {
+class TreePrintingListener implements DetailsPrintingListener {
 
 	private final Map<UniqueId, TreeNode> nodesByUniqueId = new ConcurrentHashMap<>();
 	private TreeNode root;
@@ -36,8 +34,7 @@ class TreePrintingListener implements TestExecutionListener {
 		this.treePrinter = new TreePrinter(out, theme, colorPalette);
 	}
 
-	private void addNode(TestIdentifier testIdentifier, Supplier<TreeNode> nodeSupplier) {
-		TreeNode node = nodeSupplier.get();
+	private void addNode(TestIdentifier testIdentifier, TreeNode node) {
 		nodesByUniqueId.put(testIdentifier.getUniqueIdObject(), node);
 		testIdentifier.getParentIdObject().map(nodesByUniqueId::get).orElse(root).addChild(node);
 	}
@@ -58,7 +55,7 @@ class TreePrintingListener implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		addNode(testIdentifier, () -> new TreeNode(testIdentifier));
+		addNode(testIdentifier, new TreeNode(testIdentifier));
 	}
 
 	@Override
@@ -68,7 +65,7 @@ class TreePrintingListener implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		addNode(testIdentifier, () -> new TreeNode(testIdentifier, reason));
+		addNode(testIdentifier, new TreeNode(testIdentifier, reason));
 	}
 
 	@Override
@@ -76,4 +73,15 @@ class TreePrintingListener implements TestExecutionListener {
 		getNode(testIdentifier).addReportEntry(entry);
 	}
 
+	@Override
+	public void listTests(TestPlan testPlan) {
+		root = new TreeNode(testPlan.toString());
+		testPlan.accept(new TestPlan.Visitor() {
+			@Override
+			public void visit(TestIdentifier testIdentifier) {
+				addNode(testIdentifier, new TreeNode(testIdentifier));
+			}
+		});
+		treePrinter.print(root);
+	}
 }
