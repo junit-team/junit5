@@ -52,7 +52,9 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `{displayName}` placeholder of `@ParameterizedTest` is no longer parsed during the
+  evaluation of the `MessageFormat`, now `@DisplayName` and Kotlin method names can contain
+  single apostrophes and `MessageFormat` elements, such as `{data}`.
 
 ==== Deprecations and Breaking Changes
 
