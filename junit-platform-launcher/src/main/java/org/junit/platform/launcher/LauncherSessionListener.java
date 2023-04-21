@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.platform.launcher.core.LauncherConfig;
@@ -39,7 +39,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
  * @see LauncherConfig.Builder#addLauncherSessionListeners
  * @see LauncherFactory
  */
-@API(status = EXPERIMENTAL, since = "1.8")
+@API(status = STABLE, since = "1.10")
 public interface LauncherSessionListener {
 
 	/**

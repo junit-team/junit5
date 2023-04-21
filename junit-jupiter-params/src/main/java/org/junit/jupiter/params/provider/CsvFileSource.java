@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -123,7 +122,7 @@ public @interface CsvFileSource {
 	 *
 	 * @since 5.8.2
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8.2")
+	@API(status = STABLE, since = "5.10")
 	boolean useHeadersInDisplayName() default false;
 
 	/**
@@ -136,7 +135,7 @@ public @interface CsvFileSource {
 	 *
 	 * @since 5.8.2
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8.2")
+	@API(status = STABLE, since = "5.10")
 	char quoteCharacter() default '"';
 
 	/**
@@ -211,7 +210,7 @@ public @interface CsvFileSource {
 	 *
 	 * @since 5.7
 	 */
-	@API(status = EXPERIMENTAL, since = "5.7")
+	@API(status = STABLE, since = "5.10")
 	int maxCharsPerColumn() default 4096;
 
 	/**
@@ -222,7 +221,7 @@ public @interface CsvFileSource {
 	 *
 	 * @since 5.8
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.10")
 	boolean ignoreLeadingAndTrailingWhitespace() default true;
 
 }

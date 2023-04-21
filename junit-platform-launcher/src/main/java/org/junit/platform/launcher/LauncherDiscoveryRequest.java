@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -91,7 +90,7 @@ public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 	 * @return the discovery listener; never {@code null}
 	 * @since 1.6
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
+	@API(status = STABLE, since = "1.10")
 	@Override
 	default LauncherDiscoveryListener getDiscoveryListener() {
 		return LauncherDiscoveryListener.NOOP;

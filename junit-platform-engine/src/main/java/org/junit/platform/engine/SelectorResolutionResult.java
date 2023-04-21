@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Optional;
 
@@ -26,7 +26,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 1.6
  */
-@API(status = EXPERIMENTAL, since = "1.6")
+@API(status = STABLE, since = "1.10")
 public class SelectorResolutionResult {
 
 	/**

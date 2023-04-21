@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -27,7 +28,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  *
  * @since 1.3
  */
-@API(status = EXPERIMENTAL, since = "1.3")
+@API(status = STABLE, since = "1.10")
 public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 
 	/**
