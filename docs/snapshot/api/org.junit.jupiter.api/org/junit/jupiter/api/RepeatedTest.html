@@ -81,7 +81,7 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">RepeatedTest</span></div>
 <div class="block"><code>@RepeatedTest</code> is used to signal that the annotated method is a
  <em>test template</em> method that should be repeated a <a href="#value()">specified number of times</a> with a configurable <a href="#name()">display
- name</a>.
+ name</a> and an optional <a href="#failureThreshold()">failure threshold</a>.
 
  <p>Each invocation of the repeated test behaves like the execution of a
  regular <a href="Test.html" title="annotation interface in org.junit.jupiter.api"><code>@Test</code></a> method with full support for the same lifecycle
@@ -162,9 +162,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Optional Element</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#name()" class="member-name-link">name</a></code></div>
+<div class="col-first even-row-color"><code>int</code></div>
+<div class="col-second even-row-color"><code><a href="#failureThreshold()" class="member-name-link">failureThreshold</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Configures the number of failures after which remaining repetitions will
+ be automatically skipped.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#name()" class="member-name-link">name</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">The display name for each repetition of the repeated test.</div>
 </div>
 </div>
@@ -370,6 +376,49 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>"repetition {currentRepetition} of {totalRepetitions}"</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="failureThreshold()">
+<h3>failureThreshold</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.10")
+</span><span class="return-type">int</span>&nbsp;<span class="element-name">failureThreshold</span></div>
+<div class="block">Configures the number of failures after which remaining repetitions will
+ be automatically skipped.
+
+ <p>Set this to a positive number less than the total <a href="#value()">number of repetitions</a> in order to skip the invocations of remaining
+ repetitions after the specified number of failures has been encountered.
+
+ <p>For example, if you are using <code>@RepeatedTest</code> to repeatedly invoke
+ a test that you suspect to be <em>flaky</em>, a single failure is sufficient
+ to demonstrate that the test is flaky, and there is no need to invoke the
+ remaining repetitions. To support that specific use case, set
+ <code>failureThreshold = 1</code>. You can alternatively set the threshold to
+ a number greater than <code>1</code> depending on your use case.
+
+ <p>Defaults to <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a>, signaling that no failure
+ threshold will be applied, which effectively means that the specified
+ <a href="#value()">number of repetitions</a> will be invoked regardless of
+ whether any repetitions fail.
+
+ <p><strong>WARNING</strong>: if the repetitions of a <code>@RepeatedTest</code>
+ method are executed in parallel, no guarantees can be made regarding the
+ failure threshold. It is therefore recommended that a <code>@RepeatedTest</code>
+ method be annotated with
+ <a href="parallel/Execution.html" title="annotation interface in org.junit.jupiter.api.parallel"><code>@Execution(SAME_THREAD)</code></a>
+ when parallel execution is configured.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the failure threshold; must be greater than zero and less than the
+ total number of repetitions</dd>
+<dt>Since:</dt>
+<dd>5.10</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>2147483647</dd>
 </dl>
 </section>
 </li>

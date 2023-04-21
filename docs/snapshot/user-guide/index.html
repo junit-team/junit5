@@ -3274,13 +3274,13 @@ following demonstrates how to have <code>TestInfo</code> injected into a test co
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java">RepetitionInfoParameterResolver</a></code>: if a method parameter in a <code>@RepeatedTest</code>,
-<code>@BeforeEach</code>, or <code>@AfterEach</code> method is of type <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/RepetitionInfo.html">RepetitionInfo</a></code>, the
-<code>RepetitionInfoParameterResolver</code> will supply an instance of <code>RepetitionInfo</code>.
-<code>RepetitionInfo</code> can then be used to retrieve information about the current repetition
-and the total number of repetitions for the corresponding <code>@RepeatedTest</code>. Note,
-however, that <code>RepetitionInfoParameterResolver</code> is not registered outside the context
-of a <code>@RepeatedTest</code>. See <a href="#writing-tests-repeated-tests-examples">Repeated Test Examples</a>.</p>
+<p><code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionExtension.java">RepetitionExtension</a></code>: if a method parameter in a <code>@RepeatedTest</code>, <code>@BeforeEach</code>, or
+<code>@AfterEach</code> method is of type <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/RepetitionInfo.html">RepetitionInfo</a></code>, the <code>RepetitionExtension</code> will supply
+an instance of <code>RepetitionInfo</code>. <code>RepetitionInfo</code> can then be used to retrieve
+information about the current repetition, the total number of repetitions, the number of
+repetitions that have failed, and the failure threshold for the corresponding
+<code>@RepeatedTest</code>. Note, however, that <code>RepetitionExtension</code> is not registered outside the
+context of a <code>@RepeatedTest</code>. See <a href="#writing-tests-repeated-tests-examples">Repeated Test Examples</a>.</p>
 </li>
 <li>
 <p><code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a constructor or method parameter is of type
@@ -3604,10 +3604,45 @@ will be automatically repeated 10 times.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In addition to specifying the number of repetitions, a custom display name can be
-configured for each repetition via the <code>name</code> attribute of the <code>@RepeatedTest</code>
-annotation. Furthermore, the display name can be a pattern composed of a combination of
-static text and dynamic placeholders. The following placeholders are currently supported.</p>
+<p>Since JUnit Jupiter 5.10, <code>@RepeatedTest</code> can be configured with a failure threshold which
+signifies the number of failures after which remaining repetitions will be automatically
+skipped. Set the <code>failureThreshold</code> attribute to a positive number less than the total
+number of repetitions in order to skip the invocations of remaining repetitions after the
+specified number of failures has been encountered.</p>
+</div>
+<div class="paragraph">
+<p>For example, if you are using <code>@RepeatedTest</code> to repeatedly invoke a test that you suspect
+to be <em>flaky</em>, a single failure is sufficient to demonstrate that the test is flaky, and
+there is no need to invoke the remaining repetitions. To support that specific use case,
+set <code>failureThreshold = 1</code>. You can alternatively set the threshold to a number greater
+than 1 depending on your use case.</p>
+</div>
+<div class="paragraph">
+<p>By default, the <code>failureThreshold</code> attribute is set to <code>Integer.MAX_VALUE</code>, signaling that
+no failure threshold will be applied, which effectively means that the specified number of
+repetitions will be invoked regardless of whether any repetitions fail.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If the repetitions of a <code>@RepeatedTest</code> method are executed in parallel, no
+guarantees can be made regarding the failure threshold. It is therefore recommended that a
+<code>@RepeatedTest</code> method be annotated with <code>@Execution(SAME_THREAD)</code> when parallel execution
+is configured. See <a href="#writing-tests-parallel-execution">Parallel Execution</a> for further details.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In addition to specifying the number of repetitions and failure threshold, a custom
+display name can be configured for each repetition via the <code>name</code> attribute of the
+<code>@RepeatedTest</code> annotation. Furthermore, the display name can be a pattern composed of a
+combination of static text and dynamic placeholders. The following placeholders are
+currently supported.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3634,9 +3669,10 @@ latter is equal to <code>"{displayName} :: repetition {currentRepetition} of
 <code>repeatedTest() :: repetition 1 of 10</code>, <code>repeatedTest() :: repetition 2 of 10</code>, etc.</p>
 </div>
 <div class="paragraph">
-<p>In order to retrieve information about the current repetition and the total number of
-repetitions programmatically, a developer can choose to have an instance of
-<code>RepetitionInfo</code> injected into a <code>@RepeatedTest</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> method.</p>
+<p>In order to retrieve information about the current repetition, the total number of
+repetitions, the number of repetitions that have failed, and the failure threshold, a
+developer can choose to have an instance of <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/RepetitionInfo.html">RepetitionInfo</a></code> injected into a
+<code>@RepeatedTest</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> method.</p>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-repeated-tests-examples"><a class="anchor" href="#writing-tests-repeated-tests-examples"></a>2.15.1. Repeated Test Examples</h4>
@@ -3645,10 +3681,15 @@ repetitions programmatically, a developer can choose to have an instance of
 repeated tests.</p>
 </div>
 <div class="paragraph">
-<p>The <code>repeatedTest()</code> method is identical to example from the previous section; whereas,
+<p>The <code>repeatedTest()</code> method is identical to the example from the previous section; whereas,
 <code>repeatedTestWithRepetitionInfo()</code> demonstrates how to have an instance of
 <code>RepetitionInfo</code> injected into a test to access the total number of repetitions for the
 current repeated test.</p>
+</div>
+<div class="paragraph">
+<p><code>repeatedTestWithFailureThreshold()</code> demonstrates how to set a failure threshold and
+simulates an unexpected failure for every second repetition. The resulting behavior can be
+viewed in the <code>ConsoleLauncher</code> output at the end of this section.</p>
 </div>
 <div class="paragraph">
 <p>The next two methods demonstrate how to include a custom <code>@DisplayName</code> for the
@@ -3689,6 +3730,10 @@ INFO: About to execute repetition 2 of 5 for repeatedTestWithRepetitionInfo
 INFO: About to execute repetition 3 of 5 for repeatedTestWithRepetitionInfo
 INFO: About to execute repetition 4 of 5 for repeatedTestWithRepetitionInfo
 INFO: About to execute repetition 5 of 5 for repeatedTestWithRepetitionInfo
+INFO: About to execute repetition 1 of 8 for repeatedTestWithFailureThreshold
+INFO: About to execute repetition 2 of 8 for repeatedTestWithFailureThreshold
+INFO: About to execute repetition 3 of 8 for repeatedTestWithFailureThreshold
+INFO: About to execute repetition 4 of 8 for repeatedTestWithFailureThreshold
 INFO: About to execute repetition 1 of 1 for customDisplayName
 INFO: About to execute repetition 1 of 1 for customDisplayNameWithLongPattern
 INFO: About to execute repetition 1 of 5 for repeatedTestInGerman
@@ -3701,6 +3746,7 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman</pre>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">fail</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.util.logging.Logger</span><span class="o">;</span>
 
@@ -3731,6 +3777,14 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman</pre>
     <span class="nd">@RepeatedTest</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
     <span class="kt">void</span> <span class="nf">repeatedTestWithRepetitionInfo</span><span class="o">(</span><span class="nc">RepetitionInfo</span> <span class="n">repetitionInfo</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">assertEquals</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="n">repetitionInfo</span><span class="o">.</span><span class="na">getTotalRepetitions</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@RepeatedTest</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">8</span><span class="o">,</span> <span class="n">failureThreshold</span> <span class="o">=</span> <span class="mi">2</span><span class="o">)</span>
+    <span class="kt">void</span> <span class="nf">repeatedTestWithFailureThreshold</span><span class="o">(</span><span class="nc">RepetitionInfo</span> <span class="n">repetitionInfo</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Simulate unexpected failure every second repetition</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">repetitionInfo</span><span class="o">.</span><span class="na">getCurrentRepetition</span><span class="o">()</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">fail</span><span class="o">(</span><span class="s">"Boom!"</span><span class="o">);</span>
+        <span class="o">}</span>
     <span class="o">}</span>
 
     <span class="nd">@RepeatedTest</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"{displayName} {currentRepetition}/{totalRepetitions}"</span><span class="o">)</span>
@@ -3777,6 +3831,15 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman</pre>
 │  │  ├─ repetition 3 of 5 ✔
 │  │  ├─ repetition 4 of 5 ✔
 │  │  └─ repetition 5 of 5 ✔
+│  ├─ repeatedTestWithFailureThreshold(RepetitionInfo) ✔
+│  │  ├─ repetition 1 of 8 ✔
+│  │  ├─ repetition 2 of 8 ✘ Boom!
+│  │  ├─ repetition 3 of 8 ✔
+│  │  ├─ repetition 4 of 8 ✘ Boom!
+│  │  ├─ repetition 5 of 8 ↷ Failure threshold [2] exceeded
+│  │  ├─ repetition 6 of 8 ↷ Failure threshold [2] exceeded
+│  │  ├─ repetition 7 of 8 ↷ Failure threshold [2] exceeded
+│  │  └─ repetition 8 of 8 ↷ Failure threshold [2] exceeded
 │  ├─ Repeat! ✔
 │  │  └─ Repeat! 1/1 ✔
 │  ├─ Details... ✔
@@ -12440,7 +12503,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-17 17:39:42 UTC
+Last updated 2023-04-21 09:37:11 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

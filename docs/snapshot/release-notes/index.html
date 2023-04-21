@@ -620,16 +620,21 @@ via <code>@TempDir</code> now include the root cause.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><code>@RepeatedTest</code> can now be configured with a failure threshold which signifies the
+number of failures after which remaining repetitions will be automatically skipped. See
+the <a href="../user-guide/index.html#writing-tests-repeated-tests">User Guide</a> for details.</p>
+</li>
+<li>
 <p>New <code>ArgumentsAccessor.getInvocationIndex()</code> method that supplies the index of a
 <code>@ParameterizedTest</code> invocation.</p>
 </li>
 <li>
-<p><code>DisplayNameGenerator</code> methods are now allowed to return <code>null</code>, in order to signal to
-fall back to the default display name generator.</p>
-</li>
-<li>
 <p><code>@EmptySource</code> now supports additional types, including <code>Collection</code> and <code>Map</code> subtypes
 with a public no-arg constructor.</p>
+</li>
+<li>
+<p><code>DisplayNameGenerator</code> methods are now allowed to return <code>null</code>, in order to signal to
+fall back to the default display name generator.</p>
 </li>
 <li>
 <p>New <code>AnnotationBasedArgumentsProvider</code> convenience base class which implements both
@@ -930,7 +935,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-17 17:39:42 UTC
+Last updated 2023-04-21 09:37:11 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

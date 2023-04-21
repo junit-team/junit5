@@ -125,6 +125,18 @@ loadScripts(document, 'script');</script>
  <a href="RepeatedTest.html" title="annotation interface in org.junit.jupiter.api"><code>@RepeatedTest</code></a> method.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getFailureCount()" class="member-name-link">getFailureCount</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Get the current number of repetitions of the corresponding
+ <a href="RepeatedTest.html" title="annotation interface in org.junit.jupiter.api"><code>@RepeatedTest</code></a> method that have ended in a failure.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getFailureThreshold()" class="member-name-link">getFailureThreshold</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Get the configured failure threshold of the corresponding
+ <a href="RepeatedTest.html" title="annotation interface in org.junit.jupiter.api"><code>@RepeatedTest</code></a> method.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getTotalRepetitions()" class="member-name-link">getTotalRepetitions</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Get the total number of repetitions of the corresponding
@@ -163,6 +175,46 @@ loadScripts(document, 'script');</script>
 <dd>
 <ul class="see-list">
 <li><a href="RepeatedTest.html#value()"><code>RepeatedTest.value()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getFailureCount()">
+<h3>getFailureCount</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.10")
+</span><span class="return-type">int</span>&nbsp;<span class="element-name">getFailureCount</span>()</div>
+<div class="block">Get the current number of repetitions of the corresponding
+ <a href="RepeatedTest.html" title="annotation interface in org.junit.jupiter.api"><code>@RepeatedTest</code></a> method that have ended in a failure.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.10</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="#getFailureThreshold()"><code>getFailureThreshold()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getFailureThreshold()">
+<h3>getFailureThreshold</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.10")
+</span><span class="return-type">int</span>&nbsp;<span class="element-name">getFailureThreshold</span>()</div>
+<div class="block">Get the configured failure threshold of the corresponding
+ <a href="RepeatedTest.html" title="annotation interface in org.junit.jupiter.api"><code>@RepeatedTest</code></a> method.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>5.10</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="RepeatedTest.html#failureThreshold()"><code>RepeatedTest.failureThreshold()</code></a></li>
 </ul>
 </dd>
 </dl>
