@@ -7606,13 +7606,13 @@ SELECTORS
                                -cp (directories and JAR files) are scanned. Explicit classpath
                                roots that are not on the classpath will be silently ignored.
                                This option can be repeated.
-      --scan-modules         EXPERIMENTAL: Scan all resolved modules for test discovery.
+      --scan-modules         Scan all resolved modules for test discovery.
   -u, --select-uri=URI       Select a URI for test discovery. This option can be repeated.
   -f, --select-file=FILE     Select a file for test discovery. This option can be repeated.
   -d, --select-directory=DIR Select a directory for test discovery. This option can be
                                repeated.
-  -o, --select-module=NAME   EXPERIMENTAL: Select single module for test discovery. This
-                               option can be repeated.
+  -o, --select-module=NAME   Select single module for test discovery. This option can be
+                               repeated.
   -p, --select-package=PKG   Select a package for test discovery. This option can be repeated.
   -c, --select-class=CLASS   Select a class for test discovery. This option can be repeated.
   -m, --select-method=NAME   Select a method for test discovery. This option can be repeated.
@@ -11779,46 +11779,6 @@ value of lower stability.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClassDescriptor</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClassOrderer</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClassOrdererContext</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DisplayNameGenerator.IndicativeSentences</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IndicativeSentencesGeneration</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodOrderer.DisplayName</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodOrderer.MethodName</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestClassOrder</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeout.ThreadMode</code> <em>(enum)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.9</code></p></td>
 </tr>
@@ -11834,38 +11794,8 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InvocationInterceptor</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InvocationInterceptor.Invocation</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LifecycleMethodExecutionExceptionHandler</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReflectiveInvocationContext</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestInstancePreConstructCallback</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.9</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestInstantiationException</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension.support</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TypeBasedParameterResolver</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.6</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.io</code></p></td>
@@ -11873,54 +11803,9 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.9</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.io</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TempDir</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Execution</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExecutionMode</code> <em>(enum)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Isolated</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ResourceAccessMode</code> <em>(enum)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ResourceLock</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ResourceLocks</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Resources</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.converter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotationBasedArgumentConverter</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.10</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.converter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TypedArgumentConverter</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
@@ -11928,119 +11813,9 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.10</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.commons.support</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SearchOption</code> <em>(enum)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.console</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConsoleLauncherToolProvider</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EngineDiscoveryListener</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectorResolutionResult</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.discovery</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>IterationSelector</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.9</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.config</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PrefixedConfigurationParameters</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.discovery</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EngineDiscoveryRequestResolver</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.discovery</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EngineDiscoveryRequestResolver.Builder</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.discovery</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EngineDiscoveryRequestResolver.InitializationContext</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.discovery</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectorResolver</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.discovery</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectorResolver.Context</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.discovery</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectorResolver.Match</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.discovery</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectorResolver.Resolution</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DefaultParallelExecutionConfigurationStrategy</code> <em>(enum)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExclusiveResource</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ForkJoinPoolHierarchicalTestExecutorService</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HierarchicalTestExecutorService</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Node.ExecutionMode</code> <em>(enum)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Node.Invocation</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.4</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ParallelExecutionConfiguration</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ParallelExecutionConfigurationStrategy</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ResourceLock</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SameThreadHierarchicalTestExecutorService</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.jfr</code></p></td>
@@ -12054,11 +11829,6 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EngineDiscoveryResult</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherDiscoveryListener</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
 </tr>
@@ -12066,16 +11836,6 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherInterceptor</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherSession</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherSessionListener</code> <em>(interface)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
@@ -12088,69 +11848,9 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher.listeners.discovery</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherDiscoveryListeners</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.reporting.open.xml</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>OpenTestReportGeneratingListener</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.9</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConfigurationParameter</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConfigurationParameters</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DisableParentConfigurationParameters</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectClasspathResource</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectClasspathResources</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectDirectories</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectFile</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectFiles</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectModules</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectUris</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.suite.api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Suite</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.8</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -12503,7 +12203,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-21 09:37:11 UTC
+Last updated 2023-04-21 12:06:23 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
