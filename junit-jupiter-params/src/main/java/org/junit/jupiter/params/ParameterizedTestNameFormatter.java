@@ -62,7 +62,7 @@ class ParameterizedTestNameFormatter {
 		MessageFormat format = new MessageFormat(pattern);
 		Object[] humanReadableArguments = makeReadable(format, namedArguments);
 		String formatted = format.format(humanReadableArguments);
-		return formatted.replace("__DISPLAY_NAME__",  this.displayName);
+		return formatted.replace("__DISPLAY_NAME__", this.displayName);
 	}
 
 	private Object[] extractNamedArguments(Object[] arguments) {
@@ -72,9 +72,9 @@ class ParameterizedTestNameFormatter {
 	}
 
 	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
-			String result = pattern//
-					.replace(DISPLAY_NAME_PLACEHOLDER, "__DISPLAY_NAME__")//
-					.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
+		String result = pattern//
+				.replace(DISPLAY_NAME_PLACEHOLDER, "__DISPLAY_NAME__")//
+				.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
 
 		if (result.contains(ARGUMENTS_WITH_NAMES_PLACEHOLDER)) {
 			result = result.replace(ARGUMENTS_WITH_NAMES_PLACEHOLDER, argumentsWithNamesPattern(arguments));
