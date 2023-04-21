@@ -800,13 +800,6 @@ class MethodArgumentsProviderTests {
 		}
 	}
 
-	@TestInstance(TestInstance.Lifecycle.PER_METHOD)
-	static class NonStaticTestCaseForPerMethodLifecycle {
-		Stream<String> nonStaticStringStreamProvider() {
-			return Stream.of("foo", "bar");
-		}
-	}
-
 	static class ExternalFactoryMethods {
 
 		static Stream<String> stringsProvider() {
