@@ -61,6 +61,24 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	@Test
+	void formatsDisplayNameWithApostrophe() {
+		String displayName = "display'Zero";
+		var formatter = formatter(DISPLAY_NAME_PLACEHOLDER, "display'Zero");
+
+		assertEquals(displayName, formatter.format(1));
+		assertEquals(displayName, formatter.format(2));
+	}
+
+	@Test
+	void formatsDisplayNameContainingFormatElements() {
+		String displayName = "{enigma} {0} '{1}'";
+		var formatter = formatter(DISPLAY_NAME_PLACEHOLDER, displayName);
+
+		assertEquals(displayName, formatter.format(1));
+		assertEquals(displayName, formatter.format(2));
+	}
+
+	@Test
 	void formatsInvocationIndex() {
 		var formatter = formatter(INDEX_PLACEHOLDER, "enigma");
 

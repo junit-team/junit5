@@ -31,6 +31,7 @@ import org.junit.platform.commons.util.StringUtils;
 class ParameterizedTestNameFormatter {
 
 	private static final char ELLIPSIS = '\u2026';
+	private static final String DISPLAY_NAME_TEMPORARY_PLACEHOLDER = "__DISPLAY_NAME__";
 
 	private final String pattern;
 	private final String displayName;
@@ -61,7 +62,8 @@ class ParameterizedTestNameFormatter {
 		String pattern = prepareMessageFormatPattern(invocationIndex, namedArguments);
 		MessageFormat format = new MessageFormat(pattern);
 		Object[] humanReadableArguments = makeReadable(format, namedArguments);
-		return format.format(humanReadableArguments);
+		String formatted = format.format(humanReadableArguments);
+		return formatted.replace(DISPLAY_NAME_TEMPORARY_PLACEHOLDER, this.displayName);
 	}
 
 	private Object[] extractNamedArguments(Object[] arguments) {
@@ -72,7 +74,7 @@ class ParameterizedTestNameFormatter {
 
 	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
 		String result = pattern//
-				.replace(DISPLAY_NAME_PLACEHOLDER, this.displayName)//
+				.replace(DISPLAY_NAME_PLACEHOLDER, DISPLAY_NAME_TEMPORARY_PLACEHOLDER)//
 				.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
 
 		if (result.contains(ARGUMENTS_WITH_NAMES_PLACEHOLDER)) {
