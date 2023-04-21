@@ -61,6 +61,14 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	@Test
+	void formatsDisplayNameWithApostrophe() {
+		var formatter = formatter(DISPLAY_NAME_PLACEHOLDER, "display'Zero");
+
+		assertEquals("display'Zero", formatter.format(1));
+		assertEquals("display'Zero", formatter.format(2));
+	}
+
+	@Test
 	void formatsInvocationIndex() {
 		var formatter = formatter(INDEX_PLACEHOLDER, "enigma");
 
