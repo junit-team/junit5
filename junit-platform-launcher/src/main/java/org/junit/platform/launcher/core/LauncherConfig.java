@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collection;
@@ -77,7 +76,7 @@ public interface LauncherConfig {
 	 * automatically registered
 	 * @since 1.8
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	boolean isLauncherSessionListenerAutoRegistrationEnabled();
 
 	/**
@@ -89,7 +88,7 @@ public interface LauncherConfig {
 	 * automatically registered
 	 * @since 1.8
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	boolean isLauncherDiscoveryListenerAutoRegistrationEnabled();
 
 	/**
@@ -111,7 +110,7 @@ public interface LauncherConfig {
 	 * registered
 	 * @since 1.7
 	 */
-	@API(status = EXPERIMENTAL, since = "1.7")
+	@API(status = STABLE, since = "1.10")
 	boolean isPostDiscoveryFilterAutoRegistrationEnabled();
 
 	/**
@@ -131,7 +130,7 @@ public interface LauncherConfig {
 	 * {@code null} but potentially empty
 	 * @since 1.8
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	Collection<LauncherSessionListener> getAdditionalLauncherSessionListeners();
 
 	/**
@@ -142,7 +141,7 @@ public interface LauncherConfig {
 	 * {@code null} but potentially empty
 	 * @since 1.8
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	Collection<LauncherDiscoveryListener> getAdditionalLauncherDiscoveryListeners();
 
 	/**
@@ -162,7 +161,7 @@ public interface LauncherConfig {
 	 * {@code null} but potentially empty
 	 * @since 1.7
 	 */
-	@API(status = EXPERIMENTAL, since = "1.7")
+	@API(status = STABLE, since = "1.10")
 	Collection<PostDiscoveryFilter> getAdditionalPostDiscoveryFilters();
 
 	/**
@@ -205,7 +204,7 @@ public interface LauncherConfig {
 		 * @return this builder for method chaining
 		 * @since 1.8
 		 */
-		@API(status = EXPERIMENTAL, since = "1.8")
+		@API(status = STABLE, since = "1.10")
 		public Builder enableLauncherSessionListenerAutoRegistration(boolean enabled) {
 			this.launcherSessionListenerAutoRegistrationEnabled = enabled;
 			return this;
@@ -222,7 +221,7 @@ public interface LauncherConfig {
 		 * @return this builder for method chaining
 		 * @since 1.8
 		 */
-		@API(status = EXPERIMENTAL, since = "1.8")
+		@API(status = STABLE, since = "1.10")
 		public Builder enableLauncherDiscoveryListenerAutoRegistration(boolean enabled) {
 			this.launcherDiscoveryListenerAutoRegistrationEnabled = enabled;
 			return this;
@@ -266,7 +265,7 @@ public interface LauncherConfig {
 		 * @return this builder for method chaining
 		 * @since 1.7
 		 */
-		@API(status = EXPERIMENTAL, since = "1.7")
+		@API(status = STABLE, since = "1.10")
 		public Builder enablePostDiscoveryFilterAutoRegistration(boolean enabled) {
 			this.postDiscoveryFilterAutoRegistrationEnabled = enabled;
 			return this;
@@ -339,7 +338,7 @@ public interface LauncherConfig {
 		 * @return this builder for method chaining
 		 * @since 1.7
 		 */
-		@API(status = EXPERIMENTAL, since = "1.7")
+		@API(status = STABLE, since = "1.10")
 		public Builder addPostDiscoveryFilters(PostDiscoveryFilter... filters) {
 			Preconditions.notNull(filters, "PostDiscoveryFilter array must not be null");
 			Preconditions.containsNoNullElements(filters, "PostDiscoveryFilter array must not contain null elements");

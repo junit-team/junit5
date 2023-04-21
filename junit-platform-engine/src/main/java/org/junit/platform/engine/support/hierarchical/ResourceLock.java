@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
@@ -20,7 +20,7 @@ import org.apiguardian.api.API;
  * @since 1.3
  * @see HierarchicalTestExecutorService.TestTask#getResourceLock()
  */
-@API(status = EXPERIMENTAL, since = "1.3")
+@API(status = STABLE, since = "1.10")
 public interface ResourceLock extends AutoCloseable {
 
 	/**

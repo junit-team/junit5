@@ -11,7 +11,7 @@
 package org.junit.platform.engine.support.discovery;
 
 import static java.util.stream.Collectors.toCollection;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ import org.junit.platform.engine.support.discovery.SelectorResolver.Resolution;
  * @see #builder()
  * @see #resolve(EngineDiscoveryRequest, TestDescriptor)
  */
-@API(status = EXPERIMENTAL, since = "1.5")
+@API(status = STABLE, since = "1.10")
 public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 
 	private final List<Function<InitializationContext<T>, SelectorResolver>> resolverCreators;
@@ -134,7 +134,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 	 * @param <T> the type of the engine's descriptor
 	 * @since 1.5
 	 */
-	@API(status = EXPERIMENTAL, since = "1.5")
+	@API(status = STABLE, since = "1.10")
 	public static class Builder<T extends TestDescriptor> {
 
 		private final List<Function<InitializationContext<T>, SelectorResolver>> resolverCreators = new ArrayList<>();
@@ -219,7 +219,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 	 * @see Builder#addSelectorResolver(Function)
 	 * @see Builder#addTestDescriptorVisitor(Function)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.5")
+	@API(status = STABLE, since = "1.10")
 	public interface InitializationContext<T extends TestDescriptor> {
 
 		/**
