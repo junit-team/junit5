@@ -1036,6 +1036,11 @@ By default, the `failureThreshold` attribute is set to `Integer.MAX_VALUE`, sign
 no failure threshold will be applied, which effectively means that the specified number of
 repetitions will be invoked regardless of whether any repetitions fail.
 
+WARNING: If the repetitions of a `@RepeatedTest` method are executed in parallel, no
+guarantees can be made regarding the failure threshold. It is therefore recommended that a
+`@RepeatedTest` method be annotated with `@Execution(SAME_THREAD)` when parallel execution
+is configured. See <<writing-tests-parallel-execution>> for further details.
+
 In addition to specifying the number of repetitions and failure threshold, a custom
 display name can be configured for each repetition via the `name` attribute of the
 `@RepeatedTest` annotation. Furthermore, the display name can be a pattern composed of a

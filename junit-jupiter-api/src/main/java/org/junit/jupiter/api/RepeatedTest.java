@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
  * {@code @RepeatedTest} is used to signal that the annotated method is a
  * <em>test template</em> method that should be repeated a {@linkplain #value
  * specified number of times} with a configurable {@linkplain #name display
- * name}.
+ * name} and an optional {@linkplain #failureThreshold() failure threshold}.
  *
  * <p>Each invocation of the repeated test behaves like the execution of a
  * regular {@link Test @Test} method with full support for the same lifecycle
@@ -173,7 +173,15 @@ public @interface RepeatedTest {
 	 * {@linkplain #value() number of repetitions} will be invoked regardless of
 	 * whether any repetitions fail.
 	 *
+	 * <p><strong>WARNING</strong>: if the repetitions of a {@code @RepeatedTest}
+	 * method are executed in parallel, no guarantees can be made regarding the
+	 * failure threshold. It is therefore recommended that a {@code @RepeatedTest}
+	 * method be annotated with
+	 * {@link org.junit.jupiter.api.parallel.Execution @Execution(SAME_THREAD)}
+	 * when parallel execution is configured.
+	 *
 	 * @since 5.10
+	 * @return the failure threshold; must be greater than zero
 	 */
 	@API(status = EXPERIMENTAL, since = "5.10")
 	int failureThreshold() default Integer.MAX_VALUE;
