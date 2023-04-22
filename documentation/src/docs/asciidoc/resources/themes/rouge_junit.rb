@@ -11,7 +11,7 @@ module Rouge; module Themes
     style Num,               fg: '#0000ff'
     style Keyword,           fg: '#000080', bold: true
     style Operator::Word,    bold: true
-    style Name::Tag,         fg: '#0000ff', bold: true
+    style Name::Tag,         fg: '#ff0000', bold: true
     style Name::Attribute,   fg: '#ff0000'
     style Generic::Deleted,  fg: '#000000', bg: '#ffdddd', inline_block: true, extend: true
     style Generic::Inserted, fg: '#000000', bg: '#ddffdd', inline_block: true, extend: true

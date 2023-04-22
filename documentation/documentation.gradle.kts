@@ -65,6 +65,7 @@ asciidoctorj {
 		diagram.use()
 		pdf.version(libs.versions.asciidoctor.pdf)
 	}
+	requires(file("src/docs/asciidoc/resources/themes/rouge_junit.rb"))
 }
 
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
@@ -218,7 +219,7 @@ tasks {
 				"standaloneConsoleLauncherShadowedArtifactsFile" to standaloneConsoleLauncherShadowedArtifactsFile.get(),
 				"outdir" to outputDir.absolutePath,
 				"source-highlighter" to "rouge",
-//				"rouge-style" to "colorful",
+				"rouge-style" to "junit",
 				"tabsize" to "4",
 				"toc" to "left",
 				"icons" to "font",
@@ -256,7 +257,6 @@ tasks {
 		resources {
 			from(sourceDir) {
 				include("tocbot-*/**")
-				include("resources/themes/rogue_junit.rb")
 			}
 		}
 		attributes(mapOf(
@@ -398,7 +398,6 @@ tasks {
 			include("user-guide/**")
 			include("release-notes/**")
 			include("tocbot-*/**")
-			include("resources/themes/rogue_junit.rb")
 		}
 		if (uploadPdfs) {
 			from(asciidoctorPdf.map { it.outputDir }) {
