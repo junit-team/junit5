@@ -40,6 +40,9 @@ JUnit repository on GitHub.
   `@MethodSource("myFactory([I)"` (which was already supported) and
   `@MethodSource("myFactory(java.lang.String[])` instead of
   `@MethodSource("myFactory([Ljava.lang.String;)`.
+* The search algorithm used to find `@MethodSource` factory methods now applies consistent
+  semantics for _local_ qualified method names and fully-qualified method names for
+  overloaded factory methods.
 * Exceptions thrown for files that cannot be deleted when cleaning up a temporary
   directory created via `@TempDir` now include the root cause.
 * Lifecycle methods are allowed to be declared as `private` again for backwards
@@ -52,7 +55,10 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The search algorithm used to find `@MethodSource` factory methods now falls back to
+  lenient search semantics when a factory method cannot be found by qualified name
+  (without a parameter list) and also provides better diagnostics when a unique factory
+  method cannot be found.
 
 
 [[release-notes-5.9.3-junit-vintage]]
