@@ -1167,6 +1167,11 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				fileSystem = MemoryFileSystemBuilder.newEmpty().build();
 				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
 			}
+
+			@Override
+			public void close() throws IOException {
+				fileSystem.close();
+			}
 		}
 
 	}
@@ -1187,6 +1192,11 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			public Path createTempDirectory(ExtensionContext context) throws Exception {
 				fileSystem = Jimfs.newFileSystem(Configuration.unix());
 				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
+			}
+
+			@Override
+			public void close() throws IOException {
+				fileSystem.close();
 			}
 		}
 

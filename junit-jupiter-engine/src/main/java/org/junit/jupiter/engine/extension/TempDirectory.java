@@ -287,18 +287,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				throw createIOExceptionWithAttachedFailures(failures);
 			}
 
-			closeFactory();
-		}
-
-		private void closeFactory() throws IOException {
-			try {
-				if (factory instanceof AutoCloseable) {
-					((AutoCloseable) factory).close();
-				}
-			}
-			catch (Exception e) {
-				throw new IOException("Failed to close factory", e);
-			}
+			factory.close();
 		}
 
 		private SortedMap<Path, IOException> deleteAllFilesAndDirectories(FileOperations fileOperations)

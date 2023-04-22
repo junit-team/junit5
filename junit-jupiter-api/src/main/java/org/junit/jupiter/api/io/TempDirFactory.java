@@ -12,6 +12,7 @@ package org.junit.jupiter.api.io;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,7 +40,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  */
 @FunctionalInterface
 @API(status = EXPERIMENTAL, since = "5.10")
-public interface TempDirFactory {
+public interface TempDirFactory extends Closeable {
 
 	/**
 	 * Create a new temporary directory, using the given prefix to generate its name.
@@ -51,6 +52,13 @@ public interface TempDirFactory {
 	 * @throws Exception in case of failures
 	 */
 	Path createTempDirectory(ExtensionContext context) throws Exception;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	default void close() throws IOException {
+	}
 
 	/**
 	 * Standard temporary directory factory that delegates to
