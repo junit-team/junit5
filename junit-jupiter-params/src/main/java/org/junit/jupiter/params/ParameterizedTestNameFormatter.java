@@ -36,6 +36,7 @@ class ParameterizedTestNameFormatter {
 	private final String displayName;
 	private final ParameterizedTestMethodContext methodContext;
 	private final int argumentMaxLength;
+	private final String DISPLAY_NAME_TEMPORARY_PLACEHOLDER = "__DISPLAY_NAME__";
 
 	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
 			int argumentMaxLength) {
@@ -62,7 +63,7 @@ class ParameterizedTestNameFormatter {
 		MessageFormat format = new MessageFormat(pattern);
 		Object[] humanReadableArguments = makeReadable(format, namedArguments);
 		String formatted = format.format(humanReadableArguments);
-		return formatted.replace("__DISPLAY_NAME__", this.displayName);
+		return formatted.replace(DISPLAY_NAME_TEMPORARY_PLACEHOLDER, this.displayName);
 	}
 
 	private Object[] extractNamedArguments(Object[] arguments) {
@@ -73,7 +74,7 @@ class ParameterizedTestNameFormatter {
 
 	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
 		String result = pattern//
-				.replace(DISPLAY_NAME_PLACEHOLDER, "__DISPLAY_NAME__")//
+				.replace(DISPLAY_NAME_PLACEHOLDER, DISPLAY_NAME_TEMPORARY_PLACEHOLDER)//
 				.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
 
 		if (result.contains(ARGUMENTS_WITH_NAMES_PLACEHOLDER)) {
