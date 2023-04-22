@@ -26,7 +26,7 @@ public abstract class AbstractEqualsAndHashCodeTests {
 		assertThat(different).isNotNull();
 
 		assertThat(equal1).isNotSameAs(equal2);
-		assertThat(equal1).isNotEqualTo(null);
+		assertThat(equal1).isNotNull();
 		assertThat(equal1).isNotEqualTo(new Object());
 		assertThat(equal1).isNotEqualTo(different);
 		assertThat(different).isNotEqualTo(equal1);
