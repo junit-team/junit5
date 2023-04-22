@@ -381,15 +381,18 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		@SuppressWarnings("ResultOfMethodCallIgnored")
 		private static void tryToResetPermissions(Path path) {
+			File file;
 			try {
-				File file = path.toFile();
-				file.setReadable(true);
-				file.setWritable(true);
-				if (Files.isDirectory(path)) {
-					file.setExecutable(true);
-				}
+				file = path.toFile();
 			}
 			catch (UnsupportedOperationException ignore) {
+				// Might happen when the `TempDirFactory` uses a custom `FileSystem`
+				return;
+			}
+			file.setReadable(true);
+			file.setWritable(true);
+			if (Files.isDirectory(path)) {
+				file.setExecutable(true);
 			}
 		}
 

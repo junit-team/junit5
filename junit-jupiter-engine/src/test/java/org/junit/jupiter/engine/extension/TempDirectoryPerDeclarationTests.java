@@ -30,6 +30,7 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.su
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -37,6 +38,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder;
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
@@ -321,6 +326,20 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@DisplayName("that uses custom temp dir parent directory")
 		void supportsFactoryWithCustomParentDirectory() {
 			executeTestsForClass(FactoryWithCustomParentDirectoryTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("that uses com.github.marschall:memoryfilesystem")
+		void supportsFactoryWithMemoryFileSystem() {
+			executeTestsForClass(FactoryWithMemoryFileSystemTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("that uses com.google.jimfs:jimfs")
+		void supportsFactoryWithJimfs() {
+			executeTestsForClass(FactoryWitJimfsTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
@@ -1093,7 +1112,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
 			assertTrue(Files.exists(tempDir));
-			assertThat(tempDir.toFile().getName()).startsWith("test");
+			assertThat(tempDir.getFileName().toString()).startsWith("test");
 		}
 
 		private static class Factory implements TempDirFactory {
@@ -1112,7 +1131,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
 			assertThat(tempDir).exists().hasParent(Factory.parent);
-			assertThat(tempDir.toFile().getName()).startsWith("prefix");
+			assertThat(tempDir.getFileName().toString()).startsWith("prefix");
 		}
 
 		private static class Factory implements TempDirFactory {
@@ -1126,6 +1145,48 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			@Override
 			public Path createTempDirectory(ExtensionContext context) throws Exception {
 				return Files.createTempDirectory(parent, "prefix");
+			}
+		}
+
+	}
+
+	static class FactoryWithMemoryFileSystemTestCase {
+
+		@Test
+		void test(@TempDir(factory = Factory.class) Path tempDir) {
+			assertThat(tempDir).exists().hasFileSystem(Factory.fileSystem);
+			assertThat(tempDir.getFileName().toString()).startsWith("prefix");
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			private static FileSystem fileSystem;
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				fileSystem = MemoryFileSystemBuilder.newEmpty().build();
+				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
+			}
+		}
+
+	}
+
+	static class FactoryWitJimfsTestCase {
+
+		@Test
+		void test(@TempDir(factory = Factory.class) Path tempDir) {
+			assertThat(tempDir).exists().hasFileSystem(Factory.fileSystem);
+			assertThat(tempDir.getFileName().toString()).startsWith("prefix");
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			private static FileSystem fileSystem;
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				fileSystem = Jimfs.newFileSystem(Configuration.unix());
+				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
 			}
 		}
 
