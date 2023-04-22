@@ -139,7 +139,7 @@ class TimeoutConfigurationTests {
 	void specificThreadModeIsUsed() {
 		when(extensionContext.getConfigurationParameter(DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME)).thenReturn(
 			Optional.of("SEPARATE_THREAD"));
-		assertThat(config.getDefaultTimeoutThreadMode()).isEqualTo(Optional.of(SEPARATE_THREAD));
+		assertThat(config.getDefaultTimeoutThreadMode()).contains(SEPARATE_THREAD);
 	}
 
 	@Test
@@ -148,7 +148,7 @@ class TimeoutConfigurationTests {
 		when(extensionContext.getConfigurationParameter(DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME)).thenReturn(
 			Optional.of("invalid"));
 
-		assertThat(config.getDefaultTimeoutThreadMode()).isEqualTo(Optional.empty());
+		assertThat(config.getDefaultTimeoutThreadMode()).isNotPresent();
 		assertThat(logRecordListener.stream(Level.WARNING).map(LogRecord::getMessage)) //
 				.containsExactly(
 					"Invalid timeout thread mode 'invalid' set via the 'junit.jupiter.execution.timeout.thread.mode.default' configuration parameter.");

@@ -179,9 +179,9 @@ class DynamicTestTests {
 		URI containerSourceUri = URI.create("other://container");
 		DynamicContainer container = dynamicContainer("bar", containerSourceUri, Stream.of(test));
 
-		assertThat(test.getTestSourceUri().get()).isSameAs(testSourceUri);
+		assertThat(test.getTestSourceUri()).containsSame(testSourceUri);
 		assertThat(test.toString()).isEqualTo("DynamicTest [displayName = 'foo', testSourceUri = any://test]");
-		assertThat(container.getTestSourceUri().get()).isSameAs(containerSourceUri);
+		assertThat(container.getTestSourceUri()).containsSame(containerSourceUri);
 		assertThat(container.toString()).isEqualTo(
 			"DynamicContainer [displayName = 'bar', testSourceUri = other://container]");
 	}
