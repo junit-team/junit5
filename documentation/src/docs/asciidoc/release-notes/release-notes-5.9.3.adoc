@@ -33,6 +33,8 @@ JUnit repository on GitHub.
 
 * Exceptions thrown for undeletable files when cleaning up a temporary directory created
   via `@TempDir` now include the root cause.
+* Allow lifecycle methods to be declared as `private` again for backwards compatibility
+  but document it as a discouraged practice.
 
 ==== Deprecations and Breaking Changes
 

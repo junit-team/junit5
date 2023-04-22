@@ -29,16 +29,19 @@ import org.apiguardian.api.API;
  *
  * <h2>Method Signatures</h2>
  *
- * <p>{@code @AfterAll} methods must have a {@code void} return type, must not
- * be {@code private}, and must be {@code static} by default. Consequently,
- * {@code @AfterAll} methods are not supported in {@link Nested @Nested} test
- * classes or as <em>interface default methods</em> unless the test class is
- * annotated with {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
+ * <p>{@code @AfterAll} methods must have a {@code void} return type and must be
+ * {@code static} by default. Consequently, {@code @AfterAll} methods are not
+ * supported in {@link Nested @Nested} test classes or as <em>interface default
+ * methods</em> unless the test class is annotated with
+ * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
  * However, beginning with Java 16 {@code @AfterAll} methods may be declared as
  * {@code static} in {@link Nested @Nested} test classes, and the
  * {@code Lifecycle.PER_CLASS} restriction no longer applies. {@code @AfterAll}
  * methods may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
+ *
+ * <p>Using {@code private} visibility for {@code @BeforeAll} methods is
+ * strongly discouraged and will be disallowed in a future release.
  *
  * <h2>Inheritance and Execution Order</h2>
  *
