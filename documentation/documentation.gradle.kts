@@ -1,10 +1,9 @@
-import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
-import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
-import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import junitbuild.exec.ClasspathSystemPropertyProvider
 import junitbuild.exec.RunConsoleLauncher
 import junitbuild.javadoc.ModuleSpecificJavadocFileOption
+import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
+import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
 
@@ -236,10 +235,8 @@ tasks {
 			))
 			inputs.dir(java.srcDirs.first())
 			inputs.dir(resources.srcDirs.first())
-			withConvention(KotlinSourceSet::class) {
-				attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
-				inputs.dir(kotlin.srcDirs.first())
-			}
+			attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
+			inputs.dir(kotlin.srcDirs.first())
 		}
 
 		forkOptions {

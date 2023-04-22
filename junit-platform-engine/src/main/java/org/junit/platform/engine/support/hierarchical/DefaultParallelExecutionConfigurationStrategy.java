@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -27,11 +28,11 @@ import org.junit.platform.engine.ConfigurationParameters;
  *
  * @since 1.3
  */
-@API(status = EXPERIMENTAL, since = "1.3")
+@API(status = STABLE, since = "1.10")
 public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 
 	/**
-	 * Uses the mandatory {@value CONFIG_FIXED_PARALLELISM_PROPERTY_NAME} configuration
+	 * Uses the mandatory {@value #CONFIG_FIXED_PARALLELISM_PROPERTY_NAME} configuration
 	 * parameter as the desired parallelism.
 	 */
 	FIXED {
@@ -55,7 +56,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	/**
 	 * Computes the desired parallelism based on the number of available
-	 * processors/cores multiplied by the {@value CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME}
+	 * processors/cores multiplied by the {@value #CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME}
 	 * configuration parameter.
 	 */
 	DYNAMIC {
@@ -90,7 +91,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	/**
 	 * Allows the specification of a custom {@link ParallelExecutionConfigurationStrategy}
-	 * implementation via the mandatory {@value CONFIG_CUSTOM_CLASS_PROPERTY_NAME}
+	 * implementation via the mandatory {@value #CONFIG_CUSTOM_CLASS_PROPERTY_NAME}
 	 * configuration parameter to determine the desired configuration.
 	 */
 	CUSTOM {

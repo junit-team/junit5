@@ -11,21 +11,17 @@
 package org.junit.platform.console.tasks;
 
 import java.io.PrintWriter;
-import java.util.regex.Pattern;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
  */
-class FlatPrintingListener implements TestExecutionListener {
-
-	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
+class FlatPrintingListener implements DetailsPrintingListener {
 
 	static final String INDENTATION = "             ";
 
@@ -103,7 +99,17 @@ class FlatPrintingListener implements TestExecutionListener {
 	 * @return indented message
 	 */
 	private static String indented(String message) {
-		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();
+		return DetailsPrintingListener.indented(message, INDENTATION);
 	}
 
+	@Override
+	public void listTests(TestPlan testPlan) {
+		testPlan.accept(new TestPlan.Visitor() {
+			@Override
+			public void visit(TestIdentifier testIdentifier) {
+				println(Style.valueOf(testIdentifier), "%s (%s)", testIdentifier.getDisplayName(),
+					testIdentifier.getUniqueId());
+			}
+		});
+	}
 }

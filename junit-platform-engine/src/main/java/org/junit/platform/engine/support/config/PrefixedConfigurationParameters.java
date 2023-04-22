@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.config;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Optional;
 import java.util.Set;
@@ -26,7 +26,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  *
  * @since 1.3
  */
-@API(status = EXPERIMENTAL, since = "1.3")
+@API(status = STABLE, since = "1.10")
 public class PrefixedConfigurationParameters implements ConfigurationParameters {
 
 	private final ConfigurationParameters delegate;

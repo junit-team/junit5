@@ -31,7 +31,7 @@ import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.TimeoutInvoca
  * @since 5.9
  */
 @DisplayName("SeparateThreadTimeoutInvocation")
-class SeparateThreadTimeoutInvocationTest {
+class SeparateThreadTimeoutInvocationTests {
 
 	private static final long PREEMPTIVE_TIMEOUT_MILLIS = WINDOWS.isCurrentOs() ? 1000 : 100;
 
@@ -70,7 +70,7 @@ class SeparateThreadTimeoutInvocationTest {
 	}
 
 	private static <T> SeparateThreadTimeoutInvocation<T> aSeparateThreadInvocation(Invocation<T> invocation) {
-		var namespace = ExtensionContext.Namespace.create(SeparateThreadTimeoutInvocationTest.class);
+		var namespace = ExtensionContext.Namespace.create(SeparateThreadTimeoutInvocationTests.class);
 		var store = new NamespaceAwareStore(new ExtensionValuesStore(null), namespace);
 		var parameters = new TimeoutInvocationParameters<>(invocation,
 			new TimeoutDuration(PREEMPTIVE_TIMEOUT_MILLIS, MILLISECONDS), () -> "method()");

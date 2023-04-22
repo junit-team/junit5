@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * @since 5.9
  */
 @DisplayName("TimeoutExceptionFactory")
-class TimeoutExceptionFactoryTest {
+class TimeoutExceptionFactoryTests {
 
 	private static final TimeoutDuration tenMillisDuration = new TimeoutDuration(10, MILLISECONDS);
 	private static final Exception suppressedException = new Exception("Winke!");

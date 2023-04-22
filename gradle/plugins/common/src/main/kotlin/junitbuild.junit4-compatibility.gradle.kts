@@ -20,8 +20,9 @@ dependencies {
 
 tasks {
 	val test_4_12 by registering(Test::class) {
-		classpath -= configurations.testRuntimeClasspath.get()
-		classpath += junit_4_12
+		val test by testing.suites.existing(JvmTestSuite::class)
+		testClassesDirs = files(test.map { it.sources.output.classesDirs })
+		classpath = files(test.map { it.sources.runtimeClasspath }) + junit_4_12
 	}
 	check {
 		dependsOn(test_4_12)

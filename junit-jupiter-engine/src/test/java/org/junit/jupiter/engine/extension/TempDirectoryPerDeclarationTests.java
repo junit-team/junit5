@@ -29,6 +29,7 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.su
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -52,10 +53,10 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -63,6 +64,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.TempDirectory.FileOperations;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -192,15 +194,27 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				.assertStatistics(stats -> stats.started(2).succeeded(2));
 	}
 
-	@Test
-	@DisplayName("only attempts to delete undeletable directories once")
-	void onlyAttemptsToDeleteUndeletableDirectoriesOnce() {
-		var results = executeTestsForClass(UndeletableDirectoryTestCase.class);
+	@TestFactory
+	@DisplayName("only attempts to delete undeletable paths once")
+	Stream<DynamicTest> onlyAttemptsToDeleteUndeletablePathsOnce() {
+		return Stream.of( //
+			dynamicTest("directory", () -> onlyAttemptsToDeleteUndeletablePathOnce(UndeletableDirectoryTestCase.class)), //
+			dynamicTest("file", () -> onlyAttemptsToDeleteUndeletablePathOnce(UndeletableFileTestCase.class)) //
+		);
+	}
+
+	private void onlyAttemptsToDeleteUndeletablePathOnce(Class<? extends UndeletableTestCase> testClass) {
+		var results = executeTestsForClass(testClass);
+
+		var tempDir = results.testEvents().reportingEntryPublished().stream().map(
+			it -> it.getPayload(ReportEntry.class).orElseThrow()).map(
+				it -> Path.of(it.getKeyValuePairs().get(UndeletableTestCase.TEMP_DIR))).findAny().orElseThrow();
 
 		assertSingleFailedTest(results, //
 			instanceOf(IOException.class), //
-			message(it -> it.startsWith("Failed to delete temp directory")), //
-			suppressed(0, instanceOf(IOException.class), message("Simulated failure")), //
+			message("Failed to delete temp directory " + tempDir.toAbsolutePath() + ". " + //
+					"The following paths could not be deleted (see suppressed exceptions for details): <root>, undeletable"), //
+			suppressed(0, instanceOf(DirectoryNotEmptyException.class)), //
 			suppressed(1, instanceOf(IOException.class), message("Simulated failure")));
 	}
 
@@ -1012,18 +1026,43 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class UndeletableDirectoryTestCase {
+	static class UndeletableTestCase {
+
+		static final Path UNDELETABLE_PATH = Path.of("undeletable");
+		static final String TEMP_DIR = "TEMP_DIR";
 
 		@RegisterExtension
-		Extension injector = (BeforeEachCallback) context -> context //
+		BeforeEachCallback injector = context -> context //
 				.getStore(TempDirectory.NAMESPACE) //
 				.put(TempDirectory.FILE_OPERATIONS_KEY, (FileOperations) path -> {
-					throw new IOException("Simulated failure");
+					if (path.endsWith(UNDELETABLE_PATH)) {
+						throw new IOException("Simulated failure");
+					}
+					else {
+						Files.delete(path);
+					}
 				});
 
+		@TempDir
+		Path tempDir;
+
+		@BeforeEach
+		void reportTempDir(TestReporter reporter) {
+			reporter.publishEntry(TEMP_DIR, tempDir.toString());
+		}
+	}
+
+	static class UndeletableDirectoryTestCase extends UndeletableTestCase {
 		@Test
-		void test(@TempDir Path tempDir) throws Exception {
-			Files.createDirectory(tempDir.resolve("test-sub-dir"));
+		void test() throws Exception {
+			Files.createDirectory(tempDir.resolve(UNDELETABLE_PATH));
+		}
+	}
+
+	static class UndeletableFileTestCase extends UndeletableTestCase {
+		@Test
+		void test() throws Exception {
+			Files.createFile(tempDir.resolve(UNDELETABLE_PATH));
 		}
 	}
 }

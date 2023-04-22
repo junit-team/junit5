@@ -1,3 +1,5 @@
+import org.gradle.configurationcache.extensions.capitalized
+
 plugins {
 	id("junitbuild.java-library-conventions")
 }
@@ -27,7 +29,7 @@ listOf(9, 17).forEach { javaVersion ->
 			options.release.set(javaVersion)
 		}
 
-		named<Checkstyle>("checkstyle${sourceSet.name.replaceFirstChar(Char::titlecase)}").configure {
+		named<Checkstyle>("checkstyle${sourceSet.name.capitalized()}").configure {
             config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
 		}
 

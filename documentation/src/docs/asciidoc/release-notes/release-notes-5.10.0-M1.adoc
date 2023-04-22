@@ -24,19 +24,24 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* All utility methods from `ReflectionSupport` now have counterparts returning `Stream`
-  instead of `List`.
-* For consistency with Jupiter lifecycle callbacks, listener method pairs for started/
-  finished and opened/closed events are now called using "wrap" semantics, i.e. the latter
-  methods are called in reverse order compared to the former when multiple listeners are
-  registered. This affects the following listener interfaces: `TestExecutionListener`,
-  `EngineExecutionListener`, `LauncherDiscoveryListener`, and `LauncherSessionListener`.
-* Introduce `LauncherInterceptor` SPI for intercepting the creation of instances of
-  `Launcher` and `LauncherSessionlistener` as well as calls for `discover` and `execute`
-  of the former. Please refer to the
+* All utility methods in `ReflectionSupport` that return a `List` now have counterparts
+  which return a `Stream`.
+* For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
+  started/finished and opened/closed events are now invoked using "wrapping" semantics.
+  This means that finished/closed event methods are invoked in reverse order compared to
+  the corresponding started/opened event methods when multiple listeners are registered.
+  This affects the following listener interfaces:
+  `TestExecutionListener`, `EngineExecutionListener`, `LauncherDiscoveryListener`, and
+  `LauncherSessionListener`.
+* New `LauncherInterceptor` SPI for intercepting the creation of instances of `Launcher`
+  and `LauncherSessionlistener` as well as invocations of the `discover` and `execute`
+  methods of the former. Please refer to the
   <<../user-guide/index.adoc#launcher-api-launcher-interceptors-custom, User Guide>> for
   details.
 * Support for limiting the `max-pool-size-factor` for parallel execution via a configuration parameter.
+* The new `testfeed` details mode for `ConsoleLauncher` prints test execution events as
+  they occur in a concise format.
+
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter
@@ -52,6 +57,8 @@ repository on GitHub.
   `@MethodSource("myFactory([I)"` (which was already supported) and
   `@MethodSource("myFactory(java.lang.String[])` instead of
   `@MethodSource("myFactory([Ljava.lang.String;)`.
+* Exceptions thrown for undeletable files when cleaning up a temporary directory created
+  via `@TempDir` now include the root cause.
 
 ==== Deprecations and Breaking Changes
 
@@ -60,10 +67,11 @@ default.
 
 ==== New Features and Improvements
 
+* `@RepeatedTest` can now be configured with a failure threshold which signifies the
+  number of failures after which remaining repetitions will be automatically skipped. See
+  the <<../user-guide/index.adoc#writing-tests-repeated-tests, User Guide>> for details.
 * New `ArgumentsAccessor.getInvocationIndex()` method that supplies the index of a
   `@ParameterizedTest` invocation.
-* `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal
-  to fall back to the default display name generator.
 * `@EmptySource` now supports additional types, including `Collection` and `Map` subtypes
   with a public no-arg constructor.
 * New `AnnotationBasedArgumentsProvider` that implements both `ArgumentsProvider` and
@@ -74,6 +82,13 @@ default.
 parameter to set the maximum pool size factor.
 * New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
 parameter to disable pool saturation.
+* `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal to
+  fall back to the default display name generator.
+* New `AnnotationBasedArgumentsProvider` convenience base class which implements both
+  `ArgumentsProvider` and `AnnotationConsumer`.
+* New `AnnotationBasedArgumentConverter` convenience base class which implements both
+  `ArgumentConverter` and `AnnotationConsumer`.
+
 
 [[release-notes-5.10.0-M1-junit-vintage]]
 === JUnit Vintage

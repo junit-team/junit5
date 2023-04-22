@@ -1,6 +1,4 @@
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
-import org.gradle.kotlin.dsl.*
+import org.gradle.configurationcache.extensions.capitalized
 
 val tempRepoName by extra("temp")
 val tempRepoDir by extra(file("$buildDir/repo"))
@@ -22,7 +20,7 @@ subprojects {
 			}
 		}
 		tasks.withType<PublishToMavenRepository>().configureEach {
-			if (name.endsWith("To${tempRepoName.replaceFirstChar(Char::titlecase)}Repository")) {
+			if (name.endsWith("To${tempRepoName.capitalized()}Repository")) {
 				dependsOn(clearTempRepoDir)
 			}
 		}

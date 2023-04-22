@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -241,7 +240,7 @@ public @interface ParameterizedTest {
 	 * @since 5.8
 	 * @see java.lang.AutoCloseable
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.10")
 	boolean autoCloseArguments() default true;
 
 }

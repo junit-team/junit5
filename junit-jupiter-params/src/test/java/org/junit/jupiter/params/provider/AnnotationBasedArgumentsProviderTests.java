@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 @DisplayName("AnnotationBasedArgumentsProvider")
-class AnnotationBasedArgumentsProviderTest {
+class AnnotationBasedArgumentsProviderTests {
 
 	private final AnnotationBasedArgumentsProvider<CsvSource> annotationBasedArgumentsProvider = new AnnotationBasedArgumentsProvider<>() {
 		@Override
@@ -43,7 +43,7 @@ class AnnotationBasedArgumentsProviderTest {
 
 	@Test
 	@DisplayName("should invoke the provideArguments template method with the accepted annotation")
-	void shouldInvokeTemplateMethodWithTheAnnotationProvidedWithAccept() {
+	void shouldInvokeTemplateMethodWithTheAnnotationProvidedToAccept() {
 		var spiedProvider = spy(annotationBasedArgumentsProvider);
 		var extensionContext = mock(ExtensionContext.class);
 		var annotation = csvSource("0", "1", "2");

@@ -11,7 +11,6 @@
 package org.junit.jupiter.api;
 
 import static java.util.Comparator.comparingInt;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collections;
@@ -59,7 +58,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * @see #orderClasses(ClassOrdererContext)
  * @see MethodOrderer
  */
-@API(status = EXPERIMENTAL, since = "5.8")
+@API(status = STABLE, since = "5.10")
 public interface ClassOrderer {
 
 	/**

@@ -487,10 +487,10 @@ class ParameterizedTestIntegrationTests {
 		 * @since 5.10
 		 */
 		@ParameterizedTest(name = "{1}")
-		@CsvSource({ //
-				"testWithEmptySourceForArrayList, java.util.ArrayList", //
-				"testWithEmptySourceForLinkedList, java.util.LinkedList"//
-		})
+		@CsvSource(textBlock = """
+				testWithEmptySourceForArrayList,  java.util.ArrayList
+				testWithEmptySourceForLinkedList, java.util.LinkedList
+				""")
 		void executesWithEmptySourceForListSubtype(String methodName, Class<?> parameterType) {
 			var results = execute(methodName, parameterType);
 			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
@@ -506,13 +506,13 @@ class ParameterizedTestIntegrationTests {
 		 * @since 5.10
 		 */
 		@ParameterizedTest(name = "{1}")
-		@CsvSource({ //
-				"testWithEmptySourceForSortedSet, java.util.SortedSet", //
-				"testWithEmptySourceForNavigableSet, java.util.NavigableSet", //
-				"testWithEmptySourceForHashSet, java.util.HashSet", //
-				"testWithEmptySourceForTreeSet, java.util.TreeSet", //
-				"testWithEmptySourceForLinkedHashSet, java.util.LinkedHashSet"//
-		})
+		@CsvSource(textBlock = """
+				testWithEmptySourceForSortedSet,     java.util.SortedSet
+				testWithEmptySourceForNavigableSet,  java.util.NavigableSet
+				testWithEmptySourceForHashSet,       java.util.HashSet
+				testWithEmptySourceForTreeSet,       java.util.TreeSet
+				testWithEmptySourceForLinkedHashSet, java.util.LinkedHashSet
+				""")
 		void executesWithEmptySourceForSetSubtype(String methodName, Class<?> parameterType) {
 			var results = execute(methodName, parameterType);
 			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
@@ -528,13 +528,13 @@ class ParameterizedTestIntegrationTests {
 		 * @since 5.10
 		 */
 		@ParameterizedTest(name = "{1}")
-		@CsvSource({ //
-				"testWithEmptySourceForSortedMap, java.util.SortedMap", //
-				"testWithEmptySourceForNavigableMap, java.util.NavigableMap", //
-				"testWithEmptySourceForHashMap, java.util.HashMap", //
-				"testWithEmptySourceForTreeMap, java.util.TreeMap", //
-				"testWithEmptySourceForLinkedHashMap, java.util.LinkedHashMap"//
-		})
+		@CsvSource(textBlock = """
+				testWithEmptySourceForSortedMap,     java.util.SortedMap
+				testWithEmptySourceForNavigableMap,  java.util.NavigableMap
+				testWithEmptySourceForHashMap,       java.util.HashMap
+				testWithEmptySourceForTreeMap,       java.util.TreeMap
+				testWithEmptySourceForLinkedHashMap, java.util.LinkedHashMap
+				""")
 		void executesWithEmptySourceForMapSubtype(String methodName, Class<?> parameterType) {
 			var results = execute(methodName, parameterType);
 			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument={}")));
@@ -576,10 +576,10 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@ParameterizedTest(name = "{1}")
-		@CsvSource({ //
-				"testWithEmptySourceForPrimitive, int", //
-				"testWithEmptySourceForUnsupportedReferenceType, java.lang.Integer"//
-		})
+		@CsvSource(textBlock = """
+				testWithEmptySourceForPrimitive,                int
+				testWithEmptySourceForUnsupportedReferenceType, java.lang.Integer
+				""")
 		void failsWithEmptySourceForUnsupportedType(String methodName, Class<?> parameterType) {
 			execute(methodName, parameterType).containerEvents().failed().assertEventsMatchExactly(//
 				event(container(methodName), //
