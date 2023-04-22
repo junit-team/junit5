@@ -31,7 +31,8 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Exceptions thrown for undeletable files when cleaning up a temporary directory created
+  via `@TempDir` now include the root cause.
 
 ==== Deprecations and Breaking Changes
 
