@@ -85,8 +85,9 @@ loadScripts(document, 'script');</script>
 
  <h2>Method Signatures</h2>
 
- <p><code>@BeforeEach</code> methods must have a <code>void</code> return type,
- must not be <code>private</code>, and must not be <code>static</code>.
+ <p><code>@BeforeEach</code> methods must have a <code>void</code> return type and must
+ not be <code>static</code>. Using <code>private</code> visibility is strongly
+ discouraged and will be disallowed in a future release.
  They may optionally declare parameters to be resolved by
  <a href="extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolvers</code></a>.
 

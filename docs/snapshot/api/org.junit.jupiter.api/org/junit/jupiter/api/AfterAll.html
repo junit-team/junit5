@@ -86,16 +86,19 @@ loadScripts(document, 'script');</script>
 
  <h2>Method Signatures</h2>
 
- <p><code>@AfterAll</code> methods must have a <code>void</code> return type, must not
- be <code>private</code>, and must be <code>static</code> by default. Consequently,
- <code>@AfterAll</code> methods are not supported in <a href="Nested.html" title="annotation interface in org.junit.jupiter.api"><code>@Nested</code></a> test
- classes or as <em>interface default methods</em> unless the test class is
- annotated with <a href="TestInstance.html" title="annotation interface in org.junit.jupiter.api"><code>@TestInstance(Lifecycle.PER_CLASS)</code></a>.
+ <p><code>@AfterAll</code> methods must have a <code>void</code> return type and must be
+ <code>static</code> by default. Consequently, <code>@AfterAll</code> methods are not
+ supported in <a href="Nested.html" title="annotation interface in org.junit.jupiter.api"><code>@Nested</code></a> test classes or as <em>interface default
+ methods</em> unless the test class is annotated with
+ <a href="TestInstance.html" title="annotation interface in org.junit.jupiter.api"><code>@TestInstance(Lifecycle.PER_CLASS)</code></a>.
  However, beginning with Java 16 <code>@AfterAll</code> methods may be declared as
  <code>static</code> in <a href="Nested.html" title="annotation interface in org.junit.jupiter.api"><code>@Nested</code></a> test classes, and the
  <code>Lifecycle.PER_CLASS</code> restriction no longer applies. <code>@AfterAll</code>
  methods may optionally declare parameters to be resolved by
  <a href="extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolvers</code></a>.
+
+ <p>Using <code>private</code> visibility for <code>@BeforeAll</code> methods is
+ strongly discouraged and will be disallowed in a future release.
 
  <h2>Inheritance and Execution Order</h2>
 
