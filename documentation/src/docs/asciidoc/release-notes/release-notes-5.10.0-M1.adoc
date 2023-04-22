@@ -78,16 +78,12 @@ default.
   `AnnotationConsumer` interfaces.
 * New `AnnotationBasedArgumentConverter` that implements both `ArgumentConverter` and
   `AnnotationConsumer` interfaces.
-* New `junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor` configuration
-parameter to set the maximum pool size factor.
-* New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
-parameter to disable pool saturation.
 * `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal to
   fall back to the default display name generator.
-* New `AnnotationBasedArgumentsProvider` convenience base class which implements both
-  `ArgumentsProvider` and `AnnotationConsumer`.
-* New `AnnotationBasedArgumentConverter` convenience base class which implements both
-  `ArgumentConverter` and `AnnotationConsumer`.
+* New `junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor` configuration
+  parameter to set the maximum pool size factor.
+* New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
+  parameter to disable pool saturation.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
