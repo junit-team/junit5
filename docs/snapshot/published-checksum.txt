@@ -72,7 +72,6 @@
 182d49e063428485230c85718770f5c8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultTestInstanceFactoryContext.java
 183fcd36b45a4e0fa39b2602e7ec8bd8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/package-info.java
 18774dbba2f4b37b3851a1f81ef5fcbf  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultDynamicTestInvocationContext.java
-187f5f149b6bdcb7ee6e5e43004c635b  documentation/src/docs/asciidoc/release-notes/index.adoc
 189d65c06d834aa8a0bfa93cebba8273  junit-platform-console/src/main/java/org/junit/platform/console/tasks/FlatPrintingListener.java
 18b517a03fa90475db4d472e7d917ce8  documentation/src/test/java/example/TempDirectoryDemo.java
 18bb27843cfd973c6d9afe9245b1d92e  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Assertions.java
@@ -370,6 +369,7 @@
 7949c04a7a9bfabd0e445c5f8d6cfd5a  documentation/src/test/java/example/TestReporterDemo.java
 7961ebb7b127cbd89e4a30249b17a685  junit-platform-engine/src/main/java/org/junit/platform/engine/ExecutionRequest.java
 79787c80943b40d745cb06af1f3238ad  documentation/src/docs/asciidoc/user-guide/index.adoc
+7a419818b839682291147c26d2c9f2e7  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.3.adoc
 7a7ad49e5e1dbdf2d34901006405f64b  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/UseTechnicalNames.java
 7a93fb94ec4db6482815a938d889b599  documentation/src/test/resources/log4j2-test.xml
 7b276a71d7a46ef3631451dfb73a4bc6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrdererContext.java
@@ -400,6 +400,7 @@
 80f5794b346241c7b33355d1f801627d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectDirectories.java
 80f72323070880ad5de1f766ead444c3  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvSource.java
 8190a3cf0ad99c6ee83c7e7a509d513b  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
+81dfe6ac65daf2a7698ca6ce1dce501a  documentation/src/docs/asciidoc/release-notes/index.adoc
 823656fcc20d2518a7762d73309d5e4b  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/UniqueIdSelector.java
 827bc0b6010704829e01a851aba484b4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestFactory.java
 8281ac7684aa3309005860107a007f56  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestTemplate.java
@@ -567,6 +568,7 @@ b659d6afa2ba4637865ed4a0d4311b5b  documentation/src/docs/asciidoc/user-guide/con
 b6a67aa6c088e3a71ac44291245398a9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstantiationException.java
 b7017c89228a7f71cbb73ef0ca61535a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingSupplier.java
 b71fe7d2613308e00db7ad666d096e80  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludePackages.java
+b882b89d2f1e85aaac8f93075a7f898f  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 b8cbb3a565c2cd08008245929a8abc4b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
 b8d6324e03368e61c37a1a35e1fcf250  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeTags.java
 b90fbaffccf58877535683fbe5bd1adf  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvParsingException.java
@@ -699,7 +701,6 @@ dda4b9fb1559b109b7e955118fe5c7ed  junit-jupiter-api/src/main/java/org/junit/jupi
 dde7db1f7eae6dccc5b2f00839db0e08  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFileVisitor.java
 de13d12a45a170889bd687beb07b6373  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/package-info.java
 de4cba3ea38cef53b8211a7c401269d1  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/AnnotationBasedArgumentsProvider.java
-de5a25ce5e40872b9e6d4787d3c8a9d5  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 deadf0c1183ef158a1c90a12b34d4778  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ExecutionMode.java
 df5a28f62631ba3588a8f5dc6cc93d45  documentation/src/main/java/example/domain/Person.java
 dff4474265f7cf5defdea547db2e7cdc  documentation/src/test/java/org/junit/api/tools/ApiReportGenerator.java
