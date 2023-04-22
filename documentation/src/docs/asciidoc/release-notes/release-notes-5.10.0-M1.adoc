@@ -24,6 +24,10 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
+* Promote various "experimental" APIs that have matured to "stable" including
+  `ModuleSelector`, `EngineDiscoveryListener`, `EngineDiscoveryRequestResolver`,
+  `LauncherSession`, `LauncherSessionListener`, parallel execution support classes,
+  `@Suite` and related annotations, and others.
 * All utility methods in `ReflectionSupport` that return a `List` now have counterparts
   which return a `Stream`.
 * For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
@@ -65,7 +69,10 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-
+* Promote various "experimental" APIs that have matured to "stable" including
+  `MethodOrderer`, `ClassOrderer`, `InvocationInterceptor`,
+  `LifecycleMethodExecutionExceptionHandler`, `@TempDir`, parallel execution annotations,
+  and others.
 * `@RepeatedTest` can now be configured with a failure threshold which signifies the
   number of failures after which remaining repetitions will be automatically skipped. See
   the <<../user-guide/index.adoc#writing-tests-repeated-tests, User Guide>> for details.
