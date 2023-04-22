@@ -76,10 +76,10 @@ default.
   with a public no-arg constructor.
 * `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal to
   fall back to the default display name generator.
-* New `AnnotationBasedArgumentsProvider` that implements both `ArgumentsProvider` and
-  `AnnotationConsumer` interfaces.
-* New `AnnotationBasedArgumentConverter` that implements both `ArgumentConverter` and
-  `AnnotationConsumer` interfaces.
+* New `AnnotationBasedArgumentsProvider` convenience base class which implements both
+  `ArgumentsProvider` and `AnnotationConsumer`.
+* New `AnnotationBasedArgumentConverter` convenience base class which implements both
+  `ArgumentConverter` and `AnnotationConsumer`.
 * New `junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor` configuration
   parameter to set the maximum pool size factor.
 * New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
