@@ -4,6 +4,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Juli
 :basedir: {includedir}/user-guide
 :pdf-fontsdir: GEM_FONTS_DIR;{includedir}/resources/fonts
 :pdf-theme: {includedir}/resources/themes/junit-pdf-theme.yml
+:rouge-style: colorful
 :imagesdir: images
 :imagesoutdir: {outdir}/user-guide/images
 //
