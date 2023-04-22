@@ -339,7 +339,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("that uses com.google.jimfs:jimfs")
 		void supportsFactoryWithJimfs() {
-			executeTestsForClass(FactoryWitJimfsTestCase.class).testEvents()//
+			executeTestsForClass(FactoryWithJimfsTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
@@ -1176,7 +1176,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class FactoryWitJimfsTestCase {
+	static class FactoryWithJimfsTestCase {
 
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
