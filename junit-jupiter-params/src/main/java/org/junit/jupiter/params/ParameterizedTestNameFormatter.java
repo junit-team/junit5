@@ -31,12 +31,12 @@ import org.junit.platform.commons.util.StringUtils;
 class ParameterizedTestNameFormatter {
 
 	private static final char ELLIPSIS = '\u2026';
+	private static final String DISPLAY_NAME_TEMPORARY_PLACEHOLDER = "__DISPLAY_NAME__";
 
 	private final String pattern;
 	private final String displayName;
 	private final ParameterizedTestMethodContext methodContext;
 	private final int argumentMaxLength;
-	private final String DISPLAY_NAME_TEMPORARY_PLACEHOLDER = "__DISPLAY_NAME__";
 
 	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
 			int argumentMaxLength) {

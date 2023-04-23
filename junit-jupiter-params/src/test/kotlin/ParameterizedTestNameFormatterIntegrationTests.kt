@@ -7,69 +7,56 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.TestInfo
-import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 
-@TestMethodOrder(MethodOrderer.MethodName::class)
 class ParameterizedTestNameFormatterIntegrationTests {
 
-    @MethodSource("methodSource")
+    @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest
     fun `implicit'Name`(param: String, info: TestInfo) {
         if (param.equals("foo")) {
-            Assertions.assertEquals("[1] foo", info.displayName)
+            assertEquals("[1] foo", info.displayName)
         } else {
-            Assertions.assertEquals("[2] bar", info.displayName)
+            assertEquals("[2] bar", info.displayName)
         }
     }
 
-    @MethodSource("methodSource")
+    @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest(name = "{0}")
     fun `zero'Only`(param: String, info: TestInfo) {
         if (param.equals("foo")) {
-            Assertions.assertEquals("foo", info.displayName)
+            assertEquals("foo", info.displayName)
         } else {
-            Assertions.assertEquals("bar", info.displayName)
+            assertEquals("bar", info.displayName)
         }
     }
 
-    @MethodSource("methodSource")
+    @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest(name = "{displayName}")
     fun `displayName'Only`(param: String, info: TestInfo) {
-        Assertions.assertEquals("displayName'Only(String, TestInfo)", info.displayName)
+        assertEquals("displayName'Only(String, TestInfo)", info.displayName)
     }
 
-    @MethodSource("methodSource")
+    @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest(name = "{displayName} - {0}")
     fun `displayName'Zero`(param: String, info: TestInfo) {
         if (param.equals("foo")) {
-            Assertions.assertEquals("displayName'Zero(String, TestInfo) - foo", info.displayName)
+            assertEquals("displayName'Zero(String, TestInfo) - foo", info.displayName)
         } else {
-            Assertions.assertEquals("displayName'Zero(String, TestInfo) - bar", info.displayName)
+            assertEquals("displayName'Zero(String, TestInfo) - bar", info.displayName)
         }
     }
 
-    @MethodSource("methodSource")
+    @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest(name = "{0} - {displayName}")
     fun `zero'DisplayName`(param: String, info: TestInfo) {
         if (param.equals("foo")) {
-            Assertions.assertEquals("foo - zero'DisplayName(String, TestInfo)", info.displayName)
+            assertEquals("foo - zero'DisplayName(String, TestInfo)", info.displayName)
         } else {
-            Assertions.assertEquals("bar - zero'DisplayName(String, TestInfo)", info.displayName)
+            assertEquals("bar - zero'DisplayName(String, TestInfo)", info.displayName)
         }
-    }
-
-    companion object {
-
-        @JvmStatic
-        private fun methodSource(): Array<String> =
-            arrayOf(
-                "foo",
-                "bar"
-            )
     }
 }
