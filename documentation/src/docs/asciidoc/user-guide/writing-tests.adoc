@@ -2476,6 +2476,14 @@ The following table lists relevant properties for configuring parallel execution
 | 256 + the value of `junit.jupiter.execution.parallel.config.dynamic.factor` multiplied
   by the number of available processors/cores
 
+| ```junit.jupiter.execution.parallel.config.dynamic.saturate```
+| Disable saturation of the underlying fork-join pool for the ```dynamic``` configuration
+strategy
+|
+* `true`
+* `false`
+| ```true```
+
 | ```junit.jupiter.execution.parallel.config.fixed.parallelism```
 | Desired parallelism for the ```fixed``` configuration strategy
 | a positive integer
