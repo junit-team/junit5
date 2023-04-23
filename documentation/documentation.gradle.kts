@@ -219,7 +219,7 @@ tasks {
 				"standaloneConsoleLauncherShadowedArtifactsFile" to standaloneConsoleLauncherShadowedArtifactsFile.get(),
 				"outdir" to outputDir.absolutePath,
 				"source-highlighter" to "rouge",
-				"rouge-style" to "junit",
+				"rouge-style" to "junit_light",
 				"tabsize" to "4",
 				"toc" to "left",
 				"icons" to "font",
