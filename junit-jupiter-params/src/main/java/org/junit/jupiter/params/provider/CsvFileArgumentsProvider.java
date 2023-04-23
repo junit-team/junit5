@@ -58,45 +58,45 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 	}
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvFileSource annotation) {
-		this.charset = getCharsetFrom(annotation);
-		this.numLinesToSkip = annotation.numLinesToSkip();
-		this.csvParser = createParserFor(annotation);
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvFileSource csvFileSource) {
+		this.charset = getCharsetFrom(csvFileSource);
+		this.numLinesToSkip = csvFileSource.numLinesToSkip();
+		this.csvParser = createParserFor(csvFileSource);
 
-		Stream<Source> resources = Arrays.stream(annotation.resources()).map(inputStreamProvider::classpathResource);
-		Stream<Source> files = Arrays.stream(annotation.files()).map(inputStreamProvider::file);
+		Stream<Source> resources = Arrays.stream(csvFileSource.resources()).map(inputStreamProvider::classpathResource);
+		Stream<Source> files = Arrays.stream(csvFileSource.files()).map(inputStreamProvider::file);
 		List<Source> sources = Stream.concat(resources, files).collect(toList());
 
 		// @formatter:off
 		return Preconditions.notEmpty(sources, "Resources or files must not be empty")
 				.stream()
 				.map(source -> source.open(context))
-				.map(inputStream -> beginParsing(inputStream, annotation))
-				.flatMap(parser -> toStream(parser, annotation));
+				.map(inputStream -> beginParsing(inputStream, csvFileSource))
+				.flatMap(parser -> toStream(parser, csvFileSource));
 		// @formatter:on
 	}
 
-	private Charset getCharsetFrom(CsvFileSource annotation) {
+	private Charset getCharsetFrom(CsvFileSource csvFileSource) {
 		try {
-			return Charset.forName(annotation.encoding());
+			return Charset.forName(csvFileSource.encoding());
 		}
 		catch (Exception ex) {
-			throw new PreconditionViolationException("The charset supplied in " + annotation + " is invalid", ex);
+			throw new PreconditionViolationException("The charset supplied in " + csvFileSource + " is invalid", ex);
 		}
 	}
 
-	private CsvParser beginParsing(InputStream inputStream, CsvFileSource annotation) {
+	private CsvParser beginParsing(InputStream inputStream, CsvFileSource csvFileSource) {
 		try {
 			this.csvParser.beginParsing(inputStream, this.charset);
 		}
 		catch (Throwable throwable) {
-			handleCsvException(throwable, annotation);
+			handleCsvException(throwable, csvFileSource);
 		}
 		return this.csvParser;
 	}
 
-	private Stream<Arguments> toStream(CsvParser csvParser, CsvFileSource annotation) {
-		CsvParserIterator iterator = new CsvParserIterator(csvParser, annotation);
+	private Stream<Arguments> toStream(CsvParser csvParser, CsvFileSource csvFileSource) {
+		CsvParserIterator iterator = new CsvParserIterator(csvParser, csvFileSource);
 		return stream(spliteratorUnknownSize(iterator, Spliterator.ORDERED), false) //
 				.skip(this.numLinesToSkip) //
 				.onClose(() -> {
@@ -104,7 +104,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 						csvParser.stopParsing();
 					}
 					catch (Throwable throwable) {
-						handleCsvException(throwable, annotation);
+						handleCsvException(throwable, csvFileSource);
 					}
 				});
 	}
@@ -112,17 +112,17 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 	private static class CsvParserIterator implements Iterator<Arguments> {
 
 		private final CsvParser csvParser;
-		private final CsvFileSource annotation;
+		private final CsvFileSource csvFileSource;
 		private final boolean useHeadersInDisplayName;
 		private final Set<String> nullValues;
 		private Arguments nextArguments;
 		private String[] headers;
 
-		CsvParserIterator(CsvParser csvParser, CsvFileSource annotation) {
+		CsvParserIterator(CsvParser csvParser, CsvFileSource csvFileSource) {
 			this.csvParser = csvParser;
-			this.annotation = annotation;
-			this.useHeadersInDisplayName = annotation.useHeadersInDisplayName();
-			this.nullValues = toSet(annotation.nullValues());
+			this.csvFileSource = csvFileSource;
+			this.useHeadersInDisplayName = csvFileSource.useHeadersInDisplayName();
+			this.nullValues = toSet(csvFileSource.nullValues());
 			advance();
 		}
 
@@ -154,7 +154,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 				}
 			}
 			catch (Throwable throwable) {
-				handleCsvException(throwable, this.annotation);
+				handleCsvException(throwable, this.csvFileSource);
 			}
 		}
 

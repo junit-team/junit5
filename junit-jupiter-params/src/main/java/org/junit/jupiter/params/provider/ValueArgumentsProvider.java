@@ -27,25 +27,25 @@ import org.junit.platform.commons.util.Preconditions;
 class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSource> {
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, ValueSource source) {
-		Object[] arguments = getArgumentsFromSource(source);
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, ValueSource valueSource) {
+		Object[] arguments = getArgumentsFromSource(valueSource);
 		return Arrays.stream(arguments).map(Arguments::of);
 	}
 
-	private Object[] getArgumentsFromSource(ValueSource source) {
+	private Object[] getArgumentsFromSource(ValueSource valueSource) {
 		// @formatter:off
 		List<Object> arrays =
 			Stream.of(
-				source.shorts(),
-				source.bytes(),
-				source.ints(),
-				source.longs(),
-				source.floats(),
-				source.doubles(),
-				source.chars(),
-				source.booleans(),
-				source.strings(),
-				source.classes()
+				valueSource.shorts(),
+				valueSource.bytes(),
+				valueSource.ints(),
+				valueSource.longs(),
+				valueSource.floats(),
+				valueSource.doubles(),
+				valueSource.chars(),
+				valueSource.booleans(),
+				valueSource.strings(),
+				valueSource.classes()
 			)
 			.filter(array -> Array.getLength(array) > 0)
 			.collect(toList());
@@ -59,4 +59,5 @@ class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSourc
 				.mapToObj(index -> Array.get(originalArray, index)) //
 				.toArray();
 	}
+
 }
