@@ -42,11 +42,11 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		method -> isConvertibleToStream(method.getReturnType()) && !isTestMethod(method);
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, MethodSource annotation) {
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, MethodSource methodSource) {
 		Class<?> testClass = context.getRequiredTestClass();
 		Method testMethod = context.getRequiredTestMethod();
 		Object testInstance = context.getTestInstance().orElse(null);
-		String[] methodNames = annotation.value();
+		String[] methodNames = methodSource.value();
 		// @formatter:off
 		return stream(methodNames)
 				.map(factoryMethodName -> findFactoryMethod(testClass, testMethod, factoryMethodName))

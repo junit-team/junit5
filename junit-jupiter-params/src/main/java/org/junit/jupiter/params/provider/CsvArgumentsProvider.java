@@ -41,19 +41,19 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	private CsvParser csvParser;
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
-		this.nullValues = toSet(annotation.nullValues());
-		this.csvParser = createParserFor(annotation);
-		final boolean textBlockDeclared = !annotation.textBlock().isEmpty();
-		Preconditions.condition(annotation.value().length > 0 ^ textBlockDeclared,
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource csvSource) {
+		this.nullValues = toSet(csvSource.nullValues());
+		this.csvParser = createParserFor(csvSource);
+		final boolean textBlockDeclared = !csvSource.textBlock().isEmpty();
+		Preconditions.condition(csvSource.value().length > 0 ^ textBlockDeclared,
 			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
-		return textBlockDeclared ? parseTextBlock(annotation) : parseValueArray(annotation);
+		return textBlockDeclared ? parseTextBlock(csvSource) : parseValueArray(csvSource);
 	}
 
-	private Stream<Arguments> parseTextBlock(CsvSource annotation) {
-		String textBlock = annotation.textBlock();
-		boolean useHeadersInDisplayName = annotation.useHeadersInDisplayName();
+	private Stream<Arguments> parseTextBlock(CsvSource csvSource) {
+		String textBlock = csvSource.textBlock();
+		boolean useHeadersInDisplayName = csvSource.useHeadersInDisplayName();
 		List<Arguments> argumentsList = new ArrayList<>();
 
 		try {
@@ -69,20 +69,20 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 			}
 		}
 		catch (Throwable throwable) {
-			throw handleCsvException(throwable, annotation);
+			throw handleCsvException(throwable, csvSource);
 		}
 
 		return argumentsList.stream();
 	}
 
-	private Stream<Arguments> parseValueArray(CsvSource annotation) {
-		boolean useHeadersInDisplayName = annotation.useHeadersInDisplayName();
+	private Stream<Arguments> parseValueArray(CsvSource csvSource) {
+		boolean useHeadersInDisplayName = csvSource.useHeadersInDisplayName();
 		List<Arguments> argumentsList = new ArrayList<>();
 
 		try {
 			String[] headers = null;
 			AtomicInteger index = new AtomicInteger(0);
-			for (String input : annotation.value()) {
+			for (String input : csvSource.value()) {
 				index.incrementAndGet();
 				String[] csvRecord = this.csvParser.parseLine(input + LINE_SEPARATOR);
 				// Lazily retrieve headers if necessary.
@@ -96,7 +96,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 			}
 		}
 		catch (Throwable throwable) {
-			throw handleCsvException(throwable, annotation);
+			throw handleCsvException(throwable, csvSource);
 		}
 
 		return argumentsList.stream();
