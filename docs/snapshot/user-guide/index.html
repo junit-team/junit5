@@ -6077,7 +6077,9 @@ configuration parameter to one of the following options.</p>
 <dd>
 <p>Computes the desired parallelism based on the number of available processors/cores
 multiplied by the <code>junit.jupiter.execution.parallel.config.dynamic.factor</code>
-configuration parameter (defaults to <code>1</code>).</p>
+configuration parameter (defaults to <code>1</code>).
+The optional <code>junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor</code>
+configuration parameter can be used to limit the maximum number of threads.</p>
 </dd>
 <dt class="hdlist1"><code>fixed</code></dt>
 <dd>
@@ -6113,8 +6115,8 @@ of the synchronization mechanisms described in the next section, the <code>ForkJ
 is used behind the scenes may spawn additional threads to ensure execution continues with
 sufficient parallelism.
 If you require such guarantees, with Java 9+, it is possible to limit the maximum number
-of concurrent threads by controlling the maximum pool size of the <code>fixed</code> and <code>custom</code>
-strategies.
+of concurrent threads by controlling the maximum pool size of the <code>dynamic</code>, <code>fixed</code> and
+<code>custom</code> strategies.
 </td>
 </tr>
 </table>
@@ -6214,6 +6216,33 @@ strategies.
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>1.0</code></code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Factor to be multiplied by the number of available processors/cores and the value of
+  <code>junit.jupiter.execution.parallel.config.dynamic.factor</code> to determine the desired
+  parallelism for the <code><code>dynamic</code></code> configuration strategy</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>a positive decimal number, must be greater than or equal to <code>1.0</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">256 + the value of <code>junit.jupiter.execution.parallel.config.dynamic.factor</code> multiplied
+  by the number of available processors/cores</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.dynamic.saturate</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable saturation of the underlying fork-join pool for the <code><code>dynamic</code></code> configuration
+strategy</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><code>true</code></p>
+</li>
+<li>
+<p><code>false</code></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>true</code></code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>junit.jupiter.execution.parallel.config.fixed.parallelism</code></code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Desired parallelism for the <code><code>fixed</code></code> configuration strategy</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6226,7 +6255,7 @@ strategies.
 <td class="tableblock halign-left valign-top"><p class="tableblock">Desired maximum pool size of the underlying fork-join pool for the <code><code>fixed</code></code>
   configuration strategy</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>a positive integer, must greater than or equal to <code>junit.jupiter.execution.parallel.config.fixed.parallelism</code></p>
+<p>a positive integer, must be greater than or equal to <code>junit.jupiter.execution.parallel.config.fixed.parallelism</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">256 + the value of <code>junit.jupiter.execution.parallel.config.fixed.parallelism</code></p></td>
 </tr>
@@ -12203,7 +12232,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-23 12:09:21 UTC
+Last updated 2023-04-23 13:22:38 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

@@ -585,6 +585,9 @@ methods of the former. Please refer to the
 details.</p>
 </li>
 <li>
+<p>Support for limiting the <code>max-pool-size-factor</code> for parallel execution via a configuration parameter.</p>
+</li>
+<li>
 <p>The new <code>testfeed</code> details mode for <code>ConsoleLauncher</code> prints test execution events as
 they occur in a concise format.</p>
 </li>
@@ -609,7 +612,8 @@ they occur in a concise format.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>dynamic</code> parallel execution strategy now allows the thread pool to be saturated by
+default.</p>
 </li>
 </ul>
 </div>
@@ -648,6 +652,14 @@ fall back to the default display name generator.</p>
 <li>
 <p>New <code>AnnotationBasedArgumentConverter</code> convenience base class which implements both
 <code>ArgumentConverter</code> and <code>AnnotationConsumer</code>.</p>
+</li>
+<li>
+<p>New <code>junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor</code> configuration
+parameter to set the maximum pool size factor.</p>
+</li>
+<li>
+<p>New <code>junit.jupiter.execution.parallel.config.dynamic.saturate</code> configuration
+parameter to disable pool saturation.</p>
 </li>
 </ul>
 </div>
@@ -1082,7 +1094,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-23 12:09:21 UTC
+Last updated 2023-04-23 13:22:38 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
