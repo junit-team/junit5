@@ -1,0 +1,77 @@
+[[release-notes-5.9.3]]
+== 5.9.3
+
+*Date of Release:* ❓
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/67?closed=1+[5.9.3] milestone page in the
+JUnit repository on GitHub.
+
+
+[[release-notes-5.9.3-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.9.3-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* Parameter types for _local_ `@MethodSource` factory method names are now validated. For
+  example, `@MethodSource("myFactory(example.NonexistentType)")` will now result in an
+  exception stating that `example.NonexistentType` cannot be resolved to a valid type.
+* The syntax for parameter types in _local_ `@MethodSource` factory method names now
+  supports canonical array names -- for example, you may now specify `int[]` as in
+  `@MethodSource("myFactory(int[])"` instead of the _binary_ name `[I` as in
+  `@MethodSource("myFactory([I)"` (which was already supported) and
+  `@MethodSource("myFactory(java.lang.String[])` instead of
+  `@MethodSource("myFactory([Ljava.lang.String;)`.
+* The search algorithm used to find `@MethodSource` factory methods now applies consistent
+  semantics for _local_ qualified method names and fully-qualified method names for
+  overloaded factory methods.
+* Exceptions thrown for files that cannot be deleted when cleaning up a temporary
+  directory created via `@TempDir` now include the root cause.
+* Lifecycle methods are allowed to be declared as `private` again for backwards
+  compatibility; however, using `private` visibility for lifecycle methods is strongly
+  discouraged and will be disallowed in a future release.
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* The search algorithm used to find `@MethodSource` factory methods now falls back to
+  lenient search semantics when a factory method cannot be found by qualified name
+  (without a parameter list) and also provides better diagnostics when a unique factory
+  method cannot be found.
+
+
+[[release-notes-5.9.3-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓

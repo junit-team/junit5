@@ -24,6 +24,10 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
+* Promote various "experimental" APIs that have matured to "stable" including
+  `ModuleSelector`, `EngineDiscoveryListener`, `EngineDiscoveryRequestResolver`,
+  `LauncherSession`, `LauncherSessionListener`, parallel execution support classes,
+  `@Suite` and related annotations, and others.
 * All utility methods in `ReflectionSupport` that return a `List` now have counterparts
   which return a `Stream`.
 * For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
@@ -48,17 +52,7 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* Parameter types for _local_ `@MethodSource` factory method names are now validated. For
-  example, `@MethodSource("myFactory(example.NonexistentType)")` will now result in an
-  exception stating that `example.NonexistentType` cannot be resolved to a valid type.
-* The syntax for parameter types in _local_ `@MethodSource` factory method names now
-  supports canonical array names -- for example, you may now specify `int[]` as in
-  `@MethodSource("myFactory(int[])"` instead of the _binary_ name `[I` as in
-  `@MethodSource("myFactory([I)"` (which was already supported) and
-  `@MethodSource("myFactory(java.lang.String[])` instead of
-  `@MethodSource("myFactory([Ljava.lang.String;)`.
-* Exceptions thrown for undeletable files when cleaning up a temporary directory created
-  via `@TempDir` now include the root cause.
+* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -67,6 +61,10 @@ default.
 
 ==== New Features and Improvements
 
+* Promote various "experimental" APIs that have matured to "stable" including
+  `MethodOrderer`, `ClassOrderer`, `InvocationInterceptor`,
+  `LifecycleMethodExecutionExceptionHandler`, `@TempDir`, parallel execution annotations,
+  and others.
 * `@RepeatedTest` can now be configured with a failure threshold which signifies the
   number of failures after which remaining repetitions will be automatically skipped. See
   the <<../user-guide/index.adoc#writing-tests-repeated-tests, User Guide>> for details.
