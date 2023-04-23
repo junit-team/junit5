@@ -82,4 +82,7 @@ dependencies {
 	testRuntimeOnly(project(":junit-platform-reporting"))
 
 	testRuntimeOnly(bundleFromLibs("log4j"))
+	testRuntimeOnly(dependencyFromLibs("openTestReporting-events")) {
+		because("it's required to run tests via IntelliJ which does not consumed the shadowed jar of junit-platform-reporting")
+	}
 }
