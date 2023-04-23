@@ -199,11 +199,19 @@ loadScripts(document, 'script');</script>
 <div class="block">The names of factory methods within the test class or in external classes
  to use as sources for arguments.
 
- <p>Factory methods in external classes must be referenced by <em>fully
- qualified method name</em> &mdash; for example,
- <code>com.example.StringsProviders#blankStrings</code> or
- <code>com.example.TopLevelClass$NestedClass#classMethod</code> for a factory
+ <p>Factory methods in external classes must be referenced by
+ <em>fully-qualified method name</em> &mdash; for example,
+ <code>"com.example.StringsProviders#blankStrings"</code> or
+ <code>"com.example.TopLevelClass$NestedClass#classMethod"</code> for a factory
  method in a static nested class.
+
+ <p>If a factory method accepts arguments that are provided by a
+ <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolver</code></a>,
+ you can supply the formal parameter list in the qualified method name to
+ disambiguate between overloaded variants of the factory method. For example,
+ <code>"blankStrings(int)"</code> for a local qualified method name or
+ <code>"com.example.StringsProviders#blankStrings(int)"</code> for a fully-qualified
+ method name.
 
  <p>If no factory method names are declared, a method within the test class
  that has the same name as the test method will be used as the factory

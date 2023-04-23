@@ -483,11 +483,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.9.3-junit-platform">JUnit Platform</a></li>
 <li><a href="#release-notes-5.9.3-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.9.3-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#"></a>
-<ul class="sectlevel2">
-<li><a href="#junit-vintage">JUnit Vintage</a></li>
 <li><a href="#release-notes-5.9.2">5.9.2</a>
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.9.2-junit-platform">JUnit Platform</a></li>
@@ -503,8 +501,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#release-notes-5.9.0">5.9.0</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
@@ -759,12 +755,18 @@ supports canonical array names&#8201;&#8212;&#8201;for example, you may now spec
 <code>@MethodSource("myFactory([Ljava.lang.String;)</code>.</p>
 </li>
 <li>
-<p>Exceptions thrown for undeletable files when cleaning up a temporary directory created
-via <code>@TempDir</code> now include the root cause.</p>
+<p>The search algorithm used to find <code>@MethodSource</code> factory methods now applies consistent
+semantics for <em>local</em> qualified method names and fully-qualified method names for
+overloaded factory methods.</p>
 </li>
 <li>
-<p>Allow lifecycle methods to be declared as <code>private</code> again for backwards compatibility
-but document it as a discouraged practice.</p>
+<p>Exceptions thrown for files that cannot be deleted when cleaning up a temporary
+directory created via <code>@TempDir</code> now include the root cause.</p>
+</li>
+<li>
+<p>Lifecycle methods are allowed to be declared as <code>private</code> again for backwards
+compatibility; however, using <code>private</code> visibility for lifecycle methods is strongly
+discouraged and will be disallowed in a future release.</p>
 </li>
 </ul>
 </div>
@@ -784,17 +786,17 @@ but document it as a discouraged practice.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The search algorithm used to find <code>@MethodSource</code> factory methods now falls back to
+lenient search semantics when a factory method cannot be found by qualified name
+(without a parameter list) and also provides better diagnostics when a unique factory
+method cannot be found.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
-</div>
-</div>
-<h1 id="" class="sect0"><a class="anchor" href="#"></a><a id="release-notes-5.9.3-junit-vintage"></a></h1>
 <div class="sect2">
-<h3 id="junit-vintage"><a class="anchor" href="#junit-vintage"></a>JUnit Vintage</h3>
+<h3 id="release-notes-5.9.3-junit-vintage"><a class="anchor" href="#release-notes-5.9.3-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
 <h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
@@ -823,6 +825,8 @@ but document it as a discouraged practice.</p>
 <p>❓</p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1078,7 +1082,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-22 19:58:26 UTC
+Last updated 2023-04-23 12:09:21 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
