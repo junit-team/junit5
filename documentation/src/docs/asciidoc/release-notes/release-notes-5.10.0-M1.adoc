@@ -58,6 +58,9 @@ repository on GitHub.
   `@MethodSource("myFactory([Ljava.lang.String;)`.
 * Exceptions thrown for undeletable files when cleaning up a temporary directory created
   via `@TempDir` now include the root cause.
+* The `{displayName}` placeholder of `@ParameterizedTest` is no longer parsed during the
+  evaluation of the `MessageFormat`, now `@DisplayName` and Kotlin method names can contain
+  single apostrophes and `MessageFormat` elements, such as `{data}`.
 
 ==== Deprecations and Breaking Changes
 
