@@ -200,10 +200,9 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		return resources;
 	}
 
-	private Set<ExclusiveResource> mapResourceLocksForTarget(List<ResourceLock> ResourceLocks,
-			ResourceLockTarget target) {
+	private Set<ExclusiveResource> mapResourceLocksForTarget(List<ResourceLock> locks, ResourceLockTarget target) {
 		// @formatter:off
-		return ResourceLocks.stream()
+		return locks.stream()
 				.filter(lock -> lock.target() == target)
 				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
 				.collect(Collectors.toSet());
