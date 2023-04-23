@@ -34,14 +34,14 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		out.println(h1("@API Declarations"));
 		out.println();
 		out.println(paragraph(
-			format("Discovered %d types with %s declarations.", this.apiReport.getTypes().size(), code("@API"))));
+			format("Discovered %d types with %s declarations.", this.apiReport.types().size(), code("@API"))));
 		out.println();
 	}
 
 	@Override
 	public void printDeclarationInfo(PrintWriter out, EnumSet<Status> statuses) {
 		// @formatter:off
-		this.apiReport.getDeclarationsMap().entrySet().stream()
+		this.apiReport.declarationsMap().entrySet().stream()
 				.filter(e -> statuses.contains(e.getKey()))
 				.forEach(e -> printDeclarationSection(statuses, e.getKey(), e.getValue(), out));
 		// @formatter:on

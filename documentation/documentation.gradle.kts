@@ -157,6 +157,10 @@ tasks {
 		dependsOn(consoleLauncherTest)
 	}
 
+	named<JavaCompile>(tools.compileJavaTaskName) {
+		options.release.set(17)
+	}
+
 	val generateConsoleLauncherOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(standaloneConsoleLauncher)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
