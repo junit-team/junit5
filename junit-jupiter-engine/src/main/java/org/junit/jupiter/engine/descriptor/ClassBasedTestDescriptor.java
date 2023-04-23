@@ -22,6 +22,7 @@ import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBefor
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getTestInstanceLifecycle;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
+import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Constructor;
@@ -52,6 +53,7 @@ import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
@@ -142,7 +144,12 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
-		return getExclusiveResourcesFromAnnotation(getTestClass());
+		return collectExclusiveResourcesFromHierarchy();
+	}
+
+	@Override
+	protected List<ResourceLock> getResourceLocks() {
+		return findRepeatableAnnotations(getTestClass(), ResourceLock.class);
 	}
 
 	@Override

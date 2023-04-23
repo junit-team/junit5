@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayName;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
@@ -50,7 +50,6 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
-import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockScope;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
@@ -182,15 +181,32 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
+	protected List<ResourceLock> getResourceLocks() {
+		return Collections.emptyList();
+	}
+
+	protected Set<ExclusiveResource> collectExclusiveResourcesFromHierarchy() {
+		Set<ExclusiveResource> resources = mapResourceLocksForTarget(getResourceLocks(), ResourceLockTarget.SELF);
+
+		Optional<TestDescriptor> nextParent = getParent();
+		while (nextParent.isPresent()) {
+			TestDescriptor testDescriptor = nextParent.get();
+			if (testDescriptor instanceof JupiterTestDescriptor) {
+				List<ResourceLock> parentLocks = ((JupiterTestDescriptor) testDescriptor).getResourceLocks();
+				resources.addAll(mapResourceLocksForTarget(parentLocks, ResourceLockTarget.CHILDREN));
+			}
+			nextParent = testDescriptor.getParent();
+		}
+		return resources;
+	}
+
+	private Set<ExclusiveResource> mapResourceLocksForTarget(List<ResourceLock> ResourceLocks,
+			ResourceLockTarget target) {
 		// @formatter:off
-		return findRepeatableAnnotations(element, ResourceLock.class).stream()
-				.map(resource -> new ExclusiveResource(
-						resource.value(),
-						toLockMode(resource.mode()),
-						toLockScope(resource.target()))
-				)
-				.collect(toSet());
+		return ResourceLocks.stream()
+				.filter(lock -> lock.target() == target)
+				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
+				.collect(Collectors.toSet());
 		// @formatter:on
 	}
 
@@ -202,16 +218,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 				return LockMode.READ_WRITE;
 		}
 		throw new JUnitException("Unknown ResourceAccessMode: " + mode);
-	}
-
-	private static LockScope toLockScope(ResourceLockTarget lockTarget) {
-		switch (lockTarget) {
-			case SELF:
-				return LockScope.SELF;
-			case CHILDREN:
-				return LockScope.CHILDREN;
-		}
-		throw new JUnitException("Unknown ResourceLockTarget: " + lockTarget);
 	}
 
 	@Override

@@ -41,7 +41,10 @@ import org.apiguardian.api.API;
  * within class hierarchies.
  *
  * <p>Since JUnit Jupiter 5.10, this annotation can be used to specify the target
- * of the lock with {@link ResourceLockTarget}.
+ * of the lock with {@link ResourceLockTarget}. In case the same resource is announced
+ * for the parent with a target {@link ResourceLockTarget#CHILDREN} and for the child
+ * with {@link ResourceLockTarget#SELF} they will be merged as if they were declared
+ * on the child altogether with {@link ResourceLockTarget#SELF} target.
  *
  * @see Isolated
  * @see Resources

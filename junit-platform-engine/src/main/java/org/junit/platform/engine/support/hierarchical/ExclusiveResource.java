@@ -52,20 +52,7 @@ public class ExclusiveResource {
 
 	private final String key;
 	private final LockMode lockMode;
-	private final LockScope lockScope;
 	private int hash;
-
-	/**
-	 * Create a new {@code ExclusiveResource} with a default lock scope {@link LockScope#SELF}
-	 *
-	 * @param key the identifier of the resource; never {@code null} or blank
-	 * @param lockMode the lock mode to use to synchronize access to the
-	 * resource; never {@code null}
-	 *
-	 */
-	public ExclusiveResource(String key, LockMode lockMode) {
-		this(key, lockMode, LockScope.SELF);
-	}
 
 	/**
 	 * Create a new {@code ExclusiveResource}.
@@ -73,13 +60,10 @@ public class ExclusiveResource {
 	 * @param key the identifier of the resource; never {@code null} or blank
 	 * @param lockMode the lock mode to use to synchronize access to the
 	 * resource; never {@code null}
-	 * @param lockScope the lock scope to use to synchronize access to the
-	 * resource; never {@code null}
 	 */
-	public ExclusiveResource(String key, LockMode lockMode, LockScope lockScope) {
+	public ExclusiveResource(String key, LockMode lockMode) {
 		this.key = Preconditions.notBlank(key, "key must not be blank");
 		this.lockMode = Preconditions.notNull(lockMode, "lockMode must not be null");
-		this.lockScope = Preconditions.notNull(lockScope, "lockScope must not be null");
 	}
 
 	/**
@@ -96,13 +80,6 @@ public class ExclusiveResource {
 		return lockMode;
 	}
 
-	/**
-	 * Get the lock scope of this resource.
-	 */
-	public LockScope getLockScope() {
-		return lockScope;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -112,26 +89,21 @@ public class ExclusiveResource {
 			return false;
 		}
 		ExclusiveResource that = (ExclusiveResource) o;
-		return Objects.equals(key, that.key) && lockMode == that.lockMode && lockScope == that.lockScope;
+		return Objects.equals(key, that.key) && lockMode == that.lockMode;
 	}
 
 	@Override
 	public int hashCode() {
 		int h = hash;
 		if (h == 0) {
-			h = hash = Objects.hash(key, lockMode, lockScope);
+			h = hash = Objects.hash(key, lockMode);
 		}
 		return h;
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("key", key).append("lockMode", lockMode).append("lockScope",
-			lockScope).toString();
-	}
-
-	public ExclusiveResource convertToSelfTarget() {
-		return new ExclusiveResource(key, lockMode, LockScope.SELF);
+		return new ToStringBuilder(this).append("key", key).append("lockMode", lockMode).toString();
 	}
 
 	/**
@@ -156,23 +128,6 @@ public class ExclusiveResource {
 		 * @see ReadWriteLock#readLock()
 		 */
 		READ
-
-	}
-
-	/**
-	 * {@code LockTarget} defines the scope of the lock.
-	 */
-	public enum LockScope {
-
-		/**
-		 * Lock the resource for the node itself.
-		 */
-		SELF,
-
-		/**
-		 * Lock the resource for all children of the node. Bypass the node itself.
-		 */
-		CHILDREN
 
 	}
 

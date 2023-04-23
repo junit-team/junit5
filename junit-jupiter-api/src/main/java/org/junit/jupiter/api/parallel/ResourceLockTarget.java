@@ -15,7 +15,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 /**
- *	Indicates the target of a {@link ResourceLock}.
+ * Indicates the target of a {@link ResourceLock}.
  *
  * @since 5.10
  * @see ResourceLock

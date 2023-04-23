@@ -203,6 +203,40 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(readWriteMethod)).isEmpty();
 	}
 
+	@Test
+	void locksMergedWhileAnnouncedForThe() {
+		var engineDescriptor = discover(TestCaseWithResourceLockCollisionsOnParentAndChildTestCase.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()).isEqualTo(
+			List.of(getLock(GLOBAL_READ)));
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
+
+		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(
+			List.of(getReadWriteLock("a")));
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).isEmpty();
+	}
+
+	@Test
+	void explicitLockCollisionsForTheSameMethod() {
+		var engineDescriptor = discover(TestCaseWithExplicitResourceLockCollisions.class);
+
+		var advisor = nodeTreeWalker.walk(engineDescriptor);
+
+		var testClassDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testClassDescriptor)).extracting(allLocks()).isEqualTo(
+			List.of(getLock(GLOBAL_READ)));
+		assertThat(advisor.getForcedExecutionMode(testClassDescriptor)).isEmpty();
+
+		var testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()).isEqualTo(
+			List.of(getReadWriteLock("a")));
+		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).isEmpty();
+	}
+
 	private static Function<org.junit.platform.engine.support.hierarchical.ResourceLock, List<Lock>> allLocks() {
 		return ResourceLockSupport::getLocks;
 	}
@@ -303,6 +337,24 @@ class NodeTreeWalkerIntegrationTests {
 		@Test
 		@ResourceLock(value = "b", mode = ResourceAccessMode.READ_WRITE)
 		void greedyMethod() {
+		}
+	}
+
+	@ResourceLock(value = "a", mode = ResourceAccessMode.READ, target = ResourceLockTarget.CHILDREN)
+	static class TestCaseWithResourceLockCollisionsOnParentAndChildTestCase {
+
+		@Test
+		@ResourceLock(value = "a", mode = ResourceAccessMode.READ_WRITE)
+		void overridenLockMethod() {
+		}
+	}
+
+	static class TestCaseWithExplicitResourceLockCollisions {
+
+		@Test
+		@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
+		@ResourceLock(value = "a", mode = ResourceAccessMode.READ_WRITE)
+		void overridenLockMethod() {
 		}
 	}
 }
