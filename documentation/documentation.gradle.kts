@@ -30,6 +30,9 @@ javaLibrary {
 val apiReport by configurations.creatingResolvable
 val standaloneConsoleLauncher by configurations.creatingResolvable
 
+val tools by sourceSets.creating
+val toolsImplementation by configurations.getting
+
 dependencies {
 	implementation(projects.junitJupiterApi) {
 		because("Jupiter API is used in src/main/java")
@@ -44,16 +47,12 @@ dependencies {
 	testImplementation(projects.junitPlatformRunner)
 	testImplementation(projects.junitPlatformSuite)
 	testImplementation(projects.junitPlatformTestkit)
+	testImplementation(projects.junitVintageEngine)
 	testImplementation(kotlin("stdlib"))
 
-	testImplementation(projects.junitVintageEngine)
-	testRuntimeOnly(libs.apiguardian) {
-		because("it's required to generate API tables")
-	}
-
-	testImplementation(libs.classgraph) {
-		because("ApiReportGenerator needs it")
-	}
+	toolsImplementation(projects.junitPlatformCommons)
+	toolsImplementation(libs.classgraph)
+	toolsImplementation(libs.apiguardian)
 
 	testImplementation(libs.jimfs) {
 		because("Jimfs is used in src/test/java")
@@ -159,35 +158,35 @@ tasks {
 	}
 
 	val generateConsoleLauncherOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(standaloneConsoleLauncher)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("--help", "--disable-banner")
 		outputFile = consoleLauncherOptionsFile
 	}
 
 	val generateConsoleLauncherDiscoverOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(standaloneConsoleLauncher)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("discover", "--help", "--disable-banner")
 		outputFile = consoleLauncherDiscoverOptionsFile
 	}
 
 	val generateConsoleLauncherExecuteOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(standaloneConsoleLauncher)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("execute", "--help", "--disable-banner")
 		outputFile = consoleLauncherExecuteOptionsFile
 	}
 
 	val generateConsoleLauncherEnginesOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(standaloneConsoleLauncher)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("engines", "--help", "--disable-banner")
 		outputFile = consoleLauncherEnginesOptionsFile
 	}
 
 	val generateExperimentalApisTable by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(tools.runtimeClasspath)
 		mainClass = "org.junit.api.tools.ApiReportGenerator"
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
 		args.add("EXPERIMENTAL")
@@ -195,7 +194,7 @@ tasks {
 	}
 
 	val generateDeprecatedApisTable by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(tools.runtimeClasspath)
 		mainClass = "org.junit.api.tools.ApiReportGenerator"
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
 		args.add("DEPRECATED")
