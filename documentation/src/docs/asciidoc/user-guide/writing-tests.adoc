@@ -2468,7 +2468,7 @@ The following table lists relevant properties for configuring parallel execution
 | a positive decimal number
 | ```1.0```
 
-| ```junit.jupiter.execution.parallel.config.dynamic.max-pool-size.factor```
+| ```junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor```
 | Factor to be multiplied by the number of available processors/cores and the value of
   `junit.jupiter.execution.parallel.config.dynamic.factor` to determine the desired
   parallelism for the ```dynamic``` configuration strategy
