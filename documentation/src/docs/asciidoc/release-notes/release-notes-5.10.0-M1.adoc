@@ -52,12 +52,7 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* The `{displayName}` placeholder for `@ParameterizedTest` invocation names is no longer
-  parsed using `java.text.MessageFormat`. Consequently, any text in the display name of
-  the `@ParameterizedTest` method will be included unmodified in the invocation display
-  name. For example, Kotlin method names and custom display names configured via
-  `@DisplayName` can now contain apostrophes (`'`) as well as text resembling
-  `MessageFormat` elements such as `{0}` or `{data}`.
+* ❓
 
 ==== Deprecations and Breaking Changes
 
