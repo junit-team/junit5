@@ -113,19 +113,19 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 					"instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
 				assertThat(testBTempDirs.values()).hasSize(10).doesNotHaveDuplicates();
 
-				assertThat(testATempDirs.get("staticField1")).isEqualTo(classTempDirs.get("staticField1"));
-				assertThat(testBTempDirs.get("staticField1")).isEqualTo(classTempDirs.get("staticField1"));
-				assertThat(testATempDirs.get("staticField2")).isEqualTo(classTempDirs.get("staticField2"));
-				assertThat(testBTempDirs.get("staticField2")).isEqualTo(classTempDirs.get("staticField2"));
+				assertThat(testATempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
+				assertThat(testBTempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
+				assertThat(testATempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
+				assertThat(testBTempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
 
-				assertThat(testATempDirs.get("instanceField1")).isNotEqualTo(testBTempDirs.get("instanceField1"));
-				assertThat(testATempDirs.get("instanceField2")).isNotEqualTo(testBTempDirs.get("instanceField2"));
-				assertThat(testATempDirs.get("beforeEach1")).isNotEqualTo(testBTempDirs.get("beforeEach1"));
-				assertThat(testATempDirs.get("beforeEach2")).isNotEqualTo(testBTempDirs.get("beforeEach2"));
-				assertThat(testATempDirs.get("test1")).isNotEqualTo(testBTempDirs.get("test1"));
-				assertThat(testATempDirs.get("test2")).isNotEqualTo(testBTempDirs.get("test2"));
-				assertThat(testATempDirs.get("afterEach1")).isNotEqualTo(testBTempDirs.get("afterEach1"));
-				assertThat(testATempDirs.get("afterEach2")).isNotEqualTo(testBTempDirs.get("afterEach2"));
+				assertThat(testATempDirs).doesNotContainEntry("instanceField1", testBTempDirs.get("instanceField1"));
+				assertThat(testATempDirs).doesNotContainEntry("instanceField2", testBTempDirs.get("instanceField2"));
+				assertThat(testATempDirs).doesNotContainEntry("beforeEach1", testBTempDirs.get("beforeEach1"));
+				assertThat(testATempDirs).doesNotContainEntry("beforeEach2", testBTempDirs.get("beforeEach2"));
+				assertThat(testATempDirs).doesNotContainEntry("test1", testBTempDirs.get("test1"));
+				assertThat(testATempDirs).doesNotContainEntry("test2", testBTempDirs.get("test2"));
+				assertThat(testATempDirs).doesNotContainEntry("afterEach1", testBTempDirs.get("afterEach1"));
+				assertThat(testATempDirs).doesNotContainEntry("afterEach2", testBTempDirs.get("afterEach2"));
 			}));
 	}
 

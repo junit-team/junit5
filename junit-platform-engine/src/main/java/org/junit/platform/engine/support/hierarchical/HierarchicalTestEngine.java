@@ -10,8 +10,8 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -75,7 +75,7 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 * @see ForkJoinPoolHierarchicalTestExecutorService
 	 * @see SameThreadHierarchicalTestExecutorService
 	 */
-	@API(status = EXPERIMENTAL, since = "1.3")
+	@API(status = STABLE, since = "1.10")
 	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
 		return new SameThreadHierarchicalTestExecutorService();
 	}
@@ -98,7 +98,7 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 * @see OpenTest4JAwareThrowableCollector
 	 * @see ThrowableCollector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.3")
+	@API(status = STABLE, since = "1.10")
 	protected ThrowableCollector.Factory createThrowableCollectorFactory(ExecutionRequest request) {
 		return OpenTest4JAwareThrowableCollector::new;
 	}

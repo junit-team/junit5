@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -21,7 +21,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  * @since 1.3
  * @see DefaultParallelExecutionConfigurationStrategy
  */
-@API(status = EXPERIMENTAL, since = "1.3")
+@API(status = STABLE, since = "1.10")
 public interface ParallelExecutionConfigurationStrategy {
 
 	/**

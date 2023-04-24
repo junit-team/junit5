@@ -12,7 +12,6 @@ package org.junit.platform.engine;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
@@ -180,7 +179,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 *
 	 * @since 1.8
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	public UniqueId appendEngine(String engineId) {
 		return append(new Segment(ENGINE_SEGMENT_TYPE, engineId));
 	}

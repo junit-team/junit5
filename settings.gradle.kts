@@ -10,7 +10,7 @@ pluginManagement {
 		id("com.gradle.enterprise") version "3.13" // keep in sync with gradle/plugins/build.gradle.kts
 		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.10"
 		id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
-		id("org.ajoberstar.git-publish") version "4.1.1"
+		id("org.ajoberstar.git-publish") version "4.2.0"
 		kotlin("jvm") version "1.8.20"
 		// Check if workaround in documentation.gradle.kts can be removed when upgrading
 		id("org.asciidoctor.jvm.convert") version "4.0.0-alpha.1"

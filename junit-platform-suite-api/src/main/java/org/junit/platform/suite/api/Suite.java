@@ -10,6 +10,8 @@
 
 package org.junit.platform.suite.api;
 
+import static org.apiguardian.api.API.Status.STABLE;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -70,7 +72,7 @@ import org.junit.platform.commons.annotation.Testable;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-@API(status = Status.EXPERIMENTAL, since = "1.8")
+@API(status = STABLE, since = "1.10")
 @Testable
 public @interface Suite {
 

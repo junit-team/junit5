@@ -11,7 +11,6 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.Collections.emptyList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.ENABLE_LAUNCHER_INTERCEPTORS;
@@ -78,7 +77,7 @@ public class LauncherFactory {
 	 * @since 1.8
 	 * @see #openSession(LauncherConfig)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	public static LauncherSession openSession() throws PreconditionViolationException {
 		return openSession(LauncherConfig.DEFAULT);
 	}
@@ -94,7 +93,7 @@ public class LauncherFactory {
 	 * @since 1.8
 	 * @see #openSession()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	public static LauncherSession openSession(LauncherConfig config) throws PreconditionViolationException {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
@@ -124,7 +123,7 @@ public class LauncherFactory {
 	 * @since 1.3
 	 * @see #create()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.3")
+	@API(status = STABLE, since = "1.10")
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
