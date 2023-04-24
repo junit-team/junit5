@@ -54,6 +54,10 @@ dependencies {
 		because("ApiReportGenerator needs it")
 	}
 
+	testImplementation(libs.jimfs) {
+		because("Jimfs is used in src/main/test")
+	}
+
 	standaloneConsoleLauncher(projects.junitPlatformConsoleStandalone)
 }
 
