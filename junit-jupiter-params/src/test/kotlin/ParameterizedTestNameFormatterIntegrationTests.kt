@@ -16,7 +16,7 @@ class ParameterizedTestNameFormatterIntegrationTests {
 
     @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest
-    fun `implicit'Name`(param: String, info: TestInfo) {
+    fun defaultDisplayName(param: String, info: TestInfo) {
         if (param.equals("foo")) {
             assertEquals("[1] foo", info.displayName)
         } else {
@@ -26,7 +26,7 @@ class ParameterizedTestNameFormatterIntegrationTests {
 
     @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest(name = "{0}")
-    fun `zero'Only`(param: String, info: TestInfo) {
+    fun `1st argument`(param: String, info: TestInfo) {
         if (param.equals("foo")) {
             assertEquals("foo", info.displayName)
         } else {
@@ -36,27 +36,27 @@ class ParameterizedTestNameFormatterIntegrationTests {
 
     @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest(name = "{displayName}")
-    fun `displayName'Only`(param: String, info: TestInfo) {
-        assertEquals("displayName'Only(String, TestInfo)", info.displayName)
+    fun `it's an {enigma} '{0}'`(@Suppress("UNUSED_PARAMETER") param: String, info: TestInfo) {
+        assertEquals("it's an {enigma} '{0}'(String, TestInfo)", info.displayName)
     }
 
     @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest(name = "{displayName} - {0}")
-    fun `displayName'Zero`(param: String, info: TestInfo) {
+    fun `displayName and 1st 'argument'`(param: String, info: TestInfo) {
         if (param.equals("foo")) {
-            assertEquals("displayName'Zero(String, TestInfo) - foo", info.displayName)
+            assertEquals("displayName and 1st 'argument'(String, TestInfo) - foo", info.displayName)
         } else {
-            assertEquals("displayName'Zero(String, TestInfo) - bar", info.displayName)
+            assertEquals("displayName and 1st 'argument'(String, TestInfo) - bar", info.displayName)
         }
     }
 
     @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest(name = "{0} - {displayName}")
-    fun `zero'DisplayName`(param: String, info: TestInfo) {
+    fun `1st 'argument' and displayName`(param: String, info: TestInfo) {
         if (param.equals("foo")) {
-            assertEquals("foo - zero'DisplayName(String, TestInfo)", info.displayName)
+            assertEquals("foo - 1st 'argument' and displayName(String, TestInfo)", info.displayName)
         } else {
-            assertEquals("bar - zero'DisplayName(String, TestInfo)", info.displayName)
+            assertEquals("bar - 1st 'argument' and displayName(String, TestInfo)", info.displayName)
         }
     }
 }
