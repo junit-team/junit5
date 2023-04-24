@@ -16,7 +16,7 @@ class ParameterizedTestNameFormatterIntegrationTests {
 
     @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest
-    fun `defaultDisplayName`(param: String, info: TestInfo) {
+    fun defaultDisplayName(param: String, info: TestInfo) {
         if (param.equals("foo")) {
             assertEquals("[1] foo", info.displayName)
         } else {
@@ -36,8 +36,8 @@ class ParameterizedTestNameFormatterIntegrationTests {
 
     @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest(name = "{displayName}")
-    fun `displayNamePlaceholder - it's an {enigma} '{0}'`(@Suppress("UNUSED_PARAMETER") param: String, info: TestInfo) {
-        assertEquals("displayNamePlaceholder - it's an {enigma} '{0}'(String, TestInfo)", info.displayName)
+    fun `it's an {enigma} '{0}'`(@Suppress("UNUSED_PARAMETER") param: String, info: TestInfo) {
+        assertEquals("it's an {enigma} '{0}'(String, TestInfo)", info.displayName)
     }
 
     @ValueSource(strings = ["foo", "bar"])
