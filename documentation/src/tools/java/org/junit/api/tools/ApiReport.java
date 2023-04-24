@@ -9,12 +9,12 @@
  */
 package org.junit.api.tools;
 
+import org.apiguardian.api.API.Status;
+
 import java.util.List;
 import java.util.Map;
-
-import org.apiguardian.api.API.Status;
 
 /**
  * @since 1.0
  */
-record ApiReport(List<Class<?>> types, Map<Status, List<Class<?>>> declarationsMap) {}
+record ApiReport(List<Class<?>> types, Map<Status, List<Declaration>> declarationsMap) {}

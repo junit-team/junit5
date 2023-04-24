@@ -58,7 +58,7 @@ class HtmlApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableRow(Class<?> type, PrintWriter out) {
+	protected void printDeclarationTableRow(Declaration declaration, PrintWriter out) {
 		out.printf(HTML_ROW_FORMAT, //
 			code(type.getPackage().getName()), //
 			code(type.getSimpleName()) + " " + italic("(" + getKind(type) + ")"), //

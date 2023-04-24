@@ -53,15 +53,12 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableRow(Class<?> type, PrintWriter out) {
-		String packageName = type.getPackage().getName();
-		String typeName = type.getCanonicalName();
-		if (typeName.startsWith(packageName + '.')) {
-			typeName = typeName.substring(packageName.length() + 1);
-		}
+	protected void printDeclarationTableRow(Declaration declaration, PrintWriter out) {
+		String packageName = declaration.getPackageName();
+		String name = declaration.getName();
 		out.printf(ASCIIDOC_FORMAT, //
 			code(packageName), //
-			code(typeName) + " " + italic("(" + getKind(type) + ")"), //
+			code(name) + " " + italic("(" + declaration.getKind() + ")"), //
 			code(type.getAnnotation(API.class).since()) //
 		);
 	}

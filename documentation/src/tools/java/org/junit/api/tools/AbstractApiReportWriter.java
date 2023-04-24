@@ -10,13 +10,13 @@
 
 package org.junit.api.tools;
 
-import static java.lang.String.format;
+import org.apiguardian.api.API.Status;
 
 import java.io.PrintWriter;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.apiguardian.api.API.Status;
+import static java.lang.String.format;
 
 /**
  * @since 1.0
@@ -47,12 +47,12 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		// @formatter:on
 	}
 
-	protected void printDeclarationSection(EnumSet<Status> statuses, Status status, List<Class<?>> types,
+	protected void printDeclarationSection(EnumSet<Status> statuses, Status status, List<Declaration> declarations,
 			PrintWriter out) {
-		printDeclarationSectionHeader(statuses, status, types, out);
-		if (types.size() > 0) {
+		printDeclarationSectionHeader(statuses, status, declarations, out);
+		if (declarations.size() > 0) {
 			printDeclarationTableHeader(out);
-			types.forEach(type -> printDeclarationTableRow(type, out));
+			declarations.forEach(it -> printDeclarationTableRow(, it, out));
 			printDeclarationTableFooter(out);
 			out.println();
 		}
@@ -84,7 +84,7 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 
 	protected abstract void printDeclarationTableHeader(PrintWriter out);
 
-	protected abstract void printDeclarationTableRow(Class<?> type, PrintWriter out);
+	protected abstract void printDeclarationTableRow(Declaration declaration, PrintWriter out);
 
 	protected abstract void printDeclarationTableFooter(PrintWriter out);
 
