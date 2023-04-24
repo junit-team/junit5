@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.parallel;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
@@ -20,7 +20,7 @@ import org.apiguardian.api.API;
  * @since 5.3
  * @see ResourceLock
  */
-@API(status = EXPERIMENTAL, since = "5.3")
+@API(status = STABLE, since = "5.10")
 public class Resources {
 
 	/**
@@ -54,7 +54,7 @@ public class Resources {
 	 * @since 5.4
 	 * @see java.util.Locale#setDefault(java.util.Locale)
 	 */
-	@API(status = EXPERIMENTAL, since = "5.4")
+	@API(status = STABLE, since = "5.10")
 	public static final String LOCALE = "java.util.Locale.default";
 
 	/**
@@ -64,7 +64,7 @@ public class Resources {
 	 * @since 5.4
 	 * @see java.util.TimeZone#setDefault(java.util.TimeZone)
 	 */
-	@API(status = EXPERIMENTAL, since = "5.4")
+	@API(status = STABLE, since = "5.10")
 	public static final String TIME_ZONE = "java.util.TimeZone.default";
 
 	/**
@@ -74,7 +74,7 @@ public class Resources {
 	 * @see Isolated
 	 * @see org.junit.platform.engine.support.hierarchical.ExclusiveResource
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.10")
 	public static final String GLOBAL = "org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY";
 
 	private Resources() {

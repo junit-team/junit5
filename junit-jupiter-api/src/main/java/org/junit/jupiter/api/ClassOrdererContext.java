@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
  * @see ClassOrderer
  * @see ClassDescriptor
  */
-@API(status = EXPERIMENTAL, since = "5.8")
+@API(status = STABLE, since = "5.10")
 public interface ClassOrdererContext {
 
 	/**

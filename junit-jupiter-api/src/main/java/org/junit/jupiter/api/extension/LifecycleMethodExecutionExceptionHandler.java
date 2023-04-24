@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
@@ -53,7 +53,7 @@ import org.apiguardian.api.API;
  * @since 5.5
  * @see TestExecutionExceptionHandler
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.10")
 public interface LifecycleMethodExecutionExceptionHandler extends Extension {
 
 	/**

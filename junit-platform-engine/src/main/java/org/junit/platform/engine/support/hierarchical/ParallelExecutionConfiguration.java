@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.Predicate;
@@ -30,7 +31,7 @@ import org.apiguardian.api.API;
  * @see ParallelExecutionConfigurationStrategy
  * @see DefaultParallelExecutionConfigurationStrategy
  */
-@API(status = EXPERIMENTAL, since = "1.3")
+@API(status = STABLE, since = "1.10")
 public interface ParallelExecutionConfiguration {
 
 	/**

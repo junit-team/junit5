@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.converter;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @see ArgumentConverter
  * @see SimpleArgumentConverter
  */
-@API(status = EXPERIMENTAL, since = "5.7")
+@API(status = STABLE, since = "5.10")
 public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter {
 
 	private final Class<S> sourceType;

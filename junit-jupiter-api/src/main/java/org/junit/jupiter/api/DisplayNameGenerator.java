@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
@@ -229,7 +228,7 @@ public interface DisplayNameGenerator {
 	 *
 	 * @since 5.7
 	 */
-	@API(status = EXPERIMENTAL, since = "5.7")
+	@API(status = STABLE, since = "5.10")
 	class IndicativeSentences implements DisplayNameGenerator {
 
 		static final DisplayNameGenerator INSTANCE = new IndicativeSentences();

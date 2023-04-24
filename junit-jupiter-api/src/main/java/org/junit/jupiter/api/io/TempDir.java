@@ -12,6 +12,7 @@ package org.junit.jupiter.api.io;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,7 +94,7 @@ import org.junit.jupiter.api.io.TempDirFactory.Standard;
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = STABLE, since = "5.10")
 public @interface TempDir {
 
 	/**

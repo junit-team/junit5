@@ -403,7 +403,7 @@ class DefaultLauncherTests {
 		launcher.execute(request().build());
 
 		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
-		assertThat(configurationParameters.get("key").isPresent()).isFalse();
+		assertThat(configurationParameters.get("key")).isNotPresent();
 		assertThat(configurationParameters.size()).isEqualTo(0);
 	}
 
@@ -417,8 +417,8 @@ class DefaultLauncherTests {
 
 		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.size()).isEqualTo(1);
-		assertThat(configurationParameters.get("key").isPresent()).isTrue();
-		assertThat(configurationParameters.get("key").get()).isEqualTo("value");
+		assertThat(configurationParameters.get("key")).isPresent();
+		assertThat(configurationParameters.get("key")).contains("value");
 	}
 
 	@Test
