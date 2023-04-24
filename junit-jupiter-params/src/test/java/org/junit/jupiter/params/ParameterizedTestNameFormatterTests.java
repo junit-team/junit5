@@ -61,7 +61,7 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	@Test
-	void formatsDisplayNameWithApostrophe() {
+	void formatsDisplayNameContainingApostrophe() {
 		String displayName = "display'Zero";
 		var formatter = formatter(DISPLAY_NAME_PLACEHOLDER, "display'Zero");
 
