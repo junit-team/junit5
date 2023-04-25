@@ -2038,7 +2038,7 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 <p>Even though the assertion facilities provided by JUnit Jupiter are sufficient for many
 testing scenarios, there are times when more power and additional functionality such as
 <em>matchers</em> are desired or required. In such cases, the JUnit team recommends the use of
-third-party assertion libraries such as <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a>, <a href="https://hamcrest.org/JavaHamcrest/">Hamcrest</a>, <a href="https://truth.dev/">Truth</a>, etc. Developers
+third-party assertion libraries such as <a href="https://assertj.github.io/doc/">AssertJ</a>, <a href="https://hamcrest.org/JavaHamcrest/">Hamcrest</a>, <a href="https://truth.dev/">Truth</a>, etc. Developers
 are therefore free to use the assertion library of their choice.</p>
 </div>
 <div class="paragraph">
@@ -5943,20 +5943,6 @@ This heuristic is queried by the <code>disabled_on_debug</code> mode.</p>
 </div>
 <div class="sect2">
 <h3 id="writing-tests-parallel-execution"><a class="anchor" href="#writing-tests-parallel-execution"></a>2.20. Parallel Execution</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="title">Parallel test execution is an experimental feature</div>
-You&#8217;re invited to give it a try and provide feedback to the JUnit team so they
-can improve and eventually <a href="#api-evolution">promote</a> this feature.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
 parallel&#8201;&#8212;&#8201;for example, to speed up execution&#8201;&#8212;&#8201;is available as an opt-in feature since
@@ -6387,20 +6373,6 @@ another dependency.</p>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-built-in-extensions-TempDirectory"><a class="anchor" href="#writing-tests-built-in-extensions-TempDirectory"></a>2.21.1. The TempDirectory Extension</h4>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="title"><code>@TempDir</code> is an experimental feature</div>
-You&#8217;re invited to give it a try and provide feedback to the JUnit team so they
-can improve and eventually <a href="#api-evolution">promote</a> this feature.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>The built-in <code><a href="https://github.com/junit-team/junit5/tree/HEAD/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a></code> extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
@@ -6581,7 +6553,7 @@ tests to JUnit Jupiter.</p>
 <ul>
 <li>
 <p>Note that you may continue to use assertion methods from <code>org.junit.Assert</code> or any
-other assertion library such as <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a>, <a href="https://hamcrest.org/JavaHamcrest/">Hamcrest</a>, <a href="https://truth.dev/">Truth</a>, etc.</p>
+other assertion library such as <a href="https://assertj.github.io/doc/">AssertJ</a>, <a href="https://hamcrest.org/JavaHamcrest/">Hamcrest</a>, <a href="https://truth.dev/">Truth</a>, etc.</p>
 </li>
 </ul>
 </div>
@@ -10658,7 +10630,7 @@ follows.</p>
 <td class="content">
 <div class="paragraph">
 <p>The <code>assertThatEvents()</code> method in the following example is a shortcut for
-<code>org.assertj.core.api.Assertions.assertThat(events.list())</code> from the <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a> assertion
+<code>org.assertj.core.api.Assertions.assertThat(events.list())</code> from the <a href="https://assertj.github.io/doc/">AssertJ</a> assertion
 library.</p>
 </div>
 <div class="paragraph">
@@ -12232,7 +12204,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-24 12:25:35 UTC
+Last updated 2023-04-25 05:46:53 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
