@@ -178,7 +178,7 @@ endif::[]
 // Third-party Links
 :API:                                        https://apiguardian-team.github.io/apiguardian/docs/current/api/[@API]
 :API_Guardian:                               https://github.com/apiguardian-team/apiguardian[@API Guardian]
-:AssertJ:                                    https://joel-costigliola.github.io/assertj/[AssertJ]
+:AssertJ:                                    https://assertj.github.io/doc/[AssertJ]
 :Gitter:                                     https://gitter.im/junit-team/junit5[Gitter]
 :Hamcrest:                                   https://hamcrest.org/JavaHamcrest/[Hamcrest]
 :Jimfs:                                      https://google.github.io/jimfs/[Jimfs]
