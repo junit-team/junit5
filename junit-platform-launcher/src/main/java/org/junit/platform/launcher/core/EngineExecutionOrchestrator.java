@@ -13,6 +13,9 @@ package org.junit.platform.launcher.core;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.ListenerRegistry.forEngineExecutionListeners;
+import static org.junit.platform.launcher.core.StackTracePruningEngineExecutionListener.STACKTRACE_PRUNING_DEFAULT_PATTERN;
+import static org.junit.platform.launcher.core.StackTracePruningEngineExecutionListener.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME;
+import static org.junit.platform.launcher.core.StackTracePruningEngineExecutionListener.STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -155,18 +158,32 @@ public class EngineExecutionOrchestrator {
 		Preconditions.notNull(discoveryResult, "discoveryResult must not be null");
 		Preconditions.notNull(engineExecutionListener, "engineExecutionListener must not be null");
 
+		ConfigurationParameters configurationParameters = discoveryResult.getConfigurationParameters();
+		EngineExecutionListener listener = selectExecutionListener(engineExecutionListener, configurationParameters);
+
 		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
 			TestDescriptor engineDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 			if (engineDescriptor instanceof EngineDiscoveryErrorDescriptor) {
-				engineExecutionListener.executionStarted(engineDescriptor);
-				engineExecutionListener.executionFinished(engineDescriptor,
+				listener.executionStarted(engineDescriptor);
+				listener.executionFinished(engineDescriptor,
 					TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
 			}
 			else {
-				execute(engineDescriptor, engineExecutionListener, discoveryResult.getConfigurationParameters(),
-					testEngine);
+				execute(engineDescriptor, listener, configurationParameters, testEngine);
 			}
 		}
+	}
+
+	private static EngineExecutionListener selectExecutionListener(EngineExecutionListener engineExecutionListener,
+			ConfigurationParameters configurationParameters) {
+		boolean stackTracePruningEnabled = configurationParameters.getBoolean(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME) //
+				.orElse(true);
+		if (stackTracePruningEnabled) {
+			String pruningPattern = configurationParameters.get(STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME) //
+					.orElse(STACKTRACE_PRUNING_DEFAULT_PATTERN);
+			return new StackTracePruningEngineExecutionListener(engineExecutionListener, pruningPattern);
+		}
+		return engineExecutionListener;
 	}
 
 	private ListenerRegistry<TestExecutionListener> buildListenerRegistryForExecution(
