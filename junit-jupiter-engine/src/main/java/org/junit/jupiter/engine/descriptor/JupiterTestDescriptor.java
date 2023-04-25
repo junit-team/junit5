@@ -188,14 +188,10 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	protected Set<ExclusiveResource> collectExclusiveResourcesFromHierarchy() {
 		Set<ExclusiveResource> resources = mapResourceLocksForTarget(getResourceLocks(), ResourceLockTarget.SELF);
 
-		Optional<TestDescriptor> nextParent = getParent();
-		while (nextParent.isPresent()) {
-			TestDescriptor testDescriptor = nextParent.get();
-			if (testDescriptor instanceof JupiterTestDescriptor) {
-				List<ResourceLock> parentLocks = ((JupiterTestDescriptor) testDescriptor).getResourceLocks();
-				resources.addAll(mapResourceLocksForTarget(parentLocks, ResourceLockTarget.CHILDREN));
-			}
-			nextParent = testDescriptor.getParent();
+		Optional<TestDescriptor> parent = getParent();
+		if (parent.isPresent() && parent.get() instanceof JupiterTestDescriptor) {
+			List<ResourceLock> parentLocks = ((JupiterTestDescriptor) parent.get()).getResourceLocks();
+			resources.addAll(mapResourceLocksForTarget(parentLocks, ResourceLockTarget.CHILDREN));
 		}
 		return resources;
 	}

@@ -29,7 +29,7 @@ public enum ResourceLockTarget {
 	SELF,
 
 	/**
-	 * Skip the test descriptor itself and apply annotation {@link ResourceLock} to all its children
+	 * Skip the test descriptor itself and apply annotation {@link ResourceLock} to its direct children
 	 */
 	CHILDREN
 
