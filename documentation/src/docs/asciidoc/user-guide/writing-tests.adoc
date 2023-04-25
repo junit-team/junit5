@@ -2262,10 +2262,6 @@ This heuristic is queried by the `disabled_on_debug` mode.
 [[writing-tests-parallel-execution]]
 === Parallel Execution
 
-.Parallel test execution is an experimental feature
-WARNING: You're invited to give it a try and provide feedback to the JUnit team so they
-can improve and eventually <<api-evolution, promote>> this feature.
-
 By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
 parallel -- for example, to speed up execution -- is available as an opt-in feature since
 version 5.3. To enable parallel execution, set the
@@ -2560,10 +2556,6 @@ another dependency.
 
 [[writing-tests-built-in-extensions-TempDirectory]]
 ==== The TempDirectory Extension
-
-.`@TempDir` is an experimental feature
-WARNING: You're invited to give it a try and provide feedback to the JUnit team so they
-can improve and eventually <<api-evolution, promote>> this feature.
 
 The built-in `{TempDirectory}` extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
