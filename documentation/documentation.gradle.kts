@@ -55,7 +55,7 @@ dependencies {
 	}
 
 	testImplementation(libs.jimfs) {
-		because("Jimfs is used in src/main/test")
+		because("Jimfs is used in src/test/java")
 	}
 
 	standaloneConsoleLauncher(projects.junitPlatformConsoleStandalone)
