@@ -66,26 +66,30 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">JUnit Jupiter API support for writing extensions.</div>
 </div>
-<div class="col-first even-row-color"><a href="#org.junit.jupiter.engine.descriptor">org.junit.jupiter.engine.descriptor</a></div>
+<div class="col-first even-row-color"><a href="#org.junit.jupiter.api.io">org.junit.jupiter.api.io</a></div>
 <div class="col-last even-row-color">
+<div class="block">IO-related support in JUnit Jupiter.</div>
+</div>
+<div class="col-first odd-row-color"><a href="#org.junit.jupiter.engine.descriptor">org.junit.jupiter.engine.descriptor</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Test descriptors used within the JUnit Jupiter test engine.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#org.junit.jupiter.engine.execution">org.junit.jupiter.engine.execution</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#org.junit.jupiter.engine.execution">org.junit.jupiter.engine.execution</a></div>
+<div class="col-last even-row-color">
 <div class="block">Internal classes for test execution within the JUnit Jupiter test engine.</div>
 </div>
-<div class="col-first even-row-color"><a href="#org.junit.jupiter.migrationsupport.conditions">org.junit.jupiter.migrationsupport.conditions</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#org.junit.jupiter.migrationsupport.conditions">org.junit.jupiter.migrationsupport.conditions</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Extensions which provide support for conditional test execution features of
  JUnit 4 (e.g., the <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/Ignore.html" title="class or interface in org.junit" class="external-link"><code>@Ignore</code></a> annotation) within JUnit
  Jupiter.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules</a></div>
+<div class="col-last even-row-color">
 <div class="block">Extensions which provide (limited) support for JUnit 4 rules within JUnit Jupiter.</div>
 </div>
-<div class="col-first even-row-color"><a href="#org.junit.jupiter.params.provider">org.junit.jupiter.params.provider</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#org.junit.jupiter.params.provider">org.junit.jupiter.params.provider</a></div>
+<div class="col-last odd-row-color">
 <div class="block"><a href="../../../../../../../org.junit.jupiter.params/org/junit/jupiter/params/provider/ArgumentsProvider.html" title="interface in org.junit.jupiter.params.provider"><code>ArgumentsProvider</code></a>
  implementations and their corresponding
  <a href="../../../../../../../org.junit.jupiter.params/org/junit/jupiter/params/provider/ArgumentsSource.html" title="annotation interface in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a>
@@ -373,6 +377,25 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>final boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">TypeBasedParameterResolver.</span><code><a href="../support/TypeBasedParameterResolver.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)" class="member-name-link">supportsParameter</a><wbr>(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
  <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="org.junit.jupiter.api.io">
+<h2>Uses of <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a> in <a href="../../io/package-summary.html">org.junit.jupiter.api.io</a></h2>
+<div class="caption"><span>Methods in <a href="../../io/package-summary.html">org.junit.jupiter.api.io</a> with parameters of type <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TempDirFactory.</span><code><a href="../../io/TempDirFactory.html#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)" class="member-name-link">createTempDirectory</a><wbr>(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Create a new temporary directory, using the given prefix to generate its name.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TempDirFactory.Standard.</span><code><a href="../../io/TempDirFactory.Standard.html#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)" class="member-name-link">createTempDirectory</a><wbr>(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>

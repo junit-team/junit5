@@ -6481,12 +6481,84 @@ temporary directories are deleted only after a test completed successfully.</p>
 <div class="listingblock">
 <div class="title">A test class with a temporary directory that doesn&#8217;t get cleaned up</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">TempDirCleanupModeDemo</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">CleanupModeDemo</span> <span class="o">{</span>
 
     <span class="nd">@Test</span>
     <span class="kt">void</span> <span class="nf">fileTest</span><span class="o">(</span><span class="nd">@TempDir</span><span class="o">(</span><span class="n">cleanup</span> <span class="o">=</span> <span class="no">ON_SUCCESS</span><span class="o">)</span> <span class="nc">Path</span> <span class="n">tempDir</span><span class="o">)</span> <span class="o">{</span>
         <span class="c1">// perform test</span>
     <span class="o">}</span>
+
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@TempDir</code> supports custom creation of temporary directories via the optional
+<code>factory</code> attribute. This allows to define how the temporary directory is created,
+giving control over characteristics such as the directory name, root folder,
+and underlying file system.</p>
+</div>
+<div class="paragraph">
+<p>Factories can be created by implementing <code>TempDirFactory</code>. The default implementation
+available in Jupiter delegates the directory creation to
+<code>java.nio.file.Files::createTempDirectory</code>, passing <code>junit</code> as the prefix string
+to be used in generating the directory&#8217;s name.</p>
+</div>
+<div class="paragraph">
+<p>The following example defines a factory that uses the test name as the directory name
+prefix instead of the <code>junit</code> constant value.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test class with a temporary directory having the test name as the directory name prefix</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">TempDirFactoryDemo</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">factoryTest</span><span class="o">(</span><span class="nd">@TempDir</span><span class="o">(</span><span class="n">factory</span> <span class="o">=</span> <span class="nc">Factory</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="nc">Path</span> <span class="n">tempDir</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">assertTrue</span><span class="o">(</span><span class="n">tempDir</span><span class="o">.</span><span class="na">getFileName</span><span class="o">().</span><span class="na">toString</span><span class="o">().</span><span class="na">startsWith</span><span class="o">(</span><span class="s">"factoryTest"</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Factory</span> <span class="kd">implements</span> <span class="nc">TempDirFactory</span> <span class="o">{</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="nc">Path</span> <span class="nf">createTempDirectory</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nc">Files</span><span class="o">.</span><span class="na">createTempDirectory</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">getRequiredTestMethod</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s also possible to use an in-memory file system like <code><a href="https://google.github.io/jimfs/">Jimfs</a></code> for the creation of the
+temporary directory. The following example shows how to do it.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test class with a temporary directory created with the Jimfs in-memory file system</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">InMemoryTempDirDemo</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nd">@TempDir</span><span class="o">(</span><span class="n">factory</span> <span class="o">=</span> <span class="nc">JimfsTempDirFactory</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="nc">Path</span> <span class="n">tempDir</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// perform test</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">JimfsTempDirFactory</span> <span class="kd">implements</span> <span class="nc">TempDirFactory</span> <span class="o">{</span>
+
+        <span class="kd">private</span> <span class="kd">final</span> <span class="nc">FileSystem</span> <span class="n">fileSystem</span> <span class="o">=</span> <span class="nc">Jimfs</span><span class="o">.</span><span class="na">newFileSystem</span><span class="o">(</span><span class="nc">Configuration</span><span class="o">.</span><span class="na">unix</span><span class="o">());</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="nc">Path</span> <span class="nf">createTempDirectory</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nc">Files</span><span class="o">.</span><span class="na">createTempDirectory</span><span class="o">(</span><span class="n">fileSystem</span><span class="o">.</span><span class="na">getPath</span><span class="o">(</span><span class="s">"/"</span><span class="o">),</span> <span class="s">"junit"</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+            <span class="n">fileSystem</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -11804,6 +11876,11 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.9</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.io</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TempDirFactory</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.10</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.converter</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotationBasedArgumentConverter</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.10</code></p></td>
@@ -12204,7 +12281,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-26 06:54:15 UTC
+Last updated 2023-04-26 07:39:28 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

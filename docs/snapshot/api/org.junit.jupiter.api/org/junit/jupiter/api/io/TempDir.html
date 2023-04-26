@@ -158,6 +158,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">How the temporary directory gets cleaned up after the test completes.</div>
 </div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io">TempDirFactory</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#factory()" class="member-name-link">factory</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Factory for the temporary directory.</div>
+</div>
 </div>
 </section>
 </li>
@@ -256,6 +261,28 @@ loadScripts(document, 'script');</script>
 <section class="member-details">
 <h2>Element Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="factory()">
+<h3>factory</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.10")
+</span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io">TempDirFactory</a>&gt;</span>&nbsp;<span class="element-name">factory</span></div>
+<div class="block">Factory for the temporary directory.
+
+ <p>If <a href="#SCOPE_PROPERTY_NAME">"junit.jupiter.tempdir.scope"</a> is set to <code>per_context</code>, no
+ custom factory is allowed.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the class instance of the factory</dd>
+<dt>Since:</dt>
+<dd>5.10</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>org.junit.jupiter.api.io.TempDirFactory.Standard.class</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="cleanup()">
 <h3>cleanup</h3>

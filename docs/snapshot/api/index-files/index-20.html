@@ -97,6 +97,16 @@ loadScripts(document, 'script');</script>
  parameter in a lifecycle method or test method of type <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a> or
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link"><code>File</code></a> that should be resolved into a temporary directory.</div>
 </dd>
+<dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/io/TempDirFactory.html" class="type-name-link" title="interface in org.junit.jupiter.api.io">TempDirFactory</a> - Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/io/package-summary.html">org.junit.jupiter.api.io</a></dt>
+<dd>
+<div class="block"><code>TempDirFactory</code> defines the SPI for creating temporary directories
+ programmatically.</div>
+</dd>
+<dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/io/TempDirFactory.Standard.html" class="type-name-link" title="class in org.junit.jupiter.api.io">TempDirFactory.Standard</a> - Class in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/io/package-summary.html">org.junit.jupiter.api.io</a></dt>
+<dd>
+<div class="block">Standard temporary directory factory that delegates to
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html#createTempDirectory(java.nio.file.Path,java.lang.String,java.nio.file.attribute.FileAttribute...)" title="class or interface in java.nio.file" class="external-link"><code>Files.createTempDirectory(java.nio.file.Path, java.lang.String, java.nio.file.attribute.FileAttribute&lt;?&gt;...)</code></a>.</div>
+</dd>
 <dt><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/TerminationInfo.html" class="type-name-link" title="class in org.junit.platform.testkit.engine">TerminationInfo</a> - Class in <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></dt>
 <dd>
 <div class="block"><code>TerminationInfo</code> is a union type that allows propagation of terminated
