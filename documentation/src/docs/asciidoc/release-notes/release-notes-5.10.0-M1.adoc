@@ -45,7 +45,9 @@ repository on GitHub.
 * Support for limiting the `max-pool-size-factor` for parallel execution via a configuration parameter.
 * The new `testfeed` details mode for `ConsoleLauncher` prints test execution events as
   they occur in a concise format.
-
+* Introduced `@ResourceLock(target = SELF | CHILDREN)` where the target defaults to SELF to
+  preserve existing behavior. Using CHILDREN has the same effect as declaring @ResourceLock
+  on every @Test method of a test class. Please refer to the <<../user-guide/writing-tests.adoc#specifying-target-for-resource-lock, User Guide. Writing Tests>> for details.
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter

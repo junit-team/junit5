@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayNameForMethod;
+import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
@@ -20,10 +21,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.logging.Logger;
@@ -47,6 +50,7 @@ import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 	private static final Logger logger = LoggerFactory.getLogger(MethodBasedTestDescriptor.class);
+	public static final Predicate<ResourceLock> ACCEPT_ALL = lock -> true;
 
 	private final Class<?> testClass;
 	private final Method testMethod;
@@ -81,7 +85,12 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
-		return getExclusiveResourcesFromAnnotation(getTestMethod());
+		return collectExclusiveResourcesFromHierarchy();
+	}
+
+	@Override
+	protected List<ResourceLock> getResourceLocks() {
+		return findRepeatableAnnotations(getTestMethod(), ResourceLock.class);
 	}
 
 	@Override

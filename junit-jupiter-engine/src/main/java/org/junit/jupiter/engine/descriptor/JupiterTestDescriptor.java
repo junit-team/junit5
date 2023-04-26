@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayName;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
@@ -33,6 +33,7 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.ResourceLockTarget;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -180,11 +181,27 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
+	protected List<ResourceLock> getResourceLocks() {
+		return Collections.emptyList();
+	}
+
+	protected Set<ExclusiveResource> collectExclusiveResourcesFromHierarchy() {
+		Set<ExclusiveResource> resources = mapResourceLocksForTarget(getResourceLocks(), ResourceLockTarget.SELF);
+
+		Optional<TestDescriptor> parent = getParent();
+		if (parent.isPresent() && parent.get() instanceof JupiterTestDescriptor) {
+			List<ResourceLock> parentLocks = ((JupiterTestDescriptor) parent.get()).getResourceLocks();
+			resources.addAll(mapResourceLocksForTarget(parentLocks, ResourceLockTarget.CHILDREN));
+		}
+		return resources;
+	}
+
+	private Set<ExclusiveResource> mapResourceLocksForTarget(List<ResourceLock> locks, ResourceLockTarget target) {
 		// @formatter:off
-		return findRepeatableAnnotations(element, ResourceLock.class).stream()
+		return locks.stream()
+				.filter(lock -> lock.target() == target)
 				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
-				.collect(toSet());
+				.collect(Collectors.toSet());
 		// @formatter:on
 	}
 
