@@ -63,6 +63,7 @@ dependencies {
 	thirdPartyJars(libs.apiguardian)
 	thirdPartyJars(libs.hamcrest)
 	thirdPartyJars(libs.opentest4j)
+	thirdPartyJars(libs.jimfs)
 
 	antJars(platform(projects.junitBom))
 	antJars(libs.bundles.ant)
