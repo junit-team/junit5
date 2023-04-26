@@ -82,6 +82,7 @@ default.
   parameter to set the maximum pool size factor.
 * New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
   parameter to disable pool saturation.
+* Improve error message for non-static `@MethodSource` factory methods
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
