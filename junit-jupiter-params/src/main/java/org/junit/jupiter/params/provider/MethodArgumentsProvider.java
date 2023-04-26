@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
@@ -50,10 +51,25 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		// @formatter:off
 		return stream(methodNames)
 				.map(factoryMethodName -> findFactoryMethod(testClass, testMethod, factoryMethodName))
+				.map(factoryMethod -> validateStaticFactoryMethod(context, factoryMethod))
 				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
 		// @formatter:on
+	}
+
+	private Method validateStaticFactoryMethod(ExtensionContext context, Method factoryMethod) {
+		if (isPerMethodLifecycle(context)) {
+			Preconditions.condition(ReflectionUtils.isStatic(factoryMethod), () -> String.format(
+				"method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
+				factoryMethod.toGenericString()));
+		}
+		return factoryMethod;
+	}
+
+	private boolean isPerMethodLifecycle(ExtensionContext context) {
+		return context.getTestInstanceLifecycle().orElse(
+			TestInstance.Lifecycle.PER_CLASS) == TestInstance.Lifecycle.PER_METHOD;
 	}
 
 	private static Method findFactoryMethod(Class<?> testClass, Method testMethod, String factoryMethodName) {
