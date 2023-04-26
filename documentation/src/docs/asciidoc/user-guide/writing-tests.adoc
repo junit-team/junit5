@@ -2613,5 +2613,33 @@ The default cleanup mode is `ALWAYS`. You can use the
 [source,java,indent=0]
 .A test class with a temporary directory that doesn't get cleaned up
 ----
-include::{testDir}/example/TempDirCleanupModeDemo.java[tags=user_guide]
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_cleanup_mode]
+----
+
+`@TempDir` supports custom creation of temporary directories via the optional
+`factory` attribute. This allows to define how the temporary directory is created,
+giving control over characteristics such as the directory name, root folder,
+and underlying file system.
+
+Factories can be created by implementing `TempDirFactory`. The default implementation
+available in Jupiter delegates the directory creation to
+`java.nio.file.Files::createTempDirectory`, passing `junit` as the prefix string
+to be used in generating the directory's name.
+
+The following example defines a factory that uses the test name as the directory name
+prefix instead of the `junit` constant value.
+
+[source,java,indent=0]
+.A test class with a temporary directory having the test name as the directory name prefix
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_factory_name_prefix]
+----
+
+It's also possible to use an in-memory file system like `{Jimfs}` for the creation of the
+temporary directory. The following example shows how to do it.
+
+[source,java,indent=0]
+.A test class with a temporary directory created with the Jimfs in-memory file system
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_factory_jimfs]
 ----
