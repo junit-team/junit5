@@ -179,7 +179,9 @@ class MethodArgumentsProviderTests {
 			() -> provideArguments(NonStaticTestCase.class, null, false, "nonStaticStringStreamProvider").toArray());
 
 		assertThat(exception).hasMessageContainingAll("Method '",
-			"' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS)");
+			"' must be static: local factory methods must be static ",
+			"unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS); ",
+			"external factory methods must always be static.");
 	}
 
 	@Test
