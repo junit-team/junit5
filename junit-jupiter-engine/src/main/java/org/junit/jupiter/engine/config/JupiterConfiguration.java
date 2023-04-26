@@ -23,6 +23,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.io.CleanupMode;
+import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
@@ -65,5 +66,7 @@ public interface JupiterConfiguration {
 	Optional<ClassOrderer> getDefaultTestClassOrderer();
 
 	CleanupMode getDefaultTempDirCleanupMode();
+
+	TempDirFactory getDefaultTempDirFactory();
 
 }

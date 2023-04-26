@@ -123,7 +123,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 			try {
 				CleanupMode cleanupMode = determineCleanupModeForField(field);
-				TempDirFactory factory = getTempDirFactoryForField(field);
+				TempDirFactory factory = determineTempDirFactoryForField(field);
 				makeAccessible(field).set(testInstance,
 					getPathOrFile(field, field.getType(), factory, cleanupMode, context));
 			}
@@ -156,7 +156,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
 		CleanupMode cleanupMode = determineCleanupModeForParameter(parameterContext);
-		TempDirFactory factory = getTempDirFactoryForParameter(parameterContext);
+		TempDirFactory factory = determineTempDirFactoryForParameter(parameterContext);
 		return getPathOrFile(parameterContext.getParameter(), parameterType, factory, cleanupMode, extensionContext);
 	}
 
@@ -177,22 +177,22 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return cleanupMode == DEFAULT ? this.configuration.getDefaultTempDirCleanupMode() : cleanupMode;
 	}
 
-	private TempDirFactory getTempDirFactoryForField(Field field) {
+	private TempDirFactory determineTempDirFactoryForField(Field field) {
 		TempDir tempDir = findAnnotation(field, TempDir.class).orElseThrow(
 			() -> new JUnitException("Field " + field + " must be annotated with @TempDir"));
-		return getTempDirFactory(tempDir);
+		return determineTempDirFactory(tempDir);
 	}
 
-	private TempDirFactory getTempDirFactoryForParameter(ParameterContext parameterContext) {
+	private TempDirFactory determineTempDirFactoryForParameter(ParameterContext parameterContext) {
 		TempDir tempDir = parameterContext.findAnnotation(TempDir.class).orElseThrow(() -> new JUnitException(
 			"Parameter " + parameterContext.getParameter() + " must be annotated with @TempDir"));
-		return getTempDirFactory(tempDir);
+		return determineTempDirFactory(tempDir);
 	}
 
-	private static TempDirFactory getTempDirFactory(TempDir tempDir) {
+	private TempDirFactory determineTempDirFactory(TempDir tempDir) {
 		Class<? extends TempDirFactory> factory = tempDir.factory();
 		return factory == TempDirFactory.Standard.class //
-				? TempDirFactory.Standard.INSTANCE
+				? this.configuration.getDefaultTempDirFactory()
 				: ReflectionUtils.newInstance(factory);
 	}
 

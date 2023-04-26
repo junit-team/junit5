@@ -98,10 +98,33 @@ import org.junit.jupiter.api.io.TempDirFactory.Standard;
 public @interface TempDir {
 
 	/**
+	 * Property name used to set the default temporary directory factory class name:
+	 * {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include fully qualified class names for types that
+	 * implement {@link TempDirFactory}.
+	 *
+	 * <p>If not specified, the default is {@link TempDirFactory.Standard}.
+	 *
+	 * @since 5.10
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	String DEFAULT_FACTORY_PROPERTY_NAME = "junit.jupiter.tempdir.factory.default";
+
+	/**
 	 * Factory for the temporary directory.
 	 *
 	 * <p>If {@value #SCOPE_PROPERTY_NAME} is set to {@code per_context}, no
 	 * custom factory is allowed.
+	 *
+	 * <p>As an alternative to this parameter, a global
+	 * {@link TempDirFactory} can be configured for the entire test suite via
+	 * the {@value #DEFAULT_FACTORY_PROPERTY_NAME} configuration parameter.
+	 * See the User Guide for details. Note, however, that a {@code @TempDir}
+	 * declaration with a custom {@code factory} always overrides a global
+	 * {@code TempDirFactory}.
 	 *
 	 * @return the class instance of the factory
 	 *

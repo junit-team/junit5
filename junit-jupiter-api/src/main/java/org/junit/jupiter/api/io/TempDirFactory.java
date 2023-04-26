@@ -31,7 +31,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  *
  * <p>Concrete implementations must have a <em>default constructor</em>.
  *
- * <p>A {@link TempDirFactory} can be configured <em>locally</em>
+ * <p>A {@link TempDirFactory} can be configured <em>globally</em> for the
+ * entire test suite via the {@value TempDir#DEFAULT_FACTORY_PROPERTY_NAME}
+ * configuration parameter (see the User Guide for details) or <em>locally</em>
  * for a test class field or method parameter via the {@link TempDir @TempDir}
  * annotation.
  *
