@@ -303,7 +303,6 @@
 620f660c0178f8c93125cdf2705713ae  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tags.java
 621be07d12c13d1af862e238a3113f3b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.java
 622a69aa84b4e34e72e8b42494386ad2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContextException.java
-626384fec240b3e4446029646d4ee3a2  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.3.adoc
 631710358445e1f25395f036d6f41886  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/AbstractExtensionContext.java
 6338d1301d0e2d171a6ee753b0008955  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolution.java
 6361c98da2d5c9cce1d984af5c41311c  documentation/src/test/java/example/HamcrestAssertionsDemo.java
@@ -626,6 +625,7 @@ c8f6645531cd7c5e037a82d42e77b5cc  junit-jupiter-engine/src/main/java/org/junit/j
 c8fd0eeb8874dd8f7cb13fa486244178  documentation/src/test/java/example/exception/IgnoreIOExceptionExtension.java
 c91647ef561840470148d1b186742fbe  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/CleanupMode.java
 c96c33a92f88078e3124b9a84891505b  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectFile.java
+ca9075ce14d526b9952d0f2647cb1ef6  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.3.adoc
 cab9dc5b5855f1cc0383bfae913a8c0d  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TestFeedPrintingListener.java
 cbf7b57f0c4424674bc09625405117ed  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerRequest.java
 cc2140429fc869e228200939b3a831db  documentation/src/test/java/example/registration/DocumentationDemo.java
