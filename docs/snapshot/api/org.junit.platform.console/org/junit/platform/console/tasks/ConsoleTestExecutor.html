@@ -48,7 +48,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -92,6 +92,21 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ConsoleTestExecutor.Factory.html" class="type-name-link" title="interface in org.junit.platform.console.tasks">ConsoleTestExecutor.Factory</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -100,7 +115,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.junit.platform.console.options.CommandLineOptions)" class="member-name-link">ConsoleTestExecutor</a><wbr>(<a href="../options/CommandLineOptions.html" title="class in org.junit.platform.console.options">CommandLineOptions</a>&nbsp;options)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.junit.platform.console.options.TestDiscoveryOptions,org.junit.platform.console.options.TestConsoleOutputOptions)" class="member-name-link">ConsoleTestExecutor</a><wbr>(<a href="../options/TestDiscoveryOptions.html" title="class in org.junit.platform.console.options">TestDiscoveryOptions</a>&nbsp;discoveryOptions,
+ <a href="../options/TestConsoleOutputOptions.html" title="class in org.junit.platform.console.options">TestConsoleOutputOptions</a>&nbsp;outputOptions)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -120,7 +136,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#discover(java.io.PrintWriter)" class="member-name-link">discover</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html" title="class or interface in java.io" class="external-link">PrintWriter</a>&nbsp;out)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#execute(java.io.PrintWriter)" class="member-name-link">execute</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html" title="class or interface in java.io" class="external-link">PrintWriter</a>&nbsp;out)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#execute(java.io.PrintWriter,java.util.Optional)" class="member-name-link">execute</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html" title="class or interface in java.io" class="external-link">PrintWriter</a>&nbsp;out,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&gt;&nbsp;reportsDir)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -140,9 +157,10 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(org.junit.platform.console.options.CommandLineOptions)">
+<section class="detail" id="&lt;init&gt;(org.junit.platform.console.options.TestDiscoveryOptions,org.junit.platform.console.options.TestConsoleOutputOptions)">
 <h3>ConsoleTestExecutor</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConsoleTestExecutor</span><wbr><span class="parameters">(<a href="../options/CommandLineOptions.html" title="class in org.junit.platform.console.options">CommandLineOptions</a>&nbsp;options)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConsoleTestExecutor</span><wbr><span class="parameters">(<a href="../options/TestDiscoveryOptions.html" title="class in org.junit.platform.console.options">TestDiscoveryOptions</a>&nbsp;discoveryOptions,
+ <a href="../options/TestConsoleOutputOptions.html" title="class in org.junit.platform.console.options">TestConsoleOutputOptions</a>&nbsp;outputOptions)</span></div>
 </section>
 </li>
 </ul>
@@ -156,23 +174,14 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="discover(java.io.PrintWriter)">
 <h3>discover</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">discover</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html" title="class or interface in java.io" class="external-link">PrintWriter</a>&nbsp;out)</span>
-              throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
-<dl class="notes">
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code></dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">discover</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html" title="class or interface in java.io" class="external-link">PrintWriter</a>&nbsp;out)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="execute(java.io.PrintWriter)">
+<section class="detail" id="execute(java.io.PrintWriter,java.util.Optional)">
 <h3>execute</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></span>&nbsp;<span class="element-name">execute</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html" title="class or interface in java.io" class="external-link">PrintWriter</a>&nbsp;out)</span>
-                             throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
-<dl class="notes">
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code></dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../../../../org.junit.platform.launcher/org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></span>&nbsp;<span class="element-name">execute</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html" title="class or interface in java.io" class="external-link">PrintWriter</a>&nbsp;out,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&gt;&nbsp;reportsDir)</span></div>
 </section>
 </li>
 </ul>

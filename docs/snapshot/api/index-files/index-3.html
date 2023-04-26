@@ -309,11 +309,14 @@ loadScripts(document, 'script');</script>
 <div class="block">The column number within the file; ignored if the line number is ignored
  or if not greater than zero.</div>
 </dd>
-<dt><a href="../org.junit.platform.console/org/junit/platform/console/options/CommandLineOptions.html" class="type-name-link" title="class in org.junit.platform.console.options">CommandLineOptions</a> - Class in <a href="../org.junit.platform.console/org/junit/platform/console/options/package-summary.html">org.junit.platform.console.options</a></dt>
+<dt><a href="../org.junit.platform.console/org/junit/platform/console/options/CommandFacade.html" class="type-name-link" title="class in org.junit.platform.console.options">CommandFacade</a> - Class in <a href="../org.junit.platform.console/org/junit/platform/console/options/package-summary.html">org.junit.platform.console.options</a></dt>
+<dd>
+<div class="block">Internal facade to run a CLI command that exists to hide implementation
+ details such as the used library.</div>
+</dd>
+<dt><a href="../org.junit.platform.console/org/junit/platform/console/options/CommandFacade.html#%3Cinit%3E(org.junit.platform.console.tasks.ConsoleTestExecutor.Factory)" class="member-name-link">CommandFacade(ConsoleTestExecutor.Factory)</a> - Constructor for class org.junit.platform.console.options.<a href="../org.junit.platform.console/org/junit/platform/console/options/CommandFacade.html" title="class in org.junit.platform.console.options">CommandFacade</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../org.junit.platform.console/org/junit/platform/console/options/CommandLineOptions.html#%3Cinit%3E()" class="member-name-link">CommandLineOptions()</a> - Constructor for class org.junit.platform.console.options.<a href="../org.junit.platform.console/org/junit/platform/console/options/CommandLineOptions.html" title="class in org.junit.platform.console.options">CommandLineOptions</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="../org.junit.platform.console/org/junit/platform/console/options/CommandLineOptionsParser.html" class="type-name-link" title="interface in org.junit.platform.console.options">CommandLineOptionsParser</a> - Interface in <a href="../org.junit.platform.console/org/junit/platform/console/options/package-summary.html">org.junit.platform.console.options</a></dt>
+<dt><a href="../org.junit.platform.console/org/junit/platform/console/options/CommandResult.html" class="type-name-link" title="class in org.junit.platform.console.options">CommandResult</a>&lt;<a href="../org.junit.platform.console/org/junit/platform/console/options/CommandResult.html" title="type parameter in CommandResult">T</a>&gt; - Class in <a href="../org.junit.platform.console/org/junit/platform/console/options/package-summary.html">org.junit.platform.console.options</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/Filter.html#composeFilters(java.util.Collection)" class="member-name-link">composeFilters(Collection&lt;? extends Filter&lt;T&gt;&gt;)</a> - Static method in interface org.junit.platform.engine.<a href="../org.junit.platform.engine/org/junit/platform/engine/Filter.html" title="interface in org.junit.platform.engine">Filter</a></dt>
 <dd>
@@ -333,8 +336,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A <code>CompositeTestSource</code> contains one or more <a href="../org.junit.platform.engine/org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine"><code>TestSources</code></a>.</div>
 </dd>
-<dt><a href="../org.junit.platform.console/org/junit/platform/console/ConsoleLauncherExecutionResult.html#computeExitCode(org.junit.platform.launcher.listeners.TestExecutionSummary,org.junit.platform.console.options.CommandLineOptions)" class="member-name-link">computeExitCode(TestExecutionSummary, CommandLineOptions)</a> - Static method in class org.junit.platform.console.<a href="../org.junit.platform.console/org/junit/platform/console/ConsoleLauncherExecutionResult.html" title="class in org.junit.platform.console">ConsoleLauncherExecutionResult</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/parallel/ExecutionMode.html#CONCURRENT" class="member-name-link">CONCURRENT</a> - Enum constant in enum class org.junit.jupiter.api.parallel.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/parallel/ExecutionMode.html" title="enum class in org.junit.jupiter.api.parallel">ExecutionMode</a></dt>
 <dd>
 <div class="block">Allow concurrent execution with any other node.</div>
@@ -457,8 +458,6 @@ loadScripts(document, 'script');</script>
 <div class="block">The <code>ConsoleLauncher</code> is a stand-alone application for launching the
  JUnit Platform from the console.</div>
 </dd>
-<dt><a href="../org.junit.platform.console/org/junit/platform/console/ConsoleLauncherExecutionResult.html" class="type-name-link" title="class in org.junit.platform.console">ConsoleLauncherExecutionResult</a> - Class in <a href="../org.junit.platform.console/org/junit/platform/console/package-summary.html">org.junit.platform.console</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.console/org/junit/platform/console/ConsoleLauncherToolProvider.html" class="type-name-link" title="class in org.junit.platform.console">ConsoleLauncherToolProvider</a> - Class in <a href="../org.junit.platform.console/org/junit/platform/console/package-summary.html">org.junit.platform.console</a></dt>
 <dd>
 <div class="block">Run the JUnit Platform Console Launcher as a service.</div>
@@ -467,7 +466,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.html" class="type-name-link" title="class in org.junit.platform.console.tasks">ConsoleTestExecutor</a> - Class in <a href="../org.junit.platform.console/org/junit/platform/console/tasks/package-summary.html">org.junit.platform.console.tasks</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.html#%3Cinit%3E(org.junit.platform.console.options.CommandLineOptions)" class="member-name-link">ConsoleTestExecutor(CommandLineOptions)</a> - Constructor for class org.junit.platform.console.tasks.<a href="../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.html" title="class in org.junit.platform.console.tasks">ConsoleTestExecutor</a></dt>
+<dt><a href="../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.html#%3Cinit%3E(org.junit.platform.console.options.TestDiscoveryOptions,org.junit.platform.console.options.TestConsoleOutputOptions)" class="member-name-link">ConsoleTestExecutor(TestDiscoveryOptions, TestConsoleOutputOptions)</a> - Constructor for class org.junit.platform.console.tasks.<a href="../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.html" title="class in org.junit.platform.console.tasks">ConsoleTestExecutor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.Factory.html" class="type-name-link" title="interface in org.junit.platform.console.tasks">ConsoleTestExecutor.Factory</a> - Interface in <a href="../org.junit.platform.console/org/junit/platform/console/tasks/package-summary.html">org.junit.platform.console.tasks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.console/org/junit/platform/console/options/ConsoleUtils.html" class="type-name-link" title="class in org.junit.platform.console.options">ConsoleUtils</a> - Class in <a href="../org.junit.platform.console/org/junit/platform/console/options/package-summary.html">org.junit.platform.console.options</a></dt>
 <dd>
@@ -614,6 +615,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Factory method for creating a new <a href="../org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> using the
  <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html#DEFAULT">default</a> <a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
 </dd>
+<dt><a href="../org.junit.platform.console/org/junit/platform/console/options/CommandResult.html#create(int,T)" class="member-name-link">create(int, T)</a> - Static method in class org.junit.platform.console.options.<a href="../org.junit.platform.console/org/junit/platform/console/options/CommandResult.html" title="class in org.junit.platform.console.options">CommandResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Namespace.html#create(java.lang.Object...)" class="member-name-link">create(Object...)</a> - Static method in class org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension">ExtensionContext.Namespace</a></dt>
 <dd>
 <div class="block">Create a namespace which restricts access to data to all extensions
@@ -624,6 +627,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a <code>TestTag</code> from the supplied <code>name</code>.</div>
 </dd>
 <dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/OutputDir.html#create(java.util.Optional)" class="member-name-link">create(Optional&lt;String&gt;)</a> - Static method in class org.junit.platform.launcher.listeners.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/listeners/OutputDir.html" title="class in org.junit.platform.launcher.listeners">OutputDir</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.Factory.html#create(org.junit.platform.console.options.TestDiscoveryOptions,org.junit.platform.console.options.TestConsoleOutputOptions)" class="member-name-link">create(TestDiscoveryOptions, TestConsoleOutputOptions)</a> - Method in interface org.junit.platform.console.tasks.<a href="../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.Factory.html" title="interface in org.junit.platform.console.tasks">ConsoleTestExecutor.Factory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/ExecutionRequest.html#create(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.EngineExecutionListener,org.junit.platform.engine.ConfigurationParameters)" class="member-name-link">create(TestDescriptor, EngineExecutionListener, ConfigurationParameters)</a> - Static method in class org.junit.platform.engine.<a href="../org.junit.platform.engine/org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a></dt>
 <dd>

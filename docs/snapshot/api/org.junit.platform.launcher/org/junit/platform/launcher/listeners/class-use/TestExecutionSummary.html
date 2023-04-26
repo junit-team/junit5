@@ -58,46 +58,18 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Package</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="#org.junit.platform.console">org.junit.platform.console</a></div>
+<div class="col-first even-row-color"><a href="#org.junit.platform.console.tasks">org.junit.platform.console.tasks</a></div>
 <div class="col-last even-row-color">
-<div class="block">Support for launching the JUnit Platform from the console.</div>
-</div>
-<div class="col-first odd-row-color"><a href="#org.junit.platform.console.tasks">org.junit.platform.console.tasks</a></div>
-<div class="col-last odd-row-color">
 <div class="block">Internal execution tasks for JUnit's console launcher.</div>
 </div>
-<div class="col-first even-row-color"><a href="#org.junit.platform.launcher.listeners">org.junit.platform.launcher.listeners</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#org.junit.platform.launcher.listeners">org.junit.platform.launcher.listeners</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Common <a href="../../TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> implementations and related support classes for
  the <a href="../../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
-<li>
-<section class="detail" id="org.junit.platform.console">
-<h2>Uses of <a href="../TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a> in <a href="../../../../../../../org.junit.platform.console/org/junit/platform/console/package-summary.html">org.junit.platform.console</a></h2>
-<div class="caption"><span>Methods in <a href="../../../../../../../org.junit.platform.console/org/junit/platform/console/package-summary.html">org.junit.platform.console</a> that return types with arguments of type <a href="../TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Method</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ConsoleLauncherExecutionResult.</span><code><a href="../../../../../../../org.junit.platform.console/org/junit/platform/console/ConsoleLauncherExecutionResult.html#getTestExecutionSummary()" class="member-name-link">getTestExecutionSummary</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-<div class="caption"><span>Methods in <a href="../../../../../../../org.junit.platform.console/org/junit/platform/console/package-summary.html">org.junit.platform.console</a> with parameters of type <a href="../TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Method</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static int</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ConsoleLauncherExecutionResult.</span><code><a href="../../../../../../../org.junit.platform.console/org/junit/platform/console/ConsoleLauncherExecutionResult.html#computeExitCode(org.junit.platform.launcher.listeners.TestExecutionSummary,org.junit.platform.console.options.CommandLineOptions)" class="member-name-link">computeExitCode</a><wbr>(<a href="../TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a>&nbsp;summary,
- <a href="../../../../../../../org.junit.platform.console/org/junit/platform/console/options/CommandLineOptions.html" title="class in org.junit.platform.console.options">CommandLineOptions</a>&nbsp;options)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <li>
 <section class="detail" id="org.junit.platform.console.tasks">
 <h2>Uses of <a href="../TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a> in <a href="../../../../../../../org.junit.platform.console/org/junit/platform/console/tasks/package-summary.html">org.junit.platform.console.tasks</a></h2>
@@ -107,7 +79,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="../TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ConsoleTestExecutor.</span><code><a href="../../../../../../../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.html#execute(java.io.PrintWriter)" class="member-name-link">execute</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html" title="class or interface in java.io" class="external-link">PrintWriter</a>&nbsp;out)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ConsoleTestExecutor.</span><code><a href="../../../../../../../org.junit.platform.console/org/junit/platform/console/tasks/ConsoleTestExecutor.html#execute(java.io.PrintWriter,java.util.Optional)" class="member-name-link">execute</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html" title="class or interface in java.io" class="external-link">PrintWriter</a>&nbsp;out,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&gt;&nbsp;reportsDir)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
