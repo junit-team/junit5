@@ -86,6 +86,7 @@ default.
   temporary directories. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, User Guide>>
   for details.
+* Improve error message for non-static `@MethodSource` factory methods
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
