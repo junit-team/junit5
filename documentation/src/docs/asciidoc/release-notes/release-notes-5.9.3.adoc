@@ -26,10 +26,10 @@ No changes.
   exception stating that `example.NonexistentType` cannot be resolved to a valid type.
 * The syntax for parameter types in _local_ `@MethodSource` factory method names now
   supports canonical array names -- for example, you may now specify `int[]` as in
-  `@MethodSource("myFactory(int[])"` instead of the _binary_ name `[I` as in
-  `@MethodSource("myFactory([I)"` (which was already supported) and
-  `@MethodSource("myFactory(java.lang.String[])` instead of
-  `@MethodSource("myFactory([Ljava.lang.String;)`.
+  `@MethodSource("myFactory(int[])")` instead of the _binary_ name `[I` as in
+  `@MethodSource("myFactory([I)")` (which was already supported) and
+  `@MethodSource("myFactory(java.lang.String[])")` instead of
+  `@MethodSource("myFactory([Ljava.lang.String;)")`.
 * The search algorithm used to find `@MethodSource` factory methods now applies consistent
   semantics for _local_ qualified method names and fully-qualified method names for
   overloaded factory methods.
