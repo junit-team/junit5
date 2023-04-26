@@ -585,18 +585,19 @@ methods of the former. Please refer to the
 details.</p>
 </li>
 <li>
-<p>Support for limiting the <code>max-pool-size-factor</code> for parallel execution via a configuration parameter.</p>
+<p>Support for limiting the <code>max-pool-size-factor</code> for parallel execution via a
+configuration parameter.</p>
 </li>
 <li>
-<p>The new <code>testfeed</code> details mode for <code>ConsoleLauncher</code> prints test execution events as
+<p>New <code>testfeed</code> details mode for <code>ConsoleLauncher</code> that prints test execution events as
 they occur in a concise format.</p>
 </li>
 <li>
-<p>The existing functionality of the Console Launcher has been split into two subcommands:
+<p>The existing functionality of the <code>ConsoleLauncher</code> has been split into two subcommands:
 <code>execute</code> for executing tests and <code>engines</code> for listing registered test engines.</p>
 </li>
 <li>
-<p>A new <code>discover</code> subcommand has been added to the Console Launcher to print the
+<p>A new <code>discover</code> subcommand has been added to the <code>ConsoleLauncher</code> to print the
 discovered tests for the specified details mode without executing them.</p>
 </li>
 </ul>
@@ -676,7 +677,10 @@ temporary directories. See the
 for details.</p>
 </li>
 <li>
-<p>Improve error message for non-static <code>@MethodSource</code> factory methods</p>
+<p>If a non-static <code>@MethodSource</code> factory method is used with test instance per-method
+lifecycle semantics, the exception thrown now informs the user that the factory method
+must be <code>static</code> unless the test class is annotated with
+<code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
 </li>
 </ul>
 </div>
@@ -1055,7 +1059,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-26 14:18:16 UTC
+Last updated 2023-04-26 17:18:32 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
