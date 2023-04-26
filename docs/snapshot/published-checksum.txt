@@ -92,6 +92,7 @@
 1e550aff483b846feb7b755f2c70ecea  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumArgumentsProvider.java
 1e786c089d13e48e1842c051791dfc46  documentation/src/test/java/org/junit/api/tools/MarkdownApiReportWriter.java
 1f50abf4c4388cde0a0bdac50682a2c1  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertArrayEquals.java
+1f9087685926f25908e4aec576ab016e  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.3.adoc
 1ff0610325b239c6eacdfca62ec3c2a6  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathRootSelector.java
 202ceb0b24bee30f78288402b96e9d66  documentation/src/test/java/example/SlowTests.java
 20a3f9a6a1edba8faec57721e673226c  documentation/src/docs/asciidoc/user-guide/advanced-topics/launcher-api.adoc
@@ -625,7 +626,6 @@ c8f6645531cd7c5e037a82d42e77b5cc  junit-jupiter-engine/src/main/java/org/junit/j
 c8fd0eeb8874dd8f7cb13fa486244178  documentation/src/test/java/example/exception/IgnoreIOExceptionExtension.java
 c91647ef561840470148d1b186742fbe  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/CleanupMode.java
 c96c33a92f88078e3124b9a84891505b  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectFile.java
-ca9075ce14d526b9952d0f2647cb1ef6  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.3.adoc
 cab9dc5b5855f1cc0383bfae913a8c0d  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TestFeedPrintingListener.java
 cbf7b57f0c4424674bc09625405117ed  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerRequest.java
 cc2140429fc869e228200939b3a831db  documentation/src/test/java/example/registration/DocumentationDemo.java
