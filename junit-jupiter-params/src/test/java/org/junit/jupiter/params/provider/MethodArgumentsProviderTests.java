@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -178,8 +178,8 @@ class MethodArgumentsProviderTests {
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(NonStaticTestCase.class, null, false, "nonStaticStringStreamProvider").toArray());
 
-		assertThat(exception).hasMessageContaining(
-			"must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS)");
+		assertThat(exception).hasMessageContainingAll("Method '",
+			"' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS)");
 	}
 
 	@Test
@@ -715,7 +715,7 @@ class MethodArgumentsProviderTests {
 		var testInstance = allowNonStaticMethod ? ReflectionUtils.newInstance(testClass) : null;
 		when(extensionContext.getTestInstance()).thenReturn(Optional.ofNullable(testInstance));
 
-		var lifeCycle = allowNonStaticMethod ? TestInstance.Lifecycle.PER_CLASS : TestInstance.Lifecycle.PER_METHOD;
+		var lifeCycle = allowNonStaticMethod ? Lifecycle.PER_CLASS : Lifecycle.PER_METHOD;
 		when(extensionContext.getTestInstanceLifecycle()).thenReturn(Optional.of(lifeCycle));
 
 		var provider = new MethodArgumentsProvider();
