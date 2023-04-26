@@ -20,6 +20,7 @@ import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Help.ColorScheme;
 import picocli.CommandLine.IExitCodeGenerator;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -107,12 +108,12 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 		commandLine.getOut().flush();
 		err.println();
-		err.println(commandLine.getColorScheme().text(
+		ColorScheme colorScheme = commandLine.getColorScheme();
+		err.println(colorScheme.string(
 			String.format("@|yellow,bold WARNING:|@ Delegated to the '%s' command%s.", subcommand, reason)));
-		err.println(commandLine.getColorScheme().text(
-			"         This behaviour has been deprecated and will be removed in a future release."));
 		err.println(
-			commandLine.getColorScheme().text("         Please use the '" + subcommand + "' command directly."));
+			colorScheme.string("         This behaviour has been deprecated and will be removed in a future release."));
+		err.println(colorScheme.string("         Please use the '" + subcommand + "' command directly."));
 		err.flush();
 	}
 
