@@ -667,6 +667,9 @@ temporary directories. See the
 <a href="../user-guide/index.html#writing-tests-built-in-extensions-TempDirectory">User Guide</a>
 for details.</p>
 </li>
+<li>
+<p>Improve error message for non-static <code>@MethodSource</code> factory methods</p>
+</li>
 </ul>
 </div>
 </div>
@@ -740,10 +743,10 @@ exception stating that <code>example.NonexistentType</code> cannot be resolved t
 <li>
 <p>The syntax for parameter types in <em>local</em> <code>@MethodSource</code> factory method names now
 supports canonical array names&#8201;&#8212;&#8201;for example, you may now specify <code>int[]</code> as in
-<code>@MethodSource("myFactory(int[])"</code> instead of the <em>binary</em> name <code>[I</code> as in
-<code>@MethodSource("myFactory([I)"</code> (which was already supported) and
-<code>@MethodSource("myFactory(java.lang.String[])</code> instead of
-<code>@MethodSource("myFactory([Ljava.lang.String;)</code>.</p>
+<code>@MethodSource("myFactory(int[])")</code> instead of the <em>binary</em> name <code>[I</code> as in
+<code>@MethodSource("myFactory([I)")</code> (which was already supported) and
+<code>@MethodSource("myFactory(java.lang.String[])")</code> instead of
+<code>@MethodSource("myFactory([Ljava.lang.String;)")</code>.</p>
 </li>
 <li>
 <p>The search algorithm used to find <code>@MethodSource</code> factory methods now applies consistent
@@ -1044,7 +1047,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-26 07:39:28 UTC
+Last updated 2023-04-26 14:07:13 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
