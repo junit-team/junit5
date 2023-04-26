@@ -82,6 +82,10 @@ default.
   parameter to set the maximum pool size factor.
 * New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
   parameter to disable pool saturation.
+* New `TempDirFactory` SPI for customizing how the `TempDirectory` extension creates
+  temporary directories. See the
+  <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, User Guide>>
+  for details.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
