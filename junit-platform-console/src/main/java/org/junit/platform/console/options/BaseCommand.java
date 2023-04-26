@@ -84,14 +84,18 @@ abstract class BaseCommand<T> implements Callable<T> {
 
 	private void displayBanner(PrintWriter out) {
 		out.println();
-		CommandLine.Help.ColorScheme colorScheme = commandSpec.commandLine().getColorScheme();
+		CommandLine.Help.ColorScheme colorScheme = getColorScheme();
 		if (colorScheme.ansi().enabled()) {
 			out.print("💚 ");
 		}
-		out.println(colorScheme.text(
+		out.println(colorScheme.string(
 			"@|italic Thanks for using JUnit!|@ Support its development at @|underline https://junit.org/sponsoring|@"));
 		out.println();
 		out.flush();
+	}
+
+	protected final CommandLine.Help.ColorScheme getColorScheme() {
+		return commandSpec.commandLine().getColorScheme();
 	}
 
 	protected abstract T execute(PrintWriter out);
