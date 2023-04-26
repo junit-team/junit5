@@ -1,7 +1,7 @@
 [[release-notes-5.9.3]]
 == 5.9.3
 
-*Date of Release:* April ❓, 2023
+*Date of Release:* April 26, 2023
 
 *Scope:* Bug fixes and enhancements since 5.9.2
 
@@ -26,19 +26,19 @@ No changes.
   exception stating that `example.NonexistentType` cannot be resolved to a valid type.
 * The syntax for parameter types in _local_ `@MethodSource` factory method names now
   supports canonical array names -- for example, you may now specify `int[]` as in
-  `@MethodSource("myFactory(int[])"` instead of the _binary_ name `[I` as in
-  `@MethodSource("myFactory([I)"` (which was already supported) and
-  `@MethodSource("myFactory(java.lang.String[])` instead of
-  `@MethodSource("myFactory([Ljava.lang.String;)`.
+  `@MethodSource("myFactory(int[])")` instead of the _binary_ name `[I` as in
+  `@MethodSource("myFactory([I)")` (which was already supported) and
+  `@MethodSource("myFactory(java.lang.String[])")` instead of
+  `@MethodSource("myFactory([Ljava.lang.String;)")`.
 * The search algorithm used to find `@MethodSource` factory methods now applies consistent
   semantics for _local_ qualified method names and fully-qualified method names for
   overloaded factory methods.
-* The `{displayName}` placeholder for `@ParameterizedTest` invocation names is no longer
+* The `+{displayName}+` placeholder for `@ParameterizedTest` invocation names is no longer
   parsed using `java.text.MessageFormat`. Consequently, any text in the display name of
   the `@ParameterizedTest` method will be included unmodified in the invocation display
   name. For example, Kotlin method names and custom display names configured via
   `@DisplayName` can now contain apostrophes (`'`) as well as text resembling
-  `MessageFormat` elements such as `{0}` or `{data}`.
+  `MessageFormat` elements such as `+{0}+` or `+{data}+`.
 * Exceptions thrown for files that cannot be deleted when cleaning up a temporary
   directory created via `@TempDir` now include the root cause.
 * Lifecycle methods are allowed to be declared as `private` again for backwards
