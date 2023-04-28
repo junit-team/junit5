@@ -1,7 +1,9 @@
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
 
 plugins {
+	id("junitbuild.build-parameters")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
 }
@@ -45,7 +47,7 @@ dependencies {
 	testImplementation(libs.groovy4) {
 		because("it provides convenience methods to handle process output")
 	}
-	testImplementation(libs.bnd) {
+	testImplementation(libs.bndlib) {
 		because("parsing OSGi metadata")
 	}
 	testRuntimeOnly(libs.slf4j.julBinding) {
@@ -61,6 +63,7 @@ dependencies {
 	thirdPartyJars(libs.apiguardian)
 	thirdPartyJars(libs.hamcrest)
 	thirdPartyJars(libs.opentest4j)
+	thirdPartyJars(libs.jimfs)
 
 	antJars(platform(projects.junitBom))
 	antJars(libs.bundles.ant)
@@ -96,7 +99,7 @@ tasks.test {
 		val tempRepoName: String by rootProject
 
 		(mavenizedProjects + projects.junitBom.dependencyProject)
-			.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
+			.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalized()}Repository") }
 			.forEach { dependsOn(it) }
 	}
 
@@ -135,8 +138,6 @@ class MavenRepo(@get:InputDirectory @get:PathSensitive(RELATIVE) val repoDir: Fi
 }
 
 class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgumentProvider {
-	@Internal
-	val passToolchain = project.providers.gradleProperty("enableTestDistribution").map(String::toBoolean).orElse(false).map { !it }
 
 	@Internal
 	val javaLauncher: Property<JavaLauncher> = project.objects.property<JavaLauncher>()
@@ -151,12 +152,12 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 			})
 
 	override fun asArguments(): List<String> {
-		if (passToolchain.get()) {
-			val metadata = javaLauncher.map { it.metadata }
-			val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
-			return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
+		if (buildParameters.enterprise.testDistribution.enabled) {
+			return emptyList()
 		}
-		return emptyList()
+		val metadata = javaLauncher.map { it.metadata }
+		val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
+		return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
 	}
 }
 

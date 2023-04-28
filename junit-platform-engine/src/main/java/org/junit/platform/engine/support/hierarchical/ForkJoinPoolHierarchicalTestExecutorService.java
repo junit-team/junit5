@@ -11,7 +11,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
 
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -47,7 +47,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  * @see ForkJoinPool
  * @see DefaultParallelExecutionConfigurationStrategy
  */
-@API(status = EXPERIMENTAL, since = "1.3")
+@API(status = STABLE, since = "1.10")
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
 	private final ForkJoinPool forkJoinPool;
@@ -69,7 +69,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	 *
 	 * @since 1.7
 	 */
-	@API(status = EXPERIMENTAL, since = "1.7")
+	@API(status = STABLE, since = "1.10")
 	public ForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
 		forkJoinPool = createForkJoinPool(configuration);
 		parallelism = forkJoinPool.getParallelism();

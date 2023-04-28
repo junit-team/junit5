@@ -21,9 +21,11 @@ dependencies {
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(testFixtures(projects.junitPlatformCommons))
 	testImplementation(kotlin("stdlib"))
+	testImplementation(libs.jimfs)
 	testImplementation(libs.junit4)
 	testImplementation(libs.kotlinx.coroutines)
 	testImplementation(libs.groovy4)
+	testImplementation(libs.memoryfilesystem)
 	testImplementation(testFixtures(projects.junitJupiterApi))
 
 	osgiVerification(projects.junitPlatformLauncher)

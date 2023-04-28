@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.parallel;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
@@ -21,7 +21,7 @@ import org.apiguardian.api.API;
  * @see #SAME_THREAD
  * @see #CONCURRENT
  */
-@API(status = EXPERIMENTAL, since = "5.3")
+@API(status = STABLE, since = "5.10")
 public enum ExecutionMode {
 
 	/**

@@ -75,4 +75,5 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 		// forget invocationContext so it can be garbage collected
 		invocationContext = null;
 	}
+
 }

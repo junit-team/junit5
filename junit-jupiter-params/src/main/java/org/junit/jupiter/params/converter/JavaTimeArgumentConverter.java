@@ -27,13 +27,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.jupiter.params.support.AnnotationConsumer;
-
 /**
  * @since 5.0
  */
-class JavaTimeArgumentConverter extends SimpleArgumentConverter
-		implements AnnotationConsumer<JavaTimeConversionPattern> {
+class JavaTimeArgumentConverter extends AnnotationBasedArgumentConverter<JavaTimeConversionPattern> {
 
 	private static final Map<Class<?>, TemporalQuery<?>> TEMPORAL_QUERIES;
 	static {
@@ -52,20 +49,17 @@ class JavaTimeArgumentConverter extends SimpleArgumentConverter
 		TEMPORAL_QUERIES = Collections.unmodifiableMap(queries);
 	}
 
-	private String pattern;
-
 	@Override
-	public void accept(JavaTimeConversionPattern annotation) {
-		pattern = annotation.value();
-	}
-
-	@Override
-	public Object convert(Object input, Class<?> targetClass) throws ArgumentConversionException {
-		if (!TEMPORAL_QUERIES.containsKey(targetClass)) {
+	protected Object convert(Object input, Class<?> targetClass, JavaTimeConversionPattern annotation) {
+		if (input == null) {
+			throw new ArgumentConversionException("Cannot convert null to " + targetClass.getName());
+		}
+		TemporalQuery<?> temporalQuery = TEMPORAL_QUERIES.get(targetClass);
+		if (temporalQuery == null) {
 			throw new ArgumentConversionException("Cannot convert to " + targetClass.getName() + ": " + input);
 		}
+		String pattern = annotation.value();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-		TemporalQuery<?> temporalQuery = TEMPORAL_QUERIES.get(targetClass);
 		return formatter.parse(input.toString(), temporalQuery);
 	}
 

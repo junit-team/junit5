@@ -1,6 +1,6 @@
 plugins {
-	id("io.spring.nohttp")
-	id("io.github.gradle-nexus.publish-plugin")
+	alias(libs.plugins.nohttp)
+	alias(libs.plugins.nexusPublish)
 	id("junitbuild.base-conventions")
 	id("junitbuild.build-metadata")
 	id("junitbuild.dependency-update-check")
@@ -61,5 +61,5 @@ nexusPublishing {
 }
 
 nohttp {
-	source.exclude("**/.gradle/**", "gradle/plugins/build/**")
+	source.exclude("**/.gradle/**", "gradle/plugins/**/build/**", "buildSrc/build/**")
 }

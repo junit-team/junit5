@@ -12,7 +12,9 @@ updates:
       - gradle-plugin-portal
     schedule:
       interval: "weekly"
+    labels: [ ]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    labels: [ ]

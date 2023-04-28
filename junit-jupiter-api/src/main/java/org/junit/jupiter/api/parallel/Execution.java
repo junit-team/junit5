@@ -11,6 +11,7 @@
 package org.junit.jupiter.api.parallel;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -48,7 +49,7 @@ import org.apiguardian.api.API;
  * @see ResourceLock
  * @since 5.3
  */
-@API(status = EXPERIMENTAL, since = "5.3")
+@API(status = STABLE, since = "5.10")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Inherited

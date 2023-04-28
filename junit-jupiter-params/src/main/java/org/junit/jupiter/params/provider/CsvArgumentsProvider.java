@@ -26,7 +26,6 @@ import com.univocity.parsers.csv.CsvParser;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
@@ -34,33 +33,27 @@ import org.junit.platform.commons.util.UnrecoverableExceptions;
 /**
  * @since 5.0
  */
-class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvSource> {
+class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 
 	private static final String LINE_SEPARATOR = "\n";
 
-	private CsvSource annotation;
 	private Set<String> nullValues;
 	private CsvParser csvParser;
 
 	@Override
-	public void accept(CsvSource annotation) {
-		this.annotation = annotation;
-		this.nullValues = toSet(annotation.nullValues());
-		this.csvParser = createParserFor(annotation);
-	}
-
-	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		final boolean textBlockDeclared = !this.annotation.textBlock().isEmpty();
-		Preconditions.condition(this.annotation.value().length > 0 ^ textBlockDeclared,
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource csvSource) {
+		this.nullValues = toSet(csvSource.nullValues());
+		this.csvParser = createParserFor(csvSource);
+		final boolean textBlockDeclared = !csvSource.textBlock().isEmpty();
+		Preconditions.condition(csvSource.value().length > 0 ^ textBlockDeclared,
 			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
-		return textBlockDeclared ? parseTextBlock() : parseValueArray();
+		return textBlockDeclared ? parseTextBlock(csvSource) : parseValueArray(csvSource);
 	}
 
-	private Stream<Arguments> parseTextBlock() {
-		String textBlock = this.annotation.textBlock();
-		boolean useHeadersInDisplayName = this.annotation.useHeadersInDisplayName();
+	private Stream<Arguments> parseTextBlock(CsvSource csvSource) {
+		String textBlock = csvSource.textBlock();
+		boolean useHeadersInDisplayName = csvSource.useHeadersInDisplayName();
 		List<Arguments> argumentsList = new ArrayList<>();
 
 		try {
@@ -76,20 +69,20 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 			}
 		}
 		catch (Throwable throwable) {
-			throw handleCsvException(throwable, this.annotation);
+			throw handleCsvException(throwable, csvSource);
 		}
 
 		return argumentsList.stream();
 	}
 
-	private Stream<Arguments> parseValueArray() {
-		boolean useHeadersInDisplayName = this.annotation.useHeadersInDisplayName();
+	private Stream<Arguments> parseValueArray(CsvSource csvSource) {
+		boolean useHeadersInDisplayName = csvSource.useHeadersInDisplayName();
 		List<Arguments> argumentsList = new ArrayList<>();
 
 		try {
 			String[] headers = null;
 			AtomicInteger index = new AtomicInteger(0);
-			for (String input : this.annotation.value()) {
+			for (String input : csvSource.value()) {
 				index.incrementAndGet();
 				String[] csvRecord = this.csvParser.parseLine(input + LINE_SEPARATOR);
 				// Lazily retrieve headers if necessary.
@@ -103,7 +96,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 			}
 		}
 		catch (Throwable throwable) {
-			throw handleCsvException(throwable, this.annotation);
+			throw handleCsvException(throwable, csvSource);
 		}
 
 		return argumentsList.stream();

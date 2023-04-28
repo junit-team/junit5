@@ -19,48 +19,45 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
  * @since 5.0
  */
-class ValueArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<ValueSource> {
-
-	private Object[] arguments;
+class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSource> {
 
 	@Override
-	public void accept(ValueSource source) {
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, ValueSource valueSource) {
+		Object[] arguments = getArgumentsFromSource(valueSource);
+		return Arrays.stream(arguments).map(Arguments::of);
+	}
+
+	private Object[] getArgumentsFromSource(ValueSource valueSource) {
 		// @formatter:off
 		List<Object> arrays =
-				Stream.of(
-					source.shorts(),
-					source.bytes(),
-					source.ints(),
-					source.longs(),
-					source.floats(),
-					source.doubles(),
-					source.chars(),
-					source.booleans(),
-					source.strings(),
-					source.classes()
-				)
-				.filter(array -> Array.getLength(array) > 0)
-				.collect(toList());
+			Stream.of(
+				valueSource.shorts(),
+				valueSource.bytes(),
+				valueSource.ints(),
+				valueSource.longs(),
+				valueSource.floats(),
+				valueSource.doubles(),
+				valueSource.chars(),
+				valueSource.booleans(),
+				valueSource.strings(),
+				valueSource.classes()
+			)
+			.filter(array -> Array.getLength(array) > 0)
+			.collect(toList());
 		// @formatter:on
 
 		Preconditions.condition(arrays.size() == 1, () -> "Exactly one type of input must be provided in the @"
 				+ ValueSource.class.getSimpleName() + " annotation, but there were " + arrays.size());
 
 		Object originalArray = arrays.get(0);
-		arguments = IntStream.range(0, Array.getLength(originalArray)) //
+		return IntStream.range(0, Array.getLength(originalArray)) //
 				.mapToObj(index -> Array.get(originalArray, index)) //
 				.toArray();
-	}
-
-	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		return Arrays.stream(arguments).map(Arguments::of);
 	}
 
 }

@@ -1,17 +1,17 @@
-import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
-import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
-import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import junitbuild.exec.ClasspathSystemPropertyProvider
 import junitbuild.exec.RunConsoleLauncher
 import junitbuild.javadoc.ModuleSpecificJavadocFileOption
+import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
+import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
 
 plugins {
-	id("org.asciidoctor.jvm.convert")
-	id("org.asciidoctor.jvm.pdf")
-	id("org.ajoberstar.git-publish")
+	alias(libs.plugins.asciidoctorConvert)
+	alias(libs.plugins.asciidoctorPdf)
+	alias(libs.plugins.gitPublish)
+	id("junitbuild.build-parameters")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
 }
@@ -49,12 +49,13 @@ dependencies {
 	testRuntimeOnly(libs.apiguardian) {
 		because("it's required to generate API tables")
 	}
-	testRuntimeOnly(libs.openTestReporting.events) {
-		because("it's required to run tests via IntelliJ which does not consumed the shadowed jar of junit-platform-reporting")
-	}
 
 	testImplementation(libs.classgraph) {
 		because("ApiReportGenerator needs it")
+	}
+
+	testImplementation(libs.jimfs) {
+		because("Jimfs is used in src/test/java")
 	}
 
 	standaloneConsoleLauncher(projects.junitPlatformConsoleStandalone)
@@ -71,7 +72,7 @@ val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val releaseBranch = if (snapshot) "HEAD" else "r${rootProject.version}"
 val docsDir = file("$buildDir/ghpages-docs")
-val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
+val replaceCurrentDocs = buildParameters.documentation.replaceCurrentDocs
 val uploadPdfs = !snapshot
 val userGuidePdfFileName = "junit-user-guide-${rootProject.version}.pdf"
 val ota4jDocVersion = if (libs.versions.opentest4j.get().contains("SNAPSHOT")) "snapshot" else libs.versions.opentest4j.get()
@@ -81,6 +82,7 @@ gitPublish {
 	repoUri.set("https://github.com/junit-team/junit5.git")
 	branch.set("gh-pages")
 	sign.set(false)
+	fetchDepth.set(1)
 
 	contents {
 		from(docsDir)
@@ -98,6 +100,9 @@ gitPublish {
 
 val generatedAsciiDocPath = layout.buildDirectory.dir("generated/asciidoc")
 val consoleLauncherOptionsFile = generatedAsciiDocPath.map { it.file("console-launcher-options.txt") }
+val consoleLauncherDiscoverOptionsFile = generatedAsciiDocPath.map { it.file("console-launcher-discover-options.txt") }
+val consoleLauncherExecuteOptionsFile = generatedAsciiDocPath.map { it.file("console-launcher-execute-options.txt") }
+val consoleLauncherEnginesOptionsFile = generatedAsciiDocPath.map { it.file("console-launcher-engines-options.txt") }
 val experimentalApisTableFile = generatedAsciiDocPath.map { it.file("experimental-apis-table.adoc") }
 val deprecatedApisTableFile = generatedAsciiDocPath.map { it.file("deprecated-apis-table.adoc") }
 val standaloneConsoleLauncherShadowedArtifactsFile = generatedAsciiDocPath.map { it.file("console-launcher-standalone-shadowed-artifacts.adoc") }
@@ -116,6 +121,18 @@ require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
 tasks {
 
 	val consoleLauncherTest by registering(RunConsoleLauncher::class) {
+		args.addAll("execute")
+		args.addAll("--scan-classpath")
+		args.addAll("--config=junit.platform.reporting.open.xml.enabled=true")
+		val reportsDir = project.layout.buildDirectory.dir("console-launcher-test-results")
+		outputs.dir(reportsDir)
+		argumentProviders.add(CommandLineArgumentProvider {
+			listOf(
+				"--reports-dir=${reportsDir.get()}",
+				"--config=junit.platform.reporting.output.dir=${reportsDir.get()}"
+
+			)
+		})
 		args.addAll("--config", "enableHttpServer=true")
 		args.addAll("--include-classname", ".*Tests")
 		args.addAll("--include-classname", ".*Demo")
@@ -125,13 +142,7 @@ tasks {
 
 	register<RunConsoleLauncher>("consoleLauncher") {
 		hideOutput.set(false)
-		reportsDir.set(layout.buildDirectory.dir("console-launcher"))
 		outputs.upToDateWhen { false }
-		args.addAll("--config", "enableHttpServer=true")
-		args.addAll("--include-classname", ".*Tests")
-		args.addAll("--include-classname", ".*Demo")
-		args.addAll("--exclude-tag", "exclude")
-		args.addAll("--exclude-tag", "timeout")
 	}
 
 	test {
@@ -151,6 +162,27 @@ tasks {
 		mainClass.set("org.junit.platform.console.ConsoleLauncher")
 		args("--help", "--disable-banner")
 		redirectOutput(consoleLauncherOptionsFile)
+	}
+
+	val generateConsoleLauncherDiscoverOptions by registering(JavaExec::class) {
+		classpath = sourceSets["test"].runtimeClasspath
+		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		args("discover", "--help", "--disable-banner")
+		redirectOutput(consoleLauncherDiscoverOptionsFile)
+	}
+
+	val generateConsoleLauncherExecuteOptions by registering(JavaExec::class) {
+		classpath = sourceSets["test"].runtimeClasspath
+		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		args("execute", "--help", "--disable-banner")
+		redirectOutput(consoleLauncherExecuteOptionsFile)
+	}
+
+	val generateConsoleLauncherEnginesOptions by registering(JavaExec::class) {
+		classpath = sourceSets["test"].runtimeClasspath
+		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		args("engines", "--help", "--disable-banner")
+		redirectOutput(consoleLauncherEnginesOptionsFile)
 	}
 
 	val generateExperimentalApisTable by registering(JavaExec::class) {
@@ -184,6 +216,9 @@ tasks {
 	withType<AbstractAsciidoctorTask>().configureEach {
 		inputs.files(
 			generateConsoleLauncherOptions,
+			generateConsoleLauncherDiscoverOptions,
+			generateConsoleLauncherExecuteOptions,
+			generateConsoleLauncherEnginesOptions,
 			generateExperimentalApisTable,
 			generateDeprecatedApisTable,
 			generateStandaloneConsoleLauncherShadowedArtifactsFile
@@ -213,6 +248,9 @@ tasks {
 				"docs-version" to docsVersion,
 				"revnumber" to version,
 				"consoleLauncherOptionsFile" to consoleLauncherOptionsFile.get(),
+				"consoleLauncherDiscoverOptionsFile" to consoleLauncherDiscoverOptionsFile.get(),
+				"consoleLauncherExecuteOptionsFile" to consoleLauncherExecuteOptionsFile.get(),
+				"consoleLauncherEnginesOptionsFile" to consoleLauncherEnginesOptionsFile.get(),
 				"experimentalApisTableFile" to experimentalApisTableFile.get(),
 				"deprecatedApisTableFile" to deprecatedApisTableFile.get(),
 				"standaloneConsoleLauncherShadowedArtifactsFile" to standaloneConsoleLauncherShadowedArtifactsFile.get(),
@@ -235,10 +273,8 @@ tasks {
 			))
 			inputs.dir(java.srcDirs.first())
 			inputs.dir(resources.srcDirs.first())
-			withConvention(KotlinSourceSet::class) {
-				attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
-				inputs.dir(kotlin.srcDirs.first())
-			}
+			attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
+			inputs.dir(kotlin.srcDirs.first())
 		}
 
 		forkOptions {

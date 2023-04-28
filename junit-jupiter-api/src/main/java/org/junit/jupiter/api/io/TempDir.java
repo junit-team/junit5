@@ -12,6 +12,7 @@ package org.junit.jupiter.api.io;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.nio.file.Path;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.io.TempDirFactory.Standard;
 
 /**
  * {@code @TempDir} can be used to annotate a field in a test class or a
@@ -92,12 +94,25 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = STABLE, since = "5.10")
 public @interface TempDir {
 
 	/**
+	 * Factory for the temporary directory.
+	 *
+	 * <p>If {@value #SCOPE_PROPERTY_NAME} is set to {@code per_context}, no
+	 * custom factory is allowed.
+	 *
+	 * @return the class instance of the factory
+	 *
+	 * @since 5.10
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	Class<? extends TempDirFactory> factory() default Standard.class;
+
+	/**
 	 * Property name used to set the scope of temporary directories created via
-	 * {@link org.junit.jupiter.api.io.TempDir @TempDir} annotation: {@value}
+	 * {@link TempDir @TempDir} annotation: {@value}
 	 *
 	 * <h4>Supported Values</h4>
 	 * <ul>
