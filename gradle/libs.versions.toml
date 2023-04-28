@@ -6,6 +6,7 @@ asciidoctor-plugins = "4.0.0-alpha.1"
 assertj = "3.24.2"
 bnd = "6.4.0"
 checkstyle = "9.0"
+gradleVersionsPlugin = "0.46.0"
 jacoco = "0.8.7"
 jmh = "1.36"
 junit4 = "4.13.2"
@@ -17,7 +18,6 @@ opentest4j = "1.2.0"
 openTestReporting = "0.1.0-M1"
 surefire = "3.0.0-M7"
 xmlunit = "2.9.1"
-gradleVersionsPlugin = "0.46.0"
 
 [libraries]
 ant = { module = "org.apache.ant:ant", version.ref = "ant" }
