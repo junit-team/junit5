@@ -17,7 +17,6 @@ opentest4j = "1.2.0"
 openTestReporting = "0.1.0-M1"
 surefire = "3.0.0-M7"
 xmlunit = "2.9.1"
-gradleEnterprisePlugin = "3.13" # keep in sync with root settings.gradle.kts
 gradleVersionsPlugin = "0.46.0"
 
 [libraries]
@@ -31,7 +30,9 @@ bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.157" }
 commons-io = { module = "commons-io:commons-io", version = "2.11.0" }
-gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version.ref = "gradleEnterprisePlugin" }
+gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "1.10" }
+gradle-foojayResolver = { module = "org.gradle.toolchains:foojay-resolver", version = "0.5.0" }
+gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version = "3.13" }
 gradle-bnd = { module = "biz.aQute.bnd:biz.aQute.bnd.gradle", version.ref = "bnd" }
 gradle-shadow = { module = "gradle.plugin.com.github.johnrengelman:shadow", version = "8.0.0" }
 gradle-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.18.0" }
