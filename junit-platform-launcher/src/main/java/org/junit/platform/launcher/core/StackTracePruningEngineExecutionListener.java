@@ -42,10 +42,14 @@ class StackTracePruningEngineExecutionListener extends DelegatingEngineExecution
 		if (testExecutionResult.getThrowable().isPresent()) {
 			Throwable throwable = testExecutionResult.getThrowable().get();
 
-			ExceptionUtils.pruneStackTrace(throwable,
-				ClassNamePatternFilterUtils.excludeMatchingClassNames(pruningPattern));
+			ExceptionUtils.findNestedThrowables(throwable).forEach(this::pruneStackTrace);
 		}
 		super.executionFinished(testDescriptor, testExecutionResult);
+	}
+
+	private void pruneStackTrace(Throwable throwable) {
+		ExceptionUtils.pruneStackTrace(throwable,
+			ClassNamePatternFilterUtils.excludeMatchingClassNames(pruningPattern));
 	}
 
 }

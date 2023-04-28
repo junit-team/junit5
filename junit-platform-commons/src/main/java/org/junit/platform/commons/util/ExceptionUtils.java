@@ -14,9 +14,12 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -127,6 +130,38 @@ public final class ExceptionUtils {
 
 		Collections.reverse(prunedStackTrace);
 		throwable.setStackTrace(prunedStackTrace.toArray(new StackTraceElement[0]));
+	}
+
+	/**
+	 * Find all causes and suppressed exceptions in the backtrace of the
+	 * supplied {@link Throwable}.
+	 *
+	 * @param rootThrowable the {@code Throwable} to explore; never {@code null}
+	 * @return a list of all throwables found, including the supplied one;
+	 * never {@code null}
+	 *
+	 * @since 5.10
+	 */
+	public static List<Throwable> findNestedThrowables(Throwable rootThrowable) {
+		Preconditions.notNull(rootThrowable, "Throwable must not be null");
+
+		HashSet<Throwable> visited = new HashSet<>();
+		Deque<Throwable> toVisit = new ArrayDeque<>();
+		toVisit.add(rootThrowable);
+
+		while (!toVisit.isEmpty()) {
+			Throwable current = toVisit.remove();
+			boolean isFirstVisit = visited.add(current);
+			if (isFirstVisit) {
+				Throwable cause = current.getCause();
+				if (cause != null) {
+					toVisit.add(cause);
+				}
+				toVisit.addAll(Arrays.asList(current.getSuppressed()));
+			}
+		}
+
+		return new ArrayList<>(visited);
 	}
 
 }

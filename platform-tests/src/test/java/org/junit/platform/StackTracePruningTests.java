@@ -172,7 +172,7 @@ class StackTracePruningTests {
 	// -------------------------------------------------------------------
 
 	static class StackTracePruningTestCase {
-		
+
 		@Test
 		void failingAssertion() {
 			Assertions.fail();
@@ -180,12 +180,9 @@ class StackTracePruningTests {
 
 		@Test
 		void multipleFailingAssertion() {
-			Assertions.assertAll(
-					Assertions::fail,
-					Assertions::fail
-			);
+			Assertions.assertAll(Assertions::fail, Assertions::fail);
 		}
-		
+
 		@Test
 		void failingAssumption() {
 			Assumptions.assumeTrue(() -> {
