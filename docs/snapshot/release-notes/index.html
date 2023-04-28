@@ -624,6 +624,11 @@ discovered tests for the specified details mode without executing them.</p>
 <p>The <code>dynamic</code> parallel execution strategy now allows the thread pool to be saturated by
 default.</p>
 </li>
+<li>
+<p>Implicit type conversion of boolean values like in <code>@CsvSource</code> is now stricter, only
+allowing values <code>"true"</code> or <code>"false"</code> (case-insensitive), in order to make accidental
+mistakes apparent, avoiding potential confusion.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1059,7 +1064,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-28 09:57:01 UTC
+Last updated 2023-04-28 12:39:43 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
