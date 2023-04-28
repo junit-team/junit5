@@ -11,6 +11,7 @@
 package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.io.File;
 import java.lang.Thread.State;
@@ -97,6 +98,21 @@ class DefaultArgumentConverterTests {
 		assertConverts("42.2_3", float.class, 42.23f);
 		assertConverts("42.23", double.class, 42.23);
 		assertConverts("42.2_3", double.class, 42.23);
+	}
+
+	@Test
+	void throwsExceptionOnInvalidStringForPrimitiveTypes() {
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("ab", char.class)) //
+				.withMessage("Failed to convert String \"ab\" to type java.lang.Character") //
+				.havingCause() //
+				.withMessage("String must have length of 1: ab");
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("tru", boolean.class)) //
+				.withMessage("Failed to convert String \"tru\" to type java.lang.Boolean") //
+				.havingCause() //
+				.withMessage("String must be (ignoring case) 'true' or 'false': tru");
 	}
 
 	/**
@@ -232,11 +248,14 @@ class DefaultArgumentConverterTests {
 	// -------------------------------------------------------------------------
 
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
-		var result = DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
+		var result = convert(input, targetClass);
 
 		assertThat(result) //
 				.describedAs(input + " --(" + targetClass.getName() + ")--> " + expectedOutput) //
 				.isEqualTo(expectedOutput);
 	}
 
+	private Object convert(Object input, Class<?> targetClass) {
+		return DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
+	}
 }

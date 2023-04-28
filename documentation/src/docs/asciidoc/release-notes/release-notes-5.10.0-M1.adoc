@@ -63,6 +63,9 @@ repository on GitHub.
 
 * The `dynamic` parallel execution strategy now allows the thread pool to be saturated by
   default.
+* Implicit type conversion of boolean values like in `@CsvSource` is now stricter, only
+  allowing values `"true"` or `"false"` (case-insensitive), in order to make accidental
+  mistakes apparent, avoiding potential confusion.
 
 ==== New Features and Improvements
 

@@ -1706,7 +1706,7 @@ integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 |===
 | Target Type | Example
 
-| `boolean`/`Boolean`        | `"true"`                                 -> `true`
+| `boolean`/`Boolean`        | `"true"`                                 -> `true` _(only accepts values 'true' or 'false', case-insensitive)_
 | `byte`/`Byte`              | `"15"`, `"0xF"`, or `"017"`              -> `(byte) 15`
 | `char`/`Character`         | `"o"`                                    -> `'o'`
 | `short`/`Short`            | `"15"`, `"0xF"`, or `"017"`              -> `(short) 15`
