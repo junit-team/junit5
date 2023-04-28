@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":build-parameters"))
+	implementation(projects.buildParameters)
 	implementation(kotlin("gradle-plugin"))
 	implementation(libs.gradle.bnd)
 	implementation(libs.gradle.spotless)
