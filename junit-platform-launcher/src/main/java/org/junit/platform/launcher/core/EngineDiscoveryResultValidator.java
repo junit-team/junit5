@@ -10,8 +10,13 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
 
@@ -38,42 +43,34 @@ class EngineDiscoveryResultValidator {
 				"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
 				testEngine.getId()));
 		Optional<String> cyclicGraphInfo = getCyclicGraphInfo(root);
-		Preconditions.condition(!cyclicGraphInfo.isPresent(), () -> String.format(
-			"The discover() method for TestEngine with ID '%s' returned a cyclic graph: " + cyclicGraphInfo));
+		Preconditions.condition(!cyclicGraphInfo.isPresent(),
+			() -> String.format("The discover() method for TestEngine with ID '%s' returned a cyclic graph; %s",
+				testEngine.getId(), cyclicGraphInfo.get()));
 	}
 
 	/**
-	 * @return {@code true} if the tree does <em>not</em> contain a cycle; else {@code false}.
+	 * @return non-empty {@link Optional} if the tree contains a cycle
 	 */
-	boolean isAcyclic(TestDescriptor root) {
-		return !getCyclicGraphInfo(root).isPresent();
-	}
+	private Optional<String> getCyclicGraphInfo(TestDescriptor root) {
 
-	Optional<String> getCyclicGraphInfo(TestDescriptor root) {
-		HashMap<UniqueId, Optional<UniqueId>> visited = new HashMap<>();
-
+		Map<UniqueId, Optional<UniqueId>> visited = new HashMap<>();
 		visited.put(root.getUniqueId(), Optional.empty());
+
 		Queue<TestDescriptor> queue = new ArrayDeque<>();
 		queue.add(root);
+
 		while (!queue.isEmpty()) {
 			TestDescriptor parent = queue.remove();
 			for (TestDescriptor child : parent.getChildren()) {
 				UniqueId uid = child.getUniqueId();
-				if (visited.containsKey(uid)) {// id already known: cycle detected!
+				if (visited.containsKey(uid)) { // id already known: cycle detected!
 
-					StringBuilder path1 = new StringBuilder();
-					path1.append(uid);
-					addPath(visited, uid, path1);
+					List<UniqueId> path1 = findPath(visited, uid);
+					List<UniqueId> path2 = findPath(visited, parent.getUniqueId());
+					path2.add(uid);
 
-					StringBuilder path2 = new StringBuilder();
-					path2.append(uid);
-					UniqueId parentUID = parent.getUniqueId();
-					path2.append(" <- ").append(parentUID);
-					addPath(visited, parentUID, path2);
-
-					String msg = String.format("Test %s exists in at least two paths:", uid) + "\n\t" + path1.toString()
-							+ "\n\t" + path2.toString();
-					return Optional.of(msg);
+					return Optional.of(String.format("%s exists in at least two paths:%n(1) %s%n(2) %s", uid,
+						formatted(path1), formatted(path2)));
 				}
 				else {
 					visited.put(uid, Optional.of(parent.getUniqueId()));
@@ -86,19 +83,26 @@ class EngineDiscoveryResultValidator {
 		return Optional.empty();
 	}
 
-	private static void addPath(HashMap<UniqueId, Optional<UniqueId>> visited, UniqueId from, StringBuilder path) {
-		UniqueId current = from;
+	private String formatted(List<UniqueId> path) {
+		return path.stream().map(UniqueId::toString).collect(joining(" -> "));
+	}
+
+	private static List<UniqueId> findPath(Map<UniqueId, Optional<UniqueId>> visited, UniqueId target) {
+		List<UniqueId> path = new ArrayList<>();
+		path.add(target);
+		UniqueId current = target;
 
 		while (visited.containsKey(current)) {
 			Optional<UniqueId> backTraced = visited.get(current);
 			if (backTraced.isPresent()) {
-				path.append(" <- ").append(backTraced.get());
+				path.add(0, backTraced.get());
 				current = backTraced.get();
 			}
 			else {
 				break;
 			}
 		}
+		return path;
 	}
 
 }

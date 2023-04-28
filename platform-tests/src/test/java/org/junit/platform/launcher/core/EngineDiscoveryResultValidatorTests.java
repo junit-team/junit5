@@ -10,31 +10,38 @@
 
 package org.junit.platform.launcher.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.fakes.TestDescriptorStub;
+import org.junit.platform.fakes.TestEngineStub;
 
 /**
  * @since 1.3
  */
 class EngineDiscoveryResultValidatorTests {
 
+	private final TestEngine testEngine = new TestEngineStub("my-engine");
 	private final EngineDiscoveryResultValidator validator = new EngineDiscoveryResultValidator();
 
 	@Test
 	void detectCycleWithDoubleRoot() {
+
 		var root = new TestDescriptorStub(UniqueId.forEngine("root"), "root");
-		assertTrue(validator.isAcyclic(root));
+		validator.validate(testEngine, root);
 
 		root.addChild(root);
-		assertFalse(validator.isAcyclic(root));
-		assertEquals(validator.getCyclicGraphInfo(root).get(), "Test [engine:root] exists in at least two paths:\n"
-				+ "\t[engine:root]\n" + "\t[engine:root] <- [engine:root]");
+		assertThatThrownBy(() -> validator.validate(testEngine, root)) //
+				.isInstanceOf(PreconditionViolationException.class) //
+				.hasMessage(
+					"""
+							The discover() method for TestEngine with ID 'my-engine' returned a cyclic graph; [engine:root] exists in at least two paths:
+							(1) [engine:root]
+							(2) [engine:root] -> [engine:root]""");
 	}
 
 	@Test
@@ -45,14 +52,16 @@ class EngineDiscoveryResultValidatorTests {
 		TestDescriptor group2 = new TestDescriptorStub(rootId.append("group", "2"), "2");
 		root.addChild(group1);
 		root.addChild(group2);
-		assertTrue(validator.isAcyclic(root));
+		validator.validate(testEngine, root);
 
 		group2.addChild(group1);
-		assertFalse(validator.isAcyclic(root));
-		assertEquals(validator.getCyclicGraphInfo(root).get(),
-			"Test [engine:root]/[group:1] exists in at least two paths:\n"
-					+ "\t[engine:root]/[group:1] <- [engine:root]\n"
-					+ "\t[engine:root]/[group:1] <- [engine:root]/[group:2] <- [engine:root]");
+		assertThatThrownBy(() -> validator.validate(testEngine, root)) //
+				.isInstanceOf(PreconditionViolationException.class) //
+				.hasMessage(
+					"""
+							The discover() method for TestEngine with ID 'my-engine' returned a cyclic graph; [engine:root]/[group:1] exists in at least two paths:
+							(1) [engine:root] -> [engine:root]/[group:1]
+							(2) [engine:root] -> [engine:root]/[group:2] -> [engine:root]/[group:1]""");
 	}
 
 	@Test
@@ -63,18 +72,20 @@ class EngineDiscoveryResultValidatorTests {
 		TestDescriptor group2 = new TestDescriptorStub(rootId.append("group", "2"), "2");
 		root.addChild(group1);
 		root.addChild(group2);
-		TestDescriptor test1 = new TestDescriptorStub(rootId.append("test", "1"), "1-1");
-		TestDescriptor test2 = new TestDescriptorStub(rootId.append("test", "2"), "2-2");
+		TestDescriptor test1 = new TestDescriptorStub(group1.getUniqueId().append("test", "1"), "1-1");
+		TestDescriptor test2 = new TestDescriptorStub(group2.getUniqueId().append("test", "2"), "2-2");
 		group1.addChild(test1);
 		group2.addChild(test2);
-		assertTrue(validator.isAcyclic(root));
+		validator.validate(testEngine, root);
 
 		group2.addChild(test1);
-		assertFalse(validator.isAcyclic(root));
-		assertEquals(validator.getCyclicGraphInfo(root).get(),
-			"Test [engine:root]/[test:1] exists in at least two paths:\n"
-					+ "\t[engine:root]/[test:1] <- [engine:root]/[group:1] <- [engine:root]\n"
-					+ "\t[engine:root]/[test:1] <- [engine:root]/[group:2] <- [engine:root]");
+		assertThatThrownBy(() -> validator.validate(testEngine, root)) //
+				.isInstanceOf(PreconditionViolationException.class) //
+				.hasMessage(
+					"""
+							The discover() method for TestEngine with ID 'my-engine' returned a cyclic graph; [engine:root]/[group:1]/[test:1] exists in at least two paths:
+							(1) [engine:root] -> [engine:root]/[group:1] -> [engine:root]/[group:1]/[test:1]
+							(2) [engine:root] -> [engine:root]/[group:2] -> [engine:root]/[group:1]/[test:1]""");
 	}
 
 }
