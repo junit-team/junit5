@@ -80,6 +80,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	/**
 	 * If a close action is configured, it will be called with all successfully
 	 * stored values in reverse insertion order.
+	 *
+	 * <p>Closing a store does not close its parent or any of its children.
 	 */
 	@Override
 	public void close() {
