@@ -2,20 +2,15 @@ import buildparameters.BuildParametersExtension
 import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
+	includeBuild("gradle/plugins")
 	repositories {
-		includeBuild("gradle/plugins")
 		gradlePluginPortal()
-	}
-	plugins {
-		kotlin("jvm") version "1.8.20"
 	}
 }
 
 plugins {
-	id("com.gradle.enterprise") version "3.13" // keep in sync with gradle/libs.versions.toml
-	id("com.gradle.common-custom-user-data-gradle-plugin") version "1.10"
-	id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
 	id("junitbuild.build-parameters")
+	id("junitbuild.settings-conventions")
 }
 
 dependencyResolutionManagement {
