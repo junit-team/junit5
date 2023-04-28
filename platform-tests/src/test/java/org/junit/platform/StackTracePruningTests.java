@@ -130,18 +130,6 @@ class StackTracePruningTests {
 				""");
 	}
 
-	@Test
-	void shouldPruneEverythingAfterLastLauncherStackTraceElement() {
-		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
-				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.selectors(selectClass(FailingAssertionWithCustomStackTraceElementTestCase.class)) //
-				.execute();
-
-		List<StackTraceElement> stackTrace = extractStackTrace(results);
-
-		assertStackTraceDoesNotContain(stackTrace, "someClass.someMethod(someFile:123)");
-	}
-
 	private static List<StackTraceElement> extractStackTrace(EngineExecutionResults results) {
 		var failedTestEvent = results.testEvents().failed().list().get(0);
 		var testResult = failedTestEvent.getRequiredPayload(TestExecutionResult.class);
@@ -180,23 +168,6 @@ class StackTracePruningTests {
 			Assumptions.assumeTrue(() -> {
 				throw new RuntimeException();
 			});
-		}
-
-	}
-
-	static class FailingAssertionWithCustomStackTraceElementTestCase {
-
-		@Test
-		void test() {
-			try {
-				Assertions.fail();
-			}
-			catch (Throwable throwable) {
-				StackTraceElement[] stackTrace = throwable.getStackTrace();
-				stackTrace[stackTrace.length - 1] = new StackTraceElement("someClass", "someMethod", "someFile", 123);
-				throwable.setStackTrace(stackTrace);
-				throw throwable;
-			}
 		}
 
 	}

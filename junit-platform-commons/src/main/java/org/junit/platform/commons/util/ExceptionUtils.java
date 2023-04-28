@@ -120,7 +120,7 @@ public final class ExceptionUtils {
 			if (name.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
 				prunedStackTrace.clear();
 			}
-			if (stackTraceElementFilter.test(name) || ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS.contains(name)) {
+			else if (stackTraceElementFilter.test(name) || ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS.contains(name)) {
 				prunedStackTrace.add(element);
 			}
 		}
