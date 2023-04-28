@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 
 include("build-parameters")
 include("common")
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
