@@ -149,6 +149,9 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * Put the supplied value for the supplied namespace and key into this
 	 * store and return the previously associated value in this store.
 	 *
+	 * <p>The {@link CloseAction} will <em>not</em> be called for the previously
+	 * stored value, if any.
+	 *
 	 * @return previously stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
 	 *                                         to the required type
@@ -162,6 +165,9 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * Remove the value stored for the supplied namespace and key from this
 	 * store.
 	 *
+	 * <p>The {@link CloseAction} will <em>not</em> be called for the removed
+	 * value.
+	 *
 	 * @return previously stored value; may be {@code null}
 	 */
 	public Object remove(N namespace, Object key) {
@@ -172,6 +178,9 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	/**
 	 * Remove the value stored for the supplied namespace and key from this
 	 * store and cast it to the supplied required type.
+	 *
+	 * <p>The {@link CloseAction} will <em>not</em> be called for the removed
+	 * value.
 	 *
 	 * @return previously stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
