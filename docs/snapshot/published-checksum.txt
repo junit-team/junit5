@@ -396,7 +396,6 @@
 7dc1d91d2c34d7cf4472f0c7a895b161  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ResourceUtils.java
 7dcd2702fb84a28a10d1d7a0e0cd5a5f  junit-platform-console/src/main/java/org/junit/platform/console/tasks/CustomContextClassLoaderExecutor.java
 7ddc90d2825a3c942dd5f12d5afeb921  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/discovery/AbortOnFailureLauncherDiscoveryListener.java
-7e0cfa4f65cc2e18479b9c7bd4c2c0f8  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineDiscoveryResultValidator.java
 7e0eb25a7f0de73743eb98bac74de2ff  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemPropertyCondition.java
 7e25c7dbc10e91927d58cc94ee1dcf3a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultLauncherSession.java
 7e71d7527dea3c2e6d7033a889d74505  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.java
@@ -725,6 +724,7 @@ e30b18d3bbe0924d87bc2e05ca28dff9  junit-jupiter-params/src/main/java/org/junit/j
 e36a2b4644f4fa0d5a424d80898d63ed  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/InterceptingLauncher.java
 e384063e544ebf363545a42a45834669  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactoryContext.java
 e47b4a1c24fa69252638ab58d0ef5d76  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java
+e483f238d90c8c0c4cc16012f89161f3  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineDiscoveryResultValidator.java
 e4b8e906b467dedaaf8903742b76c7b2  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineIdValidator.java
 e4e6cd80dd40a25fe453cdf32f38b6a6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/package-info.java
 e520cdac56a6ad23126588ba3813f11e  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.java
