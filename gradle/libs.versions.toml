@@ -4,6 +4,7 @@ apiguardian = "1.1.2"
 asciidoctor-pdf = "1.5.3"
 asciidoctor-plugins = "4.0.0-alpha.1"
 assertj = "3.24.2"
+bnd = "6.4.0"
 checkstyle = "9.0"
 jacoco = "0.8.7"
 jmh = "1.36"
@@ -16,6 +17,8 @@ opentest4j = "1.2.0"
 openTestReporting = "0.1.0-M1"
 surefire = "3.0.0-M7"
 xmlunit = "2.9.1"
+gradleEnterprisePlugin = "3.13" # keep in sync with root settings.gradle.kts
+gradleVersionsPlugin = "0.46.0"
 
 [libraries]
 ant = { module = "org.apache.ant:ant", version.ref = "ant" }
@@ -25,9 +28,14 @@ apiguardian = { module = "org.apiguardian:apiguardian-api", version.ref = "apigu
 archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "1.0.1" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
-bnd = { module = "biz.aQute.bnd:biz.aQute.bndlib", version = "6.4.0" }
+bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.157" }
 commons-io = { module = "commons-io:commons-io", version = "2.11.0" }
+gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version.ref = "gradleEnterprisePlugin" }
+gradle-bnd = { module = "biz.aQute.bnd:biz.aQute.bnd.gradle", version.ref = "bnd" }
+gradle-shadow = { module = "gradle.plugin.com.github.johnrengelman:shadow", version = "8.0.0" }
+gradle-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.18.0" }
+gradle-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradleVersionsPlugin" }
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.11" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.21" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "2.2" }
@@ -69,4 +77,4 @@ gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.0" }
 jmh = { id = "me.champeau.jmh", version = "0.7.1" }
 nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "1.3.0" }
-versions = { id = "com.github.ben-manes.versions", version = "0.46.0" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "gradleVersionsPlugin" }

@@ -12,11 +12,11 @@ repositories {
 dependencies {
 	implementation(project(":build-parameters"))
 	implementation(kotlin("gradle-plugin"))
-	implementation("biz.aQute.bnd:biz.aQute.bnd.gradle:6.4.0")
-	implementation("com.diffplug.spotless:spotless-plugin-gradle:6.18.0")
-	implementation("com.github.ben-manes:gradle-versions-plugin:0.46.0")
-	implementation("gradle.plugin.com.github.johnrengelman:shadow:8.0.0")
-	compileOnly("com.gradle:gradle-enterprise-gradle-plugin:3.13") // keep in sync with root settings.gradle.kts
+	implementation(libs.gradle.bnd)
+	implementation(libs.gradle.spotless)
+	implementation(libs.gradle.versions)
+	implementation(libs.gradle.shadow)
+	compileOnly(libs.gradle.enterprise)
 }
 
 tasks {
