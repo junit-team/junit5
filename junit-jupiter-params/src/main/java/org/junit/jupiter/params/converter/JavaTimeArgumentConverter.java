@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -27,13 +27,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.jupiter.params.support.AnnotationConsumer;
-
 /**
  * @since 5.0
  */
-class JavaTimeArgumentConverter extends SimpleArgumentConverter
-		implements AnnotationConsumer<JavaTimeConversionPattern> {
+class JavaTimeArgumentConverter extends AnnotationBasedArgumentConverter<JavaTimeConversionPattern> {
 
 	private static final Map<Class<?>, TemporalQuery<?>> TEMPORAL_QUERIES;
 	static {
@@ -52,20 +49,17 @@ class JavaTimeArgumentConverter extends SimpleArgumentConverter
 		TEMPORAL_QUERIES = Collections.unmodifiableMap(queries);
 	}
 
-	private String pattern;
-
 	@Override
-	public void accept(JavaTimeConversionPattern annotation) {
-		pattern = annotation.value();
-	}
-
-	@Override
-	public Object convert(Object input, Class<?> targetClass) throws ArgumentConversionException {
-		if (!TEMPORAL_QUERIES.containsKey(targetClass)) {
+	protected Object convert(Object input, Class<?> targetClass, JavaTimeConversionPattern annotation) {
+		if (input == null) {
+			throw new ArgumentConversionException("Cannot convert null to " + targetClass.getName());
+		}
+		TemporalQuery<?> temporalQuery = TEMPORAL_QUERIES.get(targetClass);
+		if (temporalQuery == null) {
 			throw new ArgumentConversionException("Cannot convert to " + targetClass.getName() + ": " + input);
 		}
+		String pattern = annotation.value();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-		TemporalQuery<?> temporalQuery = TEMPORAL_QUERIES.get(targetClass);
 		return formatter.parse(input.toString(), temporalQuery);
 	}
 

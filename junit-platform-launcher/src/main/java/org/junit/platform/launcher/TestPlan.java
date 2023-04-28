@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,6 +14,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.synchronizedSet;
 import static java.util.Collections.unmodifiableSet;
 import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -32,7 +33,6 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestDescriptor.Visitor;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -91,7 +91,7 @@ public class TestPlan {
 		Preconditions.notNull(configurationParameters, "Cannot create TestPlan from null ConfigurationParameters");
 		TestPlan testPlan = new TestPlan(engineDescriptors.stream().anyMatch(TestDescriptor::containsTests),
 			configurationParameters);
-		Visitor visitor = descriptor -> testPlan.addInternal(TestIdentifier.from(descriptor));
+		TestDescriptor.Visitor visitor = descriptor -> testPlan.addInternal(TestIdentifier.from(descriptor));
 		engineDescriptors.forEach(engineDescriptor -> engineDescriptor.accept(visitor));
 		return testPlan;
 	}
@@ -291,4 +291,57 @@ public class TestPlan {
 		return this.configurationParameters;
 	}
 
+	/**
+	 * Accept the supplied {@link Visitor} for a depth-first traversal of the
+	 * test plan.
+	 *
+	 * @param visitor the visitor to accept; never {@code null}
+	 * @since 1.10
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public void accept(Visitor visitor) {
+		getRoots().forEach(it -> accept(visitor, it));
+	}
+
+	private void accept(Visitor visitor, TestIdentifier testIdentifier) {
+		if (testIdentifier.isContainer()) {
+			visitor.preVisitContainer(testIdentifier);
+		}
+		visitor.visit(testIdentifier);
+		getChildren(testIdentifier).forEach(it -> accept(visitor, it));
+		if (testIdentifier.isContainer()) {
+			visitor.postVisitContainer(testIdentifier);
+		}
+	}
+
+	/**
+	 * Visitor for {@link TestIdentifier TestIdentifiers} in a {@link TestPlan}.
+	 *
+	 * @since 1.10
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public interface Visitor {
+
+		/**
+		 * Called before visiting a container.
+		 *
+		 * @see TestIdentifier#isContainer()
+		 */
+		default void preVisitContainer(TestIdentifier testIdentifier) {
+		}
+
+		/**
+		 * Called for all test identifiers regardless of their type.
+		 */
+		default void visit(TestIdentifier testIdentifier) {
+		}
+
+		/**
+		 * Called after visiting a container.
+		 *
+		 * @see TestIdentifier#isContainer()
+		 */
+		default void postVisitContainer(TestIdentifier testIdentifier) {
+		}
+	}
 }

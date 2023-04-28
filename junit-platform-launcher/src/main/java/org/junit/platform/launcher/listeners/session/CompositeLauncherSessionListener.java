@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -9,6 +9,8 @@
  */
 
 package org.junit.platform.launcher.listeners.session;
+
+import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +38,6 @@ class CompositeLauncherSessionListener implements LauncherSessionListener {
 
 	@Override
 	public void launcherSessionClosed(LauncherSession session) {
-		listeners.forEach(delegate -> delegate.launcherSessionClosed(session));
+		forEachInReverseOrder(listeners, delegate -> delegate.launcherSessionClosed(session));
 	}
 }

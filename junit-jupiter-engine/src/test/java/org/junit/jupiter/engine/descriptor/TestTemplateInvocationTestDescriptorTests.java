@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -31,11 +31,11 @@ class TestTemplateInvocationTestDescriptorTests {
 	void invocationsDoNotDeclareExclusiveResources() throws Exception {
 		Class<MyTestCase> testClass = MyTestCase.class;
 		Method testTemplateMethod = testClass.getDeclaredMethod("testTemplate");
-		JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+		JupiterConfiguration configuration = mock();
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 		TestTemplateTestDescriptor parent = new TestTemplateTestDescriptor(UniqueId.root("segment", "template"),
 			testClass, testTemplateMethod, configuration);
-		TestTemplateInvocationContext invocationContext = mock(TestTemplateInvocationContext.class);
+		TestTemplateInvocationContext invocationContext = mock();
 		when(invocationContext.getDisplayName(anyInt())).thenReturn("invocation");
 
 		TestTemplateInvocationTestDescriptor testDescriptor = new TestTemplateInvocationTestDescriptor(

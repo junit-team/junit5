@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,6 +14,7 @@ package example.session;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ class HttpTests {
 	void respondsWith204() throws Exception {
 		String host = System.getProperty("http.server.host"); // <1>
 		String port = System.getProperty("http.server.port"); // <2>
-		URL url = new URL("http://" + host + ":" + port + "/test");
+		URL url = URI.create("http://" + host + ":" + port + "/test").toURL();
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("GET");

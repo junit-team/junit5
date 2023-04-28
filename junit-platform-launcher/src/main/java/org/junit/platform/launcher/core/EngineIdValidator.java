@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -23,8 +23,6 @@ import org.junit.platform.engine.TestEngine;
  */
 class EngineIdValidator {
 
-	private static final Logger logger = LoggerFactory.getLogger(EngineIdValidator.class);
-
 	private EngineIdValidator() {
 	}
 
@@ -33,7 +31,7 @@ class EngineIdValidator {
 		for (TestEngine testEngine : testEngines) {
 			// check usage of reserved id prefix
 			if (!validateReservedIds(testEngine)) {
-				logger.warn(() -> String.format(
+				getLogger().warn(() -> String.format(
 					"Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '%s'",
 					testEngine.getId()));
 			}
@@ -45,6 +43,11 @@ class EngineIdValidator {
 			}
 		}
 		return testEngines;
+	}
+
+	private static Logger getLogger() {
+		// Not a constant to avoid problems with building GraalVM native images
+		return LoggerFactory.getLogger(EngineIdValidator.class);
 	}
 
 	// https://github.com/junit-team/junit5/issues/1557

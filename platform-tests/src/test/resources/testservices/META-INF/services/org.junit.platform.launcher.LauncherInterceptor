@@ -1,0 +1,2 @@
+org.junit.platform.launcher.TestLauncherInterceptor1
+org.junit.platform.launcher.TestLauncherInterceptor2

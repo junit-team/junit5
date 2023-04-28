@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -3023,7 +3022,7 @@ public class Assertions {
 	 *
 	 * @since 5.8
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.10")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable) {
 		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable);
 	}
@@ -3042,7 +3041,7 @@ public class Assertions {
 	 *
 	 * @since 5.8
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.10")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
 			String message) {
 		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, message);
@@ -3063,7 +3062,7 @@ public class Assertions {
 	 *
 	 * @since 5.8
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.10")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {
 		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, messageSupplier);
@@ -3567,7 +3566,7 @@ public class Assertions {
 	 *
 	 * @since 5.8
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.10")
 	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue) {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue);
 	}
@@ -3583,7 +3582,7 @@ public class Assertions {
 	 *
 	 * @since 5.8
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.10")
 	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, String message) {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, message);
 	}
@@ -3600,7 +3599,7 @@ public class Assertions {
 	 *
 	 * @since 5.8
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.10")
 	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Supplier<String> messageSupplier) {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}

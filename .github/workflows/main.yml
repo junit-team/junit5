@@ -4,15 +4,15 @@ on:
   push:
     branches:
       - main
-      - 'releases/*'
+      - 'releases/**'
   pull_request:
     branches:
       - '*'
 
 env:
-  ORG_GRADLE_PROJECT_enableTestDistribution: true
-  ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
-  ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
+  ENTERPRISE_TESTDISTRIBUTION_ENABLED: true
+  BUILDCACHE_USERNAME: ${{ secrets.BUILD_CACHE_USERNAME }}
+  BUILDCACHE_PASSWORD: ${{ secrets.BUILD_CACHE_PASSWORD }}
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:
@@ -38,12 +38,12 @@ jobs:
       uses: ./.github/actions/main-build
       with:
         arguments: |
-          -PenableJaCoCo
+          -Ptesting.enableJaCoCo
           build
           jacocoRootReport
           prepareDocsForUploadToGhPages
     - name: Upload to Codecov.io
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
 
   Windows:
     runs-on: windows-latest
@@ -85,7 +85,10 @@ jobs:
 
   update_documentation:
     name: Update Snapshot Documentation
-    needs: linux
+    concurrency:
+      group: github-pages
+      cancel-in-progress: true
+    needs: Linux
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
@@ -104,4 +107,4 @@ jobs:
     - name: Upload Documentation
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
-      run: ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
+      run: ./gradle/scripts/publishDocumentationSnapshotOnlyIfNecessary.sh

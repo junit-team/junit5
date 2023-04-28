@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,6 +13,7 @@ package org.junit.platform.console;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.junit.platform.console.options.CommandResult;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
@@ -26,12 +27,14 @@ class ConsoleLauncherWrapperResult implements TestExecutionSummary {
 	final int code;
 	private final TestExecutionSummary summary;
 
-	ConsoleLauncherWrapperResult(String[] args, String out, String err, ConsoleLauncherExecutionResult result) {
+	ConsoleLauncherWrapperResult(String[] args, String out, String err, CommandResult<?> result) {
 		this.args = args;
 		this.out = out;
 		this.err = err;
 		this.code = result.getExitCode();
-		this.summary = result.getTestExecutionSummary().orElse(null);
+		this.summary = (TestExecutionSummary) result.getValue() //
+				.filter(it -> it instanceof TestExecutionSummary) //
+				.orElse(null);
 	}
 
 	private void checkTestExecutionSummaryState() {

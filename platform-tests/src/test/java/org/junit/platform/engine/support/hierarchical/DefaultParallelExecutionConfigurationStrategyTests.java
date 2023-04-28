@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,8 +17,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import java.util.concurrent.ForkJoinPool;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +30,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 class DefaultParallelExecutionConfigurationStrategyTests {
 
-	private ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+	final ConfigurationParameters configParams = mock();
 
 	@BeforeEach
 	void setUp() {
@@ -51,7 +49,20 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(42);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + 42);
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
-		assertThat(configuration.getSaturatePredicate()).isNull();
+		assertThat(configuration.getSaturatePredicate().test(null)).isTrue();
+	}
+
+	@Test
+	void fixedSaturateStrategyCreatesValidConfiguration() {
+		when(configParams.get("fixed.parallelism")).thenReturn(Optional.of("42"));
+		when(configParams.get("fixed.max-pool-size")).thenReturn(Optional.of("42"));
+		when(configParams.get("fixed.saturate")).thenReturn(Optional.of("false"));
+
+		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.FIXED;
+		var configuration = strategy.createConfiguration(configParams);
+		assertThat(configuration.getParallelism()).isEqualTo(42);
+		assertThat(configuration.getMaxPoolSize()).isEqualTo(42);
+		assertThat(configuration.getSaturatePredicate().test(null)).isFalse();
 	}
 
 	@Test
@@ -67,7 +78,25 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors * 2);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + (availableProcessors * 2));
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
-		assertThat(configuration.getSaturatePredicate()).isNull();
+		assertThat(configuration.getSaturatePredicate().test(null)).isTrue();
+	}
+
+	@Test
+	void dynamicSaturateStrategyCreatesValidConfiguration() {
+		when(configParams.get("dynamic.factor")).thenReturn(Optional.of("2.0"));
+		when(configParams.get("dynamic.max-pool-size-factor")).thenReturn(Optional.of("3.0"));
+		when(configParams.get("dynamic.saturate")).thenReturn(Optional.of("false"));
+
+		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
+		var configuration = strategy.createConfiguration(configParams);
+
+		var availableProcessors = Runtime.getRuntime().availableProcessors();
+		assertThat(configuration.getParallelism()).isEqualTo(availableProcessors * 2);
+		assertThat(configuration.getCorePoolSize()).isEqualTo(availableProcessors * 2);
+		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors * 2);
+		assertThat(configuration.getMaxPoolSize()).isEqualTo(availableProcessors * 6);
+		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
+		assertThat(configuration.getSaturatePredicate().test(null)).isFalse();
 	}
 
 	@Test
@@ -183,12 +212,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 	static class CustomParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
-			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5) {
-				@Override
-				public Predicate<? super ForkJoinPool> getSaturatePredicate() {
-					return __ -> true;
-				}
-			};
+			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5, __ -> true);
 		}
 	}
 

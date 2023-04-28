@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -179,9 +179,9 @@ class DynamicTestTests {
 		URI containerSourceUri = URI.create("other://container");
 		DynamicContainer container = dynamicContainer("bar", containerSourceUri, Stream.of(test));
 
-		assertThat(test.getTestSourceUri().get()).isSameAs(testSourceUri);
+		assertThat(test.getTestSourceUri()).containsSame(testSourceUri);
 		assertThat(test.toString()).isEqualTo("DynamicTest [displayName = 'foo', testSourceUri = any://test]");
-		assertThat(container.getTestSourceUri().get()).isSameAs(containerSourceUri);
+		assertThat(container.getTestSourceUri()).containsSame(containerSourceUri);
 		assertThat(container.toString()).isEqualTo(
 			"DynamicContainer [displayName = 'bar', testSourceUri = other://container]");
 	}

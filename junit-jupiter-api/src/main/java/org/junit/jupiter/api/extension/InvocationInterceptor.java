@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,6 +12,7 @@ package org.junit.jupiter.api.extension;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -49,7 +50,7 @@ import org.junit.jupiter.api.TestTemplate;
  * @see ReflectiveInvocationContext
  * @see ExtensionContext
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.10")
 public interface InvocationInterceptor extends Extension {
 
 	/**
@@ -222,7 +223,7 @@ public interface InvocationInterceptor extends Extension {
 	 * @param <T> the result type
 	 * @since 5.5
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	interface Invocation<T> {
 
 		/**
@@ -239,7 +240,7 @@ public interface InvocationInterceptor extends Extension {
 		 * <p>This allows to bypass the check that {@link #proceed()} must be
 		 * called at least once. The default implementation does nothing.
 		 */
-		@API(status = EXPERIMENTAL, since = "5.6")
+		@API(status = STABLE, since = "5.10")
 		default void skip() {
 			// do nothing
 		}

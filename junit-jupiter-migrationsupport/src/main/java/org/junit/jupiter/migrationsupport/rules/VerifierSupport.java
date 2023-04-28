@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -41,6 +41,9 @@ import org.junit.rules.Verifier;
 public class VerifierSupport implements AfterEachCallback {
 
 	private final TestRuleSupport support = new TestRuleSupport(VerifierAdapter::new, Verifier.class);
+
+	public VerifierSupport() {
+	}
 
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -49,5 +50,25 @@ public interface RepetitionInfo {
 	 * @see RepeatedTest#value
 	 */
 	int getTotalRepetitions();
+
+	/**
+	 * Get the current number of repetitions of the corresponding
+	 * {@link RepeatedTest @RepeatedTest} method that have ended in a failure.
+	 *
+	 * @since 5.10
+	 * @see #getFailureThreshold()
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	int getFailureCount();
+
+	/**
+	 * Get the configured failure threshold of the corresponding
+	 * {@link RepeatedTest @RepeatedTest} method.
+	 *
+	 * @since 5.10
+	 * @see RepeatedTest#failureThreshold()
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	int getFailureThreshold();
 
 }

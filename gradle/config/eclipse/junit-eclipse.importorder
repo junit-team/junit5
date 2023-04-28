@@ -1,0 +1,12 @@
+#Organize Import Order
+0=java
+1=javax
+2=jdk
+3=aQute
+4=junit
+5=de
+6=com
+7=example
+8=extensions
+9=io
+10=org

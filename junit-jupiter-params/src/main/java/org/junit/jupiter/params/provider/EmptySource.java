@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -27,13 +27,18 @@ import org.apiguardian.api.API;
  * <h2>Supported Parameter Types</h2>
  *
  * <p>This argument source will only provide an empty argument for the following
- * method parameter types. Subtypes of the supported types are not supported.
+ * method parameter types.
  *
  * <ul>
  * <li>{@link java.lang.String}</li>
+ * <li>{@link java.util.Collection} and concrete subtypes with a public no-arg constructor</li>
  * <li>{@link java.util.List}</li>
  * <li>{@link java.util.Set}</li>
- * <li>{@link java.util.Map}</li>
+ * <li>{@link java.util.SortedSet}</li>
+ * <li>{@link java.util.NavigableSet}</li>
+ * <li>{@link java.util.Map} and concrete subtypes with a public no-arg constructor</li>
+ * <li>{@link java.util.SortedMap}</li>
+ * <li>{@link java.util.NavigableMap}</li>
  * <li>primitive arrays &mdash; for example {@code int[]}, {@code char[][]}, etc.</li>
  * <li>object arrays &mdash; for example {@code String[]}, {@code Integer[][]}, etc.</li>
  * </ul>
@@ -49,5 +54,6 @@ import org.apiguardian.api.API;
 @Documented
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(EmptyArgumentsProvider.class)
+@SuppressWarnings("exports")
 public @interface EmptySource {
 }

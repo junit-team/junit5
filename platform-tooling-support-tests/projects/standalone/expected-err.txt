@@ -1,3 +1,7 @@
+.+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
+.+ Loaded LauncherInterceptor instances: ..
+.+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
+.+ Loaded LauncherSessionListener instances: ..
 .+ org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
 .+ Discovered TestEngines:
 - junit-jupiter .+
@@ -9,8 +13,6 @@
 .+ Loaded LauncherDiscoveryListener instances: ..
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
 .+ Loaded TestExecutionListener instances: .+
-.+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
-.+ Loaded LauncherSessionListener instances: ..
 .+ org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
 .+ Discovered TestEngines:
 - junit-jupiter .+

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -51,7 +51,8 @@ import org.apiguardian.api.API;
  * <li>Declaration of {@code @BeforeAll} and {@code @AfterAll} on interface
  * {@code default} methods.</li>
  * <li>Simplified declaration of non-static {@code @BeforeAll} and {@code @AfterAll}
- * methods in test classes implemented with the Kotlin programming language.</li>
+ * lifecycle methods as well as {@code @MethodSource} factory methods in test classes
+ * implemented with the Kotlin programming language.</li>
  * </ul>
  *
  * <p>{@code @TestInstance} may also be used as a meta-annotation in order to

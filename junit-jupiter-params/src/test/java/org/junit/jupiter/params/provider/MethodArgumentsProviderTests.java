@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,7 +13,7 @@ package org.junit.jupiter.params.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryWithDefaultExtensions;
-import static org.junit.jupiter.params.provider.MethodArgumentsProviderTests.DefaultFactoryMethodNameTestCase.TEST_METHOD;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -31,12 +32,13 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -47,26 +49,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class MethodArgumentsProviderTests {
 
 	private MutableExtensionRegistry extensionRegistry;
-
-	@Test
-	void throwsExceptionWhenFactoryMethodDoesNotExist() {
-		var exception = assertThrows(JUnitException.class, () -> provideArguments("unknownMethod").toArray());
-
-		assertThat(exception.getMessage()).isEqualTo(
-			"Could not find factory method [unknownMethod] in class [" + TestCase.class.getName() + "]");
-	}
-
-	@Test
-	void throwsExceptionForIllegalReturnType() {
-		var exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments("providerWithIllegalReturnType").toArray());
-
-		assertThat(exception.getMessage())//
-				.containsSubsequence("Could not find valid factory method [providerWithIllegalReturnType] in class [",
-					TestCase.class.getName() + "]", //
-					"but found the following invalid candidates: ", //
-					"[static java.lang.Object org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase.providerWithIllegalReturnType()]");
-	}
 
 	@Test
 	void providesArgumentsUsingStream() {
@@ -193,10 +175,13 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionWhenNonStaticFactoryMethodIsReferencedAndStaticIsRequired() {
-		var exception = assertThrows(JUnitException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(NonStaticTestCase.class, null, false, "nonStaticStringStreamProvider").toArray());
 
-		assertThat(exception).hasMessageContaining("Cannot invoke non-static method");
+		assertThat(exception).hasMessageContainingAll("Method '",
+			"' must be static: local factory methods must be static ",
+			"unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS); ",
+			"external factory methods must always be static.");
 	}
 
 	@Test
@@ -207,9 +192,11 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void providesArgumentsUsingDefaultFactoryMethodName() throws Exception {
-		Class<?> testClass = DefaultFactoryMethodNameTestCase.class;
-		var testMethod = testClass.getDeclaredMethod(TEST_METHOD, String.class);
+	void providesArgumentsUsingDefaultFactoryMethodName() {
+		var testClass = DefaultFactoryMethodNameTestCase.class;
+		var methodName = "testDefaultFactoryMethodName";
+		var testMethod = findMethod(testClass, methodName, String.class).get();
+
 		var arguments = provideArguments(testClass, testMethod, false, "");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
@@ -242,35 +229,6 @@ class MethodArgumentsProviderTests {
 			ExternalFactoryMethods.class.getName() + "#stringsProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("string1"), array("string2"));
-	}
-
-	@Test
-	void throwsExceptionWhenClassForExternalFactoryMethodCannotBeLoaded() {
-		var exception = assertThrows(JUnitException.class,
-			() -> provideArguments("com.example.NonExistentExternalFactoryMethods#stringsProvider").toArray());
-
-		assertThat(exception.getMessage()).isEqualTo(
-			"Could not load class [com.example.NonExistentExternalFactoryMethods]");
-	}
-
-	@Test
-	void throwsExceptionWhenExternalFactoryMethodCannotBeFound() {
-		var exception = assertThrows(JUnitException.class,
-			() -> provideArguments(ExternalFactoryMethods.class.getName() + "#nonExistentMethod").toArray());
-
-		assertThat(exception.getMessage()).isEqualTo("Could not find factory method [nonExistentMethod()] in class ["
-				+ ExternalFactoryMethods.class.getName() + "]");
-	}
-
-	@Test
-	void throwsExceptionWhenFullyQualifiedMethodNameIsInvalid() {
-		var exception = assertThrows(JUnitException.class,
-			() -> provideArguments(ExternalFactoryMethods.class.getName() + ".wrongSyntax").toArray());
-
-		assertThat(exception.getMessage()).isEqualTo(
-			"[" + ExternalFactoryMethods.class.getName() + ".wrongSyntax] is not a valid fully qualified method name: "
-					+ "it must start with a fully qualified class name followed by a '#' and then the method name, "
-					+ "optionally followed by a parameter list enclosed in parentheses.");
 	}
 
 	@Nested
@@ -363,31 +321,41 @@ class MethodArgumentsProviderTests {
 	@Nested
 	class ParameterResolution {
 
+		private final Method testMethod = findMethod(TestCase.class, "test").get();
+
 		@BeforeEach
 		void registerParameterResolver() {
-			JupiterConfiguration configuration = mock(JupiterConfiguration.class);
-			extensionRegistry = createRegistryWithDefaultExtensions(configuration);
+			extensionRegistry = createRegistryWithDefaultExtensions(mock());
 			extensionRegistry.registerExtension(StringResolver.class);
+			extensionRegistry.registerExtension(StringArrayResolver.class);
+			extensionRegistry.registerExtension(IntArrayResolver.class);
 		}
 
 		@Test
-		void providesArgumentsUsingDefaultFactoryMethodWithParameter() throws Exception {
-			Class<?> testClass = TestCase.class;
-			var testMethod = testClass.getDeclaredMethod("overloadedStringStreamProvider", Object.class);
-			var arguments = provideArguments(testClass, testMethod, false, "");
+		void providesArgumentsInferringDefaultFactoryMethodThatAcceptsArgument() {
+			Method testMethod = findMethod(TestCase.class, "overloadedStringStreamProvider", Object.class).get();
+			String factoryMethodName = ""; // signals to use default
+			var arguments = provideArguments(testMethod, factoryMethodName);
 
 			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
 		}
 
 		@Test
-		void providesArgumentsUsingFactoryMethodWithParameter() {
+		void providesArgumentsUsingSimpleNameForFactoryMethodThatAcceptsArgumentWithoutSpecifyingParameterList() {
 			var arguments = provideArguments("stringStreamProviderWithParameter");
 
 			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
 		}
 
 		@Test
-		void providesArgumentsUsingFullyQualifiedNameWithParameter() {
+		void providesArgumentsUsingFullyQualifiedNameForFactoryMethodThatAcceptsArgumentWithoutSpecifyingParameterList() {
+			var arguments = provideArguments(TestCase.class.getName() + "#stringStreamProviderWithParameter");
+
+			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
+		}
+
+		@Test
+		void providesArgumentsUsingFullyQualifiedNameSpecifyingParameter() {
 			var arguments = provideArguments(
 				TestCase.class.getName() + "#stringStreamProviderWithParameter(java.lang.String)");
 
@@ -395,19 +363,29 @@ class MethodArgumentsProviderTests {
 		}
 
 		@Test
-		void throwsExceptionWhenSeveralFactoryMethodsWithSameNameAreAvailable() {
-			var exception = assertThrows(PreconditionViolationException.class,
-				() -> provideArguments("stringStreamProviderWithOrWithoutParameter").toArray());
+		void providesArgumentsUsingLocalQualifiedNameSpecifyingParameter() {
+			var arguments = provideArguments(testMethod, "stringStreamProviderWithParameter(java.lang.String)");
 
-			assertThat(exception.getMessage())//
-					.startsWith("2 factory methods named [stringStreamProviderWithOrWithoutParameter] were found in "
-							+ "class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]: ")//
-					.contains("stringStreamProviderWithOrWithoutParameter()",
-						"stringStreamProviderWithOrWithoutParameter(java.lang.String)");
+			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
 		}
 
 		@Test
-		void providesArgumentsUsingFactoryMethodSelectedViaFullyQualifiedNameWithParameter() {
+		void providesArgumentsUsingFullyQualifiedNameForOverloadedFactoryMethodSpecifyingEmptyParameterList() {
+			var arguments = provideArguments(
+				TestCase.class.getName() + "#stringStreamProviderWithOrWithoutParameter()");
+
+			assertThat(arguments).containsExactly(array("foo"), array("bar"));
+		}
+
+		@Test
+		void providesArgumentsUsingLocalQualifiedNameForOverloadedFactoryMethodSpecifyingEmptyParameterList() {
+			var arguments = provideArguments(this.testMethod, "stringStreamProviderWithOrWithoutParameter()");
+
+			assertThat(arguments).containsExactly(array("foo"), array("bar"));
+		}
+
+		@Test
+		void providesArgumentsUsingFullyQualifiedNameForOverloadedFactoryMethodSpecifyingParameter() {
 			var arguments = provideArguments(
 				TestCase.class.getName() + "#stringStreamProviderWithOrWithoutParameter(java.lang.String)");
 
@@ -415,11 +393,278 @@ class MethodArgumentsProviderTests {
 		}
 
 		@Test
-		void providesArgumentsUsingFactoryMethodSelectedViaFullyQualifiedNameWithoutParameter() {
-			var arguments = provideArguments(
-				TestCase.class.getName() + "#stringStreamProviderWithOrWithoutParameter()");
+		void providesArgumentsUsingLocalQualifiedNameForOverloadedFactoryMethodSpecifyingParameter() {
+			var arguments = provideArguments(testMethod,
+				"stringStreamProviderWithOrWithoutParameter(java.lang.String)");
+
+			assertThat(arguments).containsExactly(array("foo!"), array("bar!"));
+		}
+
+		@Test
+		void failsToProvideArgumentsUsingFullyQualifiedNameSpecifyingInvalidParameterType() {
+			String method = TestCase.class.getName() + "#stringStreamProviderWithParameter(example.FooBar)";
+			var exception = assertThrows(JUnitException.class, () -> provideArguments(method).toArray());
+
+			assertThat(exception).hasMessage("""
+					Failed to load parameter type [example.FooBar] for method [stringStreamProviderWithParameter] \
+					in class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase].""");
+		}
+
+		@Test
+		void failsToProvideArgumentsUsingLocalQualifiedNameSpecifyingInvalidParameterType() {
+			var method = "stringStreamProviderWithParameter(example.FooBar)";
+			var exception = assertThrows(JUnitException.class,
+				() -> provideArguments(this.testMethod, method).toArray());
+
+			assertThat(exception).hasMessage("""
+					Failed to load parameter type [example.FooBar] for method [stringStreamProviderWithParameter] \
+					in class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase].""");
+		}
+
+		@Test
+		void failsToProvideArgumentsUsingFullyQualifiedNameSpecifyingIncorrectParameterType() {
+			String method = TestCase.class.getName() + "#stringStreamProviderWithParameter(java.lang.Integer)";
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(method).toArray());
+
+			assertThat(exception).hasMessage("""
+					Could not find factory method [stringStreamProviderWithParameter(java.lang.Integer)] in \
+					class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]""");
+		}
+
+		@Test
+		void failsToProvideArgumentsUsingLocalQualifiedNameSpecifyingIncorrectParameterType() {
+			var method = "stringStreamProviderWithParameter(java.lang.Integer)";
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(this.testMethod, method).toArray());
+
+			assertThat(exception).hasMessage("""
+					Could not find factory method [stringStreamProviderWithParameter(java.lang.Integer)] in \
+					class [org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase]""");
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = {
+				"org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase#stringStreamProviderWithArrayParameter(java.lang.String[])",
+				"org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase#stringStreamProviderWithArrayParameter([Ljava.lang.String;)", })
+		void providesArgumentsUsingFullyQualifiedNameSpecifyingObjectArrayParameter(String method) {
+			var arguments = provideArguments(method);
+
+			assertThat(arguments).containsExactly(array("foo :)"), array("bar :)"));
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { //
+				"stringStreamProviderWithArrayParameter(java.lang.String[])",
+				"stringStreamProviderWithArrayParameter([Ljava.lang.String;)" })
+		void providesArgumentsUsingLocalQualifiedNameSpecifyingObjectArrayParameter(String method) {
+			var arguments = provideArguments(this.testMethod, method);
+
+			assertThat(arguments).containsExactly(array("foo :)"), array("bar :)"));
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = {
+				"org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase#stringStreamProviderWithArrayParameter(int[])",
+				"org.junit.jupiter.params.provider.MethodArgumentsProviderTests$TestCase#stringStreamProviderWithArrayParameter([I)", })
+		void providesArgumentsUsingFullyQualifiedNameSpecifyingPrimitiveArrayParameter(String method) {
+			var arguments = provideArguments(method);
+
+			assertThat(arguments).containsExactly(array("foo 42"), array("bar 42"));
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { //
+				"stringStreamProviderWithArrayParameter(int[])", //
+				"stringStreamProviderWithArrayParameter([I)" })
+		void providesArgumentsUsingLocalQualifiedNameSpecifyingPrimitiveArrayParameter(String method) {
+			var arguments = provideArguments(this.testMethod, method);
+
+			assertThat(arguments).containsExactly(array("foo 42"), array("bar 42"));
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "java.lang.String,java.lang.String", "java.lang.String, java.lang.String",
+				"java.lang.String,    java.lang.String" })
+		void providesArgumentsUsingFullyQualifiedNameSpecifyingMultipleParameters(String params) {
+			var method = TestCase.class.getName() + "#stringStreamProviderWithOrWithoutParameter(" + params + ")";
+			var arguments = provideArguments(method);
+
+			assertThat(arguments).containsExactly(array("foo!!"), array("bar!!"));
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "java.lang.String,java.lang.String", "java.lang.String, java.lang.String",
+				"java.lang.String,    java.lang.String" })
+		void providesArgumentsUsingLocalQualifiedNameSpecifyingMultipleParameters(String params) {
+			var arguments = provideArguments(this.testMethod,
+				"stringStreamProviderWithOrWithoutParameter(" + params + ")");
+
+			assertThat(arguments).containsExactly(array("foo!!"), array("bar!!"));
+		}
+
+		@Test
+		void providesArgumentsUsingFullyQualifiedNameForOverloadedFactoryMethodWhenParameterListIsNotSpecified() {
+			var arguments = provideArguments(TestCase.class.getName() + "#stringStreamProviderWithOrWithoutParameter");
 
 			assertThat(arguments).containsExactly(array("foo"), array("bar"));
+		}
+
+		@Test
+		void providesArgumentsUsingLocalQualifiedNameForOverloadedFactoryMethodWhenParameterListIsNotSpecified() {
+			var arguments = provideArguments("stringStreamProviderWithOrWithoutParameter").toArray();
+
+			assertThat(arguments).containsExactly(array("foo"), array("bar"));
+		}
+
+	}
+
+	@Nested
+	class ErrorCases {
+
+		@Test
+		void throwsExceptionWhenFullyQualifiedMethodNameSyntaxIsInvalid() {
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments("org.example.wrongSyntax").toArray());
+
+			assertThat(exception.getMessage()).isEqualTo(
+				"[org.example.wrongSyntax] is not a valid fully qualified method name: "
+						+ "it must start with a fully qualified class name followed by a '#' and then the method name, "
+						+ "optionally followed by a parameter list enclosed in parentheses.");
+		}
+
+		@Test
+		void throwsExceptionWhenClassForExternalFactoryMethodCannotBeLoaded() {
+			var exception = assertThrows(JUnitException.class,
+				() -> provideArguments("com.example.NonExistentClass#stringsProvider").toArray());
+
+			assertThat(exception.getMessage()).isEqualTo("Could not load class [com.example.NonExistentClass]");
+		}
+
+		@Test
+		void throwsExceptionWhenExternalFactoryMethodDoesNotExist() {
+			String factoryClass = ExternalFactoryMethods.class.getName();
+
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(factoryClass + "#nonExistentMethod").toArray());
+
+			assertThat(exception.getMessage()).isEqualTo(
+				"Could not find factory method [nonExistentMethod] in class [%s]", factoryClass);
+		}
+
+		@Test
+		void throwsExceptionWhenLocalFactoryMethodDoesNotExist() {
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments("nonExistentMethod").toArray());
+
+			assertThat(exception.getMessage()).isEqualTo(
+				"Could not find factory method [nonExistentMethod] in class [%s]", TestCase.class.getName());
+		}
+
+		@Test
+		void throwsExceptionWhenExternalFactoryMethodAcceptingSingleArgumentDoesNotExist() {
+			String factoryClass = ExternalFactoryMethods.class.getName();
+
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(factoryClass + "#nonExistentMethod(int)").toArray());
+
+			assertThat(exception.getMessage()).isEqualTo(
+				"Could not find factory method [nonExistentMethod(int)] in class [%s]", factoryClass);
+		}
+
+		@Test
+		void throwsExceptionWhenLocalFactoryMethodAcceptingSingleArgumentDoesNotExist() {
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments("nonExistentMethod(int)").toArray());
+
+			assertThat(exception.getMessage()).isEqualTo(
+				"Could not find factory method [nonExistentMethod(int)] in class [%s]", TestCase.class.getName());
+		}
+
+		@Test
+		void throwsExceptionWhenExternalFactoryMethodAcceptingMultipleArgumentsDoesNotExist() {
+			String factoryClass = ExternalFactoryMethods.class.getName();
+
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(factoryClass + "#nonExistentMethod(int, java.lang.String)").toArray());
+
+			assertThat(exception.getMessage()).isEqualTo(
+				"Could not find factory method [nonExistentMethod(int, java.lang.String)] in class [%s]", factoryClass);
+		}
+
+		@Test
+		void throwsExceptionWhenLocalFactoryMethodAcceptingMultipleArgumentsDoesNotExist() {
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments("nonExistentMethod(java.lang.String,int)").toArray());
+
+			assertThat(exception.getMessage()).isEqualTo(
+				"Could not find factory method [nonExistentMethod(java.lang.String,int)] in class [%s]",
+				TestCase.class.getName());
+		}
+
+		@Test
+		void throwsExceptionWhenExternalFactoryMethodHasInvalidReturnType() {
+			String testClass = TestCase.class.getName();
+			String factoryClass = ExternalFactoryMethods.class.getName();
+			String factoryMethod = factoryClass + "#factoryWithInvalidReturnType";
+
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(TestCase.class, null, false, factoryMethod).toArray());
+
+			assertThat(exception.getMessage())//
+					.containsSubsequence("Could not find valid factory method [" + factoryMethod + "] for test class [",
+						testClass + "]", //
+						"but found the following invalid candidate: ",
+						"static java.lang.Object " + factoryClass + ".factoryWithInvalidReturnType()");
+		}
+
+		@Test
+		void throwsExceptionWhenLocalFactoryMethodHasInvalidReturnType() {
+			String testClass = TestCase.class.getName();
+			String factoryClass = testClass;
+			String factoryMethod = "factoryWithInvalidReturnType";
+
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(factoryMethod).toArray());
+
+			assertThat(exception.getMessage())//
+					.containsSubsequence("Could not find valid factory method [" + factoryMethod + "] for test class [",
+						factoryClass + "]", //
+						"but found the following invalid candidate: ", //
+						"static java.lang.Object " + factoryClass + ".factoryWithInvalidReturnType()");
+		}
+
+		@Test
+		void throwsExceptionWhenMultipleDefaultFactoryMethodCandidatesExist() {
+			var testClass = MultipleDefaultFactoriesTestCase.class;
+			var methodName = "test";
+			var testMethod = findMethod(testClass, methodName, String.class).get();
+
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(testClass, testMethod, false, "").toArray());
+
+			assertThat(exception.getMessage()).contains(//
+				"2 factory methods named [test] were found in class [", testClass.getName() + "]: ", //
+				"$MultipleDefaultFactoriesTestCase.test()", //
+				"$MultipleDefaultFactoriesTestCase.test(int)"//
+			);
+		}
+
+		@Test
+		void throwsExceptionWhenMultipleInvalidDefaultFactoryMethodCandidatesExist() {
+			var testClass = MultipleInvalidDefaultFactoriesTestCase.class;
+			var methodName = "test";
+			var testMethod = findMethod(testClass, methodName, String.class).get();
+
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(testClass, testMethod, false, "").toArray());
+
+			assertThat(exception.getMessage()).contains(//
+				"Could not find valid factory method [test] in class [", testClass.getName() + "]", //
+				"but found the following invalid candidates: ", //
+				"$MultipleInvalidDefaultFactoriesTestCase.test()", //
+				"$MultipleInvalidDefaultFactoriesTestCase.test(int)"//
+			);
 		}
 
 	}
@@ -430,17 +675,26 @@ class MethodArgumentsProviderTests {
 		return objects;
 	}
 
-	private Stream<Object[]> provideArguments(String... methodNames) {
-		return provideArguments(TestCase.class, null, false, methodNames);
+	private Stream<Object[]> provideArguments(String... factoryMethodNames) {
+		return provideArguments(TestCase.class, null, false, factoryMethodNames);
+	}
+
+	private Stream<Object[]> provideArguments(Method testMethod, String factoryMethodName) {
+		return provideArguments(TestCase.class, testMethod, false, factoryMethodName);
 	}
 
 	private Stream<Object[]> provideArguments(Class<?> testClass, Method testMethod, boolean allowNonStaticMethod,
-			String... methodNames) {
+			String... factoryMethodNames) {
 
 		if (testMethod == null) {
 			try {
+				class DummyClass {
+					@SuppressWarnings("unused")
+					public void dummyMethod() {
+					};
+				}
 				// ensure we have a non-null method, even if it's not a real test method.
-				testMethod = getClass().getMethod("toString");
+				testMethod = DummyClass.class.getMethod("dummyMethod");
 			}
 			catch (Exception ex) {
 				throw new RuntimeException(ex);
@@ -449,7 +703,7 @@ class MethodArgumentsProviderTests {
 
 		var methodSource = mock(MethodSource.class);
 
-		when(methodSource.value()).thenReturn(methodNames);
+		when(methodSource.value()).thenReturn(factoryMethodNames);
 
 		var extensionContext = mock(ExtensionContext.class);
 		when(extensionContext.getTestClass()).thenReturn(Optional.of(testClass));
@@ -463,6 +717,9 @@ class MethodArgumentsProviderTests {
 		var testInstance = allowNonStaticMethod ? ReflectionUtils.newInstance(testClass) : null;
 		when(extensionContext.getTestInstance()).thenReturn(Optional.ofNullable(testInstance));
 
+		var lifeCycle = allowNonStaticMethod ? Lifecycle.PER_CLASS : Lifecycle.PER_METHOD;
+		when(extensionContext.getTestInstanceLifecycle()).thenReturn(Optional.of(lifeCycle));
+
 		var provider = new MethodArgumentsProvider();
 		provider.accept(methodSource);
 		return provider.provideArguments(extensionContext).map(Arguments::get);
@@ -472,21 +729,58 @@ class MethodArgumentsProviderTests {
 
 	static class DefaultFactoryMethodNameTestCase {
 
-		static final String TEST_METHOD = "testDefaultFactoryMethodName";
+		// Test
+		void testDefaultFactoryMethodName(String param) {
+		}
 
+		// Factory
 		static Stream<String> testDefaultFactoryMethodName() {
 			return Stream.of("foo", "bar");
 		}
+	}
 
-		void testDefaultFactoryMethodName(String param) {
+	static class MultipleDefaultFactoriesTestCase {
+
+		// Test
+		void test(String param) {
+		}
+
+		// Factory
+		static Stream<String> test() {
+			return Stream.of();
+		}
+
+		// Another Factory
+		static Stream<Integer> test(int num) {
+			return Stream.of();
+		}
+	}
+
+	static class MultipleInvalidDefaultFactoriesTestCase {
+
+		// Test
+		void test(String param) {
+		}
+
+		// NOT a Factory
+		static String test() {
+			return null;
+		}
+
+		// Also NOT a Factory
+		static Object test(int num) {
+			return null;
 		}
 	}
 
 	static class TestCase {
 
+		void test() {
+		}
+
 		// --- Invalid ---------------------------------------------------------
 
-		static Object providerWithIllegalReturnType() {
+		static Object factoryWithInvalidReturnType() {
 			return -1;
 		}
 
@@ -500,12 +794,30 @@ class MethodArgumentsProviderTests {
 			return Stream.of("foo" + parameter, "bar" + parameter);
 		}
 
+		static Stream<String> stringStreamProviderWithArrayParameter(String[] parameter) {
+			String suffix = Arrays.stream(parameter).collect(Collectors.joining());
+			return Stream.of("foo " + suffix, "bar " + suffix);
+		}
+
+		static Stream<String> stringStreamProviderWithArrayParameter(int[] parameter) {
+			return stringStreamProviderWithArrayParameter(
+				Arrays.stream(parameter).mapToObj(String::valueOf).toArray(String[]::new));
+		}
+
 		static Stream<String> stringStreamProviderWithOrWithoutParameter() {
 			return stringStreamProvider();
 		}
 
 		static Stream<String> stringStreamProviderWithOrWithoutParameter(String parameter) {
 			return stringStreamProviderWithParameter(parameter);
+		}
+
+		static Stream<String> stringStreamProviderWithOrWithoutParameter(String parameter1, String parameter2) {
+			return stringStreamProviderWithParameter(parameter1 + parameter2);
+		}
+
+		// Overloaded method, but not a valid return type for a factory method
+		static void stringStreamProviderWithOrWithoutParameter(String parameter1, int parameter2) {
 		}
 
 		// @ParameterizedTest
@@ -635,6 +947,10 @@ class MethodArgumentsProviderTests {
 
 	static class ExternalFactoryMethods {
 
+		static Object factoryWithInvalidReturnType() {
+			return -1;
+		}
+
 		static Stream<String> stringsProvider() {
 			return Stream.of("string1", "string2");
 		}
@@ -657,6 +973,32 @@ class MethodArgumentsProviderTests {
 		@Override
 		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return "!";
+		}
+	}
+
+	static class StringArrayResolver implements ParameterResolver {
+
+		@Override
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			return parameterContext.getParameter().getType() == String[].class;
+		}
+
+		@Override
+		public String[] resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			return new String[] { ":", ")" };
+		}
+	}
+
+	static class IntArrayResolver implements ParameterResolver {
+
+		@Override
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			return parameterContext.getParameter().getType() == int[].class;
+		}
+
+		@Override
+		public int[] resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			return new int[] { 4, 2 };
 		}
 	}
 

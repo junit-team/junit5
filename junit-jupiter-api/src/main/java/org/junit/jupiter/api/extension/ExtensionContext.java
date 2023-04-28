@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -313,7 +313,7 @@ public interface ExtensionContext {
 	 * @see System#getProperty(String)
 	 * @see org.junit.platform.engine.ConfigurationParameters
 	 */
-	@API(status = EXPERIMENTAL, since = "5.7")
+	@API(status = STABLE, since = "5.10")
 	<T> Optional<T> getConfigurationParameter(String key, Function<String, T> transformer);
 
 	/**
@@ -699,7 +699,7 @@ public interface ExtensionContext {
 		 * @return new namespace; never {@code null}
 		 * @since 5.8
 		 */
-		@API(status = EXPERIMENTAL, since = "5.8")
+		@API(status = STABLE, since = "5.10")
 		public Namespace append(Object... parts) {
 			Preconditions.notEmpty(parts, "parts array must not be null or empty");
 			Preconditions.containsNoNullElements(parts, "individual parts must not be null");

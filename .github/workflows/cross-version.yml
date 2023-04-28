@@ -4,22 +4,23 @@ on:
   push:
     branches:
       - main
-      - 'releases/*'
+      - 'releases/**'
   pull_request:
     branches:
       - '*'
 
 env:
-  ORG_GRADLE_PROJECT_enableTestDistribution: true
-  ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
-  ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
+  ENTERPRISE_TESTDISTRIBUTION_ENABLED: true
+  BUILDCACHE_USERNAME: ${{ secrets.BUILD_CACHE_USERNAME }}
+  BUILDCACHE_PASSWORD: ${{ secrets.BUILD_CACHE_PASSWORD }}
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:
   openjdk:
     strategy:
+      fail-fast: false
       matrix:
-        jdk: [18, 19, 20]
+        jdk: [19, 20, 21]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     steps:
@@ -46,7 +47,7 @@ jobs:
             -Dscan.tag.JDK_${{ matrix.jdk }}
             build
       - name: Upload Test Distribution trace files
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "Test Distribution trace files (OpenJDK ${{ matrix.jdk }})"
           path: '**/build/test-results/*/trace.json'

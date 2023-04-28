@@ -6,7 +6,7 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.9.1](https://github.com/junit-team/junit5/releases/tag/r5.9.1) (September 20, 2022)
+- General Availability (GA): [JUnit 5.9.3](https://github.com/junit-team/junit5/releases/tag/r5.9.3) (April 26, 2023)
 - Preview (Milestone/Release Candidate): n/a
 
 ## Documentation
@@ -43,7 +43,7 @@ builds of the next OpenJDK.
 Code coverage using [JaCoCo] for the latest build is available on [Codecov].
 
 A code coverage report can also be generated locally via the [Gradle Wrapper] by
-executing `gradlew -PenableJaCoCo clean jacocoRootReport`. The results will be available
+executing `./gradlew -Ptesting.enableJaCoCo clean jacocoRootReport`. The results will be available
 in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
 ## Gradle Enterprise
@@ -65,27 +65,16 @@ task outputs from previous CI builds.
 You need [JDK 17] to build JUnit 5. [Gradle toolchains] are used to detect and
 potentially download additional JDKs for compilation and test execution.
 
-Note: If you're working on a machine with an Apple Silicon processor, you'll need to
-download and install a JDK 8 distribution manually (or via [SDKMAN!] or [asdf]) --
-for example, one from [Zulu] or [Liberica].
+All modules can be _built_ and _tested_ with the [Gradle Wrapper] using the following command.
 
-All modules can be _built_ with the [Gradle Wrapper] using the following command.
-
-`gradlew clean assemble`
-
-All modules can be _tested_ with the [Gradle Wrapper] using the following command.
-
-`gradlew clean test`
-
-Since Gradle has excellent incremental build support, you can usually omit executing the
-`clean` task.
+`./gradlew build`
 
 ## Installing in Local Maven Repository
 
 All modules can be _installed_ with the [Gradle Wrapper] in a local Maven repository for
 consumption in other projects via the following command.
 
-`gradlew clean publishToMavenLocal`
+`./gradlew publishToMavenLocal`
 
 ## Dependency Metadata
 
@@ -96,7 +85,6 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and
 <https://oss.sonatype.org/content/repositories/snapshots/org/junit/> for snapshots.
 
 
-[asdf]: https://asdf-vm.com/
 [Codecov]: https://codecov.io/gh/junit-team/junit5
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md
 [Dependency Metadata]: https://junit.org/junit5/docs/current/user-guide/#dependency-metadata
@@ -105,11 +93,8 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK 17]: https://adoptium.net/archive.html?variant=openjdk17&jvmVariant=hotspot
-[Liberica]: https://bell-sw.com/pages/downloads/
+[JDK 17]: https://foojay.io/almanac/java-17/
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [Samples]: https://github.com/junit-team/junit5-samples
-[SDKMAN!]: https://sdkman.io/jdks
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [User Guide]: https://junit.org/junit5/docs/current/user-guide/
-[Zulu]: https://www.azul.com/downloads/?version=java-8-lts&os=macos&architecture=arm-64-bit&package=jdk#download-openjdk

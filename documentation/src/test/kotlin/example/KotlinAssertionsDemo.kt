@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,6 +15,7 @@ import example.domain.Person
 import example.util.Calculator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -76,6 +77,9 @@ class KotlinAssertionsDemo {
         )
     }
 
+    // end::user_guide[]
+    @Tag("timeout")
+    // tag::user_guide[]
     @Test
     fun `timeout not exceeded testing`() {
         val fibonacciCalculator = FibonacciCalculator()
@@ -86,6 +90,7 @@ class KotlinAssertionsDemo {
     }
 
     // end::user_guide[]
+    @Tag("timeout")
     @extensions.ExpectToFail
     // tag::user_guide[]
     @Test

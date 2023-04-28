@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.parallel;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -34,7 +34,7 @@ import org.apiguardian.api.API;
  * @see ResourceLock
  * @since 5.3
  */
-@API(status = EXPERIMENTAL, since = "5.3")
+@API(status = STABLE, since = "5.10")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Inherited

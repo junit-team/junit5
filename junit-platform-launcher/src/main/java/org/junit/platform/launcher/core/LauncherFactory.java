@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,9 +10,10 @@
 
 package org.junit.platform.launcher.core;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME;
+import static org.junit.platform.launcher.LauncherConstants.ENABLE_LAUNCHER_INTERCEPTORS;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -29,6 +30,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.LauncherInterceptor;
 import org.junit.platform.launcher.LauncherSession;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -63,8 +65,6 @@ import org.junit.platform.launcher.TestExecutionListener;
 @API(status = STABLE, since = "1.0")
 public class LauncherFactory {
 
-	private static final ServiceLoaderRegistry SERVICE_LOADER_REGISTRY = new ServiceLoaderRegistry();
-
 	private LauncherFactory() {
 		/* no-op */
 	}
@@ -77,7 +77,7 @@ public class LauncherFactory {
 	 * @since 1.8
 	 * @see #openSession(LauncherConfig)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	public static LauncherSession openSession() throws PreconditionViolationException {
 		return openSession(LauncherConfig.DEFAULT);
 	}
@@ -93,9 +93,12 @@ public class LauncherFactory {
 	 * @since 1.8
 	 * @see #openSession()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	public static LauncherSession openSession(LauncherConfig config) throws PreconditionViolationException {
-		return new DefaultLauncherSession(createDefaultLauncher(config), createLauncherSessionListener(config));
+		Preconditions.notNull(config, "LauncherConfig must not be null");
+		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
+		return new DefaultLauncherSession(collectLauncherInterceptors(configurationParameters),
+			() -> createLauncherSessionListener(config), () -> createDefaultLauncher(config, configurationParameters));
 	}
 
 	/**
@@ -120,23 +123,35 @@ public class LauncherFactory {
 	 * @since 1.3
 	 * @see #create()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.3")
+	@API(status = STABLE, since = "1.10")
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
-		return new SessionPerRequestLauncher(createDefaultLauncher(config), createLauncherSessionListener(config));
+		Preconditions.notNull(config, "LauncherConfig must not be null");
+		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
+		return new SessionPerRequestLauncher(() -> createDefaultLauncher(config, configurationParameters),
+			() -> createLauncherSessionListener(config), () -> collectLauncherInterceptors(configurationParameters));
 	}
 
-	private static DefaultLauncher createDefaultLauncher(LauncherConfig config) {
-		Preconditions.notNull(config, "LauncherConfig must not be null");
-
+	private static DefaultLauncher createDefaultLauncher(LauncherConfig config,
+			LauncherConfigurationParameters configurationParameters) {
 		Set<TestEngine> engines = collectTestEngines(config);
 		List<PostDiscoveryFilter> filters = collectPostDiscoveryFilters(config);
 
 		DefaultLauncher launcher = new DefaultLauncher(engines, filters);
 
 		registerLauncherDiscoveryListeners(config, launcher);
-		registerTestExecutionListeners(config, launcher);
+		registerTestExecutionListeners(config, launcher, configurationParameters);
 
 		return launcher;
+	}
+
+	private static List<LauncherInterceptor> collectLauncherInterceptors(
+			LauncherConfigurationParameters configurationParameters) {
+		if (configurationParameters.getBoolean(ENABLE_LAUNCHER_INTERCEPTORS).orElse(false)) {
+			List<LauncherInterceptor> interceptors = new ArrayList<>();
+			ServiceLoaderRegistry.load(LauncherInterceptor.class).forEach(interceptors::add);
+			return interceptors;
+		}
+		return emptyList();
 	}
 
 	private static Set<TestEngine> collectTestEngines(LauncherConfig config) {
@@ -151,7 +166,7 @@ public class LauncherFactory {
 	private static LauncherSessionListener createLauncherSessionListener(LauncherConfig config) {
 		ListenerRegistry<LauncherSessionListener> listenerRegistry = ListenerRegistry.forLauncherSessionListeners();
 		if (config.isLauncherSessionListenerAutoRegistrationEnabled()) {
-			SERVICE_LOADER_REGISTRY.load(LauncherSessionListener.class).forEach(listenerRegistry::add);
+			ServiceLoaderRegistry.load(LauncherSessionListener.class).forEach(listenerRegistry::add);
 		}
 		config.getAdditionalLauncherSessionListeners().forEach(listenerRegistry::add);
 		return listenerRegistry.getCompositeListener();
@@ -160,7 +175,7 @@ public class LauncherFactory {
 	private static List<PostDiscoveryFilter> collectPostDiscoveryFilters(LauncherConfig config) {
 		List<PostDiscoveryFilter> filters = new ArrayList<>();
 		if (config.isPostDiscoveryFilterAutoRegistrationEnabled()) {
-			SERVICE_LOADER_REGISTRY.load(PostDiscoveryFilter.class).forEach(filters::add);
+			ServiceLoaderRegistry.load(PostDiscoveryFilter.class).forEach(filters::add);
 		}
 		filters.addAll(config.getAdditionalPostDiscoveryFilters());
 		return filters;
@@ -168,22 +183,24 @@ public class LauncherFactory {
 
 	private static void registerLauncherDiscoveryListeners(LauncherConfig config, Launcher launcher) {
 		if (config.isLauncherDiscoveryListenerAutoRegistrationEnabled()) {
-			SERVICE_LOADER_REGISTRY.load(LauncherDiscoveryListener.class).forEach(
+			ServiceLoaderRegistry.load(LauncherDiscoveryListener.class).forEach(
 				launcher::registerLauncherDiscoveryListeners);
 		}
 		config.getAdditionalLauncherDiscoveryListeners().forEach(launcher::registerLauncherDiscoveryListeners);
 	}
 
-	private static void registerTestExecutionListeners(LauncherConfig config, Launcher launcher) {
+	private static void registerTestExecutionListeners(LauncherConfig config, Launcher launcher,
+			LauncherConfigurationParameters configurationParameters) {
 		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
-			loadAndFilterTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
+			loadAndFilterTestExecutionListeners(configurationParameters).forEach(
+				launcher::registerTestExecutionListeners);
 		}
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 	}
 
-	private static Stream<TestExecutionListener> loadAndFilterTestExecutionListeners() {
-		Iterable<TestExecutionListener> listeners = SERVICE_LOADER_REGISTRY.load(TestExecutionListener.class);
-		ConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
+	private static Stream<TestExecutionListener> loadAndFilterTestExecutionListeners(
+			ConfigurationParameters configurationParameters) {
+		Iterable<TestExecutionListener> listeners = ServiceLoaderRegistry.load(TestExecutionListener.class);
 		String deactivatedListenersPattern = configurationParameters.get(
 			DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME).orElse(null);
 		// @formatter:off

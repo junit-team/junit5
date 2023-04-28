@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -22,7 +22,6 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.Theme;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -187,7 +186,7 @@ class ColorPaletteTests {
 
 		private void demoTestRun(TestExecutionListener listener) {
 			TestDescriptor testDescriptor = new TestDescriptorStub(UniqueId.forEngine("demo-engine"), "My Test");
-			TestPlan testPlan = TestPlan.from(List.of(testDescriptor), mock(ConfigurationParameters.class));
+			TestPlan testPlan = TestPlan.from(List.of(testDescriptor), mock());
 			listener.testPlanExecutionStarted(testPlan);
 			listener.executionStarted(TestIdentifier.from(testDescriptor));
 			listener.executionFinished(TestIdentifier.from(testDescriptor), TestExecutionResult.successful());

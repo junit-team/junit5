@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -51,6 +51,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -998,10 +999,26 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.10
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllClassesInClasspathRoot(URI, Predicate, Predicate)
+	 */
+	public static Stream<Class<?>> streamAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
+		return streamAllClassesInClasspathRoot(root, ClassFilter.of(classNameFilter, classFilter));
+	}
+
+	/**
 	 * @since 1.1
 	 */
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, ClassFilter classFilter) {
 		return Collections.unmodifiableList(classpathScanner.scanForClassesInClasspathRoot(root, classFilter));
+	}
+
+	/**
+	 * @since 1.10
+	 */
+	public static Stream<Class<?>> streamAllClassesInClasspathRoot(URI root, ClassFilter classFilter) {
+		return findAllClassesInClasspathRoot(root, classFilter).stream();
 	}
 
 	/**
@@ -1014,10 +1031,26 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * since 1.10
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllClassesInPackage(String, Predicate, Predicate)
+	 */
+	public static Stream<Class<?>> streamAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
+		return streamAllClassesInPackage(basePackageName, ClassFilter.of(classNameFilter, classFilter));
+	}
+
+	/**
 	 * @since 1.1
 	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, ClassFilter classFilter) {
 		return Collections.unmodifiableList(classpathScanner.scanForClassesInPackage(basePackageName, classFilter));
+	}
+
+	/**
+	 * @since 1.10
+	 */
+	public static Stream<Class<?>> streamAllClassesInPackage(String basePackageName, ClassFilter classFilter) {
+		return findAllClassesInPackage(basePackageName, classFilter).stream();
 	}
 
 	/**
@@ -1031,10 +1064,26 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.10
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllClassesInModule(String, Predicate, Predicate)
+	 */
+	public static Stream<Class<?>> streamAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
+			Predicate<String> classNameFilter) {
+		return streamAllClassesInModule(moduleName, ClassFilter.of(classNameFilter, classFilter));
+	}
+
+	/**
 	 * @since 1.1.1
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter classFilter) {
 		return Collections.unmodifiableList(ModuleUtils.findAllClassesInModule(moduleName, classFilter));
+	}
+
+	/**
+	 * @since 1.10
+	 */
+	public static Stream<Class<?>> streamAllClassesInModule(String moduleName, ClassFilter classFilter) {
+		return findAllClassesInModule(moduleName, classFilter).stream();
 	}
 
 	/**
@@ -1047,6 +1096,14 @@ public final class ReflectionUtils {
 		Set<Class<?>> candidates = new LinkedHashSet<>();
 		findNestedClasses(clazz, predicate, candidates);
 		return Collections.unmodifiableList(new ArrayList<>(candidates));
+	}
+
+	/**
+	 * since 1.10
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamNestedClasses(Class, Predicate)
+	 */
+	public static Stream<Class<?>> streamNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
+		return findNestedClasses(clazz, predicate).stream();
 	}
 
 	private static void findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate, Set<Class<?>> candidates) {
@@ -1181,17 +1238,21 @@ public final class ReflectionUtils {
 	 */
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
+		return streamFields(clazz, predicate, traversalMode).collect(toUnmodifiableList());
+	}
+
+	/**
+	 * @since 1.10
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
+	 */
+	public static Stream<Field> streamFields(Class<?> clazz, Predicate<Field> predicate,
+			HierarchyTraversalMode traversalMode) {
 
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
-		// @formatter:off
-		return findAllFieldsInHierarchy(clazz, traversalMode).stream()
-				.filter(predicate)
-				// unmodifiable since returned by public, non-internal method(s)
-				.collect(toUnmodifiableList());
-		// @formatter:on
+		return findAllFieldsInHierarchy(clazz, traversalMode).stream().filter(predicate);
 	}
 
 	private static List<Field> findAllFieldsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
@@ -1411,6 +1472,16 @@ public final class ReflectionUtils {
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
 			HierarchyTraversalMode traversalMode) {
 
+		return streamMethods(clazz, predicate, traversalMode).collect(toUnmodifiableList());
+	}
+
+	/**
+	 * @since 1.10
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
+	 */
+	public static Stream<Method> streamMethods(Class<?> clazz, Predicate<Method> predicate,
+			HierarchyTraversalMode traversalMode) {
+
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
@@ -1418,9 +1489,7 @@ public final class ReflectionUtils {
 		// @formatter:off
 		return findAllMethodsInHierarchy(clazz, traversalMode).stream()
 				.filter(predicate)
-				.distinct()
-				// unmodifiable since returned by public, non-internal method(s)
-				.collect(toUnmodifiableList());
+				.distinct();
 		// @formatter:on
 	}
 

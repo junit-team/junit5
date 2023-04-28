@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -35,38 +35,41 @@ class CompositeEngineExecutionListener implements EngineExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
-		notifyEach(engineExecutionListeners, listener -> listener.dynamicTestRegistered(testDescriptor),
+		notifyEach(engineExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.dynamicTestRegistered(testDescriptor),
 			() -> "dynamicTestRegistered(" + testDescriptor + ")");
 	}
 
 	@Override
 	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
-		notifyEach(engineExecutionListeners, listener -> listener.executionSkipped(testDescriptor, reason),
+		notifyEach(engineExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.executionSkipped(testDescriptor, reason),
 			() -> "executionSkipped(" + testDescriptor + ", " + reason + ")");
 	}
 
 	@Override
 	public void executionStarted(TestDescriptor testDescriptor) {
-		notifyEach(engineExecutionListeners, listener -> listener.executionStarted(testDescriptor),
-			() -> "executionStarted(" + testDescriptor + ")");
+		notifyEach(engineExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.executionStarted(testDescriptor), () -> "executionStarted(" + testDescriptor + ")");
 	}
 
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-		notifyEach(engineExecutionListeners,
+		notifyEach(engineExecutionListeners, IterationOrder.REVERSED,
 			listener -> listener.executionFinished(testDescriptor, testExecutionResult),
 			() -> "executionFinished(" + testDescriptor + ", " + testExecutionResult + ")");
 	}
 
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
-		notifyEach(engineExecutionListeners, listener -> listener.reportingEntryPublished(testDescriptor, entry),
+		notifyEach(engineExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.reportingEntryPublished(testDescriptor, entry),
 			() -> "reportingEntryPublished(" + testDescriptor + ", " + entry + ")");
 	}
 
-	private static <T extends EngineExecutionListener> void notifyEach(List<T> listeners, Consumer<T> consumer,
-			Supplier<String> description) {
-		listeners.forEach(listener -> {
+	private static <T extends EngineExecutionListener> void notifyEach(List<T> listeners, IterationOrder iterationOrder,
+			Consumer<T> consumer, Supplier<String> description) {
+		iterationOrder.forEach(listeners, listener -> {
 			try {
 				consumer.accept(listener);
 			}

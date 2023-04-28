@@ -1,7 +1,7 @@
 plugins {
-	`kotlin-library-conventions`
-	`shadow-conventions`
-	`testing-conventions`
+	id("junitbuild.kotlin-library-conventions")
+	id("junitbuild.shadow-conventions")
+	id("junitbuild.testing-conventions")
 }
 
 description = "JUnit Jupiter Params"
@@ -47,5 +47,11 @@ tasks {
 			include("LICENSE-univocity-parsers.md")
 			into("META-INF")
 		}
+	}
+	compileModule {
+		options.compilerArgs.addAll(listOf(
+			"--add-modules", "univocity.parsers",
+			"--add-reads", "${javaModuleName}=univocity.parsers"
+		))
 	}
 }

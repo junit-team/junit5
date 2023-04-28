@@ -19,7 +19,7 @@ module org.junit.platform.testkit {
 	requires transitive org.assertj.core;
 	requires org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
-	requires org.junit.platform.launcher;
+	requires transitive org.junit.platform.launcher;
 	requires transitive org.opentest4j;
 
 	// exports org.junit.platform.testkit; empty package

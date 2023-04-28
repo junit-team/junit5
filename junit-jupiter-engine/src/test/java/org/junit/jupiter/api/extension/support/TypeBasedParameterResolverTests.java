@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.annotation.ElementType;
@@ -32,7 +33,6 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.mockito.Mockito;
 
 /**
  * @since 5.6
@@ -86,13 +86,13 @@ class TypeBasedParameterResolverTests {
 	}
 
 	private static ParameterContext parameterContext(Parameter parameter) {
-		ParameterContext parameterContext = Mockito.mock(ParameterContext.class);
+		ParameterContext parameterContext = mock();
 		when(parameterContext.getParameter()).thenReturn(parameter);
 		return parameterContext;
 	}
 
 	private static ExtensionContext extensionContext() {
-		ExtensionContext extensionContext = Mockito.mock(ExtensionContext.class);
+		ExtensionContext extensionContext = mock();
 		when(extensionContext.getDisplayName()).thenReturn("Displaying");
 		return extensionContext;
 	}

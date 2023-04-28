@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.console.options.CommandLineOptions;
+import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -54,7 +54,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  */
 class DiscoveryRequestCreatorTests {
 
-	private final CommandLineOptions options = new CommandLineOptions();
+	private final TestDiscoveryOptions options = new TestDiscoveryOptions();
 
 	@Test
 	void convertsScanClasspathOptionWithoutExplicitRootDirectories() {
@@ -269,7 +269,7 @@ class DiscoveryRequestCreatorTests {
 		assertThat(methodSelectors).hasSize(2);
 		assertThat(methodSelectors.get(0).getClassName()).isEqualTo("com.acme.Foo");
 		assertThat(methodSelectors.get(0).getMethodName()).isEqualTo("m");
-		assertThat(methodSelectors.get(0).getMethodParameterTypes()).isEqualTo("");
+		assertThat(methodSelectors.get(0).getMethodParameterTypes()).isEmpty();
 		assertThat(methodSelectors.get(1).getClassName()).isEqualTo("com.example.Bar");
 		assertThat(methodSelectors.get(1).getMethodName()).isEqualTo("method");
 		assertThat(methodSelectors.get(1).getMethodParameterTypes()).isEqualTo("java.lang.Object");

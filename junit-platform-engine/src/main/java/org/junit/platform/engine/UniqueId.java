@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,7 +12,6 @@ package org.junit.platform.engine;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
@@ -174,13 +173,13 @@ public class UniqueId implements Cloneable, Serializable {
 	 * <p>This {@code UniqueId} will not be modified.
 	 *
 	 * <p>The engine ID will be stored in a {@link Segment} with
-	 * {@link Segment#getType type} {@value ENGINE_SEGMENT_TYPE}.
+	 * {@link Segment#getType type} {@value #ENGINE_SEGMENT_TYPE}.
 	 *
 	 * @param engineId the engine ID; never {@code null} or blank
 	 *
 	 * @since 1.8
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	public UniqueId appendEngine(String engineId) {
 		return append(new Segment(ENGINE_SEGMENT_TYPE, engineId));
 	}

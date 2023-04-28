@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -32,7 +32,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
  * @since 5.0
  */
 class TestTemplateTestDescriptorTests {
-	private JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
+	private JupiterConfiguration jupiterConfiguration = mock();
 
 	@Test
 	void inheritsTagsFromParent() throws Exception {

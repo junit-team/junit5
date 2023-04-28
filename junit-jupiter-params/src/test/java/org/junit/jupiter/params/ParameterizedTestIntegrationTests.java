@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -43,12 +43,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
@@ -459,9 +468,31 @@ class ParameterizedTestIntegrationTests {
 			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=")));
 		}
 
+		/**
+		 * @since 5.10
+		 */
+		@Test
+		void executesWithEmptySourceForCollection() {
+			var results = execute("testWithEmptySourceForCollection", Collection.class);
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+		}
+
 		@Test
 		void executesWithEmptySourceForList() {
 			var results = execute("testWithEmptySourceForList", List.class);
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+		}
+
+		/**
+		 * @since 5.10
+		 */
+		@ParameterizedTest(name = "{1}")
+		@CsvSource(textBlock = """
+				testWithEmptySourceForArrayList,  java.util.ArrayList
+				testWithEmptySourceForLinkedList, java.util.LinkedList
+				""")
+		void executesWithEmptySourceForListSubtype(String methodName, Class<?> parameterType) {
+			var results = execute(methodName, parameterType);
 			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
 		}
 
@@ -471,9 +502,41 @@ class ParameterizedTestIntegrationTests {
 			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
 		}
 
+		/**
+		 * @since 5.10
+		 */
+		@ParameterizedTest(name = "{1}")
+		@CsvSource(textBlock = """
+				testWithEmptySourceForSortedSet,     java.util.SortedSet
+				testWithEmptySourceForNavigableSet,  java.util.NavigableSet
+				testWithEmptySourceForHashSet,       java.util.HashSet
+				testWithEmptySourceForTreeSet,       java.util.TreeSet
+				testWithEmptySourceForLinkedHashSet, java.util.LinkedHashSet
+				""")
+		void executesWithEmptySourceForSetSubtype(String methodName, Class<?> parameterType) {
+			var results = execute(methodName, parameterType);
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+		}
+
 		@Test
 		void executesWithEmptySourceForMap() {
 			var results = execute("testWithEmptySourceForMap", Map.class);
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument={}")));
+		}
+
+		/**
+		 * @since 5.10
+		 */
+		@ParameterizedTest(name = "{1}")
+		@CsvSource(textBlock = """
+				testWithEmptySourceForSortedMap,     java.util.SortedMap
+				testWithEmptySourceForNavigableMap,  java.util.NavigableMap
+				testWithEmptySourceForHashMap,       java.util.HashMap
+				testWithEmptySourceForTreeMap,       java.util.TreeMap
+				testWithEmptySourceForLinkedHashMap, java.util.LinkedHashMap
+				""")
+		void executesWithEmptySourceForMapSubtype(String methodName, Class<?> parameterType) {
+			var results = execute(methodName, parameterType);
 			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument={}")));
 		}
 
@@ -513,13 +576,10 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@ParameterizedTest(name = "{1}")
-		@CsvSource({ //
-				"testWithEmptySourceForPrimitive, int", //
-				"testWithEmptySourceForUnsupportedReferenceType, java.lang.Integer", //
-				"testWithEmptySourceForUnsupportedListSubtype, java.util.ArrayList", //
-				"testWithEmptySourceForUnsupportedSetSubtype, java.util.HashSet", //
-				"testWithEmptySourceForUnsupportedMapSubtype, java.util.HashMap"//
-		})
+		@CsvSource(textBlock = """
+				testWithEmptySourceForPrimitive,                int
+				testWithEmptySourceForUnsupportedReferenceType, java.lang.Integer
+				""")
 		void failsWithEmptySourceForUnsupportedType(String methodName, Class<?> parameterType) {
 			execute(methodName, parameterType).containerEvents().failed().assertEventsMatchExactly(//
 				event(container(methodName), //
@@ -558,6 +618,12 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithNullAndEmptySourceForList() {
 			var results = execute("testWithNullAndEmptySourceForList", List.class);
+			assertNullAndEmpty(results);
+		}
+
+		@Test
+		void executesWithNullAndEmptySourceForArrayList() {
+			var results = execute("testWithNullAndEmptySourceForArrayList", ArrayList.class);
 			assertNullAndEmpty(results);
 		}
 
@@ -984,7 +1050,25 @@ class ParameterizedTestIntegrationTests {
 
 		@ParameterizedTest
 		@EmptySource
+		void testWithEmptySourceForCollection(Collection<?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
 		void testWithEmptySourceForList(List<?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForArrayList(ArrayList<?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForLinkedList(LinkedList<?> argument) {
 			assertThat(argument).isEmpty();
 		}
 
@@ -996,7 +1080,67 @@ class ParameterizedTestIntegrationTests {
 
 		@ParameterizedTest
 		@EmptySource
+		void testWithEmptySourceForSortedSet(SortedSet<?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForNavigableSet(NavigableSet<?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForHashSet(HashSet<?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForTreeSet(TreeSet<?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForLinkedHashSet(LinkedHashSet<?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
 		void testWithEmptySourceForMap(Map<?, ?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForSortedMap(SortedMap<?, ?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForNavigableMap(NavigableMap<?, ?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForHashMap(HashMap<?, ?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForTreeMap(TreeMap<?, ?> argument) {
+			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceForLinkedHashMap(LinkedHashMap<?, ?> argument) {
 			assertThat(argument).isEmpty();
 		}
 
@@ -1042,24 +1186,6 @@ class ParameterizedTestIntegrationTests {
 			fail("should not have been executed");
 		}
 
-		@ParameterizedTest
-		@EmptySource
-		void testWithEmptySourceForUnsupportedListSubtype(ArrayList<?> argument) {
-			fail("should not have been executed");
-		}
-
-		@ParameterizedTest
-		@EmptySource
-		void testWithEmptySourceForUnsupportedSetSubtype(HashSet<?> argument) {
-			fail("should not have been executed");
-		}
-
-		@ParameterizedTest
-		@EmptySource
-		void testWithEmptySourceForUnsupportedMapSubtype(HashMap<?, ?> argument) {
-			fail("should not have been executed");
-		}
-
 	}
 
 	static class NullAndEmptySourceTestCase {
@@ -1080,6 +1206,12 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest
 		@NullAndEmptySource
 		void testWithNullAndEmptySourceForList(List<?> argument) {
+			assertTrue(argument == null || argument.isEmpty());
+		}
+
+		@ParameterizedTest
+		@NullAndEmptySource
+		void testWithNullAndEmptySourceForArrayList(ArrayList<?> argument) {
 			assertTrue(argument == null || argument.isEmpty());
 		}
 

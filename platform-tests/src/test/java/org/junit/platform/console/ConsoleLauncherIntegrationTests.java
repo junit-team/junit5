@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,11 +10,10 @@
 
 package org.junit.platform.console;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.commons.util.StringUtils.isBlank;
 
 import org.junit.jupiter.api.Test;
 
@@ -27,8 +26,9 @@ class ConsoleLauncherIntegrationTests {
 	void executeWithoutArgumentsFailsAndPrintsHelpInformation() {
 		var result = new ConsoleLauncherWrapper().execute(-1);
 		assertAll("empty args array results in display of help information and an exception stacktrace", //
-			() -> assertTrue(result.out.contains("help information")), //
-			() -> assertTrue(result.err.contains("No arguments were supplied to the ConsoleLauncher")) //
+			() -> assertThat(result.err).contains("help information"), //
+			() -> assertThat(result.err).contains(
+				"Please specify an explicit selector option or use --scan-class-path or --scan-modules") //
 		);
 	}
 
@@ -46,8 +46,7 @@ class ConsoleLauncherIntegrationTests {
 		assertAll("all subpackage test classes are excluded by the class name filter", //
 			() -> assertArrayEquals(args, result.args), //
 			() -> assertEquals(0, result.code), //
-			() -> assertEquals(0, result.getTestsFoundCount()), //
-			() -> assertTrue(isBlank(result.err)) //
+			() -> assertEquals(0, result.getTestsFoundCount()) //
 		);
 	}
 

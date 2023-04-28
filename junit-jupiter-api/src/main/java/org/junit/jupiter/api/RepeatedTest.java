@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -24,7 +25,7 @@ import org.apiguardian.api.API;
  * {@code @RepeatedTest} is used to signal that the annotated method is a
  * <em>test template</em> method that should be repeated a {@linkplain #value
  * specified number of times} with a configurable {@linkplain #name display
- * name}.
+ * name} and an optional {@linkplain #failureThreshold() failure threshold}.
  *
  * <p>Each invocation of the repeated test behaves like the execution of a
  * regular {@link Test @Test} method with full support for the same lifecycle
@@ -151,5 +152,39 @@ public @interface RepeatedTest {
 	 * @see TestInfo#getDisplayName()
 	 */
 	String name() default SHORT_DISPLAY_NAME;
+
+	/**
+	 * Configures the number of failures after which remaining repetitions will
+	 * be automatically skipped.
+	 *
+	 * <p>Set this to a positive number less than the total {@linkplain #value()
+	 * number of repetitions} in order to skip the invocations of remaining
+	 * repetitions after the specified number of failures has been encountered.
+	 *
+	 * <p>For example, if you are using {@code @RepeatedTest} to repeatedly invoke
+	 * a test that you suspect to be <em>flaky</em>, a single failure is sufficient
+	 * to demonstrate that the test is flaky, and there is no need to invoke the
+	 * remaining repetitions. To support that specific use case, set
+	 * {@code failureThreshold = 1}. You can alternatively set the threshold to
+	 * a number greater than {@code 1} depending on your use case.
+	 *
+	 * <p>Defaults to {@link Integer#MAX_VALUE}, signaling that no failure
+	 * threshold will be applied, which effectively means that the specified
+	 * {@linkplain #value() number of repetitions} will be invoked regardless of
+	 * whether any repetitions fail.
+	 *
+	 * <p><strong>WARNING</strong>: if the repetitions of a {@code @RepeatedTest}
+	 * method are executed in parallel, no guarantees can be made regarding the
+	 * failure threshold. It is therefore recommended that a {@code @RepeatedTest}
+	 * method be annotated with
+	 * {@link org.junit.jupiter.api.parallel.Execution @Execution(SAME_THREAD)}
+	 * when parallel execution is configured.
+	 *
+	 * @since 5.10
+	 * @return the failure threshold; must be greater than zero and less than the
+	 * total number of repetitions
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	int failureThreshold() default Integer.MAX_VALUE;
 
 }

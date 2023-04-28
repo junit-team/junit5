@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -16,7 +16,6 @@ import static org.mockito.Mockito.mock;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -72,13 +71,13 @@ class LegacyReportingUtilsTests {
 	}
 
 	private String getClassName(UniqueId uniqueId) {
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock());
 		return LegacyReportingUtils.getClassName(testPlan, testPlan.getTestIdentifier(uniqueId));
 	}
 
 	@SuppressWarnings("deprecation")
 	private String getClassNameFromOldLocation(UniqueId uniqueId) {
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(ConfigurationParameters.class));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock());
 		return org.junit.platform.launcher.listeners.LegacyReportingUtils.getClassName(testPlan,
 			testPlan.getTestIdentifier(uniqueId));
 	}

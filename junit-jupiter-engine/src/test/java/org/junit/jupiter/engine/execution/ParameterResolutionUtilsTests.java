@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -43,12 +43,12 @@ class ParameterResolutionUtilsTests {
 
 	private static final String ENIGMA = "enigma";
 
-	private final MethodSource instance = mock(MethodSource.class);
+	private final MethodSource instance = mock();
 	private Method method;
 
-	private final ExtensionContext extensionContext = mock(ExtensionContext.class);
+	private final ExtensionContext extensionContext = mock();
 
-	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+	private final JupiterConfiguration configuration = mock();
 
 	private final MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
 		configuration);

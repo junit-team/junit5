@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -24,7 +24,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collector;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -201,6 +203,23 @@ public final class CollectionUtils {
 		}
 		throw new PreconditionViolationException(
 			"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object);
+	}
+
+	/**
+	 * Call the supplied action on each element of the supplied {@link List} from last to first element.
+	 */
+	@API(status = INTERNAL, since = "1.9.2")
+	public static <T> void forEachInReverseOrder(List<T> list, Consumer<? super T> action) {
+		if (list.isEmpty()) {
+			return;
+		}
+		if (list.size() == 1) {
+			action.accept(list.get(0));
+			return;
+		}
+		for (ListIterator<T> iterator = list.listIterator(list.size()); iterator.hasPrevious();) {
+			action.accept(iterator.previous());
+		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -29,7 +29,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@code @EnumSource} is an {@link ArgumentsSource} for constants of a
+ * {@code @EnumSource} is an {@link ArgumentsSource} for constants of
  * an {@link Enum}.
  *
  * <p>The enum constants will be provided as arguments to the annotated
@@ -51,6 +51,7 @@ import org.junit.platform.commons.util.Preconditions;
 @Documented
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(EnumArgumentsProvider.class)
+@SuppressWarnings("exports")
 public @interface EnumSource {
 
 	/**

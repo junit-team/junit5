@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -26,7 +26,7 @@ public abstract class AbstractEqualsAndHashCodeTests {
 		assertThat(different).isNotNull();
 
 		assertThat(equal1).isNotSameAs(equal2);
-		assertThat(equal1).isNotEqualTo(null);
+		assertThat(equal1).isNotNull();
 		assertThat(equal1).isNotEqualTo(new Object());
 		assertThat(equal1).isNotEqualTo(different);
 		assertThat(different).isNotEqualTo(equal1);

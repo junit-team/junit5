@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,13 +10,8 @@
 
 package org.junit.platform.suite.engine;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
-
-import java.util.function.Supplier;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
@@ -26,7 +21,6 @@ import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.UniqueId.Segment;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
@@ -60,26 +54,10 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	private SuiteLauncher launcher;
 
 	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, ConfigurationParameters configurationParameters) {
-		super(requireNoCycles(id), getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
+		super(id, getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
 		this.configurationParameters = configurationParameters;
 		this.failIfNoTests = getFailIfNoTests(suiteClass);
 		this.suiteClass = suiteClass;
-	}
-
-	private static UniqueId requireNoCycles(UniqueId id) {
-		// @formatter:off
-		boolean containsCycle = id.getSegments().stream()
-				.filter(segment -> SuiteTestDescriptor.SEGMENT_TYPE.equals(segment.getType()))
-				.map(Segment::getValue)
-				.collect(groupingBy(identity(), counting()))
-				.values()
-				.stream()
-				.anyMatch(count -> count > 1);
-		// @formatter:on
-		Supplier<String> message = () -> String.format(
-			"Configuration error: The suite configuration may not contain a cycle [%s]", id);
-		Preconditions.condition(!containsCycle, message);
-		return id;
 	}
 
 	private static Boolean getFailIfNoTests(Class<?> suiteClass) {

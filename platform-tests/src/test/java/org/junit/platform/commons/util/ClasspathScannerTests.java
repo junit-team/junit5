@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -123,7 +123,7 @@ class ClasspathScannerTests {
 	private void assertClassesScannedWhenExceptionIsThrown(Predicate<Class<?>> filter) throws Exception {
 		var classFilter = ClassFilter.of(filter);
 		var classes = this.classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(), classFilter);
-		assertThat(classes.size()).isGreaterThanOrEqualTo(150);
+		assertThat(classes).hasSizeGreaterThanOrEqualTo(150);
 	}
 
 	private void assertDebugMessageLogged(LogRecordListener listener, String regex) {
@@ -177,7 +177,7 @@ class ClasspathScannerTests {
 	@Test
 	void scanForClassesInPackage() {
 		var classes = classpathScanner.scanForClassesInPackage("org.junit.platform.commons", allClasses);
-		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
+		assertThat(classes).hasSizeGreaterThanOrEqualTo(20);
 		assertTrue(classes.contains(NestedClassToBeFound.class));
 		assertTrue(classes.contains(MemberClassToBeFound.class));
 	}
@@ -253,7 +253,7 @@ class ClasspathScannerTests {
 		var classFilter = ClassFilter.of(this::inDefaultPackage);
 		var classes = classpathScanner.scanForClassesInPackage("", classFilter);
 
-		assertThat(classes.size()).as("number of classes found in default package").isGreaterThanOrEqualTo(1);
+		assertThat(classes).as("number of classes found in default package").isNotEmpty();
 		assertTrue(classes.stream().allMatch(this::inDefaultPackage));
 		assertTrue(classes.stream().anyMatch(clazz -> "DefaultPackageTestCase".equals(clazz.getName())));
 	}
@@ -345,7 +345,7 @@ class ClasspathScannerTests {
 		var root = getTestClasspathRoot();
 		var classes = classpathScanner.scanForClassesInClasspathRoot(root, allClasses);
 
-		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
+		assertThat(classes).hasSizeGreaterThanOrEqualTo(20);
 		assertTrue(classes.contains(ClasspathScannerTests.class));
 	}
 

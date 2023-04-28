@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -172,12 +172,12 @@ class TagFilterTests {
 
 	private void assertIncluded(FilterResult filterResult, String expectedReason) {
 		assertTrue(filterResult.included());
-		assertThat(filterResult.getReason()).isPresent().contains(expectedReason);
+		assertThat(filterResult.getReason()).contains(expectedReason);
 	}
 
 	private void assertExcluded(FilterResult filterResult, String expectedReason) {
 		assertTrue(filterResult.excluded());
-		assertThat(filterResult.getReason()).isPresent().contains(expectedReason);
+		assertThat(filterResult.getReason()).contains(expectedReason);
 	}
 
 	// -------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -92,7 +92,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(arguments -> consumedArguments(arguments, methodContext))
 				.map(arguments -> {
 					invocationCount.incrementAndGet();
-					return createInvocationContext(formatter, methodContext, arguments);
+					return createInvocationContext(formatter, methodContext, arguments, invocationCount.intValue());
 				})
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0,
@@ -122,8 +122,8 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments) {
-		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments);
+			ParameterizedTestMethodContext methodContext, Object[] arguments, int invocationIndex) {
+		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments, invocationIndex);
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(ExtensionContext extensionContext, Method templateMethod,
@@ -150,10 +150,10 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private Object[] consumedArguments(Object[] arguments, ParameterizedTestMethodContext methodContext) {
-		int parameterCount = methodContext.getParameterCount();
 		if (methodContext.hasAggregator()) {
 			return arguments;
 		}
+		int parameterCount = methodContext.getParameterCount();
 		return arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments;
 	}
 

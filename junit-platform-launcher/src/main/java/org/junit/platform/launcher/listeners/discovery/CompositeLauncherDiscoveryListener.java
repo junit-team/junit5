@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -9,6 +9,8 @@
  */
 
 package org.junit.platform.launcher.listeners.discovery;
+
+import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +42,7 @@ class CompositeLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	@Override
 	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
-		listeners.forEach(delegate -> delegate.launcherDiscoveryFinished(request));
+		forEachInReverseOrder(listeners, delegate -> delegate.launcherDiscoveryFinished(request));
 	}
 
 	@Override
@@ -50,7 +52,7 @@ class CompositeLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	@Override
 	public void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
-		listeners.forEach(delegate -> delegate.engineDiscoveryFinished(engineId, result));
+		forEachInReverseOrder(listeners, delegate -> delegate.engineDiscoveryFinished(engineId, result));
 	}
 
 	@Override

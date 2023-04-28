@@ -1,8 +1,8 @@
 plugins {
-	`java-library-conventions`
-	`shadow-conventions`
-	`java-multi-release-sources`
-	`java-repackage-jars`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.shadow-conventions")
+	id("junitbuild.java-multi-release-sources")
+	id("junitbuild.java-repackage-jars")
 }
 
 description = "JUnit Platform Console"
@@ -25,7 +25,9 @@ tasks {
 	compileModule {
 		options.compilerArgs.addAll(listOf(
 			"--add-modules", "org.opentest4j.reporting.events",
-			"--add-reads", "org.junit.platform.reporting=org.opentest4j.reporting.events"
+			"--add-reads", "${project.projects.junitPlatformReporting.dependencyProject.javaModuleName}=org.opentest4j.reporting.events",
+			"--add-modules", "info.picocli",
+			"--add-reads", "${javaModuleName}=info.picocli"
 		))
 	}
 	shadowJar {
@@ -38,8 +40,8 @@ tasks {
 			into("META-INF")
 		}
 		from(sourceSets.mainRelease9.get().output.classesDirs)
-		doLast(objects.newInstance(org.junit.gradle.java.ExecJarAction::class).apply {
-			javaLauncher.set(project.the<JavaToolchainService>().launcherFor(java.toolchain))
+		doLast(objects.newInstance(junitbuild.java.ExecJarAction::class).apply {
+			javaLauncher.set(project.javaToolchains.launcherFor(java.toolchain))
 			args.addAll(
 				"--update",
 				"--file", archiveFile.get().asFile.absolutePath,

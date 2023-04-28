@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -24,6 +24,11 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * <p>All methods in this interface have empty <em>default</em> implementations.
  * Concrete implementations may therefore override one or more of these methods
  * to be notified of the selected events.
+ *
+ * <p>All {@code TestExecutionListener} methods are called sequentially. Methods
+ * for start events are called in registration order while methods for finish
+ * events are called in reverse order. Test case execution won't start before
+ * all {@link #executionStarted(TestIdentifier)} calls have returned.
  *
  * <p>JUnit provides two example implementations.
  *

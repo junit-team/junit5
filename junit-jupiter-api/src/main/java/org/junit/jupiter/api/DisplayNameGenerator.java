@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
@@ -74,21 +73,27 @@ public interface DisplayNameGenerator {
 	/**
 	 * Generate a display name for the given top-level or {@code static} nested test class.
 	 *
+	 * <p>If it returns {@code null}, the default display name generator will be used instead.
+	 *
 	 * @param testClass the class to generate a name for; never {@code null}
-	 * @return the display name for the class; never {@code null} or blank
+	 * @return the display name for the class; never blank
 	 */
 	String generateDisplayNameForClass(Class<?> testClass);
 
 	/**
 	 * Generate a display name for the given {@link Nested @Nested} inner test class.
 	 *
+	 * <p>If it returns {@code null}, the default display name generator will be used instead.
+	 *
 	 * @param nestedClass the class to generate a name for; never {@code null}
-	 * @return the display name for the nested class; never {@code null} or blank
+	 * @return the display name for the nested class; never blank
 	 */
 	String generateDisplayNameForNestedClass(Class<?> nestedClass);
 
 	/**
 	 * Generate a display name for the given method.
+	 *
+	 * <p>If it returns {@code null}, the default display name generator will be used instead.
 	 *
 	 * @implNote The class instance supplied as {@code testClass} may differ from
 	 * the class returned by {@code testMethod.getDeclaringClass()} &mdash; for
@@ -96,7 +101,7 @@ public interface DisplayNameGenerator {
 	 *
 	 * @param testClass the class the test method is invoked on; never {@code null}
 	 * @param testMethod method to generate a display name for; never {@code null}
-	 * @return the display name for the test; never {@code null} or blank
+	 * @return the display name for the test; never blank
 	 */
 	String generateDisplayNameForMethod(Class<?> testClass, Method testMethod);
 
@@ -223,7 +228,7 @@ public interface DisplayNameGenerator {
 	 *
 	 * @since 5.7
 	 */
-	@API(status = EXPERIMENTAL, since = "5.7")
+	@API(status = STABLE, since = "5.10")
 	class IndicativeSentences implements DisplayNameGenerator {
 
 		static final DisplayNameGenerator INSTANCE = new IndicativeSentences();

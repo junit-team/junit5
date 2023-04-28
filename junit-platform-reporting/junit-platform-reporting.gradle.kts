@@ -1,6 +1,6 @@
 plugins {
-	`java-library-conventions`
-	`shadow-conventions`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.shadow-conventions")
 }
 
 description = "JUnit Platform Reporting"
@@ -24,5 +24,11 @@ tasks {
 			include("LICENSE-open-test-reporting.md")
 			into("META-INF")
 		}
+	}
+	compileModule {
+		options.compilerArgs.addAll(listOf(
+			"--add-modules", "org.opentest4j.reporting.events",
+			"--add-reads", "${javaModuleName}=org.opentest4j.reporting.events"
+		))
 	}
 }

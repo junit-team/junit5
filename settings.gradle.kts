@@ -1,26 +1,16 @@
+import buildparameters.BuildParametersExtension
 import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
+	includeBuild("gradle/plugins")
 	repositories {
 		gradlePluginPortal()
-	}
-	plugins {
-		id("com.gradle.enterprise") version "3.11.2" // keep in sync with buildSrc/build.gradle.kts
-		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.8.2"
-		id("org.ajoberstar.git-publish") version "4.1.1"
-		kotlin("jvm") version "1.5.31"
-		// Check if workaround in documentation.gradle.kts can be removed when upgrading
-		id("org.asciidoctor.jvm.convert") version "3.3.2"
-		id("org.asciidoctor.jvm.pdf") version "3.3.2"
-		id("me.champeau.jmh") version "0.6.8"
-		id("io.spring.nohttp") version "0.0.10"
-		id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 	}
 }
 
 plugins {
-	id("com.gradle.enterprise")
-	id("com.gradle.common-custom-user-data-gradle-plugin")
+	id("junitbuild.build-parameters")
+	id("junitbuild.settings-conventions")
 }
 
 dependencyResolutionManagement {
@@ -35,15 +25,11 @@ dependencyResolutionManagement {
 }
 
 val gradleEnterpriseServer = "https://ge.junit.org"
-val isCiServer = System.getenv("CI") != null
-val junitBuildCacheUrl: String? by extra
-val junitBuildCacheUsername: String? by extra
-val junitBuildCachePassword: String? by extra
 
 gradleEnterprise {
 	buildScan {
 		capture.isTaskInputFiles = true
-		isUploadInBackground = !isCiServer
+		isUploadInBackground = !buildParameters.ci
 
 		publishAlways()
 
@@ -55,7 +41,7 @@ gradleEnterprise {
 		}
 
 		obfuscation {
-			if (isCiServer) {
+			if (buildParameters.ci) {
 				username { "github" }
 			} else {
 				hostname { null }
@@ -63,10 +49,7 @@ gradleEnterprise {
 			}
 		}
 
-		val enableTestDistribution = providers.gradleProperty("enableTestDistribution")
-			.map(String::toBoolean)
-			.getOrElse(false)
-		if (enableTestDistribution) {
+		if (buildParameters.enterprise.testDistribution.enabled) {
 			tag("test-distribution")
 		}
 	}
@@ -74,14 +57,16 @@ gradleEnterprise {
 
 buildCache {
 	local {
-		isEnabled = !isCiServer
+		isEnabled = !buildParameters.ci
 	}
 	remote<HttpBuildCache> {
-		url = uri(junitBuildCacheUrl ?: "$gradleEnterpriseServer/cache/")
-		isPush = isCiServer && !junitBuildCacheUsername.isNullOrEmpty() && !junitBuildCachePassword.isNullOrEmpty()
+		url = uri(buildParameters.buildCache.url.getOrElse("$gradleEnterpriseServer/cache/"))
+		val buildCacheUsername = buildParameters.buildCache.username.orNull?.ifBlank { null }
+		val buildCachePassword = buildParameters.buildCache.password.orNull?.ifBlank { null }
+		isPush = buildParameters.ci && buildCacheUsername != null && buildCachePassword != null
 		credentials {
-			username = junitBuildCacheUsername?.ifEmpty { null }
-			password = junitBuildCachePassword?.ifEmpty { null }
+			username = buildCacheUsername
+			password = buildCachePassword
 		}
 	}
 }
@@ -128,5 +113,8 @@ rootProject.children.forEach { project ->
 		"${project.buildFile} must exist"
 	}
 }
+
+val buildParameters: BuildParametersExtension
+	get() = the()
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

@@ -2,10 +2,14 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [main, releases/**]
+    branches:
+      - main
+      - 'releases/**'
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [main, releases/**]
+    branches:
+      - main
+      - 'releases/**'
   schedule:
     - cron: '0 19 * * 3'
 
@@ -19,14 +23,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['java', 'javascript']
+        language:
+          - java
+          - javascript
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
+        tools: latest
     - name: Build
       uses: ./.github/actions/run-gradle
       with:
@@ -35,4 +42,4 @@ jobs:
           -Dscan.tag.CodeQL
           allMainClasses
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2

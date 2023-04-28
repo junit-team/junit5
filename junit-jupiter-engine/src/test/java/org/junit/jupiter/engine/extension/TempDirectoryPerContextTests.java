@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -50,8 +50,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
@@ -346,6 +348,22 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
 		}
 
+		@Test
+		@DisplayName("when @TempDir factory is not Standard")
+		@Order(32)
+		void onlySupportsStandardTempDirFactory() {
+			var results = executeTestsForClass(NonStandardFactoryTestCase.class);
+
+			// @formatter:off
+			TempDirectoryPerContextTests.assertSingleFailedTest(results,
+					instanceOf(ParameterResolutionException.class),
+					message(m -> m.matches("Failed to resolve parameter \\[.+] in method \\[.+]: .+")),
+					cause(
+							instanceOf(ExtensionConfigurationException.class),
+							message("Custom @TempDir factory is not supported with junit.jupiter.tempdir.scope=per_context")));
+			// @formatter:on
+		}
+
 	}
 
 	@Nested
@@ -624,6 +642,23 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 		AnnotationOnConstructorParameterWithTestInstancePerClassTestCase(@TempDir Path tempDir) {
 			super(tempDir);
 		}
+	}
+
+	static class NonStandardFactoryTestCase {
+
+		@Test
+		void test(@SuppressWarnings("unused") @TempDir(factory = Factory.class) Path tempDir) {
+			// never called
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				return Files.createTempDirectory("junit");
+			}
+		}
+
 	}
 
 	static class AnnotationOnBeforeAllMethodParameterTestCase extends BaseSharedTempDirParameterInjectionTestCase {

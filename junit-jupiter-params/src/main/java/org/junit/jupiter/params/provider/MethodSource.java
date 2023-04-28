@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -104,17 +104,26 @@ import org.junit.jupiter.params.ParameterizedTest;
 @Documented
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(MethodArgumentsProvider.class)
+@SuppressWarnings("exports")
 public @interface MethodSource {
 
 	/**
 	 * The names of factory methods within the test class or in external classes
 	 * to use as sources for arguments.
 	 *
-	 * <p>Factory methods in external classes must be referenced by <em>fully
-	 * qualified method name</em> &mdash; for example,
-	 * {@code com.example.StringsProviders#blankStrings} or
-	 * {@code com.example.TopLevelClass$NestedClass#classMethod} for a factory
+	 * <p>Factory methods in external classes must be referenced by
+	 * <em>fully-qualified method name</em> &mdash; for example,
+	 * {@code "com.example.StringsProviders#blankStrings"} or
+	 * {@code "com.example.TopLevelClass$NestedClass#classMethod"} for a factory
 	 * method in a static nested class.
+	 *
+	 * <p>If a factory method accepts arguments that are provided by a
+	 * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolver},
+	 * you can supply the formal parameter list in the qualified method name to
+	 * disambiguate between overloaded variants of the factory method. For example,
+	 * {@code "blankStrings(int)"} for a local qualified method name or
+	 * {@code "com.example.StringsProviders#blankStrings(int)"} for a fully-qualified
+	 * method name.
 	 *
 	 * <p>If no factory method names are declared, a method within the test class
 	 * that has the same name as the test method will be used as the factory

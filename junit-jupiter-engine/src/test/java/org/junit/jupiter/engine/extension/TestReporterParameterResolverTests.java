@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
@@ -20,10 +21,8 @@ import java.lang.reflect.Parameter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.mockito.Mockito;
 
 /**
  * @since 5.0
@@ -45,8 +44,7 @@ class TestReporterParameterResolverTests {
 	void resolve() {
 		Parameter parameter = findParameterOfMethod("methodWithTestReporterParameter", TestReporter.class);
 
-		TestReporter testReporter = this.resolver.resolveParameter(parameterContext(parameter),
-			Mockito.mock(ExtensionContext.class));
+		TestReporter testReporter = this.resolver.resolveParameter(parameterContext(parameter), mock());
 		assertNotNull(testReporter);
 	}
 
@@ -56,7 +54,7 @@ class TestReporterParameterResolverTests {
 	}
 
 	private static ParameterContext parameterContext(Parameter parameter) {
-		ParameterContext parameterContext = Mockito.mock(ParameterContext.class);
+		ParameterContext parameterContext = mock();
 		when(parameterContext.getParameter()).thenReturn(parameter);
 		return parameterContext;
 	}

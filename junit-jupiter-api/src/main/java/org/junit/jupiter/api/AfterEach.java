@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -28,8 +28,9 @@ import org.apiguardian.api.API;
  *
  * <h2>Method Signatures</h2>
  *
- * <p>{@code @AfterEach} methods must have a {@code void} return type,
- * must not be {@code private}, and must not be {@code static}.
+ * <p>{@code @AfterEach} methods must have a {@code void} return type and must
+ * not be {@code static}. Using {@code private} visibility is strongly
+ * discouraged and will be disallowed in a future release.
  * They may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *

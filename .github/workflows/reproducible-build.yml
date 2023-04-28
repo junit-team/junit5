@@ -3,11 +3,11 @@ name: Reproducible build
 on:
   push:
     branches:
-    - main
-    - 'releases/*'
+      - main
+      - 'releases/**'
   pull_request:
     branches:
-    - '*'
+      - '*'
 
 env:
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
@@ -28,4 +28,4 @@ jobs:
     - name: Build and compare checksums
       shell: bash
       run: |
-        ./src/checkBuildReproducibility.sh
+        ./gradle/scripts/checkBuildReproducibility.sh

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -43,54 +43,61 @@ class CompositeTestExecutionListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		notifyEach(testExecutionListeners, listener -> listener.dynamicTestRegistered(testIdentifier),
+		notifyEach(testExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.dynamicTestRegistered(testIdentifier),
 			() -> "dynamicTestRegistered(" + testIdentifier + ")");
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		notifyEach(testExecutionListeners, listener -> listener.executionSkipped(testIdentifier, reason),
+		notifyEach(testExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.executionSkipped(testIdentifier, reason),
 			() -> "executionSkipped(" + testIdentifier + ", " + reason + ")");
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		notifyEach(eagerTestExecutionListeners, listener -> listener.executionJustStarted(testIdentifier),
+		notifyEach(eagerTestExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.executionJustStarted(testIdentifier),
 			() -> "executionJustStarted(" + testIdentifier + ")");
-		notifyEach(testExecutionListeners, listener -> listener.executionStarted(testIdentifier),
-			() -> "executionStarted(" + testIdentifier + ")");
+		notifyEach(testExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.executionStarted(testIdentifier), () -> "executionStarted(" + testIdentifier + ")");
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		notifyEach(eagerTestExecutionListeners,
+		notifyEach(eagerTestExecutionListeners, IterationOrder.REVERSED,
 			listener -> listener.executionJustFinished(testIdentifier, testExecutionResult),
 			() -> "executionJustFinished(" + testIdentifier + ", " + testExecutionResult + ")");
-		notifyEach(testExecutionListeners, listener -> listener.executionFinished(testIdentifier, testExecutionResult),
+		notifyEach(testExecutionListeners, IterationOrder.REVERSED,
+			listener -> listener.executionFinished(testIdentifier, testExecutionResult),
 			() -> "executionFinished(" + testIdentifier + ", " + testExecutionResult + ")");
 	}
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		notifyEach(testExecutionListeners, listener -> listener.testPlanExecutionStarted(testPlan),
+		notifyEach(testExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.testPlanExecutionStarted(testPlan),
 			() -> "testPlanExecutionStarted(" + testPlan + ")");
 	}
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
-		notifyEach(testExecutionListeners, listener -> listener.testPlanExecutionFinished(testPlan),
+		notifyEach(testExecutionListeners, IterationOrder.REVERSED,
+			listener -> listener.testPlanExecutionFinished(testPlan),
 			() -> "testPlanExecutionFinished(" + testPlan + ")");
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		notifyEach(testExecutionListeners, listener -> listener.reportingEntryPublished(testIdentifier, entry),
+		notifyEach(testExecutionListeners, IterationOrder.ORIGINAL,
+			listener -> listener.reportingEntryPublished(testIdentifier, entry),
 			() -> "reportingEntryPublished(" + testIdentifier + ", " + entry + ")");
 	}
 
-	private static <T extends TestExecutionListener> void notifyEach(List<T> listeners, Consumer<T> consumer,
-			Supplier<String> description) {
-		listeners.forEach(listener -> {
+	private static <T extends TestExecutionListener> void notifyEach(List<T> listeners, IterationOrder iterationOrder,
+			Consumer<T> consumer, Supplier<String> description) {
+		iterationOrder.forEach(listeners, listener -> {
 			try {
 				consumer.accept(listener);
 			}
@@ -109,4 +116,5 @@ class CompositeTestExecutionListener implements TestExecutionListener {
 		default void executionJustFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		}
 	}
+
 }

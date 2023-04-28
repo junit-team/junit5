@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayNameForMethod;
+import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
@@ -25,7 +26,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassUtils;
@@ -123,13 +123,9 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	protected void invokeTestWatchers(JupiterEngineExecutionContext context, boolean reverseOrder,
 			Consumer<TestWatcher> callback) {
 
-		ExtensionRegistry registry = context.getExtensionRegistry();
+		List<TestWatcher> watchers = context.getExtensionRegistry().getExtensions(TestWatcher.class);
 
-		List<TestWatcher> watchers = reverseOrder //
-				? registry.getReversedExtensions(TestWatcher.class)
-				: registry.getExtensions(TestWatcher.class);
-
-		watchers.forEach(watcher -> {
+		Consumer<TestWatcher> action = watcher -> {
 			try {
 				callback.accept(watcher);
 			}
@@ -143,7 +139,13 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 							extensionContext.getRequiredTestMethod()),
 						getDisplayName()));
 			}
-		});
+		};
+		if (reverseOrder) {
+			forEachInReverseOrder(watchers, action);
+		}
+		else {
+			watchers.forEach(action);
+		}
 	}
 
 }

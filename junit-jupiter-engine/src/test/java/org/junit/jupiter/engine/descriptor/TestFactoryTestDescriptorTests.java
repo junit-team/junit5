@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -30,7 +30,6 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
@@ -39,7 +38,6 @@ import org.junit.platform.engine.support.descriptor.FilePosition;
 import org.junit.platform.engine.support.descriptor.FileSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.descriptor.UriSource;
-import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 
 /**
@@ -134,17 +132,17 @@ class TestFactoryTestDescriptorTests {
 
 		@BeforeEach
 		void before() throws Exception {
-			jupiterConfiguration = mock(JupiterConfiguration.class);
+			jupiterConfiguration = mock();
 			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 
-			extensionContext = mock(ExtensionContext.class);
+			extensionContext = mock();
 			isClosed = false;
 
 			context = new JupiterEngineExecutionContext(null, null) //
 					.extend() //
 					.withThrowableCollector(new OpenTest4JAwareThrowableCollector()) //
 					.withExtensionContext(extensionContext) //
-					.withExtensionRegistry(mock(MutableExtensionRegistry.class)) //
+					.withExtensionRegistry(mock()) //
 					.build();
 
 			Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");
@@ -158,7 +156,7 @@ class TestFactoryTestDescriptorTests {
 			Stream<DynamicTest> dynamicTestStream = Stream.empty();
 			prepareMockForTestInstanceWithCustomStream(dynamicTestStream);
 
-			descriptor.invokeTestMethod(context, mock(Node.DynamicTestExecutor.class));
+			descriptor.invokeTestMethod(context, mock());
 
 			assertTrue(isClosed);
 		}
@@ -168,7 +166,7 @@ class TestFactoryTestDescriptorTests {
 			Stream<Integer> integerStream = Stream.of(1, 2);
 			prepareMockForTestInstanceWithCustomStream(integerStream);
 
-			descriptor.invokeTestMethod(context, mock(Node.DynamicTestExecutor.class));
+			descriptor.invokeTestMethod(context, mock());
 
 			assertTrue(isClosed);
 		}

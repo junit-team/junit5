@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -161,8 +161,8 @@ class ParameterizedTestMethodContext {
 	 * Resolve the parameter for the supplied context using the supplied
 	 * arguments.
 	 */
-	Object resolve(ParameterContext parameterContext, Object[] arguments) {
-		return getResolver(parameterContext).resolve(parameterContext, arguments);
+	Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
+		return getResolver(parameterContext).resolve(parameterContext, arguments, invocationIndex);
 	}
 
 	private Resolver getResolver(ParameterContext parameterContext) {
@@ -214,7 +214,7 @@ class ParameterizedTestMethodContext {
 
 	interface Resolver {
 
-		Object resolve(ParameterContext parameterContext, Object[] arguments);
+		Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex);
 
 	}
 
@@ -229,7 +229,7 @@ class ParameterizedTestMethodContext {
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, Object[] arguments) {
+		public Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
 			Object argument = arguments[parameterContext.getIndex()];
 			try {
 				return this.argumentConverter.convert(argument, parameterContext);
@@ -252,8 +252,8 @@ class ParameterizedTestMethodContext {
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, Object[] arguments) {
-			ArgumentsAccessor accessor = new DefaultArgumentsAccessor(arguments);
+		public Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
+			ArgumentsAccessor accessor = new DefaultArgumentsAccessor(invocationIndex, arguments);
 			try {
 				return this.argumentsAggregator.aggregateArguments(accessor, parameterContext);
 			}

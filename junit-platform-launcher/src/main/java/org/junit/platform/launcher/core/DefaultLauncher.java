@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -35,12 +35,11 @@ import org.junit.platform.launcher.TestPlan;
  * @see Launcher
  * @see LauncherFactory
  */
-class DefaultLauncher implements InternalLauncher {
+class DefaultLauncher implements Launcher {
 
-	private final ListenerRegistry<LauncherDiscoveryListener> launcherDiscoveryListenerRegistry = ListenerRegistry.forLauncherDiscoveryListeners();
-	private final ListenerRegistry<TestExecutionListener> testExecutionListenerRegistry = ListenerRegistry.forTestExecutionListeners();
+	private final LauncherListenerRegistry listenerRegistry = new LauncherListenerRegistry();
 	private final EngineExecutionOrchestrator executionOrchestrator = new EngineExecutionOrchestrator(
-		testExecutionListenerRegistry);
+		listenerRegistry.testExecutionListeners);;
 	private final EngineDiscoveryOrchestrator discoveryOrchestrator;
 
 	/**
@@ -59,17 +58,17 @@ class DefaultLauncher implements InternalLauncher {
 		Preconditions.containsNoNullElements(postDiscoveryFilters,
 			"PostDiscoveryFilter array must not contain null elements");
 		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(testEngines,
-			unmodifiableCollection(postDiscoveryFilters), launcherDiscoveryListenerRegistry);
+			unmodifiableCollection(postDiscoveryFilters), listenerRegistry.launcherDiscoveryListeners);
 	}
 
 	@Override
 	public void registerLauncherDiscoveryListeners(LauncherDiscoveryListener... listeners) {
-		this.launcherDiscoveryListenerRegistry.addAll(listeners);
+		this.listenerRegistry.launcherDiscoveryListeners.addAll(listeners);
 	}
 
 	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		this.testExecutionListenerRegistry.addAll(listeners);
+		this.listenerRegistry.testExecutionListeners.addAll(listeners);
 	}
 
 	@Override
@@ -93,16 +92,6 @@ class DefaultLauncher implements InternalLauncher {
 		Preconditions.notNull(listeners, "TestExecutionListener array must not be null");
 		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
 		execute((InternalTestPlan) testPlan, listeners);
-	}
-
-	@Override
-	public ListenerRegistry<TestExecutionListener> getTestExecutionListenerRegistry() {
-		return testExecutionListenerRegistry;
-	}
-
-	@Override
-	public ListenerRegistry<LauncherDiscoveryListener> getLauncherDiscoveryListenerRegistry() {
-		return launcherDiscoveryListenerRegistry;
 	}
 
 	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest,

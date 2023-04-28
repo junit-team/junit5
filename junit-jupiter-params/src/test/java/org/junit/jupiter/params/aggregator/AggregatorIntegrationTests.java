@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -182,6 +182,20 @@ public class AggregatorIntegrationTests {
 		results.testEvents().assertThatEvents()//
 				.haveExactly(1, event(test(), finishedWithFailure(instanceOf(ParameterResolutionException.class), //
 					message("Error aggregating arguments for parameter at index 0: something went horribly wrong"))));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ //
+			"first", //
+			"second" //
+	})
+	void argumentsAccessorInvocationIndex(ArgumentsAccessor arguments) {
+		if ("first".equals(arguments.getString(0))) {
+			assertEquals(1, arguments.getInvocationIndex());
+		}
+		if ("second".equals(arguments.getString(0))) {
+			assertEquals(2, arguments.getInvocationIndex());
+		}
 	}
 
 	private void testPersonAggregator(Person person) {

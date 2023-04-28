@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,7 @@
 
 package org.junit.platform.console;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.PrintWriter;
 import java.util.spi.ToolProvider;
@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
  *
  * @since 1.6
  */
-@API(status = EXPERIMENTAL, since = "1.6")
+@API(status = STABLE, since = "1.10")
 public class ConsoleLauncherToolProvider implements ToolProvider {
 
 	@Override
@@ -32,6 +32,6 @@ public class ConsoleLauncherToolProvider implements ToolProvider {
 
 	@Override
 	public int run(PrintWriter out, PrintWriter err, String... args) {
-		return ConsoleLauncher.execute(out, err, args).getExitCode();
+		return ConsoleLauncher.run(out, err, args).getExitCode();
 	}
 }

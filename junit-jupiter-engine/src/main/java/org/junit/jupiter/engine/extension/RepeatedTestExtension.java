@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -42,12 +43,15 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		String displayName = context.getDisplayName();
 		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
 		int totalRepetitions = totalRepetitions(repeatedTest, testMethod);
+		AtomicInteger failureCount = new AtomicInteger();
+		int failureThreshold = failureThreshold(repeatedTest, testMethod);
 		RepeatedTestDisplayNameFormatter formatter = displayNameFormatter(repeatedTest, testMethod, displayName);
 
 		// @formatter:off
 		return IntStream
 				.rangeClosed(1, totalRepetitions)
-				.mapToObj(repetition -> new RepeatedTestInvocationContext(repetition, totalRepetitions, formatter));
+				.mapToObj(repetition -> new DefaultRepetitionInfo(repetition, totalRepetitions, failureCount, failureThreshold))
+				.map(repetitionInfo -> new RepeatedTestInvocationContext(repetitionInfo, formatter));
 		// @formatter:on
 	}
 
@@ -56,6 +60,18 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 		Preconditions.condition(repetitions > 0, () -> String.format(
 			"Configuration error: @RepeatedTest on method [%s] must be declared with a positive 'value'.", method));
 		return repetitions;
+	}
+
+	private int failureThreshold(RepeatedTest repeatedTest, Method method) {
+		int failureThreshold = repeatedTest.failureThreshold();
+		if (failureThreshold != Integer.MAX_VALUE) {
+			int repetitions = repeatedTest.value();
+			Preconditions.condition((failureThreshold > 0) && (failureThreshold < repetitions),
+				() -> String.format("Configuration error: @RepeatedTest on method [%s] must declare a "
+						+ "'failureThreshold' greater than zero and less than the total number of repetitions [%d].",
+					method, repetitions));
+		}
+		return failureThreshold;
 	}
 
 	private RepeatedTestDisplayNameFormatter displayNameFormatter(RepeatedTest repeatedTest, Method method,

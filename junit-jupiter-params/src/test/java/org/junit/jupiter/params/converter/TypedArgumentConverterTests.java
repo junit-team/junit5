@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,6 +13,7 @@ package org.junit.jupiter.params.converter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.annotation.ElementType;
@@ -30,7 +31,6 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.mockito.Mockito;
 
 /**
  * Tests for {@link TypedArgumentConverter}.
@@ -92,7 +92,7 @@ class TypedArgumentConverterTests {
 		}
 
 		private ParameterContext parameterContext(Parameter parameter) {
-			ParameterContext parameterContext = Mockito.mock(ParameterContext.class);
+			ParameterContext parameterContext = mock();
 			when(parameterContext.getParameter()).thenReturn(parameter);
 			return parameterContext;
 		}

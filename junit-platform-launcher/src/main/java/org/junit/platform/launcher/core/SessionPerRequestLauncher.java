@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,8 +10,13 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.List;
+import java.util.function.Supplier;
+
+import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.LauncherInterceptor;
 import org.junit.platform.launcher.LauncherSession;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -20,24 +25,29 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.8
  */
-class SessionPerRequestLauncher implements InternalLauncher {
+class SessionPerRequestLauncher implements Launcher {
 
-	private final InternalLauncher delegate;
-	private final LauncherSessionListener sessionListener;
+	private final LauncherListenerRegistry listenerRegistry = new LauncherListenerRegistry();
+	private final Supplier<Launcher> launcherSupplier;
+	private final Supplier<LauncherSessionListener> sessionListenerSupplier;
+	private final Supplier<List<LauncherInterceptor>> interceptorFactory;
 
-	SessionPerRequestLauncher(InternalLauncher delegate, LauncherSessionListener sessionListener) {
-		this.delegate = delegate;
-		this.sessionListener = sessionListener;
+	SessionPerRequestLauncher(Supplier<Launcher> launcherSupplier,
+			Supplier<LauncherSessionListener> sessionListenerSupplier,
+			Supplier<List<LauncherInterceptor>> interceptorFactory) {
+		this.launcherSupplier = launcherSupplier;
+		this.sessionListenerSupplier = sessionListenerSupplier;
+		this.interceptorFactory = interceptorFactory;
 	}
 
 	@Override
 	public void registerLauncherDiscoveryListeners(LauncherDiscoveryListener... listeners) {
-		delegate.registerLauncherDiscoveryListeners(listeners);
+		listenerRegistry.launcherDiscoveryListeners.addAll(listeners);
 	}
 
 	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		delegate.registerTestExecutionListeners(listeners);
+		listenerRegistry.testExecutionListeners.addAll(listeners);
 	}
 
 	@Override
@@ -61,17 +71,13 @@ class SessionPerRequestLauncher implements InternalLauncher {
 		}
 	}
 
-	@Override
-	public ListenerRegistry<TestExecutionListener> getTestExecutionListenerRegistry() {
-		return delegate.getTestExecutionListenerRegistry();
-	}
-
-	@Override
-	public ListenerRegistry<LauncherDiscoveryListener> getLauncherDiscoveryListenerRegistry() {
-		return delegate.getLauncherDiscoveryListenerRegistry();
-	}
-
 	private LauncherSession createSession() {
-		return new DefaultLauncherSession(delegate, sessionListener);
+		LauncherSession session = new DefaultLauncherSession(interceptorFactory.get(), sessionListenerSupplier,
+			launcherSupplier);
+		Launcher launcher = session.getLauncher();
+		listenerRegistry.launcherDiscoveryListeners.getListeners().forEach(
+			launcher::registerLauncherDiscoveryListeners);
+		listenerRegistry.testExecutionListeners.getListeners().forEach(launcher::registerTestExecutionListeners);
+		return session;
 	}
 }

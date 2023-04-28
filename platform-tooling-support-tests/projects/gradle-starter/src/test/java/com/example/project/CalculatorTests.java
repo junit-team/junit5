@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -27,15 +27,15 @@ class CalculatorTests {
 	}
 
 	@ParameterizedTest(name = "{0} + {1} = {2}")
-	@CsvSource({
-			"0,    1,   1",
-			"1,    2,   3",
-			"49,  51, 100",
-			"1,  100, 101"
+	@CsvSource({ //
+			"0,    1,   1", //
+			"1,    2,   3", //
+			"49,  51, 100", //
+			"1,  100, 101" //
 	})
 	void add(int first, int second, int expectedResult) {
 		Calculator calculator = new Calculator();
 		assertEquals(expectedResult, calculator.add(first, second),
-				() -> first + " + " + second + " should equal " + expectedResult);
+			() -> first + " + " + second + " should equal " + expectedResult);
 	}
 }

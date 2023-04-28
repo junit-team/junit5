@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -53,12 +53,12 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 		var sources = new ArrayList<>(List.of(fileSource, classSource));
 		var compositeTestSource = CompositeTestSource.from(sources);
 
-		assertThat(compositeTestSource.getSources().size()).isEqualTo(2);
+		assertThat(compositeTestSource.getSources()).hasSize(2);
 		assertThat(compositeTestSource.getSources()).contains(fileSource, classSource);
 
 		// Ensure the supplied sources list was defensively copied.
 		sources.remove(1);
-		assertThat(compositeTestSource.getSources().size()).isEqualTo(2);
+		assertThat(compositeTestSource.getSources()).hasSize(2);
 
 		// Ensure the returned sources list is immutable.
 		assertThrows(UnsupportedOperationException.class, () -> compositeTestSource.getSources().add(fileSource));

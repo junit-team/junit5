@@ -8,10 +8,13 @@ registries:
 updates:
   - package-ecosystem: "gradle"
     directory: "/"
-    allow:
-      - dependency-name: "com.gradle*"
     registries:
       - gradle-plugin-portal
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+    labels: [ ]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: [ ]

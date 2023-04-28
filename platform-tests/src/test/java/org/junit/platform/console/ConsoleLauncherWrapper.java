@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,18 +10,14 @@
 
 package org.junit.platform.console;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.commons.util.StringUtils.isBlank;
-import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
-import org.junit.platform.console.options.CommandLineOptionsParser;
-import org.junit.platform.console.options.PicocliCommandLineOptionsParser;
+import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 /**
  * @since 1.0
@@ -33,14 +29,13 @@ class ConsoleLauncherWrapper {
 	private final ConsoleLauncher consoleLauncher;
 
 	ConsoleLauncherWrapper() {
-		this(new PicocliCommandLineOptionsParser());
+		this(ConsoleTestExecutor::new);
 	}
 
-	private ConsoleLauncherWrapper(CommandLineOptionsParser parser) {
+	private ConsoleLauncherWrapper(ConsoleTestExecutor.Factory consoleTestExecutorFactory) {
 		var outWriter = new PrintWriter(out, false);
 		var errWriter = new PrintWriter(err, false);
-		this.consoleLauncher = new ConsoleLauncher(parser, outWriter, errWriter);
-
+		this.consoleLauncher = new ConsoleLauncher(consoleTestExecutorFactory, outWriter, errWriter);
 	}
 
 	public ConsoleLauncherWrapperResult execute(String... args) {
@@ -52,16 +47,16 @@ class ConsoleLauncherWrapper {
 	}
 
 	public ConsoleLauncherWrapperResult execute(Optional<Integer> expectedCode, String... args) {
-		var result = consoleLauncher.execute(args);
+		var result = consoleLauncher.run(args);
 		var code = result.getExitCode();
 		var outText = out.toString();
 		var errText = err.toString();
 		if (expectedCode.isPresent()) {
 			int expectedValue = expectedCode.get();
-			assertAll("wrapped execution failed:\n" + outText + "\n", //
-				() -> assertEquals(expectedValue, code, "ConsoleLauncher execute code mismatch!"), //
-				() -> assertTrue(expectedValue == 0 ? isBlank(errText) : isNotBlank(errText)) //
-			);
+			assertEquals(expectedValue, code, "ConsoleLauncher execute code mismatch!");
+			if (expectedValue != 0) {
+				assertThat(errText).isNotBlank();
+			}
 		}
 		return new ConsoleLauncherWrapperResult(args, outText, errText, result);
 	}

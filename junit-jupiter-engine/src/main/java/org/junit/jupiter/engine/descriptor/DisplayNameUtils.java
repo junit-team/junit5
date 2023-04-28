@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,6 +15,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.DisplayName;
@@ -90,21 +91,35 @@ final class DisplayNameUtils {
 
 	static String determineDisplayNameForMethod(Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
-		DisplayNameGenerator generator = getDisplayNameGenerator(testClass, configuration);
-		return determineDisplayName(testMethod, () -> generator.generateDisplayNameForMethod(testClass, testMethod));
+		return determineDisplayName(testMethod,
+			createDisplayNameSupplierForMethod(testClass, testMethod, configuration));
 	}
 
 	static Supplier<String> createDisplayNameSupplierForClass(Class<?> testClass, JupiterConfiguration configuration) {
-		return () -> getDisplayNameGenerator(testClass, configuration).generateDisplayNameForClass(testClass);
+		return createDisplayNameSupplier(testClass, configuration,
+			generator -> generator.generateDisplayNameForClass(testClass));
 	}
 
 	static Supplier<String> createDisplayNameSupplierForNestedClass(Class<?> testClass,
 			JupiterConfiguration configuration) {
-		return () -> getDisplayNameGenerator(testClass, configuration).generateDisplayNameForNestedClass(testClass);
+		return createDisplayNameSupplier(testClass, configuration,
+			generator -> generator.generateDisplayNameForNestedClass(testClass));
 	}
 
-	private static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass,
+	private static Supplier<String> createDisplayNameSupplierForMethod(Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
+		return createDisplayNameSupplier(testClass, configuration,
+			generator -> generator.generateDisplayNameForMethod(testClass, testMethod));
+	}
+
+	private static Supplier<String> createDisplayNameSupplier(Class<?> testClass, JupiterConfiguration configuration,
+			Function<DisplayNameGenerator, String> generatorFunction) {
+		return () -> findDisplayNameGenerator(testClass) //
+				.map(generatorFunction) //
+				.orElseGet(() -> generatorFunction.apply(configuration.getDefaultDisplayNameGenerator()));
+	}
+
+	private static Optional<DisplayNameGenerator> findDisplayNameGenerator(Class<?> testClass) {
 		Preconditions.notNull(testClass, "Test class must not be null");
 
 		return AnnotationUtils.findAnnotation(testClass, DisplayNameGeneration.class, true) //
@@ -123,8 +138,7 @@ final class DisplayNameUtils {
 						return indicativeSentencesGenerator;
 					}
 					return ReflectionUtils.newInstance(displayNameGeneratorClass);
-				}) //
-				.orElseGet(configuration::getDefaultDisplayNameGenerator);
+				});
 	}
 
 }

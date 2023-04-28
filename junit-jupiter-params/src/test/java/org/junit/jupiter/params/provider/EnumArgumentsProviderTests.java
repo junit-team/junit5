@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -24,14 +24,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.EnumSource.Mode;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.mockito.Mockito;
 
 /**
  * @since 5.0
  */
 class EnumArgumentsProviderTests {
 
-	private ExtensionContext extensionContext = Mockito.mock(ExtensionContext.class);
+	private ExtensionContext extensionContext = mock();
 
 	@Test
 	void providesAllEnumConstants() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -9,6 +9,9 @@
  */
 
 package org.junit.platform.engine.support.hierarchical;
+
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Predicate;
 
 /**
  * @since 1.3
@@ -20,14 +23,16 @@ class DefaultParallelExecutionConfiguration implements ParallelExecutionConfigur
 	private final int maxPoolSize;
 	private final int corePoolSize;
 	private final int keepAliveSeconds;
+	private final Predicate<? super ForkJoinPool> saturate;
 
 	DefaultParallelExecutionConfiguration(int parallelism, int minimumRunnable, int maxPoolSize, int corePoolSize,
-			int keepAliveSeconds) {
+			int keepAliveSeconds, Predicate<? super ForkJoinPool> saturate) {
 		this.parallelism = parallelism;
 		this.minimumRunnable = minimumRunnable;
 		this.maxPoolSize = maxPoolSize;
 		this.corePoolSize = corePoolSize;
 		this.keepAliveSeconds = keepAliveSeconds;
+		this.saturate = saturate;
 	}
 
 	@Override
@@ -55,4 +60,8 @@ class DefaultParallelExecutionConfiguration implements ParallelExecutionConfigur
 		return keepAliveSeconds;
 	}
 
+	@Override
+	public Predicate<? super ForkJoinPool> getSaturatePredicate() {
+		return saturate;
+	}
 }

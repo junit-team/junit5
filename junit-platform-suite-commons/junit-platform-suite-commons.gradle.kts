@@ -1,5 +1,5 @@
 plugins {
-	`java-library-conventions`
+	id("junitbuild.java-library-conventions")
 }
 
 description = "JUnit Platform Suite Commons"

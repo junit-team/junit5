@@ -1,8 +1,8 @@
-import org.junit.gradle.java.WriteArtifactsFile
+import junitbuild.java.WriteArtifactsFile
 
 plugins {
-	`java-library-conventions`
-	`shadow-conventions`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.shadow-conventions")
 }
 
 description = "JUnit Platform Console Standalone"

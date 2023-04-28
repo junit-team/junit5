@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -79,8 +79,11 @@ class TreePrinter {
 			out.print(" ");
 			out.print(duration);
 		}
-		out.print(" ");
-		out.print(icon);
+		boolean nodeIsBeingListed = node.duration == 0 && !node.result().isPresent() && !node.reason().isPresent();
+		if (!nodeIsBeingListed) {
+			out.print(" ");
+			out.print(icon);
+		}
 		node.result().ifPresent(result -> printThrowable(tabbed, result));
 		node.reason().ifPresent(reason -> printMessage(Style.SKIPPED, tabbed, reason));
 		node.reports.forEach(e -> printReportEntry(tabbed, e));

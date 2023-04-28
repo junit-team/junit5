@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -51,7 +51,7 @@ class TreeNodeTests {
 			}
 		});
 
-		assertThat(treeNode.children.size()).isEqualTo(NUM_THREADS * ITEMS_PER_THREAD);
+		assertThat(treeNode.children).hasSize(NUM_THREADS * ITEMS_PER_THREAD);
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class TreeNodeTests {
 			}
 		});
 
-		assertThat(treeNode.reports.size()).isEqualTo(NUM_THREADS * ITEMS_PER_THREAD);
+		assertThat(treeNode.reports).hasSize(NUM_THREADS * ITEMS_PER_THREAD);
 	}
 
 	private void runConcurrently(Runnable action) throws InterruptedException {

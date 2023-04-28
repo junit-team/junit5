@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.DemoMethodTestDescriptor;
+import org.mockito.InOrder;
 
 @TrackLogRecords
 class CompositeEngineExecutionListenerTests {
@@ -38,9 +40,7 @@ class CompositeEngineExecutionListenerTests {
 
 	@Test
 	void shouldNotThrowExceptionButLogIfDynamicTestRegisteredListenerMethodFails(LogRecordListener logRecordListener) {
-		var testDescriptor = getSampleMethodTestDescriptor();
-
-		compositeTestExecutionListener().dynamicTestRegistered(testDescriptor);
+		compositeEngineExecutionListener().dynamicTestRegistered(anyTestDescriptor());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEngineExecutionListener.class,
 			"dynamicTestRegistered");
@@ -48,27 +48,21 @@ class CompositeEngineExecutionListenerTests {
 
 	@Test
 	void shouldNotThrowExceptionButLogIfExecutionStartedListenerMethodFails(LogRecordListener logRecordListener) {
-		var testDescriptor = getSampleMethodTestDescriptor();
-
-		compositeTestExecutionListener().executionStarted(testDescriptor);
+		compositeEngineExecutionListener().executionStarted(anyTestDescriptor());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEngineExecutionListener.class, "executionStarted");
 	}
 
 	@Test
 	void shouldNotThrowExceptionButLogIfExecutionSkippedListenerMethodFails(LogRecordListener logRecordListener) {
-		var testDescriptor = getSampleMethodTestDescriptor();
-
-		compositeTestExecutionListener().executionSkipped(testDescriptor, "deliberately skipped container");
+		compositeEngineExecutionListener().executionSkipped(anyTestDescriptor(), "deliberately skipped container");
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEngineExecutionListener.class, "executionSkipped");
 	}
 
 	@Test
 	void shouldNotThrowExceptionButLogIfExecutionFinishedListenerMethodFails(LogRecordListener logRecordListener) {
-		var testDescriptor = getSampleMethodTestDescriptor();
-
-		compositeTestExecutionListener().executionFinished(testDescriptor, mock(TestExecutionResult.class));
+		compositeEngineExecutionListener().executionFinished(anyTestDescriptor(), anyTestExecutionResult());
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEngineExecutionListener.class,
 			"executionFinished");
@@ -77,9 +71,7 @@ class CompositeEngineExecutionListenerTests {
 	@Test
 	void shouldNotThrowExceptionButLogIfReportingEntryPublishedListenerMethodFails(
 			LogRecordListener logRecordListener) {
-		var testDescriptor = getSampleMethodTestDescriptor();
-
-		compositeTestExecutionListener().reportingEntryPublished(testDescriptor, ReportEntry.from("one", "two"));
+		compositeEngineExecutionListener().reportingEntryPublished(anyTestDescriptor(), ReportEntry.from("one", "two"));
 
 		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEngineExecutionListener.class,
 			"reportingEntryPublished");
@@ -94,14 +86,37 @@ class CompositeEngineExecutionListenerTests {
 				throw new OutOfMemoryError();
 			}
 		});
-		var testDescriptor = getSampleMethodTestDescriptor();
-		assertThatThrownBy(() -> compositeTestExecutionListener().executionStarted(testDescriptor)).isInstanceOf(
+		var testDescriptor = anyTestDescriptor();
+
+		assertThatThrownBy(() -> compositeEngineExecutionListener().executionStarted(testDescriptor)).isInstanceOf(
 			OutOfMemoryError.class);
 
 		assertNotLogs(logRecordListener);
 	}
 
-	private EngineExecutionListener compositeTestExecutionListener() {
+	@Test
+	void callsListenersInReverseOrderForFinishedEvents() {
+		listeners.clear();
+		var firstListener = mock(EngineExecutionListener.class, "firstListener");
+		var secondListener = mock(EngineExecutionListener.class, "secondListener");
+		listeners.add(firstListener);
+		listeners.add(secondListener);
+
+		var testDescriptor = anyTestDescriptor();
+		var testExecutionResult = anyTestExecutionResult();
+
+		var composite = compositeEngineExecutionListener();
+		composite.executionStarted(testDescriptor);
+		composite.executionFinished(testDescriptor, testExecutionResult);
+
+		InOrder inOrder = inOrder(firstListener, secondListener);
+		inOrder.verify(firstListener).executionStarted(testDescriptor);
+		inOrder.verify(secondListener).executionStarted(testDescriptor);
+		inOrder.verify(secondListener).executionFinished(testDescriptor, testExecutionResult);
+		inOrder.verify(firstListener).executionFinished(testDescriptor, testExecutionResult);
+	}
+
+	private EngineExecutionListener compositeEngineExecutionListener() {
 		return new CompositeEngineExecutionListener(listeners);
 	}
 
@@ -114,8 +129,8 @@ class CompositeEngineExecutionListenerTests {
 		assertThat(logRecordListener.stream(CompositeEngineExecutionListener.class, Level.WARNING).count()).isZero();
 	}
 
-	private TestDescriptor getSampleMethodTestDescriptor() {
-		return getDemoMethodTestDescriptor();
+	private static TestExecutionResult anyTestExecutionResult() {
+		return mock();
 	}
 
 	private void assertThatTestListenerErrorLogged(LogRecordListener logRecordListener, Class<?> listenerClass,
@@ -124,10 +139,10 @@ class CompositeEngineExecutionListenerTests {
 			"EngineExecutionListener [" + listenerClass.getName() + "] threw exception for method: " + methodName);
 	}
 
-	private DemoMethodTestDescriptor getDemoMethodTestDescriptor() {
-		var method = ReflectionUtils.findMethod(this.getClass(), "getDemoMethodTestDescriptor",
-			new Class<?>[0]).orElseThrow();
-		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(), method);
+	private static TestDescriptor anyTestDescriptor() {
+		var testClass = CompositeEngineExecutionListenerTests.class;
+		var method = ReflectionUtils.findMethod(testClass, "anyTestDescriptor", new Class<?>[0]).orElseThrow();
+		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), testClass, method);
 	}
 
 	private static class ThrowingEngineExecutionListener implements EngineExecutionListener {

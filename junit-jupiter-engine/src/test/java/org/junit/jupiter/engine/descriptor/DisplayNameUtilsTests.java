@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -71,7 +71,7 @@ class DisplayNameUtilsTests {
 		@Nested
 		class ClassDisplayNameSupplierTests {
 
-			private JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+			private JupiterConfiguration configuration = mock();
 
 			@Test
 			void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
@@ -101,13 +101,22 @@ class DisplayNameUtilsTests {
 
 				assertThat(displayName.get()).isEqualTo("class-display-name");
 			}
+
+			@Test
+			void shouldFallbackOnDefaultDisplayNameGeneratorWhenNullIsGenerated() {
+				when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(
+					NullDisplayNameTestCase.class, configuration);
+
+				assertThat(displayName.get()).isEqualTo("class-display-name");
+			}
 		}
 	}
 
 	@Nested
 	class NestedClassDisplayNameTests {
 
-		private JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+		private JupiterConfiguration configuration = mock();
 
 		@Test
 		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
@@ -126,12 +135,21 @@ class DisplayNameUtilsTests {
 
 			assertThat(displayName.get()).isEqualTo("nested-class-display-name");
 		}
+
+		@Test
+		void shouldFallbackOnDefaultDisplayNameGeneratorWhenNullIsGenerated() {
+			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
+				NullDisplayNameTestCase.NestedTestCase.class, configuration);
+
+			assertThat(displayName.get()).isEqualTo("nested-class-display-name");
+		}
 	}
 
 	@Nested
 	class MethodDisplayNameTests {
 
-		private JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+		private JupiterConfiguration configuration = mock();
 
 		@Test
 		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() throws Exception {
@@ -149,6 +167,17 @@ class DisplayNameUtilsTests {
 			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
 			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NotDisplayNameTestCase.class, method,
+				configuration);
+
+			assertThat(displayName).isEqualTo("method-display-name");
+		}
+
+		@Test
+		void shouldFallbackOnDefaultDisplayNameGeneratorWhenNullIsGenerated() throws Exception {
+			Method method = NullDisplayNameTestCase.class.getDeclaredMethod("test");
+			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+
+			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NullDisplayNameTestCase.class, method,
 				configuration);
 
 			assertThat(displayName).isEqualTo("method-display-name");
@@ -186,6 +215,38 @@ class DisplayNameUtilsTests {
 
 	@Nested
 	class NestedTestCase {
+	}
+
+	@DisplayNameGeneration(value = NullDisplayNameGenerator.class)
+	static class NullDisplayNameTestCase {
+
+		@Test
+		void test() {
+		}
+
+		@Nested
+		class NestedTestCase {
+		}
+
+	}
+
+	static class NullDisplayNameGenerator implements DisplayNameGenerator {
+
+		@Override
+		public String generateDisplayNameForClass(Class<?> testClass) {
+			return null;
+		}
+
+		@Override
+		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+			return null;
+		}
+
+		@Override
+		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+			return null;
+		}
+
 	}
 
 }

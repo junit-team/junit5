@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,11 +21,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.console.ConsoleLauncherExecutionResult;
-import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.Details;
+import org.junit.platform.console.options.TestConsoleOutputOptions;
+import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 
 /**
@@ -38,146 +39,89 @@ class ConsoleTestExecutorTests {
 	};
 
 	private final StringWriter stringWriter = new StringWriter();
-	private final CommandLineOptions options = new CommandLineOptions();
-	private DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
+	private final TestDiscoveryOptions discoveryOptions = new TestDiscoveryOptions();
+	private final TestConsoleOutputOptions outputOptions = new TestConsoleOutputOptions();
+	private final DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 
 	{
-		options.setScanClasspath(true);
+		discoveryOptions.setScanClasspath(true);
 	}
 
 	@Test
-	void printsSummary() throws Exception {
+	void printsSummary() {
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
+		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("Test run finished after", "2 tests found", "0 tests skipped",
 			"2 tests started", "0 tests aborted", "1 tests successful", "1 tests failed");
 	}
 
 	@Test
-	void printsDetailsIfTheyAreNotHidden() throws Exception {
-		options.setDetails(Details.FLAT);
+	void printsDetailsIfTheyAreNotHidden() {
+		outputOptions.setDetails(Details.FLAT);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
+		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("Test execution started.");
 	}
 
 	@Test
-	void printsNoDetailsIfTheyAreHidden() throws Exception {
-		options.setDetails(Details.NONE);
+	void printsNoDetailsIfTheyAreHidden() {
+		outputOptions.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
+		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).doesNotContain("Test execution started.");
 	}
 
 	@Test
-	void printsFailuresEvenIfDetailsAreHidden() throws Exception {
-		options.setDetails(Details.NONE);
+	void printsFailuresEvenIfDetailsAreHidden() {
+		outputOptions.setDetails(Details.NONE);
 
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
+		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("Failures (2)", "failingTest", "failingContainer");
 	}
 
 	@Test
-	void hasStatusCode0ForSucceedingTest() throws Exception {
-		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
-
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(task.execute(dummyWriter()), options);
-
-		assertThat(exitCode).isEqualTo(0);
-	}
-
-	@Test
-	void hasStatusCode1ForFailingTest() throws Exception {
-		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
-
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(task.execute(dummyWriter()), options);
-
-		assertThat(exitCode).isEqualTo(1);
-	}
-
-	@Test
-	void hasStatusCode1ForFailingContainer() throws Exception {
-		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
-
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(task.execute(dummyWriter()), options);
-
-		assertThat(exitCode).isEqualTo(1);
-	}
-
-	/**
-	 * @since 1.3
-	 */
-	@Test
-	void hasStatusCode2ForNoTestsAndHasOptionFailIfNoTestsFound() throws Exception {
-		options.setFailIfNoTests(true);
-
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(task.execute(dummyWriter()), options);
-
-		assertThat(exitCode).isEqualTo(2);
-	}
-
-	/**
-	 * @since 1.3
-	 */
-	@Test
-	void hasStatusCode0ForNoTestsAndNotFailIfNoTestsFound() throws Exception {
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		var exitCode = ConsoleLauncherExecutionResult.computeExitCode(task.execute(dummyWriter()), options);
-
-		assertThat(exitCode).isEqualTo(0);
-	}
-
-	@Test
-	void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() throws Exception {
-		options.setAdditionalClasspathEntries(List.of(Paths.get(".")));
+	void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() {
+		discoveryOptions.setAdditionalClasspathEntries(List.of(Paths.get(".")));
 
 		var oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
+		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("failingTest", "should fail", "1 tests failed");
 	}
 
 	@Test
-	void usesSameClassLoaderIfNoAdditionalClassPathEntriesArePresent() throws Exception {
-		options.setAdditionalClasspathEntries(List.of());
+	void usesSameClassLoaderIfNoAdditionalClassPathEntriesArePresent() {
+		discoveryOptions.setAdditionalClasspathEntries(List.of());
 
 		var oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertNotSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
-		var task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter));
+		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
+		task.execute(new PrintWriter(stringWriter), Optional.empty());
 
 		assertThat(stringWriter.toString()).contains("failingTest", "should fail", "1 tests failed");
-	}
-
-	private PrintWriter dummyWriter() {
-		return new PrintWriter(new StringWriter());
 	}
 
 }

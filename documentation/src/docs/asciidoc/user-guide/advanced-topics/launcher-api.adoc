@@ -71,6 +71,11 @@ There is no return value for the `execute()` method, but you can use a
 `{SummaryGeneratingListener}`, `{LegacyXmlReportGeneratingListener}`, and
 `{UniqueIdTrackingListener}`.
 
+NOTE: All `TestExecutionListener` methods are called sequentially. Methods for start
+events are called in registration order while methods for finish events are called in
+reverse order.
+Test case execution won't start before all `executionStarted` calls have returned.
+
 [[launcher-api-engines-custom]]
 ==== Registering a TestEngine
 
@@ -157,6 +162,24 @@ include::{testDir}/example/session/HttpTests.java[tags=user_guide]
 <2> Read the port of the server from the system property set by the listener
 <3> Send a request to the server
 <4> Check the status code of the response
+
+[[launcher-api-launcher-interceptors-custom]]
+==== Registering a LauncherInterceptor
+
+In order to intercept the creation of instances of `{Launcher}` and
+`{LauncherSessionListener}` and calls to the `discover` and `execute` methods of the
+former, clients can registercustom implementations of `{LauncherInterceptor}` via Java's
+`{ServiceLoader}` mechanism by additionally setting the
+`junit.platform.launcher.interceptors.enabled` <<running-tests-config-params,
+configuration parameter>> to `true`.
+
+A typical use case is to create a custom replace the `ClassLoader` used by the JUnit
+Platform to load test classes and engine implementations.
+
+[source,java]
+----
+include::{testDir}/example/CustomLauncherInterceptor.java[tags=user_guide]
+----
 
 [[launcher-api-launcher-discovery-listeners-custom]]
 ==== Registering a LauncherDiscoveryListener

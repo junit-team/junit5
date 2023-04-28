@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,7 +15,9 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_SATURATE_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME;
 
 import org.apiguardian.api.API;
@@ -119,7 +121,7 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = JupiterConfiguration.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 
 	/**
@@ -127,7 +129,7 @@ public final class Constants {
 	 *
 	 * @see Execution#DEFAULT_EXECUTION_MODE_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.4")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_PARALLEL_EXECUTION_MODE = Execution.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
 
 	/**
@@ -136,7 +138,7 @@ public final class Constants {
 	 *
 	 * @see Execution#DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = Execution.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
 
 	static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config.";
@@ -150,7 +152,7 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_STRATEGY_PROPERTY_NAME;
 
@@ -162,9 +164,43 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+
+	/**
+	 * Property name used to configure the maximum pool size of the underlying
+	 * fork-join pool for the {@code fixed} configuration strategy: {@value}
+	 *
+	 * <p>Value must be an integer and greater than or equal to
+	 * {@value #PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME}; defaults to
+	 * {@code 256 + fixed.parallelism}.
+	 *
+	 * <p>Note: This property only takes affect on Java 9+.
+	 *
+	 * @since 5.10
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	public static final String PARALLEL_CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME;
+
+	/**
+	 * Property name used to disable saturation of the underlying fork-join pool
+	 * for the {@code fixed} configuration strategy: {@value}
+	 *
+	 * <p>When set to {@code false} the underlying fork-join pool will reject
+	 * additional tasks if all available workers are busy and the maximum
+	 * pool-size would be exceeded.
+
+	 * <p>Value must either {@code true} or {@code false}; defaults to {@code true}.
+	 *
+	 * <p>Note: This property only takes affect on Java 9+.
+	 *
+	 * @since 5.10
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	public static final String PARALLEL_CONFIG_FIXED_SATURATE_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_FIXED_SATURATE_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the factor to be multiplied with the number of
@@ -175,7 +211,7 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
 
@@ -186,7 +222,7 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
 
@@ -196,7 +232,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -204,7 +240,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -213,7 +249,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -222,7 +258,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -231,7 +267,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -239,7 +275,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -248,7 +284,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -257,7 +293,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -266,7 +302,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -275,7 +311,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -283,7 +319,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#TIMEOUT_MODE_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
+	@API(status = STABLE, since = "5.10")
 	public static final String TIMEOUT_MODE_PROPERTY_NAME = Timeout.TIMEOUT_MODE_PROPERTY_NAME;
 
 	/**

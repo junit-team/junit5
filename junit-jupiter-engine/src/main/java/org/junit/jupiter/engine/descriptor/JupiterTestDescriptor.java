@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -107,7 +107,9 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	<E extends Extension> void invokeExecutionExceptionHandlers(Class<E> handlerType, ExtensionRegistry registry,
 			Throwable throwable, ExceptionHandlerInvoker<E> handlerInvoker) {
 
-		invokeExecutionExceptionHandlers(registry.getReversedExtensions(handlerType), throwable, handlerInvoker);
+		List<E> extensions = registry.getExtensions(handlerType);
+		Collections.reverse(extensions);
+		invokeExecutionExceptionHandlers(extensions, throwable, handlerInvoker);
 	}
 
 	private <E extends Extension> void invokeExecutionExceptionHandlers(List<E> exceptionHandlers, Throwable throwable,

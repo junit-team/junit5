@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,7 +11,9 @@
 package org.junit.platform.console.tasks;
 
 import java.util.Optional;
-import java.util.concurrent.Callable;
+import java.util.function.Supplier;
+
+import org.junit.platform.commons.JUnitException;
 
 /**
  * @since 1.0
@@ -24,27 +26,35 @@ class CustomContextClassLoaderExecutor {
 		this.customClassLoader = customClassLoader;
 	}
 
-	<T> T invoke(Callable<T> callable) throws Exception {
+	<T> T invoke(Supplier<T> supplier) {
 		if (customClassLoader.isPresent()) {
 			// Only get/set context class loader when necessary to prevent problems with
 			// security managers
-			return replaceThreadContextClassLoaderAndInvoke(customClassLoader.get(), callable);
+			return replaceThreadContextClassLoaderAndInvoke(customClassLoader.get(), supplier);
 		}
-		return callable.call();
+		return supplier.get();
 	}
 
-	private <T> T replaceThreadContextClassLoaderAndInvoke(ClassLoader customClassLoader, Callable<T> callable)
-			throws Exception {
+	private <T> T replaceThreadContextClassLoaderAndInvoke(ClassLoader customClassLoader, Supplier<T> supplier) {
 		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
 		try {
 			Thread.currentThread().setContextClassLoader(customClassLoader);
-			return callable.call();
+			return supplier.get();
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(originalClassLoader);
 			if (customClassLoader instanceof AutoCloseable) {
-				((AutoCloseable) customClassLoader).close();
+				close((AutoCloseable) customClassLoader);
 			}
+		}
+	}
+
+	private static void close(AutoCloseable customClassLoader) {
+		try {
+			customClassLoader.close();
+		}
+		catch (Exception e) {
+			throw new JUnitException("Failed to close custom class loader", e);
 		}
 	}
 

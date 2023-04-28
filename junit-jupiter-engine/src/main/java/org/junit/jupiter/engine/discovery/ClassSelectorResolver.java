@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.discovery;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests.isTestOrTestFactoryOrTestTemplateMethod;
-import static org.junit.platform.commons.support.ReflectionSupport.findNestedClasses;
+import static org.junit.platform.commons.support.ReflectionSupport.streamNestedClasses;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
@@ -135,7 +135,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			return Resolution.match(Match.exact(it, () -> {
 				Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
 						.map(method -> selectMethod(testClasses, method));
-				Stream<NestedClassSelector> nestedClasses = findNestedClasses(testClass, isNestedTestClass).stream()
+				Stream<NestedClassSelector> nestedClasses = streamNestedClasses(testClass, isNestedTestClass)
 						.map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
 				return Stream.concat(methods, nestedClasses).collect(toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
 			}));

@@ -1,5 +1,5 @@
 plugins {
-	`java-library-conventions`
+	id("junitbuild.java-library-conventions")
 }
 
 description = "JUnit Platform Flight Recorder Support"
@@ -21,7 +21,7 @@ javaLibrary {
 
 tasks {
 	compileJava {
-		javaCompiler.set(project.the<JavaToolchainService>().compilerFor {
+		javaCompiler.set(project.javaToolchains.compilerFor {
 			languageVersion.set(JavaLanguageVersion.of(8))
 		})
 	}

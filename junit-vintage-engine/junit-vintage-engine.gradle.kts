@@ -1,7 +1,7 @@
 plugins {
-	`java-library-conventions`
-	`junit4-compatibility`
-	`testing-conventions`
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.junit4-compatibility")
+	id("junitbuild.testing-conventions")
 	`java-test-fixtures`
 	groovy
 }
@@ -22,13 +22,14 @@ dependencies {
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteEngine)
 	testImplementation(projects.junitPlatformTestkit)
+	testImplementation(testFixtures(projects.junitJupiterApi))
 
 	osgiVerification(projects.junitPlatformLauncher)
 }
 
 tasks {
 	compileTestFixturesGroovy {
-		javaLauncher.set(project.the<JavaToolchainService>().launcherFor {
+		javaLauncher.set(project.javaToolchains.launcherFor {
 			// Groovy 2.x (used for Spock tests) does not support current JDKs
 			languageVersion.set(JavaLanguageVersion.of(8))
 		})
@@ -61,11 +62,13 @@ tasks {
 		}
 	}
 	val testWithoutJUnit4 by registering(Test::class) {
+		val test by testing.suites.existing(JvmTestSuite::class)
 		(options as JUnitPlatformOptions).apply {
 			includeTags("missing-junit4")
 		}
 		setIncludes(listOf("**/JUnit4VersionCheckTests.class"))
-		classpath = classpath.filter {
+		testClassesDirs = files(test.map { it.sources.output.classesDirs })
+		classpath = files(test.map { it.sources.runtimeClasspath }).filter {
 			!it.name.startsWith("junit-4")
 		}
 	}

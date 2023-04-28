@@ -3,10 +3,10 @@ import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
-	`java-library-conventions`
-	`junit4-compatibility`
-	`testing-conventions`
-	id("me.champeau.jmh")
+	id("junitbuild.java-library-conventions")
+	id("junitbuild.junit4-compatibility")
+	id("junitbuild.testing-conventions")
+	alias(libs.plugins.jmh)
 }
 
 dependencies {
@@ -32,7 +32,9 @@ dependencies {
 	}
 	testImplementation(libs.joox)
 	testImplementation(libs.openTestReporting.tooling)
+	testImplementation(libs.picocli)
 	testImplementation(libs.bundles.xmlunit)
+	testImplementation(testFixtures(projects.junitJupiterApi))
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(projects.junitVintageEngine)
@@ -79,7 +81,7 @@ tasks {
 		}
 	}
 	checkstyleJmh { // use same style rules as defined for tests
-		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -325,7 +325,7 @@ public final class DiscoverySelectors {
 	 * @since 1.1
 	 * @see ModuleSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.1")
+	@API(status = STABLE, since = "1.10")
 	public static ModuleSelector selectModule(String moduleName) {
 		Preconditions.notBlank(moduleName, "Module name must not be null or blank");
 		return new ModuleSelector(moduleName.trim());
@@ -341,7 +341,7 @@ public final class DiscoverySelectors {
 	 * @since 1.1
 	 * @see ModuleSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.1")
+	@API(status = STABLE, since = "1.10")
 	public static List<ModuleSelector> selectModules(Set<String> moduleNames) {
 		Preconditions.notNull(moduleNames, "Module names must not be null");
 		Preconditions.containsNoNullElements(moduleNames, "Individual module name must not be null");

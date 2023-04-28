@@ -16,4 +16,3 @@ I hereby agree to the terms of the [JUnit Contributor License Agreement](https:/
 - [ ] Change is covered by [automated tests](https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md#tests) including corner cases, errors, and exception handling
 - [ ] Public API has [Javadoc](https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md#javadoc) and [`@API` annotations](https://apiguardian-team.github.io/apiguardian/docs/current/api/org/apiguardian/api/API.html)
 - [ ] Change is documented in the [User Guide](https://junit.org/junit5/docs/snapshot/user-guide/) and [Release Notes](https://junit.org/junit5/docs/snapshot/user-guide/#release-notes)
-- [ ] All [continuous integration builds](https://github.com/junit-team/junit5#continuous-integration-builds) pass

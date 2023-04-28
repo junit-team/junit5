@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -45,6 +45,9 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 	private static final String EXCEPTION_WAS_HANDLED = "exceptionWasHandled";
 
 	private final TestRuleSupport support = new TestRuleSupport(ExpectedExceptionAdapter::new, ExpectedException.class);
+
+	public ExpectedExceptionSupport() {
+	}
 
 	@Override
 	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {

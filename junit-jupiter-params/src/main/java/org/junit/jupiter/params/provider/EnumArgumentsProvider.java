@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -19,24 +19,16 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
  * @since 5.0
  */
-class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<EnumSource> {
-
-	private EnumSource enumSource;
+class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource> {
 
 	@Override
-	public void accept(EnumSource enumSource) {
-		this.enumSource = enumSource;
-	}
-
-	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		Set<? extends Enum<?>> constants = getEnumConstants(context);
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, EnumSource enumSource) {
+		Set<? extends Enum<?>> constants = getEnumConstants(context, enumSource);
 		EnumSource.Mode mode = enumSource.mode();
 		String[] declaredConstantNames = enumSource.names();
 		if (declaredConstantNames.length > 0) {
@@ -49,13 +41,13 @@ class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Enu
 		return constants.stream().map(Arguments::of);
 	}
 
-	private <E extends Enum<E>> Set<? extends E> getEnumConstants(ExtensionContext context) {
-		Class<E> enumClass = determineEnumClass(context);
+	private <E extends Enum<E>> Set<? extends E> getEnumConstants(ExtensionContext context, EnumSource enumSource) {
+		Class<E> enumClass = determineEnumClass(context, enumSource);
 		return EnumSet.allOf(enumClass);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private <E extends Enum<E>> Class<E> determineEnumClass(ExtensionContext context) {
+	private <E extends Enum<E>> Class<E> determineEnumClass(ExtensionContext context, EnumSource enumSource) {
 		Class enumClass = enumSource.value();
 		if (enumClass.equals(NullEnum.class)) {
 			Method method = context.getRequiredTestMethod();

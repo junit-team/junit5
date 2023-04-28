@@ -244,14 +244,6 @@ additional dependency to the runtime classpath.
 [[running-tests-build-maven]]
 ==== Maven
 
-[WARNING]
-.The JUnit Platform Maven Surefire Provider has been discontinued
-====
-The `junit-platform-surefire-provider`, which was originally developed by the JUnit team,
-was deprecated in JUnit Platform 1.3 and discontinued in 1.4. Please use Maven Surefire's
-native support instead.
-====
-
 Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0], Maven
 Surefire and Maven Failsafe provide
 https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[native support]
@@ -259,7 +251,31 @@ for executing tests on the JUnit Platform. The `pom.xml` file in the
 `{junit5-jupiter-starter-maven}` project demonstrates how to use the Maven Surefire plugin
 and can serve as a starting point for configuring your Maven build.
 
-NOTE: See <<running-tests-build-spring-boot>> for details on how to override the version
+[WARNING]
+.Use Maven Surefire/Failsafe 3.0.0-M4 or later to avoid interoperability issues
+====
+Maven Surefire/Failsafe 3.0.0-M4
+https://issues.apache.org/jira/browse/SUREFIRE-1585[introduced support] for aligning the
+version of the JUnit Platform Launcher it uses with the JUnit Platform version found on
+the test runtime classpath. Therefore, it is recommended to use version 3.0.0-M4 or later
+to avoid interoperability issues.
+
+Alternatively, you can add a test dependency on the matching version of the JUnit Platform
+Launcher to your Maven build as follows.
+
+[source,xml]
+[subs=attributes+]
+----
+<dependency>
+    <groupId>org.junit.platform</groupId>
+    <artifactId>junit-platform-launcher</artifactId>
+    <version>{platform-version}</version>
+    <scope>test</scope>
+</dependency>
+----
+====
+
+TIP: See <<running-tests-build-spring-boot>> for details on how to override the version
 of JUnit used in your Spring Boot application.
 
 [[running-tests-build-maven-engines-configure]]
@@ -582,7 +598,7 @@ standalone `ConsoleLauncher` as shown below.
 
 [source,console,subs=attributes+]
 ----
-$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS>
+$ java -jar junit-platform-console-standalone-{platform-version}.jar execute <OPTIONS>
 
 ├─ JUnit Vintage
 │  └─ example.JUnit4Tests
@@ -622,14 +638,34 @@ $ java -cp classes:testlib/* org.junit.platform.console.ConsoleLauncher <OPTIONS
 .Exit Code
 NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
 failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
-supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise the exit code
+supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise, the exit code
 is `0`.
 
 [[running-tests-console-launcher-options]]
-==== Options
+==== Subcommands and Options
+
+The `{ConsoleLauncher}` provides the following subcommands:
 
 ----
 include::{consoleLauncherOptionsFile}[]
+----
+
+===== Discovering tests
+
+----
+include::{consoleLauncherDiscoverOptionsFile}[]
+----
+
+===== Executing tests
+
+----
+include::{consoleLauncherExecuteOptionsFile}[]
+----
+
+===== Listing test engines
+
+----
+include::{consoleLauncherEnginesOptionsFile}[]
 ----
 
 [[running-tests-console-launcher-argument-files]]
@@ -963,7 +999,7 @@ because particularly when
 to attribute it to a specific test or container.
 
 [[running-tests-listeners]]
-=== Using Listeners
+=== Using Listeners and Interceptors
 
 The JUnit Platform provides the following listener APIs that allow JUnit, third parties,
 and custom user code to react to events fired at various points during the discovery and
@@ -971,6 +1007,8 @@ execution of a `TestPlan`.
 
 * `{LauncherSessionListener}`: receives events when a `{LauncherSession}` is opened and
   closed.
+* `{LauncherInterceptor}`: intercepts test discovery and execution in the context of a
+  `LauncherSession`.
 * `{LauncherDiscoveryListener}`: receives events that occur during test discovery.
 * `{TestExecutionListener}`: receives events that occur during test execution.
 
@@ -987,6 +1025,7 @@ For details on registering and configuring listeners, see the following sections
 guide.
 
 * <<launcher-api-launcher-session-listeners-custom>>
+* <<launcher-api-launcher-interceptors-custom>>
 * <<launcher-api-launcher-discovery-listeners-custom>>
 * <<launcher-api-listeners-custom>>
 * <<launcher-api-listeners-config>>

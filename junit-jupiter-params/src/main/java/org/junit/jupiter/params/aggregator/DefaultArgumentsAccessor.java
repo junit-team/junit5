@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -35,10 +35,13 @@ import org.junit.platform.commons.util.Preconditions;
 @API(status = INTERNAL, since = "5.2")
 public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
+	private final int invocationIndex;
 	private final Object[] arguments;
 
-	public DefaultArgumentsAccessor(Object... arguments) {
+	public DefaultArgumentsAccessor(int invocationIndex, Object... arguments) {
+		Preconditions.condition(invocationIndex >= 1, () -> "invocation index must be >= 1");
 		Preconditions.notNull(arguments, "Arguments array must not be null");
+		this.invocationIndex = invocationIndex;
 		this.arguments = arguments;
 	}
 
@@ -124,6 +127,11 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	@Override
 	public List<Object> toList() {
 		return Collections.unmodifiableList(Arrays.asList(this.arguments));
+	}
+
+	@Override
+	public int getInvocationIndex() {
+		return this.invocationIndex;
 	}
 
 }

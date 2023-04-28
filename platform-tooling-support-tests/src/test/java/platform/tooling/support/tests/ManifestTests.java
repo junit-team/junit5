@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -56,8 +56,8 @@ class ManifestTests {
 				MavenVersion.parseMavenString(version).getOSGiVersion().toString());
 			switch (module) {
 				case "junit-platform-commons" -> assertValue(attributes, "Multi-Release", "true");
-				case "junit-platform-console" -> assertValue(attributes, "Main-Class",
-					"org.junit.platform.console.ConsoleLauncher");
+				case "junit-platform-console" ->
+					assertValue(attributes, "Main-Class", "org.junit.platform.console.ConsoleLauncher");
 			}
 			var domain = Domain.domain(manifest);
 			domain.getExportPackage().forEach((pkg, attrs) -> {

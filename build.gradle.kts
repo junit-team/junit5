@@ -1,11 +1,11 @@
 plugins {
-	id("io.spring.nohttp")
-	id("io.github.gradle-nexus.publish-plugin")
-	`base-conventions`
-	`build-metadata`
-	`dependency-update-check`
-	`jacoco-aggregation-conventions`
-	`temp-maven-repo`
+	alias(libs.plugins.nohttp)
+	alias(libs.plugins.nexusPublish)
+	id("junitbuild.base-conventions")
+	id("junitbuild.build-metadata")
+	id("junitbuild.dependency-update-check")
+	id("junitbuild.jacoco-aggregation-conventions")
+	id("junitbuild.temp-maven-repo")
 }
 
 description = "JUnit 5"
@@ -13,7 +13,7 @@ description = "JUnit 5"
 val license by extra(License(
 	name = "Eclipse Public License v2.0",
 	url = uri("https://www.eclipse.org/legal/epl-v20.html"),
-	headerFile = file("src/spotless/eclipse-public-license-2.0.java")
+	headerFile = layout.projectDirectory.file("gradle/config/spotless/eclipse-public-license-2.0.java")
 ))
 
 val platformProjects by extra(listOf(
@@ -61,5 +61,5 @@ nexusPublishing {
 }
 
 nohttp {
-	source.exclude("buildSrc/build/generated-sources/**")
+	source.exclude("**/.gradle/**", "gradle/plugins/**/build/**", "buildSrc/build/**")
 }

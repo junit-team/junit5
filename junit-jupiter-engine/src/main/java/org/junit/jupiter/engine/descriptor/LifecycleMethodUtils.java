@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -61,7 +61,6 @@ final class LifecycleMethodUtils {
 		if (requireStatic) {
 			methods.forEach(method -> assertStatic(annotationType, method));
 		}
-		methods.forEach(method -> assertNonPrivate(annotationType, method));
 		return methods;
 	}
 
@@ -69,10 +68,7 @@ final class LifecycleMethodUtils {
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
 
 		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
-		methods.forEach(method -> {
-			assertNonStatic(annotationType, method);
-			assertNonPrivate(annotationType, method);
-		});
+		methods.forEach(method -> assertNonStatic(annotationType, method));
 		return methods;
 	}
 
@@ -95,13 +91,6 @@ final class LifecycleMethodUtils {
 	private static void assertNonStatic(Class<? extends Annotation> annotationType, Method method) {
 		if (ReflectionUtils.isStatic(method)) {
 			throw new JUnitException(String.format("@%s method '%s' must not be static.",
-				annotationType.getSimpleName(), method.toGenericString()));
-		}
-	}
-
-	private static void assertNonPrivate(Class<? extends Annotation> annotationType, Method method) {
-		if (ReflectionUtils.isPrivate(method)) {
-			throw new JUnitException(String.format("@%s method '%s' must not be private.",
 				annotationType.getSimpleName(), method.toGenericString()));
 		}
 	}
