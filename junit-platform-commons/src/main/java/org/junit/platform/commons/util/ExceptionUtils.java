@@ -14,6 +14,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 
@@ -30,6 +35,12 @@ import org.apiguardian.api.API;
  */
 @API(status = INTERNAL, since = "1.0")
 public final class ExceptionUtils {
+
+	private static final String JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX = "org.junit.platform.launcher.";
+	private static final List<String> ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS = Arrays.asList( //
+		"org.junit.jupiter.api.Assertions", //
+		"org.junit.jupiter.api.Assumptions" //
+	);
 
 	private ExceptionUtils() {
 		/* no-op */
@@ -78,6 +89,44 @@ public final class ExceptionUtils {
 			throwable.printStackTrace(printWriter);
 		}
 		return stringWriter.toString();
+	}
+
+	/**
+	 * Prune stack trace elements of the supplied {@link Throwable} using the
+	 * supplied {@link Predicate}, except {@code org.junit.jupiter.api.Assertions}
+	 * and {@code org.junit.jupiter.api.Assumptions} that will always remain
+	 * present.
+	 *
+	 * <p>Additionally, all elements prior to and including the first
+	 * JUnit Launcher call will be pruned.
+	 *
+	 * @param throwable the {@code Throwable} whose stack trace should be
+	 * pruned; never {@code null}
+	 * @param stackTraceElementFilter the {@code Predicate} used to filter
+	 * elements of the stack trace
+	 *
+	 * @since 5.10
+	 */
+	public static void pruneStackTrace(Throwable throwable, Predicate<String> stackTraceElementFilter) {
+		Preconditions.notNull(throwable, "Throwable must not be null");
+
+		List<StackTraceElement> stackTrace = Arrays.asList(throwable.getStackTrace());
+		List<StackTraceElement> prunedStackTrace = new ArrayList<>();
+
+		Collections.reverse(stackTrace);
+
+		for (StackTraceElement element : stackTrace) {
+			String name = element.getClassName();
+			if (name.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
+				prunedStackTrace.clear();
+			}
+			if (stackTraceElementFilter.test(name) || ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS.contains(name)) {
+				prunedStackTrace.add(element);
+			}
+		}
+
+		Collections.reverse(prunedStackTrace);
+		throwable.setStackTrace(prunedStackTrace.toArray(new StackTraceElement[0]));
 	}
 
 }

@@ -10,7 +10,10 @@
 
 package org.junit.platform.launcher.core;
 
-import org.junit.platform.commons.util.StackTraceUtils;
+import java.util.function.Predicate;
+
+import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -19,7 +22,7 @@ import org.junit.platform.engine.TestExecutionResult;
  * Prunes the stack trace in case of a failed event.
  *
  * @since 1.10
- * @see org.junit.platform.commons.util.StackTraceUtils#pruneStackTrace(Throwable, String)
+ * @see org.junit.platform.commons.util.ExceptionUtils#pruneStackTrace(Throwable, Predicate)
  */
 class StackTracePruningEngineExecutionListener extends DelegatingEngineExecutionListener {
 
@@ -38,7 +41,9 @@ class StackTracePruningEngineExecutionListener extends DelegatingEngineExecution
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
 		if (testExecutionResult.getThrowable().isPresent()) {
 			Throwable throwable = testExecutionResult.getThrowable().get();
-			StackTraceUtils.pruneStackTrace(throwable, pruningPattern);
+
+			ExceptionUtils.pruneStackTrace(throwable,
+				ClassNamePatternFilterUtils.excludeMatchingClassNames(pruningPattern));
 		}
 		super.executionFinished(testDescriptor, testExecutionResult);
 	}
