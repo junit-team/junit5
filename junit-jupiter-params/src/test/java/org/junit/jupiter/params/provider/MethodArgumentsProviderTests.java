@@ -174,10 +174,38 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void throwsExceptionWhenNonStaticFactoryMethodIsReferencedAndStaticIsRequired() {
+	void throwsExceptionWhenNonStaticLocalFactoryMethodIsReferencedWithLifecyclePerMethodSemantics() {
+		var lifecyclePerClass = false;
 		var exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(NonStaticTestCase.class, null, false, "nonStaticStringStreamProvider").toArray());
+			() -> provideArguments(NonStaticTestCase.class, lifecyclePerClass,
+				"nonStaticStringStreamProvider").toArray());
 
+		assertStaticIsRequired(exception);
+	}
+
+	@Test
+	void throwsExceptionWhenNonStaticExternalFactoryMethodIsReferencedWithLifecyclePerMethodSemantics() {
+		var factoryClass = NonStaticTestCase.class.getName();
+		var factoryMethod = factoryClass + "#nonStaticStringStreamProvider";
+		var lifecyclePerClass = false;
+		var exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(TestCase.class, lifecyclePerClass, factoryMethod).toArray());
+
+		assertStaticIsRequired(exception);
+	}
+
+	@Test
+	void throwsExceptionWhenNonStaticExternalFactoryMethodIsReferencedWithLifecyclePerClassSemantics() {
+		var factoryClass = NonStaticTestCase.class.getName();
+		var factoryMethod = factoryClass + "#nonStaticStringStreamProvider";
+		boolean lifecyclePerClass = true;
+		var exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(TestCase.class, lifecyclePerClass, factoryMethod).toArray());
+
+		assertStaticIsRequired(exception);
+	}
+
+	private static void assertStaticIsRequired(PreconditionViolationException exception) {
 		assertThat(exception).hasMessageContainingAll("Method '",
 			"' must be static: local factory methods must be static ",
 			"unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS); ",
@@ -186,7 +214,7 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void providesArgumentsFromNonStaticFactoryMethodWhenStaticIsNotRequired() {
-		var arguments = provideArguments(NonStaticTestCase.class, null, true, "nonStaticStringStreamProvider");
+		var arguments = provideArguments(NonStaticTestCase.class, true, "nonStaticStringStreamProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
@@ -609,7 +637,7 @@ class MethodArgumentsProviderTests {
 			String factoryMethod = factoryClass + "#factoryWithInvalidReturnType";
 
 			var exception = assertThrows(PreconditionViolationException.class,
-				() -> provideArguments(TestCase.class, null, false, factoryMethod).toArray());
+				() -> provideArguments(TestCase.class, false, factoryMethod).toArray());
 
 			assertThat(exception.getMessage())//
 					.containsSubsequence("Could not find valid factory method [" + factoryMethod + "] for test class [",
@@ -676,30 +704,24 @@ class MethodArgumentsProviderTests {
 	}
 
 	private Stream<Object[]> provideArguments(String... factoryMethodNames) {
-		return provideArguments(TestCase.class, null, false, factoryMethodNames);
+		return provideArguments(TestCase.class, false, factoryMethodNames);
 	}
 
 	private Stream<Object[]> provideArguments(Method testMethod, String factoryMethodName) {
 		return provideArguments(TestCase.class, testMethod, false, factoryMethodName);
 	}
 
-	private Stream<Object[]> provideArguments(Class<?> testClass, Method testMethod, boolean allowNonStaticMethod,
+	private Stream<Object[]> provideArguments(Class<?> testClass, boolean allowNonStaticMethod,
 			String... factoryMethodNames) {
 
-		if (testMethod == null) {
-			try {
-				class DummyClass {
-					@SuppressWarnings("unused")
-					public void dummyMethod() {
-					};
-				}
-				// ensure we have a non-null method, even if it's not a real test method.
-				testMethod = DummyClass.class.getMethod("dummyMethod");
-			}
-			catch (Exception ex) {
-				throw new RuntimeException(ex);
-			}
-		}
+		// Ensure we have a non-null test method, even if it's not a real test method.
+		// If this throws an exception, make sure that the supplied test class defines a "void test()" method.
+		Method testMethod = ReflectionUtils.findMethod(testClass, "test").get();
+		return provideArguments(testClass, testMethod, allowNonStaticMethod, factoryMethodNames);
+	}
+
+	private Stream<Object[]> provideArguments(Class<?> testClass, Method testMethod, boolean allowNonStaticMethod,
+			String... factoryMethodNames) {
 
 		var methodSource = mock(MethodSource.class);
 
@@ -939,6 +961,9 @@ class MethodArgumentsProviderTests {
 
 	// This test case mimics @TestInstance(Lifecycle.PER_CLASS)
 	static class NonStaticTestCase {
+
+		void test() {
+		}
 
 		Stream<String> nonStaticStringStreamProvider() {
 			return Stream.of("foo", "bar");
