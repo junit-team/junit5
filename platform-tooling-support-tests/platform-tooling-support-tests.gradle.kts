@@ -47,7 +47,7 @@ dependencies {
 	testImplementation(libs.groovy4) {
 		because("it provides convenience methods to handle process output")
 	}
-	testImplementation(libs.bnd) {
+	testImplementation(libs.bndlib) {
 		because("parsing OSGi metadata")
 	}
 	testRuntimeOnly(libs.slf4j.julBinding) {
