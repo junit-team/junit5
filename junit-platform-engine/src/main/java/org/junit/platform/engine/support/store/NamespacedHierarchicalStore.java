@@ -20,8 +20,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -284,7 +282,6 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 		private static final Object NO_VALUE_SET = new Object();
 
-		private final Lock lock = new ReentrantLock();
 		private final Supplier<Object> delegate;
 		private volatile Object value = NO_VALUE_SET;
 
@@ -303,8 +300,7 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			return value;
 		}
 
-		private void computeValue() {
-			lock.lock();
+		private synchronized void computeValue() {
 			try {
 				if (value == NO_VALUE_SET) {
 					value = delegate.get();
@@ -312,9 +308,6 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			}
 			catch (RuntimeException e) {
 				value = new Failure(e);
-			}
-			finally {
-				lock.unlock();
 			}
 		}
 
