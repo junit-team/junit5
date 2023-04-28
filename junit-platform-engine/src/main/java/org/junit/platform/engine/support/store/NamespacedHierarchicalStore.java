@@ -24,6 +24,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -263,7 +265,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			try {
 				return evaluate();
 			}
-			catch (RuntimeException e) {
+			catch (Throwable t) {
+				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 				return null;
 			}
 		}
@@ -295,7 +298,7 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 				computeValue();
 			}
 			if (value instanceof Failure) {
-				throw ((Failure) value).exception;
+				ExceptionUtils.throwAsUncheckedException(((Failure) value).throwable);
 			}
 			return value;
 		}
@@ -306,17 +309,18 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 					value = delegate.get();
 				}
 			}
-			catch (RuntimeException e) {
-				value = new Failure(e);
+			catch (Throwable t) {
+				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
+				value = new Failure(t);
 			}
 		}
 
 		private static class Failure {
 
-			private final RuntimeException exception;
+			private final Throwable throwable;
 
-			public Failure(RuntimeException exception) {
-				this.exception = exception;
+			public Failure(Throwable throwable) {
+				this.throwable = throwable;
 			}
 		}
 
