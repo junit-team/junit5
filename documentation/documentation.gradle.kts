@@ -8,9 +8,9 @@ import java.io.ByteArrayOutputStream
 import java.nio.file.Files
 
 plugins {
-	id("org.asciidoctor.jvm.convert")
-	id("org.asciidoctor.jvm.pdf")
-	id("org.ajoberstar.git-publish")
+	alias(libs.plugins.asciidoctorConvert)
+	alias(libs.plugins.asciidoctorPdf)
+	alias(libs.plugins.gitPublish)
 	id("junitbuild.build-parameters")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")

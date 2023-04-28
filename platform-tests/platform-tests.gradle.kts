@@ -6,7 +6,7 @@ plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.junit4-compatibility")
 	id("junitbuild.testing-conventions")
-	id("me.champeau.jmh")
+	alias(libs.plugins.jmh)
 }
 
 dependencies {
