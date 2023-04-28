@@ -54,7 +54,9 @@ repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* Implicit type conversion of boolean values like in `@CsvSource` is now stricter, only
+  allowing values `"true"` or `"false"` (case-insensitive), in order to make accidental
+  mistakes apparent, avoiding potential confusion.
 
 ==== New Features and Improvements
 
@@ -64,9 +66,6 @@ repository on GitHub.
   to fall back to the default display name generator.
 * `@EmptySource` now supports additional types, including `Collection` and `Map` subtypes
   with a public no-arg constructor.
-* Implicit type conversion of boolean values like in `@CsvSource` is now stricter, only
-  allowing values `"true"` or `"false"` (case-insensitive), in order to make accidental
-  mistakes apparent, avoiding potential confusion.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
