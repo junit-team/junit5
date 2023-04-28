@@ -30,18 +30,17 @@ class EngineDiscoveryResultValidatorTests {
 
 	@Test
 	void detectCycleWithDoubleRoot() {
-
 		var root = new TestDescriptorStub(UniqueId.forEngine("root"), "root");
 		validator.validate(testEngine, root);
 
 		root.addChild(root);
 		assertThatThrownBy(() -> validator.validate(testEngine, root)) //
 				.isInstanceOf(PreconditionViolationException.class) //
-				.hasMessage(
-					"""
-							The discover() method for TestEngine with ID 'my-engine' returned a cyclic graph; [engine:root] exists in at least two paths:
-							(1) [engine:root]
-							(2) [engine:root] -> [engine:root]""");
+				.hasMessage("""
+						The discover() method for TestEngine with ID 'my-engine' returned a cyclic graph; \
+						[engine:root] exists in at least two paths:
+						(1) [engine:root]
+						(2) [engine:root] -> [engine:root]""");
 	}
 
 	@Test
@@ -57,11 +56,11 @@ class EngineDiscoveryResultValidatorTests {
 		group2.addChild(group1);
 		assertThatThrownBy(() -> validator.validate(testEngine, root)) //
 				.isInstanceOf(PreconditionViolationException.class) //
-				.hasMessage(
-					"""
-							The discover() method for TestEngine with ID 'my-engine' returned a cyclic graph; [engine:root]/[group:1] exists in at least two paths:
-							(1) [engine:root] -> [engine:root]/[group:1]
-							(2) [engine:root] -> [engine:root]/[group:2] -> [engine:root]/[group:1]""");
+				.hasMessage("""
+						The discover() method for TestEngine with ID 'my-engine' returned a cyclic graph; \
+						[engine:root]/[group:1] exists in at least two paths:
+						(1) [engine:root] -> [engine:root]/[group:1]
+						(2) [engine:root] -> [engine:root]/[group:2] -> [engine:root]/[group:1]""");
 	}
 
 	@Test
@@ -81,11 +80,11 @@ class EngineDiscoveryResultValidatorTests {
 		group2.addChild(test1);
 		assertThatThrownBy(() -> validator.validate(testEngine, root)) //
 				.isInstanceOf(PreconditionViolationException.class) //
-				.hasMessage(
-					"""
-							The discover() method for TestEngine with ID 'my-engine' returned a cyclic graph; [engine:root]/[group:1]/[test:1] exists in at least two paths:
-							(1) [engine:root] -> [engine:root]/[group:1] -> [engine:root]/[group:1]/[test:1]
-							(2) [engine:root] -> [engine:root]/[group:2] -> [engine:root]/[group:1]/[test:1]""");
+				.hasMessage("""
+						The discover() method for TestEngine with ID 'my-engine' returned a cyclic graph; \
+						[engine:root]/[group:1]/[test:1] exists in at least two paths:
+						(1) [engine:root] -> [engine:root]/[group:1] -> [engine:root]/[group:1]/[test:1]
+						(2) [engine:root] -> [engine:root]/[group:2] -> [engine:root]/[group:1]/[test:1]""");
 	}
 
 }
