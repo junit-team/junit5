@@ -12,7 +12,7 @@ package org.junit.platform;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +39,7 @@ class StackTracePruningTests {
 	@Test
 	void shouldPruneStackTraceByDefault() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
-				.selectors(selectClass(FailingAssertionTestCase.class)) //
+				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -56,7 +56,7 @@ class StackTracePruningTests {
 	void shouldPruneStackTraceWhenEnabled() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.selectors(selectClass(FailingAssertionTestCase.class)) //
+				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -66,14 +66,14 @@ class StackTracePruningTests {
 				>>>>
 				""");
 
-		assertStackTraceDoesNotContain(stackTrace, "java.base/java.util.ArrayList.forEach(ArrayList.java:");
+		assertStackTraceDoesNotContain(stackTrace, "java.util.ArrayList.forEach(ArrayList.java:");
 	}
 
 	@Test
 	void shouldNotPruneStackTraceWhenDisabled() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "false") //
-				.selectors(selectClass(FailingAssertionTestCase.class)) //
+				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -92,7 +92,7 @@ class StackTracePruningTests {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
 				.configurationParameter("junit.platform.stacktrace.pruning.pattern", "jdk.*") //
-				.selectors(selectClass(FailingAssertionTestCase.class)) //
+				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -105,7 +105,7 @@ class StackTracePruningTests {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
 				.configurationParameter("junit.platform.stacktrace.pruning.pattern", "*") //
-				.selectors(selectClass(FailingAssertionTestCase.class)) //
+				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -120,7 +120,7 @@ class StackTracePruningTests {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
 				.configurationParameter("junit.platform.stacktrace.pruning.pattern", "*") //
-				.selectors(selectClass(FailingAssumptionTestCase.class)) //
+				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssumption")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -130,11 +130,29 @@ class StackTracePruningTests {
 				""");
 	}
 
+	@Test
+	void shouldPruneStackTracesOfSuppressedExceptions() {
+		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
+				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
+				.selectors(selectMethod(StackTracePruningTestCase.class, "multipleFailingAssertion")) //
+				.execute();
+
+		Throwable throwable = getThrowable(results);
+
+		for (Throwable suppressed : throwable.getSuppressed()) {
+			List<StackTraceElement> stackTrace = Arrays.asList(suppressed.getStackTrace());
+			assertStackTraceDoesNotContain(stackTrace, "java.util.ArrayList.forEach(ArrayList.java:");
+		}
+	}
+
 	private static List<StackTraceElement> extractStackTrace(EngineExecutionResults results) {
+		return Arrays.asList(getThrowable(results).getStackTrace());
+	}
+
+	private static Throwable getThrowable(EngineExecutionResults results) {
 		var failedTestEvent = results.testEvents().failed().list().get(0);
 		var testResult = failedTestEvent.getRequiredPayload(TestExecutionResult.class);
-		Throwable throwable = testResult.getThrowable().orElseThrow();
-		return Arrays.asList(throwable.getStackTrace());
+		return testResult.getThrowable().orElseThrow();
 	}
 
 	private static void assertStackTraceMatch(List<StackTraceElement> stackTrace, String expectedLines) {
@@ -153,18 +171,23 @@ class StackTracePruningTests {
 
 	// -------------------------------------------------------------------
 
-	static class FailingAssertionTestCase {
+	static class StackTracePruningTestCase {
+		
 		@Test
-		void test() {
+		void failingAssertion() {
 			Assertions.fail();
 		}
 
-	}
-
-	static class FailingAssumptionTestCase {
-
 		@Test
-		void test() {
+		void multipleFailingAssertion() {
+			Assertions.assertAll(
+					Assertions::fail,
+					Assertions::fail
+			);
+		}
+		
+		@Test
+		void failingAssumption() {
 			Assumptions.assumeTrue(() -> {
 				throw new RuntimeException();
 			});
