@@ -15,6 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,7 +40,9 @@ public class NamespacedHierarchicalStoreTests {
 
 	private final String namespace = "ns";
 
-	private final NamespacedHierarchicalStore<String> grandParentStore = new NamespacedHierarchicalStore<>(null);
+	private NamespacedHierarchicalStore.CloseAction closeAction = mock();
+	private final NamespacedHierarchicalStore<String> grandParentStore = new NamespacedHierarchicalStore<>(null,
+		closeAction);
 	private final NamespacedHierarchicalStore<String> parentStore = grandParentStore.newChild();
 	private final NamespacedHierarchicalStore<String> store = parentStore.newChild();
 
@@ -342,6 +349,45 @@ public class NamespacedHierarchicalStoreTests {
 			assertEquals(value2, store.get(ns2, key));
 		}
 
+	}
+
+	@Nested
+	class CloseActionTests {
+
+		@Test
+		void callsCloseActionInReverseInsertionOrderWhenClosingStore() throws Throwable {
+			store.put(namespace, "key1", "value1");
+			store.put(namespace, "key2", "value2");
+			store.put(namespace, "key3", "value3");
+			verifyNoInteractions(closeAction);
+
+			store.close();
+			var inOrder = inOrder(closeAction);
+			inOrder.verify(closeAction).close("value3");
+			inOrder.verify(closeAction).close("value2");
+			inOrder.verify(closeAction).close("value1");
+		}
+
+		@Test
+		void doesNotCallCloseActionForRemovedValues() {
+			store.put(namespace, key, value);
+			store.remove(namespace, key);
+
+			store.close();
+
+			verifyNoInteractions(closeAction);
+		}
+
+		@Test
+		void doesNotCallCloseActionForReplacedValues() throws Throwable {
+			store.put(namespace, key, "value1");
+			store.put(namespace, key, "value2");
+
+			store.close();
+
+			verify(closeAction).close("value2");
+			verifyNoMoreInteractions(closeAction);
+		}
 	}
 
 	private Object createObject(final String display) {
