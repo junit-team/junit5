@@ -6,6 +6,8 @@ dependencyResolutionManagement {
 	}
 }
 
+rootProject.name = "plugins"
+
 include("build-parameters")
 include("common")
 
