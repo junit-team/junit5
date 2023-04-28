@@ -42,7 +42,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 @API(status = EXPERIMENTAL, since = "5.10")
 public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
-	private static final Comparator<StoredValue> REVERSE_INSERT_ORDER = Comparator.<StoredValue, Integer> comparing(
+	private static final Comparator<EvaluatedValue> REVERSE_INSERT_ORDER = Comparator.<EvaluatedValue, Integer> comparing(
 		it -> it.order).reversed();
 
 	private final AtomicInteger insertOrderSequence = new AtomicInteger();
@@ -90,10 +90,10 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		}
 		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
 		storedValues.values().stream() //
-				.filter(storedValue -> storedValue.evaluateSafely() != null) //
+				.map(StoredValue::evaluateSafely) //
+				.filter(Objects::nonNull) //
 				.sorted(REVERSE_INSERT_ORDER) //
-				.map(StoredValue::evaluate) //
-				.forEach(value -> throwableCollector.execute(() -> closeAction.close(value)));
+				.forEach(it -> throwableCollector.execute(() -> closeAction.close(it.value)));
 		throwableCollector.assertEmpty();
 	}
 
@@ -267,9 +267,9 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			this.supplier = supplier;
 		}
 
-		private Object evaluateSafely() {
+		private EvaluatedValue evaluateSafely() {
 			try {
-				return evaluate();
+				return new EvaluatedValue(order, evaluate());
 			}
 			catch (Throwable t) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
@@ -285,6 +285,17 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			return value != null ? value.evaluate() : null;
 		}
 
+	}
+
+	private static class EvaluatedValue {
+
+		private final int order;
+		private final Object value;
+
+		EvaluatedValue(int order, Object value) {
+			this.order = order;
+			this.value = value;
+		}
 	}
 
 	private static class MemoizingSupplier implements Supplier<Object> {
