@@ -2,7 +2,7 @@
 ant = "1.10.13"
 apiguardian = "1.1.2"
 asciidoctor-pdf = "1.5.3"
-asciidoctor-plugins = "4.0.0-alpha.1"
+asciidoctor-plugins = "4.0.0-alpha.1" # Check if workaround in documentation.gradle.kts can be removed when upgrading
 assertj = "3.24.2"
 bnd = "6.4.0"
 checkstyle = "9.3"
@@ -68,11 +68,8 @@ log4j = ["log4j-core", "log4j-jul"]
 xmlunit = ["xmlunit-assertj", "xmlunit-placeholders"]
 
 [plugins]
-
-# Check if workaround in documentation.gradle.kts can be removed when upgrading
 asciidoctorConvert = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor-plugins" }
 asciidoctorPdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "asciidoctor-plugins" }
-
 buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.3" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.0" }
 jmh = { id = "me.champeau.jmh", version = "0.7.1" }
