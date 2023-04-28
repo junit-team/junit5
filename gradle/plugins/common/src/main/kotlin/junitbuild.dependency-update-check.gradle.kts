@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.resolutionStrategy
-
 plugins {
 	id("com.github.ben-manes.versions")
 }
