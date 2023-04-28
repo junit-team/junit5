@@ -82,6 +82,7 @@ gitPublish {
 	repoUri.set("https://github.com/junit-team/junit5.git")
 	branch.set("gh-pages")
 	sign.set(false)
+	fetchDepth.set(1)
 
 	contents {
 		from(docsDir)
