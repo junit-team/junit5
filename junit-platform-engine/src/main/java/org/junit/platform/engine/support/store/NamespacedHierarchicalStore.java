@@ -73,6 +73,10 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		this.closeAction = closeAction;
 	}
 
+	public NamespacedHierarchicalStore<N> newChild() {
+		return new NamespacedHierarchicalStore<>(this, closeAction);
+	}
+
 	/**
 	 * If a close action is configured, it will be called with all successfully
 	 * stored values in reverse insertion order.

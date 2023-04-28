@@ -36,8 +36,8 @@ public class NamespacedHierarchicalStoreTests {
 	private final String namespace = "ns";
 
 	private final NamespacedHierarchicalStore<String> grandParentStore = new NamespacedHierarchicalStore<>(null);
-	private final NamespacedHierarchicalStore<String> parentStore = new NamespacedHierarchicalStore<>(grandParentStore);
-	private final NamespacedHierarchicalStore<String> store = new NamespacedHierarchicalStore<>(parentStore);
+	private final NamespacedHierarchicalStore<String> parentStore = grandParentStore.newChild();
+	private final NamespacedHierarchicalStore<String> store = parentStore.newChild();
 
 	@Nested
 	class StoringValuesTests {
