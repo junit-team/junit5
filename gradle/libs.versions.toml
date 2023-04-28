@@ -2,6 +2,7 @@
 ant = "1.10.13"
 apiguardian = "1.1.2"
 asciidoctor-pdf = "1.5.3"
+asciidoctor-plugins = "4.0.0-alpha.1"
 assertj = "3.24.2"
 checkstyle = "9.0"
 jacoco = "0.8.7"
@@ -56,3 +57,14 @@ xmlunit-placeholders = { module = "org.xmlunit:xmlunit-placeholders", version.re
 ant = ["ant", "ant-junit", "ant-junitlauncher"]
 log4j = ["log4j-core", "log4j-jul"]
 xmlunit = ["xmlunit-assertj", "xmlunit-placeholders"]
+
+[plugins]
+
+# Check if workaround in documentation.gradle.kts can be removed when upgrading
+asciidoctorConvert = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor-plugins" }
+asciidoctorPdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "asciidoctor-plugins" }
+
+gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.0" }
+jmh = { id = "me.champeau.jmh", version = "0.7.1" }
+nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
+nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "1.3.0" }

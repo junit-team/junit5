@@ -7,17 +7,10 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 	plugins {
-		id("com.gradle.enterprise") version "3.13" // keep in sync with gradle/plugins/build.gradle.kts
+		id("com.gradle.enterprise") version "3.13" // keep in sync with gradle/libs.versions.toml
 		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.10"
 		id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
-		id("org.ajoberstar.git-publish") version "4.2.0"
 		kotlin("jvm") version "1.8.20"
-		// Check if workaround in documentation.gradle.kts can be removed when upgrading
-		id("org.asciidoctor.jvm.convert") version "4.0.0-alpha.1"
-		id("org.asciidoctor.jvm.pdf") version "4.0.0-alpha.1"
-		id("me.champeau.jmh") version "0.7.1"
-		id("io.spring.nohttp") version "0.0.11"
-		id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
 	}
 }
 
