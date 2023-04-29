@@ -284,6 +284,8 @@ tasks {
 				"--add-opens", "java.base/java.io=ALL-UNNAMED"
 			)
 		}
+
+		notCompatibleWithConfigurationCache("https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/564")
 	}
 
 	asciidoctor {
