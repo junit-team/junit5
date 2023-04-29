@@ -100,7 +100,30 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html" class="type-name-link" title="class in org.junit.jupiter.engine.execution">NamespaceAwareStore</a> - Class in <a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html#%3Cinit%3E(org.junit.jupiter.engine.execution.ExtensionValuesStore,org.junit.jupiter.api.extension.ExtensionContext.Namespace)" class="member-name-link">NamespaceAwareStore(ExtensionValuesStore, ExtensionContext.Namespace)</a> - Constructor for class org.junit.jupiter.engine.execution.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html" title="class in org.junit.jupiter.engine.execution">NamespaceAwareStore</a></dt>
+<dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html#%3Cinit%3E(org.junit.platform.engine.support.store.NamespacedHierarchicalStore,org.junit.jupiter.api.extension.ExtensionContext.Namespace)" class="member-name-link">NamespaceAwareStore(NamespacedHierarchicalStore&lt;ExtensionContext.Namespace&gt;, ExtensionContext.Namespace)</a> - Constructor for class org.junit.jupiter.engine.execution.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html" title="class in org.junit.jupiter.engine.execution">NamespaceAwareStore</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" class="type-name-link" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt; - Class in <a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/package-summary.html">org.junit.platform.engine.support.store</a></dt>
+<dd>
+<div class="block"><code>ExtensionValuesStore</code> is a hierarchical namespaced key-value store.</div>
+</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html#%3Cinit%3E(org.junit.platform.engine.support.store.NamespacedHierarchicalStore)" class="member-name-link">NamespacedHierarchicalStore(NamespacedHierarchicalStore&lt;N&gt;)</a> - Constructor for class org.junit.platform.engine.support.store.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a></dt>
+<dd>
+<div class="block">Create a new store with the supplied parent.</div>
+</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html#%3Cinit%3E(org.junit.platform.engine.support.store.NamespacedHierarchicalStore,org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction)" class="member-name-link">NamespacedHierarchicalStore(NamespacedHierarchicalStore&lt;N&gt;, NamespacedHierarchicalStore.CloseAction&lt;N&gt;)</a> - Constructor for class org.junit.platform.engine.support.store.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a></dt>
+<dd>
+<div class="block">Create a new store with the supplied parent and close action.</div>
+</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.CloseAction.html" class="type-name-link" title="interface in org.junit.platform.engine.support.store">NamespacedHierarchicalStore.CloseAction</a>&lt;<a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.CloseAction.html" title="type parameter in NamespacedHierarchicalStore.CloseAction">N</a>&gt; - Interface in <a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/package-summary.html">org.junit.platform.engine.support.store</a></dt>
+<dd>
+<div class="block">Called for each successfully stored non-null value in when closing a
+ <a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store"><code>NamespacedHierarchicalStore</code></a>.</div>
+</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStoreException.html" class="type-name-link" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a> - Exception in <a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/package-summary.html">org.junit.platform.engine.support.store</a></dt>
+<dd>
+<div class="block">Exception thrown by failed <a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store"><code>NamespacedHierarchicalStore</code></a> operations.</div>
+</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStoreException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">NamespacedHierarchicalStoreException(String)</a> - Constructor for exception org.junit.platform.engine.support.store.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/Nested.html" class="type-name-link" title="annotation interface in org.junit.jupiter.api">Nested</a> - Annotation Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
 <dd>
@@ -152,6 +175,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Never clean up a temporary directory after the test has completed.</div>
 </dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html#newChild()" class="member-name-link">newChild()</a> - Method in class org.junit.platform.engine.support.store.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.commons/org/junit/platform/commons/support/ReflectionSupport.html#newInstance(java.lang.Class,java.lang.Object...)" class="member-name-link">newInstance(Class&lt;T&gt;, Object...)</a> - Static method in class org.junit.platform.commons.support.<a href="../org.junit.platform.commons/org/junit/platform/commons/support/ReflectionSupport.html" title="class in org.junit.platform.commons.support">ReflectionSupport</a></dt>
 <dd>
 <div class="block">Create a new instance of the specified <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> by invoking

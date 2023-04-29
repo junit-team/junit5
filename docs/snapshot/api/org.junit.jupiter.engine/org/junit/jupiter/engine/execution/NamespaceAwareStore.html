@@ -114,7 +114,7 @@ implements <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/ap
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.junit.jupiter.engine.execution.ExtensionValuesStore,org.junit.jupiter.api.extension.ExtensionContext.Namespace)" class="member-name-link">NamespaceAwareStore</a><wbr>(<a href="ExtensionValuesStore.html" title="class in org.junit.jupiter.engine.execution">ExtensionValuesStore</a>&nbsp;valuesStore,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.junit.platform.engine.support.store.NamespacedHierarchicalStore,org.junit.jupiter.api.extension.ExtensionContext.Namespace)" class="member-name-link">NamespaceAwareStore</a><wbr>(<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension">ExtensionContext.Namespace</a>&gt;&nbsp;valuesStore,
  <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension">ExtensionContext.Namespace</a>&nbsp;namespace)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -198,9 +198,9 @@ V&gt;&nbsp;V</code></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(org.junit.jupiter.engine.execution.ExtensionValuesStore,org.junit.jupiter.api.extension.ExtensionContext.Namespace)">
+<section class="detail" id="&lt;init&gt;(org.junit.platform.engine.support.store.NamespacedHierarchicalStore,org.junit.jupiter.api.extension.ExtensionContext.Namespace)">
 <h3>NamespaceAwareStore</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NamespaceAwareStore</span><wbr><span class="parameters">(<a href="ExtensionValuesStore.html" title="class in org.junit.jupiter.engine.execution">ExtensionValuesStore</a>&nbsp;valuesStore,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NamespaceAwareStore</span><wbr><span class="parameters">(<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension">ExtensionContext.Namespace</a>&gt;&nbsp;valuesStore,
  <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension">ExtensionContext.Namespace</a>&nbsp;namespace)</span></div>
 </section>
 </li>
@@ -307,7 +307,7 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/
 <dt>Parameters:</dt>
 <dd><code>key</code> - the key; never <code>null</code></dd>
 <dd><code>defaultCreator</code> - the function called with the supplied <code>key</code>
- to create a new value; never <code>null</code></dd>
+ to create a new value; never <code>null</code> but may return <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>the value; potentially <code>null</code></dd>
 <dt>See Also:</dt>
@@ -351,7 +351,7 @@ V&gt;</span>&nbsp;<span class="return-type">V</span>&nbsp;<span class="element-n
 <dt>Parameters:</dt>
 <dd><code>key</code> - the key; never <code>null</code></dd>
 <dd><code>defaultCreator</code> - the function called with the supplied <code>key</code>
- to create a new value; never <code>null</code></dd>
+ to create a new value; never <code>null</code> but may return <code>null</code></dd>
 <dd><code>requiredType</code> - the required type of the value; never <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>the value; potentially <code>null</code></dd>
