@@ -11,8 +11,10 @@
 package org.junit.platform.engine.support.store;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
 import static org.mockito.Mockito.inOrder;
@@ -246,6 +248,15 @@ public class NamespacedHierarchicalStoreTests {
 		}
 
 		@Test
+		void getOrComputeIfAbsentWithExceptionThrowingCreatorFunction() {
+			var e = assertThrows(RuntimeException.class, () -> store.getOrComputeIfAbsent(namespace, key, __ -> {
+				throw new RuntimeException("boom");
+			}));
+			assertSame(e, assertThrows(RuntimeException.class, () -> store.get(namespace, key)));
+			assertSame(e, assertThrows(RuntimeException.class, () -> store.remove(namespace, key)));
+		}
+
+		@Test
 		void removeWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
 			Integer key = 42;
 			String value = "enigma";
@@ -387,6 +398,17 @@ public class NamespacedHierarchicalStoreTests {
 
 			verify(closeAction).close("value2");
 			verifyNoMoreInteractions(closeAction);
+		}
+
+		@Test
+		void ignoresStoredValuesThatThrewExceptionsDuringCleanup() {
+			assertThrows(RuntimeException.class, () -> store.getOrComputeIfAbsent(namespace, key, __ -> {
+				throw new RuntimeException("boom");
+			}));
+
+			assertDoesNotThrow(store::close);
+
+			verifyNoInteractions(closeAction);
 		}
 	}
 
