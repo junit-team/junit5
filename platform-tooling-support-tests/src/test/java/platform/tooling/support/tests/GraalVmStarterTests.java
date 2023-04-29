@@ -21,6 +21,8 @@ import java.time.Duration;
 
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
+import com.gradle.enterprise.testing.annotations.LocalOnly;
+
 import org.junit.jupiter.api.Test;
 
 import platform.tooling.support.MavenRepo;
@@ -29,6 +31,7 @@ import platform.tooling.support.Request;
 /**
  * @since 1.9.1
  */
+@LocalOnly(because = "GraalVM is not installed on Test Distribution agents")
 class GraalVmStarterTests {
 
 	@Test
