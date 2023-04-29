@@ -40,7 +40,7 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
  */
 abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext, AutoCloseable {
 
-	private static final NamespacedHierarchicalStore.CloseAction CLOSE_RESOURCES = value -> {
+	private static final NamespacedHierarchicalStore.CloseAction<Namespace> CLOSE_RESOURCES = (__, ___, value) -> {
 		if (value instanceof CloseableResource) {
 			((CloseableResource) value).close();
 		}

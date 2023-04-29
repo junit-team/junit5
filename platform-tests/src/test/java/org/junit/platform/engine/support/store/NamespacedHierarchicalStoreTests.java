@@ -42,7 +42,7 @@ public class NamespacedHierarchicalStoreTests {
 
 	private final String namespace = "ns";
 
-	private NamespacedHierarchicalStore.CloseAction closeAction = mock();
+	private final NamespacedHierarchicalStore.CloseAction<String> closeAction = mock();
 	private final NamespacedHierarchicalStore<String> grandParentStore = new NamespacedHierarchicalStore<>(null,
 		closeAction);
 	private final NamespacedHierarchicalStore<String> parentStore = grandParentStore.newChild();
@@ -311,10 +311,12 @@ public class NamespacedHierarchicalStoreTests {
 		void simulateRaceConditionInGetOrComputeIfAbsent() throws Exception {
 			int threads = 10;
 			AtomicInteger counter = new AtomicInteger();
-			NamespacedHierarchicalStore<String> localStore = new NamespacedHierarchicalStore<>(null);
+			List<Object> values;
 
-			List<Object> values = executeConcurrently(threads, //
-				() -> localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet()));
+			try (var localStore = new NamespacedHierarchicalStore<>(null)) {
+				values = executeConcurrently(threads, //
+					() -> localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet()));
+			}
 
 			assertEquals(1, counter.get());
 			assertThat(values).hasSize(threads).containsOnly(1);
@@ -374,9 +376,9 @@ public class NamespacedHierarchicalStoreTests {
 
 			store.close();
 			var inOrder = inOrder(closeAction);
-			inOrder.verify(closeAction).close("value3");
-			inOrder.verify(closeAction).close("value2");
-			inOrder.verify(closeAction).close("value1");
+			inOrder.verify(closeAction).close(namespace, "key3", "value3");
+			inOrder.verify(closeAction).close(namespace, "key2", "value2");
+			inOrder.verify(closeAction).close(namespace, "key1", "value1");
 		}
 
 		@Test
@@ -396,7 +398,7 @@ public class NamespacedHierarchicalStoreTests {
 
 			store.close();
 
-			verify(closeAction).close("value2");
+			verify(closeAction).close(namespace, key, "value2");
 			verifyNoMoreInteractions(closeAction);
 		}
 

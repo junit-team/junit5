@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.store;
 
+import static java.util.Comparator.comparing;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
@@ -41,13 +42,10 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 @API(status = EXPERIMENTAL, since = "5.10")
 public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
-	private static final Comparator<EvaluatedValue> REVERSE_INSERT_ORDER = Comparator.<EvaluatedValue, Integer> comparing(
-		it -> it.order).reversed();
-
 	private final AtomicInteger insertOrderSequence = new AtomicInteger();
 	private final ConcurrentMap<CompositeKey<N>, StoredValue> storedValues = new ConcurrentHashMap<>(4);
 	private final NamespacedHierarchicalStore<N> parentStore;
-	private final CloseAction closeAction;
+	private final CloseAction<N> closeAction;
 
 	/**
 	 * Create a new store with the supplied parent.
@@ -67,7 +65,7 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param closeAction The action to be called for each stored value when
 	 *                    this store is closed.
 	 */
-	public NamespacedHierarchicalStore(NamespacedHierarchicalStore<N> parentStore, CloseAction closeAction) {
+	public NamespacedHierarchicalStore(NamespacedHierarchicalStore<N> parentStore, CloseAction<N> closeAction) {
 		this.parentStore = parentStore;
 		this.closeAction = closeAction;
 	}
@@ -88,11 +86,11 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			return;
 		}
 		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
-		storedValues.values().stream() //
-				.map(StoredValue::evaluateSafely) //
+		storedValues.entrySet().stream() //
+				.map(e -> e.getValue().evaluateSafely(e.getKey())) //
 				.filter(Objects::nonNull) //
-				.sorted(REVERSE_INSERT_ORDER) //
-				.forEach(it -> throwableCollector.execute(() -> closeAction.close(it.value)));
+				.sorted(EvaluatedValue.REVERSE_INSERT_ORDER) //
+				.forEach(it -> throwableCollector.execute(() -> it.close(closeAction)));
 		throwableCollector.assertEmpty();
 	}
 
@@ -266,9 +264,9 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			this.supplier = supplier;
 		}
 
-		private EvaluatedValue evaluateSafely() {
+		private <N> EvaluatedValue<N> evaluateSafely(CompositeKey<N> compositeKey) {
 			try {
-				return new EvaluatedValue(order, evaluate());
+				return new EvaluatedValue<>(compositeKey, order, evaluate());
 			}
 			catch (Throwable t) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
@@ -286,14 +284,23 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	}
 
-	private static class EvaluatedValue {
+	private static class EvaluatedValue<N> {
 
+		private static final Comparator<EvaluatedValue<?>> REVERSE_INSERT_ORDER = comparing(
+			(EvaluatedValue<?> it) -> it.order).reversed();
+
+		private final CompositeKey<N> compositeKey;
 		private final int order;
 		private final Object value;
 
-		EvaluatedValue(int order, Object value) {
+		EvaluatedValue(CompositeKey<N> key, int order, Object value) {
+			this.compositeKey = key;
 			this.order = order;
 			this.value = value;
+		}
+
+		void close(CloseAction<N> closeAction) throws Throwable {
+			closeAction.close(compositeKey.namespace, compositeKey.key, value);
 		}
 	}
 
@@ -355,12 +362,12 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * Called for each stored value in a {@link NamespacedHierarchicalStore}.
 	 */
 	@FunctionalInterface
-	public interface CloseAction {
+	public interface CloseAction<N> {
 
 		/**
-		 * Attempt to close the supplied resource.
+		 * Close the supplied {@code value}.
 		 */
-		void close(Object resource) throws Throwable;
+		void close(N namespace, Object key, Object value) throws Throwable;
 	}
 
 }
