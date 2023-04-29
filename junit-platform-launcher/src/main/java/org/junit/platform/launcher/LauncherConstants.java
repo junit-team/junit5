@@ -148,6 +148,22 @@ public class LauncherConstants {
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static final String ENABLE_LAUNCHER_INTERCEPTORS = "junit.platform.launcher.interceptors.enabled";
 
+	/**
+	 * Property name used to enable dry-run mode for test execution.
+	 *
+	 * <p>When dry-run mode is enabled, no tests will be executed. Instead, all
+	 * registered {@link TestExecutionListener TestExecutionListeners} will
+	 * receive started/finished events for all test descriptors that are part
+	 * of the discovered {@link TestPlan}. All tests will be reported as
+	 * successful. This can be useful to test changes in the configuration of a
+	 * build or to verify a listener is called as expected without having to
+	 * wait for all tests to be executed.
+	 *
+	 * <p>Value must either {@code true} or {@code false}; defaults to {@code false}.
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public static final String DRY_RUN_PROPERTY_NAME = "junit.platform.execution.dryRun.enabled";
+
 	private LauncherConstants() {
 		/* no-op */
 	}
