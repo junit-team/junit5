@@ -54,7 +54,66 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1 title="Uses of Class org.junit.platform.engine.support.store.NamespacedHierarchicalStoreException" class="title">Uses of Class<br>org.junit.platform.engine.support.store.NamespacedHierarchicalStoreException</h1>
 </div>
-No usage of org.junit.platform.engine.support.store.NamespacedHierarchicalStoreException</main>
+<div class="caption"><span>Packages that use <a href="../NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Package</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><a href="#org.junit.platform.engine.support.store">org.junit.platform.engine.support.store</a></div>
+<div class="col-last even-row-color">
+<div class="block">Reusable data structures for test engines and their extensions.</div>
+</div>
+</div>
+<section class="class-uses">
+<ul class="block-list">
+<li>
+<section class="detail" id="org.junit.platform.engine.support.store">
+<h2>Uses of <a href="../NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a> in <a href="../package-summary.html">org.junit.platform.engine.support.store</a></h2>
+<div class="caption"><span>Methods in <a href="../package-summary.html">org.junit.platform.engine.support.store</a> that throw <a href="../NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>&lt;T&gt;&nbsp;T</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">NamespacedHierarchicalStore.</span><code><a href="../NamespacedHierarchicalStore.html#get(N,java.lang.Object,java.lang.Class)" class="member-name-link">get</a><wbr>(<a href="../NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;requiredType)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Get the value stored for the supplied namespace and key in this store or
+ the parent store, if present, and cast it to the supplied required type.</div>
+</div>
+<div class="col-first odd-row-color"><code>&lt;K,<wbr>
+V&gt;&nbsp;V</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">NamespacedHierarchicalStore.</span><code><a href="../NamespacedHierarchicalStore.html#getOrComputeIfAbsent(N,K,java.util.function.Function,java.lang.Class)" class="member-name-link">getOrComputeIfAbsent</a><wbr>(<a href="../NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+ K&nbsp;key,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,<wbr>V&gt;&nbsp;defaultCreator,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;V&gt;&nbsp;requiredType)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Get the value stored for the supplied namespace and key in this store or
+ the parent store, if present, or call the supplied function to compute it
+ and, finally, cast it to the supplied required type.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">NamespacedHierarchicalStore.</span><code><a href="../NamespacedHierarchicalStore.html#put(N,java.lang.Object,java.lang.Object)" class="member-name-link">put</a><wbr>(<a href="../NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Put the supplied value for the supplied namespace and key into this
+ store and return the previously associated value in this store.</div>
+</div>
+<div class="col-first odd-row-color"><code>&lt;T&gt;&nbsp;T</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">NamespacedHierarchicalStore.</span><code><a href="../NamespacedHierarchicalStore.html#remove(N,java.lang.Object,java.lang.Class)" class="member-name-link">remove</a><wbr>(<a href="../NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;requiredType)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Remove the value stored for the supplied namespace and key from this
+ store and cast it to the supplied required type.</div>
+</div>
+</div>
+</section>
+</li>
+</ul>
+</section>
+</main>
 </div>
 </div>
 </body>
