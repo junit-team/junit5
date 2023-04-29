@@ -7,6 +7,8 @@ plugins {
 
 val importAPIGuardian = "org.apiguardian.*;resolution:=\"optional\""
 
+val projectDescription = objects.property<String>().convention(provider { project.description })
+
 // This task enhances `jar` and `shadowJar` tasks with the bnd
 // `BundleTaskExtension` extension which allows for generating OSGi
 // metadata into the jar
@@ -16,8 +18,8 @@ tasks.withType<Jar>().matching { task: Jar ->
 	extra["importAPIGuardian"] = importAPIGuardian
 
 	extensions.create<BundleTaskExtension>(BundleTaskExtension.NAME, this).apply {
-		properties.set(provider {
-			mapOf("project.description" to project.description)
+		properties.set(projectDescription.map {
+			mapOf("project.description" to it)
 		})
 		// These are bnd instructions necessary for generating OSGi metadata.
 		// We've generalized these so that they are widely applicable limiting
