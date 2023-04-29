@@ -54,6 +54,8 @@ repository on GitHub.
   actionable.
 * Extracted `NamespacedHierarchicalStore` from JUnit Jupiter engine for reuse by other
   test engines and their extensions.
+* New dry-run mode to simulate test execution without actually running tests. Please refer
+  to the <<../user-guide/index.adoc#launcher-api-dry-run-mode, User Guide>> for details.
 
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
