@@ -16,7 +16,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -131,8 +130,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
 		StoredValue storedValue = getStoredValue(compositeKey);
 		if (storedValue == null) {
-			StoredValue newValue = storedValue(new MemoizingSupplier(() -> defaultCreator.apply(key)));
-			storedValue = Optional.ofNullable(storedValues.putIfAbsent(compositeKey, newValue)).orElse(newValue);
+			storedValue = storedValues.computeIfAbsent(compositeKey,
+				__ -> storedValue(new MemoizingSupplier(() -> defaultCreator.apply(key))));
 		}
 		return storedValue.evaluate();
 	}
