@@ -1029,6 +1029,7 @@ pre.rouge {
 </ul>
 </li>
 <li><a href="#launcher-api-launcher-config">6.4.11. Configuring the Launcher</a></li>
+<li><a href="#launcher-api-dry-run-mode">6.4.12. Dry-Run Mode</a></li>
 </ul>
 </li>
 <li><a href="#test-engines">6.5. Test Engines</a>
@@ -11693,6 +11694,17 @@ built-in fluent <em>builder</em> API, as demonstrated in the following example.<
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="launcher-api-dry-run-mode"><a class="anchor" href="#launcher-api-dry-run-mode"></a>6.4.12. Dry-Run Mode</h4>
+<div class="paragraph">
+<p>When running tests via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, you can enable <em>dry-run mode</em> by setting the
+<code>junit.platform.execution.dryRun.enabled</code> <a href="#running-tests-config-params">configuration parameter</a> to <code>true</code>. In this mode, the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> will not actually
+execute any tests but will notify registered <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> instances as if all
+tests had been executed successfully. This can be useful to test changes in the
+configuration of a build or to verify a listener is called as expected without having to
+wait for all tests to be executed.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="test-engines"><a class="anchor" href="#test-engines"></a>6.5. Test Engines</h3>
@@ -12421,7 +12433,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-29 13:00:04 UTC
+Last updated 2023-04-29 14:01:26 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

@@ -143,21 +143,26 @@ loadScripts(document, 'script');</script>
  via the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html" title="class or interface in java.util" class="external-link"><code>ServiceLoader</code></a> mechanism: "junit.platform.execution.listeners.deactivate"</div>
 </div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#ENABLE_LAUNCHER_INTERCEPTORS" class="member-name-link">ENABLE_LAUNCHER_INTERCEPTORS</a></code></div>
+<div class="col-second even-row-color"><code><a href="#DRY_RUN_PROPERTY_NAME" class="member-name-link">DRY_RUN_PROPERTY_NAME</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Property name used to enable dry-run mode for test execution.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#ENABLE_LAUNCHER_INTERCEPTORS" class="member-name-link">ENABLE_LAUNCHER_INTERCEPTORS</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Property name used to enable support for
  <a href="LauncherInterceptor.html" title="interface in org.junit.platform.launcher"><code>LauncherInterceptor</code></a> instances to be registered via the
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html" title="class or interface in java.util" class="external-link"><code>ServiceLoader</code></a> mechanism: "junit.platform.launcher.interceptors.enabled"</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#STDERR_REPORT_ENTRY_KEY" class="member-name-link">STDERR_REPORT_ENTRY_KEY</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#STDERR_REPORT_ENTRY_KEY" class="member-name-link">STDERR_REPORT_ENTRY_KEY</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Key used to publish captured output to <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html#err" title="class or interface in java.lang" class="external-link"><code>System.err</code></a> as part of a
  <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting"><code>ReportEntry</code></a>: "stderr"</div>
 </div>
-<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#STDOUT_REPORT_ENTRY_KEY" class="member-name-link">STDOUT_REPORT_ENTRY_KEY</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#STDOUT_REPORT_ENTRY_KEY" class="member-name-link">STDOUT_REPORT_ENTRY_KEY</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Key used to publish captured output to <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html#out" title="class or interface in java.lang" class="external-link"><code>System.out</code></a> as part of a
  <a href="../../../../../org.junit.platform.engine/org/junit/platform/engine/reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting"><code>ReportEntry</code></a>: "stdout"</div>
 </div>
@@ -383,6 +388,33 @@ loadScripts(document, 'script');</script>
 <ul class="see-list">
 <li><a href="LauncherInterceptor.html" title="interface in org.junit.platform.launcher"><code>LauncherInterceptor</code></a></li>
 <li><a href="../../../../../constant-values.html#org.junit.platform.launcher.LauncherConstants.ENABLE_LAUNCHER_INTERCEPTORS">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DRY_RUN_PROPERTY_NAME">
+<h3>DRY_RUN_PROPERTY_NAME</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">DRY_RUN_PROPERTY_NAME</span></div>
+<div class="block">Property name used to enable dry-run mode for test execution.
+
+ <p>When dry-run mode is enabled, no tests will be executed. Instead, all
+ registered <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListeners</code></a> will
+ receive started/finished events for all test descriptors that are part
+ of the discovered <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>. All tests will be reported as
+ successful. This can be useful to test changes in the configuration of a
+ build or to verify a listener is called as expected without having to
+ wait for all tests to be executed.
+
+ <p>Value must either <code>true</code> or <code>false</code>; defaults to <code>false</code>.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../../constant-values.html#org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
