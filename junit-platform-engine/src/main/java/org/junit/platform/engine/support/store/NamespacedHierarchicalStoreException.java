@@ -21,11 +21,11 @@ import org.junit.platform.commons.JUnitException;
  * @since 5.10
  */
 @API(status = EXPERIMENTAL, since = "5.10")
-public class NamespacedHierarchicalException extends JUnitException {
+public class NamespacedHierarchicalStoreException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;
 
-	NamespacedHierarchicalException(String message) {
+	public NamespacedHierarchicalStoreException(String message) {
 		super(message);
 	}
 

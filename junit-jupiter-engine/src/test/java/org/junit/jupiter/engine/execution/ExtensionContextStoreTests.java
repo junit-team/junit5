@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStoreException;
 
 /**
  * Unit tests for {@link NamespaceAwareStore} and {@link NamespacedHierarchicalStore}.
@@ -54,7 +55,10 @@ class ExtensionContextStoreTests {
 
 		Exception exception = assertThrows(ExtensionContextException.class,
 			() -> store.getOrDefault(KEY, boolean.class, true));
-		assertThat(exception).hasMessageContaining("is not of required type");
+		assertThat(exception) //
+				.hasMessageContaining("is not of required type") //
+				.hasCauseInstanceOf(NamespacedHierarchicalStoreException.class) //
+				.hasStackTraceContaining(NamespacedHierarchicalStore.class.getName());
 	}
 
 	@Test

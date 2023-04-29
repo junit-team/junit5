@@ -169,7 +169,7 @@ public class NamespacedHierarchicalStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = assertThrows(NamespacedHierarchicalException.class,
+			Exception exception = assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.get(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
@@ -219,7 +219,7 @@ public class NamespacedHierarchicalStoreTests {
 			// But declare that our function creates a String...
 			Function<String, String> defaultCreator = k -> "enigma";
 
-			Exception exception = assertThrows(NamespacedHierarchicalException.class,
+			Exception exception = assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.getOrComputeIfAbsent(namespace, key, defaultCreator, String.class));
 			assertEquals("Object stored under key [pi] is not of required type [java.lang.String]",
 				exception.getMessage());
@@ -262,7 +262,7 @@ public class NamespacedHierarchicalStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = assertThrows(NamespacedHierarchicalException.class,
+			Exception exception = assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.remove(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());

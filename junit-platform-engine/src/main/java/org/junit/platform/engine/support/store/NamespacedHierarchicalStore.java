@@ -112,8 +112,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * parent store, if present, and cast it to the supplied required type.
 	 *
 	 * @return stored value; may be {@code null}
-	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
-	 *                                         to the required type
+	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
+	 *                                              be cast to the required type
 	 */
 	public <T> T get(N namespace, Object key, Class<T> requiredType) {
 		Object value = get(namespace, key);
@@ -142,8 +142,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * and, finally, cast it to the supplied required type.
 	 *
 	 * @return stored value; may be {@code null}
-	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
-	 *                                         to the required type
+	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
+	 *                                              be cast to the required type
 	 */
 	public <K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
@@ -158,8 +158,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * stored value, if any.
 	 *
 	 * @return previously stored value; may be {@code null}
-	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
-	 *                                         to the required type
+	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
+	 *                                              be cast to the required type
 	 */
 	public Object put(N namespace, Object key, Object value) {
 		StoredValue oldValue = storedValues.put(new CompositeKey<>(namespace, key), storedValue(() -> value));
@@ -188,8 +188,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * value.
 	 *
 	 * @return previously stored value; may be {@code null}
-	 * @throws NamespacedHierarchicalException if the stored value cannot be cast
-	 *                                         to the required type
+	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
+	 *                                              be cast to the required type
 	 */
 	public <T> T remove(N namespace, Object key, Class<T> requiredType) {
 		Object value = remove(namespace, key);
@@ -223,7 +223,7 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			return requiredType.cast(value);
 		}
 		// else
-		throw new NamespacedHierarchicalException(
+		throw new NamespacedHierarchicalStoreException(
 			String.format("Object stored under key [%s] is not of required type [%s]", key, requiredType.getName()));
 	}
 
