@@ -1,5 +1,6 @@
 import junitbuild.exec.CaptureJavaExecOutput
 import junitbuild.exec.ClasspathSystemPropertyProvider
+import junitbuild.exec.GenerateStandaloneConsoleLauncherShadowedArtifactsFile
 import junitbuild.exec.RunConsoleLauncher
 import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
@@ -200,16 +201,9 @@ tasks {
 		outputFile.set(deprecatedApisTableFile)
 	}
 
-	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(Copy::class) {
-		from(zipTree(standaloneConsoleLauncher.elements.map { it.single().asFile })) {
-			include("META-INF/shadowed-artifacts")
-			includeEmptyDirs = false
-			eachFile {
-				relativePath = RelativePath(true, standaloneConsoleLauncherShadowedArtifactsFile.get().asFile.name)
-			}
-			filter { line -> "- `${line}`" }
-		}
-		into(standaloneConsoleLauncherShadowedArtifactsFile.map { it.asFile.parentFile })
+	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(GenerateStandaloneConsoleLauncherShadowedArtifactsFile::class) {
+		inputJar.fileProvider(standaloneConsoleLauncher.elements.map { it.single().asFile })
+		outputFile.set(standaloneConsoleLauncherShadowedArtifactsFile)
 	}
 
 	withType<AbstractAsciidoctorTask>().configureEach {
