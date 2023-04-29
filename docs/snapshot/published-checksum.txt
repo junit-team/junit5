@@ -273,7 +273,6 @@
 57e01a56ae6cc75389ce75a44d21135d  junit-platform-commons/src/main/java/org/junit/platform/commons/JUnitException.java
 581f453aa456a0b72b0a3a5d3ce684e8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutConfiguration.java
 585f0b72b70976837b8b83ca704166fa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassDescriptor.java
-585f6bdde50760973b3f5df9096eb437  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 58871474bbe927809f2dde7ed9801c49  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java
 58fca51a5f799a2d033982725860853a  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/JUnitFactory.java
 594db60bea5b42f583f65d5aa02ad745  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullEnum.java
@@ -757,6 +756,7 @@ ec36a47691ed847401d7302f27445803  junit-platform-jfr/src/main/java/org/junit/pla
 ec47f91f99f39248fe353d35a22c1cf3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ConditionEvaluationResult.java
 ecdfb8bf91563105bab55999d6abc29d  documentation/src/docs/asciidoc/release-notes/release-notes-5.9.2.adoc
 ece75a42eac6a387ad157be0718a0694  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsInnerClass.java
+ed039f923b91764628eb8824091eb028  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 ed074fdb4e0f87135a718a790a34b490  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutExceptionFactory.java
 ed0f37cab303fe07f951335983944450  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
 ed8394139c05c16d002981004170cdff  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.js
