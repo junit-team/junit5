@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
@@ -63,7 +64,7 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param parentStore The parent store to use for lookups; may be
 	 *                    {@code null}.
 	 * @param closeAction The action to be called for each stored value when
-	 *                    this store is closed.
+	 *                    this store is closed; may be {@code null}.
 	 */
 	public NamespacedHierarchicalStore(NamespacedHierarchicalStore<N> parentStore, CloseAction<N> closeAction) {
 		this.parentStore = parentStore;
@@ -98,6 +99,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * Get the value stored for the supplied namespace and key in this or the
 	 * parent store, if present.
 	 *
+	 * @param namespace the namespace; never {@code null}
+	 * @param key the key; never {@code null}
 	 * @return stored value; may be {@code null}
 	 */
 	public Object get(N namespace, Object key) {
@@ -109,6 +112,9 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * Get the value stored for the supplied namespace and key in this or the
 	 * parent store, if present, and cast it to the supplied required type.
 	 *
+	 * @param namespace the namespace; never {@code null}
+	 * @param key the key; never {@code null}
+	 * @param requiredType the required type of the value; never {@code null}
 	 * @return stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
 	 *                                              be cast to the required type
@@ -122,10 +128,15 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * Get the value stored for the supplied namespace and key in this or the
 	 * parent store, if present, or call the supplied function to compute it.
 	 *
+	 * @param namespace the namespace; never {@code null}
+	 * @param key the key; never {@code null}
+	 * @param defaultCreator the function called with the supplied {@code key}
+	 * to create a new value; never {@code null} but may return {@code null}
 	 * @return stored value; may be {@code null}
 	 */
 	public <K, V> Object getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator) {
 		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
+		Preconditions.notNull(defaultCreator, "defaultCreator must not be null");
 		StoredValue storedValue = getStoredValue(compositeKey);
 		if (storedValue == null) {
 			storedValue = storedValues.computeIfAbsent(compositeKey,
@@ -139,6 +150,11 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * parent store, if present, or call the supplied function to compute it
 	 * and, finally, cast it to the supplied required type.
 	 *
+	 * @param namespace the namespace; never {@code null}
+	 * @param key the key; never {@code null}
+	 * @param defaultCreator the function called with the supplied {@code key}
+	 * to create a new value; never {@code null} but may return {@code null}
+	 * @param requiredType the required type of the value; never {@code null}
 	 * @return stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
 	 *                                              be cast to the required type
@@ -155,6 +171,9 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * <p>The {@link CloseAction} will <em>not</em> be called for the previously
 	 * stored value, if any.
 	 *
+	 * @param namespace the namespace; never {@code null}
+	 * @param key the key; never {@code null}
+	 * @param value the value to store; may be {@code null}
 	 * @return previously stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
 	 *                                              be cast to the required type
@@ -171,6 +190,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * <p>The {@link CloseAction} will <em>not</em> be called for the removed
 	 * value.
 	 *
+	 * @param namespace the namespace; never {@code null}
+	 * @param key the key; never {@code null}
 	 * @return previously stored value; may be {@code null}
 	 */
 	public Object remove(N namespace, Object key) {
@@ -185,6 +206,9 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * <p>The {@link CloseAction} will <em>not</em> be called for the removed
 	 * value.
 	 *
+	 * @param namespace the namespace; never {@code null}
+	 * @param key the key; never {@code null}
+	 * @param requiredType the required type of the value; never {@code null}
 	 * @return previously stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
 	 *                                              be cast to the required type
@@ -211,6 +235,7 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	@SuppressWarnings("unchecked")
 	private <T> T castToRequiredType(Object key, Object value, Class<T> requiredType) {
+		Preconditions.notNull(requiredType, "requiredType must not be null");
 		if (value == null) {
 			return null;
 		}
@@ -231,8 +256,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		private final Object key;
 
 		private CompositeKey(N namespace, Object key) {
-			this.namespace = namespace;
-			this.key = key;
+			this.namespace = Preconditions.notNull(namespace, "namespace must not be null");
+			this.key = Preconditions.notNull(key, "key must not be null");
 		}
 
 		@Override
@@ -366,6 +391,10 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 		/**
 		 * Close the supplied {@code value}.
+		 *
+		 * @param namespace the namespace; never {@code null}
+		 * @param key the key; never {@code null}
+		 * @param value the value; never {@code null}
 		 */
 		void close(N namespace, Object key, Object value) throws Throwable;
 	}

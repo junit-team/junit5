@@ -547,7 +547,7 @@ public interface ExtensionContext {
 		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
-		 * to create a new value; never {@code null}
+		 * to create a new value; never {@code null} but may return {@code null}
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
@@ -574,7 +574,7 @@ public interface ExtensionContext {
 		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
-		 * to create a new value; never {@code null}
+		 * to create a new value; never {@code null} but may return {@code null}
 		 * @param requiredType the required type of the value; never {@code null}
 		 * @param <K> the key type
 		 * @param <V> the value type
