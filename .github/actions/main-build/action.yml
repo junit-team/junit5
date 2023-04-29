@@ -17,3 +17,8 @@ runs:
       with:
         name: Test Distribution trace files (${{ github.job }})
         path: '**/build/test-results/*/trace.json'
+    - uses: actions/upload-artifact@v3
+      if: ${{ always() }}
+      with:
+        name: Configuration Cache reports (${{ github.job }})
+        path: 'build/reports/configuration-cache/**'

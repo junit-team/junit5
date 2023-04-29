@@ -51,3 +51,8 @@ jobs:
         with:
           name: "Test Distribution trace files (OpenJDK ${{ matrix.jdk }})"
           path: '**/build/test-results/*/trace.json'
+      - uses: actions/upload-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: "Configuration Cache reports (OpenJDK ${{ matrix.jdk }})"
+          path: 'build/reports/configuration-cache/**'
