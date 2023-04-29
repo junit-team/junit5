@@ -24,6 +24,7 @@ dependencyResolutionManagement {
 	}
 }
 
+val buildParameters = the<BuildParametersExtension>()
 val gradleEnterpriseServer = "https://ge.junit.org"
 
 gradleEnterprise {
@@ -71,9 +72,10 @@ buildCache {
 	}
 }
 
-val javaVersion = JavaVersion.current()
-require(javaVersion == JavaVersion.VERSION_17) {
-	"The JUnit 5 build must be executed with Java 17. Currently executing with Java ${javaVersion.majorVersion}."
+val expectedJavaVersion = JavaVersion.VERSION_17
+val actualJavaVersion = JavaVersion.current()
+require(actualJavaVersion == expectedJavaVersion) {
+	"The JUnit 5 build must be executed with Java ${expectedJavaVersion.majorVersion}. Currently executing with Java ${actualJavaVersion.majorVersion}."
 }
 
 rootProject.name = "junit5"
@@ -105,16 +107,10 @@ include("junit-bom")
 // check that every subproject has a custom build file
 // based on the project name
 rootProject.children.forEach { project ->
-	project.buildFileName = "${project.name}.gradle"
-	if (!project.buildFile.isFile) {
-		project.buildFileName = "${project.name}.gradle.kts"
-	}
+	project.buildFileName = "${project.name}.gradle.kts"
 	require(project.buildFile.isFile) {
 		"${project.buildFile} must exist"
 	}
 }
-
-val buildParameters: BuildParametersExtension
-	get() = the()
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
