@@ -77,6 +77,7 @@
 1810387ce645632db56f249a7543c318  documentation/src/test/java/example/TaggingDemo.java
 182d49e063428485230c85718770f5c8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultTestInstanceFactoryContext.java
 183fcd36b45a4e0fa39b2602e7ec8bd8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/package-info.java
+1851b32c943a412c8e08302d0ac4f423  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 18774dbba2f4b37b3851a1f81ef5fcbf  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultDynamicTestInvocationContext.java
 189d65c06d834aa8a0bfa93cebba8273  junit-platform-console/src/main/java/org/junit/platform/console/tasks/FlatPrintingListener.java
 18bb27843cfd973c6d9afe9245b1d92e  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Assertions.java
@@ -535,7 +536,6 @@ a8859f80ff968fb6df8eb3bf30774b13  documentation/src/test/java/example/defaultmet
 a8cb4061c4d230068858bbf82c550c8c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineDiscoveryResult.java
 a93801a84f5bf1ec8fd8e6ab1e960501  junit-platform-commons/src/main/java/org/junit/platform/commons/function/package-info.java
 aac3c809e942dc9982c07f83a9d1b5f0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/InstantiatingConfigurationParameterConverter.java
-aade33a4c6dc3faf67e173460779e270  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 aaf75672c058ce6f60fb35a34e59a590  junit-platform-console/src/main/java/org/junit/platform/console/options/Details.java
 ab72e7847b8203ddbb210e7d08a4315a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/package-info.java
 ab83ef64ae475dffa6ef688db027c5e0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/package-info.java

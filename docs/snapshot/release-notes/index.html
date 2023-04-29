@@ -690,10 +690,9 @@ temporary directories. See the
 for details.</p>
 </li>
 <li>
-<p>If a non-static <code>@MethodSource</code> factory method is used with test instance per-method
-lifecycle semantics, the exception thrown now informs the user that the factory method
-must be <code>static</code> unless the test class is annotated with
-<code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
+<p>If <code>@MethodSource</code> is used with a non-static factory method that should be <code>static</code>, the
+exception thrown now provides the user a meaningful explanation of how to address the
+problem.</p>
 </li>
 </ul>
 </div>
@@ -1072,7 +1071,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-29 10:56:32 UTC
+Last updated 2023-04-29 12:07:36 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
