@@ -50,6 +50,8 @@ repository on GitHub.
   `execute` for executing tests and `engines` for listing registered test engines.
 * A new `discover` subcommand has been added to the `ConsoleLauncher` to print the
   discovered tests for the specified details mode without executing them.
+* Improved error message for cyclic graphs detected during test discovery to be more
+  actionable.
 * Extracted `NamespacedHierarchicalStore` from JUnit Jupiter engine for reuse by other
   test engines and their extensions.
 
