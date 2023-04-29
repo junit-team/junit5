@@ -297,6 +297,15 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		}
 	}
 
+	/**
+	 * Thread-safe {@link Supplier} that memoizes the result of calling its
+	 * delegate and ensures it is called at most once.
+	 *
+	 * <p>If the delegate throws an exception, it is stored and rethrown every
+	 * time {@link #get()} is called.
+	 *
+	 * @see StoredValue
+	 */
 	private static class MemoizingSupplier implements Supplier<Object> {
 
 		private static final Object NO_VALUE_SET = new Object();
