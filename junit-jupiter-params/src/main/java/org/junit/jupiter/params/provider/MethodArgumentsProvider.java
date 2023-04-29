@@ -176,13 +176,12 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 	}
 
 	private static Method validateFactoryMethod(ExtensionContext context, Method factoryMethod, Object testInstance) {
-		if (!factoryMethod.getDeclaringClass().isInstance(testInstance)) {
-			Preconditions.condition(ReflectionUtils.isStatic(factoryMethod),
-				() -> format("Method '%s' must be static: local factory methods must be static unless "
-						+ "the test class is annotated with @TestInstance(Lifecycle.PER_CLASS); external "
-						+ "factory methods must always be static.",
-					factoryMethod.toGenericString()));
-		}
+		Preconditions.condition(
+			factoryMethod.getDeclaringClass().isInstance(testInstance) || ReflectionUtils.isStatic(factoryMethod),
+			() -> format("Method '%s' must be static: local factory methods must be static "
+					+ "unless the PER_CLASS @TestInstance lifecycle mode is used; "
+					+ "external factory methods must always be static.",
+				factoryMethod.toGenericString()));
 		return factoryMethod;
 	}
 
