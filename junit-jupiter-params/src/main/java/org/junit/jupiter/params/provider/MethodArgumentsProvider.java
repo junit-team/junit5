@@ -50,7 +50,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		// @formatter:off
 		return stream(methodNames)
 				.map(factoryMethodName -> findFactoryMethod(testClass, testMethod, factoryMethodName))
-				.map(factoryMethod -> validateFactoryMethod(context, factoryMethod, testInstance))
+				.map(factoryMethod -> validateFactoryMethod(factoryMethod, testInstance))
 				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
@@ -175,7 +175,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 			cause -> new JUnitException(format("Could not load class [%s]", className), cause));
 	}
 
-	private static Method validateFactoryMethod(ExtensionContext context, Method factoryMethod, Object testInstance) {
+	private static Method validateFactoryMethod(Method factoryMethod, Object testInstance) {
 		Preconditions.condition(
 			factoryMethod.getDeclaringClass().isInstance(testInstance) || ReflectionUtils.isStatic(factoryMethod),
 			() -> format("Method '%s' must be static: local factory methods must be static "
