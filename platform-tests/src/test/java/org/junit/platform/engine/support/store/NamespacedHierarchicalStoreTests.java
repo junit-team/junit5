@@ -8,14 +8,20 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.execution;
+package org.junit.platform.engine.support.store;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,25 +29,24 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContextException;
 
 /**
- * Unit tests for {@link ExtensionValuesStore}.
+ * Unit tests for {@link NamespacedHierarchicalStore}.
  *
  * @since 5.0
- * @see org.junit.jupiter.engine.descriptor.ExtensionContextTests
  */
-public class ExtensionValuesStoreTests {
+public class NamespacedHierarchicalStoreTests {
 
 	private final Object key = "key";
 	private final Object value = "value";
 
-	private final Namespace namespace = Namespace.create("ns");
+	private final String namespace = "ns";
 
-	private final ExtensionValuesStore grandParentStore = new ExtensionValuesStore(null);
-	private final ExtensionValuesStore parentStore = new ExtensionValuesStore(grandParentStore);
-	private final ExtensionValuesStore store = new ExtensionValuesStore(parentStore);
+	private final NamespacedHierarchicalStore.CloseAction<String> closeAction = mock();
+	private final NamespacedHierarchicalStore<String> grandParentStore = new NamespacedHierarchicalStore<>(null,
+		closeAction);
+	private final NamespacedHierarchicalStore<String> parentStore = grandParentStore.newChild();
+	private final NamespacedHierarchicalStore<String> store = parentStore.newChild();
 
 	@Nested
 	class StoringValuesTests {
@@ -62,7 +67,7 @@ public class ExtensionValuesStoreTests {
 			store.put(namespace, key, value);
 
 			Object newValue = new Object();
-			store.put(namespace, key, newValue);
+			assertEquals(value, store.put(namespace, key, newValue));
 
 			assertEquals(newValue, store.get(namespace, key));
 		}
@@ -119,10 +124,10 @@ public class ExtensionValuesStoreTests {
 		@Test
 		void sameKeyWithDifferentNamespaces() {
 			Object value1 = createObject("value1");
-			Namespace namespace1 = Namespace.create("ns1");
+			String namespace1 = "ns1";
 
 			Object value2 = createObject("value2");
-			Namespace namespace2 = Namespace.create("ns2");
+			String namespace2 = "ns2";
 
 			store.put(namespace1, key, value1);
 			store.put(namespace2, key, value2);
@@ -133,8 +138,8 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void valueIsComputedIfAbsentInDifferentNamespace() {
-			Namespace namespace1 = Namespace.create("ns1");
-			Namespace namespace2 = Namespace.create("ns2");
+			String namespace1 = "ns1";
+			String namespace2 = "ns2";
 
 			assertEquals(value, store.getOrComputeIfAbsent(namespace1, key, innerKey -> value));
 			assertEquals(value, store.get(namespace1, key));
@@ -144,8 +149,8 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void keyIsOnlyRemovedInGivenNamespace() {
-			Namespace namespace1 = Namespace.create("ns1");
-			Namespace namespace2 = Namespace.create("ns2");
+			String namespace1 = "ns1";
+			String namespace2 = "ns2";
 
 			Object value1 = createObject("value1");
 			Object value2 = createObject("value2");
@@ -164,7 +169,7 @@ public class ExtensionValuesStoreTests {
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = assertThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.get(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
@@ -214,7 +219,7 @@ public class ExtensionValuesStoreTests {
 			// But declare that our function creates a String...
 			Function<String, String> defaultCreator = k -> "enigma";
 
-			Exception exception = assertThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.getOrComputeIfAbsent(namespace, key, defaultCreator, String.class));
 			assertEquals("Object stored under key [pi] is not of required type [java.lang.String]",
 				exception.getMessage());
@@ -243,12 +248,21 @@ public class ExtensionValuesStoreTests {
 		}
 
 		@Test
+		void getOrComputeIfAbsentWithExceptionThrowingCreatorFunction() {
+			var e = assertThrows(RuntimeException.class, () -> store.getOrComputeIfAbsent(namespace, key, __ -> {
+				throw new RuntimeException("boom");
+			}));
+			assertSame(e, assertThrows(RuntimeException.class, () -> store.get(namespace, key)));
+			assertSame(e, assertThrows(RuntimeException.class, () -> store.remove(namespace, key)));
+		}
+
+		@Test
 		void removeWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
 			Integer key = 42;
 			String value = "enigma";
 			store.put(namespace, key, value);
 
-			Exception exception = assertThrows(ExtensionContextException.class,
+			Exception exception = assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.remove(namespace, key, Number.class));
 			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
 				exception.getMessage());
@@ -297,10 +311,12 @@ public class ExtensionValuesStoreTests {
 		void simulateRaceConditionInGetOrComputeIfAbsent() throws Exception {
 			int threads = 10;
 			AtomicInteger counter = new AtomicInteger();
-			ExtensionValuesStore localStore = new ExtensionValuesStore(null);
+			List<Object> values;
 
-			List<Object> values = executeConcurrently(threads, //
-				() -> localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet()));
+			try (var localStore = new NamespacedHierarchicalStore<>(null)) {
+				values = executeConcurrently(threads, //
+					() -> localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet()));
+			}
 
 			assertEquals(1, counter.get());
 			assertThat(values).hasSize(threads).containsOnly(1);
@@ -332,27 +348,10 @@ public class ExtensionValuesStoreTests {
 	class CompositeNamespaceTests {
 
 		@Test
-		void namespacesEqualForSamePartsSequence() {
-			Namespace ns1 = Namespace.create("part1", "part2");
-			Namespace ns2 = Namespace.create("part1", "part2");
-
-			assertEquals(ns1, ns2);
-		}
-
-		@Test
-		void orderOfNamespacePartsDoesMatter() {
-			Namespace ns1 = Namespace.create("part1", "part2");
-			Namespace ns2 = Namespace.create("part2", "part1");
-
-			assertNotEquals(ns1, ns2);
-		}
-
-		@Test
 		void additionNamespacePartMakesADifference() {
 
-			Namespace ns1 = Namespace.create("part1", "part2");
-			Namespace ns2 = Namespace.create("part1");
-			Namespace ns3 = Namespace.create("part1", "part2");
+			String ns1 = "part1/part2";
+			String ns2 = "part1";
 
 			Object value2 = createObject("value2");
 
@@ -360,10 +359,79 @@ public class ExtensionValuesStoreTests {
 			parentStore.put(ns2, key, value2);
 
 			assertEquals(value, store.get(ns1, key));
-			assertEquals(value, store.get(ns3, key));
 			assertEquals(value2, store.get(ns2, key));
 		}
 
+	}
+
+	@Nested
+	class CloseActionTests {
+
+		@Test
+		void callsCloseActionInReverseInsertionOrderWhenClosingStore() throws Throwable {
+			store.put(namespace, "key1", "value1");
+			store.put(namespace, "key2", "value2");
+			store.put(namespace, "key3", "value3");
+			verifyNoInteractions(closeAction);
+
+			store.close();
+			var inOrder = inOrder(closeAction);
+			inOrder.verify(closeAction).close(namespace, "key3", "value3");
+			inOrder.verify(closeAction).close(namespace, "key2", "value2");
+			inOrder.verify(closeAction).close(namespace, "key1", "value1");
+		}
+
+		@Test
+		void doesNotCallCloseActionForRemovedValues() {
+			store.put(namespace, key, value);
+			store.remove(namespace, key);
+
+			store.close();
+
+			verifyNoInteractions(closeAction);
+		}
+
+		@Test
+		void doesNotCallCloseActionForReplacedValues() throws Throwable {
+			store.put(namespace, key, "value1");
+			store.put(namespace, key, "value2");
+
+			store.close();
+
+			verify(closeAction).close(namespace, key, "value2");
+			verifyNoMoreInteractions(closeAction);
+		}
+
+		@Test
+		void doesNotCallCloseActionForNullValues() {
+			store.put(namespace, key, null);
+
+			store.close();
+
+			verifyNoInteractions(closeAction);
+		}
+
+		@Test
+		void ignoresStoredValuesThatThrewExceptionsDuringCleanup() {
+			assertThrows(RuntimeException.class, () -> store.getOrComputeIfAbsent(namespace, key, __ -> {
+				throw new RuntimeException("boom");
+			}));
+
+			assertDoesNotThrow(store::close);
+
+			verifyNoInteractions(closeAction);
+		}
+
+		@Test
+		void doesNotIgnoreStoredValuesThatThrewUnrecoverableFailuresDuringCleanup() {
+			assertThrows(OutOfMemoryError.class, () -> store.getOrComputeIfAbsent(namespace, key, __ -> {
+				throw new OutOfMemoryError();
+			}));
+
+			assertThrows(OutOfMemoryError.class, store::close);
+
+			verifyNoInteractions(closeAction);
+		}
 	}
 
 	private Object createObject(final String display) {
