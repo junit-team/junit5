@@ -335,8 +335,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 				}
 			}
 			catch (Throwable t) {
-				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 				value = new Failure(t);
+				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			}
 		}
 

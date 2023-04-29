@@ -410,6 +410,17 @@ public class NamespacedHierarchicalStoreTests {
 
 			verifyNoInteractions(closeAction);
 		}
+
+		@Test
+		void doesNotIgnoreStoredValuesThatThrewUnrecoverableFailuresDuringCleanup() {
+			assertThrows(OutOfMemoryError.class, () -> store.getOrComputeIfAbsent(namespace, key, __ -> {
+				throw new OutOfMemoryError();
+			}));
+
+			assertThrows(OutOfMemoryError.class, store::close);
+
+			verifyNoInteractions(closeAction);
+		}
 	}
 
 	private Object createObject(final String display) {
