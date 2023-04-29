@@ -41,7 +41,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * @since 5.10
  */
 @API(status = EXPERIMENTAL, since = "5.10")
-public class NamespacedHierarchicalStore<N> implements AutoCloseable {
+public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	private final AtomicInteger insertOrderSequence = new AtomicInteger();
 	private final ConcurrentMap<CompositeKey<N>, StoredValue> storedValues = new ConcurrentHashMap<>(4);
