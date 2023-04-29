@@ -98,10 +98,9 @@ repository on GitHub.
   temporary directories. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, User Guide>>
   for details.
-* If a non-static `@MethodSource` factory method is used with test instance per-method
-  lifecycle semantics, the exception thrown now informs the user that the factory method
-  must be `static` unless the test class is annotated with
-  `@TestInstance(Lifecycle.PER_CLASS)`.
+* If `@MethodSource` is used with a non-static factory method that should be `static`, the
+  exception thrown now provides the user a meaningful explanation of how to address the
+  problem.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]
