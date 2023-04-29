@@ -134,7 +134,7 @@ class StackTracePruningTests {
 	void shouldPruneStackTracesOfSuppressedExceptions() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.selectors(selectMethod(StackTracePruningTestCase.class, "multipleFailingAssertion")) //
+				.selectors(selectMethod(StackTracePruningTestCase.class, "multipleFailingAssertions")) //
 				.execute();
 
 		Throwable throwable = getThrowable(results);
@@ -179,7 +179,7 @@ class StackTracePruningTests {
 		}
 
 		@Test
-		void multipleFailingAssertion() {
+		void multipleFailingAssertions() {
 			Assertions.assertAll(Assertions::fail, Assertions::fail);
 		}
 

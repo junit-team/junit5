@@ -95,23 +95,25 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * Prune stack trace elements of the supplied {@link Throwable} using the
-	 * supplied {@link Predicate}, except {@code org.junit.jupiter.api.Assertions}
-	 * and {@code org.junit.jupiter.api.Assumptions} that will always remain
+	 * Prune the stack trace of the supplied {@link Throwable} by filtering its
+	 * elements using the supplied {@link Predicate}, except for
+	 * {@code org.junit.jupiter.api.Assertions} and
+	 * {@code org.junit.jupiter.api.Assumptions} that will always remain
 	 * present.
 	 *
 	 * <p>Additionally, all elements prior to and including the first
-	 * JUnit Launcher call will be pruned.
+	 * JUnit Launcher call will be removed.
 	 *
 	 * @param throwable the {@code Throwable} whose stack trace should be
 	 * pruned; never {@code null}
 	 * @param stackTraceElementFilter the {@code Predicate} used to filter
-	 * elements of the stack trace
+	 * elements of the stack trace; never {@code null}
 	 *
 	 * @since 5.10
 	 */
 	public static void pruneStackTrace(Throwable throwable, Predicate<String> stackTraceElementFilter) {
 		Preconditions.notNull(throwable, "Throwable must not be null");
+		Preconditions.notNull(stackTraceElementFilter, "Predicate must not be null");
 
 		List<StackTraceElement> stackTrace = Arrays.asList(throwable.getStackTrace());
 		List<StackTraceElement> prunedStackTrace = new ArrayList<>();
@@ -119,11 +121,12 @@ public final class ExceptionUtils {
 		Collections.reverse(stackTrace);
 
 		for (StackTraceElement element : stackTrace) {
-			String name = element.getClassName();
-			if (name.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
+			String className = element.getClassName();
+			if (className.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
 				prunedStackTrace.clear();
 			}
-			else if (stackTraceElementFilter.test(name) || ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS.contains(name)) {
+			else if (stackTraceElementFilter.test(className)
+					|| ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS.contains(className)) {
 				prunedStackTrace.add(element);
 			}
 		}
@@ -137,8 +140,8 @@ public final class ExceptionUtils {
 	 * supplied {@link Throwable}.
 	 *
 	 * @param rootThrowable the {@code Throwable} to explore; never {@code null}
-	 * @return a list of all throwables found, including the supplied one;
-	 * never {@code null}
+	 * @return an immutable list of all throwables found, including the supplied
+	 * one; never {@code null}
 	 *
 	 * @since 5.10
 	 */
@@ -161,7 +164,7 @@ public final class ExceptionUtils {
 			}
 		}
 
-		return new ArrayList<>(visited);
+		return Collections.unmodifiableList(new ArrayList<>(visited));
 	}
 
 }

@@ -56,6 +56,10 @@ repository on GitHub.
   test engines and their extensions.
 * New dry-run mode to simulate test execution without actually running tests. Please refer
   to the <<../user-guide/index.adoc#launcher-api-dry-run-mode, User Guide>> for details.
+* Stack traces produced by failing tests are now pruned of calls from JUnit and Java by
+  default. This feature can be disabled via the `junit.platform.stacktrace.pruning.enabled`
+  configuration parameter, or configured to exclude other fully qualified class names
+  by providing a list of patterns to `junit.platform.stacktrace.pruning.pattern`.
 
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
