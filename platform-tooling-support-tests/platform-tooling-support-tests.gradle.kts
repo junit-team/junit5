@@ -126,9 +126,6 @@ tasks.test {
 
 	distribution {
 		requirements.add("jdk=8")
-		localOnly {
-			includeClasses.add("platform.tooling.support.tests.GraalVmStarterTests") // GraalVM is not installed on Test Distribution agents
-		}
 	}
 	jvmArgumentProviders += JavaHomeDir(project, 8)
 }

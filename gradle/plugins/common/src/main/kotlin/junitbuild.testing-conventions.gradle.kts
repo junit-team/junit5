@@ -72,6 +72,7 @@ tasks.withType<Test>().configureEach {
 dependencies {
 	testImplementation(dependencyFromLibs("assertj"))
 	testImplementation(dependencyFromLibs("mockito"))
+	testImplementation(dependencyFromLibs("testingAnnotations"))
 
 	if (!project.name.startsWith("junit-jupiter")) {
 		testImplementation(project(":junit-jupiter"))
