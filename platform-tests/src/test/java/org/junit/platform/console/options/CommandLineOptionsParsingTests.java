@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
@@ -36,7 +35,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -556,26 +554,15 @@ class CommandLineOptionsParsingTests {
 			Stream.of(options).map(opt -> () -> assertThrows(Exception.class, () -> ArgsType.args.parseArgLine(opt))));
 	}
 
-	private void assertParses(String name, Predicate<Result> property, String... argLines) {
-		Stream.of(argLines).forEach(argLine -> {
-			Result result = null;
-			try {
-				result = ArgsType.args.parseArgLine(argLine);
-			}
-			catch (IOException e) {
-				fail(e);
-			}
-			assertTrue(property.test(result), () -> name + " should be enabled by: " + argLine);
-		});
-	}
-
 	enum ArgsType {
 		args {
+			@Override
 			Result parseArgLine(String argLine) {
 				return parse(split(argLine));
 			}
 		},
 		atFile {
+			@Override
 			Result parseArgLine(String argLine) throws IOException {
 				var atFile = Files.createTempFile("junit-launcher-args", ".txt");
 				try {
