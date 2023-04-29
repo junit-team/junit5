@@ -403,6 +403,15 @@ public class NamespacedHierarchicalStoreTests {
 		}
 
 		@Test
+		void doesNotCallCloseActionForNullValues() {
+			store.put(namespace, key, null);
+
+			store.close();
+
+			verifyNoInteractions(closeAction);
+		}
+
+		@Test
 		void ignoresStoredValuesThatThrewExceptionsDuringCleanup() {
 			assertThrows(RuntimeException.class, () -> store.getOrComputeIfAbsent(namespace, key, __ -> {
 				throw new RuntimeException("boom");

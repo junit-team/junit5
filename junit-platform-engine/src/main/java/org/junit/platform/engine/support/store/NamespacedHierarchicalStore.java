@@ -89,7 +89,7 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
 		storedValues.entrySet().stream() //
 				.map(e -> e.getValue().evaluateSafely(e.getKey())) //
-				.filter(Objects::nonNull) //
+				.filter(it -> it != null && it.value != null) //
 				.sorted(EvaluatedValue.REVERSE_INSERT_ORDER) //
 				.forEach(it -> throwableCollector.execute(() -> it.close(closeAction)));
 		throwableCollector.assertEmpty();
@@ -384,7 +384,8 @@ public class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	}
 
 	/**
-	 * Called for each stored value in a {@link NamespacedHierarchicalStore}.
+	 * Called for each successfully stored non-null value in when closing a
+	 * {@link NamespacedHierarchicalStore}.
 	 */
 	@FunctionalInterface
 	public interface CloseAction<N> {
