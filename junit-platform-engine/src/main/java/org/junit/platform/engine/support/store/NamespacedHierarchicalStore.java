@@ -30,12 +30,14 @@ import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
- * {@code ExtensionValuesStore} is a hierarchical namespaced key-value store.
- * <p>
- * Its behavior when closed can be customized by passing a {@link CloseAction}
- * to {@link #NamespacedHierarchicalStore(NamespacedHierarchicalStore, CloseAction)}.
- * <p>
- * This class is thread-safe.
+ * {@code NamespacedHierarchicalStore} is a hierarchical, namespaced key-value store.
+ *
+ * <p>Its {@linkplain #close() closing} behavior can be customized by passing a
+ * {@link CloseAction} to the
+ * {@link #NamespacedHierarchicalStore(NamespacedHierarchicalStore, CloseAction)}
+ * constructor.
+ *
+ * <p>This class is thread-safe.
  *
  * @param <N> Namespace type
  * @since 5.10
@@ -51,8 +53,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	/**
 	 * Create a new store with the supplied parent.
 	 *
-	 * @param parentStore The parent store to use for lookups; may be
-	 *                    {@code null}.
+	 * @param parentStore the parent store to use for lookups; may be {@code null}
 	 */
 	public NamespacedHierarchicalStore(NamespacedHierarchicalStore<N> parentStore) {
 		this(parentStore, null);
@@ -61,10 +62,9 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	/**
 	 * Create a new store with the supplied parent and close action.
 	 *
-	 * @param parentStore The parent store to use for lookups; may be
-	 *                    {@code null}.
-	 * @param closeAction The action to be called for each stored value when
-	 *                    this store is closed; may be {@code null}.
+	 * @param parentStore the parent store to use for lookups; may be {@code null}
+	 * @param closeAction the action to be called for each stored value when this
+	 * store is closed; may be {@code null}
 	 */
 	public NamespacedHierarchicalStore(NamespacedHierarchicalStore<N> parentStore, CloseAction<N> closeAction) {
 		this.parentStore = parentStore;
@@ -72,7 +72,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	}
 
 	public NamespacedHierarchicalStore<N> newChild() {
-		return new NamespacedHierarchicalStore<>(this, closeAction);
+		return new NamespacedHierarchicalStore<>(this, this.closeAction);
 	}
 
 	/**
@@ -83,25 +83,25 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 */
 	@Override
 	public void close() {
-		if (closeAction == null) {
+		if (this.closeAction == null) {
 			return;
 		}
 		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
-		storedValues.entrySet().stream() //
+		this.storedValues.entrySet().stream() //
 				.map(e -> e.getValue().evaluateSafely(e.getKey())) //
 				.filter(it -> it != null && it.value != null) //
 				.sorted(EvaluatedValue.REVERSE_INSERT_ORDER) //
-				.forEach(it -> throwableCollector.execute(() -> it.close(closeAction)));
+				.forEach(it -> throwableCollector.execute(() -> it.close(this.closeAction)));
 		throwableCollector.assertEmpty();
 	}
 
 	/**
-	 * Get the value stored for the supplied namespace and key in this or the
-	 * parent store, if present.
+	 * Get the value stored for the supplied namespace and key in this store or
+	 * the parent store, if present.
 	 *
 	 * @param namespace the namespace; never {@code null}
 	 * @param key the key; never {@code null}
-	 * @return stored value; may be {@code null}
+	 * @return the stored value; may be {@code null}
 	 */
 	public Object get(N namespace, Object key) {
 		StoredValue storedValue = getStoredValue(new CompositeKey<>(namespace, key));
@@ -109,45 +109,45 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	}
 
 	/**
-	 * Get the value stored for the supplied namespace and key in this or the
-	 * parent store, if present, and cast it to the supplied required type.
+	 * Get the value stored for the supplied namespace and key in this store or
+	 * the parent store, if present, and cast it to the supplied required type.
 	 *
 	 * @param namespace the namespace; never {@code null}
 	 * @param key the key; never {@code null}
 	 * @param requiredType the required type of the value; never {@code null}
-	 * @return stored value; may be {@code null}
+	 * @return the stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
-	 *                                              be cast to the required type
+	 * be cast to the required type
 	 */
-	public <T> T get(N namespace, Object key, Class<T> requiredType) {
+	public <T> T get(N namespace, Object key, Class<T> requiredType) throws NamespacedHierarchicalStoreException {
 		Object value = get(namespace, key);
 		return castToRequiredType(key, value, requiredType);
 	}
 
 	/**
-	 * Get the value stored for the supplied namespace and key in this or the
-	 * parent store, if present, or call the supplied function to compute it.
+	 * Get the value stored for the supplied namespace and key in this store or
+	 * the parent store, if present, or call the supplied function to compute it.
 	 *
 	 * @param namespace the namespace; never {@code null}
 	 * @param key the key; never {@code null}
 	 * @param defaultCreator the function called with the supplied {@code key}
 	 * to create a new value; never {@code null} but may return {@code null}
-	 * @return stored value; may be {@code null}
+	 * @return the stored value; may be {@code null}
 	 */
 	public <K, V> Object getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator) {
-		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
 		Preconditions.notNull(defaultCreator, "defaultCreator must not be null");
+		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
 		StoredValue storedValue = getStoredValue(compositeKey);
 		if (storedValue == null) {
-			storedValue = storedValues.computeIfAbsent(compositeKey,
+			storedValue = this.storedValues.computeIfAbsent(compositeKey,
 				__ -> storedValue(new MemoizingSupplier(() -> defaultCreator.apply(key))));
 		}
 		return storedValue.evaluate();
 	}
 
 	/**
-	 * Get the value stored for the supplied namespace and key in this or the
-	 * parent store, if present, or call the supplied function to compute it
+	 * Get the value stored for the supplied namespace and key in this store or
+	 * the parent store, if present, or call the supplied function to compute it
 	 * and, finally, cast it to the supplied required type.
 	 *
 	 * @param namespace the namespace; never {@code null}
@@ -155,11 +155,12 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param defaultCreator the function called with the supplied {@code key}
 	 * to create a new value; never {@code null} but may return {@code null}
 	 * @param requiredType the required type of the value; never {@code null}
-	 * @return stored value; may be {@code null}
+	 * @return the stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
-	 *                                              be cast to the required type
+	 * be cast to the required type
 	 */
-	public <K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
+	public <K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType)
+			throws NamespacedHierarchicalStoreException {
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
 		return castToRequiredType(key, value, requiredType);
 	}
@@ -174,12 +175,12 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param namespace the namespace; never {@code null}
 	 * @param key the key; never {@code null}
 	 * @param value the value to store; may be {@code null}
-	 * @return previously stored value; may be {@code null}
+	 * @return the previously stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
-	 *                                              be cast to the required type
+	 * be cast to the required type
 	 */
-	public Object put(N namespace, Object key, Object value) {
-		StoredValue oldValue = storedValues.put(new CompositeKey<>(namespace, key), storedValue(() -> value));
+	public Object put(N namespace, Object key, Object value) throws NamespacedHierarchicalStoreException {
+		StoredValue oldValue = this.storedValues.put(new CompositeKey<>(namespace, key), storedValue(() -> value));
 		return StoredValue.evaluateIfNotNull(oldValue);
 	}
 
@@ -192,10 +193,10 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 *
 	 * @param namespace the namespace; never {@code null}
 	 * @param key the key; never {@code null}
-	 * @return previously stored value; may be {@code null}
+	 * @return the previously stored value; may be {@code null}
 	 */
 	public Object remove(N namespace, Object key) {
-		StoredValue previous = storedValues.remove(new CompositeKey<>(namespace, key));
+		StoredValue previous = this.storedValues.remove(new CompositeKey<>(namespace, key));
 		return StoredValue.evaluateIfNotNull(previous);
 	}
 
@@ -209,26 +210,26 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param namespace the namespace; never {@code null}
 	 * @param key the key; never {@code null}
 	 * @param requiredType the required type of the value; never {@code null}
-	 * @return previously stored value; may be {@code null}
+	 * @return the previously stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
-	 *                                              be cast to the required type
+	 * be cast to the required type
 	 */
-	public <T> T remove(N namespace, Object key, Class<T> requiredType) {
+	public <T> T remove(N namespace, Object key, Class<T> requiredType) throws NamespacedHierarchicalStoreException {
 		Object value = remove(namespace, key);
 		return castToRequiredType(key, value, requiredType);
 	}
 
 	private StoredValue storedValue(Supplier<Object> value) {
-		return new StoredValue(insertOrderSequence.getAndIncrement(), value);
+		return new StoredValue(this.insertOrderSequence.getAndIncrement(), value);
 	}
 
 	private StoredValue getStoredValue(CompositeKey<N> compositeKey) {
-		StoredValue storedValue = storedValues.get(compositeKey);
+		StoredValue storedValue = this.storedValues.get(compositeKey);
 		if (storedValue != null) {
 			return storedValue;
 		}
-		if (parentStore != null) {
-			return parentStore.getStoredValue(compositeKey);
+		if (this.parentStore != null) {
+			return this.parentStore.getStoredValue(compositeKey);
 		}
 		return null;
 	}
@@ -274,7 +275,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(namespace, key);
+			return Objects.hash(this.namespace, this.key);
 		}
 
 	}
@@ -318,15 +319,16 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		private final int order;
 		private final Object value;
 
-		EvaluatedValue(CompositeKey<N> key, int order, Object value) {
-			this.compositeKey = key;
+		private EvaluatedValue(CompositeKey<N> compositeKey, int order, Object value) {
+			this.compositeKey = compositeKey;
 			this.order = order;
 			this.value = value;
 		}
 
-		void close(CloseAction<N> closeAction) throws Throwable {
-			closeAction.close(compositeKey.namespace, compositeKey.key, value);
+		private void close(CloseAction<N> closeAction) throws Throwable {
+			closeAction.close(this.compositeKey.namespace, this.compositeKey.key, this.value);
 		}
+
 	}
 
 	/**
@@ -351,23 +353,23 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 		@Override
 		public Object get() {
-			if (value == NO_VALUE_SET) {
+			if (this.value == NO_VALUE_SET) {
 				computeValue();
 			}
-			if (value instanceof Failure) {
-				ExceptionUtils.throwAsUncheckedException(((Failure) value).throwable);
+			if (this.value instanceof Failure) {
+				ExceptionUtils.throwAsUncheckedException(((Failure) this.value).throwable);
 			}
-			return value;
+			return this.value;
 		}
 
 		private synchronized void computeValue() {
 			try {
-				if (value == NO_VALUE_SET) {
-					value = delegate.get();
+				if (this.value == NO_VALUE_SET) {
+					this.value = this.delegate.get();
 				}
 			}
 			catch (Throwable t) {
-				value = new Failure(t);
+				this.value = new Failure(t);
 				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			}
 		}
@@ -384,8 +386,9 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	}
 
 	/**
-	 * Called for each successfully stored non-null value in when closing a
-	 * {@link NamespacedHierarchicalStore}.
+	 * Called for each successfully stored non-null value in the store when a
+	 * {@link NamespacedHierarchicalStore} is
+	 * {@link NamespacedHierarchicalStore#close() closed}.
 	 */
 	@FunctionalInterface
 	public interface CloseAction<N> {
@@ -398,6 +401,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		 * @param value the value; never {@code null}
 		 */
 		void close(N namespace, Object key, Object value) throws Throwable;
+
 	}
 
 }
