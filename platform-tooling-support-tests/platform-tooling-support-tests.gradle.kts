@@ -105,8 +105,8 @@ tasks.test {
 
 	val tempRepoDir: File by rootProject
 	jvmArgumentProviders += MavenRepo(tempRepoDir)
-	jvmArgumentProviders += JarPath(thirdPartyJars)
-	jvmArgumentProviders += JarPath(antJars)
+	jvmArgumentProviders += JarPath(project, thirdPartyJars)
+	jvmArgumentProviders += JarPath(project, antJars)
 	jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution)
 
 	(options as JUnitPlatformOptions).apply {
@@ -127,14 +127,14 @@ tasks.test {
 	distribution {
 		requirements.add("jdk=8")
 	}
-	jvmArgumentProviders += JavaHomeDir(project, 8)
+	jvmArgumentProviders += JavaHomeDir(project, 8, distribution.enabled)
 }
 
 class MavenRepo(@get:InputDirectory @get:PathSensitive(RELATIVE) val repoDir: File) : CommandLineArgumentProvider {
 	override fun asArguments() = listOf("-Dmaven.repo=$repoDir")
 }
 
-class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgumentProvider {
+class JavaHomeDir(project: Project, @Input val version: Int, testDistributionEnabled: Provider<Boolean>) : CommandLineArgumentProvider {
 
 	@Internal
 	val javaLauncher: Property<JavaLauncher> = project.objects.property<JavaLauncher>()
@@ -148,8 +148,11 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 				}
 			})
 
+	@Internal
+	val enabled: Property<Boolean> = project.objects.property<Boolean>().convention(testDistributionEnabled.map { !it })
+
 	override fun asArguments(): List<String> {
-		if (buildParameters.enterprise.testDistribution.enabled) {
+		if (!enabled.get()) {
 			return emptyList()
 		}
 		val metadata = javaLauncher.map { it.metadata }
@@ -158,8 +161,11 @@ class JavaHomeDir(project: Project, @Input val version: Int) : CommandLineArgume
 	}
 }
 
-class JarPath(@Classpath val configuration: Configuration, @Input val key: String = configuration.name) : CommandLineArgumentProvider {
-	override fun asArguments() = listOf("-D${key}=${configuration.asPath}")
+class JarPath(project: Project, configuration: Configuration, @Input val key: String = configuration.name) : CommandLineArgumentProvider {
+	@get:Classpath
+	val files: ConfigurableFileCollection = project.objects.fileCollection().from(configuration)
+
+	override fun asArguments() = listOf("-D${key}=${files.asPath}")
 }
 
 class MavenDistribution(project: Project, sourceTask: TaskProvider<*>) : CommandLineArgumentProvider {
