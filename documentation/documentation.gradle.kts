@@ -1,11 +1,10 @@
+import junitbuild.exec.CaptureJavaExecOutput
 import junitbuild.exec.ClasspathSystemPropertyProvider
 import junitbuild.exec.RunConsoleLauncher
 import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import java.io.ByteArrayOutputStream
-import java.nio.file.Files
 
 plugins {
 	alias(libs.plugins.asciidoctorConvert)
@@ -157,48 +156,48 @@ tasks {
 		dependsOn(consoleLauncherTest)
 	}
 
-	val generateConsoleLauncherOptions by registering(JavaExec::class) {
-		classpath = sourceSets["test"].runtimeClasspath
+	val generateConsoleLauncherOptions by registering(CaptureJavaExecOutput::class) {
+		classpath.from(sourceSets["test"].runtimeClasspath)
 		mainClass.set("org.junit.platform.console.ConsoleLauncher")
-		args("--help", "--disable-banner")
-		redirectOutput(consoleLauncherOptionsFile)
+		args.addAll("--help", "--disable-banner")
+		outputFile.set(consoleLauncherOptionsFile)
 	}
 
-	val generateConsoleLauncherDiscoverOptions by registering(JavaExec::class) {
-		classpath = sourceSets["test"].runtimeClasspath
+	val generateConsoleLauncherDiscoverOptions by registering(CaptureJavaExecOutput::class) {
+		classpath.from(sourceSets["test"].runtimeClasspath)
 		mainClass.set("org.junit.platform.console.ConsoleLauncher")
-		args("discover", "--help", "--disable-banner")
-		redirectOutput(consoleLauncherDiscoverOptionsFile)
+		args.addAll("discover", "--help", "--disable-banner")
+		outputFile.set(consoleLauncherDiscoverOptionsFile)
 	}
 
-	val generateConsoleLauncherExecuteOptions by registering(JavaExec::class) {
-		classpath = sourceSets["test"].runtimeClasspath
+	val generateConsoleLauncherExecuteOptions by registering(CaptureJavaExecOutput::class) {
+		classpath.from(sourceSets["test"].runtimeClasspath)
 		mainClass.set("org.junit.platform.console.ConsoleLauncher")
-		args("execute", "--help", "--disable-banner")
-		redirectOutput(consoleLauncherExecuteOptionsFile)
+		args.addAll("execute", "--help", "--disable-banner")
+		outputFile.set(consoleLauncherExecuteOptionsFile)
 	}
 
-	val generateConsoleLauncherEnginesOptions by registering(JavaExec::class) {
-		classpath = sourceSets["test"].runtimeClasspath
+	val generateConsoleLauncherEnginesOptions by registering(CaptureJavaExecOutput::class) {
+		classpath.from(sourceSets["test"].runtimeClasspath)
 		mainClass.set("org.junit.platform.console.ConsoleLauncher")
-		args("engines", "--help", "--disable-banner")
-		redirectOutput(consoleLauncherEnginesOptionsFile)
+		args.addAll("engines", "--help", "--disable-banner")
+		outputFile.set(consoleLauncherEnginesOptionsFile)
 	}
 
-	val generateExperimentalApisTable by registering(JavaExec::class) {
-		classpath = sourceSets["test"].runtimeClasspath
+	val generateExperimentalApisTable by registering(CaptureJavaExecOutput::class) {
+		classpath.from(sourceSets["test"].runtimeClasspath)
 		mainClass.set("org.junit.api.tools.ApiReportGenerator")
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
-		args("EXPERIMENTAL")
-		redirectOutput(experimentalApisTableFile)
+		args.add("EXPERIMENTAL")
+		outputFile.set(experimentalApisTableFile)
 	}
 
-	val generateDeprecatedApisTable by registering(JavaExec::class) {
-		classpath = sourceSets["test"].runtimeClasspath
+	val generateDeprecatedApisTable by registering(CaptureJavaExecOutput::class) {
+		classpath.from(sourceSets["test"].runtimeClasspath)
 		mainClass.set("org.junit.api.tools.ApiReportGenerator")
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
-		args("DEPRECATED")
-		redirectOutput(deprecatedApisTableFile)
+		args.add("DEPRECATED")
+		outputFile.set(deprecatedApisTableFile)
 	}
 
 	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(Copy::class) {
@@ -476,18 +475,6 @@ tasks {
 
 	gitPublishCommit {
 		dependsOn(configureGitAuthor)
-	}
-}
-
-fun JavaExec.redirectOutput(outputFile: Provider<RegularFile>) {
-	outputs.file(outputFile)
-	val byteStream = ByteArrayOutputStream()
-	standardOutput = byteStream
-	doLast {
-		outputFile.get().asFile.apply {
-			Files.createDirectories(parentFile.toPath())
-			Files.write(toPath(), byteStream.toByteArray())
-		}
 	}
 }
 
