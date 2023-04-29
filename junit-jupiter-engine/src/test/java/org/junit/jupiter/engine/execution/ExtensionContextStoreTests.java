@@ -21,9 +21,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContextException;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStoreException;
 
 /**
- * Unit tests for {@link NamespaceAwareStore} and {@link ExtensionValuesStore}.
+ * Unit tests for {@link NamespaceAwareStore} and {@link NamespacedHierarchicalStore}.
  *
  * @since 5.5
  * @see ExtensionContextStoreConcurrencyTests
@@ -34,8 +36,8 @@ class ExtensionContextStoreTests {
 	private static final String KEY = "key";
 	private static final String VALUE = "value";
 
-	private final ExtensionValuesStore parentStore = new ExtensionValuesStore(null);
-	private final ExtensionValuesStore localStore = new ExtensionValuesStore(parentStore);
+	private final NamespacedHierarchicalStore<Namespace> parentStore = new NamespacedHierarchicalStore<>(null);
+	private final NamespacedHierarchicalStore<Namespace> localStore = new NamespacedHierarchicalStore<>(parentStore);
 	private final Store store = new NamespaceAwareStore(localStore, Namespace.GLOBAL);
 
 	@Test
@@ -53,7 +55,10 @@ class ExtensionContextStoreTests {
 
 		Exception exception = assertThrows(ExtensionContextException.class,
 			() -> store.getOrDefault(KEY, boolean.class, true));
-		assertThat(exception).hasMessageContaining("is not of required type");
+		assertThat(exception) //
+				.hasMessageContaining("is not of required type") //
+				.hasCauseInstanceOf(NamespacedHierarchicalStoreException.class) //
+				.hasStackTraceContaining(NamespacedHierarchicalStore.class.getName());
 	}
 
 	@Test
@@ -83,7 +88,7 @@ class ExtensionContextStoreTests {
 		var e2 = assertThrows(RuntimeException.class, () -> store.get(KEY));
 		assertSame(e1, e2);
 
-		assertDoesNotThrow(localStore::closeAllStoredCloseableValues);
+		assertDoesNotThrow(localStore::close);
 		assertThat(invocations).hasValue(1);
 	}
 

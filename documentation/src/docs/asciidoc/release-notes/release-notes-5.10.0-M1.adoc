@@ -52,6 +52,8 @@ repository on GitHub.
   discovered tests for the specified details mode without executing them.
 * Improved error message for cyclic graphs detected during test discovery to be more
   actionable.
+* Extracted `NamespacedHierarchicalStore` from JUnit Jupiter engine for reuse by other
+  test engines and their extensions.
 
 
 [[release-notes-5.10.0-M1-junit-jupiter]]

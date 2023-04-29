@@ -34,8 +34,8 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.mockito.Mockito;
 
 /**
@@ -56,7 +56,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 
 	@BeforeEach
 	void setUpExtensionContext() {
-		var store = new NamespaceAwareStore(new ExtensionValuesStore(null), Namespace.GLOBAL);
+		var store = new NamespaceAwareStore(new NamespacedHierarchicalStore<>(null), Namespace.GLOBAL);
 		when(extensionContext.getStore(any())).thenReturn(store);
 	}
 
