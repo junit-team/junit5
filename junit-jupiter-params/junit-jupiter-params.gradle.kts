@@ -30,10 +30,11 @@ dependencies {
 tasks {
 	jar {
 		bundle {
+			val version = project.version
 			bnd("""
 				Require-Capability:\
 					org.junit.platform.engine;\
-						filter:='(&(org.junit.platform.engine=junit-jupiter)(version>=${'$'}{version_cleanup;${rootProject.property("version")!!}})(!(version>=${'$'}{versionmask;+;${'$'}{version_cleanup;${rootProject.property("version")!!}}})))';\
+						filter:='(&(org.junit.platform.engine=junit-jupiter)(version>=${'$'}{version_cleanup;$version})(!(version>=${'$'}{versionmask;+;${'$'}{version_cleanup;$version}})))';\
 						effective:=active
 			""")
 		}

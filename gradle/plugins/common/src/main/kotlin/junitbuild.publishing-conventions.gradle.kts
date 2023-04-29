@@ -47,6 +47,7 @@ signing {
 }
 
 tasks.withType<Sign>().configureEach {
+	val isSnapshot = project.version.toString().contains("SNAPSHOT")
 	onlyIf {
 		!isSnapshot // Gradle Module Metadata currently does not support signing snapshots
 	}
