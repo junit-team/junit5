@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.ListenerRegistry.forEngineExecutionListeners;
 
 import java.util.Optional;
@@ -27,6 +28,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
@@ -82,13 +84,50 @@ public class EngineExecutionOrchestrator {
 		TestPlan testPlan = internalTestPlan.getDelegate();
 		LauncherDiscoveryResult discoveryResult = internalTestPlan.getDiscoveryResult();
 
+		testExecutionListener.testPlanExecutionStarted(testPlan);
+		if (isDryRun(internalTestPlan)) {
+			dryRun(testPlan, testExecutionListener);
+		}
+		else {
+			execute(discoveryResult,
+				buildEngineExecutionListener(parentEngineExecutionListener, testExecutionListener, testPlan));
+		}
+		testExecutionListener.testPlanExecutionFinished(testPlan);
+	}
+
+	private Boolean isDryRun(InternalTestPlan internalTestPlan) {
+		return internalTestPlan.getConfigurationParameters().getBoolean(DRY_RUN_PROPERTY_NAME).orElse(false);
+	}
+
+	private void dryRun(TestPlan testPlan, TestExecutionListener listener) {
+		testPlan.accept(new TestPlan.Visitor() {
+			@Override
+			public void preVisitContainer(TestIdentifier testIdentifier) {
+				listener.executionStarted(testIdentifier);
+			}
+
+			@Override
+			public void visit(TestIdentifier testIdentifier) {
+				if (!testIdentifier.isContainer()) {
+					listener.executionStarted(testIdentifier);
+					listener.executionFinished(testIdentifier, TestExecutionResult.successful());
+				}
+			}
+
+			@Override
+			public void postVisitContainer(TestIdentifier testIdentifier) {
+				listener.executionFinished(testIdentifier, TestExecutionResult.successful());
+			}
+		});
+	}
+
+	private static EngineExecutionListener buildEngineExecutionListener(
+			EngineExecutionListener parentEngineExecutionListener, TestExecutionListener testExecutionListener,
+			TestPlan testPlan) {
 		ListenerRegistry<EngineExecutionListener> engineExecutionListenerRegistry = forEngineExecutionListeners();
 		engineExecutionListenerRegistry.add(new ExecutionListenerAdapter(testPlan, testExecutionListener));
 		engineExecutionListenerRegistry.add(parentEngineExecutionListener);
-
-		testExecutionListener.testPlanExecutionStarted(testPlan);
-		execute(discoveryResult, engineExecutionListenerRegistry.getCompositeListener());
-		testExecutionListener.testPlanExecutionFinished(testPlan);
+		return engineExecutionListenerRegistry.getCompositeListener();
 	}
 
 	private void withInterceptedStreams(ConfigurationParameters configurationParameters,

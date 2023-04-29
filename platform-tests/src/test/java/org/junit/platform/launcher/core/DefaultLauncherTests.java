@@ -18,6 +18,7 @@ import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
@@ -49,6 +50,7 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.fakes.TestEngineSpy;
@@ -625,4 +627,30 @@ class DefaultLauncherTests {
 			impostor.getClass().getName(), id);
 	}
 
+	@Test
+	void dryRunModeReportsEventsForAllTestsButDoesNotExecuteThem() {
+		var engine = new DemoHierarchicalTestEngine("engine");
+		var container = engine.addContainer("container", "Container", null);
+		var test = new DemoHierarchicalTestDescriptor(container.getUniqueId().append("test", "test"), "Test",
+			(__, ___) -> {
+				throw new RuntimeException("boom");
+			});
+		container.addChild(test);
+
+		var launcher = createLauncher(engine);
+		TestExecutionListener listener = mock();
+
+		launcher.execute(request().configurationParameter(DRY_RUN_PROPERTY_NAME, "true").build(), listener);
+
+		var inOrder = inOrder(listener);
+		inOrder.verify(listener).testPlanExecutionStarted(any());
+		inOrder.verify(listener).executionStarted(TestIdentifier.from(engine.getEngineDescriptor()));
+		inOrder.verify(listener).executionStarted(TestIdentifier.from(container));
+		inOrder.verify(listener).executionStarted(TestIdentifier.from(test));
+		inOrder.verify(listener).executionFinished(TestIdentifier.from(test), successful());
+		inOrder.verify(listener).executionFinished(TestIdentifier.from(container), successful());
+		inOrder.verify(listener).executionFinished(TestIdentifier.from(engine.getEngineDescriptor()), successful());
+		inOrder.verify(listener).testPlanExecutionFinished(any());
+		inOrder.verifyNoMoreInteractions();
+	}
 }
