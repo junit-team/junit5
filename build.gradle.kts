@@ -63,3 +63,7 @@ nexusPublishing {
 nohttp {
 	source.exclude("**/.gradle/**", "gradle/plugins/**/build/**", "buildSrc/build/**")
 }
+
+tasks.checkstyleNohttp {
+	notCompatibleWithConfigurationCache("https://github.com/spring-io/nohttp/issues/61")
+}

@@ -1,3 +1,7 @@
+import com.diffplug.gradle.spotless.SpotlessApply
+import com.diffplug.gradle.spotless.SpotlessCheck
+import com.diffplug.spotless.LineEnding
+
 plugins {
 	id("com.diffplug.spotless")
 }
@@ -43,5 +47,17 @@ spotless {
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
+	}
+
+	// https://github.com/diffplug/spotless/issues/1644
+	lineEndings = LineEnding.PLATFORM_NATIVE // or any other except GIT_ATTRIBUTES
+}
+
+tasks {
+	withType<SpotlessApply>().configureEach {
+		notCompatibleWithConfigurationCache("https://github.com/diffplug/spotless/issues/644")
+	}
+	withType<SpotlessCheck>().configureEach {
+		notCompatibleWithConfigurationCache("https://github.com/diffplug/spotless/issues/644")
 	}
 }
