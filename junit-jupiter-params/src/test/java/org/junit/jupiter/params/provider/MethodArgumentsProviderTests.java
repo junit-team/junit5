@@ -208,7 +208,7 @@ class MethodArgumentsProviderTests {
 	private static void assertStaticIsRequired(PreconditionViolationException exception) {
 		assertThat(exception).hasMessageContainingAll("Method '",
 			"' must be static: local factory methods must be static ",
-			"unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS); ",
+			"unless the PER_CLASS @TestInstance lifecycle mode is used; ",
 			"external factory methods must always be static.");
 	}
 
