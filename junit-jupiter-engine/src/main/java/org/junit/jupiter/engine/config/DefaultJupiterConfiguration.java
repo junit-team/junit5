@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.io.TempDir.DEFAULT_FACTORY_PROPERTY_NAME;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.ClassOrderer;
@@ -134,9 +135,10 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public TempDirFactory getDefaultTempDirFactory() {
+	public Supplier<TempDirFactory> getDefaultTempDirFactorySupplier() {
 		return tempDirFactoryConverter.get(configurationParameters, DEFAULT_FACTORY_PROPERTY_NAME) //
-				.orElse(TempDirFactory.Standard.INSTANCE);
+				.map(tempDirFactory -> (Supplier<TempDirFactory>) () -> tempDirFactory) //
+				.orElse(() -> TempDirFactory.Standard.INSTANCE);
 	}
 
 }

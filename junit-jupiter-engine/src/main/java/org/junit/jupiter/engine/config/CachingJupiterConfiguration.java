@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.ClassOrderer;
@@ -117,10 +118,11 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 			key -> delegate.getDefaultTempDirCleanupMode());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public TempDirFactory getDefaultTempDirFactory() {
-		return (TempDirFactory) cache.computeIfAbsent(DEFAULT_FACTORY_PROPERTY_NAME,
-			key -> delegate.getDefaultTempDirFactory());
+	public Supplier<TempDirFactory> getDefaultTempDirFactorySupplier() {
+		return (Supplier<TempDirFactory>) cache.computeIfAbsent(DEFAULT_FACTORY_PROPERTY_NAME,
+			key -> delegate.getDefaultTempDirFactorySupplier());
 	}
 
 }

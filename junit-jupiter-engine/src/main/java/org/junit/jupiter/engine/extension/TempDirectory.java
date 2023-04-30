@@ -192,7 +192,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private TempDirFactory determineTempDirFactory(TempDir tempDir) {
 		Class<? extends TempDirFactory> factory = tempDir.factory();
 		return factory == TempDirFactory.Standard.class //
-				? this.configuration.getDefaultTempDirFactory()
+				? this.configuration.getDefaultTempDirFactorySupplier().get()
 				: ReflectionUtils.newInstance(factory);
 	}
 

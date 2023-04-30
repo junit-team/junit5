@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.ClassOrderer;
@@ -67,6 +68,6 @@ public interface JupiterConfiguration {
 
 	CleanupMode getDefaultTempDirCleanupMode();
 
-	TempDirFactory getDefaultTempDirFactory();
+	Supplier<TempDirFactory> getDefaultTempDirFactorySupplier();
 
 }
