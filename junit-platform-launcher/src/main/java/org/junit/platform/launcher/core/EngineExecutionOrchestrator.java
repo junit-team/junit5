@@ -12,10 +12,10 @@ package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
+import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_DEFAULT_PATTERN;
+import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME;
+import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.ListenerRegistry.forEngineExecutionListeners;
-import static org.junit.platform.launcher.core.StackTracePruningEngineExecutionListener.STACKTRACE_PRUNING_DEFAULT_PATTERN;
-import static org.junit.platform.launcher.core.StackTracePruningEngineExecutionListener.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME;
-import static org.junit.platform.launcher.core.StackTracePruningEngineExecutionListener.STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME;
 
 import java.util.Optional;
 import java.util.function.Consumer;

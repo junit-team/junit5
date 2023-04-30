@@ -28,9 +28,6 @@ import org.junit.platform.engine.TestExecutionResult;
  */
 class StackTracePruningEngineExecutionListener extends DelegatingEngineExecutionListener {
 
-	public static final String STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME = "junit.platform.stacktrace.pruning.enabled";
-	public static final String STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME = "junit.platform.stacktrace.pruning.pattern";
-	public static final String STACKTRACE_PRUNING_DEFAULT_PATTERN = "org.junit.*,java.*";
 	private static final List<String> ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS = Arrays.asList( //
 		"org.junit.jupiter.api.Assertions", //
 		"org.junit.jupiter.api.Assumptions" //
