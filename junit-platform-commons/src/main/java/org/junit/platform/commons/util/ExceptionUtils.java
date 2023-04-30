@@ -19,8 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
@@ -111,6 +112,7 @@ public final class ExceptionUtils {
 	 *
 	 * @since 5.10
 	 */
+	@API(status = INTERNAL, since = "5.10")
 	public static void pruneStackTrace(Throwable throwable, Predicate<String> stackTraceElementFilter) {
 		Preconditions.notNull(throwable, "Throwable must not be null");
 		Preconditions.notNull(stackTraceElementFilter, "Predicate must not be null");
@@ -145,10 +147,11 @@ public final class ExceptionUtils {
 	 *
 	 * @since 5.10
 	 */
+	@API(status = INTERNAL, since = "5.10")
 	public static List<Throwable> findNestedThrowables(Throwable rootThrowable) {
 		Preconditions.notNull(rootThrowable, "Throwable must not be null");
 
-		HashSet<Throwable> visited = new HashSet<>();
+		Set<Throwable> visited = new LinkedHashSet<>();
 		Deque<Throwable> toVisit = new ArrayDeque<>();
 		toVisit.add(rootThrowable);
 
