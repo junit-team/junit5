@@ -46,10 +46,11 @@ class StackTracePruningTests {
 
 		assertStackTraceMatch(stackTrace, """
 				\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
-				>>>>
 				""");
 
 		assertStackTraceDoesNotContain(stackTrace, "java.util.ArrayList.forEach(ArrayList.java:");
+		assertStackTraceDoesNotContain(stackTrace,
+			"jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:");
 	}
 
 	@Test
@@ -63,10 +64,11 @@ class StackTracePruningTests {
 
 		assertStackTraceMatch(stackTrace, """
 				\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
-				>>>>
 				""");
 
 		assertStackTraceDoesNotContain(stackTrace, "java.util.ArrayList.forEach(ArrayList.java:");
+		assertStackTraceDoesNotContain(stackTrace,
+			"jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:");
 	}
 
 	@Test
@@ -96,6 +98,14 @@ class StackTracePruningTests {
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
+
+		assertStackTraceMatch(stackTrace, """
+				\\Qorg.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:\\E.+
+				\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
+				>>>>
+				\\Qjava.base/java.util.ArrayList.forEach(ArrayList.java:\\E.+
+				>>>>
+				""");
 
 		assertStackTraceDoesNotContain(stackTrace, "jdk.");
 	}

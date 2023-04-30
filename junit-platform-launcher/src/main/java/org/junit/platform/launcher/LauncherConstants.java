@@ -215,7 +215,7 @@ public class LauncherConstants {
 	 * @see #STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public static final String STACKTRACE_PRUNING_DEFAULT_PATTERN = "org.junit.*,java.*";
+	public static final String STACKTRACE_PRUNING_DEFAULT_PATTERN = "org.junit.*,java.*,jdk.*";
 
 	private LauncherConstants() {
 		/* no-op */
