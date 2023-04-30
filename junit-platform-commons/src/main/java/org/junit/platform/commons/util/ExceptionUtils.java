@@ -41,10 +41,6 @@ import org.apiguardian.api.API;
 public final class ExceptionUtils {
 
 	private static final String JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX = "org.junit.platform.launcher.";
-	private static final List<String> ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS = Arrays.asList( //
-		"org.junit.jupiter.api.Assertions", //
-		"org.junit.jupiter.api.Assumptions" //
-	);
 
 	private ExceptionUtils() {
 		/* no-op */
@@ -127,8 +123,7 @@ public final class ExceptionUtils {
 			if (className.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
 				prunedStackTrace.clear();
 			}
-			else if (stackTraceElementFilter.test(className)
-					|| ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS.contains(className)) {
+			else if (stackTraceElementFilter.test(className)) {
 				prunedStackTrace.add(element);
 			}
 		}

@@ -10,6 +10,8 @@
 
 package org.junit.platform.launcher.core;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
@@ -29,12 +31,17 @@ class StackTracePruningEngineExecutionListener extends DelegatingEngineExecution
 	public static final String STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME = "junit.platform.stacktrace.pruning.enabled";
 	public static final String STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME = "junit.platform.stacktrace.pruning.pattern";
 	public static final String STACKTRACE_PRUNING_DEFAULT_PATTERN = "org.junit.*,java.*";
+	private static final List<String> ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS = Arrays.asList( //
+		"org.junit.jupiter.api.Assertions", //
+		"org.junit.jupiter.api.Assumptions" //
+	);
 
-	private final String pruningPattern;
+	private final Predicate<String> stackTraceElementFilter;
 
 	StackTracePruningEngineExecutionListener(EngineExecutionListener delegate, String pruningPattern) {
 		super(delegate);
-		this.pruningPattern = pruningPattern;
+		this.stackTraceElementFilter = ClassNamePatternFilterUtils.excludeMatchingClassNames(pruningPattern) //
+				.or(ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS::contains);
 	}
 
 	@Override
@@ -48,8 +55,7 @@ class StackTracePruningEngineExecutionListener extends DelegatingEngineExecution
 	}
 
 	private void pruneStackTrace(Throwable throwable) {
-		ExceptionUtils.pruneStackTrace(throwable,
-			ClassNamePatternFilterUtils.excludeMatchingClassNames(pruningPattern));
+		ExceptionUtils.pruneStackTrace(throwable, stackTraceElementFilter);
 	}
 
 }

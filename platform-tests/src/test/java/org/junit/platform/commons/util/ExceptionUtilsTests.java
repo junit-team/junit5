@@ -23,12 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.opentest4j.AssertionFailedError;
 
 /**
  * Unit tests for {@link ExceptionUtils}.
@@ -80,31 +77,6 @@ class ExceptionUtilsTests {
 			pruneStackTrace(e, element -> !element.startsWith("org.junit."));
 			assertThat(e.getStackTrace()) //
 					.noneMatch(element -> element.toString().contains("org.junit."));
-		}
-	}
-
-	@Test
-	void pruneStackTraceOfEverythingExceptJupiterAssertions() {
-		try {
-			Assertions.fail();
-		}
-		catch (AssertionFailedError e) {
-			pruneStackTrace(e, element -> false);
-			assertStackTraceMatch(e.getStackTrace(), "\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+");
-		}
-	}
-
-	@Test
-	void pruneStackTraceOfEverythingExceptJupiterAssumptions() {
-		try {
-			Assumptions.assumeTrue(() -> {
-				throw new JUnitException("expected");
-			});
-		}
-		catch (JUnitException e) {
-			pruneStackTrace(e, element -> false);
-			assertStackTraceMatch(e.getStackTrace(),
-				"\\Qorg.junit.jupiter.api.Assumptions.assumeTrue(Assumptions.java:\\E.+");
 		}
 	}
 
