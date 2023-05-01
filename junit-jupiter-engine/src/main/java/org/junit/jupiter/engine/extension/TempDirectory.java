@@ -273,21 +273,24 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		@Override
 		public void close() throws IOException {
-			if (cleanupMode == NEVER
-					|| (cleanupMode == ON_SUCCESS && executionContext.getExecutionException().isPresent())) {
-				logger.info(() -> "Skipping cleanup of temp dir " + dir + " due to cleanup mode configuration.");
-				return;
+			try {
+				if (cleanupMode == NEVER
+						|| (cleanupMode == ON_SUCCESS && executionContext.getExecutionException().isPresent())) {
+					logger.info(() -> "Skipping cleanup of temp dir " + dir + " due to cleanup mode configuration.");
+					return;
+				}
+
+				FileOperations fileOperations = executionContext.getStore(NAMESPACE) //
+						.getOrDefault(FILE_OPERATIONS_KEY, FileOperations.class, FileOperations.DEFAULT);
+
+				SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(fileOperations);
+				if (!failures.isEmpty()) {
+					throw createIOExceptionWithAttachedFailures(failures);
+				}
 			}
-
-			FileOperations fileOperations = executionContext.getStore(NAMESPACE) //
-					.getOrDefault(FILE_OPERATIONS_KEY, FileOperations.class, FileOperations.DEFAULT);
-
-			SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(fileOperations);
-			if (!failures.isEmpty()) {
-				throw createIOExceptionWithAttachedFailures(failures);
+			finally {
+				factory.close();
 			}
-
-			factory.close();
 		}
 
 		private SortedMap<Path, IOException> deleteAllFilesAndDirectories(FileOperations fileOperations)
