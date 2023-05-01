@@ -117,15 +117,17 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
 			Predicate<Field> predicate) {
 
+		Scope scope = getScope(context);
+
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
 			assertNonFinalField(field);
 			assertSupportedType("field", field.getType());
 
 			try {
 				CleanupMode cleanupMode = determineCleanupModeForField(field);
-				TempDirFactory factory = determineTempDirFactoryForField(field);
+				TempDirFactory factory = determineTempDirFactoryForField(field, scope);
 				makeAccessible(field).set(testInstance,
-					getPathOrFile(field, field.getType(), factory, cleanupMode, context));
+					getPathOrFile(field, field.getType(), factory, cleanupMode, scope, context));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
@@ -156,8 +158,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
 		CleanupMode cleanupMode = determineCleanupModeForParameter(parameterContext);
-		TempDirFactory factory = determineTempDirFactoryForParameter(parameterContext);
-		return getPathOrFile(parameterContext.getParameter(), parameterType, factory, cleanupMode, extensionContext);
+		Scope scope = getScope(extensionContext);
+		TempDirFactory factory = determineTempDirFactoryForParameter(parameterContext, scope);
+		return getPathOrFile(parameterContext.getParameter(), parameterType, factory, cleanupMode, scope,
+			extensionContext);
 	}
 
 	private CleanupMode determineCleanupModeForField(Field field) {
@@ -177,20 +181,38 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return cleanupMode == DEFAULT ? this.configuration.getDefaultTempDirCleanupMode() : cleanupMode;
 	}
 
-	private TempDirFactory determineTempDirFactoryForField(Field field) {
+	@SuppressWarnings("deprecation")
+	private Scope getScope(ExtensionContext context) {
+		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent( //
+			Scope.class, //
+			__ -> new EnumConfigurationParameterConverter<>(Scope.class, "@TempDir scope") //
+					.get(TempDir.SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
+			Scope.class //
+		);
+	}
+
+	private TempDirFactory determineTempDirFactoryForField(Field field, Scope scope) {
 		TempDir tempDir = findAnnotation(field, TempDir.class).orElseThrow(
 			() -> new JUnitException("Field " + field + " must be annotated with @TempDir"));
-		return determineTempDirFactory(tempDir);
+		return determineTempDirFactory(tempDir, scope);
 	}
 
-	private TempDirFactory determineTempDirFactoryForParameter(ParameterContext parameterContext) {
+	private TempDirFactory determineTempDirFactoryForParameter(ParameterContext parameterContext, Scope scope) {
 		TempDir tempDir = parameterContext.findAnnotation(TempDir.class).orElseThrow(() -> new JUnitException(
 			"Parameter " + parameterContext.getParameter() + " must be annotated with @TempDir"));
-		return determineTempDirFactory(tempDir);
+		return determineTempDirFactory(tempDir, scope);
 	}
 
-	private TempDirFactory determineTempDirFactory(TempDir tempDir) {
+	@SuppressWarnings("deprecation")
+	private TempDirFactory determineTempDirFactory(TempDir tempDir, Scope scope) {
 		Class<? extends TempDirFactory> factory = tempDir.factory();
+
+		if (factory != TempDirFactory.Standard.class && scope == Scope.PER_CONTEXT) {
+			throw new ExtensionConfigurationException("Custom @TempDir factory is not supported with "
+					+ TempDir.SCOPE_PROPERTY_NAME + "=" + Scope.PER_CONTEXT.toString().toLowerCase() + ". Use "
+					+ TempDir.DEFAULT_FACTORY_PROPERTY_NAME + " instead.");
+		}
+
 		return factory == TempDirFactory.Standard.class //
 				? this.configuration.getDefaultTempDirFactorySupplier().get()
 				: ReflectionUtils.newInstance(factory);
@@ -209,16 +231,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, TempDirFactory factory,
-			CleanupMode cleanupMode, ExtensionContext extensionContext) {
-		Scope scope = getScope(extensionContext);
-
-		if (scope == Scope.PER_CONTEXT && factory != TempDirFactory.Standard.INSTANCE) {
-			throw new ExtensionConfigurationException("Custom @TempDir factory is not supported with "
-					+ TempDir.SCOPE_PROPERTY_NAME + "=" + Scope.PER_CONTEXT.toString().toLowerCase());
-		}
-
+			CleanupMode cleanupMode, Scope scope, ExtensionContext extensionContext) {
 		Namespace namespace = scope == Scope.PER_DECLARATION //
 				? NAMESPACE.append(sourceElement) //
 				: NAMESPACE;
@@ -228,16 +242,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				.get();
 
 		return (type == Path.class) ? path : path.toFile();
-	}
-
-	@SuppressWarnings("deprecation")
-	private Scope getScope(ExtensionContext context) {
-		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent( //
-			Scope.class, //
-			__ -> new EnumConfigurationParameterConverter<>(Scope.class, "@TempDir scope") //
-					.get(TempDir.SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
-			Scope.class //
-		);
 	}
 
 	static CloseablePath createTempDir(TempDirFactory factory, CleanupMode cleanupMode,
