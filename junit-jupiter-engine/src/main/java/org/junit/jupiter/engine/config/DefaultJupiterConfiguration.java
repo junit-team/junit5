@@ -136,9 +136,9 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	@Override
 	public Supplier<TempDirFactory> getDefaultTempDirFactorySupplier() {
-		return tempDirFactoryConverter.get(configurationParameters, DEFAULT_FACTORY_PROPERTY_NAME) //
-				.map(tempDirFactory -> (Supplier<TempDirFactory>) () -> tempDirFactory) //
-				.orElse(() -> TempDirFactory.Standard.INSTANCE);
+		Supplier<Optional<TempDirFactory>> supplier = tempDirFactoryConverter.supply(configurationParameters,
+			DEFAULT_FACTORY_PROPERTY_NAME);
+		return () -> supplier.get().orElse(TempDirFactory.Standard.INSTANCE);
 	}
 
 }
