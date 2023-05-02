@@ -292,9 +292,9 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Nested
-	@DisplayName("supports default temp dir factory")
+	@DisplayName("supports default factory")
 	@TestMethodOrder(OrderAnnotation.class)
-	class DefaultTempDirFactory {
+	class DefaultFactory {
 
 		private EngineExecutionResults executeTestsForClassWithDefaultFactory(Class<?> testClass,
 				Class<? extends TempDirFactory> factoryClass) {
@@ -707,8 +707,8 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	static class StandardDefaultFactoryTestCase {
 
 		@Test
-		void test(@TempDir Path tempDir) {
-			assertTrue(Files.exists(tempDir));
+		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
+			assertSame(tempDir1, tempDir2);
 		}
 
 	}
@@ -716,8 +716,8 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	static class NonStandardDefaultFactoryTestCase {
 
 		@Test
-		void test(@TempDir Path tempDir) {
-			assertTrue(Files.exists(tempDir));
+		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
+			assertSame(tempDir1, tempDir2);
 		}
 
 	}
