@@ -21,11 +21,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 
@@ -121,6 +123,18 @@ class CachingJupiterConfigurationTests {
 		assertThat(cache.getDefaultTempDirCleanupMode()).isSameAs(NEVER);
 
 		verify(delegate, only()).getDefaultTempDirCleanupMode();
+	}
+
+	@Test
+	void cachesDefaultTempDirFactorySupplier() {
+		Supplier<TempDirFactory> supplier = mock();
+		when(delegate.getDefaultTempDirFactorySupplier()).thenReturn(supplier);
+
+		// call `cache.getDefaultTempDirFactorySupplier()` twice to verify the delegate method is called only once.
+		assertThat(cache.getDefaultTempDirFactorySupplier()).isSameAs(supplier);
+		assertThat(cache.getDefaultTempDirFactorySupplier()).isSameAs(supplier);
+
+		verify(delegate, only()).getDefaultTempDirFactorySupplier();
 	}
 
 	@Test

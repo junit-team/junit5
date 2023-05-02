@@ -20,13 +20,17 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.nio.file.Path;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.io.CleanupMode;
+import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -106,6 +110,38 @@ class DefaultJupiterConfigurationTests {
 		final Optional<MethodOrderer> defaultTestMethodOrder = configuration.getDefaultTestMethodOrderer();
 
 		assertThat(defaultTestMethodOrder).isEmpty();
+	}
+
+	@Test
+	void shouldGetDefaultTempDirFactorySupplierWithConfigParamSet() {
+		ConfigurationParameters parameters = mock();
+		String key = Constants.DEFAULT_TEMP_DIR_FACTORY_PROPERTY_NAME;
+		when(parameters.get(key)).thenReturn(Optional.of(CustomFactory.class.getName()));
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+
+		Supplier<TempDirFactory> supplier = configuration.getDefaultTempDirFactorySupplier();
+
+		assertThat(supplier.get()).isInstanceOf(TempDirFactory.class);
+	}
+
+	private static class CustomFactory implements TempDirFactory {
+
+		@Override
+		public Path createTempDirectory(ExtensionContext context) {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	@Test
+	void shouldGetStandardAsDefaultTempDirFactorySupplierWithoutConfigParamSet() {
+		ConfigurationParameters parameters = mock();
+		String key = Constants.DEFAULT_TEMP_DIR_FACTORY_PROPERTY_NAME;
+		when(parameters.get(key)).thenReturn(Optional.empty());
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+
+		Supplier<TempDirFactory> supplier = configuration.getDefaultTempDirFactorySupplier();
+
+		assertThat(supplier.get()).isSameAs(TempDirFactory.Standard.INSTANCE);
 	}
 
 	private void assertDefaultConfigParam(String configValue, Lifecycle expected) {

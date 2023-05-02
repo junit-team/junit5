@@ -385,9 +385,9 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Override
-			public void close() throws IOException {
+			public void close() {
 				if (closed) {
-					throw new IOException("already closed");
+					throw new IllegalStateException("already closed");
 				}
 				closed = true;
 			}
