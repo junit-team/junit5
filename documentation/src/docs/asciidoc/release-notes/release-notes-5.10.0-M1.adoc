@@ -15,7 +15,8 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Use a test class's own classloader to search for `@MethodSource` and `MethodBasedCondition` methods.
+  This allows these features to work correctly inside an OSGi framework.
 
 ==== Deprecations and Breaking Changes
 
