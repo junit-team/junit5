@@ -57,13 +57,14 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 	}
 
 	private Method getConditionMethod(String fullyQualifiedMethodName, ExtensionContext context) {
+		final Class<?> testClass = context.getRequiredTestClass();
 		if (!fullyQualifiedMethodName.contains("#")) {
-			return findMethod(context.getRequiredTestClass(), fullyQualifiedMethodName);
+			return findMethod(testClass, fullyQualifiedMethodName);
 		}
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
 		String className = methodParts[0];
 		String methodName = methodParts[1];
-		Class<?> clazz = ReflectionUtils.tryToLoadClass(className).getOrThrow(
+		Class<?> clazz = ReflectionUtils.tryToLoadClass(className, testClass.getClassLoader()).getOrThrow(
 			cause -> new JUnitException(format("Could not load class [%s]", className), cause));
 		return findMethod(clazz, methodName);
 	}
