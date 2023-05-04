@@ -100,6 +100,8 @@ repository on GitHub.
   temporary directories. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, User Guide>>
   for details.
+* New `junit.jupiter.tempdir.factory.default` configuration parameter to set the default
+  factory for temporary directories.
 * If `@MethodSource` is used with a non-static factory method that should be `static`, the
   exception thrown now provides the user a meaningful explanation of how to address the
   problem.
