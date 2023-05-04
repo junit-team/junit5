@@ -2655,7 +2655,8 @@ annotation specifies a custom factory.
 In summary, the factory for a temporary directory is determined according to the
 following precedence rules:
 
-1. value of the `factory` attribute of the `@TempDir` annotation, if present
-2. by calling the default `TempDirFactory` configured via the configuration parameter,
-if present
-3. by calling `org.junit.jupiter.api.io.TempDirFactory.Standard`
+1. by looking at the `factory` attribute of the `@TempDir` annotation, if present
+2. by looking at the default `TempDirFactory` configured via the configuration
+parameter, if present
+
+If none is found, `org.junit.jupiter.api.io.TempDirFactory.Standard` is used.
