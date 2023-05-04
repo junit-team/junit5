@@ -2643,3 +2643,19 @@ temporary directory. The following example shows how to do it.
 ----
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_factory_jimfs]
 ----
+
+You can use the `junit.jupiter.tempdir.factory.default`
+<<running-tests-config-params, configuration parameter>> to specify the fully qualified
+class name of the `TempDirFactory` you would like to use by default. Just like for
+factories configured via the `factory` attribute of the `@TempDir` annotation,
+the supplied class has to implement the `TempDirFactory` interface. The default factory
+will be used for all `@TempDir` annotations unless the `factory` attribute of the
+annotation specifies a custom factory.
+
+In summary, the factory for a temporary directory is determined according to the
+following precedence rules:
+
+1. value of the `factory` attribute of the `@TempDir` annotation, if present
+2. by calling the default `TempDirFactory` configured via the configuration parameter,
+if present
+3. by calling `org.junit.jupiter.api.io.TempDirFactory.Standard`
