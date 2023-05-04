@@ -159,7 +159,7 @@ public class LauncherConstants {
 	 * build or to verify a listener is called as expected without having to
 	 * wait for all tests to be executed.
 	 *
-	 * <p>Value must either {@code true} or {@code false}; defaults to {@code false}.
+	 * <p>Value must be either {@code true} or {@code false}; defaults to {@code false}.
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static final String DRY_RUN_PROPERTY_NAME = "junit.platform.execution.dryRun.enabled";
