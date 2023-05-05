@@ -207,7 +207,7 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SCOPE_PROPERTY_NAME</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Property name used to set the scope of temporary directories created via
- <a href="TempDir.html" title="annotation interface in org.junit.jupiter.api.io"><code>@TempDir</code></a> annotation: "junit.jupiter.tempdir.scope"
+ the <a href="TempDir.html" title="annotation interface in org.junit.jupiter.api.io"><code>@TempDir</code></a> annotation: "junit.jupiter.tempdir.scope"
 
  <h4>Supported Values</h4>
  <ul>
@@ -269,13 +269,21 @@ loadScripts(document, 'script');</script>
 </span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io">TempDirFactory</a>&gt;</span>&nbsp;<span class="element-name">factory</span></div>
 <div class="block">Factory for the temporary directory.
 
- <p>If <a href="#SCOPE_PROPERTY_NAME">"junit.jupiter.tempdir.scope"</a> is set to <code>per_context</code>, no
- custom factory is allowed.</div>
+ <p>If the <a href="#SCOPE_PROPERTY_NAME">"junit.jupiter.tempdir.scope"</a> configuration parameter is set to
+ <code>per_context</code>, no custom factory is allowed.
+
+ <p>Defaults to <a href="TempDirFactory.Standard.html" title="class in org.junit.jupiter.api.io"><code>TempDirFactory.Standard</code></a>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the class instance of the factory</dd>
+<dd>the type of <code>TempDirFactory</code> to use</dd>
 <dt>Since:</dt>
 <dd>5.10</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io"><code>TempDirFactory</code></a></li>
+</ul>
+</dd>
 </dl>
 <dl class="notes">
 <dt>Default:</dt>

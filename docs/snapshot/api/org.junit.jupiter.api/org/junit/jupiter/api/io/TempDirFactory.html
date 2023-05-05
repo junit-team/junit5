@@ -98,15 +98,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block"><code>TempDirFactory</code> defines the SPI for creating temporary directories
  programmatically.
 
- <p>A temporary directory factory is typically used to gain more control on
- the temporary directory creation, like defining the parent directory or even
- the file system that should be used.
+ <p>A temporary directory factory is typically used to gain control over the
+ temporary directory creation, like defining the parent directory or the file
+ system that should be used.
 
  <p>Concrete implementations must have a <em>default constructor</em>.
 
- <p>A <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io"><code>TempDirFactory</code></a> can be configured <em>locally</em>
- for a test class field or method parameter via the <a href="TempDir.html" title="annotation interface in org.junit.jupiter.api.io"><code>@TempDir</code></a>
- annotation.</div>
+ <p>A <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io"><code>TempDirFactory</code></a> can be configured <em>locally</em> for a test class
+ field or method parameter via the <a href="TempDir.html" title="annotation interface in org.junit.jupiter.api.io"><code>@TempDir</code></a> annotation.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.10</dd>
@@ -132,8 +131,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="col-first even-row-color"><code>static class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="TempDirFactory.Standard.html" class="type-name-link" title="class in org.junit.jupiter.api.io">TempDirFactory.Standard</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Standard temporary directory factory that delegates to
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html#createTempDirectory(java.nio.file.Path,java.lang.String,java.nio.file.attribute.FileAttribute...)" title="class or interface in java.nio.file" class="external-link"><code>Files.createTempDirectory(java.nio.file.Path, java.lang.String, java.nio.file.attribute.FileAttribute&lt;?&gt;...)</code></a>.</div>
+<div class="block">Standard <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io"><code>TempDirFactory</code></a> implementation which delegates to
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html#createTempDirectory(java.nio.file.Path,java.lang.String,java.nio.file.attribute.FileAttribute...)" title="class or interface in java.nio.file" class="external-link"><code>Files.createTempDirectory(java.nio.file.Path, java.lang.String, java.nio.file.attribute.FileAttribute&lt;?&gt;...)</code></a> using <code>"junit"</code> as the prefix.</div>
 </div>
 </div>
 </section>
@@ -155,7 +154,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)" class="member-name-link">createTempDirectory</a><wbr>(<a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Create a new temporary directory, using the given prefix to generate its name.</div>
+<div class="block">Create a new temporary directory.</div>
 </div>
 </div>
 </div>
@@ -176,14 +175,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>createTempDirectory</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">createTempDirectory</span><wbr><span class="parameters">(<a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</span>
                   throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
-<div class="block">Create a new temporary directory, using the given prefix to generate its name.
- Depending on the implementation, the resulting <code>Path</code> may or may not be
- associated with the default <code>FileSystem</code>.</div>
+<div class="block">Create a new temporary directory.
+
+ <p>Depending on the implementation, the resulting <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a> may or may
+ not be associated with the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/FileSystems.html#getDefault()" title="class or interface in java.nio.file" class="external-link"><code>default FileSystem</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>
 <dt>Returns:</dt>
-<dd>the path to the newly created directory that did not exist before this method was invoked; never <code>null</code></dd>
+<dd>the path to the newly created temporary directory; never <code>null</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code> - in case of failures</dd>
 </dl>
