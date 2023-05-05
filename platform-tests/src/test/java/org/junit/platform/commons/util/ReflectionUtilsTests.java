@@ -70,6 +70,7 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.Recursive
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNestedClass;
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNestedSiblingClass;
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClassImplementingInterface.InnerClassImplementingInterface;
+import org.junit.platform.commons.util.classes.CustomType;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
@@ -1023,6 +1024,33 @@ class ReflectionUtilsTests {
 		assertFindMethodByParameterNames("methodWithMultidimensionalObjectArray", Double[][][][][].class);
 	}
 
+	/**
+	 * @since 5.10
+	 */
+	@Test
+	void findMethodByParameterNamesWithWithCustomTypeFromDifferentClassLoader() throws Exception {
+		var methodName = "customMethod";
+		var customTypeName = CustomType.class.getName();
+		var nestedTypeName = CustomType.NestedType.class.getName();
+
+		try (CustomTypeClassLoader customTypeClassLoader = new CustomTypeClassLoader()) {
+			var customType = customTypeClassLoader.loadClass(customTypeName);
+
+			var optional = findMethod(customType, methodName, nestedTypeName);
+			assertThat(optional).get().satisfies(method -> {
+				assertThat(method.getName()).isEqualTo(methodName);
+
+				var declaringClass = method.getDeclaringClass();
+				assertThat(declaringClass.getName()).isEqualTo(customTypeName);
+				assertThat(declaringClass).isNotEqualTo(CustomType.class);
+
+				var parameterTypes = method.getParameterTypes();
+				assertThat(parameterTypes).extracting(Class::getName).containsExactly(nestedTypeName);
+				assertThat(parameterTypes[0].getClass()).isNotEqualTo(CustomType.NestedType.class);
+			});
+		}
+	}
+
 	@Test
 	void findMethodByParameterNamesWithParameterizedMapParameter() throws Exception {
 		var methodName = "methodWithParameterizedMap";
@@ -1901,6 +1929,20 @@ class ReflectionUtilsTests {
 
 		ClassWithTwoConstructors(String str) {
 		}
+	}
+
+	private static class CustomTypeClassLoader extends URLClassLoader {
+
+		CustomTypeClassLoader() {
+			super(new URL[] { CustomTypeClassLoader.class.getProtectionDomain().getCodeSource().getLocation() },
+				getSystemClassLoader());
+		}
+
+		@Override
+		public Class<?> loadClass(String name) throws ClassNotFoundException {
+			return (name.startsWith(CustomType.class.getName()) ? findClass(name) : super.loadClass(name));
+		}
+
 	}
 
 }

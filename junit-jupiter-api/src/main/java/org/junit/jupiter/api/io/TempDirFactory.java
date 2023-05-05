@@ -16,7 +16,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileAttribute;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -25,9 +24,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * {@code TempDirFactory} defines the SPI for creating temporary directories
  * programmatically.
  *
- * <p>A temporary directory factory is typically used to gain more control on
- * the temporary directory creation, like defining the parent directory or even
- * the file system that should be used.
+ * <p>A temporary directory factory is typically used to gain control over the
+ * temporary directory creation, like defining the parent directory or the file
+ * system that should be used.
  *
  * <p>Concrete implementations must have a <em>default constructor</em>.
  *
@@ -45,12 +44,14 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 public interface TempDirFactory extends Closeable {
 
 	/**
-	 * Create a new temporary directory, using the given prefix to generate its name.
-	 * Depending on the implementation, the resulting {@code Path} may or may not be
-	 * associated with the default {@code FileSystem}.
+	 * Create a new temporary directory.
+	 *
+	 * <p>Depending on the implementation, the resulting {@link Path} may or may
+	 * not be associated with the {@link java.nio.file.FileSystems#getDefault()
+	 * default FileSystem}.
 	 *
 	 * @param context the current extension context; never {@code null}
-	 * @return the path to the newly created directory that did not exist before this method was invoked; never {@code null}
+	 * @return the path to the newly created temporary directory; never {@code null}
 	 * @throws Exception in case of failures
 	 */
 	Path createTempDirectory(ExtensionContext context) throws Exception;
@@ -63,10 +64,10 @@ public interface TempDirFactory extends Closeable {
 	}
 
 	/**
-	 * Standard temporary directory factory that delegates to
-	 * {@link Files#createTempDirectory}.
+	 * Standard {@link TempDirFactory} implementation which delegates to
+	 * {@link Files#createTempDirectory} using {@code "junit"} as the prefix.
 	 *
-	 * @see Files#createTempDirectory(String, FileAttribute[])
+	 * @see Files#createTempDirectory(java.lang.String, java.nio.file.attribute.FileAttribute[])
 	 */
 	class Standard implements TempDirFactory {
 

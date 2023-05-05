@@ -1221,6 +1221,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			@Override
 			public void close() throws IOException {
 				fileSystem.close();
+				fileSystem = null;
 			}
 		}
 
@@ -1247,6 +1248,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			@Override
 			public void close() throws IOException {
 				fileSystem.close();
+				fileSystem = null;
 			}
 		}
 
