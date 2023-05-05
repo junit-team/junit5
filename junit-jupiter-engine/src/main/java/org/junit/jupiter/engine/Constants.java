@@ -360,7 +360,7 @@ public final class Constants {
 	public static final String DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME = Timeout.DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME;
 
 	/**
-	 * Property name used to set the default factory of temporary directories created via
+	 * Property name used to set the default factory for temporary directories created via
 	 * {@link TempDir @TempDir} annotation: {@value}
 	 *
 	 * @since 5.10

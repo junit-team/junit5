@@ -119,7 +119,7 @@ public @interface TempDir {
 	 * <p>If {@value #SCOPE_PROPERTY_NAME} is set to {@code per_context}, no
 	 * custom factory is allowed.
 	 *
-	 * <p>As an alternative to this parameter, a global
+	 * <p>As an alternative to setting this attribute, a global
 	 * {@link TempDirFactory} can be configured for the entire test suite via
 	 * the {@value #DEFAULT_FACTORY_PROPERTY_NAME} configuration parameter.
 	 * See the User Guide for details. Note, however, that a {@code @TempDir}

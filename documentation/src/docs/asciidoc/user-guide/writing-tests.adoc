@@ -2650,13 +2650,12 @@ class name of the `TempDirFactory` you would like to use by default. Just like f
 factories configured via the `factory` attribute of the `@TempDir` annotation,
 the supplied class has to implement the `TempDirFactory` interface. The default factory
 will be used for all `@TempDir` annotations unless the `factory` attribute of the
-annotation specifies a custom factory.
+annotation specifies a different factory.
 
 In summary, the factory for a temporary directory is determined according to the
 following precedence rules:
 
-1. by looking at the `factory` attribute of the `@TempDir` annotation, if present
-2. by looking at the default `TempDirFactory` configured via the configuration
+1. The `factory` attribute of the `@TempDir` annotation, if present
+2. The default `TempDirFactory` configured via the configuration
 parameter, if present
-
-If none is found, `org.junit.jupiter.api.io.TempDirFactory.Standard` is used.
+3. Otherwise, `org.junit.jupiter.api.io.TempDirFactory$Standard` will be used.
