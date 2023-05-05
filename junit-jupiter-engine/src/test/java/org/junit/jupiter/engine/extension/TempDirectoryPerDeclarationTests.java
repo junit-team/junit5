@@ -69,6 +69,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirFactory;
+import org.junit.jupiter.api.io.TempDirFactory.Standard;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.TempDirectory.FileOperations;
@@ -362,7 +363,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("set to Jupiter's default")
 		void supportsStandardDefaultFactory() {
-			executeTestsForClassWithDefaultFactory(StandardDefaultFactoryTestCase.class, TempDirFactory.Standard.class) //
+			executeTestsForClassWithDefaultFactory(StandardDefaultFactoryTestCase.class, Standard.class) //
 					.testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
@@ -370,7 +371,16 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("set to custom factory")
 		void supportsCustomDefaultFactory() {
-			executeTestsForClassWithDefaultFactory(NonStandardDefaultFactoryTestCase.class, Factory.class) //
+			executeTestsForClassWithDefaultFactory(CustomDefaultFactoryTestCase.class, Factory.class) //
+					.testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("set to custom factory together with declaration of Jupiter's default")
+		void supportsCustomDefaultFactoryWithStandardFactoryOnDeclaration() {
+			executeTestsForClassWithDefaultFactory( //
+				CustomDefaultFactoryWithStandardDeclarationTestCase.class, Factory.class) //
 					.testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
@@ -381,7 +391,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 			@Override
 			public Path createTempDirectory(ExtensionContext context) throws Exception {
-				return Files.createTempDirectory("junit");
+				return Files.createTempDirectory("custom");
 			}
 
 			@Override
@@ -1259,15 +1269,30 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
 			assertNotSame(tempDir1, tempDir2);
+			assertThat(tempDir1.getFileName().toString()).startsWith("junit");
+			assertThat(tempDir2.getFileName().toString()).startsWith("junit");
 		}
 
 	}
 
-	static class NonStandardDefaultFactoryTestCase {
+	static class CustomDefaultFactoryTestCase {
 
 		@Test
 		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
 			assertNotSame(tempDir1, tempDir2);
+			assertThat(tempDir1.getFileName().toString()).startsWith("custom");
+			assertThat(tempDir2.getFileName().toString()).startsWith("custom");
+		}
+
+	}
+
+	static class CustomDefaultFactoryWithStandardDeclarationTestCase {
+
+		@Test
+		void test(@TempDir Path tempDir1, @TempDir(factory = Standard.class) Path tempDir2) {
+			assertNotSame(tempDir1, tempDir2);
+			assertThat(tempDir1.getFileName().toString()).startsWith("custom");
+			assertThat(tempDir2.getFileName().toString()).startsWith("junit");
 		}
 
 	}
