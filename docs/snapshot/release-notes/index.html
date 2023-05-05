@@ -569,6 +569,14 @@ repository on GitHub.</p>
 which return a <code>Stream</code>.</p>
 </li>
 <li>
+<p><code>ReflectionSupport.findMethod(Class&lt;?&gt;, String, String)</code> now uses the <code>ClassLoader</code> of
+the supplied <code>Class</code> to load parameter types instead of using the <em>default</em>
+<code>ClassLoader</code>. This allows parameter types to be resolved in non-standard <code>ClassLoader</code>
+arrangements (such as OSGi). Consequently,
+<code>DiscoverySelectors.selectMethod(Class&lt;?&gt;, String, String)</code> also now works properly in
+non-standard <code>ClassLoader</code> arrangements.</p>
+</li>
+<li>
 <p>For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
 started/finished and opened/closed events are now invoked using "wrapping" semantics.
 This means that finished/closed event methods are invoked in reverse order compared to
@@ -1075,7 +1083,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-04-29 14:01:26 UTC
+Last updated 2023-05-05 14:48:39 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

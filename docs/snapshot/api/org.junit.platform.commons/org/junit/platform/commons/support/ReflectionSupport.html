@@ -691,6 +691,11 @@ loadScripts(document, 'script');</script>
  interface and traversing up the type hierarchy until such a method is
  found or the type hierarchy is exhausted.
 
+ <p>As of JUnit Platform 1.10, this method uses the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link"><code>ClassLoader</code></a> of
+ the supplied <code>clazz</code> to load parameter types instead of using the
+ <em>default</em> <code>ClassLoader</code>, which allows parameter types to be
+ resolved in different <code>ClassLoader</code> arrangements.
+
  <p>The algorithm does not search for methods in <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
