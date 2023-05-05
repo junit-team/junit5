@@ -100,19 +100,21 @@ public @interface TempDir {
 	/**
 	 * Factory for the temporary directory.
 	 *
-	 * <p>If {@value #SCOPE_PROPERTY_NAME} is set to {@code per_context}, no
-	 * custom factory is allowed.
+	 * <p>If the {@value #SCOPE_PROPERTY_NAME} configuration parameter is set to
+	 * {@code per_context}, no custom factory is allowed.
 	 *
-	 * @return the class instance of the factory
+	 * <p>Defaults to {@link TempDirFactory.Standard}.
 	 *
+	 * @return the type of {@code TempDirFactory} to use
 	 * @since 5.10
+	 * @see TempDirFactory
 	 */
 	@API(status = EXPERIMENTAL, since = "5.10")
 	Class<? extends TempDirFactory> factory() default Standard.class;
 
 	/**
 	 * Property name used to set the scope of temporary directories created via
-	 * {@link TempDir @TempDir} annotation: {@value}
+	 * the {@link TempDir @TempDir} annotation: {@value}
 	 *
 	 * <h4>Supported Values</h4>
 	 * <ul>
