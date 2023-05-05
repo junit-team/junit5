@@ -26,7 +26,6 @@ import java.nio.file.Path;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.io.TempDirFactory.Standard;
 
 /**
  * {@code @TempDir} can be used to annotate a field in a test class or a
@@ -133,7 +132,7 @@ public @interface TempDir {
 	 * @see TempDirFactory
 	 */
 	@API(status = EXPERIMENTAL, since = "5.10")
-	Class<? extends TempDirFactory> factory() default Standard.class;
+	Class<? extends TempDirFactory> factory() default TempDirFactory.class;
 
 	/**
 	 * Property name used to set the scope of temporary directories created via

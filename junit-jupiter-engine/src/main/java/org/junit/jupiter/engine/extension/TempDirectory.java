@@ -207,13 +207,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private TempDirFactory determineTempDirFactory(TempDir tempDir, Scope scope) {
 		Class<? extends TempDirFactory> factory = tempDir.factory();
 
-		if (factory != TempDirFactory.Standard.class && scope == Scope.PER_CONTEXT) {
+		if (factory != TempDirFactory.class && scope == Scope.PER_CONTEXT) {
 			throw new ExtensionConfigurationException("Custom @TempDir factory is not supported with "
 					+ TempDir.SCOPE_PROPERTY_NAME + "=" + Scope.PER_CONTEXT.name().toLowerCase() + ". Use "
 					+ TempDir.DEFAULT_FACTORY_PROPERTY_NAME + " instead.");
 		}
 
-		return factory == TempDirFactory.Standard.class //
+		return factory == TempDirFactory.class //
 				? this.configuration.getDefaultTempDirFactorySupplier().get()
 				: ReflectionUtils.newInstance(factory);
 	}
