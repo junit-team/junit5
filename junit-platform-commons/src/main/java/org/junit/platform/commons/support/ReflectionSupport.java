@@ -351,6 +351,11 @@ public final class ReflectionSupport {
 	 * interface and traversing up the type hierarchy until such a method is
 	 * found or the type hierarchy is exhausted.
 	 *
+	 * <p>As of JUnit Platform 1.10, this method uses the {@link ClassLoader} of
+	 * the supplied {@code clazz} to load parameter types instead of using the
+	 * <em>default</em> {@code ClassLoader}, which allows parameter types to be
+	 * resolved in different {@code ClassLoader} arrangements.
+	 *
 	 * <p>The algorithm does not search for methods in {@link java.lang.Object}.
 	 *
 	 * @param clazz the class or interface in which to find the method; never {@code null}
