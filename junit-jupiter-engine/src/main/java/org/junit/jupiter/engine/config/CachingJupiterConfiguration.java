@@ -12,11 +12,13 @@ package org.junit.jupiter.engine.config;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.api.io.TempDir.DEFAULT_CLEANUP_MODE_PROPERTY_NAME;
+import static org.junit.jupiter.api.io.TempDir.DEFAULT_FACTORY_PROPERTY_NAME;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.ClassOrderer;
@@ -25,6 +27,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.io.CleanupMode;
+import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
@@ -113,6 +116,13 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	public CleanupMode getDefaultTempDirCleanupMode() {
 		return (CleanupMode) cache.computeIfAbsent(DEFAULT_CLEANUP_MODE_PROPERTY_NAME,
 			key -> delegate.getDefaultTempDirCleanupMode());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Supplier<TempDirFactory> getDefaultTempDirFactorySupplier() {
+		return (Supplier<TempDirFactory>) cache.computeIfAbsent(DEFAULT_FACTORY_PROPERTY_NAME,
+			key -> delegate.getDefaultTempDirFactorySupplier());
 	}
 
 }

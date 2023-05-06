@@ -36,7 +36,6 @@ import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
-import org.mockito.Mockito;
 
 /**
  * Integration tests for cleanup of the {@link TempDirectory} when the {@link CleanupMode} is
@@ -84,7 +83,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 
 		closeablePath.close();
 		assertThat(closeablePath.get()).exists();
-		verify(factory, Mockito.never()).close();
+		verify(factory).close();
 	}
 
 	@Test
@@ -97,7 +96,7 @@ class CloseablePathCleanupTests extends AbstractJupiterTestEngineTests {
 
 		closeablePath.close();
 		assertThat(closeablePath.get()).exists();
-		verify(factory, Mockito.never()).close();
+		verify(factory).close();
 	}
 
 	@Test

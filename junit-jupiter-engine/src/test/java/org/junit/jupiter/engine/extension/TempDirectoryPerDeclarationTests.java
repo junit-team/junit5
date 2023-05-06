@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -68,6 +69,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirFactory;
+import org.junit.jupiter.api.io.TempDirFactory.Standard;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.TempDirectory.FileOperations;
@@ -341,6 +343,64 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		void supportsFactoryWithJimfs() {
 			executeTestsForClass(FactoryWithJimfsTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+	}
+
+	@Nested
+	@DisplayName("supports default factory")
+	@TestMethodOrder(OrderAnnotation.class)
+	class DefaultFactory {
+
+		private EngineExecutionResults executeTestsForClassWithDefaultFactory(Class<?> testClass,
+				Class<? extends TempDirFactory> factoryClass) {
+			return TempDirectoryPerDeclarationTests.super.executeTests(request() //
+					.selectors(selectClass(testClass)) //
+					.configurationParameter(TempDir.DEFAULT_FACTORY_PROPERTY_NAME, factoryClass.getName()) //
+					.build());
+		}
+
+		@Test
+		@DisplayName("set to Jupiter's default")
+		void supportsStandardDefaultFactory() {
+			executeTestsForClassWithDefaultFactory(StandardDefaultFactoryTestCase.class, Standard.class) //
+					.testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("set to custom factory")
+		void supportsCustomDefaultFactory() {
+			executeTestsForClassWithDefaultFactory(CustomDefaultFactoryTestCase.class, Factory.class) //
+					.testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("set to custom factory together with declaration of Jupiter's default")
+		void supportsCustomDefaultFactoryWithStandardFactoryOnDeclaration() {
+			executeTestsForClassWithDefaultFactory( //
+				CustomDefaultFactoryWithStandardDeclarationTestCase.class, Factory.class) //
+					.testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			private boolean closed;
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				return Files.createTempDirectory("custom");
+			}
+
+			@Override
+			public void close() {
+				if (closed) {
+					throw new IllegalStateException("already closed");
+				}
+				closed = true;
+			}
 		}
 
 	}
@@ -1200,6 +1260,39 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				fileSystem.close();
 				fileSystem = null;
 			}
+		}
+
+	}
+
+	static class StandardDefaultFactoryTestCase {
+
+		@Test
+		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
+			assertNotSame(tempDir1, tempDir2);
+			assertThat(tempDir1.getFileName().toString()).startsWith("junit");
+			assertThat(tempDir2.getFileName().toString()).startsWith("junit");
+		}
+
+	}
+
+	static class CustomDefaultFactoryTestCase {
+
+		@Test
+		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
+			assertNotSame(tempDir1, tempDir2);
+			assertThat(tempDir1.getFileName().toString()).startsWith("custom");
+			assertThat(tempDir2.getFileName().toString()).startsWith("custom");
+		}
+
+	}
+
+	static class CustomDefaultFactoryWithStandardDeclarationTestCase {
+
+		@Test
+		void test(@TempDir Path tempDir1, @TempDir(factory = Standard.class) Path tempDir2) {
+			assertNotSame(tempDir1, tempDir2);
+			assertThat(tempDir1.getFileName().toString()).startsWith("custom");
+			assertThat(tempDir2.getFileName().toString()).startsWith("junit");
 		}
 
 	}
