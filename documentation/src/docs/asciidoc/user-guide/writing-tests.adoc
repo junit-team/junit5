@@ -1303,7 +1303,7 @@ for parameterized tests that accept a single argument.
   `java.util.List`, `java.util.Set`, `java.util.SortedSet`, `java.util.NavigableSet`,
   `java.util.Map` (and concrete subtypes with a `public` no-arg constructor,
   `java.util.SortedMap`, `java.util.NavigableMap`, primitive arrays (e.g., `int[]`,
-  `char[][]`, etc.), object arrays (e.g.,`String[]`, `Integer[][]`, etc.).
+  `char[][]`, etc.), object arrays (e.g., `String[]`, `Integer[][]`, etc.).
 * `{NullAndEmptySource}`: a _composed annotation_ that combines the functionality of
   `@NullSource` and `@EmptySource`.
 
