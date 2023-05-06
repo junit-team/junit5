@@ -87,13 +87,14 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(ArgumentsSource::value)
 				.map(this::instantiateArgumentsProvider)
 				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
-				.flatMap(provider -> arguments(provider, extensionContext))
-				.map(Arguments::get)
-				.map(arguments -> consumedArguments(arguments, methodContext))
-				.map(arguments -> {
-					invocationCount.incrementAndGet();
-					return createInvocationContext(formatter, methodContext, arguments, invocationCount.intValue());
-				})
+				.flatMap(provider -> arguments(provider, extensionContext)
+						.map(Arguments::get)
+						.map(arguments -> consumedArguments(arguments, methodContext))
+						.map(arguments -> {
+							invocationCount.incrementAndGet();
+							return createInvocationContext(formatter, methodContext, provider, arguments, invocationCount.intValue());
+						})
+				)
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0,
 								"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"));
@@ -122,8 +123,9 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments, int invocationIndex) {
-		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments, invocationIndex);
+			ParameterizedTestMethodContext methodContext, ArgumentsProvider provider, Object[] arguments,
+			int invocationIndex) {
+		return new ParameterizedTestInvocationContext(formatter, methodContext, provider, arguments, invocationIndex);
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(ExtensionContext extensionContext, Method templateMethod,

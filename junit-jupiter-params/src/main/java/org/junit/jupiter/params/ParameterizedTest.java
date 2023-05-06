@@ -21,6 +21,7 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 
 /**
  * {@code @ParameterizedTest} is used to signal that the annotated method is a
@@ -124,6 +125,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ParameterizedTestExtension.class)
 @SuppressWarnings("exports")
 public @interface ParameterizedTest {
+
+	Namespace NAMESPACE = Namespace.create(ParameterizedTest.class);
+	String ARGUMENTS_PROVIDER_KEY = "ArgumentsProvider";
 
 	/**
 	 * Placeholder for the {@linkplain org.junit.jupiter.api.TestInfo#getDisplayName

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.platform.commons.util.AnnotationUtils;
 
 /**
@@ -33,12 +34,14 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestParameterResolver.class);
 
 	private final ParameterizedTestMethodContext methodContext;
+	private final ArgumentsProvider provider;
 	private final Object[] arguments;
 	private final int invocationIndex;
 
-	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, Object[] arguments,
-			int invocationIndex) {
+	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, ArgumentsProvider provider,
+			Object[] arguments, int invocationIndex) {
 		this.methodContext = methodContext;
+		this.provider = provider;
 		this.arguments = arguments;
 		this.invocationIndex = invocationIndex;
 	}
@@ -72,6 +75,8 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
+		extensionContext.getStore(ParameterizedTest.NAMESPACE).put(ParameterizedTest.ARGUMENTS_PROVIDER_KEY,
+			this.provider);
 		return this.methodContext.resolve(parameterContext, extractPayloads(this.arguments), this.invocationIndex);
 	}
 

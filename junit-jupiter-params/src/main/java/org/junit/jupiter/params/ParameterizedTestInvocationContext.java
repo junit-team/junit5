@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
 
 /**
  * @since 5.0
@@ -24,13 +25,16 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	private final ParameterizedTestNameFormatter formatter;
 	private final ParameterizedTestMethodContext methodContext;
+	private final ArgumentsProvider provider;
 	private final Object[] arguments;
 	private final int invocationIndex;
 
 	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments, int invocationIndex) {
+			ParameterizedTestMethodContext methodContext, ArgumentsProvider provider, Object[] arguments,
+			int invocationIndex) {
 		this.formatter = formatter;
 		this.methodContext = methodContext;
+		this.provider = provider;
 		this.arguments = arguments;
 		this.invocationIndex = invocationIndex;
 	}
@@ -42,8 +46,8 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return singletonList(
-			new ParameterizedTestParameterResolver(this.methodContext, this.arguments, this.invocationIndex));
+		return singletonList(new ParameterizedTestParameterResolver(this.methodContext, this.provider, this.arguments,
+			this.invocationIndex));
 	}
 
 }
