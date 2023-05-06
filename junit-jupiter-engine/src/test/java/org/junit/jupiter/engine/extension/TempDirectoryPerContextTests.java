@@ -57,6 +57,7 @@ import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
+import org.junit.platform.testkit.engine.Events;
 
 /**
  * Integration tests for the legacy behavior of the {@link TempDirectory}
@@ -77,7 +78,7 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	private static LauncherDiscoveryRequestBuilder requestBuilder(Class<?> testClass) {
 		return request() //
 				.selectors(selectClass(testClass)) //
-				.configurationParameter(TempDir.SCOPE_PROPERTY_NAME, TempDirectory.Scope.PER_CONTEXT.toString());
+				.configurationParameter(TempDir.SCOPE_PROPERTY_NAME, TempDirectory.Scope.PER_CONTEXT.name());
 	}
 
 	@BeforeEach
@@ -296,18 +297,17 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	@TestMethodOrder(OrderAnnotation.class)
 	class DefaultFactory {
 
-		private EngineExecutionResults executeTestsForClassWithDefaultFactory(Class<?> testClass,
+		private Events executeTestsForClassWithDefaultFactory(Class<?> testClass,
 				Class<? extends TempDirFactory> factoryClass) {
 			return TempDirectoryPerContextTests.super.executeTests(requestBuilder(testClass) //
 					.configurationParameter(TempDir.DEFAULT_FACTORY_PROPERTY_NAME, factoryClass.getName()) //
-					.build());
+					.build()).testEvents();
 		}
 
 		@Test
 		@DisplayName("set to Jupiter's default")
 		void supportsStandardDefaultFactory() {
 			executeTestsForClassWithDefaultFactory(StandardDefaultFactoryTestCase.class, TempDirFactory.Standard.class) //
-					.testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
@@ -315,7 +315,6 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 		@DisplayName("set to custom factory")
 		void supportsCustomDefaultFactory() {
 			executeTestsForClassWithDefaultFactory(NonStandardDefaultFactoryTestCase.class, Factory.class) //
-					.testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
@@ -1401,4 +1400,5 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 	}
+
 }

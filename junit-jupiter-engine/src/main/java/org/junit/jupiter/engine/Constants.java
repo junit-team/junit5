@@ -315,7 +315,7 @@ public final class Constants {
 	public static final String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
-	 * Property used to determine if timeouts are applied to tests: {@value}.
+	 * Property name used to configure whether timeouts are applied to tests: {@value}.
 	 *
 	 * @see Timeout#TIMEOUT_MODE_PROPERTY_NAME
 	 */
@@ -340,7 +340,7 @@ public final class Constants {
 
 	/**
 	 * Property name used to set the scope of temporary directories created via
-	 * {@link TempDir @TempDir} annotation: {@value}
+	 * the {@link TempDir @TempDir} annotation: {@value}
 	 *
 	 * @see TempDir#SCOPE_PROPERTY_NAME
 	 */
@@ -361,7 +361,7 @@ public final class Constants {
 
 	/**
 	 * Property name used to set the default factory for temporary directories created via
-	 * {@link TempDir @TempDir} annotation: {@value}
+	 * the {@link TempDir @TempDir} annotation: {@value}
 	 *
 	 * @since 5.10
 	 * @see TempDir#DEFAULT_FACTORY_PROPERTY_NAME
