@@ -72,12 +72,6 @@ buildCache {
 	}
 }
 
-val expectedJavaVersion = JavaVersion.VERSION_17
-val actualJavaVersion = JavaVersion.current()
-require(actualJavaVersion == expectedJavaVersion) {
-	"The JUnit 5 build must be executed with Java ${expectedJavaVersion.majorVersion}. Currently executing with Java ${actualJavaVersion.majorVersion}."
-}
-
 rootProject.name = "junit5"
 
 include("documentation")
