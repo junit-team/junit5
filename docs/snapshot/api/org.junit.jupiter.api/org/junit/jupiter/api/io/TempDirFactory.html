@@ -104,8 +104,11 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 
  <p>Concrete implementations must have a <em>default constructor</em>.
 
- <p>A <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io"><code>TempDirFactory</code></a> can be configured <em>locally</em> for a test class
- field or method parameter via the <a href="TempDir.html" title="annotation interface in org.junit.jupiter.api.io"><code>@TempDir</code></a> annotation.</div>
+ <p>A <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io"><code>TempDirFactory</code></a> can be configured <em>globally</em> for the
+ entire test suite via the <a href="TempDir.html#DEFAULT_FACTORY_PROPERTY_NAME">"junit.jupiter.tempdir.factory.default"</a>
+ configuration parameter (see the User Guide for details) or <em>locally</em>
+ for a test class field or method parameter via the <a href="TempDir.html" title="annotation interface in org.junit.jupiter.api.io"><code>@TempDir</code></a>
+ annotation.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.10</dd>
