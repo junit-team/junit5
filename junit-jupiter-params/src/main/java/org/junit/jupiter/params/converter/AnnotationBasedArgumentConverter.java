@@ -20,7 +20,7 @@ import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@code SimpleArgumentConverter} is an abstract base class for
+ * {@code AnnotationBasedArgumentConverter} is an abstract base class for
  * {@link ArgumentConverter} implementations that also need to consume an
  * annotation in order to perform the conversion.
  *
