@@ -23,10 +23,9 @@ import java.io.IOException;
 import java.io.Serial;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.function.Executable;
-import org.junit.platform.commons.test.FilteringClassLoader;
+import org.junit.platform.commons.test.TestClassLoader;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -242,9 +241,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void assertThrowsWithExecutableThatThrowsSameExceptionTypeFromDifferentClassLoader() throws Exception {
-		Predicate<String> classNameFilter = name -> EnigmaThrowable.class.getName().equals(name);
-
-		try (FilteringClassLoader enigmaClassLoader = new FilteringClassLoader(classNameFilter)) {
+		try (TestClassLoader enigmaClassLoader = TestClassLoader.forClasses(EnigmaThrowable.class)) {
 			// Load expected exception type from different class loader
 			Class<? extends Throwable> enigmaThrowableClass = (Class<? extends Throwable>) enigmaClassLoader.loadClass(
 				EnigmaThrowable.class.getName());

@@ -58,7 +58,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
-import org.junit.platform.commons.test.FilteringClassLoader;
+import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
@@ -1033,9 +1033,8 @@ class ReflectionUtilsTests {
 		var methodName = "customMethod";
 		var customTypeName = CustomType.class.getName();
 		var nestedTypeName = CustomType.NestedType.class.getName();
-		Predicate<String> classNameFilter = name -> name.startsWith(customTypeName);
 
-		try (FilteringClassLoader customTypeClassLoader = new FilteringClassLoader(classNameFilter)) {
+		try (TestClassLoader customTypeClassLoader = TestClassLoader.forClassNamePrefix(customTypeName)) {
 			var customType = customTypeClassLoader.loadClass(customTypeName);
 
 			var optional = findMethod(customType, methodName, nestedTypeName);

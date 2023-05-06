@@ -15,12 +15,13 @@ import java.lang.StackWalker.StackFrame;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.util.ClassLoaderUtils;
 
 /**
- * Custom {@link ClassLoader} which accepts a class name {@link Predicate} to
+ * Test {@link ClassLoader} which accepts a class name {@link Predicate} to
  * filter classes that should be loaded by this {@code ClassLoader} instead of
  * the {@linkplain ClassLoaderUtils#getDefaultClassLoader() default ClassLoader}.
  *
@@ -29,14 +30,33 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  *
  * @since 5.10
  */
-public class FilteringClassLoader extends URLClassLoader {
+public class TestClassLoader extends URLClassLoader {
 
-	private static final Predicate<Class<?>> notFilteringClassLoader = //
-		clazz -> !clazz.equals(FilteringClassLoader.class);
+	private static final Predicate<Class<?>> notTestClassLoader = clazz -> !clazz.equals(TestClassLoader.class);
 
 	private final Predicate<String> classNameFilter;
 
-	public FilteringClassLoader(Predicate<String> classNameFilter) {
+	/**
+	 * Create a {@link TestClassLoader} that filters the provided classes.
+	 *
+	 * @see #forClassNamePrefix(String)
+	 */
+	public static TestClassLoader forClasses(Class<?>... classes) {
+		Predicate<String> classNameFilter = name -> Arrays.stream(classes).map(Class::getName).anyMatch(name::equals);
+		return new TestClassLoader(classNameFilter);
+	}
+
+	/**
+	 * Create a {@link TestClassLoader} that filters classes whose fully
+	 * qualified names start with the provided prefix.
+	 *
+	 * @see #forClasses(Class...)
+	 */
+	public static TestClassLoader forClassNamePrefix(String prefix) {
+		return new TestClassLoader(name -> name.startsWith(prefix));
+	}
+
+	public TestClassLoader(Predicate<String> classNameFilter) {
 		super(new URL[] { getCodeSourceUrl() }, ClassLoaderUtils.getDefaultClassLoader());
 
 		this.classNameFilter = classNameFilter;
@@ -49,7 +69,7 @@ public class FilteringClassLoader extends URLClassLoader {
 
 	/**
 	 * Get the {@link CodeSource} {@link URL} of the class that instantiated the
-	 * {@code FilteringClassLoader}.
+	 * {@code TestClassLoader}.
 	 */
 	private static URL getCodeSourceUrl() {
 		StackWalker walker = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
@@ -57,7 +77,7 @@ public class FilteringClassLoader extends URLClassLoader {
 		// @formatter:off
 		Class<?> callerClass = walker.walk(stream -> stream
 				.map(StackFrame::getDeclaringClass)
-				.filter(notFilteringClassLoader)
+				.filter(notTestClassLoader)
 				.findFirst()
 				.get()
 			);
