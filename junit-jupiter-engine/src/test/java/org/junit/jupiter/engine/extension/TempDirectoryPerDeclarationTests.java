@@ -100,7 +100,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				var results = executeTests(request() //
 						.selectors(selectClass(AllPossibleDeclarationLocationsTestCase.class)) //
 						.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
-							lifecycle.toString()).build());
+							lifecycle.name()).build());
 
 				results.containerEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
 				results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
@@ -1172,7 +1172,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
 			assertTrue(Files.exists(tempDir));
-			assertThat(tempDir.getFileName().toString()).startsWith("test");
+			assertThat(tempDir.getFileName()).asString().startsWith("test");
 		}
 
 		private static class Factory implements TempDirFactory {
@@ -1191,7 +1191,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
 			assertThat(tempDir).exists().hasParent(Factory.parent);
-			assertThat(tempDir.getFileName().toString()).startsWith("prefix");
+			assertThat(tempDir.getFileName()).asString().startsWith("prefix");
 		}
 
 		private static class Factory implements TempDirFactory {
@@ -1215,7 +1215,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
 			assertThat(tempDir).exists().hasFileSystem(Factory.fileSystem);
-			assertThat(tempDir.getFileName().toString()).startsWith("prefix");
+			assertThat(tempDir.getFileName()).asString().startsWith("prefix");
 		}
 
 		private static class Factory implements TempDirFactory {
@@ -1242,7 +1242,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir(factory = Factory.class) Path tempDir) {
 			assertThat(tempDir).exists().hasFileSystem(Factory.fileSystem);
-			assertThat(tempDir.getFileName().toString()).startsWith("prefix");
+			assertThat(tempDir.getFileName()).asString().startsWith("prefix");
 		}
 
 		private static class Factory implements TempDirFactory {
@@ -1269,8 +1269,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
 			assertNotSame(tempDir1, tempDir2);
-			assertThat(tempDir1.getFileName().toString()).startsWith("junit");
-			assertThat(tempDir2.getFileName().toString()).startsWith("junit");
+			assertThat(tempDir1.getFileName()).asString().startsWith("junit");
+			assertThat(tempDir2.getFileName()).asString().startsWith("junit");
 		}
 
 	}
@@ -1280,8 +1280,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
 			assertNotSame(tempDir1, tempDir2);
-			assertThat(tempDir1.getFileName().toString()).startsWith("custom");
-			assertThat(tempDir2.getFileName().toString()).startsWith("custom");
+			assertThat(tempDir1.getFileName()).asString().startsWith("custom");
+			assertThat(tempDir2.getFileName()).asString().startsWith("custom");
 		}
 
 	}
@@ -1291,8 +1291,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test(@TempDir Path tempDir1, @TempDir(factory = Standard.class) Path tempDir2) {
 			assertNotSame(tempDir1, tempDir2);
-			assertThat(tempDir1.getFileName().toString()).startsWith("custom");
-			assertThat(tempDir2.getFileName().toString()).startsWith("junit");
+			assertThat(tempDir1.getFileName()).asString().startsWith("custom");
+			assertThat(tempDir2.getFileName()).asString().startsWith("junit");
 		}
 
 	}

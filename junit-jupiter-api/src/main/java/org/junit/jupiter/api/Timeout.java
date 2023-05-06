@@ -298,7 +298,7 @@ public @interface Timeout {
 	String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.afterall.method.default";
 
 	/**
-	 * Property used to determine if timeouts are applied to tests: {@value}.
+	 * Property name used to configure whether timeouts are applied to tests: {@value}.
 	 *
 	 * <p>The value of this property will be used to toggle whether
 	 * {@link Timeout @Timeout} is applied to tests.</p>
