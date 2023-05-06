@@ -58,6 +58,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.commons.test.FilteringClassLoader;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
@@ -1032,8 +1033,9 @@ class ReflectionUtilsTests {
 		var methodName = "customMethod";
 		var customTypeName = CustomType.class.getName();
 		var nestedTypeName = CustomType.NestedType.class.getName();
+		Predicate<String> classNameFilter = name -> name.startsWith(customTypeName);
 
-		try (CustomTypeClassLoader customTypeClassLoader = new CustomTypeClassLoader()) {
+		try (FilteringClassLoader customTypeClassLoader = new FilteringClassLoader(classNameFilter)) {
 			var customType = customTypeClassLoader.loadClass(customTypeName);
 
 			var optional = findMethod(customType, methodName, nestedTypeName);
@@ -1929,20 +1931,6 @@ class ReflectionUtilsTests {
 
 		ClassWithTwoConstructors(String str) {
 		}
-	}
-
-	private static class CustomTypeClassLoader extends URLClassLoader {
-
-		CustomTypeClassLoader() {
-			super(new URL[] { CustomTypeClassLoader.class.getProtectionDomain().getCodeSource().getLocation() },
-				getSystemClassLoader());
-		}
-
-		@Override
-		public Class<?> loadClass(String name) throws ClassNotFoundException {
-			return (name.startsWith(CustomType.class.getName()) ? findClass(name) : super.loadClass(name));
-		}
-
 	}
 
 }
