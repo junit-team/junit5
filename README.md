@@ -78,7 +78,15 @@ consumption in other projects via the following command.
 
 ## Dependency Metadata
 
-[![Maven Central](https://img.shields.io/maven-central/v/org.junit.jupiter/junit-jupiter)](https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter)
+ <a href="https://central.sonatype.com/search?namespace=org.junit.jupiter"> 
+   <img alt="JUnit Jupiter version" src="https://img.shields.io/maven-central/v/org.junit.jupiter/junit-jupiter/5..svg?color=25a162&label=Jupiter"> 
+ </a> 
+ <a href="https://central.sonatype.com/search?namespace=org.junit.vintage"> 
+   <img alt="JUnit Vintage version" src="https://img.shields.io/maven-central/v/org.junit.vintage/junit-vintage-engine/5..svg?color=25a162&label=Vintage"> 
+ </a> 
+ <a href="https://central.sonatype.com/search?namespace=org.junit.platform"> 
+   <img alt="JUnit Platform version" src="https://img.shields.io/maven-central/v/org.junit.platform/junit-platform-commons/1..svg?color=25a162&label=Platform"> 
+ </a> 
 
 Consult the [Dependency Metadata] section of the [User Guide] for a list of all artifacts
 of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.
