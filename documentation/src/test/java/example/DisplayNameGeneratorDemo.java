@@ -15,6 +15,7 @@ package example;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ class DisplayNameGeneratorDemo {
 	}
 
 	@Nested
-	@IndicativeSentencesGeneration(separator = " -> ", generator = DisplayNameGenerator.ReplaceUnderscores.class)
+	@IndicativeSentencesGeneration(separator = " -> ", generator = ReplaceUnderscores.class)
 	class A_year_is_a_leap_year {
 
 		@Test
