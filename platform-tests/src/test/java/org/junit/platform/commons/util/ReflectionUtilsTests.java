@@ -1036,18 +1036,23 @@ class ReflectionUtilsTests {
 
 		try (TestClassLoader customTypeClassLoader = TestClassLoader.forClassNamePrefix(customTypeName)) {
 			var customType = customTypeClassLoader.loadClass(customTypeName);
+			assertThat(customType.getClassLoader()).isInstanceOf(TestClassLoader.class);
 
 			var optional = findMethod(customType, methodName, nestedTypeName);
 			assertThat(optional).get().satisfies(method -> {
 				assertThat(method.getName()).isEqualTo(methodName);
 
 				var declaringClass = method.getDeclaringClass();
+				assertThat(declaringClass.getClassLoader()).isInstanceOf(TestClassLoader.class);
 				assertThat(declaringClass.getName()).isEqualTo(customTypeName);
 				assertThat(declaringClass).isNotEqualTo(CustomType.class);
 
 				var parameterTypes = method.getParameterTypes();
 				assertThat(parameterTypes).extracting(Class::getName).containsExactly(nestedTypeName);
-				assertThat(parameterTypes[0].getClass()).isNotEqualTo(CustomType.NestedType.class);
+				Class<?> parameterType = parameterTypes[0].getClass();
+				assertThat(parameterType).isNotEqualTo(CustomType.NestedType.class);
+				// The ClassLoader is null because of the behavior of our TestClassLoader.
+				assertThat(parameterType.getClassLoader()).isNull();
 			});
 		}
 	}
