@@ -32,10 +32,9 @@ repository on GitHub.
   which return a `Stream`.
 * `ReflectionSupport.findMethod(Class<?>, String, String)` now uses the `ClassLoader` of
   the supplied `Class` to load parameter types instead of using the _default_
-  `ClassLoader`. This allows parameter types to be resolved in non-standard `ClassLoader`
-  arrangements (such as OSGi). Consequently,
-  `DiscoverySelectors.selectMethod(Class<?>, String, String)` also now works properly in
-  non-standard `ClassLoader` arrangements.
+  `ClassLoader`. This allows parameter types to be resolved with custom `ClassLoader`
+  arrangements (such as OSGi). Consequently, `DiscoverySelectors.selectMethod(Class<?>,
+  String, String)` also now works properly with custom `ClassLoader` arrangements.
 * For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
   started/finished and opened/closed events are now invoked using "wrapping" semantics.
   This means that finished/closed event methods are invoked in reverse order compared to
