@@ -878,6 +878,7 @@ parameters_ used for the following features.
 
 - <<extensions-conditions-deactivation>>
 - <<launcher-api-listeners-custom-deactivation>>
+- <<stacktrace-pruning>>
 
 If the value for the given _configuration parameter_ consists solely of an asterisk
 (`+++*+++`), the pattern will match against all candidate classes. Otherwise, the value
@@ -1094,3 +1095,28 @@ https://jdk.java.net/jmc/[JDK Mission Control].
 WARNING: Flight Recorder support is currently an _experimental_ feature. You're invited to
 give it a try and provide feedback to the JUnit team so they can improve and eventually
 <<api-evolution, promote>> this feature.
+
+[[stacktrace-pruning]]
+=== Stack trace pruning
+
+Since version 1.10, the JUnit Platform provides opt-out support for pruning stack traces
+produced by failing tests. This feature can be enabled or disabled via the
+`junit.platform.stacktrace.pruning.enabled` _configuration parameter_.
+
+By default, all calls from `org.junit`, `java` and `jdk` packages are removed from the
+stack trace. You can also configure the JUnit Platform to exclude different or additional
+calls. To do this, provide a pattern for the `junit.platform.stacktrace.pruning.pattern`
+_configuration parameter_ to specify which fully qualified class names should be excluded
+from the stack traces.
+
+In addition, and independently of the provided pattern, all elements prior to and
+including the first JUnit Launcher call will be removed.
+
+NOTE: Since they provide necessary insides to understand a test failure, calls to
+`{Assertions}` or `{Assumptions}` will never be excluded from stack traces even though
+they are part of the `org.junit` package.
+
+[[stacktrace-pruning-pattern]]
+==== Pattern Matching Syntax
+
+Refer to <<running-tests-config-params-deactivation-pattern>> for details.
