@@ -22,6 +22,7 @@ module Rouge; module Themes
     P_BLUE_2       = {:dark => '#79c0ff'}
     P_BLUE_5       = {:dark => '#1f6feb'}
     P_BLUE_6       = {:light => '#0550ae'}
+    P_BLUE_7       = {:light => '#055099'}
     P_BLUE_8       = {:light => '#0a3069'}
     P_PURPLE_2     = {:dark => '#d2a8ff'}
     P_PURPLE_5     = {:light => '#8250df'}
@@ -68,13 +69,13 @@ module Rouge; module Themes
     end
 
     def self.make_light!
-     palette :comment     => P_GRAY_5[@mode]
+     palette :comment     => P_GREEN_6[@mode]
      palette :constant    => P_BLUE_6[@mode]
      palette :entity      => P_PURPLE_5[@mode]
      palette :heading     => P_BLUE_6[@mode]
      palette :keyword     => P_RED_5[@mode]
      palette :string      => P_BLUE_8[@mode]
-     palette :tag         => P_GREEN_6[@mode]
+     palette :tag         => P_BLUE_7[@mode]
      palette :variable    => P_ORANGE_6[@mode]
 
      palette :fgDefault   => P_GRAY_9[@mode]
