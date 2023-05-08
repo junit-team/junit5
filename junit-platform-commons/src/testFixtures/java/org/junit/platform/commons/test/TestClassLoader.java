@@ -16,8 +16,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.util.ClassLoaderUtils;
@@ -34,9 +32,11 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  */
 public class TestClassLoader extends URLClassLoader {
 
-	private static final Predicate<Class<?>> notTestClassLoader = clazz -> !clazz.equals(TestClassLoader.class);
+	static {
+		ClassLoader.registerAsParallelCapable();
+	}
 
-	private final Map<String, Class<?>> cachedClasses = new ConcurrentHashMap<>();
+	private static final Predicate<Class<?>> notTestClassLoader = clazz -> !clazz.equals(TestClassLoader.class);
 
 	private final Predicate<String> classNameFilter;
 
@@ -68,18 +68,12 @@ public class TestClassLoader extends URLClassLoader {
 
 	@Override
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
-		Class<?> clazz = this.cachedClasses.get(name);
-		if (clazz != null) {
-			return clazz;
-		}
-		synchronized (this.cachedClasses) {
-			clazz = this.cachedClasses.get(name);
+		synchronized (getClassLoadingLock(name)) {
+			Class<?> clazz = findLoadedClass(name);
 			if (clazz != null) {
 				return clazz;
 			}
-			clazz = this.classNameFilter.test(name) ? findClass(name) : super.loadClass(name);
-			this.cachedClasses.put(name, clazz);
-			return clazz;
+			return this.classNameFilter.test(name) ? findClass(name) : super.loadClass(name);
 		}
 	}
 
