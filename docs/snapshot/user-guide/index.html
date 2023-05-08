@@ -812,6 +812,11 @@ pre.rouge .gs {
 <li><a href="#running-tests-listeners-flight-recorder">4.8.1. Flight Recorder Support</a></li>
 </ul>
 </li>
+<li><a href="#stacktrace-pruning">4.9. Stack trace pruning</a>
+<ul class="sectlevel3">
+<li><a href="#stacktrace-pruning-pattern">4.9.1. Pattern Matching Syntax</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#extensions">5. Extension Model</a>
@@ -8184,6 +8189,9 @@ parameters</em> used for the following features.</p>
 <li>
 <p><a href="#launcher-api-listeners-custom-deactivation">Deactivating a TestExecutionListener</a></p>
 </li>
+<li>
+<p><a href="#stacktrace-pruning">Stack trace pruning</a></p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -8579,6 +8587,45 @@ give it a try and provide feedback to the JUnit team so they can improve and eve
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="stacktrace-pruning"><a class="anchor" href="#stacktrace-pruning"></a>4.9. Stack trace pruning</h3>
+<div class="paragraph">
+<p>Since version 1.10, the JUnit Platform provides built-in support for pruning stack traces
+produced by failing tests. This feature can be enabled or disabled via the
+<code>junit.platform.stacktrace.pruning.enabled</code> <em>configuration parameter</em>.</p>
+</div>
+<div class="paragraph">
+<p>By default, all calls from the <code>org.junit</code>, <code>java</code>, and <code>jdk</code> packages are removed from the
+stack trace. You can also configure the JUnit Platform to exclude different or additional
+calls. To do this, provide a pattern for the <code>junit.platform.stacktrace.pruning.pattern</code>
+<em>configuration parameter</em> to specify which fully qualified class names should be excluded
+from the stack traces.</p>
+</div>
+<div class="paragraph">
+<p>In addition, and independently of the provided pattern, all elements prior to and
+including the first call from the JUnit Platform Launcher will be removed.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Since they provide necessary insights to understand a test failure, calls to
+<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.api.Assertions</a></code> or <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> will never be excluded from stack traces even though
+they are part of the <code>org.junit</code> package.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="stacktrace-pruning-pattern"><a class="anchor" href="#stacktrace-pruning-pattern"></a>4.9.1. Pattern Matching Syntax</h4>
+<div class="paragraph">
+<p>Refer to <a href="#running-tests-config-params-deactivation-pattern">Pattern Matching Syntax</a> for details.</p>
 </div>
 </div>
 </div>
@@ -12360,7 +12407,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-08 15:55:28 UTC
+Last updated 2023-05-08 20:33:39 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

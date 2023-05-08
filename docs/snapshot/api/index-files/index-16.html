@@ -335,6 +335,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.vintage.engine/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.html#prune()" class="member-name-link">prune()</a> - Method in class org.junit.vintage.engine.descriptor.<a href="../org.junit.vintage.engine/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">RunnerTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="../org.junit.platform.commons/org/junit/platform/commons/util/ExceptionUtils.html#pruneStackTrace(java.lang.Throwable,java.util.function.Predicate)" class="member-name-link">pruneStackTrace(Throwable, Predicate&lt;String&gt;)</a> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/ExceptionUtils.html" title="class in org.junit.platform.commons.util">ExceptionUtils</a></dt>
+<dd>
+<div class="block">Prune the stack trace of the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link"><code>Throwable</code></a> by filtering its
+ elements using the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link"><code>Predicate</code></a>, except for
+ <code>org.junit.jupiter.api.Assertions</code> and
+ <code>org.junit.jupiter.api.Assumptions</code> that will always remain
+ present.</div>
+</dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/TestReporter.html#publishEntry(java.lang.String)" class="member-name-link">publishEntry(String)</a> - Method in interface org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/TestReporter.html" title="interface in org.junit.jupiter.api">TestReporter</a></dt>
 <dd>
 <div class="block">Publish the supplied value as a <em>report entry</em>.</div>

@@ -623,6 +623,12 @@ test engines and their extensions.</p>
 <p>New dry-run mode to simulate test execution without actually running tests. Please refer
 to the <a href="../user-guide/index.html#launcher-api-dry-run-mode">User Guide</a> for details.</p>
 </li>
+<li>
+<p>Stack traces produced by failing tests are now pruned of calls from the <code>org.junit</code>,
+<code>java</code>, and <code>jdk</code> packages by default. This feature can be disabled or configured to
+prune other calls via configurations parameters. Please refer to the
+<a href="../user-guide/index.html#stacktrace-pruning">User Guide</a> for details.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1090,7 +1096,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-08 15:55:28 UTC
+Last updated 2023-05-08 20:33:39 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
