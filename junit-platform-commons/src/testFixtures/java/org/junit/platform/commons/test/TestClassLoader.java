@@ -11,7 +11,6 @@
 package org.junit.platform.commons.test;
 
 import java.lang.StackWalker.Option;
-import java.lang.StackWalker.StackFrame;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
@@ -32,13 +31,11 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  */
 public class TestClassLoader extends URLClassLoader {
 
+	private static final StackWalker stackWalker = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
+
 	static {
 		ClassLoader.registerAsParallelCapable();
 	}
-
-	private static final Predicate<Class<?>> notTestClassLoader = clazz -> !clazz.equals(TestClassLoader.class);
-
-	private final Predicate<String> classNameFilter;
 
 	/**
 	 * Create a {@link TestClassLoader} that filters the provided classes.
@@ -47,7 +44,7 @@ public class TestClassLoader extends URLClassLoader {
 	 */
 	public static TestClassLoader forClasses(Class<?>... classes) {
 		Predicate<String> classNameFilter = name -> Arrays.stream(classes).map(Class::getName).anyMatch(name::equals);
-		return new TestClassLoader(classNameFilter);
+		return new TestClassLoader(getCodeSourceUrl(stackWalker.getCallerClass()), classNameFilter);
 	}
 
 	/**
@@ -57,11 +54,13 @@ public class TestClassLoader extends URLClassLoader {
 	 * @see #forClasses(Class...)
 	 */
 	public static TestClassLoader forClassNamePrefix(String prefix) {
-		return new TestClassLoader(name -> name.startsWith(prefix));
+		return new TestClassLoader(getCodeSourceUrl(stackWalker.getCallerClass()), name -> name.startsWith(prefix));
 	}
 
-	public TestClassLoader(Predicate<String> classNameFilter) {
-		super(new URL[] { getCodeSourceUrl() }, ClassLoaderUtils.getDefaultClassLoader());
+	private final Predicate<String> classNameFilter;
+
+	private TestClassLoader(URL codeSourceUrl, Predicate<String> classNameFilter) {
+		super(new URL[] { codeSourceUrl }, ClassLoaderUtils.getDefaultClassLoader());
 
 		this.classNameFilter = classNameFilter;
 	}
@@ -78,22 +77,10 @@ public class TestClassLoader extends URLClassLoader {
 	}
 
 	/**
-	 * Get the {@link CodeSource} {@link URL} of the class that instantiated the
-	 * {@code TestClassLoader}.
+	 * Get the {@link CodeSource} {@link URL} of the supplied class.
 	 */
-	private static URL getCodeSourceUrl() {
-		StackWalker walker = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
-
-		// @formatter:off
-		Class<?> callerClass = walker.walk(stream -> stream
-				.map(StackFrame::getDeclaringClass)
-				.filter(notTestClassLoader)
-				.findFirst()
-				.get()
-			);
-		// @formatter:on
-
-		return callerClass.getProtectionDomain().getCodeSource().getLocation();
+	private static URL getCodeSourceUrl(Class<?> clazz) {
+		return clazz.getProtectionDomain().getCodeSource().getLocation();
 	}
 
 }
