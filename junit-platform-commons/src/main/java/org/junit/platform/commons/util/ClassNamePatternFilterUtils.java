@@ -56,7 +56,7 @@ public class ClassNamePatternFilterUtils {
 
 	/**
 	 * Create a {@link Predicate} that can be used to exclude (i.e., filter out)
-	 * fully qualified class names matching with any of the supplied patterns.
+	 * fully qualified class names matching any of the supplied patterns.
 	 *
 	 * @param patterns a comma-separated list of patterns
 	 */

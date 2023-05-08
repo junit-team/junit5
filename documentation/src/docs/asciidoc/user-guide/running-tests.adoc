@@ -1099,20 +1099,20 @@ give it a try and provide feedback to the JUnit team so they can improve and eve
 [[stacktrace-pruning]]
 === Stack trace pruning
 
-Since version 1.10, the JUnit Platform provides opt-out support for pruning stack traces
+Since version 1.10, the JUnit Platform provides built-in support for pruning stack traces
 produced by failing tests. This feature can be enabled or disabled via the
 `junit.platform.stacktrace.pruning.enabled` _configuration parameter_.
 
-By default, all calls from `org.junit`, `java` and `jdk` packages are removed from the
+By default, all calls from the `org.junit`, `java`, and `jdk` packages are removed from the
 stack trace. You can also configure the JUnit Platform to exclude different or additional
 calls. To do this, provide a pattern for the `junit.platform.stacktrace.pruning.pattern`
 _configuration parameter_ to specify which fully qualified class names should be excluded
 from the stack traces.
 
 In addition, and independently of the provided pattern, all elements prior to and
-including the first JUnit Launcher call will be removed.
+including the first call from the JUnit Platform Launcher will be removed.
 
-NOTE: Since they provide necessary insides to understand a test failure, calls to
+NOTE: Since they provide necessary insights to understand a test failure, calls to
 `{Assertions}` or `{Assumptions}` will never be excluded from stack traces even though
 they are part of the `org.junit` package.
 

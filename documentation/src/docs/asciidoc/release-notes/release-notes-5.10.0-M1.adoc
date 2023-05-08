@@ -56,9 +56,9 @@ repository on GitHub.
   test engines and their extensions.
 * New dry-run mode to simulate test execution without actually running tests. Please refer
   to the <<../user-guide/index.adoc#launcher-api-dry-run-mode, User Guide>> for details.
-* Stack traces produced by failing tests are now pruned of calls from `org.junit`, `java`
-  and `jdk` by default. This feature can be disabled or configured to prune other calls
-  via configurations parameters. Please refer to the
+* Stack traces produced by failing tests are now pruned of calls from the `org.junit`,
+  `java`, and `jdk` packages by default. This feature can be disabled or configured to
+  prune other calls via configurations parameters. Please refer to the
   <<../user-guide/index.adoc#stacktrace-pruning, User Guide>> for details.
 
 
