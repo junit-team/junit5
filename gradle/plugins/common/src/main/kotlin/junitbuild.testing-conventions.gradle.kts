@@ -41,6 +41,7 @@ tasks.withType<Test>().configureEach {
 		server.set(uri("https://ge.junit.org"))
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+	systemProperty("junit.platform.stacktrace.pruning.enabled", false)
 	// Required until ASM officially supports the JDK 14
 	systemProperty("net.bytebuddy.experimental", true)
 	if (buildParameters.testing.enableJFR) {
