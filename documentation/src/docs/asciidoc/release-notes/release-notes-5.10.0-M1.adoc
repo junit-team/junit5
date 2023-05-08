@@ -30,6 +30,8 @@ repository on GitHub.
   `@Suite` and related annotations, and others.
 * All utility methods in `ReflectionSupport` that return a `List` now have counterparts
   which return a `Stream`.
+* New `tryToLoadClass(...)` variant in `ReflectionSupport` that accepts an explicit
+  `ClassLoader`, allowing classes to be resolved with custom `ClassLoader` arrangements.
 * `ReflectionSupport.findMethod(Class<?>, String, String)` now uses the `ClassLoader` of
   the supplied `Class` to load parameter types instead of using the _default_
   `ClassLoader`. This allows parameter types to be resolved with custom `ClassLoader`
