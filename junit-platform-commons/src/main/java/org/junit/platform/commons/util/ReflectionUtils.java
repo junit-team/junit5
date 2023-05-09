@@ -829,7 +829,7 @@ public final class ReflectionUtils {
 			}
 
 			// Fallback to standard VM class loading
-			return classLoader.loadClass(trimmedName);
+			return Class.forName(trimmedName, false, classLoader);
 		});
 	}
 
@@ -838,7 +838,7 @@ public final class ReflectionUtils {
 
 		Class<?> componentType = classNameToTypeMap.containsKey(componentTypeName)
 				? classNameToTypeMap.get(componentTypeName)
-				: classLoader.loadClass(componentTypeName);
+				: Class.forName(componentTypeName, false, classLoader);
 
 		return Array.newInstance(componentType, new int[dimensions]).getClass();
 	}
