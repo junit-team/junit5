@@ -295,7 +295,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			// @formatter:off
 			return ReflectionUtils.tryToLoadClass(type)
 					.getOrThrow(cause -> new ArgumentConversionException(
-							"Failed to convert String \"" + type + "\" to type " + Class.class.getName(), cause));
+							"Failed to convert String \"" + type + "\" to type java.lang.Class", cause));
 			// @formatter:on
 		}
 
@@ -304,8 +304,8 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 				return URI.create(url).toURL();
 			}
 			catch (MalformedURLException ex) {
-				throw new ArgumentConversionException(
-					"Failed to convert String \"" + url + "\" to type " + URL.class.getName(), ex);
+				throw new ArgumentConversionException("Failed to convert String \"" + url + "\" to type java.net.URL",
+					ex);
 			}
 		}
 
