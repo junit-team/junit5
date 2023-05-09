@@ -125,8 +125,9 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 				}
 			}
 		}
-		throw new ArgumentConversionException("No implicit conversion to convert object of type "
-				+ source.getClass().getName() + " to type " + targetType.getName());
+		throw new ArgumentConversionException(
+			String.format("No built-in converter for source type %s and target type %s",
+				source.getClass().getTypeName(), targetType.getTypeName()));
 	}
 
 	private static Class<?> toWrapperType(Class<?> targetType) {
@@ -291,12 +292,11 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 
 		private static Class<?> toClass(String type) {
-			//@formatter:off
-			return ReflectionUtils
-					.tryToLoadClass(type)
+			// @formatter:off
+			return ReflectionUtils.tryToLoadClass(type)
 					.getOrThrow(cause -> new ArgumentConversionException(
 							"Failed to convert String \"" + type + "\" to type " + Class.class.getName(), cause));
-			//@formatter:on
+			// @formatter:on
 		}
 
 		private static URL toURL(String url) {
