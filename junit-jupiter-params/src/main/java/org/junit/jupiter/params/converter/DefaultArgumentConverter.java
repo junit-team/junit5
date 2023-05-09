@@ -39,7 +39,6 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
@@ -76,8 +75,9 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
 
 	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList( //
-		new StringToBooleanAndCharPrimitiveConverter(), //
-		new StringToNumericPrimitiveConverter(), //
+		new StringToBooleanConverter(), //
+		new StringToCharacterConverter(), //
+		new StringToNumberConverter(), //
 		new StringToEnumConverter(), //
 		new StringToJavaTimeConverter(), //
 		new StringToCommonJavaTypesConverter(), //
@@ -93,7 +93,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ArgumentConversionException(
-					"Cannot convert null to primitive value of type " + targetType.getName());
+					"Cannot convert null to primitive value of type " + targetType.getTypeName());
 			}
 			return null;
 		}
@@ -102,16 +102,17 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			return source;
 		}
 
-		return convertToTargetType(source, toWrapperType(targetType));
+		return convertToTargetType(source, targetType);
 	}
 
 	private Object convertToTargetType(Object source, Class<?> targetType) {
 		if (source instanceof String) {
+			Class<?> targetTypeToUse = toWrapperType(targetType);
 			Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
-				candidate -> candidate.canConvert(targetType)).findFirst();
+				candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
 			if (converter.isPresent()) {
 				try {
-					return converter.get().convert((String) source, targetType);
+					return converter.get().convert((String) source, targetTypeToUse);
 				}
 				catch (Exception ex) {
 					if (ex instanceof ArgumentConversionException) {
@@ -120,7 +121,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 					}
 					// else
 					throw new ArgumentConversionException(
-						"Failed to convert String \"" + source + "\" to type " + targetType.getName(), ex);
+						"Failed to convert String \"" + source + "\" to type " + targetType.getTypeName(), ex);
 				}
 			}
 		}
@@ -135,42 +136,48 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	interface StringToObjectConverter {
 
+		/**
+		 * Determine if this converter can convert from a {@link String} to the
+		 * supplied target type (which is guaranteed to be a wrapper type for
+		 * primitives &mdash; for example, {@link Integer} instead of {@code int}).
+		 */
 		boolean canConvert(Class<?> targetType);
 
 		Object convert(String source, Class<?> targetType) throws Exception;
 
 	}
 
-	private static class StringToBooleanAndCharPrimitiveConverter implements StringToObjectConverter {
-
-		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
-		static {
-			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
-			converters.put(Boolean.class, source -> {
-				boolean isTrue = "true".equalsIgnoreCase(source);
-				Preconditions.condition(isTrue || "false".equalsIgnoreCase(source),
-					() -> "String must be (ignoring case) 'true' or 'false': " + source);
-				return isTrue;
-			});
-			converters.put(Character.class, source -> {
-				Preconditions.condition(source.length() == 1, () -> "String must have length of 1: " + source);
-				return source.charAt(0);
-			});
-			CONVERTERS = unmodifiableMap(converters);
-		}
+	private static class StringToBooleanConverter implements StringToObjectConverter {
 
 		@Override
 		public boolean canConvert(Class<?> targetType) {
-			return CONVERTERS.containsKey(targetType);
+			return targetType == Boolean.class;
 		}
 
 		@Override
 		public Object convert(String source, Class<?> targetType) {
-			return CONVERTERS.get(targetType).apply(source);
+			boolean isTrue = "true".equalsIgnoreCase(source);
+			Preconditions.condition(isTrue || "false".equalsIgnoreCase(source),
+				() -> "String must be 'true' or 'false' (ignoring case): " + source);
+			return isTrue;
 		}
 	}
 
-	private static class StringToNumericPrimitiveConverter implements StringToObjectConverter {
+	private static class StringToCharacterConverter implements StringToObjectConverter {
+
+		@Override
+		public boolean canConvert(Class<?> targetType) {
+			return targetType == Character.class;
+		}
+
+		@Override
+		public Object convert(String source, Class<?> targetType) {
+			Preconditions.condition(source.length() == 1, () -> "String must have length of 1: " + source);
+			return source.charAt(0);
+		}
+	}
+
+	private static class StringToNumberConverter implements StringToObjectConverter {
 
 		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
 		static {
@@ -232,7 +239,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			converters.put(ZonedDateTime.class, ZonedDateTime::parse);
 			converters.put(ZoneId.class, ZoneId::of);
 			converters.put(ZoneOffset.class, ZoneOffset::of);
-			CONVERTERS = Collections.unmodifiableMap(converters);
+			CONVERTERS = unmodifiableMap(converters);
 		}
 
 		@Override
@@ -270,7 +277,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			converters.put(Locale.class, Locale::new);
 			converters.put(UUID.class, UUID::fromString);
 
-			CONVERTERS = Collections.unmodifiableMap(converters);
+			CONVERTERS = unmodifiableMap(converters);
 		}
 
 		@Override
