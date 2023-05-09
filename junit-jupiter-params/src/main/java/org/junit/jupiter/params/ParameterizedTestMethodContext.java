@@ -253,7 +253,7 @@ class ParameterizedTestMethodContext {
 
 		@Override
 		public Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
-			ArgumentsAccessor accessor = new DefaultArgumentsAccessor(invocationIndex, arguments);
+			ArgumentsAccessor accessor = new DefaultArgumentsAccessor(invocationIndex, parameterContext, arguments);
 			try {
 				return this.argumentsAggregator.aggregateArguments(accessor, parameterContext);
 			}

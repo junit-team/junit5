@@ -48,8 +48,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -57,21 +59,23 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * {@code DefaultArgumentConverter} is the default implementation of the
  * {@link ArgumentConverter} API.
  *
- * <p>The {@code DefaultArgumentConverter} is able to convert from strings to a
+ * <p>
+ * The {@code DefaultArgumentConverter} is able to convert from strings to a
  * number of primitive types and their corresponding wrapper types (Byte, Short,
  * Integer, Long, Float, and Double), date and time types from the
  * {@code java.time} package, and some additional common Java types such as
  * {@link File}, {@link BigDecimal}, {@link BigInteger}, {@link Currency},
  * {@link Locale}, {@link URI}, {@link URL}, {@link UUID}, etc.
  *
- * <p>If the source and target types are identical the source object will not
- * be modified.
+ * <p>
+ * If the source and target types are identical the source object will not be
+ * modified.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.converter.ArgumentConverter
  */
 @API(status = INTERNAL, since = "5.0")
-public class DefaultArgumentConverter extends SimpleArgumentConverter {
+public class DefaultArgumentConverter implements ArgumentConverter {
 
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
 
@@ -84,11 +88,35 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		new FallbackStringToObjectConverter() //
 	));
 
+	private final StringToObjectConverter defaultClassConverter;
+
 	private DefaultArgumentConverter() {
-		// nothing to initialize
+		this(null);
+	}
+
+	public DefaultArgumentConverter(ParameterContext parameterContext) {
+		defaultClassConverter = parameterContext == null ? StringToClassConverterWithNullContext.DEFAULT
+				: new StringToClassConverterWithContext(parameterContext);
 	}
 
 	@Override
+	public Object convert(Object source, ParameterContext parameterContext) {
+		final Class<?> targetType = parameterContext.getParameter().getType();
+		if (source == null) {
+			if (targetType.isPrimitive()) {
+				throw new ArgumentConversionException(
+					"Cannot convert null to primitive value of type " + targetType.getName());
+			}
+			return null;
+		}
+
+		if (ReflectionUtils.isAssignableTo(source, targetType)) {
+			return source;
+		}
+
+		return convertToTargetType(source, parameterContext, toWrapperType(targetType));
+	}
+
 	public Object convert(Object source, Class<?> targetType) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
@@ -102,13 +130,16 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			return source;
 		}
 
-		return convertToTargetType(source, toWrapperType(targetType));
+		return convertToTargetType(source, null, toWrapperType(targetType));
 	}
 
-	private Object convertToTargetType(Object source, Class<?> targetType) {
+	private Object convertToTargetType(Object source, ParameterContext parameterContext, Class<?> targetType) {
 		if (source instanceof String) {
-			Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
-				candidate -> candidate.canConvert(targetType)).findFirst();
+			final StringToObjectConverter classConverter = parameterContext == null ? defaultClassConverter
+					: new StringToClassConverterWithContext(parameterContext);
+
+			Optional<StringToObjectConverter> converter = Stream.concat(Stream.of(classConverter),
+				stringToObjectConverters.stream()).filter(candidate -> candidate.canConvert(targetType)).findFirst();
 			if (converter.isPresent()) {
 				try {
 					return converter.get().convert((String) source, targetType);
@@ -139,6 +170,50 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 		Object convert(String source, Class<?> targetType) throws Exception;
 
+	}
+
+	private static class StringToClassConverterWithNullContext implements StringToObjectConverter {
+
+		private final static StringToClassConverterWithNullContext DEFAULT = new StringToClassConverterWithNullContext();
+
+		@Override
+		public boolean canConvert(Class<?> targetType) {
+			return Class.class == targetType;
+		}
+
+		@Override
+		public Object convert(String source, Class<?> targetType) throws Exception {
+			//@formatter:off
+			return ReflectionUtils
+					.tryToLoadClass(source)
+					.getOrThrow(cause -> new ArgumentConversionException(
+							"Failed to convert String \"" + source + "\" to type " + Class.class.getName(), cause));
+			//@formatter:on
+		}
+	}
+
+	private static class StringToClassConverterWithContext implements StringToObjectConverter {
+
+		final private ClassLoader loader;
+
+		StringToClassConverterWithContext(ParameterContext parameterContext) {
+			this.loader = parameterContext.getDeclaringExecutable().getDeclaringClass().getClassLoader();
+		}
+
+		@Override
+		public boolean canConvert(Class<?> targetType) {
+			return Class.class == targetType;
+		}
+
+		@Override
+		public Object convert(String source, Class<?> targetType) throws Exception {
+			//@formatter:off
+			return ReflectionUtils
+					.tryToLoadClass(source, loader)
+					.getOrThrow(cause -> new ArgumentConversionException(
+							"Failed to convert String \"" + source + "\" to type " + Class.class.getName(), cause));
+			//@formatter:on
+		}
 	}
 
 	private static class StringToBooleanAndCharPrimitiveConverter implements StringToObjectConverter {
@@ -253,8 +328,6 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		static {
 			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
 
-			// java.lang
-			converters.put(Class.class, StringToCommonJavaTypesConverter::toClass);
 			// java.io and java.nio
 			converters.put(File.class, File::new);
 			converters.put(Charset.class, Charset::forName);
@@ -275,21 +348,12 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 		@Override
 		public boolean canConvert(Class<?> targetType) {
-			return CONVERTERS.containsKey(targetType);
+			return targetType == Class.class || CONVERTERS.containsKey(targetType);
 		}
 
 		@Override
 		public Object convert(String source, Class<?> targetType) throws Exception {
 			return CONVERTERS.get(targetType).apply(source);
-		}
-
-		private static Class<?> toClass(String type) {
-			//@formatter:off
-			return ReflectionUtils
-					.tryToLoadClass(type)
-					.getOrThrow(cause -> new ArgumentConversionException(
-							"Failed to convert String \"" + type + "\" to type " + Class.class.getName(), cause));
-			//@formatter:on
 		}
 
 		private static URL toURL(String url) {
@@ -303,5 +367,4 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		}
 
 	}
-
 }
