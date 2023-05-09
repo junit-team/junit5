@@ -18,12 +18,8 @@ class StringToEnumConverter implements StringToObjectConverter {
 	}
 
 	@Override
-	public Object convert(String source, Class<?> targetType) throws Exception {
-		return valueOf(targetType, source);
-	}
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static Object valueOf(Class targetType, String source) {
+	public Object convert(String source, Class targetType) throws Exception {
 		return Enum.valueOf(targetType, source);
 	}
 
