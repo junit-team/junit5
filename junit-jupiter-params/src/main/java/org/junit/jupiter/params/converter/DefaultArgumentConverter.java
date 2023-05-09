@@ -49,6 +49,8 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -70,7 +72,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @see org.junit.jupiter.params.converter.ArgumentConverter
  */
 @API(status = INTERNAL, since = "5.0")
-public class DefaultArgumentConverter extends SimpleArgumentConverter {
+public class DefaultArgumentConverter implements ArgumentConverter {
 
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
 
@@ -78,6 +80,7 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		new StringToBooleanConverter(), //
 		new StringToCharacterConverter(), //
 		new StringToNumberConverter(), //
+		new StringToClassConverter(), //
 		new StringToEnumConverter(), //
 		new StringToJavaTimeConverter(), //
 		new StringToCommonJavaTypesConverter(), //
@@ -89,7 +92,12 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 	}
 
 	@Override
-	public Object convert(Object source, Class<?> targetType) {
+	public final Object convert(Object source, ParameterContext context) {
+		Class<?> targetType = context.getParameter().getType();
+		return convert(source, targetType, context);
+	}
+
+	public final Object convert(Object source, Class<?> targetType, ParameterContext context) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ArgumentConversionException(
@@ -102,17 +110,17 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 			return source;
 		}
 
-		return convertToTargetType(source, targetType);
-	}
-
-	private Object convertToTargetType(Object source, Class<?> targetType) {
 		if (source instanceof String) {
 			Class<?> targetTypeToUse = toWrapperType(targetType);
 			Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
 				candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
 			if (converter.isPresent()) {
+				ClassLoader classLoader = context.getDeclaringExecutable().getDeclaringClass().getClassLoader();
+				if (classLoader == null) {
+					classLoader = ClassLoaderUtils.getDefaultClassLoader();
+				}
 				try {
-					return converter.get().convert((String) source, targetTypeToUse);
+					return converter.get().convert((String) source, targetTypeToUse, classLoader);
 				}
 				catch (Exception ex) {
 					if (ex instanceof ArgumentConversionException) {
@@ -145,6 +153,10 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		boolean canConvert(Class<?> targetType);
 
 		Object convert(String source, Class<?> targetType) throws Exception;
+
+		default Object convert(String source, Class<?> targetType, ClassLoader classLoader) throws Exception {
+			return convert(source, targetType);
+		}
 
 	}
 
@@ -201,6 +213,29 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		public Object convert(String source, Class<?> targetType) {
 			return CONVERTERS.get(targetType).apply(source.replace("_", ""));
 		}
+	}
+
+	private static class StringToClassConverter implements StringToObjectConverter {
+
+		@Override
+		public boolean canConvert(Class<?> targetType) {
+			return targetType == Class.class;
+		}
+
+		@Override
+		public Object convert(String source, Class<?> targetType) throws Exception {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Object convert(String className, Class<?> targetType, ClassLoader classLoader) throws Exception {
+			// @formatter:off
+			return ReflectionUtils.tryToLoadClass(className, classLoader)
+					.getOrThrow(cause -> new ArgumentConversionException(
+							"Failed to convert String \"" + className + "\" to type java.lang.Class", cause));
+			// @formatter:on
+		}
+
 	}
 
 	private static class StringToEnumConverter implements StringToObjectConverter {
@@ -261,8 +296,6 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		static {
 			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
 
-			// java.lang
-			converters.put(Class.class, StringToCommonJavaTypesConverter::toClass);
 			// java.io and java.nio
 			converters.put(File.class, File::new);
 			converters.put(Charset.class, Charset::forName);
@@ -289,14 +322,6 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		@Override
 		public Object convert(String source, Class<?> targetType) throws Exception {
 			return CONVERTERS.get(targetType).apply(source);
-		}
-
-		private static Class<?> toClass(String type) {
-			// @formatter:off
-			return ReflectionUtils.tryToLoadClass(type)
-					.getOrThrow(cause -> new ArgumentConversionException(
-							"Failed to convert String \"" + type + "\" to type java.lang.Class", cause));
-			// @formatter:on
 		}
 
 		private static URL toURL(String url) {

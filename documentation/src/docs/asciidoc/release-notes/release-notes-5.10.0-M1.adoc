@@ -74,7 +74,10 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* When converting an argument for a `@ParameterizedTest` method from a fully-qualified
+  class name (`String`) to a `Class`, the `ClassLoader` of the class in which the
+  `@ParameterizedTest` method is declared is now used to resolve the `Class` instead of
+  the _default_ `ClassLoader`.
 
 ==== Deprecations and Breaking Changes
 

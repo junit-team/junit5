@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -35,12 +36,15 @@ import org.junit.platform.commons.util.Preconditions;
 @API(status = INTERNAL, since = "5.2")
 public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
+	private final ParameterContext parameterContext;
 	private final int invocationIndex;
 	private final Object[] arguments;
 
-	public DefaultArgumentsAccessor(int invocationIndex, Object... arguments) {
+	public DefaultArgumentsAccessor(ParameterContext parameterContext, int invocationIndex, Object... arguments) {
+		Preconditions.notNull(parameterContext, "ParameterContext must not be null");
 		Preconditions.condition(invocationIndex >= 1, () -> "invocation index must be >= 1");
 		Preconditions.notNull(arguments, "Arguments array must not be null");
+		this.parameterContext = parameterContext;
 		this.invocationIndex = invocationIndex;
 		this.arguments = arguments;
 	}
@@ -57,7 +61,8 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 		Preconditions.notNull(requiredType, "requiredType must not be null");
 		Object value = get(index);
 		try {
-			Object convertedValue = DefaultArgumentConverter.INSTANCE.convert(value, requiredType);
+			Object convertedValue = DefaultArgumentConverter.INSTANCE.convert(value, requiredType,
+				this.parameterContext);
 			return requiredType.cast(convertedValue);
 		}
 		catch (Exception ex) {

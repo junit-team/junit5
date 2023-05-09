@@ -12,9 +12,12 @@ package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.lang.Thread.State;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -43,6 +46,9 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.test.TestClassLoader;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link DefaultArgumentConverter}.
@@ -202,6 +208,23 @@ class DefaultArgumentConverterTests {
 		assertConverts("[[Ljava.lang.String;", Class.class, String[][].class);
 	}
 
+	@Test
+	void convertsStringToClassWithCustomTypeFromDifferentClassLoader() throws Exception {
+		String customTypeName = Enigma.class.getName();
+		try (TestClassLoader customTypeClassLoader = TestClassLoader.forClasses(Enigma.class)) {
+			var customType = customTypeClassLoader.loadClass(customTypeName);
+			assertThat(customType.getClassLoader()).isInstanceOf(TestClassLoader.class);
+
+			var declaringExecutable = ReflectionUtils.findMethod(customType, "foo").get();
+			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isInstanceOf(TestClassLoader.class);
+
+			var clazz = (Class<?>) convert(customTypeName, Class.class, parameterContext(declaringExecutable));
+			assertThat(clazz).isNotEqualTo(Enigma.class);
+			assertThat(clazz).isEqualTo(customType);
+			assertThat(clazz.getClassLoader()).isInstanceOf(TestClassLoader.class);
+		}
+	}
+
 	// --- java.math -----------------------------------------------------------
 
 	@Test
@@ -280,10 +303,33 @@ class DefaultArgumentConverterTests {
 	}
 
 	private Object convert(Object input, Class<?> targetClass) {
-		return DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
+		return convert(input, targetClass, parameterContext());
+	}
+
+	private Object convert(Object input, Class<?> targetClass, ParameterContext parameterContext) {
+		return DefaultArgumentConverter.INSTANCE.convert(input, targetClass, parameterContext);
+	}
+
+	private static ParameterContext parameterContext() {
+		Method declaringExecutable = ReflectionUtils.findMethod(DefaultArgumentConverterTests.class, "foo").get();
+		return parameterContext(declaringExecutable);
+	}
+
+	private static ParameterContext parameterContext(Method declaringExecutable) {
+		ParameterContext parameterContext = mock();
+		when(parameterContext.getDeclaringExecutable()).thenReturn(declaringExecutable);
+		return parameterContext;
+	}
+
+	@SuppressWarnings("unused")
+	private static void foo() {
 	}
 
 	private static class Enigma {
+
+		@SuppressWarnings("unused")
+		void foo() {
+		}
 	}
 
 }
