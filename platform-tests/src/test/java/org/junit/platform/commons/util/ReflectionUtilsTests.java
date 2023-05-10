@@ -1049,10 +1049,9 @@ class ReflectionUtilsTests {
 
 				var parameterTypes = method.getParameterTypes();
 				assertThat(parameterTypes).extracting(Class::getName).containsExactly(nestedTypeName);
-				Class<?> parameterType = parameterTypes[0].getClass();
+				Class<?> parameterType = parameterTypes[0];
 				assertThat(parameterType).isNotEqualTo(CustomType.NestedType.class);
-				// The ClassLoader is null because of the behavior of our TestClassLoader.
-				assertThat(parameterType.getClassLoader()).isNull();
+				assertThat(parameterType.getClassLoader()).isInstanceOf(TestClassLoader.class);
 			});
 		}
 	}
