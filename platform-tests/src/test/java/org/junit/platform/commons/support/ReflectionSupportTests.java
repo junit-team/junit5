@@ -74,6 +74,34 @@ class ReflectionSupportTests {
 		assertPreconditionViolationExceptionForString("Class name", () -> ReflectionSupport.tryToLoadClass(""));
 	}
 
+	/**
+	 * @since 1.10
+	 */
+	@Test
+	void tryToLoadClassWithExplicitClassLoaderDelegates() {
+		ClassLoader classLoader = getClass().getClassLoader();
+
+		assertEquals(ReflectionUtils.tryToLoadClass("-", classLoader).toOptional(),
+			ReflectionSupport.tryToLoadClass("-", classLoader).toOptional());
+		assertEquals(ReflectionUtils.tryToLoadClass("A", classLoader).toOptional(),
+			ReflectionSupport.tryToLoadClass("A", classLoader).toOptional());
+		assertEquals(ReflectionUtils.tryToLoadClass("java.nio.Bits", classLoader),
+			ReflectionSupport.tryToLoadClass("java.nio.Bits", classLoader));
+	}
+
+	/**
+	 * @since 1.10
+	 */
+	@Test
+	void tryToLoadClassWithExplicitClassLoaderPreconditions() {
+		ClassLoader cl = getClass().getClassLoader();
+
+		assertPreconditionViolationExceptionForString("Class name", () -> ReflectionSupport.tryToLoadClass(null, cl));
+		assertPreconditionViolationExceptionForString("Class name", () -> ReflectionSupport.tryToLoadClass("", cl));
+
+		assertPreconditionViolationException("ClassLoader", () -> ReflectionSupport.tryToLoadClass("int", null));
+	}
+
 	@TestFactory
 	List<DynamicTest> findAllClassesInClasspathRootDelegates() throws Throwable {
 		List<DynamicTest> tests = new ArrayList<>();

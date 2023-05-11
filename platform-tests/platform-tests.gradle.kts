@@ -6,7 +6,7 @@ plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.junit4-compatibility")
 	id("junitbuild.testing-conventions")
-	id("me.champeau.jmh")
+	alias(libs.plugins.jmh)
 }
 
 dependencies {
@@ -32,6 +32,7 @@ dependencies {
 	}
 	testImplementation(libs.joox)
 	testImplementation(libs.openTestReporting.tooling)
+	testImplementation(libs.picocli)
 	testImplementation(libs.bundles.xmlunit)
 	testImplementation(testFixtures(projects.junitJupiterApi))
 

@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -27,11 +28,11 @@ import org.junit.platform.engine.ConfigurationParameters;
  *
  * @since 1.3
  */
-@API(status = EXPERIMENTAL, since = "1.3")
+@API(status = STABLE, since = "1.10")
 public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 
 	/**
-	 * Uses the mandatory {@value CONFIG_FIXED_PARALLELISM_PROPERTY_NAME} configuration
+	 * Uses the mandatory {@value #CONFIG_FIXED_PARALLELISM_PROPERTY_NAME} configuration
 	 * parameter as the desired parallelism.
 	 */
 	FIXED {
@@ -55,7 +56,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	/**
 	 * Computes the desired parallelism based on the number of available
-	 * processors/cores multiplied by the {@value CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME}
+	 * processors/cores multiplied by the {@value #CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME}
 	 * configuration parameter.
 	 */
 	DYNAMIC {
@@ -71,14 +72,26 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 			int parallelism = Math.max(1,
 				factor.multiply(BigDecimal.valueOf(Runtime.getRuntime().availableProcessors())).intValue());
 
-			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
-				KEEP_ALIVE_SECONDS, null);
+			int maxPoolSize = configurationParameters.get(CONFIG_DYNAMIC_MAX_POOL_SIZE_FACTOR_PROPERTY_NAME,
+				BigDecimal::new).map(maxPoolSizeFactor -> {
+					Preconditions.condition(maxPoolSizeFactor.compareTo(BigDecimal.ONE) >= 0,
+						() -> String.format(
+							"Factor '%s' specified via configuration parameter '%s' must be greater than or equal to 1",
+							factor, CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME));
+					return maxPoolSizeFactor.multiply(BigDecimal.valueOf(parallelism)).intValue();
+				}).orElseGet(() -> 256 + parallelism);
+
+			boolean saturate = configurationParameters.get(CONFIG_DYNAMIC_SATURATE_PROPERTY_NAME,
+				Boolean::valueOf).orElse(true);
+
+			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, maxPoolSize, parallelism,
+				KEEP_ALIVE_SECONDS, __ -> saturate);
 		}
 	},
 
 	/**
 	 * Allows the specification of a custom {@link ParallelExecutionConfigurationStrategy}
-	 * implementation via the mandatory {@value CONFIG_CUSTOM_CLASS_PROPERTY_NAME}
+	 * implementation via the mandatory {@value #CONFIG_CUSTOM_CLASS_PROPERTY_NAME}
 	 * configuration parameter to determine the desired configuration.
 	 */
 	CUSTOM {
@@ -154,11 +167,45 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	 * Property name of the factor used to determine the desired parallelism for the
 	 * {@link #DYNAMIC} configuration strategy.
 	 *
-	 * <p>Value must be a decimal number; defaults to {@code 1}.
+	 * <p>Value must be a non-negative decimal number; defaults to {@code 1}.
 	 *
 	 * @see #DYNAMIC
 	 */
 	public static final String CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = "dynamic.factor";
+
+	/**
+	 * Property name of the factor used to determine the maximum pool size of
+	 * the underlying fork-join pool for the {@link #DYNAMIC} configuration
+	 * strategy.
+	 *
+	 * <p>Value must be a decimal number equal and greater than or equal to
+	 * {@code 1}. When set the maximum pool size is calculated as
+	 * {@code dynamic.max-pool-size-factor * dynamic.factor * Runtime.getRuntime().availableProcessors()}
+	 * When not set the maximum pool size is calculated as
+	 * {@code 256 + dynamic.factor * Runtime.getRuntime().availableProcessors()}
+	 * instead.
+	 *
+	 * @since 1.10
+	 * @see #DYNAMIC
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public static final String CONFIG_DYNAMIC_MAX_POOL_SIZE_FACTOR_PROPERTY_NAME = "dynamic.max-pool-size-factor";
+
+	/**
+	 * Property name used to disable saturation of the underlying fork-join pool
+	 * for the {@link #DYNAMIC} configuration strategy.
+	 *
+	 * <p>When set to {@code false} the underlying fork-join pool will reject
+	 * additional tasks if all available workers are busy and the maximum
+	 * pool-size would be exceeded.
+	 * <p>Value must either {@code true} or {@code false}; defaults to {@code true}.
+	 *
+	 * @since 1.10
+	 * @see #DYNAMIC
+	 * @see #CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public static final String CONFIG_DYNAMIC_SATURATE_PROPERTY_NAME = "dynamic.saturate";
 
 	/**
 	 * Property name used to specify the fully qualified class name of the

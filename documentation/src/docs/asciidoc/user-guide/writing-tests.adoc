@@ -751,8 +751,9 @@ NOTE: Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declar
 `static` in `@Nested` test classes.
 
 If you are authoring tests using the Kotlin programming language, you may also find it
-easier to implement `@BeforeAll` and `@AfterAll` methods by switching to the "per-class"
-test instance lifecycle mode.
+easier to implement non-static `@BeforeAll` and `@AfterAll` lifecycle methods as well as
+`@MethodSource` factory methods by switching to the "per-class" test instance lifecycle
+mode.
 
 [[writing-tests-test-instance-lifecycle-changing-default]]
 ==== Changing the Default Test Instance Lifecycle
@@ -861,13 +862,13 @@ following demonstrates how to have `TestInfo` injected into a test constructor,
 include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 ----
 
-* `{RepetitionInfoParameterResolver}`: if a method parameter in a `@RepeatedTest`,
-  `@BeforeEach`, or `@AfterEach` method is of type `{RepetitionInfo}`, the
-  `RepetitionInfoParameterResolver` will supply an instance of `RepetitionInfo`.
-  `RepetitionInfo` can then be used to retrieve information about the current repetition
-  and the total number of repetitions for the corresponding `@RepeatedTest`. Note,
-  however, that `RepetitionInfoParameterResolver` is not registered outside the context
-  of a `@RepeatedTest`. See <<writing-tests-repeated-tests-examples>>.
+* `{RepetitionExtension}`: if a method parameter in a `@RepeatedTest`, `@BeforeEach`, or
+  `@AfterEach` method is of type `{RepetitionInfo}`, the `RepetitionExtension` will supply
+  an instance of `RepetitionInfo`. `RepetitionInfo` can then be used to retrieve
+  information about the current repetition, the total number of repetitions, the number of
+  repetitions that have failed, and the failure threshold for the corresponding
+  `@RepeatedTest`. Note, however, that `RepetitionExtension` is not registered outside the
+  context of a `@RepeatedTest`. See <<writing-tests-repeated-tests-examples>>.
 
 * `{TestReporterParameterResolver}`: if a constructor or method parameter is of type
   `{TestReporter}`, the `TestReporterParameterResolver` will supply an instance of
@@ -1019,10 +1020,32 @@ void repeatedTest() {
 }
 ----
 
-In addition to specifying the number of repetitions, a custom display name can be
-configured for each repetition via the `name` attribute of the `@RepeatedTest`
-annotation. Furthermore, the display name can be a pattern composed of a combination of
-static text and dynamic placeholders. The following placeholders are currently supported.
+Since JUnit Jupiter 5.10, `@RepeatedTest` can be configured with a failure threshold which
+signifies the number of failures after which remaining repetitions will be automatically
+skipped. Set the `failureThreshold` attribute to a positive number less than the total
+number of repetitions in order to skip the invocations of remaining repetitions after the
+specified number of failures has been encountered.
+
+For example, if you are using `@RepeatedTest` to repeatedly invoke a test that you suspect
+to be _flaky_, a single failure is sufficient to demonstrate that the test is flaky, and
+there is no need to invoke the remaining repetitions. To support that specific use case,
+set `failureThreshold = 1`. You can alternatively set the threshold to a number greater
+than 1 depending on your use case.
+
+By default, the `failureThreshold` attribute is set to `Integer.MAX_VALUE`, signaling that
+no failure threshold will be applied, which effectively means that the specified number of
+repetitions will be invoked regardless of whether any repetitions fail.
+
+WARNING: If the repetitions of a `@RepeatedTest` method are executed in parallel, no
+guarantees can be made regarding the failure threshold. It is therefore recommended that a
+`@RepeatedTest` method be annotated with `@Execution(SAME_THREAD)` when parallel execution
+is configured. See <<writing-tests-parallel-execution>> for further details.
+
+In addition to specifying the number of repetitions and failure threshold, a custom
+display name can be configured for each repetition via the `name` attribute of the
+`@RepeatedTest` annotation. Furthermore, the display name can be a pattern composed of a
+combination of static text and dynamic placeholders. The following placeholders are
+currently supported.
 
 - `{displayName}`: display name of the `@RepeatedTest` method
 - `{currentRepetition}`: the current repetition count
@@ -1038,9 +1061,10 @@ latter is equal to `"{displayName} :: repetition {currentRepetition} of
 {totalRepetitions}"` which results in display names for individual repetitions like
 `repeatedTest() :: repetition 1 of 10`, `repeatedTest() :: repetition 2 of 10`, etc.
 
-In order to retrieve information about the current repetition and the total number of
-repetitions programmatically, a developer can choose to have an instance of
-`RepetitionInfo` injected into a `@RepeatedTest`, `@BeforeEach`, or `@AfterEach` method.
+In order to retrieve information about the current repetition, the total number of
+repetitions, the number of repetitions that have failed, and the failure threshold, a
+developer can choose to have an instance of `{RepetitionInfo}` injected into a
+`@RepeatedTest`, `@BeforeEach`, or `@AfterEach` method.
 
 [[writing-tests-repeated-tests-examples]]
 ==== Repeated Test Examples
@@ -1048,10 +1072,14 @@ repetitions programmatically, a developer can choose to have an instance of
 The `RepeatedTestsDemo` class at the end of this section demonstrates several examples of
 repeated tests.
 
-The `repeatedTest()` method is identical to example from the previous section; whereas,
+The `repeatedTest()` method is identical to the example from the previous section; whereas,
 `repeatedTestWithRepetitionInfo()` demonstrates how to have an instance of
 `RepetitionInfo` injected into a test to access the total number of repetitions for the
 current repeated test.
+
+`repeatedTestWithFailureThreshold()` demonstrates how to set a failure threshold and
+simulates an unexpected failure for every second repetition. The resulting behavior can be
+viewed in the `ConsoleLauncher` output at the end of this section.
 
 The next two methods demonstrate how to include a custom `@DisplayName` for the
 `@RepeatedTest` method in the display name of each repetition. `customDisplayName()`
@@ -1088,6 +1116,10 @@ INFO: About to execute repetition 2 of 5 for repeatedTestWithRepetitionInfo
 INFO: About to execute repetition 3 of 5 for repeatedTestWithRepetitionInfo
 INFO: About to execute repetition 4 of 5 for repeatedTestWithRepetitionInfo
 INFO: About to execute repetition 5 of 5 for repeatedTestWithRepetitionInfo
+INFO: About to execute repetition 1 of 8 for repeatedTestWithFailureThreshold
+INFO: About to execute repetition 2 of 8 for repeatedTestWithFailureThreshold
+INFO: About to execute repetition 3 of 8 for repeatedTestWithFailureThreshold
+INFO: About to execute repetition 4 of 8 for repeatedTestWithFailureThreshold
 INFO: About to execute repetition 1 of 1 for customDisplayName
 INFO: About to execute repetition 1 of 1 for customDisplayNameWithLongPattern
 INFO: About to execute repetition 1 of 5 for repeatedTestInGerman
@@ -1124,6 +1156,15 @@ When using the `ConsoleLauncher` with the unicode theme enabled, execution of
 │  │  ├─ repetition 3 of 5 ✔
 │  │  ├─ repetition 4 of 5 ✔
 │  │  └─ repetition 5 of 5 ✔
+│  ├─ repeatedTestWithFailureThreshold(RepetitionInfo) ✔
+│  │  ├─ repetition 1 of 8 ✔
+│  │  ├─ repetition 2 of 8 ✘ Boom!
+│  │  ├─ repetition 3 of 8 ✔
+│  │  ├─ repetition 4 of 8 ✘ Boom!
+│  │  ├─ repetition 5 of 8 ↷ Failure threshold [2] exceeded
+│  │  ├─ repetition 6 of 8 ↷ Failure threshold [2] exceeded
+│  │  ├─ repetition 7 of 8 ↷ Failure threshold [2] exceeded
+│  │  └─ repetition 8 of 8 ↷ Failure threshold [2] exceeded
 │  ├─ Repeat! ✔
 │  │  └─ Repeat! 1/1 ✔
 │  ├─ Details... ✔
@@ -1256,13 +1297,13 @@ for parameterized tests that accept a single argument.
 * `{NullSource}`: provides a single `null` argument to the annotated `@ParameterizedTest`
   method.
    - `@NullSource` cannot be used for a parameter that has a primitive type.
-* `{EmptySource}`: provides a single _empty_ argument to the annotated `@ParameterizedTest`
-  method for parameters of the following types: `java.lang.String`, `java.util.Collection`
-  and subtypes with a public no-arg constructor, `java.util.List`, `java.util.Set`,
-  `java.util.SortedSet`, `java.util.NavigableSet`, `java.util.Map` and subtypes with a
-  public no-arg constructor, `java.util.SortedMap`, `java.util.NavigableMap`, primitive
-  arrays (e.g., `int[]`, `char[][]`, etc.), object arrays (e.g.,`String[]`, `Integer[][]`,
-  etc.).
+* `{EmptySource}`: provides a single _empty_ argument to the annotated
+  `@ParameterizedTest` method for parameters of the following types: `java.lang.String`,
+  `java.util.Collection` (and concrete subtypes with a `public` no-arg constructor),
+  `java.util.List`, `java.util.Set`, `java.util.SortedSet`, `java.util.NavigableSet`,
+  `java.util.Map` (and concrete subtypes with a `public` no-arg constructor,
+  `java.util.SortedMap`, `java.util.NavigableMap`, primitive arrays (e.g., `int[]`,
+  `char[][]`, etc.), object arrays (e.g., `String[]`, `Integer[][]`, etc.).
 * `{NullAndEmptySource}`: a _composed annotation_ that combines the functionality of
   `@NullSource` and `@EmptySource`.
 
@@ -1622,6 +1663,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsSource_examp
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsProvider_example]
 ----
 
+If you wish to implement a custom `ArgumentsProvider` that also consumes an annotation
+(like built-in providers such as `{ValueArgumentsProvider}` or `{CsvArgumentsProvider}`),
+you have the possibility to extend the `{AnnotationBasedArgumentsProvider}` class.
 
 [[writing-tests-parameterized-tests-argument-conversion]]
 ==== Argument Conversion
@@ -1662,7 +1706,7 @@ integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 |===
 | Target Type | Example
 
-| `boolean`/`Boolean`        | `"true"`                                 -> `true`
+| `boolean`/`Boolean`        | `"true"`                                 -> `true` _(only accepts values 'true' or 'false', case-insensitive)_
 | `byte`/`Byte`              | `"15"`, `"0xF"`, or `"017"`              -> `(byte) 15`
 | `char`/`Character`         | `"o"`                                    -> `'o'`
 | `short`/`Short`            | `"15"`, `"0xF"`, or `"017"`              -> `(short) 15`
@@ -1768,6 +1812,10 @@ composed annotation `JavaTimeConversionPattern`.
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_java_time_converter]
 ----
+
+If you wish to implement a custom `ArgumentConverter` that also consumes an annotation
+(like `JavaTimeArgumentConverter`), you have the possibility to extend the
+`{AnnotationBasedArgumentConverter}` class.
 
 [[writing-tests-parameterized-tests-argument-aggregation]]
 ==== Argument Aggregation
@@ -2214,10 +2262,6 @@ This heuristic is queried by the `disabled_on_debug` mode.
 [[writing-tests-parallel-execution]]
 === Parallel Execution
 
-.Parallel test execution is an experimental feature
-WARNING: You're invited to give it a try and provide feedback to the JUnit team so they
-can improve and eventually <<api-evolution, promote>> this feature.
-
 By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
 parallel -- for example, to speed up execution -- is available as an opt-in feature since
 version 5.3. To enable parallel execution, set the
@@ -2347,6 +2391,8 @@ configuration parameter to one of the following options.
   Computes the desired parallelism based on the number of available processors/cores
   multiplied by the `junit.jupiter.execution.parallel.config.dynamic.factor`
   configuration parameter (defaults to `1`).
+  The optional `junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor`
+  configuration parameter can be used to limit the maximum number of threads.
 
 `fixed`::
   Uses the mandatory `junit.jupiter.execution.parallel.config.fixed.parallelism`
@@ -2370,8 +2416,8 @@ of the synchronization mechanisms described in the next section, the `ForkJoinPo
 is used behind the scenes may spawn additional threads to ensure execution continues with
 sufficient parallelism.
 If you require such guarantees, with Java 9+, it is possible to limit the maximum number
-of concurrent threads by controlling the maximum pool size of the `fixed` and `custom`
-strategies.
+of concurrent threads by controlling the maximum pool size of the `dynamic`, `fixed` and
+`custom` strategies.
 
 [[writing-tests-parallel-execution-config-properties]]
 ===== Relevant properties
@@ -2418,6 +2464,22 @@ The following table lists relevant properties for configuring parallel execution
 | a positive decimal number
 | ```1.0```
 
+| ```junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor```
+| Factor to be multiplied by the number of available processors/cores and the value of
+  `junit.jupiter.execution.parallel.config.dynamic.factor` to determine the desired
+  parallelism for the ```dynamic``` configuration strategy
+| a positive decimal number, must be greater than or equal to `1.0`
+| 256 + the value of `junit.jupiter.execution.parallel.config.dynamic.factor` multiplied
+  by the number of available processors/cores
+
+| ```junit.jupiter.execution.parallel.config.dynamic.saturate```
+| Disable saturation of the underlying fork-join pool for the ```dynamic``` configuration
+strategy
+|
+* `true`
+* `false`
+| ```true```
+
 | ```junit.jupiter.execution.parallel.config.fixed.parallelism```
 | Desired parallelism for the ```fixed``` configuration strategy
 | a positive integer
@@ -2426,7 +2488,7 @@ The following table lists relevant properties for configuring parallel execution
 | ```junit.jupiter.execution.parallel.config.fixed.max-pool-size```
 | Desired maximum pool size of the underlying fork-join pool for the ```fixed```
   configuration strategy
-| a positive integer, must greater than or equal to `junit.jupiter.execution.parallel.config.fixed.parallelism`
+| a positive integer, must be greater than or equal to `junit.jupiter.execution.parallel.config.fixed.parallelism`
 | 256 + the value of `junit.jupiter.execution.parallel.config.fixed.parallelism`
 
 | ```junit.jupiter.execution.parallel.config.fixed.saturate```
@@ -2495,10 +2557,6 @@ another dependency.
 [[writing-tests-built-in-extensions-TempDirectory]]
 ==== The TempDirectory Extension
 
-.`@TempDir` is an experimental feature
-WARNING: You're invited to give it a try and provide feedback to the JUnit team so they
-can improve and eventually <<api-evolution, promote>> this feature.
-
 The built-in `{TempDirectory}` extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
 default. To use it, annotate a non-final, unassigned field of type `java.nio.file.Path` or
@@ -2555,5 +2613,49 @@ The default cleanup mode is `ALWAYS`. You can use the
 [source,java,indent=0]
 .A test class with a temporary directory that doesn't get cleaned up
 ----
-include::{testDir}/example/TempDirCleanupModeDemo.java[tags=user_guide]
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_cleanup_mode]
 ----
+
+`@TempDir` supports custom creation of temporary directories via the optional
+`factory` attribute. This allows to define how the temporary directory is created,
+giving control over characteristics such as the directory name, root folder,
+and underlying file system.
+
+Factories can be created by implementing `TempDirFactory`. The default implementation
+available in Jupiter delegates the directory creation to
+`java.nio.file.Files::createTempDirectory`, passing `junit` as the prefix string
+to be used in generating the directory's name.
+
+The following example defines a factory that uses the test name as the directory name
+prefix instead of the `junit` constant value.
+
+[source,java,indent=0]
+.A test class with a temporary directory having the test name as the directory name prefix
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_factory_name_prefix]
+----
+
+It's also possible to use an in-memory file system like `{Jimfs}` for the creation of the
+temporary directory. The following example shows how to do it.
+
+[source,java,indent=0]
+.A test class with a temporary directory created with the Jimfs in-memory file system
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_factory_jimfs]
+----
+
+You can use the `junit.jupiter.tempdir.factory.default`
+<<running-tests-config-params, configuration parameter>> to specify the fully qualified
+class name of the `TempDirFactory` you would like to use by default. Just like for
+factories configured via the `factory` attribute of the `@TempDir` annotation,
+the supplied class has to implement the `TempDirFactory` interface. The default factory
+will be used for all `@TempDir` annotations unless the `factory` attribute of the
+annotation specifies a different factory.
+
+In summary, the factory for a temporary directory is determined according to the
+following precedence rules:
+
+1. The `factory` attribute of the `@TempDir` annotation, if present
+2. The default `TempDirFactory` configured via the configuration
+parameter, if present
+3. Otherwise, `org.junit.jupiter.api.io.TempDirFactory$Standard` will be used.

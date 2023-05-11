@@ -25,8 +25,6 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,6 +43,7 @@ import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
@@ -693,9 +692,11 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 			Class<?> testClass = factoryContext.getTestClass();
 			String className = testClass.getName();
+			String prefix = TestInstanceFactoryTests.class.getName();
+
 			instantiated(getClass(), testClass);
 
-			try (ProxyClassLoader proxyClassLoader = new ProxyClassLoader()) {
+			try (TestClassLoader proxyClassLoader = TestClassLoader.forClassNamePrefix(prefix)) {
 				// Load test class from different class loader
 				Class<?> clazz = proxyClassLoader.loadClass(className);
 				return ReflectionUtils.newInstance(clazz);
@@ -703,20 +704,6 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			catch (Exception ex) {
 				throw new RuntimeException("Failed to load class [" + className + "]", ex);
 			}
-		}
-	}
-
-	private static class ProxyClassLoader extends URLClassLoader {
-
-		ProxyClassLoader() {
-			super(new URL[] { ProxyClassLoader.class.getProtectionDomain().getCodeSource().getLocation() },
-				getSystemClassLoader());
-		}
-
-		@Override
-		public Class<?> loadClass(String name) throws ClassNotFoundException {
-			return (name.startsWith(TestInstanceFactoryTests.class.getName()) ? findClass(name)
-					: super.loadClass(name));
 		}
 	}
 

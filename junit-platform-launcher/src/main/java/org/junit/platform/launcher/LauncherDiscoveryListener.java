@@ -11,6 +11,7 @@
 package org.junit.platform.launcher;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineDiscoveryListener;
@@ -53,7 +54,7 @@ public interface LauncherDiscoveryListener extends EngineDiscoveryListener {
 	 * @param request the request for which discovery is being started
 	 * @since 1.8
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	default void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
 	}
 
@@ -63,7 +64,7 @@ public interface LauncherDiscoveryListener extends EngineDiscoveryListener {
 	 * @param request the request for which discovery has finished
 	 * @since 1.8
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	default void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
 	}
 

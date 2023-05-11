@@ -121,7 +121,7 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = JupiterConfiguration.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 
 	/**
@@ -129,7 +129,7 @@ public final class Constants {
 	 *
 	 * @see Execution#DEFAULT_EXECUTION_MODE_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.4")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_PARALLEL_EXECUTION_MODE = Execution.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
 
 	/**
@@ -138,7 +138,7 @@ public final class Constants {
 	 *
 	 * @see Execution#DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = Execution.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
 
 	static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config.";
@@ -152,7 +152,7 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_STRATEGY_PROPERTY_NAME;
 
@@ -164,7 +164,7 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
 
@@ -211,7 +211,7 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
 
@@ -222,7 +222,7 @@ public final class Constants {
 	 *
 	 * @since 5.3
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
+	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
 
@@ -232,7 +232,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -240,7 +240,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -249,7 +249,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -258,7 +258,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -267,7 +267,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -275,7 +275,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -284,7 +284,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -293,7 +293,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -302,7 +302,7 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
@@ -311,15 +311,15 @@ public final class Constants {
 	 *
 	 * @see Timeout#DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.5")
+	@API(status = STABLE, since = "5.10")
 	public static final String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = Timeout.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	/**
-	 * Property used to determine if timeouts are applied to tests: {@value}.
+	 * Property name used to configure whether timeouts are applied to tests: {@value}.
 	 *
 	 * @see Timeout#TIMEOUT_MODE_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.6")
+	@API(status = STABLE, since = "5.10")
 	public static final String TIMEOUT_MODE_PROPERTY_NAME = Timeout.TIMEOUT_MODE_PROPERTY_NAME;
 
 	/**
@@ -340,7 +340,7 @@ public final class Constants {
 
 	/**
 	 * Property name used to set the scope of temporary directories created via
-	 * {@link TempDir @TempDir} annotation: {@value}
+	 * the {@link TempDir @TempDir} annotation: {@value}
 	 *
 	 * @see TempDir#SCOPE_PROPERTY_NAME
 	 */
@@ -358,6 +358,16 @@ public final class Constants {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.9")
 	public static final String DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME = Timeout.DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default factory for temporary directories created via
+	 * the {@link TempDir @TempDir} annotation: {@value}
+	 *
+	 * @since 5.10
+	 * @see TempDir#DEFAULT_FACTORY_PROPERTY_NAME
+	 */
+	@API(status = EXPERIMENTAL, since = "5.10")
+	public static final String DEFAULT_TEMP_DIR_FACTORY_PROPERTY_NAME = TempDir.DEFAULT_FACTORY_PROPERTY_NAME;
 
 	private Constants() {
 		/* no-op */

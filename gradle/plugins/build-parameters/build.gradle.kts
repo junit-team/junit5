@@ -1,5 +1,5 @@
 plugins {
-	id("org.gradlex.build-parameters") version "1.4.3"
+	alias(libs.plugins.buildParameters)
 }
 
 group = "junitbuild"
@@ -71,11 +71,5 @@ buildParameters {
 		integer("retries") {
 			description.set("Configures the number of times failing test are retried")
 		}
-	}
-}
-
-tasks {
-	withType<JavaCompile>().configureEach {
-		options.release.set(11)
 	}
 }

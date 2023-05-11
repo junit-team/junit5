@@ -34,13 +34,13 @@ import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
  * Unit tests for {@link ParameterizedTestExtension}.
@@ -189,7 +189,7 @@ class ParameterizedTestExtensionTests {
 
 		return new ExtensionContext() {
 
-			private final ExtensionValuesStore store = new ExtensionValuesStore(null);
+			private final NamespacedHierarchicalStore<Namespace> store = new NamespacedHierarchicalStore<>(null);
 
 			@Override
 			public Optional<Method> getTestMethod() {

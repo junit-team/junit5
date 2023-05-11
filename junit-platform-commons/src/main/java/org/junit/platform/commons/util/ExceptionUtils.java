@@ -14,6 +14,15 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 
@@ -30,6 +39,8 @@ import org.apiguardian.api.API;
  */
 @API(status = INTERNAL, since = "1.0")
 public final class ExceptionUtils {
+
+	private static final String JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX = "org.junit.platform.launcher.";
 
 	private ExceptionUtils() {
 		/* no-op */
@@ -78,6 +89,80 @@ public final class ExceptionUtils {
 			throwable.printStackTrace(printWriter);
 		}
 		return stringWriter.toString();
+	}
+
+	/**
+	 * Prune the stack trace of the supplied {@link Throwable} by filtering its
+	 * elements using the supplied {@link Predicate}, except for
+	 * {@code org.junit.jupiter.api.Assertions} and
+	 * {@code org.junit.jupiter.api.Assumptions} that will always remain
+	 * present.
+	 *
+	 * <p>Additionally, all elements prior to and including the first
+	 * JUnit Launcher call will be removed.
+	 *
+	 * @param throwable the {@code Throwable} whose stack trace should be
+	 * pruned; never {@code null}
+	 * @param stackTraceElementFilter the {@code Predicate} used to filter
+	 * elements of the stack trace; never {@code null}
+	 *
+	 * @since 5.10
+	 */
+	@API(status = INTERNAL, since = "5.10")
+	public static void pruneStackTrace(Throwable throwable, Predicate<String> stackTraceElementFilter) {
+		Preconditions.notNull(throwable, "Throwable must not be null");
+		Preconditions.notNull(stackTraceElementFilter, "Predicate must not be null");
+
+		List<StackTraceElement> stackTrace = Arrays.asList(throwable.getStackTrace());
+		List<StackTraceElement> prunedStackTrace = new ArrayList<>();
+
+		Collections.reverse(stackTrace);
+
+		for (StackTraceElement element : stackTrace) {
+			String className = element.getClassName();
+			if (className.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
+				prunedStackTrace.clear();
+			}
+			else if (stackTraceElementFilter.test(className)) {
+				prunedStackTrace.add(element);
+			}
+		}
+
+		Collections.reverse(prunedStackTrace);
+		throwable.setStackTrace(prunedStackTrace.toArray(new StackTraceElement[0]));
+	}
+
+	/**
+	 * Find all causes and suppressed exceptions in the backtrace of the
+	 * supplied {@link Throwable}.
+	 *
+	 * @param rootThrowable the {@code Throwable} to explore; never {@code null}
+	 * @return an immutable list of all throwables found, including the supplied
+	 * one; never {@code null}
+	 *
+	 * @since 5.10
+	 */
+	@API(status = INTERNAL, since = "5.10")
+	public static List<Throwable> findNestedThrowables(Throwable rootThrowable) {
+		Preconditions.notNull(rootThrowable, "Throwable must not be null");
+
+		Set<Throwable> visited = new LinkedHashSet<>();
+		Deque<Throwable> toVisit = new ArrayDeque<>();
+		toVisit.add(rootThrowable);
+
+		while (!toVisit.isEmpty()) {
+			Throwable current = toVisit.remove();
+			boolean isFirstVisit = visited.add(current);
+			if (isFirstVisit) {
+				Throwable cause = current.getCause();
+				if (cause != null) {
+					toVisit.add(cause);
+				}
+				toVisit.addAll(Arrays.asList(current.getSuppressed()));
+			}
+		}
+
+		return Collections.unmodifiableList(new ArrayList<>(visited));
 	}
 
 }

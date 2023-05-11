@@ -50,9 +50,9 @@ import org.apiguardian.api.API;
  *     <dd>Default timeout for {@link Test @Test} methods</dd>
  *     <dt>{@value #DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
  *     <dd>Default timeout for {@link TestTemplate @TestTemplate} methods</dd>
- *     <dt>{@value DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
+ *     <dt>{@value #DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
  *     <dd>Default timeout for {@link TestFactory @TestFactory} methods</dd>
- *     <dt>{@value DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
+ *     <dt>{@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
  *     <dd>Default timeout for all lifecycle methods</dd>
  *     <dt>{@value #DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME}</dt>
  *     <dd>Default timeout for {@link BeforeAll @BeforeAll} methods</dd>
@@ -298,7 +298,7 @@ public @interface Timeout {
 	String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.afterall.method.default";
 
 	/**
-	 * Property used to determine if timeouts are applied to tests: {@value}.
+	 * Property name used to configure whether timeouts are applied to tests: {@value}.
 	 *
 	 * <p>The value of this property will be used to toggle whether
 	 * {@link Timeout @Timeout} is applied to tests.</p>

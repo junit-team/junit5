@@ -11,7 +11,9 @@
 package org.junit.jupiter.engine.config;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
+import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -33,18 +35,23 @@ class InstantiatingConfigurationParameterConverter<T> {
 	}
 
 	Optional<T> get(ConfigurationParameters configurationParameters, String key) {
+		return supply(configurationParameters, key).get();
+	}
+
+	Supplier<Optional<T>> supply(ConfigurationParameters configurationParameters, String key) {
 		// @formatter:off
 		return configurationParameters.get(key)
 				.map(String::trim)
 				.filter(className -> !className.isEmpty())
-				.flatMap(className -> newInstance(className, key));
+				.map(className -> newInstanceSupplier(className, key))
+				.orElse(Optional::empty);
 		// @formatter:on
 	}
 
-	private Optional<T> newInstance(String className, String key) {
+	private Supplier<Optional<T>> newInstanceSupplier(String className, String key) {
+		Try<Class<?>> clazz = ReflectionUtils.tryToLoadClass(className);
 		// @formatter:off
-		return ReflectionUtils.tryToLoadClass(className)
-				.andThenTry(ReflectionUtils::newInstance)
+		return () -> clazz.andThenTry(ReflectionUtils::newInstance)
 				.andThenTry(this.clazz::cast)
 				.ifSuccess(generator -> logSuccessMessage(className, key))
 				.ifFailure(cause -> logFailureMessage(className, key, cause))

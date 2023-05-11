@@ -28,8 +28,9 @@ import org.apiguardian.api.API;
  *
  * <h2>Method Signatures</h2>
  *
- * <p>{@code @AfterEach} methods must have a {@code void} return type,
- * must not be {@code private}, and must not be {@code static}.
+ * <p>{@code @AfterEach} methods must have a {@code void} return type and must
+ * not be {@code static}. Using {@code private} visibility is strongly
+ * discouraged and will be disallowed in a future release.
  * They may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *

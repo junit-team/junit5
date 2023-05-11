@@ -10,29 +10,41 @@
 
 package org.junit.platform.suite.api;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apiguardian.api.API;
+
+/**
+ * specifies a method to select when running a test suite on the JUnit Platform,
+ * This annotation can be repeated to add multiple methods.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
-
+@Repeatable(SelectMethods.class)
+@API(status = EXPERIMENTAL, since = "1.10")
 public @interface SelectMethod {
 
 	/**
-	 * The name of the method to select.
+	 * the fully qualified name of the class in which the method is declared,
+	 * or a subclass thereof; never null or blank
 	 */
-	String name();
+	Class<?> methodClass();
 
 	/**
-	 * The parameter types of the method to select, in the form "int,String".
+	 * the name of the method to select; never null or blank
 	 */
-	String parameterTypes() default "";
+	String methodName();
 
 	/**
-	 * The return type of the method to select.
+	 * The method parameter types as an array of Class objects;
+	 * never null, not to be entered if the function has no input parameters.
 	 */
-	Class<?> returnType() default void.class;
+	Class<?>[] methodParameterTypes() default {};
 
 }

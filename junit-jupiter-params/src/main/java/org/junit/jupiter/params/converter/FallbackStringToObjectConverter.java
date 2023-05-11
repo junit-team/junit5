@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import org.junit.jupiter.params.converter.DefaultArgumentConverter.StringToObjectConverter;
 import org.junit.platform.commons.util.Preconditions;
 
 /**

@@ -2,30 +2,15 @@ import buildparameters.BuildParametersExtension
 import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
+	includeBuild("gradle/plugins")
 	repositories {
-		includeBuild("gradle/plugins")
 		gradlePluginPortal()
-	}
-	plugins {
-		id("com.gradle.enterprise") version "3.12.3" // keep in sync with gradle/plugins/build.gradle.kts
-		id("com.gradle.common-custom-user-data-gradle-plugin") version "1.8.2"
-		id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
-		id("org.ajoberstar.git-publish") version "4.1.1"
-		kotlin("jvm") version "1.8.10"
-		// Check if workaround in documentation.gradle.kts can be removed when upgrading
-		id("org.asciidoctor.jvm.convert") version "4.0.0-alpha.1"
-		id("org.asciidoctor.jvm.pdf") version "4.0.0-alpha.1"
-		id("me.champeau.jmh") version "0.7.0"
-		id("io.spring.nohttp") version "0.0.11"
-		id("io.github.gradle-nexus.publish-plugin") version "1.2.0"
 	}
 }
 
 plugins {
-	id("com.gradle.enterprise")
-	id("com.gradle.common-custom-user-data-gradle-plugin")
-	id("org.gradle.toolchains.foojay-resolver-convention")
 	id("junitbuild.build-parameters")
+	id("junitbuild.settings-conventions")
 }
 
 dependencyResolutionManagement {
@@ -39,6 +24,7 @@ dependencyResolutionManagement {
 	}
 }
 
+val buildParameters = the<BuildParametersExtension>()
 val gradleEnterpriseServer = "https://ge.junit.org"
 
 gradleEnterprise {
@@ -76,19 +62,14 @@ buildCache {
 	}
 	remote<HttpBuildCache> {
 		url = uri(buildParameters.buildCache.url.getOrElse("$gradleEnterpriseServer/cache/"))
-		val buildCacheUsername = buildParameters.buildCache.username.map { it.ifBlank { null } }
-		val buildCachePassword = buildParameters.buildCache.password.map { it.ifBlank { null } }
-		isPush = buildParameters.ci && buildCacheUsername.isPresent && buildCachePassword.isPresent
+		val buildCacheUsername = buildParameters.buildCache.username.orNull?.ifBlank { null }
+		val buildCachePassword = buildParameters.buildCache.password.orNull?.ifBlank { null }
+		isPush = buildParameters.ci && buildCacheUsername != null && buildCachePassword != null
 		credentials {
-			username = buildCacheUsername.orNull
-			password = buildCachePassword.orNull
+			username = buildCacheUsername
+			password = buildCachePassword
 		}
 	}
-}
-
-val javaVersion = JavaVersion.current()
-require(javaVersion == JavaVersion.VERSION_17) {
-	"The JUnit 5 build must be executed with Java 17. Currently executing with Java ${javaVersion.majorVersion}."
 }
 
 rootProject.name = "junit5"
@@ -120,16 +101,11 @@ include("junit-bom")
 // check that every subproject has a custom build file
 // based on the project name
 rootProject.children.forEach { project ->
-	project.buildFileName = "${project.name}.gradle"
-	if (!project.buildFile.isFile) {
-		project.buildFileName = "${project.name}.gradle.kts"
-	}
+	project.buildFileName = "${project.name}.gradle.kts"
 	require(project.buildFile.isFile) {
 		"${project.buildFile} must exist"
 	}
 }
 
-val buildParameters: BuildParametersExtension
-	get() = the()
-
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

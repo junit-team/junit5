@@ -30,6 +30,7 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
@@ -50,6 +51,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.JUnitException;
@@ -73,7 +75,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	private static final String KEY = "temp.dir";
-	private static final String TEMP_DIR_PREFIX = "junit";
 
 	// for testing purposes
 	static final String FILE_OPERATIONS_KEY = "file.operations";
@@ -116,13 +117,17 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
 			Predicate<Field> predicate) {
 
+		Scope scope = getScope(context);
+
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
 			assertNonFinalField(field);
 			assertSupportedType("field", field.getType());
 
 			try {
 				CleanupMode cleanupMode = determineCleanupModeForField(field);
-				makeAccessible(field).set(testInstance, getPathOrFile(field, field.getType(), cleanupMode, context));
+				TempDirFactory factory = determineTempDirFactoryForField(field, scope);
+				makeAccessible(field).set(testInstance,
+					getPathOrFile(field, field.getType(), factory, cleanupMode, scope, context));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
@@ -153,7 +158,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
 		CleanupMode cleanupMode = determineCleanupModeForParameter(parameterContext);
-		return getPathOrFile(parameterContext.getParameter(), parameterType, cleanupMode, extensionContext);
+		Scope scope = getScope(extensionContext);
+		TempDirFactory factory = determineTempDirFactoryForParameter(parameterContext, scope);
+		return getPathOrFile(parameterContext.getParameter(), parameterType, factory, cleanupMode, scope,
+			extensionContext);
 	}
 
 	private CleanupMode determineCleanupModeForField(Field field) {
@@ -173,6 +181,43 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return cleanupMode == DEFAULT ? this.configuration.getDefaultTempDirCleanupMode() : cleanupMode;
 	}
 
+	@SuppressWarnings("deprecation")
+	private Scope getScope(ExtensionContext context) {
+		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent( //
+			Scope.class, //
+			__ -> new EnumConfigurationParameterConverter<>(Scope.class, "@TempDir scope") //
+					.get(TempDir.SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
+			Scope.class //
+		);
+	}
+
+	private TempDirFactory determineTempDirFactoryForField(Field field, Scope scope) {
+		TempDir tempDir = findAnnotation(field, TempDir.class).orElseThrow(
+			() -> new JUnitException("Field " + field + " must be annotated with @TempDir"));
+		return determineTempDirFactory(tempDir, scope);
+	}
+
+	private TempDirFactory determineTempDirFactoryForParameter(ParameterContext parameterContext, Scope scope) {
+		TempDir tempDir = parameterContext.findAnnotation(TempDir.class).orElseThrow(() -> new JUnitException(
+			"Parameter " + parameterContext.getParameter() + " must be annotated with @TempDir"));
+		return determineTempDirFactory(tempDir, scope);
+	}
+
+	@SuppressWarnings("deprecation")
+	private TempDirFactory determineTempDirFactory(TempDir tempDir, Scope scope) {
+		Class<? extends TempDirFactory> factory = tempDir.factory();
+
+		if (factory != TempDirFactory.class && scope == Scope.PER_CONTEXT) {
+			throw new ExtensionConfigurationException("Custom @TempDir factory is not supported with "
+					+ TempDir.SCOPE_PROPERTY_NAME + "=" + Scope.PER_CONTEXT.name().toLowerCase() + ". Use "
+					+ TempDir.DEFAULT_FACTORY_PROPERTY_NAME + " instead.");
+		}
+
+		return factory == TempDirFactory.class //
+				? this.configuration.getDefaultTempDirFactorySupplier().get()
+				: ReflectionUtils.newInstance(factory);
+	}
+
 	private void assertNonFinalField(Field field) {
 		if (ReflectionUtils.isFinal(field)) {
 			throw new ExtensionConfigurationException("@TempDir field [" + field + "] must not be declared as final.");
@@ -186,31 +231,23 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, CleanupMode cleanupMode,
-			ExtensionContext extensionContext) {
-		Namespace namespace = getScope(extensionContext) == Scope.PER_DECLARATION //
+	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, TempDirFactory factory,
+			CleanupMode cleanupMode, Scope scope, ExtensionContext extensionContext) {
+		Namespace namespace = scope == Scope.PER_DECLARATION //
 				? NAMESPACE.append(sourceElement) //
 				: NAMESPACE;
 		Path path = extensionContext.getStore(namespace) //
-				.getOrComputeIfAbsent(KEY, __ -> createTempDir(cleanupMode, extensionContext), CloseablePath.class) //
+				.getOrComputeIfAbsent(KEY, __ -> createTempDir(factory, cleanupMode, extensionContext),
+					CloseablePath.class) //
 				.get();
 
 		return (type == Path.class) ? path : path.toFile();
 	}
 
-	@SuppressWarnings("deprecation")
-	private Scope getScope(ExtensionContext context) {
-		return context.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent( //
-			Scope.class, //
-			__ -> new EnumConfigurationParameterConverter<>(Scope.class, "@TempDir scope") //
-					.get(TempDir.SCOPE_PROPERTY_NAME, context::getConfigurationParameter, Scope.PER_DECLARATION), //
-			Scope.class //
-		);
-	}
-
-	static CloseablePath createTempDir(CleanupMode cleanupMode, ExtensionContext executionContext) {
+	static CloseablePath createTempDir(TempDirFactory factory, CleanupMode cleanupMode,
+			ExtensionContext executionContext) {
 		try {
-			return new CloseablePath(Files.createTempDirectory(TEMP_DIR_PREFIX), cleanupMode, executionContext);
+			return new CloseablePath(factory, cleanupMode, executionContext);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
@@ -222,11 +259,14 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private static final Logger logger = LoggerFactory.getLogger(CloseablePath.class);
 
 		private final Path dir;
+		private final TempDirFactory factory;
 		private final CleanupMode cleanupMode;
 		private final ExtensionContext executionContext;
 
-		CloseablePath(Path dir, CleanupMode cleanupMode, ExtensionContext executionContext) {
-			this.dir = dir;
+		CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, ExtensionContext executionContext)
+				throws Exception {
+			this.dir = factory.createTempDirectory(executionContext);
+			this.factory = factory;
 			this.cleanupMode = cleanupMode;
 			this.executionContext = executionContext;
 		}
@@ -237,18 +277,23 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		@Override
 		public void close() throws IOException {
-			if (cleanupMode == NEVER
-					|| (cleanupMode == ON_SUCCESS && executionContext.getExecutionException().isPresent())) {
-				logger.info(() -> "Skipping cleanup of temp dir " + dir + " due to cleanup mode configuration.");
-				return;
+			try {
+				if (cleanupMode == NEVER
+						|| (cleanupMode == ON_SUCCESS && executionContext.getExecutionException().isPresent())) {
+					logger.info(() -> "Skipping cleanup of temp dir " + dir + " due to cleanup mode configuration.");
+					return;
+				}
+
+				FileOperations fileOperations = executionContext.getStore(NAMESPACE) //
+						.getOrDefault(FILE_OPERATIONS_KEY, FileOperations.class, FileOperations.DEFAULT);
+
+				SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(fileOperations);
+				if (!failures.isEmpty()) {
+					throw createIOExceptionWithAttachedFailures(failures);
+				}
 			}
-
-			FileOperations fileOperations = executionContext.getStore(NAMESPACE) //
-					.getOrDefault(FILE_OPERATIONS_KEY, FileOperations.class, FileOperations.DEFAULT);
-
-			SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(fileOperations);
-			if (!failures.isEmpty()) {
-				throw createIOExceptionWithAttachedFailures(failures);
+			finally {
+				factory.close();
 			}
 		}
 
@@ -260,13 +305,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 			SortedMap<Path, IOException> failures = new TreeMap<>();
 			Set<Path> retriedPaths = new HashSet<>();
-			resetPermissions(dir);
+			tryToResetPermissions(dir);
 			Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
 
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 					if (!dir.equals(CloseablePath.this.dir)) {
-						resetPermissions(dir);
+						tryToResetPermissions(dir);
 					}
 					return CONTINUE;
 				}
@@ -309,7 +354,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					boolean notYetRetried = retriedPaths.add(path);
 					if (notYetRetried) {
 						try {
-							resetPermissions(path);
+							tryToResetPermissions(path);
 							if (Files.isDirectory(path)) {
 								Files.walkFileTree(path, this);
 							}
@@ -319,6 +364,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 						}
 						catch (Exception suppressed) {
 							exception.addSuppressed(suppressed);
+							failures.put(path, exception);
 						}
 					}
 					else {
@@ -330,8 +376,15 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 
 		@SuppressWarnings("ResultOfMethodCallIgnored")
-		private static void resetPermissions(Path path) {
-			File file = path.toFile();
+		private static void tryToResetPermissions(Path path) {
+			File file;
+			try {
+				file = path.toFile();
+			}
+			catch (UnsupportedOperationException ignore) {
+				// Might happen when the `TempDirFactory` uses a custom `FileSystem`
+				return;
+			}
 			file.setReadable(true);
 			file.setWritable(true);
 			if (Files.isDirectory(path)) {
@@ -340,13 +393,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 
 		private IOException createIOExceptionWithAttachedFailures(SortedMap<Path, IOException> failures) {
-			// @formatter:off
-			String joinedPaths = failures.keySet().stream()
-					.map(this::tryToDeleteOnExit)
-					.map(this::relativizeSafely)
-					.map(String::valueOf)
+			Path emptyPath = Paths.get("");
+			String joinedPaths = failures.keySet().stream() //
+					.map(this::tryToDeleteOnExit) //
+					.map(this::relativizeSafely) //
+					.map(path -> emptyPath.equals(path) ? "<root>" : path.toString()) //
 					.collect(joining(", "));
-			// @formatter:on
 			IOException exception = new IOException("Failed to delete temp directory " + dir.toAbsolutePath()
 					+ ". The following paths could not be deleted (see suppressed exceptions for details): "
 					+ joinedPaths);

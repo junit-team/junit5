@@ -30,4 +30,5 @@ module org.junit.platform.engine {
 	exports org.junit.platform.engine.support.discovery;
 	exports org.junit.platform.engine.support.filter;
 	exports org.junit.platform.engine.support.hierarchical;
+	exports org.junit.platform.engine.support.store;
 }

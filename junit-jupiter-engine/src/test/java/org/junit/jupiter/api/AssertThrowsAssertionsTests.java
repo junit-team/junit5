@@ -21,12 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.io.Serial;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import org.junit.jupiter.api.function.Executable;
+import org.junit.platform.commons.test.TestClassLoader;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -242,8 +241,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void assertThrowsWithExecutableThatThrowsSameExceptionTypeFromDifferentClassLoader() throws Exception {
-		try (EnigmaClassLoader enigmaClassLoader = new EnigmaClassLoader()) {
-
+		try (TestClassLoader enigmaClassLoader = TestClassLoader.forClasses(EnigmaThrowable.class)) {
 			// Load expected exception type from different class loader
 			Class<? extends Throwable> enigmaThrowableClass = (Class<? extends Throwable>) enigmaClassLoader.loadClass(
 				EnigmaThrowable.class.getName());
@@ -276,20 +274,6 @@ class AssertThrowsAssertionsTests {
 	private static class LocalException extends RuntimeException {
 		@Serial
 		private static final long serialVersionUID = 1L;
-	}
-
-	private static class EnigmaClassLoader extends URLClassLoader {
-
-		EnigmaClassLoader() {
-			super(new URL[] { EnigmaClassLoader.class.getProtectionDomain().getCodeSource().getLocation() },
-				getSystemClassLoader());
-		}
-
-		@Override
-		public Class<?> loadClass(String name) throws ClassNotFoundException {
-			return (EnigmaThrowable.class.getName().equals(name) ? findClass(name) : super.loadClass(name));
-		}
-
 	}
 
 }

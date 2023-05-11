@@ -18,3 +18,18 @@ updates:
     schedule:
       interval: "weekly"
     labels: [ ]
+  - package-ecosystem: "github-actions"
+    directory: "/.github/actions/main-build"
+    schedule:
+      interval: "weekly"
+    labels: [ ]
+  - package-ecosystem: "github-actions"
+    directory: "/.github/actions/run-gradle"
+    schedule:
+      interval: "weekly"
+    labels: [ ]
+  - package-ecosystem: "github-actions"
+    directory: "/.github/actions/setup-test-jdk"
+    schedule:
+      interval: "weekly"
+    labels: [ ]

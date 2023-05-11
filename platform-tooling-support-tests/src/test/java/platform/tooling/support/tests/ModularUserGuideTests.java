@@ -84,6 +84,8 @@ class ModularUserGuideTests {
 		ThirdPartyJars.copy(lib, "org.apiguardian", "apiguardian-api");
 		ThirdPartyJars.copy(lib, "org.hamcrest", "hamcrest");
 		ThirdPartyJars.copy(lib, "org.opentest4j", "opentest4j");
+		ThirdPartyJars.copy(lib, "com.google.jimfs", "jimfs");
+		ThirdPartyJars.copy(lib, "com.google.guava", "guava");
 		Helper.loadAllJUnitModules(lib);
 		args.add("--module-path");
 		args.add(lib.toString());
@@ -186,7 +188,9 @@ class ModularUserGuideTests {
 			"lib/apiguardian-api-.+\\.jar", //
 			"lib/assertj-core-.+\\.jar", //
 			"lib/byte-buddy-.+", //
+			"lib/guava-.+\\.jar", //
 			"lib/hamcrest-.+\\.jar", //
+			"lib/jimfs-.+\\.jar", //
 			"lib/junit-.+\\.jar", //
 			">> ALL JUNIT 5 JARS >>", //
 			"lib/opentest4j-.+\\.jar", //

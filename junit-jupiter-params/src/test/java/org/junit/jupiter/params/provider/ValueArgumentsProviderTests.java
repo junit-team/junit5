@@ -160,7 +160,7 @@ class ValueArgumentsProviderTests {
 
 		var provider = new ValueArgumentsProvider();
 		provider.accept(annotation);
-		return provider.provideArguments(null).map(Arguments::get);
+		return provider.provideArguments(mock()).map(Arguments::get);
 	}
 
 	private static Object[] array(Object... objects) {

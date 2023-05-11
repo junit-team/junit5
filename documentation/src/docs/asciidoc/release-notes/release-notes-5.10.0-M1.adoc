@@ -24,46 +24,101 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* All utility methods from `ReflectionSupport` now have counterparts returning `Stream`
-  instead of `List`.
-* For consistency with Jupiter lifecycle callbacks, listener method pairs for started/
-  finished and opened/closed events are now called using "wrap" semantics, i.e. the latter
-  methods are called in reverse order compared to the former when multiple listeners are
-  registered. This affects the following listener interfaces: `TestExecutionListener`,
-  `EngineExecutionListener`, `LauncherDiscoveryListener`, and `LauncherSessionListener`.
-* Introduce `LauncherInterceptor` SPI for intercepting the creation of instances of
-  `Launcher` and `LauncherSessionlistener` as well as calls for `discover` and `execute`
-  of the former. Please refer to the
+* Promote various "experimental" APIs that have matured to "stable" including
+  `ModuleSelector`, `EngineDiscoveryListener`, `EngineDiscoveryRequestResolver`,
+  `LauncherSession`, `LauncherSessionListener`, parallel execution support classes,
+  `@Suite` and related annotations, and others.
+* All utility methods in `ReflectionSupport` that return a `List` now have counterparts
+  which return a `Stream`.
+* New `tryToLoadClass(...)` variant in `ReflectionSupport` that accepts an explicit
+  `ClassLoader`, allowing classes to be resolved with custom `ClassLoader` arrangements.
+* `ReflectionSupport.findMethod(Class<?>, String, String)` now uses the `ClassLoader` of
+  the supplied `Class` to load parameter types instead of using the _default_
+  `ClassLoader`. This allows parameter types to be resolved with custom `ClassLoader`
+  arrangements (such as OSGi). Consequently, `DiscoverySelectors.selectMethod(Class<?>,
+  String, String)` also now works properly with custom `ClassLoader` arrangements.
+* For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
+  started/finished and opened/closed events are now invoked using "wrapping" semantics.
+  This means that finished/closed event methods are invoked in reverse order compared to
+  the corresponding started/opened event methods when multiple listeners are registered.
+  This affects the following listener interfaces:
+  `TestExecutionListener`, `EngineExecutionListener`, `LauncherDiscoveryListener`, and
+  `LauncherSessionListener`.
+* New `LauncherInterceptor` SPI for intercepting the creation of instances of `Launcher`
+  and `LauncherSessionlistener` as well as invocations of the `discover` and `execute`
+  methods of the former. Please refer to the
   <<../user-guide/index.adoc#launcher-api-launcher-interceptors-custom, User Guide>> for
   details.
+* Support for limiting the `max-pool-size-factor` for parallel execution via a
+  configuration parameter.
+* New `testfeed` details mode for `ConsoleLauncher` that prints test execution events as
+  they occur in a concise format.
+* The existing functionality of the `ConsoleLauncher` has been split into two subcommands:
+  `execute` for executing tests and `engines` for listing registered test engines.
+* A new `discover` subcommand has been added to the `ConsoleLauncher` to print the
+  discovered tests for the specified details mode without executing them.
+* Improved error message for cyclic graphs detected during test discovery to be more
+  actionable.
+* Extracted `NamespacedHierarchicalStore` from JUnit Jupiter engine for reuse by other
+  test engines and their extensions.
+* New dry-run mode to simulate test execution without actually running tests. Please refer
+  to the <<../user-guide/index.adoc#launcher-api-dry-run-mode, User Guide>> for details.
+* Stack traces produced by failing tests are now pruned of calls from the `org.junit`,
+  `java`, and `jdk` packages by default. This feature can be disabled or configured to
+  prune other calls via configurations parameters. Please refer to the
+  <<../user-guide/index.adoc#stacktrace-pruning, User Guide>> for details.
+
 
 [[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
 
-* Parameter types for _local_ `@MethodSource` factory method names are now validated. For
-  example, `@MethodSource("myFactory(example.NonexistentType)")` will now result in an
-  exception stating that `example.NonexistentType` cannot be resolved to a valid type.
-* The syntax for parameter types in _local_ `@MethodSource` factory method names now
-  supports canonical array names -- for example, you may now specify `int[]` as in
-  `@MethodSource("myFactory(int[])"` instead of the _binary_ name `[I` as in
-  `@MethodSource("myFactory([I)"` (which was already supported) and
-  `@MethodSource("myFactory(java.lang.String[])` instead of
-  `@MethodSource("myFactory([Ljava.lang.String;)`.
+* When converting an argument for a `@ParameterizedTest` method from a fully-qualified
+  class name (`String`) to a `Class`, the `ClassLoader` of the class in which the
+  `@ParameterizedTest` method is declared is now used to resolve the `Class` instead of
+  the _default_ `ClassLoader`.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The `dynamic` parallel execution strategy now allows the thread pool to be saturated by
+  default.
+* Implicit type conversion of boolean values like in `@CsvSource` is now stricter, only
+  allowing values `"true"` or `"false"` (case-insensitive), in order to make accidental
+  mistakes apparent, avoiding potential confusion.
 
 ==== New Features and Improvements
 
+* Promote various "experimental" APIs that have matured to "stable" including
+  `MethodOrderer`, `ClassOrderer`, `InvocationInterceptor`,
+  `LifecycleMethodExecutionExceptionHandler`, `@TempDir`, parallel execution annotations,
+  and others.
+* `@RepeatedTest` can now be configured with a failure threshold which signifies the
+  number of failures after which remaining repetitions will be automatically skipped. See
+  the <<../user-guide/index.adoc#writing-tests-repeated-tests, User Guide>> for details.
 * New `ArgumentsAccessor.getInvocationIndex()` method that supplies the index of a
   `@ParameterizedTest` invocation.
-* `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal
-  to fall back to the default display name generator.
 * `@EmptySource` now supports additional types, including `Collection` and `Map` subtypes
   with a public no-arg constructor.
+* `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal to
+  fall back to the default display name generator.
+* New `AnnotationBasedArgumentsProvider` convenience base class which implements both
+  `ArgumentsProvider` and `AnnotationConsumer`.
+* New `AnnotationBasedArgumentConverter` convenience base class which implements both
+  `ArgumentConverter` and `AnnotationConsumer`.
+* New `junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor` configuration
+  parameter to set the maximum pool size factor.
+* New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
+  parameter to disable pool saturation.
+* New `TempDirFactory` SPI for customizing how the `TempDirectory` extension creates
+  temporary directories. See the
+  <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, User Guide>>
+  for details.
+* New `junit.jupiter.tempdir.factory.default` configuration parameter to set the default
+  `TempDirFactory` for temporary directories.
+* If `@MethodSource` is used with a non-static factory method that should be `static`, the
+  exception thrown now provides the user a meaningful explanation of how to address the
+  problem.
 
 
 [[release-notes-5.10.0-M1-junit-vintage]]

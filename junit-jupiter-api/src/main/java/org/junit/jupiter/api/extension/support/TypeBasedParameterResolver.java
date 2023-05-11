@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension.support;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @param <T> the type of the parameter supported by this {@code ParameterResolver}
  * @since 5.6
  */
-@API(status = EXPERIMENTAL, since = "5.6")
+@API(status = STABLE, since = "5.10")
 public abstract class TypeBasedParameterResolver<T> implements ParameterResolver {
 
 	private final Type supportedParameterType;

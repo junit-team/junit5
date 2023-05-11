@@ -52,10 +52,11 @@ tasks {
 		}
 
 		bundle {
+			val importAPIGuardian: String by extra
 			bnd("""
 				# Customize the imports because this is an aggregate jar
 				Import-Package: \
-					${extra["importAPIGuardian"]},\
+					$importAPIGuardian,\
 					kotlin.*;resolution:="optional",\
 					*
 				# Disable the APIGuardian plugin since everything was already

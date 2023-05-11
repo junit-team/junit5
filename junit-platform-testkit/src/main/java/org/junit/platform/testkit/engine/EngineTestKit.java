@@ -13,8 +13,8 @@ package org.junit.platform.testkit.engine;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
 import java.util.Map;
@@ -361,7 +361,7 @@ public final class EngineTestKit {
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
 		 */
-		@API(status = EXPERIMENTAL, since = "1.7")
+		@API(status = STABLE, since = "1.10")
 		public Builder filters(Filter<?>... filters) {
 			this.requestBuilder.filters(filters);
 			return this;
@@ -416,7 +416,7 @@ public final class EngineTestKit {
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 */
-		@API(status = EXPERIMENTAL, since = "1.7")
+		@API(status = STABLE, since = "1.10")
 		public Builder enableImplicitConfigurationParameters(boolean enabled) {
 			this.requestBuilder.enableImplicitConfigurationParameters(enabled);
 			return this;

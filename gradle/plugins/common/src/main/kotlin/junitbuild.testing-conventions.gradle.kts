@@ -41,6 +41,7 @@ tasks.withType<Test>().configureEach {
 		server.set(uri("https://ge.junit.org"))
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+	systemProperty("junit.platform.stacktrace.pruning.enabled", false)
 	// Required until ASM officially supports the JDK 14
 	systemProperty("net.bytebuddy.experimental", true)
 	if (buildParameters.testing.enableJFR) {
@@ -72,6 +73,7 @@ tasks.withType<Test>().configureEach {
 dependencies {
 	testImplementation(dependencyFromLibs("assertj"))
 	testImplementation(dependencyFromLibs("mockito"))
+	testImplementation(dependencyFromLibs("testingAnnotations"))
 
 	if (!project.name.startsWith("junit-jupiter")) {
 		testImplementation(project(":junit-jupiter"))
@@ -82,4 +84,7 @@ dependencies {
 	testRuntimeOnly(project(":junit-platform-reporting"))
 
 	testRuntimeOnly(bundleFromLibs("log4j"))
+	testRuntimeOnly(dependencyFromLibs("openTestReporting-events")) {
+		because("it's required to run tests via IntelliJ which does not consumed the shadowed jar of junit-platform-reporting")
+	}
 }

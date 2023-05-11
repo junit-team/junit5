@@ -7,9 +7,10 @@ on:
 
 jobs:
   combine-prs:
+    if: github.repository == 'junit-team/junit5'
     runs-on: ubuntu-latest
     steps:
       - name: combine-prs
-        uses: github/combine-prs@v2.0.0
+        uses: github/combine-prs@v3.1.1
         with:
           github_token: ${{ secrets.GH_TOKEN }}

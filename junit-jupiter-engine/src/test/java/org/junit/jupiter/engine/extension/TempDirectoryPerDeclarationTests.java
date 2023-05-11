@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -29,6 +30,8 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.su
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -36,6 +39,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder;
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
@@ -52,17 +59,21 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.io.TempDirFactory;
+import org.junit.jupiter.api.io.TempDirFactory.Standard;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.TempDirectory.FileOperations;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -89,7 +100,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				var results = executeTests(request() //
 						.selectors(selectClass(AllPossibleDeclarationLocationsTestCase.class)) //
 						.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
-							lifecycle.toString()).build());
+							lifecycle.name()).build());
 
 				results.containerEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
 				results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
@@ -111,19 +122,19 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 					"instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
 				assertThat(testBTempDirs.values()).hasSize(10).doesNotHaveDuplicates();
 
-				assertThat(testATempDirs.get("staticField1")).isEqualTo(classTempDirs.get("staticField1"));
-				assertThat(testBTempDirs.get("staticField1")).isEqualTo(classTempDirs.get("staticField1"));
-				assertThat(testATempDirs.get("staticField2")).isEqualTo(classTempDirs.get("staticField2"));
-				assertThat(testBTempDirs.get("staticField2")).isEqualTo(classTempDirs.get("staticField2"));
+				assertThat(testATempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
+				assertThat(testBTempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
+				assertThat(testATempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
+				assertThat(testBTempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
 
-				assertThat(testATempDirs.get("instanceField1")).isNotEqualTo(testBTempDirs.get("instanceField1"));
-				assertThat(testATempDirs.get("instanceField2")).isNotEqualTo(testBTempDirs.get("instanceField2"));
-				assertThat(testATempDirs.get("beforeEach1")).isNotEqualTo(testBTempDirs.get("beforeEach1"));
-				assertThat(testATempDirs.get("beforeEach2")).isNotEqualTo(testBTempDirs.get("beforeEach2"));
-				assertThat(testATempDirs.get("test1")).isNotEqualTo(testBTempDirs.get("test1"));
-				assertThat(testATempDirs.get("test2")).isNotEqualTo(testBTempDirs.get("test2"));
-				assertThat(testATempDirs.get("afterEach1")).isNotEqualTo(testBTempDirs.get("afterEach1"));
-				assertThat(testATempDirs.get("afterEach2")).isNotEqualTo(testBTempDirs.get("afterEach2"));
+				assertThat(testATempDirs).doesNotContainEntry("instanceField1", testBTempDirs.get("instanceField1"));
+				assertThat(testATempDirs).doesNotContainEntry("instanceField2", testBTempDirs.get("instanceField2"));
+				assertThat(testATempDirs).doesNotContainEntry("beforeEach1", testBTempDirs.get("beforeEach1"));
+				assertThat(testATempDirs).doesNotContainEntry("beforeEach2", testBTempDirs.get("beforeEach2"));
+				assertThat(testATempDirs).doesNotContainEntry("test1", testBTempDirs.get("test1"));
+				assertThat(testATempDirs).doesNotContainEntry("test2", testBTempDirs.get("test2"));
+				assertThat(testATempDirs).doesNotContainEntry("afterEach1", testBTempDirs.get("afterEach1"));
+				assertThat(testATempDirs).doesNotContainEntry("afterEach2", testBTempDirs.get("afterEach2"));
 			}));
 	}
 
@@ -192,15 +203,27 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				.assertStatistics(stats -> stats.started(2).succeeded(2));
 	}
 
-	@Test
-	@DisplayName("only attempts to delete undeletable directories once")
-	void onlyAttemptsToDeleteUndeletableDirectoriesOnce() {
-		var results = executeTestsForClass(UndeletableDirectoryTestCase.class);
+	@TestFactory
+	@DisplayName("only attempts to delete undeletable paths once")
+	Stream<DynamicTest> onlyAttemptsToDeleteUndeletablePathsOnce() {
+		return Stream.of( //
+			dynamicTest("directory", () -> onlyAttemptsToDeleteUndeletablePathOnce(UndeletableDirectoryTestCase.class)), //
+			dynamicTest("file", () -> onlyAttemptsToDeleteUndeletablePathOnce(UndeletableFileTestCase.class)) //
+		);
+	}
+
+	private void onlyAttemptsToDeleteUndeletablePathOnce(Class<? extends UndeletableTestCase> testClass) {
+		var results = executeTestsForClass(testClass);
+
+		var tempDir = results.testEvents().reportingEntryPublished().stream().map(
+			it -> it.getPayload(ReportEntry.class).orElseThrow()).map(
+				it -> Path.of(it.getKeyValuePairs().get(UndeletableTestCase.TEMP_DIR))).findAny().orElseThrow();
 
 		assertSingleFailedTest(results, //
 			instanceOf(IOException.class), //
-			message(it -> it.startsWith("Failed to delete temp directory")), //
-			suppressed(0, instanceOf(IOException.class), message("Simulated failure")), //
+			message("Failed to delete temp directory " + tempDir.toAbsolutePath() + ". " + //
+					"The following paths could not be deleted (see suppressed exceptions for details): <root>, undeletable"), //
+			suppressed(0, instanceOf(DirectoryNotEmptyException.class)), //
 			suppressed(1, instanceOf(IOException.class), message("Simulated failure")));
 	}
 
@@ -286,6 +309,98 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		void supportsPrivateStaticFields() {
 			executeTestsForClass(AnnotationOnPrivateInstanceFieldTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+	}
+
+	@Nested
+	@DisplayName("supports custom factory")
+	class Factory {
+
+		@Test
+		@DisplayName("that uses test method name as temp dir name prefix")
+		void supportsFactoryWithTestMethodNameAsPrefix() {
+			executeTestsForClass(FactoryWithTestMethodNameAsPrefixTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("that uses custom temp dir parent directory")
+		void supportsFactoryWithCustomParentDirectory() {
+			executeTestsForClass(FactoryWithCustomParentDirectoryTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("that uses com.github.marschall:memoryfilesystem")
+		void supportsFactoryWithMemoryFileSystem() {
+			executeTestsForClass(FactoryWithMemoryFileSystemTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("that uses com.google.jimfs:jimfs")
+		void supportsFactoryWithJimfs() {
+			executeTestsForClass(FactoryWithJimfsTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+	}
+
+	@Nested
+	@DisplayName("supports default factory")
+	@TestMethodOrder(OrderAnnotation.class)
+	class DefaultFactory {
+
+		private EngineExecutionResults executeTestsForClassWithDefaultFactory(Class<?> testClass,
+				Class<? extends TempDirFactory> factoryClass) {
+			return TempDirectoryPerDeclarationTests.super.executeTests(request() //
+					.selectors(selectClass(testClass)) //
+					.configurationParameter(TempDir.DEFAULT_FACTORY_PROPERTY_NAME, factoryClass.getName()) //
+					.build());
+		}
+
+		@Test
+		@DisplayName("set to Jupiter's default")
+		void supportsStandardDefaultFactory() {
+			executeTestsForClassWithDefaultFactory(StandardDefaultFactoryTestCase.class, Standard.class) //
+					.testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("set to custom factory")
+		void supportsCustomDefaultFactory() {
+			executeTestsForClassWithDefaultFactory(CustomDefaultFactoryTestCase.class, Factory.class) //
+					.testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("set to custom factory together with declaration of Jupiter's default")
+		void supportsCustomDefaultFactoryWithStandardFactoryOnDeclaration() {
+			executeTestsForClassWithDefaultFactory( //
+				CustomDefaultFactoryWithStandardDeclarationTestCase.class, Factory.class) //
+					.testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			private boolean closed;
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				return Files.createTempDirectory("custom");
+			}
+
+			@Override
+			public void close() {
+				if (closed) {
+					throw new IllegalStateException("already closed");
+				}
+				closed = true;
+			}
 		}
 
 	}
@@ -1012,18 +1127,174 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class UndeletableDirectoryTestCase {
+	static class UndeletableTestCase {
+
+		static final Path UNDELETABLE_PATH = Path.of("undeletable");
+		static final String TEMP_DIR = "TEMP_DIR";
 
 		@RegisterExtension
-		Extension injector = (BeforeEachCallback) context -> context //
+		BeforeEachCallback injector = context -> context //
 				.getStore(TempDirectory.NAMESPACE) //
 				.put(TempDirectory.FILE_OPERATIONS_KEY, (FileOperations) path -> {
-					throw new IOException("Simulated failure");
+					if (path.endsWith(UNDELETABLE_PATH)) {
+						throw new IOException("Simulated failure");
+					}
+					else {
+						Files.delete(path);
+					}
 				});
 
-		@Test
-		void test(@TempDir Path tempDir) throws Exception {
-			Files.createDirectory(tempDir.resolve("test-sub-dir"));
+		@TempDir
+		Path tempDir;
+
+		@BeforeEach
+		void reportTempDir(TestReporter reporter) {
+			reporter.publishEntry(TEMP_DIR, tempDir.toString());
 		}
 	}
+
+	static class UndeletableDirectoryTestCase extends UndeletableTestCase {
+		@Test
+		void test() throws Exception {
+			Files.createDirectory(tempDir.resolve(UNDELETABLE_PATH));
+		}
+	}
+
+	static class UndeletableFileTestCase extends UndeletableTestCase {
+		@Test
+		void test() throws Exception {
+			Files.createFile(tempDir.resolve(UNDELETABLE_PATH));
+		}
+	}
+
+	static class FactoryWithTestMethodNameAsPrefixTestCase {
+
+		@Test
+		void test(@TempDir(factory = Factory.class) Path tempDir) {
+			assertTrue(Files.exists(tempDir));
+			assertThat(tempDir.getFileName()).asString().startsWith("test");
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				return Files.createTempDirectory(context.getRequiredTestMethod().getName());
+			}
+		}
+
+	}
+
+	// https://github.com/junit-team/junit5/issues/2088
+	static class FactoryWithCustomParentDirectoryTestCase {
+
+		@Test
+		void test(@TempDir(factory = Factory.class) Path tempDir) {
+			assertThat(tempDir).exists().hasParent(Factory.parent);
+			assertThat(tempDir.getFileName()).asString().startsWith("prefix");
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			private static Path parent;
+
+			private Factory() throws IOException {
+				parent = Files.createTempDirectory("parent");
+			}
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				return Files.createTempDirectory(parent, "prefix");
+			}
+		}
+
+	}
+
+	static class FactoryWithMemoryFileSystemTestCase {
+
+		@Test
+		void test(@TempDir(factory = Factory.class) Path tempDir) {
+			assertThat(tempDir).exists().hasFileSystem(Factory.fileSystem);
+			assertThat(tempDir.getFileName()).asString().startsWith("prefix");
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			private static FileSystem fileSystem;
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				fileSystem = MemoryFileSystemBuilder.newEmpty().build();
+				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
+			}
+
+			@Override
+			public void close() throws IOException {
+				fileSystem.close();
+				fileSystem = null;
+			}
+		}
+
+	}
+
+	static class FactoryWithJimfsTestCase {
+
+		@Test
+		void test(@TempDir(factory = Factory.class) Path tempDir) {
+			assertThat(tempDir).exists().hasFileSystem(Factory.fileSystem);
+			assertThat(tempDir.getFileName()).asString().startsWith("prefix");
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			private static FileSystem fileSystem;
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				fileSystem = Jimfs.newFileSystem(Configuration.unix());
+				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
+			}
+
+			@Override
+			public void close() throws IOException {
+				fileSystem.close();
+				fileSystem = null;
+			}
+		}
+
+	}
+
+	static class StandardDefaultFactoryTestCase {
+
+		@Test
+		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
+			assertNotSame(tempDir1, tempDir2);
+			assertThat(tempDir1.getFileName()).asString().startsWith("junit");
+			assertThat(tempDir2.getFileName()).asString().startsWith("junit");
+		}
+
+	}
+
+	static class CustomDefaultFactoryTestCase {
+
+		@Test
+		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
+			assertNotSame(tempDir1, tempDir2);
+			assertThat(tempDir1.getFileName()).asString().startsWith("custom");
+			assertThat(tempDir2.getFileName()).asString().startsWith("custom");
+		}
+
+	}
+
+	static class CustomDefaultFactoryWithStandardDeclarationTestCase {
+
+		@Test
+		void test(@TempDir Path tempDir1, @TempDir(factory = Standard.class) Path tempDir2) {
+			assertNotSame(tempDir1, tempDir2);
+			assertThat(tempDir1.getFileName()).asString().startsWith("custom");
+			assertThat(tempDir2.getFileName()).asString().startsWith("junit");
+		}
+
+	}
+
 }

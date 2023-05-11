@@ -7,6 +7,8 @@ plugins {
 
 val importAPIGuardian = "org.apiguardian.*;resolution:=\"optional\""
 
+val projectDescription = objects.property<String>().convention(provider { project.description })
+
 // This task enhances `jar` and `shadowJar` tasks with the bnd
 // `BundleTaskExtension` extension which allows for generating OSGi
 // metadata into the jar
@@ -16,8 +18,8 @@ tasks.withType<Jar>().matching { task: Jar ->
 	extra["importAPIGuardian"] = importAPIGuardian
 
 	extensions.create<BundleTaskExtension>(BundleTaskExtension.NAME, this).apply {
-		properties.set(provider {
-			mapOf("project.description" to project.description)
+		properties.set(projectDescription.map {
+			mapOf("project.description" to it)
 		})
 		// These are bnd instructions necessary for generating OSGi metadata.
 		// We've generalized these so that they are widely applicable limiting
@@ -75,7 +77,7 @@ tasks.withType<Jar>().matching { task: Jar ->
 // task writes out the properties necessary for it to verify the OSGi
 // metadata.
 val osgiProperties by tasks.registering(WriteProperties::class) {
-	setOutputFile(layout.buildDirectory.file("verifyOSGiProperties.bndrun"))
+	destinationFile.set(layout.buildDirectory.file("verifyOSGiProperties.bndrun"))
 	property("-standalone", true)
 	project.extensions.getByType(JavaLibraryExtension::class.java).let { javaLibrary ->
 		property("-runee", "JavaSE-${javaLibrary.mainJavaVersion}")
@@ -95,7 +97,7 @@ val osgiVerification by configurations.creatingResolvable {
 // that its metadata is valid. If the metadata is invalid this task will
 // fail.
 val verifyOSGi by tasks.registering(Resolve::class) {
-	bndrun.fileProvider(osgiProperties.map { it.outputFile })
+	bndrun.set(osgiProperties.flatMap { it.destinationFile })
 	outputBndrun.set(layout.buildDirectory.file("resolvedOSGiProperties.bndrun"))
 	isReportOptional = false
 	// By default bnd will use jars found in:

@@ -50,10 +50,14 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
+import org.junit.platform.testkit.engine.Events;
 
 /**
  * Integration tests for the legacy behavior of the {@link TempDirectory}
@@ -65,13 +69,16 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 @DisplayName("TempDirectory extension (per context)")
 class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected EngineExecutionResults executeTestsForClass(Class<?> testClass) {
-		return executeTests(request() //
+		return executeTests(requestBuilder(testClass).build());
+	}
+
+	@SuppressWarnings("deprecation")
+	private static LauncherDiscoveryRequestBuilder requestBuilder(Class<?> testClass) {
+		return request() //
 				.selectors(selectClass(testClass)) //
-				.configurationParameter(TempDir.SCOPE_PROPERTY_NAME, TempDirectory.Scope.PER_CONTEXT.toString()) //
-				.build());
+				.configurationParameter(TempDir.SCOPE_PROPERTY_NAME, TempDirectory.Scope.PER_CONTEXT.name());
 	}
 
 	@BeforeEach
@@ -286,6 +293,42 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Nested
+	@DisplayName("supports default factory")
+	@TestMethodOrder(OrderAnnotation.class)
+	class DefaultFactory {
+
+		private Events executeTestsForClassWithDefaultFactory(Class<?> testClass,
+				Class<? extends TempDirFactory> factoryClass) {
+			return TempDirectoryPerContextTests.super.executeTests(requestBuilder(testClass) //
+					.configurationParameter(TempDir.DEFAULT_FACTORY_PROPERTY_NAME, factoryClass.getName()) //
+					.build()).testEvents();
+		}
+
+		@Test
+		@DisplayName("set to Jupiter's default")
+		void supportsStandardDefaultFactory() {
+			executeTestsForClassWithDefaultFactory(StandardDefaultFactoryTestCase.class, TempDirFactory.Standard.class) //
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("set to custom factory")
+		void supportsCustomDefaultFactory() {
+			executeTestsForClassWithDefaultFactory(NonStandardDefaultFactoryTestCase.class, Factory.class) //
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				return Files.createTempDirectory("junit");
+			}
+		}
+
+	}
+
+	@Nested
 	@DisplayName("reports failure")
 	@TestMethodOrder(OrderAnnotation.class)
 	class Failures {
@@ -344,6 +387,23 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 
 			assertSingleFailedContainer(results, ParameterResolutionException.class,
 				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
+		}
+
+		@Test
+		@DisplayName("when @TempDir factory is not Standard")
+		@Order(32)
+		void onlySupportsStandardTempDirFactory() {
+			var results = executeTestsForClass(NonStandardFactoryTestCase.class);
+
+			// @formatter:off
+			TempDirectoryPerContextTests.assertSingleFailedTest(results,
+					instanceOf(ParameterResolutionException.class),
+					message(m -> m.matches("Failed to resolve parameter \\[.+] in method \\[.+]: .+")),
+					cause(
+							instanceOf(ExtensionConfigurationException.class),
+							message("Custom @TempDir factory is not supported with junit.jupiter.tempdir.scope=per_context. "
+									+ "Use junit.jupiter.tempdir.factory.default instead.")));
+			// @formatter:on
 		}
 
 	}
@@ -624,6 +684,41 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 		AnnotationOnConstructorParameterWithTestInstancePerClassTestCase(@TempDir Path tempDir) {
 			super(tempDir);
 		}
+	}
+
+	static class NonStandardFactoryTestCase {
+
+		@Test
+		void test(@SuppressWarnings("unused") @TempDir(factory = Factory.class) Path tempDir) {
+			// never called
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(ExtensionContext context) throws Exception {
+				return Files.createTempDirectory("junit");
+			}
+		}
+
+	}
+
+	static class StandardDefaultFactoryTestCase {
+
+		@Test
+		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
+			assertSame(tempDir1, tempDir2);
+		}
+
+	}
+
+	static class NonStandardDefaultFactoryTestCase {
+
+		@Test
+		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
+			assertSame(tempDir1, tempDir2);
+		}
+
 	}
 
 	static class AnnotationOnBeforeAllMethodParameterTestCase extends BaseSharedTempDirParameterInjectionTestCase {
@@ -1305,4 +1400,5 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 	}
+
 }

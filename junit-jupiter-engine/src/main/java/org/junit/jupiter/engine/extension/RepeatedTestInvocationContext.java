@@ -24,26 +24,24 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
  */
 class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 
-	private final int currentRepetition;
-	private final int totalRepetitions;
+	private final DefaultRepetitionInfo repetitionInfo;
 	private final RepeatedTestDisplayNameFormatter formatter;
 
-	public RepeatedTestInvocationContext(int currentRepetition, int totalRepetitions,
+	public RepeatedTestInvocationContext(DefaultRepetitionInfo repetitionInfo,
 			RepeatedTestDisplayNameFormatter formatter) {
 
-		this.currentRepetition = currentRepetition;
-		this.totalRepetitions = totalRepetitions;
+		this.repetitionInfo = repetitionInfo;
 		this.formatter = formatter;
 	}
 
 	@Override
 	public String getDisplayName(int invocationIndex) {
-		return this.formatter.format(this.currentRepetition, this.totalRepetitions);
+		return this.formatter.format(this.repetitionInfo.currentRepetition, this.repetitionInfo.totalRepetitions);
 	}
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return singletonList(new RepetitionInfoParameterResolver(this.currentRepetition, this.totalRepetitions));
+		return singletonList(new RepetitionExtension(this.repetitionInfo));
 	}
 
 }

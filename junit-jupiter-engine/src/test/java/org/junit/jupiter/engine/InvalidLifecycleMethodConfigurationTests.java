@@ -35,45 +35,25 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 
 	@Test
 	void executeValidTestCaseAlongsideTestCaseWithInvalidNonStaticBeforeAllDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidNonStaticBeforeAllMethod.class);
-	}
-
-	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateBeforeAllDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidPrivateBeforeAllMethod.class);
+		assertContainerFailed(TestCaseWithInvalidNonStaticBeforeAllMethod.class);
 	}
 
 	@Test
 	void executeValidTestCaseAlongsideTestCaseWithInvalidNonStaticAfterAllDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidNonStaticAfterAllMethod.class);
-	}
-
-	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateAfterAllDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidPrivateAfterAllMethod.class);
+		assertContainerFailed(TestCaseWithInvalidNonStaticAfterAllMethod.class);
 	}
 
 	@Test
 	void executeValidTestCaseAlongsideTestCaseWithInvalidStaticBeforeEachDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidStaticBeforeEachMethod.class);
-	}
-
-	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateBeforeEachDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidPrivateBeforeEachMethod.class);
+		assertContainerFailed(TestCaseWithInvalidStaticBeforeEachMethod.class);
 	}
 
 	@Test
 	void executeValidTestCaseAlongsideTestCaseWithInvalidStaticAfterEachDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidStaticAfterEachMethod.class);
+		assertContainerFailed(TestCaseWithInvalidStaticAfterEachMethod.class);
 	}
 
-	@Test
-	void executeValidTestCaseAlongsideTestCaseWithInvalidPrivateAfterEachDeclaration() {
-		assertExecutionResults(TestCaseWithInvalidPrivateAfterEachMethod.class);
-	}
-
-	private void assertExecutionResults(Class<?> invalidTestClass) {
+	private void assertContainerFailed(Class<?> invalidTestClass) {
 		EngineExecutionResults executionResults = executeTests(selectClass(TestCase.class),
 			selectClass(invalidTestClass));
 		Events containers = executionResults.containerEvents();
@@ -112,35 +92,11 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidPrivateBeforeAllMethod {
-
-		// must not be private
-		@BeforeAll
-		private static void beforeAll() {
-		}
-
-		@Test
-		void test() {
-		}
-	}
-
 	static class TestCaseWithInvalidNonStaticAfterAllMethod {
 
 		// must be static
 		@AfterAll
 		void afterAll() {
-		}
-
-		@Test
-		void test() {
-		}
-	}
-
-	static class TestCaseWithInvalidPrivateAfterAllMethod {
-
-		// must not be private
-		@AfterAll
-		private static void afterAll() {
 		}
 
 		@Test
@@ -160,35 +116,11 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
-	static class TestCaseWithInvalidPrivateBeforeEachMethod {
-
-		// must NOT be private
-		@BeforeEach
-		private void beforeEach() {
-		}
-
-		@Test
-		void test() {
-		}
-	}
-
 	static class TestCaseWithInvalidStaticAfterEachMethod {
 
 		// must NOT be static
 		@AfterEach
 		static void afterEach() {
-		}
-
-		@Test
-		void test() {
-		}
-	}
-
-	static class TestCaseWithInvalidPrivateAfterEachMethod {
-
-		// must NOT be private
-		@AfterEach
-		private void afterEach() {
 		}
 
 		@Test

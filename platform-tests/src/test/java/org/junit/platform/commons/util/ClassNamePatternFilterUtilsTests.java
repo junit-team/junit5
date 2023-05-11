@@ -45,11 +45,11 @@ class ClassNamePatternFilterUtilsTests {
 	})
 	//@formatter:on
 	@ParameterizedTest
-	void alwaysEnabledConditions(String pattern) {
+	void neverExcludedConditions(String pattern) {
 		List<? extends ExecutionCondition> executionConditions = List.of(new AExecutionConditionClass(),
 			new BExecutionConditionClass());
-		assertThat(executionConditions).filteredOn(
-			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isNotEmpty();
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)) //
+				.hasSize(2);
 	}
 
 	//@formatter:off
@@ -62,11 +62,11 @@ class ClassNamePatternFilterUtilsTests {
 	})
 	//@formatter:on
 	@ParameterizedTest
-	void alwaysDisabledConditions(String pattern) {
+	void alwaysExcludedConditions(String pattern) {
 		List<? extends ExecutionCondition> executionConditions = List.of(new AExecutionConditionClass(),
 			new BExecutionConditionClass());
-		assertThat(executionConditions).filteredOn(
-			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isEmpty();
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)) //
+				.isEmpty();
 	}
 
 	//@formatter:off
@@ -79,11 +79,11 @@ class ClassNamePatternFilterUtilsTests {
 	})
 	//@formatter:on
 	@ParameterizedTest
-	void alwaysEnabledListeners(String pattern) {
+	void neverExcludedListeners(String pattern) {
 		List<? extends TestExecutionListener> executionConditions = List.of(new ATestExecutionListenerClass(),
 			new BTestExecutionListenerClass());
-		assertThat(executionConditions).filteredOn(
-			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isNotEmpty();
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)) //
+				.hasSize(2);
 	}
 
 	//@formatter:off
@@ -96,11 +96,11 @@ class ClassNamePatternFilterUtilsTests {
 	})
 	//@formatter:on
 	@ParameterizedTest
-	void alwaysDisabledListeners(String pattern) {
+	void alwaysExcludedListeners(String pattern) {
 		List<? extends TestExecutionListener> executionConditions = List.of(new ATestExecutionListenerClass(),
 			new BTestExecutionListenerClass());
-		assertThat(executionConditions).filteredOn(
-			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isEmpty();
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)) //
+				.isEmpty();
 	}
 
 	//@formatter:off
@@ -113,10 +113,10 @@ class ClassNamePatternFilterUtilsTests {
 	})
 	//@formatter:on
 	@ParameterizedTest
-	void alwaysEnabledClass(String pattern) {
+	void neverExcludedClass(String pattern) {
 		var executionConditions = List.of(new AVanillaEmpty(), new BVanillaEmpty());
-		assertThat(executionConditions).filteredOn(
-			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isNotEmpty();
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)) //
+				.hasSize(2);
 	}
 
 	//@formatter:off
@@ -129,9 +129,44 @@ class ClassNamePatternFilterUtilsTests {
 	})
 	//@formatter:on
 	@ParameterizedTest
-	void alwaysDisabledClass(String pattern) {
+	void alwaysExcludedClass(String pattern) {
 		var executionConditions = List.of(new AVanillaEmpty(), new BVanillaEmpty());
-		assertThat(executionConditions).filteredOn(
-			ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)).isEmpty();
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.excludeMatchingClasses(pattern)) //
+				.isEmpty();
 	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.jupiter.*",
+			"org.junit.platform.*.NonExistentClass",
+			"*.NonExistentClass*",
+			"*NonExistentClass*",
+			"AVanillaEmpty, BVanillaEmpty"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void neverExcludedClassName(String pattern) {
+		var executionConditions = List.of("org.junit.platform.commons.util.classes.AVanillaEmpty",
+			"org.junit.platform.commons.util.classes.BVanillaEmpty");
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.excludeMatchingClassNames(pattern)) //
+				.hasSize(2);
+	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.platform.*",
+			"*.platform.*",
+			"*",
+			"*AVanillaEmpty, *BVanillaEmpty",
+			"*VanillaEmpty"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void alwaysExcludedClassName(String pattern) {
+		var executionConditions = List.of("org.junit.platform.commons.util.classes.AVanillaEmpty",
+			"org.junit.platform.commons.util.classes.BVanillaEmpty");
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.excludeMatchingClassNames(pattern)) //
+				.isEmpty();
+	}
+
 }

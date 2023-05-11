@@ -58,6 +58,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
@@ -70,6 +71,7 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.Recursive
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNestedClass;
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNestedSiblingClass;
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClassImplementingInterface.InnerClassImplementingInterface;
+import org.junit.platform.commons.util.classes.CustomType;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
@@ -1021,6 +1023,37 @@ class ReflectionUtilsTests {
 	@Test
 	void findMethodByParameterNamesWithMultidimensionalObjectArrayParameter() throws Exception {
 		assertFindMethodByParameterNames("methodWithMultidimensionalObjectArray", Double[][][][][].class);
+	}
+
+	/**
+	 * @since 5.10
+	 */
+	@Test
+	void findMethodByParameterNamesWithWithCustomTypeFromDifferentClassLoader() throws Exception {
+		var methodName = "customMethod";
+		var customTypeName = CustomType.class.getName();
+		var nestedTypeName = CustomType.NestedType.class.getName();
+
+		try (TestClassLoader customTypeClassLoader = TestClassLoader.forClassNamePrefix(customTypeName)) {
+			var customType = customTypeClassLoader.loadClass(customTypeName);
+			assertThat(customType.getClassLoader()).isEqualTo(customTypeClassLoader);
+
+			var optional = findMethod(customType, methodName, nestedTypeName);
+			assertThat(optional).get().satisfies(method -> {
+				assertThat(method.getName()).isEqualTo(methodName);
+
+				var declaringClass = method.getDeclaringClass();
+				assertThat(declaringClass.getClassLoader()).isEqualTo(customTypeClassLoader);
+				assertThat(declaringClass.getName()).isEqualTo(customTypeName);
+				assertThat(declaringClass).isNotEqualTo(CustomType.class);
+
+				var parameterTypes = method.getParameterTypes();
+				assertThat(parameterTypes).extracting(Class::getName).containsExactly(nestedTypeName);
+				Class<?> parameterType = parameterTypes[0];
+				assertThat(parameterType).isNotEqualTo(CustomType.NestedType.class);
+				assertThat(parameterType.getClassLoader()).isEqualTo(customTypeClassLoader);
+			});
+		}
 	}
 
 	@Test

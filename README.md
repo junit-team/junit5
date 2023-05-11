@@ -1,12 +1,12 @@
 # <img src="https://junit.org/junit5/assets/img/junit5-logo.png" align="right" width="100">JUnit 5
 
-This repository is the home of the next generation of JUnit, _JUnit 5_.
+This repository is the home of _JUnit 5_.
 
 [![Support JUnit](https://img.shields.io/badge/%F0%9F%92%9A-Support%20JUnit-brightgreen.svg)](https://junit.org/sponsoring)
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.9.2](https://github.com/junit-team/junit5/releases/tag/r5.9.2) (January 10, 2023)
+- General Availability (GA): [JUnit 5.9.3](https://github.com/junit-team/junit5/releases/tag/r5.9.3) (April 26, 2023)
 - Preview (Milestone/Release Candidate): n/a
 
 ## Documentation
@@ -77,6 +77,10 @@ consumption in other projects via the following command.
 `./gradlew publishToMavenLocal`
 
 ## Dependency Metadata
+
+[![JUnit Jupiter version](https://img.shields.io/maven-central/v/org.junit.jupiter/junit-jupiter/5..svg?color=25a162&label=Jupiter)](https://central.sonatype.com/search?namespace=org.junit.jupiter)
+[![JUnit Vintage version](https://img.shields.io/maven-central/v/org.junit.vintage/junit-vintage-engine/5..svg?color=25a162&label=Vintage)](https://central.sonatype.com/search?namespace=org.junit.vintage)
+[![JUnit Platform version](https://img.shields.io/maven-central/v/org.junit.platform/junit-platform-commons/1..svg?color=25a162&label=Platform)](https://central.sonatype.com/search?namespace=org.junit.platform)
 
 Consult the [Dependency Metadata] section of the [User Guide] for a list of all artifacts
 of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.

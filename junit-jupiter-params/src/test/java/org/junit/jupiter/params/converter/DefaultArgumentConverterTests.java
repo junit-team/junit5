@@ -11,9 +11,13 @@
 package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.lang.Thread.State;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -42,6 +46,9 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.test.TestClassLoader;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link DefaultArgumentConverter}.
@@ -97,6 +104,45 @@ class DefaultArgumentConverterTests {
 		assertConverts("42.2_3", float.class, 42.23f);
 		assertConverts("42.23", double.class, 42.23);
 		assertConverts("42.2_3", double.class, 42.23);
+	}
+
+	@Test
+	void throwsExceptionOnInvalidStringForPrimitiveTypes() {
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("ab", char.class)) //
+				.withMessage("Failed to convert String \"ab\" to type char") //
+				.havingCause() //
+				.withMessage("String must have length of 1: ab");
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("tru", boolean.class)) //
+				.withMessage("Failed to convert String \"tru\" to type boolean") //
+				.havingCause() //
+				.withMessage("String must be 'true' or 'false' (ignoring case): tru");
+	}
+
+	@Test
+	void throwsExceptionWhenImplicitConverstionIsUnsupported() {
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("foo", Enigma.class)) //
+				.withMessage("No built-in converter for source type java.lang.String and target type %s",
+					Enigma.class.getName());
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert(new Enigma(), int[].class)) //
+				.withMessage("No built-in converter for source type %s and target type int[]", Enigma.class.getName());
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert(new long[] {}, int[].class)) //
+				.withMessage("No built-in converter for source type long[] and target type int[]");
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert(new String[] {}, boolean.class)) //
+				.withMessage("No built-in converter for source type java.lang.String[] and target type boolean");
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert(Class.class, int[].class)) //
+				.withMessage("No built-in converter for source type java.lang.Class and target type int[]");
 	}
 
 	/**
@@ -160,6 +206,23 @@ class DefaultArgumentConverterTests {
 		assertConverts("java.lang.Long[][]", Class.class, Long[][].class);
 		assertConverts("[[[I", Class.class, int[][][].class);
 		assertConverts("[[Ljava.lang.String;", Class.class, String[][].class);
+	}
+
+	@Test
+	void convertsStringToClassWithCustomTypeFromDifferentClassLoader() throws Exception {
+		String customTypeName = Enigma.class.getName();
+		try (TestClassLoader customTypeClassLoader = TestClassLoader.forClasses(Enigma.class)) {
+			var customType = customTypeClassLoader.loadClass(customTypeName);
+			assertThat(customType.getClassLoader()).isInstanceOf(TestClassLoader.class);
+
+			var declaringExecutable = ReflectionUtils.findMethod(customType, "foo").get();
+			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isInstanceOf(TestClassLoader.class);
+
+			var clazz = (Class<?>) convert(customTypeName, Class.class, parameterContext(declaringExecutable));
+			assertThat(clazz).isNotEqualTo(Enigma.class);
+			assertThat(clazz).isEqualTo(customType);
+			assertThat(clazz.getClassLoader()).isInstanceOf(TestClassLoader.class);
+		}
 	}
 
 	// --- java.math -----------------------------------------------------------
@@ -232,11 +295,41 @@ class DefaultArgumentConverterTests {
 	// -------------------------------------------------------------------------
 
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
-		var result = DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
+		var result = convert(input, targetClass);
 
 		assertThat(result) //
 				.describedAs(input + " --(" + targetClass.getName() + ")--> " + expectedOutput) //
 				.isEqualTo(expectedOutput);
+	}
+
+	private Object convert(Object input, Class<?> targetClass) {
+		return convert(input, targetClass, parameterContext());
+	}
+
+	private Object convert(Object input, Class<?> targetClass, ParameterContext parameterContext) {
+		return DefaultArgumentConverter.INSTANCE.convert(input, targetClass, parameterContext);
+	}
+
+	private static ParameterContext parameterContext() {
+		Method declaringExecutable = ReflectionUtils.findMethod(DefaultArgumentConverterTests.class, "foo").get();
+		return parameterContext(declaringExecutable);
+	}
+
+	private static ParameterContext parameterContext(Method declaringExecutable) {
+		ParameterContext parameterContext = mock();
+		when(parameterContext.getDeclaringExecutable()).thenReturn(declaringExecutable);
+		return parameterContext;
+	}
+
+	@SuppressWarnings("unused")
+	private static void foo() {
+	}
+
+	private static class Enigma {
+
+		@SuppressWarnings("unused")
+		void foo() {
+		}
 	}
 
 }

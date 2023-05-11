@@ -11,7 +11,6 @@
 package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
@@ -214,7 +213,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @see #configurationParameter(String, String)
 	 * @see #configurationParameters(Map)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.8")
+	@API(status = STABLE, since = "1.10")
 	public LauncherDiscoveryRequestBuilder parentConfigurationParameters(
 			ConfigurationParameters configurationParameters) {
 		Preconditions.notNull(configurationParameters, "parent configuration parameters must not be null");
@@ -228,7 +227,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * <p>In addition to the {@linkplain LauncherDiscoveryListener listeners}
 	 * registered using this method, this builder will add a default listener
 	 * to this request that can be specified using the
-	 * {@value LauncherDiscoveryRequestBuilder#DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME}
+	 * {@value #DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME}
 	 * configuration parameter.
 	 *
 	 * @param listeners the {@code LauncherDiscoveryListeners} to add; never
@@ -239,7 +238,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @see LauncherDiscoveryListeners
 	 * @see LauncherDiscoveryRequestBuilder#DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "1.6")
+	@API(status = STABLE, since = "1.10")
 	public LauncherDiscoveryRequestBuilder listeners(LauncherDiscoveryListener... listeners) {
 		Preconditions.notNull(listeners, "discovery listener array must not be null");
 		Preconditions.containsNoNullElements(listeners, "individual discovery listeners must not be null");
@@ -260,7 +259,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @see #configurationParameter(String, String)
 	 * @see #configurationParameters(Map)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.7")
+	@API(status = STABLE, since = "1.10")
 	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
 		this.implicitConfigurationParametersEnabled = enabled;
 		return this;
