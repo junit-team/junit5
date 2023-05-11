@@ -692,13 +692,12 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 			Class<?> testClass = factoryContext.getTestClass();
 			String className = testClass.getName();
-			String prefix = TestInstanceFactoryTests.class.getName();
 
 			instantiated(getClass(), testClass);
 
-			try (TestClassLoader proxyClassLoader = TestClassLoader.forClassNamePrefix(prefix)) {
+			try (var testClassLoader = TestClassLoader.forClasses(testClass)) {
 				// Load test class from different class loader
-				Class<?> clazz = proxyClassLoader.loadClass(className);
+				Class<?> clazz = testClassLoader.loadClass(className);
 				return ReflectionUtils.newInstance(clazz);
 			}
 			catch (Exception ex) {

@@ -241,9 +241,9 @@ class AssertThrowsAssertionsTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	void assertThrowsWithExecutableThatThrowsSameExceptionTypeFromDifferentClassLoader() throws Exception {
-		try (TestClassLoader enigmaClassLoader = TestClassLoader.forClasses(EnigmaThrowable.class)) {
+		try (var testClassLoader = TestClassLoader.forClasses(EnigmaThrowable.class)) {
 			// Load expected exception type from different class loader
-			Class<? extends Throwable> enigmaThrowableClass = (Class<? extends Throwable>) enigmaClassLoader.loadClass(
+			Class<? extends Throwable> enigmaThrowableClass = (Class<? extends Throwable>) testClassLoader.loadClass(
 				EnigmaThrowable.class.getName());
 
 			try {

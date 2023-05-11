@@ -1034,16 +1034,16 @@ class ReflectionUtilsTests {
 		var customTypeName = CustomType.class.getName();
 		var nestedTypeName = CustomType.NestedType.class.getName();
 
-		try (TestClassLoader customTypeClassLoader = TestClassLoader.forClassNamePrefix(customTypeName)) {
-			var customType = customTypeClassLoader.loadClass(customTypeName);
-			assertThat(customType.getClassLoader()).isEqualTo(customTypeClassLoader);
+		try (var testClassLoader = TestClassLoader.forClassNamePrefix(customTypeName)) {
+			var customType = testClassLoader.loadClass(customTypeName);
+			assertThat(customType.getClassLoader()).isSameAs(testClassLoader);
 
 			var optional = findMethod(customType, methodName, nestedTypeName);
 			assertThat(optional).get().satisfies(method -> {
 				assertThat(method.getName()).isEqualTo(methodName);
 
 				var declaringClass = method.getDeclaringClass();
-				assertThat(declaringClass.getClassLoader()).isEqualTo(customTypeClassLoader);
+				assertThat(declaringClass.getClassLoader()).isSameAs(testClassLoader);
 				assertThat(declaringClass.getName()).isEqualTo(customTypeName);
 				assertThat(declaringClass).isNotEqualTo(CustomType.class);
 
@@ -1051,7 +1051,7 @@ class ReflectionUtilsTests {
 				assertThat(parameterTypes).extracting(Class::getName).containsExactly(nestedTypeName);
 				Class<?> parameterType = parameterTypes[0];
 				assertThat(parameterType).isNotEqualTo(CustomType.NestedType.class);
-				assertThat(parameterType.getClassLoader()).isEqualTo(customTypeClassLoader);
+				assertThat(parameterType.getClassLoader()).isSameAs(testClassLoader);
 			});
 		}
 	}
