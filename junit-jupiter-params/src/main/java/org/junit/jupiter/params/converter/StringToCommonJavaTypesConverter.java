@@ -13,8 +13,6 @@ package org.junit.jupiter.params.converter;
 import static java.util.Collections.unmodifiableMap;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -42,9 +40,6 @@ class StringToCommonJavaTypesConverter implements StringToObjectConverter {
 		// java.net
 		converters.put(URI.class, URI::create);
 		converters.put(URL.class, StringToCommonJavaTypesConverter::toURL);
-		// java.math
-		converters.put(BigDecimal.class, BigDecimal::new);
-		converters.put(BigInteger.class, BigInteger::new);
 		// java.util
 		converters.put(Currency.class, Currency::getInstance);
 		converters.put(Locale.class, Locale::new);
