@@ -294,11 +294,17 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/ClassSelector.html#getClassLoader()" class="member-name-link">getClassLoader()</a> - Method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></dt>
 <dd>
-<div class="block">Get the class loader used to load the selected class.</div>
+<div class="block">Get the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link"><code>ClassLoader</code></a> used to load the selected class.</div>
 </dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/MethodSelector.html#getClassLoader()" class="member-name-link">getClassLoader()</a> - Method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></dt>
 <dd>
-<div class="block">Get the class loader used to load the specified class.</div>
+<div class="block">Get the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link"><code>ClassLoader</code></a> used to load the specified class.</div>
+</dd>
+<dt><a href="../org.junit.platform.commons/org/junit/platform/commons/util/ClassLoaderUtils.html#getClassLoader(java.lang.Class)" class="member-name-link">getClassLoader(Class&lt;?&gt;)</a> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/ClassLoaderUtils.html" title="class in org.junit.platform.commons.util">ClassLoaderUtils</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link"><code>ClassLoader</code></a> for the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>, falling back
+ to the <a href="../org.junit.platform.commons/org/junit/platform/commons/util/ClassLoaderUtils.html#getDefaultClassLoader()"><code>default class loader</code></a> if the class
+ loader for the supplied class is <code>null</code>.</div>
 </dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/ClassSelector.html#getClassName()" class="member-name-link">getClassName()</a> - Method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></dt>
 <dd>

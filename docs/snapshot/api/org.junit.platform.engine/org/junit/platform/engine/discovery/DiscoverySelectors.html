@@ -136,8 +136,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectClass(java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>ClassSelector</code> for the supplied class name using the
- supplied class loader.</div>
+<div class="block">Create a <code>ClassSelector</code> for the supplied class name and class loader.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathResourceSelector</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectClasspathResource(java.lang.String)" class="member-name-link">selectClasspathResource</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;classpathResourceName)</code></div>
@@ -228,7 +227,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
- method name</em> using the given classloader.</div>
+ method name</em> and class loader.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
@@ -242,8 +241,8 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>MethodSelector</code> for the supplied class name and method name, using
- the given class loader to find the class.</div>
+<div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
+ and class loader.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
@@ -260,7 +259,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
- and method parameter types, using the specified class loader.</div>
+ method parameter types, and class loader.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectModule(java.lang.String)" class="member-name-link">selectModule</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;moduleName)</code></div>
@@ -759,8 +758,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a <code>ClassSelector</code> for the supplied class name.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>className</code> - the fully qualified name of the class to select;
- never <code>null</code> or blank</dd>
+<dd><code>className</code> - the fully qualified name of the class to select; never
+ <code>null</code> or blank</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
@@ -773,16 +772,19 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="selectClass(java.lang.String,java.lang.ClassLoader)">
 <h3>selectClass</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></span>&nbsp;<span class="element-name">selectClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></span>&nbsp;<span class="element-name">selectClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span></div>
-<div class="block">Create a <code>ClassSelector</code> for the supplied class name using the
- supplied class loader.</div>
+<div class="block">Create a <code>ClassSelector</code> for the supplied class name and class loader.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>className</code> - the fully qualified name of the class to select;
- never <code>null</code> or blank</dd>
-<dd><code>classLoader</code> - the class loader to use to try and load the
- supplied class. If <code>null</code>, the default class loader will be used.</dd>
+<dd><code>className</code> - the fully qualified name of the class to select; never
+ <code>null</code> or blank</dd>
+<dd><code>classLoader</code> - the class loader to use to load the class, or <code>null</code>
+ to signal that the default <code>ClassLoader</code> should be used</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
@@ -835,8 +837,8 @@ loadScripts(document, 'script');</script>
  </table></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>fullyQualifiedMethodName</code> - the fully qualified name of the method to select; never
- <code>null</code> or blank</dd>
+<dd><code>fullyQualifiedMethodName</code> - the fully qualified name of the method to
+ select; never <code>null</code> or blank</dd>
 <dt>Throws:</dt>
 <dd><code><a href="../../../../../../org.junit.platform.commons/org/junit/platform/commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code></dd>
 <dt>See Also:</dt>
@@ -851,23 +853,32 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="selectMethod(java.lang.String,java.lang.ClassLoader)">
 <h3>selectMethod</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName,
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span>
                                    throws <span class="exceptions"><a href="../../../../../../org.junit.platform.commons/org/junit/platform/commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></span></div>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
- method name</em> using the given classloader.</div>
+ method name</em> and class loader.
+
+ <p>See <a href="#selectMethod(java.lang.String)"><code>selectMethod(String)</code></a> for the supported formats for a
+ fully qualified method name.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>fullyQualifiedMethodName</code> - the fully qualified name of the method to select; never
- <code>null</code> or blank (see <a href="#selectMethod(java.lang.String)"><code>selectMethod(String)</code></a> for the format of this string).</dd>
-<dd><code>classLoader</code> - the class loader to use to try and load the
- supplied class. If <code>null</code>, the default class loader will be used.</dd>
+<dd><code>fullyQualifiedMethodName</code> - the fully qualified name of the method to
+ select; never <code>null</code> or blank</dd>
+<dd><code>classLoader</code> - the class loader to use to load the method's declaring
+ class, or <code>null</code> to signal that the default <code>ClassLoader</code>
+ should be used</dd>
 <dt>Throws:</dt>
 <dd><code><a href="../../../../../../org.junit.platform.commons/org/junit/platform/commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code></dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
 <li><a href="#selectMethod(java.lang.String)"><code>selectMethod(String)</code></a></li>
+<li><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -897,18 +908,22 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="selectMethod(java.lang.String,java.lang.String,java.lang.ClassLoader)">
 <h3>selectMethod</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span></div>
-<div class="block">Create a <code>MethodSelector</code> for the supplied class name and method name, using
- the given class loader to find the class.</div>
+<div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
+ and class loader.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>className</code> - the fully qualified name of the class in which the method
  is declared, or a subclass thereof; never <code>null</code> or blank</dd>
 <dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
-<dd><code>classLoader</code> - the class loader to use to try and load the
- supplied class. If <code>null</code>, the default class loader will be used.</dd>
+<dd><code>classLoader</code> - the class loader to use to load the class, or <code>null</code>
+ to signal that the default <code>ClassLoader</code> should be used</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
@@ -950,12 +965,14 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="selectMethod(java.lang.String,java.lang.String,java.lang.String,java.lang.ClassLoader)">
 <h3>selectMethod</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span></div>
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
- and method parameter types, using the specified class loader.
+ method parameter types, and class loader.
 
  <p>The parameter types <code>String</code> is typically a comma-separated list
  of atomic types, fully qualified class names, or array types; however,
@@ -968,6 +985,10 @@ loadScripts(document, 'script');</script>
 <dd><code>methodParameterTypes</code> - the method parameter types as a single string; never
  <code>null</code> though potentially an empty string if the method does not accept
  arguments</dd>
+<dd><code>classLoader</code> - the class loader to use to load the class, or <code>null</code>
+ to signal that the default <code>ClassLoader</code> should be used</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
