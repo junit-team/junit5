@@ -92,10 +92,8 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 			Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
 				candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
 			if (converter.isPresent()) {
-				ClassLoader classLoader = context.getDeclaringExecutable().getDeclaringClass().getClassLoader();
-				if (classLoader == null) {
-					classLoader = ClassLoaderUtils.getDefaultClassLoader();
-				}
+				Class<?> declaringClass = context.getDeclaringExecutable().getDeclaringClass();
+				ClassLoader classLoader = ClassLoaderUtils.getClassLoader(declaringClass);
 				try {
 					return converter.get().convert((String) source, targetTypeToUse, classLoader);
 				}

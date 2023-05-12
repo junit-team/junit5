@@ -66,10 +66,7 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
 		String className = methodParts[0];
 		String methodName = methodParts[1];
-		ClassLoader classLoader = testClass.getClassLoader();
-		if (classLoader == null) {
-			classLoader = ClassLoaderUtils.getDefaultClassLoader();
-		}
+		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(testClass);
 		Class<?> clazz = ReflectionUtils.tryToLoadClass(className, classLoader).getOrThrow(
 			cause -> new JUnitException(format("Could not load class [%s]", className), cause));
 		return findMethod(clazz, methodName);

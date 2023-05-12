@@ -36,6 +36,19 @@ public final class ClassLoaderUtils {
 		/* no-op */
 	}
 
+	/**
+	 * Get the {@link ClassLoader} for the supplied {@link Class}, falling back
+	 * to the {@link #getDefaultClassLoader() default class loader} if the class
+	 * loader for the supplied class is {@code null}.
+	 * @param clazz the class for which to retrieve the class loader; never {@code null}
+	 * @since 1.10
+	 */
+	public static ClassLoader getClassLoader(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		ClassLoader classLoader = clazz.getClassLoader();
+		return (classLoader != null) ? classLoader : getDefaultClassLoader();
+	}
+
 	public static ClassLoader getDefaultClassLoader() {
 		try {
 			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();

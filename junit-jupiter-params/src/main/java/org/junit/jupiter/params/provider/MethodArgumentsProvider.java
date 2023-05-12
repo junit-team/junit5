@@ -111,10 +111,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		String className = methodParts[0];
 		String methodName = methodParts[1];
 		String methodParameters = methodParts[2];
-		ClassLoader classLoader = testClass.getClassLoader();
-		if (classLoader == null) {
-			classLoader = ClassLoaderUtils.getDefaultClassLoader();
-		}
+		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(testClass);
 		Class<?> clazz = loadRequiredClass(className, classLoader);
 
 		// Attempt to find an exact match first.
