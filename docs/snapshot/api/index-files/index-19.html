@@ -110,6 +110,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Create a <code>ClassSelector</code> for the supplied class name.</div>
 </dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectClass(java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectClass(String, ClassLoader)</a> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></dt>
+<dd>
+<div class="block">Create a <code>ClassSelector</code> for the supplied class name using the
+ supplied class loader.</div>
+</dd>
 <dt><a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/SelectClasses.html" class="type-name-link" title="annotation interface in org.junit.platform.suite.api">SelectClasses</a> - Annotation Interface in <a href="../org.junit.platform.suite.api/org/junit/platform/suite/api/package-summary.html">org.junit.platform.suite.api</a></dt>
 <dd>
 <div class="block"><code>@SelectClasses</code> specifies the classes to <em>select</em> when running
@@ -204,14 +209,30 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
  method name</em>.</div>
 </dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectMethod(String, ClassLoader)</a> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></dt>
+<dd>
+<div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
+ method name</em> using the given classloader.</div>
+</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String)" class="member-name-link">selectMethod(String, String)</a> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></dt>
 <dd>
-<div class="block">Create a <code>MethodSelector</code> for the supplied class name and method name.</div>
+<div class="block">Create a <code>MethodSelector</code> for the supplied class name and method name
+ using the default class loader.</div>
+</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectMethod(String, String, ClassLoader)</a> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></dt>
+<dd>
+<div class="block">Create a <code>MethodSelector</code> for the supplied class name and method name, using
+ the given class loader to find the class.</div>
 </dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectMethod(String, String, String)</a> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></dt>
 <dd>
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
  and method parameter types.</div>
+</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String,java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectMethod(String, String, String, ClassLoader)</a> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></dt>
+<dd>
+<div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
+ and method parameter types, using the specified class loader.</div>
 </dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectModule(java.lang.String)" class="member-name-link">selectModule(String)</a> - Static method in class org.junit.platform.engine.discovery.<a href="../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></dt>
 <dd>

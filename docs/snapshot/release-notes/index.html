@@ -573,6 +573,11 @@ which return a <code>Stream</code>.</p>
 <code>ClassLoader</code>, allowing classes to be resolved with custom <code>ClassLoader</code> arrangements.</p>
 </li>
 <li>
+<p>New overloaded constructors for <code>ClassSelector</code> and <code>MethodSelector</code> that take an
+explicit <code>ClassLoader</code> as a parameter, allowing selectors to select classes in custom
+<code>ClassLoader</code> arrangements like in OSGi.</p>
+</li>
+<li>
 <p><code>ReflectionSupport.findMethod(Class&lt;?&gt;, String, String)</code> now uses the <code>ClassLoader</code> of
 the supplied <code>Class</code> to load parameter types instead of using the <em>default</em>
 <code>ClassLoader</code>. This allows parameter types to be resolved with custom <code>ClassLoader</code>
@@ -1105,7 +1110,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-12 14:26:59 UTC
+Last updated 2023-05-12 15:09:38 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
