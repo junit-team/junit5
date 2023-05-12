@@ -57,7 +57,8 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 				.orElseGet(this::enabledByDefault);
 	}
 
-	private Method getConditionMethod(String fullyQualifiedMethodName, ExtensionContext context) {
+	// package-private for testing
+	Method getConditionMethod(String fullyQualifiedMethodName, ExtensionContext context) {
 		Class<?> testClass = context.getRequiredTestClass();
 		if (!fullyQualifiedMethodName.contains("#")) {
 			return findMethod(testClass, fullyQualifiedMethodName);
