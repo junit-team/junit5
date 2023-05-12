@@ -640,6 +640,12 @@ prune other calls via configurations parameters. Please refer to the
 <div class="ulist">
 <ul>
 <li>
+<p>The extensions supporting <code>@MethodSource</code>, <code>@EnabledIf</code>, and <code>@DisabledIf</code> now load
+classes by fully-qualified class name using the <code>ClassLoader</code> obtained from the test
+class when possible. This allows classes to be resolved with custom <code>ClassLoader</code>
+arrangements (such as OSGi).</p>
+</li>
+<li>
 <p>When converting an argument for a <code>@ParameterizedTest</code> method from a fully-qualified
 class name (<code>String</code>) to a <code>Class</code>, the <code>ClassLoader</code> of the class in which the
 <code>@ParameterizedTest</code> method is declared is now used to resolve the <code>Class</code> instead of
@@ -1099,7 +1105,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-09 15:15:15 UTC
+Last updated 2023-05-12 14:26:59 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
