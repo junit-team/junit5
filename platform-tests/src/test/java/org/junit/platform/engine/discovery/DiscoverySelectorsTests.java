@@ -33,7 +33,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -248,12 +247,12 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectClassByNameAndClassLoader() throws Exception {
-		try (TestClassLoader l = TestClassLoader.forClasses(getClass())) {
-			ClassSelector selector = selectClass(getClass().getName(), l);
-			assertEquals(getClass().getTypeName(), selector.getJavaClass().getTypeName());
+		try (var testClassLoader = TestClassLoader.forClasses(getClass())) {
+			ClassSelector selector = selectClass(getClass().getName(), testClassLoader);
+			assertEquals(getClass().getName(), selector.getJavaClass().getName());
 			assertNotEquals(getClass(), selector.getJavaClass());
-			assertSame(l, selector.getClassLoader());
-			assertSame(l, selector.getJavaClass().getClassLoader());
+			assertSame(testClassLoader, selector.getClassLoader());
+			assertSame(testClassLoader, selector.getJavaClass().getClassLoader());
 		}
 	}
 
@@ -337,12 +336,12 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectMethodByFullyQualifiedNameAndClassLoader() throws Exception {
-		try (URLClassLoader l = TestClassLoader.forClasses(getClass())) {
-			Class<?> clazz = l.loadClass(getClass().getTypeName());
+		try (var testClassLoader = TestClassLoader.forClasses(getClass())) {
+			Class<?> clazz = testClassLoader.loadClass(getClass().getName());
 			assertNotEquals(getClass(), clazz);
 
 			Method method = clazz.getDeclaredMethod("myTest");
-			MethodSelector selector = selectMethod(getClass().getName(), "myTest", l);
+			MethodSelector selector = selectMethod(getClass().getName(), "myTest", testClassLoader);
 			assertEquals(method, selector.getJavaMethod());
 			assertEquals(clazz, selector.getJavaClass());
 			assertEquals(clazz.getName(), selector.getClassName());

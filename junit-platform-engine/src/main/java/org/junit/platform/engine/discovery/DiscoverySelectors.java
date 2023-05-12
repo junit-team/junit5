@@ -384,25 +384,25 @@ public final class DiscoverySelectors {
 	/**
 	 * Create a {@code ClassSelector} for the supplied class name.
 	 *
-	 * @param className the fully qualified name of the class to select;
-	 * never {@code null} or blank
+	 * @param className the fully qualified name of the class to select; never
+	 * {@code null} or blank
 	 * @see ClassSelector
 	 */
 	public static ClassSelector selectClass(String className) {
-		Preconditions.notBlank(className, "Class name must not be null or blank");
-		return new ClassSelector(className);
+		return selectClass(className, null);
 	}
 
 	/**
-	 * Create a {@code ClassSelector} for the supplied class name using the
-	 * supplied class loader.
+	 * Create a {@code ClassSelector} for the supplied class name and class loader.
 	 *
-	 * @param className the fully qualified name of the class to select;
-	 * never {@code null} or blank
-	 * @param classLoader the class loader to use to try and load the
-	 * supplied class. If {@code null}, the default class loader will be used.
+	 * @param className the fully qualified name of the class to select; never
+	 * {@code null} or blank
+	 * @param classLoader the class loader to use to load the class, or {@code null}
+	 * to signal that the default {@code ClassLoader} should be used
+	 * @since 1.10
 	 * @see ClassSelector
 	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
 	public static ClassSelector selectClass(String className, ClassLoader classLoader) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		return new ClassSelector(className, classLoader);
@@ -446,8 +446,8 @@ public final class DiscoverySelectors {
 	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code example.Service#process(java.lang.String[][])}</td></tr>
 	 * </table>
 	 *
-	 * @param fullyQualifiedMethodName the fully qualified name of the method to select; never
-	 * {@code null} or blank
+	 * @param fullyQualifiedMethodName the fully qualified name of the method to
+	 * select; never {@code null} or blank
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException {
@@ -456,14 +456,21 @@ public final class DiscoverySelectors {
 
 	/**
 	 * Create a {@code MethodSelector} for the supplied <em>fully qualified
-	 * method name</em> using the given classloader.
+	 * method name</em> and class loader.
 	 *
-	 * @param fullyQualifiedMethodName the fully qualified name of the method to select; never
-	 * {@code null} or blank (see {@link #selectMethod(String)} for the format of this string).
-	 * @param classLoader the class loader to use to try and load the
-	 * supplied class. If {@code null}, the default class loader will be used.
+	 * <p>See {@link #selectMethod(String)} for the supported formats for a
+	 * fully qualified method name.
+	 *
+	 * @param fullyQualifiedMethodName the fully qualified name of the method to
+	 * select; never {@code null} or blank
+	 * @param classLoader the class loader to use to load the method's declaring
+	 * class, or {@code null} to signal that the default {@code ClassLoader}
+	 * should be used
+	 * @since 1.10
 	 * @see #selectMethod(String)
+	 * @see MethodSelector
 	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
 	public static MethodSelector selectMethod(String fullyQualifiedMethodName, ClassLoader classLoader)
 			throws PreconditionViolationException {
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
@@ -484,16 +491,18 @@ public final class DiscoverySelectors {
 	}
 
 	/**
-	 * Create a {@code MethodSelector} for the supplied class name and method name, using
-	 * the given class loader to find the class.
+	 * Create a {@code MethodSelector} for the supplied class name, method name,
+	 * and class loader.
 	 *
 	 * @param className the fully qualified name of the class in which the method
 	 * is declared, or a subclass thereof; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param classLoader the class loader to use to try and load the
-	 * supplied class. If {@code null}, the default class loader will be used.
+	 * @param classLoader the class loader to use to load the class, or {@code null}
+	 * to signal that the default {@code ClassLoader} should be used
+	 * @since 1.10
 	 * @see MethodSelector
 	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
 	public static MethodSelector selectMethod(String className, String methodName, ClassLoader classLoader) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
@@ -522,7 +531,7 @@ public final class DiscoverySelectors {
 
 	/**
 	 * Create a {@code MethodSelector} for the supplied class name, method name,
-	 * and method parameter types, using the specified class loader.
+	 * method parameter types, and class loader.
 	 *
 	 * <p>The parameter types {@code String} is typically a comma-separated list
 	 * of atomic types, fully qualified class names, or array types; however,
@@ -534,8 +543,12 @@ public final class DiscoverySelectors {
 	 * @param methodParameterTypes the method parameter types as a single string; never
 	 * {@code null} though potentially an empty string if the method does not accept
 	 * arguments
+	 * @param classLoader the class loader to use to load the class, or {@code null}
+	 * to signal that the default {@code ClassLoader} should be used
+	 * @since 1.10
 	 * @see MethodSelector
 	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
 	public static MethodSelector selectMethod(String className, String methodName, String methodParameterTypes,
 			ClassLoader classLoader) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");

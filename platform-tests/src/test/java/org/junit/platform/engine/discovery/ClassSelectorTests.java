@@ -45,9 +45,10 @@ class ClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 	}
 
 	@Test
-	void useClassClassLoader() {
+	void usesClassClassLoader() {
 		var selector = new ClassSelector(getClass());
 
 		assertThat(selector.getClassLoader()).isNotNull().isSameAs(getClass().getClassLoader());
 	}
+
 }

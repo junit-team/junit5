@@ -52,7 +52,7 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 	void usesClassClassLoader() {
 		var selector = new MethodSelector(getClass(), "usesClassClassLoader");
 
-		assertThat(selector.getClassLoader()).isNotNull().isEqualTo(getClass().getClassLoader());
+		assertThat(selector.getClassLoader()).isNotNull().isSameAs(getClass().getClassLoader());
 	}
 
 }

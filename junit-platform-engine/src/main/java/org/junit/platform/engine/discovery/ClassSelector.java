@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
@@ -71,8 +72,10 @@ public class ClassSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the class loader used to load the selected class.
+	 * Get the {@link ClassLoader} used to load the selected class.
+	 * @since 1.10
 	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
 	public ClassLoader getClassLoader() {
 		return this.classLoader;
 	}
@@ -86,10 +89,13 @@ public class ClassSelector implements DiscoverySelector {
 	 */
 	public Class<?> getJavaClass() {
 		if (this.javaClass == null) {
-			final Try<Class<?>> clazz = this.classLoader == null ? ReflectionUtils.tryToLoadClass(this.className)
-					: ReflectionUtils.tryToLoadClass(className, this.classLoader);
-			this.javaClass = clazz.getOrThrow(cause -> new PreconditionViolationException(
-				"Could not load class with name: " + this.className, cause));
+			// @formatter:off
+			Try<Class<?>> tryToLoadClass = this.classLoader == null
+				? ReflectionUtils.tryToLoadClass(this.className)
+				: ReflectionUtils.tryToLoadClass(this.className, this.classLoader);
+			this.javaClass = tryToLoadClass.getOrThrow(cause ->
+				new PreconditionViolationException("Could not load class with name: " + this.className, cause));
+			// @formatter:on
 		}
 		return this.javaClass;
 	}
@@ -121,7 +127,12 @@ public class ClassSelector implements DiscoverySelector {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("className", this.className).toString();
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("className", this.className)
+				.append("classLoader", this.classLoader)
+				.toString();
+		// @formatter:on
 	}
 
 }
