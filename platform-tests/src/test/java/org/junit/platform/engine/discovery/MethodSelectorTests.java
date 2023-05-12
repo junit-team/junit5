@@ -27,25 +27,32 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void equalsAndHashCode() {
-		var selector1 = new MethodSelector("TestClass", "method", "int, boolean");
-		var selector2 = new MethodSelector("TestClass", "method", "int, boolean");
+		var selector1 = new MethodSelector("TestClass", "method", "int, boolean", null);
+		var selector2 = new MethodSelector("TestClass", "method", "int, boolean", null);
 
 		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "method", "int"));
-		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "method"));
-		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "X", "int, boolean"));
-		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "X"));
-		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("X", "method", "int, boolean"));
-		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("X", "method"));
+		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "method", (ClassLoader) null));
+		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "X", "int, boolean", null));
+		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "X", (ClassLoader) null));
+		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("X", "method", "int, boolean", null));
+		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("X", "method", (ClassLoader) null));
 	}
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadClass() {
-		var selector = new MethodSelector("TestClass", "method", "int, boolean");
+		var selector = new MethodSelector("TestClass", "method", "int, boolean", (ClassLoader) null);
 
 		var e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
 
 		assertThat(e).hasMessage("Could not load class with name: TestClass").hasCauseInstanceOf(
 			ClassNotFoundException.class);
+	}
+
+	@Test
+	void usesClassClassLoader() {
+		var selector = new MethodSelector(getClass(), "usesClassClassLoader");
+
+		assertThat(selector.getClassLoader()).isNotNull().isEqualTo(getClass().getClassLoader());
 	}
 
 }
