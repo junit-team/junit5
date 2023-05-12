@@ -28,6 +28,7 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -109,7 +110,11 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		String className = methodParts[0];
 		String methodName = methodParts[1];
 		String methodParameters = methodParts[2];
-		Class<?> clazz = loadRequiredClass(className, testClass.getClassLoader());
+		ClassLoader classLoader = testClass.getClassLoader();
+		if (classLoader == null) {
+			classLoader = ClassLoaderUtils.getDefaultClassLoader();
+		}
+		Class<?> clazz = loadRequiredClass(className, classLoader);
 
 		// Attempt to find an exact match first.
 		Method factoryMethod = ReflectionUtils.findMethod(clazz, methodName, methodParameters).orElse(null);

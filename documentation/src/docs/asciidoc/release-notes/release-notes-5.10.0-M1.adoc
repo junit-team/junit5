@@ -15,8 +15,7 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* Use a test class's own classloader to search for `@MethodSource` and `MethodBasedCondition` methods.
-  This allows these features to work correctly inside an OSGi framework.
+* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -75,6 +74,10 @@ repository on GitHub.
 
 ==== Bug Fixes
 
+* The extensions supporting `@MethodSource`, `@EnabledIf`, and `@DisabledIf` now load
+  classes by fully-qualified class name using the `ClassLoader` obtained from the test
+  class when possible. This allows classes to be resolved with custom `ClassLoader`
+  arrangements (such as OSGi).
 * When converting an argument for a `@ParameterizedTest` method from a fully-qualified
   class name (`String`) to a `Class`, the `ClassLoader` of the class in which the
   `@ParameterizedTest` method is declared is now used to resolve the `Class` instead of
