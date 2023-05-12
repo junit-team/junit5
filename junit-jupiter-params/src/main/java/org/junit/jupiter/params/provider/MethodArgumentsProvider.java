@@ -104,7 +104,8 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		return true;
 	}
 
-	private static Method findFactoryMethodByFullyQualifiedName(Class<?> testClass, Method testMethod,
+	// package-private for testing
+	static Method findFactoryMethodByFullyQualifiedName(Class<?> testClass, Method testMethod,
 			String fullyQualifiedMethodName) {
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
 		String className = methodParts[0];
