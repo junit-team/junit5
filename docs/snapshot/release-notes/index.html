@@ -580,9 +580,10 @@ arrangements (such as OSGi). Consequently, <code>DiscoverySelectors.selectMethod
 String, String)</code> also now works properly with custom <code>ClassLoader</code> arrangements.</p>
 </li>
 <li>
-<p>New overloaded constructors for <code>ClassSelector</code> and <code>MethodSelector</code> that take an
-explicit <code>ClassLoader</code> as a parameter, allowing selectors to select classes in custom
-<code>ClassLoader</code> arrangements like in OSGi.</p>
+<p>New overloaded constructors for <code>ClassSelector</code>, <code>NestedClassSelector</code>,
+<code>MethodSelector</code>, and <code>NestedMethodSelector</code> that take an explicit <code>ClassLoader</code> as a
+parameter, allowing selectors to select classes in custom <code>ClassLoader</code> arrangements
+like in OSGi.</p>
 </li>
 <li>
 <p>For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
@@ -1110,7 +1111,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-12 16:39:17 UTC
+Last updated 2023-05-13 11:36:13 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
