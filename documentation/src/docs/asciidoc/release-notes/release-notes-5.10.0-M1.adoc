@@ -10,12 +10,13 @@
 * New `testfeed` details mode for `ConsoleLauncher`
 * New `ConsoleLauncher` subcommand for test discovery without execution
 * Dry-run mode for test execution
-* Provide `NamespacedHierarchicalStore` for third-party test engine reuse
+* New `NamespacedHierarchicalStore` for use in third-party test engines
 * Stacktrace pruning to hide internal JUnit calls
 * New `TempDirFactory` SPI for customizing how temporary directories are created
 * Failure threshold for `@RepeatedTest`
 * New convenience base classes for implementing `ArgumentsProvider` and `ArgumentConverter`
-* Custom class loader support for class/method selectors, `@MethodSource`, `@EnabledIf`, and `@DisabledIf`
+* Custom class loader support for class/method selectors, `@MethodSource`, `@EnabledIf`,
+  and `@DisabledIf`
 * Improved configurability of parallel execution
 * Numerous bug fixes and minor improvements
 
@@ -138,3 +139,9 @@ repository on GitHub.
 * If `@MethodSource` is used with a non-static factory method that should be `static`, the
   exception thrown now provides the user a meaningful explanation of how to address the
   problem.
+
+
+[[release-notes-5.10.0-M1-junit-vintage]]
+=== JUnit Vintage
+
+No changes.
