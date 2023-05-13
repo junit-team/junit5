@@ -36,6 +36,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -55,6 +56,7 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.SelectDirectories;
 import org.junit.platform.suite.api.SelectFile;
+import org.junit.platform.suite.api.SelectMethod;
 import org.junit.platform.suite.api.SelectModules;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
@@ -149,6 +151,10 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		findAnnotationValues(suiteClass, SelectClasses.class, SelectClasses::value)
 				.map(this::selectClasses)
 				.ifPresent(this::selectors);
+		findRepeatableAnnotations(suiteClass, SelectMethod.class)
+				.stream()
+				.map(annotation -> selectMethod(annotation.methodClass(), annotation.methodName(), annotation.methodParameterTypes()))
+				.forEach(this::selectors);
 		findAnnotationValues(suiteClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(this::createIncludeClassNameFilter)
@@ -204,6 +210,11 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	private List<ClassSelector> selectClasses(Class<?>... classes) {
 		Arrays.stream(classes).map(Class::getName).distinct().forEach(this.selectedClassNames::add);
 		return AdditionalDiscoverySelectors.selectClasses(classes);
+	}
+
+	private MethodSelector selectMethod(Class<?> methodClass, String methodName, String methodParameterTypes) {
+		selectedClassNames.add(methodClass.getName());
+		return AdditionalDiscoverySelectors.selectMethod(methodClass, methodName, methodParameterTypes);
 	}
 
 	private ClassNameFilter createIncludeClassNameFilter(String... patterns) {

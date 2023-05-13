@@ -34,8 +34,10 @@ import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.FilePosition;
 import org.junit.platform.engine.discovery.FileSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.discovery.PackageSelector;
@@ -58,6 +60,7 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.SelectDirectories;
 import org.junit.platform.suite.api.SelectFile;
+import org.junit.platform.suite.api.SelectMethod;
 import org.junit.platform.suite.api.SelectModules;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
@@ -212,6 +215,58 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 		assertFalse(selectors.isEmpty());
 		assertEquals(TestCase.class, exactlyOne(selectors).getJavaClass());
+	}
+
+	@Test
+	void selectOneMethodWithNoParameters() {
+		class TestClass {
+			void testMethod() {
+
+			}
+		}
+		@SelectMethod(methodClass = TestClass.class, methodName = "testMethod")
+		class Suite {
+		}
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
+		assertEquals(DiscoverySelectors.selectMethod(TestClass.class, "testMethod"), exactlyOne(selectors));
+	}
+
+	@Test
+	void selectOneMethodWithOneParameters() {
+		class TestClass {
+			void testMethod(int i) {
+
+			}
+		}
+		@SelectMethod(methodClass = TestClass.class, methodName = "testMethod", methodParameterTypes = "int")
+		class Suite {
+		}
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
+		assertEquals(DiscoverySelectors.selectMethod(TestClass.class, "testMethod", "int"), exactlyOne(selectors));
+	}
+
+	@Test
+	void selectTwoMethodWithTwoParameters() {
+		class TestClass {
+			void firstTestMethod(int i, String j) {
+			}
+
+			void secondTestMethod(boolean i, float j) {
+			}
+		}
+		@SelectMethod(methodClass = TestClass.class, methodName = "firstTestMethod", methodParameterTypes = "int, java.lang.String")
+		@SelectMethod(methodClass = TestClass.class, methodName = "secondTestMethod", methodParameterTypes = "boolean, float")
+		class Suite {
+		}
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
+		assertEquals(2, selectors.size());
+		assertEquals(DiscoverySelectors.selectMethod(TestClass.class, "firstTestMethod", "int, java.lang.String"),
+			selectors.get(0));
+		assertEquals(DiscoverySelectors.selectMethod(TestClass.class, "secondTestMethod", "boolean, float"),
+			selectors.get(1));
 	}
 
 	@Test
