@@ -35,7 +35,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * {@linkplain #getJavaMethod() method} and its method name, class name, and
  * parameter types accordingly. If a {@link Class} and method name, a class name
  * and method name, or a <em>fully qualified method name</em> is provided,
- * this selector will only attempt to lazily load the {@link Class} and
+ * this selector will only attempt to lazily load the {@link Class} or
  * {@link Method} if {@link #getJavaClass()} or {@link #getJavaMethod()} is
  * invoked.
  *

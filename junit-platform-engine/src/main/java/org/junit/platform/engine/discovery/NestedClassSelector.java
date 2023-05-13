@@ -30,10 +30,10 @@ import org.junit.platform.engine.DiscoverySelector;
  * tests or containers based on classes.
  *
  * <p>If Java {@link Class} references are provided for the nested class or
- * the enclosing classes, the selector will return these {@code Class} and
- * their class names accordingly. If class names are provided, the selector
- * will only attempt to lazily load the {@link Class} if
- * {@link #getEnclosingClasses()} or {@link #getNestedClass()} are invoked.
+ * the enclosing classes, the selector will return those classes and their class
+ * names accordingly. If class names are provided, the selector will only attempt
+ * to lazily load classes if {@link #getEnclosingClasses()} or
+ * {@link #getNestedClass()} is invoked.
  *
  * <p>In this context, Java {@link Class} means anything that can be referenced
  * as a {@link Class} on the JVM &mdash; for example, classes from other JVM

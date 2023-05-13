@@ -31,10 +31,10 @@ import org.junit.platform.engine.DiscoverySelector;
  *
  * <p>If a Java {@link Method} is provided, the selector will return that
  * {@linkplain #getMethod() method} and its method name, class name, enclosing
- * classes names and parameter types accordingly. If class or methods names are
- * provided, this selector will only attempt to lazily load the {@link Class}
- * and {@link Method} if {@link #getEnclosingClasses()},
- * {@link #getNestedClass()} or {@link #getMethod()} is invoked.
+ * classes names, and parameter types accordingly. If class names or method names
+ * are provided, this selector will only attempt to lazily load the {@link Class}
+ * or {@link Method} if {@link #getEnclosingClasses()},
+ * {@link #getNestedClass()}, or {@link #getMethod()} is invoked.
  *
  * <p>In this context, a Java {@code Method} means anything that can be referenced
  * as a {@link Method} on the JVM &mdash; for example, methods from Java classes
