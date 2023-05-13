@@ -30,18 +30,18 @@ class NestedClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 	@Test
 	void equalsAndHashCode() {
 		var selector1 = new NestedClassSelector(List.of("org.example.EnclosingTestClass"),
-			"org.example.NestedTestClass");
+			"org.example.NestedTestClass", null);
 		var selector2 = new NestedClassSelector(List.of("org.example.EnclosingTestClass"),
-			"org.example.NestedTestClass");
-		var selector3 = new NestedClassSelector(List.of("org.example.X"), "org.example.Y");
+			"org.example.NestedTestClass", null);
+		var selector3 = new NestedClassSelector(List.of("org.example.X"), "org.example.Y", null);
 
 		assertEqualsAndHashCode(selector1, selector2, selector3);
 	}
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadEnclosingClasses() {
-		var selector = new NestedClassSelector(List.of("org.example.EnclosingTestClass"),
-			"org.example.NestedTestClass");
+		var selector = new NestedClassSelector(List.of("org.example.EnclosingTestClass"), "org.example.NestedTestClass",
+			null);
 
 		var exception = assertThrows(PreconditionViolationException.class, selector::getEnclosingClasses);
 
@@ -51,12 +51,23 @@ class NestedClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadNestedClass() {
-		var selector = new NestedClassSelector(List.of("org.example.EnclosingTestClass"),
-			"org.example.NestedTestClass");
+		var selector = new NestedClassSelector(List.of("org.example.EnclosingTestClass"), "org.example.NestedTestClass",
+			null);
 
 		var exception = assertThrows(PreconditionViolationException.class, selector::getNestedClass);
 
 		assertThat(exception).hasMessage("Could not load class with name: org.example.NestedTestClass") //
 				.hasCauseInstanceOf(ClassNotFoundException.class);
+	}
+
+	@Test
+	void usesClassClassLoader() {
+		var selector = new NestedClassSelector(List.of(getClass()), NestedTestCase.class);
+
+		assertThat(selector.getClassLoader()).isNotNull().isSameAs(getClass().getClassLoader());
+	}
+
+	@SuppressWarnings("InnerClassMayBeStatic")
+	class NestedTestCase {
 	}
 }

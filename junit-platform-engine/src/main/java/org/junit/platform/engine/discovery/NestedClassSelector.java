@@ -11,7 +11,9 @@
 package org.junit.platform.engine.discovery;
 
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.util.List;
 import java.util.Objects;
@@ -46,17 +48,31 @@ import org.junit.platform.engine.DiscoverySelector;
 @API(status = STABLE, since = "1.6")
 public class NestedClassSelector implements DiscoverySelector {
 
-	private List<ClassSelector> enclosingClassSelectors;
-	private ClassSelector nestedClassSelector;
+	private final List<ClassSelector> enclosingClassSelectors;
+	private final ClassSelector nestedClassSelector;
+	private final ClassLoader classLoader;
 
-	NestedClassSelector(List<String> enclosingClassNames, String nestedClassName) {
-		this.enclosingClassSelectors = enclosingClassNames.stream().map(ClassSelector::new).collect(toList());
-		this.nestedClassSelector = new ClassSelector(nestedClassName);
+	NestedClassSelector(List<String> enclosingClassNames, String nestedClassName, ClassLoader classLoader) {
+		this.enclosingClassSelectors = enclosingClassNames.stream() //
+				.map(className -> new ClassSelector(className, classLoader)) //
+				.collect(toUnmodifiableList());
+		this.nestedClassSelector = new ClassSelector(nestedClassName, classLoader);
+		this.classLoader = classLoader;
 	}
 
 	NestedClassSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass) {
 		this.enclosingClassSelectors = enclosingClasses.stream().map(ClassSelector::new).collect(toList());
 		this.nestedClassSelector = new ClassSelector(nestedClass);
+		this.classLoader = nestedClass.getClassLoader();
+	}
+
+	/**
+	 * Get the {@link ClassLoader} used to load the selected nested class.
+	 * @since 1.10
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public ClassLoader getClassLoader() {
+		return this.classLoader;
 	}
 
 	/**
@@ -121,6 +137,7 @@ public class NestedClassSelector implements DiscoverySelector {
 		return new ToStringBuilder(this) //
 				.append("enclosingClassNames", getEnclosingClassNames()) //
 				.append("nestedClassName", getNestedClassName()) //
+				.append("classLoader", getClassLoader()) //
 				.toString();
 	}
 

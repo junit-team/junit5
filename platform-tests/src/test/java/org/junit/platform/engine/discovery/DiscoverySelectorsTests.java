@@ -692,6 +692,27 @@ class DiscoverySelectorsTests {
 		}
 
 		@Test
+		void selectNestedClassByClassNamesAndClassLoader() throws Exception {
+			var testClasses = List.of(AbstractClassWithNestedInnerClass.class, ClassWithNestedInnerClass.class,
+				AbstractClassWithNestedInnerClass.NestedClass.class);
+			try (var testClassLoader = TestClassLoader.forClasses(testClasses.toArray(Class[]::new))) {
+
+				var selector = selectNestedClass(List.of(enclosingClassName), nestedClassName, testClassLoader);
+
+				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
+				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
+				assertThat(selector.getNestedClass()).isNotEqualTo(AbstractClassWithNestedInnerClass.NestedClass.class);
+				assertThat(selector.getNestedClass().getName()).isEqualTo(nestedClassName);
+
+				assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
+				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
+					testClassLoader);
+				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
+				assertSame(testClassLoader, selector.getNestedClass().getClassLoader());
+			}
+		}
+
+		@Test
 		void selectDoubleNestedClassByClassNames() {
 			var selector = selectNestedClass(List.of(enclosingClassName, nestedClassName), doubleNestedClassName);
 
