@@ -476,7 +476,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.10.0-M1-junit-platform">JUnit Platform</a></li>
 <li><a href="#release-notes-5.10.0-M1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.10.0-M1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
 <li><a href="#release-notes-5.9.3">5.9.3</a>
@@ -521,10 +520,53 @@ authors as well as build tool and IDE vendors.</p>
 <h2 id="release-notes-5.10.0-M1"><a class="anchor" href="#release-notes-5.10.0-M1"></a>5.10.0-M1</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> May 13, 2023</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Promotion of various experimental APIs to stable</p>
+</li>
+<li>
+<p>New <code>LauncherInterceptor</code> SPI</p>
+</li>
+<li>
+<p>New <code>testfeed</code> details mode for <code>ConsoleLauncher</code></p>
+</li>
+<li>
+<p>New <code>ConsoleLauncher</code> subcommand for test discovery without execution</p>
+</li>
+<li>
+<p>Dry-run mode for test execution</p>
+</li>
+<li>
+<p>Provide <code>NamespacedHierarchicalStore</code> for third-party test engine reuse</p>
+</li>
+<li>
+<p>Stacktrace pruning to hide internal JUnit calls</p>
+</li>
+<li>
+<p>New <code>TempDirFactory</code> SPI for customizing how temporary directories are created</p>
+</li>
+<li>
+<p>Failure threshold for <code>@RepeatedTest</code></p>
+</li>
+<li>
+<p>New convenience base classes for implementing <code>ArgumentsProvider</code> and <code>ArgumentConverter</code></p>
+</li>
+<li>
+<p>Custom class loader support for class/method selectors, <code>@MethodSource</code>, <code>@EnabledIf</code>, and <code>@DisabledIf</code></p>
+</li>
+<li>
+<p>Improved configurability of parallel execution</p>
+</li>
+<li>
+<p>Numerous bug fixes and minor improvements</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -534,22 +576,13 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.10.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.10.0-M1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
 <h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
 <p>Building native images with GraalVM now requires configuring the build arg
-<code>--initialize-at-build-time=org.junit.platform.launcher.core.LauncherConfig</code>.</p>
+<code>--initialize-at-build-time=org.junit.platform.launcher.core.LauncherConfig</code> and
+<code>--initialize-at-build-time=org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter</code>.</p>
 </li>
 </ul>
 </div>
@@ -642,7 +675,7 @@ prune other calls via configurations parameters. Please refer to the
 <div class="sect2">
 <h3 id="release-notes-5.10.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.10.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
+<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -720,8 +753,8 @@ parameter to set the maximum pool size factor.</p>
 parameter to disable pool saturation.</p>
 </li>
 <li>
-<p>New <code>TempDirFactory</code> SPI for customizing how the <code>TempDirectory</code> extension creates
-temporary directories. See the
+<p>New <code>TempDirFactory</code> SPI for customizing how the <code>@TempDir</code> extension creates temporary
+directories. See the
 <a href="../user-guide/index.html#writing-tests-built-in-extensions-TempDirectory">User Guide</a>
 for details.</p>
 </li>
@@ -733,39 +766,6 @@ for details.</p>
 <p>If <code>@MethodSource</code> is used with a non-static factory method that should be <code>static</code>, the
 exception thrown now provides the user a meaningful explanation of how to address the
 problem.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.10.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.10.0-M1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
 </li>
 </ul>
 </div>
@@ -796,7 +796,7 @@ JUnit repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.3-junit-jupiter"><a class="anchor" href="#release-notes-5.9.3-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -838,7 +838,7 @@ discouraged and will be disallowed in a future release.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -876,7 +876,7 @@ GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.2-junit-platform"><a class="anchor" href="#release-notes-5.9.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -889,7 +889,7 @@ from being silently ignored.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -911,7 +911,7 @@ message at <code>CONFIG</code> level instead of throwing an exception.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.2-junit-jupiter"><a class="anchor" href="#release-notes-5.9.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -922,7 +922,7 @@ without specifying its fully qualified name.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -933,7 +933,7 @@ default.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -954,7 +954,7 @@ disable pool saturation.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.2-junit-vintage"><a class="anchor" href="#release-notes-5.9.2-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -995,7 +995,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.1-junit-platform"><a class="anchor" href="#release-notes-5.9.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1012,7 +1012,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.9.1-junit-jupiter"><a class="anchor" href="#release-notes-5.9.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1038,7 +1038,7 @@ are now properly reported.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1111,7 +1111,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-13 11:36:13 UTC
+Last updated 2023-05-13 12:36:16 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

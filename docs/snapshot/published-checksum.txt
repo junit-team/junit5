@@ -428,7 +428,6 @@
 86d550ae7980a369ee250e3d45e39b72  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFilter.java
 87c149169e1ecbcbff90b97f066e704c  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
 87d4bb38f5eed81b92120a5ff4984328  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/Suite.java
-87dd6005550c6750838e347a1a899f09  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 884181bfe47f11bb2cc7e166be439e41  junit-platform-console/src/main/java/org/junit/platform/console/options/TestDiscoveryOptionsMixin.java
 886cf74e6f1023545a05b0bc90e50895  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 89406f40f711e284ed7587f18cca0c3d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
@@ -538,6 +537,7 @@ a8237042ff7dd334f02cd22865c22664  documentation/src/test/java/example/testinterf
 a8859f80ff968fb6df8eb3bf30774b13  documentation/src/test/java/example/defaultmethods/ComparableContract.java
 a8cb4061c4d230068858bbf82c550c8c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineDiscoveryResult.java
 a93801a84f5bf1ec8fd8e6ab1e960501  junit-platform-commons/src/main/java/org/junit/platform/commons/function/package-info.java
+a9ae75c17a1f655062ffc01963eed859  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-M1.adoc
 aaf75672c058ce6f60fb35a34e59a590  junit-platform-console/src/main/java/org/junit/platform/console/options/Details.java
 ab72e7847b8203ddbb210e7d08a4315a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/package-info.java
 ab83ef64ae475dffa6ef688db027c5e0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/package-info.java
