@@ -63,16 +63,8 @@ public class MethodSelector implements DiscoverySelector {
 	private Class<?> javaClass;
 	private Method javaMethod;
 
-	MethodSelector(String className, String methodName) {
-		this(className, methodName, (ClassLoader) null);
-	}
-
 	MethodSelector(String className, String methodName, ClassLoader classLoader) {
 		this(className, methodName, "", classLoader);
-	}
-
-	MethodSelector(String className, String methodName, String methodParameterTypes) {
-		this(className, methodName, methodParameterTypes, null);
 	}
 
 	MethodSelector(String className, String methodName, String methodParameterTypes, ClassLoader classLoader) {
@@ -236,10 +228,10 @@ public class MethodSelector implements DiscoverySelector {
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("className", this.className)
-				.append("methodName", this.methodName)
-				.append("methodParameterTypes", this.methodParameterTypes)
-				.append("classLoader", this.classLoader)
+				.append("className", getClassName())
+				.append("methodName", getMethodName())
+				.append("methodParameterTypes", getMethodParameterTypes())
+				.append("classLoader", getClassLoader())
 				.toString();
 		// @formatter:on
 	}

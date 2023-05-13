@@ -49,10 +49,6 @@ public class ClassSelector implements DiscoverySelector {
 
 	private Class<?> javaClass;
 
-	ClassSelector(String className) {
-		this(className, null);
-	}
-
 	ClassSelector(String className, ClassLoader classLoader) {
 		this.className = className;
 		this.classLoader = classLoader;
