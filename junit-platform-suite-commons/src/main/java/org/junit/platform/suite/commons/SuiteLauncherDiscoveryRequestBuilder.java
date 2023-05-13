@@ -25,10 +25,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -36,6 +38,8 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -55,6 +59,7 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.SelectDirectories;
 import org.junit.platform.suite.api.SelectFile;
+import org.junit.platform.suite.api.SelectMethod;
 import org.junit.platform.suite.api.SelectModules;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
@@ -149,6 +154,10 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		findAnnotationValues(suiteClass, SelectClasses.class, SelectClasses::value)
 				.map(this::selectClasses)
 				.ifPresent(this::selectors);
+		findRepeatableAnnotations(suiteClass,SelectMethod.class)
+				.stream()
+				.map(this::selectMethods)
+				.forEach(this::selectors);
 		findAnnotationValues(suiteClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(this::createIncludeClassNameFilter)
@@ -199,6 +208,17 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		}
 
 		return delegate.build();
+	}
+
+	private List<MethodSelector> selectMethods(SelectMethod... methods) {
+		Arrays.stream(methods).map(method -> method.methodClass().getName()).distinct().forEach(
+			this.selectedClassNames::add);
+		List<MethodSelector> selectors = Arrays.stream(methods).map(
+			selectMethod -> DiscoverySelectors.selectMethod(selectMethod.methodClass(), selectMethod.methodName(),
+				ClassUtils.nullSafeToString(selectMethod.methodParameterTypes()))).distinct().collect(
+					Collectors.toList());
+
+		return selectors;
 	}
 
 	private List<ClassSelector> selectClasses(Class<?>... classes) {
