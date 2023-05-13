@@ -13,8 +13,6 @@ package org.junit.platform.engine.discovery;
 import static java.lang.String.join;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -248,11 +246,12 @@ class DiscoverySelectorsTests {
 	@Test
 	void selectClassByNameAndClassLoader() throws Exception {
 		try (var testClassLoader = TestClassLoader.forClasses(getClass())) {
-			ClassSelector selector = selectClass(getClass().getName(), testClassLoader);
-			assertEquals(getClass().getName(), selector.getJavaClass().getName());
-			assertNotEquals(getClass(), selector.getJavaClass());
-			assertSame(testClassLoader, selector.getClassLoader());
-			assertSame(testClassLoader, selector.getJavaClass().getClassLoader());
+			var selector = selectClass(getClass().getName(), testClassLoader);
+
+			assertThat(selector.getJavaClass().getName()).isEqualTo(getClass().getName());
+			assertThat(selector.getJavaClass()).isNotEqualTo(getClass());
+			assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
+			assertThat(selector.getJavaClass().getClassLoader()).isSameAs(testClassLoader);
 		}
 	}
 
@@ -337,16 +336,16 @@ class DiscoverySelectorsTests {
 	@Test
 	void selectMethodByFullyQualifiedNameAndClassLoader() throws Exception {
 		try (var testClassLoader = TestClassLoader.forClasses(getClass())) {
-			Class<?> clazz = testClassLoader.loadClass(getClass().getName());
-			assertNotEquals(getClass(), clazz);
+			var clazz = testClassLoader.loadClass(getClass().getName());
+			assertThat(clazz).isNotEqualTo(getClass());
 
-			Method method = clazz.getDeclaredMethod("myTest");
-			MethodSelector selector = selectMethod(getClass().getName(), "myTest", testClassLoader);
-			assertEquals(method, selector.getJavaMethod());
-			assertEquals(clazz, selector.getJavaClass());
-			assertEquals(clazz.getName(), selector.getClassName());
-			assertEquals(method.getName(), selector.getMethodName());
-			assertEquals("", selector.getMethodParameterTypes());
+			var method = clazz.getDeclaredMethod("myTest");
+			var selector = selectMethod(getClass().getName(), "myTest", testClassLoader);
+			assertThat(selector.getJavaMethod()).isEqualTo(method);
+			assertThat(selector.getJavaClass()).isEqualTo(clazz);
+			assertThat(selector.getClassName()).isEqualTo(clazz.getName());
+			assertThat(selector.getMethodName()).isEqualTo(method.getName());
+			assertThat(selector.getMethodParameterTypes()).isEmpty();
 		}
 	}
 
@@ -695,8 +694,8 @@ class DiscoverySelectorsTests {
 		void selectNestedClassByClassNamesAndClassLoader() throws Exception {
 			var testClasses = List.of(AbstractClassWithNestedInnerClass.class, ClassWithNestedInnerClass.class,
 				AbstractClassWithNestedInnerClass.NestedClass.class);
-			try (var testClassLoader = TestClassLoader.forClasses(testClasses.toArray(Class[]::new))) {
 
+			try (var testClassLoader = TestClassLoader.forClasses(testClasses)) {
 				var selector = selectNestedClass(List.of(enclosingClassName), nestedClassName, testClassLoader);
 
 				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
@@ -708,7 +707,6 @@ class DiscoverySelectorsTests {
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
 					testClassLoader);
 				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
-				assertSame(testClassLoader, selector.getNestedClass().getClassLoader());
 			}
 		}
 
@@ -751,8 +749,8 @@ class DiscoverySelectorsTests {
 		void selectNestedMethodByEnclosingClassNamesAndMethodNameAndClassLoader() throws Exception {
 			var testClasses = List.of(AbstractClassWithNestedInnerClass.class, ClassWithNestedInnerClass.class,
 				AbstractClassWithNestedInnerClass.NestedClass.class);
-			try (var testClassLoader = TestClassLoader.forClasses(testClasses.toArray(Class[]::new))) {
 
+			try (var testClassLoader = TestClassLoader.forClasses(testClasses)) {
 				var selector = selectNestedMethod(List.of(enclosingClassName), nestedClassName, methodName,
 					testClassLoader);
 
@@ -765,7 +763,6 @@ class DiscoverySelectorsTests {
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
 					testClassLoader);
 				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
-				assertSame(testClassLoader, selector.getNestedClass().getClassLoader());
 
 				assertThat(selector.getMethodName()).isEqualTo(methodName);
 			}
@@ -804,8 +801,8 @@ class DiscoverySelectorsTests {
 		void selectNestedMethodByEnclosingClassNamesAndMethodNameWithParameterTypesAndClassLoader() throws Exception {
 			var testClasses = List.of(AbstractClassWithNestedInnerClass.class, ClassWithNestedInnerClass.class,
 				AbstractClassWithNestedInnerClass.NestedClass.class);
-			try (var testClassLoader = TestClassLoader.forClasses(testClasses.toArray(Class[]::new))) {
 
+			try (var testClassLoader = TestClassLoader.forClasses(testClasses.toArray(Class[]::new))) {
 				var selector = selectNestedMethod(List.of(enclosingClassName), nestedClassName, methodName,
 					String.class.getName(), testClassLoader);
 
@@ -818,7 +815,6 @@ class DiscoverySelectorsTests {
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
 					testClassLoader);
 				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
-				assertSame(testClassLoader, selector.getNestedClass().getClassLoader());
 
 				assertThat(selector.getMethodName()).isEqualTo(methodName);
 				assertThat(selector.getMethodParameterTypes()).isEqualTo(String.class.getName());

@@ -79,7 +79,7 @@ public class NestedClassSelector implements DiscoverySelector {
 	 * Get the names of the classes enclosing the selected nested class.
 	 */
 	public List<String> getEnclosingClassNames() {
-		return enclosingClassSelectors.stream().map(ClassSelector::getClassName).collect(toList());
+		return this.enclosingClassSelectors.stream().map(ClassSelector::getClassName).collect(toList());
 	}
 
 	/**
@@ -92,14 +92,14 @@ public class NestedClassSelector implements DiscoverySelector {
 	 * {@link PreconditionViolationException} if the classes cannot be loaded.
 	 */
 	public List<Class<?>> getEnclosingClasses() {
-		return enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).collect(toList());
+		return this.enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).collect(toList());
 	}
 
 	/**
 	 * Get the name of the selected nested class.
 	 */
 	public String getNestedClassName() {
-		return nestedClassSelector.getClassName();
+		return this.nestedClassSelector.getClassName();
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class NestedClassSelector implements DiscoverySelector {
 	 * {@link PreconditionViolationException} if the class cannot be loaded.
 	 */
 	public Class<?> getNestedClass() {
-		return nestedClassSelector.getJavaClass();
+		return this.nestedClassSelector.getJavaClass();
 	}
 
 	@Override
@@ -123,13 +123,13 @@ public class NestedClassSelector implements DiscoverySelector {
 			return false;
 		}
 		NestedClassSelector that = (NestedClassSelector) o;
-		return enclosingClassSelectors.equals(that.enclosingClassSelectors)
-				&& nestedClassSelector.equals(that.nestedClassSelector);
+		return this.enclosingClassSelectors.equals(that.enclosingClassSelectors)
+				&& this.nestedClassSelector.equals(that.nestedClassSelector);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(enclosingClassSelectors, nestedClassSelector);
+		return Objects.hash(this.enclosingClassSelectors, this.nestedClassSelector);
 	}
 
 	@Override

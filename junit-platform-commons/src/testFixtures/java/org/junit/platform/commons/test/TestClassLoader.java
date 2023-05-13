@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.util.ClassLoaderUtils;
@@ -40,6 +41,7 @@ public class TestClassLoader extends URLClassLoader {
 	/**
 	 * Create a {@link TestClassLoader} that filters the provided classes.
 	 *
+	 * @see #forClasses(List)
 	 * @see #forClassNamePrefix(String)
 	 */
 	public static TestClassLoader forClasses(Class<?>... classes) {
@@ -48,10 +50,22 @@ public class TestClassLoader extends URLClassLoader {
 	}
 
 	/**
+	 * Create a {@link TestClassLoader} that filters the provided classes.
+	 *
+	 * @see #forClasses(Class...)
+	 * @see #forClassNamePrefix(String)
+	 */
+	public static TestClassLoader forClasses(List<Class<?>> classes) {
+		Predicate<String> classNameFilter = name -> classes.stream().map(Class::getName).anyMatch(name::equals);
+		return new TestClassLoader(getCodeSourceUrl(stackWalker.getCallerClass()), classNameFilter);
+	}
+
+	/**
 	 * Create a {@link TestClassLoader} that filters classes whose fully
 	 * qualified names start with the provided prefix.
 	 *
 	 * @see #forClasses(Class...)
+	 * @see #forClasses(List)
 	 */
 	public static TestClassLoader forClassNamePrefix(String prefix) {
 		return new TestClassLoader(getCodeSourceUrl(stackWalker.getCallerClass()), name -> name.startsWith(prefix));

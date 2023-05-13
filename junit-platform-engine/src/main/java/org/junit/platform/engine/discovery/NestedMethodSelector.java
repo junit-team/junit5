@@ -98,7 +98,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 	 * containing the selected method.
 	 */
 	public List<String> getEnclosingClassNames() {
-		return nestedClassSelector.getEnclosingClassNames();
+		return this.nestedClassSelector.getEnclosingClassNames();
 	}
 
 	/**
@@ -111,14 +111,14 @@ public class NestedMethodSelector implements DiscoverySelector {
 	 * {@link PreconditionViolationException} if the classes cannot be loaded.
 	 */
 	public List<Class<?>> getEnclosingClasses() {
-		return nestedClassSelector.getEnclosingClasses();
+		return this.nestedClassSelector.getEnclosingClasses();
 	}
 
 	/**
 	 * Get the name of the nested class containing the selected method.
 	 */
 	public String getNestedClassName() {
-		return nestedClassSelector.getNestedClassName();
+		return this.nestedClassSelector.getNestedClassName();
 	}
 
 	/**
@@ -130,14 +130,14 @@ public class NestedMethodSelector implements DiscoverySelector {
 	 * {@link PreconditionViolationException} if the class cannot be loaded.
 	 */
 	public Class<?> getNestedClass() {
-		return nestedClassSelector.getNestedClass();
+		return this.nestedClassSelector.getNestedClass();
 	}
 
 	/**
 	 * Get the name of the selected method.
 	 */
 	public String getMethodName() {
-		return methodSelector.getMethodName();
+		return this.methodSelector.getMethodName();
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 	 * {@link PreconditionViolationException} if the method cannot be loaded.
 	 */
 	public Method getMethod() {
-		return methodSelector.getJavaMethod();
+		return this.methodSelector.getJavaMethod();
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 	 * constructor; never {@code null}
 	 */
 	public String getMethodParameterTypes() {
-		return methodSelector.getMethodParameterTypes();
+		return this.methodSelector.getMethodParameterTypes();
 	}
 
 	@Override
@@ -178,12 +178,13 @@ public class NestedMethodSelector implements DiscoverySelector {
 			return false;
 		}
 		NestedMethodSelector that = (NestedMethodSelector) o;
-		return nestedClassSelector.equals(that.nestedClassSelector) && methodSelector.equals(that.methodSelector);
+		return this.nestedClassSelector.equals(that.nestedClassSelector)
+				&& this.methodSelector.equals(that.methodSelector);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(nestedClassSelector, methodSelector);
+		return Objects.hash(this.nestedClassSelector, this.methodSelector);
 	}
 
 	@Override
