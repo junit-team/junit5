@@ -748,6 +748,30 @@ class DiscoverySelectorsTests {
 		}
 
 		@Test
+		void selectNestedMethodByEnclosingClassNamesAndMethodNameAndClassLoader() throws Exception {
+			var testClasses = List.of(AbstractClassWithNestedInnerClass.class, ClassWithNestedInnerClass.class,
+				AbstractClassWithNestedInnerClass.NestedClass.class);
+			try (var testClassLoader = TestClassLoader.forClasses(testClasses.toArray(Class[]::new))) {
+
+				var selector = selectNestedMethod(List.of(enclosingClassName), nestedClassName, methodName,
+					testClassLoader);
+
+				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
+				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
+				assertThat(selector.getNestedClass()).isNotEqualTo(AbstractClassWithNestedInnerClass.NestedClass.class);
+				assertThat(selector.getNestedClass().getName()).isEqualTo(nestedClassName);
+
+				assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
+				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
+					testClassLoader);
+				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
+				assertSame(testClassLoader, selector.getNestedClass().getClassLoader());
+
+				assertThat(selector.getMethodName()).isEqualTo(methodName);
+			}
+		}
+
+		@Test
 		void selectNestedMethodByEnclosingClassesAndMethodName() throws Exception {
 			var selector = selectNestedMethod(List.of(ClassWithNestedInnerClass.class),
 				AbstractClassWithNestedInnerClass.NestedClass.class, methodName);
@@ -774,6 +798,31 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
 			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
 			assertThat(selector.getMethodName()).isEqualTo(methodName);
+		}
+
+		@Test
+		void selectNestedMethodByEnclosingClassNamesAndMethodNameWithParameterTypesAndClassLoader() throws Exception {
+			var testClasses = List.of(AbstractClassWithNestedInnerClass.class, ClassWithNestedInnerClass.class,
+				AbstractClassWithNestedInnerClass.NestedClass.class);
+			try (var testClassLoader = TestClassLoader.forClasses(testClasses.toArray(Class[]::new))) {
+
+				var selector = selectNestedMethod(List.of(enclosingClassName), nestedClassName, methodName,
+					String.class.getName(), testClassLoader);
+
+				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
+				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
+				assertThat(selector.getNestedClass()).isNotEqualTo(AbstractClassWithNestedInnerClass.NestedClass.class);
+				assertThat(selector.getNestedClass().getName()).isEqualTo(nestedClassName);
+
+				assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
+				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
+					testClassLoader);
+				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
+				assertSame(testClassLoader, selector.getNestedClass().getClassLoader());
+
+				assertThat(selector.getMethodName()).isEqualTo(methodName);
+				assertThat(selector.getMethodParameterTypes()).isEqualTo(String.class.getName());
+			}
 		}
 
 		@Test
@@ -808,7 +857,8 @@ class DiscoverySelectorsTests {
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", null, "int"));
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", " "));
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", " ", "int"));
-			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", "methodName", null));
+			assertViolatesPrecondition(
+				() -> selectNestedMethod(List.of("ClassName"), "ClassName", "methodName", (String) null));
 		}
 
 		abstract class AbstractClassWithNestedInnerClass {
