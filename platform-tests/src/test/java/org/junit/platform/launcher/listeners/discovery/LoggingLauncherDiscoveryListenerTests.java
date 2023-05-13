@@ -80,7 +80,7 @@ public class LoggingLauncherDiscoveryListenerTests extends AbstractLauncherDisco
 		assertThat(log.stream(LoggingLauncherDiscoveryListener.class, Level.SEVERE)) //
 				.extracting(LogRecord::getMessage) //
 				.containsExactly(
-					"Resolution of ClassSelector [className = 'java.lang.Object'] by [engine:some-engine] failed");
+					"Resolution of ClassSelector [className = 'java.lang.Object', classLoader = null] by [engine:some-engine] failed");
 	}
 
 	@Test

@@ -12,6 +12,8 @@ package org.junit.jupiter.params.converter;
 
 import static java.util.Collections.unmodifiableMap;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -27,6 +29,11 @@ class StringToNumberConverter implements StringToObjectConverter {
 		converters.put(Long.class, Long::decode);
 		converters.put(Float.class, Float::valueOf);
 		converters.put(Double.class, Double::valueOf);
+		// Technically, BigInteger and BigDecimal constructors are covered by
+		// FallbackStringToObjectConverter, but we have explicit conversion
+		// configured for them anyway.
+		converters.put(BigInteger.class, BigInteger::new);
+		converters.put(BigDecimal.class, BigDecimal::new);
 		CONVERTERS = unmodifiableMap(converters);
 	}
 

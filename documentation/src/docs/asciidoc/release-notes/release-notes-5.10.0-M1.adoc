@@ -37,6 +37,9 @@ repository on GitHub.
   `ClassLoader`. This allows parameter types to be resolved with custom `ClassLoader`
   arrangements (such as OSGi). Consequently, `DiscoverySelectors.selectMethod(Class<?>,
   String, String)` also now works properly with custom `ClassLoader` arrangements.
+* New overloaded constructors for `ClassSelector` and `MethodSelector` that take an
+  explicit `ClassLoader` as a parameter, allowing selectors to select classes in custom
+  `ClassLoader` arrangements like in OSGi.
 * For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
   started/finished and opened/closed events are now invoked using "wrapping" semantics.
   This means that finished/closed event methods are invoked in reverse order compared to
@@ -74,6 +77,10 @@ repository on GitHub.
 
 ==== Bug Fixes
 
+* The extensions supporting `@MethodSource`, `@EnabledIf`, and `@DisabledIf` now load
+  classes by fully-qualified class name using the `ClassLoader` obtained from the test
+  class when possible. This allows classes to be resolved with custom `ClassLoader`
+  arrangements (such as OSGi).
 * When converting an argument for a `@ParameterizedTest` method from a fully-qualified
   class name (`String`) to a `Class`, the `ClassLoader` of the class in which the
   `@ParameterizedTest` method is declared is now used to resolve the `Class` instead of

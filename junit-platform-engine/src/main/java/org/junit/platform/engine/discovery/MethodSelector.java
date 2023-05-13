@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
@@ -17,6 +18,7 @@ import java.util.Objects;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -53,6 +55,7 @@ import org.junit.platform.engine.DiscoverySelector;
 @API(status = STABLE, since = "1.0")
 public class MethodSelector implements DiscoverySelector {
 
+	private final ClassLoader classLoader;
 	private final String className;
 	private final String methodName;
 	private final String methodParameterTypes;
@@ -61,10 +64,19 @@ public class MethodSelector implements DiscoverySelector {
 	private Method javaMethod;
 
 	MethodSelector(String className, String methodName) {
-		this(className, methodName, "");
+		this(className, methodName, (ClassLoader) null);
+	}
+
+	MethodSelector(String className, String methodName, ClassLoader classLoader) {
+		this(className, methodName, "", classLoader);
 	}
 
 	MethodSelector(String className, String methodName, String methodParameterTypes) {
+		this(className, methodName, methodParameterTypes, null);
+	}
+
+	MethodSelector(String className, String methodName, String methodParameterTypes, ClassLoader classLoader) {
+		this.classLoader = classLoader;
 		this.className = className;
 		this.methodName = methodName;
 		this.methodParameterTypes = methodParameterTypes;
@@ -75,6 +87,7 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	MethodSelector(Class<?> javaClass, String methodName, String methodParameterTypes) {
+		this.classLoader = javaClass.getClassLoader();
 		this.javaClass = javaClass;
 		this.className = javaClass.getName();
 		this.methodName = methodName;
@@ -82,6 +95,7 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	MethodSelector(Class<?> javaClass, Method method) {
+		this.classLoader = javaClass.getClassLoader();
 		this.javaClass = javaClass;
 		this.className = javaClass.getName();
 		this.javaMethod = method;
@@ -94,6 +108,15 @@ public class MethodSelector implements DiscoverySelector {
 	 */
 	public String getClassName() {
 		return this.className;
+	}
+
+	/**
+	 * Get the {@link ClassLoader} used to load the specified class.
+	 * @since 1.10
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public ClassLoader getClassLoader() {
+		return this.classLoader;
 	}
 
 	/**
@@ -153,8 +176,11 @@ public class MethodSelector implements DiscoverySelector {
 	private void lazyLoadJavaClass() {
 		if (this.javaClass == null) {
 			// @formatter:off
-			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
-				cause -> new PreconditionViolationException("Could not load class with name: " + this.className, cause));
+			Try<Class<?>> tryToLoadClass = this.classLoader == null
+				? ReflectionUtils.tryToLoadClass(this.className)
+				: ReflectionUtils.tryToLoadClass(this.className, this.classLoader);
+			this.javaClass = tryToLoadClass.getOrThrow(cause ->
+				new PreconditionViolationException("Could not load class with name: " + this.className, cause));
 			// @formatter:on
 		}
 	}
@@ -213,6 +239,7 @@ public class MethodSelector implements DiscoverySelector {
 				.append("className", this.className)
 				.append("methodName", this.methodName)
 				.append("methodParameterTypes", this.methodParameterTypes)
+				.append("classLoader", this.classLoader)
 				.toString();
 		// @formatter:on
 	}

@@ -1375,10 +1375,7 @@ public final class ReflectionUtils {
 	}
 
 	private static Class<?> loadRequiredParameterType(Class<?> clazz, String methodName, String typeName) {
-		ClassLoader classLoader = clazz.getClassLoader();
-		if (classLoader == null) {
-			classLoader = ClassLoaderUtils.getDefaultClassLoader();
-		}
+		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(clazz);
 
 		// @formatter:off
 		return tryToLoadClass(typeName, classLoader)

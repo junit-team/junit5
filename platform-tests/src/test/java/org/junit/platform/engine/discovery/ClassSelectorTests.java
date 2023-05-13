@@ -43,4 +43,12 @@ class ClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 		assertThat(e).hasMessage("Could not load class with name: org.example.TestClass").hasCauseInstanceOf(
 			ClassNotFoundException.class);
 	}
+
+	@Test
+	void usesClassClassLoader() {
+		var selector = new ClassSelector(getClass());
+
+		assertThat(selector.getClassLoader()).isNotNull().isSameAs(getClass().getClassLoader());
+	}
+
 }

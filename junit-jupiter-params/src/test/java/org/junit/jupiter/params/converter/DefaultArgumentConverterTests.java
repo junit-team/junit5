@@ -211,17 +211,17 @@ class DefaultArgumentConverterTests {
 	@Test
 	void convertsStringToClassWithCustomTypeFromDifferentClassLoader() throws Exception {
 		String customTypeName = Enigma.class.getName();
-		try (TestClassLoader customTypeClassLoader = TestClassLoader.forClasses(Enigma.class)) {
-			var customType = customTypeClassLoader.loadClass(customTypeName);
-			assertThat(customType.getClassLoader()).isInstanceOf(TestClassLoader.class);
+		try (var testClassLoader = TestClassLoader.forClasses(Enigma.class)) {
+			var customType = testClassLoader.loadClass(customTypeName);
+			assertThat(customType.getClassLoader()).isSameAs(testClassLoader);
 
 			var declaringExecutable = ReflectionUtils.findMethod(customType, "foo").get();
-			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isInstanceOf(TestClassLoader.class);
+			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
 			var clazz = (Class<?>) convert(customTypeName, Class.class, parameterContext(declaringExecutable));
 			assertThat(clazz).isNotEqualTo(Enigma.class);
 			assertThat(clazz).isEqualTo(customType);
-			assertThat(clazz.getClassLoader()).isInstanceOf(TestClassLoader.class);
+			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
 		}
 	}
 

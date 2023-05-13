@@ -10,12 +10,14 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
@@ -43,15 +45,22 @@ import org.junit.platform.engine.DiscoverySelector;
 public class ClassSelector implements DiscoverySelector {
 
 	private final String className;
+	private final ClassLoader classLoader;
 
 	private Class<?> javaClass;
 
 	ClassSelector(String className) {
+		this(className, null);
+	}
+
+	ClassSelector(String className, ClassLoader classLoader) {
 		this.className = className;
+		this.classLoader = classLoader;
 	}
 
 	ClassSelector(Class<?> javaClass) {
 		this.className = javaClass.getName();
+		this.classLoader = javaClass.getClassLoader();
 		this.javaClass = javaClass;
 	}
 
@@ -63,6 +72,15 @@ public class ClassSelector implements DiscoverySelector {
 	}
 
 	/**
+	 * Get the {@link ClassLoader} used to load the selected class.
+	 * @since 1.10
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public ClassLoader getClassLoader() {
+		return this.classLoader;
+	}
+
+	/**
 	 * Get the selected {@link Class}.
 	 *
 	 * <p>If the {@link Class} was not provided, but only the name, this method
@@ -71,9 +89,13 @@ public class ClassSelector implements DiscoverySelector {
 	 */
 	public Class<?> getJavaClass() {
 		if (this.javaClass == null) {
-			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
-				cause -> new PreconditionViolationException("Could not load class with name: " + this.className,
-					cause));
+			// @formatter:off
+			Try<Class<?>> tryToLoadClass = this.classLoader == null
+				? ReflectionUtils.tryToLoadClass(this.className)
+				: ReflectionUtils.tryToLoadClass(this.className, this.classLoader);
+			this.javaClass = tryToLoadClass.getOrThrow(cause ->
+				new PreconditionViolationException("Could not load class with name: " + this.className, cause));
+			// @formatter:on
 		}
 		return this.javaClass;
 	}
@@ -105,7 +127,12 @@ public class ClassSelector implements DiscoverySelector {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("className", this.className).toString();
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("className", this.className)
+				.append("classLoader", this.classLoader)
+				.toString();
+		// @formatter:on
 	}
 
 }

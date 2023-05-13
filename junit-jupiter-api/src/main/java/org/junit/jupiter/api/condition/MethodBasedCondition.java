@@ -25,6 +25,7 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -56,14 +57,17 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 				.orElseGet(this::enabledByDefault);
 	}
 
-	private Method getConditionMethod(String fullyQualifiedMethodName, ExtensionContext context) {
+	// package-private for testing
+	Method getConditionMethod(String fullyQualifiedMethodName, ExtensionContext context) {
+		Class<?> testClass = context.getRequiredTestClass();
 		if (!fullyQualifiedMethodName.contains("#")) {
-			return findMethod(context.getRequiredTestClass(), fullyQualifiedMethodName);
+			return findMethod(testClass, fullyQualifiedMethodName);
 		}
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
 		String className = methodParts[0];
 		String methodName = methodParts[1];
-		Class<?> clazz = ReflectionUtils.tryToLoadClass(className).getOrThrow(
+		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(testClass);
+		Class<?> clazz = ReflectionUtils.tryToLoadClass(className, classLoader).getOrThrow(
 			cause -> new JUnitException(format("Could not load class [%s]", className), cause));
 		return findMethod(clazz, methodName);
 	}

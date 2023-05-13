@@ -41,6 +41,7 @@ import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -235,6 +236,31 @@ class MethodArgumentsProviderTests {
 		var arguments = provideArguments(ExternalFactoryMethods.class.getName() + "#stringsProvider");
 
 		assertThat(arguments).containsExactly(array("string1"), array("string2"));
+	}
+
+	@Test
+	void providesArgumentsUsingExternalFactoryMethodInTypeFromDifferentClassLoader() throws Exception {
+		try (var testClassLoader = TestClassLoader.forClasses(TestCase.class, ExternalFactoryMethods.class)) {
+			var testClass = testClassLoader.loadClass(TestCase.class.getName());
+			var testMethod = ReflectionUtils.findMethod(testClass, "test").get();
+			var fullyQualifiedMethodName = ExternalFactoryMethods.class.getName() + "#stringsProvider";
+
+			assertThat(testClass.getClassLoader()).isSameAs(testClassLoader);
+
+			var arguments = provideArguments(testClass, false, fullyQualifiedMethodName);
+			assertThat(arguments).containsExactly(array("string1"), array("string2"));
+
+			var factoryMethod = MethodArgumentsProvider.findFactoryMethodByFullyQualifiedName(testClass, testMethod,
+				fullyQualifiedMethodName);
+			assertThat(factoryMethod).isNotNull();
+			assertThat(factoryMethod.getName()).isEqualTo("stringsProvider");
+			assertThat(factoryMethod.getParameterTypes()).isEmpty();
+
+			var declaringClass = factoryMethod.getDeclaringClass();
+			assertThat(declaringClass.getName()).isEqualTo(ExternalFactoryMethods.class.getName());
+			assertThat(declaringClass).isNotEqualTo(ExternalFactoryMethods.class);
+			assertThat(declaringClass.getClassLoader()).isSameAs(testClassLoader);
+		}
 	}
 
 	@Test

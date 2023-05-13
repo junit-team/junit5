@@ -13,6 +13,8 @@ package org.junit.platform.engine.discovery;
 import static java.lang.String.join;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -46,6 +48,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -243,8 +246,19 @@ class DiscoverySelectorsTests {
 	}
 
 	@Test
+	void selectClassByNameAndClassLoader() throws Exception {
+		try (var testClassLoader = TestClassLoader.forClasses(getClass())) {
+			ClassSelector selector = selectClass(getClass().getName(), testClassLoader);
+			assertEquals(getClass().getName(), selector.getJavaClass().getName());
+			assertNotEquals(getClass(), selector.getJavaClass());
+			assertSame(testClassLoader, selector.getClassLoader());
+			assertSame(testClassLoader, selector.getJavaClass().getClassLoader());
+		}
+	}
+
+	@Test
 	void selectMethodByClassNameAndMethodNamePreconditions() {
-		assertViolatesPrecondition(() -> selectMethod("TestClass", null));
+		assertViolatesPrecondition(() -> selectMethod("TestClass", (String) null));
 		assertViolatesPrecondition(() -> selectMethod("TestClass", ""));
 		assertViolatesPrecondition(() -> selectMethod("TestClass", "  "));
 		assertViolatesPrecondition(() -> selectMethod((String) null, "method"));
@@ -260,7 +274,7 @@ class DiscoverySelectorsTests {
 		assertViolatesPrecondition(() -> selectMethod((String) null, "method", "int"));
 		assertViolatesPrecondition(() -> selectMethod("", "method", "int"));
 		assertViolatesPrecondition(() -> selectMethod("   ", "method", "int"));
-		assertViolatesPrecondition(() -> selectMethod("TestClass", "method", null));
+		assertViolatesPrecondition(() -> selectMethod("TestClass", "method", (String) null));
 	}
 
 	@Test
@@ -318,6 +332,22 @@ class DiscoverySelectorsTests {
 		Class<?> clazz = getClass();
 		var method = clazz.getDeclaredMethod("myTest");
 		assertSelectMethodByFullyQualifiedName(clazz, method);
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedNameAndClassLoader() throws Exception {
+		try (var testClassLoader = TestClassLoader.forClasses(getClass())) {
+			Class<?> clazz = testClassLoader.loadClass(getClass().getName());
+			assertNotEquals(getClass(), clazz);
+
+			Method method = clazz.getDeclaredMethod("myTest");
+			MethodSelector selector = selectMethod(getClass().getName(), "myTest", testClassLoader);
+			assertEquals(method, selector.getJavaMethod());
+			assertEquals(clazz, selector.getJavaClass());
+			assertEquals(clazz.getName(), selector.getClassName());
+			assertEquals(method.getName(), selector.getMethodName());
+			assertEquals("", selector.getMethodParameterTypes());
+		}
 	}
 
 	@Test

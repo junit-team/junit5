@@ -28,6 +28,7 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -73,7 +74,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		}
 
 		// Find factory method using fully-qualified name.
-		Method factoryMethod = findFactoryMethodByFullyQualifiedName(testMethod, factoryMethodName);
+		Method factoryMethod = findFactoryMethodByFullyQualifiedName(testClass, testMethod, factoryMethodName);
 
 		// Ensure factory method has a valid return type and is not a test method.
 		Preconditions.condition(isFactoryMethod.test(factoryMethod), () -> format(
@@ -103,12 +104,15 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		return true;
 	}
 
-	private static Method findFactoryMethodByFullyQualifiedName(Method testMethod, String fullyQualifiedMethodName) {
+	// package-private for testing
+	static Method findFactoryMethodByFullyQualifiedName(Class<?> testClass, Method testMethod,
+			String fullyQualifiedMethodName) {
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
 		String className = methodParts[0];
 		String methodName = methodParts[1];
 		String methodParameters = methodParts[2];
-		Class<?> clazz = loadRequiredClass(className);
+		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(testClass);
+		Class<?> clazz = loadRequiredClass(className, classLoader);
 
 		// Attempt to find an exact match first.
 		Method factoryMethod = ReflectionUtils.findMethod(clazz, methodName, methodParameters).orElse(null);
@@ -170,8 +174,8 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 				|| isAnnotated(candidate, TestFactory.class);
 	}
 
-	private static Class<?> loadRequiredClass(String className) {
-		return ReflectionUtils.tryToLoadClass(className).getOrThrow(
+	private static Class<?> loadRequiredClass(String className, ClassLoader classLoader) {
+		return ReflectionUtils.tryToLoadClass(className, classLoader).getOrThrow(
 			cause -> new JUnitException(format("Could not load class [%s]", className), cause));
 	}
 
