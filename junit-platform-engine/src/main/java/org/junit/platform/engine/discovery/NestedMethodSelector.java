@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
@@ -55,15 +56,15 @@ public class NestedMethodSelector implements DiscoverySelector {
 	private final NestedClassSelector nestedClassSelector;
 	private final MethodSelector methodSelector;
 
-	NestedMethodSelector(List<String> enclosingClassNames, String nestedClassName, String methodName) {
-		this.nestedClassSelector = new NestedClassSelector(enclosingClassNames, nestedClassName);
-		this.methodSelector = new MethodSelector(nestedClassName, methodName);
+	NestedMethodSelector(List<String> enclosingClassNames, String nestedClassName, String methodName,
+			ClassLoader classLoader) {
+		this(enclosingClassNames, nestedClassName, methodName, "", classLoader);
 	}
 
 	NestedMethodSelector(List<String> enclosingClassNames, String nestedClassName, String methodName,
-			String methodParameterTypes) {
-		this.nestedClassSelector = new NestedClassSelector(enclosingClassNames, nestedClassName);
-		this.methodSelector = new MethodSelector(nestedClassName, methodName, methodParameterTypes);
+			String methodParameterTypes, ClassLoader classLoader) {
+		this.nestedClassSelector = new NestedClassSelector(enclosingClassNames, nestedClassName, classLoader);
+		this.methodSelector = new MethodSelector(nestedClassName, methodName, methodParameterTypes, classLoader);
 	}
 
 	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, String methodName) {
@@ -80,6 +81,16 @@ public class NestedMethodSelector implements DiscoverySelector {
 	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, Method method) {
 		this.nestedClassSelector = new NestedClassSelector(enclosingClasses, nestedClass);
 		this.methodSelector = new MethodSelector(nestedClass, method);
+	}
+
+	/**
+	 * Get the {@link ClassLoader} used to load the nested class.
+	 *
+	 * @since 1.10
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public ClassLoader getClassLoader() {
+		return this.nestedClassSelector.getClassLoader();
 	}
 
 	/**
@@ -182,6 +193,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 				.append("nestedClassName", getNestedClassName()) //
 				.append("methodName", getMethodName()) //
 				.append("methodParameterTypes", getMethodParameterTypes()) //
+				.append("classLoader", getClassLoader()) //
 				.toString();
 	}
 

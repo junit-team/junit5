@@ -37,9 +37,10 @@ repository on GitHub.
   `ClassLoader`. This allows parameter types to be resolved with custom `ClassLoader`
   arrangements (such as OSGi). Consequently, `DiscoverySelectors.selectMethod(Class<?>,
   String, String)` also now works properly with custom `ClassLoader` arrangements.
-* New overloaded constructors for `ClassSelector`, `NestedClassSelector`, and
-  `MethodSelector` that take an explicit `ClassLoader` as a parameter, allowing selectors
-  to select classes in custom `ClassLoader` arrangements like in OSGi.
+* New overloaded constructors for `ClassSelector`, `NestedClassSelector`,
+  `MethodSelector`, and `NestedMethodSelector` that take an explicit `ClassLoader` as a
+  parameter, allowing selectors to select classes in custom `ClassLoader` arrangements
+  like in OSGi.
 * For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
   started/finished and opened/closed events are now invoked using "wrapping" semantics.
   This means that finished/closed event methods are invoked in reverse order compared to
