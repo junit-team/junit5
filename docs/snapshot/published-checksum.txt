@@ -562,6 +562,7 @@ b22cb6a77f1586c944c3e142d2950598  junit-platform-commons/src/main/java/org/junit
 b2364b2c4adcc3dd599760fd42cabebf  documentation/src/docs/asciidoc/user-guide/overview.adoc
 b29eb2d76eae71574310c968b9c4b2b9  documentation/src/test/java/org/junit/api/tools/ApiReport.java
 b2bb4375a73b0fd01f8cebe3212c41f9  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/SuiteTestEngine.java
+b2f65088cac583c5b96a72c21bd4e85f  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 b38daa6d2402fa2bfa3002b7fe974a60  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/CompositeTestExecutionListener.java
 b3b82eb96976201be25163b472f3916d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGenerator.java
 b3cc98df4a3cba0150b9d66e291d76c4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrderer.java
@@ -819,7 +820,6 @@ fbfc8b6f76d41bcdf86162407846a952  junit-jupiter-engine/src/main/java/org/junit/j
 fcad7963446a6fc15ffdb9a4db58f978  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullSource.java
 fd386654d78d02c03e761475d3d7f0e9  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LegacyReportingUtils.java
 fd46635860f27b28f4e9e2b85ef91dfe  junit-platform-console/src/main/java/org/junit/platform/console/options/BaseCommand.java
-fd894debf1ebef02abf3274256ea9e5c  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 fdad38d506d69b1aa9dc04be34298537  documentation/src/test/java/example/CustomTestEngine.java
 fdd3416b4725930466c2b96a636e225c  documentation/src/test/java/example/timing/TimingExtensionTests.java
 fddd0e3bd36a1c1af9c1c4063ab61b1b  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectClasspathResource.java
