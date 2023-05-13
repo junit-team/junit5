@@ -635,9 +635,26 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = STABLE, since = "1.6")
 	public static NestedClassSelector selectNestedClass(List<String> enclosingClassNames, String nestedClassName) {
+		return selectNestedClass(enclosingClassNames, nestedClassName, null);
+	}
+
+	/**
+	 * Create a {@code NestedClassSelector} for the supplied class name, its enclosing
+	 * classes' names, and class loader.
+	 *
+	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
+	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
+	 * @param classLoader the class loader to use to load the enclosing and nested classes, or
+	 * {@code null} to signal that the default {@code ClassLoader} should be used
+	 * @since 1.10
+	 * @see NestedClassSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public static NestedClassSelector selectNestedClass(List<String> enclosingClassNames, String nestedClassName,
+			ClassLoader classLoader) {
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");
-		return new NestedClassSelector(enclosingClassNames, nestedClassName);
+		return new NestedClassSelector(enclosingClassNames, nestedClassName, classLoader);
 	}
 
 	/**
