@@ -30,7 +30,7 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 		var selector1 = new MethodSelector("TestClass", "method", "int, boolean", null);
 		var selector2 = new MethodSelector("TestClass", "method", "int, boolean", null);
 
-		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "method", "int"));
+		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "method", "int", null));
 		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "method", (ClassLoader) null));
 		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "X", "int, boolean", null));
 		assertEqualsAndHashCode(selector1, selector2, new MethodSelector("TestClass", "X", (ClassLoader) null));
