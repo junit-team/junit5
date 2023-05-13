@@ -98,10 +98,10 @@ implements <a href="../DiscoverySelector.html" title="interface in org.junit.pla
 
  <p>If a Java <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> is provided, the selector will return that
  <a href="#getMethod()">method</a> and its method name, class name, enclosing
- classes names and parameter types accordingly. If class or methods names are
- provided, this selector will only attempt to lazily load the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>
- and <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> if <a href="#getEnclosingClasses()"><code>getEnclosingClasses()</code></a>,
- <a href="#getNestedClass()"><code>getNestedClass()</code></a> or <a href="#getMethod()"><code>getMethod()</code></a> is invoked.
+ classes names, and parameter types accordingly. If class names or method names
+ are provided, this selector will only attempt to lazily load the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>
+ or <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> if <a href="#getEnclosingClasses()"><code>getEnclosingClasses()</code></a>,
+ <a href="#getNestedClass()"><code>getNestedClass()</code></a>, or <a href="#getMethod()"><code>getMethod()</code></a> is invoked.
 
  <p>In this context, a Java <code>Method</code> means anything that can be referenced
  as a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> on the JVM &mdash; for example, methods from Java classes

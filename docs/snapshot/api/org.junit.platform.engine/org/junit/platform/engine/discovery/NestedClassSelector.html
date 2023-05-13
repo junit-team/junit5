@@ -96,10 +96,10 @@ implements <a href="../DiscoverySelector.html" title="interface in org.junit.pla
  tests or containers based on classes.
 
  <p>If Java <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> references are provided for the nested class or
- the enclosing classes, the selector will return these <code>Class</code> and
- their class names accordingly. If class names are provided, the selector
- will only attempt to lazily load the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> if
- <a href="#getEnclosingClasses()"><code>getEnclosingClasses()</code></a> or <a href="#getNestedClass()"><code>getNestedClass()</code></a> are invoked.
+ the enclosing classes, the selector will return those classes and their class
+ names accordingly. If class names are provided, the selector will only attempt
+ to lazily load classes if <a href="#getEnclosingClasses()"><code>getEnclosingClasses()</code></a> or
+ <a href="#getNestedClass()"><code>getNestedClass()</code></a> is invoked.
 
  <p>In this context, Java <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> means anything that can be referenced
  as a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> on the JVM &mdash; for example, classes from other JVM
