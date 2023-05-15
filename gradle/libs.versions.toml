@@ -28,7 +28,7 @@ archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "1.0.1" 
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
-classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.157" }
+classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.158" }
 commons-io = { module = "commons-io:commons-io", version = "2.11.0" }
 gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "1.10" }
 gradle-foojayResolver = { module = "org.gradle.toolchains:foojay-resolver", version = "0.5.0" }
