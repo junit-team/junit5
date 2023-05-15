@@ -225,7 +225,7 @@ tasks {
 			}
 		}
 
-		// Temporary workaround for https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/599
+		// temporary workaround for https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/599
 		inputs.dir(sourceDir).withPropertyName("sourceDir").withPathSensitivity(RELATIVE)
 
 		attributeProviders += AsciidoctorAttributeProvider {
