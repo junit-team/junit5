@@ -17,6 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,6 +28,7 @@ import java.nio.file.Path;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 
+import example.TempDirectoryDemo.InMemoryTempDirDemo.JimfsTempDirFactory;
 import example.util.ListWriter;
 
 import org.junit.jupiter.api.Test;
@@ -141,5 +146,26 @@ class TempDirectoryDemo {
 
 	}
 	// end::user_guide_factory_jimfs[]
+
+	// tag::user_guide_meta_annotation[]
+	@Target({ ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.PARAMETER })
+	@Retention(RetentionPolicy.RUNTIME)
+	@TempDir(factory = JimfsTempDirFactory.class)
+	@interface JimfsTempDir {
+
+	}
+	// end::user_guide_meta_annotation[]
+
+	static
+	// tag::user_guide_meta_annotation_usage[]
+	class JimfsTempDirAnnotationDemo {
+
+		@Test
+		void test(@JimfsTempDir Path tempDir) {
+			// perform test
+		}
+
+	}
+	// end::user_guide_meta_annotation_usage[]
 
 }
