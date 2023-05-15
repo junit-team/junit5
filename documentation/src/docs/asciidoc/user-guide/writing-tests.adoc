@@ -2644,6 +2644,19 @@ temporary directory. The following example shows how to do it.
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_factory_jimfs]
 ----
 
+`@TempDir` can also be used in meta-annotations to reduce repetition.
+
+[source,java,indent=0]
+.A definition of a meta-annotation using `@TempDir`
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_meta_annotation]
+----
+[source,java,indent=0]
+.A test class using a meta-annotation
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_meta_annotation_usage]
+----
+
 You can use the `junit.jupiter.tempdir.factory.default`
 <<running-tests-config-params, configuration parameter>> to specify the fully qualified
 class name of the `TempDirFactory` you would like to use by default. Just like for

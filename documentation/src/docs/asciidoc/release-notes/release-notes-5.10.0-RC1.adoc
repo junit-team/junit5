@@ -24,6 +24,7 @@ JUnit repository on GitHub.
 ==== New Features and Improvements
 
 * Add `@SelectMethod` selector support to `@Suite` test engine
+* `@TempDir` can now be used in meta-annotations
 
 
 [[release-notes-5.10.0-RC1-junit-jupiter]]
