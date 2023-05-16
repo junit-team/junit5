@@ -820,5 +820,15 @@
       "mmerdes",
       "sbrannen"
     ]
+  },
+  {
+    "title": "Testing with Spring, AOT, GraalVM, and JUnit 5",
+    "event": "Spring I/O 2023",
+    "date": "2023-05-19",
+    "location": "Barcelona, Spain",
+    "link": "https://2023.springio.net/sessions/testing-with-spring-aot-graalvm-and-junit-5/",
+    "speakers": [
+      "sbrannen"
+    ]
   }
 ]
