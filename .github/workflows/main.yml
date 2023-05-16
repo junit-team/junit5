@@ -90,8 +90,6 @@ jobs:
       cancel-in-progress: true
     needs: Linux
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # in order to push to gh-pages branch
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
     - name: Check out repository
@@ -108,5 +106,5 @@ jobs:
         arguments: --quiet
     - name: Upload Documentation
       env:
-        GRGIT_USER: ${{ github.token }}
+        GRGIT_USER: ${{ secrets.GH_TOKEN }}
       run: ./gradle/scripts/publishDocumentationSnapshotOnlyIfNecessary.sh
