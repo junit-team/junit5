@@ -30,7 +30,7 @@ import org.apiguardian.api.API;
  * @since 1.10
  * @see Suite
  * @see org.junit.platform.runner.JUnitPlatform
- * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectMethod(Class, String)
+ * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectMethod(Class, String, String methodParameterTypes)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
