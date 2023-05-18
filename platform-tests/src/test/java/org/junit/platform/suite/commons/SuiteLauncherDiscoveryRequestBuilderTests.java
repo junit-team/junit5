@@ -224,7 +224,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 			}
 		}
-		@SelectMethod(methodClass = TestClass.class, methodName = "testMethod")
+		@SelectMethod(clazz = TestClass.class, name = "testMethod")
 		class Suite {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
@@ -239,7 +239,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 			}
 		}
-		@SelectMethod(methodClass = TestClass.class, methodName = "testMethod", methodParameterTypes = "int")
+		@SelectMethod(clazz = TestClass.class, name = "testMethod", parameters = "int")
 		class Suite {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
@@ -256,8 +256,8 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 			void secondTestMethod(boolean i, float j) {
 			}
 		}
-		@SelectMethod(methodClass = TestClass.class, methodName = "firstTestMethod", methodParameterTypes = "int, java.lang.String")
-		@SelectMethod(methodClass = TestClass.class, methodName = "secondTestMethod", methodParameterTypes = "boolean, float")
+		@SelectMethod(clazz = TestClass.class, name = "firstTestMethod", parameters = "int, java.lang.String")
+		@SelectMethod(clazz = TestClass.class, name = "secondTestMethod", parameters = "boolean, float")
 		class Suite {
 		}
 		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();

@@ -79,11 +79,10 @@ class AdditionalDiscoverySelectors {
 		// @formatter:on
 	}
 
-	static MethodSelector selectMethod(Class<?> methodClass, String methodName, String methodParameterTypes) {
-		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		Preconditions.notNull(methodParameterTypes, "Method parameter types must not be null");
-
-		return DiscoverySelectors.selectMethod(methodClass, methodName, methodParameterTypes);
+	static MethodSelector selectMethod(Class<?> clazz, String name, String parameters) {
+		Preconditions.notBlank(name, "Method name must not be null or blank");
+		Preconditions.notNull(parameters, "Method parameter types must not be null");
+		return DiscoverySelectors.selectMethod(clazz, name, parameters);
 	}
 
 	static List<ModuleSelector> selectModules(String... moduleNames) {

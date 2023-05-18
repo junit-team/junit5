@@ -1,0 +1,71 @@
+[[release-notes-5.10.0-M2]]
+== 5.10.0-M2
+
+*Date of Release:* May 17, 2023
+
+*Scope:*
+
+* Added two new classes, org.junit.platform.suite.api.SelectMethod and
+  org.junit.platform.suite.api.SelectMethods, with their respective functionalities,
+  to the JUnit 5 repository. These classes provide options for selecting specific methods
+  when running a test suite on the JUnit Platform. The @SelectMethod annotation allows
+  specifying a method to be selected, while the @SelectMethods annotation serves as a
+  container for multiple @SelectMethod declarations.
+
+* Please refer to the documentation and JUnit 5 repository for more details on how to use
+  these new annotations and their capabilities.
+
+* This release is marked as experimental, and further improvements and changes may occur
+  in future releases.
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/MILESTONE_NUMBER?closed=1+[VERSION] milestone page in the
+JUnit repository on GitHub.
+
+
+[[release-notes-5.10.0-M2]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* No specific bug fixes mentioned.
+
+==== Deprecations and Breaking Changes
+
+* No deprecations or breaking changes mentioned.
+
+==== New Features and Improvements
+
+* No specific new features or improvements mentioned.
+
+
+[[release-notes-VERSION-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* No specific bug fixes mentioned.
+
+==== Deprecations and Breaking Changes
+
+* No deprecations or breaking changes mentioned.
+
+==== New Features and Improvements
+
+* No specific new features or improvements mentioned.
+
+
+[[release-notes-VERSION-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* No specific bug fixes mentioned.
+
+==== Deprecations and Breaking Changes
+
+* No deprecations or breaking changes mentioned.
+
+==== New Features and Improvements
+
+* No specific new features or improvements mentioned.

@@ -153,7 +153,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 				.ifPresent(this::selectors);
 		findRepeatableAnnotations(suiteClass, SelectMethod.class)
 				.stream()
-				.map(annotation -> selectMethod(annotation.methodClass(), annotation.methodName(), annotation.methodParameterTypes()))
+				.map(annotation -> selectMethod(annotation.clazz(), annotation.name(), annotation.parameters()))
 				.forEach(this::selectors);
 		findAnnotationValues(suiteClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
@@ -212,9 +212,9 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return AdditionalDiscoverySelectors.selectClasses(classes);
 	}
 
-	private MethodSelector selectMethod(Class<?> methodClass, String methodName, String methodParameterTypes) {
-		selectedClassNames.add(methodClass.getName());
-		return AdditionalDiscoverySelectors.selectMethod(methodClass, methodName, methodParameterTypes);
+	private MethodSelector selectMethod(Class<?> clazz, String name, String parameters) {
+		selectedClassNames.add(clazz.getName());
+		return AdditionalDiscoverySelectors.selectMethod(clazz, name, parameters);
 	}
 
 	private ClassNameFilter createIncludeClassNameFilter(String... patterns) {

@@ -43,17 +43,17 @@ public @interface SelectMethod {
 	/**
 	 * The class that declares the method to select.
 	 */
-	Class<?> methodClass();
+	Class<?> clazz();
 
 	/**
 	 * The name of the method to select.
 	 */
-	String methodName();
+	String name();
 
 	/**
 	 * The parameter types of the method to select in the format "type1,type2,type3".
 	 * If the method takes no parameters, this attribute must be an empty string.
 	 */
-	String methodParameterTypes() default "";
+	String parameters() default "";
 
 }

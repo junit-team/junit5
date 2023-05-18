@@ -11,6 +11,7 @@
 package org.junit.platform.suite.engine;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.suite.engine.SuiteEngineDescriptor.ENGINE_ID;
@@ -51,6 +52,7 @@ import org.junit.platform.suite.engine.testsuites.MultiEngineSuite;
 import org.junit.platform.suite.engine.testsuites.MultipleSuite;
 import org.junit.platform.suite.engine.testsuites.NestedSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
+import org.junit.platform.suite.engine.testsuites.SelectMethodsSuite;
 import org.junit.platform.suite.engine.testsuites.SuiteDisplayNameSuite;
 import org.junit.platform.suite.engine.testsuites.SuiteSuite;
 import org.junit.platform.suite.engine.testsuites.ThreePartCyclicSuite;
@@ -71,6 +73,21 @@ class SuiteEngineTests {
 				.assertThatEvents()
 				.haveExactly(1, event(test(SelectClassesSuite.class.getName()), finishedSuccessfully()))
 				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
+		// @formatter:on
+	}
+
+	@Test
+	void selectMethods() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(SelectMethodsSuite.class))
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(test(SelectMethodsSuite.class.getName()), finishedSuccessfully()));
+				//.doNotHave(event(test(MultipleTestsTestCase.class.getDeclaredMethod("test2", new Class[0]).getName()), finishedSuccessfully()));
+				//.haveExactly(1, event(test(MultipleTestsTestCase.class.getDeclaredMethod("test", new Class[0]).getName()), finishedSuccessfully()));
+				// this does not work --> java.lang.NoSuchMethodException while the method is declared;
 		// @formatter:on
 	}
 

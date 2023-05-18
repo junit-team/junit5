@@ -25,3 +25,5 @@ include::{basedir}/release-notes-5.9.2.adoc[]
 include::{basedir}/release-notes-5.9.1.adoc[]
 
 include::{basedir}/release-notes-5.9.0.adoc[]
+
+include::{basedir}/release-notes-5.10.0-M2.adoc[]
