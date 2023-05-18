@@ -11,7 +11,6 @@
 package org.junit.platform.suite.engine;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.suite.engine.SuiteEngineDescriptor.ENGINE_ID;
@@ -84,10 +83,8 @@ class SuiteEngineTests {
 				.execute()
 				.testEvents()
 				.assertThatEvents()
-				.haveExactly(1, event(test(SelectMethodsSuite.class.getName()), finishedSuccessfully()));
-				//.doNotHave(event(test(MultipleTestsTestCase.class.getDeclaredMethod("test2", new Class[0]).getName()), finishedSuccessfully()));
-				//.haveExactly(1, event(test(MultipleTestsTestCase.class.getDeclaredMethod("test", new Class[0]).getName()), finishedSuccessfully()));
-				// this does not work --> java.lang.NoSuchMethodException while the method is declared;
+				.haveExactly(1, event(test(MultipleTestsTestCase.class.getName(), "test()"), finishedSuccessfully()))
+				.doNotHave(event(test(MultipleTestsTestCase.class.getName(), "test2()")));
 		// @formatter:on
 	}
 
