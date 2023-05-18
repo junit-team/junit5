@@ -50,6 +50,7 @@ public @interface SelectMethod {
 	 */
 	String name();
 
+	/**
 	 * The parameter types of the method to select.
 	 *
 	 * <p>This is typically a comma-separated list of atomic types, fully
