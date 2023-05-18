@@ -1,6 +1,8 @@
+import com.gradle.enterprise.gradleplugin.testdistribution.internal.TestDistributionExtensionInternal
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
+import java.time.Duration
 
 plugins {
 	id("junitbuild.build-parameters")
@@ -126,6 +128,8 @@ tasks.test {
 
 	distribution {
 		requirements.add("jdk=8")
+		this as TestDistributionExtensionInternal
+		preferredMaxDuration.set(Duration.ofMillis(500))
 	}
 	jvmArgumentProviders += JavaHomeDir(project, 8, distribution.enabled)
 }
