@@ -1,6 +1,8 @@
+import com.gradle.enterprise.gradleplugin.testdistribution.internal.TestDistributionExtensionInternal
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
+import java.time.Duration
 
 plugins {
 	id("junitbuild.build-parameters")
@@ -85,6 +87,32 @@ val unzipMavenDistribution by tasks.registering(Sync::class) {
 	into(layout.buildDirectory.dir("maven-distribution"))
 }
 
+val normalizeMavenRepo by tasks.registering(Sync::class) {
+
+	val mavenizedProjects: List<Project> by rootProject
+	val tempRepoDir: File by rootProject
+	val tempRepoName: String by rootProject
+
+	// All maven-aware projects must be published to the local temp repository
+	(mavenizedProjects + projects.junitBom.dependencyProject)
+		.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalized()}Repository") }
+		.forEach { dependsOn(it) }
+
+	from(tempRepoDir) {
+		exclude("**/maven-metadata.xml*")
+		exclude("**/*.md5")
+		exclude("**/*.sha*")
+		exclude("**/*.module")
+	}
+	from(tempRepoDir) {
+		include("**/*.module")
+		val regex = "\"(sha\\d+|md5|size)\": (?:\".+\"|\\d+)(,)?".toRegex()
+		filter { line -> regex.replace(line, "\"normalized-$1\": \"normalized-value\"$2") }
+	}
+	rename("(.*\\W)\\d{8}\\.\\d{6}-\\d+(\\W.*)", "$1SNAPSHOT$2")
+	into(layout.buildDirectory.dir("normalized-repo"))
+}
+
 tasks.test {
 	// Opt-out via system property: '-Dplatform.tooling.support.tests.enabled=false'
 	enabled = System.getProperty("platform.tooling.support.tests.enabled")?.toBoolean() ?: true
@@ -93,18 +121,10 @@ tasks.test {
 	// always publish all mavenizedProjects even if this "test" task
 	// is not executed.
 	if (enabled) {
-
-		// All maven-aware projects must be installed, i.e. published to the local repository
-		val mavenizedProjects: List<Project> by rootProject
-		val tempRepoName: String by rootProject
-
-		(mavenizedProjects + projects.junitBom.dependencyProject)
-			.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalized()}Repository") }
-			.forEach { dependsOn(it) }
+		dependsOn(normalizeMavenRepo)
+		jvmArgumentProviders += MavenRepo(project, normalizeMavenRepo.map { it.destinationDir })
 	}
 
-	val tempRepoDir: File by rootProject
-	jvmArgumentProviders += MavenRepo(tempRepoDir)
 	jvmArgumentProviders += JarPath(project, thirdPartyJars)
 	jvmArgumentProviders += JarPath(project, antJars)
 	jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution)
@@ -126,12 +146,30 @@ tasks.test {
 
 	distribution {
 		requirements.add("jdk=8")
+		this as TestDistributionExtensionInternal
+		preferredMaxDuration.set(Duration.ofMillis(500))
 	}
 	jvmArgumentProviders += JavaHomeDir(project, 8, distribution.enabled)
 }
 
-class MavenRepo(@get:InputDirectory @get:PathSensitive(RELATIVE) val repoDir: File) : CommandLineArgumentProvider {
-	override fun asArguments() = listOf("-Dmaven.repo=$repoDir")
+class MavenRepo(project: Project, @get:Internal val repoDir: Provider<File>) : CommandLineArgumentProvider {
+
+	// Track jars and non-jars separately to benefit from runtime classpath normalization
+	// which ignores timestamp manifest attributes.
+
+	@InputFiles
+	@Classpath
+	val jarFiles: ConfigurableFileTree = project.fileTree(repoDir) {
+		include("**/*.jar")
+	}
+
+	@InputFiles
+	@PathSensitive(RELATIVE)
+	val nonJarFiles: ConfigurableFileTree = project.fileTree(repoDir) {
+		exclude("**/*.jar")
+	}
+
+	override fun asArguments() = listOf("-Dmaven.repo=${repoDir.get().absolutePath}")
 }
 
 class JavaHomeDir(project: Project, @Input val version: Int, testDistributionEnabled: Provider<Boolean>) : CommandLineArgumentProvider {

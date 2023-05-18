@@ -12,7 +12,7 @@ val clearTempRepoDir by tasks.registering {
 
 subprojects {
 	pluginManager.withPlugin("maven-publish") {
-		configure<PublishingExtension>() {
+		configure<PublishingExtension> {
 			repositories {
 				maven {
 					name = tempRepoName
