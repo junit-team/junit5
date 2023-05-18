@@ -88,6 +88,7 @@ class AdditionalDiscoverySelectors {
 	static List<ModuleSelector> selectModules(String... moduleNames) {
 		Preconditions.notNull(moduleNames, "Module names must not be null");
 		Preconditions.containsNoNullElements(moduleNames, "Individual module names must not be null");
+
 		return DiscoverySelectors.selectModules(uniqueStreamOf(moduleNames).collect(Collectors.toSet()));
 	}
 
