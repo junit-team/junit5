@@ -50,9 +50,36 @@ public @interface SelectMethod {
 	 */
 	String name();
 
-	/**
-	 * The parameter types of the method to select in the format "type1,type2,type3".
-	 * If the method takes no parameters, this attribute must be an empty string.
+	 * The parameter types of the method to select.
+	 *
+	 * <p>This is typically a comma-separated list of atomic types, fully
+	 * qualified class names, or array types; however, the exact syntax
+	 * depends on the underlying test engine.
+	 *
+	 * <p>If the method takes no parameters, this attribute must be an
+	 * empty string.
+	 *
+	 * <p>Array parameter types may be specified using either the JVM's internal
+	 * String representation (e.g., {@code [[I} for {@code int[][]},
+	 * {@code [Ljava.lang.String;} for {@code java.lang.String[]}, etc.) or
+	 * <em>source code syntax</em> (e.g., {@code int[][]}, {@code java.lang.String[]},
+	 * etc.).
+	 * <p>
+	 * <table class="plain">
+	 * <caption>Examples</caption>
+	 * <tr><th>Method</th><th>Parameter types list</th></tr>
+	 * <tr><td>{@code java.lang.String.chars()}</td><td>The empty string</td></tr>
+	 * <tr><td>{@code java.lang.String.equalsIgnoreCase(String)}</td><td>{@code java.lang.String}</td></tr>
+	 * <tr><td>{@code java.lang.String.substring(int, int)}</td><td>{@code int, int}</td></tr>
+	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code [I}</td></tr>
+	 * <tr><td>{@code example.Calc.avg(int[])}</td><td>{@code int[]}</td></tr>
+	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code [[D}</td></tr>
+	 * <tr><td>{@code example.Matrix.multiply(double[][])}</td><td>{@code double[][]}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code [Ljava.lang.String;}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[])}</td><td>{@code java.lang.String[]}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code [[Ljava.lang.String;}</td></tr>
+	 * <tr><td>{@code example.Service.process(String[][])}</td><td>{@code java.lang.String[][]}</td></tr>
+	 * </table>
 	 */
 	String parameters() default "";
 
