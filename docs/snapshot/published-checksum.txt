@@ -291,6 +291,7 @@
 5c6e4656556e618e1edd2fbc5fb63d17  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
 5cbbe6bd69e3a91e5df1a7fc7bbc6481  documentation/src/test/java/example/ExternalMethodSourceDemo.java
 5ceb9f20d9603ca3e06394c021ccb091  junit-platform-console/src/main/java/org/junit/platform/console/options/ClasspathEntriesConverter.java
+5cec28e6d2bfcf9c076c67722fd41f69  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-RC1.adoc
 5d5412276e4dd6e75ba19819245f7b2a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassExtensionContext.java
 5dc2b96b8dcc1359fcb6f54b44f472ca  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutDuration.java
 5e3fcafe6ee9677d7641e535b9487615  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.java
@@ -410,7 +411,6 @@
 816fe1c3d613123d56465bc53461febc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/StringToCharacterConverter.java
 8190a3cf0ad99c6ee83c7e7a509d513b  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
 81aec38e75c15602a054dc3694d03fca  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AfterEach.java
-81dfe6ac65daf2a7698ca6ce1dce501a  documentation/src/docs/asciidoc/release-notes/index.adoc
 823656fcc20d2518a7762d73309d5e4b  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/UniqueIdSelector.java
 827bc0b6010704829e01a851aba484b4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestFactory.java
 8281ac7684aa3309005860107a007f56  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestTemplate.java
@@ -577,6 +577,7 @@ b605687b16ddc6bc8dd36662d1cb3fee  junit-platform-reporting/src/main/java/org/jun
 b627101655f594c376e10715b6e1d131  junit-platform-jfr/src/main/java/org/junit/platform/jfr/FlightRecordingExecutionListener.java
 b659d6afa2ba4637865ed4a0d4311b5b  documentation/src/docs/asciidoc/user-guide/contributors.adoc
 b65c4f78020212c6dd86da04307d0d9b  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/NestedClassSelector.java
+b69b76da9fe1454961f477bfc602a292  documentation/src/docs/asciidoc/release-notes/index.adoc
 b6a67aa6c088e3a71ac44291245398a9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstantiationException.java
 b7017c89228a7f71cbb73ef0ca61535a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingSupplier.java
 b71fe7d2613308e00db7ad666d096e80  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludePackages.java
