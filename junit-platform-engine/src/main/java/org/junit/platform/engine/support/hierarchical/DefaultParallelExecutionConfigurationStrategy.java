@@ -134,6 +134,17 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	public static final String CONFIG_FIXED_PARALLELISM_PROPERTY_NAME = "fixed.parallelism";
 
 	/**
+	 * Property name used to determine the executor to use for the
+	 * {@link #FIXED} configuration strategy.
+	 *
+	 * <p>Value must be either {@code forkjoinpool} or {@code threadpoolexecutor};
+	 * defaults to {@code forkjoinpool}.
+	 *
+	 * @see #FIXED
+	 */
+	public static final String CONFIG_FIXED_EXECUTOR_PROPERTY_NAME = "fixed.executor";
+
+	/**
 	 * Property name used to configure the maximum pool size of the underlying
 	 * fork-join pool for the {@link #FIXED} configuration strategy.
 	 *
