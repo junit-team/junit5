@@ -135,10 +135,10 @@ tasks.test {
 
 	inputs.apply {
 		dir("projects").withPathSensitivity(RELATIVE)
-		file("${rootDir}/gradle.properties")
-		file("${rootDir}/settings.gradle.kts")
-		file("${rootDir}/gradlew")
-		file("${rootDir}/gradlew.bat")
+		file("${rootDir}/gradle.properties").withPathSensitivity(RELATIVE)
+		file("${rootDir}/settings.gradle.kts").withPathSensitivity(RELATIVE)
+		file("${rootDir}/gradlew").withPathSensitivity(RELATIVE)
+		file("${rootDir}/gradlew.bat").withPathSensitivity(RELATIVE)
 		dir("${rootDir}/gradle/wrapper").withPathSensitivity(RELATIVE)
 		dir("${rootDir}/documentation/src/main").withPathSensitivity(RELATIVE)
 		dir("${rootDir}/documentation/src/test").withPathSensitivity(RELATIVE)
