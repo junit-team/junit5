@@ -20,6 +20,7 @@ spotless {
 
 	format("documentation") {
 		target("*.adoc", "*.md", "src/**/*.adoc", "src/**/*.md")
+		targetExclude("**/build", "**/target")
 		trimTrailingWhitespace()
 		endWithNewline()
 	}
