@@ -39,10 +39,10 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Add thread-safety details to `TempDirFactory` documentation
 
 
-= [[release-notes-5.10.0-RC1-junit-vintage]]
+[[release-notes-5.10.0-RC1-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes

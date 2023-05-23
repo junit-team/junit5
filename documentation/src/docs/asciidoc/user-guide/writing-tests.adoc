@@ -2616,13 +2616,17 @@ The default cleanup mode is `ALWAYS`. You can use the
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_cleanup_mode]
 ----
 
-`@TempDir` supports custom creation of temporary directories via the optional
-`factory` attribute. This allows to define how the temporary directory is created,
-giving control over characteristics such as the directory name, root folder,
-and underlying file system.
+`@TempDir` supports the programmatic creation of temporary directories via the optional
+`factory` attribute. This is typically used to gain control over the temporary directory
+creation, like defining the parent directory or the file system that should be used.
 
-Factories can be created by implementing `TempDirFactory`. The default implementation
-available in Jupiter delegates the directory creation to
+Factories can be created by implementing `TempDirFactory`.
+Implementations must provide a no-args constructor and should not make any assumptions
+regarding when and how many times they are instantiated, but can assume that
+`TempDirFactory::createTempDirectory` and `TempDirFactory::close` are both called
+once per instance, in this order, and from the same thread.
+
+The default implementation available in Jupiter delegates the directory creation to
 `java.nio.file.Files::createTempDirectory`, passing `junit` as the prefix string
 to be used in generating the directory's name.
 
