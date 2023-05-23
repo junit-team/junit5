@@ -28,7 +28,10 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * temporary directory creation, like defining the parent directory or the file
  * system that should be used.
  *
- * <p>Concrete implementations must have a <em>default constructor</em>.
+ * <p>Implementations must provide a no-args constructor and should not make any
+ * assumptions regarding when and how many times they are instantiated, but can
+ * assume that {@link #createTempDirectory(ExtensionContext)} and {@link #close()}
+ * are both called once per instance, in this order, and from the same thread.
  *
  * <p>A {@link TempDirFactory} can be configured <em>globally</em> for the
  * entire test suite via the {@value TempDir#DEFAULT_FACTORY_PROPERTY_NAME}
