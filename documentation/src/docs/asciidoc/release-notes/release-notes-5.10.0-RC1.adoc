@@ -28,8 +28,11 @@ JUnit repository on GitHub.
 ==== New Features and Improvements
 
 * New `@SelectMethod` selector support in the `@Suite` test engine.
-* Classes may now be selected by fully-qualified name via new the `names` attribute in
+* Classes may now be selected by fully-qualified name via the `names` attribute in
   `@SelectClasses`.
+* New `selectMethod()` and `selectNestedMethod()` variants in `DiscoverySelectors` that
+  accept a `Class<?>...` argument of parameter types as a type-safe alternative to
+  providing the names of parameter types as a comma-delimited string.
 
 
 [[release-notes-5.10.0-RC1-junit-jupiter]]
