@@ -35,8 +35,9 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 		var selector1 = new MethodSelector(null, TEST_CASE_NAME, "method", "int, boolean");
 		var selector2 = new MethodSelector(null, TEST_CASE_NAME, "method", "int, boolean");
 		var selector3 = new MethodSelector(TestCase.class, "method", "int, boolean");
+		var selector4 = new MethodSelector(TestCase.class, "method", int.class, boolean.class);
 
-		Stream.of(selector2, selector3).forEach(selector -> {
+		Stream.of(selector2, selector3, selector4).forEach(selector -> {
 			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, TEST_CASE_NAME, "method", "int"));
 			assertEqualsAndHashCode(selector1, selector,
 				new MethodSelector((ClassLoader) null, TEST_CASE_NAME, "method", ""));

@@ -33,9 +33,9 @@ import org.junit.platform.engine.DiscoverySelector;
  * <p>If a Java {@link Method} is provided, the selector will return that
  * {@linkplain #getMethod() method} and its method name, class name, enclosing
  * classes names, and parameter types accordingly. If class names or method names
- * are provided, this selector will only attempt to lazily load the {@link Class}
- * or {@link Method} if {@link #getEnclosingClasses()},
- * {@link #getNestedClass()}, or {@link #getMethod()} is invoked.
+ * are provided, this selector will only attempt to lazily load a class or method
+ * if {@link #getEnclosingClasses()}, {@link #getNestedClass()},
+ * {@link #getMethod()}, or {@link #getParameterTypes()} is invoked.
  *
  * <p>In this context, a Java {@code Method} means anything that can be referenced
  * as a {@link Method} on the JVM &mdash; for example, methods from Java classes
@@ -63,10 +63,28 @@ public class NestedMethodSelector implements DiscoverySelector {
 		this.methodSelector = new MethodSelector(classLoader, nestedClassName, methodName, parameterTypeNames);
 	}
 
+	/**
+	 * @since 1.10
+	 */
+	NestedMethodSelector(ClassLoader classLoader, List<String> enclosingClassNames, String nestedClassName,
+			String methodName, Class<?>... parameterTypes) {
+		this.nestedClassSelector = new NestedClassSelector(classLoader, enclosingClassNames, nestedClassName);
+		this.methodSelector = new MethodSelector(classLoader, nestedClassName, methodName, parameterTypes);
+	}
+
 	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, String methodName,
 			String parameterTypeNames) {
 		this.nestedClassSelector = new NestedClassSelector(enclosingClasses, nestedClass);
 		this.methodSelector = new MethodSelector(nestedClass, methodName, parameterTypeNames);
+	}
+
+	/**
+	 * @since 1.10
+	 */
+	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, String methodName,
+			Class<?>... parameterTypes) {
+		this.nestedClassSelector = new NestedClassSelector(enclosingClasses, nestedClass);
+		this.methodSelector = new MethodSelector(nestedClass, methodName, parameterTypes);
 	}
 
 	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, Method method) {
@@ -147,10 +165,10 @@ public class NestedMethodSelector implements DiscoverySelector {
 	 *
 	 * <p>See {@link #getParameterTypeNames()} for details.
 	 *
-	 * @return the names of parameter types supplied to this {@code NestedMethodSelector}
-	 * via a constructor or deduced from a {@code Method} supplied via a constructor;
-	 * never {@code null} but potentially an empty string
+	 * @return the names of parameter types
 	 * @since 1.6
+	 * @see #getParameterTypeNames()
+	 * @see #getParameterTypes()
 	 * @deprecated since 1.10 in favor or {@link #getParameterTypeNames()}
 	 */
 	@Deprecated
@@ -160,23 +178,36 @@ public class NestedMethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the names of parameter types for the selected method as a {@link String},
-	 * typically a comma-separated list of primitive types, fully qualified
-	 * class names, or array types.
+	 * Get the names of parameter types for the selected method as a {@link String}.
 	 *
-	 * <p>Note: the names of parameter types are provided as a single string instead
-	 * of a collection in order to allow this selector to be used in a generic
-	 * fashion by various test engines. It is therefore the responsibility of
-	 * the caller of this method to determine how to parse the returned string.
+	 * <p>See {@link MethodSelector#getParameterTypeNames()} for details.
 	 *
 	 * @return the names of parameter types supplied to this {@code NestedMethodSelector}
-	 * via a constructor or deduced from a {@code Method} supplied via a constructor;
-	 * never {@code null} but potentially an empty string
+	 * via a constructor or deduced from a {@code Method} or parameter types supplied
+	 * via a constructor; never {@code null} but potentially an empty string
 	 * @since 1.10
+	 * @see MethodSelector#getParameterTypeNames()
+	 *
 	 */
 	@API(status = STABLE, since = "1.10")
 	public String getParameterTypeNames() {
 		return this.methodSelector.getParameterTypeNames();
+	}
+
+	/**
+	 * Get the parameter types for the selected method.
+	 *
+	 * <p>See {@link MethodSelector#getParameterTypes()} for details.
+	 *
+	 * @return the method's parameter types; never {@code null} but potentially
+	 * an empty array if the selected method does not declare parameters
+	 * @since 1.10
+	 * @see #getParameterTypeNames()
+	 * @see MethodSelector#getParameterTypes()
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public Class<?>[] getParameterTypes() {
+		return this.methodSelector.getParameterTypes();
 	}
 
 	@Override
