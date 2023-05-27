@@ -23,7 +23,7 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
-* Add `@SelectMethod` selector support to `@Suite` test engine
+* New `@SelectMethod` selector support in the `@Suite` test engine.
 
 
 [[release-notes-5.10.0-RC1-junit-jupiter]]
@@ -39,7 +39,7 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
-* Add thread-safety details to `TempDirFactory` documentation
+* Lifecycle and thread-safety semantics are now documented for the `TempDirFactory` SPI.
 
 
 [[release-notes-5.10.0-RC1-junit-vintage]]

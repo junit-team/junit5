@@ -2620,11 +2620,11 @@ include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_cleanup_mode]
 `factory` attribute. This is typically used to gain control over the temporary directory
 creation, like defining the parent directory or the file system that should be used.
 
-Factories can be created by implementing `TempDirFactory`.
-Implementations must provide a no-args constructor and should not make any assumptions
-regarding when and how many times they are instantiated, but can assume that
-`TempDirFactory::createTempDirectory` and `TempDirFactory::close` are both called
-once per instance, in this order, and from the same thread.
+Factories can be created by implementing `TempDirFactory`. Implementations must provide a
+no-args constructor and should not make any assumptions regarding when and how many times
+they are instantiated, but they can assume that their `createTempDirectory(...)` and
+`close()` methods will both be called once per instance, in this order, and from the same
+thread.
 
 The default implementation available in Jupiter delegates the directory creation to
 `java.nio.file.Files::createTempDirectory`, passing `junit` as the prefix string

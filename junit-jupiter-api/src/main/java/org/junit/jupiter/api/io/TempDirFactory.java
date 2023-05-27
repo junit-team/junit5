@@ -29,9 +29,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * system that should be used.
  *
  * <p>Implementations must provide a no-args constructor and should not make any
- * assumptions regarding when and how many times they are instantiated, but can
- * assume that {@link #createTempDirectory(ExtensionContext)} and {@link #close()}
- * are both called once per instance, in this order, and from the same thread.
+ * assumptions regarding when and how many times they are instantiated, but they
+ * can assume that {@link #createTempDirectory(ExtensionContext)} and {@link #close()}
+ * will both be called once per instance, in this order, and from the same thread.
  *
  * <p>A {@link TempDirFactory} can be configured <em>globally</em> for the
  * entire test suite via the {@value TempDir#DEFAULT_FACTORY_PROPERTY_NAME}
