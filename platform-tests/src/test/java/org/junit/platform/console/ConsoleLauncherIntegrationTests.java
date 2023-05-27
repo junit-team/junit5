@@ -35,8 +35,10 @@ class ConsoleLauncherIntegrationTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "-e junit-jupiter -p org.junit.platform.console.subpackage",
-			"execute -e junit-jupiter -p org.junit.platform.console.subpackage" })
+	@ValueSource(strings = { //
+			"-e junit-jupiter -p org.junit.platform.console.subpackage", //
+			"execute -e junit-jupiter -p org.junit.platform.console.subpackage" //
+	})
 	void executeWithoutExcludeClassnameOptionDoesNotExcludeClassesAndMustIncludeAllClassesMatchingTheStandardClassnamePattern(
 			final String line) {
 		String[] args = line.split(" ");
@@ -48,7 +50,8 @@ class ConsoleLauncherIntegrationTests {
 			"-e junit-jupiter -p org.junit.platform.console.subpackage --exclude-classname"
 					+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..*",
 			"execute -e junit-jupiter -p org.junit.platform.console.subpackage --exclude-classname"
-					+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..*" })
+					+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..*" //
+	})
 	void executeWithExcludeClassnameOptionExcludesClasses(final String line) {
 		String[] args = line.split(" ");
 		var result = new ConsoleLauncherWrapper().execute(args);
@@ -60,8 +63,10 @@ class ConsoleLauncherIntegrationTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "-e junit-jupiter -o java.base", "-e junit-jupiter --select-module java.base",
-			"execute -e junit-jupiter -o java.base", "execute -e junit-jupiter --select-module java.base" })
+	@ValueSource(strings = { //
+			"-e junit-jupiter -o java.base", "-e junit-jupiter --select-module java.base", //
+			"execute -e junit-jupiter -o java.base", "execute -e junit-jupiter --select-module java.base" //
+	})
 	void executeSelectingModuleNames(final String line) {
 		String[] args1 = line.split(" ");
 		assertEquals(0, new ConsoleLauncherWrapper().execute(args1).getTestsFoundCount());
