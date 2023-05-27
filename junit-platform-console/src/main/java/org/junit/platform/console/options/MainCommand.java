@@ -135,6 +135,16 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 				.setOut(out) //
 				.setErr(err) //
 				.execute(args);
-		return CommandResult.create(exitCode, commandLine.getExecutionResult());
+		return CommandResult.create(exitCode, getLikelyExecutedCommand(commandLine).getExecutionResult());
+	}
+
+	/**
+	 * Get the most likely executed subcommand, if any, or the main command otherwise.
+	 * @see <a href="https://picocli.info/#_executing_commands_with_subcommands">Executing Commands with Subcommands</a>
+	 */
+	private static CommandLine getLikelyExecutedCommand(final CommandLine commandLine) {
+		return Optional.ofNullable(commandLine.getParseResult().subcommand()) //
+				.map(parseResult -> parseResult.commandSpec().commandLine()) //
+				.orElse(commandLine);
 	}
 }

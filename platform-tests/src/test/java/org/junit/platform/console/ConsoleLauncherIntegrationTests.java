@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * @since 1.0
@@ -32,16 +34,26 @@ class ConsoleLauncherIntegrationTests {
 		);
 	}
 
-	@Test
-	void executeWithoutExcludeClassnameOptionDoesNotExcludeClassesAndMustIncludeAllClassesMatchingTheStandardClassnamePattern() {
-		String[] args = { "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage" };
+	@ParameterizedTest
+	@ValueSource(strings = { //
+			"-e junit-jupiter -p org.junit.platform.console.subpackage", //
+			"execute -e junit-jupiter -p org.junit.platform.console.subpackage" //
+	})
+	void executeWithoutExcludeClassnameOptionDoesNotExcludeClassesAndMustIncludeAllClassesMatchingTheStandardClassnamePattern(
+			final String line) {
+		String[] args = line.split(" ");
 		assertEquals(9, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
 	}
 
-	@Test
-	void executeWithExcludeClassnameOptionExcludesClasses() {
-		String[] args = { "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage", "--exclude-classname",
-				"^org\\.junit\\.platform\\.console\\.subpackage\\..*" };
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"-e junit-jupiter -p org.junit.platform.console.subpackage --exclude-classname"
+					+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..*",
+			"execute -e junit-jupiter -p org.junit.platform.console.subpackage --exclude-classname"
+					+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..*" //
+	})
+	void executeWithExcludeClassnameOptionExcludesClasses(final String line) {
+		String[] args = line.split(" ");
 		var result = new ConsoleLauncherWrapper().execute(args);
 		assertAll("all subpackage test classes are excluded by the class name filter", //
 			() -> assertArrayEquals(args, result.args), //
@@ -50,17 +62,20 @@ class ConsoleLauncherIntegrationTests {
 		);
 	}
 
-	@Test
-	void executeSelectingModuleNames() {
-		String[] args1 = { "-e", "junit-jupiter", "-o", "java.base" };
+	@ParameterizedTest
+	@ValueSource(strings = { //
+			"-e junit-jupiter -o java.base", "-e junit-jupiter --select-module java.base", //
+			"execute -e junit-jupiter -o java.base", "execute -e junit-jupiter --select-module java.base" //
+	})
+	void executeSelectingModuleNames(final String line) {
+		String[] args1 = line.split(" ");
 		assertEquals(0, new ConsoleLauncherWrapper().execute(args1).getTestsFoundCount());
-		String[] args2 = { "-e", "junit-jupiter", "--select-module", "java.base" };
-		assertEquals(0, new ConsoleLauncherWrapper().execute(args2).getTestsFoundCount());
 	}
 
-	@Test
-	void executeScanModules() {
-		String[] args1 = { "-e", "junit-jupiter", "--scan-modules" };
+	@ParameterizedTest
+	@ValueSource(strings = { "-e junit-jupiter --scan-modules", "execute -e junit-jupiter --scan-modules" })
+	void executeScanModules(final String line) {
+		String[] args1 = line.split(" ");
 		assertEquals(0, new ConsoleLauncherWrapper().execute(args1).getTestsFoundCount());
 	}
 
