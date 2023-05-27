@@ -6409,11 +6409,11 @@ temporary directories are deleted only after a test completed successfully.</p>
 creation, like defining the parent directory or the file system that should be used.</p>
 </div>
 <div class="paragraph">
-<p>Factories can be created by implementing <code>TempDirFactory</code>.
-Implementations must provide a no-args constructor and should not make any assumptions
-regarding when and how many times they are instantiated, but can assume that
-<code>TempDirFactory::createTempDirectory</code> and <code>TempDirFactory::close</code> are both called
-once per instance, in this order, and from the same thread.</p>
+<p>Factories can be created by implementing <code>TempDirFactory</code>. Implementations must provide a
+no-args constructor and should not make any assumptions regarding when and how many times
+they are instantiated, but they can assume that their <code>createTempDirectory(&#8230;&#8203;)</code> and
+<code>close()</code> methods will both be called once per instance, in this order, and from the same
+thread.</p>
 </div>
 <div class="paragraph">
 <p>The default implementation available in Jupiter delegates the directory creation to
@@ -12422,7 +12422,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-27 11:49:39 UTC
+Last updated 2023-05-27 16:02:41 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

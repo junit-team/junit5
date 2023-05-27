@@ -103,9 +103,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  system that should be used.
 
  <p>Implementations must provide a no-args constructor and should not make any
- assumptions regarding when and how many times they are instantiated, but can
- assume that <a href="#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)"><code>createTempDirectory(ExtensionContext)</code></a> and <a href="#close()"><code>close()</code></a>
- are both called once per instance, in this order, and from the same thread.
+ assumptions regarding when and how many times they are instantiated, but they
+ can assume that <a href="#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)"><code>createTempDirectory(ExtensionContext)</code></a> and <a href="#close()"><code>close()</code></a>
+ will both be called once per instance, in this order, and from the same thread.
 
  <p>A <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io"><code>TempDirFactory</code></a> can be configured <em>globally</em> for the
  entire test suite via the <a href="TempDir.html#DEFAULT_FACTORY_PROPERTY_NAME">"junit.jupiter.tempdir.factory.default"</a>
