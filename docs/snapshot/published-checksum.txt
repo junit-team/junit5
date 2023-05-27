@@ -189,7 +189,6 @@
 3e55f6a125df488c2827a5776505096e  documentation/src/test/java/example/MyFirstJUnitJupiterTests.java
 3eefe5bbe2b4eb8c07c1046d26c58568  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
 3f831d7d8fdb239f5861fe3c08975295  documentation/src/main/java/example/registration/WebResponse.java
-3fbb8e8be467c7b26f84613589cb5f2e  junit-platform-console/src/main/java/org/junit/platform/console/options/MainCommand.java
 3ffaeff15c4e384b74b76c8ebe8bb093  junit-platform-console/src/main/java/org/junit/platform/console/options/SelectorConverter.java
 3fff9646ecfd1e745a25a7181ca5b263  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/MethodInvocation.java
 4081ed487cd32594ceaa02032e78d37d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/EnumConfigurationParameterConverter.java
@@ -782,6 +781,7 @@ ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit
 efa817b68328110fe7db1ea8f10b1ca7  documentation/src/test/java/example/ExampleTestCase.java
 efa854ea5daf85c7e7b104ee55648e6f  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandFacade.java
 efb8cac73d45dc2af134fab81fd65ebc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrdererContext.java
+efbd442d65a26677317215e0edc40288  junit-platform-console/src/main/java/org/junit/platform/console/options/MainCommand.java
 eff90a7cb1dfa7206dca42ea0e986f7c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
 f02b067dd26ff65062706c42c2aff2c6  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/package-info.java
 f08dcb4e9b644b0b989873c901d98ef2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExecutionCondition.java
