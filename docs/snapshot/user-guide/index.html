@@ -6417,8 +6417,8 @@ thread.</p>
 </div>
 <div class="paragraph">
 <p>The default implementation available in Jupiter delegates the directory creation to
-<code>java.nio.file.Files::createTempDirectory</code>, passing <code>junit</code> as the prefix string
-to be used in generating the directory&#8217;s name.</p>
+<code>java.nio.file.Files::createTempDirectory</code>, passing <code>junit</code> as the prefix string to be
+used in generating the directory&#8217;s name.</p>
 </div>
 <div class="paragraph">
 <p>The following example defines a factory that uses the test name as the directory name
@@ -6448,7 +6448,7 @@ prefix instead of the <code>junit</code> constant value.</p>
 </div>
 <div class="paragraph">
 <p>It&#8217;s also possible to use an in-memory file system like <code><a href="https://google.github.io/jimfs/">Jimfs</a></code> for the creation of the
-temporary directory. The following example shows how to do it.</p>
+temporary directory. The following example demonstrates how to achieve that.</p>
 </div>
 <div class="listingblock">
 <div class="title">A test class with a temporary directory created with the Jimfs in-memory file system</div>
@@ -6474,6 +6474,38 @@ temporary directory. The following example shows how to do it.</p>
             <span class="n">fileSystem</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
         <span class="o">}</span>
 
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@TempDir</code> can also be used as a <a href="#writing-tests-meta-annotations">meta-annotation</a> to
+reduce repetition. The following code listing shows how to create a custom <code>@JimfsTempDir</code>
+annotation that can be used as a drop-in replacement for
+<code>@TempDir(factory = JimfsTempDirFactory.class)</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">A custom annotation meta-annotated with <code>@TempDir</code></div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="nd">@Target</span><span class="o">({</span> <span class="nc">ElementType</span><span class="o">.</span><span class="na">ANNOTATION_TYPE</span><span class="o">,</span> <span class="nc">ElementType</span><span class="o">.</span><span class="na">FIELD</span><span class="o">,</span> <span class="nc">ElementType</span><span class="o">.</span><span class="na">PARAMETER</span> <span class="o">})</span>
+<span class="nd">@Retention</span><span class="o">(</span><span class="nc">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+<span class="nd">@TempDir</span><span class="o">(</span><span class="n">factory</span> <span class="o">=</span> <span class="nc">JimfsTempDirFactory</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="nd">@interface</span> <span class="nc">JimfsTempDir</span> <span class="o">{</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example demonstrates how to use the custom <code>@JimfsTempDir</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test class using the custom annotation</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">JimfsTempDirAnnotationDemo</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nd">@JimfsTempDir</span> <span class="nc">Path</span> <span class="n">tempDir</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// perform test</span>
     <span class="o">}</span>
 
 <span class="o">}</span></code></pre>
@@ -12422,7 +12454,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-27 16:02:41 UTC
+Last updated 2023-05-27 16:34:54 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
