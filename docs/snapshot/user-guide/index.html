@@ -6404,14 +6404,19 @@ temporary directories are deleted only after a test completed successfully.</p>
 </div>
 </div>
 <div class="paragraph">
-<p><code>@TempDir</code> supports custom creation of temporary directories via the optional
-<code>factory</code> attribute. This allows to define how the temporary directory is created,
-giving control over characteristics such as the directory name, root folder,
-and underlying file system.</p>
+<p><code>@TempDir</code> supports the programmatic creation of temporary directories via the optional
+<code>factory</code> attribute. This is typically used to gain control over the temporary directory
+creation, like defining the parent directory or the file system that should be used.</p>
 </div>
 <div class="paragraph">
-<p>Factories can be created by implementing <code>TempDirFactory</code>. The default implementation
-available in Jupiter delegates the directory creation to
+<p>Factories can be created by implementing <code>TempDirFactory</code>.
+Implementations must provide a no-args constructor and should not make any assumptions
+regarding when and how many times they are instantiated, but can assume that
+<code>TempDirFactory::createTempDirectory</code> and <code>TempDirFactory::close</code> are both called
+once per instance, in this order, and from the same thread.</p>
+</div>
+<div class="paragraph">
+<p>The default implementation available in Jupiter delegates the directory creation to
 <code>java.nio.file.Files::createTempDirectory</code>, passing <code>junit</code> as the prefix string
 to be used in generating the directory&#8217;s name.</p>
 </div>
@@ -12417,7 +12422,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-19 15:35:59 UTC
+Last updated 2023-05-27 11:49:39 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
