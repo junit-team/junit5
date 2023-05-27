@@ -147,17 +147,16 @@ class TempDirectoryDemo {
 	}
 	// end::user_guide_factory_jimfs[]
 
-	// tag::user_guide_meta_annotation[]
+	// tag::user_guide_composed_annotation[]
 	@Target({ ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.PARAMETER })
 	@Retention(RetentionPolicy.RUNTIME)
 	@TempDir(factory = JimfsTempDirFactory.class)
 	@interface JimfsTempDir {
-
 	}
-	// end::user_guide_meta_annotation[]
+	// end::user_guide_composed_annotation[]
 
 	static
-	// tag::user_guide_meta_annotation_usage[]
+	// tag::user_guide_composed_annotation_usage[]
 	class JimfsTempDirAnnotationDemo {
 
 		@Test
@@ -166,6 +165,6 @@ class TempDirectoryDemo {
 		}
 
 	}
-	// end::user_guide_meta_annotation_usage[]
+	// end::user_guide_composed_annotation_usage[]
 
 }

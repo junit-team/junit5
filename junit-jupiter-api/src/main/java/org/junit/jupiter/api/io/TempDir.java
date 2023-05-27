@@ -90,7 +90,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  *
  * @since 5.4
  */
-@Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = STABLE, since = "5.10")

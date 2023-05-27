@@ -34,19 +34,19 @@ class TempDirectoryMetaAnnotationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void annotationOnField() {
-		executeTestsForClass(AnnotationOnFieldTestCase.class).testEvents().assertStatistics(
-			stats -> stats.started(1).succeeded(1));
+		executeTestsForClass(AnnotationOnFieldTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
 	@Test
 	void annotationOnParameter() {
-		executeTestsForClass(AnnotationOnParameterTestCase.class).testEvents().assertStatistics(
-			stats -> stats.started(1).succeeded(1));
+		executeTestsForClass(AnnotationOnParameterTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
 	static class AnnotationOnFieldTestCase {
 
-		@MetaTempDir
+		@CustomTempDir
 		private Path tempDir;
 
 		@Test
@@ -59,7 +59,7 @@ class TempDirectoryMetaAnnotationTests extends AbstractJupiterTestEngineTests {
 	static class AnnotationOnParameterTestCase {
 
 		@Test
-		void test(@MetaTempDir Path tempDir) {
+		void test(@CustomTempDir Path tempDir) {
 			assertTrue(Files.exists(tempDir));
 		}
 
@@ -68,8 +68,7 @@ class TempDirectoryMetaAnnotationTests extends AbstractJupiterTestEngineTests {
 	@TempDir
 	@Target({ ElementType.FIELD, ElementType.PARAMETER })
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface MetaTempDir {
-
+	@interface CustomTempDir {
 	}
 
 }

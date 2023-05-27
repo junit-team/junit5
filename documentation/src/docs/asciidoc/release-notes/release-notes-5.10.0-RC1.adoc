@@ -24,8 +24,6 @@ JUnit repository on GitHub.
 ==== New Features and Improvements
 
 * New `@SelectMethod` selector support in the `@Suite` test engine.
-* Add `@SelectMethod` selector support to `@Suite` test engine
-* `@TempDir` can now be used in meta-annotations
 
 
 [[release-notes-5.10.0-RC1-junit-jupiter]]
@@ -41,6 +39,10 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
+* `@TempDir` can now be used as a meta-annotation in order to create custom _composed
+  annotations_. See the `@JimfsTempDir` example in the
+  <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, User Guide>>
+  for details.
 * Lifecycle and thread-safety semantics are now documented for the `TempDirFactory` SPI.
 
 

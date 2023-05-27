@@ -2627,8 +2627,8 @@ they are instantiated, but they can assume that their `createTempDirectory(...)`
 thread.
 
 The default implementation available in Jupiter delegates the directory creation to
-`java.nio.file.Files::createTempDirectory`, passing `junit` as the prefix string
-to be used in generating the directory's name.
+`java.nio.file.Files::createTempDirectory`, passing `junit` as the prefix string to be
+used in generating the directory's name.
 
 The following example defines a factory that uses the test name as the directory name
 prefix instead of the `junit` constant value.
@@ -2640,7 +2640,7 @@ include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_factory_name_p
 ----
 
 It's also possible to use an in-memory file system like `{Jimfs}` for the creation of the
-temporary directory. The following example shows how to do it.
+temporary directory. The following example demonstrates how to achieve that.
 
 [source,java,indent=0]
 .A test class with a temporary directory created with the Jimfs in-memory file system
@@ -2648,17 +2648,23 @@ temporary directory. The following example shows how to do it.
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_factory_jimfs]
 ----
 
-`@TempDir` can also be used in meta-annotations to reduce repetition.
+`@TempDir` can also be used as a <<writing-tests-meta-annotations, meta-annotation>> to
+reduce repetition. The following code listing shows how to create a custom `@JimfsTempDir`
+annotation that can be used as a drop-in replacement for
+`@TempDir(factory = JimfsTempDirFactory.class)`.
 
 [source,java,indent=0]
-.A definition of a meta-annotation using `@TempDir`
+.A custom annotation meta-annotated with `@TempDir`
 ----
-include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_meta_annotation]
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_composed_annotation]
 ----
+
+The following example demonstrates how to use the custom `@JimfsTempDir` annotation.
+
 [source,java,indent=0]
-.A test class using a meta-annotation
+.A test class using the custom annotation
 ----
-include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_meta_annotation_usage]
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_composed_annotation_usage]
 ----
 
 You can use the `junit.jupiter.tempdir.factory.default`
