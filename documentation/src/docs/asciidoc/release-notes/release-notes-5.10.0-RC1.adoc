@@ -24,6 +24,7 @@ JUnit repository on GitHub.
 ==== New Features and Improvements
 
 * New `@SelectMethod` selector support in the `@Suite` test engine.
+* Allow selecting classes by name via new `names` attribute of `@SelectClasses`
 
 
 [[release-notes-5.10.0-RC1-junit-jupiter]]

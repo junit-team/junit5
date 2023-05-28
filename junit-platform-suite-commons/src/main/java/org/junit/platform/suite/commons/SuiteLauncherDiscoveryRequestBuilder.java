@@ -10,6 +10,7 @@
 
 package org.junit.platform.suite.commons;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
@@ -18,11 +19,12 @@ import static org.junit.platform.suite.commons.AdditionalDiscoverySelectors.sele
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -69,7 +71,7 @@ import org.junit.platform.suite.api.SelectUris;
 public final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private final LauncherDiscoveryRequestBuilder delegate = LauncherDiscoveryRequestBuilder.request();
-	private final List<String> selectedClassNames = new ArrayList<>();
+	private final Set<String> selectedClassNames = new LinkedHashSet<>();
 	private boolean includeClassNamePatternsUsed;
 	private boolean filterStandardClassNamePatterns = false;
 	private ConfigurationParameters parentConfigurationParameters;
@@ -148,8 +150,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 				.ifPresent(this::filters);
 		// Process @SelectClasses before @IncludeClassNamePatterns, since the names
 		// of selected classes get automatically added to the include filter.
-		findAnnotationValues(suiteClass, SelectClasses.class, SelectClasses::value)
-				.map(this::selectClasses)
+		findAnnotation(suiteClass, SelectClasses.class)
+				.map(annotation -> selectClasses(suiteClass, annotation))
 				.ifPresent(this::selectors);
 		findRepeatableAnnotations(suiteClass, SelectMethod.class)
 				.stream()
@@ -207,9 +209,21 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return delegate.build();
 	}
 
-	private List<ClassSelector> selectClasses(Class<?>... classes) {
-		Arrays.stream(classes).map(Class::getName).distinct().forEach(this.selectedClassNames::add);
-		return AdditionalDiscoverySelectors.selectClasses(classes);
+	private List<ClassSelector> selectClasses(Class<?> suiteClass, SelectClasses annotation) {
+		return toClassSelectors(suiteClass, annotation) //
+				.distinct() //
+				.peek(selector -> this.selectedClassNames.add(selector.getClassName())) //
+				.collect(toList());
+	}
+
+	private static Stream<ClassSelector> toClassSelectors(Class<?> suiteClass, SelectClasses annotation) {
+		Preconditions.condition(annotation.value().length > 0 || annotation.names().length > 0,
+			() -> String.format("@SelectClasses on class [%s] must declare at least one class reference or name",
+				suiteClass.getName()));
+		return Stream.concat(//
+			AdditionalDiscoverySelectors.selectClasses(annotation.value()), //
+			AdditionalDiscoverySelectors.selectClasses(annotation.names()) //
+		);
 	}
 
 	private MethodSelector selectMethod(Class<?> clazz, String name, String parameters) {

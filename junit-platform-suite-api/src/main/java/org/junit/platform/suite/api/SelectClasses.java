@@ -10,6 +10,7 @@
 
 package org.junit.platform.suite.api;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.annotation.Documented;
@@ -26,8 +27,10 @@ import org.apiguardian.api.API;
  * a test suite on the JUnit Platform.
  *
  * @since 1.0
+ * @see Suite
  * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectClass(Class)
+ * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectClass(String)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -38,7 +41,23 @@ public @interface SelectClasses {
 
 	/**
 	 * One or more classes to select.
+	 * <p>
+	 * May be use in conjunction with or instead of {@link #names()}.
 	 */
-	Class<?>[] value();
+	Class<?>[] value() default {};
+
+	/**
+	 * One or more classes to select by their fully qualified names.
+	 * <p>
+	 * May be use in conjunction with or instead of {@link #value()}.
+	 * <p>
+	 * This attribute is intended to be used when the class cannot be referenced
+	 * directly from where this annotation is used, for example, when it's not
+	 * visible due to being package-private.
+	 *
+	 * @since 1.10
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	String[] names() default {};
 
 }

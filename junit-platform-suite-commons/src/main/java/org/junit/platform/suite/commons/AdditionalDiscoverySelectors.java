@@ -68,14 +68,23 @@ class AdditionalDiscoverySelectors {
 		// @formatter:on
 	}
 
-	static List<ClassSelector> selectClasses(Class<?>... classes) {
+	static Stream<ClassSelector> selectClasses(Class<?>... classes) {
 		Preconditions.notNull(classes, "classes must not be null");
 		Preconditions.containsNoNullElements(classes, "Individual classes must not be null");
 
 		// @formatter:off
 		return uniqueStreamOf(classes)
-				.map(DiscoverySelectors::selectClass)
-				.collect(Collectors.toList());
+				.map(DiscoverySelectors::selectClass);
+		// @formatter:on
+	}
+
+	static Stream<ClassSelector> selectClasses(String... classNames) {
+		Preconditions.notNull(classNames, "classNames must not be null");
+		Preconditions.containsNoNullElements(classNames, "Individual class names must not be null");
+
+		// @formatter:off
+		return uniqueStreamOf(classNames)
+				.map(DiscoverySelectors::selectClass);
 		// @formatter:on
 	}
 

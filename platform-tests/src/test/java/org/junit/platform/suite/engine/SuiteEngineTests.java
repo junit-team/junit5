@@ -144,7 +144,7 @@ class SuiteEngineTests {
 
 	@SuppressWarnings("InnerClassMayBeStatic")
 	@Suite
-	@SelectClasses(SingleTestTestCase.class)
+	@SelectClasses(names = "org.junit.platform.suite.engine.testcases.SingleTestTestCase")
 	private class InnerSuite {
 
 	}

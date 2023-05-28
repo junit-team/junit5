@@ -10,8 +10,10 @@
 
 package org.junit.platform.suite.commons;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.Retention;
@@ -23,9 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
@@ -204,7 +209,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 	}
 
 	@Test
-	void selectClasses() {
+	void selectClassesByReference() {
 		class TestCase {
 		}
 		@SelectClasses(TestCase.class)
@@ -215,6 +220,33 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 		assertFalse(selectors.isEmpty());
 		assertEquals(TestCase.class, exactlyOne(selectors).getJavaClass());
+	}
+
+	@Test
+	void selectClassesByName() {
+		@SelectClasses(names = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NonLocalTestCase")
+		class Suite {
+		}
+
+		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
+		assertEquals(NonLocalTestCase.class, exactlyOne(selectors).getJavaClass());
+	}
+
+	@Test
+	void selectClassesWithoutReferencesOrNames() {
+		@SelectClasses
+		class Suite {
+		}
+
+		var e = assertThrows(PreconditionViolationException.class, () -> builder.suite(Suite.class));
+
+		assertThat(e).hasMessageMatching(
+			"@SelectClasses on class \\[" + Pattern.quote(SuiteLauncherDiscoveryRequestBuilderTests.class.getName())
+					+ "\\$\\d+Suite] must declare at least one class reference or name");
+	}
+
+	static class NonLocalTestCase {
 	}
 
 	@Test
@@ -460,8 +492,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 	}
 
 	private static <T> T exactlyOne(List<T> list) {
-		assertEquals(1, list.size());
-		return list.get(0);
+		return CollectionUtils.getOnlyElement(list);
 	}
 
 	private static class StubAbstractTestDescriptor extends AbstractTestDescriptor {
