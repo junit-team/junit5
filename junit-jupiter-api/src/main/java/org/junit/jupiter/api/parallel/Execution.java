@@ -99,4 +99,10 @@ public @interface Execution {
 	 */
 	ExecutionMode value();
 
+	/**
+	 * The reason of using a non-default execution mode.
+	 *
+	 */
+	String reason() default "";
+
 }
