@@ -100,9 +100,10 @@ public @interface Execution {
 	ExecutionMode value();
 
 	/**
-	 * The reason of using a non-default execution mode.
-	 *
+	 * The reason for using the selected execution mode.
+	 * @since 5.10
 	 */
+	@API(status = STABLE, since = "5.10")
 	String reason() default "";
 
 }
