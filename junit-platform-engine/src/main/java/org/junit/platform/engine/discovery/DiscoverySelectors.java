@@ -389,23 +389,23 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	public static ClassSelector selectClass(String className) {
-		return selectClass(className, (ClassLoader) null);
+		return selectClass((ClassLoader) null, className);
 	}
 
 	/**
 	 * Create a {@code ClassSelector} for the supplied class name and class loader.
 	 *
-	 * @param className the fully qualified name of the class to select; never
-	 * {@code null} or blank
 	 * @param classLoader the class loader to use to load the class, or {@code null}
 	 * to signal that the default {@code ClassLoader} should be used
+	 * @param className the fully qualified name of the class to select; never
+	 * {@code null} or blank
 	 * @since 1.10
 	 * @see ClassSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public static ClassSelector selectClass(String className, ClassLoader classLoader) {
+	public static ClassSelector selectClass(ClassLoader classLoader, String className) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
-		return new ClassSelector(className, classLoader);
+		return new ClassSelector(classLoader, className);
 	}
 
 	/**
@@ -451,7 +451,7 @@ public final class DiscoverySelectors {
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException {
-		return selectMethod(fullyQualifiedMethodName, (ClassLoader) null);
+		return selectMethod((ClassLoader) null, fullyQualifiedMethodName);
 	}
 
 	/**
@@ -461,20 +461,20 @@ public final class DiscoverySelectors {
 	 * <p>See {@link #selectMethod(String)} for the supported formats for a
 	 * fully qualified method name.
 	 *
-	 * @param fullyQualifiedMethodName the fully qualified name of the method to
-	 * select; never {@code null} or blank
 	 * @param classLoader the class loader to use to load the method's declaring
 	 * class, or {@code null} to signal that the default {@code ClassLoader}
 	 * should be used
+	 * @param fullyQualifiedMethodName the fully qualified name of the method to
+	 * select; never {@code null} or blank
 	 * @since 1.10
 	 * @see #selectMethod(String)
 	 * @see MethodSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public static MethodSelector selectMethod(String fullyQualifiedMethodName, ClassLoader classLoader)
+	public static MethodSelector selectMethod(ClassLoader classLoader, String fullyQualifiedMethodName)
 			throws PreconditionViolationException {
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
-		return selectMethod(methodParts[0], methodParts[1], methodParts[2], classLoader);
+		return selectMethod(classLoader, methodParts[0], methodParts[1], methodParts[2]);
 	}
 
 	/**
@@ -487,26 +487,26 @@ public final class DiscoverySelectors {
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String className, String methodName) {
-		return selectMethod(className, methodName, (ClassLoader) null);
+		return selectMethod((ClassLoader) null, className, methodName);
 	}
 
 	/**
 	 * Create a {@code MethodSelector} for the supplied class name, method name,
 	 * and class loader.
 	 *
+	 * @param classLoader the class loader to use to load the class, or {@code null}
+	 * to signal that the default {@code ClassLoader} should be used
 	 * @param className the fully qualified name of the class in which the method
 	 * is declared, or a subclass thereof; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param classLoader the class loader to use to load the class, or {@code null}
-	 * to signal that the default {@code ClassLoader} should be used
 	 * @since 1.10
 	 * @see MethodSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public static MethodSelector selectMethod(String className, String methodName, ClassLoader classLoader) {
+	public static MethodSelector selectMethod(ClassLoader classLoader, String className, String methodName) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		return new MethodSelector(className, methodName, "", classLoader);
+		return new MethodSelector(classLoader, className, methodName, "");
 	}
 
 	/**
@@ -526,7 +526,7 @@ public final class DiscoverySelectors {
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String className, String methodName, String parameterTypeNames) {
-		return selectMethod(className, methodName, parameterTypeNames, (ClassLoader) null);
+		return selectMethod((ClassLoader) null, className, methodName, parameterTypeNames);
 	}
 
 	/**
@@ -537,24 +537,24 @@ public final class DiscoverySelectors {
 	 * list of atomic types, fully qualified class names, or array types; however,
 	 * the exact syntax depends on the underlying test engine.
 	 *
+	 * @param classLoader the class loader to use to load the class, or {@code null}
+	 * to signal that the default {@code ClassLoader} should be used
 	 * @param className the fully qualified name of the class in which the method
 	 * is declared, or a subclass thereof; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @param parameterTypeNames the parameter type names as a single string; never
 	 * {@code null} though potentially an empty string if the method does not declare
 	 * any parameters
-	 * @param classLoader the class loader to use to load the class, or {@code null}
-	 * to signal that the default {@code ClassLoader} should be used
 	 * @since 1.10
 	 * @see MethodSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public static MethodSelector selectMethod(String className, String methodName, String parameterTypeNames,
-			ClassLoader classLoader) {
+	public static MethodSelector selectMethod(ClassLoader classLoader, String className, String methodName,
+			String parameterTypeNames) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypeNames, "Parameter type names must not be null");
-		return new MethodSelector(className, methodName, parameterTypeNames.trim(), classLoader);
+		return new MethodSelector(classLoader, className, methodName, parameterTypeNames.trim());
 	}
 
 	/**
@@ -633,26 +633,26 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = STABLE, since = "1.6")
 	public static NestedClassSelector selectNestedClass(List<String> enclosingClassNames, String nestedClassName) {
-		return selectNestedClass(enclosingClassNames, nestedClassName, (ClassLoader) null);
+		return selectNestedClass((ClassLoader) null, enclosingClassNames, nestedClassName);
 	}
 
 	/**
 	 * Create a {@code NestedClassSelector} for the supplied class name, its enclosing
 	 * classes' names, and class loader.
 	 *
-	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
-	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
 	 * @param classLoader the class loader to use to load the enclosing and nested classes, or
 	 * {@code null} to signal that the default {@code ClassLoader} should be used
+	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
+	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
 	 * @since 1.10
 	 * @see NestedClassSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public static NestedClassSelector selectNestedClass(List<String> enclosingClassNames, String nestedClassName,
-			ClassLoader classLoader) {
+	public static NestedClassSelector selectNestedClass(ClassLoader classLoader, List<String> enclosingClassNames,
+			String nestedClassName) {
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");
-		return new NestedClassSelector(enclosingClassNames, nestedClassName, classLoader);
+		return new NestedClassSelector(classLoader, enclosingClassNames, nestedClassName);
 	}
 
 	/**
@@ -667,25 +667,25 @@ public final class DiscoverySelectors {
 	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName) {
-		return selectNestedMethod(enclosingClassNames, nestedClassName, methodName, (ClassLoader) null);
+		return selectNestedMethod((ClassLoader) null, enclosingClassNames, nestedClassName, methodName);
 	}
 
 	/**
 	 * Create a {@code NestedMethodSelector} for the supplied nested class name, method name,
 	 * and class loader.
 	 *
-	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
-	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
-	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @param classLoader the class loader to use to load the method's declaring
 	 * class, or {@code null} to signal that the default {@code ClassLoader}
 	 * should be used
+	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
+	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
+	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @since 1.10
 	 * @see NestedMethodSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
-			String methodName, ClassLoader classLoader) throws PreconditionViolationException {
+	public static NestedMethodSelector selectNestedMethod(ClassLoader classLoader, List<String> enclosingClassNames,
+			String nestedClassName, String methodName) throws PreconditionViolationException {
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
@@ -712,28 +712,29 @@ public final class DiscoverySelectors {
 	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName, String parameterTypeNames) {
-		return selectNestedMethod(enclosingClassNames, nestedClassName, methodName, parameterTypeNames, null);
+		return selectNestedMethod((ClassLoader) null, enclosingClassNames, nestedClassName, methodName,
+			parameterTypeNames);
 	}
 
 	/**
 	 * Create a {@code NestedMethodSelector} for the supplied nested class name, method name,
 	 * parameter type names, and class loader.
 	 *
+	 * @param classLoader the class loader to use to load the method's declaring
+	 * class, or {@code null} to signal that the default {@code ClassLoader}
+	 * should be used
 	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
 	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @param parameterTypeNames the parameter type names as a single string; never
 	 * {@code null} though potentially an empty string if the method does not declare
 	 * parameters
-	 * @param classLoader the class loader to use to load the method's declaring
-	 * class, or {@code null} to signal that the default {@code ClassLoader}
-	 * should be used
 	 * @since 1.10
 	 * @see #selectNestedMethod(List, String, String, String)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
-			String methodName, String parameterTypeNames, ClassLoader classLoader) {
+	public static NestedMethodSelector selectNestedMethod(ClassLoader classLoader, List<String> enclosingClassNames,
+			String nestedClassName, String methodName, String parameterTypeNames) {
 
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");

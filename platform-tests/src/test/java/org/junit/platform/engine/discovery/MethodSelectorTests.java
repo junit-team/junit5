@@ -32,25 +32,25 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void equalsAndHashCode() {
-		var selector1 = new MethodSelector(TEST_CASE_NAME, "method", "int, boolean", null);
-		var selector2 = new MethodSelector(TEST_CASE_NAME, "method", "int, boolean", null);
+		var selector1 = new MethodSelector(null, TEST_CASE_NAME, "method", "int, boolean");
+		var selector2 = new MethodSelector(null, TEST_CASE_NAME, "method", "int, boolean");
 		var selector3 = new MethodSelector(TestCase.class, "method", "int, boolean");
 
 		Stream.of(selector2, selector3).forEach(selector -> {
-			assertEqualsAndHashCode(selector1, selector, new MethodSelector(TEST_CASE_NAME, "method", "int", null));
+			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, TEST_CASE_NAME, "method", "int"));
 			assertEqualsAndHashCode(selector1, selector,
-				new MethodSelector(TEST_CASE_NAME, "method", "", (ClassLoader) null));
-			assertEqualsAndHashCode(selector1, selector, new MethodSelector(TEST_CASE_NAME, "X", "int, boolean", null));
+				new MethodSelector((ClassLoader) null, TEST_CASE_NAME, "method", ""));
+			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, TEST_CASE_NAME, "X", "int, boolean"));
 			assertEqualsAndHashCode(selector1, selector,
-				new MethodSelector(TEST_CASE_NAME, "X", "", (ClassLoader) null));
-			assertEqualsAndHashCode(selector1, selector, new MethodSelector("X", "method", "int, boolean", null));
-			assertEqualsAndHashCode(selector1, selector, new MethodSelector("X", "method", "", (ClassLoader) null));
+				new MethodSelector((ClassLoader) null, TEST_CASE_NAME, "X", ""));
+			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, "X", "method", "int, boolean"));
+			assertEqualsAndHashCode(selector1, selector, new MethodSelector((ClassLoader) null, "X", "method", ""));
 		});
 	}
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadJavaClass() {
-		var selector = new MethodSelector("org.example.BogusClass", "method", "int, boolean", (ClassLoader) null);
+		var selector = new MethodSelector((ClassLoader) null, "org.example.BogusClass", "method", "int, boolean");
 
 		assertThat(selector.getClassName()).isEqualTo("org.example.BogusClass");
 		assertThat(selector.getMethodName()).isEqualTo("method");
@@ -64,7 +64,7 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadClassForParameterType() {
-		var selector = new MethodSelector(TEST_CASE_NAME, "method", "int[], org.example.Bogus", (ClassLoader) null);
+		var selector = new MethodSelector((ClassLoader) null, TEST_CASE_NAME, "method", "int[], org.example.Bogus");
 
 		assertThat(selector.getClassName()).isEqualTo(TEST_CASE_NAME);
 		assertThat(selector.getMethodName()).isEqualTo("method");

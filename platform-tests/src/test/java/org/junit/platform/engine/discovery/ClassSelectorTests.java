@@ -27,16 +27,16 @@ class ClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void equalsAndHashCode() {
-		var selector1 = new ClassSelector("org.example.TestClass", null);
-		var selector2 = new ClassSelector("org.example.TestClass", null);
-		var selector3 = new ClassSelector("org.example.X", null);
+		var selector1 = new ClassSelector(null, "org.example.TestClass");
+		var selector2 = new ClassSelector(null, "org.example.TestClass");
+		var selector3 = new ClassSelector(null, "org.example.X");
 
 		assertEqualsAndHashCode(selector1, selector2, selector3);
 	}
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadClass() {
-		var selector = new ClassSelector("org.example.TestClass", null);
+		var selector = new ClassSelector(null, "org.example.TestClass");
 
 		var e = assertThrows(PreconditionViolationException.class, selector::getJavaClass);
 

@@ -316,7 +316,7 @@ class DiscoverySelectorsTests {
 		@Test
 		void selectClassByNameAndClassLoader() throws Exception {
 			try (var testClassLoader = TestClassLoader.forClasses(getClass())) {
-				var selector = selectClass(getClass().getName(), testClassLoader);
+				var selector = selectClass(testClassLoader, getClass().getName());
 
 				assertThat(selector.getJavaClass().getName()).isEqualTo(getClass().getName());
 				assertThat(selector.getJavaClass()).isNotEqualTo(getClass());
@@ -419,7 +419,7 @@ class DiscoverySelectorsTests {
 				assertThat(clazz).isNotEqualTo(testClass());
 
 				var method = clazz.getDeclaredMethod("myTest");
-				var selector = selectMethod(testClass().getName(), "myTest", testClassLoader);
+				var selector = selectMethod(testClassLoader, testClass().getName(), "myTest");
 				assertThat(selector.getJavaMethod()).isEqualTo(method);
 				assertThat(selector.getJavaClass()).isEqualTo(clazz);
 				assertThat(selector.getClassName()).isEqualTo(clazz.getName());
@@ -755,7 +755,7 @@ class DiscoverySelectorsTests {
 				AbstractClassWithNestedInnerClass.NestedClass.class);
 
 			try (var testClassLoader = TestClassLoader.forClasses(testClasses)) {
-				var selector = selectNestedClass(List.of(enclosingClassName), nestedClassName, testClassLoader);
+				var selector = selectNestedClass(testClassLoader, List.of(enclosingClassName), nestedClassName);
 
 				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
@@ -810,8 +810,8 @@ class DiscoverySelectorsTests {
 				AbstractClassWithNestedInnerClass.NestedClass.class);
 
 			try (var testClassLoader = TestClassLoader.forClasses(testClasses)) {
-				var selector = selectNestedMethod(List.of(enclosingClassName), nestedClassName, methodName,
-					testClassLoader);
+				var selector = selectNestedMethod(testClassLoader, List.of(enclosingClassName), nestedClassName,
+					methodName);
 
 				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
@@ -862,8 +862,8 @@ class DiscoverySelectorsTests {
 				AbstractClassWithNestedInnerClass.NestedClass.class);
 
 			try (var testClassLoader = TestClassLoader.forClasses(testClasses.toArray(Class[]::new))) {
-				var selector = selectNestedMethod(List.of(enclosingClassName), nestedClassName, methodName,
-					String.class.getName(), testClassLoader);
+				var selector = selectNestedMethod(testClassLoader, List.of(enclosingClassName), nestedClassName,
+					methodName, String.class.getName());
 
 				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);

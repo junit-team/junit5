@@ -21,6 +21,9 @@ JUnit repository on GitHub.
 
 * The `getMethodParameterTypes()` methods in `MethodSelector` and `NestedMethodSelector`
   have been deprecated and replaced by `getParameterTypeNames()` for greater clarity.
+* Methods in `DiscoverySelectors` that accept a `ClassLoader` now declare the
+  `ClassLoader` as the first parameter. This is only a breaking change for code that
+  relies on the new methods introduced in JUnit Platform 1.10 M1.
 
 ==== New Features and Improvements
 

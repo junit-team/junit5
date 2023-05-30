@@ -67,7 +67,7 @@ public class MethodSelector implements DiscoverySelector {
 	/**
 	 * @since 1.10
 	 */
-	MethodSelector(String className, String methodName, String parameterTypeNames, ClassLoader classLoader) {
+	MethodSelector(ClassLoader classLoader, String className, String methodName, String parameterTypeNames) {
 		this.classLoader = classLoader;
 		this.className = className;
 		this.methodName = methodName;
@@ -93,6 +93,7 @@ public class MethodSelector implements DiscoverySelector {
 
 	/**
 	 * Get the {@link ClassLoader} used to load the specified class.
+	 *
 	 * @return the {@code ClassLoader}; potentially {@code null}
 	 * @since 1.10
 	 */
