@@ -511,50 +511,50 @@ public final class DiscoverySelectors {
 
 	/**
 	 * Create a {@code MethodSelector} for the supplied class name, method name,
-	 * and method parameter types.
+	 * and parameter type names.
 	 *
-	 * <p>The parameter types {@code String} is typically a comma-separated list
-	 * of atomic types, fully qualified class names, or array types; however,
+	 * <p>The parameter type names {@code String} is typically a comma-separated
+	 * list of atomic types, fully qualified class names, or array types; however,
 	 * the exact syntax depends on the underlying test engine.
 	 *
 	 * @param className the fully qualified name of the class in which the method
 	 * is declared, or a subclass thereof; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param methodParameterTypes the method parameter types as a single string; never
-	 * {@code null} though potentially an empty string if the method does not accept
-	 * arguments
+	 * @param parameterTypeNames the parameter type names as a single string; never
+	 * {@code null} though potentially an empty string if the method does not declare
+	 * parameters
 	 * @see MethodSelector
 	 */
-	public static MethodSelector selectMethod(String className, String methodName, String methodParameterTypes) {
-		return selectMethod(className, methodName, methodParameterTypes, null);
+	public static MethodSelector selectMethod(String className, String methodName, String parameterTypeNames) {
+		return selectMethod(className, methodName, parameterTypeNames, (ClassLoader) null);
 	}
 
 	/**
 	 * Create a {@code MethodSelector} for the supplied class name, method name,
-	 * method parameter types, and class loader.
+	 * parameter type names, and class loader.
 	 *
-	 * <p>The parameter types {@code String} is typically a comma-separated list
-	 * of atomic types, fully qualified class names, or array types; however,
+	 * <p>The parameter type names {@code String} is typically a comma-separated
+	 * list of atomic types, fully qualified class names, or array types; however,
 	 * the exact syntax depends on the underlying test engine.
 	 *
 	 * @param className the fully qualified name of the class in which the method
 	 * is declared, or a subclass thereof; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param methodParameterTypes the method parameter types as a single string; never
-	 * {@code null} though potentially an empty string if the method does not accept
-	 * arguments
+	 * @param parameterTypeNames the parameter type names as a single string; never
+	 * {@code null} though potentially an empty string if the method does not declare
+	 * any parameters
 	 * @param classLoader the class loader to use to load the class, or {@code null}
 	 * to signal that the default {@code ClassLoader} should be used
 	 * @since 1.10
 	 * @see MethodSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public static MethodSelector selectMethod(String className, String methodName, String methodParameterTypes,
+	public static MethodSelector selectMethod(String className, String methodName, String parameterTypeNames,
 			ClassLoader classLoader) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		Preconditions.notNull(methodParameterTypes, "Parameter types must not be null");
-		return new MethodSelector(className, methodName, methodParameterTypes.trim(), classLoader);
+		Preconditions.notNull(parameterTypeNames, "Parameter type names must not be null");
+		return new MethodSelector(className, methodName, parameterTypeNames.trim(), classLoader);
 	}
 
 	/**
@@ -571,25 +571,25 @@ public final class DiscoverySelectors {
 
 	/**
 	 * Create a {@code MethodSelector} for the supplied {@link Class}, method name,
-	 * and method parameter types.
+	 * and parameter type names.
 	 *
-	 * <p>The parameter types {@code String} is typically a comma-separated list
-	 * of atomic types, fully qualified class names, or array types; however,
+	 * <p>The parameter type names {@code String} is typically a comma-separated
+	 * list of atomic types, fully qualified class names, or array types; however,
 	 * the exact syntax depends on the underlying test engine.
 	 *
 	 * @param javaClass the class in which the method is declared, or a subclass thereof;
 	 * never {@code null}
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param methodParameterTypes the method parameter types as a single string; never
-	 * {@code null} though potentially an empty string if the method does not accept
-	 * arguments
+	 * @param parameterTypeNames the parameter type names as a single string; never
+	 * {@code null} though potentially an empty string if the method does not declare
+	 * any parameters
 	 * @see MethodSelector
 	 */
-	public static MethodSelector selectMethod(Class<?> javaClass, String methodName, String methodParameterTypes) {
+	public static MethodSelector selectMethod(Class<?> javaClass, String methodName, String parameterTypeNames) {
 		Preconditions.notNull(javaClass, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		Preconditions.notNull(methodParameterTypes, "Parameter types must not be null");
-		return new MethodSelector(javaClass, methodName, methodParameterTypes.trim());
+		Preconditions.notNull(parameterTypeNames, "Parameter type names must not be null");
+		return new MethodSelector(javaClass, methodName, parameterTypeNames.trim());
 	}
 
 	/**
@@ -694,37 +694,37 @@ public final class DiscoverySelectors {
 
 	/**
 	 * Create a {@code NestedMethodSelector} for the supplied nested class name, method name,
-	 * and method parameter types.
+	 * and parameter type names.
 	 *
-	 * <p>The parameter types {@code String} is typically a comma-separated list
-	 * of atomic types, fully qualified class names, or array types; however,
+	 * <p>The parameter type names {@code String} is typically a comma-separated
+	 * list of atomic types, fully qualified class names, or array types; however,
 	 * the exact syntax depends on the underlying test engine.
 	 *
 	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
 	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param methodParameterTypes the method parameter types as a single string; never
-	 * {@code null} though potentially an empty string if the method does not accept
-	 * arguments
+	 * @param parameterTypeNames the parameter type names as a single string; never
+	 * {@code null} though potentially an empty string if the method does not declare
+	 * parameters
 	 * @since 1.6
 	 * @see NestedMethodSelector
 	 */
 	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
-			String methodName, String methodParameterTypes) {
-		return selectNestedMethod(enclosingClassNames, nestedClassName, methodName, methodParameterTypes, null);
+			String methodName, String parameterTypeNames) {
+		return selectNestedMethod(enclosingClassNames, nestedClassName, methodName, parameterTypeNames, null);
 	}
 
 	/**
 	 * Create a {@code NestedMethodSelector} for the supplied nested class name, method name,
-	 * method parameter types, and class loader.
+	 * parameter type names, and class loader.
 	 *
 	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
 	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param methodParameterTypes the method parameter types as a single string; never
-	 * {@code null} though potentially an empty string if the method does not accept
-	 * arguments
+	 * @param parameterTypeNames the parameter type names as a single string; never
+	 * {@code null} though potentially an empty string if the method does not declare
+	 * parameters
 	 * @param classLoader the class loader to use to load the method's declaring
 	 * class, or {@code null} to signal that the default {@code ClassLoader}
 	 * should be used
@@ -733,13 +733,13 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
-			String methodName, String methodParameterTypes, ClassLoader classLoader) {
+			String methodName, String parameterTypeNames, ClassLoader classLoader) {
 
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		Preconditions.notNull(methodParameterTypes, "Parameter types must not be null");
-		return new NestedMethodSelector(enclosingClassNames, nestedClassName, methodName, methodParameterTypes,
+		Preconditions.notNull(parameterTypeNames, "Parameter types must not be null");
+		return new NestedMethodSelector(enclosingClassNames, nestedClassName, methodName, parameterTypeNames,
 			classLoader);
 	}
 
@@ -764,30 +764,30 @@ public final class DiscoverySelectors {
 
 	/**
 	 * Create a {@code NestedMethodSelector} for the supplied {@link Class}, method name,
-	 * and method parameter types.
+	 * and parameter type names.
 	 *
-	 * <p>The parameter types {@code String} is typically a comma-separated list
-	 * of atomic types, fully qualified class names, or array types; however,
+	 * <p>The parameter type names {@code String} is typically a comma-separated
+	 * list of atomic types, fully qualified class names, or array types; however,
 	 * the exact syntax depends on the underlying test engine.
 	 *
 	 * @param enclosingClasses the path to the nested class to select; never {@code null} or empty
 	 * @param nestedClass the nested class to select; never {@code null}
 	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param methodParameterTypes the method parameter types as a single string; never
-	 * {@code null} though potentially an empty string if the method does not accept
-	 * arguments
+	 * @param parameterTypeNames the parameter type names as a single string; never
+	 * {@code null} though potentially an empty string if the method does not declare
+	 * parameters
 	 * @since 1.6
 	 * @see NestedMethodSelector
 	 */
 	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<Class<?>> enclosingClasses, Class<?> nestedClass,
-			String methodName, String methodParameterTypes) {
+			String methodName, String parameterTypeNames) {
 
 		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
 		Preconditions.notNull(nestedClass, "Nested class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		Preconditions.notNull(methodParameterTypes, "Parameter types must not be null");
-		return new NestedMethodSelector(enclosingClasses, nestedClass, methodName, methodParameterTypes);
+		Preconditions.notNull(parameterTypeNames, "Parameter types must not be null");
+		return new NestedMethodSelector(enclosingClasses, nestedClass, methodName, parameterTypeNames);
 	}
 
 	/**

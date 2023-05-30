@@ -269,10 +269,10 @@ class DiscoveryRequestCreatorTests {
 		assertThat(methodSelectors).hasSize(2);
 		assertThat(methodSelectors.get(0).getClassName()).isEqualTo("com.acme.Foo");
 		assertThat(methodSelectors.get(0).getMethodName()).isEqualTo("m");
-		assertThat(methodSelectors.get(0).getMethodParameterTypes()).isEmpty();
+		assertThat(methodSelectors.get(0).getParameterTypeNames()).isEmpty();
 		assertThat(methodSelectors.get(1).getClassName()).isEqualTo("com.example.Bar");
 		assertThat(methodSelectors.get(1).getMethodName()).isEqualTo("method");
-		assertThat(methodSelectors.get(1).getMethodParameterTypes()).isEqualTo("java.lang.Object");
+		assertThat(methodSelectors.get(1).getParameterTypeNames()).isEqualTo("java.lang.Object");
 	}
 
 	@Test

@@ -19,7 +19,8 @@ JUnit repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The `getMethodParameterTypes()` methods in `MethodSelector` and `NestedMethodSelector`
+  have been deprecated and replaced by `getParameterTypeNames()` for greater clarity.
 
 ==== New Features and Improvements
 
