@@ -41,9 +41,8 @@ import org.apiguardian.api.API;
  *     <dd>Default execution mode for top-level classes</dd>
  * </dl>
  *
- * <p>{@value #DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME}
- * overrides {@value #DEFAULT_EXECUTION_MODE_PROPERTY_NAME} for top-level
- * classes
+ * <p>{@value #DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME} overrides
+ * {@value #DEFAULT_EXECUTION_MODE_PROPERTY_NAME} for top-level classes.
  *
  * @see Isolated
  * @see ResourceLock
