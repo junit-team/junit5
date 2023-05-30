@@ -19,13 +19,19 @@ JUnit repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The `getMethodParameterTypes()` methods in `MethodSelector` and `NestedMethodSelector`
+  have been deprecated and replaced by `getParameterTypeNames()` for greater clarity.
+* Methods in `DiscoverySelectors` that accept a `ClassLoader` now declare the
+  `ClassLoader` as the first parameter. This is only a breaking change for code that
+  relies on the new methods introduced in JUnit Platform 1.10 M1.
 
 ==== New Features and Improvements
 
 * New `@SelectMethod` selector support in the `@Suite` test engine.
 * Allow selecting classes by name via new `names` attribute of `@SelectClasses`
+* Allow selecting classes by name via new the `names` attribute in `@SelectClasses`.
 *Adding a reason for using the selected execution mode.
+
 
 
 [[release-notes-5.10.0-RC1-junit-jupiter]]

@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -57,25 +58,19 @@ public class NestedMethodSelector implements DiscoverySelector {
 	private final MethodSelector methodSelector;
 
 	NestedMethodSelector(List<String> enclosingClassNames, String nestedClassName, String methodName,
-			ClassLoader classLoader) {
-		this(enclosingClassNames, nestedClassName, methodName, "", classLoader);
-	}
-
-	NestedMethodSelector(List<String> enclosingClassNames, String nestedClassName, String methodName,
-			String methodParameterTypes, ClassLoader classLoader) {
-		this.nestedClassSelector = new NestedClassSelector(enclosingClassNames, nestedClassName, classLoader);
-		this.methodSelector = new MethodSelector(nestedClassName, methodName, methodParameterTypes, classLoader);
+			String parameterTypeNames, ClassLoader classLoader) {
+		this.nestedClassSelector = new NestedClassSelector(classLoader, enclosingClassNames, nestedClassName);
+		this.methodSelector = new MethodSelector(classLoader, nestedClassName, methodName, parameterTypeNames);
 	}
 
 	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, String methodName) {
-		this.nestedClassSelector = new NestedClassSelector(enclosingClasses, nestedClass);
-		this.methodSelector = new MethodSelector(nestedClass, methodName);
+		this(enclosingClasses, nestedClass, methodName, "");
 	}
 
 	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, String methodName,
-			String methodParameterTypes) {
+			String parameterTypeNames) {
 		this.nestedClassSelector = new NestedClassSelector(enclosingClasses, nestedClass);
-		this.methodSelector = new MethodSelector(nestedClass, methodName, methodParameterTypes);
+		this.methodSelector = new MethodSelector(nestedClass, methodName, parameterTypeNames);
 	}
 
 	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, Method method) {
@@ -152,21 +147,40 @@ public class NestedMethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the parameter types for the selected method as a {@link String},
+	 * Get the names of parameter types for the selected method.
+	 *
+	 * <p>See {@link #getParameterTypeNames()} for details.
+	 *
+	 * @return the names of parameter types supplied to this {@code NestedMethodSelector}
+	 * via a constructor or deduced from a {@code Method} supplied via a constructor;
+	 * never {@code null} but potentially an empty string
+	 * @since 1.6
+	 * @deprecated since 1.10 in favor or {@link #getParameterTypeNames()}
+	 */
+	@Deprecated
+	@API(status = DEPRECATED, since = "1.10")
+	public String getMethodParameterTypes() {
+		return getParameterTypeNames();
+	}
+
+	/**
+	 * Get the names of parameter types for the selected method as a {@link String},
 	 * typically a comma-separated list of primitive types, fully qualified
 	 * class names, or array types.
 	 *
-	 * <p>Note: the parameter types are provided as a single string instead of
-	 * a collection in order to allow this selector to be used in a generic
+	 * <p>Note: the names of parameter types are provided as a single string instead
+	 * of a collection in order to allow this selector to be used in a generic
 	 * fashion by various test engines. It is therefore the responsibility of
 	 * the caller of this method to determine how to parse the returned string.
 	 *
-	 * @return the parameter types supplied to this {@code NestedMethodSelector}
-	 * via a constructor or deduced from a {@code Method} supplied via a
-	 * constructor; never {@code null}
+	 * @return the names of parameter types supplied to this {@code NestedMethodSelector}
+	 * via a constructor or deduced from a {@code Method} supplied via a constructor;
+	 * never {@code null} but potentially an empty string
+	 * @since 1.10
 	 */
-	public String getMethodParameterTypes() {
-		return this.methodSelector.getMethodParameterTypes();
+	@API(status = STABLE, since = "1.10")
+	public String getParameterTypeNames() {
+		return this.methodSelector.getParameterTypeNames();
 	}
 
 	@Override
@@ -193,7 +207,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 				.append("enclosingClassNames", getEnclosingClassNames()) //
 				.append("nestedClassName", getNestedClassName()) //
 				.append("methodName", getMethodName()) //
-				.append("methodParameterTypes", getMethodParameterTypes()) //
+				.append("parameterTypes", getParameterTypeNames()) //
 				.append("classLoader", getClassLoader()) //
 				.toString();
 	}

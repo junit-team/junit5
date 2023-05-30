@@ -48,26 +48,28 @@ import org.junit.platform.engine.DiscoverySelector;
 @API(status = STABLE, since = "1.6")
 public class NestedClassSelector implements DiscoverySelector {
 
+	private final ClassLoader classLoader;
 	private final List<ClassSelector> enclosingClassSelectors;
 	private final ClassSelector nestedClassSelector;
-	private final ClassLoader classLoader;
 
-	NestedClassSelector(List<String> enclosingClassNames, String nestedClassName, ClassLoader classLoader) {
-		this.enclosingClassSelectors = enclosingClassNames.stream() //
-				.map(className -> new ClassSelector(className, classLoader)) //
-				.collect(toUnmodifiableList());
-		this.nestedClassSelector = new ClassSelector(nestedClassName, classLoader);
+	NestedClassSelector(ClassLoader classLoader, List<String> enclosingClassNames, String nestedClassName) {
 		this.classLoader = classLoader;
+		this.enclosingClassSelectors = enclosingClassNames.stream() //
+				.map(className -> new ClassSelector(classLoader, className)) //
+				.collect(toUnmodifiableList());
+		this.nestedClassSelector = new ClassSelector(classLoader, nestedClassName);
 	}
 
 	NestedClassSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass) {
+		this.classLoader = nestedClass.getClassLoader();
 		this.enclosingClassSelectors = enclosingClasses.stream().map(ClassSelector::new).collect(toList());
 		this.nestedClassSelector = new ClassSelector(nestedClass);
-		this.classLoader = nestedClass.getClassLoader();
 	}
 
 	/**
 	 * Get the {@link ClassLoader} used to load the selected nested class.
+	 *
+	 * @return the {@code ClassLoader}; potentially {@code null}
 	 * @since 1.10
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")

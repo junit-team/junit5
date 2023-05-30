@@ -29,19 +29,19 @@ class NestedClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void equalsAndHashCode() {
-		var selector1 = new NestedClassSelector(List.of("org.example.EnclosingTestClass"),
-			"org.example.NestedTestClass", null);
-		var selector2 = new NestedClassSelector(List.of("org.example.EnclosingTestClass"),
-			"org.example.NestedTestClass", null);
-		var selector3 = new NestedClassSelector(List.of("org.example.X"), "org.example.Y", null);
+		var selector1 = new NestedClassSelector(null, List.of("org.example.EnclosingTestClass"),
+			"org.example.NestedTestClass");
+		var selector2 = new NestedClassSelector(null, List.of("org.example.EnclosingTestClass"),
+			"org.example.NestedTestClass");
+		var selector3 = new NestedClassSelector(null, List.of("org.example.X"), "org.example.Y");
 
 		assertEqualsAndHashCode(selector1, selector2, selector3);
 	}
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadEnclosingClasses() {
-		var selector = new NestedClassSelector(List.of("org.example.EnclosingTestClass"), "org.example.NestedTestClass",
-			null);
+		var selector = new NestedClassSelector(null, List.of("org.example.EnclosingTestClass"),
+			"org.example.NestedTestClass");
 
 		var exception = assertThrows(PreconditionViolationException.class, selector::getEnclosingClasses);
 
@@ -51,8 +51,8 @@ class NestedClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadNestedClass() {
-		var selector = new NestedClassSelector(List.of("org.example.EnclosingTestClass"), "org.example.NestedTestClass",
-			null);
+		var selector = new NestedClassSelector(null, List.of("org.example.EnclosingTestClass"),
+			"org.example.NestedTestClass");
 
 		var exception = assertThrows(PreconditionViolationException.class, selector::getNestedClass);
 

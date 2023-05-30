@@ -72,26 +72,20 @@ class AdditionalDiscoverySelectors {
 		Preconditions.notNull(classes, "classes must not be null");
 		Preconditions.containsNoNullElements(classes, "Individual classes must not be null");
 
-		// @formatter:off
-		return uniqueStreamOf(classes)
-				.map(DiscoverySelectors::selectClass);
-		// @formatter:on
+		return uniqueStreamOf(classes).map(DiscoverySelectors::selectClass);
 	}
 
 	static Stream<ClassSelector> selectClasses(String... classNames) {
 		Preconditions.notNull(classNames, "classNames must not be null");
 		Preconditions.containsNoNullElements(classNames, "Individual class names must not be null");
 
-		// @formatter:off
-		return uniqueStreamOf(classNames)
-				.map(DiscoverySelectors::selectClass);
-		// @formatter:on
+		return uniqueStreamOf(classNames).map(DiscoverySelectors::selectClass);
 	}
 
-	static MethodSelector selectMethod(Class<?> clazz, String name, String parameters) {
+	static MethodSelector selectMethod(Class<?> clazz, String name, String parameterTypeNames) {
 		Preconditions.notBlank(name, "Method name must not be null or blank");
-		Preconditions.notNull(parameters, "Method parameter types must not be null");
-		return DiscoverySelectors.selectMethod(clazz, name, parameters);
+		Preconditions.notNull(parameterTypeNames, "parameter type names must not be null");
+		return DiscoverySelectors.selectMethod(clazz, name, parameterTypeNames);
 	}
 
 	static List<ModuleSelector> selectModules(String... moduleNames) {
@@ -125,8 +119,8 @@ class AdditionalDiscoverySelectors {
 		return DiscoverySelectors.selectClasspathResource(classpathResourceName, FilePosition.from(line, column));
 	}
 
-	private static <T> Stream<T> uniqueStreamOf(T[] packageNames) {
-		return Arrays.stream(packageNames).distinct();
+	private static <T> Stream<T> uniqueStreamOf(T[] elements) {
+		return Arrays.stream(elements).distinct();
 	}
 
 }

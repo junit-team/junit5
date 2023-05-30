@@ -44,12 +44,12 @@ import org.junit.platform.engine.DiscoverySelector;
 @API(status = STABLE, since = "1.0")
 public class ClassSelector implements DiscoverySelector {
 
-	private final String className;
 	private final ClassLoader classLoader;
+	private final String className;
 
 	private Class<?> javaClass;
 
-	ClassSelector(String className, ClassLoader classLoader) {
+	ClassSelector(ClassLoader classLoader, String className) {
 		this.className = className;
 		this.classLoader = classLoader;
 	}
@@ -61,19 +61,21 @@ public class ClassSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected class name.
-	 */
-	public String getClassName() {
-		return this.className;
-	}
-
-	/**
 	 * Get the {@link ClassLoader} used to load the selected class.
+	 *
+	 * @return the {@code ClassLoader}; potentially {@code null}
 	 * @since 1.10
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public ClassLoader getClassLoader() {
 		return this.classLoader;
+	}
+
+	/**
+	 * Get the selected class name.
+	 */
+	public String getClassName() {
+		return this.className;
 	}
 
 	/**

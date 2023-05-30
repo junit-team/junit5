@@ -41,19 +41,19 @@ public @interface SelectClasses {
 
 	/**
 	 * One or more classes to select.
-	 * <p>
-	 * May be use in conjunction with or instead of {@link #names()}.
+	 *
+	 * <p>May be use in conjunction with or instead of {@link #names() names}.
 	 */
 	Class<?>[] value() default {};
 
 	/**
 	 * One or more classes to select by their fully qualified names.
-	 * <p>
-	 * May be use in conjunction with or instead of {@link #value()}.
-	 * <p>
-	 * This attribute is intended to be used when the class cannot be referenced
-	 * directly from where this annotation is used, for example, when it's not
-	 * visible due to being package-private.
+	 *
+	 * <p>May be use in conjunction with or instead of {@link #value() value}.
+	 *
+	 * <p>This attribute is intended to be used when a class cannot be referenced
+	 * directly from where this annotation is used &mdash; for example, when a
+	 * class is not visible due to being private or package-private.
 	 *
 	 * @since 1.10
 	 */

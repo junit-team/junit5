@@ -316,7 +316,7 @@ class DiscoverySelectorsTests {
 		@Test
 		void selectClassByNameAndClassLoader() throws Exception {
 			try (var testClassLoader = TestClassLoader.forClasses(getClass())) {
-				var selector = selectClass(getClass().getName(), testClassLoader);
+				var selector = selectClass(testClassLoader, getClass().getName());
 
 				assertThat(selector.getJavaClass().getName()).isEqualTo(getClass().getName());
 				assertThat(selector.getJavaClass()).isNotEqualTo(getClass());
@@ -419,12 +419,12 @@ class DiscoverySelectorsTests {
 				assertThat(clazz).isNotEqualTo(testClass());
 
 				var method = clazz.getDeclaredMethod("myTest");
-				var selector = selectMethod(testClass().getName(), "myTest", testClassLoader);
+				var selector = selectMethod(testClassLoader, testClass().getName(), "myTest");
 				assertThat(selector.getJavaMethod()).isEqualTo(method);
 				assertThat(selector.getJavaClass()).isEqualTo(clazz);
 				assertThat(selector.getClassName()).isEqualTo(clazz.getName());
 				assertThat(selector.getMethodName()).isEqualTo(method.getName());
-				assertThat(selector.getMethodParameterTypes()).isEmpty();
+				assertThat(selector.getParameterTypeNames()).isEmpty();
 			}
 		}
 
@@ -552,7 +552,7 @@ class DiscoverySelectorsTests {
 			var selector = selectMethod(fqmn);
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
-			assertEquals("", selector.getMethodParameterTypes());
+			assertEquals("", selector.getParameterTypeNames());
 		}
 
 		/**
@@ -567,7 +567,7 @@ class DiscoverySelectorsTests {
 			var selector = selectMethod(fqmn);
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
-			assertEquals("", selector.getMethodParameterTypes());
+			assertEquals("", selector.getParameterTypeNames());
 		}
 
 		/**
@@ -583,7 +583,7 @@ class DiscoverySelectorsTests {
 			var selector = selectMethod(fqmn);
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
-			assertEquals(methodParameters, selector.getMethodParameterTypes());
+			assertEquals(methodParameters, selector.getParameterTypeNames());
 		}
 
 		/**
@@ -599,7 +599,7 @@ class DiscoverySelectorsTests {
 
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
-			assertEquals("", selector.getMethodParameterTypes());
+			assertEquals("", selector.getParameterTypeNames());
 		}
 
 		/**
@@ -615,7 +615,7 @@ class DiscoverySelectorsTests {
 
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
-			assertEquals("", selector.getMethodParameterTypes());
+			assertEquals("", selector.getParameterTypeNames());
 		}
 
 		/**
@@ -632,7 +632,7 @@ class DiscoverySelectorsTests {
 
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
-			assertEquals(methodParameters, selector.getMethodParameterTypes());
+			assertEquals(methodParameters, selector.getParameterTypeNames());
 		}
 
 		private void assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method) {
@@ -641,7 +641,7 @@ class DiscoverySelectorsTests {
 			assertEquals(clazz, selector.getJavaClass());
 			assertEquals(clazz.getName(), selector.getClassName());
 			assertEquals(method.getName(), selector.getMethodName());
-			assertEquals("", selector.getMethodParameterTypes());
+			assertEquals("", selector.getParameterTypeNames());
 		}
 
 		private void assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method, Class<?> parameterType,
@@ -652,7 +652,7 @@ class DiscoverySelectorsTests {
 			assertEquals(clazz, selector.getJavaClass());
 			assertEquals(clazz.getName(), selector.getClassName());
 			assertEquals(method.getName(), selector.getMethodName());
-			assertEquals(expectedParameterTypes, selector.getMethodParameterTypes());
+			assertEquals(expectedParameterTypes, selector.getParameterTypeNames());
 		}
 
 		private void assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method, String parameterName,
@@ -663,7 +663,7 @@ class DiscoverySelectorsTests {
 			assertEquals(clazz, selector.getJavaClass());
 			assertEquals(clazz.getName(), selector.getClassName());
 			assertEquals(method.getName(), selector.getMethodName());
-			assertEquals(expectedParameterTypes, selector.getMethodParameterTypes());
+			assertEquals(expectedParameterTypes, selector.getParameterTypeNames());
 		}
 
 		@Test
@@ -675,7 +675,7 @@ class DiscoverySelectorsTests {
 			assertEquals(testClass().getName(), selector.getClassName());
 			assertEquals(method, selector.getJavaMethod());
 			assertEquals("myTest", selector.getMethodName());
-			assertEquals("", selector.getMethodParameterTypes());
+			assertEquals("", selector.getParameterTypeNames());
 		}
 
 		@Test
@@ -689,7 +689,7 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getJavaClass()).isEqualTo(testClass);
 			assertThat(selector.getMethodName()).isEqualTo("myTest");
 			assertThat(selector.getJavaMethod()).isEqualTo(method);
-			assertThat(selector.getMethodParameterTypes()).isEqualTo("java.lang.String, boolean[]");
+			assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String, boolean[]");
 		}
 
 		@Test
@@ -703,7 +703,7 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getJavaClass()).isEqualTo(testClass);
 			assertThat(selector.getMethodName()).isEqualTo("myTest");
 			assertThat(selector.getJavaMethod()).isEqualTo(method);
-			assertThat(selector.getMethodParameterTypes()).isEqualTo("java.lang.String, [Z");
+			assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String, [Z");
 		}
 
 		@Test
@@ -721,7 +721,7 @@ class DiscoverySelectorsTests {
 			var selector = selectMethod(className, methodName);
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
-			assertEquals("", selector.getMethodParameterTypes());
+			assertEquals("", selector.getParameterTypeNames());
 		}
 
 		private static Class<?> testClass() {
@@ -755,7 +755,7 @@ class DiscoverySelectorsTests {
 				AbstractClassWithNestedInnerClass.NestedClass.class);
 
 			try (var testClassLoader = TestClassLoader.forClasses(testClasses)) {
-				var selector = selectNestedClass(List.of(enclosingClassName), nestedClassName, testClassLoader);
+				var selector = selectNestedClass(testClassLoader, List.of(enclosingClassName), nestedClassName);
 
 				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
@@ -810,8 +810,8 @@ class DiscoverySelectorsTests {
 				AbstractClassWithNestedInnerClass.NestedClass.class);
 
 			try (var testClassLoader = TestClassLoader.forClasses(testClasses)) {
-				var selector = selectNestedMethod(List.of(enclosingClassName), nestedClassName, methodName,
-					testClassLoader);
+				var selector = selectNestedMethod(testClassLoader, List.of(enclosingClassName), nestedClassName,
+					methodName);
 
 				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
@@ -862,8 +862,8 @@ class DiscoverySelectorsTests {
 				AbstractClassWithNestedInnerClass.NestedClass.class);
 
 			try (var testClassLoader = TestClassLoader.forClasses(testClasses.toArray(Class[]::new))) {
-				var selector = selectNestedMethod(List.of(enclosingClassName), nestedClassName, methodName,
-					String.class.getName(), testClassLoader);
+				var selector = selectNestedMethod(testClassLoader, List.of(enclosingClassName), nestedClassName,
+					methodName, String.class.getName());
 
 				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
@@ -876,7 +876,7 @@ class DiscoverySelectorsTests {
 				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
 
 				assertThat(selector.getMethodName()).isEqualTo(methodName);
-				assertThat(selector.getMethodParameterTypes()).isEqualTo(String.class.getName());
+				assertThat(selector.getParameterTypeNames()).isEqualTo(String.class.getName());
 			}
 		}
 

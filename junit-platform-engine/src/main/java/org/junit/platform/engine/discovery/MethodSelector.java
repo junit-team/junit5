@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -58,32 +59,27 @@ public class MethodSelector implements DiscoverySelector {
 	private final ClassLoader classLoader;
 	private final String className;
 	private final String methodName;
-	private final String methodParameterTypes;
+	private final String parameterTypeNames;
 
-	private Class<?> javaClass;
-	private Method javaMethod;
+	private volatile Class<?> javaClass;
+	private volatile Method javaMethod;
 
-	MethodSelector(String className, String methodName, ClassLoader classLoader) {
-		this(className, methodName, "", classLoader);
-	}
-
-	MethodSelector(String className, String methodName, String methodParameterTypes, ClassLoader classLoader) {
+	/**
+	 * @since 1.10
+	 */
+	MethodSelector(ClassLoader classLoader, String className, String methodName, String parameterTypeNames) {
 		this.classLoader = classLoader;
 		this.className = className;
 		this.methodName = methodName;
-		this.methodParameterTypes = methodParameterTypes;
+		this.parameterTypeNames = parameterTypeNames;
 	}
 
-	MethodSelector(Class<?> javaClass, String methodName) {
-		this(javaClass, methodName, "");
-	}
-
-	MethodSelector(Class<?> javaClass, String methodName, String methodParameterTypes) {
+	MethodSelector(Class<?> javaClass, String methodName, String parameterTypeNames) {
 		this.classLoader = javaClass.getClassLoader();
 		this.javaClass = javaClass;
 		this.className = javaClass.getName();
 		this.methodName = methodName;
-		this.methodParameterTypes = methodParameterTypes;
+		this.parameterTypeNames = parameterTypeNames;
 	}
 
 	MethodSelector(Class<?> javaClass, Method method) {
@@ -92,7 +88,18 @@ public class MethodSelector implements DiscoverySelector {
 		this.className = javaClass.getName();
 		this.javaMethod = method;
 		this.methodName = method.getName();
-		this.methodParameterTypes = ClassUtils.nullSafeToString(method.getParameterTypes());
+		this.parameterTypeNames = ClassUtils.nullSafeToString(method.getParameterTypes());
+	}
+
+	/**
+	 * Get the {@link ClassLoader} used to load the specified class.
+	 *
+	 * @return the {@code ClassLoader}; potentially {@code null}
+	 * @since 1.10
+	 */
+	@API(status = EXPERIMENTAL, since = "1.10")
+	public ClassLoader getClassLoader() {
+		return this.classLoader;
 	}
 
 	/**
@@ -103,15 +110,6 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the {@link ClassLoader} used to load the specified class.
-	 * @since 1.10
-	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
-	public ClassLoader getClassLoader() {
-		return this.classLoader;
-	}
-
-	/**
 	 * Get the selected method name.
 	 */
 	public String getMethodName() {
@@ -119,21 +117,41 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the parameter types for the selected method as a {@link String},
-	 * typically a comma-separated list of primitive types, fully qualified
-	 * class names, or array types.
+	 * Get the names of parameter types for the selected method.
 	 *
-	 * <p>Note: the parameter types are provided as a single string instead of
-	 * a collection in order to allow this selector to be used in a generic
+	 * <p>See {@link #getParameterTypeNames()} for details.
+	 *
+	 * @return the names of parameter types supplied to this {@code MethodSelector}
+	 * via a constructor or deduced from a {@code Method} or parameter types supplied
+	 * via a constructor; never {@code null} but potentially an empty string
+	 * @since 1.0
+	 * @see #getParameterTypes()
+	 * @deprecated since 1.10 in favor of {@link #getParameterTypeNames()}
+	 */
+	@Deprecated
+	@API(status = DEPRECATED, since = "1.10")
+	public String getMethodParameterTypes() {
+		return getParameterTypeNames();
+	}
+
+	/**
+	 * Get the names of parameter types for the selected method as a {@link String},
+	 * typically a comma-separated list of primitive types, fully qualified class
+	 * names, or array types.
+	 *
+	 * <p>Note: the names of parameter types are provided as a single string instead
+	 * of a collection in order to allow this selector to be used in a generic
 	 * fashion by various test engines. It is therefore the responsibility of
 	 * the caller of this method to determine how to parse the returned string.
 	 *
-	 * @return the parameter types supplied to this {@code MethodSelector} via
-	 * a constructor or deduced from a {@code Method} supplied via a constructor;
-	 * never {@code null}
+	 * @return the names of parameter types supplied to this {@code MethodSelector}
+	 * via a constructor or deduced from a {@code Method} supplied via a constructor;
+	 * never {@code null} but potentially an empty string
+	 * @since 1.10
 	 */
-	public String getMethodParameterTypes() {
-		return this.methodParameterTypes;
+	@API(status = STABLE, since = "1.10")
+	public String getParameterTypeNames() {
+		return this.parameterTypeNames;
 	}
 
 	/**
@@ -166,27 +184,26 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	private void lazyLoadJavaClass() {
+		// @formatter:off
 		if (this.javaClass == null) {
-			// @formatter:off
 			Try<Class<?>> tryToLoadClass = this.classLoader == null
 				? ReflectionUtils.tryToLoadClass(this.className)
 				: ReflectionUtils.tryToLoadClass(this.className, this.classLoader);
 			this.javaClass = tryToLoadClass.getOrThrow(cause ->
 				new PreconditionViolationException("Could not load class with name: " + this.className, cause));
-			// @formatter:on
 		}
+		// @formatter:on
 	}
 
 	private void lazyLoadJavaMethod() {
-		lazyLoadJavaClass();
-
 		if (this.javaMethod == null) {
-			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
+			lazyLoadJavaClass();
+			if (StringUtils.isNotBlank(this.parameterTypeNames)) {
 				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName,
-					this.methodParameterTypes).orElseThrow(
+					this.parameterTypeNames).orElseThrow(
 						() -> new PreconditionViolationException(String.format(
 							"Could not find method with name [%s] and parameter types [%s] in class [%s].",
-							this.methodName, this.methodParameterTypes, this.javaClass.getName())));
+							this.methodName, this.parameterTypeNames, this.javaClass.getName())));
 			}
 			else {
 				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName).orElseThrow(
@@ -212,7 +229,7 @@ public class MethodSelector implements DiscoverySelector {
 		MethodSelector that = (MethodSelector) o;
 		return Objects.equals(this.className, that.className)//
 				&& Objects.equals(this.methodName, that.methodName)//
-				&& Objects.equals(this.methodParameterTypes, that.methodParameterTypes);
+				&& Objects.equals(this.parameterTypeNames, that.parameterTypeNames);
 	}
 
 	/**
@@ -221,7 +238,7 @@ public class MethodSelector implements DiscoverySelector {
 	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.className, this.methodName, this.methodParameterTypes);
+		return Objects.hash(this.className, this.methodName, this.parameterTypeNames);
 	}
 
 	@Override
@@ -230,7 +247,7 @@ public class MethodSelector implements DiscoverySelector {
 		return new ToStringBuilder(this)
 				.append("className", getClassName())
 				.append("methodName", getMethodName())
-				.append("methodParameterTypes", getMethodParameterTypes())
+				.append("parameterTypes", getParameterTypeNames())
 				.append("classLoader", getClassLoader())
 				.toString();
 		// @formatter:on
