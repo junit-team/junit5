@@ -29,7 +29,6 @@ JUnit repository on GitHub.
 
 * New `@SelectMethod` selector support in the `@Suite` test engine.
 * Allow selecting classes by name via new the `names` attribute in `@SelectClasses`.
-*Adding a reason for using the selected execution mode.
 
 
 [[release-notes-5.10.0-RC1-junit-jupiter]]
@@ -50,6 +49,8 @@ JUnit repository on GitHub.
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, User Guide>>
   for details.
 * Lifecycle and thread-safety semantics are now documented for the `TempDirFactory` SPI.
+* New `reason` attribute in `@Execution` which can be used to document the reason for
+  using the selected execution mode.
 
 
 [[release-notes-5.10.0-RC1-junit-vintage]]

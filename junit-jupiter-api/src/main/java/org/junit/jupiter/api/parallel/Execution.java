@@ -101,6 +101,9 @@ public @interface Execution {
 
 	/**
 	 * The reason for using the selected execution mode.
+	 *
+	 * <p>This is for informational purposes only.
+	 *
 	 * @since 5.10
 	 */
 	@API(status = STABLE, since = "5.10")
