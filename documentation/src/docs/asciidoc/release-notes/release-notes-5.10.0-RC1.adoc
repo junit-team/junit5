@@ -28,7 +28,6 @@ JUnit repository on GitHub.
 ==== New Features and Improvements
 
 * New `@SelectMethod` selector support in the `@Suite` test engine.
-* Allow selecting classes by name via new `names` attribute of `@SelectClasses`
 * Allow selecting classes by name via new the `names` attribute in `@SelectClasses`.
 *Adding a reason for using the selected execution mode.
 
