@@ -65,7 +65,7 @@ public @interface SelectMethod {
 	 * {@code [Ljava.lang.String;} for {@code java.lang.String[]}, etc.) or
 	 * <em>source code syntax</em> (e.g., {@code int[][]}, {@code java.lang.String[]},
 	 * etc.).
-	 * <p>
+	 *
 	 * <table class="plain">
 	 * <caption>Examples</caption>
 	 * <tr><th>Method</th><th>Parameter types list</th></tr>

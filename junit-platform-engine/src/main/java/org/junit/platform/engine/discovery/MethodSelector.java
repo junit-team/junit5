@@ -125,7 +125,6 @@ public class MethodSelector implements DiscoverySelector {
 	 * via a constructor or deduced from a {@code Method} or parameter types supplied
 	 * via a constructor; never {@code null} but potentially an empty string
 	 * @since 1.0
-	 * @see #getParameterTypes()
 	 * @deprecated since 1.10 in favor of {@link #getParameterTypeNames()}
 	 */
 	@Deprecated
