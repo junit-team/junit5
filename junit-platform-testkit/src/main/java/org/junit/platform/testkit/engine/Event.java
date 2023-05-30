@@ -22,6 +22,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -49,6 +50,21 @@ public class Event {
 	public static Event reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 		Preconditions.notNull(entry, "ReportEntry must not be null");
 		return new Event(EventType.REPORTING_ENTRY_PUBLISHED, testDescriptor, entry);
+	}
+
+	/**
+	 * Create an {@code Event} for a published file for the
+	 * supplied {@link TestDescriptor} and {@link FileEntry}.
+	 *
+	 * @param testDescriptor the {@code TestDescriptor} associated with the event;
+	 * never {@code null}
+	 * @param file the {@code FileEntry} that was published; never {@code null}
+	 * @return the newly created {@code Event}
+	 * @see EventType#FILE_ENTRY_PUBLISHED
+	 */
+	public static Event fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
+		Preconditions.notNull(file, "FileEntry must not be null");
+		return new Event(EventType.FILE_ENTRY_PUBLISHED, testDescriptor, file);
 	}
 
 	/**

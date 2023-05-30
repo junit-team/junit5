@@ -43,6 +43,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.mockito.ArgumentCaptor;
@@ -54,8 +55,8 @@ import org.mockito.Mockito;
  * {@link JupiterEngineExtensionContext}, {@link ClassExtensionContext}, and
  * {@link MethodExtensionContext}.
  *
- * @since 5.0
  * @see org.junit.jupiter.engine.execution.ExtensionValuesStoreTests
+ * @since 5.0
  */
 public class ExtensionContextTests {
 
@@ -74,7 +75,7 @@ public class ExtensionContextTests {
 			UniqueId.root("engine", "junit-jupiter"), configuration);
 
 		JupiterEngineExtensionContext engineContext = new JupiterEngineExtensionContext(null, engineTestDescriptor,
-			configuration, null);
+			configuration, OutputDirProvider.NOOP, null);
 
 		// @formatter:off
 		assertAll("engineContext",
@@ -161,7 +162,7 @@ public class ExtensionContextTests {
 		Method testMethod = methodTestDescriptor.getTestMethod();
 
 		JupiterEngineExtensionContext engineExtensionContext = new JupiterEngineExtensionContext(null, engineDescriptor,
-			configuration, null);
+			configuration, OutputDirProvider.NOOP, null);
 		ClassExtensionContext classExtensionContext = new ClassExtensionContext(engineExtensionContext, null,
 			classTestDescriptor, configuration, null, null);
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(classExtensionContext, null,
@@ -274,7 +275,8 @@ public class ExtensionContextTests {
 			configuration);
 
 		return Stream.of( //
-			(ExtensionContext) new JupiterEngineExtensionContext(null, engineDescriptor, echo, null), //
+			(ExtensionContext) new JupiterEngineExtensionContext(null, engineDescriptor, echo, OutputDirProvider.NOOP,
+				null), //
 			new ClassExtensionContext(null, null, classTestDescriptor, echo, null, null), //
 			new MethodExtensionContext(null, null, methodTestDescriptor, echo, null, null) //
 		).map(context -> dynamicTest(context.getClass().getSimpleName(),

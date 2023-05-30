@@ -13,6 +13,7 @@ package org.junit.platform.launcher.core;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -51,4 +52,8 @@ class DelegatingEngineExecutionListener implements EngineExecutionListener {
 		delegate.reportingEntryPublished(testDescriptor, entry);
 	}
 
+	@Override
+	public void fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
+		delegate.fileEntryPublished(testDescriptor, file);
+	}
 }

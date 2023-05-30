@@ -34,6 +34,7 @@ import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator;
 import org.junit.platform.launcher.core.EngineExecutionOrchestrator;
@@ -249,8 +250,8 @@ public final class EngineTestKit {
 			EngineExecutionListener listener) {
 		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
-		ExecutionRequest request = new ExecutionRequest(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters());
+		ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
+			discoveryRequest.getConfigurationParameters(), OutputDirProvider.NOOP);
 		testEngine.execute(request);
 	}
 

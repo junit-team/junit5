@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -71,6 +72,12 @@ class FlatPrintingListener implements DetailsPrintingListener {
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 		printlnTestDescriptor(Style.REPORTED, "Reported:", testIdentifier);
 		printlnMessage(Style.REPORTED, "Reported values", entry.toString());
+	}
+
+	@Override
+	public void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
+		printlnTestDescriptor(Style.REPORTED, "Reported:", testIdentifier);
+		printlnMessage(Style.REPORTED, "Reported file", file.toString());
 	}
 
 	private void printlnTestDescriptor(Style style, String message, TestIdentifier testIdentifier) {

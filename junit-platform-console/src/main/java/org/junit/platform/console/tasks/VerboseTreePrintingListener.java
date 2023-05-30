@@ -19,6 +19,7 @@ import java.util.Deque;
 
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -128,6 +129,11 @@ class VerboseTreePrintingListener implements DetailsPrintingListener {
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 		printDetail(Style.REPORTED, "reports", entry.toString());
+	}
+
+	@Override
+	public void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
+		printDetail(Style.REPORTED, "reports", file.toString());
 	}
 
 	/**

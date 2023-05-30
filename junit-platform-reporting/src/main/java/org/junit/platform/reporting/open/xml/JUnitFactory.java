@@ -32,4 +32,9 @@ class JUnitFactory {
 	static Factory<Type> type(TestDescriptor.Type type) {
 		return context -> new Type(context, type);
 	}
+
+	static Factory<File> file() {
+		return File::new;
+	}
+
 }

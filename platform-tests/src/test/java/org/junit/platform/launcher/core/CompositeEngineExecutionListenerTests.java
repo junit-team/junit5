@@ -28,6 +28,7 @@ import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.DemoMethodTestDescriptor;
 import org.mockito.InOrder;
@@ -169,6 +170,11 @@ class CompositeEngineExecutionListenerTests {
 
 		@Override
 		public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
+		public void fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
 			throw new RuntimeException("failed to invoke listener");
 		}
 	}

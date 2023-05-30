@@ -13,6 +13,8 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -23,14 +25,18 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.reporting.FileEntry;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
@@ -51,11 +57,18 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final T testDescriptor;
 	private final Set<String> tags;
 	private final JupiterConfiguration configuration;
+	private final OutputDirProvider outputDirProvider;
 	private final NamespacedHierarchicalStore<Namespace> valuesStore;
 	private final ExecutableInvoker executableInvoker;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
 			JupiterConfiguration configuration, ExecutableInvoker executableInvoker) {
+		this(parent, engineExecutionListener, testDescriptor, configuration, null, executableInvoker);
+	}
+
+	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
+			JupiterConfiguration configuration, OutputDirProvider outputDirProvider,
+			ExecutableInvoker executableInvoker) {
 		this.executableInvoker = executableInvoker;
 
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
@@ -65,6 +78,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
 		this.configuration = configuration;
+		this.outputDirProvider = outputDirProvider;
 		this.valuesStore = createStore(parent);
 
 		// @formatter:off
@@ -100,6 +114,37 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@Override
 	public void publishReportEntry(Map<String, String> values) {
 		this.engineExecutionListener.reportingEntryPublished(this.testDescriptor, ReportEntry.from(values));
+	}
+
+	@Override
+	public void publishFile(String fileName, ThrowingConsumer<Path> action) {
+		try {
+			getOutputDirProvider().createOutputDirectory(this.testDescriptor).ifPresent(dir -> {
+				try {
+					Path file = dir.resolve(fileName);
+					action.accept(file);
+					this.engineExecutionListener.fileEntryPublished(this.testDescriptor, FileEntry.from(file));
+				}
+				catch (Throwable t) {
+					UnrecoverableExceptions.rethrowIfUnrecoverable(t);
+					throw new JUnitException("Failed to publish file", t);
+				}
+			});
+		}
+		catch (IOException e) {
+			throw new JUnitException("Failed to create output directory", e);
+		}
+	}
+
+	private OutputDirProvider getOutputDirProvider() {
+		if (outputDirProvider == null) {
+			return getParent() //
+					.filter(it -> it instanceof AbstractExtensionContext) //
+					.map(it -> (AbstractExtensionContext<?>) it) //
+					.map(AbstractExtensionContext::getOutputDirProvider).orElseThrow(
+						() -> new JUnitException("Missing OutputDirProvider"));
+		}
+		return outputDirProvider;
 	}
 
 	@Override

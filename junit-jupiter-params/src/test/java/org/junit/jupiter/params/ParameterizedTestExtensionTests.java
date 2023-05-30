@@ -20,6 +20,7 @@ import static org.junit.jupiter.params.ParameterizedTestExtension.arguments;
 import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
@@ -263,6 +265,10 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public void publishReportEntry(Map<String, String> map) {
+			}
+
+			@Override
+			public void publishFile(String fileName, ThrowingConsumer<Path> action) {
 			}
 
 			@Override

@@ -83,7 +83,7 @@ public final class ReportEntry {
 	 *
 	 * @return a copy of the map of key-value pairs; never {@code null}
 	 */
-	public final Map<String, String> getKeyValuePairs() {
+	public Map<String, String> getKeyValuePairs() {
 		return Collections.unmodifiableMap(this.keyValuePairs);
 	}
 
@@ -94,7 +94,7 @@ public final class ReportEntry {
 	 *
 	 * @return when this entry was created; never {@code null}
 	 */
-	public final LocalDateTime getTimestamp() {
+	public LocalDateTime getTimestamp() {
 		return this.timestamp;
 	}
 
