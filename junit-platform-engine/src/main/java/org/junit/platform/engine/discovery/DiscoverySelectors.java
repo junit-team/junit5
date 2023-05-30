@@ -689,7 +689,7 @@ public final class DiscoverySelectors {
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		return new NestedMethodSelector(enclosingClassNames, nestedClassName, methodName, "", classLoader);
+		return new NestedMethodSelector(classLoader, enclosingClassNames, nestedClassName, methodName, "");
 	}
 
 	/**
@@ -740,8 +740,8 @@ public final class DiscoverySelectors {
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypeNames, "Parameter types must not be null");
-		return new NestedMethodSelector(enclosingClassNames, nestedClassName, methodName, parameterTypeNames,
-			classLoader);
+		return new NestedMethodSelector(classLoader, enclosingClassNames, nestedClassName, methodName,
+			parameterTypeNames.trim());
 	}
 
 	/**
@@ -757,10 +757,7 @@ public final class DiscoverySelectors {
 	public static NestedMethodSelector selectNestedMethod(List<Class<?>> enclosingClasses, Class<?> nestedClass,
 			String methodName) {
 
-		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
-		Preconditions.notNull(nestedClass, "Nested class must not be null");
-		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		return new NestedMethodSelector(enclosingClasses, nestedClass, methodName);
+		return selectNestedMethod(enclosingClasses, nestedClass, methodName, "");
 	}
 
 	/**
@@ -788,7 +785,7 @@ public final class DiscoverySelectors {
 		Preconditions.notNull(nestedClass, "Nested class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypeNames, "Parameter types must not be null");
-		return new NestedMethodSelector(enclosingClasses, nestedClass, methodName, parameterTypeNames);
+		return new NestedMethodSelector(enclosingClasses, nestedClass, methodName, parameterTypeNames.trim());
 	}
 
 	/**
