@@ -68,8 +68,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 	}
 
 	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, String methodName) {
-		this.nestedClassSelector = new NestedClassSelector(enclosingClasses, nestedClass);
-		this.methodSelector = new MethodSelector(nestedClass, methodName);
+		this(enclosingClasses, nestedClass, methodName, "");
 	}
 
 	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, String methodName,

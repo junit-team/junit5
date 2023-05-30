@@ -166,15 +166,15 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	private void lazyLoadJavaClass() {
+		// @formatter:off
 		if (this.javaClass == null) {
-			// @formatter:off
 			Try<Class<?>> tryToLoadClass = this.classLoader == null
 				? ReflectionUtils.tryToLoadClass(this.className)
 				: ReflectionUtils.tryToLoadClass(this.className, this.classLoader);
 			this.javaClass = tryToLoadClass.getOrThrow(cause ->
 				new PreconditionViolationException("Could not load class with name: " + this.className, cause));
-			// @formatter:on
 		}
+		// @formatter:on
 	}
 
 	private void lazyLoadJavaMethod() {

@@ -389,7 +389,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	public static ClassSelector selectClass(String className) {
-		return selectClass(className, null);
+		return selectClass(className, (ClassLoader) null);
 	}
 
 	/**
@@ -506,7 +506,7 @@ public final class DiscoverySelectors {
 	public static MethodSelector selectMethod(String className, String methodName, ClassLoader classLoader) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		return new MethodSelector(className, methodName, classLoader);
+		return new MethodSelector(className, methodName, "", classLoader);
 	}
 
 	/**
@@ -566,9 +566,7 @@ public final class DiscoverySelectors {
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(Class<?> javaClass, String methodName) {
-		Preconditions.notNull(javaClass, "Class must not be null");
-		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		return new MethodSelector(javaClass, methodName);
+		return selectMethod(javaClass, methodName, "");
 	}
 
 	/**
@@ -635,7 +633,7 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = STABLE, since = "1.6")
 	public static NestedClassSelector selectNestedClass(List<String> enclosingClassNames, String nestedClassName) {
-		return selectNestedClass(enclosingClassNames, nestedClassName, null);
+		return selectNestedClass(enclosingClassNames, nestedClassName, (ClassLoader) null);
 	}
 
 	/**
@@ -691,7 +689,7 @@ public final class DiscoverySelectors {
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		return new NestedMethodSelector(enclosingClassNames, nestedClassName, methodName, classLoader);
+		return new NestedMethodSelector(enclosingClassNames, nestedClassName, methodName, "", classLoader);
 	}
 
 	/**
