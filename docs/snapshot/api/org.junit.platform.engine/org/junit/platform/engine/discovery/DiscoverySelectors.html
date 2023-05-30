@@ -128,15 +128,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a <code>ClassSelector</code> for the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectClass(java.lang.String)" class="member-name-link">selectClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectClass(java.lang.ClassLoader,java.lang.String)" class="member-name-link">selectClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>ClassSelector</code> for the supplied class name.</div>
+<div class="block">Create a <code>ClassSelector</code> for the supplied class name and class loader.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectClass(java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectClass(java.lang.String)" class="member-name-link">selectClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>ClassSelector</code> for the supplied class name and class loader.</div>
+<div class="block">Create a <code>ClassSelector</code> for the supplied class name.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathResourceSelector</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectClasspathResource(java.lang.String)" class="member-name-link">selectClasspathResource</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;classpathResourceName)</code></div>
@@ -211,23 +211,40 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.Class,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;javaClass,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>, method name,
- and method parameter types.</div>
+ and parameter type names.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.ClassLoader,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
- method name</em>.</div>
+ method name</em> and class loader.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.ClassLoader,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
+ and class loader.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.ClassLoader,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
+ parameter type names, and class loader.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
- method name</em> and class loader.</div>
+ method name</em>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
@@ -237,29 +254,12 @@ loadScripts(document, 'script');</script>
  using the default class loader.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String,java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
- and class loader.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
- and method parameter types.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectMethod(java.lang.String,java.lang.String,java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
- method parameter types, and class loader.</div>
+ and parameter type names.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectModule(java.lang.String)" class="member-name-link">selectModule</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;moduleName)</code></div>
@@ -272,26 +272,45 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a list of <code>ModuleSelectors</code> for the supplied module names.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedClassSelector.html" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedClass(java.util.List,java.lang.Class)" class="member-name-link">selectNestedClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;enclosingClasses,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;nestedClass)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>NestedClassSelector</code> for the supplied nested <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> and its
- enclosing classes.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedClassSelector.html" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedClass(java.util.List,java.lang.String)" class="member-name-link">selectNestedClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedClass(java.lang.ClassLoader,java.util.List,java.lang.String)" class="member-name-link">selectNestedClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>NestedClassSelector</code> for the supplied class name and its enclosing
- classes' names.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedClassSelector.html" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedClass(java.util.List,java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectNestedClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a <code>NestedClassSelector</code> for the supplied class name, its enclosing
  classes' names, and class loader.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedClassSelector.html" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedClass(java.util.List,java.lang.Class)" class="member-name-link">selectNestedClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;enclosingClasses,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;nestedClass)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create a <code>NestedClassSelector</code> for the supplied nested <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> and its
+ enclosing classes.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedClassSelector.html" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedClass(java.util.List,java.lang.String)" class="member-name-link">selectNestedClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create a <code>NestedClassSelector</code> for the supplied class name and its enclosing
+ classes' names.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedMethod(java.lang.ClassLoader,java.util.List,java.lang.String,java.lang.String)" class="member-name-link">selectNestedMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name, method name,
+ and class loader.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedMethod(java.lang.ClassLoader,java.util.List,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectNestedMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name, method name,
+ parameter type names, and class loader.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedMethod(java.util.List,java.lang.Class,java.lang.reflect.Method)" class="member-name-link">selectNestedMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;enclosingClasses,
@@ -311,10 +330,10 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedMethod(java.util.List,java.lang.Class,java.lang.String,java.lang.String)" class="member-name-link">selectNestedMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;enclosingClasses,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;nestedClass,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a <code>NestedMethodSelector</code> for the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>, method name,
- and method parameter types.</div>
+ and parameter type names.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedMethod(java.util.List,java.lang.String,java.lang.String)" class="member-name-link">selectNestedMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
@@ -324,32 +343,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name and method name.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedMethod(java.util.List,java.lang.String,java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectNestedMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedMethod(java.util.List,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectNestedMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name, method name,
- and class loader.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedMethod(java.util.List,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectNestedMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name, method name,
- and method parameter types.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectNestedMethod(java.util.List,java.lang.String,java.lang.String,java.lang.String,java.lang.ClassLoader)" class="member-name-link">selectNestedMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name, method name,
- method parameter types, and class loader.</div>
+ and parameter type names.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PackageSelector.html" title="class in org.junit.platform.engine.discovery">PackageSelector</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#selectPackage(java.lang.String)" class="member-name-link">selectPackage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;packageName)</code></div>
@@ -797,19 +797,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="selectClass(java.lang.String,java.lang.ClassLoader)">
+<section class="detail" id="selectClass(java.lang.ClassLoader,java.lang.String)">
 <h3>selectClass</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></span>&nbsp;<span class="element-name">selectClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span></div>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></span>&nbsp;<span class="element-name">selectClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</span></div>
 <div class="block">Create a <code>ClassSelector</code> for the supplied class name and class loader.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>className</code> - the fully qualified name of the class to select; never
- <code>null</code> or blank</dd>
 <dd><code>classLoader</code> - the class loader to use to load the class, or <code>null</code>
  to signal that the default <code>ClassLoader</code> should be used</dd>
+<dd><code>className</code> - the fully qualified name of the class to select; never
+ <code>null</code> or blank</dd>
 <dt>Since:</dt>
 <dd>1.10</dd>
 <dt>See Also:</dt>
@@ -878,12 +878,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="selectMethod(java.lang.String,java.lang.ClassLoader)">
+<section class="detail" id="selectMethod(java.lang.ClassLoader,java.lang.String)">
 <h3>selectMethod</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName)</span>
                                    throws <span class="exceptions"><a href="../../../../../../org.junit.platform.commons/org/junit/platform/commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></span></div>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
  method name</em> and class loader.
@@ -892,11 +892,11 @@ loadScripts(document, 'script');</script>
  fully qualified method name.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>fullyQualifiedMethodName</code> - the fully qualified name of the method to
- select; never <code>null</code> or blank</dd>
 <dd><code>classLoader</code> - the class loader to use to load the method's declaring
  class, or <code>null</code> to signal that the default <code>ClassLoader</code>
  should be used</dd>
+<dd><code>fullyQualifiedMethodName</code> - the fully qualified name of the method to
+ select; never <code>null</code> or blank</dd>
 <dt>Throws:</dt>
 <dd><code><a href="../../../../../../org.junit.platform.commons/org/junit/platform/commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code></dd>
 <dt>Since:</dt>
@@ -933,22 +933,22 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="selectMethod(java.lang.String,java.lang.String,java.lang.ClassLoader)">
+<section class="detail" id="selectMethod(java.lang.ClassLoader,java.lang.String,java.lang.String)">
 <h3>selectMethod</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span></div>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName)</span></div>
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
  and class loader.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
+<dd><code>classLoader</code> - the class loader to use to load the class, or <code>null</code>
+ to signal that the default <code>ClassLoader</code> should be used</dd>
 <dd><code>className</code> - the fully qualified name of the class in which the method
  is declared, or a subclass thereof; never <code>null</code> or blank</dd>
 <dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
-<dd><code>classLoader</code> - the class loader to use to load the class, or <code>null</code>
- to signal that the default <code>ClassLoader</code> should be used</dd>
 <dt>Since:</dt>
 <dd>1.10</dd>
 <dt>See Also:</dt>
@@ -965,21 +965,21 @@ loadScripts(document, 'script');</script>
 <h3>selectMethod</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</span></div>
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
- and method parameter types.
+ and parameter type names.
 
- <p>The parameter types <code>String</code> is typically a comma-separated list
- of atomic types, fully qualified class names, or array types; however,
+ <p>The parameter type names <code>String</code> is typically a comma-separated
+ list of atomic types, fully qualified class names, or array types; however,
  the exact syntax depends on the underlying test engine.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>className</code> - the fully qualified name of the class in which the method
  is declared, or a subclass thereof; never <code>null</code> or blank</dd>
 <dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
-<dd><code>methodParameterTypes</code> - the method parameter types as a single string; never
- <code>null</code> though potentially an empty string if the method does not accept
- arguments</dd>
+<dd><code>parameterTypeNames</code> - the parameter type names as a single string; never
+ <code>null</code> though potentially an empty string if the method does not declare
+ parameters</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
@@ -990,30 +990,30 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="selectMethod(java.lang.String,java.lang.String,java.lang.String,java.lang.ClassLoader)">
+<section class="detail" id="selectMethod(java.lang.ClassLoader,java.lang.String,java.lang.String,java.lang.String)">
 <h3>selectMethod</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</span></div>
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
- method parameter types, and class loader.
+ parameter type names, and class loader.
 
- <p>The parameter types <code>String</code> is typically a comma-separated list
- of atomic types, fully qualified class names, or array types; however,
+ <p>The parameter type names <code>String</code> is typically a comma-separated
+ list of atomic types, fully qualified class names, or array types; however,
  the exact syntax depends on the underlying test engine.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
+<dd><code>classLoader</code> - the class loader to use to load the class, or <code>null</code>
+ to signal that the default <code>ClassLoader</code> should be used</dd>
 <dd><code>className</code> - the fully qualified name of the class in which the method
  is declared, or a subclass thereof; never <code>null</code> or blank</dd>
 <dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
-<dd><code>methodParameterTypes</code> - the method parameter types as a single string; never
- <code>null</code> though potentially an empty string if the method does not accept
- arguments</dd>
-<dd><code>classLoader</code> - the class loader to use to load the class, or <code>null</code>
- to signal that the default <code>ClassLoader</code> should be used</dd>
+<dd><code>parameterTypeNames</code> - the parameter type names as a single string; never
+ <code>null</code> though potentially an empty string if the method does not declare
+ any parameters</dd>
 <dt>Since:</dt>
 <dd>1.10</dd>
 <dt>See Also:</dt>
@@ -1050,21 +1050,21 @@ loadScripts(document, 'script');</script>
 <h3>selectMethod</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></span>&nbsp;<span class="element-name">selectMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;javaClass,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</span></div>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>, method name,
- and method parameter types.
+ and parameter type names.
 
- <p>The parameter types <code>String</code> is typically a comma-separated list
- of atomic types, fully qualified class names, or array types; however,
+ <p>The parameter type names <code>String</code> is typically a comma-separated
+ list of atomic types, fully qualified class names, or array types; however,
  the exact syntax depends on the underlying test engine.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>javaClass</code> - the class in which the method is declared, or a subclass thereof;
  never <code>null</code></dd>
 <dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
-<dd><code>methodParameterTypes</code> - the method parameter types as a single string; never
- <code>null</code> though potentially an empty string if the method does not accept
- arguments</dd>
+<dd><code>parameterTypeNames</code> - the parameter type names as a single string; never
+ <code>null</code> though potentially an empty string if the method does not declare
+ any parameters</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
@@ -1143,21 +1143,21 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="selectNestedClass(java.util.List,java.lang.String,java.lang.ClassLoader)">
+<section class="detail" id="selectNestedClass(java.lang.ClassLoader,java.util.List,java.lang.String)">
 <h3>selectNestedClass</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="NestedClassSelector.html" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a></span>&nbsp;<span class="element-name">selectNestedClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span></div>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="NestedClassSelector.html" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a></span>&nbsp;<span class="element-name">selectNestedClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName)</span></div>
 <div class="block">Create a <code>NestedClassSelector</code> for the supplied class name, its enclosing
  classes' names, and class loader.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>enclosingClassNames</code> - the names of the enclosing classes; never <code>null</code> or empty</dd>
-<dd><code>nestedClassName</code> - the name of the nested class to select; never <code>null</code> or blank</dd>
 <dd><code>classLoader</code> - the class loader to use to load the enclosing and nested classes, or
  <code>null</code> to signal that the default <code>ClassLoader</code> should be used</dd>
+<dd><code>enclosingClassNames</code> - the names of the enclosing classes; never <code>null</code> or empty</dd>
+<dd><code>nestedClassName</code> - the name of the nested class to select; never <code>null</code> or blank</dd>
 <dt>Since:</dt>
 <dd>1.10</dd>
 <dt>See Also:</dt>
@@ -1195,25 +1195,25 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="selectNestedMethod(java.util.List,java.lang.String,java.lang.String,java.lang.ClassLoader)">
+<section class="detail" id="selectNestedMethod(java.lang.ClassLoader,java.util.List,java.lang.String,java.lang.String)">
 <h3>selectNestedMethod</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></span>&nbsp;<span class="element-name">selectNestedMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></span>&nbsp;<span class="element-name">selectNestedMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName)</span>
                                                throws <span class="exceptions"><a href="../../../../../../org.junit.platform.commons/org/junit/platform/commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></span></div>
 <div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name, method name,
  and class loader.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>enclosingClassNames</code> - the names of the enclosing classes; never <code>null</code> or empty</dd>
-<dd><code>nestedClassName</code> - the name of the nested class to select; never <code>null</code> or blank</dd>
-<dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
 <dd><code>classLoader</code> - the class loader to use to load the method's declaring
  class, or <code>null</code> to signal that the default <code>ClassLoader</code>
  should be used</dd>
+<dd><code>enclosingClassNames</code> - the names of the enclosing classes; never <code>null</code> or empty</dd>
+<dd><code>nestedClassName</code> - the name of the nested class to select; never <code>null</code> or blank</dd>
+<dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
 <dt>Throws:</dt>
 <dd><code><a href="../../../../../../org.junit.platform.commons/org/junit/platform/commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code></dd>
 <dt>Since:</dt>
@@ -1235,21 +1235,21 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></span>&nbsp;<span class="element-name">selectNestedMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</span></div>
 <div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name, method name,
- and method parameter types.
+ and parameter type names.
 
- <p>The parameter types <code>String</code> is typically a comma-separated list
- of atomic types, fully qualified class names, or array types; however,
+ <p>The parameter type names <code>String</code> is typically a comma-separated
+ list of atomic types, fully qualified class names, or array types; however,
  the exact syntax depends on the underlying test engine.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>enclosingClassNames</code> - the names of the enclosing classes; never <code>null</code> or empty</dd>
 <dd><code>nestedClassName</code> - the name of the nested class to select; never <code>null</code> or blank</dd>
 <dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
-<dd><code>methodParameterTypes</code> - the method parameter types as a single string; never
- <code>null</code> though potentially an empty string if the method does not accept
- arguments</dd>
+<dd><code>parameterTypeNames</code> - the parameter type names as a single string; never
+ <code>null</code> though potentially an empty string if the method does not declare
+ parameters</dd>
 <dt>Since:</dt>
 <dd>1.6</dd>
 <dt>See Also:</dt>
@@ -1262,28 +1262,28 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="selectNestedMethod(java.util.List,java.lang.String,java.lang.String,java.lang.String,java.lang.ClassLoader)">
+<section class="detail" id="selectNestedMethod(java.lang.ClassLoader,java.util.List,java.lang.String,java.lang.String,java.lang.String)">
 <h3>selectNestedMethod</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></span>&nbsp;<span class="element-name">selectNestedMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></span>&nbsp;<span class="element-name">selectNestedMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;enclosingClassNames,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nestedClassName,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</span></div>
 <div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name, method name,
- method parameter types, and class loader.</div>
+ parameter type names, and class loader.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>enclosingClassNames</code> - the names of the enclosing classes; never <code>null</code> or empty</dd>
-<dd><code>nestedClassName</code> - the name of the nested class to select; never <code>null</code> or blank</dd>
-<dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
-<dd><code>methodParameterTypes</code> - the method parameter types as a single string; never
- <code>null</code> though potentially an empty string if the method does not accept
- arguments</dd>
 <dd><code>classLoader</code> - the class loader to use to load the method's declaring
  class, or <code>null</code> to signal that the default <code>ClassLoader</code>
  should be used</dd>
+<dd><code>enclosingClassNames</code> - the names of the enclosing classes; never <code>null</code> or empty</dd>
+<dd><code>nestedClassName</code> - the name of the nested class to select; never <code>null</code> or blank</dd>
+<dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
+<dd><code>parameterTypeNames</code> - the parameter type names as a single string; never
+ <code>null</code> though potentially an empty string if the method does not declare
+ parameters</dd>
 <dt>Since:</dt>
 <dd>1.10</dd>
 <dt>See Also:</dt>
@@ -1328,21 +1328,21 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a></span>&nbsp;<span class="element-name">selectNestedMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;&nbsp;enclosingClasses,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;nestedClass,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodParameterTypes)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</span></div>
 <div class="block">Create a <code>NestedMethodSelector</code> for the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>, method name,
- and method parameter types.
+ and parameter type names.
 
- <p>The parameter types <code>String</code> is typically a comma-separated list
- of atomic types, fully qualified class names, or array types; however,
+ <p>The parameter type names <code>String</code> is typically a comma-separated
+ list of atomic types, fully qualified class names, or array types; however,
  the exact syntax depends on the underlying test engine.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>enclosingClasses</code> - the path to the nested class to select; never <code>null</code> or empty</dd>
 <dd><code>nestedClass</code> - the nested class to select; never <code>null</code></dd>
 <dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
-<dd><code>methodParameterTypes</code> - the method parameter types as a single string; never
- <code>null</code> though potentially an empty string if the method does not accept
- arguments</dd>
+<dd><code>parameterTypeNames</code> - the parameter type names as a single string; never
+ <code>null</code> though potentially an empty string if the method does not declare
+ parameters</dd>
 <dt>Since:</dt>
 <dd>1.6</dd>
 <dt>See Also:</dt>

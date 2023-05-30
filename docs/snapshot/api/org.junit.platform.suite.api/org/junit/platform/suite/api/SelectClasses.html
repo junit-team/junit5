@@ -133,8 +133,8 @@ loadScripts(document, 'script');</script>
 <h3>value</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;[]</span>&nbsp;<span class="element-name">value</span></div>
 <div class="block">One or more classes to select.
- <p>
- May be use in conjunction with or instead of <a href="#names()"><code>names()</code></a>.</div>
+
+ <p>May be use in conjunction with or instead of <a href="#names()"><code>names</code></a>.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>{}</dd>
@@ -148,12 +148,12 @@ loadScripts(document, 'script');</script>
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
 </span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">names</span></div>
 <div class="block">One or more classes to select by their fully qualified names.
- <p>
- May be use in conjunction with or instead of <a href="#value()"><code>value()</code></a>.
- <p>
- This attribute is intended to be used when the class cannot be referenced
- directly from where this annotation is used, for example, when it's not
- visible due to being package-private.</div>
+
+ <p>May be use in conjunction with or instead of <a href="#value()"><code>value</code></a>.
+
+ <p>This attribute is intended to be used when a class cannot be referenced
+ directly from where this annotation is used &mdash; for example, when a
+ class is not visible due to being private or package-private.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>1.10</dd>

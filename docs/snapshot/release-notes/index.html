@@ -555,7 +555,13 @@ JUnit repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>getMethodParameterTypes()</code> methods in <code>MethodSelector</code> and <code>NestedMethodSelector</code>
+have been deprecated and replaced by <code>getParameterTypeNames()</code> for greater clarity.</p>
+</li>
+<li>
+<p>Methods in <code>DiscoverySelectors</code> that accept a <code>ClassLoader</code> now declare the
+<code>ClassLoader</code> as the first parameter. This is only a breaking change for code that
+relies on the new methods introduced in JUnit Platform 1.10 M1.</p>
 </li>
 </ul>
 </div>
@@ -568,7 +574,7 @@ JUnit repository on GitHub.</p>
 <p>New <code>@SelectMethod</code> selector support in the <code>@Suite</code> test engine.</p>
 </li>
 <li>
-<p>Allow selecting classes by name via new <code>names</code> attribute of <code>@SelectClasses</code></p>
+<p>Allow selecting classes by name via new the <code>names</code> attribute in <code>@SelectClasses</code>.</p>
 </li>
 </ul>
 </div>
@@ -1250,7 +1256,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-05-28 15:41:54 UTC
+Last updated 2023-05-30 10:06:51 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
