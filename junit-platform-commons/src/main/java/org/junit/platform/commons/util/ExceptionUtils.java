@@ -42,6 +42,8 @@ public final class ExceptionUtils {
 
 	private static final String JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX = "org.junit.platform.launcher.";
 
+	private static final String STACK_TRACE_ELEMENTS_TO_EXCLUDE = "org.junit.*,jdk.internal.reflect.*,sun.reflect.*";
+
 	private ExceptionUtils() {
 		/* no-op */
 	}
@@ -103,28 +105,37 @@ public final class ExceptionUtils {
 	 *
 	 * @param throwable the {@code Throwable} whose stack trace should be
 	 * pruned; never {@code null}
-	 * @param stackTraceElementFilter the {@code Predicate} used to filter
-	 * elements of the stack trace; never {@code null}
+	 * @param testClassNames the test class names that should stop the pruning
+	 * if encountered; never {@code null}
 	 *
 	 * @since 5.10
 	 */
 	@API(status = INTERNAL, since = "5.10")
-	public static void pruneStackTrace(Throwable throwable, Predicate<String> stackTraceElementFilter) {
+	public static void pruneStackTrace(Throwable throwable, List<String> testClassNames) {
 		Preconditions.notNull(throwable, "Throwable must not be null");
-		Preconditions.notNull(stackTraceElementFilter, "Predicate must not be null");
+
+		Predicate<String> stackTraceElementFilter = ClassNamePatternFilterUtils //
+				.excludeMatchingClassNames(STACK_TRACE_ELEMENTS_TO_EXCLUDE);
 
 		List<StackTraceElement> stackTrace = Arrays.asList(throwable.getStackTrace());
 		List<StackTraceElement> prunedStackTrace = new ArrayList<>();
 
 		Collections.reverse(stackTrace);
 
-		for (StackTraceElement element : stackTrace) {
+		for (int i = 0; i < stackTrace.size(); i++) {
+			StackTraceElement element = stackTrace.get(i);
 			String className = element.getClassName();
+
 			if (className.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
 				prunedStackTrace.clear();
 			}
 			else if (stackTraceElementFilter.test(className)) {
 				prunedStackTrace.add(element);
+			}
+			else if (testClassNames.contains(className)) {
+				// Include all elements called by the test
+				prunedStackTrace.addAll(stackTrace.subList(i, stackTrace.size()));
+				break;
 			}
 		}
 

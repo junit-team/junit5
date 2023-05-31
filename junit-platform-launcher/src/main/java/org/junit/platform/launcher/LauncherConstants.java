@@ -174,50 +174,6 @@ public class LauncherConstants {
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static final String STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME = "junit.platform.stacktrace.pruning.enabled";
 
-	/**
-	 * Property name used to provide patterns to remove elements from stack traces.
-	 *
-	 * <h4>Pattern Matching Syntax</h4>
-	 *
-	 * <p>If the property value consists solely of an asterisk ({@code *}), all
-	 * elements will be removed. Otherwise, the property value will be treated
-	 * as a comma-separated list of patterns where each individual pattern will
-	 * be matched against the fully qualified class name (<em>FQCN</em>) of the
-	 * stack trace element. Any dot ({@code .}) in a pattern will match against
-	 * a dot ({@code .}) or a dollar sign ({@code $}) in a FQCN. Any asterisk
-	 * ({@code *}) will match against one or more characters in a FQCN. All
-	 * other characters in a pattern will be matched one-to-one against a FQCN.
-	 *
-	 * <h4>Examples</h4>
-	 *
-	 * <ul>
-	 * <li>{@code *}: remove all elements.
-	 * <li>{@code org.junit.*}: remove every element with the {@code org.junit}
-	 * base package and any of its subpackages.
-	 * <li>{@code *.MyClass}: remove every element whose simple class name is
-	 * exactly {@code MyClass}.
-	 * <li>{@code *System*, *Dev*}: exclude every element whose FQCN contains
-	 * {@code System} or {@code Dev}.
-	 * <li>{@code org.example.MyClass, org.example.TheirClass}: remove
-	 * elements whose FQCN is exactly {@code org.example.MyClass} or
-	 * {@code org.example.TheirClass}.
-	 * </ul>
-	 *
-	 * @see #STACKTRACE_PRUNING_DEFAULT_PATTERN
-	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
-	public static final String STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME = "junit.platform.stacktrace.pruning.pattern";
-
-	/**
-	 * Default pattern for stack trace pruning which matches the
-	 * {@code org.junit}, {@code java}, and {@code jdk} base packages as well
-	 * as any of their subpackages.
-	 *
-	 * @see #STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME
-	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
-	public static final String STACKTRACE_PRUNING_DEFAULT_PATTERN = "org.junit.*,java.*,jdk.*";
-
 	private LauncherConstants() {
 		/* no-op */
 	}

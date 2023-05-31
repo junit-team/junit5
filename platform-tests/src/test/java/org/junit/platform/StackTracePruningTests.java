@@ -44,11 +44,6 @@ class StackTracePruningTests {
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
 
-		assertStackTraceMatch(stackTrace, """
-				\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
-				""");
-
-		assertStackTraceDoesNotContain(stackTrace, "java.util.ArrayList.forEach(ArrayList.java:");
 		assertStackTraceDoesNotContain(stackTrace,
 			"jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:");
 	}
@@ -62,11 +57,6 @@ class StackTracePruningTests {
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
 
-		assertStackTraceMatch(stackTrace, """
-				\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
-				""");
-
-		assertStackTraceDoesNotContain(stackTrace, "java.util.ArrayList.forEach(ArrayList.java:");
 		assertStackTraceDoesNotContain(stackTrace,
 			"jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:");
 	}
@@ -82,46 +72,25 @@ class StackTracePruningTests {
 
 		assertStackTraceMatch(stackTrace, """
 				\\Qorg.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:\\E.+
-				\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
 				>>>>
-				\\Qjava.base/java.util.ArrayList.forEach(ArrayList.java:\\E.+
-				>>>>
-				""");
-	}
-
-	@Test
-	void shouldPruneStackTraceAccordingToPattern() {
-		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
-				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.configurationParameter("junit.platform.stacktrace.pruning.pattern", "jdk.*") //
-				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
-				.execute();
-
-		List<StackTraceElement> stackTrace = extractStackTrace(results);
-
-		assertStackTraceMatch(stackTrace, """
-				\\Qorg.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:\\E.+
-				\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
-				>>>>
-				\\Qjava.base/java.util.ArrayList.forEach(ArrayList.java:\\E.+
+				\\Qorg.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:\\E.+
 				>>>>
 				""");
-
-		assertStackTraceDoesNotContain(stackTrace, "jdk.");
 	}
 
 	@Test
 	void shouldAlwaysKeepJupiterAssertionStackTraceElement() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.configurationParameter("junit.platform.stacktrace.pruning.pattern", "*") //
 				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
 
 		assertStackTraceMatch(stackTrace, """
+				>>>>
 				\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
+				>>>>
 				""");
 	}
 
@@ -129,15 +98,34 @@ class StackTracePruningTests {
 	void shouldAlwaysKeepJupiterAssumptionStackTraceElement() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.configurationParameter("junit.platform.stacktrace.pruning.pattern", "*") //
 				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssumption")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
 
 		assertStackTraceMatch(stackTrace, """
+				>>>>
 				\\Qorg.junit.jupiter.api.Assumptions.assumeTrue(Assumptions.java:\\E.+
+				>>>>
 				""");
+	}
+
+	@Test
+	void shouldKeepEverythingAfterTestCall() {
+		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
+				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
+				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
+				.execute();
+
+		List<StackTraceElement> stackTrace = extractStackTrace(results);
+
+		assertStackTraceMatch(stackTrace,
+			"""
+					\\Qorg.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:\\E.+
+					\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
+					\\Qorg.junit.platform.StackTracePruningTests$StackTracePruningTestCase.failingAssertion(StackTracePruningTests.java:\\E.+
+					>>>>
+					""");
 	}
 
 	@Test
@@ -151,7 +139,8 @@ class StackTracePruningTests {
 
 		for (Throwable suppressed : throwable.getSuppressed()) {
 			List<StackTraceElement> stackTrace = Arrays.asList(suppressed.getStackTrace());
-			assertStackTraceDoesNotContain(stackTrace, "java.util.ArrayList.forEach(ArrayList.java:");
+			assertStackTraceDoesNotContain(stackTrace,
+				"jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:");
 		}
 	}
 
