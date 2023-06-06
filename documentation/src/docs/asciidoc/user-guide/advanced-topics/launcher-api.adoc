@@ -168,7 +168,7 @@ include::{testDir}/example/session/HttpTests.java[tags=user_guide]
 
 In order to intercept the creation of instances of `{Launcher}` and
 `{LauncherSessionListener}` and calls to the `discover` and `execute` methods of the
-former, clients can registercustom implementations of `{LauncherInterceptor}` via Java's
+former, clients can register custom implementations of `{LauncherInterceptor}` via Java's
 `{ServiceLoader}` mechanism by additionally setting the
 `junit.platform.launcher.interceptors.enabled` <<running-tests-config-params,
 configuration parameter>> to `true`.
