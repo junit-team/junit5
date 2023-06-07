@@ -45,6 +45,7 @@
 0d2e7ac811930e1fa119591f1397ae2c  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IsPotentialJUnit4TestMethod.java
 0d5cd9eb5b65afc1b763c6d3d491b03b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfCondition.java
 0e672dac91a40b2ea5dffb4e3c21589e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/config/PrefixedConfigurationParameters.java
+0e830f3ff8c5014155d7afc13087b205  documentation/src/docs/asciidoc/user-guide/advanced-topics/launcher-api.adoc
 0f6dac7d2703e1a61e1cf7d680bc0ad0  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/NoTestsDiscoveredException.java
 0ff7f72d18baa3b15d4779c9764fafff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/OutputDir.java
 10158c40e2d2b0add71c249348a2f18d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ResourceLock.java
@@ -806,7 +807,6 @@ f700e30e900cae6a72e287f5cb144232  documentation/src/test/java/extensions/ExpectT
 f739ee1a6335a323029d0b820f4f106c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/IndicativeSentencesGeneration.java
 f767e117fd70ce0314f95862a50e208d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Named.java
 f78c55d9c149bbc08d38ee7c1956cbbc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertInstanceOf.java
-f7b978f5bcd75540d5642cd2d3ed1495  documentation/src/docs/asciidoc/user-guide/advanced-topics/launcher-api.adoc
 f7ea4e1fe30c15c2632dc5aab635cbec  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodExtensionContext.java
 f8f22ec8a127354c9a9dd4eec6cfc5d2  junit-platform-commons/src/main/java/org/junit/platform/commons/function/Try.java
 f8ff9545052f8b24e7ecf57c786fb820  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/package-info.java
