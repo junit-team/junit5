@@ -122,13 +122,6 @@ your IDE has built-in support for JUnit 4.
 [[running-tests-build-gradle]]
 ==== Gradle
 
-[WARNING]
-.The JUnit Platform Gradle Plugin has been discontinued
-====
-The `junit-platform-gradle-plugin` developed by the JUnit team was deprecated in JUnit
-Platform 1.2 and discontinued in 1.3. Please switch to Gradle's standard `test` task.
-====
-
 Starting with https://docs.gradle.org/4.6/release-notes.html[version 4.6], Gradle provides
 https://docs.gradle.org/current/userguide/java_testing.html#using_junit5[native support]
 for executing tests on the JUnit Platform. To enable it, you need to specify
