@@ -748,6 +748,7 @@ pre.rouge .gs {
 <ul class="sectlevel3">
 <li><a href="#running-tests-build-gradle">4.2.1. Gradle</a>
 <ul class="sectlevel4">
+<li><a href="#running-tests-build-gradle-bom">Aligning dependency versions</a></li>
 <li><a href="#running-tests-build-gradle-config-params">Configuration Parameters</a></li>
 <li><a href="#running-tests-build-gradle-engines-configure">Configuring Test Engines</a></li>
 <li><a href="#running-tests-build-gradle-logging">Configuring Logging (optional)</a></li>
@@ -755,6 +756,7 @@ pre.rouge .gs {
 </li>
 <li><a href="#running-tests-build-maven">4.2.2. Maven</a>
 <ul class="sectlevel4">
+<li><a href="#running-tests-build-maven-bom">Aligning dependency versions</a></li>
 <li><a href="#running-tests-build-maven-engines-configure">Configuring Test Engines</a></li>
 <li><a href="#running-tests-build-maven-filter-test-class-names">Filtering by Test Class Names</a></li>
 <li><a href="#running-tests-build-maven-filter-tags">Filtering by Tags</a></li>
@@ -6966,22 +6968,6 @@ your IDE has built-in support for JUnit 4.</p>
 <h3 id="running-tests-build"><a class="anchor" href="#running-tests-build"></a>4.2. Build Support</h3>
 <div class="sect3">
 <h4 id="running-tests-build-gradle"><a class="anchor" href="#running-tests-build-gradle"></a>4.2.1. Gradle</h4>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="title">The JUnit Platform Gradle Plugin has been discontinued</div>
-<div class="paragraph">
-<p>The <code>junit-platform-gradle-plugin</code> developed by the JUnit team was deprecated in JUnit
-Platform 1.2 and discontinued in 1.3. Please switch to Gradle&#8217;s standard <code>test</code> task.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Starting with <a href="https://docs.gradle.org/4.6/release-notes.html">version 4.6</a>, Gradle provides
 <a href="https://docs.gradle.org/current/userguide/java_testing.html#using_junit5">native support</a>
@@ -7016,11 +7002,28 @@ for executing tests on the JUnit Platform. To enable it, you need to specify
 <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_test">official Gradle documentation</a>
 for a comprehensive list of options.</p>
 </div>
-<div class="admonitionblock note">
+<div class="sect4">
+<h5 id="running-tests-build-gradle-bom"><a class="anchor" href="#running-tests-build-gradle-bom"></a>Aligning dependency versions</h5>
+<div class="paragraph">
+<p>Unless you&#8217;re using Spring Boot which defines its own way of managing dependencies, it is
+recommended to use the JUnit Platform BOM to align the versions of all JUnit 5 artifacts.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
+    <span class="n">testImplementation</span><span class="o">(</span><span class="n">platform</span><span class="o">(</span><span class="s2">"org.junit:junit-bom:5.10.0-SNAPSHOT"</span><span class="o">))</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using the BOM allows you to omit the version when declaring dependencies on all artifacts
+with the <code>org.junit.platform</code>, <code>org.junit.jupiter</code>, and <code>org.junit.vintage</code> group IDs.</p>
+</div>
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
 See <a href="#running-tests-build-spring-boot">Spring Boot</a> for details on how to override the version
@@ -7028,6 +7031,7 @@ of JUnit used in your Spring Boot application.
 </td>
 </tr>
 </table>
+</div>
 </div>
 <div class="sect4">
 <h5 id="running-tests-build-gradle-config-params"><a class="anchor" href="#running-tests-build-gradle-config-params"></a>Configuration Parameters</h5>
@@ -7062,7 +7066,7 @@ on the dependency-aggregating JUnit Jupiter artifact similar to the following.</
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
-    <span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.junit.jupiter:junit-jupiter:5.10.0-SNAPSHOT"</span><span class="o">)</span>
+    <span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.junit.jupiter:junit-jupiter:5.10.0-SNAPSHOT"</span><span class="o">)</span> <span class="c1">// version can be omitted when using the BOM</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -7075,7 +7079,7 @@ implementation similar to the following.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
     <span class="n">testImplementation</span><span class="o">(</span><span class="s2">"junit:junit:4.13.2"</span><span class="o">)</span>
-    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.vintage:junit-vintage-engine:5.10.0-SNAPSHOT"</span><span class="o">)</span>
+    <span class="n">testRuntimeOnly</span><span class="o">(</span><span class="s2">"org.junit.vintage:junit-vintage-engine:5.10.0-SNAPSHOT"</span><span class="o">)</span> <span class="c1">// version can be omitted when using the BOM</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -7153,6 +7157,31 @@ Launcher to your Maven build as follows.</p>
 </tr>
 </table>
 </div>
+<div class="sect4">
+<h5 id="running-tests-build-maven-bom"><a class="anchor" href="#running-tests-build-maven-bom"></a>Aligning dependency versions</h5>
+<div class="paragraph">
+<p>Unless you&#8217;re using Spring Boot which defines its own way of managing dependencies, it is
+recommended to use the JUnit Platform BOM to align the versions of all JUnit 5 artifacts.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;dependencyManagement&gt;</span>
+    <span class="nt">&lt;dependencies&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.junit<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>junit-bom<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>5.10.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
+            <span class="nt">&lt;scope&gt;</span>import<span class="nt">&lt;/scope&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/dependencyManagement&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using the BOM allows you to omit the version when declaring dependencies on all artifacts
+with the <code>org.junit.platform</code>, <code>org.junit.jupiter</code>, and <code>org.junit.vintage</code> group IDs.</p>
+</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -7165,6 +7194,7 @@ of JUnit used in your Spring Boot application.
 </td>
 </tr>
 </table>
+</div>
 </div>
 <div class="sect4">
 <h5 id="running-tests-build-maven-engines-configure"><a class="anchor" href="#running-tests-build-maven-engines-configure"></a>Configuring Test Engines</h5>
@@ -7185,7 +7215,7 @@ following.</p>
     <span class="nt">&lt;dependency&gt;</span>
         <span class="nt">&lt;groupId&gt;</span>org.junit.jupiter<span class="nt">&lt;/groupId&gt;</span>
         <span class="nt">&lt;artifactId&gt;</span>junit-jupiter<span class="nt">&lt;/artifactId&gt;</span>
-        <span class="nt">&lt;version&gt;</span>5.10.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;version&gt;</span>5.10.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span> <span class="c">&lt;!-- can be omitted when using the BOM --&gt;</span>
         <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
     <span class="nt">&lt;/dependency&gt;</span>
     <span class="c">&lt;!-- ... --&gt;</span>
@@ -7224,7 +7254,7 @@ long as you configure <code>test</code> scoped dependencies on JUnit 4 and the J
     <span class="nt">&lt;dependency&gt;</span>
         <span class="nt">&lt;groupId&gt;</span>org.junit.vintage<span class="nt">&lt;/groupId&gt;</span>
         <span class="nt">&lt;artifactId&gt;</span>junit-vintage-engine<span class="nt">&lt;/artifactId&gt;</span>
-        <span class="nt">&lt;version&gt;</span>5.10.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;version&gt;</span>5.10.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span> <span class="c">&lt;!-- can be omitted when using the BOM --&gt;</span>
         <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
     <span class="nt">&lt;/dependency&gt;</span>
     <span class="c">&lt;!-- ... --&gt;</span>
@@ -12454,7 +12484,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-06-07 08:29:43 UTC
+Last updated 2023-06-07 09:08:12 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
