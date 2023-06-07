@@ -155,7 +155,24 @@ Please refer to the
 https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_test[official Gradle documentation]
 for a comprehensive list of options.
 
-NOTE: See <<running-tests-build-spring-boot>> for details on how to override the version
+[[running-tests-build-gradle-bom]]
+===== Aligning dependency versions
+
+Unless you're using Spring Boot which defines its own way of managing dependencies, it is
+recommended to use the JUnit Platform BOM to align the versions of all JUnit 5 artifacts.
+
+[source,groovy,indent=0]
+[subs=attributes+]
+----
+dependencies {
+	testImplementation(platform("org.junit:junit-bom:{bom-version}"))
+}
+----
+
+Using the BOM allows you to omit the version when declaring dependencies on all artifacts
+with the `org.junit.platform`, `org.junit.jupiter`, and `org.junit.vintage` group IDs.
+
+TIP: See <<running-tests-build-spring-boot>> for details on how to override the version
 of JUnit used in your Spring Boot application.
 
 [[running-tests-build-gradle-config-params]]
@@ -190,7 +207,7 @@ on the dependency-aggregating JUnit Jupiter artifact similar to the following.
 [subs=attributes+]
 ----
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
+	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}") // version can be omitted when using the BOM
 }
 ----
 
@@ -203,7 +220,7 @@ implementation similar to the following.
 ----
 dependencies {
 	testImplementation("junit:junit:{junit4-version}")
-	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}") // version can be omitted when using the BOM
 }
 ----
 
@@ -268,6 +285,31 @@ Launcher to your Maven build as follows.
 ----
 ====
 
+[[running-tests-build-maven-bom]]
+===== Aligning dependency versions
+
+Unless you're using Spring Boot which defines its own way of managing dependencies, it is
+recommended to use the JUnit Platform BOM to align the versions of all JUnit 5 artifacts.
+
+[source,xml,indent=0]
+[subs=attributes+]
+----
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.junit</groupId>
+			<artifactId>junit-bom</artifactId>
+			<version>{bom-version}</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
+----
+
+Using the BOM allows you to omit the version when declaring dependencies on all artifacts
+with the `org.junit.platform`, `org.junit.jupiter`, and `org.junit.vintage` group IDs.
+
 TIP: See <<running-tests-build-spring-boot>> for details on how to override the version
 of JUnit used in your Spring Boot application.
 
@@ -290,7 +332,7 @@ following.
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>{jupiter-version}</version>
+			<version>{jupiter-version}</version> <!-- can be omitted when using the BOM -->
 			<scope>test</scope>
 		</dependency>
 		<!-- ... -->
@@ -329,7 +371,7 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>
-			<version>{vintage-version}</version>
+			<version>{vintage-version}</version> <!-- can be omitted when using the BOM -->
 			<scope>test</scope>
 		</dependency>
 		<!-- ... -->
