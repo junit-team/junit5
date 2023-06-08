@@ -1361,6 +1361,7 @@ public final class ReflectionUtils {
 		return findMethod(clazz, methodName, resolveParameterTypes(clazz, methodName, parameterTypeNames));
 	}
 
+	@API(status = INTERNAL, since = "1.10")
 	public static Class<?>[] resolveParameterTypes(Class<?> clazz, String methodName, String parameterTypeNames) {
 		if (StringUtils.isBlank(parameterTypeNames)) {
 			return EMPTY_CLASS_ARRAY;
