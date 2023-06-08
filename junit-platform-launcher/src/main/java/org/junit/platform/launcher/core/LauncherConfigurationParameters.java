@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
+import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -93,6 +94,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 	static final class Builder {
 
 		private final Map<String, String> explicitParameters = new HashMap<>();
+		private final List<String> configResources = new ArrayList<>();
 		private boolean implicitProvidersEnabled = true;
 		private String configFileName = ConfigurationParameters.CONFIG_FILE_NAME;
 		private ConfigurationParameters parentConfigurationParameters;
@@ -103,6 +105,12 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		Builder explicitParameters(Map<String, String> parameters) {
 			Preconditions.notNull(parameters, "configuration parameters must not be null");
 			explicitParameters.putAll(parameters);
+			return this;
+		}
+
+		Builder configurationResources(List<String> configResources) {
+			Preconditions.notNull(configResources, "configResources must not be null");
+			this.configResources.addAll(configResources);
 			return this;
 		}
 
@@ -128,6 +136,9 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			if (!explicitParameters.isEmpty()) {
 				parameterProviders.add(ParameterProvider.explicit(explicitParameters));
 			}
+
+			CollectionUtils.forEachInReverseOrder(configResources,
+				configResource -> parameterProviders.add(ParameterProvider.propertiesFile(configResource)));
 
 			if (parentConfigurationParameters != null) {
 				parameterProviders.add(ParameterProvider.inherited(parentConfigurationParameters));
