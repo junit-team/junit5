@@ -54,6 +54,7 @@ class DiscoveryRequestCreator {
 		requestBuilder.selectors(selectors);
 		addFilters(requestBuilder, options, selectors);
 		requestBuilder.configurationParameters(options.getConfigurationParameters());
+		requestBuilder.configurationParametersResources(options.getConfigurationParametersResources());
 		return requestBuilder.build();
 	}
 

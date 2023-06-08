@@ -949,13 +949,16 @@ engines running on the JUnit Platform via one of the following mechanisms.
     `systemProperty` or `systemProperties` DSL.
   * <<running-tests-build-maven-config-params,Maven Surefire provider>>: use the
     `configurationParameters` property.
-2. JVM system properties.
-3. The JUnit Platform configuration file: a file named `junit-platform.properties` in the
+2. The `configurationParametersResource()` and `configurationParametersResources()`
+  methods in the `LauncherDiscoveryRequestBuilder` which are used to select a `.properties`
+  file on the classpath with configuration parameters.
+3. JVM system properties.
+4. The JUnit Platform configuration file: a file named `junit-platform.properties` in the
   root of the class path that follows the syntax rules for a Java `Properties` file.
 
 NOTE: Configuration parameters are looked up in the exact order defined above.
 Consequently, configuration parameters supplied directly to the `Launcher` take
-precedence over those supplied via system properties and the configuration file.
+precedence over those supplied via system properties, the specified properties files, and the platform configuration file.
 Similarly, configuration parameters supplied via system properties take precedence over
 those supplied via the configuration file.
 

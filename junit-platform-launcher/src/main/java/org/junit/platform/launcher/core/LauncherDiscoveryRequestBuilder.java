@@ -102,6 +102,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	private final List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
 	private final Map<String, String> configurationParameters = new HashMap<>();
+	private final List<String> configurationParametersResources = new ArrayList<>();
 	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
 	private boolean implicitConfigurationParametersEnabled = true;
 	private ConfigurationParameters parentConfigurationParameters;
@@ -195,6 +196,30 @@ public final class LauncherDiscoveryRequestBuilder {
 	public LauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
 		Preconditions.notNull(configurationParameters, "configuration parameters map must not be null");
 		configurationParameters.forEach(this::configurationParameter);
+		return this;
+	}
+
+	/**
+	 * Add the supplied configuration parameters resource file to the request.
+	 * @param propertiesFile the classpath location of the properties file
+	 * never {@code null}
+	 * @return this builder for method chaining
+	 */
+	public LauncherDiscoveryRequestBuilder configurationParametersResource(String propertiesFile) {
+		Preconditions.notNull(propertiesFile, "properties file must not be null");
+		configurationParametersResources.add(propertiesFile);
+		return this;
+	}
+
+	/**
+	 * Add all of the supplied configuration parameters resource files to the request.
+	 * @param propertiesFiles the classpath locations of the properties files
+	 * never {@code null}
+	 * @return this builder for method chaining
+	 */
+	public LauncherDiscoveryRequestBuilder configurationParametersResources(List<String> propertiesFiles) {
+		Preconditions.notNull(propertiesFiles, "properties files must not be null");
+		propertiesFiles.forEach(this::configurationParametersResource);
 		return this;
 	}
 
@@ -300,6 +325,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {
 		Builder builder = LauncherConfigurationParameters.builder() //
 				.explicitParameters(this.configurationParameters) //
+				.configurationResources(this.configurationParametersResources) //
 				.enableImplicitProviders(this.implicitConfigurationParametersEnabled);
 
 		if (this.parentConfigurationParameters != null) {
