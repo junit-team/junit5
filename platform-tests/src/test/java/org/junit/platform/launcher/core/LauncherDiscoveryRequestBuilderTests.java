@@ -318,7 +318,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		void configurationParametersResource_areStoredInDiscoveryRequest() {
 			// @formatter:off
 			var discoveryRequest = request()
-					.configurationParametersResource("config-test.properties")
+					.configurationParametersResources("config-test.properties")
 					.build();
 			// @formatter:on
 
@@ -332,7 +332,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		void configurationParametersResource_explicitConfigParametersOverrideResource() {
 			// @formatter:off
 			var discoveryRequest = request()
-					.configurationParametersResource("config-test.properties")
+					.configurationParametersResources("config-test.properties")
 					.configurationParameter("com.example.prop.first", "first value override")
 					.build();
 			// @formatter:on
@@ -346,8 +346,8 @@ class LauncherDiscoveryRequestBuilderTests {
 		void configurationParametersResource_lastDeclaredResourceFileWins() {
 			// @formatter:off
 			var discoveryRequest = request()
-					.configurationParametersResource("config-test.properties")
-					.configurationParametersResource("config-test-override.properties")
+					.configurationParametersResources("config-test.properties")
+					.configurationParametersResources("config-test-override.properties")
 					.build();
 			// @formatter:on
 

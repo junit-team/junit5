@@ -302,7 +302,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
 				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
 		findRepeatableAnnotations(suiteClass, ConfigurationParametersResource.class)
-				.forEach(configResource -> configurationParametersResource(configResource.resource()));
+				.forEach(configResource -> configurationParametersResource(configResource.value()));
 		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
 				.ifPresent(__ -> this.enableParentConfigurationParameters = false);
 		// @formatter:on

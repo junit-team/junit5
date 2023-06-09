@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,26 +201,14 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Add the supplied configuration parameters resource file to the request.
-	 * @param propertiesFile the classpath location of the properties file
-	 * never {@code null}
-	 * @return this builder for method chaining
-	 */
-	public LauncherDiscoveryRequestBuilder configurationParametersResource(String propertiesFile) {
-		Preconditions.notNull(propertiesFile, "properties file must not be null");
-		configurationParametersResources.add(propertiesFile);
-		return this;
-	}
-
-	/**
 	 * Add all of the supplied configuration parameters resource files to the request.
-	 * @param propertiesFiles the classpath locations of the properties files
+	 * @param paths the classpath locations of the properties files
 	 * never {@code null}
 	 * @return this builder for method chaining
 	 */
-	public LauncherDiscoveryRequestBuilder configurationParametersResources(List<String> propertiesFiles) {
-		Preconditions.notNull(propertiesFiles, "properties files must not be null");
-		propertiesFiles.forEach(this::configurationParametersResource);
+	public LauncherDiscoveryRequestBuilder configurationParametersResources(String... paths) {
+		Preconditions.notNull(paths, "property file paths must not be null");
+		Collections.addAll(configurationParametersResources, paths);
 		return this;
 	}
 

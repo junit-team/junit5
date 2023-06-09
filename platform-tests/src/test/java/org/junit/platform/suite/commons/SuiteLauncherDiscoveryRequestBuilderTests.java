@@ -59,7 +59,6 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.ConfigurationParametersResource;
-import org.junit.platform.suite.api.ConfigurationParametersResources;
 import org.junit.platform.suite.api.DisableParentConfigurationParameters;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
@@ -97,7 +96,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	@Test
 	void configurationParametersResource() {
-		@ConfigurationParametersResource(resource = "config-test.properties")
+		@ConfigurationParametersResource("config-test.properties")
 		class Suite {
 		}
 
@@ -109,8 +108,8 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	@Test
 	void configurationParametersResources() {
-		@ConfigurationParametersResources({ @ConfigurationParametersResource(resource = "config-test.properties"),
-				@ConfigurationParametersResource(resource = "config-test-override.properties") })
+		@ConfigurationParametersResource("config-test.properties")
+		@ConfigurationParametersResource("config-test-override.properties")
 		class Suite {
 		}
 
@@ -124,7 +123,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	@Test
 	void configurationParametersResource_explicitParametersTakePrecedence() {
-		@ConfigurationParametersResource(resource = "config-test.properties")
+		@ConfigurationParametersResource("config-test.properties")
 		@ConfigurationParameter(key = "com.example.prop.first", value = "first value from explicit parameter")
 		class Suite {
 		}

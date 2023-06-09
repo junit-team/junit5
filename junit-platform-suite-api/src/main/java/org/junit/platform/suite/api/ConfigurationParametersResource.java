@@ -32,13 +32,12 @@ import org.apiguardian.api.API;
  * @see Suite
  * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder#configurationParameter(String, String)
+ * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder#configurationParametersResources(String...)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-// TODO: Before PR merge, change to STABLE/MAINTAINED
-// TODO: Is version 1.11 correct?
 @API(status = EXPERIMENTAL, since = "1.11")
 @Repeatable(ConfigurationParametersResources.class)
 public @interface ConfigurationParametersResource {
@@ -46,6 +45,6 @@ public @interface ConfigurationParametersResource {
 	/**
 	 * The classpath location for the desired properties file; never {@code null} or blank.
 	 */
-	String resource();
+	String value();
 
 }

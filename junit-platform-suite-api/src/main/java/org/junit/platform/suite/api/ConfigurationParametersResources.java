@@ -36,8 +36,6 @@ import org.apiguardian.api.API;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-// TODO: Before PR merge, change to STABLE/MAINTAINED
-// TODO: Is version 1.11 correct?
 @API(status = EXPERIMENTAL, since = "1.11")
 public @interface ConfigurationParametersResources {
 
