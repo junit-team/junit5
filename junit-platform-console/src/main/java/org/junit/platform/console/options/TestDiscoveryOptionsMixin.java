@@ -260,6 +260,13 @@ class TestDiscoveryOptionsMixin {
 		// Implementation note: the @Option annotation is on a setter method to allow validation.
 		private final Map<String, String> configurationParameters = new LinkedHashMap<>();
 
+		@Option(names = {
+				"--config-resource" }, paramLabel = "PATH", arity = "1", description = "Set configuration parameters for test discovery and execution, from a resource file. This option can be repeated.")
+		private List<String> configurationParametersResources = new ArrayList<>();
+
+		@Option(names = { "-config-resource" }, arity = "1", hidden = true)
+		private List<String> configurationParametersResources2 = new ArrayList<>();
+
 		@CommandLine.Spec
 		private CommandLine.Model.CommandSpec spec;
 
@@ -296,6 +303,8 @@ class TestDiscoveryOptionsMixin {
 
 		private void applyTo(TestDiscoveryOptions result) {
 			result.setAdditionalClasspathEntries(merge(additionalClasspathEntries, additionalClasspathEntries2));
+			result.setConfigurationParametersResources(
+				merge(configurationParametersResources, configurationParametersResources2));
 			result.setConfigurationParameters(configurationParameters);
 		}
 	}
