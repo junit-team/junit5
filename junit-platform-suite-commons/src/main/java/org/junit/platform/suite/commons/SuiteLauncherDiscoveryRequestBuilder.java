@@ -116,8 +116,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
-	public SuiteLauncherDiscoveryRequestBuilder configurationParametersResource(String resourceFile) {
-		delegate.configurationParametersResource(resourceFile);
+	public SuiteLauncherDiscoveryRequestBuilder configurationParametersResource(String path) {
+		delegate.configurationParametersResources(path);
 		return this;
 	}
 
@@ -140,7 +140,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
 				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
 		findRepeatableAnnotations(suiteClass, ConfigurationParametersResource.class)
-				.forEach(configResource -> configurationParametersResource(configResource.resource()));
+				.forEach(configResource -> configurationParametersResource(configResource.value()));
 		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
 				.ifPresent(__ -> enableParentConfigurationParameters = false);
 		findAnnotationValues(suiteClass, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
