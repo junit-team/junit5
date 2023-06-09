@@ -11,7 +11,6 @@
 package org.junit.platform.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.util.ExceptionUtils.findNestedThrowables;
 import static org.junit.platform.commons.util.ExceptionUtils.pruneStackTrace;
@@ -19,9 +18,6 @@ import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
@@ -135,13 +131,6 @@ class ExceptionUtilsTests {
 		t2.addSuppressed(t3);
 
 		assertThat(findNestedThrowables(t1)).hasSize(3);
-	}
-
-	private static void assertStackTraceMatch(StackTraceElement[] stackTrace, String expectedLines) {
-		List<String> stackStraceAsLines = Arrays.stream(stackTrace) //
-				.map(StackTraceElement::toString) //
-				.collect(Collectors.toList());
-		assertLinesMatch(expectedLines.lines().toList(), stackStraceAsLines);
 	}
 
 }
