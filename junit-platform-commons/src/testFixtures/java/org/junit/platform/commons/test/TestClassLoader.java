@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  * <p>This class loader is only suitable for specific testing scenarios, where
  * you need to load particular classes from a different class loader.
  *
- * @since 5.10
+ * @since 1.10
  */
 public class TestClassLoader extends URLClassLoader {
 
