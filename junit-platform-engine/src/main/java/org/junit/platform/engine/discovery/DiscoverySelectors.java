@@ -604,31 +604,11 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static MethodSelector selectMethod(String className, String methodName, Class<?>... parameterTypes) {
-		return selectMethod((ClassLoader) null, className, methodName, parameterTypes);
-	}
-
-	/**
-	 * Create a {@code MethodSelector} for the supplied class name, method name,
-	 * parameter types, and class loader.
-	 *
-	 * @param classLoader the class loader to use to load the class, or {@code null}
-	 * to signal that the default {@code ClassLoader} should be used
-	 * @param className the fully qualified name of the class in which the method
-	 * is declared, or a subclass thereof; never {@code null} or blank
-	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param parameterTypes the formal parameter types of the method; never
-	 * {@code null} though potentially empty if the method does not declare parameters
-	 * @since 1.10
-	 * @see MethodSelector
-	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
-	public static MethodSelector selectMethod(ClassLoader classLoader, String className, String methodName,
-			Class<?>... parameterTypes) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypes, "Parameter types array must not be null");
 		Preconditions.containsNoNullElements(parameterTypes, "Parameter types array must not contain null elements");
-		return new MethodSelector(classLoader, className, methodName, parameterTypes);
+		return new MethodSelector((ClassLoader) null, className, methodName, parameterTypes);
 	}
 
 	/**
@@ -821,36 +801,14 @@ public final class DiscoverySelectors {
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName, Class<?>... parameterTypes) {
-		return selectNestedMethod((ClassLoader) null, enclosingClassNames, nestedClassName, methodName, parameterTypes);
-	}
-
-	/**
-	 * Create a {@code NestedMethodSelector} for the supplied enclosing class names,
-	 * nested class name, method name, parameter types, and class loader.
-	 *
-	 * @param classLoader the class loader to use to load the method's declaring
-	 * class, or {@code null} to signal that the default {@code ClassLoader}
-	 * should be used
-	 * @param enclosingClassNames the names of the enclosing classes; never {@code null}
-	 * or empty
-	 * @param nestedClassName the name of the nested class to select; never {@code null}
-	 * or blank
-	 * @param methodName the name of the method to select; never {@code null} or blank
-	 * @param parameterTypes the formal parameter types of the method; never {@code null}
-	 * though potentially empty if the method does not declare parameters
-	 * @since 1.10
-	 * @see NestedMethodSelector
-	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
-	public static NestedMethodSelector selectNestedMethod(ClassLoader classLoader, List<String> enclosingClassNames,
-			String nestedClassName, String methodName, Class<?>... parameterTypes) {
 
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypes, "Parameter types array must not be null");
 		Preconditions.containsNoNullElements(parameterTypes, "Parameter types array must not contain null elements");
-		return new NestedMethodSelector(classLoader, enclosingClassNames, nestedClassName, methodName, parameterTypes);
+		return new NestedMethodSelector((ClassLoader) null, enclosingClassNames, nestedClassName, methodName,
+			parameterTypes);
 	}
 
 	/**

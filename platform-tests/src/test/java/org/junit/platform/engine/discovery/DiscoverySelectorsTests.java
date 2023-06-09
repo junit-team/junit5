@@ -722,7 +722,7 @@ class DiscoverySelectorsTests {
 		}
 
 		@Test
-		void selectMethodByClassNameMethodNameAndParameterTypesWithExplicitClassLoader() throws Exception {
+		void selectMethodByClassNameMethodNameAndParameterTypeNamesWithExplicitClassLoader() throws Exception {
 			var testClass = testClass();
 
 			try (var testClassLoader = TestClassLoader.forClasses(testClass)) {
@@ -730,8 +730,8 @@ class DiscoverySelectorsTests {
 				assertThat(clazz).isNotEqualTo(testClass);
 
 				var method = clazz.getDeclaredMethod("myTest", String.class, boolean[].class);
-				var selector = selectMethod(testClassLoader, testClass.getName(), "myTest", String.class,
-					boolean[].class);
+				var selector = selectMethod(testClassLoader, testClass.getName(), "myTest",
+					"java.lang.String, boolean[]");
 
 				assertThat(selector.getClassName()).isEqualTo(clazz.getName());
 				assertThat(selector.getJavaClass()).isEqualTo(clazz);
@@ -965,36 +965,6 @@ class DiscoverySelectorsTests {
 
 				assertThat(selector.getMethodName()).isEqualTo(methodName);
 				assertThat(selector.getParameterTypeNames()).isEqualTo(String.class.getName());
-			}
-		}
-
-		/**
-		 * @since 1.10
-		 */
-		@Test
-		void selectNestedMethodByEnclosingClassNamesMethodNameAndParameterTypesWithExplicitClassLoader()
-				throws Exception {
-
-			var enclosingClass = ClassWithNestedInnerClass.class;
-			var nestedClass = ClassWithNestedInnerClass.NestedClass.class;
-
-			try (var testClassLoader = TestClassLoader.forClasses(enclosingClass, nestedClass)) {
-				var selector = selectNestedMethod(testClassLoader, List.of(enclosingClassName), nestedClassName,
-					methodName, String.class);
-
-				assertThat(selector.getEnclosingClasses()).doesNotContain(enclosingClass);
-				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
-				assertThat(selector.getNestedClass()).isNotEqualTo(nestedClass);
-				assertThat(selector.getNestedClass().getName()).isEqualTo(nestedClassName);
-
-				assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
-				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
-					testClassLoader);
-				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
-
-				assertThat(selector.getMethodName()).isEqualTo(methodName);
-				assertThat(selector.getParameterTypes()).containsExactly(String.class);
-				assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String");
 			}
 		}
 
