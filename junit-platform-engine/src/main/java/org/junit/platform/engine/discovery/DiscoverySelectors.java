@@ -504,9 +504,7 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static MethodSelector selectMethod(ClassLoader classLoader, String className, String methodName) {
-		Preconditions.notBlank(className, "Class name must not be null or blank");
-		Preconditions.notBlank(methodName, "Method name must not be null or blank");
-		return new MethodSelector(classLoader, className, methodName, "");
+		return selectMethod(classLoader, className, methodName, "");
 	}
 
 	/**
