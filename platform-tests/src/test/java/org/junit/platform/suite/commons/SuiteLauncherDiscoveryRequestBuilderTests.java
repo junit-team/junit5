@@ -251,6 +251,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	@Test
 	void selectOneMethodWithNoParameters() {
+		@SuppressWarnings("unused")
 		class TestClass {
 			void testMethod() {
 			}
@@ -266,6 +267,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	@Test
 	void selectOneMethodWithOneParameters() {
+		@SuppressWarnings("unused")
 		class TestClass {
 			void testMethod(int i) {
 			}
@@ -281,6 +283,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	@Test
 	void selectTwoMethodWithTwoParameters() {
+		@SuppressWarnings("unused")
 		class TestClass {
 			void firstTestMethod(int i, String j) {
 			}
