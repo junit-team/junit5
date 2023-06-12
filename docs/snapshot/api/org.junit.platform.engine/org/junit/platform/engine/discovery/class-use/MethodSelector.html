@@ -119,49 +119,65 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> and method name.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.Class,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;javaClass,
+<div class="col-second even-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.Class,java.lang.String,java.lang.Class...)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;javaClass,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;parameterTypes)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>, method name,
+ and parameter types.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.Class,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;javaClass,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>, method name,
  and parameter type names.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.ClassLoader,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+<div class="col-first even-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.ClassLoader,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
  method name</em> and class loader.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.ClassLoader,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+<div class="col-first odd-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.ClassLoader,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
  and class loader.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.ClassLoader,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
+<div class="col-first even-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.ClassLoader,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link">ClassLoader</a>&nbsp;classLoader,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterTypeNames)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
  parameter type names, and class loader.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fullyQualifiedMethodName)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
  method name</em>.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+<div class="col-first even-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name and method name
  using the default class loader.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String,java.lang.Class...)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;parameterTypes)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
+ and parameter types.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">DiscoverySelectors.</span><code><a href="../DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">selectMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,

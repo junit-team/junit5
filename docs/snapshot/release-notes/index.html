@@ -574,8 +574,13 @@ relies on the new methods introduced in JUnit Platform 1.10 M1.</p>
 <p>New <code>@SelectMethod</code> selector support in the <code>@Suite</code> test engine.</p>
 </li>
 <li>
-<p>Classes may now be selected by fully-qualified name via new the <code>names</code> attribute in
+<p>Classes may now be selected by fully-qualified name via the <code>names</code> attribute in
 <code>@SelectClasses</code>.</p>
+</li>
+<li>
+<p>New <code>selectMethod()</code> and <code>selectNestedMethod()</code> variants in <code>DiscoverySelectors</code> that
+accept a <code>Class&lt;?&gt;&#8230;&#8203;</code> argument of parameter types as a type-safe alternative to
+providing the names of parameter types as a comma-delimited string.</p>
 </li>
 </ul>
 </div>
@@ -1261,7 +1266,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-06-07 09:08:12 UTC
+Last updated 2023-06-12 14:33:44 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

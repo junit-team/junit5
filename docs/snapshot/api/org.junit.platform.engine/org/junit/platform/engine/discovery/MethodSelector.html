@@ -99,9 +99,9 @@ implements <a href="../DiscoverySelector.html" title="interface in org.junit.pla
  <a href="#getJavaMethod()">method</a> and its method name, class name, and
  parameter types accordingly. If a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> and method name, a class name
  and method name, or a <em>fully qualified method name</em> is provided,
- this selector will only attempt to lazily load the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> or
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> if <a href="#getJavaClass()"><code>getJavaClass()</code></a> or <a href="#getJavaMethod()"><code>getJavaMethod()</code></a> is
- invoked.
+ this selector will only attempt to lazily load the class, method, or parameter
+ types if <a href="#getJavaClass()"><code>getJavaClass()</code></a>, <a href="#getJavaMethod()"><code>getJavaMethod()</code></a>, or
+ <a href="#getParameterTypes()"><code>getParameterTypes()</code></a> is invoked.
 
  <p>In this context, a Java <code>Method</code> means anything that can be referenced
  as a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> on the JVM &mdash; for example, methods from Java classes
@@ -178,12 +178,17 @@ implements <a href="../DiscoverySelector.html" title="interface in org.junit.pla
  typically a comma-separated list of primitive types, fully qualified class
  names, or array types.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getParameterTypes()" class="member-name-link">getParameterTypes</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the parameter types for the selected method.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -245,11 +250,16 @@ implements <a href="../DiscoverySelector.html" title="interface in org.junit.pla
  <p>See <a href="#getParameterTypeNames()"><code>getParameterTypeNames()</code></a> for details.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the names of parameter types supplied to this <code>MethodSelector</code>
- via a constructor or deduced from a <code>Method</code> or parameter types supplied
- via a constructor; never <code>null</code> but potentially an empty string</dd>
+<dd>the names of parameter types</dd>
 <dt>Since:</dt>
 <dd>1.0</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="#getParameterTypeNames()"><code>getParameterTypeNames()</code></a></li>
+<li><a href="#getParameterTypes()"><code>getParameterTypes()</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -270,10 +280,16 @@ implements <a href="../DiscoverySelector.html" title="interface in org.junit.pla
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the names of parameter types supplied to this <code>MethodSelector</code>
- via a constructor or deduced from a <code>Method</code> supplied via a constructor;
- never <code>null</code> but potentially an empty string</dd>
+ via a constructor or deduced from a <code>Method</code> or parameter types supplied
+ via a constructor; never <code>null</code> but potentially an empty string</dd>
 <dt>Since:</dt>
 <dd>1.10</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="#getParameterTypes()"><code>getParameterTypes()</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -310,6 +326,35 @@ implements <a href="../DiscoverySelector.html" title="interface in org.junit.pla
 <dd>
 <ul class="see-list">
 <li><a href="#getJavaClass()"><code>getJavaClass()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getParameterTypes()">
+<h3>getParameterTypes</h3>
+<div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.10")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;[]</span>&nbsp;<span class="element-name">getParameterTypes</span>()</div>
+<div class="block">Get the parameter types for the selected method.
+
+ <p>If the parameter types were not provided as <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> references
+ (or could not be deduced as <code>Class</code> references in the constructor),
+ this method attempts to lazily load the class reference for each parameter
+ type based on its name and throws a <a href="../../../../../../org.junit.platform.commons/org/junit/platform/commons/JUnitException.html" title="class in org.junit.platform.commons"><code>JUnitException</code></a> if the class
+ cannot be loaded.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the method's parameter types; never <code>null</code> but potentially
+ an empty array if the selected method does not declare parameters</dd>
+<dt>Since:</dt>
+<dd>1.10</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="#getParameterTypeNames()"><code>getParameterTypeNames()</code></a></li>
+<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html#getParameterTypes()" title="class or interface in java.lang.reflect" class="external-link"><code>Method.getParameterTypes()</code></a></li>
 </ul>
 </dd>
 </dl>
