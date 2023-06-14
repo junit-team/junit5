@@ -14,7 +14,7 @@ val projectDescription = objects.property<String>().convention(provider { projec
 // metadata into the jar
 tasks.withType<Jar>().matching { task: Jar ->
 	task.name == "jar" || task.name == "shadowJar"
-}.configureEach {
+}.all {
 	extra["importAPIGuardian"] = importAPIGuardian
 
 	extensions.create<BundleTaskExtension>(BundleTaskExtension.NAME, this).apply {
