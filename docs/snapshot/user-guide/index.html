@@ -8834,23 +8834,130 @@ transparently as in the following <code>RandomNumberDemo</code> example.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">class</span> <span class="nc">RandomNumberDemo</span> <span class="o">{</span>
 
-    <span class="c1">// use random number field in test methods and @BeforeEach</span>
-    <span class="c1">// or @AfterEach lifecycle methods</span>
+    <span class="c1">// Use static randomNumber0 field anywhere in the test class,</span>
+    <span class="c1">// including @BeforeAll or @AfterEach lifecycle methods.</span>
+    <span class="nd">@Random</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Integer</span> <span class="n">randomNumber0</span><span class="o">;</span>
+
+    <span class="c1">// Use randomNumber1 field in test methods and @BeforeEach</span>
+    <span class="c1">// or @AfterEach lifecycle methods.</span>
     <span class="nd">@Random</span>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">randomNumber1</span><span class="o">;</span>
 
     <span class="nc">RandomNumberDemo</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber2</span><span class="o">)</span> <span class="o">{</span>
-        <span class="c1">// use random number in constructor</span>
+        <span class="c1">// Use randomNumber2 in constructor</span>
     <span class="o">}</span>
 
     <span class="nd">@BeforeEach</span>
     <span class="kt">void</span> <span class="nf">beforeEach</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber3</span><span class="o">)</span> <span class="o">{</span>
-        <span class="c1">// use random number in @BeforeEach method</span>
+        <span class="c1">// Use randomNumber3 in @BeforeEach method.</span>
     <span class="o">}</span>
 
     <span class="nd">@Test</span>
     <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber4</span><span class="o">)</span> <span class="o">{</span>
-        <span class="c1">// use random number in test method</span>
+        <span class="c1">// Use randomNumber4 in test method.</span>
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div id="extensions-RandomNumberExtension" class="paragraph">
+<p>The following code listing provides an example of how one might choose to implement such a
+<code>RandomNumberExtension</code>. This implementation works for the use cases in
+<code>RandomNumberDemo</code>; however, it may not prove robust enough to cover all use cases – for
+example, the random number generation support is limited to integers, it uses
+<code>java.util.Random</code> instead of <code>java.security.SecureRandom</code>, etc. In any case, it is
+important to note which extension APIs are implemented and for what reasons.</p>
+</div>
+<div class="paragraph">
+<p>Specifically, <code>RandomNumberExtension</code> implements the following extension APIs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>BeforeAllCallback</code>: to support static field injection</p>
+</li>
+<li>
+<p><code>BeforeEachCallback</code>: to support non-static field injection</p>
+</li>
+<li>
+<p><code>ParameterResolver</code>: to support constructor and method injection</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">platform</span><span class="o">.</span><span class="na">commons</span><span class="o">.</span><span class="na">support</span><span class="o">.</span><span class="na">AnnotationSupport</span><span class="o">.</span><span class="na">findAnnotatedFields</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.lang.reflect.Field</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.function.Predicate</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.BeforeAllCallback</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.BeforeEachCallback</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.ExtensionContext</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.ParameterContext</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.ParameterResolver</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.platform.commons.support.ModifierSupport</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">RandomNumberExtension</span>
+        <span class="kd">implements</span> <span class="nc">BeforeAllCallback</span><span class="o">,</span> <span class="nc">BeforeEachCallback</span><span class="o">,</span> <span class="nc">ParameterResolver</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Random</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">());</span>
+
+    <span class="cm">/**
+     * Injects a random integer into static fields that are annotated with
+     * {@code @Random} and are of type {@code int} or {@link Integer}.
+     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">beforeAll</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">injectFields</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">getRequiredTestClass</span><span class="o">(),</span> <span class="kc">null</span><span class="o">,</span> <span class="nl">ModifierSupport:</span><span class="o">:</span><span class="n">isStatic</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * Injects a random integer into non-static fields that are annotated with
+     * {@code @Random} and are of type {@code int} or {@link Integer}.
+     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">beforeEach</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">injectFields</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">getRequiredTestClass</span><span class="o">(),</span> <span class="n">context</span><span class="o">.</span><span class="na">getRequiredTestInstance</span><span class="o">(),</span>
+            <span class="nl">ModifierSupport:</span><span class="o">:</span><span class="n">isNotStatic</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * Returns true if the parameter is annotated with {@code @Random} and is
+     * of type {@code int} or {@link Integer}.
+     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">supportsParameter</span><span class="o">(</span><span class="nc">ParameterContext</span> <span class="n">pc</span><span class="o">,</span> <span class="nc">ExtensionContext</span> <span class="n">ec</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">pc</span><span class="o">.</span><span class="na">isAnnotated</span><span class="o">(</span><span class="nc">Random</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">isInteger</span><span class="o">(</span><span class="n">pc</span><span class="o">.</span><span class="na">getParameter</span><span class="o">().</span><span class="na">getType</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * Returns a random integer.
+     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">resolveParameter</span><span class="o">(</span><span class="nc">ParameterContext</span> <span class="n">pc</span><span class="o">,</span> <span class="nc">ExtensionContext</span> <span class="n">ec</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">injectFields</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">testClass</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">testInstance</span><span class="o">,</span>
+            <span class="nc">Predicate</span><span class="o">&lt;</span><span class="nc">Field</span><span class="o">&gt;</span> <span class="n">predicate</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="n">predicate</span> <span class="o">=</span> <span class="n">predicate</span><span class="o">.</span><span class="na">and</span><span class="o">(</span><span class="n">field</span> <span class="o">-&gt;</span> <span class="n">isInteger</span><span class="o">(</span><span class="n">field</span><span class="o">.</span><span class="na">getType</span><span class="o">()));</span>
+        <span class="n">findAnnotatedFields</span><span class="o">(</span><span class="n">testClass</span><span class="o">,</span> <span class="nc">Random</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">predicate</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">field</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="n">field</span><span class="o">.</span><span class="na">setAccessible</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+                    <span class="n">field</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">testInstance</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">());</span>
+                <span class="o">}</span>
+                <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">ex</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">});</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isInteger</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">type</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">type</span> <span class="o">==</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">class</span> <span class="o">||</span> <span class="n">type</span> <span class="o">==</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
     <span class="o">}</span>
 
 <span class="o">}</span></code></pre>
@@ -12484,7 +12591,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-06-15 06:01:09 UTC
+Last updated 2023-06-16 14:53:45 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
