@@ -55,6 +55,9 @@ JUnit repository on GitHub.
 * Lifecycle and thread-safety semantics are now documented for the `TempDirFactory` SPI.
 * New `reason` attribute in `@Execution` which can be used to document the reason for
   using the selected execution mode.
+* The <<../user-guide/index.adoc#extensions-RandomNumberExtension, User Guide>> now
+  includes an example implementation of the `RandomNumberExtension` in order to improve
+  the documentation for extension registration via `@ExtendWith` on fields.
 
 
 [[release-notes-5.10.0-RC1-junit-vintage]]

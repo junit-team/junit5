@@ -115,6 +115,25 @@ include::{testDir}/example/extensions/Random.java[tags=user_guide]
 include::{testDir}/example/extensions/RandomNumberDemo.java[tags=user_guide]
 ----
 
+[[extensions-RandomNumberExtension]]
+The following code listing provides an example of how one might choose to implement such a
+`RandomNumberExtension`. This implementation works for the use cases in
+`RandomNumberDemo`; however, it may not prove robust enough to cover all use cases – for
+example, the random number generation support is limited to integers, it uses
+`java.util.Random` instead of `java.security.SecureRandom`, etc. In any case, it is
+important to note which extension APIs are implemented and for what reasons.
+
+Specifically, `RandomNumberExtension` implements the following extension APIs:
+
+- `BeforeAllCallback`: to support static field injection
+- `BeforeEachCallback`: to support non-static field injection
+- `ParameterResolver`: to support constructor and method injection
+
+[source,java,indent=0]
+----
+include::{testDir}/example/extensions/RandomNumberExtension.java[tags=user_guide]
+----
+
 [TIP]
 .Extension Registration Order for `@ExtendWith` on Fields
 ====

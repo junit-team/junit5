@@ -11,31 +11,34 @@
 package example.extensions;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled("RandomNumberExtension has not been implemented")
-//tag::user_guide[]
+// tag::user_guide[]
 class RandomNumberDemo {
 
-	// use random number field in test methods and @BeforeEach
-	// or @AfterEach lifecycle methods
+	// Use static randomNumber0 field anywhere in the test class,
+	// including @BeforeAll or @AfterEach lifecycle methods.
+	@Random
+	private static Integer randomNumber0;
+
+	// Use randomNumber1 field in test methods and @BeforeEach
+	// or @AfterEach lifecycle methods.
 	@Random
 	private int randomNumber1;
 
 	RandomNumberDemo(@Random int randomNumber2) {
-		// use random number in constructor
+		// Use randomNumber2 in constructor
 	}
 
 	@BeforeEach
 	void beforeEach(@Random int randomNumber3) {
-		// use random number in @BeforeEach method
+		// Use randomNumber3 in @BeforeEach method.
 	}
 
 	@Test
 	void test(@Random int randomNumber4) {
-		// use random number in test method
+		// Use randomNumber4 in test method.
 	}
 
 }
-//end::user_guide[]
+// end::user_guide[]
