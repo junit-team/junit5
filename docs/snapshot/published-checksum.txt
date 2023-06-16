@@ -261,6 +261,7 @@
 5298aaffeab1d1e90b5e78d9fccba9f8  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java
 52fb193117bc1fc6266f079dfa02e4ba  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/TypedArgumentConverter.java
 5500f094801ec232a7cf41d07c953090  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoveryFilter.java
+552b58b91afc3e09102321f62a1c929f  junit-platform-commons/src/main/java/org/junit/platform/commons/util/AnnotationUtils.java
 5580b0319afc32aa8f917d1830f14e78  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/EventType.java
 55f90ca686cf4a9ac3e3aa229c232e10  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/package-info.java
 56ae90b958a7f4690c5f4a1546a7f60f  junit-platform-launcher/src/main/java/org/junit/platform/launcher/PostDiscoveryFilter.java
@@ -502,7 +503,6 @@
 9c6cb1ad834a8dcc0582c35b632e8364  documentation/src/test/java/example/timing/TimingExtension.java
 9d08dc3847d482b94960a9cbf9e2b2ec  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TagExpression.java
 9db24367202c0abf63cbbeb18a57bdce  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.java
-9de276a6eec74c1aa9ef83e2dbff71a7  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
 9ecd468317cda5363fae92f3e2c7394f  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/ExecutionRecorder.java
 9f538e48b80697983ce992caaf044135  junit-platform-engine/src/main/java/org/junit/platform/engine/TestEngine.java
 9fb728afae734e88ec82b4a1270b7c15  junit-platform-engine/src/main/java/org/junit/platform/engine/TestSource.java
@@ -587,7 +587,6 @@ b90fbaffccf58877535683fbe5bd1adf  junit-jupiter-params/src/main/java/org/junit/j
 b91350f7d9171a6b88af07074c5defd4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.java
 b94c6ef55ec127dd296fc7ef3e6f9245  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/StringToEnumConverter.java
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
-ba58c58c4d3ea0079f2352c667943223  junit-platform-commons/src/main/java/org/junit/platform/commons/util/AnnotationUtils.java
 baceac6be671d3ef20c08cd549e9f6c0  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassUtils.java
 bb0963d944eef8876d99205539e32fb0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/InvocationInterceptor.java
 bb8b04bc6e974d6c4cd95638b30b1c52  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTrue.java
@@ -697,6 +696,7 @@ d6d5f016102d467aa41b71d811c2ccc6  junit-jupiter-api/src/main/java/org/junit/jupi
 d785877ba2d0cb2e3dd61b6635cb064c  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ExcludePackageNameFilter.java
 d799f00ddd68b4c5c6454163db5dbe02  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectMethods.java
 d7be8cbfa88f1d6ee195d5fbabbd1b14  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/package-info.java
+d7e78423df2ae72ab05553af6be94a74  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
 d85367c63dfe803dd3072b0a856a4933  junit-platform-reporting/src/main/java/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.java
 d8bd8a82228a73deaf1be8317da6e6e5  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdStringifier.java
 d8de75eb134ac62780487423cf8f837e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodSourceSupport.java
