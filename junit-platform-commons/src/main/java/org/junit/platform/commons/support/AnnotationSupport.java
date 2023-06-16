@@ -285,7 +285,36 @@ public final class AnnotationSupport {
 	 */
 	@API(status = MAINTAINED, since = "1.4")
 	public static List<Field> findAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType) {
-		return AnnotationUtils.findAnnotatedFields(clazz, annotationType, field -> true);
+		return findAnnotatedFields(clazz, annotationType, field -> true);
+	}
+
+	/**
+	 * Find all {@linkplain Field fields} of the supplied class or interface
+	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * {@code annotationType} and match the specified {@code predicate}, using
+	 * top-down search semantics within the type hierarchy.
+	 *
+	 * <p>Fields declared in the same class or interface will be ordered using
+	 * an algorithm that is deterministic but intentionally nonobvious.
+	 *
+	 * <p>The results will not contain fields that are <em>hidden</em> or
+	 * {@linkplain Field#isSynthetic() synthetic}.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @param predicate the field filter; never {@code null}
+	 * @return the list of all such fields found; neither {@code null} nor mutable
+	 * @since 1.10
+	 * @see Class#getDeclaredFields()
+	 * @see #findPublicAnnotatedFields(Class, Class, Class)
+	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
+	 */
+	@API(status = MAINTAINED, since = "1.10")
+	public static List<Field> findAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType,
+			Predicate<Field> predicate) {
+		return AnnotationUtils.findAnnotatedFields(clazz, annotationType, predicate);
 	}
 
 	/**

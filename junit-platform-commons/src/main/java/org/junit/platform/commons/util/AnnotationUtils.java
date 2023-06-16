@@ -455,11 +455,7 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that are annotated or <em>meta-annotated</em> with the specified
-	 * {@code annotationType} and match the specified {@code predicate}, using
-	 * top-down search semantics within the type hierarchy.
-	 *
+	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotatedFields(Class, Class, Predicate)
 	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
 	 */
 	public static List<Field> findAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType,
