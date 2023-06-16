@@ -306,7 +306,6 @@
 60d600e4fde4a10f315519034c93773c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestMethodContext.java
 60f9a3c165d082a8237a4110c0718b3f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicTestTestDescriptor.java
 613eaa24024c4e7f237748b0402872af  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueIdFormat.java
-61944ff3c740c8204f193195105687ab  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 6201c245a49230dec804ee8a4341ad6b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TagExpressions.java
 620f660c0178f8c93125cdf2705713ae  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tags.java
 621be07d12c13d1af862e238a3113f3b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.java
@@ -455,6 +454,7 @@
 8e8c9ec287e466507d377a1e21c6da05  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/MutableExtensionRegistry.java
 8f357407fbea6d14e5d5bfc06cd2ba91  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.java
 8f3fd10378f55fad8e1375dc0d5036a0  documentation/src/main/java/example/registration/WebClient.java
+8fd8ad2e0c863f13e264f6b909cc853a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 9002dc21147446ec59101940ddbe67d0  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 90936ae0be0ae3df839198479b7a22b1  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClassSource.java
 9227d67fd9ae55b98df0fc0b368bdc57  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicContainer.java
