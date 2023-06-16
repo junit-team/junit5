@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionTestUtils.assertExpectedAndActualValues;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
+import static org.junit.jupiter.api.AssertionTestUtils.assertMessageMatches;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -79,6 +80,20 @@ class AssertSameAssertionsTests {
 			assertMessageContains(ex, "expected: <java.lang.Object@");
 			assertMessageContains(ex, "but was: <java.lang.Object@");
 			assertExpectedAndActualValues(ex, expected, actual);
+		}
+	}
+
+	@Test
+	void assertSameWithEqualPrimitivesAutoboxedToDifferentWrappers() {
+		try {
+			int i = 999;
+			assertSame(i, i);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageMatches(ex,
+				"expected: java\\.lang\\.Integer@.+?<999> but was: java\\.lang\\.Integer@.+?<999>");
+			assertExpectedAndActualValues(ex, 999, 999);
 		}
 	}
 

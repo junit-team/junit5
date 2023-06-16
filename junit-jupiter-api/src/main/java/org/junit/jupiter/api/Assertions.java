@@ -2845,14 +2845,24 @@ public class Assertions {
 	// --- assertSame ----------------------------------------------------------
 
 	/**
-	 * <em>Assert</em> that {@code expected} and {@code actual} refer to the same object.
+	 * <em>Assert</em> that the {@code expected} object and the {@code actual} object
+	 * are the same object.
+	 * <p>This method should only be used to assert <em>identity</em> between objects.
+	 * To assert <em>equality</em> between two objects or two primitive values,
+	 * use one of the {@code assertEquals(...)} methods instead &mdash; for example,
+	 * use {@code assertEquals(999, 999)} instead of {@code assertSame(999, 999)}.
 	 */
 	public static void assertSame(Object expected, Object actual) {
 		AssertSame.assertSame(expected, actual);
 	}
 
 	/**
-	 * <em>Assert</em> that {@code expected} and {@code actual} refer to the same object.
+	 * <em>Assert</em> that the {@code expected} object and the {@code actual} object
+	 * are the same object.
+	 * <p>This method should only be used to assert <em>identity</em> between objects.
+	 * To assert <em>equality</em> between two objects or two primitive values,
+	 * use one of the {@code assertEquals(...)} methods instead &mdash; for example,
+	 * use {@code assertEquals(999, 999)} instead of {@code assertSame(999, 999)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertSame(Object expected, Object actual, String message) {
@@ -2860,8 +2870,14 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Assert</em> that {@code expected} and {@code actual} refer to the same object.
-	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 * <em>Assert</em> that the {@code expected} object and the {@code actual} object
+	 * are the same object.
+	 * <p>This method should only be used to assert <em>identity</em> between objects.
+	 * To assert <em>equality</em> between two objects or two primitive values,
+	 * use one of the {@code assertEquals(...)} methods instead &mdash; for example,
+	 * use {@code assertEquals(999, 999)} instead of {@code assertSame(999, 999)}.
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied
+	 * {@code messageSupplier}.
 	 */
 	public static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {
 		AssertSame.assertSame(expected, actual, messageSupplier);
@@ -2870,14 +2886,22 @@ public class Assertions {
 	// --- assertNotSame -------------------------------------------------------
 
 	/**
-	 * <em>Assert</em> that {@code expected} and {@code actual} do not refer to the same object.
+	 * <em>Assert</em> that the {@code unexpected} object and the {@code actual}
+	 * object are not the same object.
+	 * <p>This method should only be used to compare the <em>identity</em> of two
+	 * objects. To assert that two objects or two primitive values are not
+	 * <em>equal</em>, use one of the {@code assertNotEquals(...)} methods instead.
 	 */
 	public static void assertNotSame(Object unexpected, Object actual) {
 		AssertNotSame.assertNotSame(unexpected, actual);
 	}
 
 	/**
-	 * <em>Assert</em> that {@code expected} and {@code actual} do not refer to the same object.
+	 * <em>Assert</em> that the {@code unexpected} object and the {@code actual}
+	 * object are not the same object.
+	 * <p>This method should only be used to compare the <em>identity</em> of two
+	 * objects. To assert that two objects or two primitive values are not
+	 * <em>equal</em>, use one of the {@code assertNotEquals(...)} methods instead.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertNotSame(Object unexpected, Object actual, String message) {
@@ -2885,8 +2909,13 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Assert</em> that {@code expected} and {@code actual} do not refer to the same object.
-	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 * <em>Assert</em> that the {@code unexpected} object and the {@code actual}
+	 * object are not the same object.
+	 * <p>This method should only be used to compare the <em>identity</em> of two
+	 * objects. To assert that two objects or two primitive values are not
+	 * <em>equal</em>, use one of the {@code assertNotEquals(...)} methods instead.
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied
+	 * {@code messageSupplier}.
 	 */
 	public static void assertNotSame(Object unexpected, Object actual, Supplier<String> messageSupplier) {
 		AssertNotSame.assertNotSame(unexpected, actual, messageSupplier);
