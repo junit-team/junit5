@@ -68,7 +68,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	void testWatcherIsInvokedForTestMethodsInTopLevelAndNestedTestClasses() {
 		assertCommonStatistics(executeTestsForClass(TrackingTestWatcherTestMethodsTestCase.class));
 		assertThat(TrackingTestWatcher.results.keySet()).containsAll(testWatcherMethodNames);
-		TrackingTestWatcher.results.values().forEach(uidList -> assertEquals(2, uidList.size()));
+		TrackingTestWatcher.results.values().forEach(testMethodNames -> assertEquals(2, testMethodNames.size()));
 	}
 
 	@Test
@@ -80,12 +80,11 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		results.testEvents().assertStatistics(
 			stats -> stats.dynamicallyRegistered(6).skipped(0).started(6).succeeded(2).aborted(2).failed(2));
 
-		ArrayList<String> expectedMethods = new ArrayList<>(testWatcherMethodNames);
 		// Since the @RepeatedTest container is disabled, the individual invocations never occur.
-		assertThat(TrackingTestWatcher.results.keySet()).containsAll(expectedMethods);
+		assertThat(TrackingTestWatcher.results.keySet()).containsAll(testWatcherMethodNames);
 		// 2 => number of iterations declared in @RepeatedTest(2).
-		TrackingTestWatcher.results.forEach(
-			(methodName, uidList) -> assertEquals("testDisabled".endsWith(methodName) ? 1 : 2, uidList.size()));
+		TrackingTestWatcher.results.forEach((testWatcherMethod, testMethodNames) -> assertEquals(
+			"testDisabled".equals(testWatcherMethod) ? 1 : 2, testMethodNames.size()));
 	}
 
 	@Test
@@ -109,8 +108,9 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		// @formatter:off
 		long exceptionCount = logRecordListener.stream(MethodBasedTestDescriptor.class, Level.WARNING)
 				.map(LogRecord::getThrown)
-				.filter(throwable -> throwable instanceof JUnitException)
-				.filter(throwable -> testWatcherMethodNames.contains(throwable.getStackTrace()[0].getMethodName()))
+				.filter(JUnitException.class::isInstance)
+				.map(throwable -> throwable.getStackTrace()[0].getMethodName())
+				.filter(testWatcherMethodNames::contains)
 				.count();
 		// @formatter:on
 
@@ -118,7 +118,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void testWatcherInvokedForTestMethodsInTestCaseWithProblematicConstructor() {
+	void testWatcherIsInvokedForTestMethodsInTestCaseWithProblematicConstructor() {
 		EngineExecutionResults results = executeTestsForClass(ProblematicConstructorTestCase.class);
 		results.testEvents().assertStatistics(stats -> stats.skipped(0).started(8).succeeded(0).aborted(0).failed(8));
 		assertThat(TrackingTestWatcher.results.keySet()).containsExactly("testFailed");
@@ -257,26 +257,27 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void testSuccessful(ExtensionContext context) {
-			trackResult("testSuccessful", context.getUniqueId());
+			trackResult("testSuccessful", context);
 		}
 
 		@Override
 		public void testAborted(ExtensionContext context, Throwable cause) {
-			trackResult("testAborted", context.getUniqueId());
+			trackResult("testAborted", context);
 		}
 
 		@Override
 		public void testFailed(ExtensionContext context, Throwable cause) {
-			trackResult("testFailed", context.getUniqueId());
+			trackResult("testFailed", context);
 		}
 
 		@Override
 		public void testDisabled(ExtensionContext context, Optional<String> reason) {
-			trackResult("testDisabled", context.getUniqueId());
+			trackResult("testDisabled", context);
 		}
 
-		protected void trackResult(String status, String uid) {
-			results.computeIfAbsent(status, k -> new ArrayList<>()).add(uid);
+		protected void trackResult(String testWatcherMethod, ExtensionContext context) {
+			String testMethod = context.getRequiredTestMethod().getName();
+			results.computeIfAbsent(testWatcherMethod, k -> new ArrayList<>()).add(testMethod);
 		}
 
 	}
