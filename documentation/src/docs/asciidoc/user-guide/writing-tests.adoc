@@ -592,8 +592,7 @@ deterministic but intentionally nonobvious. This ensures that subsequent runs of
 suite execute test classes and test methods in the same order, thereby allowing for
 repeatable builds.
 
-NOTE: See <<writing-tests-classes-and-methods>> for a definition of _test method_ and
-_test class_.
+NOTE: See <<writing-tests-definitions>> for a definition of _test method_ and _test class_.
 
 [[writing-tests-test-execution-order-methods]]
 ==== Method Order
@@ -728,8 +727,8 @@ include::{testDir}/example/OrderedNestedTestClassesDemo.java[tags=user_guide]
 In order to allow individual test methods to be executed in isolation and to avoid
 unexpected side effects due to mutable test instance state, JUnit creates a new instance
 of each test class before executing each _test method_ (see
-<<writing-tests-classes-and-methods>>). This "per-method" test instance lifecycle is the
-default behavior in JUnit Jupiter and is analogous to all previous versions of JUnit.
+<<writing-tests-definitions>>). This "per-method" test instance lifecycle is the default
+behavior in JUnit Jupiter and is analogous to all previous versions of JUnit.
 
 NOTE: Please note that the test class will still be instantiated if a given _test method_
 is _disabled_ via a <<writing-tests-conditional-execution,condition>> (e.g., `@Disabled`,
@@ -840,8 +839,8 @@ constructors and methods.
 
 `{ParameterResolver}` defines the API for test extensions that wish to _dynamically_
 resolve parameters at runtime. If a _test class_ constructor, a _test method_, or a
-_lifecycle method_ (see <<writing-tests-classes-and-methods>>) accepts a parameter, the
-parameter must be resolved at runtime by a registered `ParameterResolver`.
+_lifecycle method_ (see <<writing-tests-definitions>>) accepts a parameter, the parameter
+must be resolved at runtime by a registered `ParameterResolver`.
 
 There are currently three built-in resolvers that are registered automatically.
 

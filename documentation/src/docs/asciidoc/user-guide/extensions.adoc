@@ -405,11 +405,11 @@ test instance, invoking custom de-initialization methods on the test instance, e
 runtime.
 
 If a _test class_ constructor, _test method_, or _lifecycle method_ (see
-<<writing-tests-classes-and-methods>>) declares a parameter, the parameter must be
-_resolved_ at runtime by a `ParameterResolver`. A `ParameterResolver` can either be
-built-in (see `{TestInfoParameterResolver}`) or <<extensions-registration,registered by
-the user>>. Generally speaking, parameters may be resolved by _name_, _type_,
-_annotation_, or any combination thereof.
+<<writing-tests-definitions>>) declares a parameter, the parameter must be _resolved_ at
+runtime by a `ParameterResolver`. A `ParameterResolver` can either be built-in (see
+`{TestInfoParameterResolver}`) or <<extensions-registration,registered by the user>>.
+Generally speaking, parameters may be resolved by _name_, _type_, _annotation_, or any
+combination thereof.
 
 If you wish to implement a custom `{ParameterResolver}` that resolves parameters based
 solely on the type of the parameter, you may find it convenient to extend the
@@ -455,8 +455,8 @@ information for the following events.
 * `testFailed`: invoked after a _test method_ has failed
 
 NOTE: In contrast to the definition of "test method" presented in
-<<writing-tests-classes-and-methods>>, in this context _test method_ refers to any `@Test`
-method or `@TestTemplate` method (for example, a `@RepeatedTest` or `@ParameterizedTest`).
+<<writing-tests-definitions>>, in this context _test method_ refers to any `@Test` method
+or `@TestTemplate` method (for example, a `@RepeatedTest` or `@ParameterizedTest`).
 
 Extensions implementing this interface can be registered at the class level, instance
 level, or method level. When registered at the class level, a `TestWatcher` will be
@@ -840,7 +840,7 @@ callbacks implemented by `Extension2`. `Extension1` is therefore said to _wrap_
 `Extension2`.
 
 JUnit Jupiter also guarantees _wrapping_ behavior within class and interface hierarchies
-for user-supplied _lifecycle methods_ (see <<writing-tests-classes-and-methods>>).
+for user-supplied _lifecycle methods_ (see <<writing-tests-definitions>>).
 
 * `@BeforeAll` methods are inherited from superclasses as long as they are not _hidden_,
   _overridden_, or _superseded_ (i.e., replaced based on signature only, irrespective of
@@ -988,7 +988,6 @@ image::extensions_BrokenLifecycleMethodConfigDemo.png[caption='',title='BrokenLi
 [TIP]
 ====
 Due to the aforementioned behavior, the JUnit Team recommends that developers declare at
-most one of each type of _lifecycle method_ (see <<writing-tests-classes-and-methods>>)
-per test class or test interface unless there are no dependencies between such lifecycle
-methods.
+most one of each type of _lifecycle method_ (see <<writing-tests-definitions>>) per test
+class or test interface unless there are no dependencies between such lifecycle methods.
 ====
