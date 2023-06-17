@@ -18,42 +18,43 @@ import java.lang.reflect.Field;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.platform.commons.support.ModifierSupport;
 
 // end::user_guide[]
 // @formatter:off
 // tag::user_guide[]
 class RandomNumberExtension
-		implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
+		implements BeforeAllCallback, TestInstancePostProcessor, ParameterResolver {
 
 	private final java.util.Random random = new java.util.Random(System.nanoTime());
 
 	/**
-	 * Injects a random integer into static fields that are annotated with
-	 * {@code @Random} and are of type {@code int} or {@link Integer}.
+	 * Inject a random integer into static fields that are annotated with
+	 * {@code @Random} and can be assigned an integer value.
 	 */
 	@Override
 	public void beforeAll(ExtensionContext context) {
-		injectFields(context.getRequiredTestClass(), null, ModifierSupport::isStatic);
+		Class<?> testClass = context.getRequiredTestClass();
+		injectFields(testClass, null, ModifierSupport::isStatic);
 	}
 
 	/**
-	 * Injects a random integer into non-static fields that are annotated with
-	 * {@code @Random} and are of type {@code int} or {@link Integer}.
+	 * Inject a random integer into non-static fields that are annotated with
+	 * {@code @Random} and can be assigned an integer value.
 	 */
 	@Override
-	public void beforeEach(ExtensionContext context) {
-		injectFields(context.getRequiredTestClass(), context.getRequiredTestInstance(),
-			ModifierSupport::isNotStatic);
+	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+		Class<?> testClass = context.getRequiredTestClass();
+		injectFields(testClass, testInstance, ModifierSupport::isNotStatic);
 	}
 
 	/**
-	 * Returns true if the parameter is annotated with {@code @Random} and is
-	 * of type {@code int} or {@link Integer}.
+	 * Determine if the parameter is annotated with {@code @Random} and can be
+	 * assigned an integer value.
 	 */
 	@Override
 	public boolean supportsParameter(ParameterContext pc, ExtensionContext ec) {
@@ -61,10 +62,10 @@ class RandomNumberExtension
 	}
 
 	/**
-	 * Returns a random integer.
+	 * Resolve a random integer.
 	 */
 	@Override
-	public Object resolveParameter(ParameterContext pc, ExtensionContext ec) {
+	public Integer resolveParameter(ParameterContext pc, ExtensionContext ec) {
 		return this.random.nextInt();
 	}
 
@@ -85,7 +86,7 @@ class RandomNumberExtension
 	}
 
 	private static boolean isInteger(Class<?> type) {
-		return type == Integer.class || type == int.class;
+		return int.class.isAssignableFrom(type);
 	}
 
 }

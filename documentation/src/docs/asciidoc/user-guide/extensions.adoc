@@ -126,7 +126,7 @@ important to note which extension APIs are implemented and for what reasons.
 Specifically, `RandomNumberExtension` implements the following extension APIs:
 
 - `BeforeAllCallback`: to support static field injection
-- `BeforeEachCallback`: to support non-static field injection
+- `TestInstancePostProcessor`: to support non-static field injection
 - `ParameterResolver`: to support constructor and method injection
 
 [source,java,indent=0]
