@@ -31,9 +31,29 @@ import org.apiguardian.api.API;
  * {@link org.junit.jupiter.api.TestTemplate @TestTemplate} methods (e.g.,
  * {@code @RepeatedTest} and {@code @ParameterizedTest}). Moreover, if there is a
  * failure at the class level &mdash; for example, an exception thrown by a
- * {@code @BeforeAll} method &mdash; no test results will be reported.
+ * {@code @BeforeAll} method &mdash; no test results will be reported. Similarly,
+ * if the test class is disabled via an {@link ExecutionCondition} &mdash; for
+ * example, {@code @Disabled} &mdash; no test results will be reported.
  *
- * <p>Extensions implementing this API can be registered at any level.
+ * <p>Extensions implementing this interface can be registered at the class level,
+ * instance level, or method level. When registered at the class level, a
+ * {@code TestWatcher} will be invoked for any contained test method including
+ * those in {@link org.junit.jupiter.api.Nested @Nested} classes. When registered
+ * at the method level, a {@code TestWatcher} will only be invoked for the test
+ * method for which it was registered.
+ *
+ * <p><strong>WARNING</strong>: If a {@code TestWatcher} is registered via a
+ * non-static (instance) field &mdash; for example, using
+ * {@link RegisterExtension @RegisterExtension} &mdash; and the test class is
+ * configured with
+ * {@link org.junit.jupiter.api.TestInstance @TestInstance(Lifecycle.PER_METHOD)}
+ * semantics (which is the default lifecycle mode), the {@code TestWatcher} will
+ * <strong>not</strong> be invoked with events for {@code @TestTemplate} methods
+ * (such as {@code @RepeatedTest} and {@code @ParameterizedTest}). To ensure that
+ * a {@code TestWatcher} is invoked for all test methods in a given class, it is
+ * therefore recommended that the {@code TestWatcher} be registered at the class
+ * level with {@link ExtendWith @ExtendWith} or via a {@code static} field with
+ * {@code @RegisterExtension} or {@code @ExtendWith}.
  *
  * <h2>Exception Handling</h2>
  *

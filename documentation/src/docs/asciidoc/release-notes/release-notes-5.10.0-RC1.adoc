@@ -58,6 +58,8 @@ JUnit repository on GitHub.
 * The <<../user-guide/index.adoc#extensions-RandomNumberExtension, User Guide>> now
   includes an example implementation of the `RandomNumberExtension` in order to improve
   the documentation for extension registration via `@ExtendWith` on fields.
+* The scope of applicability for `TestWatcher` implementations is now more extensively
+  documented in the User Guide and Javadoc.
 
 
 [[release-notes-5.10.0-RC1-junit-vintage]]

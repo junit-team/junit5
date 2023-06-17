@@ -458,9 +458,34 @@ NOTE: In contrast to the definition of "test method" presented in
 <<writing-tests-classes-and-methods>>, in this context _test method_ refers to any `@Test`
 method or `@TestTemplate` method (for example, a `@RepeatedTest` or `@ParameterizedTest`).
 
-Extensions implementing this interface can be registered at the method level or at the
-class level. In the latter case they will be invoked for any contained _test method_
-including those in `@Nested` classes.
+Extensions implementing this interface can be registered at the class level, instance
+level, or method level. When registered at the class level, a `TestWatcher` will be
+invoked for any contained _test method_ including those in `@Nested` classes. When
+registered at the method level, a `TestWatcher` will only be invoked for the _test method_
+for which it was registered.
+
+[WARNING]
+====
+If a `TestWatcher` is registered via a non-static (instance) field – for example, using
+`@RegisterExtension` – and the test class is configured with
+`@TestInstance(Lifecycle.PER_METHOD)` semantics (which is the default lifecycle mode), the
+`TestWatcher` will **not** be invoked with events for `@TestTemplate` methods (for
+example, `@RepeatedTest` or `@ParameterizedTest`).
+
+To ensure that a `TestWatcher` is invoked for all _test methods_ in a given class, it is
+therefore recommended that the `TestWatcher` be registered at the class level with
+`@ExtendWith` or via a `static` field with `@RegisterExtension` or `@ExtendWith`.
+====
+
+If there is a failure at the class level — for example, an exception thrown by a
+`@BeforeAll` method — no test results will be reported. Similarly, if the test class is
+disabled via an `ExecutionCondition` — for example, `@Disabled` — no test results will be
+reported.
+
+In contrast to other Extension APIs, a `TestWatcher` is not permitted to adversely
+influence the execution of tests. Consequently, any exception thrown by a method in the
+`TestWatcher` API will be logged at `WARNING` level and will not be allowed to propagate
+or fail test execution.
 
 [WARNING]
 ====

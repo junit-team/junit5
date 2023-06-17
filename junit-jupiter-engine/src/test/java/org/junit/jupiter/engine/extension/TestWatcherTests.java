@@ -33,12 +33,18 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -125,9 +131,58 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		assertThat(TrackingTestWatcher.results.get("testFailed")).hasSize(8);
 	}
 
+	@Test
+	void testWatcherSemanticsWhenRegisteredAtClassLevel() {
+		Class<?> testClass = ClassLevelTestWatcherTestCase.class;
+		assertStatsForAbstractDisabledMethodsTestCase(testClass);
+
+		// We get "testDisabled" events for the @Test method and the @RepeatedTest container.
+		assertThat(TrackingTestWatcher.results.get("testDisabled")).containsExactly("test", "repeatedTest");
+	}
+
+	@Test
+	void testWatcherSemanticsWhenRegisteredAtInstanceLevelWithTestInstanceLifecyclePerClass() {
+		Class<?> testClass = TestInstancePerClassInstanceLevelTestWatcherTestCase.class;
+		assertStatsForAbstractDisabledMethodsTestCase(testClass);
+
+		// We get "testDisabled" events for the @Test method and the @RepeatedTest container.
+		assertThat(TrackingTestWatcher.results.get("testDisabled")).containsExactly("test", "repeatedTest");
+	}
+
+	@Test
+	void testWatcherSemanticsWhenRegisteredAtInstanceLevelWithTestInstanceLifecyclePerMethod() {
+		Class<?> testClass = TestInstancePerMethodInstanceLevelTestWatcherTestCase.class;
+		assertStatsForAbstractDisabledMethodsTestCase(testClass);
+
+		// Since the TestWatcher is registered at the instance level with test instance
+		// lifecycle per-method semantics, we get a "testDisabled" event only for the @Test
+		// method and NOT for the @RepeatedTest container.
+		assertThat(TrackingTestWatcher.results.get("testDisabled")).containsExactly("test");
+	}
+
+	@Test
+	void testWatcherSemanticsWhenRegisteredAtMethodLevel() {
+		Class<?> testClass = MethodLevelTestWatcherTestCase.class;
+		assertStatsForAbstractDisabledMethodsTestCase(testClass);
+
+		// We get "testDisabled" events for the @Test method and the @RepeatedTest container.
+		assertThat(TrackingTestWatcher.results.get("testDisabled")).containsExactly("test", "repeatedTest");
+	}
+
 	private void assertCommonStatistics(EngineExecutionResults results) {
 		results.containerEvents().assertStatistics(stats -> stats.started(3).succeeded(3).failed(0));
 		results.testEvents().assertStatistics(stats -> stats.skipped(2).started(6).succeeded(2).aborted(2).failed(2));
+	}
+
+	private void assertStatsForAbstractDisabledMethodsTestCase(Class<?> testClass) {
+		EngineExecutionResults results = executeTestsForClass(testClass);
+
+		results.containerEvents().assertStatistics(//
+			stats -> stats.skipped(1).started(2).succeeded(2).aborted(0).failed(0));
+		results.testEvents().assertStatistics(//
+			stats -> stats.skipped(1).started(0).succeeded(0).aborted(0).failed(0));
+
+		assertThat(TrackingTestWatcher.results.keySet()).containsExactly("testDisabled");
 	}
 
 	// -------------------------------------------------------------------------
@@ -248,6 +303,61 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	@ExtendWith(TrackingTestWatcher.class)
 	static class ProblematicConstructorTestCase extends AbstractTestCase {
 		ProblematicConstructorTestCase(Object ignore) {
+		}
+	}
+
+	@TestMethodOrder(OrderAnnotation.class)
+	private static abstract class AbstractDisabledMethodsTestCase {
+
+		@Disabled
+		@Test
+		@Order(1)
+		void test() {
+		}
+
+		@Disabled
+		@RepeatedTest(2)
+		@Order(2)
+		void repeatedTest() {
+		}
+	}
+
+	static class ClassLevelTestWatcherTestCase extends AbstractDisabledMethodsTestCase {
+
+		@RegisterExtension
+		static TestWatcher watcher = new TrackingTestWatcher();
+	}
+
+	@TestInstance(Lifecycle.PER_CLASS)
+	static class TestInstancePerClassInstanceLevelTestWatcherTestCase extends AbstractDisabledMethodsTestCase {
+
+		@RegisterExtension
+		TestWatcher watcher = new TrackingTestWatcher();
+	}
+
+	@TestInstance(Lifecycle.PER_METHOD)
+	static class TestInstancePerMethodInstanceLevelTestWatcherTestCase extends AbstractDisabledMethodsTestCase {
+
+		@RegisterExtension
+		TestWatcher watcher = new TrackingTestWatcher();
+	}
+
+	static class MethodLevelTestWatcherTestCase extends AbstractDisabledMethodsTestCase {
+
+		@Override
+		@Disabled
+		@Test
+		@Order(1)
+		@ExtendWith(TrackingTestWatcher.class)
+		void test() {
+		}
+
+		@Override
+		@Disabled
+		@RepeatedTest(1)
+		@Order(2)
+		@ExtendWith(TrackingTestWatcher.class)
+		void repeatedTest() {
 		}
 	}
 
