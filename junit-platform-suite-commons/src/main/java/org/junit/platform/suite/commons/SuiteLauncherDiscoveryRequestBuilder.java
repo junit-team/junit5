@@ -38,6 +38,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.launcher.EngineFilter;
@@ -155,7 +156,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 				.ifPresent(this::selectors);
 		findRepeatableAnnotations(suiteClass, SelectMethod.class)
 				.stream()
-				.map(annotation -> selectMethod(annotation.clazz(), annotation.name(), annotation.parameters()))
+				.map(annotation -> selectMethod(suiteClass, annotation))
 				.forEach(this::selectors);
 		findAnnotationValues(suiteClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
@@ -226,9 +227,68 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		);
 	}
 
-	private MethodSelector selectMethod(Class<?> clazz, String name, String parameters) {
-		selectedClassNames.add(clazz.getName());
-		return AdditionalDiscoverySelectors.selectMethod(clazz, name, parameters);
+	private MethodSelector selectMethod(Class<?> suiteClass, SelectMethod annotation) {
+		MethodSelector methodSelector = toMethodSelector(suiteClass, annotation);
+		selectedClassNames.add(methodSelector.getClassName());
+		return methodSelector;
+	}
+
+	private MethodSelector toMethodSelector(Class<?> suiteClass, SelectMethod annotation) {
+		if (!annotation.value().isEmpty()) {
+			Preconditions.condition(annotation.type() == Class.class,
+				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+					"type must not be set in conjunction with fully qualified method name"));
+			Preconditions.condition(annotation.typeName().isEmpty(),
+				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+					"type name must not be set in conjunction with fully qualified method name"));
+			Preconditions.condition(annotation.name().isEmpty(),
+				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+					"method name must not be set in conjunction with fully qualified method name"));
+			Preconditions.condition(annotation.parameterTypes().length == 0,
+				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+					"parameter types must not be set in conjunction with fully qualified method name"));
+			Preconditions.condition(annotation.parameterTypeNames().isEmpty(),
+				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+					"parameter type names must not be set in conjunction with fully qualified method name"));
+
+			return DiscoverySelectors.selectMethod(annotation.value());
+		}
+
+		Class<?> type = annotation.type() == Class.class ? null : annotation.type();
+		String typeName = annotation.typeName().isEmpty() ? null : annotation.typeName().trim();
+		String methodName = Preconditions.notBlank(annotation.name(),
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass, "method name must not be blank"));
+		Class<?>[] parameterTypes = annotation.parameterTypes().length == 0 ? null : annotation.parameterTypes();
+		String parameterTypeNames = annotation.parameterTypeNames().trim();
+		if (parameterTypes != null) {
+			Preconditions.condition(parameterTypeNames.isEmpty(),
+				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+					"either parameter type names or parameter types must be set but not both"));
+		}
+		if (type == null) {
+			Preconditions.notBlank(typeName, () -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"type must be set or type name must not be blank"));
+			if (parameterTypes == null) {
+				return DiscoverySelectors.selectMethod(typeName, methodName, parameterTypeNames);
+			}
+			else {
+				return DiscoverySelectors.selectMethod(typeName, methodName, parameterTypes);
+			}
+		}
+		else {
+			Preconditions.condition(typeName == null, () -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"either type name or type must be set but not both"));
+			if (parameterTypes == null) {
+				return DiscoverySelectors.selectMethod(type, methodName, parameterTypeNames);
+			}
+			else {
+				return DiscoverySelectors.selectMethod(type, methodName, parameterTypes);
+			}
+		}
+	}
+
+	private static String prefixErrorMessageForInvalidSelectMethodUsage(Class<?> suiteClass, String detailMessage) {
+		return String.format("@SelectMethod on class [%s]: %s", suiteClass.getName(), detailMessage);
 	}
 
 	private ClassNameFilter createIncludeClassNameFilter(String... patterns) {

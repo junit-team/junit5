@@ -23,7 +23,6 @@ import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.FilePosition;
 import org.junit.platform.engine.discovery.FileSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UriSelector;
@@ -80,12 +79,6 @@ class AdditionalDiscoverySelectors {
 		Preconditions.containsNoNullElements(classNames, "Individual class names must not be null");
 
 		return uniqueStreamOf(classNames).map(DiscoverySelectors::selectClass);
-	}
-
-	static MethodSelector selectMethod(Class<?> clazz, String name, String parameterTypeNames) {
-		Preconditions.notBlank(name, "Method name must not be null or blank");
-		Preconditions.notNull(parameterTypeNames, "parameter type names must not be null");
-		return DiscoverySelectors.selectMethod(clazz, name, parameterTypeNames);
 	}
 
 	static List<ModuleSelector> selectModules(String... moduleNames) {

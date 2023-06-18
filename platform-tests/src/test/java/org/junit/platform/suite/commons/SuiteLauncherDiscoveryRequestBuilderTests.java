@@ -10,11 +10,14 @@
 
 package org.junit.platform.suite.commons;
 
+import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -26,8 +29,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.CollectionUtils;
@@ -72,7 +78,7 @@ import org.junit.platform.suite.api.SelectUris;
 
 class SuiteLauncherDiscoveryRequestBuilderTests {
 
-	SuiteLauncherDiscoveryRequestBuilder builder = SuiteLauncherDiscoveryRequestBuilder.request();
+	SuiteLauncherDiscoveryRequestBuilder builder = request();
 
 	@Test
 	void configurationParameter() {
@@ -249,40 +255,68 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 	static class NonLocalTestCase {
 	}
 
-	@Test
-	void selectOneMethodWithNoParameters() {
-		@SuppressWarnings("unused")
-		class TestClass {
-			void testMethod() {
-			}
+	@TestFactory
+	Stream<DynamicTest> selectOneMethodWithNoParameters() {
+		@SelectMethod("org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase#testMethod")
+		class SuiteA {
 		}
-		@SelectMethod(clazz = TestClass.class, name = "testMethod")
-		class Suite {
+		@SelectMethod(type = NoParameterTestCase.class, name = "testMethod")
+		class SuiteB {
+		}
+		@SelectMethod(typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase", name = "testMethod")
+		class SuiteC {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
-		List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
-		assertEquals(DiscoverySelectors.selectMethod(TestClass.class, "testMethod"), exactlyOne(selectors));
+		return Stream.of(SuiteA.class, SuiteB.class, SuiteC.class) //
+				.map(suiteClass -> dynamicTest(suiteClass.getSimpleName(), () -> {
+					LauncherDiscoveryRequest request = request().suite(suiteClass).build();
+					List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
+					assertEquals(DiscoverySelectors.selectMethod(NoParameterTestCase.class, "testMethod"),
+						exactlyOne(selectors));
+				}));
+	}
+
+	static class NoParameterTestCase {
+		@SuppressWarnings("unused")
+		void testMethod() {
+		}
+	}
+
+	@TestFactory
+	Stream<DynamicTest> selectOneMethodWithOneParameter() {
+		@SelectMethod("org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$OneParameterTestCase#testMethod(int)")
+		class SuiteA {
+		}
+		@SelectMethod(type = OneParameterTestCase.class, name = "testMethod", parameterTypeNames = "int")
+		class SuiteB {
+		}
+		@SelectMethod(type = OneParameterTestCase.class, name = "testMethod", parameterTypes = int.class)
+		class SuiteC {
+		}
+		@SelectMethod(typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$OneParameterTestCase", name = "testMethod", parameterTypeNames = "int")
+		class SuiteD {
+		}
+		@SelectMethod(typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$OneParameterTestCase", name = "testMethod", parameterTypes = int.class)
+		class SuiteE {
+		}
+
+		return Stream.of(SuiteA.class, SuiteB.class, SuiteC.class, SuiteD.class, SuiteE.class) //
+				.map(suiteClass -> dynamicTest(suiteClass.getSimpleName(), () -> {
+					LauncherDiscoveryRequest request = request().suite(suiteClass).build();
+					List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
+					assertEquals(DiscoverySelectors.selectMethod(OneParameterTestCase.class, "testMethod", "int"),
+						exactlyOne(selectors));
+				}));
+	}
+
+	static class OneParameterTestCase {
+		@SuppressWarnings("unused")
+		void testMethod(int i) {
+		}
 	}
 
 	@Test
-	void selectOneMethodWithOneParameters() {
-		@SuppressWarnings("unused")
-		class TestClass {
-			void testMethod(int i) {
-			}
-		}
-		@SelectMethod(clazz = TestClass.class, name = "testMethod", parameters = "int")
-		class Suite {
-		}
-
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
-		List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
-		assertEquals(DiscoverySelectors.selectMethod(TestClass.class, "testMethod", "int"), exactlyOne(selectors));
-	}
-
-	@Test
-	void selectTwoMethodWithTwoParameters() {
+	void selectTwoMethodsWithTwoParameters() {
 		@SuppressWarnings("unused")
 		class TestClass {
 			void firstTestMethod(int i, String j) {
@@ -291,8 +325,9 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 			void secondTestMethod(boolean i, float j) {
 			}
 		}
-		@SelectMethod(clazz = TestClass.class, name = "firstTestMethod", parameters = "int, java.lang.String")
-		@SelectMethod(clazz = TestClass.class, name = "secondTestMethod", parameters = "boolean, float")
+		@SelectMethod(type = TestClass.class, name = "firstTestMethod", parameterTypeNames = "int, java.lang.String")
+		@SelectMethod(type = TestClass.class, name = "secondTestMethod", parameterTypes = { boolean.class,
+				float.class })
 		class Suite {
 		}
 
@@ -303,6 +338,61 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 			selectors.get(0));
 		assertEquals(DiscoverySelectors.selectMethod(TestClass.class, "secondTestMethod", "boolean, float"),
 			selectors.get(1));
+	}
+
+	@TestFactory
+	Stream<DynamicTest> selectMethodCausesExceptionOnInvalidUsage() {
+		@SelectMethod(value = "irrelevant", type = NoParameterTestCase.class)
+		class ValueAndType {
+		}
+		@SelectMethod(value = "SomeClass#someMethod", typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase")
+		class ValueAndTypeName {
+		}
+		@SelectMethod(value = "SomeClass#someMethod", name = "testMethod")
+		class ValueAndMethodName {
+		}
+		@SelectMethod(value = "SomeClass#someMethod", parameterTypes = int.class)
+		class ValueAndParameterTypes {
+		}
+		@SelectMethod(value = "SomeClass#someMethod", parameterTypeNames = "int")
+		class ValueAndParameterTypeNames {
+		}
+		@SelectMethod(type = NoParameterTestCase.class)
+		class MissingMethodName {
+		}
+		@SelectMethod(name = "testMethod", type = NoParameterTestCase.class, typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase")
+		class TypeAndTypeName {
+		}
+		@SelectMethod(name = "testMethod", parameterTypes = int.class, parameterTypeNames = "int")
+		class ParameterTypesAndParameterTypeNames {
+		}
+
+		var expectedFailureMessages = Map.ofEntries( //
+			entry(ValueAndType.class, "type must not be set in conjunction with fully qualified method name"), //
+			entry(ValueAndTypeName.class, "type name must not be set in conjunction with fully qualified method name"), //
+			entry(ValueAndMethodName.class,
+				"method name must not be set in conjunction with fully qualified method name"), //
+			entry(ValueAndParameterTypes.class,
+				"parameter types must not be set in conjunction with fully qualified method name"), //
+			entry(ValueAndParameterTypeNames.class,
+				"parameter type names must not be set in conjunction with fully qualified method name"), //
+			entry(MissingMethodName.class, "method name must not be blank"), //
+			entry(TypeAndTypeName.class, "either type name or type must be set but not both"), //
+			entry(ParameterTypesAndParameterTypeNames.class,
+				"either parameter type names or parameter types must be set but not both") //
+		);
+		return expectedFailureMessages.entrySet().stream() //
+				.map(entry -> {
+					Class<?> suiteClassName = entry.getKey();
+					var expectedFailureMessage = entry.getValue();
+					return dynamicTest(suiteClassName.getSimpleName(), () -> {
+						var ex = assertThrows(PreconditionViolationException.class,
+							() -> request().suite(suiteClassName));
+						assertEquals(
+							"@SelectMethod on class [" + suiteClassName.getName() + "]: " + expectedFailureMessage,
+							ex.getMessage());
+					});
+				});
 	}
 
 	@Test

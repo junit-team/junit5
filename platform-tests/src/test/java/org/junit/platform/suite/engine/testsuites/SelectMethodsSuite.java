@@ -18,6 +18,6 @@ import org.junit.platform.suite.engine.testcases.MultipleTestsTestCase;
  * @since 1.10
  */
 @Suite
-@SelectMethod(clazz = MultipleTestsTestCase.class, name = "test")
+@SelectMethod(type = MultipleTestsTestCase.class, name = "test")
 public class SelectMethodsSuite {
 }
