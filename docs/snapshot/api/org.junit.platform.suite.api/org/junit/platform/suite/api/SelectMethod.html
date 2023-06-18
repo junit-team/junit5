@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#annotation-interface-optional-element-summary">Optional</a>&nbsp;|&nbsp;</li>
-<li><a href="#annotation-interface-required-element-summary">Required</a></li>
+<li>Required</li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
@@ -91,35 +91,17 @@ loadScripts(document, 'script');</script>
 <ul class="see-list-long">
 <li><a href="Suite.html" title="annotation interface in org.junit.platform.suite.api"><code>Suite</code></a></li>
 <li><a href="../../../../../../org.junit.platform.runner/org/junit/platform/runner/JUnitPlatform.html" title="class in org.junit.platform.runner"><code>JUnitPlatform</code></a></li>
+<li><a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String)"><code>DiscoverySelectors.selectMethod(String)</code></a></li>
+<li><a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String,java.lang.String)"><code>DiscoverySelectors.selectMethod(String, String, String)</code></a></li>
+<li><a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String,java.lang.Class...)"><code>DiscoverySelectors.selectMethod(String, String, Class...)</code></a></li>
 <li><a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.Class,java.lang.String,java.lang.String)"><code>DiscoverySelectors.selectMethod(Class, String, String)</code></a></li>
+<li><a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.Class,java.lang.String,java.lang.Class...)"><code>DiscoverySelectors.selectMethod(Class, String, Class...)</code></a></li>
 </ul>
 </dd>
 </dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== ANNOTATION INTERFACE REQUIRED MEMBER SUMMARY =========== -->
-<li>
-<section class="member-summary" id="annotation-interface-required-element-summary">
-<h2>Required Element Summary</h2>
-<div class="caption"><span>Required Elements</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Required Element</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#clazz()" class="member-name-link">clazz</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">The class in which the method is declared, or a subclass thereof.</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#name()" class="member-name-link">name</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">The name of the method to select; never blank.</div>
-</div>
-</div>
-</section>
-</li>
 <!-- =========== ANNOTATION INTERFACE OPTIONAL MEMBER SUMMARY =========== -->
 <li>
 <section class="member-summary" id="annotation-interface-optional-element-summary">
@@ -130,9 +112,34 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Optional Element</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#parameters()" class="member-name-link">parameters</a></code></div>
+<div class="col-second even-row-color"><code><a href="#name()" class="member-name-link">name</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">The name of the method to select; never blank unless <a href="#value()"><code>value()</code></a> is used.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#parameterTypeNames()" class="member-name-link">parameterTypeNames</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">The parameter types of the method to select.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;[]</code></div>
+<div class="col-second even-row-color"><code><a href="#parameterTypes()" class="member-name-link">parameterTypes</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">The parameter types of the method to select.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#type()" class="member-name-link">type</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">The class in which the method is declared, or a subclass thereof.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#typeName()" class="member-name-link">typeName</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">The <em>fully qualified class name</em> in which the method is declared, or a subclass thereof.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">The <em>fully qualified method name</em> of the method to select.</div>
 </div>
 </div>
 </section>
@@ -147,30 +154,114 @@ loadScripts(document, 'script');</script>
 <h2>Element Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="clazz()">
-<h3>clazz</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;</span>&nbsp;<span class="element-name">clazz</span></div>
-<div class="block">The class in which the method is declared, or a subclass thereof.</div>
+<section class="detail" id="value()">
+<h3>value</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">value</span></div>
+<div class="block">The <em>fully qualified method name</em> of the method to select.
+
+ <p>The following formats are supported.
+
+ <ul>
+ <li><code>[fully qualified class name]#[methodName]</code></li>
+ <li><code>[fully qualified class name]#[methodName](parameter type list)</code>
+ </ul>
+
+ <p>The <em>parameter type list</em> is a comma-separated list of primitive
+ names or fully qualified class names for the types of parameters accepted
+ by the method.
+
+ <p>Array parameter types may be specified using either the JVM's internal
+ String representation (e.g., <code>[[I</code> for <code>int[][]</code>,
+ <code>[Ljava.lang.String;</code> for <code>java.lang.String[]</code>, etc.) or
+ <em>source code syntax</em> (e.g., <code>int[][]</code>, <code>java.lang.String[]</code>,
+ etc.).
+
+ <table class="plain">
+ <caption>Examples</caption>
+ <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>
+ <tr><td><code>java.lang.String.chars()</code></td><td><code>java.lang.String#chars</code></td></tr>
+ <tr><td><code>java.lang.String.chars()</code></td><td><code>java.lang.String#chars()</code></td></tr>
+ <tr><td><code>java.lang.String.equalsIgnoreCase(String)</code></td><td><code>java.lang.String#equalsIgnoreCase(java.lang.String)</code></td></tr>
+ <tr><td><code>java.lang.String.substring(int, int)</code></td><td><code>java.lang.String#substring(int, int)</code></td></tr>
+ <tr><td><code>example.Calc.avg(int[])</code></td><td><code>example.Calc#avg([I)</code></td></tr>
+ <tr><td><code>example.Calc.avg(int[])</code></td><td><code>example.Calc#avg(int[])</code></td></tr>
+ <tr><td><code>example.Matrix.multiply(double[][])</code></td><td><code>example.Matrix#multiply([[D)</code></td></tr>
+ <tr><td><code>example.Matrix.multiply(double[][])</code></td><td><code>example.Matrix#multiply(double[][])</code></td></tr>
+ <tr><td><code>example.Service.process(String[])</code></td><td><code>example.Service#process([Ljava.lang.String;)</code></td></tr>
+ <tr><td><code>example.Service.process(String[])</code></td><td><code>example.Service#process(java.lang.String[])</code></td></tr>
+ <tr><td><code>example.Service.process(String[][])</code></td><td><code>example.Service#process([[Ljava.lang.String;)</code></td></tr>
+ <tr><td><code>example.Service.process(String[][])</code></td><td><code>example.Service#process(java.lang.String[][])</code></td></tr>
+ </table>
+
+ <p>Cannot be combined with any other attribute.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String)"><code>DiscoverySelectors.selectMethod(String)</code></a></li>
+</ul>
+</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="type()">
+<h3>type</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;</span>&nbsp;<span class="element-name">type</span></div>
+<div class="block">The class in which the method is declared, or a subclass thereof.
+
+ <p>Cannot be used in conjunction with <a href="#typeName()"><code>typeName()</code></a>.</div>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>java.lang.Class.class</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="typeName()">
+<h3>typeName</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">typeName</span></div>
+<div class="block">The <em>fully qualified class name</em> in which the method is declared, or a subclass thereof.
+
+ <p>Cannot be used in conjunction with <a href="#type()"><code>type()</code></a>.</div>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="name()">
 <h3>name</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">name</span></div>
-<div class="block">The name of the method to select; never blank.</div>
+<div class="block">The name of the method to select; never blank unless <a href="#value()"><code>value()</code></a> is used.</div>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
 </section>
 </li>
-</ul>
+<li>
+<section class="detail" id="parameterTypes()">
+<h3>parameterTypes</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;[]</span>&nbsp;<span class="element-name">parameterTypes</span></div>
+<div class="block">The parameter types of the method to select.
+
+ <p>Cannot be used in conjunction with <a href="#parameterTypeNames()"><code>parameterTypeNames()</code></a>.</div>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
 </section>
 </li>
-<!-- ============ ANNOTATION INTERFACE MEMBER DETAIL =========== -->
 <li>
-<section class="member-details">
-<ul class="member-list">
-<li>
-<section class="detail" id="parameters()">
-<h3>parameters</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">parameters</span></div>
+<section class="detail" id="parameterTypeNames()">
+<h3>parameterTypeNames</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">parameterTypeNames</span></div>
 <div class="block">The parameter types of the method to select.
 
  <p>This is typically a comma-separated list of atomic types, fully
@@ -200,7 +291,9 @@ loadScripts(document, 'script');</script>
  <tr><td><code>example.Service.process(String[])</code></td><td><code>java.lang.String[]</code></td></tr>
  <tr><td><code>example.Service.process(String[][])</code></td><td><code>[[Ljava.lang.String;</code></td></tr>
  <tr><td><code>example.Service.process(String[][])</code></td><td><code>java.lang.String[][]</code></td></tr>
- </table></div>
+ </table>
+
+ <p>Cannot be used in conjunction with <a href="#parameterTypes()"><code>parameterTypes()</code></a>.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>""</dd>
