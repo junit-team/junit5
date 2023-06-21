@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -61,6 +62,7 @@ class StackTracePruningEngineExecutionListener extends DelegatingEngineExecution
 						return null;
 					}
 				}) //
+				.filter(Objects::nonNull) //
 				.collect(Collectors.toList());
 	}
 
