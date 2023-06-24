@@ -30,7 +30,6 @@ public class AutoCloseExtension implements AfterEachCallback {
     /**
      * Invoked after each test execution to close the annotated resources within the test instance.
      *
-     * @param context the extension context for the current test execution
      * @throws Exception if an exception occurs during resource cleanup
      */
     AutoCloseExtension(){

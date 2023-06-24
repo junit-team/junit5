@@ -1,10 +1,8 @@
 package org.junit.jupiter.api;
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.AutoClose;
 
 import java.io.Closeable;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -32,7 +30,6 @@ import java.util.List;
  * @see org.junit.jupiter.api.AutoClose
  * @see java.io.Closeable
  * @see java.lang.reflect.Field
- * @see java.lang.reflect.Method
  */
 @API(status = API.Status.EXPERIMENTAL,since = "5.9")
 
