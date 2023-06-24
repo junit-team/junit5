@@ -52,6 +52,11 @@ public class AutoCloseExtension implements AfterEachCallback {
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
 		Object testInstance = context.getRequiredTestInstance();
-		AutoCloseUtils.closeResources(testInstance);
+		try {
+			AutoCloseUtils.closeResources(testInstance);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 }
