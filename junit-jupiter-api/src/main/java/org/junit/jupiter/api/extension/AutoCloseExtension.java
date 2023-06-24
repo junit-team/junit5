@@ -12,9 +12,6 @@ package org.junit.jupiter.api.extension;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.AutoCloseUtils;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-
 /**
  * The {@code AutoCloseExtension} class is a JUnit 5 extension that automatically closes resources used in tests.
  *
@@ -38,15 +35,20 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  */
 @API(status = API.Status.EXPERIMENTAL, since = "5.9")
 public class AutoCloseExtension implements AfterEachCallback {
+
 	/**
-	 * Invoked after each test execution to close the annotated resources within the test instance.
-	 *
-	 * @throws Exception if an exception occurs during resource cleanup
+	 * Creates a new instance of AutoCloseExtension.
 	 */
 	public AutoCloseExtension() {
 
 	}
 
+	/**
+	 * Invoked after each test execution to close the annotated resources within the test instance.
+	 *
+	 * @param context the extension context for the current test execution
+	 * @throws Exception if an exception occurs during resource cleanup
+	 */
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
 		Object testInstance = context.getRequiredTestInstance();
