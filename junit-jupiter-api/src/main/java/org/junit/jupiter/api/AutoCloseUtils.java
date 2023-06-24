@@ -1,4 +1,5 @@
 package org.junit.jupiter.api;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.AutoClose;
 
 import java.io.Closeable;
@@ -33,6 +34,8 @@ import java.util.List;
  * @see java.lang.reflect.Field
  * @see java.lang.reflect.Method
  */
+@API(status = API.Status.EXPERIMENTAL,since = "5.9")
+
 public class AutoCloseUtils {
     private AutoCloseUtils() {
         // Private constructor to prevent instantiation

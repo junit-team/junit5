@@ -1,4 +1,5 @@
 package org.junit.jupiter.api.extension;
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.AutoCloseUtils;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -23,6 +24,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * @see org.junit.jupiter.api.AutoClose
  * @see AutoCloseUtils#closeResources(Object)
  */
+@API(status = API.Status.EXPERIMENTAL,since = "5.9")
+
 public class AutoCloseExtension implements AfterEachCallback {
     /**
      * Invoked after each test execution to close the annotated resources within the test instance.

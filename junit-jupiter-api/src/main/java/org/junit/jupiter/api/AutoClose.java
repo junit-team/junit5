@@ -1,5 +1,7 @@
 package org.junit.jupiter.api;
 
+import org.apiguardian.api.API;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,6 +32,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@API(status = API.Status.EXPERIMENTAL,since = "5.9")
 public @interface AutoClose {
     /**
      * Specifies the name of the method to invoke for closing the resource.
