@@ -2745,8 +2745,8 @@ time as outlined in the following scenarios.</p>
 <p>Run previously failing tests and faster tests first: "fail fast" mode</p>
 </li>
 <li>
-<p>With parallel execution enabled, run longer tests first: "shortest test plan execution
-duration" mode</p>
+<p>With parallel execution enabled, schedule longer tests first: "shortest test plan
+execution duration" mode</p>
 </li>
 <li>
 <p>Various other use cases</p>
@@ -5906,6 +5906,13 @@ have to ensure that the test class is thread-safe; in the latter, concurrent exe
 might conflict with the configured execution order. Thus, in both cases, test methods in
 such test classes are only executed concurrently if the <code>@Execution(CONCURRENT)</code>
 annotation is present on the test class or method.</p>
+</div>
+<div class="paragraph">
+<p>When parallel execution is enabled and a default <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.html">ClassOrderer</a></code> (see
+<a href="#writing-tests-test-execution-order-classes">Class Order</a> for details) is registered, top-level test
+classes will initially be sorted accordingly and scheduled in that order. However, they
+are not guaranteed to be started in exactly that order since the threads they are executed
+on are not controlled directly by JUnit.</p>
 </div>
 <div class="paragraph">
 <p>All nodes of the test tree that are configured with the <code>CONCURRENT</code> execution mode will
@@ -12626,7 +12633,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-06-17 16:11:58 UTC
+Last updated 2023-06-25 07:31:14 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
