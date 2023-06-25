@@ -20,7 +20,11 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
@@ -39,7 +43,7 @@ class StackTracePruningTests {
 	@Test
 	void shouldPruneStackTraceByDefault() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
-				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
+				.selectors(selectMethod(FailingTestTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -52,7 +56,7 @@ class StackTracePruningTests {
 	void shouldPruneStackTraceWhenEnabled() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
+				.selectors(selectMethod(FailingTestTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -65,7 +69,7 @@ class StackTracePruningTests {
 	void shouldNotPruneStackTraceWhenDisabled() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "false") //
-				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
+				.selectors(selectMethod(FailingTestTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -82,7 +86,7 @@ class StackTracePruningTests {
 	void shouldAlwaysKeepJupiterAssertionStackTraceElement() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
+				.selectors(selectMethod(FailingTestTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -98,7 +102,7 @@ class StackTracePruningTests {
 	void shouldAlwaysKeepJupiterAssumptionStackTraceElement() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssumption")) //
+				.selectors(selectMethod(FailingTestTestCase.class, "failingAssumption")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -114,7 +118,7 @@ class StackTracePruningTests {
 	void shouldKeepEverythingAfterTestCall() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.selectors(selectMethod(StackTracePruningTestCase.class, "failingAssertion")) //
+				.selectors(selectMethod(FailingTestTestCase.class, "failingAssertion")) //
 				.execute();
 
 		List<StackTraceElement> stackTrace = extractStackTrace(results);
@@ -123,7 +127,28 @@ class StackTracePruningTests {
 			"""
 					\\Qorg.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:\\E.+
 					\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
-					\\Qorg.junit.platform.StackTracePruningTests$StackTracePruningTestCase.failingAssertion(StackTracePruningTests.java:\\E.+
+					\\Qorg.junit.platform.StackTracePruningTests$FailingTestTestCase.failingAssertion(StackTracePruningTests.java:\\E.+
+					>>>>
+					""");
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "org.junit.platform.StackTracePruningTests$FailingBeforeEachTestCase",
+			"org.junit.platform.StackTracePruningTests$FailingBeforeEachTestCase$NestedTestCase",
+			"org.junit.platform.StackTracePruningTests$FailingBeforeEachTestCase$NestedTestCase$NestedNestedTestCase" })
+	void shouldKeepEverythingAfterLifecycleMethodCall(Class<?> methodClass) {
+		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
+				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
+				.selectors(selectMethod(methodClass, "test")) //
+				.execute();
+
+		List<StackTraceElement> stackTrace = extractStackTrace(results);
+
+		assertStackTraceMatch(stackTrace,
+			"""
+					\\Qorg.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:\\E.+
+					\\Qorg.junit.jupiter.api.Assertions.fail(Assertions.java:\\E.+
+					\\Qorg.junit.platform.StackTracePruningTests$FailingBeforeEachTestCase.setUp(StackTracePruningTests.java:\\E.+
 					>>>>
 					""");
 	}
@@ -132,7 +157,7 @@ class StackTracePruningTests {
 	void shouldPruneStackTracesOfSuppressedExceptions() {
 		EngineExecutionResults results = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter("junit.platform.stacktrace.pruning.enabled", "true") //
-				.selectors(selectMethod(StackTracePruningTestCase.class, "multipleFailingAssertions")) //
+				.selectors(selectMethod(FailingTestTestCase.class, "multipleFailingAssertions")) //
 				.execute();
 
 		Throwable throwable = getThrowable(results);
@@ -170,7 +195,7 @@ class StackTracePruningTests {
 
 	// -------------------------------------------------------------------
 
-	static class StackTracePruningTestCase {
+	static class FailingTestTestCase {
 
 		@Test
 		void failingAssertion() {
@@ -187,6 +212,37 @@ class StackTracePruningTests {
 			Assumptions.assumeTrue(() -> {
 				throw new RuntimeException();
 			});
+		}
+
+	}
+
+	static class FailingBeforeEachTestCase {
+
+		@BeforeEach
+		void setUp() {
+			Assertions.fail();
+		}
+
+		@Test
+		void test() {
+		}
+
+		@Nested
+		class NestedTestCase {
+
+			@Test
+			void test() {
+			}
+
+			@Nested
+			class NestedNestedTestCase {
+
+				@Test
+				void test() {
+				}
+
+			}
+
 		}
 
 	}

@@ -42,7 +42,8 @@ public final class ExceptionUtils {
 
 	private static final String JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX = "org.junit.platform.launcher.";
 
-	private static final String STACK_TRACE_ELEMENTS_TO_EXCLUDE = "org.junit.*,jdk.internal.reflect.*,sun.reflect.*";
+	private static final Predicate<String> STACK_TRACE_ELEMENT_FILTER = ClassNamePatternFilterUtils //
+			.excludeMatchingClassNames("org.junit.*,jdk.internal.reflect.*,sun.reflect.*");
 
 	private ExceptionUtils() {
 		/* no-op */
@@ -114,9 +115,6 @@ public final class ExceptionUtils {
 		Preconditions.notNull(throwable, "Throwable must not be null");
 		Preconditions.notNull(testClassNames, "List of test class names must not be null");
 
-		Predicate<String> stackTraceElementFilter = ClassNamePatternFilterUtils //
-				.excludeMatchingClassNames(STACK_TRACE_ELEMENTS_TO_EXCLUDE);
-
 		List<StackTraceElement> stackTrace = Arrays.asList(throwable.getStackTrace());
 		List<StackTraceElement> prunedStackTrace = new ArrayList<>();
 
@@ -134,7 +132,7 @@ public final class ExceptionUtils {
 			else if (className.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
 				prunedStackTrace.clear();
 			}
-			else if (stackTraceElementFilter.test(className)) {
+			else if (STACK_TRACE_ELEMENT_FILTER.test(className)) {
 				prunedStackTrace.add(element);
 			}
 		}
