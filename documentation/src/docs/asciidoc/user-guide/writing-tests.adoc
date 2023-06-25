@@ -664,8 +664,8 @@ dependencies between test classes, or you may wish to order test classes to opti
 time as outlined in the following scenarios.
 
 * Run previously failing tests and faster tests first: "fail fast" mode
-* With parallel execution enabled, run longer tests first: "shortest test plan execution
-  duration" mode
+* With parallel execution enabled, schedule longer tests first: "shortest test plan
+  execution duration" mode
 * Various other use cases
 
 To configure test class execution order _globally_ for the entire test suite, use the
@@ -2301,6 +2301,12 @@ have to ensure that the test class is thread-safe; in the latter, concurrent exe
 might conflict with the configured execution order. Thus, in both cases, test methods in
 such test classes are only executed concurrently if the `@Execution(CONCURRENT)`
 annotation is present on the test class or method.
+
+When parallel execution is enabled and a default `{ClassOrderer}` (see
+<<writing-tests-test-execution-order-classes>> for details) is registered, top-level test
+classes will initially be sorted accordingly and scheduled in that order. However, they
+are not guaranteed to be started in exactly that order since the threads they are executed
+on are not controlled directly by JUnit.
 
 All nodes of the test tree that are configured with the `CONCURRENT` execution mode will
 be executed fully in parallel according to the provided
