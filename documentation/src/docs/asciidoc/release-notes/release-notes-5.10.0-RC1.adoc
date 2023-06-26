@@ -33,7 +33,10 @@ JUnit repository on GitHub.
 * New `selectMethod()` and `selectNestedMethod()` variants in `DiscoverySelectors` that
   accept a `Class<?>...` argument of parameter types as a type-safe alternative to
   providing the names of parameter types as a comma-delimited string.
-
+* Stack trace pruning has been revised and now only removes calls from the `org.junit`,
+  `jdk.internal.reflect`, and `sun.reflect` packages. Please refer to the
+  <<../user-guide/index.adoc#stacktrace-pruning, User Guide>> for details.
+* New `getAncestors()` method in `TestDescriptor`.
 
 [[release-notes-5.10.0-RC1-junit-jupiter]]
 === JUnit Jupiter
