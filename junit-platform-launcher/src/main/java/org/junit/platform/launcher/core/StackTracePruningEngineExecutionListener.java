@@ -10,11 +10,9 @@
 
 package org.junit.platform.launcher.core;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -49,9 +47,10 @@ class StackTracePruningEngineExecutionListener extends DelegatingEngineExecution
 	}
 
 	private static List<String> getTestClassNames(TestDescriptor testDescriptor) {
-		return findAllParentDescriptors(testDescriptor) //
+		return testDescriptor.getAncestors() //
 				.stream() //
-				.map(TestDescriptor::getSource).filter(Optional::isPresent) //
+				.map(TestDescriptor::getSource) //
+				.filter(Optional::isPresent) //
 				.map(Optional::get) //
 				.map(source -> {
 					if (source instanceof ClassSource) {
@@ -66,20 +65,6 @@ class StackTracePruningEngineExecutionListener extends DelegatingEngineExecution
 				}) //
 				.filter(Objects::nonNull) //
 				.collect(Collectors.toList());
-	}
-
-	private static Set<TestDescriptor> findAllParentDescriptors(TestDescriptor testDescriptor) {
-		return findParentDescriptors(testDescriptor, new HashSet<>());
-	}
-
-	private static Set<TestDescriptor> findParentDescriptors(TestDescriptor testDescriptor,
-			Set<TestDescriptor> visitedDescriptors) {
-		if (testDescriptor.isRoot()) {
-			return visitedDescriptors;
-		}
-		TestDescriptor parent = testDescriptor.getParent().get();
-		visitedDescriptors.add(parent);
-		return findParentDescriptors(parent, visitedDescriptors);
 	}
 
 }
