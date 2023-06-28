@@ -1138,18 +1138,13 @@ Since version 1.10, the JUnit Platform provides built-in support for pruning sta
 produced by failing tests. This feature can be enabled or disabled via the
 `junit.platform.stacktrace.pruning.enabled` _configuration parameter_.
 
-By default, all calls from the `org.junit`, `java`, and `jdk` packages are removed from the
-stack trace. You can also configure the JUnit Platform to exclude different or additional
-calls. To do this, provide a pattern for the `junit.platform.stacktrace.pruning.pattern`
-_configuration parameter_ to specify which fully qualified class names should be excluded
-from the stack traces.
+If enabled, all calls from the `org.junit`, `jdk.internal.reflect`, and `sun.reflect`
+packages are removed from the stack trace, unless they are subsequent to the test itself
+or any of its ancestors. For that reason, calls to `{Assertions}` or `{Assumptions}` will
+never be excluded.
 
-In addition, and independently of the provided pattern, all elements prior to and
-including the first call from the JUnit Platform Launcher will be removed.
-
-NOTE: Since they provide necessary insights to understand a test failure, calls to
-`{Assertions}` or `{Assumptions}` will never be excluded from stack traces even though
-they are part of the `org.junit` package.
+In addition, all elements prior to and including the first call from the JUnit Platform
+Launcher will be removed.
 
 [[stacktrace-pruning-pattern]]
 ==== Pattern Matching Syntax

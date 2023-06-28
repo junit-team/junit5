@@ -42,6 +42,9 @@ public final class ExceptionUtils {
 
 	private static final String JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX = "org.junit.platform.launcher.";
 
+	private static final Predicate<String> STACK_TRACE_ELEMENT_FILTER = ClassNamePatternFilterUtils //
+			.excludeMatchingClassNames("org.junit.*,jdk.internal.reflect.*,sun.reflect.*");
+
 	private ExceptionUtils() {
 		/* no-op */
 	}
@@ -92,38 +95,44 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * Prune the stack trace of the supplied {@link Throwable} by filtering its
-	 * elements using the supplied {@link Predicate}, except for
-	 * {@code org.junit.jupiter.api.Assertions} and
-	 * {@code org.junit.jupiter.api.Assumptions} that will always remain
-	 * present.
+	 * Prune the stack trace of the supplied {@link Throwable} by removing
+	 * elements from the {@code org.junit}, {@code jdk.internal.reflect} and
+	 * {@code sun.reflect} packages. If an element matching one of the supplied
+	 * class names is encountered, all following elements will be kept regardless.
 	 *
 	 * <p>Additionally, all elements prior to and including the first
 	 * JUnit Launcher call will be removed.
 	 *
 	 * @param throwable the {@code Throwable} whose stack trace should be
 	 * pruned; never {@code null}
-	 * @param stackTraceElementFilter the {@code Predicate} used to filter
-	 * elements of the stack trace; never {@code null}
+	 * @param testClassNames the test class names that should stop the pruning
+	 * if encountered; never {@code null}
 	 *
 	 * @since 5.10
 	 */
 	@API(status = INTERNAL, since = "5.10")
-	public static void pruneStackTrace(Throwable throwable, Predicate<String> stackTraceElementFilter) {
+	public static void pruneStackTrace(Throwable throwable, List<String> testClassNames) {
 		Preconditions.notNull(throwable, "Throwable must not be null");
-		Preconditions.notNull(stackTraceElementFilter, "Predicate must not be null");
+		Preconditions.notNull(testClassNames, "List of test class names must not be null");
 
 		List<StackTraceElement> stackTrace = Arrays.asList(throwable.getStackTrace());
 		List<StackTraceElement> prunedStackTrace = new ArrayList<>();
 
 		Collections.reverse(stackTrace);
 
-		for (StackTraceElement element : stackTrace) {
+		for (int i = 0; i < stackTrace.size(); i++) {
+			StackTraceElement element = stackTrace.get(i);
 			String className = element.getClassName();
-			if (className.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
+
+			if (testClassNames.contains(className)) {
+				// Include all elements called by the test
+				prunedStackTrace.addAll(stackTrace.subList(i, stackTrace.size()));
+				break;
+			}
+			else if (className.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
 				prunedStackTrace.clear();
 			}
-			else if (stackTraceElementFilter.test(className)) {
+			else if (STACK_TRACE_ELEMENT_FILTER.test(className)) {
 				prunedStackTrace.add(element);
 			}
 		}
