@@ -8671,29 +8671,14 @@ produced by failing tests. This feature can be enabled or disabled via the
 <code>junit.platform.stacktrace.pruning.enabled</code> <em>configuration parameter</em>.</p>
 </div>
 <div class="paragraph">
-<p>By default, all calls from the <code>org.junit</code>, <code>java</code>, and <code>jdk</code> packages are removed from the
-stack trace. You can also configure the JUnit Platform to exclude different or additional
-calls. To do this, provide a pattern for the <code>junit.platform.stacktrace.pruning.pattern</code>
-<em>configuration parameter</em> to specify which fully qualified class names should be excluded
-from the stack traces.</p>
+<p>If enabled, all calls from the <code>org.junit</code>, <code>jdk.internal.reflect</code>, and <code>sun.reflect</code>
+packages are removed from the stack trace, unless they are subsequent to the test itself
+or any of its ancestors. For that reason, calls to <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.api.Assertions</a></code> or <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> will
+never be excluded.</p>
 </div>
 <div class="paragraph">
-<p>In addition, and independently of the provided pattern, all elements prior to and
-including the first call from the JUnit Platform Launcher will be removed.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Since they provide necessary insights to understand a test failure, calls to
-<code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.api.Assertions</a></code> or <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> will never be excluded from stack traces even though
-they are part of the <code>org.junit</code> package.
-</td>
-</tr>
-</table>
+<p>In addition, all elements prior to and including the first call from the JUnit Platform
+Launcher will be removed.</p>
 </div>
 <div class="sect3">
 <h4 id="stacktrace-pruning-pattern"><a class="anchor" href="#stacktrace-pruning-pattern"></a>4.9.1. Pattern Matching Syntax</h4>
@@ -12633,7 +12618,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-06-25 07:31:14 UTC
+Last updated 2023-06-26 17:43:35 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

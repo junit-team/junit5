@@ -266,19 +266,24 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Find the descriptor with the supplied unique ID.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#getChildren()" class="member-name-link">getChildren</a>()</code></div>
+<div class="col-first odd-row-color"><code>default <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#getAncestors()" class="member-name-link">getAncestors</a>()</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Get the immutable set of all <em>ancestors</em> of this descriptor.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#getChildren()" class="member-name-link">getChildren</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Get the immutable set of <em>children</em> of this descriptor.</div>
 </div>
-<div class="col-first even-row-color"><code>default <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#getDescendants()" class="member-name-link">getDescendants</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>default <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#getDescendants()" class="member-name-link">getDescendants</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Get the immutable set of all <em>descendants</em> of this descriptor.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#getParent()" class="member-name-link">getParent</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#getParent()" class="member-name-link">getParent</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Get the <em>parent</em> of this descriptor, if available.</div>
 </div>
 </div>

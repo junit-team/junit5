@@ -582,6 +582,14 @@ relies on the new methods introduced in JUnit Platform 1.10 M1.</p>
 accept a <code>Class&lt;?&gt;&#8230;&#8203;</code> argument of parameter types as a type-safe alternative to
 providing the names of parameter types as a comma-delimited string.</p>
 </li>
+<li>
+<p>Stack trace pruning has been revised and now only removes calls from the <code>org.junit</code>,
+<code>jdk.internal.reflect</code>, and <code>sun.reflect</code> packages. Please refer to the
+<a href="../user-guide/index.html#stacktrace-pruning">User Guide</a> for details.</p>
+</li>
+<li>
+<p>New <code>getAncestors()</code> method in <code>TestDescriptor</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1275,7 +1283,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-06-25 07:31:14 UTC
+Last updated 2023-06-26 17:43:35 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
