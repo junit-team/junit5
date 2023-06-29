@@ -77,5 +77,5 @@ JUnit repository on GitHub.
 * ❓
 
 ==== New Features and Improvements
-
-* ❓
+* New `assertInstanceOf` methods added for Kotlin following up with similar Java `assertInstanceOf`
+methods introduced in `5.8.0` version.

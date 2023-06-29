@@ -19,6 +19,7 @@ import org.junit.jupiter.api.function.ThrowingSupplier
 import java.time.Duration
 import java.util.function.Supplier
 import java.util.stream.Stream
+import kotlin.reflect.KClass
 
 /**
  * @see Assertions.fail
@@ -108,6 +109,41 @@ inline fun <reified T : Throwable> assertThrows(executable: () -> Unit): T {
             throw throwable
         }
     }
+}
+
+/**
+ * Example usage:
+ * ```kotlin
+ * assertInstanceOf(NotImplementedError(), Error::class)
+ * ```
+ *
+ * @see Assertions.assertInstanceOf
+ */
+@API(status = EXPERIMENTAL, since = "5.10")
+fun assertInstanceOf(source: Any?, type: KClass<*>, message: String = "Provided source object is not of a given type $type") {
+    assert(type.isInstance(source), { message })
+}
+
+/**
+ * Example usage:
+ * ```kotlin
+ * assertThrows<AssertionError> {
+ *     assertInstanceOf({ mapOf(Pair(1, 2)) }, MutableList::class)
+ * }
+ * assertEquals("Talk to a duck", exception.message)
+ * ```
+ * @see Assertions.assertInstanceOf
+ */
+@API(status = EXPERIMENTAL, since = "5.10")
+inline fun assertInstanceOf(
+    sourceSupplier: () -> Any?,
+    type: KClass<*>,
+    message: String = "Provided function yield object that is not an instance of a given type $type"
+) {
+    assert(
+        type.isInstance(sourceSupplier()),
+        { message }
+    )
 }
 
 /**
