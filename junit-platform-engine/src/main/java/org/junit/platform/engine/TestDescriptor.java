@@ -114,7 +114,7 @@ public interface TestDescriptor {
 	 *
 	 * @see #getParent()
 	 */
-	@API(status = STABLE, since = "5.10")
+	@API(status = STABLE, since = "1.10")
 	default Set<? extends TestDescriptor> getAncestors() {
 		if (!getParent().isPresent()) {
 			return Collections.emptySet();
