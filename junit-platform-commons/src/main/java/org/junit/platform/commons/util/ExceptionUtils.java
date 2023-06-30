@@ -96,24 +96,25 @@ public final class ExceptionUtils {
 
 	/**
 	 * Prune the stack trace of the supplied {@link Throwable} by removing
-	 * elements from the {@code org.junit}, {@code jdk.internal.reflect} and
-	 * {@code sun.reflect} packages. If an element matching one of the supplied
-	 * class names is encountered, all following elements will be kept regardless.
+	 * {@linkplain StackTraceElement stack trace elements} from the {@code org.junit},
+	 * {@code jdk.internal.reflect}, and {@code sun.reflect} packages. If a
+	 * {@code StackTraceElement} matching one of the supplied {@code classNames}
+	 * is encountered, all subsequent elements in the stack trace will be retained.
 	 *
-	 * <p>Additionally, all elements prior to and including the first
-	 * JUnit Launcher call will be removed.
+	 * <p>Additionally, all elements prior to and including the first JUnit Platform
+	 * Launcher call will be removed.
 	 *
-	 * @param throwable the {@code Throwable} whose stack trace should be
-	 * pruned; never {@code null}
-	 * @param testClassNames the test class names that should stop the pruning
-	 * if encountered; never {@code null}
+	 * @param throwable the {@code Throwable} whose stack trace should be pruned;
+	 * never {@code null}
+	 * @param classNames the class names that should stop the pruning if encountered;
+	 * never {@code null}
 	 *
-	 * @since 5.10
+	 * @since 1.10
 	 */
-	@API(status = INTERNAL, since = "5.10")
-	public static void pruneStackTrace(Throwable throwable, List<String> testClassNames) {
+	@API(status = INTERNAL, since = "1.10")
+	public static void pruneStackTrace(Throwable throwable, List<String> classNames) {
 		Preconditions.notNull(throwable, "Throwable must not be null");
-		Preconditions.notNull(testClassNames, "List of test class names must not be null");
+		Preconditions.notNull(classNames, "List of class names must not be null");
 
 		List<StackTraceElement> stackTrace = Arrays.asList(throwable.getStackTrace());
 		List<StackTraceElement> prunedStackTrace = new ArrayList<>();
@@ -124,7 +125,7 @@ public final class ExceptionUtils {
 			StackTraceElement element = stackTrace.get(i);
 			String className = element.getClassName();
 
-			if (testClassNames.contains(className)) {
+			if (classNames.contains(className)) {
 				// Include all elements called by the test
 				prunedStackTrace.addAll(stackTrace.subList(i, stackTrace.size()));
 				break;
@@ -142,16 +143,16 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * Find all causes and suppressed exceptions in the backtrace of the
+	 * Find all causes and suppressed exceptions in the stack trace of the
 	 * supplied {@link Throwable}.
 	 *
 	 * @param rootThrowable the {@code Throwable} to explore; never {@code null}
 	 * @return an immutable list of all throwables found, including the supplied
 	 * one; never {@code null}
 	 *
-	 * @since 5.10
+	 * @since 1.10
 	 */
-	@API(status = INTERNAL, since = "5.10")
+	@API(status = INTERNAL, since = "1.10")
 	public static List<Throwable> findNestedThrowables(Throwable rootThrowable) {
 		Preconditions.notNull(rootThrowable, "Throwable must not be null");
 

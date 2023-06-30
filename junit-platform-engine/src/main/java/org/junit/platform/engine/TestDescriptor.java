@@ -109,8 +109,8 @@ public interface TestDescriptor {
 	/**
 	 * Get the immutable set of all <em>ancestors</em> of this descriptor.
 	 *
-	 * <p>An <em>ancestors</em> is the parent of this descriptor or the parent
-	 * of one of its parents, recursively.
+	 * <p>An <em>ancestor</em> is the parent of this descriptor or the parent of
+	 * one of its parents, recursively.
 	 *
 	 * @see #getParent()
 	 */
@@ -122,7 +122,10 @@ public interface TestDescriptor {
 		TestDescriptor parent = getParent().get();
 		Set<TestDescriptor> ancestors = new LinkedHashSet<>();
 		ancestors.add(parent);
-		ancestors.addAll(parent.getAncestors());
+		// Need to recurse?
+		if (parent.getParent().isPresent()) {
+			ancestors.addAll(parent.getAncestors());
+		}
 		return Collections.unmodifiableSet(ancestors);
 	}
 

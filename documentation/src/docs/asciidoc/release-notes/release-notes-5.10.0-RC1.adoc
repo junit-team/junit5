@@ -38,6 +38,7 @@ JUnit repository on GitHub.
   <<../user-guide/index.adoc#stacktrace-pruning, User Guide>> for details.
 * New `getAncestors()` method in `TestDescriptor`.
 
+
 [[release-notes-5.10.0-RC1-junit-jupiter]]
 === JUnit Jupiter
 

@@ -1132,14 +1132,15 @@ give it a try and provide feedback to the JUnit team so they can improve and eve
 <<api-evolution, promote>> this feature.
 
 [[stacktrace-pruning]]
-=== Stack trace pruning
+=== Stack Trace Pruning
 
 Since version 1.10, the JUnit Platform provides built-in support for pruning stack traces
-produced by failing tests. This feature can be enabled or disabled via the
-`junit.platform.stacktrace.pruning.enabled` _configuration parameter_.
+produced by failing tests. This feature is enabled by default but can be disabled by
+setting the `junit.platform.stacktrace.pruning.enabled` _configuration parameter_ to
+`false`.
 
-If enabled, all calls from the `org.junit`, `jdk.internal.reflect`, and `sun.reflect`
-packages are removed from the stack trace, unless they are subsequent to the test itself
+When enabled, all calls from the `org.junit`, `jdk.internal.reflect`, and `sun.reflect`
+packages are removed from the stack trace, unless the calls occur after the test itself
 or any of its ancestors. For that reason, calls to `{Assertions}` or `{Assumptions}` will
 never be excluded.
 
