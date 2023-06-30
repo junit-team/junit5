@@ -814,7 +814,7 @@ pre.rouge .gs {
 <li><a href="#running-tests-listeners-flight-recorder">4.8.1. Flight Recorder Support</a></li>
 </ul>
 </li>
-<li><a href="#stacktrace-pruning">4.9. Stack trace pruning</a>
+<li><a href="#stacktrace-pruning">4.9. Stack Trace Pruning</a>
 <ul class="sectlevel3">
 <li><a href="#stacktrace-pruning-pattern">4.9.1. Pattern Matching Syntax</a></li>
 </ul>
@@ -5908,11 +5908,11 @@ such test classes are only executed concurrently if the <code>@Execution(CONCURR
 annotation is present on the test class or method.</p>
 </div>
 <div class="paragraph">
-<p>When parallel execution is enabled and a default <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.html">ClassOrderer</a></code> (see
-<a href="#writing-tests-test-execution-order-classes">Class Order</a> for details) is registered, top-level test
-classes will initially be sorted accordingly and scheduled in that order. However, they
-are not guaranteed to be started in exactly that order since the threads they are executed
-on are not controlled directly by JUnit.</p>
+<p>When parallel execution is enabled and a default <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.html">ClassOrderer</a></code> is registered (see
+<a href="#writing-tests-test-execution-order-classes">Class Order</a> for details), top-level test classes will
+initially be sorted accordingly and scheduled in that order. However, they are not
+guaranteed to be started in exactly that order since the threads they are executed on are
+not controlled directly by JUnit.</p>
 </div>
 <div class="paragraph">
 <p>All nodes of the test tree that are configured with the <code>CONCURRENT</code> execution mode will
@@ -8263,7 +8263,7 @@ parameters</em> used for the following features.</p>
 <p><a href="#launcher-api-listeners-custom-deactivation">Deactivating a TestExecutionListener</a></p>
 </li>
 <li>
-<p><a href="#stacktrace-pruning">Stack trace pruning</a></p>
+<p><a href="#stacktrace-pruning">Stack Trace Pruning</a></p>
 </li>
 </ul>
 </div>
@@ -8664,15 +8664,16 @@ give it a try and provide feedback to the JUnit team so they can improve and eve
 </div>
 </div>
 <div class="sect2">
-<h3 id="stacktrace-pruning"><a class="anchor" href="#stacktrace-pruning"></a>4.9. Stack trace pruning</h3>
+<h3 id="stacktrace-pruning"><a class="anchor" href="#stacktrace-pruning"></a>4.9. Stack Trace Pruning</h3>
 <div class="paragraph">
 <p>Since version 1.10, the JUnit Platform provides built-in support for pruning stack traces
-produced by failing tests. This feature can be enabled or disabled via the
-<code>junit.platform.stacktrace.pruning.enabled</code> <em>configuration parameter</em>.</p>
+produced by failing tests. This feature is enabled by default but can be disabled by
+setting the <code>junit.platform.stacktrace.pruning.enabled</code> <em>configuration parameter</em> to
+<code>false</code>.</p>
 </div>
 <div class="paragraph">
-<p>If enabled, all calls from the <code>org.junit</code>, <code>jdk.internal.reflect</code>, and <code>sun.reflect</code>
-packages are removed from the stack trace, unless they are subsequent to the test itself
+<p>When enabled, all calls from the <code>org.junit</code>, <code>jdk.internal.reflect</code>, and <code>sun.reflect</code>
+packages are removed from the stack trace, unless the calls occur after the test itself
 or any of its ancestors. For that reason, calls to <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.api.Assertions</a></code> or <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> will
 never be excluded.</p>
 </div>
@@ -12618,7 +12619,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-06-26 17:43:35 UTC
+Last updated 2023-06-30 09:52:27 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
