@@ -33,6 +33,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.DosFileAttributeView;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -389,6 +390,15 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			file.setWritable(true);
 			if (Files.isDirectory(path)) {
 				file.setExecutable(true);
+			}
+			DosFileAttributeView dos = Files.getFileAttributeView(path, DosFileAttributeView.class);
+			if (dos != null) {
+				try {
+					dos.setReadOnly(false);
+				}
+				catch (IOException ignore) {
+					// nothing we can do
+				}
 			}
 		}
 

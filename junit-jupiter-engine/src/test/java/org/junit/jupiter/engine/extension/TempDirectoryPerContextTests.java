@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.DosFileAttributeView;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Supplier;
@@ -47,8 +48,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -126,7 +125,6 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	@DisabledOnOs(OS.WINDOWS)
 	@DisplayName("is capable of removing a read-only file in a read-only dir")
 	void readOnlyFileInReadOnlyDirDoesNotCauseFailure() {
 		executeTestsForClass(ReadOnlyFileInReadOnlyDirDoesNotCauseFailureTestCase.class).testEvents()//
@@ -134,7 +132,6 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	@DisabledOnOs(OS.WINDOWS)
 	@DisplayName("is capable of removing a read-only file in a dir in a read-only dir")
 	void readOnlyFileInNestedReadOnlyDirDoesNotCauseFailure() {
 		executeTestsForClass(ReadOnlyFileInDirInReadOnlyDirDoesNotCauseFailureTestCase.class).testEvents()//
@@ -942,8 +939,8 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 		void createReadOnlyFileInReadOnlyDir(@TempDir File tempDir) throws IOException {
 			File file = tempDir.toPath().resolve("file").toFile();
 			assumeTrue(file.createNewFile());
-			assumeTrue(tempDir.setReadOnly());
-			assumeTrue(file.setReadOnly());
+			assumeTrue(makeReadOnly(tempDir));
+			assumeTrue(makeReadOnly(file));
 		}
 
 	}
@@ -956,11 +953,20 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 			File file = tempDir.toPath().resolve("dir").resolve("file").toFile();
 			assumeTrue(file.getParentFile().mkdirs());
 			assumeTrue(file.createNewFile());
-			assumeTrue(tempDir.setReadOnly());
-			assumeTrue(file.getParentFile().setReadOnly());
-			assumeTrue(file.setReadOnly());
+			assumeTrue(makeReadOnly(tempDir));
+			assumeTrue(makeReadOnly(file.getParentFile()));
+			assumeTrue(makeReadOnly(file));
 		}
 
+	}
+
+	private static boolean makeReadOnly(File file) throws IOException {
+		var dos = Files.getFileAttributeView(file.toPath(), DosFileAttributeView.class);
+		if (dos != null) {
+			dos.setReadOnly(true);
+			return true;
+		}
+		return file.setReadOnly();
 	}
 
 	// https://github.com/junit-team/junit5/issues/2609

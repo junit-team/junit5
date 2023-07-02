@@ -64,6 +64,8 @@ JUnit repository on GitHub.
   the documentation for extension registration via `@ExtendWith` on fields.
 * The scope of applicability for `TestWatcher` implementations is now more extensively
   documented in the User Guide and Javadoc.
+* `@TempDir` now successfully cleans up files and directories on Windows that are set to
+  read-only.
 
 
 [[release-notes-5.10.0-RC1-junit-vintage]]
