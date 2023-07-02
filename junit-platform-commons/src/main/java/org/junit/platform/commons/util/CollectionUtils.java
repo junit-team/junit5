@@ -18,6 +18,7 @@ import static java.util.stream.StreamSupport.stream;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
 import java.util.stream.DoubleStream;
@@ -99,7 +101,7 @@ public final class CollectionUtils {
 	 * returned, so if more control over the returned list is required,
 	 * consider creating a new {@code Collector} implementation like the
 	 * following:
-	 *
+	 * <p>
 	 * <pre class="code">
 	 * public static &lt;T&gt; Collector&lt;T, ?, List&lt;T&gt;&gt; toUnmodifiableList(Supplier&lt;List&lt;T&gt;&gt; listSupplier) {
 	 *     return Collectors.collectingAndThen(Collectors.toCollection(listSupplier), Collections::unmodifiableList);
@@ -138,8 +140,12 @@ public final class CollectionUtils {
 				|| LongStream.class.isAssignableFrom(type)//
 				|| Iterable.class.isAssignableFrom(type)//
 				|| Iterator.class.isAssignableFrom(type)//
+				|| Spliterator.class.isAssignableFrom(type)//
 				|| Object[].class.isAssignableFrom(type)//
-				|| (type.isArray() && type.getComponentType().isPrimitive()));
+				|| (type.isArray() && type.getComponentType().isPrimitive())//
+				|| Arrays.stream(type.getMethods())//
+						.map(Method::getReturnType)//
+						.anyMatch(returnType -> returnType == Iterator.class || returnType == Spliterator.class));
 	}
 
 	/**
@@ -153,8 +159,10 @@ public final class CollectionUtils {
 	 * <li>{@link Collection}</li>
 	 * <li>{@link Iterable}</li>
 	 * <li>{@link Iterator}</li>
+	 * <li>{@link Spliterator}</li>
 	 * <li>{@link Object} array</li>
 	 * <li>primitive array</li>
+	 * <li>An object that contains an iterator or spliterator returning method</li>
 	 * </ul>
 	 *
 	 * @param object the object to convert into a stream; never {@code null}
@@ -186,6 +194,9 @@ public final class CollectionUtils {
 		if (object instanceof Iterator) {
 			return stream(spliteratorUnknownSize((Iterator<?>) object, ORDERED), false);
 		}
+		if (object instanceof Spliterator) {
+			return stream((Spliterator<?>) object, false);
+		}
 		if (object instanceof Object[]) {
 			return Arrays.stream((Object[]) object);
 		}
@@ -201,8 +212,7 @@ public final class CollectionUtils {
 		if (object.getClass().isArray() && object.getClass().getComponentType().isPrimitive()) {
 			return IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i));
 		}
-		throw new PreconditionViolationException(
-			"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object);
+		return StreamUtils.tryConvertToStreamByReflection(object);
 	}
 
 	/**

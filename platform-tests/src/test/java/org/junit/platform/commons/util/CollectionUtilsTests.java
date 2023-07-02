@@ -21,10 +21,13 @@ import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -60,8 +63,9 @@ class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithEmptyCollection() {
+		Set<Object> emptySet = Set.of();
 		var exception = assertThrows(PreconditionViolationException.class,
-			() -> CollectionUtils.getOnlyElement(Set.of()));
+			() -> CollectionUtils.getOnlyElement(emptySet));
 		assertEquals("collection must contain exactly one element: []", exception.getMessage());
 	}
 
@@ -74,8 +78,9 @@ class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithMultiElementCollection() {
+		List<String> strings = List.of("foo", "bar");
 		var exception = assertThrows(PreconditionViolationException.class,
-			() -> CollectionUtils.getOnlyElement(List.of("foo", "bar")));
+			() -> CollectionUtils.getOnlyElement(strings));
 		assertEquals("collection must contain exactly one element: [foo, bar]", exception.getMessage());
 	}
 
@@ -94,6 +99,9 @@ class CollectionUtilsTests {
 			Collection.class, //
 			Iterable.class, //
 			Iterator.class, //
+			Spliterator.class, //
+			MySpliteratorProvider.class, //
+			MyIteratorProvider.class, //
 			Object[].class, //
 			String[].class, //
 			int[].class, //
@@ -118,7 +126,9 @@ class CollectionUtilsTests {
 			LongStream.of(100000000), //
 			Set.of(1, 2, 3), //
 			Arguments.of((Object) new Object[] { 9, 8, 7 }), //
-			new int[] { 5, 10, 15 }//
+			new int[] { 5, 10, 15 }, //
+			MySpliteratorProvider.of(new String[] { "mouse", "bear" }), //
+			MyIteratorProvider.of(new Integer[] { 1, 2, 3, 4, 5 })//
 		);
 	}
 
@@ -196,7 +206,7 @@ class CollectionUtilsTests {
 	}
 
 	@Test
-	@SuppressWarnings({ "unchecked", "serial" })
+	@SuppressWarnings({ "unchecked" })
 	void toStreamWithCollection() {
 		var collectionStreamClosed = new AtomicBoolean(false);
 		Collection<String> input = new ArrayList<>() {
@@ -235,6 +245,36 @@ class CollectionUtilsTests {
 	@SuppressWarnings("unchecked")
 	void toStreamWithIterator() {
 		var input = List.of("foo", "bar").iterator();
+
+		var result = (Stream<String>) CollectionUtils.toStream(input);
+
+		assertThat(result).containsExactly("foo", "bar");
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void toStreamWithSpliterator() {
+		final var input = List.of("foo", "bar").spliterator();
+
+		final var result = (Stream<String>) CollectionUtils.toStream(input);
+
+		assertThat(result).containsExactly("foo", "bar");
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void toStreamWithIteratorProvider() {
+		final var input = MyIteratorProvider.of(new String[] { "foo", "bar" });
+
+		final var result = (Stream<String>) CollectionUtils.toStream(input);
+
+		assertThat(result).containsExactly("foo", "bar");
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void toStreamWithSpliteratorProvider() {
+		final var input = MySpliteratorProvider.of(new String[] { "foo", "bar" });
 
 		var result = (Stream<String>) CollectionUtils.toStream(input);
 
@@ -302,6 +342,28 @@ class CollectionUtilsTests {
 		@Override
 		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
 			return source == null ? List.of() : List.of(((String) source).split(","));
+		}
+	}
+
+	@FunctionalInterface
+	private interface MySpliteratorProvider<T> {
+
+		@SuppressWarnings("unused")
+		Spliterator<T> thisReturnsASpliterator();
+
+		static <T> MySpliteratorProvider<T> of(T[] elements) {
+			return () -> Arrays.spliterator(elements);
+		}
+	}
+
+	@FunctionalInterface
+	private interface MyIteratorProvider<T> {
+
+		@SuppressWarnings("unused")
+		Iterator<T> thisReturnsAnIterator();
+
+		static <T> MyIteratorProvider<T> of(T[] elements) {
+			return () -> Spliterators.iterator(Arrays.spliterator(elements));
 		}
 	}
 }
