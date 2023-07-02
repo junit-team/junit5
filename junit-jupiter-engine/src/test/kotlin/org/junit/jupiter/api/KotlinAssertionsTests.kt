@@ -185,6 +185,30 @@ class KotlinAssertionsTests {
     )
 
     @Test
+    fun `assertInstanceOf test passed`() {
+        assertInstanceOf(NotImplementedError(), Error::class)
+    }
+
+    @Test
+    fun `assertInstanceOf test negative`() {
+        assertThrows<AssertionError> {
+            assertInstanceOf(RuntimeException(), String::class)
+        }
+    }
+
+    @Test
+    fun `assertInstanceOf lazy test passed`() {
+        assertInstanceOf({ mutableListOf(1, 2, 3) }, List::class)
+    }
+
+    @Test
+    fun `assertInstanceOf lazy test negative`() {
+        assertThrows<AssertionError> {
+            assertInstanceOf({ mapOf(Pair(1, 2)) }, MutableList::class)
+        }
+    }
+
+    @Test
     fun `assertAll with stream of functions that throw AssertionErrors`() {
         val multipleFailuresError = assertThrows<MultipleFailuresError>("Should have thrown multiple errors") {
             assertAll(Stream.of({ assertFalse(true) }, { assertFalse(true) }))
