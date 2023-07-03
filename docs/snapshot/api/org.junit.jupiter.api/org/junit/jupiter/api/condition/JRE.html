@@ -110,6 +110,13 @@ loadScripts(document, 'script');</script>
 <li><a href="#JAVA_12"><code>JAVA_12</code></a></li>
 <li><a href="#JAVA_13"><code>JAVA_13</code></a></li>
 <li><a href="#JAVA_14"><code>JAVA_14</code></a></li>
+<li><a href="#JAVA_15"><code>JAVA_15</code></a></li>
+<li><a href="#JAVA_16"><code>JAVA_16</code></a></li>
+<li><a href="#JAVA_17"><code>JAVA_17</code></a></li>
+<li><a href="#JAVA_18"><code>JAVA_18</code></a></li>
+<li><a href="#JAVA_19"><code>JAVA_19</code></a></li>
+<li><a href="#JAVA_20"><code>JAVA_20</code></a></li>
+<li><a href="#JAVA_21"><code>JAVA_21</code></a></li>
 <li><a href="#OTHER"><code>OTHER</code></a></li>
 <li><a href="EnabledOnJre.html" title="annotation interface in org.junit.jupiter.api.condition"><code>EnabledOnJre</code></a></li>
 <li><a href="DisabledOnJre.html" title="annotation interface in org.junit.jupiter.api.condition"><code>DisabledOnJre</code></a></li>
@@ -184,7 +191,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color"><code><a href="#JAVA_21" class="member-name-link">JAVA_21</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Java 20.</div>
+<div class="block">Java 21.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="#JAVA_8" class="member-name-link">JAVA_8</a></code></div>
 <div class="col-last even-row-color">
@@ -404,7 +411,7 @@ the order they are declared.</div>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#STABLE" title="class or interface in org.apiguardian.api" class="external-link">STABLE</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.9.2")
 </span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="JRE.html" title="enum class in org.junit.jupiter.api.condition">JRE</a></span>&nbsp;<span class="element-name">JAVA_21</span></div>
-<div class="block">Java 20.</div>
+<div class="block">Java 21.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.9.2</dd>
@@ -468,7 +475,8 @@ not permitted.)</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>true</code> if <em>this</em> <code>JRE</code> is known to be the
- Java Runtime Environment version for the currently executing JVM</dd>
+ Java Runtime Environment version for the currently executing JVM or if
+ the version is <a href="#OTHER"><code>OTHER</code></a></dd>
 </dl>
 </section>
 </li>
@@ -480,7 +488,8 @@ not permitted.)</div>
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="JRE.html" title="enum class in org.junit.jupiter.api.condition">JRE</a></span>&nbsp;<span class="element-name">currentVersion</span>()</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the <a href="JRE.html" title="enum class in org.junit.jupiter.api.condition"><code>JRE</code></a> for the currently executing JVM</dd>
+<dd>the <a href="JRE.html" title="enum class in org.junit.jupiter.api.condition"><code>JRE</code></a> for the currently executing JVM, potentially
+ <a href="#OTHER"><code>OTHER</code></a></dd>
 <dt>Since:</dt>
 <dd>5.7</dd>
 </dl>
