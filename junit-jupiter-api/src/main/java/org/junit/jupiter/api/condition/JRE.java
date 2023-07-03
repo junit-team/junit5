@@ -139,7 +139,7 @@ public enum JRE {
 	JAVA_20,
 
 	/**
-	 * Java 20.
+	 * Java 21.
 	 *
 	 * @since 5.9.2
 	 */
