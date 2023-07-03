@@ -70,7 +70,6 @@
 14ccf3e9668bc111f26f95e209be0cbd  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
 152aae1ed34c678371a7388ad77a8d10  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContext.java
 1662c08704dfa152a611468e4481e8d0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Disabled.java
-17454161b4a842f742007f436b57e742  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-RC1.adoc
 17b47ac362ae93bdda46f9237fe809bf  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Events.java
 1810387ce645632db56f249a7543c318  documentation/src/test/java/example/TaggingDemo.java
 182d49e063428485230c85718770f5c8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultTestInstanceFactoryContext.java
@@ -502,6 +501,7 @@
 9b37e89fef4204ae9853fefae15ae9e4  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ModuleSelector.java
 9b8aebe5972703cb10ebd9251fee5bcd  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/JupiterConfiguration.java
 9bc7c7b55627a2e7bc279f941e2086c4  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTreeWalker.java
+9bdd40cd546c0e8700965d40fe43690e  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-RC1.adoc
 9be445d9b0d99674e70015f4181167b6  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
 9be6adcbe42542572769ff4b9a27ab1f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTaskContext.java
 9c1b99de3aea6ec9a2b736d7b63c48fa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactory.java
