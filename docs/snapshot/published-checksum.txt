@@ -188,6 +188,7 @@
 3df09ba82e07117aac6a5647ef328506  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineDiscoveryRequest.java
 3e153248547a47dd3d79cffc59831ade  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Order.java
 3e55f6a125df488c2827a5776505096e  documentation/src/test/java/example/MyFirstJUnitJupiterTests.java
+3e5f7b71bd18a572165c3a49d4bd341b  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 3eefe5bbe2b4eb8c07c1046d26c58568  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
 3f831d7d8fdb239f5861fe3c08975295  documentation/src/main/java/example/registration/WebResponse.java
 3ffaeff15c4e384b74b76c8ebe8bb093  junit-platform-console/src/main/java/org/junit/platform/console/options/SelectorConverter.java
@@ -254,7 +255,6 @@
 505bccab8e9de16804198413a8bae474  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/NamespaceAwareStore.java
 509c830ec69bdebcce365306bc22fc5b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemProperty.java
 50b76c1f015fbbdefc1c1e014581808a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java
-50f64be32014d23801e961d73752485e  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 517ae1f471cc03186818dd38ec6e518c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariables.java
 51849cb4bda22f6e4aafd3d13a1b6f83  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SuiteDisplayName.java
 518c1a6a46a575f579dbb5b17e18e814  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/OrFilter.java

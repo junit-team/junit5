@@ -6663,6 +6663,18 @@ instead.</p>
 </div>
 </li>
 <li>
+<p><code>@Test(expected = &#8230;&#8203;)</code> and the <code>ExpectedException</code> rule no longer exist; use
+<code>Assertions.assertThrows(&#8230;&#8203;)</code> instead.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#migrating-from-junit4-rule-support">Limited JUnit 4 Rule Support</a> if you still need to use
+<code>ExpectedException</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>Assertions and assumptions in JUnit Jupiter accept the failure message as their last
 argument instead of the first one.</p>
 <div class="ulist">
@@ -12619,7 +12631,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-07-02 15:45:42 UTC
+Last updated 2023-07-03 14:05:11 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
