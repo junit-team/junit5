@@ -37,6 +37,13 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #JAVA_12
  * @see #JAVA_13
  * @see #JAVA_14
+ * @see #JAVA_15
+ * @see #JAVA_16
+ * @see #JAVA_17
+ * @see #JAVA_18
+ * @see #JAVA_19
+ * @see #JAVA_20
+ * @see #JAVA_21
  * @see #OTHER
  * @see EnabledOnJre
  * @see DisabledOnJre
@@ -221,14 +228,16 @@ public enum JRE {
 
 	/**
 	 * @return {@code true} if <em>this</em> {@code JRE} is known to be the
-	 * Java Runtime Environment version for the currently executing JVM
+	 * Java Runtime Environment version for the currently executing JVM or if
+	 * the version is {@link #OTHER}
 	 */
 	public boolean isCurrentVersion() {
 		return this == CURRENT_VERSION;
 	}
 
 	/**
-	 * @return the {@link JRE} for the currently executing JVM
+	 * @return the {@link JRE} for the currently executing JVM, potentially
+	 * {@link #OTHER}
 	 *
 	 * @since 5.7
 	 */
