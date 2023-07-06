@@ -11888,9 +11888,9 @@ built-in fluent <em>builder</em> API, as demonstrated in the following example.<
 <p>When running tests via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, you can enable <em>dry-run mode</em> by setting the
 <code>junit.platform.execution.dryRun.enabled</code> <a href="#running-tests-config-params">configuration parameter</a> to <code>true</code>. In this mode, the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> will not actually
 execute any tests but will notify registered <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> instances as if all
-tests had been executed successfully. This can be useful to test changes in the
-configuration of a build or to verify a listener is called as expected without having to
-wait for all tests to be executed.</p>
+tests had been skipped and their containers had been successful. This can be useful to
+test changes in the configuration of a build or to verify a listener is called as expected
+without having to wait for all tests to be executed.</p>
 </div>
 </div>
 </div>
@@ -12631,7 +12631,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-07-03 14:20:08 UTC
+Last updated 2023-07-06 11:01:42 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
