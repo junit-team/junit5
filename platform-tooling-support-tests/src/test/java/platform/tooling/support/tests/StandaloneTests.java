@@ -89,6 +89,7 @@ class StandaloneTests {
 		var result = Request.builder() //
 				.setTool(new Javac()) //
 				.setProject("standalone") //
+				.addArguments("-proc:none") //
 				.addArguments("-d", workspace.resolve("bin")) //
 				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments(workspace.resolve("src/standalone/JupiterIntegration.java")) //
