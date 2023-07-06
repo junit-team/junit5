@@ -429,6 +429,7 @@
 86cc61f036883b00d526c04081f349f2  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/DirectorySource.java
 86d2fbb822b7f0580c5918d6483bc519  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodSource.java
 86d550ae7980a369ee250e3d45e39b72  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFilter.java
+86f0a17af5daa02c5fe2bbad2fb5d724  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-RC1.adoc
 87c149169e1ecbcbff90b97f066e704c  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
 87d4bb38f5eed81b92120a5ff4984328  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/Suite.java
 884181bfe47f11bb2cc7e166be439e41  junit-platform-console/src/main/java/org/junit/platform/console/options/TestDiscoveryOptionsMixin.java
@@ -501,7 +502,6 @@
 9a974faf1fac1d749616474b9361a918  documentation/src/test/java/example/StandardTests.java
 9ab2320940a1f7aafea5b190c0d4d06b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptingTestExecutionListener.java
 9b37e89fef4204ae9853fefae15ae9e4  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ModuleSelector.java
-9b51f9f05821d1e075c462393b798267  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0-RC1.adoc
 9b8aebe5972703cb10ebd9251fee5bcd  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/JupiterConfiguration.java
 9bc7c7b55627a2e7bc279f941e2086c4  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTreeWalker.java
 9be445d9b0d99674e70015f4181167b6  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
