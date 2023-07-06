@@ -1146,8 +1146,3 @@ never be excluded.
 
 In addition, all elements prior to and including the first call from the JUnit Platform
 Launcher will be removed.
-
-[[stacktrace-pruning-pattern]]
-==== Pattern Matching Syntax
-
-Refer to <<running-tests-config-params-deactivation-pattern>> for details.
