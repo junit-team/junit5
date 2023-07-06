@@ -62,6 +62,7 @@ JUnit repository on GitHub.
 * Lifecycle and thread-safety semantics are now documented for the `TempDirFactory` SPI.
 * The scope of applicability for `TestWatcher` implementations is now more extensively
   documented in the User Guide and Javadoc.
+* `JAVA_22` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.10.0-RC1-junit-vintage]]
