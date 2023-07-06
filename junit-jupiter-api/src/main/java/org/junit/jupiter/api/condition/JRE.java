@@ -159,7 +159,7 @@ public enum JRE {
 	 *
 	 * @since 5.10
 	 */
-	@API(status = STABLE, since = "5.9.2")
+	@API(status = STABLE, since = "5.10")
 	JAVA_22,
 
 	/**
