@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_18;
 import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.JAVA_20;
 import static org.junit.jupiter.api.condition.JRE.JAVA_21;
+import static org.junit.jupiter.api.condition.JRE.JAVA_22;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
 
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,12 @@ public class JRETests {
 	@EnabledOnJre(JAVA_21)
 	void java21() {
 		assertEquals(JAVA_21, JRE.currentVersion());
+	}
+
+	@Test
+	@EnabledOnJre(JAVA_22)
+	void java22() {
+		assertEquals(JAVA_22, JRE.currentVersion());
 	}
 
 	@Test

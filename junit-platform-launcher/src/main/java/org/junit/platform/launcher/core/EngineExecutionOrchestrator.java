@@ -110,8 +110,7 @@ public class EngineExecutionOrchestrator {
 			@Override
 			public void visit(TestIdentifier testIdentifier) {
 				if (!testIdentifier.isContainer()) {
-					listener.executionStarted(testIdentifier);
-					listener.executionFinished(testIdentifier, TestExecutionResult.successful());
+					listener.executionSkipped(testIdentifier, "JUnit Platform dry-run mode is enabled");
 				}
 			}
 

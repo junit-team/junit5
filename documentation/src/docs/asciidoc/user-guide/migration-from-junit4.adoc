@@ -63,6 +63,10 @@ tests to JUnit Jupiter.
 * `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith` and
   `@RegisterExtension`.
   - See also <<migrating-from-junit4-rule-support>>.
+* `@Test(expected = ...)` and the `ExpectedException` rule no longer exist; use
+  `Assertions.assertThrows(...)` instead.
+  - See <<migrating-from-junit4-rule-support>> if you still need to use
+    `ExpectedException`.
 * Assertions and assumptions in JUnit Jupiter accept the failure message as their last
   argument instead of the first one.
   - See <<migrating-from-junit4-failure-message-arguments>> for details.

@@ -153,11 +153,11 @@ public class LauncherConstants {
 	 *
 	 * <p>When dry-run mode is enabled, no tests will be executed. Instead, all
 	 * registered {@link TestExecutionListener TestExecutionListeners} will
-	 * receive started/finished events for all test descriptors that are part
-	 * of the discovered {@link TestPlan}. All tests will be reported as
-	 * successful. This can be useful to test changes in the configuration of a
-	 * build or to verify a listener is called as expected without having to
-	 * wait for all tests to be executed.
+	 * receive events for all test descriptors that are part of the discovered
+	 * {@link TestPlan}. All containers will be reported as successful and all
+	 * tests as skipped. This can be useful to test changes in the configuration
+	 * of a build or to verify a listener is called as expected without having
+	 * to wait for all tests to be executed.
 	 *
 	 * <p>Value must be either {@code true} or {@code false}; defaults to {@code false}.
 	 */
