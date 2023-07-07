@@ -36,7 +36,9 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.function.Try;
 
 /**
  * Collection of utilities for working with {@link Collection Collections}.
@@ -140,12 +142,12 @@ public final class CollectionUtils {
 				|| LongStream.class.isAssignableFrom(type)//
 				|| Iterable.class.isAssignableFrom(type)//
 				|| Iterator.class.isAssignableFrom(type)//
-				|| Spliterator.class.isAssignableFrom(type)//
 				|| Object[].class.isAssignableFrom(type)//
 				|| (type.isArray() && type.getComponentType().isPrimitive())//
 				|| Arrays.stream(type.getMethods())//
+						.filter(m -> m.getName().equals("iterator"))//
 						.map(Method::getReturnType)//
-						.anyMatch(returnType -> returnType == Iterator.class || returnType == Spliterator.class));
+						.anyMatch(returnType -> returnType == Iterator.class));
 	}
 
 	/**
@@ -159,10 +161,9 @@ public final class CollectionUtils {
 	 * <li>{@link Collection}</li>
 	 * <li>{@link Iterable}</li>
 	 * <li>{@link Iterator}</li>
-	 * <li>{@link Spliterator}</li>
 	 * <li>{@link Object} array</li>
 	 * <li>primitive array</li>
-	 * <li>An object that contains an iterator or spliterator returning method</li>
+	 * <li>An object that contains a method with name `iterator` returning an Iterator object</li>
 	 * </ul>
 	 *
 	 * @param object the object to convert into a stream; never {@code null}
@@ -194,9 +195,6 @@ public final class CollectionUtils {
 		if (object instanceof Iterator) {
 			return stream(spliteratorUnknownSize((Iterator<?>) object, ORDERED), false);
 		}
-		if (object instanceof Spliterator) {
-			return stream((Spliterator<?>) object, false);
-		}
 		if (object instanceof Object[]) {
 			return Arrays.stream((Object[]) object);
 		}
@@ -212,7 +210,31 @@ public final class CollectionUtils {
 		if (object.getClass().isArray() && object.getClass().getComponentType().isPrimitive()) {
 			return IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i));
 		}
-		return StreamUtils.tryConvertToStreamByReflection(object);
+		return tryConvertToStreamByReflection(object);
+	}
+
+	private static Stream<?> tryConvertToStreamByReflection(Object object) {
+		Preconditions.notNull(object, "Object must not be null");
+		try {
+			String name = "iterator";
+			Method method = object.getClass().getMethod(name);
+			if (method.getReturnType() == Iterator.class) {
+				return stream(() -> tryIteratorToSpliterator(object, method), ORDERED, false);
+			}
+			else {
+				throw new PreconditionViolationException(
+					"Method with name 'iterator' does not return " + Iterator.class.getName());
+			}
+		}
+		catch (NoSuchMethodException | IllegalStateException e) {
+			throw new PreconditionViolationException(//
+				"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object, e);
+		}
+	}
+
+	private static Spliterator<?> tryIteratorToSpliterator(Object object, Method method) {
+		return Try.call(() -> spliteratorUnknownSize((Iterator<?>) method.invoke(object), ORDERED))//
+				.getOrThrow(e -> new JUnitException("Cannot invoke method " + method.getName() + " onto " + object, e));//
 	}
 
 	/**

@@ -99,9 +99,7 @@ class CollectionUtilsTests {
 			Collection.class, //
 			Iterable.class, //
 			Iterator.class, //
-			Spliterator.class, //
-			MySpliteratorProvider.class, //
-			MyIteratorProvider.class, //
+			IteratorProvider.class, //
 			Object[].class, //
 			String[].class, //
 			int[].class, //
@@ -123,12 +121,11 @@ class CollectionUtilsTests {
 			Stream.of("cat", "dog"), //
 			DoubleStream.of(42.3), //
 			IntStream.of(99), //
-			LongStream.of(100000000), //
+			LongStream.of(100_000_000), //
 			Set.of(1, 2, 3), //
 			Arguments.of((Object) new Object[] { 9, 8, 7 }), //
 			new int[] { 5, 10, 15 }, //
-			MySpliteratorProvider.of(new String[] { "mouse", "bear" }), //
-			MyIteratorProvider.of(new Integer[] { 1, 2, 3, 4, 5 })//
+			IteratorProvider.of(new Integer[] { 1, 2, 3, 4, 5 })//
 		);
 	}
 
@@ -139,6 +136,8 @@ class CollectionUtilsTests {
 			Object.class, //
 			Integer.class, //
 			String.class, //
+			IteratorProviderNotUsable.class, //
+			Spliterator.class, //
 			int.class, //
 			boolean.class //
 	})
@@ -253,18 +252,8 @@ class CollectionUtilsTests {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	void toStreamWithSpliterator() {
-		final var input = List.of("foo", "bar").spliterator();
-
-		final var result = (Stream<String>) CollectionUtils.toStream(input);
-
-		assertThat(result).containsExactly("foo", "bar");
-	}
-
-	@Test
-	@SuppressWarnings("unchecked")
 	void toStreamWithIteratorProvider() {
-		final var input = MyIteratorProvider.of(new String[] { "foo", "bar" });
+		final var input = IteratorProvider.of(new String[] { "foo", "bar" });
 
 		final var result = (Stream<String>) CollectionUtils.toStream(input);
 
@@ -272,13 +261,11 @@ class CollectionUtilsTests {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
-	void toStreamWithSpliteratorProvider() {
-		final var input = MySpliteratorProvider.of(new String[] { "foo", "bar" });
+	void throwWhenIteratorNamedMethodDoesNotReturnAnIterator() {
+		var o = IteratorProviderNotUsable.of(new String[] { "Test" });
+		var e = assertThrows(PreconditionViolationException.class, () -> CollectionUtils.toStream(o));
 
-		var result = (Stream<String>) CollectionUtils.toStream(input);
-
-		assertThat(result).containsExactly("foo", "bar");
+		assertEquals("Method with name 'iterator' does not return java.util.Iterator", e.getMessage());
 	}
 
 	@Test
@@ -345,24 +332,29 @@ class CollectionUtilsTests {
 		}
 	}
 
+	/**
+	 * An interface that has a method with name 'iterator', returning a java.util/Iterator as a return type
+	 */
 	@FunctionalInterface
-	private interface MySpliteratorProvider<T> {
+	private interface IteratorProvider<T> {
 
 		@SuppressWarnings("unused")
-		Spliterator<T> thisReturnsASpliterator();
+		Iterator<T> iterator();
 
-		static <T> MySpliteratorProvider<T> of(T[] elements) {
-			return () -> Arrays.spliterator(elements);
+		static <T> IteratorProvider<T> of(T[] elements) {
+			return () -> Spliterators.iterator(Arrays.spliterator(elements));
 		}
 	}
 
+	/**
+	 * An interface that has a method with name 'iterator', but does not return java.util/Iterator as a return type
+	 */
 	@FunctionalInterface
-	private interface MyIteratorProvider<T> {
-
+	private interface IteratorProviderNotUsable {
 		@SuppressWarnings("unused")
-		Iterator<T> thisReturnsAnIterator();
+		Object iterator();
 
-		static <T> MyIteratorProvider<T> of(T[] elements) {
+		static <T> IteratorProviderNotUsable of(T[] elements) {
 			return () -> Spliterators.iterator(Arrays.spliterator(elements));
 		}
 	}
