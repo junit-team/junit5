@@ -21,11 +21,11 @@ javaLibrary {
 
 tasks {
 	compileJava {
-		javaCompiler.set(project.javaToolchains.compilerFor {
-			languageVersion.set(JavaLanguageVersion.of(8))
-		})
+		javaCompiler = project.javaToolchains.compilerFor {
+			languageVersion = JavaLanguageVersion.of(8)
+		}
 	}
 	compileModule {
-		options.release.set(11)
+		options.release = 11
 	}
 }

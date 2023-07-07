@@ -50,12 +50,12 @@ dependencies {
 }
 
 jmh {
-	jmhVersion.set(libs.versions.jmh)
+	jmhVersion = libs.versions.jmh
 
-	duplicateClassesStrategy.set(DuplicatesStrategy.WARN)
-	fork.set(1)
-	warmupIterations.set(1)
-	iterations.set(5)
+	duplicateClassesStrategy = DuplicatesStrategy.WARN
+	fork = 1
+	warmupIterations = 1
+	iterations = 5
 }
 
 tasks {
@@ -67,7 +67,7 @@ tasks {
 		distribution {
 			// Retry in a new JVM on Windows to improve chances of successful retries when
 			// cached resources are used (e.g. in ClasspathScannerTests)
-			retryInSameJvm.set(!OperatingSystem.current().isWindows)
+			retryInSameJvm = !OperatingSystem.current().isWindows
 		}
 	}
 	test {

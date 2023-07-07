@@ -19,12 +19,12 @@ tasks.withType<Test>().configureEach {
 		exceptionFormat = FULL
 	}
 	retry {
-		maxRetries.set(buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0))
+		maxRetries = buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0)
 	}
 	distribution {
 		enabled.convention(buildParameters.enterprise.testDistribution.enabled && (!buildParameters.ci || System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNotBlank()))
-		maxLocalExecutors.set(buildParameters.enterprise.testDistribution.maxLocalExecutors)
-		maxRemoteExecutors.set(buildParameters.enterprise.testDistribution.maxRemoteExecutors)
+		maxLocalExecutors = buildParameters.enterprise.testDistribution.maxLocalExecutors
+		maxRemoteExecutors = buildParameters.enterprise.testDistribution.maxRemoteExecutors
 		if (buildParameters.ci) {
 			when {
 				OperatingSystem.current().isLinux -> requirements.add("os=linux")
@@ -34,11 +34,11 @@ tasks.withType<Test>().configureEach {
 		}
 	}
 	predictiveSelection {
-		enabled.set(buildParameters.enterprise.predictiveTestSelection.enabled)
+		enabled = buildParameters.enterprise.predictiveTestSelection.enabled
 
 		// Ensure PTS works when publishing Build Scans to scans.gradle.com
 		this as PredictiveTestSelectionExtensionInternal
-		server.set(uri("https://ge.junit.org"))
+		server = uri("https://ge.junit.org")
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14

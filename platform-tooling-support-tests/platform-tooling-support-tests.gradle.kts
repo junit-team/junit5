@@ -147,7 +147,7 @@ tasks.test {
 	distribution {
 		requirements.add("jdk=8")
 		this as TestDistributionExtensionInternal
-		preferredMaxDuration.set(Duration.ofMillis(500))
+		preferredMaxDuration = Duration.ofMillis(500)
 	}
 	jvmArgumentProviders += JavaHomeDir(project, 8, distribution.enabled)
 }
@@ -179,7 +179,7 @@ class JavaHomeDir(project: Project, @Input val version: Int, testDistributionEna
 			.value(project.provider {
 				try {
 					project.javaToolchains.launcherFor {
-						languageVersion.set(JavaLanguageVersion.of(version))
+						languageVersion = JavaLanguageVersion.of(version)
 					}.get()
 				} catch (e: NoToolchainAvailableException) {
 					null

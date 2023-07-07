@@ -54,7 +54,7 @@ dependencies {
 }
 
 nexusPublishing {
-	packageGroup.set("org.junit")
+	packageGroup = "org.junit"
 	repositories {
 		sonatype()
 	}

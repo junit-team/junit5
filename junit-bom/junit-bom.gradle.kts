@@ -17,8 +17,8 @@ dependencies {
 publishing.publications.named<MavenPublication>("maven") {
 	from(components["javaPlatform"])
 	pom {
-		description.set("This Bill of Materials POM can be used to ease dependency management " +
-				"when referencing multiple JUnit artifacts using Gradle or Maven.")
+		description = "This Bill of Materials POM can be used to ease dependency management " +
+				"when referencing multiple JUnit artifacts using Gradle or Maven."
 		withXml {
 			val filteredContent = asString().replace("\\s*<scope>compile</scope>".toRegex(), "")
 			asString().clear().append(filteredContent)

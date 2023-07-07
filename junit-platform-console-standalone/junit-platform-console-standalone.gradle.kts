@@ -30,7 +30,7 @@ tasks {
 	}
 	val shadowedArtifactsFile by registering(WriteArtifactsFile::class) {
 		from(configurations.shadowed)
-		outputFile.set(layout.buildDirectory.file("shadowed-artifacts"))
+		outputFile = layout.buildDirectory.file("shadowed-artifacts")
 	}
 	shadowJar {
 		// https://github.com/junit-team/junit5/issues/2557

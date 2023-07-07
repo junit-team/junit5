@@ -80,10 +80,10 @@ val ota4jDocVersion = if (libs.versions.opentest4j.get().contains("SNAPSHOT")) "
 val apiGuardianDocVersion = if (libs.versions.apiguardian.get().contains("SNAPSHOT")) "snapshot" else libs.versions.apiguardian.get()
 
 gitPublish {
-	repoUri.set("https://github.com/junit-team/junit5.git")
-	branch.set("gh-pages")
-	sign.set(false)
-	fetchDepth.set(1)
+	repoUri = "https://github.com/junit-team/junit5.git"
+	branch = "gh-pages"
+	sign = false
+	fetchDepth = 1
 
 	contents {
 		from(docsDir)
@@ -142,7 +142,7 @@ tasks {
 	}
 
 	register<RunConsoleLauncher>("consoleLauncher") {
-		hideOutput.set(false)
+		hideOutput = false
 		outputs.upToDateWhen { false }
 	}
 
@@ -160,51 +160,51 @@ tasks {
 
 	val generateConsoleLauncherOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("--help", "--disable-banner")
-		outputFile.set(consoleLauncherOptionsFile)
+		outputFile = consoleLauncherOptionsFile
 	}
 
 	val generateConsoleLauncherDiscoverOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("discover", "--help", "--disable-banner")
-		outputFile.set(consoleLauncherDiscoverOptionsFile)
+		outputFile = consoleLauncherDiscoverOptionsFile
 	}
 
 	val generateConsoleLauncherExecuteOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("execute", "--help", "--disable-banner")
-		outputFile.set(consoleLauncherExecuteOptionsFile)
+		outputFile = consoleLauncherExecuteOptionsFile
 	}
 
 	val generateConsoleLauncherEnginesOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("engines", "--help", "--disable-banner")
-		outputFile.set(consoleLauncherEnginesOptionsFile)
+		outputFile = consoleLauncherEnginesOptionsFile
 	}
 
 	val generateExperimentalApisTable by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.api.tools.ApiReportGenerator")
+		mainClass = "org.junit.api.tools.ApiReportGenerator"
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
 		args.add("EXPERIMENTAL")
-		outputFile.set(experimentalApisTableFile)
+		outputFile = experimentalApisTableFile
 	}
 
 	val generateDeprecatedApisTable by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.api.tools.ApiReportGenerator")
+		mainClass = "org.junit.api.tools.ApiReportGenerator"
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
 		args.add("DEPRECATED")
-		outputFile.set(deprecatedApisTableFile)
+		outputFile = deprecatedApisTableFile
 	}
 
 	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(GenerateStandaloneConsoleLauncherShadowedArtifactsFile::class) {
 		inputJar.fileProvider(standaloneConsoleLauncher.elements.map { it.single().asFile })
-		outputFile.set(standaloneConsoleLauncherShadowedArtifactsFile)
+		outputFile = standaloneConsoleLauncherShadowedArtifactsFile
 	}
 
 	withType<AbstractAsciidoctorTask>().configureEach {

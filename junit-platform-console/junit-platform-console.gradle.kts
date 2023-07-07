@@ -41,7 +41,7 @@ tasks {
 		}
 		from(sourceSets.mainRelease9.get().output.classesDirs)
 		doLast(objects.newInstance(junitbuild.java.ExecJarAction::class).apply {
-			javaLauncher.set(project.javaToolchains.launcherFor(java.toolchain))
+			javaLauncher = project.javaToolchains.launcherFor(java.toolchain)
 			args.addAll(
 				"--update",
 				"--file", archiveFile.get().asFile.absolutePath,

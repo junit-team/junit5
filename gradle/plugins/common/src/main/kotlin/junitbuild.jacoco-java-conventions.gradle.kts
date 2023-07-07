@@ -17,7 +17,7 @@ tasks.withType<Test>().configureEach {
 
 val codeCoverageClassesJar by tasks.registering(Jar::class) {
 	from(tasks.jar.map { zipTree(it.archiveFile) })
-	archiveClassifier.set("jacoco")
+	archiveClassifier = "jacoco"
 	enabled = project in mavenizedProjects
 	duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }

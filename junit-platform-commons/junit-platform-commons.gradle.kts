@@ -19,7 +19,7 @@ tasks.jar {
 	val release9ClassesDir = sourceSets.mainRelease9.get().output.classesDirs.singleFile
 	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
 	doLast(objects.newInstance(ExecJarAction::class).apply {
-		javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+		javaLauncher = javaToolchains.launcherFor(java.toolchain)
 		args.addAll(
 			"--update",
 			"--file", archiveFile.get().asFile.absolutePath,
