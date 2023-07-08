@@ -24,7 +24,7 @@ import org.apiguardian.api.API;
  * <p>It is typically implemented by implementations of
  * {@link org.junit.jupiter.params.provider.ArgumentsProvider ArgumentsProvider}
  * and {@link org.junit.jupiter.params.converter.ArgumentConverter ArgumentConverter}
- * in order to signal that they can {@link #accept} a certain annotation.
+ * in order to signal that they can {@link #accept accept} a certain annotation.
  *
  * @since 5.0
  */
