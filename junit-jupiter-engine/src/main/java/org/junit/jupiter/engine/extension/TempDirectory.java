@@ -21,7 +21,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.AnnotatedElement;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -36,11 +36,14 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.DosFileAttributeView;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
@@ -58,8 +61,10 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * {@code TempDirectory} is a JUnit Jupiter extension that creates and cleans
@@ -128,7 +133,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				CleanupMode cleanupMode = determineCleanupModeForField(field);
 				TempDirFactory factory = determineTempDirFactoryForField(field, scope);
 				makeAccessible(field).set(testInstance,
-					getPathOrFile(field, field.getType(), factory, cleanupMode, scope, context));
+					getPathOrFile(new FieldContext(field), field.getType(), factory, cleanupMode, scope, context));
 			}
 			catch (Throwable t) {
 				ExceptionUtils.throwAsUncheckedException(t);
@@ -161,8 +166,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		CleanupMode cleanupMode = determineCleanupModeForParameter(parameterContext);
 		Scope scope = getScope(extensionContext);
 		TempDirFactory factory = determineTempDirFactoryForParameter(parameterContext, scope);
-		return getPathOrFile(parameterContext.getParameter(), parameterType, factory, cleanupMode, scope,
-			extensionContext);
+		return getPathOrFile(parameterContext, parameterType, factory, cleanupMode, scope, extensionContext);
 	}
 
 	private CleanupMode determineCleanupModeForField(Field field) {
@@ -232,13 +236,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private Object getPathOrFile(AnnotatedElement sourceElement, Class<?> type, TempDirFactory factory,
+	private Object getPathOrFile(AnnotatedElementContext elementContext, Class<?> type, TempDirFactory factory,
 			CleanupMode cleanupMode, Scope scope, ExtensionContext extensionContext) {
 		Namespace namespace = scope == Scope.PER_DECLARATION //
-				? NAMESPACE.append(sourceElement) //
+				? NAMESPACE.append(elementContext) //
 				: NAMESPACE;
 		Path path = extensionContext.getStore(namespace) //
-				.getOrComputeIfAbsent(KEY, __ -> createTempDir(factory, cleanupMode, extensionContext),
+				.getOrComputeIfAbsent(KEY, __ -> createTempDir(factory, cleanupMode, elementContext, extensionContext),
 					CloseablePath.class) //
 				.get();
 
@@ -246,9 +250,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	static CloseablePath createTempDir(TempDirFactory factory, CleanupMode cleanupMode,
-			ExtensionContext executionContext) {
+			AnnotatedElementContext elementContext, ExtensionContext executionContext) {
 		try {
-			return new CloseablePath(factory, cleanupMode, executionContext);
+			return new CloseablePath(factory, cleanupMode, elementContext, executionContext);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
@@ -264,9 +268,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private final CleanupMode cleanupMode;
 		private final ExtensionContext executionContext;
 
-		CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, ExtensionContext executionContext)
-				throws Exception {
-			this.dir = factory.createTempDirectory(executionContext);
+		CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, AnnotatedElementContext elementContext,
+				ExtensionContext executionContext) throws Exception {
+			this.dir = factory.createTempDirectory(elementContext, executionContext);
 			this.factory = factory;
 			this.cleanupMode = cleanupMode;
 			this.executionContext = executionContext;
@@ -433,6 +437,40 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				return path;
 			}
 		}
+	}
+
+	static class FieldContext implements AnnotatedElementContext {
+
+		private final Field field;
+
+		FieldContext(Field field) {
+			this.field = field;
+		}
+
+		@Override
+		public boolean isAnnotated(Class<? extends Annotation> annotationType) {
+			return AnnotationUtils.isAnnotated(field, annotationType);
+		}
+
+		@Override
+		public <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
+			return AnnotationUtils.findAnnotation(field, annotationType);
+		}
+
+		@Override
+		public <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
+			return AnnotationUtils.findRepeatableAnnotations(field, annotationType);
+		}
+
+		@Override
+		public String toString() {
+			// @formatter:off
+			return new ToStringBuilder(this)
+					.append("field", this.field)
+					.toString();
+			// @formatter:on
+		}
+
 	}
 
 	enum Scope {

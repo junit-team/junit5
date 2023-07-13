@@ -36,7 +36,7 @@ import org.apiguardian.api.API;
  * @see java.lang.reflect.Constructor
  */
 @API(status = STABLE, since = "5.0")
-public interface ParameterContext {
+public interface ParameterContext extends AnnotatedElementContext {
 
 	/**
 	 * Get the {@link Parameter} for this context.

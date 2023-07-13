@@ -28,6 +28,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
@@ -127,7 +128,7 @@ class DefaultJupiterConfigurationTests {
 	private static class CustomFactory implements TempDirFactory {
 
 		@Override
-		public Path createTempDirectory(ExtensionContext context) {
+		public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
 			throw new UnsupportedOperationException();
 		}
 	}

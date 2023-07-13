@@ -62,6 +62,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -390,7 +391,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			private boolean closed;
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
 				return Files.createTempDirectory("custom");
 			}
 
@@ -1178,8 +1180,9 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		private static class Factory implements TempDirFactory {
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
-				return Files.createTempDirectory(context.getRequiredTestMethod().getName());
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
+				return Files.createTempDirectory(extensionContext.getRequiredTestMethod().getName());
 			}
 		}
 
@@ -1203,7 +1206,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
 				return Files.createTempDirectory(parent, "prefix");
 			}
 		}
@@ -1223,7 +1227,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			private static FileSystem fileSystem;
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
 				fileSystem = MemoryFileSystemBuilder.newEmpty().build();
 				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
 			}
@@ -1250,7 +1255,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			private static FileSystem fileSystem;
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
 				fileSystem = Jimfs.newFileSystem(Configuration.unix());
 				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
 			}
