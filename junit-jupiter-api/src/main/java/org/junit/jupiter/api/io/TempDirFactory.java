@@ -55,7 +55,8 @@ public interface TempDirFactory extends Closeable {
 	 * not be associated with the {@link java.nio.file.FileSystems#getDefault()
 	 * default FileSystem}.
 	 *
-	 * @param elementContext   the current annotated element context; never {@code null}
+	 * @param elementContext   the context of the field or parameter where
+	 *                         {@code @TempDir} is declared; never {@code null}
 	 * @param extensionContext the current extension context; never {@code null}
 	 * @return the path to the newly created temporary directory; never {@code null}
 	 * @throws Exception in case of failures

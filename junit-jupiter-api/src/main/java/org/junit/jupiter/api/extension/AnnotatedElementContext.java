@@ -19,6 +19,19 @@ import java.util.Optional;
 
 import org.apiguardian.api.API;
 
+/**
+ * {@code AnnotatedElementContext} encapsulates the <em>context</em> in which an
+ * {@link #getAnnotatedElement() AnnotatedElement} is declared.
+ *
+ * <p>For example, an {@code AnnotatedElementContext} is used in
+ * {@link org.junit.jupiter.api.io.TempDirFactory TempDirFactory} to allow inspecting
+ * the field or parameter the {@link org.junit.jupiter.api.io.TempDir TempDir}
+ * annotation is declared on.
+ *
+ * <p>This interface is not intended to be implemented by clients.
+ *
+ * @since 5.10
+ */
 @API(status = EXPERIMENTAL, since = "5.10")
 public interface AnnotatedElementContext {
 
@@ -26,7 +39,7 @@ public interface AnnotatedElementContext {
 	 * Get the {@link AnnotatedElement} for this context.
 	 *
 	 * <h4>WARNING</h4>
-	 * <p>When searching for annotations on the parameter in this context,
+	 * <p>When searching for annotations on the annotated element in this context,
 	 * favor {@link #isAnnotated(Class)}, {@link #findAnnotation(Class)}, and
 	 * {@link #findRepeatableAnnotations(Class)} over methods in the
 	 * {@link AnnotatedElement} API due to a bug in {@code javac} on JDK versions prior
@@ -48,7 +61,6 @@ public interface AnnotatedElementContext {
 	 *
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return {@code true} if the annotation is present or meta-present
-	 * @since 5.1.1
 	 * @see #findAnnotation(Class)
 	 * @see #findRepeatableAnnotations(Class)
 	 */
@@ -68,7 +80,6 @@ public interface AnnotatedElementContext {
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return an {@code Optional} containing the annotation; never {@code null} but
 	 * potentially empty
-	 * @since 5.1.1
 	 * @see #isAnnotated(Class)
 	 * @see #findRepeatableAnnotations(Class)
 	 */
@@ -89,7 +100,6 @@ public interface AnnotatedElementContext {
 	 * {@code null}
 	 * @return the list of all such annotations found; neither {@code null} nor
 	 * mutable, but potentially empty
-	 * @since 5.1.1
 	 * @see #isAnnotated(Class)
 	 * @see #findAnnotation(Class)
 	 * @see java.lang.annotation.Repeatable
