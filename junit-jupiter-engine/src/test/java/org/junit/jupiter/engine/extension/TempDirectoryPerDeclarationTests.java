@@ -10,6 +10,10 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,6 +34,11 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.su
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Parameter;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -343,6 +352,20 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@DisplayName("that uses com.google.jimfs:jimfs")
 		void supportsFactoryWithJimfs() {
 			executeTestsForClass(FactoryWithJimfsTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("that uses annotated element name as temp dir name prefix")
+		void supportsFactoryWithAnnotatedElementNameAsPrefix() {
+			executeTestsForClass(FactoryWithAnnotatedElementNameAsPrefixTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("that uses custom annotation")
+		void supportsFactoryWithCustomAnnotation() {
+			executeTestsForClass(FactoryWithCustomAnnotationTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
@@ -1266,6 +1289,82 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				fileSystem.close();
 				fileSystem = null;
 			}
+		}
+
+	}
+
+	static class FactoryWithAnnotatedElementNameAsPrefixTestCase {
+
+		@TempDir(factory = Factory.class)
+		private Path tempDir1;
+
+		private Path tempDir2;
+
+		@BeforeEach
+		void setUp(@TempDir(factory = Factory.class) Path tempDir2) {
+			this.tempDir2 = tempDir2;
+		}
+
+		@Test
+		void test(@TempDir(factory = Factory.class) Path tempDir3) {
+			assertThat(tempDir1.getFileName()).asString().startsWith("tempDir1");
+			assertThat(tempDir2.getFileName()).asString().startsWith("tempDir2");
+			assertThat(tempDir3.getFileName()).asString().startsWith("tempDir3");
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
+				return Files.createTempDirectory(getName(elementContext.getAnnotatedElement()));
+			}
+
+			private static String getName(AnnotatedElement element) {
+				return element instanceof Field ? ((Field) element).getName() : ((Parameter) element).getName();
+			}
+
+		}
+
+	}
+
+	static class FactoryWithCustomAnnotationTestCase {
+
+		@Prefix("field")
+		@TempDir(factory = Factory.class)
+		private Path tempDir1;
+
+		private Path tempDir2;
+
+		@BeforeEach
+		void beforeEach(@Prefix("beforeEach") @TempDir(factory = Factory.class) Path tempDir2) {
+			this.tempDir2 = tempDir2;
+		}
+
+		@Test
+		void test(@Prefix("method") @TempDir(factory = Factory.class) Path tempDir3) {
+			assertThat(tempDir1.getFileName()).asString().startsWith("field");
+			assertThat(tempDir2.getFileName()).asString().startsWith("beforeEach");
+			assertThat(tempDir3.getFileName()).asString().startsWith("method");
+		}
+
+		@Target({ ANNOTATION_TYPE, FIELD, PARAMETER })
+		@Retention(RUNTIME)
+		private @interface Prefix {
+
+			String value();
+
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
+				String prefix = elementContext.findAnnotation(Prefix.class).map(Prefix::value).orElseThrow();
+				return Files.createTempDirectory(prefix);
+			}
+
 		}
 
 	}
