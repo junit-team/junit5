@@ -23,6 +23,20 @@ import org.apiguardian.api.API;
 public interface AnnotatedElementContext {
 
 	/**
+	 * Get the {@link AnnotatedElement} for this context.
+	 *
+	 * <h4>WARNING</h4>
+	 * <p>When searching for annotations on the parameter in this context,
+	 * favor {@link #isAnnotated(Class)}, {@link #findAnnotation(Class)}, and
+	 * {@link #findRepeatableAnnotations(Class)} over methods in the
+	 * {@link AnnotatedElement} API due to a bug in {@code javac} on JDK versions prior
+	 * to JDK 9.
+	 *
+	 * @return the annotated element; never {@code null}
+	 */
+	AnnotatedElement getAnnotatedElement();
+
+	/**
 	 * Determine if an annotation of {@code annotationType} is either
 	 * <em>present</em> or <em>meta-present</em> on the {@link AnnotatedElement} for
 	 * this context.

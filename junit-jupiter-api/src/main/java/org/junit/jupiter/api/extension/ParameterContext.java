@@ -13,6 +13,7 @@ package org.junit.jupiter.api.extension;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
 import java.util.List;
@@ -52,6 +53,14 @@ public interface ParameterContext extends AnnotatedElementContext {
 	 * @see #getIndex()
 	 */
 	Parameter getParameter();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	default AnnotatedElement getAnnotatedElement() {
+		return getParameter();
+	}
 
 	/**
 	 * Get the index of the {@link Parameter} for this context within the

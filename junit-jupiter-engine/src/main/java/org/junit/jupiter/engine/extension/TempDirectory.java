@@ -22,6 +22,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -445,6 +446,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		FieldContext(Field field) {
 			this.field = field;
+		}
+
+		@Override
+		public AnnotatedElement getAnnotatedElement() {
+			return this.field;
 		}
 
 		@Override
