@@ -2672,6 +2672,11 @@ The following example demonstrates how to use the custom `@JimfsTempDir` annotat
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_composed_annotation_usage]
 ----
 
+Meta-annotations or additional annotations on the field or parameter the `TempDir`
+annotation is declared on might expose additional attributes to configure the factory.
+Such annotations and related attributes can be accessed via the `AnnotatedElementContext`
+parameter of `createTempDirectory`.
+
 You can use the `junit.jupiter.tempdir.factory.default`
 <<running-tests-config-params, configuration parameter>> to specify the fully qualified
 class name of the `TempDirFactory` you would like to use by default. Just like for
