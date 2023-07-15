@@ -21,7 +21,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -37,8 +36,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.DosFileAttributeView;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -62,7 +59,6 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -468,21 +464,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		@Override
 		public AnnotatedElement getAnnotatedElement() {
 			return this.field;
-		}
-
-		@Override
-		public boolean isAnnotated(Class<? extends Annotation> annotationType) {
-			return AnnotationUtils.isAnnotated(field, annotationType);
-		}
-
-		@Override
-		public <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
-			return AnnotationUtils.findAnnotation(field, annotationType);
-		}
-
-		@Override
-		public <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
-			return AnnotationUtils.findRepeatableAnnotations(field, annotationType);
 		}
 
 		@Override

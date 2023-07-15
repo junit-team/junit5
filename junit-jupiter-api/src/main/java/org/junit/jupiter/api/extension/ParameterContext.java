@@ -13,11 +13,9 @@ package org.junit.jupiter.api.extension;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
-import java.util.List;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
@@ -99,29 +97,5 @@ public interface ParameterContext extends AnnotatedElementContext {
 	default AnnotatedElement getAnnotatedElement() {
 		return getParameter();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * @since 5.1.1
-	 */
-	@API(status = STABLE, since = "5.10")
-	@Override
-	boolean isAnnotated(Class<? extends Annotation> annotationType);
-
-	/**
-	 * {@inheritDoc}
-	 * @since 5.1.1
-	 */
-	@API(status = STABLE, since = "5.10")
-	@Override
-	<A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType);
-
-	/**
-	 * {@inheritDoc}
-	 * @since 5.1.1
-	 */
-	@API(status = STABLE, since = "5.10")
-	@Override
-	<A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType);
 
 }

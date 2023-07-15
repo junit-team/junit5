@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.support.AnnotationSupport;
 
 /**
  * {@code AnnotatedElementContext} encapsulates the <em>context</em> in which an
@@ -64,7 +65,9 @@ public interface AnnotatedElementContext {
 	 * @see #findAnnotation(Class)
 	 * @see #findRepeatableAnnotations(Class)
 	 */
-	boolean isAnnotated(Class<? extends Annotation> annotationType);
+	default boolean isAnnotated(Class<? extends Annotation> annotationType) {
+		return AnnotationSupport.isAnnotated(getAnnotatedElement(), annotationType);
+	}
 
 	/**
 	 * Find the first annotation of {@code annotationType} that is either
@@ -83,7 +86,9 @@ public interface AnnotatedElementContext {
 	 * @see #isAnnotated(Class)
 	 * @see #findRepeatableAnnotations(Class)
 	 */
-	<A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType);
+	default <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
+		return AnnotationSupport.findAnnotation(getAnnotatedElement(), annotationType);
+	}
 
 	/**
 	 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of
@@ -104,6 +109,8 @@ public interface AnnotatedElementContext {
 	 * @see #findAnnotation(Class)
 	 * @see java.lang.annotation.Repeatable
 	 */
-	<A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType);
+	default <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
+		return AnnotationSupport.findRepeatableAnnotations(getAnnotatedElement(), annotationType);
+	}
 
 }
