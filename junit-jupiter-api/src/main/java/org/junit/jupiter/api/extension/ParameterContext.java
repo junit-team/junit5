@@ -55,14 +55,6 @@ public interface ParameterContext extends AnnotatedElementContext {
 	Parameter getParameter();
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	default AnnotatedElement getAnnotatedElement() {
-		return getParameter();
-	}
-
-	/**
 	 * Get the index of the {@link Parameter} for this context within the
 	 * parameter list of the {@link #getDeclaringExecutable Executable} that
 	 * declares the parameter.
@@ -98,6 +90,14 @@ public interface ParameterContext extends AnnotatedElementContext {
 	Optional<Object> getTarget();
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	default AnnotatedElement getAnnotatedElement() {
+		return getParameter();
+	}
+
+	/**
 	 * Determine if an annotation of {@code annotationType} is either
 	 * <em>present</em> or <em>meta-present</em> on the {@link Parameter} for
 	 * this context.
@@ -113,6 +113,7 @@ public interface ParameterContext extends AnnotatedElementContext {
 	 * @see #findAnnotation(Class)
 	 * @see #findRepeatableAnnotations(Class)
 	 */
+	@Override
 	boolean isAnnotated(Class<? extends Annotation> annotationType);
 
 	/**
@@ -133,6 +134,7 @@ public interface ParameterContext extends AnnotatedElementContext {
 	 * @see #isAnnotated(Class)
 	 * @see #findRepeatableAnnotations(Class)
 	 */
+	@Override
 	<A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType);
 
 	/**
@@ -155,6 +157,7 @@ public interface ParameterContext extends AnnotatedElementContext {
 	 * @see #findAnnotation(Class)
 	 * @see java.lang.annotation.Repeatable
 	 */
+	@Override
 	<A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType);
 
 }

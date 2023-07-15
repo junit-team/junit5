@@ -64,6 +64,7 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -440,12 +441,28 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	static class FieldContext implements AnnotatedElementContext {
+	enum Scope {
+
+		PER_CONTEXT,
+
+		PER_DECLARATION
+
+	}
+
+	interface FileOperations {
+
+		FileOperations DEFAULT = Files::delete;
+
+		void delete(Path path) throws IOException;
+
+	}
+
+	private static class FieldContext implements AnnotatedElementContext {
 
 		private final Field field;
 
-		FieldContext(Field field) {
-			this.field = field;
+		private FieldContext(Field field) {
+			this.field = Preconditions.notNull(field, "field must not be null");
 		}
 
 		@Override
@@ -476,22 +493,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					.toString();
 			// @formatter:on
 		}
-
-	}
-
-	enum Scope {
-
-		PER_CONTEXT,
-
-		PER_DECLARATION
-
-	}
-
-	interface FileOperations {
-
-		FileOperations DEFAULT = Files::delete;
-
-		void delete(Path path) throws IOException;
 
 	}
 
