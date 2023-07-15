@@ -252,9 +252,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	static CloseablePath createTempDir(TempDirFactory factory, CleanupMode cleanupMode,
-			AnnotatedElementContext elementContext, ExtensionContext executionContext) {
+			AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
 		try {
-			return new CloseablePath(factory, cleanupMode, elementContext, executionContext);
+			return new CloseablePath(factory, cleanupMode, elementContext, extensionContext);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
@@ -268,14 +268,14 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private final Path dir;
 		private final TempDirFactory factory;
 		private final CleanupMode cleanupMode;
-		private final ExtensionContext executionContext;
+		private final ExtensionContext extensionContext;
 
 		CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, AnnotatedElementContext elementContext,
-				ExtensionContext executionContext) throws Exception {
-			this.dir = factory.createTempDirectory(elementContext, executionContext);
+				ExtensionContext extensionContext) throws Exception {
+			this.dir = factory.createTempDirectory(elementContext, extensionContext);
 			this.factory = factory;
 			this.cleanupMode = cleanupMode;
-			this.executionContext = executionContext;
+			this.extensionContext = extensionContext;
 		}
 
 		Path get() {
@@ -286,12 +286,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		public void close() throws IOException {
 			try {
 				if (cleanupMode == NEVER
-						|| (cleanupMode == ON_SUCCESS && executionContext.getExecutionException().isPresent())) {
+						|| (cleanupMode == ON_SUCCESS && extensionContext.getExecutionException().isPresent())) {
 					logger.info(() -> "Skipping cleanup of temp dir " + dir + " due to cleanup mode configuration.");
 					return;
 				}
 
-				FileOperations fileOperations = executionContext.getStore(NAMESPACE) //
+				FileOperations fileOperations = extensionContext.getStore(NAMESPACE) //
 						.getOrDefault(FILE_OPERATIONS_KEY, FileOperations.class, FileOperations.DEFAULT);
 
 				SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(fileOperations);
