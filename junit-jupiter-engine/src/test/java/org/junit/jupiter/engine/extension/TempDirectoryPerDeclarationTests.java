@@ -1298,18 +1298,10 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@TempDir(factory = Factory.class)
 		private Path tempDir1;
 
-		private Path tempDir2;
-
-		@BeforeEach
-		void setUp(@TempDir(factory = Factory.class) Path tempDir2) {
-			this.tempDir2 = tempDir2;
-		}
-
 		@Test
-		void test(@TempDir(factory = Factory.class) Path tempDir3) {
+		void test(@TempDir(factory = Factory.class) Path tempDir2) {
 			assertThat(tempDir1.getFileName()).asString().startsWith("tempDir1");
 			assertThat(tempDir2.getFileName()).asString().startsWith("tempDir2");
-			assertThat(tempDir3.getFileName()).asString().startsWith("tempDir3");
 		}
 
 		private static class Factory implements TempDirFactory {
@@ -1330,30 +1322,34 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	static class FactoryWithCustomMetaAnnotationTestCase {
 
-		@TempDirWithPrefix("field")
+		@TempDirForField
 		private Path tempDir1;
 
-		private Path tempDir2;
-
-		@BeforeEach
-		void beforeEach(@TempDirWithPrefix("beforeEach") Path tempDir2) {
-			this.tempDir2 = tempDir2;
-		}
-
 		@Test
-		void test(@TempDirWithPrefix("method") Path tempDir3) {
+		void test(@TempDirForParameter Path tempDir2) {
 			assertThat(tempDir1.getFileName()).asString().startsWith("field");
-			assertThat(tempDir2.getFileName()).asString().startsWith("beforeEach");
-			assertThat(tempDir3.getFileName()).asString().startsWith("method");
+			assertThat(tempDir2.getFileName()).asString().startsWith("parameter");
 		}
 
-		@Target({ ANNOTATION_TYPE, FIELD, PARAMETER })
+		@Target(ANNOTATION_TYPE)
 		@Retention(RUNTIME)
 		@TempDir(factory = FactoryWithCustomMetaAnnotationTestCase.Factory.class)
 		private @interface TempDirWithPrefix {
 
 			String value();
 
+		}
+
+		@Target(FIELD)
+		@Retention(RUNTIME)
+		@TempDirWithPrefix("field")
+		private @interface TempDirForField {
+		}
+
+		@Target(PARAMETER)
+		@Retention(RUNTIME)
+		@TempDirWithPrefix("parameter")
+		private @interface TempDirForParameter {
 		}
 
 		private static class Factory implements TempDirFactory {
