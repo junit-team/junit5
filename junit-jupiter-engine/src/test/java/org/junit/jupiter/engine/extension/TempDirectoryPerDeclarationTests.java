@@ -1330,18 +1330,18 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	static class FactoryWithCustomMetaAnnotationTestCase {
 
-		@CustomTempDir("field")
+		@TempDirWithPrefix("field")
 		private Path tempDir1;
 
 		private Path tempDir2;
 
 		@BeforeEach
-		void beforeEach(@CustomTempDir("beforeEach") Path tempDir2) {
+		void beforeEach(@TempDirWithPrefix("beforeEach") Path tempDir2) {
 			this.tempDir2 = tempDir2;
 		}
 
 		@Test
-		void test(@CustomTempDir("method") Path tempDir3) {
+		void test(@TempDirWithPrefix("method") Path tempDir3) {
 			assertThat(tempDir1.getFileName()).asString().startsWith("field");
 			assertThat(tempDir2.getFileName()).asString().startsWith("beforeEach");
 			assertThat(tempDir3.getFileName()).asString().startsWith("method");
@@ -1350,7 +1350,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Target({ ANNOTATION_TYPE, FIELD, PARAMETER })
 		@Retention(RUNTIME)
 		@TempDir(factory = FactoryWithCustomMetaAnnotationTestCase.Factory.class)
-		private @interface CustomTempDir {
+		private @interface TempDirWithPrefix {
 
 			String value();
 
@@ -1361,8 +1361,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			@Override
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
 					throws Exception {
-				String prefix = elementContext.findAnnotation(CustomTempDir.class).map(
-					CustomTempDir::value).orElseThrow();
+				String prefix = elementContext.findAnnotation(TempDirWithPrefix.class) //
+						.map(TempDirWithPrefix::value).orElseThrow();
 				return Files.createTempDirectory(prefix);
 			}
 
