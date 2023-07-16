@@ -363,9 +363,9 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		@DisplayName("that uses custom annotation")
-		void supportsFactoryWithCustomAnnotation() {
-			executeTestsForClass(FactoryWithCustomAnnotationTestCase.class).testEvents()//
+		@DisplayName("that uses custom meta-annotation")
+		void supportsFactoryWithCustomMetaAnnotation() {
+			executeTestsForClass(FactoryWithCustomMetaAnnotationTestCase.class).testEvents()//
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
@@ -1328,21 +1328,20 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class FactoryWithCustomAnnotationTestCase {
+	static class FactoryWithCustomMetaAnnotationTestCase {
 
-		@Prefix("field")
-		@TempDir(factory = Factory.class)
+		@CustomTempDir("field")
 		private Path tempDir1;
 
 		private Path tempDir2;
 
 		@BeforeEach
-		void beforeEach(@Prefix("beforeEach") @TempDir(factory = Factory.class) Path tempDir2) {
+		void beforeEach(@CustomTempDir("beforeEach") Path tempDir2) {
 			this.tempDir2 = tempDir2;
 		}
 
 		@Test
-		void test(@Prefix("method") @TempDir(factory = Factory.class) Path tempDir3) {
+		void test(@CustomTempDir("method") Path tempDir3) {
 			assertThat(tempDir1.getFileName()).asString().startsWith("field");
 			assertThat(tempDir2.getFileName()).asString().startsWith("beforeEach");
 			assertThat(tempDir3.getFileName()).asString().startsWith("method");
@@ -1350,7 +1349,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 		@Target({ ANNOTATION_TYPE, FIELD, PARAMETER })
 		@Retention(RUNTIME)
-		private @interface Prefix {
+		@TempDir(factory = FactoryWithCustomMetaAnnotationTestCase.Factory.class)
+		private @interface CustomTempDir {
 
 			String value();
 
@@ -1361,7 +1361,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			@Override
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
 					throws Exception {
-				String prefix = elementContext.findAnnotation(Prefix.class).map(Prefix::value).orElseThrow();
+				String prefix = elementContext.findAnnotation(CustomTempDir.class).map(
+					CustomTempDir::value).orElseThrow();
 				return Files.createTempDirectory(prefix);
 			}
 
