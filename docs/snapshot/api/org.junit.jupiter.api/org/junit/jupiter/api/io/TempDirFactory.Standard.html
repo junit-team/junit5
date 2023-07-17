@@ -154,7 +154,8 @@ implements <a href="TempDirFactory.html" title="interface in org.junit.jupiter.a
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)" class="member-name-link">createTempDirectory</a><wbr>(<a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createTempDirectory(org.junit.jupiter.api.extension.AnnotatedElementContext,org.junit.jupiter.api.extension.ExtensionContext)" class="member-name-link">createTempDirectory</a><wbr>(<a href="../extension/AnnotatedElementContext.html" title="interface in org.junit.jupiter.api.extension">AnnotatedElementContext</a>&nbsp;elementContext,
+ <a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Create a new temporary directory.</div>
 </div>
@@ -207,20 +208,23 @@ implements <a href="TempDirFactory.html" title="interface in org.junit.jupiter.a
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)">
+<section class="detail" id="createTempDirectory(org.junit.jupiter.api.extension.AnnotatedElementContext,org.junit.jupiter.api.extension.ExtensionContext)">
 <h3>createTempDirectory</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">createTempDirectory</span><wbr><span class="parameters">(<a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</span>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">createTempDirectory</span><wbr><span class="parameters">(<a href="../extension/AnnotatedElementContext.html" title="interface in org.junit.jupiter.api.extension">AnnotatedElementContext</a>&nbsp;elementContext,
+ <a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</span>
                          throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="TempDirFactory.html#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)">TempDirFactory</a></code></span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="TempDirFactory.html#createTempDirectory(org.junit.jupiter.api.extension.AnnotatedElementContext,org.junit.jupiter.api.extension.ExtensionContext)">TempDirFactory</a></code></span></div>
 <div class="block">Create a new temporary directory.
 
  <p>Depending on the implementation, the resulting <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link"><code>Path</code></a> may or may
  not be associated with the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/FileSystems.html#getDefault()" title="class or interface in java.nio.file" class="external-link"><code>default FileSystem</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="TempDirFactory.html#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)">createTempDirectory</a></code>&nbsp;in interface&nbsp;<code><a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io">TempDirFactory</a></code></dd>
+<dd><code><a href="TempDirFactory.html#createTempDirectory(org.junit.jupiter.api.extension.AnnotatedElementContext,org.junit.jupiter.api.extension.ExtensionContext)">createTempDirectory</a></code>&nbsp;in interface&nbsp;<code><a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io">TempDirFactory</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>context</code> - the current extension context; never <code>null</code></dd>
+<dd><code>elementContext</code> - the context of the field or parameter where
+ <code>@TempDir</code> is declared; never <code>null</code></dd>
+<dd><code>extensionContext</code> - the current extension context; never <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>the path to the newly created temporary directory; never <code>null</code></dd>
 <dt>Throws:</dt>

@@ -104,8 +104,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 
  <p>Implementations must provide a no-args constructor and should not make any
  assumptions regarding when and how many times they are instantiated, but they
- can assume that <a href="#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)"><code>createTempDirectory(ExtensionContext)</code></a> and <a href="#close()"><code>close()</code></a>
- will both be called once per instance, in this order, and from the same thread.
+ can assume that <a href="#createTempDirectory(org.junit.jupiter.api.extension.AnnotatedElementContext,org.junit.jupiter.api.extension.ExtensionContext)"><code>createTempDirectory(AnnotatedElementContext, ExtensionContext)</code></a>
+ and <a href="#close()"><code>close()</code></a> will both be called once per instance, in this order,
+ and from the same thread.
 
  <p>A <a href="TempDirFactory.html" title="interface in org.junit.jupiter.api.io"><code>TempDirFactory</code></a> can be configured <em>globally</em> for the
  entire test suite via the <a href="TempDir.html#DEFAULT_FACTORY_PROPERTY_NAME">"junit.jupiter.tempdir.factory.default"</a>
@@ -158,7 +159,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#close()" class="member-name-link">close</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)" class="member-name-link">createTempDirectory</a><wbr>(<a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#createTempDirectory(org.junit.jupiter.api.extension.AnnotatedElementContext,org.junit.jupiter.api.extension.ExtensionContext)" class="member-name-link">createTempDirectory</a><wbr>(<a href="../extension/AnnotatedElementContext.html" title="interface in org.junit.jupiter.api.extension">AnnotatedElementContext</a>&nbsp;elementContext,
+ <a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Create a new temporary directory.</div>
 </div>
@@ -177,9 +179,10 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createTempDirectory(org.junit.jupiter.api.extension.ExtensionContext)">
+<section class="detail" id="createTempDirectory(org.junit.jupiter.api.extension.AnnotatedElementContext,org.junit.jupiter.api.extension.ExtensionContext)">
 <h3>createTempDirectory</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">createTempDirectory</span><wbr><span class="parameters">(<a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</span>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">createTempDirectory</span><wbr><span class="parameters">(<a href="../extension/AnnotatedElementContext.html" title="interface in org.junit.jupiter.api.extension">AnnotatedElementContext</a>&nbsp;elementContext,
+ <a href="../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</span>
                   throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
 <div class="block">Create a new temporary directory.
 
@@ -187,7 +190,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  not be associated with the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/FileSystems.html#getDefault()" title="class or interface in java.nio.file" class="external-link"><code>default FileSystem</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>context</code> - the current extension context; never <code>null</code></dd>
+<dd><code>elementContext</code> - the context of the field or parameter where
+ <code>@TempDir</code> is declared; never <code>null</code></dd>
+<dd><code>extensionContext</code> - the current extension context; never <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>the path to the newly created temporary directory; never <code>null</code></dd>
 <dt>Throws:</dt>

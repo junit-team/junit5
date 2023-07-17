@@ -6441,8 +6441,9 @@ prefix instead of the <code>junit</code> constant value.</p>
     <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Factory</span> <span class="kd">implements</span> <span class="nc">TempDirFactory</span> <span class="o">{</span>
 
         <span class="nd">@Override</span>
-        <span class="kd">public</span> <span class="nc">Path</span> <span class="nf">createTempDirectory</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
-            <span class="k">return</span> <span class="nc">Files</span><span class="o">.</span><span class="na">createTempDirectory</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">getRequiredTestMethod</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+        <span class="kd">public</span> <span class="nc">Path</span> <span class="nf">createTempDirectory</span><span class="o">(</span><span class="nc">AnnotatedElementContext</span> <span class="n">elementContext</span><span class="o">,</span> <span class="nc">ExtensionContext</span> <span class="n">extensionContext</span><span class="o">)</span>
+                <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nc">Files</span><span class="o">.</span><span class="na">createTempDirectory</span><span class="o">(</span><span class="n">extensionContext</span><span class="o">.</span><span class="na">getRequiredTestMethod</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
         <span class="o">}</span>
 
     <span class="o">}</span>
@@ -6469,7 +6470,8 @@ temporary directory. The following example demonstrates how to achieve that.</p>
         <span class="kd">private</span> <span class="kd">final</span> <span class="nc">FileSystem</span> <span class="n">fileSystem</span> <span class="o">=</span> <span class="nc">Jimfs</span><span class="o">.</span><span class="na">newFileSystem</span><span class="o">(</span><span class="nc">Configuration</span><span class="o">.</span><span class="na">unix</span><span class="o">());</span>
 
         <span class="nd">@Override</span>
-        <span class="kd">public</span> <span class="nc">Path</span> <span class="nf">createTempDirectory</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="nc">Path</span> <span class="nf">createTempDirectory</span><span class="o">(</span><span class="nc">AnnotatedElementContext</span> <span class="n">elementContext</span><span class="o">,</span> <span class="nc">ExtensionContext</span> <span class="n">extensionContext</span><span class="o">)</span>
+                <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
             <span class="k">return</span> <span class="nc">Files</span><span class="o">.</span><span class="na">createTempDirectory</span><span class="o">(</span><span class="n">fileSystem</span><span class="o">.</span><span class="na">getPath</span><span class="o">(</span><span class="s">"/"</span><span class="o">),</span> <span class="s">"junit"</span><span class="o">);</span>
         <span class="o">}</span>
 
@@ -6514,6 +6516,12 @@ annotation that can be used as a drop-in replacement for
 
 <span class="o">}</span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Meta-annotations or additional annotations on the field or parameter the <code>TempDir</code>
+annotation is declared on might expose additional attributes to configure the factory.
+Such annotations and related attributes can be accessed via the <code>AnnotatedElementContext</code>
+parameter of <code>createTempDirectory</code>.</p>
 </div>
 <div class="paragraph">
 <p>You can use the <code>junit.jupiter.tempdir.factory.default</code>
@@ -12177,6 +12185,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotatedElementContext</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.10</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DynamicTestInvocationContext</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.8</code></p></td>
 </tr>
@@ -12621,7 +12634,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-07-07 11:58:25 UTC
+Last updated 2023-07-17 06:50:44 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

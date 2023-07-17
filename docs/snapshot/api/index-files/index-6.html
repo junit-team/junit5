@@ -344,10 +344,16 @@ loadScripts(document, 'script');</script>
  <em>present</em> or <em>meta-present</em> on the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> for
  this descriptor.</div>
 </dd>
+<dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AnnotatedElementContext.html#findAnnotation(java.lang.Class)" class="member-name-link">findAnnotation(Class&lt;A&gt;)</a> - Method in interface org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AnnotatedElementContext.html" title="interface in org.junit.jupiter.api.extension">AnnotatedElementContext</a></dt>
+<dd>
+<div class="block">Find the first annotation of <code>annotationType</code> that is either
+ <em>present</em> or <em>meta-present</em> on the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/AnnotatedElement.html" title="class or interface in java.lang.reflect" class="external-link"><code>AnnotatedElement</code></a> for
+ this context.</div>
+</dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html#findAnnotation(java.lang.Class)" class="member-name-link">findAnnotation(Class&lt;A&gt;)</a> - Method in interface org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a></dt>
 <dd>
 <div class="block">Find the first annotation of <code>annotationType</code> that is either
- <em>present</em> or <em>meta-present</em> on the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Parameter.html" title="class or interface in java.lang.reflect" class="external-link"><code>Parameter</code></a> for
+ <em>present</em> or <em>meta-present</em> on the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/AnnotatedElement.html" title="class or interface in java.lang.reflect" class="external-link"><code>AnnotatedElement</code></a> for
  this context.</div>
 </dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/MethodDescriptor.html#findAnnotation(java.lang.Class)" class="member-name-link">findAnnotation(Class&lt;A&gt;)</a> - Method in interface org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/MethodDescriptor.html" title="interface in org.junit.jupiter.api">MethodDescriptor</a></dt>
@@ -456,11 +462,17 @@ loadScripts(document, 'script');</script>
  <code>annotationType</code> that are either <em>present</em> or
  <em>meta-present</em> on the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> for this descriptor.</div>
 </dd>
+<dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AnnotatedElementContext.html#findRepeatableAnnotations(java.lang.Class)" class="member-name-link">findRepeatableAnnotations(Class&lt;A&gt;)</a> - Method in interface org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AnnotatedElementContext.html" title="interface in org.junit.jupiter.api.extension">AnnotatedElementContext</a></dt>
+<dd>
+<div class="block">Find all <em>repeatable</em> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">annotations</a> of
+ <code>annotationType</code> that are either <em>present</em> or
+ <em>meta-present</em> on the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/AnnotatedElement.html" title="class or interface in java.lang.reflect" class="external-link"><code>AnnotatedElement</code></a> for this context.</div>
+</dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html#findRepeatableAnnotations(java.lang.Class)" class="member-name-link">findRepeatableAnnotations(Class&lt;A&gt;)</a> - Method in interface org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a></dt>
 <dd>
 <div class="block">Find all <em>repeatable</em> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">annotations</a> of
  <code>annotationType</code> that are either <em>present</em> or
- <em>meta-present</em> on the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Parameter.html" title="class or interface in java.lang.reflect" class="external-link"><code>Parameter</code></a> for this context.</div>
+ <em>meta-present</em> on the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/AnnotatedElement.html" title="class or interface in java.lang.reflect" class="external-link"><code>AnnotatedElement</code></a> for this context.</div>
 </dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/MethodDescriptor.html#findRepeatableAnnotations(java.lang.Class)" class="member-name-link">findRepeatableAnnotations(Class&lt;A&gt;)</a> - Method in interface org.junit.jupiter.api.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/MethodDescriptor.html" title="interface in org.junit.jupiter.api">MethodDescriptor</a></dt>
 <dd>
