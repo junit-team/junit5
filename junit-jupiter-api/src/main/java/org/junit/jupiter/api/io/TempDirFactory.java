@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
@@ -30,8 +31,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  *
  * <p>Implementations must provide a no-args constructor and should not make any
  * assumptions regarding when and how many times they are instantiated, but they
- * can assume that {@link #createTempDirectory(ExtensionContext)} and {@link #close()}
- * will both be called once per instance, in this order, and from the same thread.
+ * can assume that {@link #createTempDirectory(AnnotatedElementContext, ExtensionContext)}
+ * and {@link #close()} will both be called once per instance, in this order,
+ * and from the same thread.
  *
  * <p>A {@link TempDirFactory} can be configured <em>globally</em> for the
  * entire test suite via the {@value TempDir#DEFAULT_FACTORY_PROPERTY_NAME}
@@ -53,11 +55,14 @@ public interface TempDirFactory extends Closeable {
 	 * not be associated with the {@link java.nio.file.FileSystems#getDefault()
 	 * default FileSystem}.
 	 *
-	 * @param context the current extension context; never {@code null}
+	 * @param elementContext the context of the field or parameter where
+	 * {@code @TempDir} is declared; never {@code null}
+	 * @param extensionContext the current extension context; never {@code null}
 	 * @return the path to the newly created temporary directory; never {@code null}
 	 * @throws Exception in case of failures
 	 */
-	Path createTempDirectory(ExtensionContext context) throws Exception;
+	Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+			throws Exception;
 
 	/**
 	 * {@inheritDoc}
@@ -82,7 +87,8 @@ public interface TempDirFactory extends Closeable {
 		}
 
 		@Override
-		public Path createTempDirectory(ExtensionContext context) throws IOException {
+		public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+				throws IOException {
 			return Files.createTempDirectory(TEMP_DIR_PREFIX);
 		}
 
