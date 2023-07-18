@@ -9,6 +9,7 @@
 * New `LauncherInterceptor` SPI
 * New `testfeed` details mode for `ConsoleLauncher`
 * New `ConsoleLauncher` subcommand for test discovery without execution
+* `ConsoleLauncher` shows expected, actual, and a diff for failed assertions on `CharSequence` objects
 * Dry-run mode for test execution
 * New `NamespacedHierarchicalStore` for use in third-party test engines
 * Stacktrace pruning to hide internal JUnit calls
