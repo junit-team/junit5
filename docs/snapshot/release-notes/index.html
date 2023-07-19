@@ -472,11 +472,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#release-notes-5.10.0">5.10.0</a>
+<li><a href="#release-notes-5.10.0-RC2">5.10.0-RC2</a>
 <ul class="sectlevel2">
-<li><a href="#release-notes-5.10.0-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.10.0-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.10.0-junit-vintage">JUnit Vintage</a></li>
+<li><a href="#release-notes-5.10.0-RC2-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.10.0-RC2-junit-jupiter">JUnit Jupiter</a></li>
+</ul>
+</li>
+<li><a href="#"></a>
+<ul class="sectlevel2">
+<li><a href="#junit-vintage">JUnit Vintage</a></li>
+<li><a href="#release-notes-5.10.0-RC1">5.10.0-RC1</a>
+<ul class="sectlevel2">
+<li><a href="#release-notes-5.10.0-RC1-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.10.0-RC1-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.10.0-RC1-junit-vintage">JUnit Vintage</a></li>
+</ul>
+</li>
+<li><a href="#release-notes-5.10.0-M1">5.10.0-M1</a>
+<ul class="sectlevel2">
+<li><a href="#release-notes-5.10.0-M1-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.10.0-M1-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.10.0-M1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
 <li><a href="#release-notes-5.9.3">5.9.3</a>
@@ -502,6 +518,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#release-notes-5.9.0">5.9.0</a></li>
 </ul>
+</li>
+</ul>
 </div>
 </div>
 <div id="content">
@@ -518,10 +536,189 @@ authors as well as build tool and IDE vendors.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes-5.10.0"><a class="anchor" href="#release-notes-5.10.0"></a>5.10.0</h2>
+<h2 id="release-notes-5.10.0-RC2"><a class="anchor" href="#release-notes-5.10.0-RC2"></a>5.10.0-RC2</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Date of Release:</strong> ❓</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Provide <code>TempDirFactory</code> access to the source element (parameter or field)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/71?closed=1">5.10.0-RC2</a> milestone page in the
+JUnit repository on GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.10.0-RC2-junit-platform"><a class="anchor" href="#release-notes-5.10.0-RC2-junit-platform"></a>JUnit Platform</h3>
+<div class="paragraph">
+<p>No changes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.10.0-RC2-junit-jupiter"><a class="anchor" href="#release-notes-5.10.0-RC2-junit-jupiter"></a>JUnit Jupiter</h3>
+<div class="sect3">
+<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Provide <code>TempDirFactory</code> access to the source element (parameter or field)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<h1 id="" class="sect0"><a class="anchor" href="#"></a><a id="release-notes-5.10.0-RC2-junit-vintage"></a></h1>
+<div class="sect2">
+<h3 id="junit-vintage"><a class="anchor" href="#junit-vintage"></a>JUnit Vintage</h3>
+<div class="paragraph">
+<p>No changes.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-5.10.0-RC1"><a class="anchor" href="#release-notes-5.10.0-RC1"></a>5.10.0-RC1</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Date of Release:</strong> July 6, 2023</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>New <code>@SelectMethod</code> support in test <code>@Suite</code> classes.</p>
+</li>
+<li>
+<p>Various enhancements for discovery selectors for classes and methods, including
+additional support for custom ClassLoader arrangements.</p>
+</li>
+<li>
+<p>Improved <code>@TempDir</code> support for cleaning up files and directories on Windows.</p>
+</li>
+<li>
+<p>Revised stack trace pruning support.</p>
+</li>
+<li>
+<p>Various documentation improvements.</p>
+</li>
+<li>
+<p>Minor changes and enhancements since 5.10 M1.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/69?closed=1">5.10.0-RC1</a> milestone page in the
+JUnit repository on GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.10.0-RC1-junit-platform"><a class="anchor" href="#release-notes-5.10.0-RC1-junit-platform"></a>JUnit Platform</h3>
+<div class="sect3">
+<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>getMethodParameterTypes()</code> methods in <code>MethodSelector</code> and <code>NestedMethodSelector</code>
+have been deprecated and replaced by <code>getParameterTypeNames()</code> for greater clarity.</p>
+</li>
+<li>
+<p>Methods in <code>DiscoverySelectors</code> that accept a <code>ClassLoader</code> now declare the
+<code>ClassLoader</code> as the first parameter. This is only a breaking change for code that
+relies on the new methods introduced in JUnit Platform 1.10 M1.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>New <code>@SelectMethod</code> selector support in the <code>@Suite</code> test engine.</p>
+</li>
+<li>
+<p>Classes may now be selected by fully-qualified name via the <code>names</code> attribute in
+<code>@SelectClasses</code>.</p>
+</li>
+<li>
+<p>New <code>selectMethod()</code> and <code>selectNestedMethod()</code> variants in <code>DiscoverySelectors</code> that
+accept a <code>Class&lt;?&gt;&#8230;&#8203;</code> argument of parameter types as a type-safe alternative to
+providing the names of parameter types as a comma-delimited string.</p>
+</li>
+<li>
+<p>Stack trace pruning has been revised and now only removes calls from the <code>org.junit</code>,
+<code>jdk.internal.reflect</code>, and <code>sun.reflect</code> packages. Please refer to the
+<a href="../user-guide/index.html#stacktrace-pruning">User Guide</a> for details.</p>
+</li>
+<li>
+<p>New <code>getAncestors()</code> method in <code>TestDescriptor</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.10.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.10.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
+<div class="sect3">
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@TempDir</code> can now be used as a meta-annotation in order to create custom <em>composed
+annotations</em>. See the <code>@JimfsTempDir</code> example in the
+<a href="../user-guide/index.html#writing-tests-built-in-extensions-TempDirectory">User Guide</a>
+for details.</p>
+</li>
+<li>
+<p><code>@TempDir</code> now successfully cleans up files and directories on Windows that are set to
+read-only.</p>
+</li>
+<li>
+<p>New <code>reason</code> attribute in <code>@Execution</code> which can be used to document the reason for
+using the selected execution mode.</p>
+</li>
+<li>
+<p>The <a href="../user-guide/index.html#extensions-RandomNumberExtension">User Guide</a> now
+includes an example implementation of the <code>RandomNumberExtension</code> in order to improve
+the documentation for extension registration via <code>@ExtendWith</code> on fields.</p>
+</li>
+<li>
+<p>Lifecycle and thread-safety semantics are now documented for the <code>TempDirFactory</code> SPI.</p>
+</li>
+<li>
+<p>The scope of applicability for <code>TestWatcher</code> implementations is now more extensively
+documented in the User Guide and Javadoc.</p>
+</li>
+<li>
+<p><code>JAVA_22</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.10.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.10.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
+<div class="paragraph">
+<p>No changes.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-5.10.0-M1"><a class="anchor" href="#release-notes-5.10.0-M1"></a>5.10.0-M1</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Date of Release:</strong> May 13, 2023</p>
 </div>
 <div class="paragraph">
 <p><strong>Scope:</strong></p>
@@ -550,9 +747,6 @@ authors as well as build tool and IDE vendors.</p>
 <p>Stacktrace pruning to hide internal JUnit calls</p>
 </li>
 <li>
-<p>New <code>@SelectMethod</code> support in test <code>@Suite</code> classes.</p>
-</li>
-<li>
 <p>New <code>TempDirFactory</code> SPI for customizing how temporary directories are created</p>
 </li>
 <li>
@@ -575,15 +769,13 @@ and <code>@DisabledIf</code></p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/65?closed=1">5.10.0-M1</a>,
-<a href="https://github.com/junit-team/junit5/milestone/69?closed=1">5.10.0-RC1</a>, and
-<a href="https://github.com/junit-team/junit5/milestone/70?closed=1">5.10.0 GA</a> milestone pages in the JUnit
+<a href="https://github.com/junit-team/junit5/milestone/65?closed=1">5.10.0-M1</a> milestone page in the JUnit
 repository on GitHub.</p>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.10.0-junit-platform"><a class="anchor" href="#release-notes-5.10.0-junit-platform"></a>JUnit Platform</h3>
+<h3 id="release-notes-5.10.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.10.0-M1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -591,19 +783,15 @@ repository on GitHub.</p>
 <code>--initialize-at-build-time=org.junit.platform.launcher.core.LauncherConfig</code> and
 <code>--initialize-at-build-time=org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter</code>.</p>
 </li>
-<li>
-<p>The <code>getMethodParameterTypes()</code> methods in <code>MethodSelector</code> and <code>NestedMethodSelector</code>
-have been deprecated and replaced by <code>getParameterTypeNames()</code> for greater clarity.</p>
-</li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Various "experimental" APIs have been promoted to "stable", including
+<p>Promote various "experimental" APIs that have matured to "stable" including
 <code>ModuleSelector</code>, <code>EngineDiscoveryListener</code>, <code>EngineDiscoveryRequestResolver</code>,
 <code>LauncherSession</code>, <code>LauncherSessionListener</code>, parallel execution support classes,
 <code>@Suite</code> and related annotations, and others.</p>
@@ -624,22 +812,10 @@ arrangements (such as OSGi). Consequently, <code>DiscoverySelectors.selectMethod
 String, String)</code> also now works properly with custom <code>ClassLoader</code> arrangements.</p>
 </li>
 <li>
-<p>New <code>@SelectMethod</code> selector support in the <code>@Suite</code> test engine.</p>
-</li>
-<li>
-<p>Classes may now be selected by fully-qualified name via the <code>names</code> attribute in
-<code>@SelectClasses</code>.</p>
-</li>
-<li>
 <p>New overloaded constructors for <code>ClassSelector</code>, <code>NestedClassSelector</code>,
 <code>MethodSelector</code>, and <code>NestedMethodSelector</code> that take an explicit <code>ClassLoader</code> as a
 parameter, allowing selectors to select classes in custom <code>ClassLoader</code> arrangements
 like in OSGi.</p>
-</li>
-<li>
-<p>New <code>selectMethod()</code> and <code>selectNestedMethod()</code> variants in <code>DiscoverySelectors</code> that
-accept a <code>Class&lt;?&gt;&#8230;&#8203;</code> argument of parameter types as a type-safe alternative to
-providing the names of parameter types as a comma-delimited string.</p>
 </li>
 <li>
 <p>For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
@@ -687,19 +863,16 @@ to the <a href="../user-guide/index.html#launcher-api-dry-run-mode">User Guide</
 </li>
 <li>
 <p>Stack traces produced by failing tests are now pruned of calls from the <code>org.junit</code>,
-<code>jdk.internal.reflect</code>, and <code>sun.reflect</code> packages. This feature can be disabled via a
-configuration parameter. Please refer to the
+<code>java</code>, and <code>jdk</code> packages by default. This feature can be disabled or configured to
+prune other calls via configurations parameters. Please refer to the
 <a href="../user-guide/index.html#stacktrace-pruning">User Guide</a> for details.</p>
-</li>
-<li>
-<p>New <code>getAncestors()</code> method in <code>TestDescriptor</code>.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.10.0-junit-jupiter"><a class="anchor" href="#release-notes-5.10.0-junit-jupiter"></a>JUnit Jupiter</h3>
+<h3 id="release-notes-5.10.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.10.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
 <h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
@@ -720,7 +893,7 @@ the <em>default</em> <code>ClassLoader</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -730,35 +903,20 @@ default.</p>
 <li>
 <p>Implicit type conversion of boolean values like in <code>@CsvSource</code> is now stricter, only
 allowing values <code>"true"</code> or <code>"false"</code> (case-insensitive), in order to make accidental
-mistakes apparent and to avoid potential confusion.</p>
+mistakes apparent, avoiding potential confusion.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Various "experimental" APIs have been promoted to "stable", including
+<p>Promote various "experimental" APIs that have matured to "stable" including
 <code>MethodOrderer</code>, <code>ClassOrderer</code>, <code>InvocationInterceptor</code>,
 <code>LifecycleMethodExecutionExceptionHandler</code>, <code>@TempDir</code>, parallel execution annotations,
 and others.</p>
-</li>
-<li>
-<p><code>JAVA_22</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
-</li>
-<li>
-<p>New <code>reason</code> attribute in <code>@Execution</code> which can be used to document the reason for
-using the selected execution mode.</p>
-</li>
-<li>
-<p>New <code>junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor</code> configuration
-parameter to set the maximum pool size factor.</p>
-</li>
-<li>
-<p>New <code>junit.jupiter.execution.parallel.config.dynamic.saturate</code> configuration
-parameter to disable pool saturation.</p>
 </li>
 <li>
 <p><code>@RepeatedTest</code> can now be configured with a failure threshold which signifies the
@@ -766,17 +924,16 @@ number of failures after which remaining repetitions will be automatically skipp
 the <a href="../user-guide/index.html#writing-tests-repeated-tests">User Guide</a> for details.</p>
 </li>
 <li>
-<p>If <code>@MethodSource</code> is used with a non-static factory method that should be <code>static</code>, the
-exception thrown now provides the user a meaningful explanation of how to address the
-problem.</p>
+<p>New <code>ArgumentsAccessor.getInvocationIndex()</code> method that supplies the index of a
+<code>@ParameterizedTest</code> invocation.</p>
 </li>
 <li>
 <p><code>@EmptySource</code> now supports additional types, including <code>Collection</code> and <code>Map</code> subtypes
 with a public no-arg constructor.</p>
 </li>
 <li>
-<p>New <code>ArgumentsAccessor.getInvocationIndex()</code> method that supplies the index of a
-<code>@ParameterizedTest</code> invocation.</p>
+<p><code>DisplayNameGenerator</code> methods are now allowed to return <code>null</code>, in order to signal to
+fall back to the default display name generator.</p>
 </li>
 <li>
 <p>New <code>AnnotationBasedArgumentsProvider</code> convenience base class which implements both
@@ -787,14 +944,12 @@ with a public no-arg constructor.</p>
 <code>ArgumentConverter</code> and <code>AnnotationConsumer</code>.</p>
 </li>
 <li>
-<p><code>@TempDir</code> can now be used as a meta-annotation in order to create custom <em>composed
-annotations</em>. See the <code>@JimfsTempDir</code> example in the
-<a href="../user-guide/index.html#writing-tests-built-in-extensions-TempDirectory">User Guide</a>
-for details.</p>
+<p>New <code>junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor</code> configuration
+parameter to set the maximum pool size factor.</p>
 </li>
 <li>
-<p><code>@TempDir</code> now successfully cleans up files and directories on Windows that are set to
-read-only.</p>
+<p>New <code>junit.jupiter.execution.parallel.config.dynamic.saturate</code> configuration
+parameter to disable pool saturation.</p>
 </li>
 <li>
 <p>New <code>TempDirFactory</code> SPI for customizing how the <code>@TempDir</code> extension creates temporary
@@ -803,24 +958,20 @@ directories. See the
 for details.</p>
 </li>
 <li>
-<p>The <a href="../user-guide/index.html#extensions-RandomNumberExtension">User Guide</a> now
-includes an example implementation of the <code>RandomNumberExtension</code> in order to improve
-the documentation for extension registration via <code>@ExtendWith</code> on fields.</p>
+<p>New <code>junit.jupiter.tempdir.factory.default</code> configuration parameter to set the default
+<code>TempDirFactory</code> for temporary directories.</p>
 </li>
 <li>
-<p>The scope of applicability for <code>TestWatcher</code> implementations is now more extensively
-documented in the User Guide and Javadoc.</p>
-</li>
-<li>
-<p><code>DisplayNameGenerator</code> methods are now allowed to return <code>null</code>, in order to signal to
-fall back to the default display name generator.</p>
+<p>If <code>@MethodSource</code> is used with a non-static factory method that should be <code>static</code>, the
+exception thrown now provides the user a meaningful explanation of how to address the
+problem.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.10.0-junit-vintage"><a class="anchor" href="#release-notes-5.10.0-junit-vintage"></a>JUnit Vintage</h3>
+<h3 id="release-notes-5.10.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.10.0-M1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="paragraph">
 <p>No changes.</p>
 </div>
@@ -892,7 +1043,7 @@ discouraged and will be disallowed in a future release.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -943,7 +1094,7 @@ from being silently ignored.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -976,7 +1127,7 @@ without specifying its fully qualified name.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -987,7 +1138,7 @@ default.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1092,7 +1243,7 @@ are now properly reported.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1165,7 +1316,7 @@ format</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.10.0-SNAPSHOT<br>
-Last updated 2023-07-17 06:50:44 UTC
+Last updated 2023-07-19 12:57:26 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
