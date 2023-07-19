@@ -1,7 +1,7 @@
 [[release-notes-5.10.0-RC2]]
 == 5.10.0-RC2
 
-*Date of Release:* ❓
+*Date of Release:* July 19, 2023
 
 *Scope:*
 
