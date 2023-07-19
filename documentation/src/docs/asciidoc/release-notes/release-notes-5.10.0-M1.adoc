@@ -1,7 +1,7 @@
-[[release-notes-5.10.0]]
-== 5.10.0
+[[release-notes-5.10.0-M1]]
+== 5.10.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* May 13, 2023
 
 *Scope:*
 
@@ -12,7 +12,6 @@
 * Dry-run mode for test execution
 * New `NamespacedHierarchicalStore` for use in third-party test engines
 * Stacktrace pruning to hide internal JUnit calls
-* New `@SelectMethod` support in test `@Suite` classes.
 * New `TempDirFactory` SPI for customizing how temporary directories are created
 * Failure threshold for `@RepeatedTest`
 * New convenience base classes for implementing `ArgumentsProvider` and `ArgumentConverter`
@@ -22,13 +21,11 @@
 * Numerous bug fixes and minor improvements
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/65?closed=1+[5.10.0-M1],
-link:{junit5-repo}+/milestone/69?closed=1+[5.10.0-RC1], and
-link:{junit5-repo}+/milestone/70?closed=1+[5.10.0 GA] milestone pages in the JUnit
+link:{junit5-repo}+/milestone/65?closed=1+[5.10.0-M1] milestone page in the JUnit
 repository on GitHub.
 
 
-[[release-notes-5.10.0-junit-platform]]
+[[release-notes-5.10.0-M1-junit-platform]]
 === JUnit Platform
 
 ==== Deprecations and Breaking Changes
@@ -36,12 +33,10 @@ repository on GitHub.
 * Building native images with GraalVM now requires configuring the build arg
   `--initialize-at-build-time=org.junit.platform.launcher.core.LauncherConfig` and
   `--initialize-at-build-time=org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter`.
-* The `getMethodParameterTypes()` methods in `MethodSelector` and `NestedMethodSelector`
-  have been deprecated and replaced by `getParameterTypeNames()` for greater clarity.
 
 ==== New Features and Improvements
 
-* Various "experimental" APIs have been promoted to "stable", including
+* Promote various "experimental" APIs that have matured to "stable" including
   `ModuleSelector`, `EngineDiscoveryListener`, `EngineDiscoveryRequestResolver`,
   `LauncherSession`, `LauncherSessionListener`, parallel execution support classes,
   `@Suite` and related annotations, and others.
@@ -54,17 +49,10 @@ repository on GitHub.
   `ClassLoader`. This allows parameter types to be resolved with custom `ClassLoader`
   arrangements (such as OSGi). Consequently, `DiscoverySelectors.selectMethod(Class<?>,
   String, String)` also now works properly with custom `ClassLoader` arrangements.
-
-* New `@SelectMethod` selector support in the `@Suite` test engine.
-* Classes may now be selected by fully-qualified name via the `names` attribute in
-  `@SelectClasses`.
 * New overloaded constructors for `ClassSelector`, `NestedClassSelector`,
   `MethodSelector`, and `NestedMethodSelector` that take an explicit `ClassLoader` as a
   parameter, allowing selectors to select classes in custom `ClassLoader` arrangements
   like in OSGi.
-* New `selectMethod()` and `selectNestedMethod()` variants in `DiscoverySelectors` that
-  accept a `Class<?>...` argument of parameter types as a type-safe alternative to
-  providing the names of parameter types as a comma-delimited string.
 * For consistency with JUnit Jupiter lifecycle callbacks, listener method pairs for
   started/finished and opened/closed events are now invoked using "wrapping" semantics.
   This means that finished/closed event methods are invoked in reverse order compared to
@@ -92,13 +80,12 @@ repository on GitHub.
 * New dry-run mode to simulate test execution without actually running tests. Please refer
   to the <<../user-guide/index.adoc#launcher-api-dry-run-mode, User Guide>> for details.
 * Stack traces produced by failing tests are now pruned of calls from the `org.junit`,
-  `jdk.internal.reflect`, and `sun.reflect` packages. This feature can be disabled via a
-  configuration parameter. Please refer to the
+  `java`, and `jdk` packages by default. This feature can be disabled or configured to
+  prune other calls via configurations parameters. Please refer to the
   <<../user-guide/index.adoc#stacktrace-pruning, User Guide>> for details.
-* New `getAncestors()` method in `TestDescriptor`.
 
 
-[[release-notes-5.10.0-junit-jupiter]]
+[[release-notes-5.10.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
@@ -118,55 +105,43 @@ repository on GitHub.
   default.
 * Implicit type conversion of boolean values like in `@CsvSource` is now stricter, only
   allowing values `"true"` or `"false"` (case-insensitive), in order to make accidental
-  mistakes apparent and to avoid potential confusion.
+  mistakes apparent, avoiding potential confusion.
 
 ==== New Features and Improvements
 
-* Various "experimental" APIs have been promoted to "stable", including
+* Promote various "experimental" APIs that have matured to "stable" including
   `MethodOrderer`, `ClassOrderer`, `InvocationInterceptor`,
   `LifecycleMethodExecutionExceptionHandler`, `@TempDir`, parallel execution annotations,
   and others.
-* `JAVA_22` has been added to the `JRE` enum for use with JRE-based execution conditions.
-* New `reason` attribute in `@Execution` which can be used to document the reason for
-  using the selected execution mode.
-* New `junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor` configuration
-  parameter to set the maximum pool size factor.
-* New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
-  parameter to disable pool saturation.
 * `@RepeatedTest` can now be configured with a failure threshold which signifies the
   number of failures after which remaining repetitions will be automatically skipped. See
   the <<../user-guide/index.adoc#writing-tests-repeated-tests, User Guide>> for details.
-* If `@MethodSource` is used with a non-static factory method that should be `static`, the
-  exception thrown now provides the user a meaningful explanation of how to address the
-  problem.
-* `@EmptySource` now supports additional types, including `Collection` and `Map` subtypes
-  with a public no-arg constructor.
 * New `ArgumentsAccessor.getInvocationIndex()` method that supplies the index of a
   `@ParameterizedTest` invocation.
+* `@EmptySource` now supports additional types, including `Collection` and `Map` subtypes
+  with a public no-arg constructor.
+* `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal to
+  fall back to the default display name generator.
 * New `AnnotationBasedArgumentsProvider` convenience base class which implements both
   `ArgumentsProvider` and `AnnotationConsumer`.
 * New `AnnotationBasedArgumentConverter` convenience base class which implements both
   `ArgumentConverter` and `AnnotationConsumer`.
-* `@TempDir` can now be used as a meta-annotation in order to create custom _composed
-  annotations_. See the `@JimfsTempDir` example in the
-  <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, User Guide>>
-  for details.
-* `@TempDir` now successfully cleans up files and directories on Windows that are set to
-  read-only.
+* New `junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor` configuration
+  parameter to set the maximum pool size factor.
+* New `junit.jupiter.execution.parallel.config.dynamic.saturate` configuration
+  parameter to disable pool saturation.
 * New `TempDirFactory` SPI for customizing how the `@TempDir` extension creates temporary
   directories. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, User Guide>>
   for details.
-* The <<../user-guide/index.adoc#extensions-RandomNumberExtension, User Guide>> now
-  includes an example implementation of the `RandomNumberExtension` in order to improve
-  the documentation for extension registration via `@ExtendWith` on fields.
-* The scope of applicability for `TestWatcher` implementations is now more extensively
-  documented in the User Guide and Javadoc.
-* `DisplayNameGenerator` methods are now allowed to return `null`, in order to signal to
-  fall back to the default display name generator.
+* New `junit.jupiter.tempdir.factory.default` configuration parameter to set the default
+  `TempDirFactory` for temporary directories.
+* If `@MethodSource` is used with a non-static factory method that should be `static`, the
+  exception thrown now provides the user a meaningful explanation of how to address the
+  problem.
 
 
-[[release-notes-5.10.0-junit-vintage]]
+[[release-notes-5.10.0-M1-junit-vintage]]
 === JUnit Vintage
 
 No changes.
