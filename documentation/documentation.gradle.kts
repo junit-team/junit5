@@ -72,7 +72,7 @@ asciidoctorj {
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val releaseBranch = if (snapshot) "HEAD" else "r${rootProject.version}"
-val docsDir = file("$buildDir/ghpages-docs")
+val docsDir = layout.buildDirectory.dir("ghpages-docs")
 val replaceCurrentDocs = buildParameters.documentation.replaceCurrentDocs
 val uploadPdfs = !snapshot
 val userGuidePdfFileName = "junit-user-guide-${rootProject.version}.pdf"
@@ -109,7 +109,7 @@ val deprecatedApisTableFile = generatedAsciiDocPath.map { it.file("deprecated-ap
 val standaloneConsoleLauncherShadowedArtifactsFile = generatedAsciiDocPath.map { it.file("console-launcher-standalone-shadowed-artifacts.adoc") }
 
 val jdkJavadocBaseUrl = "https://docs.oracle.com/en/java/javase/11/docs/api"
-val elementListsDir = file("$buildDir/elementLists")
+val elementListsDir = layout.buildDirectory.dir("elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
 		"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
 		"org.assertj.core" to "https://javadoc.io/doc/org.assertj/assertj-core/${libs.versions.assertj.get()}/",
@@ -314,7 +314,7 @@ tasks {
 		doFirst {
 			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
 				val resource = resources.text.fromUri("${baseUrl}element-list")
-				elementListsDir.resolve(moduleName).apply {
+				elementListsDir.get().asFile.resolve(moduleName).apply {
 					mkdir()
 					resolve("element-list").writeText("module:$moduleName\n${resource.asString()}")
 				}
@@ -356,7 +356,7 @@ tasks {
 			links(jdkJavadocBaseUrl)
 			links("https://junit.org/junit4/javadoc/${libs.versions.junit4.get()}/")
 			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
-				linksOffline(baseUrl, "$elementListsDir/$moduleName")
+				linksOffline(baseUrl, elementListsDir.get().asFile.resolve(moduleName).absolutePath)
 			}
 
 			groups = mapOf(
@@ -387,7 +387,7 @@ tasks {
 		classpath = files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
 
 		maxMemory = "1024m"
-		destinationDir = file("$buildDir/docs/javadoc")
+		destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
 
 		doFirst {
 			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
@@ -417,14 +417,14 @@ tasks {
 				}
 			}
 		}
-		into("$buildDir/docs/fixedJavadoc")
+		into(layout.buildDirectory.dir("docs/fixedJavadoc"))
 	}
 
 	val prepareDocsForUploadToGhPages by registering(Copy::class) {
 		dependsOn(fixJavadoc, asciidoctor, asciidoctorPdf)
 		outputs.dir(docsDir)
 
-		from("$buildDir/checksum") {
+		from(layout.buildDirectory.dir("checksum")) {
 			include("published-checksum.txt")
 		}
 		from(asciidoctor.map { it.outputDir }) {
@@ -441,7 +441,7 @@ tasks {
 		from(fixJavadoc.map { it.destinationDir }) {
 			into("api")
 		}
-		into("$docsDir/$docsVersion")
+		into(docsDir.map { it.dir(docsVersion.toString()) })
 		includeEmptyDirs = false
 	}
 

@@ -1,7 +1,9 @@
 import org.gradle.configurationcache.extensions.capitalized
 
 val tempRepoName by extra("temp")
-val tempRepoDir by extra(file("$buildDir/repo"))
+val tempRepoDir by extra {
+	layout.buildDirectory.dir("repo").get().asFile
+}
 
 val clearTempRepoDir by tasks.registering {
 	val dir = tempRepoDir

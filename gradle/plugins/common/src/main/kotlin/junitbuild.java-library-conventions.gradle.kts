@@ -21,9 +21,9 @@ val builtByValue: String by rootProject.extra
 
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
-val moduleSourceDir = file("src/module/$javaModuleName")
+val moduleSourceDir = layout.projectDirectory.dir("src/module/$javaModuleName")
 val combinedModuleSourceDir = layout.buildDirectory.dir("module")
-val moduleOutputDir = file("$buildDir/classes/java/module")
+val moduleOutputDir = layout.buildDirectory.dir("classes/java/module")
 val javaVersion = JavaVersion.current()
 
 eclipse {
@@ -194,7 +194,7 @@ tasks.withType<Jar>().configureEach {
 	val suffix = archiveClassifier.getOrElse("")
 	if (suffix.isBlank() || this is ShadowJar) {
 		dependsOn(allMainClasses, compileModule)
-		from("$moduleOutputDir/$javaModuleName") {
+		from(moduleOutputDir.map { it.dir(javaModuleName) }) {
 			include("module-info.class")
 		}
 	}
