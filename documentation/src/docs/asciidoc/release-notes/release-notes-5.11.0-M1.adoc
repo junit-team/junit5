@@ -35,7 +35,7 @@ JUnit repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* Change used Kotlin API and language version from 1.3 to 1.6
 
 ==== New Features and Improvements
 

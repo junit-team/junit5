@@ -7,8 +7,8 @@ plugins {
 
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
-		apiVersion = "1.3"
-		languageVersion = "1.3"
+		apiVersion = "1.6"
+		languageVersion = "1.6"
 		allWarningsAsErrors = false
 	}
 }
