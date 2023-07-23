@@ -42,7 +42,7 @@ JUnit repository on GitHub.
 * ❓
 
 
-= [[release-notes-5.11.0-M1-junit-vintage]]
+[[release-notes-5.11.0-M1-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes
