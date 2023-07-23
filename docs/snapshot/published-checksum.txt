@@ -434,6 +434,7 @@
 87c149169e1ecbcbff90b97f066e704c  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
 87d4bb38f5eed81b92120a5ff4984328  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/Suite.java
 884181bfe47f11bb2cc7e166be439e41  junit-platform-console/src/main/java/org/junit/platform/console/options/TestDiscoveryOptionsMixin.java
+8851a127cc0672b534b65da0a399c322  documentation/documentation.gradle.kts
 886cf74e6f1023545a05b0bc90e50895  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 89406f40f711e284ed7587f18cca0c3d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
 894cd93bbd1a6429c6436f2a42dcdac2  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrintingListener.java
@@ -462,7 +463,6 @@
 8f3fd10378f55fad8e1375dc0d5036a0  documentation/src/main/java/example/registration/WebClient.java
 8fd8ad2e0c863f13e264f6b909cc853a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 9002dc21147446ec59101940ddbe67d0  documentation/src/docs/asciidoc/user-guide/appendix.adoc
-90127611754efad7f5b04ed05bae2900  documentation/documentation.gradle.kts
 90936ae0be0ae3df839198479b7a22b1  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClassSource.java
 910eb298c49e29af32e58cf0e9029d11  documentation/src/docs/asciidoc/user-guide/advanced-topics/launcher-api.adoc
 9227d67fd9ae55b98df0fc0b368bdc57  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicContainer.java
