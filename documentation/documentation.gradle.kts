@@ -447,11 +447,10 @@ tasks {
 
 	val createCurrentDocsFolder by registering(Copy::class) {
 		dependsOn(prepareDocsForUploadToGhPages)
-		outputs.dir("$docsDir/current")
 		onlyIf { replaceCurrentDocs }
 
-		from("$docsDir/$docsVersion")
-		into("$docsDir/current")
+		from(docsDir.map { it.dir(docsVersion.toString()) })
+		into(docsDir.map { it.dir("current") })
 	}
 
 	val configureGitAuthor by registering {
