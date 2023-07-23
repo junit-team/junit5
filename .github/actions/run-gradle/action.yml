@@ -5,6 +5,10 @@ inputs:
     required: true
     description: Gradle arguments
     default: build
+  dependency-graph:
+    required: false
+    description: Gradle build action dependency-graph setting
+    default: disabled
 runs:
   using: "composite"
   steps:
@@ -17,6 +21,7 @@ runs:
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
       with:
+        dependency-graph: ${{ inputs.dependency-graph }}
         arguments: |
           -Porg.gradle.java.installations.auto-download=false
           -Penterprise.predictiveTestSelection.enabled=${{ github.event_name == 'pull_request' }}
