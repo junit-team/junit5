@@ -1,7 +1,7 @@
 [[release-notes-5.10.0]]
 == 5.10.0
 
-*Date of Release:* ❓
+*Date of Release:* July 23, 2023
 
 *Scope:*
 
@@ -23,7 +23,8 @@
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/65?closed=1+[5.10.0-M1],
-link:{junit5-repo}+/milestone/69?closed=1+[5.10.0-RC1], and
+link:{junit5-repo}+/milestone/69?closed=1+[5.10.0-RC1],
+link:{junit5-repo}+/milestone/71?closed=1+[5.10.0-RC2], and
 link:{junit5-repo}+/milestone/70?closed=1+[5.10.0 GA] milestone pages in the JUnit
 repository on GitHub.
 
