@@ -322,8 +322,8 @@
 63bd545fb6013c5e6c71cd6cf957e8ea  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoverySelector.java
 63f97c0fd797519a7f1e8ffc98f68781  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Token.java
 64b7ef31895d1744f3a8d982d1665d39  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Tokenizer.java
+64bc12f68002da47d3a78536c000efa5  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0.adoc
 654387799306f61c9f1e98b5d164c561  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/ClassContainerSelectorResolver.java
-654875e5bc61f6dabeee70fbd01380c4  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.0.adoc
 65d849663a861fdd87b48f70e3f04fc8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/package-info.java
 65ed252df456f013af31987620abb755  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInstance.java
 65f02fe3059c02b5170a6d6f976cd88d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
