@@ -51,8 +51,8 @@ class TestReporterDemo {
 
 		testReporter.publishFile("test1.txt", file -> Files.write(file, singletonList("Test 1")));
 
-		Path existingFile = tempDir.resolve("test2.txt");
-		testReporter.publishFile(Files.write(existingFile, singletonList("Test 2")));
+		Path existingFile = Files.write(tempDir.resolve("test2.txt"), singletonList("Test 2"));
+		testReporter.publishFile(existingFile);
 
 		testReporter.publishFile("test3", dir -> {
 			Path nestedFile = Files.createDirectory(dir).resolve("nested.txt");
