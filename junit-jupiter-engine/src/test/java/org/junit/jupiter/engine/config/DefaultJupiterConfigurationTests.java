@@ -122,7 +122,7 @@ class DefaultJupiterConfigurationTests {
 
 		Supplier<TempDirFactory> supplier = configuration.getDefaultTempDirFactorySupplier();
 
-		assertThat(supplier.get()).isInstanceOf(TempDirFactory.class);
+		assertThat(supplier.get()).isInstanceOf(CustomFactory.class);
 	}
 
 	private static class CustomFactory implements TempDirFactory {
