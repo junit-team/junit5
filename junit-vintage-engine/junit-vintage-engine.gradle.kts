@@ -15,6 +15,8 @@ dependencies {
 
 	compileOnlyApi(libs.apiguardian)
 
+	compileOnly(projects.junitVintageReporting)
+
 	testFixturesApi(platform(libs.groovy2.bom))
 	testFixturesApi(libs.spock1)
 	testFixturesImplementation(projects.junitPlatformRunner)

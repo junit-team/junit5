@@ -46,6 +46,7 @@ dependencies {
 	testImplementation(kotlin("stdlib"))
 
 	testImplementation(projects.junitVintageEngine)
+	testImplementation(projects.junitVintageReporting)
 	testRuntimeOnly(libs.apiguardian) {
 		because("it's required to generate API tables")
 	}

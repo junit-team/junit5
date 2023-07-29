@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,11 +27,13 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.core.LauncherConfigurationParameters.Builder;
+import org.junit.platform.launcher.listeners.OutputDir;
 import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 
 /**
@@ -289,8 +292,19 @@ public final class LauncherDiscoveryRequestBuilder {
 	public LauncherDiscoveryRequest build() {
 		LauncherConfigurationParameters launcherConfigurationParameters = buildLauncherConfigurationParameters();
 		LauncherDiscoveryListener discoveryListener = getLauncherDiscoveryListener(launcherConfigurationParameters);
+		OutputDirProvider outputDirProvider = createOutputDirProvider(launcherConfigurationParameters);
 		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
-			this.postDiscoveryFilters, launcherConfigurationParameters, discoveryListener);
+			this.postDiscoveryFilters, launcherConfigurationParameters, discoveryListener, outputDirProvider);
+	}
+
+	private OutputDirProvider createOutputDirProvider(LauncherConfigurationParameters configurationParameters) {
+		// TODO Provider another configuration parameter to disable writing outputs?
+		// TODO OutputDirProvider could be made configurable via another configuration parameter
+		return new HierarchicalOutputDirProvider(() -> {
+			OutputDir outputDir = OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME));
+			return outputDir.createDir("junit");
+		});
+
 	}
 
 	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {

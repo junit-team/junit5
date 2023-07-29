@@ -41,7 +41,8 @@ val jupiterProjects by extra(listOf(
 ).map { it.dependencyProject })
 
 val vintageProjects by extra(listOf(
-		projects.junitVintageEngine.dependencyProject
+		projects.junitVintageEngine.dependencyProject,
+		projects.junitVintageReporting.dependencyProject
 ))
 
 val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProjects)

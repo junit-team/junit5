@@ -12,7 +12,6 @@ package org.junit.platform.launcher.core;
 
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
 
 import java.util.List;
 
@@ -26,7 +25,6 @@ import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
-import org.junit.platform.launcher.listeners.OutputDir;
 
 /**
  * {@code DefaultDiscoveryRequest} is the default implementation of the
@@ -54,15 +52,19 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	// Listener for test discovery that may abort on errors.
 	private final LauncherDiscoveryListener discoveryListener;
 
+	private final OutputDirProvider outputDirProvider;
+
 	DefaultDiscoveryRequest(List<DiscoverySelector> selectors, List<EngineFilter> engineFilters,
 			List<DiscoveryFilter<?>> discoveryFilters, List<PostDiscoveryFilter> postDiscoveryFilters,
-			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener) {
+			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener,
+			OutputDirProvider outputDirProvider) {
 		this.selectors = selectors;
 		this.engineFilters = engineFilters;
 		this.discoveryFilters = discoveryFilters;
 		this.postDiscoveryFilters = postDiscoveryFilters;
 		this.configurationParameters = configurationParameters;
 		this.discoveryListener = discoveryListener;
+		this.outputDirProvider = outputDirProvider;
 	}
 
 	@Override
@@ -99,11 +101,6 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 
 	@Override
 	public OutputDirProvider getOutputDirProvider() {
-		// TODO Provider another configuration parameter to disable writing outputs?
-		// TODO OutputDirProvider could be made configurable via another configuration parameter
-		return new HierarchicalOutputDirProvider(() -> {
-			OutputDir outputDir = OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME));
-			return outputDir.createDir("junit");
-		});
+		return outputDirProvider;
 	}
 }

@@ -20,7 +20,10 @@ module org.junit.vintage.engine {
 	requires junit; // 4
 	requires static org.apiguardian.api;
 	requires org.junit.platform.engine;
+	requires static org.junit.vintage.reporting;
 
 	provides org.junit.platform.engine.TestEngine
 			with org.junit.vintage.engine.VintageTestEngine;
+	provides org.junit.vintage.reporting.VintageReportingService
+			with org.junit.vintage.engine.execution.JUnitPlatformVintageReportingService;
 }

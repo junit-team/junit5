@@ -38,7 +38,8 @@ public class VintageDiscoverer {
 	// @formatter:on
 
 	public VintageEngineDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		VintageEngineDescriptor engineDescriptor = new VintageEngineDescriptor(uniqueId);
+		VintageEngineDescriptor engineDescriptor = new VintageEngineDescriptor(uniqueId,
+			discoveryRequest.getOutputDirProvider());
 		resolver.resolve(discoveryRequest, engineDescriptor);
 		RunnerTestDescriptorPostProcessor postProcessor = new RunnerTestDescriptorPostProcessor();
 		for (TestDescriptor testDescriptor : engineDescriptor.getChildren()) {
