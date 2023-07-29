@@ -63,16 +63,15 @@ class HierarchicalOutputDirProvider implements OutputDirProvider {
 	}
 
 	private static String sanitizeName(String value) {
-		StringBuilder result = new StringBuilder();
+		StringBuilder result = new StringBuilder(value.length());
 		for (int i = 0; i < value.length(); i++) {
 			char c = value.charAt(i);
-			if (!FORBIDDEN_CHARS.contains(c) || Character.isISOControl(c)) {
-				result.append(c);
-			}
-			else {
-				result.append(REPLACEMENT);
-			}
+			result.append(isForbiddenCharacter(c) ? REPLACEMENT : c);
 		}
 		return result.toString();
+	}
+
+	private static boolean isForbiddenCharacter(char c) {
+		return FORBIDDEN_CHARS.contains(c) || Character.isISOControl(c);
 	}
 }
