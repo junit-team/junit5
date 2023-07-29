@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
+import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
 
 import java.util.List;
 
@@ -20,10 +21,12 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.listeners.OutputDir;
 
 /**
  * {@code DefaultDiscoveryRequest} is the default implementation of the
@@ -94,4 +97,13 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 		return discoveryListener;
 	}
 
+	@Override
+	public OutputDirProvider getOutputDirProvider() {
+		// TODO Provider another configuration parameter to disable writing outputs?
+		// TODO OutputDirProvider could be made configurable via another configuration parameter
+		return new HierarchicalOutputDirProvider(() -> {
+			OutputDir outputDir = OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME));
+			return outputDir.createDir("junit");
+		});
+	}
 }

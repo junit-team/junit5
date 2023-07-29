@@ -75,7 +75,7 @@ public class ExtensionContextTests {
 			UniqueId.root("engine", "junit-jupiter"), configuration);
 
 		JupiterEngineExtensionContext engineContext = new JupiterEngineExtensionContext(null, engineTestDescriptor,
-			configuration, OutputDirProvider.NOOP, null);
+			configuration, null);
 
 		// @formatter:off
 		assertAll("engineContext",
@@ -162,7 +162,7 @@ public class ExtensionContextTests {
 		Method testMethod = methodTestDescriptor.getTestMethod();
 
 		JupiterEngineExtensionContext engineExtensionContext = new JupiterEngineExtensionContext(null, engineDescriptor,
-			configuration, OutputDirProvider.NOOP, null);
+			configuration, null);
 		ClassExtensionContext classExtensionContext = new ClassExtensionContext(engineExtensionContext, null,
 			classTestDescriptor, configuration, null, null);
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(classExtensionContext, null,
@@ -259,7 +259,7 @@ public class ExtensionContextTests {
 
 	@TestFactory
 	Stream<DynamicTest> configurationParameter() throws Exception {
-		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters());
+		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters(), OutputDirProvider.NOOP);
 		String key = "123";
 		Optional<String> expected = Optional.of(key);
 
@@ -275,8 +275,7 @@ public class ExtensionContextTests {
 			configuration);
 
 		return Stream.of( //
-			(ExtensionContext) new JupiterEngineExtensionContext(null, engineDescriptor, echo, OutputDirProvider.NOOP,
-				null), //
+			(ExtensionContext) new JupiterEngineExtensionContext(null, engineDescriptor, echo, null), //
 			new ClassExtensionContext(null, null, classTestDescriptor, echo, null, null), //
 			new MethodExtensionContext(null, null, methodTestDescriptor, echo, null, null) //
 		).map(context -> dynamicTest(context.getClass().getSimpleName(),

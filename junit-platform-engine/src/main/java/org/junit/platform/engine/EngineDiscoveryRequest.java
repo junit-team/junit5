@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.List;
 
 import org.apiguardian.api.API;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 
 /**
  * {@code EngineDiscoveryRequest} provides a {@link TestEngine} access to the
@@ -84,4 +85,7 @@ public interface EngineDiscoveryRequest {
 		return EngineDiscoveryListener.NOOP;
 	}
 
+	default OutputDirProvider getOutputDirProvider() {
+		return OutputDirProvider.NOOP;
+	}
 }

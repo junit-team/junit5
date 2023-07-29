@@ -12,7 +12,6 @@ package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
-import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.ListenerRegistry.forEngineExecutionListeners;
 
@@ -29,11 +28,9 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
-import org.junit.platform.launcher.listeners.OutputDir;
 
 /**
  * Orchestrates test execution using the configured test engines.
@@ -159,7 +156,6 @@ public class EngineExecutionOrchestrator {
 		Preconditions.notNull(engineExecutionListener, "engineExecutionListener must not be null");
 
 		ConfigurationParameters configurationParameters = discoveryResult.getConfigurationParameters();
-		OutputDirProvider outputDirProvider = createOutputDirProvider(configurationParameters);
 		EngineExecutionListener listener = selectExecutionListener(engineExecutionListener, configurationParameters);
 
 		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
@@ -170,18 +166,9 @@ public class EngineExecutionOrchestrator {
 					TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
 			}
 			else {
-				execute(engineDescriptor, listener, configurationParameters, outputDirProvider, testEngine);
+				execute(engineDescriptor, listener, configurationParameters, testEngine);
 			}
 		}
-	}
-
-	private static OutputDirProvider createOutputDirProvider(ConfigurationParameters configurationParameters) {
-		// TODO Provider another configuration parameter to disable writing outputs?
-		// TODO OutputDirProvider could be made configurable via another configuration parameter
-		return new HierarchicalOutputDirProvider(() -> {
-			OutputDir outputDir = OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME));
-			return outputDir.createDir("junit");
-		});
 	}
 
 	private static EngineExecutionListener selectExecutionListener(EngineExecutionListener engineExecutionListener,
@@ -203,14 +190,12 @@ public class EngineExecutionOrchestrator {
 	}
 
 	private void execute(TestDescriptor engineDescriptor, EngineExecutionListener listener,
-			ConfigurationParameters configurationParameters, OutputDirProvider outputDirProvider,
-			TestEngine testEngine) {
+			ConfigurationParameters configurationParameters, TestEngine testEngine) {
 
 		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
 			engineDescriptor);
 		try {
-			testEngine.execute(ExecutionRequest.create(engineDescriptor, delayingListener, configurationParameters,
-				outputDirProvider));
+			testEngine.execute(ExecutionRequest.create(engineDescriptor, delayingListener, configurationParameters));
 			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {

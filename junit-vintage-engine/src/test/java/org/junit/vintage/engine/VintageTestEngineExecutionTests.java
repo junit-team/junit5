@@ -45,7 +45,6 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -900,8 +899,8 @@ class VintageTestEngineExecutionTests {
 		TestEngine testEngine = new VintageTestEngine();
 		var discoveryRequest = request(testClass);
 		var engineTestDescriptor = testEngine.discover(discoveryRequest, UniqueId.forEngine(testEngine.getId()));
-		testEngine.execute(ExecutionRequest.create(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters(), OutputDirProvider.NOOP));
+		testEngine.execute(
+			ExecutionRequest.create(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
 	}
 
 	private static LauncherDiscoveryRequest request(Class<?> testClass) {

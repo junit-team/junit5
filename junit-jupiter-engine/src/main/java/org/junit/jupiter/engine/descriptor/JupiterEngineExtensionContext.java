@@ -19,7 +19,6 @@ import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
@@ -29,9 +28,9 @@ final class JupiterEngineExtensionContext extends AbstractExtensionContext<Jupit
 
 	JupiterEngineExtensionContext(EngineExecutionListener engineExecutionListener,
 			JupiterEngineDescriptor testDescriptor, JupiterConfiguration configuration,
-			OutputDirProvider outputDirProvider, ExecutableInvoker executableInvoker) {
+			ExecutableInvoker executableInvoker) {
 
-		super(null, engineExecutionListener, testDescriptor, configuration, outputDirProvider, executableInvoker);
+		super(null, engineExecutionListener, testDescriptor, configuration, executableInvoker);
 	}
 
 	@Override

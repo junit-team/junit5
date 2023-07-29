@@ -55,7 +55,7 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 		EngineExecutionListener executionListener = context.getExecutionListener();
 		ExecutableInvoker executableInvoker = new DefaultExecutableInvoker(context);
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionListener, this,
-			context.getConfiguration(), context.getOutputDirProvider(), executableInvoker);
+			context.getConfiguration(), executableInvoker);
 
 		// @formatter:off
 		return context.extend()

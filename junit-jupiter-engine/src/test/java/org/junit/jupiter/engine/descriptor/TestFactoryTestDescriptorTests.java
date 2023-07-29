@@ -32,7 +32,6 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
 import org.junit.platform.engine.support.descriptor.DirectorySource;
 import org.junit.platform.engine.support.descriptor.FilePosition;
@@ -139,7 +138,7 @@ class TestFactoryTestDescriptorTests {
 			extensionContext = mock();
 			isClosed = false;
 
-			context = new JupiterEngineExecutionContext(null, null, OutputDirProvider.NOOP) //
+			context = new JupiterEngineExecutionContext(null, null) //
 					.extend() //
 					.withThrowableCollector(new OpenTest4JAwareThrowableCollector()) //
 					.withExtensionContext(extensionContext) //

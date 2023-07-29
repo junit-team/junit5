@@ -20,7 +20,6 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
@@ -38,9 +37,9 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	private boolean beforeAllCallbacksExecuted = false;
 	private boolean beforeAllMethodsExecuted = false;
 
-	public JupiterEngineExecutionContext(EngineExecutionListener executionListener, JupiterConfiguration configuration,
-			OutputDirProvider outputDirProvider) {
-		this(new State(executionListener, configuration, outputDirProvider));
+	public JupiterEngineExecutionContext(EngineExecutionListener executionListener,
+			JupiterConfiguration configuration) {
+		this(new State(executionListener, configuration));
 	}
 
 	private JupiterEngineExecutionContext(State state) {
@@ -84,10 +83,6 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 		return this.state.throwableCollector;
 	}
 
-	public OutputDirProvider getOutputDirProvider() {
-		return this.state.outputDirProvider;
-	}
-
 	/**
 	 * Track that an attempt was made to execute {@code BeforeAllCallback} extensions.
 	 *
@@ -129,17 +124,14 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 		final EngineExecutionListener executionListener;
 		final JupiterConfiguration configuration;
-		final OutputDirProvider outputDirProvider;
 		TestInstancesProvider testInstancesProvider;
 		MutableExtensionRegistry extensionRegistry;
 		ExtensionContext extensionContext;
 		ThrowableCollector throwableCollector;
 
-		State(EngineExecutionListener executionListener, JupiterConfiguration configuration,
-				OutputDirProvider outputDirProvider) {
+		State(EngineExecutionListener executionListener, JupiterConfiguration configuration) {
 			this.executionListener = executionListener;
 			this.configuration = configuration;
-			this.outputDirProvider = outputDirProvider;
 		}
 
 		@Override

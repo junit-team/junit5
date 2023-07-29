@@ -27,7 +27,6 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.reporting.OutputDirProvider;
 
 /**
  * Unit tests for {@link JupiterEngineExecutionContext}.
@@ -41,7 +40,7 @@ class JupiterEngineExecutionContextTests {
 	private final EngineExecutionListener engineExecutionListener = mock();
 
 	private final JupiterEngineExecutionContext originalContext = new JupiterEngineExecutionContext(
-		engineExecutionListener, configuration, OutputDirProvider.NOOP);
+		engineExecutionListener, configuration);
 
 	@Test
 	void executionListenerIsHandedOnWhenContextIsExtended() {

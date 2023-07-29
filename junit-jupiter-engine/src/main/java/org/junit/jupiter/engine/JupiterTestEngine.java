@@ -63,8 +63,8 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		JupiterConfiguration configuration = new CachingJupiterConfiguration(
-			new DefaultJupiterConfiguration(discoveryRequest.getConfigurationParameters()));
+		JupiterConfiguration configuration = new CachingJupiterConfiguration(new DefaultJupiterConfiguration(
+			discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirProvider()));
 		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(uniqueId, configuration);
 		new DiscoverySelectorResolver().resolveSelectors(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
@@ -82,8 +82,8 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 
 	@Override
 	protected JupiterEngineExecutionContext createExecutionContext(ExecutionRequest request) {
-		return new JupiterEngineExecutionContext(request.getEngineExecutionListener(), getJupiterConfiguration(request),
-			request.getOutputDirProvider());
+		return new JupiterEngineExecutionContext(request.getEngineExecutionListener(),
+			getJupiterConfiguration(request));
 	}
 
 	/**
