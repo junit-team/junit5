@@ -85,7 +85,8 @@ public interface TestReporter {
 	/**
 	 * Publish the supplied file and attach it to the current test or container.
 	 * <p>
-	 * The file will be copied to the report output directory.
+	 * The file will be copied to the report output directory replacing any
+	 * potentially existing file with the same name.
 	 *
 	 * @param file the file to be attached; never {@code null} or blank
 	 * @since 5.11
@@ -99,8 +100,9 @@ public interface TestReporter {
 	 * Publish a file with the supplied name written by the supplied action and
 	 * attach it to the current test or container.
 	 * <p>
-	 * The file will be created in the report output directory prior to invoking
-	 * the supplied action.
+	 * The {@link Path} passed to the supplied action will be relative to the
+	 * report output directory, but it's up to the action to write the file or
+	 * directory.
 	 *
 	 * @param fileName the name of the file to be attached; never {@code null} or blank
 	 *                 and must not contain any path separators
