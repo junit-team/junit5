@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
+import static org.junit.jupiter.params.converter.LocaleConversionFormat.ISO_639;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
@@ -95,7 +96,7 @@ class CachingJupiterConfigurationTests {
 		CustomDisplayNameGenerator customDisplayNameGenerator = new CustomDisplayNameGenerator();
 		when(delegate.getDefaultDisplayNameGenerator()).thenReturn(customDisplayNameGenerator);
 
-		// call `cache.getDefaultDisplayNameGenerator()` twice to verify the delegate method is called only once.
+		// call twice to verify the delegate method is called only once.
 		assertThat(cache.getDefaultDisplayNameGenerator()).isSameAs(customDisplayNameGenerator);
 		assertThat(cache.getDefaultDisplayNameGenerator()).isSameAs(customDisplayNameGenerator);
 
@@ -107,7 +108,7 @@ class CachingJupiterConfigurationTests {
 		final Optional<MethodOrderer> methodOrderer = Optional.of(new MethodOrderer.MethodName());
 		when(delegate.getDefaultTestMethodOrderer()).thenReturn(methodOrderer);
 
-		// call `cache.getDefaultTestMethodOrderer()` twice to verify the delegate method is called only once.
+		// call twice to verify the delegate method is called only once.
 		assertThat(cache.getDefaultTestMethodOrderer()).isSameAs(methodOrderer);
 		assertThat(cache.getDefaultTestMethodOrderer()).isSameAs(methodOrderer);
 
@@ -118,7 +119,7 @@ class CachingJupiterConfigurationTests {
 	void cachesDefaultTempDirCleanupMode() {
 		when(delegate.getDefaultTempDirCleanupMode()).thenReturn(NEVER);
 
-		// call `cache.getDefaultTempStrategyDirCleanupMode()` twice to verify the delegate method is called only once.
+		// call twice to verify the delegate method is called only once.
 		assertThat(cache.getDefaultTempDirCleanupMode()).isSameAs(NEVER);
 		assertThat(cache.getDefaultTempDirCleanupMode()).isSameAs(NEVER);
 
@@ -130,11 +131,22 @@ class CachingJupiterConfigurationTests {
 		Supplier<TempDirFactory> supplier = mock();
 		when(delegate.getDefaultTempDirFactorySupplier()).thenReturn(supplier);
 
-		// call `cache.getDefaultTempDirFactorySupplier()` twice to verify the delegate method is called only once.
+		// call twice to verify the delegate method is called only once.
 		assertThat(cache.getDefaultTempDirFactorySupplier()).isSameAs(supplier);
 		assertThat(cache.getDefaultTempDirFactorySupplier()).isSameAs(supplier);
 
 		verify(delegate, only()).getDefaultTempDirFactorySupplier();
+	}
+
+	@Test
+	void cachesDefaultLocaleConversionFormat() {
+		when(delegate.getDefaultLocaleConversionFormat()).thenReturn(ISO_639);
+
+		// call twice to verify the delegate method is called only once.
+		assertThat(cache.getDefaultLocaleConversionFormat()).isSameAs(ISO_639);
+		assertThat(cache.getDefaultLocaleConversionFormat()).isSameAs(ISO_639);
+
+		verify(delegate, only()).getDefaultLocaleConversionFormat();
 	}
 
 	@Test

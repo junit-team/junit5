@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.Extension
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.converter.LocaleConversionFormat;
 
 /**
  * Caching implementation of the {@link JupiterConfiguration} API.
@@ -138,4 +139,10 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 			DEFAULT_TEST_INSTANTIATION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME,
 			__ -> delegate.getDefaultTestInstantiationExtensionContextScope());
 	}
+	@Override
+	public LocaleConversionFormat getDefaultLocaleConversionFormat() {
+		return (LocaleConversionFormat) cache.computeIfAbsent(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME,
+			key -> delegate.getDefaultLocaleConversionFormat());
+	}
+
 }

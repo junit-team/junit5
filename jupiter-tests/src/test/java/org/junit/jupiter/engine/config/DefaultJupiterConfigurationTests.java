@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
+import static org.junit.jupiter.params.converter.LocaleConversionFormat.ISO_639;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +35,7 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
+import org.junit.jupiter.params.converter.LocaleConversionFormat;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 
@@ -143,6 +145,13 @@ class DefaultJupiterConfigurationTests {
 		Supplier<TempDirFactory> supplier = configuration.getDefaultTempDirFactorySupplier();
 
 		assertThat(supplier.get()).isSameAs(TempDirFactory.Standard.INSTANCE);
+	}
+
+	@Test
+	void shouldGetDefaultLocaleConversionFormatWithNoConfigParamSet() {
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock());
+		LocaleConversionFormat localeConversionFormat = configuration.getDefaultLocaleConversionFormat();
+		assertThat(localeConversionFormat).isEqualTo(ISO_639);
 	}
 
 	private void assertDefaultConfigParam(String configValue, Lifecycle expected) {

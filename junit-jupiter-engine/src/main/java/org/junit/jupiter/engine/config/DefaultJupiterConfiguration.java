@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.TempDir.DEFAULT_CLEANUP_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.api.io.TempDir.DEFAULT_FACTORY_PROPERTY_NAME;
+import static org.junit.jupiter.params.converter.LocaleConversionFormat.ISO_639;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.Extension
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.converter.LocaleConversionFormat;
 import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -65,6 +67,9 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	private static final EnumConfigurationParameterConverter<ExtensionContextScope> extensionContextScopeConverter = //
 		new EnumConfigurationParameterConverter<>(ExtensionContextScope.class, "extension context scope");
+
+	private static final EnumConfigurationParameterConverter<LocaleConversionFormat> localeConversionFormatConverter = //
+		new EnumConfigurationParameterConverter<>(LocaleConversionFormat.class, "locale conversion format");
 
 	private final ConfigurationParameters configurationParameters;
 
@@ -156,4 +161,10 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 		return extensionContextScopeConverter.get(configurationParameters,
 			DEFAULT_TEST_INSTANTIATION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME, ExtensionContextScope.DEFAULT);
 	}
+	@Override
+	public LocaleConversionFormat getDefaultLocaleConversionFormat() {
+		return localeConversionFormatConverter.get(configurationParameters,
+			DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, ISO_639);
+	}
+
 }

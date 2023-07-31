@@ -2,6 +2,7 @@ org.junit.jupiter.engine@${jupiterVersion} jar:file:.+/junit-jupiter-engine-\d.+
 requires java.base mandated
 requires org.apiguardian.api static
 requires org.junit.jupiter.api
+requires org.junit.jupiter.params
 requires org.junit.platform.commons
 requires org.junit.platform.engine
 requires org.opentest4j
