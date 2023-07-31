@@ -29,6 +29,7 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.converter.LocaleConversionFormat;
 
 /**
  * Caching implementation of the {@link JupiterConfiguration} API.
@@ -123,6 +124,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	public Supplier<TempDirFactory> getDefaultTempDirFactorySupplier() {
 		return (Supplier<TempDirFactory>) cache.computeIfAbsent(DEFAULT_FACTORY_PROPERTY_NAME,
 			key -> delegate.getDefaultTempDirFactorySupplier());
+	}
+
+	@Override
+	public LocaleConversionFormat getDefaultLocaleConversionFormat() {
+		return (LocaleConversionFormat) cache.computeIfAbsent(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME,
+			key -> delegate.getDefaultLocaleConversionFormat());
 	}
 
 }

@@ -13,6 +13,7 @@ dependencies {
 	api(platform(projects.junitBom))
 	api(projects.junitPlatformEngine)
 	api(projects.junitJupiterApi)
+	api(projects.junitJupiterParams)
 
 	compileOnlyApi(libs.apiguardian)
 
