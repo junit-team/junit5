@@ -65,6 +65,7 @@ class StandaloneTests {
 		var result = Request.builder() //
 				.setTool(new Java()) //
 				.setProject("standalone") //
+				.addArguments("-Djdk.console=java.base") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("engines", "--disable-banner").build() //
 				.run(false);
@@ -339,6 +340,7 @@ class StandaloneTests {
 		var result = Request.builder() //
 				.setTool(new Java()) //
 				.setProject("standalone") //
+				.addArguments("-Djdk.console=java.base") //
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
