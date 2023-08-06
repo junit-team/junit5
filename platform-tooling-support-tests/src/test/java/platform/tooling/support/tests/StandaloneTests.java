@@ -89,8 +89,8 @@ class StandaloneTests {
 		var result = Request.builder() //
 				.setTool(new Javac()) //
 				.setProject("standalone") //
-				.addArguments("-Xlint:-options")
-				.addArguments("--release", "8")
+				.addArguments("-Xlint:-options") //
+				.addArguments("--release", "8") //
 				.addArguments("-proc:none") //
 				.addArguments("-d", workspace.resolve("bin")) //
 				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone")) //
