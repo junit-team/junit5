@@ -69,7 +69,7 @@ class StandaloneTests {
 				.addArguments("engines", "--disable-banner").build() //
 				.run(false);
 
-		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var suiteVersion = Helper.version("junit-platform-suite-engine");
@@ -98,7 +98,7 @@ class StandaloneTests {
 				.addArguments(workspace.resolve("src/standalone/VintageIntegration.java")).build() //
 				.run();
 
-		assertEquals(0, result.getExitCode(), result.getOutput("out") + result.getOutput("err"));
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
 		assertTrue(result.getOutput("out").isEmpty());
 		assertTrue(result.getOutput("err").isEmpty());
 
@@ -327,7 +327,7 @@ class StandaloneTests {
 				.build() //
 				.run(false);
 
-		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
 		return result;
 	}
 
@@ -349,7 +349,7 @@ class StandaloneTests {
 				.addArguments("--classpath", "bin").build() //
 				.run(false);
 
-		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
@@ -384,7 +384,7 @@ class StandaloneTests {
 				.addArguments("--classpath", "bin").build() //
 				.run(false);
 
-		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
@@ -420,7 +420,7 @@ class StandaloneTests {
 				.addArguments("--classpath", "bin").build() //
 				.run(false);
 
-		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
@@ -461,6 +461,11 @@ class StandaloneTests {
 				.build() //
 				.run(false);
 
-		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
+	}
+
+	private static String getExitCodeMessage(Result result) {
+		return "Exit codes don't match. Stdout:\n" + result.getOutput("out") + //
+				"\n\nStderr:\n" + result.getOutput("err") + "\n";
 	}
 }
