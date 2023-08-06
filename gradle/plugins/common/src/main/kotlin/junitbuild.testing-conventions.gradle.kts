@@ -51,6 +51,9 @@ tasks.withType<Test>().configureEach {
 			"-XX:FlightRecorderOptions=stackdepth=1024"
 		)
 	}
+	if (buildParameters.javaToolchainVersion.get() >= 22) {
+		jvmArgs("-Djdk.console=java.base")
+	}
 
 	// Track OS as input so that tests are executed on all configured operating systems on CI
 	trackOperationSystemAsInput()
