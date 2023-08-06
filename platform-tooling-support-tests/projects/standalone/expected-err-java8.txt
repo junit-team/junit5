@@ -1,0 +1,21 @@
+>> JAVA VERSION >>
+.+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
+.+ Loaded LauncherInterceptor instances: ..
+.+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
+.+ Loaded LauncherSessionListener instances: ..
+.+ org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
+.+ Discovered TestEngines:
+- junit-jupiter .+
+- junit-vintage .+
+- junit-platform-suite .+
+.+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
+.+ Loaded PostDiscoveryFilter instances: ..
+.+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
+.+ Loaded LauncherDiscoveryListener instances: ..
+.+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
+.+ Loaded TestExecutionListener instances: .+
+.+ org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
+.+ Discovered TestEngines:
+- junit-jupiter .+
+- junit-vintage .+
+- junit-platform-suite .+
