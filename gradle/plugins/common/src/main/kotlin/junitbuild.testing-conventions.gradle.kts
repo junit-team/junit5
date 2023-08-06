@@ -51,7 +51,7 @@ tasks.withType<Test>().configureEach {
 			"-XX:FlightRecorderOptions=stackdepth=1024"
 		)
 	}
-	if (buildParameters.javaToolchainVersion.get() >= 22) {
+	if (buildParameters.javaToolchainVersion.isPresent && buildParameters.javaToolchainVersion.get() >= 22) {
 		jvmArgs("-Djdk.console=java.base")
 	}
 
