@@ -1,0 +1,18 @@
+>> TREE >>
+Failures (2):
+>> STACKTRACE >>
+
+Test run finished after \d+ ms
+[        11 containers found      ]
+[         0 containers skipped    ]
+[        11 containers started    ]
+[         0 containers aborted    ]
+[        11 containers successful ]
+[         0 containers failed     ]
+[        10 tests found           ]
+[         2 tests skipped         ]
+[         8 tests started         ]
+[         1 tests aborted         ]
+[         5 tests successful      ]
+[         2 tests failed          ]
+

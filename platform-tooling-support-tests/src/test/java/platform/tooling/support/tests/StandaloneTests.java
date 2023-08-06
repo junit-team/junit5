@@ -390,8 +390,8 @@ class StandaloneTests {
 		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
-		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
-		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out-java8.txt"));
+		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err-java8.txt"));
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
 		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
 
@@ -427,8 +427,8 @@ class StandaloneTests {
 		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
-		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
-		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out-java8.txt"));
+		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err-java8.txt"));
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
 		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
 
