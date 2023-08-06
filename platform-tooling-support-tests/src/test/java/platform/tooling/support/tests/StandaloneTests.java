@@ -89,6 +89,8 @@ class StandaloneTests {
 		var result = Request.builder() //
 				.setTool(new Javac()) //
 				.setProject("standalone") //
+				.addArguments("-Xlint:-options") //
+				.addArguments("--release", "8") //
 				.addArguments("-proc:none") //
 				.addArguments("-d", workspace.resolve("bin")) //
 				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone")) //
@@ -368,11 +370,12 @@ class StandaloneTests {
 	@Test
 	@Order(4)
 	void executeOnJava8() throws IOException {
+		Java java8 = getJava8();
 		var result = Request.builder() //
-				.setTool(new Java()) //
-				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.setTool(java8) //
+				.setJavaHome(java8.getHome()) //
 				.setProject("standalone") //
-				.addArguments("--show-version") //
+				.addArguments("-showversion") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
@@ -387,8 +390,8 @@ class StandaloneTests {
 		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
-		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
-		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out-java8.txt"));
+		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err-java8.txt"));
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
 		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
 
@@ -404,11 +407,12 @@ class StandaloneTests {
 	@Order(5)
 	// https://github.com/junit-team/junit5/issues/2600
 	void executeOnJava8SelectPackage() throws IOException {
+		Java java8 = getJava8();
 		var result = Request.builder() //
-				.setTool(new Java()) //
-				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.setTool(java8) //
+				.setJavaHome(java8.getHome()) //
 				.setProject("standalone") //
-				.addArguments("--show-version") //
+				.addArguments("-showversion") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
@@ -423,8 +427,8 @@ class StandaloneTests {
 		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
-		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
-		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out-java8.txt"));
+		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err-java8.txt"));
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
 		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
 
@@ -467,5 +471,23 @@ class StandaloneTests {
 	private static String getExitCodeMessage(Result result) {
 		return "Exit codes don't match. Stdout:\n" + result.getOutput("out") + //
 				"\n\nStderr:\n" + result.getOutput("err") + "\n";
+	}
+
+	/**
+	 * Special override of class {@link Java} to resolve against a different {@code JAVA_HOME}.
+	 */
+	private static Java getJava8() {
+		Path java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
+		return new Java() {
+			@Override
+			public Path getHome() {
+				return java8Home;
+			}
+
+			@Override
+			public String getVersion() {
+				return "8";
+			}
+		};
 	}
 }
