@@ -469,8 +469,8 @@ class StandaloneTests {
 	}
 
 	private static String getExitCodeMessage(Result result) {
-		return "Exit codes don't match. Stdout:\n" +
-				result.getOutput("out") + "\n\nStderr:\n" + result.getOutput("err") + "\n";
+		return "Exit codes don't match. Stdout:\n" + result.getOutput("out") + //
+				"\n\nStderr:\n" + result.getOutput("err") + "\n";
 	}
 
 	/**
