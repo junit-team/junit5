@@ -211,3 +211,4 @@ Your donations will help to make that a reality!
 - Ravi Vasamsetty
 - Rajesh Aadi
 - Jun Nakamura
+- Sebastian Staack
