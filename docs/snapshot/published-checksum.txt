@@ -461,7 +461,6 @@
 8f07b10063d7990c34d34064d70da1cb  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 8f357407fbea6d14e5d5bfc06cd2ba91  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.java
 8f3fd10378f55fad8e1375dc0d5036a0  documentation/src/main/java/example/registration/WebClient.java
-8fd8ad2e0c863f13e264f6b909cc853a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 90936ae0be0ae3df839198479b7a22b1  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClassSource.java
 910eb298c49e29af32e58cf0e9029d11  documentation/src/docs/asciidoc/user-guide/advanced-topics/launcher-api.adoc
 9227d67fd9ae55b98df0fc0b368bdc57  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicContainer.java
@@ -497,6 +496,7 @@
 98b1b9c85cf39781847fbdc72caa7735  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
 99aa398301da1cb0f4b3f112ae30ed7a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContext.java
 9a0f4b5eab771e8f3da562febe91423a  documentation/src/test/java/example/exception/IgnoreIOExceptionTests.java
+9a48c8d28ae365c1514f78f2c7ebe155  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 9a974faf1fac1d749616474b9361a918  documentation/src/test/java/example/StandardTests.java
 9ab2320940a1f7aafea5b190c0d4d06b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptingTestExecutionListener.java
 9b37e89fef4204ae9853fefae15ae9e4  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ModuleSelector.java
