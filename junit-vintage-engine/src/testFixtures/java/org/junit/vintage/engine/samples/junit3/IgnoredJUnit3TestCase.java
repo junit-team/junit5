@@ -18,7 +18,7 @@ import org.junit.Ignore;
 /**
  * @since 4.12
  */
-@Ignore
+@Ignore("respected by Vintage engine")
 public class IgnoredJUnit3TestCase extends TestCase {
 
 	public void test() {
