@@ -12,6 +12,7 @@ package org.junit.platform.console;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -81,9 +82,9 @@ class ConsoleLauncherTests {
 
 	static Stream<Arguments> commandsWithEmptyOptionExitCodes() {
 		return Stream.of( //
-			Arguments.of("execute", -1), //
-			Arguments.of("discover", -1), //
-			Arguments.of("engines", 0) //
+			arguments("execute", -1), //
+			arguments("discover", -1), //
+			arguments("engines", 0) //
 		);
 	}
 
