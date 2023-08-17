@@ -38,7 +38,7 @@ class ConsoleLauncherTests {
 		var exitCode = consoleLauncher.run(command, "--help").getExitCode();
 
 		assertEquals(0, exitCode);
-		assertThat(stringWriter.toString()).contains("--help", "--disable-banner", "--scan-classpath" /* ... */);
+		assertThat(stringWriter.toString()).contains("--help", "--disable-banner" /* ... */);
 	}
 
 	@ParameterizedTest(name = "{0}")
