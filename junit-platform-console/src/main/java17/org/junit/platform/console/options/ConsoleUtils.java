@@ -45,9 +45,11 @@ public class ConsoleUtils {
 		try {
 			//noinspection JavaReflectionMemberAccess
 			return (boolean) Console.class.getDeclaredMethod("isTerminal").invoke(null);
-		} catch (NoSuchMethodException exception) {
+		}
+		catch (NoSuchMethodException exception) {
 			return false; // Console.isTerminal() was introduced in Java 22
-		} catch (ReflectiveOperationException exception) {
+		}
+		catch (ReflectiveOperationException exception) {
 			throw new JUnitException("Failed to call Console.isTerminal()", exception);
 		}
 	}
