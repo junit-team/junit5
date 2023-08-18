@@ -39,5 +39,4 @@ public class ConsoleUtils {
 		Console console = System.console();
 		return console != null ? console.charset() : Charset.defaultCharset();
 	}
-
 }
